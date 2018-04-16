@@ -8,7 +8,7 @@ import TopMenu from '@/components/Header/TopMenu'
 import Footer from '@/components/Footer/Footer'
 
 Vue.component('top-menu', TopMenu)
-Vue.component('footer', Footer)
+Vue.component('bottom-footer', Footer)
 
 Vue.config.productionTip = false
 
