@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-
+    <top-menu></top-menu>
+    <bottom-footer></bottom-footer>
   </div>
 </template>
 
