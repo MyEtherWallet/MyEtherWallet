@@ -4,6 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import TopMenu from '@/components/Header/TopMenu'
+import Footer from '@/components/Footer/Footer'
+
+Vue.component('top-menu', TopMenu)
+Vue.component('footer', Footer)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
