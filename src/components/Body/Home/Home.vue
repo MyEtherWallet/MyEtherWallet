@@ -3,6 +3,11 @@
     <div class="page-container">
       <vue-header></vue-header>
       <top-banner></top-banner>
+    </div>
+
+    <about-mew></about-mew>
+
+    <div class="page-container">
       <vue-footer></vue-footer>
     </div>
   </div>
