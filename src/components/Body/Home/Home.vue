@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-    <div class="wrap">
+    <div class="page-container">
       <vue-header></vue-header>
+      <top-banner></top-banner>
       <vue-footer></vue-footer>
     </div>
   </div>

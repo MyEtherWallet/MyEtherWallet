@@ -1,0 +1,80 @@
+@import "~@/scss/GlobalVariables.scss";
+
+.wrap{
+  .banner{
+    padding: 30px;
+
+    .banner-text{
+      flex: 1;
+      h1{
+        font-size: 45px;
+        font-weight: 700;
+        line-height: 47px;
+      }
+      h2{
+        margin-top: 17px;
+        line-height: 25px;
+        color: $body-text-color-1;
+        font-size: 18px;
+        max-width: 470px;
+      }
+    }
+    .banner-image{
+      flex: 1;
+      img{
+        width: 100%;
+      }
+    }
+  }// .banner
+}
+
+
+.wrap{
+  .promo-cards{
+    grid-column-gap: 30px;
+
+    .card{
+      color: white;
+      padding: 50px 30px;
+      border-radius: 4px;
+      .card-image{
+        padding-right: 30px;
+      }
+      .card-content{
+        h2{
+          font-size: 25px;
+          font-weight: 500;
+          margin-bottom: 15px;
+        }
+        p{
+          font-size: 12px;
+          margin-bottom: 30px;
+          line-height: 17px;
+        }
+        button{
+          background-color: transparent;
+          border: 2px solid white;
+          color: white;
+          border-radius: 100px;
+          padding: 12px 25px;
+          font-size: 14px;
+          i{
+            margin-left: 10px;
+            vertical-align: middle;
+            font-size: 22px;
+          }
+        }
+      }
+    }
+
+    .card.create-wallet{
+      background-color: #5a78f0;
+    }
+
+    .card.unlock-wallet{
+      background-color: #05c0a5;
+    }
+
+  }// .promo-cards
+}
+

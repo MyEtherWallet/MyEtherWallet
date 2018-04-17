@@ -10,7 +10,12 @@
           <li><router-link to="/">About</router-link></li>
           <li><router-link to="/">FAQs</router-link></li>
           <li><router-link to="/">News</router-link></li>
-          <li><router-link to="/"><img class="country-flag" src="~@/assets/images/flags/gb.svg">English</router-link></li>
+          <li>
+            <img class="country-flag" src="~@/assets/images/flags/gb.svg">
+            <router-link to="/">English</router-link>
+            <i class="fa fa-sort-desc" aria-hidden="true"></i>
+          </li>
+
         </ul>
       </div>
     </div>

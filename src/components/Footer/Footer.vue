@@ -1,6 +1,8 @@
 <template>
   <div class="footer">
-
+    <div class="wrap">
+      Footer
+    </div>
   </div>
 </template>
 
