@@ -15,7 +15,7 @@
 
       <div class="grid-col-2 promo-cards">
         <div class="card create-wallet">
-          <div class="flex-col">
+          <div class="flex-col-vertical-center">
             <div class="card-image">
               <img src="~@/assets/images/home/create-wallet.png">
             </div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="card unlock-wallet">
-          <div class="flex-col">
+          <div class="flex-col-vertical-center">
             <div class="card-image">
               <img src="~@/assets/images/home/unlock-wallet.png">
             </div>

@@ -7,12 +7,14 @@ import router from './router'
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
 import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
+import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
 
 // "vue-header" prevents HTML reserved tag name conflict.
 Vue.component('vue-header', Header)
 // "vue-footer" prevents HTML reserved tag name conflict.
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
+Vue.component('about-mew', AboutMEW)
 
 Vue.config.productionTip = false
 
