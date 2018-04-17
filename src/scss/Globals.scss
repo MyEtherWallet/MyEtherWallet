@@ -4,8 +4,24 @@ body{
   font-family: 'Montserrat', sans-serif;
 }
 
-.wrap{
-  max-width: 70%;
+.page-container{
+  max-width: 1140px;
   margin: 0 auto;
+}
+
+
+.flex-col{
+  display: flex;
+}
+
+.flex-col-vertical-center{
+  display: flex;
+  align-items: center;
+}
+
+.grid-col-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
 }
 
