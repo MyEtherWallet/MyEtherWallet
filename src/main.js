@@ -4,11 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import TopMenu from '@/components/Header/TopMenu'
+import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
 
-Vue.component('top-menu', TopMenu)
-Vue.component('bottom-footer', Footer)
+// "vue-header" prevents HTML reserved tag name conflict.
+Vue.component('vue-header', Header)
+// "vue-footer" prevents HTML reserved tag name conflict.
+Vue.component('vue-footer', Footer)
 
 Vue.config.productionTip = false
 

@@ -1,7 +1,9 @@
 <template>
   <div class="home">
-    <top-menu></top-menu>
-    <bottom-footer></bottom-footer>
+    <div class="wrap">
+      <vue-header></vue-header>
+      <vue-footer></vue-footer>
+    </div>
   </div>
 </template>
 
@@ -15,7 +17,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // Reset CSS
-  @import "Reset.scss";
   @import "Home.scss";
 </style>

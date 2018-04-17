@@ -1,0 +1,36 @@
+@import "~@/scss/GlobalVariables.scss";
+
+.header-container{
+  display: flex;
+  padding: 30px 0;
+
+  .top-logo{
+    img{
+      height: 40px;
+    }
+  }
+
+  .top-menu{
+    margin-left: auto;
+    ul{
+
+      li{
+        display: inline-block;
+        margin-left: 40px;
+        padding: 13px 0;
+        font-size: 15px;
+        a{
+          color: $body-text-color-1;
+        }
+
+        .country-flag{
+          height: 13px;
+          margin-right: 10px;
+          vertical-align: bottom;
+        }
+
+      }
+    }
+  }
+}
+
