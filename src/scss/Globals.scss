@@ -1,12 +1,20 @@
+@import "~@/scss/GlobalVariables.scss";
 
 h2{
   font-size: 30px;
   font-weight: 500;
+  margin-bottom: 20px;
 }
 
 h3{
   font-size: 20px;
   font-weight: 500;
+}
+
+h5{
+  font-size: 14px;
+  font-weight: 400;
+  color: $body-text-color-1;
 }
 
 p{
