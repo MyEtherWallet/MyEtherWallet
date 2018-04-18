@@ -1,5 +1,17 @@
 @import "~@/scss/GlobalVariables.scss";
 
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+    color: $link-text-color-1;
+}
+
+.title{
+  color: $title-text-color-1;
+}
+
 h2{
   font-size: 30px;
   font-weight: 500;
@@ -44,6 +56,11 @@ body{
 .flex-col-vertical-center{
   display: flex;
   align-items: center;
+}
+
+.flex-col-vertical-bottom{
+  display: flex;
+  align-items: flex-end;
 }
 
 .grid-col-2{

@@ -46,22 +46,24 @@
           font-weight: 500;
           margin-bottom: 15px;
         }
-        p{
+        &>p{
           font-size: 12px;
           margin-bottom: 30px;
           line-height: 17px;
         }
-        span.button{
+        .button{
           background-color: transparent;
           border: 2px solid white;
           color: white;
           border-radius: 100px;
           padding: 12px 25px;
           font-size: 14px;
-          i{
-            margin-left: 10px;
+          display: inline-block;
+
+          span{
+            font-size: 40px;
             vertical-align: middle;
-            font-size: 22px;
+            margin-left: 5px;
           }
         }
       }
