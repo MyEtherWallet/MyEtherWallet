@@ -9,6 +9,11 @@
 
     <div class="page-container">
       <faqs></faqs>
+    </div>
+
+    <news></news>
+
+    <div class="page-container">
       <vue-footer></vue-footer>
     </div>
   </div>

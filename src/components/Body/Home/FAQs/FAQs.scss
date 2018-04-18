@@ -29,12 +29,10 @@
     grid-row-gap: 20px;
     grid-column-gap: 20px;
     .card{
-      padding: 30px;
+      padding: 25px 30px;
       background-color: $background-color-1;
       position: relative;
       .title{
-        font-size: 14px;
-        font-weight: 600;
         margin-bottom: 20px;
         position: relative;
       }
@@ -45,7 +43,7 @@
         position: absolute;
         background-color: #05c0a5;
         left: -30px;
-        top: -5px;
+        top: -2px;
       }
       .questions{
         position: relative;
@@ -60,6 +58,9 @@
             right: 0px;
             top: 0px;
             font-size: 25px;
+          }
+          &:last-child{
+            margin-bottom: 0px;
           }
         }
       }// .questions
