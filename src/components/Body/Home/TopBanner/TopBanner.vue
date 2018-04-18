@@ -29,10 +29,9 @@
                 Ethereum wallets & more.
               </p>
               <router-link to="/">
-                <span class="button">
-                  Create Now
-                  <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                </span>
+                <p class="button">
+                  Create Now<span>🠂</span>
+                </p>
               </router-link>
             </div>
           </div>
@@ -49,10 +48,9 @@
                 generating Ethereum wallets & more.
               </p>
               <router-link to="/">
-                <span class="button">
-                  Unlock Now
-                  <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                </span>
+                <p class="button">
+                  Unlock Now<span>🠂</span>
+                </p>
               </router-link>
             </div>
           </div>

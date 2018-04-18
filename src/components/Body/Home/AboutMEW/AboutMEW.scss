@@ -28,13 +28,15 @@
           }
           p{
             font-size: 15px;
-            i{
-              padding: 2px 7px;
+            span{
+              padding: 3px 6px 5px 8px;
               border-radius: 150px;
               background-color: #05c0a5;
               color: white;
               text-align: center;
-              margin-left: 5px;
+              margin-left: 8px;
+              font-size: 10px;
+              vertical-align: middle;
             }
           }
         }
@@ -80,7 +82,7 @@
 .wrap{
   .bottom-section{
     background-color: #f9f9f9;
-    color: #003945;
+    color: $title-text-color-1;
     padding: 70px 0;
 
     .mew-features{
