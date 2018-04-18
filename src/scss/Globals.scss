@@ -1,4 +1,14 @@
 
+h2{
+  font-size: 30px;
+  font-weight: 500;
+}
+
+p{
+  font-size: 12px;
+  line-height: 16px;
+}
+
 body{
   //background-color: #f2f4fa;
   font-family: 'Montserrat', sans-serif;
@@ -7,6 +17,15 @@ body{
 .page-container{
   max-width: 1140px;
   margin: 0 auto;
+}
+
+
+.flex-col-1-1-vertical-center{
+  display: flex;
+  align-items: center;
+  &>*{
+    flex: 1;
+  }
 }
 
 .flex-col-vertical-center{
