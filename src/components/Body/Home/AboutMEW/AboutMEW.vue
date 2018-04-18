@@ -1,35 +1,108 @@
 <template>
   <div class="about-mew">
     <div class="wrap">
-      <div class="circle">
-        <img src="~@/assets/images/home/circle.svg">
-      </div>
 
-      <div class="star-background">
-        <div class="page-container">
-          <div class="flex-col-1-1-vertical-center content">
-            <div class="text-content">
-              <h2>About MEW</h2>
-              <p>
-                Free, open-source, client-side interface for generating
-                Ethereum wallets & more. Interact with the Ethereum blockchain
-                easily & securely. Double-check the URL ( myetherwallet.com )
-                before unlocking your wallet.
-              </p>
-              <div class="watch-video">
-                <p>Watch Video <i class="fa fa-caret-right" aria-hidden="true"></i></p>
+      <div class="top-section">
+        <div class="circle">
+          <img src="~@/assets/images/home/circle.svg">
+        </div>
+        <div class="star-background">
+          <div class="page-container">
+            <div class="flex-col-1-1-vertical-center content">
+              <div class="text-content">
+                <h2>About MEW</h2>
+                <p>
+                  Free, open-source, client-side interface for generating
+                  Ethereum wallets & more. Interact with the Ethereum
+                  blockchain
+                  easily & securely. Double-check the URL
+                  ( myetherwallet.com )
+                  before unlocking your wallet.
+                </p>
+                <div class="watch-video">
+                  <router-link to="/">
+                    <p>
+                      Watch Video
+                      <i class="fa fa-caret-right" aria-hidden="true"></i>
+                    </p>
+                  </router-link>
+                </div>
+              </div>
+              <div class="image-content">
+                <img class="spaceman" src="~@/assets/images/home/spaceman.png">
+                <img class="mew-icon" src="~@/assets/images/home/mew-icon.png">
               </div>
             </div>
-            <div class="image-content">
-              <img class="spaceman" src="~@/assets/images/home/spaceman.png">
-              <img class="mew-icon" src="~@/assets/images/home/mew-icon.png">
-            </div>
+          </div><!-- .page-container -->
+        </div><!-- .star-background -->
+      </div><!-- .top-section -->
+
+      <div class="bottom-section">
+        <div class="page-container">
+          <div class="grid-col-2 mew-features">
+            <dir class="content">
+              <div class="image">
+                <img src="~@/assets/images/home/bird.svg">
+              </div>
+              <div class="text">
+                <h3>MEW Wallet</h3>
+                <p>
+                  Text here for feature discription, Text here for
+                  feature discription, Text here for feature discription,
+                  Text here for feature discription, Text here for feature
+                  discription.
+                </p>
+              </div>
+            </dir>
+            <dir class="content">
+              <div class="image">
+                <img src="~@/assets/images/home/bird.svg">
+              </div>
+              <div class="text">
+                <h3>Hardware Wallet Support</h3>
+                <p>
+                  Text here for feature discription, Text here for
+                  feature discription, Text here for feature discription,
+                  Text here for feature discription, Text here for feature
+                  discription.
+                </p>
+              </div>
+            </dir>
+            <dir class="content">
+              <div class="image">
+                <img src="~@/assets/images/home/bird.svg">
+              </div>
+              <div class="text">
+                <h3>Swap</h3>
+                <p>
+                  Text here for feature discription, Text here for
+                  feature discription, Text here for feature discription,
+                  Text here for feature discription, Text here for feature
+                  discription.
+                </p>
+              </div>
+            </dir>
+            <dir class="content">
+              <div class="image">
+                <img src="~@/assets/images/home/bird.svg">
+              </div>
+              <div class="text">
+                <h3>MEW Connect</h3>
+                <p>
+                  Text here for feature discription, Text here for
+                  feature discription, Text here for feature discription,
+                  Text here for feature discription, Text here for feature
+                  discription.
+                </p>
+              </div>
+            </dir>
+
           </div>
-        </div><!-- .page-container -->
+        </div>
       </div>
 
-    </div>
-  </div>
+    </div><!-- .wrap -->
+  </div><!-- .about-mew -->
 </template>
 
 <script>

@@ -6,7 +6,10 @@
         <div class="banner-text">
           <h1>Your Security</h1>
           <h1>Ethereum Wallet.</h1>
-          <h2>Here is subtitle, Here is subtitle, Here is subtitle, Here is subtitle.</h2>
+          <h2>
+            Here is subtitle, Here is subtitle,
+            Here is subtitle, Here is subtitle.
+          </h2>
         </div>
         <div class="banner-image">
           <img src="~@/assets/images/home/top-banner.png">
@@ -21,8 +24,16 @@
             </div>
             <div class="card-content">
               <h2>Create New Wallet</h2>
-              <p>Free, open-source, client-side interface for generating Ethereum wallets & more.</p>
-              <button>Create Now <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+              <p>
+                Free, open-source, client-side interface for generating
+                Ethereum wallets & more.
+              </p>
+              <router-link to="/">
+                <span class="button">
+                  Create Now
+                  <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                </span>
+              </router-link>
             </div>
           </div>
         </div>
@@ -33,8 +44,16 @@
             </div>
             <div class="card-content">
               <h2>Create New Wallet</h2>
-              <p>Free, open-source, client-side interface for generating Ethereum wallets & more.</p>
-              <button>Unlock Now <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+              <p>
+                Free, open-source, client-side interface for
+                generating Ethereum wallets & more.
+              </p>
+              <router-link to="/">
+                <span class="button">
+                  Unlock Now
+                  <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                </span>
+              </router-link>
             </div>
           </div>
         </div>
