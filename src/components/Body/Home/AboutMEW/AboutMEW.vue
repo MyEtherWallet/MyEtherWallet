@@ -1,7 +1,6 @@
 <template>
   <div class="about-mew">
     <div class="wrap">
-
       <div class="top-section">
         <div class="circle">
           <img src="~@/assets/images/home/circle.svg">
@@ -14,10 +13,8 @@
                 <p>
                   Free, open-source, client-side interface for generating
                   Ethereum wallets & more. Interact with the Ethereum
-                  blockchain
-                  easily & securely. Double-check the URL
-                  ( myetherwallet.com )
-                  before unlocking your wallet.
+                  blockchain easily & securely. Double-check the URL
+                  ( myetherwallet.com ) before unlocking your wallet.
                 </p>
                 <div class="watch-video">
                   <router-link to="/">
@@ -35,7 +32,6 @@
           </div><!-- .page-container -->
         </div><!-- .star-background -->
       </div><!-- .top-section -->
-
       <div class="bottom-section">
         <div class="page-container">
           <div class="grid-col-2 mew-features">
@@ -94,12 +90,10 @@
                   discription.
                 </p>
               </div>
-            </dir>
-
-          </div>
-        </div>
-      </div>
-
+            </dir><!-- .content -->
+          </div><!-- .mew-features -->
+        </div><!-- .page-container -->
+      </div><!-- .bottom-section -->
     </div><!-- .wrap -->
   </div><!-- .about-mew -->
 </template>
