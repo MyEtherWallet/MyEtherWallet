@@ -1,76 +1,114 @@
 @import "~@/scss/GlobalVariables.scss";
 
 .wrap{
-  margin-top: 25px;
-  background-color: #0b2840;
-  color: white;
+  .top-section{
+    margin-top: 40px;
+    background-color: #0b2840;
+    color: white;
 
-  .circle img{
-    width: 100%;
-  }
+    .circle img{
+      width: 100%;
+    }
 
-  .star-background{
-    background-image: url(~@/assets/images/home/stars.svg);
-    background-size: 55%;
-    background-position: right top;
-    background-repeat: no-repeat;
-  }
+    .star-background{
+      background-image: url(~@/assets/images/home/stars.svg);
+      background-size: 55%;
+      background-position: right top;
+      background-repeat: no-repeat;
+    }
 
-  .content{
-    .text-content{
-      
-      h2{
-        margin-bottom: 20px;
-      }
-      p{
-        margin-bottom: 40px;
-      }
-      .watch-video{
+    .content{
+      .text-content{
+        
+        h2{
+          margin-bottom: 20px;
+        }
         p{
-          font-size: 15px;
-          i{
-            padding: 2px 7px;
-            border-radius: 150px;
-            background-color: #05c0a5;
+          margin-bottom: 40px;
+        }
+        .watch-video{
+          a{
             color: white;
-            text-align: center;
-            margin-left: 5px;
+          }
+          p{
+            font-size: 15px;
+            i{
+              padding: 2px 7px;
+              border-radius: 150px;
+              background-color: #05c0a5;
+              color: white;
+              text-align: center;
+              margin-left: 5px;
+            }
+          }
+        }
+      }
+      .image-content{
+        position: relative;
+        height: 700px;
+        .spaceman{
+          position: absolute;
+          //bottom: 30px;
+          //left: 0px;
+          height: 300px;
+          z-index: 999;
+
+          animation-name: spaceman-fly;
+          animation-duration: 22s;
+          animation-iteration-count: infinite;
+        }
+        .mew-icon{
+          position: absolute;
+          top: 70px;
+          right: 0px;
+          height: 224px;
+          box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
+          border-radius: 999px;
+        }
+
+        @keyframes spaceman-fly {
+          0%   {bottom: 109px; right: 43%;}
+          25%  {bottom: 80px; right: 40%;}
+          50%  {bottom: 100px;}
+          75% {bottom: 60px;}
+          100% {bottom: 109px; right: 43%;}
+        }
+
+      }
+    }
+  }//. top-section
+}// .wrap
+
+
+
+.wrap{
+  .bottom-section{
+    background-color: #f9f9f9;
+    color: #003945;
+    padding: 70px 0;
+
+    .mew-features{
+      grid-column-gap: 40px;
+      grid-row-gap: 40px;
+
+      .content{
+        display: flex;
+
+        .image{
+          img{
+            width: 200px;
+          }
+        }
+        .text{
+          h3{
+            margin-bottom: 10px;
+          }
+          p{
+
           }
         }
       }
     }
-    .image-content{
-      position: relative;
-      height: 700px;
-      .spaceman{
-        position: absolute;
-        bottom: 30px;
-        left: 0px;
-        height: 500px;
-        z-index: 999;
 
-        animation-name: spaceman-fly;
-        animation-duration: 22s;
-        animation-iteration-count: infinite;
-      }
-      .mew-icon{
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        height: 224px;
-        box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
-        border-radius: 999px;
-      }
-
-      @keyframes spaceman-fly {
-        0%   {top:89px; right: 43%;}
-        25%  {top:60px; right: 40%;}
-        50%  {top: 80px;}
-        75% {top:40px;}
-        100% {top:89px; right: 43%;}
-      }
-
-    }
-  }
-}
-
+  }// .bottom-section
+}// .wrap
