@@ -1,11 +1,11 @@
 <template>
-  <div class="footer">
+  <div class="social">
     <div class="wrap">
-      <div class="page-container">
-        Footer
+      <div class="content">
+        <div>Get Involved</div>
       </div>
-    </div>
-  </div>
+    </div><!-- .wrap -->
+  </div><!-- .about-mew -->
 </template>
 
 <script>
@@ -18,5 +18,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "Footer.scss";
+  @import "Social.scss";
 </style>

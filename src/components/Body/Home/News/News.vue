@@ -83,7 +83,6 @@
 export default {
   data () {
     return {
-      news1: '~@/assets/images/home/bell.svg'
     }
   }
 }

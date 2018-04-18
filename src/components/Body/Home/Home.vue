@@ -1,21 +1,11 @@
 <template>
   <div class="home">
-    <div class="page-container">
-      <vue-header></vue-header>
-      <top-banner></top-banner>
-    </div>
-
+    <vue-header></vue-header>
+    <top-banner></top-banner>
     <about-mew></about-mew>
-
-    <div class="page-container">
-      <faqs></faqs>
-    </div>
-
+    <faqs></faqs>
     <news></news>
-
-    <div class="page-container">
-      <vue-footer></vue-footer>
-    </div>
+    <vue-footer></vue-footer>
   </div>
 </template>
 
