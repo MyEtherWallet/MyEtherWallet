@@ -8,6 +8,7 @@
     <about-mew></about-mew>
 
     <div class="page-container">
+      <faqs></faqs>
       <vue-footer></vue-footer>
     </div>
   </div>

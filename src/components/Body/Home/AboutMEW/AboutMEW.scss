@@ -19,10 +19,6 @@
 
     .content{
       .text-content{
-        
-        h2{
-          margin-bottom: 20px;
-        }
         p{
           margin-bottom: 40px;
         }
@@ -88,15 +84,19 @@
     padding: 70px 0;
 
     .mew-features{
-      grid-column-gap: 40px;
+      grid-column-gap: 70px;
       grid-row-gap: 40px;
 
       .content{
         display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
 
         .image{
+          padding-right: 30px;
           img{
-            width: 200px;
+            //width: 200px;
           }
         }
         .text{
