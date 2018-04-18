@@ -23,6 +23,12 @@ h3{
   font-weight: 500;
 }
 
+h4{
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 23px;
+}
+
 h5{
   font-size: 14px;
   font-weight: 400;
@@ -53,6 +59,11 @@ body{
   }
 }
 
+.flex-col-vertical-top{
+  display: flex;
+  align-items: flex-start;
+}
+
 .flex-col-vertical-center{
   display: flex;
   align-items: center;
@@ -63,9 +74,15 @@ body{
   align-items: flex-end;
 }
 
+
 .grid-col-2{
   display: grid;
   grid-template-columns: 1fr 1fr;
 
 }
 
+.grid-col-3{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+}

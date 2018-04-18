@@ -9,6 +9,7 @@ import Footer from '@/components/Footer/Footer'
 import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
 import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
 import FAQs from '@/components/Body/Home/FAQs/FAQs'
+import News from '@/components/Body/Home/News/News'
 
 // "vue-header" prevents HTML reserved tag name conflict.
 Vue.component('vue-header', Header)
@@ -17,6 +18,7 @@ Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
 Vue.component('about-mew', AboutMEW)
 Vue.component('faqs', FAQs)
+Vue.component('news', News)
 
 Vue.config.productionTip = false
 

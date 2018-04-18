@@ -1,0 +1,56 @@
+@import "~@/scss/GlobalVariables.scss";
+
+.wrap{
+  background-color: $background-color-1;
+  padding: 70px 0;
+  .top-title{
+    margin-bottom: 30px;
+  }
+  .news-container{
+    grid-column-gap: 30px;
+    .news{
+      .news-image{
+        height: 200px;
+        width: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      .news-text{
+        background-color: white;
+        padding: 30px;
+        h4{
+          color: $body-text-color-3;
+          margin-bottom: 15px;
+        }
+        p{
+          color: $body-text-color-2;
+          line-height: 17px;
+        }
+        div.links{
+          margin-top: 30px;
+          display: flex;
+          p{
+
+          }
+          div{
+            margin-left: auto;
+            i{
+              border: 1px solid $social-button-color-1;
+              border-radius: 100px;
+              color: $social-button-color-1;
+              text-align: center;
+              margin-left: 7px;
+              &.fa-facebook{
+                padding: 4px 8px;
+              }
+              &.fa-twitter{
+                padding: 4px 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}// .wrap

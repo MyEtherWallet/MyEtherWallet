@@ -12,7 +12,7 @@
         </div>
         <div class="support">
           <router-link to="/">
-            <img src="~@/assets/images/bell.svg">
+            <img src="~@/assets/images/home/bell.svg">
             <h5>Customer Support</h5>
           </router-link>
         </div>
@@ -20,7 +20,7 @@
 
       <div class="grid-col-2 qa-cards">
         <div class="card">
-          <p class="title">Getting Started With MEW</p>
+          <h4 class="title">Getting Started With MEW</h4>
           <div class="questions">
             <p>What is MEW?</p>
             <p>How to create a wallet?</p>
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="card">
-          <p class="title">Security And Phishing</p>
+          <h4 class="title">Security And Phishing</h4>
           <div class="questions">
             <p>What is MEW?</p>
             <p>How to create a wallet?</p>
@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="card">
-          <p class="title">Transactions</p>
+          <h4 class="title">Transactions</h4>
           <div class="questions">
             <p>What is MEW?</p>
             <p>How to create a wallet?</p>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="card">
-          <p class="title">Private Keys And Passwords</p>
+          <h4 class="title">Private Keys And Passwords</h4>
           <div class="questions">
             <p>What is MEW?</p>
             <p>How to create a wallet?</p>
