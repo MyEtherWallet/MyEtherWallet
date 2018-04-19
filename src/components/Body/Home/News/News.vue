@@ -43,8 +43,6 @@ export default {
       newsTitle: [
         'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
         'Recently the founder of something called',
-        'Another day an anonymous donor set up an $86 million…',
-        'Another day an anonymous donor set up an $86 million…',
         'Another day an anonymous donor set up an $86 million…'
       ]
     }

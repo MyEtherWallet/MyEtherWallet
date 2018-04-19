@@ -12,7 +12,7 @@
             </h2>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/bird.svg">
+            <img src="~@/assets/images/home/top-banner.jpg">
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
