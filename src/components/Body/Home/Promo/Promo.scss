@@ -1,0 +1,21 @@
+@import "~@/scss/GlobalVariables.scss";
+
+.wrap{
+  background-color: #05c0a5;
+  padding: 80px 0;
+  .content{
+    .title{
+      color: white;
+      h2{
+        line-height: 40px;
+      }
+    }
+    .buttons{
+      margin-left: auto;
+      display: flex;
+      span{
+        margin-left: 20px;
+      }
+    }
+  }
+}// .wrap

@@ -12,7 +12,7 @@
             </h2>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/top-banner.png">
+            <img src="~@/assets/images/home/bird.svg">
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
@@ -24,7 +24,8 @@
               <div class="card-content">
                 <h2>Create New Wallet</h2>
                 <p>
-                  Free, open-source, client-side interface for generating
+                  Free, open-source, client-side interface
+                  for generating
                   Ethereum wallets & more.
                 </p>
                 <router-link to="/">

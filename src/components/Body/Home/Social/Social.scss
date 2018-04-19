@@ -1,8 +1,52 @@
 @import "~@/scss/GlobalVariables.scss";
 
 .wrap{
-  padding: 60px 0;
+  padding: 80px 0;
   .content{
-
+    .icons{
+      margin-left: auto;
+      display: flex;
+      &>a>div{
+        margin-left: 30px;
+        p{
+          text-align: center;
+        }
+      }
+      .telegram{
+        img{
+          $icon-size: 70px;
+          width: $icon-size;
+          height: $icon-size;
+          padding-bottom: 9px;
+        }
+      }
+      .slack{
+        img{
+          $icon-size: 87px;
+          width: $icon-size;
+          height: $icon-size;
+          margin-top: -9px;
+          padding-bottom: 1px;
+        }
+      }
+      .reddit{
+        img{
+          $icon-size: 75px;
+          width: $icon-size;
+          height: $icon-size;
+          margin-top: -3px;
+          padding-bottom: 6px;
+        }
+      }
+      .github{
+        img{
+          $icon-size: 67px;
+          width: $icon-size;
+          height: $icon-size;
+          padding-left: 6px;
+          padding-bottom: 9px;
+        }
+      }
+    }
   }
 }// .wrap
