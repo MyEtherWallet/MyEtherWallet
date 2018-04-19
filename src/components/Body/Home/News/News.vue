@@ -7,13 +7,10 @@
         </div>
         <div class="grid-col-3 news-container">
 
-          <div class="news">
+          <div v-for="title in newsTitle" v-bind:key="title.id" class="news">
             <div class="news-image" style="background-image: url(https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg);"></div>
             <div class="news-text">
-              <h4>
-                Your Cryptocurrency Masters Are Getting
-                Hilariously Rich, and…
-              </h4>
+              <h4>{{title}}</h4>
               <p>
                 SAN FRANCISCO - Recently the founder of something called
                 Ripple briefly became richer than Mark Zuckerberg.
@@ -22,52 +19,12 @@
               <div class="links">
                 <p><router-link to="/">Read More...</router-link></p>
                 <div>
-                  <i class="fa fa-facebook" aria-hidden="true"></i>
-                  <i class="fa fa-twitter" aria-hidden="true"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="news">
-            <div class="news-image" style="background-image: url(https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg);"></div>
-            <div class="news-text">
-              <h4>
-                Your Cryptocurrency Masters Are Getting
-                Hilariously Rich, and…
-              </h4>
-              <p>
-                SAN FRANCISCO - Recently the founder of something called
-                Ripple briefly became richer than Mark Zuckerberg.
-                Another day an anonymous donor set up an $86 million…
-              </p>
-              <div class="links">
-                <p><router-link to="/">Read More...</router-link></p>
-                <div>
-                  <i class="fa fa-facebook" aria-hidden="true"></i>
-                  <i class="fa fa-twitter" aria-hidden="true"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="news">
-            <div class="news-image" style="background-image: url(https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg);"></div>
-            <div class="news-text">
-              <h4>
-                Your Cryptocurrency Masters Are Getting
-                Hilariously Rich, and…
-              </h4>
-              <p>
-                SAN FRANCISCO - Recently the founder of something called
-                Ripple briefly became richer than Mark Zuckerberg.
-                Another day an anonymous donor set up an $86 million…
-              </p>
-              <div class="links">
-                <p><router-link to="/">Read More...</router-link></p>
-                <div>
-                  <i class="fa fa-facebook" aria-hidden="true"></i>
-                  <i class="fa fa-twitter" aria-hidden="true"></i>
+                  <a href="https://facebook.com" target="_blank">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a href="https://twitter.com" target="_blank">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                  </a>
                 </div>
               </div>
             </div>
@@ -83,6 +40,13 @@
 export default {
   data () {
     return {
+      newsTitle: [
+        'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
+        'Recently the founder of something called',
+        'Another day an anonymous donor set up an $86 million…',
+        'Another day an anonymous donor set up an $86 million…',
+        'Another day an anonymous donor set up an $86 million…'
+      ]
     }
   }
 }
