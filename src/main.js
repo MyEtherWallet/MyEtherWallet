@@ -11,16 +11,16 @@ import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
 import FAQs from '@/components/Body/Home/FAQs/FAQs'
 import News from '@/components/Body/Home/News/News'
 import Social from '@/components/Body/Home/Social/Social'
+import Promo from '@/components/Body/Home/Promo/Promo'
 
-// "vue-header" prevents HTML reserved tag name conflict.
 Vue.component('vue-header', Header)
-// "vue-footer" prevents HTML reserved tag name conflict.
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
 Vue.component('about-mew', AboutMEW)
 Vue.component('faqs', FAQs)
 Vue.component('news', News)
 Vue.component('social', Social)
+Vue.component('promo', Promo)
 
 Vue.config.productionTip = false
 

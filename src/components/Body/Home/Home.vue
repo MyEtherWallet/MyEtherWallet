@@ -5,6 +5,8 @@
     <about-mew></about-mew>
     <faqs></faqs>
     <news></news>
+    <social></social>
+    <promo></promo>
     <vue-footer></vue-footer>
   </div>
 </template>

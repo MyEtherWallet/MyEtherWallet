@@ -86,3 +86,33 @@ body{
   grid-template-columns: 1fr 1fr 1fr;
 
 }
+
+
+// Buttons
+.large-round-button-white-filled{
+  padding: 25px 55px;
+  background-color: white;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.large-round-button-white-border{
+  padding: 21px 55px;
+  border: 2px solid white;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+
+.white-text-color{
+  color: white;
+}
+
+.green-text-color{
+  color: #05c0a5;
+}
+
+
