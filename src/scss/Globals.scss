@@ -16,11 +16,17 @@ h2{
   font-size: 30px;
   font-weight: 500;
   margin-bottom: 20px;
+  line-height: 42px;
 }
 
 h3{
   font-size: 20px;
   font-weight: 500;
+}
+
+h3.lite{
+  font-size: 20px;
+  font-weight: 400;
 }
 
 h4{
@@ -74,19 +80,27 @@ body{
   align-items: flex-end;
 }
 
+.flex-space-between{
+  display: flex;
+  justify-content: space-between;
+}
 
 .grid-col-2{
   display: grid;
   grid-template-columns: 1fr 1fr;
-
 }
 
 .grid-col-3{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-
 }
 
+.grid-col-1-1-1-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+}
+
+.grid
 
 // Buttons
 .large-round-button-white-filled{
@@ -114,5 +128,8 @@ body{
 .green-text-color{
   color: #05c0a5;
 }
+
+
+
 
 
