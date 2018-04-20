@@ -1,7 +1,58 @@
 @import "~@/scss/GlobalVariables.scss";
 
 .wrap{
-    background-color: #132b3f;
-    color: white;
-    padding: 80px 0;
+  background-color: #132b3f;
+  color: white;
+  padding: 70px 0;
+  .footer-contents{
+    &>div{
+      h3{
+        margin-bottom: 20px;
+      }
+      p{
+        margin-bottom: 10px;
+      }
+      p.no-margin{
+        margin-bottom: 3px;
+      }
+
+    }
+
+    div.donate-us{
+      h3{
+        img{
+          vertical-align: top;
+          height: 30px;
+          margin-top: -7px;
+        }
+      }
+    }
+  }// .footer-contents
+
+  .foot-note{
+    padding-top: 40px;
+    border-top: 1px solid #506175;
+    margin-top: 40px;
+    .links{
+      span{
+        font-size: 12px;
+        color: white;
+        padding-right: 15px;
+        border-right: 1px solid white;
+        margin-right: 15px;
+      }
+      a:last-child span{
+        border-right: none;
+      }
+    }
+    .copyright{
+      color: #96a8b6;
+    }
+    .social{
+      i{
+        margin-left: 15px;
+        font-size: 19px;
+      }
+    }
+  }
 }

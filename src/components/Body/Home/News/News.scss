@@ -5,11 +5,16 @@
   padding: 70px 0;
   .top-title{
     margin-bottom: 30px;
+    h2{
+      color: $body-text-color-3;
+    }
   }
   .news-container{
     grid-column-gap: 30px;
     grid-row-gap: 30px;
     .news{
+      border-radius: 4px;
+      overflow: hidden;
       .news-image{
         height: 200px;
         width: 100%;
@@ -25,7 +30,7 @@
           margin-bottom: 15px;
         }
         p{
-          color: $body-text-color-2;
+          color: $news-content-text-color;
           line-height: 17px;
         }
         div.links{
