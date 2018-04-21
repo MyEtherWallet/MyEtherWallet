@@ -30,7 +30,7 @@
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Create Now<span>🠂</span>
+                    Create Now<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                   </p>
                 </router-link>
               </div>
@@ -49,7 +49,7 @@
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Unlock Now<span>🠂</span>
+                    Unlock Now<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                   </p>
                 </router-link>
               </div>
