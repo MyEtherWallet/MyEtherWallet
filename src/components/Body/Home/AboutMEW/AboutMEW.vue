@@ -19,7 +19,8 @@
                 <div class="watch-video">
                   <router-link to="/">
                     <p>
-                      Watch Video<span>▶</span>
+                      Watch Video
+                      <i class="fa fa-caret-right" aria-hidden="true"></i>
                     </p>
                   </router-link>
                 </div>

@@ -28,14 +28,14 @@
           }
           p{
             font-size: 15px;
-            span{
-              padding: 3px 6px 5px 8px;
+            i{
+              padding: 3px 7px 4px 9px;
               border-radius: 150px;
               background-color: #05c0a5;
               color: white;
               text-align: center;
-              margin-left: 8px;
-              font-size: 10px;
+              margin-left: 6px;
+              font-size: 14px;
               vertical-align: middle;
             }
           }
@@ -43,7 +43,7 @@
       }
       .image-content{
         position: relative;
-        height: 700px;
+        height: 650px;
         .spaceman{
           position: absolute;
           //bottom: 30px;
