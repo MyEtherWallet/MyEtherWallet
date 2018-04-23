@@ -13,6 +13,9 @@
 
     .top-menu{
       margin-left: auto;
+      @media all and (max-width: $tablet-width){
+        display: none;
+      }
       ul{
 
         li{
@@ -38,6 +41,34 @@
 
         }
       }
-    }
+    }// .top-menu
+
+    .mobile-menu{
+      display: none;
+      margin-left: auto;
+      @media all and (max-width: $tablet-width){
+        display: block;
+      }
+      .mobile-menu-button{
+        padding: 5px;
+        div{
+          background-color: black;
+          width: 30px;
+          height: 4px;
+          margin-bottom: 5px;
+          border-radius: 2px;
+        }
+        .bar-1{
+
+        }
+        .bar-2{
+          
+        }
+        .bar-3{
+          width: 15px;
+          margin: 0;
+        }
+      }
+    }// .mobile-menu
   }// .header-container
 }// .wrap

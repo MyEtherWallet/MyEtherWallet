@@ -48,12 +48,25 @@ p{
 
 body{
   font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
 }
+
 
 .page-container{
   max-width: 1140px;
   margin: 0 auto;
+  padding: 0 40px;
 }
+
+/*
+@media all and (min-width: 800px) and (max-width: 1100px) {
+  .page-container{
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
+*/
+
 
 
 .flex-col-1-1-vertical-center{
