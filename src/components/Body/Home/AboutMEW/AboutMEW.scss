@@ -112,6 +112,16 @@
         margin: 0;
         padding: 0;
 
+        @media all and (max-width: $mobile-width){
+          flex-direction: column;
+          .image{
+            margin: 0 auto;
+          }
+          .text{
+            text-align: center;
+          }
+        }
+
         .image{
           padding-right: 30px;
           img{

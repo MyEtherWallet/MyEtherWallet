@@ -3,6 +3,9 @@
 .wrap{
   background-color: $background-color-1;
   padding: 70px 0;
+  @media all and (max-width: $tablet-width){
+    padding: 40px 0;
+  }
   .top-title{
     margin-bottom: 30px;
     h2{
@@ -12,6 +15,12 @@
   .news-container{
     grid-column-gap: 30px;
     grid-row-gap: 30px;
+
+    @media all and (max-width: $tablet-width){
+      grid-template-columns: 300px 300px 300px;
+      overflow-x: scroll;
+      
+    }
     .news{
       border-radius: 4px;
       overflow: hidden;
@@ -25,13 +34,27 @@
       .news-text{
         background-color: white;
         padding: 30px;
-        h4{
+        &>h4{
           color: $body-text-color-3;
           margin-bottom: 15px;
+          height: 45px;
+
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
-        p{
+        &>p{
           color: $news-content-text-color;
           line-height: 17px;
+          height: 70px;
+
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         div.links{
           margin-top: 30px;

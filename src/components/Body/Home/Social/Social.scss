@@ -10,13 +10,23 @@
       display: block;
     }
 
+    .title{
+      h5{
+        line-height: 21px;
+      }
+    }
+
     .icons{
       margin-left: auto;
       display: flex;
       @media all and (max-width: $tablet-width){
-
         margin-top: 50px;
       }
+
+      @media all and (max-width: $mobile-width){
+        justify-content: space-between;
+      }
+
 
       &>a:first-child>div{
         margin-left: 0;
