@@ -3,13 +3,30 @@
 .wrap{
 
   padding: 80px 0;
+  @media all and (max-width: $tablet-width){
+    padding: 50px 0;
+  }
 
   .top-title{
+    @media all and (max-width: $tablet-width){
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
     .title{
-
+      h5{
+        line-height: 19px;
+      }
+      @media all and (max-width: $tablet-width){
+        margin-bottom: 30px;
+      }
     }
     .support{
       margin-left: auto;
+      @media all and (max-width: $tablet-width){
+        margin-left: 0;
+        margin-bottom: 20px;
+      }
       img{
         width: 22px;
         display: inline-block;
@@ -28,6 +45,10 @@
     margin-top: 30px;
     grid-row-gap: 20px;
     grid-column-gap: 20px;
+
+    @media all and (max-width: $tablet-width){
+      grid-template-columns: 1fr;
+    }
     .card{
       border: 1px solid #e0e0e0;
       border-radius: 4px;
