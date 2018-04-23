@@ -3,9 +3,22 @@
 .wrap{
   background-color: #05c0a5;
   padding: 70px 0;
+  @media all and (max-width: $tablet-width){
+    padding: 50px 0;
+  }
+
   .content{
+    @media all and (max-width: $tablet-width){
+      //flex-direction: column;
+      display: block;
+      padding: 0;
+    }
+    
     .title{
       color: white;
+      @media all and (max-width: $tablet-width){
+        margin-bottom: 30px;
+      }
       h2{
 
       }
@@ -15,6 +28,20 @@
       display: flex;
       span{
         margin-left: 20px;
+        @media all and (max-width: $tablet-width){
+          text-align: center;
+          line-height: 15px;
+          display: inline-block;
+          margin-left: 0;
+          margin-right: 20px;
+          font-size: 11px;
+          &.large-round-button-white-filled{
+            padding: 17px 20px;
+          }
+          &.large-round-button-white-border{
+            padding: 13px 20px;
+          }
+        }
       }
     }
   }

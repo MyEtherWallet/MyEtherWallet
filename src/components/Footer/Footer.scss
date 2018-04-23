@@ -1,11 +1,26 @@
 @import "~@/scss/GlobalVariables.scss";
 
+$border-bottom-color: #506175;
+
 .wrap{
   background-color: #132b3f;
   color: white;
   padding: 70px 0;
+  @media all and (max-width: $tablet-width){
+    padding: 30px 0;
+  }
+
   .footer-contents{
+    @media all and (max-width: $tablet-width){
+      display: block;
+    }
     &>div{
+
+      @media all and (max-width: $tablet-width){
+        border-bottom: 1px solid $border-bottom-color;
+        padding: 25px 0;
+      }
+
       h3{
         margin-bottom: 20px;
       }
@@ -19,6 +34,10 @@
     }
 
     div.donate-us{
+      .crypto-link{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       h3{
         img{
           vertical-align: top;
@@ -31,8 +50,36 @@
 
   .foot-note{
     padding-top: 40px;
-    border-top: 1px solid #506175;
+    border-top: 1px solid $border-bottom-color;
     margin-top: 40px;
+
+    @media all and (max-width: $tablet-width){
+      border-top: none;
+      margin-top: 0px;
+      flex-direction: column;
+      .links{
+        order: 1;
+        text-align: center;
+        a:last-child{
+          span{
+            margin-right: 0;
+            padding-right: 0;
+          }
+        }
+          
+      }
+      .social{
+        order: 2;
+      }
+      .copyright{
+        order: 3;
+      }
+    }
+
+    &>div{
+      //margin: 0 auto;
+      margin-bottom: 20px;
+    }
     .links{
       span{
         font-size: 12px;
@@ -47,11 +94,20 @@
     }
     .copyright{
       color: #96a8b6;
+      text-align: center;
     }
     .social{
+      @media all and (max-width: $tablet-width){
+        text-align: center;
+      }
+      
       i{
         margin-left: 15px;
         font-size: 19px;
+        @media all and (max-width: $tablet-width){
+          font-size: 24px;
+          line-height: 40px;
+        }
       }
     }
   }

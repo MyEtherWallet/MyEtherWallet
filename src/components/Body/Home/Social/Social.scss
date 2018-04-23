@@ -2,12 +2,32 @@
 
 .wrap{
   padding: 80px 0;
+  @media all and (max-width: $tablet-width){
+    padding: 40px 0 60px 0;
+  }
   .content{
+    @media all and (max-width: $tablet-width){
+      display: block;
+    }
+
     .icons{
       margin-left: auto;
       display: flex;
+      @media all and (max-width: $tablet-width){
+
+        margin-top: 50px;
+      }
+
+      &>a:first-child>div{
+        margin-left: 0;
+      }
       &>a>div{
         margin-left: 30px;
+
+        @media all and (max-width: $mobile-width){
+          margin-left: 0px;
+          margin-right: 0px;
+        }
         p{
           text-align: center;
         }

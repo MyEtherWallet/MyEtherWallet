@@ -4,7 +4,9 @@
   .header-container{
     display: flex;
     padding: 30px 0;
-
+    @media all and (max-width: $tablet-width){
+      padding: 15px 0;
+    }
     .top-logo{
       img{
         height: 40px;
