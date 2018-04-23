@@ -18,7 +18,15 @@
     }
 
     .content{
+      position: relative;
       .text-content{
+        @media all and (max-width: $tablet-width){
+          position: absolute;
+          left: 0;
+          top: 40px;
+          z-index: 9999;
+          width: 80%;
+        }
         p{
           margin-bottom: 40px;
         }
@@ -45,6 +53,7 @@
         position: relative;
         height: 650px;
         .spaceman{
+
           position: absolute;
           //bottom: 30px;
           //left: 0px;
@@ -56,6 +65,10 @@
           animation-iteration-count: infinite;
         }
         .mew-icon{
+          @media all and (max-width: $tablet-width){
+            height: 200px;
+            top: 170px;
+          }
           position: absolute;
           top: 70px;
           right: 0px;
@@ -88,6 +101,10 @@
     .mew-features{
       grid-column-gap: 70px;
       grid-row-gap: 40px;
+
+      @media all and (max-width: $tablet-width){
+        grid-template-columns: 1fr;
+      }
 
       .content{
         display: flex;

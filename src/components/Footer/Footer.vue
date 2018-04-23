@@ -33,11 +33,15 @@
             </h3>
             <p class="no-margin">BTC:</p>
             <router-link to="/">
-              <p>1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9</p>
+              <p class="crypto-link">
+                1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
+              </p>
             </router-link>
             <p class="no-margin">ETH: mewtopia.eth</p>
             <router-link to="/">
-              <p>0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D</p>
+              <p class="crypto-link">
+                0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
+              </p>
             </router-link>
           </div>
         </div><!-- .footer-contents -->

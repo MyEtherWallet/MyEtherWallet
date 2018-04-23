@@ -1,9 +1,15 @@
 @import "~@/scss/GlobalVariables.scss";
 
 .wrap{
+
   .banner{
     padding: 30px;
-
+    @media all and (max-width: 1100px){
+      &{
+        padding-bottom: 50px;
+        padding-top: 40px;
+      }
+    }
     .banner-text{
       flex: 1;
       h1{
@@ -45,10 +51,11 @@
 
 
 .wrap{
+
   .promo-cards{
     grid-column-gap: 30px;
 
-    @media all and (max-width: $mobile-width){
+    @media all and (max-width: $tablet-width){
       &{
         display: block;
       }
@@ -56,13 +63,24 @@
 
 
     .card{
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       color: white;
       padding: 50px 30px;
       border-radius: 4px;
 
+      @media all and (max-width: $mobile-width){
+        &{
+          padding: 30px 30px;
+        }
+      }
       .card-image{
         padding-right: 30px;
+
+        @media all and (max-width: $mobile-width){
+          &{
+            display: none;
+          }
+        }
       }
       .card-content{
         h2{
