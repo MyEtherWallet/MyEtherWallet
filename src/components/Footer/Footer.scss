@@ -30,24 +30,28 @@ $border-bottom-color: #506175;
         h3{
           font-size: 19px;
         }
-
-        @media all and (min-width: $tablet-width + 1){
-          p{
+        
+        p{
+          @media all and (min-width: $tablet-width + 1){
             display: none;
+          }
+
+          @media all and (max-width: $tablet-width){
+            &{
+              font-size: 20px;
+              font-weight: 400;
+              margin-left: auto;
+              cursor: pointer;
+              text-align: center;
+              display: black;
+            }
+            &.close{
+              display: none;
+            }
           }
         }
 
-        p{
-          font-size: 20px;
-          font-weight: 400;
-          margin-left: auto;
-          cursor: pointer;
-          text-align: center;
-          //width: 30px;
-        }
-        p.close{
-          display: none;
-        }
+
       }
 
       .content-links{
