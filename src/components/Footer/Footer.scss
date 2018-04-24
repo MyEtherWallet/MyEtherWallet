@@ -18,7 +18,7 @@ $border-bottom-color: #506175;
 
       @media all and (max-width: $tablet-width){
         border-bottom: 1px solid $border-bottom-color;
-        padding: 25px 15px;
+        padding: 25px 0px;
       }
 
       display: flex;
@@ -67,6 +67,7 @@ $border-bottom-color: #506175;
           }
         }
         p{
+          color: #96A8B6;
           margin-bottom: 10px;
         }
         p.no-margin{
@@ -151,6 +152,10 @@ $border-bottom-color: #506175;
           font-size: 24px;
           line-height: 40px;
         }
+      }
+
+      a:first-child i{
+        margin-left: 0px;
       }
     }
   }

@@ -48,56 +48,22 @@
         }
       }
 
-      $mobile-subtract-value: 20;
+      $mobile-subtract-value: 10;
 
-      .telegram{
+      div{
         img{
-          $icon-size: 70px;
-          @media all and (max-width: $mobile-width){
-            $icon-size: $icon-size - $mobile-subtract-value;
-          }
+          $icon-size: 64px;
           width: $icon-size;
           height: $icon-size;
           padding-bottom: 9px;
+          @media all and (max-width: $mobile-width){
+            $mobile-icon-size: $icon-size - $mobile-subtract-value;
+            width: $mobile-icon-size;
+            height: $mobile-icon-size;
+          }
+        }
+      }
 
-        }
-      }
-      .slack{
-        img{
-          $icon-size: 84px;
-          @media all and (max-width: $mobile-width){
-            $icon-size: $icon-size - $mobile-subtract-value;
-          }
-          width: $icon-size;
-          height: $icon-size;
-          margin-top: -7px;
-          padding-bottom: 2px;
-        }
-      }
-      .reddit{
-        img{
-          $icon-size: 75px;
-          @media all and (max-width: $mobile-width){
-            $icon-size: $icon-size - $mobile-subtract-value;
-          }
-          width: $icon-size;
-          height: $icon-size;
-          margin-top: -3px;
-          padding-bottom: 7px;
-        }
-      }
-      .github{
-        img{
-          $icon-size: 67px;
-          @media all and (max-width: $mobile-width){
-            $icon-size: $icon-size - $mobile-subtract-value;
-          }
-          width: $icon-size;
-          height: $icon-size;
-          padding-left: 6px;
-          padding-bottom: 11px;
-        }
-      }
     }
   }
 }// .wrap

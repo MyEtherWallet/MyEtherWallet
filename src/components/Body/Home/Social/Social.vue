@@ -10,13 +10,13 @@
           <div class="icons">
             <a href="" target="_blank">
               <div class="telegram">
-                <img src="~@/assets/images/icons/telegram.svg">
+                <img src="~@/assets/images/icons/telegram.png">
                 <p>Telegram</p>
               </div>
             </a>
             <a href="" target="_blank">
               <div class="slack">
-                <img src="~@/assets/images/icons/slack.svg">
+                <img src="~@/assets/images/icons/slack.png">
                 <p>Slack</p>
               </div>
             </a>
@@ -28,7 +28,7 @@
             </a>
             <a href="" target="_blank">
               <div class="github">
-                <img src="~@/assets/images/icons/github.svg">
+                <img src="~@/assets/images/icons/github.png">
                 <p>Github</p>
               </div>
             </a>

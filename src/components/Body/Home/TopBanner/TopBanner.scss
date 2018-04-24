@@ -15,6 +15,7 @@
         font-size: 45px;
         font-weight: 700;
         line-height: 47px;
+        color: #003945;
       }
       h2{
         margin-top: 17px;
@@ -79,6 +80,9 @@
           &{
             display: none;
           }
+        }
+        img{
+          width: 110px;
         }
       }
       .card-content{
