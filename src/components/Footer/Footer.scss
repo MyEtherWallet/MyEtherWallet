@@ -5,7 +5,7 @@ $border-bottom-color: #506175;
 .wrap{
   background-color: #132b3f;
   color: white;
-  padding: 70px 0;
+  padding: 70px 0 20px 0;
   @media all and (max-width: $tablet-width){
     padding: 30px 0;
   }
@@ -66,9 +66,14 @@ $border-bottom-color: #506175;
             max-height: 0px;
           }
         }
+        
+        p.sub-title{
+          color: white;
+        }
+
         p{
           color: #96A8B6;
-          margin-bottom: 10px;
+          margin-bottom: 15px;
         }
         p.no-margin{
           margin-bottom: 3px;
@@ -137,7 +142,7 @@ $border-bottom-color: #506175;
       }
     }
     .copyright{
-      color: #96a8b6;
+      color: #96A8B6;
       text-align: center;
     }
     .social{
@@ -146,6 +151,7 @@ $border-bottom-color: #506175;
       }
       
       i{
+        color: #96A8B6;
         margin-left: 15px;
         font-size: 19px;
         @media all and (max-width: $tablet-width){

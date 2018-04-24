@@ -53,7 +53,7 @@ body{
 
 
 .page-container{
-  max-width: 1140px;
+  max-width: 1024px;
   margin: 0 auto;
   padding: 0 40px;
   @media all and (max-width: $tablet-width){
@@ -117,7 +117,8 @@ body{
 
 // Buttons
 .large-round-button-white-filled{
-  padding: 25px 55px;
+  padding: 21px 55px;
+  border: 2px solid white;
   background-color: white;
   border-radius: 100px;
   font-size: 14px;
