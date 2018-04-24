@@ -36,7 +36,7 @@
           z-index: 9999;
           width: 80%;
         }
-        p{
+        &>p{
           margin-bottom: 40px;
         }
         .watch-video{
@@ -44,6 +44,7 @@
             color: white;
           }
           p{
+            display: inline-block;
             font-size: 15px;
             i{
               padding: 3px 7px 4px 9px;
@@ -69,12 +70,31 @@
           position: absolute;
           //bottom: 30px;
           //left: 0px;
-          height: 300px;
+          height: 220px;
           z-index: 999;
 
           animation-name: spaceman-fly;
           animation-duration: 22s;
           animation-iteration-count: infinite;
+
+          @keyframes spaceman-fly {
+            0%   {bottom: 109px; right: 53%;}
+            25%  {bottom: 80px; right: 50%;}
+            50%  {bottom: 100px;}
+            75% {bottom: 60px;}
+            100% {bottom: 109px; right: 53%;}
+          }
+
+          @media all and (max-width: $tablet-width){
+            @keyframes spaceman-fly {
+              0%   {bottom: 109px; right: 43%;}
+              25%  {bottom: 80px; right: 40%;}
+              50%  {bottom: 100px;}
+              75% {bottom: 60px;}
+              100% {bottom: 109px; right: 43%;}
+            }
+          }
+
         }
         .mew-icon{
           @media all and (max-width: $tablet-width){
@@ -84,17 +104,9 @@
           position: absolute;
           top: 70px;
           right: 0px;
-          height: 224px;
-          box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
-          border-radius: 999px;
-        }
-
-        @keyframes spaceman-fly {
-          0%   {bottom: 109px; right: 43%;}
-          25%  {bottom: 80px; right: 40%;}
-          50%  {bottom: 100px;}
-          75% {bottom: 60px;}
-          100% {bottom: 109px; right: 43%;}
+          height: 300px;
+          //box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
+          //border-radius: 999px;
         }
 
       }
