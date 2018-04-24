@@ -8,6 +8,7 @@
 
     .circle img{
       width: 100%;
+      margin-top: -2px;
     }
 
     .star-background{
@@ -15,6 +16,14 @@
       background-size: 55%;
       background-position: right top;
       background-repeat: no-repeat;
+
+      @media all and (max-width: $tablet-width){
+        &{
+          background-size: 140%;
+          background-position: center 300px;
+
+        }
+      }
     }
 
     .content{
@@ -53,7 +62,10 @@
         position: relative;
         height: 650px;
         .spaceman{
-
+          @media all and (max-width: $tablet-width){
+            height: 200px;
+            
+          }
           position: absolute;
           //bottom: 30px;
           //left: 0px;
@@ -104,6 +116,7 @@
 
       @media all and (max-width: $tablet-width){
         grid-template-columns: 1fr;
+        grid-row-gap: 70px;
       }
 
       .content{
@@ -116,6 +129,10 @@
           flex-direction: column;
           .image{
             margin: 0 auto;
+            margin-bottom: 20px;
+            img{
+              height: 80px;
+            }
           }
           .text{
             text-align: center;

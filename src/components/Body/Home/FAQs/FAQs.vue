@@ -12,8 +12,8 @@
           </div>
           <div class="support">
             <router-link to="/">
-              <img src="~@/assets/images/home/bell.svg">
-              <h5>Customer Support</h5>
+              <div><img src="~@/assets/images/home/bell.png"></div>
+              <div><h5>Customer Support</h5></div>
             </router-link>
           </div>
         </div><!-- .top-title -->

@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="top-section">
         <div class="circle">
-          <img src="~@/assets/images/home/circle.svg">
+          <img src="~@/assets/images/home/circle.png">
         </div>
         <div class="star-background">
           <div class="page-container">
@@ -38,7 +38,7 @@
           <div class="grid-col-2 mew-features">
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/image1.png">
+                <img src="~@/assets/images/home/icon-wallet.png">
               </div>
               <div class="text">
                 <h3>MEW Wallet</h3>
@@ -52,7 +52,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/image1.png">
+                <img src="~@/assets/images/home/icon-hardware.png">
               </div>
               <div class="text">
                 <h3>Hardware Wallet Support</h3>
@@ -66,7 +66,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/image1.png">
+                <img src="~@/assets/images/home/icon-swap.png">
               </div>
               <div class="text">
                 <h3>Swap</h3>
@@ -80,7 +80,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/image1.png">
+                <img src="~@/assets/images/home/icon-connect.png">
               </div>
               <div class="text">
                 <h3>MEW Connect</h3>
