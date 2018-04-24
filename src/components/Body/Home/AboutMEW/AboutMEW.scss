@@ -38,12 +38,16 @@
         }
         &>p{
           margin-bottom: 40px;
+          @media all and (min-width: $tablet-width + 1){
+            width: 350px;
+          }
         }
         .watch-video{
           a{
             color: white;
           }
           p{
+            color: #05c0a5;
             display: inline-block;
             font-size: 15px;
             i{
@@ -61,7 +65,11 @@
       }
       .image-content{
         position: relative;
-        height: 650px;
+        height: 515px;
+        @media all and (max-width: $mobile-width){
+          height: 715px;
+        }
+
         .spaceman{
           @media all and (max-width: $tablet-width){
             height: 200px;
@@ -78,11 +86,11 @@
           animation-iteration-count: infinite;
 
           @keyframes spaceman-fly {
-            0%   {bottom: 109px; right: 53%;}
-            25%  {bottom: 80px; right: 50%;}
-            50%  {bottom: 100px;}
-            75% {bottom: 60px;}
-            100% {bottom: 109px; right: 53%;}
+            0%   {bottom: 89px; right: 75%;}
+            25%  {bottom: 60px; right: 70%;}
+            50%  {bottom: 80px;}
+            75% {bottom: 40px;}
+            100% {bottom: 89px; right: 75%;}
           }
 
           @media all and (max-width: $tablet-width){
@@ -102,7 +110,7 @@
             top: 170px;
           }
           position: absolute;
-          top: 70px;
+          top: 0px;
           right: 0px;
           height: 300px;
           //box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
@@ -120,10 +128,10 @@
   .bottom-section{
     background-color: #f9f9f9;
     color: $title-text-color-1;
-    padding: 70px 0;
+    padding: 85px 0;
 
     .mew-features{
-      grid-column-gap: 90px;
+      grid-column-gap: 130px;
       grid-row-gap: 90px;
 
       @media all and (max-width: $tablet-width){

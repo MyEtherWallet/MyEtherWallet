@@ -9,14 +9,14 @@
           <div class="buttons">
             <div>
               <router-link to="/">
-                <span class="large-round-button-white-filled green-text-color">
+                <span class="large-round-button-white-border">
                   Create My Wallet
                 </span>
               </router-link>
             </div>
             <div>
               <router-link to="/">
-                <span class="large-round-button-white-border">
+                <span class="large-round-button-white-filled green-text-color">
                   Unlock My Wallet
                 </span>
               </router-link>

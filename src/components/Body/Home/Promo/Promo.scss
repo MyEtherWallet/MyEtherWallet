@@ -51,17 +51,14 @@
 
       span{
         margin-left: 20px;
+        display: block;
+        padding: 20px 45px;
         @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){
           display: block;
           text-align: center;
           line-height: 15px;
           font-size: 11px;
-          &.large-round-button-white-filled{
-            padding: 22px 45px;
-          }
-          &.large-round-button-white-border{
-            padding: 18px 45px;
-          }
+          padding: 18px 45px;
         }
 
         @media all and (max-width: $mobile-width){
@@ -69,12 +66,7 @@
           text-align: center;
           line-height: 15px;
           font-size: 11px;
-          &.large-round-button-white-filled{
-            padding: 22px 15px;
-          }
-          &.large-round-button-white-border{
-            padding: 18px 15px;
-          }
+          padding: 18px 15px;
         }
 
       }

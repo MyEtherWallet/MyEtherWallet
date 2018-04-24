@@ -98,18 +98,19 @@
         }
         .button{
           background-color: transparent;
-          border: 2px solid white;
+          border: 1.5px solid white;
           color: white;
           border-radius: 100px;
-          padding: 12px 25px;
+          padding: 15px 25px;
           font-size: 14px;
           display: inline-block;
 
-          i{
-            font-size: 20px;
+          img{
             vertical-align: middle;
-            margin-left: 10px;
+            width: 20px;
+            margin-left: 5px;
           }
+
         }
       }
     }

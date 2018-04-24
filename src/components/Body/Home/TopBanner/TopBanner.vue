@@ -30,7 +30,8 @@
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Create Now<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                    Create Now
+                    <img src="~@/assets/images/home/right-arrow.png">
                   </p>
                 </router-link>
               </div>
@@ -49,7 +50,8 @@
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Unlock Now<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                    Unlock Now
+                    <img src="~@/assets/images/home/right-arrow.png">
                   </p>
                 </router-link>
               </div>

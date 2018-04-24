@@ -64,13 +64,13 @@
               </h3>
             </div>
             <div class="content-links">
-              <p class="no-margin">BTC:</p>
+              <p class="no-margin sub-title">BTC:</p>
               <router-link to="/">
                 <p class="crypto-link">
                   1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
                 </p>
               </router-link>
-              <p class="no-margin">ETH: mewtopia.eth</p>
+              <p class="no-margin sub-title">ETH: mewtopia.eth</p>
               <router-link to="/">
                 <p class="crypto-link">
                   0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
