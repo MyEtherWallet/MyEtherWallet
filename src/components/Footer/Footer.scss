@@ -21,6 +21,8 @@ $border-bottom-color: #506175;
         padding: 25px 15px;
       }
 
+      display: flex;
+      flex-direction: column;
       .content-title{
         
         display: flex;
@@ -36,10 +38,12 @@ $border-bottom-color: #506175;
         }
 
         p{
-          font-size: 30px;
+          font-size: 20px;
           font-weight: 400;
           margin-left: auto;
           cursor: pointer;
+          text-align: center;
+          //width: 30px;
         }
         p.close{
           display: none;
@@ -50,11 +54,12 @@ $border-bottom-color: #506175;
         margin-top: 20px;
         overflow: hidden;
         transition: all 0.3s ease;
+        max-height: 600px;
 
         @media all and (max-width: $tablet-width){
           &.mobile-hide{
             margin-top: 0px;
-            height: 0px;
+            max-height: 0px;
           }
         }
         p{
