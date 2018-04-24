@@ -35,15 +35,16 @@
       }
 
       img{
+        height: 427px;
 
         @media all and (max-width: 1100px){
           &{
             height: initial;
-            width: 100%;
+            width: 300px;
             margin-left: 20px;
           }
         }
-        height: 500px;
+        
       }
     }
   }// .banner
