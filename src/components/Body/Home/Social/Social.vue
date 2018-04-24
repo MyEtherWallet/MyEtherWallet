@@ -22,7 +22,7 @@
             </a>
             <a href="" target="_blank">
               <div class="reddit">
-                <img src="~@/assets/images/icons/reddit.svg">
+                <img src="~@/assets/images/icons/reddit.png">
                 <p>Reddit</p>
               </div>
             </a>
