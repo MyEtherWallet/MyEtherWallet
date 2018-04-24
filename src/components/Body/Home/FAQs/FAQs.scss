@@ -27,16 +27,17 @@
         margin-left: 0;
         margin-bottom: 20px;
       }
-      img{
-        width: 22px;
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 7px;
-      }
-      h5{
-       display: inline-block; 
-       vertical-align: middle;
-       color: $link-text-color-1;
+      a{
+        display: flex;
+        align-items: center;
+        img{
+          width: 22px;
+          margin-right: 7px;
+        }
+        h5{
+         
+         color: $link-text-color-1;
+        }
       }
     }
   }
