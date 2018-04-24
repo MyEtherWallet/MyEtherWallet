@@ -32,7 +32,7 @@
         @media all and (max-width: $tablet-width){
           position: absolute;
           left: 0;
-          top: 40px;
+          top: 50px;
           z-index: 9999;
           width: 80%;
         }
@@ -111,8 +111,8 @@
     padding: 70px 0;
 
     .mew-features{
-      grid-column-gap: 70px;
-      grid-row-gap: 40px;
+      grid-column-gap: 90px;
+      grid-row-gap: 90px;
 
       @media all and (max-width: $tablet-width){
         grid-template-columns: 1fr;
@@ -132,6 +132,7 @@
             margin-bottom: 20px;
             img{
               height: 80px;
+              width: auto;
             }
           }
           .text{
@@ -141,8 +142,12 @@
 
         .image{
           padding-right: 30px;
+          @media all and (max-width: $mobile-width){
+            padding-right: 0px;
+          }
           img{
-            //width: 200px;
+            width: 80px;
+            height: auto;
           }
         }
         .text{

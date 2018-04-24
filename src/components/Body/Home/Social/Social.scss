@@ -24,7 +24,7 @@
       }
 
       @media all and (max-width: $mobile-width){
-        justify-content: space-between;
+        justify-content: space-around;
       }
 
 
@@ -33,48 +33,69 @@
       }
       &>a>div{
         margin-left: 30px;
+        display: flex;
+        flex-direction: column;
 
         @media all and (max-width: $mobile-width){
           margin-left: 0px;
           margin-right: 0px;
         }
+        img{
+          margin: 0 auto;
+        }
         p{
           text-align: center;
         }
       }
+
+      $mobile-subtract-value: 20;
+
       .telegram{
         img{
           $icon-size: 70px;
+          @media all and (max-width: $mobile-width){
+            $icon-size: $icon-size - $mobile-subtract-value;
+          }
           width: $icon-size;
           height: $icon-size;
           padding-bottom: 9px;
+
         }
       }
       .slack{
         img{
-          $icon-size: 87px;
+          $icon-size: 84px;
+          @media all and (max-width: $mobile-width){
+            $icon-size: $icon-size - $mobile-subtract-value;
+          }
           width: $icon-size;
           height: $icon-size;
-          margin-top: -9px;
-          padding-bottom: 1px;
+          margin-top: -7px;
+          padding-bottom: 2px;
         }
       }
       .reddit{
         img{
           $icon-size: 75px;
+          @media all and (max-width: $mobile-width){
+            $icon-size: $icon-size - $mobile-subtract-value;
+          }
           width: $icon-size;
           height: $icon-size;
           margin-top: -3px;
-          padding-bottom: 6px;
+          padding-bottom: 7px;
         }
       }
       .github{
         img{
           $icon-size: 67px;
+          @media all and (max-width: $mobile-width){
+            $icon-size: $icon-size - $mobile-subtract-value;
+          }
           width: $icon-size;
           height: $icon-size;
           padding-left: 6px;
-          padding-bottom: 9px;
+          padding-bottom: 11px;
         }
       }
     }

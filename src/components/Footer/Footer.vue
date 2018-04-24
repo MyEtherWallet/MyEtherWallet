@@ -3,11 +3,15 @@
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
-          <div>
+          <div class="e1">
             <div class="content-title">
               <h3 class="lite">Discover</h3>
-              <p v-on:click="contentOpen" class="open">+</p>
-              <p class="close">-</p>
+              <p v-on:click="openContent('e1')" class="open">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </p>
+              <p v-on:click="closeContent('e1')" class="close">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </p>
             </div>
             <div class="content-links mobile-hide">
               <router-link to="/"><p>Units</p></router-link>
@@ -17,11 +21,15 @@
               <router-link to="/"><p>Others</p></router-link>
             </div>
           </div>
-          <div>
+          <div class="e2">
             <div class="content-title">
               <h3 class="lite">Affiliates</h3>
-              <p class="open">+</p>
-              <p class="close">-</p>
+              <p v-on:click="openContent('e2')" class="open">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </p>
+              <p v-on:click="closeContent('e2')" class="close">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </p>
             </div>
             <div class="content-links mobile-hide">
               <router-link to="/"><p>Ledger Wallet</p></router-link>
@@ -31,11 +39,15 @@
               <router-link to="/"><p>Bity</p></router-link>
             </div>
           </div>
-          <div>
+          <div class="e3">
             <div class="content-title">
               <h3 class="lite">MEW</h3>
-              <p class="open">+</p>
-              <p class="close">-</p>
+              <p v-on:click="openContent('e3')" class="open">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </p>
+              <p v-on:click="closeContent('e3')" class="close">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </p>
             </div>
             <div class="content-links mobile-hide">
               <router-link to="/"><p>About Us</p></router-link>
@@ -114,8 +126,21 @@ export default {
     }
   },
   methods: {
-    contentOpen () {
-
+    openContent (element) {
+      var openButton = document.querySelector('.' + element + ' .open')
+      var closeButton = document.querySelector('.' + element + ' .close')
+      var content = document.querySelector('.' + element + ' .content-links')
+      openButton.style.display = 'none'
+      closeButton.style.display = 'block'
+      content.classList.remove('mobile-hide')
+    },
+    closeContent (element) {
+      var openButton = document.querySelector('.' + element + ' .open')
+      var closeButton = document.querySelector('.' + element + ' .close')
+      var content = document.querySelector('.' + element + ' .content-links')
+      openButton.style.display = 'block'
+      closeButton.style.display = 'none'
+      content.classList.add('mobile-hide')
     }
   }
 }
