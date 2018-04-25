@@ -68,6 +68,15 @@
       color: white;
       padding: 50px 30px;
       border-radius: 4px;
+      position: relative;
+      @media all and (min-width: $tablet-width + 1){
+        transition: all 0.1s ease;
+        top: 0px;
+        &:hover{
+          top: -10px;
+          box-shadow: 0px 5px 15px rgba(0,0,0,0.4);
+        }
+      }
 
       @media all and (max-width: $mobile-width){
         &{
