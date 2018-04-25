@@ -1,6 +1,6 @@
 <template>
-  <div class="about-mew">
-    <div class="wrap">
+  <div class="faqs">
+    <div class="wrap" id="pagelink-faqs">
       <div class="page-container">
         <div class="flex-col-vertical-bottom top-title">
           <div class="title">

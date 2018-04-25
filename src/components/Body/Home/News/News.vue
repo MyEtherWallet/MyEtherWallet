@@ -1,5 +1,5 @@
 <template>
-  <div class="news">
+  <div class="news" id="pagelink-news">
     <div class="wrap">
       <div class="page-container">
         <div class="top-title">
