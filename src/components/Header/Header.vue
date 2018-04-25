@@ -9,9 +9,9 @@
           <div class="top-menu">
             <ul>
               <li><router-link to="/">Home</router-link></li>
-              <li><router-link to="/">About</router-link></li>
-              <li><router-link to="/">FAQs</router-link></li>
-              <li><router-link to="/">News</router-link></li>
+              <li><a href="#pagelink-about-mew">About</a></li>
+              <li><a href="#pagelink-faqs">FAQs</a></li>
+              <li><a href="#pagelink-news">News</a></li>
               <li>
                 <img class="country-flag" src="~@/assets/images/flags/gb.svg">
                 <router-link to="/">English</router-link>
