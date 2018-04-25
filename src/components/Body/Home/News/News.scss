@@ -24,6 +24,16 @@
     .news{
       border-radius: 4px;
       overflow: hidden;
+      position: relative;
+
+      @media all and (min-width: $tablet-width + 1){
+        transition: all 0.1s ease;
+        top: 0px;
+        &:hover{
+          top: -10px;
+          box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
+        }
+      }
       .news-image{
         height: 200px;
         width: 100%;
