@@ -70,11 +70,11 @@
       border-radius: 4px;
       position: relative;
       @media all and (min-width: $tablet-width + 1){
-        transition: all 0.1s ease;
+        transition: all 0.3s ease;
         top: 0px;
         &:hover{
           top: -10px;
-          box-shadow: 0px 5px 15px rgba(0,0,0,0.4);
+          box-shadow: 0px 5px 24px rgba(0,0,0,0.15);
         }
       }
 
