@@ -3,6 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueLodash from 'vue-lodash'
+
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -23,6 +28,13 @@ Vue.component('social', Social)
 Vue.component('promo', Promo)
 
 Vue.config.productionTip = false
+
+/* Init Bootstrap */
+Vue.use(BootstrapVue)
+
+/* Init Lodash */
+const options = { name: 'lodash' }
+Vue.use(VueLodash, options)
 
 /* eslint-disable no-new */
 new Vue({

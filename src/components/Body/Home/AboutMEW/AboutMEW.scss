@@ -33,7 +33,7 @@
           position: absolute;
           left: 0;
           top: 50px;
-          z-index: 9999;
+          z-index: 9;
           width: 80%;
         }
         &>p{
@@ -79,7 +79,7 @@
           //bottom: 30px;
           //left: 0px;
           height: 220px;
-          z-index: 999;
+          z-index: 1;
 
           animation-name: spaceman-fly;
           animation-duration: 22s;
@@ -109,6 +109,7 @@
             height: 200px;
             top: 170px;
           }
+          z-index: 1;
           position: absolute;
           top: 0px;
           right: 0px;

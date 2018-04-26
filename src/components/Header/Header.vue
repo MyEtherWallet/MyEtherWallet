@@ -8,15 +8,42 @@
               <img class="logo-large" src="~@/assets/images/logo.png">
             </div>
             <div class="top-menu">
+
+              <b-nav pills>
+                <b-nav-item active>Active</b-nav-item>
+                <b-nav-item>Link</b-nav-item>
+                <b-nav-item-dropdown id="nav7_ddown" text="Dropdown" extra-toggle-classes="nav-link-custom" right>
+                  <b-dropdown-item>one</b-dropdown-item>
+                  <b-dropdown-item>two</b-dropdown-item>
+                  <b-dropdown-divider></b-dropdown-divider>
+                  <b-dropdown-item>three</b-dropdown-item>
+                </b-nav-item-dropdown>
+              </b-nav>
+
               <ul>
                 <li><router-link to="/">Home</router-link></li>
                 <li><a href="#pagelink-about-mew">About</a></li>
                 <li><a href="#pagelink-faqs">FAQs</a></li>
                 <li><a href="#pagelink-news">News</a></li>
-                <li>
-                  <img class="country-flag" src="~@/assets/images/flags/gb.svg">
-                  <router-link to="/">English</router-link>
-                  <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                <li class="menu__languages">
+                  <div class="menu-button__languages">
+                    <img class="country-flag" src="~@/assets/images/flags/gb.svg">
+                    English
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                  <div class="sub-menu__languages">
+                    <div class="menu-wrap">
+                      <ul class="custom-scroll-bar">
+                        <li class="selected">English</li>
+                        <li>Korean</li>
+                        <li>Japanese</li>
+                        <li>Japanese</li>
+                        <li>Japanese</li>
+                        <li>Japanese</li>
+                        <li>Japanese</li>
+                      </ul>
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -39,6 +66,8 @@ export default {
   data () {
     return {
     }
+  },
+  methods: {
   },
   mounted () {
     // Check if user scrolled window, then change header style.

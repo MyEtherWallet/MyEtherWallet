@@ -39,12 +39,13 @@
 
       .top-menu{
         margin-left: auto;
+        position: relative;
         @media all and (max-width: $tablet-width){
           display: none;
         }
-        ul{
+        &>ul{
 
-          li{
+          &>li{
             display: inline-block;
             margin-left: 40px;
             padding: 13px 0;
@@ -62,10 +63,68 @@
             i{
               font-size: 14px;
               vertical-align: top;
-              margin-left: 3px;
+              margin-left: 0px;
+              color: #c3c3c3;
+            }
+          }
+
+          li.menu__languages{
+            position: relative;
+            // Language menu button on main menu
+            .menu-button__languages{
+              cursor: pointer;
             }
 
-          }
+            // Language menu
+            &:hover .sub-menu__languages{
+              z-index: 99999;
+              opacity: 1;
+            }
+            .sub-menu__languages{
+              position: absolute;
+              z-index: -999;
+              right: 0;
+              top: 40px;
+              border: 2px solid #dedcdc;
+              border-radius: 7px;
+              background-color: white;
+              opacity: 0;
+              transition: opacity 0.3s;
+
+              .menu-wrap{
+                ul{
+                  display: flex;
+                  flex-direction: column;
+                  max-height: 225px;
+                  overflow-y: auto;
+                  overflow-x: hidden;
+
+                  li{
+                    color: grey;
+                    min-width: 150px;
+                    display: block;
+                    text-align: left;
+                    padding: 10px 0 10px 20px;
+                    cursor: pointer;
+                  }
+                  li:hover{
+                    color: black;
+                  }
+                  li:first-child{
+                    margin-top: 10px;
+                  }
+                  li:last-child{
+                    margin-bottom: 10px;
+                  }
+                  li.selected{
+                    background-color: #f2f2f2;;
+                    //color: white;
+                  }
+                }
+              }
+            }// .languages-menu
+          }// li.menu__languages
+
         }
       }// .top-menu
 
