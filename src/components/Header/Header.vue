@@ -9,43 +9,29 @@
             </div>
             <div class="top-menu">
 
-              <b-nav pills>
-                <b-nav-item active>Active</b-nav-item>
-                <b-nav-item>Link</b-nav-item>
-                <b-nav-item-dropdown id="nav7_ddown" text="Dropdown" extra-toggle-classes="nav-link-custom" right>
-                  <b-dropdown-item>one</b-dropdown-item>
-                  <b-dropdown-item>two</b-dropdown-item>
-                  <b-dropdown-divider></b-dropdown-divider>
-                  <b-dropdown-item>three</b-dropdown-item>
+              <b-nav>
+                <b-nav-item active v-bind:to="'/'">Home</b-nav-item>
+                <b-nav-item href="#pagelink-about-mew">About</b-nav-item>
+                <b-nav-item href="#pagelink-faqs">FAQs</b-nav-item>
+                <b-nav-item href="#pagelink-news">News</b-nav-item>
+                <div class="current-language-flag">
+                  <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
+                  <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
+                  <img data-flag-name="jp" src="~@/assets/images/flags/jp.svg">
+                  <img data-flag-name="cn" src="~@/assets/images/flags/cn.svg">
+                  <img data-flag-name="ru" src="~@/assets/images/flags/ru.svg">
+                  <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
+                </div>
+                <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="gb">English</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="kr">Korean</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="jp">Japanese</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="cn">Chinese</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="ru">Russian</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="de">German</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
 
-              <ul>
-                <li><router-link to="/">Home</router-link></li>
-                <li><a href="#pagelink-about-mew">About</a></li>
-                <li><a href="#pagelink-faqs">FAQs</a></li>
-                <li><a href="#pagelink-news">News</a></li>
-                <li class="menu__languages">
-                  <div class="menu-button__languages">
-                    <img class="country-flag" src="~@/assets/images/flags/gb.svg">
-                    English
-                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                  </div>
-                  <div class="sub-menu__languages">
-                    <div class="menu-wrap">
-                      <ul class="custom-scroll-bar">
-                        <li class="selected">English</li>
-                        <li>Korean</li>
-                        <li>Japanese</li>
-                        <li>Japanese</li>
-                        <li>Japanese</li>
-                        <li>Japanese</li>
-                        <li>Japanese</li>
-                      </ul>
-                    </div>
-                  </div>
-                </li>
-              </ul>
             </div>
             <div class="mobile-menu">
               <div class="mobile-menu-button">
@@ -68,6 +54,22 @@ export default {
     }
   },
   methods: {
+    // Update language text
+    languageItemClicked: function (e) {
+      var countryName = e.target.innerText
+      document.querySelector('.language-menu a span').innerText = countryName
+
+      // Hide current flag image
+      var currentFlag = document.querySelector('.current-language-flag img.show')
+      currentFlag.classList.remove('show')
+
+      // Get flag name for clicked language
+      var flag = e.target.getAttribute('data-flag-name')
+
+      // Get flag image for the language and display it
+      var newFlagImage = document.querySelector('[data-flag-name=' + flag + ']')
+      newFlagImage.classList.add('show')
+    }
   },
   mounted () {
     // Check if user scrolled window, then change header style.
