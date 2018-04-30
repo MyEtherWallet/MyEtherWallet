@@ -35,7 +35,9 @@
       }
 
       img{
-        height: 427px;
+        height: 371px;
+        display: block;
+        margin: 0 0 0 auto;
 
         @media all and (max-width: 1100px){
           &{

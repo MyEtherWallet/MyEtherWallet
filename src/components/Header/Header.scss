@@ -46,12 +46,18 @@
 
         .language-menu{
           margin-left: 0px;
+          &>a>span{
+            color: $body-text-color-1;
+          }
 
           .dropdown-menu{
+            
             a{
               $language-item-padding-value: 8px;
               padding-top: $language-item-padding-value;
               padding-bottom: $language-item-padding-value;
+              padding-left: 15px;
+              font-size: 13px;
             }
           }
         }
