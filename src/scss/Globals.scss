@@ -172,4 +172,12 @@ body{
   }
 }
 
+.dropdown-menu{
+  border: 1px solid #b1b1b1 !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active{
+  background-color: #e8e8e8;
+}
 

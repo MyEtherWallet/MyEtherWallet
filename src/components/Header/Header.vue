@@ -23,7 +23,7 @@
                   <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
                 </div>
                 <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="gb">English</b-dropdown-item>
+                  <b-dropdown-item class="active" v-on:click="languageItemClicked" data-flag-name="gb">English</b-dropdown-item>
                   <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="kr">Korean</b-dropdown-item>
                   <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="jp">Japanese</b-dropdown-item>
                   <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="cn">Chinese</b-dropdown-item>
@@ -56,6 +56,13 @@ export default {
   methods: {
     // Update language text
     languageItemClicked: function (e) {
+      var allLanguages = document.getElementsByClassName('dropdown-item')
+
+      for (let i = 0; i < allLanguages.length; i++) {
+        allLanguages[i].classList.remove('active')
+      }
+
+      e.target.classList.add('active')
       var countryName = e.target.innerText
       document.querySelector('.language-menu a span').innerText = countryName
 
