@@ -33,7 +33,7 @@
       }
       &>a>div{
         margin-left: 40px;
-        display: flex;
+        //display: flex;
         flex-direction: column;
 
         @media all and (max-width: $mobile-width){
@@ -41,7 +41,7 @@
           margin-right: 0px;
         }
         img{
-          margin: 0 auto;
+          margin: 0 auto 9px auto;
         }
         p{
           color: #999999;
@@ -56,7 +56,6 @@
           $icon-size: 64px;
           width: $icon-size;
           height: $icon-size;
-          padding-bottom: 9px;
           @media all and (max-width: $mobile-width){
             $mobile-icon-size: $icon-size - $mobile-subtract-value;
             width: $mobile-icon-size;
