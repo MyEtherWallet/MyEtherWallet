@@ -45,6 +45,12 @@
           display: none;
         }
 
+
+        .nav{
+          align-items: center;
+        }
+
+
         .language-menu{
           margin-left: 0px;
           &>a>span{
@@ -68,7 +74,7 @@
           position: relative;
           //width: 30px;
           height: 16px;
-          top: 22px;
+          top: -1px;
           left: 5px;
           margin-left: 30px;
           display: none;
@@ -82,7 +88,7 @@
 
           &>li{
             display: inline-block;
-            margin-left: 20px;
+            margin-left: 50px;
             padding: 13px 0;
             font-size: 14px;
             a{
