@@ -1,0 +1,10 @@
+@import "~@/scss/GlobalVariables.scss";
+
+.wrap{
+background-color: $background-color-1;
+  padding-top: 80px;
+  .title{
+    text-align: center;
+  }
+}
+
