@@ -15,7 +15,7 @@ a:active {
 h2{
   font-size: 30px;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   line-height: 42px;
 }
 
@@ -120,6 +120,16 @@ body{
 }
 
 // Buttons
+.large-round-button-green-filled{
+  padding: 21px 55px;
+  border: 2px solid white;
+  background-color: rgb(5, 192, 165);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
 .large-round-button-white-filled{
   padding: 21px 55px;
   border: 2px solid white;
@@ -157,9 +167,9 @@ body{
 
   /* Track */
   &::-webkit-scrollbar-track {
-      background: #f1f1f1; 
+      background: #f1f1f1;
   }
-   
+
   /* Handle */
   &::-webkit-scrollbar-thumb {
       background: #888;
@@ -168,7 +178,7 @@ body{
 
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
-      background: #555; 
+      background: #555;
   }
 }
 
@@ -181,3 +191,34 @@ body{
   background-color: #e8e8e8;
 }
 
+
+
+// Bootstrap-VUE: Nav tab
+// create-wallet-by-json-file page
+.user-input-box{
+  border-radius: 5px;
+  overflow: hidden;
+  .nav-tabs,
+  .nav-link{
+    border: none !important;
+  }
+  .nav-link{
+    padding: 20px 0;
+  }
+  .nav-tabs .nav-item{
+    width: 50%;
+    text-align: center;
+  }
+
+  .nav-link{
+    background-color: #e0e0e0;
+    font-size: 14px;
+    border-radius: 0 !important;
+  }
+
+
+  .nav-link.active{
+    background-color: #434f61 !important;
+    color: white !important;
+  }
+}

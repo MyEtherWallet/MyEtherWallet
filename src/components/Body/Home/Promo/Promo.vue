@@ -8,7 +8,7 @@
           </div>
           <div class="buttons">
             <div>
-              <router-link to="/">
+              <router-link to="/create-wallet-by-json-file">
                 <span class="large-round-button-white-border">
                   Create My Wallet
                 </span>
