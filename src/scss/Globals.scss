@@ -22,8 +22,12 @@ a:link,
 a:visited,
 a:hover,
 a:active {
-    text-decoration: none;
-    color: $link-text-color-1;
+  text-decoration: none;
+  color: $link-text-color-1;
+}
+
+.underline a{
+  text-decoration: underline;
 }
 
 .title{
@@ -223,6 +227,7 @@ body{
     opacity: 1;
   }
   .arrow{
+    display: none;
     &::before{
       border-top-color: #c5c5c5;
       border-bottom-color: #c5c5c5;
@@ -248,11 +253,14 @@ body{
     background-color: #96a8b6;
     color: white;
     border-radius: 100px;
-    padding: 1px 5px 1px 6px;
+    padding: 0px 0px 0px 0px;
     font-size: 10px;
     margin: 0;
     font-weight: 700;
     border: none;
+    width: 17px;
+    height: 17px;
+    text-align: center;
   }
 }
 
