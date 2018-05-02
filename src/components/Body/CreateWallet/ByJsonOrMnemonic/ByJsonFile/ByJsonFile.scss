@@ -10,15 +10,15 @@
     margin: 0 auto;
     background-color: white;
     .progress-bar{
-      width: 33.33%;
+      width: 66.66%;
       height: 6px;
       background-color: #05c0a5;
       animation-name: progreesbar-grow;
       animation-duration: 0.5s;
     }
     @keyframes progreesbar-grow {
-      from {width: 0%;}
-      to {width: 33.33%;}
+      from {width: 33.33%;}
+      to {width: 66.66%;}
     }
 
     .tab-pane{
@@ -28,6 +28,29 @@
         text-align: center;
         margin-bottom: 40px;
       }
+      .contents{
+        margin-bottom: 40px;
+        display: flex;
+        .content-block{
+          padding: 10px 15px;
+          flex: 1;
+          text-align: center;
+          img.icon{
+            height: 60px;
+            margin: 0 auto;
+            display: block;
+          }
+          h6{
+            margin-top: 15px;
+          }
+          p{
+            font-size: 11px;
+            margin-top: 10px;
+          }
+        }
+        
+      }// .contents
+
       .user-input{
         margin-bottom: 40px;
         input{
@@ -50,6 +73,7 @@
           }
         }
       }// .user-input
+      
       .footer-text{
         p{
           span{
