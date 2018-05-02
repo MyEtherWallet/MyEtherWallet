@@ -33,7 +33,7 @@
               <h3>Your Password</h3>
               <div class="user-input">
                 <input type="password" name="password" placeholder="Please Enter At Least 9 Charactors">
-                <router-link to='/by-json-file'>
+                <router-link to='/by-mnemonic-phrase'>
                   <div class="next-button large-round-button-green-filled">
                     Next<img src="~@/assets/images/icons/right-arrow.png">
                   </div>
