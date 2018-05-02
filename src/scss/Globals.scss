@@ -217,12 +217,15 @@ body{
 
 // Bootstrap Tooltip
 .tooltip{
+  z-index: 9999999;
+
   &.show{
     opacity: 1;
   }
   .arrow{
     &::before{
       border-top-color: #c5c5c5;
+      border-bottom-color: #c5c5c5;
       //display: none;
     }
   }
@@ -245,7 +248,7 @@ body{
     background-color: #96a8b6;
     color: white;
     border-radius: 100px;
-    padding: 1px 5px;
+    padding: 1px 5px 1px 6px;
     font-size: 10px;
     margin: 0;
     font-weight: 700;
