@@ -31,7 +31,7 @@
                 <router-link to="/">
                   <p class="button">
                     Create Now
-                    <img src="~@/assets/images/home/right-arrow.png">
+                    <img src="~@/assets/images/icons/right-arrow.png">
                   </p>
                 </router-link>
               </div>
@@ -51,7 +51,7 @@
                 <router-link to="/">
                   <p class="button">
                     Unlock Now
-                    <img src="~@/assets/images/home/right-arrow.png">
+                    <img src="~@/assets/images/icons/right-arrow.png">
                   </p>
                 </router-link>
               </div>
