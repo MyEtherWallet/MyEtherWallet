@@ -215,6 +215,47 @@ body{
 }
 
 
+// Bootstrap Tooltip
+.tooltip{
+  &.show{
+    opacity: 1;
+  }
+  .arrow{
+    &::before{
+      border-top-color: #c5c5c5;
+      //display: none;
+    }
+  }
+  .tooltip-inner{
+    padding: 17px 19px;
+    border: 1px solid #c5c5c5;
+    background-color: white;
+    color: #4c4c4c;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: left;
+    max-width: 400px;
+    border-radius: 3px;
+    box-shadow: 0 0px 15px rgba(0,0,0,0.2);
+  }
+}
+
+.tooltip-icon{
+  button{
+    background-color: #96a8b6;
+    color: white;
+    border-radius: 100px;
+    padding: 1px 5px;
+    font-size: 10px;
+    margin: 0;
+    font-weight: 700;
+    border: none;
+  }
+}
+
+
+
+
 // Bootstrap-VUE: Nav tab
 // create-wallet-by-json-file page
 .user-input-box{
