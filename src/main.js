@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import VueLodash from 'vue-lodash'
 
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
 import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
@@ -32,6 +36,9 @@ Vue.component('by-json-page-title', ByJsonPageTitle)
 Vue.component('by-json-page-footer', ByJsonPageFooter)
 
 Vue.config.productionTip = false
+
+/* Init Bootstrap */
+Vue.use(BootstrapVue)
 
 /* Init Lodash */
 const options = { name: 'lodash' }
