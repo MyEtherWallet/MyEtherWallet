@@ -59,6 +59,12 @@ h5{
   color: $body-text-color-1;
 }
 
+h6{
+  font-size: 13px;
+  font-weight: 600;
+  color: $body-text-color-1;
+}
+
 p{
   font-size: 12px;
   line-height: 16px;
@@ -221,9 +227,13 @@ body{
   .nav-link{
     padding: 20px 0;
   }
-  .nav-tabs .nav-item{
-    width: 50%;
-    text-align: center;
+
+  .nav-tabs{
+    display: flex;
+    .nav-item{
+      flex: 1;
+      text-align: center;
+    }
   }
 
   .nav-link{
