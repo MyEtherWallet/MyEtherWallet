@@ -4,9 +4,11 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <div class="top-logo">
-              <img class="logo-large" src="~@/assets/images/logo.png">
-            </div>
+            <router-link to="/">
+              <div class="top-logo">
+                <img class="logo-large" src="~@/assets/images/logo.png">
+              </div>
+            </router-link>
             <div class="top-menu">
 
               <b-nav>
