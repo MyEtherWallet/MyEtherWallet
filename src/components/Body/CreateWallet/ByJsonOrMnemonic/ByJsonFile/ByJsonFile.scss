@@ -73,12 +73,18 @@
           }
         }
       }// .user-input
-      
+
       .footer-text{
+        display: flex;
         p{
-          span{
-            color: #ff2f49;
-            font-weight: 500;
+          margin: 0 auto;
+          font-size: 13px;
+          .tooltip-icon{
+            margin-left: 5px;
+          }
+          img.icon{
+            height: 25px;
+            margin-right: 5px;
           }
         }
       }

@@ -41,7 +41,13 @@
               </div>
               <div class="footer-text">
                 <p>
-                  Print My Wallet
+                  <router-link to="/">
+                    <img class="icon" src="~@/assets/images/icons/printer.svg">
+                    Print My Wallet
+                  </router-link>
+                  <span class="tooltip-icon">
+                    <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis. Typically, the reason for these incidents is entering your private key on a malicious website. Sometimes it is a fake MyEtherWallet site (e.g. myethreawllet[.]com) and other times it is a fake ICO site or airdrop site or EthZero site. If you enter your private key (or keystore file, mnemonic phrase, passwords) on a malicious website, they have complete access to your funds. Because of the nature of the blockchain and cryptography, there is no way to reverse transactions or reset your passwords. Once a transaction is on the blockchain, it's final. For this reason, you need to move your funds as soon as possible and discontinue use of this wallet. We do actively attempt to track down the people behind these sites and do what we can to warn others, take down the site, or whatever we can given the particular situation.">?</b-btn>
+                  </span>
                 </p>
               </div>
             </b-tab>
