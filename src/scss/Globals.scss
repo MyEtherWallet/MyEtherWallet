@@ -18,6 +18,10 @@ time, mark, audio, video {
   padding: 0;
 }
 
+ul li{
+  list-style-type: none;
+}
+
 a:link,
 a:visited,
 a:hover,
@@ -235,7 +239,7 @@ body{
     }
   }
   .tooltip-inner{
-    padding: 17px 19px;
+    padding: 24px 35px;
     border: 1px solid #c5c5c5;
     background-color: white;
     color: #4c4c4c;
