@@ -15,27 +15,13 @@
                 </span>
               </h3>
               <div class="contents">
-                <div class="content-block">
-                  <img class="icon" src="~@/assets/images/icons/no-lose.svg">
-                  <h6>Don't Lose It</h6>
-                  <p>Be Carefuel, it can not be recovered if you lose it.</p>
-                </div>
-                <div class="content-block">
-                  <img class="icon" src="~@/assets/images/icons/no-share.svg">
-                  <h6>Don't Share It</h6>
-                  <p>
-                    Your funds will be stolen if you use this file
-                    on a malicious phishing site.
-                  </p>
-                </div>
-                <div class="content-block">
-                  <img class="icon" src="~@/assets/images/icons/make-a-backup.svg">
-                  <h6>Make a Backup</h6>
-                  <p>
-                    Secure it like the millions of dollars
-                    it may one day be worth.
-                  </p>
-                </div>
+
+                <!-- Rounded switch -->
+                <label class="switch">
+                  <input type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+
               </div>
               <div class="user-input">
                 <router-link to='/by-json-file'>
