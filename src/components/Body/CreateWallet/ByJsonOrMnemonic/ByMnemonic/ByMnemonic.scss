@@ -29,23 +29,38 @@
         margin-bottom: 40px;
       }
       .contents{
-        margin-bottom: 40px;
-        display: flex;
-        .content-block{
-          padding: 10px 15px;
-          flex: 1;
-          text-align: center;
-          img.icon{
-            height: 60px;
-            margin: 0 auto;
-            display: block;
+        margin-bottom: 120px;
+        .tools{
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+
+          
+          .random-button{
+            margin-left: auto;
+            font-size: $body-font-size-1;
+            color: #05c0a5;
+            i{
+              margin-right: 5px;
+            }
           }
-          h6{
-            margin-top: 15px;
-          }
-          p{
-            font-size: 11px;
-            margin-top: 10px;
+        }
+        .phrases{
+          ul{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+            li{
+              font-size: 14px;
+              border-bottom: 1px solid #e0e0e0;
+              padding: 10px 0;
+              color: #999999;
+              span{
+                color: #003945;
+                margin-left: 10px;
+              }
+            }
           }
         }
         
