@@ -60,7 +60,6 @@
         </div>
       </div>
     </div>
-
     <by-json-page-footer></by-json-page-footer>
     <vue-footer></vue-footer>
 

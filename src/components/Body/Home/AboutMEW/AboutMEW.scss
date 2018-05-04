@@ -1,129 +1,130 @@
-@import "~@/scss/Globals.scss";
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/Globals';
+@import '~@/scss/GlobalVariables';
 
-.wrap{
-  .top-section{
-    margin-top: 40px;
-    background-color: #0b2840;
-    color: white;
+.top-section {
+  background-color: #0b2840;
+  color: white;
+  margin-top: 40px;
 
-    .circle img{
-      width: 100%;
-      margin-top: -2px;
+  .circle img {
+    margin-top: -2px;
+    width: 100%;
+  }
+
+  .star-background {
+    background-image: url('~@/assets/images/home/stars.svg');
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: 55%;
+
+    @media all and (max-width: $tablet-width) {
+      background-position: center 300px;
+      background-size: 140%;
     }
+  }
 
-    .star-background{
-      background-image: url(~@/assets/images/home/stars.svg);
-      background-size: 55%;
-      background-position: right top;
-      background-repeat: no-repeat;
+  .content {
+    position: relative;
 
+    .text-content {
       @media all and (max-width: $tablet-width){
-        &{
-          background-size: 140%;
-          background-position: center 300px;
+        left: 0;
+        position: absolute;
+        top: 50px;
+        width: 80%;
+        z-index: 9;
+      }
 
+      p {
+        margin-bottom: 40px;
+
+        @media all and (min-width: $tablet-width + 1){
+          width: 350px;
         }
       }
-    }
 
-    .content{
-      position: relative;
-      .text-content{
-        @media all and (max-width: $tablet-width){
-          position: absolute;
-          left: 0;
-          top: 50px;
-          z-index: 9;
-          width: 80%;
+      .watch-video {
+
+        a{
+          color: white;
         }
-        &>p{
-          margin-bottom: 40px;
-          @media all and (min-width: $tablet-width + 1){
-            width: 350px;
-          }
-        }
-        .watch-video{
-          a{
+
+        p{
+          color: #05c0a5;
+          display: inline-block;
+          font-size: 15px;
+          
+          i{
+            padding: 3px 7px 4px 9px;
+            border-radius: 150px;
+            background-color: #05c0a5;
             color: white;
-          }
-          p{
-            color: #05c0a5;
-            display: inline-block;
-            font-size: 15px;
-            i{
-              padding: 3px 7px 4px 9px;
-              border-radius: 150px;
-              background-color: #05c0a5;
-              color: white;
-              text-align: center;
-              margin-left: 6px;
-              font-size: 14px;
-              vertical-align: middle;
-            }
+            text-align: center;
+            margin-left: 6px;
+            font-size: 14px;
+            vertical-align: middle;
           }
         }
-      }
-      .image-content{
-        position: relative;
-        height: 515px;
-        @media all and (max-width: $mobile-width){
-          height: 715px;
-        }
-
-        .spaceman{
-          @media all and (max-width: $tablet-width){
-            height: 200px;
-
-          }
-          position: absolute;
-          //bottom: 30px;
-          //left: 0px;
-          height: 220px;
-          z-index: 1;
-
-          animation-name: spaceman-fly;
-          animation-duration: 22s;
-          animation-iteration-count: infinite;
-
-          @keyframes spaceman-fly {
-            0%   {bottom: 89px; right: 75%;}
-            25%  {bottom: 60px; right: 70%;}
-            50%  {bottom: 80px;}
-            75% {bottom: 40px;}
-            100% {bottom: 89px; right: 75%;}
-          }
-
-          @media all and (max-width: $tablet-width){
-            @keyframes spaceman-fly {
-              0%   {bottom: 109px; right: 43%;}
-              25%  {bottom: 80px; right: 40%;}
-              50%  {bottom: 100px;}
-              75% {bottom: 60px;}
-              100% {bottom: 109px; right: 43%;}
-            }
-          }
-
-        }
-        .mew-icon{
-          @media all and (max-width: $tablet-width){
-            height: 200px;
-            top: 170px;
-          }
-          z-index: 1;
-          position: absolute;
-          top: 0px;
-          right: 0px;
-          height: 300px;
-          //box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
-          //border-radius: 999px;
-        }
-
       }
     }
-  }//. top-section
-}// .wrap
+    .image-content{
+      position: relative;
+      height: 515px;
+      @media all and (max-width: $mobile-width){
+        height: 715px;
+      }
 
+      .spaceman{
+        @media all and (max-width: $tablet-width){
+          height: 200px;
+
+        }
+        position: absolute;
+        //bottom: 30px;
+        //left: 0px;
+        height: 220px;
+        z-index: 1;
+
+        animation-name: spaceman-fly;
+        animation-duration: 22s;
+        animation-iteration-count: infinite;
+
+        @keyframes spaceman-fly {
+          0%   {bottom: 89px; right: 75%;}
+          25%  {bottom: 60px; right: 70%;}
+          50%  {bottom: 80px;}
+          75% {bottom: 40px;}
+          100% {bottom: 89px; right: 75%;}
+        }
+
+        @media all and (max-width: $tablet-width){
+          @keyframes spaceman-fly {
+            0%   {bottom: 109px; right: 43%;}
+            25%  {bottom: 80px; right: 40%;}
+            50%  {bottom: 100px;}
+            75% {bottom: 60px;}
+            100% {bottom: 109px; right: 43%;}
+          }
+        }
+
+      }
+      .mew-icon{
+        @media all and (max-width: $tablet-width){
+          height: 200px;
+          top: 170px;
+        }
+        z-index: 1;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 300px;
+        //box-shadow: 0 0 130px rgba(255, 255, 255, 0.5);
+        //border-radius: 999px;
+      }
+
+    }
+  }
+}//. top-section
 
 
 .wrap{
