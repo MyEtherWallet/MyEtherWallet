@@ -74,7 +74,7 @@
         .spaceman{
           @media all and (max-width: $tablet-width){
             height: 200px;
-            
+
           }
           position: absolute;
           //bottom: 30px;
@@ -129,7 +129,6 @@
 .wrap{
   .bottom-section{
     background-color: #f9f9f9;
-    color: $title-text-color-1;
     padding: 85px 0;
 
     .mew-features{

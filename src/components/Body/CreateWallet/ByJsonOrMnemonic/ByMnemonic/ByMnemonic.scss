@@ -1,11 +1,11 @@
-@import "~@/scss/Globals.scss";
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/Globals';
+@import '~@/scss/GlobalVariables';
 
-.wrap{
-  padding: 0 0 0 0;
+.wrap {
+  padding: 0;
   background-color: $background-color-1;
 
-  .user-input-box{
+  .nav-tab-user-input-box{
     max-width: 550px;
     margin: 0 auto;
     background-color: white;
@@ -35,11 +35,16 @@
           display: flex;
           align-items: center;
 
-          
+          .value-switch{
+            display: flex;
+            align-items: center;
+            .switch-label{
+              margin-left: 10px;
+            }
+          }
+
           .random-button{
             margin-left: auto;
-            font-size: $body-font-size-1;
-            color: #05c0a5;
             i{
               margin-right: 5px;
             }
@@ -63,7 +68,7 @@
             }
           }
         }
-        
+
       }// .contents
 
       .user-input{
@@ -106,4 +111,3 @@
     }
   }
 }
-

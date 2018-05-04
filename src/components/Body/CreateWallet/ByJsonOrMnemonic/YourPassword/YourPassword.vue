@@ -4,7 +4,7 @@
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
-        <div class="user-input-box">
+        <div class="nav-tab-user-input-box">
           <b-tabs>
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>

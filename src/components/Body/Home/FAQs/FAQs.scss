@@ -1,6 +1,6 @@
 @import "~@/scss/Globals.scss";
 @import "~@/scss/GlobalVariables.scss";
-  
+
 .wrap{
 
   padding: 80px 0;
@@ -13,7 +13,7 @@
       flex-direction: column;
       align-items: flex-start;
     }
-    
+
     .title{
       h5{
         line-height: 19px;
@@ -36,8 +36,8 @@
           margin-right: 7px;
         }
         h5{
-         
-         color: $link-text-color-1;
+
+         color: $text__link-color;
         }
       }
     }
@@ -75,9 +75,8 @@
         p{
           margin-bottom: 15px;
           position: relative;
-          color: $body-text-color-3;
           &::after{
-            color: $body-text-color-2;
+            
             content: '›';
             position: absolute;
             right: 0px;
