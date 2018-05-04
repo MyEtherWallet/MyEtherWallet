@@ -54,11 +54,11 @@
         .language-menu{
           margin-left: 0px;
           &>a>span{
-            color: $body-text-color-1;
+            color: text-color-3;
           }
 
           .dropdown-menu{
-            
+
             a{
               $language-item-padding-value: 8px;
               padding-top: $language-item-padding-value;
@@ -92,7 +92,7 @@
             padding: 13px 0;
             font-size: 14px;
             a{
-              color: $body-text-color-1;
+              color: text-color-3;
             }
           }
         }
@@ -117,7 +117,7 @@
 
           }
           .bar-2{
-            
+
           }
           .bar-3{
             width: 15px;

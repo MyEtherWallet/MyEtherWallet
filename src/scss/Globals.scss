@@ -1,368 +1,488 @@
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/GlobalVariables';
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+// *********************************************************************
+// CSS reset
+// *********************************************************************
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
 }
 
-ul li{
+body {
+  box-sizing: border-box;
+}
+
+
+
+
+// *********************************************************************
+// Standard list styles
+// *********************************************************************
+ul li {
   list-style-type: none;
 }
 
+
+
+
+// *********************************************************************
+// Standard link styles
+// *********************************************************************
 a:link,
 a:visited,
 a:hover,
 a:active {
-  text-decoration: none;
   color: $link-text-color-1;
+  text-decoration: none;
 }
 
-.underline a{
+a {
+  &.underline {
+    text-decoration: underline;
+  }
+}
+
+.underline a {
   text-decoration: underline;
 }
 
-.title{
-  color: $title-text-color-1;
+
+
+
+// *********************************************************************
+// Hidden element
+// *********************************************************************
+.hidden {
+  display: none;
 }
 
-h2{
+
+
+
+// *********************************************************************
+// Standard text styles
+// *********************************************************************
+p {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+h2 {
   font-size: 30px;
   font-weight: 500;
-  margin-bottom: 15px;
   line-height: 42px;
+  margin-bottom: 15px;
 }
 
-h3{
+h3 {
   font-size: 20px;
   font-weight: 500;
 }
 
-h3.lite{
-  font-size: 20px;
-  font-weight: 400;
-}
-
-h4{
+h4 {
   font-size: 16px;
   font-weight: 500;
   line-height: 23px;
 }
 
-h5{
+h5 {
   font-size: 14px;
   font-weight: 400;
-  color: $body-text-color-1;
 }
 
-h6{
+h6 {
   font-size: 13px;
   font-weight: 600;
-  color: $body-text-color-1;
-}
-
-p{
-  font-size: 12px;
-  line-height: 16px;
-}
-
-body{
-  box-sizing: border-box;
 }
 
 
-.page-container{
-  max-width: 1024px;
+.page-container {
   margin: 0 auto;
+  max-width: 1024px;
   padding: 0 40px;
+
   @media all and (max-width: $tablet-width){
     padding: 0 15px;
   }
 }
 
-.hidden{
-  display: none;
-}
 
-/*
-@media all and (min-width: 800px) and (max-width: 1100px) {
-  .page-container{
-    max-width: 900px;
-    margin: 0 auto;
+
+
+// *********************************************************************
+// Standard flex-box styles
+// *********************************************************************
+.flex {
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.align-items-start {
+    align-items: flex-start;
+  }
+
+  &.align-items-center {
+    align-items: center;
+  }
+
+  &.align-items-end {
+    align-items: flex-end;
   }
 }
-*/
 
-
-
-.flex-col-1-1-vertical-center{
-  display: flex;
+.flex-col-1-1-vertical-center {
   align-items: center;
-  &>*{
+  display: flex;
+
+  >* {
     flex: 1;
   }
 }
 
-.flex-col-vertical-top{
-  display: flex;
+.flex-col-vertical-top {
   align-items: flex-start;
+  display: flex;
 }
 
-.flex-col-vertical-center{
-  display: flex;
+.flex-col-vertical-center {
   align-items: center;
-}
-
-.flex-col-vertical-bottom{
   display: flex;
-  align-items: flex-end;
 }
 
-.flex-space-between{
+.flex-col-vertical-bottom {
+  align-items: flex-end;
+  display: flex;
+}
+
+.flex-space-between {
   display: flex;
   justify-content: space-between;
 }
 
-.grid-col-2{
+
+
+
+// *********************************************************************
+// Standard grid styles
+// *********************************************************************
+.grid-col-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.grid-col-3{
+.grid-col-3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.grid-col-1-1-1-2{
+.grid-col-1-1-1-2 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 2fr;
 }
 
-// Buttons
-.large-round-button-green-filled{
-  padding: 21px 55px;
-  border: 2px solid white;
-  background-color: rgb(5, 192, 165);
+
+
+
+// *********************************************************************
+// Standard button styles
+// *********************************************************************
+.large-round-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 2px solid $button--border-color-1;
   border-radius: 6px;
+  color: $button--text-color-1;
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  padding: 21px 55px;
 }
 
-.large-round-button-white-filled{
-  padding: 21px 55px;
-  border: 2px solid white;
-  background-color: white;
+.large-round-button-white-filled {
+  background-color: $button--background-color-2;
+  border: 2px solid $button--border-color-1;
   border-radius: 100px;
   font-size: 14px;
   font-weight: 500;
+  padding: 21px 55px;
 }
 
-.large-round-button-white-border{
-  padding: 21px 55px;
-  border: 2px solid white;
+.large-round-button-white-border {
+  border: 2px solid $button--border-color-1;
   border-radius: 100px;
+  color: $button--text-color-1;
   font-size: 14px;
   font-weight: 500;
-  color: white;
-}
-
-
-.white-text-color{
-  color: white;
-}
-
-.green-text-color{
-  color: #05c0a5;
+  padding: 21px 55px;
 }
 
 
 
-.custom-scroll-bar{
-  /* width */
+
+// *********************************************************************
+// Custom scroll bar style
+// *********************************************************************
+.custom-scroll-bar {
+  // width
   &::-webkit-scrollbar {
-      width: 7px;
+    width: 7px;
   }
-
-  /* Track */
+  // Track
   &::-webkit-scrollbar-track {
-      background: #f1f1f1;
+    background: $scrollbar--track-color;
   }
-
-  /* Handle */
+  // Handle
   &::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 10px;
+    background: $scrollbar--handle-color;
+    border-radius: 10px;
   }
-
-  /* Handle on hover */
+  // Handle on hover
   &::-webkit-scrollbar-thumb:hover {
-      background: #555;
+    background: $scrollbar--handle-hover-color;
   }
 }
 
-.dropdown-menu{
-  border: 1px solid #b1b1b1 !important;
+
+
+
+// *********************************************************************
+// [Bootstrap] Dropdown language menu style
+// *********************************************************************
+.dropdown-menu {
+  border: 1px solid $dropdown-menu-border-color;
 }
 
 .dropdown-item.active,
-.dropdown-item:active{
-  background-color: #e8e8e8;
+.dropdown-item:active {
+  background-color: $dropdown-menu--active--background-color;
 }
 
 
-// Bootstrap Tooltip
-.tooltip{
+
+
+// *********************************************************************
+// [Bootstrap] Tooltip style
+// *********************************************************************
+.tooltip {
   z-index: 9999999;
 
-  &.show{
+  &.show {
     opacity: 1;
   }
-  .arrow{
+
+  .arrow {
     display: none;
-    &::before{
-      border-top-color: #c5c5c5;
-      border-bottom-color: #c5c5c5;
-      //display: none;
-    }
   }
-  .tooltip-inner{
-    padding: 24px 35px;
-    border: 1px solid #c5c5c5;
-    background-color: white;
-    color: #4c4c4c;
+
+  .tooltip-inner {
+    background-color: $tooltip-background-color;
+    border: 1px solid $tooltip-border-color;
+    border-radius: 3px;
+    box-shadow: 0 0 15px $tooltip-box-shadow-color;
+    color: $tooltip-font-color;
     font-size: 13px;
     line-height: 20px;
-    text-align: left;
     max-width: 400px;
-    border-radius: 3px;
-    box-shadow: 0 0px 15px rgba(0,0,0,0.2);
+    padding: 24px 35px;
+    text-align: left;
   }
 }
 
-.tooltip-icon{
-  button{
-    background-color: #96a8b6;
-    color: white;
+.tooltip-icon {
+  button {
+    background-color: $tooltip--button-background-color;
+    border: 0;
     border-radius: 100px;
-    padding: 0px 0px 0px 0px;
+    color: $tooltip--button-font-color;
     font-size: 10px;
-    margin: 0;
     font-weight: 700;
-    border: none;
-    width: 17px;
     height: 17px;
+    margin: 0;
+    padding: 0;
     text-align: center;
+    width: 17px;
   }
 }
 
 
 
 
-// Bootstrap-VUE: Nav tab
-// create-wallet-by-json-file page
-.user-input-box{
+// *********************************************************************
+// [Bootstrap] Nav tab style
+// @ Create Wallet pages
+//
+.nav-tab-user-input-box {
   border-radius: 5px;
   overflow: hidden;
-  .nav-tabs,
-  .nav-link{
-    border: none !important;
-  }
-  .nav-link{
+
+  .nav-link {
+    background-color: $nav-tab--button-background-color;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
     padding: 20px 0;
+
+    &.active {
+      background-color: $nav-tab--button--active--background-color;
+      color: $nav-tab--button--active--font-color;
+    }
   }
 
-  .nav-tabs{
+  .nav-tabs {
+    border: 0;
     display: flex;
-    .nav-item{
+
+    .nav-item {
       flex: 1;
       text-align: center;
     }
   }
+}
 
-  .nav-link{
-    background-color: #e0e0e0;
-    font-size: 14px;
-    border-radius: 0 !important;
+
+
+
+// *********************************************************************
+// CSS Toggle Button style
+// *********************************************************************
+// The switch - the box around the slider
+.sliding-switch {
+  .switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+
+    // Hide default HTML checkbox
+    input {
+      display: none;
+    }
   }
 
+  // The slider
+  .slider {
+    background-color: $css-toggle-button--slider-background-color;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
 
-  .nav-link.active{
-    background-color: #434f61 !important;
-    color: white !important;
+    &::before {
+      background-color: $css-toggle-button--button-background-color;
+      bottom: 4px;
+      content: '';
+      height: 26px;
+      left: 4px;
+      position: absolute;
+      transition: .4s;
+      width: 26px;
+    }
+
+    // Rounded sliders
+    &.round {
+      border-radius: 34px;
+    }
+
+    &.round::before {
+      border-radius: 50%;
+    }
   }
-}
 
+  input:checked + .slider {
+    background-color: $css-toggle-button--slider--active--background-color;
+  }
 
+  input:focus + .slider {
+    box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+  }
 
-// CSS Toggle Button
-/* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
+  input:checked + .slider::before {
+    transform: translateX(26px);
+  }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
 }

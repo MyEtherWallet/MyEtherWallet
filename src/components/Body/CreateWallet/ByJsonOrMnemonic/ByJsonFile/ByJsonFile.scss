@@ -1,11 +1,11 @@
-@import "~@/scss/Globals.scss";
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/Globals';
+@import '~@/scss/GlobalVariables';
 
-.wrap{
+.wrap {
   padding: 0 0 0 0;
   background-color: $background-color-1;
 
-  .user-input-box{
+  .nav-tab-user-input-box{
     max-width: 550px;
     margin: 0 auto;
     background-color: white;
@@ -48,7 +48,7 @@
             margin-top: 10px;
           }
         }
-        
+
       }// .contents
 
       .user-input{
@@ -91,4 +91,3 @@
     }
   }
 }
-

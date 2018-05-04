@@ -4,7 +4,7 @@
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
-        <div class="user-input-box">
+        <div class="nav-tab-user-input-box">
           <b-tabs>
             <div class="progress-bar"></div>
             <b-tab title="By Mnemonic Phrase" active>
@@ -15,20 +15,22 @@
                 </span>
               </h3>
               <div class="contents">
-
                 <div class="tools">
                   <div class="value-switch">
                     <!-- Rounded switch -->
-                    <label class="switch">
-                      <input type="checkbox">
-                      <span class="slider round"></span>
-                    </label>
-                    <span class="switch-label">Value</span>
-                  </div>
-                  <div class="random-button">
+                    <div class="sliding-switch">
+                      <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                    <span class="text__base link switch-label">Value</span>
+                  </div><!-- .value-switch -->
+
+                  <div class="text__base link random-button">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
-                    Random
-                  </div>
+                    <span class="">Random</span>
+                  </div><!-- .random-button -->
                 </div>
                 <div class="phrases">
                   <ul>

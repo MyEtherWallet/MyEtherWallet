@@ -1,22 +1,94 @@
-$body-font-size-1: 14px;
-
-$body-text-color-1: #506175;
-$body-text-color-2: #05c0a5;
-$body-text-color-3: #003945;
-
-$news-content-text-color: #999999;
-
-$link-text-color-1: #05c0a5;
-
-$title-text-color-1: #003945;
-
-$background-color-1: #f9f9f9;
-
-$social-button-color-1: #adadad;
-
-
-
+// *********************************************************************
+// Standard window width sizes
+// *********************************************************************
 $tablet-width: 900px;
 $mobile-width: 600px;
 
 
+// *********************************************************************
+// Elements background color styles
+// *********************************************************************
+// This background color used for most of the elements background
+$background-color-1: #f9f9f9; // Lite grey background color
+
+
+// *********************************************************************
+// Social button styles
+// *********************************************************************
+$social-button-color-1: #adadad; // News block social buttons
+
+
+// *********************************************************************
+// Link text styles
+// *********************************************************************
+$link-text-color-1: #506175;
+
+
+// *********************************************************************
+// z-index values
+// *********************************************************************
+$z-base: 0;
+$z-banner-animation: 10;
+$z-menu: 100;
+$z-tooltip: 900;
+
+
+// *********************************************************************
+// Text styles
+// *********************************************************************
+$text--tooltip-color: #4c4c4c;
+$text--link-color: #05c0a5;
+$text-color-1: #fff; // White text color
+$text-color-2: #05c0a5; // Green text color
+$text-color-news-content: #999;
+
+// *********************************************************************
+// Button styles
+// *********************************************************************
+$button--text-color-1: #fff; // White text color
+$button--border-color-1: #fff; // White border color
+$button--background-color-1: #05c0a5; // Green background color
+$button--background-color-2: #fff; // White background color
+
+
+// *********************************************************************
+// Custom scroll bar style
+// *********************************************************************
+$scrollbar--track-color: #f1f1f1;
+$scrollbar--handle-color: #888;
+$scrollbar--handle-hover-color: #555;
+
+
+// *********************************************************************
+// [Bootstrap] Dropdown language menu style
+// *********************************************************************
+$dropdown-menu-border-color: #b1b1b1;
+$dropdown-menu--active--background-color: #e8e8e8;
+
+
+// *********************************************************************
+// [Bootstrap] Tooltip style
+// *********************************************************************
+$tooltip-font-color: #4c4c4c;
+$tooltip-box-shadow-color: rgba(0, 0, 0, .2);
+$tooltip-border-color: #c5c5c5;
+$tooltip-background-color: #fff;
+$tooltip--button-background-color: #96a8b6;
+$tooltip--button-font-color: #fff;
+
+
+// *********************************************************************
+// [Bootstrap] Nav tab style
+// @ Create Wallet pages
+// *********************************************************************
+$nav-tab--button-background-color: #e0e0e0;
+$nav-tab--button--active--background-color: #434f61;
+$nav-tab--button--active--font-color: #fff;
+
+
+// *********************************************************************
+// CSS Toggle Button style
+// *********************************************************************
+$css-toggle-button--slider-background-color: #ccc;
+$css-toggle-button--button-background-color: #fff;
+$css-toggle-button--slider--active--background-color: #2196f3;

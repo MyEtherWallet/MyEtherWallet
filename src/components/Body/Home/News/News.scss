@@ -11,7 +11,7 @@
   .top-title{
     margin-bottom: 30px;
     h2{
-      color: $body-text-color-3;
+
     }
   }
   .news-container{
@@ -21,7 +21,7 @@
     @media all and (max-width: $tablet-width){
       grid-template-columns: 250px 250px 250px;
       overflow-x: scroll;
-      
+
     }
     .news{
       border-radius: 4px;
@@ -48,7 +48,6 @@
         padding: 30px;
         padding-bottom: 20px;
         &>h4{
-          color: $body-text-color-3;
           margin-bottom: 15px;
           height: 45px;
 
@@ -59,7 +58,7 @@
           text-overflow: ellipsis;
         }
         &>p{
-          color: $news-content-text-color;
+          color: $text-color-news-content;
           line-height: 17px;
           height: 70px;
 
