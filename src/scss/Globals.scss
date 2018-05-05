@@ -435,7 +435,7 @@ h6 {
       pointer-events: none;
       position: absolute;
       top: 6px;
-      transition: all 0.5s ease;
+      transition: all .5s ease;
 
       &.white {
         color: $text-color-1;
