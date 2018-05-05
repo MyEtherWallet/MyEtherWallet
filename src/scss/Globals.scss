@@ -1,5 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
+
 // *********************************************************************
 // CSS reset
 // *********************************************************************
@@ -93,16 +94,12 @@ body {
 }
 
 
-
-
 // *********************************************************************
 // Standard list styles
 // *********************************************************************
 ul li {
   list-style-type: none;
 }
-
-
 
 
 // *********************************************************************
@@ -127,16 +124,12 @@ a {
 }
 
 
-
-
 // *********************************************************************
 // Hidden element
 // *********************************************************************
 .hidden {
   display: none;
 }
-
-
 
 
 // *********************************************************************
@@ -185,8 +178,6 @@ h6 {
     padding: 0 15px;
   }
 }
-
-
 
 
 // *********************************************************************
@@ -244,8 +235,6 @@ h6 {
 }
 
 
-
-
 // *********************************************************************
 // Standard grid styles
 // *********************************************************************
@@ -263,8 +252,6 @@ h6 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 2fr;
 }
-
-
 
 
 // *********************************************************************
@@ -299,8 +286,6 @@ h6 {
 }
 
 
-
-
 // *********************************************************************
 // Custom scroll bar style
 // *********************************************************************
@@ -325,8 +310,6 @@ h6 {
 }
 
 
-
-
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
 // *********************************************************************
@@ -338,8 +321,6 @@ h6 {
 .dropdown-item:active {
   background-color: $dropdown-menu--active--background-color;
 }
-
-
 
 
 // *********************************************************************
@@ -387,15 +368,20 @@ h6 {
 }
 
 
-
-
 // *********************************************************************
 // [Bootstrap] Nav tab style
 // @ Create Wallet pages
 //
 .nav-tab-user-input-box {
+  background-color: $nav-tab-background-color;
   border-radius: 5px;
   overflow: hidden;
+
+  .progress-bar {
+    animation-duration: .5s;
+    background-color: $nav-tab--progress-bar-background-color;
+    height: 6px;
+  }
 
   .nav-link {
     background-color: $nav-tab--button-background-color;
@@ -422,22 +408,46 @@ h6 {
 }
 
 
-
-
 // *********************************************************************
-// CSS Toggle Button style
+// CSS Toggle Button(Switch) style
 // *********************************************************************
 // The switch - the box around the slider
 .sliding-switch {
+  height: 27px;
+  position: relative;
+
   .switch {
     display: inline-block;
-    height: 34px;
+    height: 28px;
     position: relative;
     width: 60px;
 
     // Hide default HTML checkbox
     input {
       display: none;
+    }
+  }
+
+  .labels {
+    span {
+      color: $text-color-3;
+      font-size: 11px;
+      pointer-events: none;
+      position: absolute;
+      top: 6px;
+      transition: all 0.5s ease;
+
+      &.white {
+        color: $text-color-1;
+      }
+    }
+
+    .label-left {
+      left: 11px;
+    }
+
+    .label-right {
+      left: 36px;
     }
   }
 
@@ -454,13 +464,14 @@ h6 {
 
     &::before {
       background-color: $css-toggle-button--button-background-color;
-      bottom: 4px;
+      bottom: 3px;
       content: '';
-      height: 26px;
+      height: 22px;
       left: 4px;
+      padding: 1px 7px;
       position: absolute;
       transition: .4s;
-      width: 26px;
+      width: 25px;
     }
 
     // Rounded sliders
@@ -469,7 +480,7 @@ h6 {
     }
 
     &.round::before {
-      border-radius: 50%;
+      border-radius: 100%;
     }
   }
 

@@ -21,8 +21,12 @@
                     <div class="sliding-switch">
                       <label class="switch">
                         <input type="checkbox">
-                        <span class="slider round"></span>
+                        <span v-on:click="mnemonicValueChange" class="slider round"></span>
                       </label>
+                      <div class="labels">
+                        <span class="label-left white">12</span>
+                        <span class="label-right">24</span>
+                      </div>
                     </div>
                     <span class="text__base link switch-label">Value</span>
                   </div><!-- .value-switch -->
@@ -46,6 +50,18 @@
                     <li>10.<span>begine</span></li>
                     <li>11.<span>used</span></li>
                     <li>12.<span>near</span></li>
+                    <li>13.<span>duty</span></li>
+                    <li>14.<span>begine</span></li>
+                    <li>15.<span>used</span></li>
+                    <li>16.<span>near</span></li>
+                    <li>17.<span>duty</span></li>
+                    <li>18.<span>begine</span></li>
+                    <li>19.<span>used</span></li>
+                    <li>20.<span>near</span></li>
+                    <li>21.<span>duty</span></li>
+                    <li>22.<span>begine</span></li>
+                    <li>23.<span>used</span></li>
+                    <li>24.<span>near</span></li>
                   </ul>
                 </div>
 
@@ -84,6 +100,24 @@
 export default {
   data () {
     return {
+      mnemonic24: false
+    }
+  },
+  methods: {
+    mnemonicValueChange () {
+      this.mnemonic24 = !this.mnemonic24
+      var left = document.querySelector('.label-left')
+      var right = document.querySelector('.label-right')
+
+      console.log(this.mnemonic24)
+
+      if (this.mnemonic24 === true) {
+        left.classList.remove('white')
+        right.classList.add('white')
+      } else {
+        left.classList.add('white')
+        right.classList.remove('white')
+      }
     }
   },
   mounted () {

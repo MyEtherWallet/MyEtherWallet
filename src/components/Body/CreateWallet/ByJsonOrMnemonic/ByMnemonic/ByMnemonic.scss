@@ -2,67 +2,78 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-  padding: 0;
   background-color: $background-color-1;
+  padding: 0;
 
-  .nav-tab-user-input-box{
-    max-width: 550px;
+  .nav-tab-user-input-box {
     margin: 0 auto;
-    background-color: white;
-    .progress-bar{
-      width: 66.66%;
-      height: 6px;
-      background-color: #05c0a5;
+    max-width: 550px;
+
+    .progress-bar {
+
       animation-name: progreesbar-grow;
-      animation-duration: 0.5s;
+      width: 66.66%;
     }
+
     @keyframes progreesbar-grow {
       from {width: 33.33%;}
       to {width: 66.66%;}
     }
 
-    .tab-pane{
-      padding: 50px 50px;
+    .tab-pane {
       min-height: 500px;
-      h3{
-        text-align: center;
-        margin-bottom: 40px;
-      }
-      .contents{
-        margin-bottom: 120px;
-        .tools{
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
+      padding: 50px;
 
-          .value-switch{
-            display: flex;
+      h3 {
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .contents {
+        margin-bottom: 120px;
+
+        .tools {
+          align-items: center;
+          display: flex;
+          margin-bottom: 10px;
+
+          .value-switch {
             align-items: center;
-            .switch-label{
+            display: flex;
+
+            .switch-label {
+              color: $text-color-4;
+              font-size: 14px;
               margin-left: 10px;
             }
           }
 
-          .random-button{
+          .random-button {
+            color: $text-color-2;
+            font-size: 14px;
             margin-left: auto;
-            i{
+
+            i {
               margin-right: 5px;
             }
           }
         }
-        .phrases{
-          ul{
+
+        .phrases {
+          ul {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-column-gap: 20px;
             grid-row-gap: 20px;
-            li{
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+
+            li {
+              border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
+              color: $text--mnemonic-phrase-index-color;
               font-size: 14px;
-              border-bottom: 1px solid #e0e0e0;
               padding: 10px 0;
-              color: #999999;
-              span{
-                color: #003945;
+
+              span {
+                color: $text--mnemonic-phrase-key-color;
                 margin-left: 10px;
               }
             }
@@ -71,38 +82,44 @@
 
       }// .contents
 
-      .user-input{
+      .user-input {
         margin-bottom: 25px;
-        input{
-          width: 100%;
-          border: none;
+
+        input {
           background-color: $background-color-1;
-          padding: 20px;
+          border: 0;
           font-size: 14px;
           margin-bottom: 40px;
+          padding: 20px;
+          width: 100%;
         }
-        div.next-button{
-          text-align: center;
+
+        .next-button {
           display: block;
           margin: 0 auto;
-          padding: 20px 0px;
           max-width: 300px;
-          img{
-            width: 20px;
+          padding: 20px 0;
+          text-align: center;
+
+          img {
             margin-left: 5px;
+            width: 20px;
           }
         }
       }// .user-input
 
-      .footer-text{
+      .footer-text {
         display: flex;
-        p{
-          margin: 0 auto;
+
+        p {
           font-size: 13px;
-          .tooltip-icon{
+          margin: 0 auto;
+
+          .tooltip-icon {
             margin-left: 5px;
           }
-          img.icon{
+
+          .icon {
             height: 25px;
             margin-right: 5px;
           }
