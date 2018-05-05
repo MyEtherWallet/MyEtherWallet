@@ -10,6 +10,8 @@ $mobile-width: 600px;
 // *********************************************************************
 // This background color used for most of the elements background
 $background-color-1: #f9f9f9; // Lite grey background color
+$nav-tab-background-color: #fff;
+$nav-tab--progress-bar-background-color: #05c0a5;
 
 
 // *********************************************************************
@@ -25,9 +27,16 @@ $link-text-color-1: #506175;
 
 
 // *********************************************************************
+// Border styles
+// *********************************************************************
+$border-bottom--mnemonic-phrase-key-color: #e0e0e0;
+
+
+// *********************************************************************
 // z-index values
 // *********************************************************************
 $z-base: 0;
+$z-base-top: 5;
 $z-banner-animation: 10;
 $z-menu: 100;
 $z-tooltip: 900;
@@ -36,11 +45,15 @@ $z-tooltip: 900;
 // *********************************************************************
 // Text styles
 // *********************************************************************
-$text--tooltip-color: #4c4c4c;
-$text--link-color: #05c0a5;
 $text-color-1: #fff; // White text color
 $text-color-2: #05c0a5; // Green text color
-$text-color-news-content: #999;
+$text-color-3: #999;
+$text-color-4: #536d8b;
+$text-color-news-content: $text-color-3;
+$text--tooltip-color: #4c4c4c;
+$text--link-color: #05c0a5;
+$text--mnemonic-phrase-key-color: #003945;
+$text--mnemonic-phrase-index-color: $text-color-3;
 
 // *********************************************************************
 // Button styles
@@ -87,9 +100,10 @@ $nav-tab--button--active--background-color: #434f61;
 $nav-tab--button--active--font-color: #fff;
 $nav-tab--progress-bar-background-color: #05c0a5;
 
+
 // *********************************************************************
-// CSS Toggle Button style
+// CSS Toggle Button(Switch) style
 // *********************************************************************
-$css-toggle-button--slider-background-color: #ccc;
-$css-toggle-button--button-background-color: #fff;
-$css-toggle-button--slider--active--background-color: #2196f3;
+$css-toggle-button--slider-background-color: #f2f4fa;
+$css-toggle-button--button-background-color: #05c0a5;
+$css-toggle-button--slider--active--background-color: #f2f4fa;
