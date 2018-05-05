@@ -9,6 +9,7 @@ $mobile-width: 600px;
 // Elements background color styles
 // *********************************************************************
 // This background color used for most of the elements background
+$background-color-white: #fff;
 $background-color-1: #f9f9f9; // Lite grey background color
 $nav-tab-background-color: #fff;
 $nav-tab--progress-bar-background-color: #05c0a5;
@@ -49,6 +50,7 @@ $text-color-1: #fff; // White text color
 $text-color-2: #05c0a5; // Green text color
 $text-color-3: #999;
 $text-color-4: #536d8b;
+$text-color-5: #ff2f49; // create-wallet footer text color
 $text-color-news-content: $text-color-3;
 $text--tooltip-color: #4c4c4c;
 $text--link-color: #05c0a5;
