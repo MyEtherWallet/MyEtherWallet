@@ -1,76 +1,80 @@
-@import "~@/scss/Globals.scss";
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/Globals';
+@import '~@/scss/GlobalVariables';
 
-.wrap{
-  background-color: #05c0a5;
+.wrap {
+  background-color: $background-color-2;
   padding: 70px 0;
+
   @media all and (max-width: $tablet-width){
     padding: 50px 0;
   }
 
-  .content{
+  .content {
     @media all and (max-width: $tablet-width){
       //flex-direction: column;
       display: block;
       padding: 0;
     }
-    
-    .title{
-      color: white;
+
+    .title {
+      color: $text-color-1;
+
       @media all and (max-width: $tablet-width){
         margin-bottom: 30px;
       }
-      h2{
-
-      }
     }
-    .buttons{
-      margin-left: auto;
+
+    .buttons {
       display: flex;
+      margin-left: auto;
+
       @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){
-        &>div{
-          &:last-child span{
+        div {
+          &:last-child span {
             margin: 0 0 0 7px;
           }
-          &:first-child span{
+
+          &:first-child span {
             margin: 0 7px 0 0;
           }
         }
       }
 
       @media all and (max-width: $mobile-width){
-        &>div{
+        div {
           flex: 1;
-          &:last-child span{
+
+          &:last-child span {
             margin: 0 0 0 7px;
           }
-          &:first-child span{
+
+          &:first-child span {
             margin: 0 7px 0 0;
           }
         }
       }
 
-      span{
-        margin-left: 20px;
+      span {
         display: block;
+        margin-left: 20px;
         padding: 20px 45px;
+
         @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){
           display: block;
-          text-align: center;
-          line-height: 15px;
           font-size: 11px;
+          line-height: 15px;
           padding: 18px 45px;
+          text-align: center;
         }
 
         @media all and (max-width: $mobile-width){
           display: block;
-          text-align: center;
-          line-height: 15px;
           font-size: 11px;
+          line-height: 15px;
           padding: 18px 15px;
+          text-align: center;
         }
-
       }
-    }
-  }
+    } // .buttons
+  } // .content
 }// .wrap

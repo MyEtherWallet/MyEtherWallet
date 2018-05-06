@@ -1,10 +1,10 @@
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/GlobalVariables';
 
-.wrap{
-background-color: $background-color-1;
-  padding: 80px 0 40px 0;
-  .title{
+.wrap {
+  background-color: $background-color-1;
+  padding: 80px 0 40px;
+
+  .title {
     text-align: center;
   }
 }
-

@@ -1,8 +1,7 @@
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/GlobalVariables';
 
-.wrap{
-  padding: 40px 0 100px 0;
+.wrap {
   background-color: $background-color-1;
+  padding: 40px 0 100px;
   text-align: center;
 }
-
