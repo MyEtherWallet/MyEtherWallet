@@ -10,7 +10,7 @@ $mobile-width: 600px;
 // Box Shadow color styles
 // *********************************************************************
 $news-block-box-shadow-color: rgba(0, 0, 0, .05);
-
+$topbanner-block-box-shadow-color: rgba(0, 0, 0, .15);
 
 // *********************************************************************
 // Elements background color styles
@@ -22,7 +22,8 @@ $background-color-white: #fff;
 $nav-tab-background-color: #fff;
 $nav-tab--progress-bar-background-color: $background-color-2;
 $about-mew-spaceman-background-color: #0b2840;
-
+$create-wallet-background-color: #5a78f0;
+$unlock-wallet-background-color: $background-color-2;
 
 // *********************************************************************
 // Social button styles
@@ -40,6 +41,7 @@ $link-text-color-1: #506175;
 // Border styles
 // *********************************************************************
 $border-color-1: #e0e0e0;
+$border-color-2: #fff;
 $border-bottom--mnemonic-phrase-key-color: $border-color-1;
 
 
@@ -61,10 +63,11 @@ $text-color-2: #05c0a5; // Green text color
 $text-color-3: #999;
 $text-color-4: #536d8b;
 $text-color-5: #ff2f49; // create-wallet footer text color
+$text-color-6: #003945;
 $text-color-news-content: $text-color-3;
 $text--tooltip-color: #4c4c4c;
 $text--link-color: $text-color-2;
-$text--mnemonic-phrase-key-color: #003945;
+$text--mnemonic-phrase-key-color: $text-color-6;
 $text--mnemonic-phrase-index-color: $text-color-3;
 
 // *********************************************************************
