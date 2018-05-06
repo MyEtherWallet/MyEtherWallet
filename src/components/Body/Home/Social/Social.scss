@@ -1,25 +1,28 @@
-@import "~@/scss/Globals.scss";
-@import "~@/scss/GlobalVariables.scss";
+@import '~@/scss/Globals';
+@import '~@/scss/GlobalVariables';
 
-.wrap{
+.wrap {
   padding: 80px 0;
+
   @media all and (max-width: $tablet-width){
-    padding: 40px 0 60px 0;
+    padding: 40px 0 60px;
   }
-  .content{
+
+  .content {
     @media all and (max-width: $tablet-width){
       display: block;
     }
 
-    .title{
-      h5{
+    .title {
+      h5 {
         line-height: 21px;
       }
     }
 
-    .icons{
-      margin-left: auto;
+    .icons {
       display: flex;
+      margin-left: auto;
+
       @media all and (max-width: $tablet-width){
         margin-top: 50px;
       }
@@ -28,43 +31,44 @@
         justify-content: space-around;
       }
 
-
-      &>a:first-child>div{
+      a:first-child>div {
         margin-left: 0;
       }
-      &>a>div{
-        margin-left: 40px;
-        //display: flex;
+
+      a>div {
         flex-direction: column;
+        margin-left: 40px;
 
         @media all and (max-width: $mobile-width){
-          margin-left: 0px;
-          margin-right: 0px;
+          margin-left: 0;
+          margin-right: 0;
         }
-        img{
-          margin: 0 auto 9px auto;
+
+        img {
+          margin: 0 auto 9px;
         }
-        p{
-          color: #999999;
+
+        p {
+          color: $text-color-3;
           text-align: center;
         }
       }
 
       $mobile-subtract-value: 10;
 
-      div{
-        img{
+      div {
+        img {
           $icon-size: 64px;
-          width: $icon-size;
           height: $icon-size;
+          width: $icon-size;
+
           @media all and (max-width: $mobile-width){
             $mobile-icon-size: $icon-size - $mobile-subtract-value;
-            width: $mobile-icon-size;
             height: $mobile-icon-size;
+            width: $mobile-icon-size;
           }
         }
       }
-
-    }
-  }
-}// .wrap
+    } // .icons
+  } // .content
+} // .wrap
