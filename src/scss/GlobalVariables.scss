@@ -36,11 +36,6 @@ $footer-background-color: #132b3f;
 $social-button-color-1: #adadad; // News block social buttons
 
 
-// *********************************************************************
-// Link text styles
-// *********************************************************************
-$link-text-color-1: #506175;
-
 
 // *********************************************************************
 // Border styles
@@ -48,6 +43,7 @@ $link-text-color-1: #506175;
 $border-color-1: #e0e0e0;
 $border-color-2: #fff;
 $border-bottom--mnemonic-phrase-key-color: $border-color-1;
+$border-green: #05c0a5;
 
 
 // *********************************************************************
@@ -57,7 +53,10 @@ $z-base: 0;
 $z-base-top: 5;
 $z-banner-animation: 10;
 $z-menu: 100;
-$z-tooltip: 900;
+$z-tooltip: 500;
+$z-bootstrap-modal-backdrop: 600;
+$z-bootstrap-modal: 601;
+
 
 
 // *********************************************************************
@@ -75,6 +74,9 @@ $text--link-color: $text-color-2;
 $text--mnemonic-phrase-key-color: $text-color-6;
 $text--mnemonic-phrase-index-color: $text-color-3;
 $text--footer-link-color: #96a8b6;
+$text-color-green: $text-color-2;
+
+$link-text-color-1: #506175;
 
 
 // *********************************************************************
