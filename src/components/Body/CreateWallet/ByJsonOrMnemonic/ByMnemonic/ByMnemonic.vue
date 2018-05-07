@@ -1,5 +1,19 @@
 <template>
   <div class="create-wallet-by-mnemonic">
+
+    <!-- Modal =================================== -->
+    <b-modal ref="myModalRef" hide-footer hide-header class="bootstrap-modal">
+      <div class="d-block text-center">
+        <i class="check-icon fa fa-check" aria-hidden="true"></i>
+        <h2 class="title">Succeed</h2>
+        <p>Your have created your wallet successfully.</p>
+      </div>
+      <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+        Unlock My Wallet
+      </b-btn>
+    </b-modal>
+    <!-- Modal =================================== -->
+
     <vue-header></vue-header>
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
@@ -67,11 +81,9 @@
 
               </div>
               <div class="user-input">
-                <router-link to='/by-json-file'>
-                  <div class="next-button large-round-button-green-filled">
-                    I Already Wrote Down the Key
-                  </div>
-                </router-link>
+                <div v-on:click="mnemonicDoneModalOpen" class="next-button large-round-button-green-filled clickable">
+                  I Already Wrote Down the Key
+                </div>
               </div>
               <div class="footer-text">
                 <p>
@@ -118,6 +130,9 @@ export default {
         left.classList.add('white')
         right.classList.remove('white')
       }
+    },
+    mnemonicDoneModalOpen () {
+      this.$refs.myModalRef.show()
     }
   },
   mounted () {

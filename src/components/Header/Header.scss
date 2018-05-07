@@ -11,7 +11,7 @@
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 999999;
+  z-index: $z-menu;
 
   &.tiny-header {
     box-shadow: 0 2px 13px $tiny-header-shadow-color;

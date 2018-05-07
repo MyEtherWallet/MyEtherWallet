@@ -125,10 +125,14 @@ a {
 
 
 // *********************************************************************
-// Hidden element
+// ETC element
 // *********************************************************************
 .hidden {
   display: none;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 
@@ -267,6 +271,16 @@ h6 {
   padding: 21px 55px;
 }
 
+.mid-round-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 2px solid $button--border-color-1;
+  border-radius: 6px;
+  color: $button--text-color-1;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 15px 45px;
+}
+
 .large-round-button-white-filled {
   background-color: $button--background-color-2;
   border: 2px solid $button--border-color-1;
@@ -309,6 +323,17 @@ h6 {
   }
 }
 
+
+// *********************************************************************
+// [Bootstrap] Dropdown language menu style
+// *********************************************************************
+.modal {
+  z-index: $z-bootstrap-modal;
+}
+
+.modal-backdrop {
+  z-index: $z-bootstrap-modal-backdrop;
+}
 
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
@@ -369,9 +394,20 @@ h6 {
 
 
 // *********************************************************************
+// [Bootstrap] Modal style
+// *********************************************************************
+.modal-content {
+  border: 0;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+
+
+// *********************************************************************
 // [Bootstrap] Nav tab style
 // @ Create Wallet pages
-//
+// *********************************************************************
 .nav-tab-user-input-box {
   background-color: $nav-tab-background-color;
   border-radius: 5px;
