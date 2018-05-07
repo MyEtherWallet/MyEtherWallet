@@ -8,7 +8,7 @@
         <h2 class="title">Succeed</h2>
         <p>Your have created your wallet successfully.</p>
       </div>
-      <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+      <b-btn class="mid-round-button-green-filled close-button">
         Unlock My Wallet
       </b-btn>
     </b-modal>
