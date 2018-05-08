@@ -415,11 +415,14 @@ h6 {
   border: 0;
 }
 
-.modal-body {
+.your-password .modal-body {
   background-image: url('~@/assets/images/modal/garlands.png');
   background-position: center 20px;
   background-repeat: no-repeat;
   background-size: 91%;
+}
+
+.modal-body {
   padding: 60px 70px 50px;
 
   .title {
