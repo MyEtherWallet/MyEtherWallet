@@ -45,7 +45,7 @@
                       </div>
                     </div>
                     <span class="text__base link switch-label">Value</span>
-                  </div><!-- .value-switch -->
+                  </div><!-- .value-switch=== -->
 
                   <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
