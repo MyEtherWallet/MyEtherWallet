@@ -57,7 +57,6 @@
                     <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
                   </ul>
                 </div>
-
               </div>
               <div class="user-input">
                 <div v-on:click="mnemonicDoneModalOpen" class="next-button large-round-button-green-filled clickable">
