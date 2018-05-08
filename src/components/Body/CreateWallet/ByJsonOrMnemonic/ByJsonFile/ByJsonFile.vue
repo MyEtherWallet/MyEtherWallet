@@ -39,7 +39,7 @@
               </div>
               <div class="user-input">
                 <router-link to='/by-json-file'>
-                  <div class="next-button large-round-button-green-filled">
+                  <div v-on:click="downloadKeystore" class="next-button large-round-button-green-filled">
                     Download Keystore File
                   </div>
                 </router-link>
@@ -70,6 +70,13 @@
 export default {
   data () {
     return {
+    }
+  },
+  methods: {
+    downloadKeystore: function () {
+      var FileSaver = require('file-saver')
+      var blob = new Blob(['Hello, world of Tokens!!!!!!!!'], {type: 'text/plain;charset=utf-8'})
+      FileSaver.saveAs(blob, 'your-token-keystore.txt')
     }
   },
   mounted () {
