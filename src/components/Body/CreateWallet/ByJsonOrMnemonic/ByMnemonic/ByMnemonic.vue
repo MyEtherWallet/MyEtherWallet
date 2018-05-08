@@ -32,12 +32,12 @@
               </h3>
               <div class="contents">
                 <div class="tools">
-                  <div class="value-switch">
+                  <div class="value-switch noselect">
                     <!-- Rounded switch -->
                     <div class="sliding-switch">
                       <label class="switch">
                         <input type="checkbox">
-                        <span v-on:click="mnemonicValueChange" class="slider round"></span>
+                        <span v-on:click="mnemonicValueBitSizeChange" class="slider round"></span>
                       </label>
                       <div class="labels">
                         <span class="label-left white">12</span>
@@ -47,37 +47,14 @@
                     <span class="text__base link switch-label">Value</span>
                   </div><!-- .value-switch -->
 
-                  <div class="text__base link random-button">
+                  <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
-                    <span class="">Random</span>
+                    <span>Random</span>
                   </div><!-- .random-button -->
                 </div>
                 <div class="phrases">
                   <ul>
-                    <li>1.<span>duty</span></li>
-                    <li>2.<span>begine</span></li>
-                    <li>3.<span>used</span></li>
-                    <li>4.<span>near</span></li>
-                    <li>5.<span>duty</span></li>
-                    <li>6.<span>begine</span></li>
-                    <li>7.<span>used</span></li>
-                    <li>8.<span>near</span></li>
-                    <li>9.<span>duty</span></li>
-                    <li>10.<span>begine</span></li>
-                    <li>11.<span>used</span></li>
-                    <li>12.<span>near</span></li>
-                    <li>13.<span>duty</span></li>
-                    <li>14.<span>begine</span></li>
-                    <li>15.<span>used</span></li>
-                    <li>16.<span>near</span></li>
-                    <li>17.<span>duty</span></li>
-                    <li>18.<span>begine</span></li>
-                    <li>19.<span>used</span></li>
-                    <li>20.<span>near</span></li>
-                    <li>21.<span>duty</span></li>
-                    <li>22.<span>begine</span></li>
-                    <li>23.<span>used</span></li>
-                    <li>24.<span>near</span></li>
+                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
                   </ul>
                 </div>
 
@@ -111,24 +88,38 @@
 </template>
 
 <script>
+// Mnemonic code for generating deterministic keys
+var bip39 = require('bip39')
+
 export default {
   data () {
     return {
+      mnemonicValues: [],
       mnemonic24: false
     }
   },
   methods: {
-    mnemonicValueChange () {
-      this.mnemonic24 = !this.mnemonic24
+    mnemonicValueRefresh () {
+      if (this.mnemonic24 === true) {
+        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
+      } else {
+        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
+      }
+    },
+    mnemonicValueBitSizeChange () {
       var left = document.querySelector('.label-left')
       var right = document.querySelector('.label-right')
 
-      console.log(this.mnemonic24)
+      this.mnemonic24 = !this.mnemonic24
 
       if (this.mnemonic24 === true) {
+        // Regenerate new 24 Mnemonic phrases
+        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
         left.classList.remove('white')
         right.classList.add('white')
       } else {
+        // Regenerate new 12 Mnemonic phrases
+        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
         left.classList.add('white')
         right.classList.remove('white')
       }
@@ -140,6 +131,9 @@ export default {
   mounted () {
     // Scroll to top of the page
     window.scrollTo(0, 0)
+
+    // Generate a random mnemonic
+    this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
   }
 }
 </script>

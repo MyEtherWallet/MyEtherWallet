@@ -18,7 +18,7 @@
   .content {
     // content
   }
-  
+
   .close-button {
     // close button
   }
@@ -73,7 +73,7 @@
           }
 
           .random-button {
-            color: $text-color-2;
+            cursor: pointer;
             font-size: 14px;
             margin-left: auto;
 
@@ -89,6 +89,7 @@
             grid-column-gap: 20px;
             grid-row-gap: 20px;
             grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin-bottom: 20px;
 
             li {
               border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
