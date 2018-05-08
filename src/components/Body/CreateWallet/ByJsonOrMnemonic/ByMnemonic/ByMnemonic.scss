@@ -7,25 +7,20 @@
     border-radius: 200px;
     color: $text-color-green;
     font-size: 90px;
+    margin-bottom: 15px;
     padding: 25px;
   }
 
   .title {
-    color: $text-color-6;
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    margin-top: 15px;
+    // title
   }
 
-  p {
-    color: $link-text-color-1;
-    margin-bottom: 40px;
+  .content {
+    // content
   }
-
+  
   .close-button {
-    display: block;
-    margin: 0 auto;
+    // close button
   }
 }
 

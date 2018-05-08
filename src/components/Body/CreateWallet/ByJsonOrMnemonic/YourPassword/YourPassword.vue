@@ -1,5 +1,29 @@
 <template>
   <div class="your-password">
+
+    <!-- Modal =================================== -->
+    <b-modal ref="myModalRef" hide-footer hide-header class="bootstrap-modal">
+      <div class="d-block text-center">
+        <h2 class="title">Welcome to MEW</h2>
+        <p class="content">
+          MyEtherWallet.com doesn’t hold your keys for you.
+          We can’t access accounts, recover keys, reset passwords,
+          nor reverse transactions. Protect your keys & always check
+          that you are on CORRECT URL.
+          You are responsible for your security.
+        </p>
+      </div>
+      <div class="button-container">
+        <b-btn class="mid-round-button-green-filled close-button">
+          I'm a Fresher
+        </b-btn>
+        <b-btn class="mid-round-button-green-border close-button">
+          I'm a Experiencer
+        </b-btn>
+      </div>
+    </b-modal>
+    <!-- Modal =================================== -->
+
     <vue-header></vue-header>
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
@@ -68,9 +92,14 @@ export default {
     return {
     }
   },
+  methods: {
+  },
   mounted () {
     // Scroll to top of the page
     window.scrollTo(0, 0)
+
+    // Welcome Modal open
+    this.$refs.myModalRef.show()
   }
 }
 </script>
