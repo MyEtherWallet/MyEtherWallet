@@ -273,12 +273,22 @@ h6 {
 
 .mid-round-button-green-filled {
   background-color: $button--background-color-1;
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 6px;
   color: $button--text-color-1;
   font-size: 14px;
   font-weight: 500;
-  padding: 15px 45px;
+  padding: 15px 40px;
+}
+
+.mid-round-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 6px;
+  color: $text-color-2;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 15px 40px;
 }
 
 .large-round-button-white-filled {
@@ -334,6 +344,7 @@ h6 {
 .modal-backdrop {
   z-index: $z-bootstrap-modal-backdrop;
 }
+
 
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
@@ -396,13 +407,44 @@ h6 {
 // *********************************************************************
 // [Bootstrap] Modal style
 // *********************************************************************
-.modal-content {
-  border: 0;
-  padding-bottom: 30px;
-  padding-top: 30px;
+.modal-dialog {
+  max-width: 530px;
 }
 
+.modal-content {
+  border: 0;
+}
 
+.modal-body {
+  background-image: url('~@/assets/images/modal/garlands.png');
+  background-position: center 20px;
+  background-repeat: no-repeat;
+  background-size: 91%;
+  padding: 60px 70px 50px;
+
+  .title {
+    color: $text-color-6;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .content {
+    color: $link-text-color-1;
+    font-size: 14px;
+    line-height: 21px;
+    margin-bottom: 40px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+
+    button {
+      margin: 0 7px;
+    }
+  }
+}
 
 // *********************************************************************
 // [Bootstrap] Nav tab style

@@ -6,11 +6,13 @@
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true"></i>
         <h2 class="title">Succeed</h2>
-        <p>Your have created your wallet successfully.</p>
+        <p class="content">Your have created your wallet successfully.</p>
       </div>
-      <b-btn class="mid-round-button-green-filled close-button">
-        Unlock My Wallet
-      </b-btn>
+      <div class="button-container">
+        <b-btn class="mid-round-button-green-filled close-button">
+          Unlock My Wallet
+        </b-btn>
+      </div>
     </b-modal>
     <!-- Modal =================================== -->
 
