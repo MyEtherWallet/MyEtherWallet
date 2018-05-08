@@ -125,7 +125,7 @@ a {
 
 
 // *********************************************************************
-// ETC element
+// Standard elements
 // *********************************************************************
 .hidden {
   display: none;
@@ -133,6 +133,16 @@ a {
 
 .clickable {
   cursor: pointer;
+}
+
+.page-container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 40px;
+
+  @media all and (max-width: $tablet-width){
+    padding: 0 15px;
+  }
 }
 
 
@@ -172,16 +182,14 @@ h6 {
   font-weight: 600;
 }
 
-
-.page-container {
-  margin: 0 auto;
-  max-width: 1024px;
-  padding: 0 40px;
-
-  @media all and (max-width: $tablet-width){
-    padding: 0 15px;
-  }
+.color-green {
+  color: $text-color-green;
 }
+
+.noselect {
+  user-select: none;
+}
+
 
 
 // *********************************************************************
@@ -528,7 +536,7 @@ h6 {
     }
 
     .label-right {
-      left: 36px;
+      left: 37px;
     }
   }
 
