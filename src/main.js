@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+
 import VueLodash from 'vue-lodash'
 
 import BootstrapVue from 'bootstrap-vue'
@@ -46,6 +48,7 @@ Vue.use(VueLodash, options)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
