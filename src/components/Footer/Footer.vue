@@ -59,7 +59,7 @@
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                Donate Us
+                Welcome to Donate Us
                 <img src="~@/assets/images/icons/heart.svg">
               </h3>
             </div>

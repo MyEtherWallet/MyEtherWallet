@@ -22,15 +22,14 @@
                 <img src="~@/assets/images/home/create-wallet.png">
               </div>
               <div class="card-content">
-                <h2>Create New Wallet</h2>
-                <p>
-                  Free, open-source, client-side interface
-                  for generating
-                  Ethereum wallets & more.
+                <h2>Get a Free Wallet</h2>
+                <p class="color-white">
+                  To obtain Ethereum address and generate your private key.
+                  Saving and safekeeping the key will be your responsibility.
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Create Now
+                    Get Started
                     <img src="~@/assets/images/icons/right-arrow.png">
                   </p>
                 </router-link>
@@ -43,14 +42,14 @@
                 <img src="~@/assets/images/home/unlock-wallet.png">
               </div>
               <div class="card-content">
-                <h2>Create New Wallet</h2>
-                <p>
-                  Free, open-source, client-side interface for
-                  generating Ethereum wallets & more.
+                <h2>Access My Wallet</h2>
+                <p class="color-white">
+                  To send Ethereum and tokens, swap coins, sale the domain,
+                  deploy the contract after you access your wallet.
                 </p>
                 <router-link to="/">
                   <p class="button">
-                    Unlock Now
+                    Access Now
                     <img src="~@/assets/images/icons/right-arrow.png">
                   </p>
                 </router-link>

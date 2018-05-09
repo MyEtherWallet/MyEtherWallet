@@ -4,7 +4,7 @@
 .top-section {
   background-color: $about-mew-spaceman-background-color;
   color: $text-color-1;
-  margin-top: 40px;
+  margin-top: 0;
 
   .circle img {
     margin-top: -2px;
@@ -36,10 +36,11 @@
       }
 
       p {
+        line-height: 19px;
         margin-bottom: 40px;
 
         @media all and (min-width: $tablet-width + 1){
-          width: 350px;
+          width: 380px;
         }
       }
 
