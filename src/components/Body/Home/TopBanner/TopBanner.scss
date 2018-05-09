@@ -60,8 +60,8 @@
   .card {
     border-radius: 4px;
     color: $text-color-1;
-    margin-bottom: 25px;
-    padding: 50px 30px;
+    margin-bottom: 0;
+    padding: 30px 40px;
     position: relative;
 
     &.create-wallet {
@@ -87,14 +87,14 @@
     }
 
     .card-image {
-      padding-right: 30px;
+      padding-right: 40px;
 
       @media all and (max-width: $mobile-width){
         display: none;
       }
 
       img {
-        width: 110px;
+        width: 87px;
       }
     }
 
@@ -102,23 +102,24 @@
       h2 {
         font-size: 25px;
         font-weight: 500;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
       }
 
       p {
         font-size: 12px;
         line-height: 17px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
 
       .button {
-        background-color: transparent;
-        border: 1.5px solid $border-color-2;
-        border-radius: 100px;
+        // background-color: transparent;
+        // border: 1.5px solid $border-color-2;
+        // border-radius: 100px;
         color: $text-color-1;
         display: inline-block;
-        font-size: 14px;
-        padding: 15px 25px;
+        font-size: 16px;
+        font-weight: 500;
+        // padding: 15px 25px;
 
         img {
           margin-left: 5px;

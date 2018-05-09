@@ -10,11 +10,16 @@
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
                 <h2>About MEW</h2>
-                <p>
-                  Free, open-source, client-side interface for generating
-                  Ethereum wallets & more. Interact with the Ethereum
-                  blockchain easily & securely. Double-check the URL
-                  ( myetherwallet.com ) before unlocking your wallet.
+                <p class="color-white">
+                  MyEtherWallet(MEW)  provides a easy to use interface.
+                  We won’t hold your keys, also we can’t access accounts,
+                  recover your keys, reset your passwords, nor reverse your
+                  transactions. Please pay attention that you are
+                  on Correct URL.
+                  <br>
+                  <span class="color-white text-bold">
+                    Please Take Responsible For Your Account Security.
+                  </span>
                 </p>
                 <div class="watch-video">
                   <router-link to="/">

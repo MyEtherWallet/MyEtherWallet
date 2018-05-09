@@ -138,7 +138,7 @@ a {
 .page-container {
   margin: 0 auto;
   max-width: 1024px;
-  padding: 0 40px;
+  padding: 0;
 
   @media all and (max-width: $tablet-width){
     padding: 0 15px;
@@ -150,8 +150,9 @@ a {
 // Standard text styles
 // *********************************************************************
 p {
+  color: $text-base-color;
   font-size: 12px;
-  line-height: 16px;
+  line-height: 19px;
 }
 
 h2 {
@@ -186,10 +187,17 @@ h6 {
   color: $text-color-green;
 }
 
+.color-white {
+  color: $text-white;
+}
+
 .noselect {
   user-select: none;
 }
 
+.text-bold {
+  font-weight: 600;
+}
 
 
 // *********************************************************************
@@ -302,7 +310,7 @@ h6 {
 .large-round-button-white-filled {
   background-color: $button--background-color-2;
   border: 2px solid $button--border-color-1;
-  border-radius: 100px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
@@ -310,7 +318,7 @@ h6 {
 
 .large-round-button-white-border {
   border: 2px solid $button--border-color-1;
-  border-radius: 100px;
+  border-radius: 5px;
   color: $button--text-color-1;
   font-size: 14px;
   font-weight: 500;

@@ -2,7 +2,7 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-  padding-top: 103px;
+  padding-top: 87px;
 }
 
 .fixed-header {
@@ -24,7 +24,7 @@
   .header-container {
     align-items: center;
     display: flex;
-    padding: 30px 0;
+    padding: 12px 0;
     transition: all .3s ease;
 
     @media all and (max-width: $tablet-width){
@@ -35,7 +35,7 @@
       line-height: 10px;
 
       img {
-        height: 40px;
+        height: 33px;
         transition: all .3s ease;
       }
 
