@@ -85,6 +85,7 @@ mark,
 audio,
 video {
   font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
   margin: 0;
   padding: 0;
 }
@@ -151,7 +152,6 @@ a {
 // *********************************************************************
 p {
   color: $text-base-color;
-  font-size: 14px;
   line-height: 21px;
 }
 
@@ -174,6 +174,7 @@ h4 {
 }
 
 h5 {
+  color: $text-base-color;
   font-size: 14px;
   font-weight: 400;
 }
@@ -279,7 +280,7 @@ h6 {
 // *********************************************************************
 .large-round-button-green-filled {
   background-color: $button--background-color-1;
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 6px;
   color: $button--text-color-1;
   font-size: 14px;
@@ -309,7 +310,7 @@ h6 {
 
 .large-round-button-white-filled {
   background-color: $button--background-color-2;
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
@@ -317,7 +318,7 @@ h6 {
 }
 
 .large-round-button-white-border {
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 5px;
   color: $button--text-color-1;
   font-size: 14px;

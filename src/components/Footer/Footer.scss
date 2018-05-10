@@ -90,6 +90,11 @@ $border-bottom-color: #506175;
       text-overflow: ellipsis;
     }
 
+    i {
+      border: 1px solid $text--footer-link-color;
+      border-radius: 100px;
+    }
+
     h3 {
       img {
         height: 30px;
@@ -141,7 +146,7 @@ $border-bottom-color: #506175;
     span {
       border-right: 1px solid $border-color-2;
       color: $text-color-1;
-      font-size: 12px;
+      
       margin-right: 15px;
       padding-right: 15px;
     }

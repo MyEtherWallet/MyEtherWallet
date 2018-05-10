@@ -19,12 +19,10 @@
       line-height: 47px;
     }
 
-    h2 {
-      color: text-color-3;
-      font-size: 18px;
-      line-height: 25px;
+    p {
+      color: $text-base-color;
       margin-top: 17px;
-      max-width: 470px;
+      max-width: 440px;
     }
   }
 
@@ -57,7 +55,7 @@
   }
 
 
-  .card {
+  .card-block {
     border-radius: 4px;
     color: $text-color-1;
     margin-bottom: 0;
