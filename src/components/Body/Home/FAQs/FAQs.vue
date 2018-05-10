@@ -18,48 +18,48 @@
           </div>
         </div><!-- .top-title -->
         <div class="grid-col-2 qa-cards">
-          <div class="card">
+          <div class="card-block">
             <h4 class="title">Getting Started With MEW</h4>
             <div class="questions">
-              <p>What is MEW?</p>
-              <p>How to create a wallet?</p>
-              <p>How to properly save and backup your wallet</p>
-              <p>How to access your wallet</p>
-              <p>Protecting yourself and your funds</p>
-              <p>Checking the balance of your account</p>
+              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>How to create a wallet?</p></router-link>
+              <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
+              <router-link to="/"><p>How to access your wallet</p></router-link>
+              <router-link to="/"><p>Protecting yourself and your funds</p></router-link>
+              <router-link to="/"><p>Checking the balance of your account</p></router-link>
             </div>
           </div>
-          <div class="card">
+          <div class="card-block">
             <h4 class="title">Security And Phishing</h4>
             <div class="questions">
-              <p>What is MEW?</p>
-              <p>How to create a wallet?</p>
-              <p>How to properly save and backup your wallet</p>
-              <p>How to access your wallet</p>
-              <p>Protecting yourself and your funds</p>
-              <p>Checking the balance of your account</p>
+              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>How to create a wallet?</p></router-link>
+              <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
+              <router-link to="/"><p>How to access your wallet</p></router-link>
+              <router-link to="/"><p>Protecting yourself and your funds</p></router-link>
+              <router-link to="/"><p>Checking the balance of your account</p></router-link>
             </div>
           </div>
-          <div class="card">
+          <div class="card-block">
             <h4 class="title">Transactions</h4>
             <div class="questions">
-              <p>What is MEW?</p>
-              <p>How to create a wallet?</p>
-              <p>How to properly save and backup your wallet</p>
-              <p>How to access your wallet</p>
-              <p>Protecting yourself and your funds</p>
-              <p>Checking the balance of your account</p>
+              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>How to create a wallet?</p></router-link>
+              <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
+              <router-link to="/"><p>How to access your wallet</p></router-link>
+              <router-link to="/"><p>Protecting yourself and your funds</p></router-link>
+              <router-link to="/"><p>Checking the balance of your account</p></router-link>
             </div>
           </div>
-          <div class="card">
+          <div class="card-block">
             <h4 class="title">Private Keys And Passwords</h4>
             <div class="questions">
-              <p>What is MEW?</p>
-              <p>How to create a wallet?</p>
-              <p>How to properly save and backup your wallet</p>
-              <p>How to access your wallet</p>
-              <p>Protecting yourself and your funds</p>
-              <p>Checking the balance of your account</p>
+              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>How to create a wallet?</p></router-link>
+              <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
+              <router-link to="/"><p>How to access your wallet</p></router-link>
+              <router-link to="/"><p>Protecting yourself and your funds</p></router-link>
+              <router-link to="/"><p>Checking the balance of your account</p></router-link>
             </div>
           </div>
         </div><!-- .qa-cards -->
