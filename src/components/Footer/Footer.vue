@@ -64,6 +64,7 @@
               </h3>
             </div>
             <div class="content-links">
+              <p>Your donation will help us a lot to build our MEW Community.</p>
               <p class="no-margin sub-title">BTC:</p>
               <router-link to="/">
                 <p class="crypto-link">

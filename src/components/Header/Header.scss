@@ -60,7 +60,7 @@
         margin-left: 0;
 
         a>span {
-          color: text-color-3;
+          color: $text-color-3;
         }
 
         .dropdown-menu {
@@ -96,7 +96,7 @@
           padding: 13px 0;
 
           a {
-            color: text-color-3;
+            color: $text-color-3;
           }
         }
       }
