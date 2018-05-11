@@ -7,17 +7,17 @@
             <h2>Your Security<br>Ethereum Wallet.</h2>
           </div>
           <div class="buttons">
-            <div>
-              <router-link to="/create-wallet">
+            <div class="button-block">
+              <router-link to="/create-wallet" class="nounderline">
                 <span class="large-round-button-white-border">
-                  Create My Wallet
+                  Get a Free Wallet
                 </span>
               </router-link>
             </div>
-            <div>
-              <router-link to="/">
+            <div class="button-block">
+              <router-link to="/create-wallet" class="nounderline">
                 <span class="large-round-button-white-filled green-text-color">
-                  Unlock My Wallet
+                  Access My Wallet
                 </span>
               </router-link>
             </div>

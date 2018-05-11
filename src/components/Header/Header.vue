@@ -12,7 +12,7 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item active v-bind:to="'/'">Home</b-nav-item>
+                <b-nav-item v-bind:to="'/'">Home</b-nav-item>
                 <b-nav-item href="#pagelink-about-mew">About</b-nav-item>
                 <b-nav-item href="#pagelink-faqs">FAQs</b-nav-item>
                 <b-nav-item href="#pagelink-news">News</b-nav-item>

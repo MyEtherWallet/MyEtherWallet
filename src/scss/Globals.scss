@@ -111,11 +111,24 @@ a:visited,
 a:hover,
 a:active {
   color: $link-text-color-2;
-  text-decoration: none;
+  // text-decoration: none;
+
+  p {
+    text-decoration: none;
+  }
+
+  &.nounderline,
+  &.nounderline * {
+    text-decoration: none;
+  }
 }
 
 a {
   &.underline {
+    text-decoration: underline;
+  }
+
+  &.underline:hover * {
     text-decoration: underline;
   }
 }
@@ -169,7 +182,7 @@ h3 {
 
 h4 {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 23px;
 }
 
@@ -278,6 +291,7 @@ h6 {
 // *********************************************************************
 // Standard button styles
 // *********************************************************************
+
 .large-round-button-green-filled {
   background-color: $button--background-color-1;
   border: 1px solid $button--border-color-1;
