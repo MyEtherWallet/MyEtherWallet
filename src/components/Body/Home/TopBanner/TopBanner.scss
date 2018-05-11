@@ -4,6 +4,7 @@
 
 .banner {
   padding: 30px;
+  padding-right: 0;
 
   @media all and (max-width: 1100px){
     padding: 40px 0 50px;
@@ -22,7 +23,7 @@
     p {
       color: $text-base-color;
       margin-top: 17px;
-      max-width: 440px;
+      max-width: 420px;
     }
   }
 
@@ -35,7 +36,7 @@
 
     img {
       display: block;
-      height: 399px;
+      height: 452px;
       margin: 0 0 0 auto;
 
       @media all and (max-width: 1100px){
@@ -98,13 +99,13 @@
 
     .card-content {
       h2 {
-        font-size: 25px;
+        font-size: 24px;
         font-weight: 500;
         margin-bottom: 5px;
       }
 
       p {
-        line-height: 17px;
+        line-height: 19px;
         margin-bottom: 20px;
       }
 
@@ -114,7 +115,7 @@
         // border-radius: 100px;
         color: $text-color-1;
         display: inline-block;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         // padding: 15px 25px;
 

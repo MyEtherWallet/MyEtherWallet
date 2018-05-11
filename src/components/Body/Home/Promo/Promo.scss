@@ -28,6 +28,23 @@
       display: flex;
       margin-left: auto;
 
+      .button-block {
+        margin-left: 20px;
+        transition: all .2s ease;
+
+        span {
+          transition: all .2s ease;
+        }
+
+        &:hover {
+          margin-top: -3px;
+
+          span {
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+          }
+        }
+      }
+
       @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){
         div {
           &:last-child span {
@@ -56,7 +73,6 @@
 
       span {
         display: block;
-        margin-left: 20px;
         padding: 20px 45px;
 
         @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){

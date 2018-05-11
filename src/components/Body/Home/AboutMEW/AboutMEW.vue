@@ -22,7 +22,7 @@
                   </span>
                 </p>
                 <div class="watch-video">
-                  <router-link to="/">
+                  <router-link to="/" class="underline">
                     <p>
                       Watch Video
                       <i class="fa fa-caret-right" aria-hidden="true"></i>

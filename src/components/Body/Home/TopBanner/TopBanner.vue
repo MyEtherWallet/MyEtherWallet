@@ -4,8 +4,8 @@
       <div class="page-container">
         <div class="flex-col-vertical-center banner">
           <div class="banner-text">
-            <h1>Your Security</h1>
-            <h1>Ethereum Wallet.</h1>
+            <h1>My Security</h1>
+            <h1>Ethereum Wallet</h1>
             <p>
               MEW helps you to generate Ethereum wallets, and interact with
               the Ethereum blockchain easily and securely.
@@ -17,7 +17,7 @@
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
-          <router-link to="/">
+          <router-link to="/" class="nounderline">
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
@@ -26,7 +26,7 @@
                 <div class="card-content">
                   <h2 class="color-white">Get a Free Wallet</h2>
                   <p class="color-white">
-                    To obtain Ethereum address and generate your private key.
+                    To obtain ETH address and generate your private key.
                     Saving and safekeeping the key will be your responsibility.
                   </p>
                     <p class="button">
@@ -37,7 +37,7 @@
               </div>
             </div>
           </router-link>
-          <router-link to="/">
+          <router-link to="/" class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
