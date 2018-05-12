@@ -57,10 +57,10 @@
       grid-template-columns: 1fr;
     }
 
-    .card {
+    .card-block {
       background-color: $background-color-1;
-      border: 1px solid $border-color-1;
-      border-radius: 4px;
+      // border: 1px solid $border-color-1;
+      // border-radius: 4px;
       padding: 25px 30px;
       position: relative;
 
@@ -82,16 +82,31 @@
       .questions {
         position: relative;
 
-        p {
+        >a{
+          display: block;
           margin-bottom: 15px;
+        }
+
+        p {
           position: relative;
 
+          &:hover {
+            color: $background-color-2;
+
+            &::after {
+              color: $background-color-2;
+              right: -7px;
+            }
+          }
+
           &::after {
+            color: lighten($text-color-4, 40%);
             content: '›';
             font-size: 25px;
             position: absolute;
             right: 0;
             top: 0;
+            transition: right .2s ease;
           }
 
           &:last-child {

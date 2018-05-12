@@ -64,18 +64,22 @@
               </h3>
             </div>
             <div class="content-links">
-              <p class="no-margin sub-title">BTC:</p>
+              <p>Your donation will help us a lot to build our MEW Community.</p>
+
               <router-link to="/">
-                <p class="crypto-link">
-                  1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
+                <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
+                  <img src="~@/assets/images/icons/btc.svg">
+                  &nbsp;Bitcoin Donation
                 </p>
               </router-link>
-              <p class="no-margin sub-title">ETH: mewtopia.eth</p>
+
               <router-link to="/">
-                <p class="crypto-link">
-                  0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
+                <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  <img src="~@/assets/images/icons/eth.svg">
+                  &nbsp;Ethereum Donation
                 </p>
               </router-link>
+
             </div>
           </div>
         </div><!-- .footer-contents -->

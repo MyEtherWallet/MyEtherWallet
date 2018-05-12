@@ -60,13 +60,13 @@
           text-overflow: ellipsis;
         }
 
-        p {
+        >p {
           -webkit-box-orient: vertical;
           color: $text-color-news-content;
           display: -webkit-box;
-          height: 70px;
+          height: 80px;
           -webkit-line-clamp: 4;
-          line-height: 17px;
+          line-height: 20px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
@@ -86,8 +86,13 @@
               margin-left: 7px;
               text-align: center;
 
+              &:hover {
+                color: $link-text-color-2;
+                border: 1px solid $link-text-color-2;
+              }
+
               &.fa-facebook {
-                padding: 4px 8px;
+                padding: 4px 8px 4px 7px;
               }
 
               &.fa-twitter {

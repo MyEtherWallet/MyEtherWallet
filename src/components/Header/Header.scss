@@ -48,20 +48,34 @@
       margin-left: auto;
       position: relative;
 
+      a:link, a:visited, a:hover, a:active {
+        color: $text-base-color !important;
+      }
+
+      span {
+        color: $text-base-color !important;
+      }
+
       @media all and (max-width: $tablet-width){
         display: none;
       }
 
       .nav {
         align-items: center;
+
+        .nav-item a,
+        .nav-item a span {
+          color: $text-base-color;
+
+          &.active {
+            color: $text-black;
+            font-weight: 600;
+          }
+        }
       }
 
       .language-menu {
         margin-left: 0;
-
-        a>span {
-          color: text-color-3;
-        }
 
         .dropdown-menu {
           a {
@@ -75,7 +89,7 @@
       }
 
       .current-language-flag img {
-        box-shadow: 0 1px 7px $language-flag-box-shadow;
+        // box-shadow: 0 1px 7px $language-flag-box-shadow;
         display: none;
         height: 16px;
         left: 5px;
@@ -96,7 +110,7 @@
           padding: 13px 0;
 
           a {
-            color: text-color-3;
+            color: $text-color-3;
           }
         }
       }

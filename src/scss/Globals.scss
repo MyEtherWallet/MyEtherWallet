@@ -85,6 +85,7 @@ mark,
 audio,
 video {
   font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
   margin: 0;
   padding: 0;
 }
@@ -109,12 +110,25 @@ a:link,
 a:visited,
 a:hover,
 a:active {
-  color: $link-text-color-1;
-  text-decoration: none;
+  color: $link-text-color-2;
+  // text-decoration: none;
+
+  p {
+    text-decoration: none;
+  }
+
+  &.nounderline,
+  &.nounderline * {
+    text-decoration: none;
+  }
 }
 
 a {
   &.underline {
+    text-decoration: underline;
+  }
+
+  &.underline:hover * {
     text-decoration: underline;
   }
 }
@@ -151,8 +165,7 @@ a {
 // *********************************************************************
 p {
   color: $text-base-color;
-  font-size: 12px;
-  line-height: 19px;
+  line-height: 21px;
 }
 
 h2 {
@@ -169,11 +182,12 @@ h3 {
 
 h4 {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 23px;
 }
 
 h5 {
+  color: $text-base-color;
   font-size: 14px;
   font-weight: 400;
 }
@@ -277,9 +291,10 @@ h6 {
 // *********************************************************************
 // Standard button styles
 // *********************************************************************
+
 .large-round-button-green-filled {
   background-color: $button--background-color-1;
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 6px;
   color: $button--text-color-1;
   font-size: 14px;
@@ -309,7 +324,7 @@ h6 {
 
 .large-round-button-white-filled {
   background-color: $button--background-color-2;
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
@@ -317,7 +332,7 @@ h6 {
 }
 
 .large-round-button-white-border {
-  border: 2px solid $button--border-color-1;
+  border: 1px solid $button--border-color-1;
   border-radius: 5px;
   color: $button--text-color-1;
   font-size: 14px;

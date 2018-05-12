@@ -3,6 +3,18 @@
 
 $border-bottom-color: #506175;
 
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+
+  * {
+    text-decoration: none;
+  }
+}
+
 .wrap {
   background-color: $footer-background-color;
   color: $text-color-1;
@@ -86,8 +98,14 @@ $border-bottom-color: #506175;
 
   .donate-us {
     .crypto-link {
+      color: $link-text-color-2;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    i {
+      border: 1px solid $text--footer-link-color;
+      border-radius: 100px;
     }
 
     h3 {
@@ -141,7 +159,7 @@ $border-bottom-color: #506175;
     span {
       border-right: 1px solid $border-color-2;
       color: $text-color-1;
-      font-size: 12px;
+
       margin-right: 15px;
       padding-right: 15px;
     }
