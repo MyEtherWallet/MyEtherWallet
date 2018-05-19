@@ -21,6 +21,8 @@ import Promo from '@/components/Body/Home/Promo/Promo'
 import ByJsonPageTitle from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageTitle/PageTitle'
 import ByJsonPageFooter from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageFooter/PageFooter'
 
+import Neo from '@/components/Body/Neo/NeoWalletComponent'
+
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
@@ -32,6 +34,8 @@ Vue.component('promo', Promo)
 
 Vue.component('by-json-page-title', ByJsonPageTitle)
 Vue.component('by-json-page-footer', ByJsonPageFooter)
+
+Vue.component('neo-wallet',Neo)
 
 Vue.config.productionTip = false
 
