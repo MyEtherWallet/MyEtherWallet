@@ -68,7 +68,7 @@
 
           &.active {
             color: $text-black;
-            font-weight: 600;
+            font-weight: 500;
           }
         }
       }
@@ -149,11 +149,10 @@
       font-size: 12px;
       margin-left: 12px;
       padding: 10px 20px;
-      transition: background-color .3s ease;
+      transition: background-color .2s ease;
 
       &:hover {
         background-color: $text-color-green;
-        border: 1px solid $border-color-2;
         color: $text-white;
       }
     }
