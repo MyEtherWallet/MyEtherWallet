@@ -92,7 +92,7 @@
         display: none;
         height: 16px;
         left: 5px;
-        margin-left: 40px;
+        margin-left: 30px;
         position: relative;
         top: -1px;
 
@@ -145,9 +145,17 @@
       border: 1px solid $border-green;
       border-radius: 4px;
       color: $text-color-green;
+      cursor: pointer;
       font-size: 12px;
       margin-left: 12px;
       padding: 10px 20px;
+      transition: background-color .3s ease;
+
+      &:hover {
+        background-color: $text-color-green;
+        border: 1px solid $border-color-2;
+        color: $text-white;
+      }
     }
 
   }// .header-container
