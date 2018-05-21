@@ -29,7 +29,7 @@
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
-          <b-tabs>
+          <b-tabs class="x100">
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
               <h3>Your Password</h3>
