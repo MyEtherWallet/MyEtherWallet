@@ -12,6 +12,4 @@ export default {
 
 <style lang="scss">
   @import "App.scss";
-  #app {
-  }
 </style>
