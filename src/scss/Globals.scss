@@ -389,6 +389,9 @@ h6 {
   background-color: $dropdown-menu--active--background-color;
 }
 
+.nav-link-custom span {
+  color: $text-base-color;
+}
 
 // *********************************************************************
 // [Bootstrap] Tooltip style

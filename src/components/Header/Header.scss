@@ -48,11 +48,11 @@
       position: relative;
 
       a:link, a:visited, a:hover, a:active {
-        color: $text-base-color !important;
+        color: $text-base-color;
       }
 
       span {
-        color: $text-base-color !important;
+        color: $text-base-color;
       }
 
       @media all and (max-width: $tablet-width){
@@ -92,7 +92,7 @@
         display: none;
         height: 16px;
         left: 5px;
-        margin-left: 30px;
+        margin-left: 40px;
         position: relative;
         top: -1px;
 
@@ -105,7 +105,7 @@
         >li {
           display: inline-block;
           font-size: 14px;
-          margin-left: 50px;
+          margin-left: 26px;
           padding: 13px 0;
 
           a {
@@ -140,5 +140,15 @@
         }
       }
     }// .mobile-menu
+
+    .get-free-wallet {
+      border: 1px solid $border-green;
+      border-radius: 4px;
+      color: $text-color-green;
+      font-size: 12px;
+      margin-left: 12px;
+      padding: 10px 20px;
+    }
+
   }// .header-container
 }// .fixed-header
