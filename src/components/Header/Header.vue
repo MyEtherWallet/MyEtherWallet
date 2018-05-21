@@ -43,9 +43,11 @@
               </div>
             </div>
 
-            <div class="get-free-wallet">
-              Get a Free Wallet
-            </div>
+            <router-link to="/" class="nounderline">
+              <div class="get-free-wallet">
+                Get a Free Wallet
+              </div>
+            </router-link>
 
           </div><!-- .header-container -->
         </div><!-- .page-container -->
