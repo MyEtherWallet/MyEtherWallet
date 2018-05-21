@@ -42,6 +42,11 @@
                 <div class="bar-3"></div>
               </div>
             </div>
+
+            <div class="get-free-wallet">
+              Get a Free Wallet
+            </div>
+
           </div><!-- .header-container -->
         </div><!-- .page-container -->
       </div><!-- .fixed-header -->
