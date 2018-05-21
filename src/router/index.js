@@ -4,6 +4,7 @@ import Home from '@/components/Body/Home/Home'
 import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPassword/YourPassword'
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
 import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemonic/ByMnemonic'
+import Team from '@/components/Body/Team/Team'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/by-mnemonic-phrase',
       name: 'ByMnemonic',
       component: ByMnemonic
+    },
+    {
+      path: '/team',
+      name: 'Team',
+      component: Team
     }
   ]
 })
