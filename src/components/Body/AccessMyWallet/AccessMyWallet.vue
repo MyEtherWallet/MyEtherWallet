@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <vue-header></vue-header>
+    <price-bar></price-bar>
     <faqs></faqs>
     <vue-footer></vue-footer>
   </div>
