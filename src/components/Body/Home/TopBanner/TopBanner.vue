@@ -37,7 +37,7 @@
               </div>
             </div>
           </router-link>
-          <router-link to="/" class="nounderline">
+          <router-link to="/access-my-wallet" class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
