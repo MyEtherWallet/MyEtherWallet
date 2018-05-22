@@ -16,6 +16,12 @@
           </p>
         </div>
 
+        <div class="team-info">
+          <div class="person">
+
+          </div>
+        </div>
+
       </div><!-- .page-container -->
     </div><!-- .wrap -->
 
