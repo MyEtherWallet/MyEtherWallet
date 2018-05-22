@@ -1,5 +1,5 @@
 <template>
-  <div class="team">
+  <div class="terms-of-conditions">
     <vue-header></vue-header>
 
     <div class="wrap">
