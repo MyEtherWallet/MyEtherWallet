@@ -389,6 +389,7 @@ h6 {
 // *********************************************************************
 .dropdown-menu {
   border: 1px solid $dropdown-menu-border-color;
+  box-shadow: 0 2px 12px $language-menu-box-shadow;
 }
 
 .dropdown-item.active,
