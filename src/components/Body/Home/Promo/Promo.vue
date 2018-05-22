@@ -8,14 +8,14 @@
           </div>
           <div class="buttons">
             <div class="button-block">
-              <router-link to="/create-wallet" class="nounderline">
+              <router-link to="/create-wallet" class="nounderline" v-on:click.native="scrollTop">
                 <span class="large-round-button-white-border">
                   Get a Free Wallet
                 </span>
               </router-link>
             </div>
             <div class="button-block">
-              <router-link to="/create-wallet" class="nounderline">
+              <router-link to="/create-wallet" class="nounderline" v-on:click.native="scrollTop">
                 <span class="large-round-button-white-filled green-text-color">
                   Access My Wallet
                 </span>
@@ -32,6 +32,12 @@
 export default {
   data () {
     return {
+    }
+  },
+  methods: {
+    scrollTop: function () {
+      // Scroll to top of the page
+      window.scrollTo(0, 0)
     }
   }
 }

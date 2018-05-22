@@ -4,7 +4,7 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/">
+            <router-link to="/" v-on:click.native="scrollTop">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png">
               </div>
@@ -63,6 +63,10 @@ export default {
     }
   },
   methods: {
+    scrollTop: function () {
+      // Scroll to top of the page
+      window.scrollTo(0, 0)
+    },
     // Update language text
     languageItemClicked: function (e) {
       var allLanguages = document.getElementsByClassName('dropdown-item')
