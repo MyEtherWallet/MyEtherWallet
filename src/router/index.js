@@ -5,6 +5,8 @@ import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPa
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
 import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemonic/ByMnemonic'
 import Team from '@/components/Body/Team/Team'
+import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
+import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
 
 Vue.use(Router)
 
@@ -34,6 +36,16 @@ export default new Router({
       path: '/team',
       name: 'Team',
       component: Team
+    },
+    {
+      path: '/privacy-policy',
+      name: 'PrivacyPolicy',
+      component: PrivacyPolicy
+    },
+    {
+      path: '/terms-of-conditions',
+      name: 'TermsOfConditions',
+      component: TermsOfConditions
     }
   ]
 })

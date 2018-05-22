@@ -92,6 +92,8 @@ export default {
     }
   },
   mounted () {
+    // Scroll to top of the page
+    window.scrollTo(0, 0)
     // Check if user scrolled window, then change header style.
     window.onscroll = function (e) {
       var element = document.querySelector('body')
