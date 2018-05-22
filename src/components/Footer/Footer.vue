@@ -86,8 +86,8 @@
         <div class="flex-space-between foot-note">
           <div class="links">
             <router-link to="/"><span>Feedback</span></router-link>
-            <router-link to="/"><span>Privacy</span></router-link>
-            <router-link to="/"><span>Terms</span></router-link>
+            <router-link to="/privacy-policy"><span>Privacy</span></router-link>
+            <router-link to="/terms-of-conditions"><span>Terms</span></router-link>
           </div>
           <div class="copyright">
             <p>

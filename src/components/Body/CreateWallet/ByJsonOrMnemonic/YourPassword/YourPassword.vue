@@ -95,9 +95,6 @@ export default {
   methods: {
   },
   mounted () {
-    // Scroll to top of the page
-    window.scrollTo(0, 0)
-
     // Welcome Modal open
     this.$refs.myModalRef.show()
   }
