@@ -7,6 +7,7 @@ import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemon
 import Team from '@/components/Body/Team/Team'
 import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
 import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
+import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/terms-of-conditions',
       name: 'TermsOfConditions',
       component: TermsOfConditions
+    },
+    {
+      path: '/access-my-wallet',
+      name: 'AccessMyWallet',
+      component: AccessMyWallet
     }
   ]
 })
