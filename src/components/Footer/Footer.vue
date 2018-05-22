@@ -51,7 +51,7 @@
             </div>
             <div class="content-links mobile-hide">
               <router-link to="/"><p>About Us</p></router-link>
-              <router-link to="/"><p>Team</p></router-link>
+              <router-link to="/team"><p>Team</p></router-link>
               <router-link to="/"><p>FAQs</p></router-link>
               <router-link to="/"><p>Customer Support</p></router-link>
             </div>
