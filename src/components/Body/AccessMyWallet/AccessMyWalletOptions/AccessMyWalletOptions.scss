@@ -1,5 +1,89 @@
 @import '~@/scss/GlobalVariables';
 
+// Bootstrap modal --------------------------------------------
+.modal-container {
+  .bootstrap-modal {
+    .content-container {
+      margin-bottom: 30px;
+
+      .modal-large-text {
+        font-weight: 400;
+      }
+    }
+
+    .button-container {
+      margin-bottom: 25px;
+
+      .close-button {
+        width: 100%;
+      }
+    }
+  } // .bootstrap-modal
+
+  .support {
+    display: flex;
+
+    a {
+      margin: 0 auto;
+    }
+
+    .support-content {
+      align-items: center;
+      display: flex;
+      margin: 0 auto;
+
+      .support-icon img {
+        height: 25px;
+        margin-right: 10px;
+      }
+
+      .support-label h5 {
+        color: $link-text-color-2;
+        font-size: 14px;
+      }
+    } // .support-content
+  } // .support
+
+  .modal-metamask {
+    .content-container {
+      margin-bottom: 20px;
+
+      h4 {
+        font-weight: 400;
+        line-height: 22px;
+        margin: 0 auto 40px;
+        max-width: 340px;
+      }
+    }
+  }
+
+  .modal-hardware,
+  .modal-software {
+    .button-options {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 50px;
+
+      li {
+        color: $text--link-color;
+        cursor: pointer;
+        padding: 30px;
+        text-align: left;
+
+        &:hover {
+          box-shadow: 0 3px 15px $box-shadow-color-1;
+          color: $text-black;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+} // .modal-container
+
+
+
+
 .wrap {
   background-color: $background-color-1;
   padding: 80px 0;
@@ -50,9 +134,12 @@
       bottom: -50px;
       display: none;
       left: 0;
-      padding: 60px 0 10px;
       position: absolute;
       width: 100%;
+
+      span {
+        padding: 60px 0 10px;
+      }
     }
 
     &:hover {

@@ -445,23 +445,45 @@ h6 {
   }
 }
 
+/*
+.btn-secondary,
+.btn-secondary:hover {
+  background-color: transparent;
+  border: 0;
+  color: $link-text-color-2;
+}
+*/
 
 // *********************************************************************
 // [Bootstrap] Modal style
 // *********************************************************************
+
+// Modal header
+.modal-header {
+  background-color: $bootstrap-modal-header-background-color;
+
+  h5 {
+    color: $text-white;
+  }
+
+  .close {
+    color: $text-white;
+    float: right;
+    font-size: 52px;
+    font-weight: 100;
+    line-height: 30px;
+    opacity: 1;
+    outline: none;
+    text-shadow: none;
+  }
+}
+
 .modal-dialog {
   max-width: 530px;
 }
 
 .modal-content {
   border: 0;
-}
-
-.your-password .modal-body {
-  background-image: url('~@/assets/images/modal/garlands.png');
-  background-position: center 20px;
-  background-repeat: no-repeat;
-  background-size: 91%;
 }
 
 .modal-body {
@@ -490,6 +512,27 @@ h6 {
     }
   }
 }
+
+// Custom modal style for each pages -------------------------------
+.access-my-wallet-options {
+  .modal-title {
+    font-size: 20px;
+    padding: 0 15px;
+  }
+
+  .modal-body {
+    padding: 40px;
+  }
+}
+
+.your-password .modal-body {
+  background-image: url('~@/assets/images/modal/garlands.png');
+  background-position: center 20px;
+  background-repeat: no-repeat;
+  background-size: 91%;
+
+}
+
 
 // *********************************************************************
 // [Bootstrap] Nav tab style
@@ -619,4 +662,71 @@ h6 {
     transform: translateX(26px);
   }
 
+}
+
+
+
+// *********************************************************************
+// Custom Checkbox
+// *********************************************************************
+// Customize the label (the container)
+.container {
+  cursor: pointer;
+  display: inline;
+  font-size: 14px;
+  margin-bottom: 12px;
+  padding-left: 33px;
+  position: relative;
+  user-select: none;
+
+  // Hide the browser's default checkbox
+  input {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+
+  }
+
+  // On mouse-over, add a grey background color
+  &:hover input ~ .checkmark {
+    $check-box-hover-color: #ccc;
+    background-color: $check-box-hover-color;
+  }
+
+  // When the checkbox is checked, add a blue background
+  input:checked ~ .checkmark {
+    background-color: $background-color-2;
+  }
+
+  // Show the checkmark when checked
+  input:checked ~ .checkmark::after {
+    display: block;
+  }
+
+  // Create a custom checkbox
+  .checkmark {
+    $unchecked-box-color: #eee;
+    background-color: $unchecked-box-color;
+    border-radius: 100px;
+    height: 22px;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 22px;
+
+    // Create the checkmark/indicator (hidden when not checked)
+    // Style the checkmark/indicator
+    &::after {
+      border: solid $border-color-2;
+      border-width: 0 3px 3px 0;
+      content: '';
+      display: none;
+      height: 10px;
+      left: 9px;
+      position: absolute;
+      top: 5px;
+      transform: rotate(45deg);
+      width: 5px;
+    }
+  }
 }
