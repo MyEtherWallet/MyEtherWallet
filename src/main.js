@@ -21,6 +21,7 @@ import Promo from '@/components/Body/Home/Promo/Promo'
 import ByJsonPageTitle from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageTitle/PageTitle'
 import ByJsonPageFooter from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageFooter/PageFooter'
 import PriceBar from '@/components/Body/SmallComponents/PriceBar/PriceBar'
+import AccessMyWalletOptions from '@/components/Body/AccessMyWallet/AccessMyWalletOptions/AccessMyWalletOptions'
 
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
@@ -33,6 +34,7 @@ Vue.component('promo', Promo)
 Vue.component('by-json-page-title', ByJsonPageTitle)
 Vue.component('by-json-page-footer', ByJsonPageFooter)
 Vue.component('price-bar', PriceBar)
+Vue.component('access-my-wallet-options', AccessMyWalletOptions)
 
 Vue.config.productionTip = false
 
