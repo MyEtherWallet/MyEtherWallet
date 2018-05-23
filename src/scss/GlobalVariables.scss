@@ -9,6 +9,7 @@ $mobile-width: 600px;
 // *********************************************************************
 // Box Shadow color styles
 // *********************************************************************
+$box-shadow-color-1: rgba(0, 0, 0, .12);
 $news-block-box-shadow-color: rgba(0, 0, 0, .05);
 $topbanner-block-box-shadow-color: rgba(0, 0, 0, .15);
 $tiny-header-shadow-color: rgba(0, 0, 0, .1);
@@ -31,6 +32,7 @@ $create-wallet-background-color: #5a78f0;
 $unlock-wallet-background-color: $background-color-2;
 $footer-background-color: #132b3f;
 $price-bar-background-color: #476081;
+$bootstrap-modal-header-background-color: #434f61;
 
 
 // *********************************************************************
