@@ -1,9 +1,15 @@
 <template>
   <div class="access-my-wallet-options">
 
+    <!-- .modal-container ************************ -->
+    <!-- .modal-container ************************ -->
+    <!-- .modal-container ************************ -->
     <div class="modal-container">
-      <!-- Modal =================================== -->
+      <!-- Modal (MEW Connect) =================================== -->
       <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEW Connect">
+        <div class="modal-icon">
+          <img class="icon" src="~@/assets/images/icons/button-connect.svg">
+        </div>
         <div class="d-block content-container text-center">
           <h3 class="modal-large-text">Please Connect With Your Device</h3>
         </div>
@@ -22,32 +28,7 @@
         </div>
       </b-modal>
 
-      <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware">
-        <div class="d-block content-container text-center">
-          <ul class="hardware-options">
-            <li>Ledger Wallet</li>
-            <li>Trezor</li>
-            <li>Digital Bitbox</li>
-            <li>Secalot</li>
-          </ul>
-
-          <h3 class="modal-large-text">Please Connect With Your Device</h3>
-        </div>
-        <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button">
-            Continue
-          </b-btn>
-        </div>
-        <div class="support">
-          <router-link to="/">
-            <div class="support-content">
-              <div class="support-icon"><img src="~@/assets/images/home/bell.png"></div>
-              <div class="support-label"><h5>Customer Support</h5></div>
-            </div>
-          </router-link>
-        </div>
-      </b-modal>
-
+      <!-- Modal (Hardware) =================================== -->
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware">
         <div class="d-block content-container text-center">
           <ul class="button-options">
@@ -74,6 +55,7 @@
         </div>
       </b-modal>
 
+      <!-- Modal (MetaMask) =================================== -->
       <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask">
         <div class="d-block content-container text-center">
           <h4>
@@ -102,6 +84,7 @@
         </div>
       </b-modal>
 
+      <!-- Modal (Software) =================================== -->
       <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software">
         <div class="d-block content-container text-center">
           <ul class="button-options">
@@ -124,8 +107,10 @@
           </router-link>
         </div>
       </b-modal>
-      <!-- Modal =================================== -->
     </div>
+    <!-- .modal-container ************************ -->
+    <!-- .modal-container ************************ -->
+    <!-- .modal-container ************************ -->
 
     <div class="wrap">
       <div class="page-container">
@@ -137,9 +122,10 @@
           </h5>
         </div>
         <div class="buttons-container">
+
           <div class="button-block" v-on:click="mewConnectModalOpen">
             <div class="button-image">
-              <i class="fa fa-telegram" aria-hidden="true"></i>
+              <img class="icon" src="~@/assets/images/icons/button-mewconnect.svg">
             </div>
             <h3>MEW Connect</h3>
             <p>Use MEW Connect to access my wallet</p>
@@ -149,9 +135,10 @@
               </span>
             </div>
           </div>
+
           <div class="button-block" v-on:click="hardwareModalOpen">
             <div class="button-image">
-              <i class="fa fa-telegram" aria-hidden="true"></i>
+              <img class="icon" src="~@/assets/images/icons/button-hardware.svg">
             </div>
             <h3>Hardware</h3>
             <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
@@ -161,9 +148,10 @@
               </span>
             </div>
           </div>
+
           <div class="button-block" v-on:click="metamaskModalOpen">
             <div class="button-image">
-              <i class="fa fa-telegram" aria-hidden="true"></i>
+              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
             </div>
             <h3>MetaMask</h3>
             <p>Use extention to access my wallet</p>
@@ -173,9 +161,10 @@
               </span>
             </div>
           </div>
+
           <div class="button-block" v-on:click="softwareModalOpen">
             <div class="button-image">
-              <i class="fa fa-telegram" aria-hidden="true"></i>
+              <img class="icon" src="~@/assets/images/icons/button-software.svg">
             </div>
             <h3>Software</h3>
             <p>JSON file, Private key, Mnemonic phrase</p>
@@ -186,6 +175,7 @@
               </span>
             </div>
           </div>
+
         </div>
       </div><!-- .page-container -->
     </div><!-- .wrap -->

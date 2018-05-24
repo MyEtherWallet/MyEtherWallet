@@ -3,8 +3,18 @@
 // Bootstrap modal --------------------------------------------
 .modal-container {
   .bootstrap-modal {
+    .modal-icon {
+      display: flex;
+      margin-top: 20px;
+
+      img {
+        margin: 0 auto;
+        margin-bottom: 30px;
+      }
+    }
+
     .content-container {
-      margin-bottom: 30px;
+      margin-bottom: 35px;
 
       .modal-large-text {
         font-weight: 400;
@@ -90,7 +100,7 @@
 }
 
 .title {
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   text-align: center;
 }
 
@@ -107,13 +117,14 @@
     background-color: $background-color-white;
     border-radius: 5px;
     cursor: pointer;
-    padding: 25px 15px;
+    padding: 10px 15px 25px;
     position: relative;
     top: 0;
     transition: all .3s ease;
 
     .button-image {
       font-size: 90px;
+      margin-bottom: 5px;
     }
 
     p {
