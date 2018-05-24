@@ -55,6 +55,22 @@
   } // .support
 
   .modal-metamask {
+    .modal-multi-icons {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      margin-top: 20px;
+
+      img {
+        padding: 0 13px;
+      }
+
+      .logo-small {
+        max-height: 90px;
+      }
+    }
+
     .content-container {
       margin-bottom: 20px;
 
@@ -76,10 +92,10 @@
       margin-bottom: 50px;
 
       li {
+        align-items: center;
         color: $text--link-color;
         cursor: pointer;
         display: flex;
-        align-items: center;
         padding: 30px 10px;
         text-align: left;
 
