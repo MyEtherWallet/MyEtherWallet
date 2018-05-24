@@ -32,8 +32,14 @@
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware">
         <div class="d-block content-container text-center">
           <ul class="button-options">
-            <li>Ledger Wallet</li>
-            <li>Trezor</li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-ledger.svg">
+              <span>Ledger Wallet</span>
+            </li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-trezor.svg">
+              <span>Trezor</span>
+            </li>
             <li>Digital Bitbox</li>
             <li>Secalot</li>
           </ul>
@@ -131,7 +137,9 @@
             <p>Use MEW Connect to access my wallet</p>
             <div class="tooltip-box">
               <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">What's that?</b-btn>
+                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
+                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </b-btn>
               </span>
             </div>
           </div>
@@ -144,7 +152,9 @@
             <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
             <div class="tooltip-box">
               <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">What's that?</b-btn>
+                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
+                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </b-btn>
               </span>
             </div>
           </div>
@@ -157,7 +167,9 @@
             <p>Use extention to access my wallet</p>
             <div class="tooltip-box">
               <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">What's that?</b-btn>
+                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
+                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </b-btn>
               </span>
             </div>
           </div>
@@ -171,7 +183,9 @@
             <p class="small-note">Not recommended</p>
             <div class="tooltip-box">
               <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">What's that?</b-btn>
+                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
+                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </b-btn>
               </span>
             </div>
           </div>

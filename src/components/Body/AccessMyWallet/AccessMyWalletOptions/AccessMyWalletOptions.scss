@@ -78,7 +78,9 @@
       li {
         color: $text--link-color;
         cursor: pointer;
-        padding: 30px;
+        display: flex;
+        align-items: center;
+        padding: 30px 10px;
         text-align: left;
 
         &:hover {
@@ -142,20 +144,24 @@
     }
 
     .tooltip-box {
-      bottom: -50px;
       display: none;
-      left: 0;
       position: absolute;
-      width: 100%;
+      right: 15px;
+      top: 10px;
 
-      span {
-        padding: 60px 0 10px;
+      .btn {
+        background-color: transparent;
+        border: 0;
+        color: $text-white;
+        font-size: 18px;
+        line-height: 100%;
+        padding: 0;
       }
     }
 
     &:hover {
       background-color: $background-color-2;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, .15);
+      box-shadow: 0 5px 20px $box-shadow-color-1;
       color: $text-white;
       top: -8px;
 

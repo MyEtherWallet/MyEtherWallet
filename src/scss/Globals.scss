@@ -405,6 +405,7 @@ h6 {
 // [Bootstrap] Tooltip style
 // *********************************************************************
 .tooltip {
+  pointer-events: none;
   z-index: 9999999;
 
   &.show {
