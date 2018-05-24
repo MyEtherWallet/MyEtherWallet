@@ -63,6 +63,11 @@
 
       <!-- Modal (MetaMask) =================================== -->
       <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask">
+        <div class="modal-multi-icons">
+          <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
+          <img class="icon" src="~@/assets/images/icons/clip.svg">
+          <img class="icon logo-small" src="~@/assets/images/logo-small.png">
+        </div>
         <div class="d-block content-container text-center">
           <h4>
             Please use MyEtherWallet on a secure (SSL / HTTPS)
