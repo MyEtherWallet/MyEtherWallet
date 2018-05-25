@@ -29,7 +29,7 @@
       </b-modal>
 
       <b-modal ref="mewConnect2" hide-footer class="bootstrap-modal modal-mew-connect2" title="Network and Address">
-        <div class="content-container">
+        <div class="content-container-1">
           <div class="hd-derivation">
             <h4>HD Derivation Path</h4>
             <div class="dropdown-button-container">
@@ -43,10 +43,18 @@
             </div>
           </div>
           <p class="derivation-brands">Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
-          <div class="address-container">
+        </div>
+        <div class="content-container-2">
+          <div class="address-block-container">
             <div class="block-title">
               <h4>Address to Interact With</h4>
             </div>
+            <ul class="address-block">
+              <li>ID</li>
+              <li>Address</li>
+              <li>Balance</li>
+              <li></li>
+            </ul>
           </div>
         </div>
         <div class="accept-terms">
