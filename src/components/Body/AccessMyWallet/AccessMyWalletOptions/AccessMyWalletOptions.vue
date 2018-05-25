@@ -5,13 +5,55 @@
     <!-- .modal-container ************************ -->
     <!-- .modal-container ************************ -->
     <div class="modal-container">
-      <!-- Modal (MEW Connect) =================================== -->
+      <!-- Modal (MEW Connect) ============================================================================================================================================ -->
       <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEW Connect">
         <div class="modal-icon">
           <img class="icon" src="~@/assets/images/icons/button-connect.svg">
         </div>
         <div class="d-block content-container text-center">
           <h3 class="modal-large-text">Please Connect With Your Device</h3>
+        </div>
+        <div class="button-container">
+          <b-btn class="mid-round-button-green-filled close-button" v-on:click="mewConnectModalOpen2">
+            Continue
+          </b-btn>
+        </div>
+        <div class="support">
+          <router-link to="/">
+            <div class="support-content">
+              <div class="support-icon"><img src="~@/assets/images/home/bell.png"></div>
+              <div class="support-label"><h5>Customer Support</h5></div>
+            </div>
+          </router-link>
+        </div>
+      </b-modal>
+
+      <b-modal ref="mewConnect2" hide-footer class="bootstrap-modal modal-mew-connect2" title="Network and Address">
+        <div class="content-container">
+          <div class="hd-derivation">
+            <h4>HD Derivation Path</h4>
+            <div class="dropdown-button-container">
+              <b-dropdown id="hd-derivation-path" text="m/44’/60’/0’/0" class="dropdown-button-1">
+                <b-dropdown-item class="active">m/44’/60’/0’/0</b-dropdown-item>
+                <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
+                <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item>Add Custom Path</b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </div>
+          <p class="derivation-brands">Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
+          <div class="address-container">
+            <div class="block-title">
+              <h4>Address to Interact With</h4>
+            </div>
+          </div>
+        </div>
+        <div class="accept-terms">
+          <label class="container">To unlock my wallet, I accept <a href="/">Terms</a>.
+            <input type="checkbox">
+            <span class="checkmark"></span>
+          </label>
         </div>
         <div class="button-container">
           <b-btn class="mid-round-button-green-filled close-button">
@@ -28,7 +70,7 @@
         </div>
       </b-modal>
 
-      <!-- Modal (Hardware) =================================== -->
+      <!-- Modal (Hardware) ============================================================================================================================================ -->
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware">
         <div class="d-block content-container text-center">
           <ul class="button-options">
@@ -61,7 +103,7 @@
         </div>
       </b-modal>
 
-      <!-- Modal (MetaMask) =================================== -->
+      <!-- Modal (MetaMask) ============================================================================================================================================ -->
       <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask">
         <div class="modal-multi-icons">
           <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
@@ -73,12 +115,12 @@
             Please use MyEtherWallet on a secure (SSL / HTTPS)
             connection to connect.
           </h4>
-          <div class="accept-terms">
-            <label class="container">To unlock my wallet, I accept <a href="/">Terms</a>.
-              <input type="checkbox">
-              <span class="checkmark"></span>
-            </label>
-          </div>
+        </div>
+        <div class="accept-terms">
+          <label class="container">To unlock my wallet, I accept <a href="/">Terms</a>.
+            <input type="checkbox">
+            <span class="checkmark"></span>
+          </label>
         </div>
         <div class="button-container">
           <b-btn class="mid-round-button-green-filled close-button">
@@ -95,7 +137,7 @@
         </div>
       </b-modal>
 
-      <!-- Modal (Software) =================================== -->
+      <!-- Modal (Software) ============================================================================================================================================ -->
       <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software">
         <div class="d-block content-container text-center">
           <ul class="button-options">
@@ -211,6 +253,9 @@ export default {
   methods: {
     mewConnectModalOpen () {
       this.$refs.mewConnect.show()
+    },
+    mewConnectModalOpen2 () {
+      this.$refs.mewConnect2.show()
     },
     hardwareModalOpen () {
       this.$refs.hardware.show()
