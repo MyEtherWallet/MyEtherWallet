@@ -64,39 +64,44 @@
   } // .support
 
   .modal-mew-connect2 {
-    .content-container {
+    .content-container-1 {
       margin: -20px -40px 0;
       padding: 0 25px;
-    }
 
-    .hd-derivation {
-      align-items: center;
-      display: flex;
+      .hd-derivation {
+        align-items: center;
+        display: flex;
 
-      .dropdown-button-container {
-        margin-left: auto;
+        .dropdown-button-container {
+          margin-left: auto;
+        }
       }
-    }
 
-    .derivation-brands {
-      font-size: 12px;
-      padding: 15px 0;
-      text-align: left;
-    }
-
-    .address-container {
-      background-color: $background-color-1;
-
-      .block-title {
+      .derivation-brands {
+        font-size: 12px;
         padding: 15px 0;
-
+        text-align: left;
       }
-    }
+    } // .content-container-1
 
-    .modal-body {
-      padding: 10px;
-    }
-  }
+    .content-container-2 {
+      background-color: $background-color-1;
+      margin: 0 -40px;
+      margin-bottom: 30px;
+      padding: 0 25px;
+
+      .address-block-container {
+        .block-title {
+          padding: 15px 0;
+        }
+
+        .address-block {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+      }
+    } // .content-container-2
+  } // .modal-mew-connect2
 
   .modal-metamask {
     .modal-multi-icons {
