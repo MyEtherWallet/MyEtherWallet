@@ -732,3 +732,28 @@ h6 {
     }
   }
 }
+
+
+// *********************************************************************
+// Dropdown Buttons
+// *********************************************************************
+.dropdown-button-1 {
+
+  >button {
+    background-color: $background-color-white;
+    border: solid 1px $button--border-color-2;
+    color: $text-color-6;
+    font-family: arial;
+    min-width: 180px;
+    padding: 8px 15px;
+    text-align: left;
+  }
+
+  .active {
+    color: $text-black;
+  }
+
+  a {
+    outline: none;
+  }
+}
