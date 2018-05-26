@@ -191,7 +191,7 @@
           </h4>
         </div>
         <div class="accept-terms">
-          <label class="container">To unlock my wallet, I accept <a href="/">Terms</a>.
+          <label class="checkbox-container">To unlock my wallet, I accept <a href="/">Terms</a>.
             <input type="checkbox">
             <span class="checkmark"></span>
           </label>
