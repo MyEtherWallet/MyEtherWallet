@@ -135,32 +135,6 @@
         }
       } // .address-block-container
 
-      .address-table-container {
-        table {
-          thead {
-            tr {
-              td {
-
-              }
-            }
-          }
-
-          tbody {
-            tr {
-              td {
-                p {
-                  display: flex;
-                  overflow: hidden;
-                  padding: 5px 0;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                }
-              }
-            }
-          }
-        }
-      } // .address-table-container
-
     } // .content-container-2
   } // .modal-mew-connect2
 
@@ -206,14 +180,33 @@
         color: $text--link-color;
         cursor: pointer;
         display: flex;
-        padding: 30px 10px;
+        padding: 30px 20px;
         text-align: left;
 
         &:hover {
           box-shadow: 0 3px 15px $box-shadow-color-1;
           color: $text-black;
           font-weight: 500;
+
+          .icon {
+            display: none;
+          }
+
+          .icon-hover {
+            display: block;
+          }
         }
+
+        .icon,
+        .icon-hover {
+          margin-right: 8px;
+          width: 50px;
+        }
+
+        .icon-hover {
+          display: none;
+        }
+
       }
     }
   }

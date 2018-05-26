@@ -138,15 +138,25 @@
         <div class="d-block content-container text-center">
           <ul class="button-options">
             <li>
-              <img class="icon" src="~@/assets/images/icons/button-ledger.svg">
+              <img class="icon" src="~@/assets/images/icons/button-ledger.png">
+              <img class="icon-hover" src="~@/assets/images/icons/button-ledger-hover.png">
               <span>Ledger Wallet</span>
             </li>
             <li>
-              <img class="icon" src="~@/assets/images/icons/button-trezor.svg">
+              <img class="icon" src="~@/assets/images/icons/button-trezor.png">
+              <img class="icon-hover" src="~@/assets/images/icons/button-trezor-hover.png">
               <span>Trezor</span>
             </li>
-            <li>Digital Bitbox</li>
-            <li>Secalot</li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-bitbox.png">
+              <img class="icon-hover" src="~@/assets/images/icons/button-bitbox-hover.png">
+              <span>Digital Bitbox</span>
+            </li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-secalot.png">
+              <img class="icon-hover" src="~@/assets/images/icons/button-secalot-hover.png">
+              <span>Secalot</span>
+            </li>
           </ul>
 
           <h3 class="modal-large-text">Please Connect With Your Device</h3>
