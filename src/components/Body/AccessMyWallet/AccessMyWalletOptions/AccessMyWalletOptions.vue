@@ -49,16 +49,71 @@
             <div class="block-title">
               <h4>Address to Interact With</h4>
             </div>
-            <ul class="address-block">
+
+            <ul class="address-block table-header">
               <li>ID</li>
               <li>Address</li>
               <li>Balance</li>
               <li></li>
             </ul>
+
+            <ul class="address-block address-data selected">
+              <li>1.</li>
+              <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
+              <li>2.2233445 ETH</li>
+              <li class="user-input-checkbox">
+                <label class="checkbox-container checkbox-container-small">
+                  <input type="checkbox">
+                  <span class="checkmark checkmark-small"></span>
+                </label>
+              </li>
+            </ul>
+
+            <ul class="address-block address-data">
+              <li>2.</li>
+              <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
+              <li>2.2233445 ETH</li>
+              <li class="user-input-checkbox">
+                <label class="checkbox-container checkbox-container-small">
+                  <input type="checkbox">
+                  <span class="checkmark checkmark-small"></span>
+                </label>
+              </li>
+            </ul>
+
+            <ul class="address-block address-data">
+              <li>3.</li>
+              <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
+              <li>2.2233445 ETH</li>
+              <li class="user-input-checkbox">
+                <label class="checkbox-container checkbox-container-small">
+                  <input type="checkbox">
+                  <span class="checkmark checkmark-small"></span>
+                </label>
+              </li>
+            </ul>
+
+            <ul class="address-block address-data">
+              <li>4.</li>
+              <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
+              <li>2.2233445 ETH</li>
+              <li class="user-input-checkbox">
+                <label class="checkbox-container checkbox-container-small">
+                  <input type="checkbox">
+                  <span class="checkmark checkmark-small"></span>
+                </label>
+              </li>
+            </ul>
+          </div> <!-- .address-block-container -->
+
+          <div class="address-nav">
+            <span>&lt; Previous</span>
+            <span>Next &gt;</span>
           </div>
-        </div>
+        </div> <!-- .content-container-2 -->
+
         <div class="accept-terms">
-          <label class="container">To unlock my wallet, I accept <a href="/">Terms</a>.
+          <label class="checkbox-container">To unlock my wallet, I accept <a href="/">Terms</a>.
             <input type="checkbox">
             <span class="checkmark"></span>
           </label>

@@ -671,7 +671,7 @@ h6 {
 // Custom Checkbox
 // *********************************************************************
 // Customize the label (the container)
-.container {
+.checkbox-container {
   cursor: pointer;
   display: inline;
   font-size: 14px;
@@ -680,6 +680,10 @@ h6 {
   padding-right: 0;
   position: relative;
   user-select: none;
+
+  &.checkbox-container-small {
+    padding-left: 0;
+  }
 
   // Hide the browser's default checkbox
   input {
@@ -722,11 +726,37 @@ h6 {
       border: solid $border-color-2;
       border-width: 0 3px 3px 0;
       content: '';
-      display: none;
+      // display: none;
       height: 10px;
       left: 9px;
       position: absolute;
       top: 5px;
+      transform: rotate(45deg);
+      width: 5px;
+    }
+  }
+
+  .checkmark-small {
+    $unchecked-box-color: #eee;
+    background-color: $unchecked-box-color;
+    border-radius: 100px;
+    height: 19px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 19px;
+
+    // Create the checkmark/indicator (hidden when not checked)
+    // Style the checkmark/indicator
+    &::after {
+      border: solid $border-color-2;
+      border-width: 0 3px 3px 0;
+      content: '';
+      // display: none;
+      height: 9px;
+      left: 7px;
+      position: absolute;
+      top: 4px;
       transform: rotate(45deg);
       width: 5px;
     }
