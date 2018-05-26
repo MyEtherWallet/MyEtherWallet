@@ -14,7 +14,7 @@
           <h3 class="modal-large-text">Please Connect With Your Device</h3>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button" v-on:click="mewConnectModalOpen2">
+          <b-btn class="mid-round-button-green-filled close-button" v-on:click="networkAndAddressOpen">
             Continue
           </b-btn>
         </div>
@@ -28,7 +28,8 @@
         </div>
       </b-modal>
 
-      <b-modal ref="mewConnect2" hide-footer class="bootstrap-modal modal-mew-connect2" title="Network and Address">
+      <!-- Modal (Network and Address) ============================================================================================================================================ -->
+      <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address">
         <div class="content-container-1">
           <div class="hd-derivation">
             <h4>HD Derivation Path</h4>
@@ -162,7 +163,7 @@
           <h3 class="modal-large-text">Please Connect With Your Device</h3>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button">
+          <b-btn class="mid-round-button-green-filled close-button" v-on:click="networkAndAddressOpen">
             Continue
           </b-btn>
         </div>
@@ -327,8 +328,8 @@ export default {
     mewConnectModalOpen () {
       this.$refs.mewConnect.show()
     },
-    mewConnectModalOpen2 () {
-      this.$refs.mewConnect2.show()
+    networkAndAddressOpen () {
+      this.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
       this.$refs.hardware.show()
