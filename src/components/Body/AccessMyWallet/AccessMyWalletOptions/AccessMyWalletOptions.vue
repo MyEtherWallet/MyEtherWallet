@@ -215,9 +215,21 @@
       <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software">
         <div class="d-block content-container text-center">
           <ul class="button-options">
-            <li>JSON File</li>
-            <li>Mnemonic Phrase</li>
-            <li>Private Key</li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-json.svg">
+              <img class="icon-hover" src="~@/assets/images/icons/button-json-hover.svg">
+              <span>JSON File</span>
+            </li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-mnemonic.svg">
+              <img class="icon-hover" src="~@/assets/images/icons/button-mnemonic-hover.svg">
+              <span>Mnemonic<br>Phrase</span>
+            </li>
+            <li>
+              <img class="icon" src="~@/assets/images/icons/button-key.svg">
+              <img class="icon-hover" src="~@/assets/images/icons/button-key-hover.svg">
+              <span>Private Key</span>
+            </li>
           </ul>
         </div>
         <div class="button-container">
