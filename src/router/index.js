@@ -13,6 +13,7 @@ import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/Se
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
