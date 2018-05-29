@@ -10,6 +10,7 @@ import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
+import VueI18n from 'vue-i18n'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -28,6 +29,8 @@ import TransactionAddress from '@/components/Body/Transactions/TransactionsCompo
 import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
 import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
 import TransactionTokens from '@/components/Body/Transactions/TransactionsComponents/TransactionTokens/TransactionTokens'
+
+import languages from './translations'
 
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
@@ -58,9 +61,16 @@ Vue.use(BootstrapVue)
 const options = { name: 'lodash' }
 Vue.use(VueLodash, options)
 
+// Define vue-i18n
+Vue.use(VueI18n)
+const i18n = new VueI18n({
+  locale: 'en',
+  languages: {languages}
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  i18n,
   router,
   store,
   components: { App },
