@@ -18,6 +18,7 @@ import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSa
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
