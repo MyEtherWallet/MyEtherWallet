@@ -183,6 +183,10 @@
         padding: 30px 0 30px 30px;
         text-align: left;
 
+        span {
+          line-height: 16px;
+        }
+
         &:hover {
           box-shadow: 0 3px 15px $box-shadow-color-1;
           color: $text-black;
