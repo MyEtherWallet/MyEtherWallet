@@ -1,0 +1,15 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-column-gap: 0;
+
+  .side-nav {
+    background-color: yellow;
+  }
+
+  .contents {
+    background-color: orange;
+  }
+}
