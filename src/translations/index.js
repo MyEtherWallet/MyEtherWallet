@@ -1,17 +1,17 @@
-import ch from './ch'
+import cn from './cn'
 import en from './en'
-import ger from './ger'
+import de from './de'
 import jp from './jp'
 import kr from './kr'
-import rus from './rus'
+import rs from './rs'
 
 const languages = {
-  ch: ch,
+  cn: cn,
   en: en,
-  ger: ger,
+  de: de,
   jp: jp,
   kr: kr,
-  rus: rus
+  rs: rs
 }
 
 export default languages

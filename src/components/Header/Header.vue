@@ -25,12 +25,7 @@
                   <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
                 </div>
                 <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                  <b-dropdown-item class="active" v-on:click="languageItemClicked" data-flag-name="gb">English</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="kr">Korean</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="jp">Japanese</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="cn">Chinese</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="ru">Russian</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="de">German</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" v-for='language in languages' v-bind:key='language.code+language.lang' :data-flag-name="language.code">{{language.lang}}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
 
@@ -43,7 +38,7 @@
               </div>
             </div>
 
-            <router-link to="/" class="nounderline">
+            <router-link to="/create-wallet" class="nounderline">
               <div class="get-free-wallet">
                 Get a Free Wallet
               </div>
@@ -60,6 +55,14 @@
 export default {
   data () {
     return {
+      languages: [
+        {lang: 'English', code: 'en'},
+        {lang: 'Korean', code: 'kr'},
+        {lang: 'Japanese', code: 'jp'},
+        {lang: 'Chinese', code: 'cn'},
+        {lang: 'Russian', code: 'ru'},
+        {lang: 'German', code: 'de'}
+      ]
     }
   },
   methods: {
@@ -67,14 +70,7 @@ export default {
       // Scroll to top of the page
       window.scrollTo(0, 0)
     },
-    // Update language text
     languageItemClicked: function (e) {
-      var allLanguages = document.getElementsByClassName('dropdown-item')
-
-      for (let i = 0; i < allLanguages.length; i++) {
-        allLanguages[i].classList.remove('active')
-      }
-
       e.target.classList.add('active')
       var countryName = e.target.innerText
       document.querySelector('.language-menu a span').innerText = countryName
@@ -89,9 +85,35 @@ export default {
       // Get flag image for the language and display it
       var newFlagImage = document.querySelector('[data-flag-name=' + flag + ']')
       newFlagImage.classList.add('show')
+
+      // switch locale language
+      // super hacky, but library doesn't support switching on runtime at the moment
+      this.$root._i18n.locale = flag
+      localStorage.setItem('locale', flag)
+    },
+    switchActiveLanguage: function (flag) {
+      const elements = document.getElementsByClassName(`dropdown-item`)
+      const currentFlag = document.querySelector('.current-language-flag img.show')
+      const newFlagImage = document.querySelector('[data-flag-name=' + flag + ']')
+
+      for (let i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute('data-flag-name') === flag) {
+          currentFlag.classList.remove('show')
+          newFlagImage.classList.add('show')
+          document.querySelector('.language-menu a span').innerText = elements[i].innerText
+        }
+      }
     }
   },
   mounted () {
+    if (localStorage.getItem('locale') !== null) {
+      this.$root._i18n.locale = localStorage.getItem('locale')
+      this.switchActiveLanguage(this.$root._i18n.locale)
+    } else {
+      localStorage.setItem('locale', this.$root._i18n.locale)
+      this.switchActiveLanguage(this.$root._i18n.locale)
+    }
+
     // Scroll to top of the page
     window.scrollTo(0, 0)
     // Check if user scrolled window, then change header style.
