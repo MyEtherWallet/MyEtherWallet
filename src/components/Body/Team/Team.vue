@@ -49,7 +49,7 @@
           <div class="member">
             <img src="~@/assets/images/team/Richie.jpg" alt="">
             <div class="text">
-              <h4>Duck & Richie Wolf</h4>
+              <h4>Duke & Richie Wolf</h4>
               <h6>Customer Support</h6>
               <h6>#MEWForce</h6>
             </div>
