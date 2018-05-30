@@ -24,6 +24,8 @@ import PriceBar from '@/components/Body/SmallComponents/PriceBar/PriceBar'
 import AccessMyWalletOptions from '@/components/Body/AccessMyWallet/AccessMyWalletOptions/AccessMyWalletOptions'
 import TransactionsSideMenu from '@/components/Body/Transactions/TransactionsSideMenu/TransactionsSideMenu'
 
+import Neo from '@/components/Body/Neo/NeoWalletComponent'
+
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
@@ -37,6 +39,8 @@ Vue.component('by-json-page-footer', ByJsonPageFooter)
 Vue.component('price-bar', PriceBar)
 Vue.component('access-my-wallet-options', AccessMyWalletOptions)
 Vue.component('transactions-side-menu', TransactionsSideMenu)
+
+Vue.component('neo-wallet',Neo)
 
 Vue.config.productionTip = false
 
