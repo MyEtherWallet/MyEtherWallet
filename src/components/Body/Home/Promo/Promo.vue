@@ -15,7 +15,7 @@
               </router-link>
             </div>
             <div class="button-block">
-              <router-link to="/create-wallet" class="nounderline">
+              <router-link to="/access-my-wallet" class="nounderline">
                 <span class="large-round-button-white-filled green-text-color">
                   Access My Wallet
                 </span>
