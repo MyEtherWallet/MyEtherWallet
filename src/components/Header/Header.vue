@@ -13,6 +13,7 @@
 
               <b-nav>
                 <b-nav-item v-bind:to="'/'">Home</b-nav-item>
+                <b-nav-item href="#/neo">NEO</b-nav-item>
                 <b-nav-item href="#pagelink-about-mew">About</b-nav-item>
                 <b-nav-item href="#pagelink-faqs">FAQs</b-nav-item>
                 <b-nav-item href="#pagelink-news">News</b-nav-item>

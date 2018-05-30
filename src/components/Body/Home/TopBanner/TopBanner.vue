@@ -4,8 +4,8 @@
       <div class="page-container">
         <div class="flex-col-vertical-center banner">
           <div class="banner-text">
-            <h1>My Security</h1>
-            <h1>Ethereum Wallet</h1>
+            <h1>DU's Only</h1>
+            <h1>Multicurrency Wallet</h1>
             <p>
               MEW helps you to generate Ethereum wallets, and interact with
               the Ethereum blockchain easily and securely.
