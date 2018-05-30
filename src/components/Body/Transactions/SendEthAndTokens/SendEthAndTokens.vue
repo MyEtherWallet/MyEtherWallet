@@ -21,21 +21,6 @@
               <h2>Send ETH & Tokens</h2>
             </div>
 
-            <div class="status">
-              <div class="status-block">
-                <p>Online</p>
-                <p>Generate Information</p>
-              </div>
-              <div class="status-block">
-                <p>Offline</p>
-                <p>Generate Transaction</p>
-              </div>
-              <div class="status-block active">
-                <p>Online</p>
-                <p>Send/Publish Transaction</p>
-              </div>
-            </div>
-
             <div class="send-form">
 
             </div>
