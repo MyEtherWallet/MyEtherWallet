@@ -42,42 +42,6 @@
           }
         }
 
-        .status {
-          background-color: $background-color-1;
-          // display: flex;
-          display: none;
-          margin-top: 1px;
-          padding: 0 20px;
-          text-align: center;
-
-          >div {
-            flex: 1;
-          }
-
-          .status-block {
-            padding-top: 24px;
-
-            p {
-              line-height: 17px;
-            }
-
-            p:nth-child(1) {
-              font-weight: 600;
-            }
-
-            p:nth-child(2) {
-              display: inline-block;
-              padding: 0 8px 18px;
-            }
-
-            &.active {
-              p:nth-child(2) {
-                border-bottom: 4px solid $border-color-3;
-              }
-            }
-          } // .status-block
-        } // .status
-
         .send-form {
           padding: 30px;
         } // .send-form
