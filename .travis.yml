@@ -1,10 +1,10 @@
 language: node_js
 node_js: '7'
+sudo: required
+dist: trust
 branches:
   except:
     - gh-pages
-script:
-  - npm install
 stages:
   - remove .gitignore
   - lint code
@@ -12,6 +12,8 @@ stages:
   - name: create release
     if: branch = master
   - name: deploy to production
+    if: branch = master
+  - name: send release
     if: branch = master
 jobs:
   include:
@@ -25,7 +27,7 @@ jobs:
       script: ./release.sh
     - stage: send release
       script: skip
-      privder: releases
+      provider: releases
       api_key:
         secure: $GITHUB_API_KEY
       file_blog: true
