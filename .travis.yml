@@ -18,8 +18,6 @@ stages:
     if: branch = master and type != pull_request
   - name: deploy to production
     if: branch = master and type != pull_request
-  - name: send release
-    if: branch = master and type != pull_request
 jobs:
   fast_finish: true
   include:
@@ -31,8 +29,6 @@ jobs:
       script: npm run build
     - stage: create release
       script: bash ./release.sh
-    - stage: send release
-      script: skip
       provider: releases
       api_key:
         secure: $GITHUB_API_KEY
@@ -41,5 +37,7 @@ jobs:
       skip_cleanup: true
       on:
         repo: gamalielhere/MyEtherWallet
+        branch: master
+        tags: true
     - stage: deploy to production
       script: npm run deploy

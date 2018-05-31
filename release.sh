@@ -9,6 +9,6 @@ sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist;
 
 # for f in deploy/*; do
 #   gpg --output $f.sig --detach-sig $f
-# done;
+# done;x
 
-git tag v$PACKAGE_VERSION; git push --tag
+git tag v$PACKAGE_VERSION
