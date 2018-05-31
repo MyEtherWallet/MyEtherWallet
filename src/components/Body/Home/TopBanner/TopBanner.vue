@@ -7,9 +7,9 @@
             <h1>DU's Only</h1>
             <h1>Multicurrency Wallet</h1>
             <p>
-              MEW helps you to generate Ethereum wallets, and interact with
+              the LUV Wallet helps you to generate Ethereum wallets, and interact with
               the Ethereum blockchain easily and securely.
-              MEW is a free and open-source, client-side interface.
+              LUV is a free and open-source, client-side interface.
             </p>
           </div>
           <div class="banner-image">
