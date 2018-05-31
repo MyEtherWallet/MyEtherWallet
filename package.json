@@ -81,6 +81,7 @@
     "vue-jest": "^1.0.2",
     "vue-loader": "^15.0.4",
     "vue-lodash": "^2.0.0",
+    "vue-select": "^2.4.0",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^4.6.0",
