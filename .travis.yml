@@ -1,9 +1,9 @@
 language: node_js
 node_js: '7'
-before_script:
-  - npm install
 jobs:
   include:
+    - stage: npm install
+      script: npm install
     - stage: remove .gitignore
       script: rm .gitignore
     - stage: run unit test
@@ -29,6 +29,7 @@ jobs:
     - stage: deploy to production
       script: npm run deploy
 stages:
+  - npm install
   - remove .gitignore
   - run unit test
   - run e2e test
