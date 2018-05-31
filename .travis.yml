@@ -3,6 +3,16 @@ node_js: '7'
 branches:
   except:
     - gh-pages
+script:
+  - npm install
+stages:
+  - remove .gitignore
+  - lint code
+  - build application
+  - name: create release
+    if: branch = master
+  - name: deploy to production
+    if: branch = master
 jobs:
   include:
     - stage: remove .gitignore
@@ -25,11 +35,3 @@ jobs:
         repo: gamalielhere/MyEtherWallet
     - stage: deploy to production
       script: npm run deploy
-stages:
-  - remove .gitignore
-  - lint code
-  - build application
-  - name: create release
-    if: branch = master
-  - name: deploy to production
-    if: branch = master
