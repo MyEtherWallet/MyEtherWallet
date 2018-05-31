@@ -1,0 +1,40 @@
+language: node_js
+node_js: '7'
+before_script:
+  - npm install
+jobs:
+  include:
+    - stage: remove .gitignore
+      script: rm .gitignore
+    - stage: run unit test
+      script: npm run unit
+    - stage: run e2e test
+      script: npm run e2e
+    - stage: lint code
+      script: npm run lint
+    - stage: build application
+      script: npm run build
+    - stage: create release
+      script: ./release.sh
+    - stage: send release
+      script: skip
+      privder: releases
+      api_key:
+        secure: $GITHUB_API_KEY
+      file_blog: true
+      file: deploy/*
+      skip_cleanup: true
+      on:
+        repo: gamalielhere/MyEtherWallet
+    - stage: deploy to production
+      script: npm run deploy
+stages:
+  - remove .gitignore
+  - run unit test
+  - run e2e test
+  - lint code
+  - build application
+  - name: create release
+    if: branch = master
+  - name: deploy to production
+    if: branch = master
