@@ -21,3 +21,4 @@
 * [ ] Created a release
   - [ ] Link to release:  
 * [ ] Add PR label
+* [ ] Updated package.json version
