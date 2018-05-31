@@ -13,7 +13,8 @@ branches:
 stages:
   - remove .gitignore
   - lint code
-  - build application
+  - name: build application
+    if: branch != master
   - name: create release
     if: branch = master and type != pull_request
   - name: deploy to production
