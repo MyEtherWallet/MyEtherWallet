@@ -6,8 +6,8 @@ PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $
 
 zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist;
 
-for f in deploy/*; do
-  gpg --output $f.sig --detach-sig $f
-done;
+# for f in deploy/*; do
+#   gpg --output $f.sig --detach-sig $f
+# done;
 
 git tag v$PACKAGE_VERSION; git push --tag
