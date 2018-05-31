@@ -1,7 +1,12 @@
 language: node_js
-node_js: '7'
 sudo: required
-dist: trust
+dist: trusty
+node_js: '7'
+env: CXX=g++-4.8
+addons:
+  apt:
+    sources: ubuntu-toolchain-r-test
+    packages: g++-4.8
 branches:
   except:
     - gh-pages
@@ -25,7 +30,7 @@ jobs:
     - stage: build application
       script: npm run build
     - stage: create release
-      script: ./release.sh
+      script: bash ./release.sh
     - stage: send release
       script: skip
       provider: releases
