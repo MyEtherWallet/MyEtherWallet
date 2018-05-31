@@ -6,7 +6,7 @@
           <h2>Unlock Wallet</h2>
           <h5>
             Do not have a wallet?
-            <router-link to="/">Create Wallet</router-link>
+            <router-link to="/#create-wallet">Create Wallet</router-link>
           </h5>
         </div>
         <div class="blocks">
