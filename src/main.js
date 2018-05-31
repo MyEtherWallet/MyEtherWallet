@@ -9,6 +9,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
+import vSelect from 'vue-select'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -43,6 +44,7 @@ Vue.component('transactions-side-menu', TransactionsSideMenu)
 Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
+Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
 

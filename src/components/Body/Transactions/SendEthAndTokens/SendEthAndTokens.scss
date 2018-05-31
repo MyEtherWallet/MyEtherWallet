@@ -27,8 +27,9 @@
         grid-area: main;
         overflow: hidden;
 
-        .title {
-          box-shadow: 0 1px 1px $box-shadow-color-2;
+        .content-title {
+          // box-shadow: 0 1px 1px $box-shadow-color-2;
+          border-bottom: 2px solid $background-color-1;
           padding: 17px 0;
 
           h2 {
@@ -43,7 +44,83 @@
         }
 
         .send-form {
-          padding: 30px;
+          padding: 40px 60px 0;
+
+          .form-block {
+            border-radius: 5px;
+
+            .title {
+              margin-bottom: 12px;
+            }
+
+            .the-form {
+              background-color: $background-color-1;
+              border-radius: 5px;
+            }
+          }
+
+          .amount-to-address {
+            display: grid;
+            grid-column-gap: 5px;
+            grid-template-columns: 2fr 3fr;
+
+            .amount {
+
+              .dropdown-select-search {
+                background-color: $background-color-1;
+                margin-bottom: 5px;
+              }
+
+              .amount-number {
+                input {
+                  background-color: transparent;
+                  border: 0;
+                  padding: 13px 15px;
+                  width: 100%;
+                }
+              }
+            }
+
+            .to-address {
+              .title {
+                align-items: center;
+                display: flex;
+                position: relative;
+
+                img {
+                  height: 50px;
+                  left: 91px;
+                  position: absolute;
+                  top: -14px;
+                }
+
+                .copy-button {
+                  color: $text--link-color;
+                  cursor: pointer;
+                  margin-left: auto;
+                }
+              }
+
+              .address-block {
+                height: 98px;
+
+                textarea {
+                  background-color: transparent;
+                  border: 0;
+                  height: 100%;
+                  padding: 13px 15px;
+                  resize: none;
+                  width: 100%;
+                }
+              }
+            }
+          }
+
+          .gas-amount {
+            input {
+              
+            }
+          }
         } // .send-form
       }
 
