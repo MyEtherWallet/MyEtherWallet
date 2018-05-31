@@ -10,12 +10,13 @@ stages:
   - lint code
   - build application
   - name: create release
-    if: branch = master
+    if: branch = master and type != pull_request
   - name: deploy to production
-    if: branch = master
+    if: branch = master and type != pull_request
   - name: send release
-    if: branch = master
+    if: branch = master and type != pull_request
 jobs:
+  fast_finish: true
   include:
     - stage: remove .gitignore
       script: rm .gitignore
