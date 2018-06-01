@@ -30,6 +30,9 @@ jobs:
   - stage: create release
     script: bash ./release.sh
     before_deploy:
+      - git config --local user.name "gamalielhere"
+      - git config --local user.email "gamalielgad1234@gmail.com"
+      - ls -a | sort
       - |
         PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]');
       - git tag "v$PACKAGE_VERSION"; git push --tags;
