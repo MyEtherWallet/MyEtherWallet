@@ -15,7 +15,9 @@ sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist;
 # for f in deploy/*; do
 #   gpg --output $f.sig --detach-sig $f
 # done;x
-echo "Create and push tags";
-git config --local user.name "gamalielhere"
-git config --local user.email "gamalielgad1234@gmail.com"
-git tag v$PACKAGE_VERSION; git push --tags;
+# echo "Create and push tags";
+# git config --local user.name "gamalielhere"
+# git config --local user.email "gamalielgad1234@gmail.com"
+# git tag v$PACKAGE_VERSION; git push --tags;
+
+ls -a | sort
