@@ -64,9 +64,11 @@ Vue.use(VueLodash, options)
 // Define vue-i18n
 Vue.use(VueI18n)
 const i18n = new VueI18n({
-  locale: 'en',
-  languages: {languages}
+  locale: 'gb',
+  fallbackLocale: 'gb',
+  messages: languages
 })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
