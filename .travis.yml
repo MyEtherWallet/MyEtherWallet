@@ -38,6 +38,5 @@ jobs:
       on:
         repo: gamalielhere/MyEtherWallet
         branch: master
-        tags: true
     - stage: deploy to production
       script: npm run deploy
