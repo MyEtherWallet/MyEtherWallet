@@ -31,7 +31,7 @@ jobs:
       script: bash ./release.sh
       provider: releases
       api_key:
-        secure: $GITHUB_API_KEY
+        secure: $GITHUB_OATH_KEY
       file_blog: true
       file: deploy/*
       skip_cleanup: true
@@ -39,4 +39,6 @@ jobs:
         repo: gamalielhere/MyEtherWallet
         branch: master
     - stage: deploy to production
+      api_key:
+        secure: $GITHUB_OATH_KEY
       script: npm run deploy
