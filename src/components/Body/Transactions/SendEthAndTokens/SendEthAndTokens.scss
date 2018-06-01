@@ -19,7 +19,6 @@
       grid-template-areas: 'info-1 info-2 info-3' 'main main tokens';
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: auto;
-      margin-top: 15px;
 
       .main-content {
         background-color: $background-color-white;
@@ -46,12 +45,17 @@
         .send-form {
           padding: 40px 60px 0;
 
+          .title {
+            margin-bottom: 10px;
+            padding: 0 8px;
+
+            h4 {
+              margin-bottom: 2px;
+            }
+          }
+
           .form-block {
             border-radius: 5px;
-
-            .title {
-              margin-bottom: 12px;
-            }
 
             .the-form {
               background-color: $background-color-1;
@@ -89,7 +93,7 @@
 
                 img {
                   height: 50px;
-                  left: 91px;
+                  left: 98px;
                   position: absolute;
                   top: -14px;
                 }
@@ -118,13 +122,51 @@
 
           .gas-amount {
             input {
-              background-color: transparent;
+              background-color: $background-color-1;
               border: 0;
               padding: 13px 15px;
               width: 100%;
             }
           }
         } // .send-form
+
+        .advanced {
+          padding-top: 10px;
+
+          .advanced-content {
+            border-bottom: 2px solid $background-color-1;
+            border-top: 2px solid $background-color-1;
+            display: flex;
+            padding: 0 8px;
+            padding-bottom: 20px;
+            padding-top: 20px;
+
+            .toggle-button {
+              align-items: center;
+              display: flex;
+              margin-left: auto;
+
+              span {
+                margin-right: 10px;
+              }
+            }
+          }
+        } // .advanced
+
+        .submit-button-container {
+          padding: 60px 0;
+          text-align: center;
+
+          .submit-button {
+            margin: 0 auto;
+            text-align: center;
+            width: 300px;
+          }
+
+          p {
+            margin-top: 20px;
+          }
+        }
       }
 
       .tokens {
