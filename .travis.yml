@@ -28,10 +28,10 @@ jobs:
     - stage: build application
       script: npm run build
     - stage: create release
-      script: bash ./release.sh
-      provider: releases
       api_key:
         secure: $GITHUB_OATH_KEY
+      script: bash ./release.sh
+      provider: releases
       file_blog: true
       file: deploy/*
       skip_cleanup: true
