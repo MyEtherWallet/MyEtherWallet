@@ -30,7 +30,8 @@ jobs:
   - stage: create release
     script: bash ./release.sh
     before_deploy:
-      - PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]');
+      - |
+        PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]');
       - git tag "v$PACKAGE_VERSION"; git push --tags;
     deploy:
       provider: releases
