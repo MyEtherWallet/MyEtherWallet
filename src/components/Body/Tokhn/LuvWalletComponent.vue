@@ -227,7 +227,7 @@ export default {
 
         }
 }
-< /script>
+</script>
 
 < style scoped >
     .file - select > .select - button {
@@ -245,4 +245,4 @@ export default {
       .file-select > input[type= "file"] {
         display: none;
     }
-   < /style>
+   </style>
