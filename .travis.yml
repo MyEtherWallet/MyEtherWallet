@@ -9,36 +9,37 @@ addons:
     packages: g++-4.8
 branches:
   except:
-    - gh-pages
+  - gh-pages
 stages:
-  - remove .gitignore
-  - lint code
-  - build application
-  - name: create release
-    if: branch = master and type != pull_request
-  - name: deploy to production
-    if: branch = master and type != pull_request
+- remove .gitignore
+- lint code
+- build application
+- name: create release
+  if: branch = master and type != pull_request
+- name: deploy to production
+  if: branch = master and type != pull_request
 jobs:
   fast_finish: true
   include:
-    - stage: remove .gitignore
-      script: rm .gitignore
-    - stage: lint code
-      script: npm run lint
-    - stage: build application
-      script: npm run build
-    - stage: create release
-      api_key:
-        secure: $GITHUB_OATH_KEY
-      script: bash ./release.sh
-      provider: releases
-      file_blog: true
-      file: deploy/*
-      skip_cleanup: true
-      on:
-        repo: gamalielhere/MyEtherWallet
-        branch: master
-    - stage: deploy to production
-      api_key:
-        secure: $GITHUB_OATH_KEY
-      script: bash ./deploy.sh
+  - stage: remove .gitignore
+    script: rm .gitignore
+  - stage: lint code
+    script: npm run lint
+  - stage: build application
+    script: npm run build
+  - stage: create release
+    provider: releases
+    api_key:
+      secure: M0q9pIo1uahI602n3QoWbBMsNRVn3e6u9BuCx4O3QUM37ovRzdxDlHEytnyP/wct19YaZ/qJAzNSVL6qNdP9nepuZ3GqaEUZW8eWgHkTx0C2ViyfN945JlUKU6i8IK1wwa5r4h2fQPzp4sCqZFYtJw5taiHRizxGaCXK2NwsndpnorAcjtjO7suTVdnvcaofquClzZRtjb0N7IlbdZ0O73yjJm3wAbS7KE5r/NQ4TqCoX7aIb45hkRyDz6tbSmupp1QcLsZx2xk3B/TexQy4mXTlb7hDJ908DAnRgN9k/y8t93pkc8ZEgQjYXNZid/9Q3B1LgpR5+kdDqXlYBNTci7SqfZhbgfZjr+txlhl/1MW9Biuy9qIMZUHY+VvJ3lRnEJkOtlI7yuAnPNjeQQm/U2gKkSb9gg2HjZ2Iwy8RmImNNXoykPcSdQgSpStjE8bIvzmgo7CcdUIoxOQJF9z5s0LQh72IRoMDYrj9Lh8YH4s2MmTo8Z/JwSYS5qraZSCsAVtOHYjGxlzw1uk18BH0f8kczuL/s6CiLPPV22hdWAqDWEkqNNha5rZZo4ReCj7h+Emp8mKKL9i/B54EMn76yQJVBH7cZG3e2f8LU7kfHA34KcqmWKBTrzDFt0RETYh5FezAS5wXg3m9iDBh8K4zJGNCrFgEj4lJ6OgqTzyzMy8=
+    script: bash ./release.sh
+    provider: releases
+    file_blog: true
+    file: deploy/*
+    skip_cleanup: true
+    on:
+      repo: gamalielhere/MyEtherWallet
+      branch: master
+  - stage: deploy to production
+    api_key:
+      secure: M0q9pIo1uahI602n3QoWbBMsNRVn3e6u9BuCx4O3QUM37ovRzdxDlHEytnyP/wct19YaZ/qJAzNSVL6qNdP9nepuZ3GqaEUZW8eWgHkTx0C2ViyfN945JlUKU6i8IK1wwa5r4h2fQPzp4sCqZFYtJw5taiHRizxGaCXK2NwsndpnorAcjtjO7suTVdnvcaofquClzZRtjb0N7IlbdZ0O73yjJm3wAbS7KE5r/NQ4TqCoX7aIb45hkRyDz6tbSmupp1QcLsZx2xk3B/TexQy4mXTlb7hDJ908DAnRgN9k/y8t93pkc8ZEgQjYXNZid/9Q3B1LgpR5+kdDqXlYBNTci7SqfZhbgfZjr+txlhl/1MW9Biuy9qIMZUHY+VvJ3lRnEJkOtlI7yuAnPNjeQQm/U2gKkSb9gg2HjZ2Iwy8RmImNNXoykPcSdQgSpStjE8bIvzmgo7CcdUIoxOQJF9z5s0LQh72IRoMDYrj9Lh8YH4s2MmTo8Z/JwSYS5qraZSCsAVtOHYjGxlzw1uk18BH0f8kczuL/s6CiLPPV22hdWAqDWEkqNNha5rZZo4ReCj7h+Emp8mKKL9i/B54EMn76yQJVBH7cZG3e2f8LU7kfHA34KcqmWKBTrzDFt0RETYh5FezAS5wXg3m9iDBh8K4zJGNCrFgEj4lJ6OgqTzyzMy8=
+    script: bash ./deploy.sh
