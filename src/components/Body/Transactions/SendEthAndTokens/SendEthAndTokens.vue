@@ -57,6 +57,29 @@
               </div>
             </div>
 
+            <div class="send-form advanced">
+              <div class="advanced-content">
+                <h4>Advanced</h4>
+                <div class="toggle-button">
+                  <span>Data & Gas Limited</span>
+                  <div class="sliding-switch">
+                    <label class="switch">
+                      <input type="checkbox">
+                      <span v-on:click="mnemonicValueBitSizeChange" class="slider round"></span>
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="submit-button-container">
+              <div class="submit-button large-round-button-green-filled clickable">
+                Send Transaction
+              </div>
+              <p>Have any issues? <router-link :to="{ name: '/', params: {} }">Learn more</router-link></p>
+            </div>
+
           </div>
           <div class="tokens">
             <div class="">
