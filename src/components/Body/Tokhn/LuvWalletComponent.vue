@@ -229,7 +229,7 @@ export default {
 }
 </script>
 
-< style scoped >
+<style scoped >
     .file - select > .select - button {
         padding: 1 rem;
 
