@@ -1,20 +1,3 @@
-<style scoped>
-
-.file-select > .select-button {
-    padding: 1rem;
-    color: white;
-    background-color: #2EA169;
-    border-radius: .3rem;
-    text-align: center;
-    font-weight: bold;
-}
-
-.file-select > input[type="file"] {
-    display: none;
-}
-
-</style>
-
 <template>
 
 <div class="container">
@@ -244,7 +227,7 @@ export default {
 
         }
 }
-< /script>
+</script>
 
 < style scoped >
     .file - select > .select - button {
