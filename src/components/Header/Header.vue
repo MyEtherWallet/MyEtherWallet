@@ -12,10 +12,10 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/'">Home</b-nav-item>
-                <b-nav-item href="#pagelink-about-mew">About</b-nav-item>
-                <b-nav-item href="#pagelink-faqs">FAQs</b-nav-item>
-                <b-nav-item href="#pagelink-news">News</b-nav-item>
+                <b-nav-item v-bind:to="'/'"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item href="#pagelink-about-mew">{{ $t("header.about") }}</b-nav-item>
+                <b-nav-item href="#pagelink-faqs">{{ $t("header.faqs") }}</b-nav-item>
+                <b-nav-item href="#pagelink-news">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
@@ -25,7 +25,7 @@
                   <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
                 </div>
                 <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                  <b-dropdown-item v-on:click="languageItemClicked" v-for='language in languages' v-bind:key='language.code+language.lang' :data-flag-name="language.code">{{language.lang}}</b-dropdown-item>
+                  <b-dropdown-item v-on:click="languageItemClicked" v-for='language in languages' v-bind:class="{active: $root._i18n.locale === language.code}" v-bind:key='language.code+language.lang' :data-flag-name="language.code">{{language.lang}}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
 
@@ -40,7 +40,7 @@
 
             <router-link to="/create-wallet" class="nounderline">
               <div class="get-free-wallet">
-                Get a Free Wallet
+                {{ $t("header.getAFreeWallet") }}
               </div>
             </router-link>
 
@@ -56,7 +56,7 @@ export default {
   data () {
     return {
       languages: [
-        {lang: 'English', code: 'en'},
+        {lang: 'English', code: 'gb'},
         {lang: 'Korean', code: 'kr'},
         {lang: 'Japanese', code: 'jp'},
         {lang: 'Chinese', code: 'cn'},
@@ -71,7 +71,8 @@ export default {
       window.scrollTo(0, 0)
     },
     languageItemClicked: function (e) {
-      e.target.classList.add('active')
+      const self = this
+
       var countryName = e.target.innerText
       document.querySelector('.language-menu a span').innerText = countryName
 
@@ -88,7 +89,7 @@ export default {
 
       // switch locale language
       // super hacky, but library doesn't support switching on runtime at the moment
-      this.$root._i18n.locale = flag
+      self.$root._i18n.locale = flag
       localStorage.setItem('locale', flag)
     },
     switchActiveLanguage: function (flag) {
@@ -106,12 +107,14 @@ export default {
     }
   },
   mounted () {
+    const self = this
+
     if (localStorage.getItem('locale') !== null) {
-      this.$root._i18n.locale = localStorage.getItem('locale')
-      this.switchActiveLanguage(this.$root._i18n.locale)
+      self.$root._i18n.locale = localStorage.getItem('locale')
+      self.switchActiveLanguage(self.$root._i18n.locale)
     } else {
-      localStorage.setItem('locale', this.$root._i18n.locale)
-      this.switchActiveLanguage(this.$root._i18n.locale)
+      localStorage.setItem('locale', self.$root._i18n.locale)
+      self.switchActiveLanguage(self.$root._i18n.locale)
     }
 
     // Scroll to top of the page
