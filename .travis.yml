@@ -41,4 +41,4 @@ jobs:
     - stage: deploy to production
       api_key:
         secure: $GITHUB_OATH_KEY
-      script: npm run deploy
+      script: bash ./deploy.sh
