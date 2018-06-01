@@ -30,23 +30,21 @@ jobs:
   - stage: create release
     script: bash ./release.sh
     before_deploy:
-      - git config --local user.name "gamalielhere"
-      - git config --local user.email "gamalielgad1234@gmail.com"
-      - ls -a | sort
-      - |
-        PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]');
-      - git tag "v$PACKAGE_VERSION"
+    - ls -a | sort
+    - |
+      PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION; git push;
     deploy:
       provider: releases
       api_key:
-        secure: Bzwd+lWJamc4NyDUU+DO9dj5vVMgMj/bwJtmdJKz3paUSnjdY8kg6UdLKf01TLCEb6QN1xpxYOarKMyojSZHV7Q44NyuXNahkigFT78aKw6UUInliUUk88MivfPupoQrqAa+261plyQFc3WhuDRaQahTfxlW1jaaUcywbCg+LaGWRFkuCBQ9fsgsjR89hhFDKk1FL/ws9IKBCBi9VQOg52XPXzeUAXjkDVjWCL0wnVzmd66oa1S+DT/Z58rJXGumt0ZEEcG8Lq3BeFOS0d7J3IlIdzMLQfI4ZW92QwayQEFomwE9G+aq4UvTxJkQB4BRkYfY19NYQs12wSMfeAEeSuyXLLmmQcoj8HzSg58qR3PPt6dOvC3CRew4JwOghvKjO7L1SEv1/uq2gI2Aw/J2tI4FRcbJU+ngEa8RW37Ay8u1EO8xyka+rY4fYSIOIqAxfSYzJPabGoLBhNKWVV9QCj3TwVJeK9xXJ359AofWq5owAtvqNmMbRje4mETmQ/LuIDmrwjfyi7Gs6Q56jHqCv5OAQLFDbUgr/2DxPeeuPb113q1JCvcpeQDH1SUovJvG4V3cC2OFmHazW7SLGaU1jf9lGHQOTnIffn5Xrptqbw4oeakvOUyWFKbSodCdM2hao5pYyHJUyx2J+1asqW49MAO9nnoJKC43S0uidku+uSc=
-      file_blog: true
+        secure: oWYpw+AOf10bOpXpEXRseFamJLkBvdfB/Onas0zwrzRyDObDJrgtPJ95siZYIYdl1mMOUXY1757uzX9+4w8ow5LhPIEW0910AqrhgsLNEBLXiQij3vZzzGyIVC7bP78o7Gde66RD4ulS1LyK15P9re2CmE+euyOwJJqE1I0IYk0NMokwZTacHkfW30MtTnh+teHYyoI7Jw5w4oamzraGkQlLI/XHZRc61at3+DWLDJhI1lFKyI7D0ByKc6vofc9AHBygR80Rz79W/XQlkxvUMdMLPo2NOsunTyv3vNW4b3z5X7U8WbShHvNo2y3Zxwl0jIAdGdpigp5YWQ1YuOpNDc6iJ+n8Wcae6SxiyHfD9FKiPWie4Fmnax2VLbIzHVBMobrUEZC/XFD9LGOkwSzDv913FFlD66Y8CgTEOZZ/Dq+OjsSoBIXs1RCIMVjZdkqEQ7TxxVkKECqrOYlXs+k1sms0YFiRR5IPg7TiFGP0D3gg7TZwCWSDRFejGK2rKYuda6l9qprw4PpvfPsKzWE3b6iEa0X6srRY24mxEKjLJMsNaHH55y1XzcEjrCz/frNoBu5X2335X2zXNpqkuHzdw18oMqcIybgGUyGfU6V0fmlgCM+S0MG5afkm7I2iIMvLpzM9G1d7MNpBsz0ZXvCbIHFVzsOtlSZXuL9FqYaw/eM=
       file: deploy/*
-      skip_cleanup: true
-      on:
-        repo: gamalielhere/MyEtherWallet
-        branch: master
   - stage: deploy to production
-    api_key:
-      secure: Bzwd+lWJamc4NyDUU+DO9dj5vVMgMj/bwJtmdJKz3paUSnjdY8kg6UdLKf01TLCEb6QN1xpxYOarKMyojSZHV7Q44NyuXNahkigFT78aKw6UUInliUUk88MivfPupoQrqAa+261plyQFc3WhuDRaQahTfxlW1jaaUcywbCg+LaGWRFkuCBQ9fsgsjR89hhFDKk1FL/ws9IKBCBi9VQOg52XPXzeUAXjkDVjWCL0wnVzmd66oa1S+DT/Z58rJXGumt0ZEEcG8Lq3BeFOS0d7J3IlIdzMLQfI4ZW92QwayQEFomwE9G+aq4UvTxJkQB4BRkYfY19NYQs12wSMfeAEeSuyXLLmmQcoj8HzSg58qR3PPt6dOvC3CRew4JwOghvKjO7L1SEv1/uq2gI2Aw/J2tI4FRcbJU+ngEa8RW37Ay8u1EO8xyka+rY4fYSIOIqAxfSYzJPabGoLBhNKWVV9QCj3TwVJeK9xXJ359AofWq5owAtvqNmMbRje4mETmQ/LuIDmrwjfyi7Gs6Q56jHqCv5OAQLFDbUgr/2DxPeeuPb113q1JCvcpeQDH1SUovJvG4V3cC2OFmHazW7SLGaU1jf9lGHQOTnIffn5Xrptqbw4oeakvOUyWFKbSodCdM2hao5pYyHJUyx2J+1asqW49MAO9nnoJKC43S0uidku+uSc=
-    script: bash ./deploy.sh
+    script: skip
+    deploy:
+      provider: pages
+      skip-cleanup: true
+      github-token: "$GITHUB_TOKEN"
+      keep-history: false
+      on:
+        branch: master
+      target-branch: gh-pages

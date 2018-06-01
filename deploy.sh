@@ -2,8 +2,6 @@ echo "Remove gitignore";
 rm .gitignore;
 echo "Rebuild app";
 npm run build;
-echo "Run deploy script";
-npm run deploy;
 # # openssl aes-256-cbc -K $encrypted_85fecf66b314_key -iv $encrypted_85fecf66b314_iv -in mew.gpg.enc -out mew.gpg -d;
 # sudo mkdir deploy;
 # # gpg --allow-secret-key-import --import mew.gpg;
