@@ -1,1 +1,36 @@
 @import '~@/scss/GlobalVariables';
+
+.side-menu {
+  padding: 40px 20px;
+
+  .active {
+    color: $text-black;
+  }
+
+  ul {
+    >li {
+      margin-bottom: 40px;
+
+      p {
+        color: $text-side-menu-inactive-color;
+        font-size: 16px;
+        font-weight: 500;
+        position: relative;
+
+        i {
+          position: absolute;
+          right: 0;
+        }
+      }
+
+      ul {
+        li {
+          color: $text-side-menu-inactive-color;
+          font-size: 14px;
+          font-weight: 400;
+          margin: 10px 0 0;
+        }
+      }
+    }
+  }
+}
