@@ -9,6 +9,9 @@
                         <input class="form-control" v-model="privateKey" placeholder="Private Key"/>
                         <input class="form-control" placeholder="Phrase" v-model="phrase" type="password">
                         <button v-on:click="createAccount()" class="btn btn-success">Login With Private Key</button>
+                        <button v-on:click="generateAccount()" class="btn btn-success">Create Wallet</button>
+
+
                     </div>
                     <div v-else class="card-body">
                         <b>Address: </b>{{balance.address}}
@@ -109,6 +112,15 @@
           createAccount:function(){
 
             this.account =new wallet.Account(this.privateKey).decrypt(this.phrase);
+            var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+            var that = this;
+            that.getBalance();
+
+
+          },
+          generateAccount:function(){
+
+            this.account =new wallet.Account(this.Neon.create.privateKey());
             var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
             var that = this;
             that.getBalance();
