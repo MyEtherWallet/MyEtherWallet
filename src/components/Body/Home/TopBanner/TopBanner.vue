@@ -13,7 +13,7 @@
             </p>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/top-banner.jpg">
+            <img src="~@/assets/images/home/'J'-heart-logo.png">
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
