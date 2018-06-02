@@ -15,6 +15,7 @@
     "deploy": "npm run build; push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@cityofzion/neon-js": "^3.8.1",
     "bip39": "^2.5.0",
     "bs58": "^4.0.1",
     "ec-key": "0.0.2",
