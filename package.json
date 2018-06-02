@@ -65,6 +65,7 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^22.0.4",
     "jest-serializer-vue": "^0.3.0",
+    "jquery": "^3.2",
     "mini-css-extract-plugin": "^0.4.0",
     "nightwatch": "^0.9.21",
     "node-notifier": "^5.1.2",
