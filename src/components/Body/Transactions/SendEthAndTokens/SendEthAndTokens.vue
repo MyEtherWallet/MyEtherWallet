@@ -28,7 +28,7 @@
                     <h4>Amount</h4>
                   </div>
                   <div class="dropdown-select-search">
-                    <v-select v-model="selected" :options="['foo','bar']"></v-select>
+                    <v-select :options="['foo','bar']"></v-select>
                   </div>
                   <div class="the-form amount-number">
                     <input type="text" name="" value="2.03222">
@@ -48,12 +48,30 @@
             </div> <!-- .send-form -->
 
             <div class="send-form">
-              <div class="title">
-                <h4>Speed of Transaction</h4>
-                <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+              <div class="title-container">
+                <div class="title">
+                  <h4>Speed of Transaction<span class="alert-button"></span></h4>
+                  <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+                </div>
+                <div class="buttons">
+                  <div class="small-circle-button-green-border">
+                    Slow
+                  </div>
+                  <div class="small-circle-button-green-border active">
+                    Regular
+                  </div>
+                  <div class="small-circle-button-green-border">
+                    Fast
+                  </div>
+                </div>
               </div>
+
               <div class="the-form gas-amount">
                 <input type="text" name="" value="2.03222">
+                <div class="good-button-container">
+                  <p>Gwei</p>
+                  <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
 
@@ -62,10 +80,11 @@
                 <h4>Advanced</h4>
                 <div class="toggle-button">
                   <span>Data & Gas Limited</span>
-                  <div class="sliding-switch">
+                  <!-- Rounded switch -->
+                  <div class="sliding-switch-white">
                     <label class="switch">
                       <input type="checkbox">
-                      <span v-on:click="mnemonicValueBitSizeChange" class="slider round"></span>
+                      <span class="slider round"></span>
                     </label>
                   </div>
 
@@ -77,7 +96,7 @@
               <div class="submit-button large-round-button-green-filled clickable">
                 Send Transaction
               </div>
-              <p>Have any issues? <router-link :to="{ name: '/', params: {} }">Learn more</router-link></p>
+              <p>Have any issues? <a href="/">Learn more</a></p>
             </div>
 
           </div>
