@@ -227,7 +227,7 @@ export default {
 
         }
 }
-< /script>
+</script>
 
 <style scoped >
     .file - select > .select - button {
