@@ -30,6 +30,12 @@ import TransactionNetwork from '@/components/Body/Transactions/TransactionsCompo
 
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
 
+//NEO
+window.Neon = require('@cityofzion/neon-js')
+window.wallet = window.Neon.wallet
+window.api = window.Neon.api
+
+
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
