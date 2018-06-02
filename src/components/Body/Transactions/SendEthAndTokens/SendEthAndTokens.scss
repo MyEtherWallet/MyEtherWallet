@@ -45,12 +45,22 @@
         .send-form {
           padding: 40px 60px 0;
 
-          .title {
+          .title-container {
+            align-items: flex-end;
+            display: flex;
             margin-bottom: 10px;
-            padding: 0 8px;
 
-            h4 {
-              margin-bottom: 2px;
+            .title {
+              padding: 0 8px;
+
+              h4 {
+                margin-bottom: 2px;
+              }
+            }
+
+            .buttons {
+              margin-bottom: 3px;
+              margin-left: auto;
             }
           }
 
@@ -121,11 +131,26 @@
           }
 
           .gas-amount {
+            position: relative;
+
             input {
               background-color: $background-color-1;
               border: 0;
               padding: 13px 15px;
               width: 100%;
+            }
+
+            .good-button-container {
+              align-items: center;
+              display: flex;
+              position: absolute;
+              right: 10px;
+              top: 12px;
+
+              p {
+                color: $text--link-color;
+                margin-right: 10px;
+              }
             }
           }
         } // .send-form

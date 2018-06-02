@@ -347,6 +347,39 @@ h6 {
   padding: 21px 55px;
 }
 
+.small-circle-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 100px;
+  color: $text-color-2;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 70px;
+  padding: 6px 0;
+  text-align: center;
+
+  &.active {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    color: $text-white;
+  }
+}
+
+.small-circle-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-1;
+  border-radius: 100px;
+  color: $text-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 80px;
+  padding: 7px 0;
+  text-align: center;
+}
 
 // *********************************************************************
 // Custom check mark
@@ -453,14 +486,6 @@ h6 {
   }
 }
 
-/*
-.btn-secondary,
-.btn-secondary:hover {
-  background-color: transparent;
-  border: 0;
-  color: $link-text-color-2;
-}
-*/
 
 // *********************************************************************
 // [Bootstrap] Modal style
@@ -672,7 +697,68 @@ h6 {
 
 }
 
+.sliding-switch-white {
+  height: 27px;
+  position: relative;
 
+  .switch {
+    display: inline-block;
+    height: 28px;
+    position: relative;
+    width: 67px;
+
+    // Hide default HTML checkbox
+    input {
+      display: none;
+    }
+  }
+
+  // The slider
+  .slider {
+    background-color: $css-toggle-button--slider-background-color;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+
+    &::before {
+      background-color: $text-white;
+      bottom: 3px;
+      content: '';
+      height: 22px;
+      left: 4px;
+      padding: 1px 7px;
+      position: absolute;
+      transition: .4s;
+      width: 23px;
+    }
+
+    // Rounded sliders
+    &.round {
+      border-radius: 34px;
+    }
+
+    &.round::before {
+      border-radius: 100%;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $css-toggle-button--slider--active--background-color;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+  }
+
+  input:checked + .slider::before {
+    transform: translateX(26px);
+  }
+
+}
 
 // *********************************************************************
 // Custom Checkbox
@@ -848,4 +934,29 @@ h6 {
       background: #555;
   }
 
+}
+
+
+.alert-button {
+  position: relative;
+
+  &::before {
+    background-color: $text-color-3;
+    border-radius: 100px;
+    color: $text-white;
+    content: '!';
+    display: inline-block;
+    font-size: 12px;
+    line-height: 17px;
+    margin-left: 10px;
+    position: relative;
+    text-align: center;
+    width: 17px;
+  }
+}
+
+.good-button {
+  color: $text-color-3;
+  display: inline-block;
+  font-size: 20px;
 }
