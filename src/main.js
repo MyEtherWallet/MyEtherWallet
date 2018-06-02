@@ -9,6 +9,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
+import vSelect from 'vue-select'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -23,6 +24,9 @@ import ByJsonPageFooter from '@/components/Body/CreateWallet/ByJsonOrMnemonic/Pa
 import PriceBar from '@/components/Body/SmallComponents/PriceBar/PriceBar'
 import AccessMyWalletOptions from '@/components/Body/AccessMyWallet/AccessMyWalletOptions/AccessMyWalletOptions'
 import TransactionsSideMenu from '@/components/Body/Transactions/TransactionsSideMenu/TransactionsSideMenu'
+import TransactionAddress from '@/components/Body/Transactions/TransactionsComponents/TransactionAddress/TransactionAddress'
+import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
+import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
 
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
 
@@ -39,6 +43,10 @@ Vue.component('by-json-page-footer', ByJsonPageFooter)
 Vue.component('price-bar', PriceBar)
 Vue.component('access-my-wallet-options', AccessMyWalletOptions)
 Vue.component('transactions-side-menu', TransactionsSideMenu)
+Vue.component('transaction-address', TransactionAddress)
+Vue.component('transaction-balance', TransactionBalance)
+Vue.component('transaction-network', TransactionNetwork)
+Vue.component('v-select', vSelect)
 
 Vue.component('neo-wallet',Neo)
 

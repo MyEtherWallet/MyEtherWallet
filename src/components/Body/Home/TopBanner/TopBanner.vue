@@ -17,7 +17,7 @@
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
-          <router-link to="/" class="nounderline">
+          <router-link to="/send-eth-and-tokens" class="nounderline">
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">

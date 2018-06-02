@@ -787,3 +787,58 @@ h6 {
     outline: none;
   }
 }
+
+.dropdown-select-search {
+  border-radius: 5px;
+
+  .dropdown .dropdown-toggle {
+    border: 0;
+    padding: 6px 5px;
+  }
+
+  .dropdown.open .dropdown-toggle,
+  .v-select .dropdown-menu {
+    border: 1px solid #8a8a8a;
+  }
+
+  .v-select .dropdown-menu {
+    border-top: 0;
+  }
+
+  .clear {
+    display: none;
+  }
+
+  .v-select .open-indicator {
+    position: absolute;
+    bottom: 4px;
+    right: 17px;
+    cursor: pointer;
+    pointer-events: all;
+    opacity: 1;
+    height: 25px;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+      border-radius: 10px;
+      width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+      background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }
+
+}

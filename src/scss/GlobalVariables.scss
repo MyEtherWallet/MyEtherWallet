@@ -10,6 +10,7 @@ $mobile-width: 600px;
 // Box Shadow color styles
 // *********************************************************************
 $box-shadow-color-1: rgba(0, 0, 0, .12);
+$box-shadow-color-2: rgba(0, 0, 0, .10);
 $news-block-box-shadow-color: rgba(0, 0, 0, .05);
 $topbanner-block-box-shadow-color: rgba(0, 0, 0, .15);
 $tiny-header-shadow-color: rgba(0, 0, 0, .1);
@@ -35,6 +36,10 @@ $footer-background-color: #132b3f;
 $price-bar-background-color: #476081;
 $bootstrap-modal-header-background-color: #434f61;
 
+$transaction-block-address: #7070e3;
+$transaction-block-balance: #5a78f0;
+$transaction-block-network: #25b0e8;
+
 
 // *********************************************************************
 // Social button styles
@@ -48,6 +53,7 @@ $social-button-color-1: #adadad; // News block social buttons
 // *********************************************************************
 $border-color-1: #e0e0e0;
 $border-color-2: #fff;
+$border-color-3: #000;
 $price-bar-border-color: #677890;
 $border-bottom--mnemonic-phrase-key-color: $border-color-1;
 $border-green: #05c0a5;
@@ -85,6 +91,7 @@ $text--mnemonic-phrase-key-color: $text-color-6;
 $text--mnemonic-phrase-index-color: $text-color-3;
 $text--footer-link-color: #96a8b6;
 $text-color-green: $text-color-2;
+$text-side-menu-inactive-color: #c7c7c7;
 
 $link-text-color-1: #506175;
 $link-text-color-2: #05c0a5;
