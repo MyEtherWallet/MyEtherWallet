@@ -9,13 +9,15 @@
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
-                <h2>About MEW</h2>
+                <h2>About LUV</h2>
                 <p class="color-white">
-                  MyEtherWallet(MEW)  provides a easy to use interface.
+                  The LUV Token Wallet (LTW) provides a easy to use interface.
                   We won’t hold your keys, also we can’t access accounts,
                   recover your keys, reset your passwords, nor reverse your
                   transactions. Please pay attention that you are
                   on Correct URL.
+                  
+                  Blah blah blah blah blah by Charles
                   <br>
                   <span class="color-white text-bold">
                     Please Take Responsible For Your Account Security.

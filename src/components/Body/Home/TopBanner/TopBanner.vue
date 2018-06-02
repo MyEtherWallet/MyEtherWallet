@@ -7,13 +7,13 @@
             <h1>DU's Only</h1>
             <h1>Multicurrency Wallet</h1>
             <p>
-              the LUV Wallet helps you to generate Ethereum wallets, and interact with
-              the Ethereum blockchain easily and securely.
+              the LUV Wallet helps you to generate NEO, LUV & Ethereum wallets, and interact with
+              the NEP-5, Tokhn and Ethereum blockchain easily and securely.
               LUV is a free and open-source, client-side interface.
             </p>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/top-banner.jpg">
+            <img src="~@/assets/images/home/'J'-heart-logo.png">
           </div>
         </div><!-- .banner-image -->
         <div class="grid-col-2 promo-cards">
@@ -26,8 +26,8 @@
                 <div class="card-content">
                   <h2 class="color-white">Get a Free Wallet</h2>
                   <p class="color-white">
-                    To obtain ETH address and generate your private key.
-                    Saving and safekeeping the key will be your responsibility.
+                    To obtain your NEO, LUV or ETH address and generate your private key.
+                    Be responsible with key safety and safekeeping.
                   </p>
                     <p class="button">
                       Get Started
@@ -46,8 +46,7 @@
                 <div class="card-content">
                   <h2 class="color-white">Access My Wallet</h2>
                   <p class="color-white">
-                    To send Ethereum and tokens, swap coins, sale the domain,
-                    deploy the contract after you access your wallet.
+                    To send Ethereum and tokens, swap coins, deploy the contract after you access your wallet.
                   </p>
                   <p class="button">
                     Access Now
