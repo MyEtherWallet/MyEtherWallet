@@ -6,7 +6,7 @@
           <div class="header-container">
             <router-link to="/" v-on:click.native="scrollTop">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png">
+                <img class="logo-large" src="~@/assets/images/home/SULTRY-TOP-TEXT-1.png">
               </div>
             </router-link>
             <div class="top-menu">
