@@ -12,9 +12,9 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/'"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item v-bind:to="'/'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item href="#pagelink-about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item href="#pagelink-faqs">{{ $t("header.faqs") }}</b-nav-item>
+                <b-nav-item href="#pagelink-faqs">{{ $t("reused.faqs") }}</b-nav-item>
                 <b-nav-item href="#pagelink-news">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
@@ -40,7 +40,7 @@
 
             <router-link to="/create-wallet" class="nounderline">
               <div class="get-free-wallet">
-                {{ $t("header.getAFreeWallet") }}
+                {{ $t("reused.getAFreeWallet") }}
               </div>
             </router-link>
 
@@ -106,9 +106,8 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted: function () {
     const self = this
-
     if (localStorage.getItem('locale') !== null) {
       self.$root._i18n.locale = localStorage.getItem('locale')
       self.switchActiveLanguage(self.$root._i18n.locale)

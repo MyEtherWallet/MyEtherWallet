@@ -3,68 +3,29 @@
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
-          <div class="e1">
+          <div v-for="(item, index) in footerContent" :class="item.class" :key="item.title + index">
             <div class="content-title">
-              <h3 class="lite">Discover</h3>
-              <p v-on:click="openContent('e1')" class="open">
+              <h3 class="lite">{{item.title}}</h3>
+              <p v-on:click="openContent(item.class)" class="open">
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </p>
-              <p v-on:click="closeContent('e1')" class="close">
+              <p v-on:click="closeContent(item.class)" class="close">
                 <i class="fa fa-minus" aria-hidden="true"></i>
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link to="/"><p>Units</p></router-link>
-              <router-link to="/"><p>TX Status</p></router-link>
-              <router-link to="/"><p>Debugs</p></router-link>
-              <router-link to="/"><p>Extantions</p></router-link>
-              <router-link to="/"><p>Others</p></router-link>
-            </div>
-          </div>
-          <div class="e2">
-            <div class="content-title">
-              <h3 class="lite">Affiliates</h3>
-              <p v-on:click="openContent('e2')" class="open">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-              </p>
-              <p v-on:click="closeContent('e2')" class="close">
-                <i class="fa fa-minus" aria-hidden="true"></i>
-              </p>
-            </div>
-            <div class="content-links mobile-hide">
-              <router-link to="/"><p>Ledger Wallet</p></router-link>
-              <router-link to="/"><p>Digital Bitbox</p></router-link>
-              <router-link to="/"><p>Ether Card</p></router-link>
-              <router-link to="/"><p>Trezor</p></router-link>
-              <router-link to="/"><p>Bity</p></router-link>
-            </div>
-          </div>
-          <div class="e3">
-            <div class="content-title">
-              <h3 class="lite">MEW</h3>
-              <p v-on:click="openContent('e3')" class="open">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-              </p>
-              <p v-on:click="closeContent('e3')" class="close">
-                <i class="fa fa-minus" aria-hidden="true"></i>
-              </p>
-            </div>
-            <div class="content-links mobile-hide">
-              <router-link to="/"><p>About Us</p></router-link>
-              <router-link to="/team"><p>Team</p></router-link>
-              <router-link to="/"><p>FAQs</p></router-link>
-              <router-link to="/"><p>Customer Support</p></router-link>
+              <router-link v-for="(content, index) in item.contents" :to="content.to" :key="content.text+index"><p>{{ content.text }}</p></router-link>
             </div>
           </div>
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                Welcome to Donate Us
+                {{ $t("footer.welcome") }}
                 <img src="~@/assets/images/icons/heart.svg">
               </h3>
             </div>
             <div class="content-links">
-              <p>Your donation will help us a lot to build our MEW Community.</p>
+              <p>{{ $t("footer.welcomeDes") }}</p>
 
               <router-link to="/">
                 <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
@@ -85,36 +46,16 @@
         </div><!-- .footer-contents -->
         <div class="flex-space-between foot-note">
           <div class="links">
-            <router-link to="/"><span>Feedback</span></router-link>
-            <router-link to="/privacy-policy"><span>Privacy</span></router-link>
-            <router-link to="/terms-of-conditions"><span>Terms</span></router-link>
+            <router-link v-for="(link, index) in lowerLinks" :key="link.title + index" :to="link.to"><span>{{ link.title }}</span></router-link>
           </div>
           <div class="copyright">
             <p>
-              Copyright 2018 All right reserved by MyEtherWallet, Inc.
+              {{ $t("footer.copyright") }}
             </p>
           </div>
           <div class="social">
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-linkedin" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-github" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-reddit-alien" aria-hidden="true"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank">
-              <i class="fa fa-medium" aria-hidden="true"></i>
+            <a v-for="link in links" :href="link.to" :key="link.class">
+              <i :class="'fa '+ link.class"></i>
             </a>
           </div>
         </div><!-- .foot-note -->
@@ -127,6 +68,126 @@
 export default {
   data () {
     return {
+      lowerLinks: [
+        {
+          title: this.$t('footer.feedback'),
+          to: '/'
+        },
+        {
+          title: this.$t('footer.privacy'),
+          to: '/privacy-policy'
+        },
+        {
+          title: this.$t('footer.terms'),
+          to: '/terms-of-conditions'
+        }
+      ],
+      footerContent: [
+        {
+          class: 'e1',
+          title: this.$t('footer.discover'),
+          contents: [
+            {
+              text: this.$t('footer.units'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.txStat'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.debugs'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.extension'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.others'),
+              to: '/'
+            }
+          ]
+        },
+        {
+          class: 'e2',
+          title: this.$t('footer.affiliates'),
+          contents: [
+            {
+              text: this.$t('footer.ledger'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.digital'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.ethCard'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.trezor'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.bity'),
+              to: '/'
+            }
+          ]
+        },
+        {
+          class: 'e3',
+          title: this.$t('footer.mew'),
+          contents: [
+            {
+              text: this.$t('footer.about'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.team'),
+              to: '/'
+            },
+            {
+              text: this.$t('reused.faqs'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.custSupport'),
+              to: '/'
+            }
+          ]
+        }
+      ],
+      links: [
+        {
+          to: 'https://www.facebook.com/myetherwallet',
+          class: 'fa-facebook'
+        },
+        {
+          to: 'https://www.twitter.com/@myetherwallet',
+          class: 'fa-twitter'
+        },
+        {
+          to: 'https://www.instagram.com/myetherwallet',
+          class: 'fa-instagram'
+        },
+        {
+          to: 'https://www.linkedin.com/company/myetherwallet',
+          class: 'fa-linkedin'
+        },
+        {
+          to: 'https://www.github.com/myetherwallet',
+          class: 'fa-github'
+        },
+        {
+          to: 'https://www.reddit.com/r/myetherwallet',
+          class: 'fa-reddit-alien'
+        },
+        {
+          to: 'https://www.medium.com/@myetherwallet',
+          class: 'fa-medium'
+        }
+      ]
     }
   },
   methods: {
