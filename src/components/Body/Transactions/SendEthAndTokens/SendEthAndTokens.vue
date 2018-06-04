@@ -113,7 +113,6 @@
         </div>
       </div>
     </div>
-    <vue-footer></vue-footer>
   </div>
 </template>
 
