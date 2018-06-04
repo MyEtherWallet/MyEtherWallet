@@ -21,10 +21,13 @@
       grid-template-rows: auto;
 
       .main-content {
-        background-color: $background-color-white;
         border-radius: 5px;
         grid-area: main;
         overflow: hidden;
+
+        >div {
+          background-color: $background-color-white;
+        }
 
         .content-title {
           // box-shadow: 0 1px 1px $box-shadow-color-2;
