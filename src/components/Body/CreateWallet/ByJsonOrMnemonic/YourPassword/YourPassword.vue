@@ -24,7 +24,6 @@
     </b-modal>
     <!-- Modal =================================== -->
 
-    <vue-header></vue-header>
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
@@ -81,7 +80,6 @@
     </div>
 
     <by-json-page-footer></by-json-page-footer>
-    <vue-footer></vue-footer>
 
   </div>
 </template>
