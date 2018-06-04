@@ -1,7 +1,5 @@
 <template>
   <div class="team">
-    <vue-header></vue-header>
-
     <div class="wrap">
       <div class="page-container">
         <div class="content-width-limit">
@@ -67,8 +65,6 @@
         </div><!-- .content-width-limit -->
       </div><!-- .page-container -->
     </div><!-- .wrap -->
-
-    <vue-footer></vue-footer>
   </div><!-- .team -->
 </template>
 

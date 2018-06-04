@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Body/Home/Home'
+import HomeContainer from '@/containers/HomeContainer'
 import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPassword/YourPassword'
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
 import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemonic/ByMnemonic'
@@ -18,7 +18,7 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: HomeContainer
     },
     {
       path: '/create-wallet',

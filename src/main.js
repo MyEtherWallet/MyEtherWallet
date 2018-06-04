@@ -14,12 +14,12 @@ import VueI18n from 'vue-i18n'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
-import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
-import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
-import FAQs from '@/components/Body/Home/FAQs/FAQs'
-import News from '@/components/Body/Home/News/News'
-import Social from '@/components/Body/Home/Social/Social'
-import Promo from '@/components/Body/Home/Promo/Promo'
+// import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
+// import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
+// import FAQs from '@/components/Body/Home/FAQs/FAQs'
+// import News from '@/components/Body/Home/News/News'
+// import Social from '@/components/Body/Home/Social/Social'
+// import Promo from '@/components/Body/Home/Promo/Promo'
 import ByJsonPageTitle from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageTitle/PageTitle'
 import ByJsonPageFooter from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageFooter/PageFooter'
 import PriceBar from '@/components/Body/SmallComponents/PriceBar/PriceBar'
@@ -33,12 +33,12 @@ import languages from './translations'
 
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
-Vue.component('top-banner', TopBanner)
-Vue.component('about-mew', AboutMEW)
-Vue.component('faqs', FAQs)
-Vue.component('news', News)
-Vue.component('social', Social)
-Vue.component('promo', Promo)
+// Vue.component('top-banner', TopBanner)
+// Vue.component('about-mew', AboutMEW)
+// Vue.component('faqs', FAQs)
+// Vue.component('news', News)
+// Vue.component('social', Social)
+// Vue.component('promo', Promo)
 Vue.component('by-json-page-title', ByJsonPageTitle)
 Vue.component('by-json-page-footer', ByJsonPageFooter)
 Vue.component('price-bar', PriceBar)
