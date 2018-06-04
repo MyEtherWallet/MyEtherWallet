@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomeContainer from '@/containers/HomeContainer'
-import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPassword/YourPassword'
-import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
-import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemonic/ByMnemonic'
-import Team from '@/components/Body/Team/Team'
-import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
-import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
-import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
+import CreateWalletContainer from '@/containers/CreateWalletContainer'
+import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
+import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
+import TeamContainer from '@/containers/TeamContainer'
+import PrivacyPolicyContainer from '@/containers/PrivacyPolicyContainer'
+import TermsOfConditionsContainer from '@/containers/TermsOfConditionsContainer'
+import AccessWalletContainer from '@/containers/AccessWalletContainer'
+import SendTransactionContainer from '@/containers/SendTransactionContainer'
+
+// CLEANUP
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
 import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
 import Swap from '@/components/Body/Transactions/Swap/Swap'
@@ -27,41 +30,47 @@ export default new Router({
     },
     {
       path: '/create-wallet',
-      name: 'CreateWallet',
-      component: CreateWallet
+      name: 'CreateWalletContainer',
+      component: CreateWalletContainer
     },
     {
       path: '/by-json-file',
-      name: 'ByJsonFile',
-      component: ByJsonFile
+      name: 'ByJsonFileContainer',
+      component: ByJsonFileContainer
     },
     {
       path: '/by-mnemonic-phrase',
-      name: 'ByMnemonic',
-      component: ByMnemonic
+      name: 'ByMnemonicContainer',
+      component: ByMnemonicContainer
     },
     {
       path: '/team',
-      name: 'Team',
-      component: Team
+      name: 'TeamContainer',
+      component: TeamContainer
     },
     {
       path: '/privacy-policy',
-      name: 'PrivacyPolicy',
-      component: PrivacyPolicy
+      name: 'PrivacyPolicyContainer',
+      component: PrivacyPolicyContainer
     },
     {
       path: '/terms-of-conditions',
-      name: 'TermsOfConditions',
-      component: TermsOfConditions
+      name: 'TermsOfConditionsContainer',
+      component: TermsOfConditionsContainer
     },
     {
       path: '/access-my-wallet',
       name: 'AccessMyWallet',
-      component: AccessMyWallet
+      component: AccessWalletContainer
     },
     {
       path: '/send-eth-and-tokens',
+      name: 'SendTransactionContainer',
+      component: SendTransactionContainer
+    },
+    // Update this
+    {
+      path: '/send-eth-diff'
       name: 'SendEthAndTokens',
       component: SendEthAndTokens
     },
