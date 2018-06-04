@@ -110,7 +110,7 @@
         </div>
       </div> <!-- .tokens-container -->
       <div class="bottom-image-container">
-        <img src="https://www.companyfolders.com/blog/media/2014/02/how-to-use-typography-and-create-a-3d-text-effect.jpg" alt="">
+        <img class="icon" src="~@/assets/images/etc/oiwjehfowhohweg.png">
       </div>
     </div><!-- .wrap -->
   </div>
