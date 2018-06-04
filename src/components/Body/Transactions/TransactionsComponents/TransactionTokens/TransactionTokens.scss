@@ -1,5 +1,29 @@
 @import '~@/scss/GlobalVariables';
 
+/* width */
+::-webkit-scrollbar {
+    border-radius: 20px;
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 20px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 20px;
+    background: #555;
+}
+
 .tokens-container {
   border-radius: 5px;
   overflow: hidden;
@@ -65,28 +89,6 @@
         }
       }
     } // table
-
-    /* width */
-    ::-webkit-scrollbar {
-        border-radius: 10px;
-        width: 5px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
   } // .token-table-container
 
   .expend-bar {
