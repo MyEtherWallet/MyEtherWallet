@@ -8,8 +8,11 @@
         </div>
         <div class="block-content">
           <h2>Network</h2>
-          <h4>myetherapi.com(ETH)</h4>
-          <p class="bottom-button">Change <i class="fa fa-chevron-right" aria-hidden="true"></i></p>
+          <p>myetherapi.com(ETH)</p>
+          <p>Last Block#: 5699679</p>
+          <div class="icon-container">
+            <img src="~@/assets/images/icons/change.svg">
+          </div>
         </div>
       </div>
 

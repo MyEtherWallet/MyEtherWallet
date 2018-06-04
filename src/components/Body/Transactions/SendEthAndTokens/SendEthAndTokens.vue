@@ -33,21 +33,24 @@
                   </div>
                   <div class="the-form amount-number">
                     <input type="text" name="" value="2.03222">
-                    <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
+                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div>
                 <div class="to-address">
                   <div class="title">
                     <h4>To Address</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
-                    <p class="copy-button">Copy</p>
+                    <p v-on:click="copyAddress" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
-                    <textarea name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
-                    <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
+                    <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div> <!-- .to-address -->
               </div> <!-- .form-block .amount-to-address -->
+              <div class="error-message-container">
+                <p>You don't have enough funds</p>
+              </div>
             </div> <!-- .send-form -->
 
             <div class="send-form">
@@ -73,7 +76,7 @@
                 <input type="text" name="" value="2.03222">
                 <div class="good-button-container">
                   <p>Gwei</p>
-                  <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
+                  <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
@@ -117,6 +120,11 @@
 export default {
   data () {
     return {
+    }
+  },
+  methods: {
+    copyAddress: function () {
+      alert('This doesn\'t work for now.')
     }
   },
   mounted () {

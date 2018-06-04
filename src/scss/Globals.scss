@@ -960,4 +960,8 @@ h6 {
   color: $text-color-3;
   display: inline-block;
   font-size: 20px;
+
+  &.not-good {
+    color: $text-good-button-not-good;
+  }
 }
