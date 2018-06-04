@@ -84,9 +84,17 @@
             }
 
             .amount {
-              .dropdown-select-search {
+              .dropdown-select-search-1 {
                 background-color: $background-color-1;
                 margin-bottom: 5px;
+                position: relative;
+
+                i {
+                  color: $text-color-2;
+                  left: 14px;
+                  position: absolute;
+                  top: 16px;
+                }
               }
 
               .amount-number {
