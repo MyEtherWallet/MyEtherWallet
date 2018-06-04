@@ -32,6 +32,7 @@
                   </div>
                   <div class="the-form amount-number">
                     <input type="text" name="" value="2.03222">
+                    <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
                 </div>
                 <div class="to-address">
@@ -42,6 +43,7 @@
                   </div>
                   <div class="the-form address-block">
                     <textarea name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+                    <i class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
                 </div> <!-- .to-address -->
               </div> <!-- .form-block .amount-to-address -->
