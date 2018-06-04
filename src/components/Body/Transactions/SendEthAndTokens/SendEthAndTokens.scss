@@ -78,24 +78,38 @@
             grid-column-gap: 5px;
             grid-template-columns: 2fr 3fr;
 
-            .amount {
+            .title {
+              margin-bottom: 13px;
+              padding: 0 8px;
+            }
 
+            .amount {
               .dropdown-select-search {
                 background-color: $background-color-1;
                 margin-bottom: 5px;
               }
 
               .amount-number {
+                position: relative;
+
                 input {
                   background-color: transparent;
                   border: 0;
                   padding: 13px 15px;
                   width: 100%;
                 }
+
+                i {
+                  position: absolute;
+                  right: 13px;
+                  top: 13px;
+                }
               }
             }
 
             .to-address {
+              position: relative;
+
               .title {
                 align-items: center;
                 display: flex;
@@ -117,6 +131,12 @@
 
               .address-block {
                 height: 98px;
+
+                i {
+                  bottom: 13px;
+                  position: absolute;
+                  right: 13px;
+                }
 
                 textarea {
                   background-color: transparent;
@@ -171,8 +191,8 @@
               display: flex;
               margin-left: auto;
 
-              span {
-                margin-right: 10px;
+              >span {
+                margin-right: 15px;
               }
             }
           }
