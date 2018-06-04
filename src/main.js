@@ -27,6 +27,7 @@ import TransactionsSideMenu from '@/components/Body/Transactions/TransactionsSid
 import TransactionAddress from '@/components/Body/Transactions/TransactionsComponents/TransactionAddress/TransactionAddress'
 import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
 import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
+import TransactionTokens from '@/components/Body/Transactions/TransactionsComponents/TransactionTokens/TransactionTokens'
 
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
@@ -44,6 +45,8 @@ Vue.component('transactions-side-menu', TransactionsSideMenu)
 Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
+Vue.component('transaction-tokens', TransactionTokens)
+
 Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false

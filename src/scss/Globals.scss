@@ -881,12 +881,13 @@ h6 {
   }
 }
 
-.dropdown-select-search {
+.dropdown-select-search-1 {
   border-radius: 5px;
 
   .dropdown .dropdown-toggle {
     border: 0;
     padding: 6px 5px;
+    padding-left: 30px;
   }
 
   .dropdown.open .dropdown-toggle,

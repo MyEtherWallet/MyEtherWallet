@@ -27,8 +27,9 @@
                   <div class="title">
                     <h4>Amount</h4>
                   </div>
-                  <div class="dropdown-select-search">
+                  <div class="dropdown-select-search-1">
                     <v-select :options="['foo','bar']"></v-select>
+                    <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
                     <input type="text" name="" value="2.03222">
@@ -103,9 +104,7 @@
 
           </div>
           <div class="tokens">
-            <div class="">
-              wfwgergergerg
-            </div>
+            <transaction-tokens />
           </div>
         </div>
       </div>
