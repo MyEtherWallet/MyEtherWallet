@@ -184,6 +184,13 @@
               }
             }
           }
+
+          .error-message-container {
+            p {
+              color: $text-color-red;
+              margin: 7px 0 0 15px;
+            }
+          }
         } // .send-form
 
         .advanced {
