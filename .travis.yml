@@ -11,9 +11,6 @@ branches:
   except:
   - gh-pages
 stages:
-- remove .gitignore
-- lint code
-- build application
 - name: create release
   if: branch = master and type != pull_request
 - name: deploy to production
@@ -21,30 +18,36 @@ stages:
 jobs:
   fast_finish: true
   include:
-  - stage: remove .gitignore
-    script: rm .gitignore
-  - stage: lint code
-    script: npm run lint
-  - stage: build application
-    script: npm run build
   - stage: create release
-    script: bash ./release.sh
+    script: skip
     before_deploy:
-    - ls -a | sort
-    - |
-      PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION; git push;
+      - rm .gitignore
+      - npm run build
+      - sudo mkdir deploy
+      - ls -a /dist | sort
+      - |
+        PACKAGE_VERSION=$(cat package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[",]//g' \
+          | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
     deploy:
       provider: releases
-      api_key:
-        secure: oWYpw+AOf10bOpXpEXRseFamJLkBvdfB/Onas0zwrzRyDObDJrgtPJ95siZYIYdl1mMOUXY1757uzX9+4w8ow5LhPIEW0910AqrhgsLNEBLXiQij3vZzzGyIVC7bP78o7Gde66RD4ulS1LyK15P9re2CmE+euyOwJJqE1I0IYk0NMokwZTacHkfW30MtTnh+teHYyoI7Jw5w4oamzraGkQlLI/XHZRc61at3+DWLDJhI1lFKyI7D0ByKc6vofc9AHBygR80Rz79W/XQlkxvUMdMLPo2NOsunTyv3vNW4b3z5X7U8WbShHvNo2y3Zxwl0jIAdGdpigp5YWQ1YuOpNDc6iJ+n8Wcae6SxiyHfD9FKiPWie4Fmnax2VLbIzHVBMobrUEZC/XFD9LGOkwSzDv913FFlD66Y8CgTEOZZ/Dq+OjsSoBIXs1RCIMVjZdkqEQ7TxxVkKECqrOYlXs+k1sms0YFiRR5IPg7TiFGP0D3gg7TZwCWSDRFejGK2rKYuda6l9qprw4PpvfPsKzWE3b6iEa0X6srRY24mxEKjLJMsNaHH55y1XzcEjrCz/frNoBu5X2335X2zXNpqkuHzdw18oMqcIybgGUyGfU6V0fmlgCM+S0MG5afkm7I2iIMvLpzM9G1d7MNpBsz0ZXvCbIHFVzsOtlSZXuL9FqYaw/eM=
+      api_key: "$GITHUB_TOKEN"
       file: deploy/*
+      file_glob: true
+      skip_cleanup: true
   - stage: deploy to production
     script: skip
+    before_deploy:
+      - bash ./deploy.sh
     deploy:
       provider: pages
       skip-cleanup: true
       github-token: "$GITHUB_TOKEN"
       keep-history: false
+      local-dir: ./dist
       on:
         branch: master
       target-branch: gh-pages
