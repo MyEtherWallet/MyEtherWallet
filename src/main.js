@@ -12,33 +12,33 @@ import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 
-import Header from '@/components/Header/Header'
-import Footer from '@/components/Footer/Footer'
-// import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
-// import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
-// import FAQs from '@/components/Body/Home/FAQs/FAQs'
-// import News from '@/components/Body/Home/News/News'
-// import Social from '@/components/Body/Home/Social/Social'
-// import Promo from '@/components/Body/Home/Promo/Promo'
-import ByJsonPageTitle from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageTitle/PageTitle'
-import ByJsonPageFooter from '@/components/Body/CreateWallet/ByJsonOrMnemonic/PageFooter/PageFooter'
-import PriceBar from '@/components/Body/SmallComponents/PriceBar/PriceBar'
-import AccessMyWalletOptions from '@/components/Body/AccessMyWallet/AccessMyWalletOptions/AccessMyWalletOptions'
-import TransactionsSideMenu from '@/components/Body/Transactions/TransactionsSideMenu/TransactionsSideMenu'
-import TransactionAddress from '@/components/Body/Transactions/TransactionsComponents/TransactionAddress/TransactionAddress'
-import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
-import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import TopBanner from '@/components/TopBanner'
+import AboutMEW from '@/components/AboutMEW'
+import FAQs from '@/components/FAQs/FAQs'
+import News from '@/components/News/News'
+import Social from '@/components/Social/Social'
+import Promo from '@/components/Promo/Promo'
+import PriceBar from '@/components/PriceBar'
+import ByJsonPageTitle from '@/components/PageTitle'
+import ByJsonPageFooter from '@/components/PageFooter'
+import AccessMyWalletOptions from '@/components/AccessMyWalletOptions'
+import TransactionsSideMenu from '@/components/TransactionsSideMenu'
+import TransactionAddress from '@/components/TransactionAddress'
+import TransactionBalance from '@/components/TransactionBalance'
+import TransactionNetwork from '@/components/TransactionNetwork'
 
 import languages from './translations'
 
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
-// Vue.component('top-banner', TopBanner)
-// Vue.component('about-mew', AboutMEW)
-// Vue.component('faqs', FAQs)
-// Vue.component('news', News)
-// Vue.component('social', Social)
-// Vue.component('promo', Promo)
+Vue.component('top-banner', TopBanner)
+Vue.component('about-mew', AboutMEW)
+Vue.component('faqs', FAQs)
+Vue.component('news', News)
+Vue.component('social', Social)
+Vue.component('promo', Promo)
 Vue.component('by-json-page-title', ByJsonPageTitle)
 Vue.component('by-json-page-footer', ByJsonPageFooter)
 Vue.component('price-bar', PriceBar)
@@ -64,6 +64,12 @@ const i18n = new VueI18n({
   locale: 'gb',
   fallbackLocale: 'gb',
   messages: languages
+})
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
 })
 
 /* eslint-disable no-new */

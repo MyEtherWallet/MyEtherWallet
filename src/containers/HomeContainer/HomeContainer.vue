@@ -1,31 +1,17 @@
 <template>
   <div class="home">
-    <TopBanner></TopBanner>
-    <AboutMEW></AboutMEW>
-    <FAQs></FAQs>
-    <News></News>
-    <Social></Social>
-    <Promo></Promo>
+    <top-banner></top-banner>
+    <about-mew></about-mew>
+    <faqs></faqs>
+    <news></news>
+    <social></social>
+    <promo></promo>
   </div>
 </template>
 
 <script>
-import AboutMEW from '@/components/Body/Home/AboutMEW/AboutMEW'
-import FAQs from '@/components/Body/Home/FAQs/FAQs'
-import News from '@/components/Body/Home/News/News'
-import Promo from '@/components/Body/Home/Promo/Promo'
-import Social from '@/components/Body/Home/Social/Social'
-import TopBanner from '@/components/Body/Home/TopBanner/TopBanner'
-
 export default {
-  components: {
-    AboutMEW,
-    FAQs,
-    News,
-    Promo,
-    Social,
-    TopBanner
-  },
+  name: 'HomeContainer',
   data () {
     return {
     }
