@@ -9,7 +9,7 @@
       <b-modal ref="balance" hide-footer class="bootstrap-modal balance nopadding" title="Balance">
         <div class="content-block">
           <div class="flex-container">
-            <h4>Total Balance</h4>
+            <h4 class="modal-title">Total Balance</h4>
             <div class="margin-left-auto total-balance-amount">
               <span>7130.000000</span> ETH
             </div>

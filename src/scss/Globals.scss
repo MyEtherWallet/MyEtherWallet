@@ -94,6 +94,11 @@ body {
   box-sizing: border-box;
 }
 
+::placeholder {
+  color: $text-black;
+  opacity: .2;
+}
+
 
 // *********************************************************************
 // Custom Scrollbar
@@ -967,4 +972,23 @@ h6 {
   &.not-good {
     color: $text-good-button-not-good;
   }
+}
+
+
+
+// *********************************************************************
+// Custom Input
+// *********************************************************************
+.custom-input-text-1 {
+  background-color: $background-color-1;
+  border: 0;
+  border-radius: 4px;
+  padding: 13px 15px;
+}
+
+.custom-select-1 {
+  background-color: $background-color-white;
+  border-radius: 4px;
+  color: $text-black;
+  padding: 0 10px;
 }
