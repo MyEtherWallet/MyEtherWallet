@@ -96,6 +96,39 @@ body {
 
 
 // *********************************************************************
+// Custom Scrollbar
+// *********************************************************************
+
+// width
+::-webkit-scrollbar {
+  border-radius: 10px;
+  width: 5px;
+}
+
+// Track
+::-webkit-scrollbar-track {
+  $background-color: #f1f1f1;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+// Handle
+::-webkit-scrollbar-thumb {
+  $background-color: #888;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+// Handle on hover
+::-webkit-scrollbar-thumb:hover {
+  $background-color: #555;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+
+
+// *********************************************************************
 // Standard list styles
 // *********************************************************************
 ul li {
@@ -381,36 +414,6 @@ h6 {
   text-align: center;
 }
 
-// *********************************************************************
-// Custom check mark
-// *********************************************************************
-
-
-
-
-// *********************************************************************
-// Custom scroll bar style
-// *********************************************************************
-.custom-scroll-bar {
-  // width
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-  // Track
-  &::-webkit-scrollbar-track {
-    background: $scrollbar--track-color;
-  }
-  // Handle
-  &::-webkit-scrollbar-thumb {
-    background: $scrollbar--handle-color;
-    border-radius: 10px;
-  }
-  // Handle on hover
-  &::-webkit-scrollbar-thumb:hover {
-    background: $scrollbar--handle-hover-color;
-  }
-}
-
 
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
@@ -441,9 +444,17 @@ h6 {
   color: $text-base-color;
 }
 
+
 // *********************************************************************
 // [Bootstrap] Tooltip style
 // *********************************************************************
+.custom-tooltip,
+.custom-tooltip:hover {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+}
+
 .tooltip {
   pointer-events: none;
   z-index: 9999999;
@@ -490,13 +501,14 @@ h6 {
 // *********************************************************************
 // [Bootstrap] Modal style
 // *********************************************************************
-
 // Modal header
 .modal-header {
   background-color: $bootstrap-modal-header-background-color;
 
   h5 {
     color: $text-white;
+    font-size: 20px;
+    padding: 0 15px;
   }
 
   .close {
@@ -545,6 +557,19 @@ h6 {
     }
   }
 }
+
+.nopadding .modal-body {
+  padding: 0;
+}
+
+
+.max-height-1 .modal-body {
+  max-height: 405px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
 
 // Custom modal style for each pages -------------------------------
 .access-my-wallet-options {
@@ -892,7 +917,8 @@ h6 {
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    border: 1px solid #8a8a8a;
+    $border-color: #8a8a8a;
+    border: 1px solid $border-color;
   }
 
   .v-select .dropdown-menu {
@@ -904,37 +930,14 @@ h6 {
   }
 
   .v-select .open-indicator {
-    position: absolute;
     bottom: 4px;
-    right: 17px;
     cursor: pointer;
-    pointer-events: all;
-    opacity: 1;
     height: 25px;
+    opacity: 1;
+    pointer-events: all;
+    position: absolute;
+    right: 17px;
   }
-
-  /* width */
-  ::-webkit-scrollbar {
-      border-radius: 10px;
-      width: 5px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-      background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-  }
-
 }
 
 

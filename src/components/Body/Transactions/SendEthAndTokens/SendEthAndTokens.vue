@@ -1,5 +1,6 @@
 <template>
   <div class="send-eth-and-tokens">
+
     <vue-header></vue-header>
     <div class="wrap">
       <div class="side-nav">
@@ -32,7 +33,7 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input type="text" name="" value="2.03222">
+                    <input type="number" name="" value="" placeholder="Amount">
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div>
@@ -73,7 +74,7 @@
               </div>
 
               <div class="the-form gas-amount">
-                <input type="text" name="" value="2.03222">
+                <input type="number" name="" value="" placeholder="Gas Amount">
                 <div class="good-button-container">
                   <p>Gwei</p>
                   <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
