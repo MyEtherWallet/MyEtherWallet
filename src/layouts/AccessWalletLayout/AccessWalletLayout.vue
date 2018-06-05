@@ -21,7 +21,6 @@ export default {
       }).catch((err) => {
         return err
       })
-      
       return rates
     }
   },
