@@ -64,7 +64,7 @@
                 <img src="~@/assets/images/home/icon-swap.png">
               </div>
               <div class="text">
-                <h3>{{ $t("about.swapTitle") }}</h3>
+                <h3>{{ $t("reused.swap") }}</h3>
                 <p>
                   {{ $t("about.swapDesc") }}
                 </p>
