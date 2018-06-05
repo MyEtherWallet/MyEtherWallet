@@ -1,6 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  cursor: pointer;
+
   .info-block {
     border-radius: 5px;
     color: $text-white;
@@ -64,3 +66,50 @@
     margin-right: 13px;
   }
 }
+
+.modal-container {
+  .balance {
+    .content-block {
+      border-bottom: 1px solid $border-color-5;
+      margin: 0 20px;
+      padding: 25px 15px;
+
+      h4 {
+        font-weight: 600;
+
+        span {
+          color: $text--link-color;
+          font-size: 13px;
+        }
+      }
+
+      .total-balance-amount {
+        font-size: 22px;
+
+        span {
+          font-size: 22px;
+          font-weight: 600;
+        }
+      }
+
+      .flex-container {
+        align-items: center;
+        display: flex;
+
+        .margin-left-auto {
+          margin-left: auto;
+        }
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: auto auto auto;
+
+        p {
+          margin-top: 13px;
+        }
+      } // .grid-3
+    } // .content-block
+
+  } // .network
+} // .modal-container
