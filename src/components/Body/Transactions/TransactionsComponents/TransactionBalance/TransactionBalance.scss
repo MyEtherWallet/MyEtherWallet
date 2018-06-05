@@ -68,6 +68,11 @@
 }
 
 .modal-container {
+
+  .modal-title {
+    color: $text-color-8;
+  }
+
   .balance {
     .content-block {
       border-bottom: 1px solid $border-color-5;
