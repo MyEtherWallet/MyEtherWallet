@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HomeContainer from '@/containers/HomeContainer'
-import CreateWalletContainer from '@/containers/CreateWalletContainer'
-import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
-import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
-import TeamContainer from '@/containers/TeamContainer'
-import PrivacyPolicyContainer from '@/containers/PrivacyPolicyContainer'
-import TermsOfConditionsContainer from '@/containers/TermsOfConditionsContainer'
-import AccessWalletContainer from '@/containers/AccessWalletContainer'
-import SendTransactionContainer from '@/containers/SendTransactionContainer'
+import HomeLayout from '@/layouts/HomeLayout'
+import CreateWalletLayout from '@/layouts/CreateWalletLayout'
+import ByJsonFileLayout from '@/layouts/ByJsonFileLayout'
+import ByMnemonicLayout from '@/layouts/ByMnemonicLayout'
+import TeamLayout from '@/layouts/TeamLayout'
+import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
+import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
+import AccessWalletLayout from '@/layouts/AccessWalletLayout'
+import SendTransactionLayout from '@/layouts/SendTransactionLayout'
 
 // CLEANUP
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
@@ -26,42 +26,42 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: HomeContainer
+      component: HomeLayout
     },
     {
       path: '/create-wallet',
-      name: 'CreateWalletContainer',
-      component: CreateWalletContainer
+      name: 'CreateWalletLayout',
+      component: CreateWalletLayout
     },
     {
       path: '/by-json-file',
-      name: 'ByJsonFileContainer',
-      component: ByJsonFileContainer
+      name: 'ByJsonFileLayout',
+      component: ByJsonFileLayout
     },
     {
       path: '/by-mnemonic-phrase',
-      name: 'ByMnemonicContainer',
-      component: ByMnemonicContainer
+      name: 'ByMnemonicLayout',
+      component: ByMnemonicLayout
     },
     {
       path: '/team',
-      name: 'TeamContainer',
-      component: TeamContainer
+      name: 'TeamLayout',
+      component: TeamLayout
     },
     {
       path: '/privacy-policy',
-      name: 'PrivacyPolicyContainer',
-      component: PrivacyPolicyContainer
+      name: 'PrivacyPolicyLayout',
+      component: PrivacyPolicyLayout
     },
     {
       path: '/terms-of-conditions',
-      name: 'TermsOfConditionsContainer',
-      component: TermsOfConditionsContainer
+      name: 'TermsOfConditionsLayout',
+      component: TermsOfConditionsLayout
     },
     {
       path: '/access-my-wallet',
-      name: 'AccessMyWallet',
-      component: AccessWalletContainer
+      name: 'AccessWalletLayout',
+      component: AccessWalletLayout
     },
     {
       path: '/send-eth-and-tokens',

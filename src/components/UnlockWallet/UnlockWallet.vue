@@ -5,22 +5,22 @@
         <div class="title">
           <h2>{{$t("reused.unlockWallet")}}</h2>
           <h5>
-            {{$t("unlockWallet.noWallet")}}
+            {{$t("reused.noWallet")}}
             <router-link to="/">{{$t("reused.createWallet")}}</router-link>
           </h5>
         </div>
         <div class="blocks">
           <ul>
             <li>
-              <h6>{{$t("unlockWallet.hardware")}}</h6>
+              <h6>{{$t('reused.hardware')}}</h6>
               <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
             </li>
             <li>
-              <h6>{{$t("unlockWallet.jsonF")}}</h6>
+              <h6>{{$t("reused.jsonF")}}</h6>
               <p>{{$t("unlockWallet.jsonFDesc")}}</p>
             </li>
             <li>
-              <h6>{{$t("unlockWallet.mnemonicP")}}</h6>
+              <h6>{{$t("reused.mnemonicP")}}</h6>
               <p>{{$t("unlockWallet.mnemonicPDesc")}}</p>
             </li>
             <li>
@@ -28,7 +28,7 @@
               <p>{{$t("unlockWallet.metamaskDes")}}</p>
             </li>
             <li>
-              <h6>{{$t("unlockWallet.privKey")}}</h6>
+              <h6>{{$t("reused.privKey")}}</h6>
               <p>{{$t("unlockWallet.privKeyDesc")}}</p>
             </li>
           </ul>

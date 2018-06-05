@@ -3,7 +3,7 @@
     <div class="side-menu">
       <ul>
         <li>
-          <p class="active">{{ $t("txSideMenu.send") }} <i class="fa fa-angle-up" aria-hidden="true"></i></p>
+          <p class="active">{{ $t("txSideMenu.title") }} <i class="fa fa-angle-up" aria-hidden="true"></i></p>
           <ul>
           <!-- <li>
             <router-link to="/send-eth-and-tokens">

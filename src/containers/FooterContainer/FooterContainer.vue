@@ -1,0 +1,216 @@
+<template>
+  <div class="footer">
+    <div class="wrap">
+      <div class="page-container">
+        <div class="grid-col-1-1-1-2 footer-contents">
+          <div v-for="(item, index) in footerContent" :class="item.class" :key="item.title + index">
+            <div class="content-title">
+              <h3 class="lite">{{item.title}}</h3>
+              <p v-on:click="openContent(item.class)" class="open">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </p>
+              <p v-on:click="closeContent(item.class)" class="close">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </p>
+            </div>
+            <div class="content-links mobile-hide">
+              <router-link v-for="(content, index) in item.contents" :to="content.to" :key="content.text+index"><p>{{ content.text }}</p></router-link>
+            </div>
+          </div>
+          <div class="donate-us">
+            <div class="content-title">
+              <h3 class="lite">
+                {{ $t("footer.welcome") }}
+                <img src="~@/assets/images/icons/heart.svg">
+              </h3>
+            </div>
+            <div class="content-links">
+              <p>{{ $t("footer.welcomeDes") }}</p>
+
+              <router-link to="/">
+                <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
+                  <img src="~@/assets/images/icons/btc.svg">
+                  &nbsp;Bitcoin Donation
+                </p>
+              </router-link>
+
+              <router-link to="/">
+                <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  <img src="~@/assets/images/icons/eth.svg">
+                  &nbsp;Ethereum Donation
+                </p>
+              </router-link>
+
+            </div>
+          </div>
+        </div><!-- .footer-contents -->
+        <div class="flex-space-between foot-note">
+          <div class="links">
+            <router-link v-for="(link, index) in lowerLinks" :key="link.title + index" :to="link.to"><span>{{ link.title }}</span></router-link>
+          </div>
+          <div class="copyright">
+            <p>
+              {{ $t("footer.copyright") }}
+            </p>
+          </div>
+          <div class="social">
+            <a v-for="link in links" :href="link.to" :key="link.class">
+              <i :class="'fa '+ link.class"></i>
+            </a>
+          </div>
+        </div><!-- .foot-note -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      lowerLinks: [
+        {
+          title: this.$t('footer.feedback'),
+          to: '/'
+        },
+        {
+          title: this.$t('footer.privacy'),
+          to: '/privacy-policy'
+        },
+        {
+          title: this.$t('reused.terms'),
+          to: '/terms-of-conditions'
+        }
+      ],
+      footerContent: [
+        {
+          class: 'e1',
+          title: this.$t('footer.discover'),
+          contents: [
+            {
+              text: this.$t('footer.units'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.txStat'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.debugs'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.extension'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.others'),
+              to: '/'
+            }
+          ]
+        },
+        {
+          class: 'e2',
+          title: this.$t('footer.affiliates'),
+          contents: [
+            {
+              text: this.$t('footer.ledger'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.digital'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.ethCard'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.trezor'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.bity'),
+              to: '/'
+            }
+          ]
+        },
+        {
+          class: 'e3',
+          title: this.$t('footer.mew'),
+          contents: [
+            {
+              text: this.$t('footer.about'),
+              to: '/'
+            },
+            {
+              text: this.$t('footer.team'),
+              to: '/'
+            },
+            {
+              text: this.$t('reused.faqs'),
+              to: '/'
+            },
+            {
+              text: this.$t('reused.customerSupport'),
+              to: '/'
+            }
+          ]
+        }
+      ],
+      links: [
+        {
+          to: 'https://www.facebook.com/myetherwallet',
+          class: 'fa-facebook'
+        },
+        {
+          to: 'https://www.twitter.com/@myetherwallet',
+          class: 'fa-twitter'
+        },
+        {
+          to: 'https://www.instagram.com/myetherwallet',
+          class: 'fa-instagram'
+        },
+        {
+          to: 'https://www.linkedin.com/company/myetherwallet',
+          class: 'fa-linkedin'
+        },
+        {
+          to: 'https://www.github.com/myetherwallet',
+          class: 'fa-github'
+        },
+        {
+          to: 'https://www.reddit.com/r/myetherwallet',
+          class: 'fa-reddit-alien'
+        },
+        {
+          to: 'https://www.medium.com/@myetherwallet',
+          class: 'fa-medium'
+        }
+      ]
+    }
+  },
+  methods: {
+    openContent (element) {
+      var openButton = document.querySelector('.' + element + ' .open')
+      var closeButton = document.querySelector('.' + element + ' .close')
+      var content = document.querySelector('.' + element + ' .content-links')
+      openButton.style.display = 'none'
+      closeButton.style.display = 'block'
+      content.classList.remove('mobile-hide')
+    },
+    closeContent (element) {
+      var openButton = document.querySelector('.' + element + ' .open')
+      var closeButton = document.querySelector('.' + element + ' .close')
+      var content = document.querySelector('.' + element + ' .content-links')
+      openButton.style.display = 'block'
+      closeButton.style.display = 'none'
+      content.classList.add('mobile-hide')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "FooterContainer.scss";
+</style>

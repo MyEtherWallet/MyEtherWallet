@@ -75,7 +75,7 @@
                 <img src="~@/assets/images/home/icon-connect.png">
               </div>
               <div class="text">
-                <h3>{{ $t("about.mewConnectTitle") }}</h3>
+                <h3>{{$t('reused.mewConnect')}}</h3>
                 <p>
                   {{ $t("about.mewConnectDesc") }}
                 </p>
