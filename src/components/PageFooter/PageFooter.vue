@@ -2,7 +2,7 @@
   <div class="page-footer">
     <div class="wrap">
       <div class="page-container">
-        <p>Learn more about Blockchain or MEW? Please go to <router-link to="/">FAQs</router-link></p>
+        <p>{{ $t("pageFooter.title")}} <router-link to="/">{{ $t("reused.faqs")}}</router-link></p>
       </div>
     </div>
   </div>

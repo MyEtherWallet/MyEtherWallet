@@ -352,8 +352,6 @@ export default {
     softwareModalOpen () {
       this.$refs.software.show()
     }
-  },
-  mounted () {
   }
 }
 </script>

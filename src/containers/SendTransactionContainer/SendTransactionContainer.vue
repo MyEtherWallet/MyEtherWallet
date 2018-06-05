@@ -19,14 +19,14 @@
           </div>
           <div class="main-content">
             <div class="content-title">
-              <h2>Send ETH & Tokens</h2>
+              <h2></h2>
             </div>
 
             <div class="send-form">
               <div class="form-block amount-to-address">
                 <div class="amount">
                   <div class="title">
-                    <h4>Amount</h4>
+                    <h4>{{ $t("reused.sendTx") }}</h4>
                   </div>
                   <div class="dropdown-select-search-1">
                     <v-select :options="['foo','bar']"></v-select>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="to-address">
                   <div class="title">
-                    <h4>To Address</h4>
+                    <h4>{{ $t("sendTx.toAddr") }}</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
                     <p v-on:click="copyAddress" class="copy-button">Copy</p>
                   </div>
@@ -55,11 +55,9 @@
             </div> <!-- .send-form -->
 
             <div class="send-form">
-              <div class="title-container">
-                <div class="title">
-                  <h4>Speed of Transaction<span class="alert-button"></span></h4>
-                  <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
-                </div>
+              <div class="title">
+                <h4>{{ $t("sendTx.speedTx") }}</h4>
+                <p>{{ $t("sendTx.txFee") }}: 0.000013 ETH ($1.234)</p>
                 <div class="buttons">
                   <div class="small-circle-button-green-border">
                     Slow
@@ -120,6 +118,7 @@
 export default {
   data () {
     return {
+      selected: ''
     }
   }
 }
