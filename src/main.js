@@ -12,17 +12,23 @@ import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Containers
+import FaqsContainer from '@/containers/FaqsContainer'
+import FooterContainer from '@/containers/FooterContainer'
+import HeaderContainer from '@/containers/HeaderContainer'
+
+// Regular Components
 import TopBanner from '@/components/TopBanner'
 import AboutMEW from '@/components/AboutMEW'
-import FAQs from '@/components/FAQs/FAQs'
-import News from '@/components/News/News'
-import Social from '@/components/Social/Social'
-import Promo from '@/components/Promo/Promo'
+import News from '@/components/News'
+import FaqBlock from '@/components/FaqBlock'
+import ByJsonBlock from '@/components/ByJsonBlock'
+import Social from '@/components/Social'
+import Promo from '@/components/Promo'
 import PriceBar from '@/components/PriceBar'
-import ByJsonPageTitle from '@/components/PageTitle'
-import ByJsonPageFooter from '@/components/PageFooter'
+import PageTitle from '@/components/PageTitle'
+import PageFooter from '@/components/PageFooter'
+import CreateWalletModal from '@/components/CreateWalletModal'
 import AccessMyWalletOptions from '@/components/AccessMyWalletOptions'
 import TransactionsSideMenu from '@/components/TransactionsSideMenu'
 import TransactionAddress from '@/components/TransactionAddress'
@@ -31,16 +37,22 @@ import TransactionNetwork from '@/components/TransactionNetwork'
 
 import languages from './translations'
 
-Vue.component('vue-header', Header)
-Vue.component('vue-footer', Footer)
+// Containers
+Vue.component('faqs', FaqsContainer)
+Vue.component('footer-container', FooterContainer)
+Vue.component('header-container', HeaderContainer)
+
+// Regular Components
 Vue.component('top-banner', TopBanner)
 Vue.component('about-mew', AboutMEW)
-Vue.component('faqs', FAQs)
 Vue.component('news', News)
+Vue.component('faq-block', FaqBlock)
+Vue.component('by-json-block', ByJsonBlock)
 Vue.component('social', Social)
 Vue.component('promo', Promo)
-Vue.component('by-json-page-title', ByJsonPageTitle)
-Vue.component('by-json-page-footer', ByJsonPageFooter)
+Vue.component('by-json-page-title', PageTitle)
+Vue.component('by-json-page-footer', PageFooter)
+Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('price-bar', PriceBar)
 Vue.component('access-my-wallet-options', AccessMyWalletOptions)
 Vue.component('transactions-side-menu', TransactionsSideMenu)
