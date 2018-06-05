@@ -3,19 +3,19 @@
     <div class="side-menu">
       <ul>
         <li>
-          <p class="active">Send <i class="fa fa-angle-up" aria-hidden="true"></i></p>
+          <p class="active">{{ $t("txSideMenu.send") }} <i class="fa fa-angle-up" aria-hidden="true"></i></p>
           <ul>
-            <li>Send ETH and Tokens</li>
-            <li class="active">Send Offline</li>
+            <li>{{ $t("reused.sendTx") }}</li>
+            <li class="active">{{ $t("txSideMenu.offline") }}</li>
           </ul>
         </li>
-        <li><p>Swap</p></li>
-        <li><p>Dapps</p></li>
+        <li><p>{{ $t("reused.swap") }}</p></li>
+        <li><p>{{ $t("txSideMenu.dapps") }}</p></li>
         <li>
-          <p>Contract <i class="fa fa-angle-down" aria-hidden="true"></i></p>
+          <p>{{ $t("txSideMenu.contract") }} <i class="fa fa-angle-down" aria-hidden="true"></i></p>
           <ul>
-            <li>Interact With Contract</li>
-            <li>Deploy Contract</li>
+            <li>{{ $t("txSideMenu.interactWcontract") }}</li>
+            <li>{{ $t("txSideMenu.depContract") }}</li>
           </ul>
         </li>
       </ul>
@@ -28,8 +28,6 @@ export default {
   data () {
     return {
     }
-  },
-  mounted () {
   }
 }
 </script>

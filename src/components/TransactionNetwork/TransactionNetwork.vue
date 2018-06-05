@@ -7,9 +7,9 @@
           <img class="icon" src="~@/assets/images/icons/network.svg">
         </div>
         <div class="block-content">
-          <h2>Network</h2>
+          <h2>{{ $t("txNetwork.title") }}</h2>
           <h4>myetherapi.com(ETH)</h4>
-          <p class="bottom-button">Change <i class="fa fa-chevron-right" aria-hidden="true"></i></p>
+          <p class="bottom-button">{{ $t("txNetwork.change") }} <i class="fa fa-chevron-right" aria-hidden="true"></i></p>
         </div>
       </div>
 

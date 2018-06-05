@@ -17,14 +17,14 @@
           </div>
           <div class="main-content">
             <div class="content-title">
-              <h2>Send ETH & Tokens</h2>
+              <h2></h2>
             </div>
 
             <div class="send-form">
               <div class="form-block amount-to-address">
                 <div class="amount">
                   <div class="title">
-                    <h4>Amount</h4>
+                    <h4>{{ $t("reused.sendTx") }}</h4>
                   </div>
                   <div class="dropdown-select-search">
                     <v-select v-model="selected" :options="['foo','bar']"></v-select>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="to-address">
                   <div class="title">
-                    <h4>To Address</h4>
+                    <h4>{{ $t("sendTx.toAddr") }}</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
                     <p class="copy-button">Copy</p>
                   </div>
@@ -48,8 +48,8 @@
 
             <div class="send-form">
               <div class="title">
-                <h4>Speed of Transaction</h4>
-                <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+                <h4>{{ $t("sendTx.speedTx") }}</h4>
+                <p>{{ $t("sendTx.txFee") }}: 0.000013 ETH ($1.234)</p>
               </div>
               <div class="the-form gas-amount">
                 <input type="text" name="" value="2.03222">
@@ -72,6 +72,7 @@
 export default {
   data () {
     return {
+      selected: ''
     }
   }
 }
