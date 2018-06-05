@@ -9,6 +9,7 @@ import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
 import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
 import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
+import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
 
 Vue.use(Router)
 
@@ -58,6 +59,11 @@ export default new Router({
       path: '/send-eth-and-tokens',
       name: 'SendEthAndTokens',
       component: SendEthAndTokens
+    },
+    {
+      path: '/send-offline',
+      name: 'SendOffline',
+      component: SendOffline
     }
   ]
 })
