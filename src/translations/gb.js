@@ -166,7 +166,7 @@ const gb = {
     mnemonicPDesc: 'Enter your 12-bit or 14-bit mnemonic phrases',
     metamaskDes: 'Use extention to unlock your wallet',
     privKey: 'Private Key',
-    privKeyDesc: 'Enter your private key to unlock wallet',
+    privKeyDesc: 'Enter your private key to unlock wallet'
   }
 }
 export default gb
