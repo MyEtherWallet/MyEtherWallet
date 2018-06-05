@@ -6,7 +6,24 @@ const gb = {
     sendTx: 'Send ETH & Tokens',
     swap: 'Swap',
     unlockWallet: 'Unlock Wallet',
-    createWallet: 'Create Wallet'
+    createWallet: 'Create Wallet',
+    customerSupport: 'Customer Support',
+    address: 'Address',
+    balance: 'Balance',
+    terms: 'Terms',
+    continue: 'Continue',
+    connectDevice: 'Please Connect With Your Device',
+    jsonF: 'JSON File',
+    mnemonicP: 'Mnemonic Phrase',
+    privKey: 'Private Key',
+    mewConnect: 'MEW Connect',
+    hardware: 'Hardware',
+    noWallet: 'Do not have a wallet?',
+    toolTip1: 'Unfortunately, we encounter these phishing scams/attacks on a daily basis. Typically, the reason for these incidents is entering your private key on a malicious website. Sometimes it is a fake MyEtherWallet site (e.g. myethreawllet[.]com) and other times it is a fake ICO site or airdrop site or EthZero site. If you enter your private key (or keystore file, mnemonic phrase, passwords) on a malicious website, they have complete access to your funds. Because of the nature of the blockchain and cryptography, there is no way to reverse transactions or reset your passwords. Once a transaction is on the blockchain, it\'s final. For this reason, you need to move your funds as soon as possible and discontinue use of this wallet. We do actively attempt to track down the people behind these sites and do what we can to warn others, take down the site, or whatever we can given the particular situation.',
+    toolTip2: 'Typically, the reason for these incidents is entering your private key on a malicious website.',
+    printWallet: 'Print My Wallet',
+    previous: 'Previous',
+    next: 'Next'
   },
   header: {
     home: 'Home',
@@ -32,13 +49,11 @@ const gb = {
     hardwareWallet: 'Hardware Wallet Support',
     hardwareWalletDesc: 'Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description.',
     swapDesc: 'Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description.',
-    mewConnectTitle: 'MEW Connect',
     mewConnectDesc: 'Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description, Text here for feature description.'
   },
   faqs: {
     subheading: 'Have not found the question that you are looking for?',
     seeMore: 'See More...',
-    customerSupport: 'Customer Support',
     gettingStarted: 'Getting Started With MEW',
     article1: 'What is MEW?',
     article2: 'How to create a wallet?',
@@ -90,12 +105,10 @@ const gb = {
     mew: 'MEW',
     about: 'About us',
     team: 'Team',
-    custSupport: 'Customer Support',
     welcome: 'Welcome to Donate to Us',
     welcomeDes: 'Your donation will help us a lot to build our MEW Community.',
     feedback: 'Feedback',
     privacy: 'Privacy',
-    terms: 'Terms',
     copyright: 'Copyright 2018 All right reserved by MyEtherWallet, Inc.'
   },
   privacyPol: {
@@ -136,7 +149,6 @@ const gb = {
     title: 'Address'
   },
   txBalance: {
-    title: 'Balance',
     detail: 'Detail'
   },
   txNetwork: {
@@ -158,15 +170,53 @@ const gb = {
     title: 'Learn more about Blockchain or MEW? Please go to'
   },
   unlockWallet: {
-    noWallet: 'Do not have a wallet?',
-    hardware: 'Hardware',
-    jsonF: 'JSON File',
     jsonFDesc: 'Update ordrop your keystore file here',
-    mnemonicP: 'Mnemonic Phrase',
     mnemonicPDesc: 'Enter your 12-bit or 14-bit mnemonic phrases',
     metamaskDes: 'Use extention to unlock your wallet',
-    privKey: 'Private Key',
     privKeyDesc: 'Enter your private key to unlock wallet'
+  },
+  accessMyWalletOptions: {
+    hdDerivationPath: 'HD Derivation Path',
+    customPath: 'Add Custom Path',
+    interactAddr: 'Address to Interact With',
+    id: 'ID',
+    acceptTerms: 'To unlock my wallet, I accept',
+    mewConnectDesc: 'Use MEW Connect to access my wallet',
+    metaMaskDesc: 'Use extention to access my wallet',
+    metaMaskModalDesc: 'Please use MyEtherWallet on a secure (SSL / HTTPS) connection to connect.',
+    software: 'Software',
+    softwareDesc: 'JSON file, Private key, Mnemonic phrase',
+    notRecommended: 'Not recommended',
+    unlock: 'Unlock'
+  },
+  byJsonFile: {
+    saveKeystore: 'Save My Keystore File',
+    dontLoseTitle: 'Don\'t Lose It',
+    dontLoseDesc: 'Be Careful, it can not be recovered if you lose it.',
+    dontShareTitle: 'Don\'t Share It',
+    dontShareDesc: 'Your funds will be stolen if you use this file on a malicious phishing site.',
+    makeBackupTitle: 'Make a Backup',
+    makeBackupDesc: 'Secure it like the millions of dollars it may one day be worth.',
+    downloadKeyFile: 'Download Keystore File'
+  },
+  byMnemonic: {
+    success: 'Success',
+    successfullyCreated: 'Your have created your wallet successfully.',
+    value: 'Value',
+    random: 'Random',
+    writeDown: 'Write Down Mnemonic Phrase Key',
+    alreadyWritten: 'I Already Wrote Down the Key'
+  },
+  createWallet: {
+    title: 'Welcome to MEW',
+    subheading: 'MyEtherWallet.com doesn\'t hold your keys for you. We can’t access accounts, recover keys, reset passwords, nor reverse transactions. Protect your keys & always check that you are on CORRECT URL. You are responsible for your security.',
+    firstTime: 'I\'m a Fresher',
+    veteran: 'I\'m Experienced',
+    yourPw: 'Your Password',
+    doNotForget: 'DO NOT FORGET',
+    doNotForgetDesc: 'to save your password, and it is your private key. You will need this',
+    keyPass: 'Password + Keystore',
+    keyPassDesc: 'File to unlock your wallet.'
   }
 }
 export default gb
