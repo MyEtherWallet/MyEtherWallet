@@ -1,6 +1,6 @@
 <template>
   <div class="faqs">
-    <div class="wrap" id="pagelink-faqs">
+    <div class="wrap" id="faqs">
       <div class="page-container">
         <div class="flex-col-vertical-bottom top-title">
           <div class="title">

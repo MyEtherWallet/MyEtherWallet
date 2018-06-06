@@ -15,12 +15,13 @@ import VueI18n from 'vue-i18n'
 // Containers
 import FaqsContainer from '@/containers/FaqsContainer'
 import FooterContainer from '@/containers/FooterContainer'
+import NewsContainer from '@/containers/NewsContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
 
 // Regular Components
 import TopBanner from '@/components/TopBanner'
 import AboutMEW from '@/components/AboutMEW'
-import News from '@/components/News'
+import NewsArticle from '@/components/NewsArticle'
 import FaqBlock from '@/components/FaqBlock'
 import ByJsonBlock from '@/components/ByJsonBlock'
 import Social from '@/components/Social'
@@ -41,11 +42,12 @@ import languages from './translations'
 Vue.component('faqs', FaqsContainer)
 Vue.component('footer-container', FooterContainer)
 Vue.component('header-container', HeaderContainer)
+Vue.component('news', NewsContainer)
 
 // Regular Components
 Vue.component('top-banner', TopBanner)
 Vue.component('about-mew', AboutMEW)
-Vue.component('news', News)
+Vue.component('news-article', NewsArticle)
 Vue.component('faq-block', FaqBlock)
 Vue.component('by-json-block', ByJsonBlock)
 Vue.component('social', Social)
