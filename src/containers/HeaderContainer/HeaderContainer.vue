@@ -13,9 +13,9 @@
 
               <b-nav>
                 <b-nav-item v-bind:to="'/'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-about-mew'" v-on:click="scrollToId('pagelink-about-mew')">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-faqs'" v-on:click="scrollToId('pagelink-faqs')">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-news'" v-on:click="scrollToId('pagelink-news')">{{ $t("header.news") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#pagelink-about-mew'">{{ $t("header.about") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#pagelink-faqs'">{{ $t("reused.faqs") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#pagelink-news'">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
@@ -72,7 +72,10 @@ export default {
       window.scrollTo(0, 0)
     },
     scrollToId: function (id) {
-      document.getElementById(id).scrollIntoView()
+      const self = this
+      self.$router.push({path: '/', hash: `#${id}`}, function () {
+        console.log(document.getElementById(id))
+      })
     },
     languageItemClicked: function (e) {
       const self = this

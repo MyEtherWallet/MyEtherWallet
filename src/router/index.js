@@ -21,7 +21,7 @@ import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSa
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -99,5 +99,12 @@ export default new Router({
       name: 'DomainSale',
       component: DomainSale
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (to.hash) {
+      return {
+        selector: to.hash
+      }
+    }
+  }
 })
