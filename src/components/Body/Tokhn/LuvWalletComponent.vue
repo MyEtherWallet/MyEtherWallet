@@ -197,20 +197,25 @@ export default {
 
                 var reader = new FileReader();
                 var text;
+                var wallet;
                 reader.onload = function() {
                     text = reader.result;
                     console.log(text.substring(0, 200));
+                     wallet = JSON.parse(text);
+                     //
+                     console.log(wallet);
+
+                     account.address = wallet.address;
+                     account.publicKey = wallet.publicKey;
+                     account.privateKey = wallet.privateKey;
+                     account.utxos = wallet.utxos;
                 };
                 reader.readAsText(input.files[0]);
-                var wallet = JSON.parse(text);
                 var account = this.Token;
-                account.address = wallet.address;
-                account.publicKey = wallet.publicKey;
-                account.privateKey = wallet.privateKey;
-                account.utxos = wallet.utxos;
-                console.log(wallet);
-                this.updateBallance(account.address, 0x02);
+
+                 this.updateBallance(account.address, 0x02);
                 this.loggedin = true;
+
 
             },
             updateBallance: function(address, network) {
