@@ -29,8 +29,8 @@ export default {
     const protocol = window.location.protocol
     if (protocol !== 'http:' || protocol !== 'https:') {
       self.online = false
-      self.getRates()
     }
+    self.getRates() ? self.online = true : self.online = false
   }
 }
 </script>
