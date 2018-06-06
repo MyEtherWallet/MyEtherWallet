@@ -17,7 +17,11 @@
             </li>
           </ul>
         </li>
-        <li><p>Swap</p></li>
+        <li>
+          <router-link to="/swap">
+            <p>Swap</p>
+          </router-link>
+        </li>
         <li><p>Dapps</p></li>
         <li>
           <p>Contract <i class="fa fa-angle-down" aria-hidden="true"></i></p>
