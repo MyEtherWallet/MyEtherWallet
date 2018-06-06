@@ -11,6 +11,8 @@ import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
 import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
 import Swap from '@/components/Body/Transactions/Swap/Swap'
+import Dapps from '@/components/Body/Transactions/Dapps/Dapps'
+import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDomainENS/RegisterDomainENS'
 
 Vue.use(Router)
 
@@ -70,6 +72,16 @@ export default new Router({
       path: '/swap',
       name: 'Swap',
       component: Swap
+    },
+    {
+      path: '/dapps',
+      name: 'Dapps',
+      component: Dapps
+    },
+    {
+      path: '/register-domain',
+      name: 'RegisterDomainENS',
+      component: RegisterDomainENS
     }
   ]
 })
