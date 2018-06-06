@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <top-banner></top-banner>
-    <about-mew></about-mew>
+    <about></about>
     <faqs></faqs>
     <news></news>
     <social></social>

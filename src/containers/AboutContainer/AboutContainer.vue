@@ -98,5 +98,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "AboutMEW.scss";
+  @import "AboutContainer.scss";
 </style>

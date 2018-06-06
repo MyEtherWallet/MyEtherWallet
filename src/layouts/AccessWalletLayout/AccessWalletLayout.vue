@@ -1,6 +1,6 @@
 <template>
   <div>
-    <access-my-wallet-options></access-my-wallet-options>
+    <access-my-wallet-container></access-my-wallet-container>
     <price-bar :v-if="online"></price-bar>
     <faqs></faqs>
   </div>
