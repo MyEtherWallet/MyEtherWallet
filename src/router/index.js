@@ -10,6 +10,7 @@ import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfCondit
 import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
 import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
+import Swap from '@/components/Body/Transactions/Swap/Swap'
 
 Vue.use(Router)
 
@@ -64,6 +65,11 @@ export default new Router({
       path: '/send-offline',
       name: 'SendOffline',
       component: SendOffline
+    },
+    {
+      path: '/swap',
+      name: 'Swap',
+      component: Swap
     }
   ]
 })
