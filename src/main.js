@@ -13,55 +13,67 @@ import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 
 // Containers
+import AboutContainer from '@/containers/AboutContainer'
+import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
 import FaqsContainer from '@/containers/FaqsContainer'
 import FooterContainer from '@/containers/FooterContainer'
-import NewsContainer from '@/containers/NewsContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
+import NewsContainer from '@/containers/NewsContainer'
 
 // Regular Components
-import TopBanner from '@/components/TopBanner'
-import AboutMEW from '@/components/AboutMEW'
-import NewsArticle from '@/components/NewsArticle'
-import FaqBlock from '@/components/FaqBlock'
+import AccessWalletButton from '@/components/AccessWalletButton'
 import ByJsonBlock from '@/components/ByJsonBlock'
-import Social from '@/components/Social'
-import Promo from '@/components/Promo'
-import PriceBar from '@/components/PriceBar'
-import PageTitle from '@/components/PageTitle'
-import PageFooter from '@/components/PageFooter'
 import CreateWalletModal from '@/components/CreateWalletModal'
-import AccessMyWalletOptions from '@/components/AccessMyWalletOptions'
-import TransactionsSideMenu from '@/components/TransactionsSideMenu'
+import FaqBlock from '@/components/FaqBlock'
+import HardwareModal from '@/components/HardwareModal'
+import MetamaskModal from '@/components/MetamaskModal'
+import MewConnectModal from '@/components/MewConnectModal'
+import NetworkAndAddressModal from '@/components/NetworkAndAddressModal'
+import NewsArticle from '@/components/NewsArticle'
+import PageFooter from '@/components/PageFooter'
+import PageTitle from '@/components/PageTitle'
+import PriceBar from '@/components/PriceBar'
+import Promo from '@/components/Promo'
+import Social from '@/components/Social'
+import SoftwareModal from '@/components/SoftwareModal'
 import TransactionAddress from '@/components/TransactionAddress'
 import TransactionBalance from '@/components/TransactionBalance'
 import TransactionNetwork from '@/components/TransactionNetwork'
+import TransactionsSideMenu from '@/components/TransactionsSideMenu'
+import TopBanner from '@/components/TopBanner'
 
 import languages from './translations'
 
 // Containers
+Vue.component('about', AboutContainer)
+Vue.component('access-my-wallet-container', AccessMyWalletContainer)
 Vue.component('faqs', FaqsContainer)
 Vue.component('footer-container', FooterContainer)
 Vue.component('header-container', HeaderContainer)
 Vue.component('news', NewsContainer)
 
 // Regular Components
-Vue.component('top-banner', TopBanner)
-Vue.component('about-mew', AboutMEW)
-Vue.component('news-article', NewsArticle)
-Vue.component('faq-block', FaqBlock)
+Vue.component('access-wallet-button', AccessWalletButton)
 Vue.component('by-json-block', ByJsonBlock)
-Vue.component('social', Social)
-Vue.component('promo', Promo)
-Vue.component('by-json-page-title', PageTitle)
-Vue.component('by-json-page-footer', PageFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
+Vue.component('faq-block', FaqBlock)
+Vue.component('hardware-modal', HardwareModal)
+Vue.component('metamask-modal', MetamaskModal)
+Vue.component('mew-connect-modal', MewConnectModal)
+Vue.component('network-and-address-modal', NetworkAndAddressModal)
+Vue.component('news-article', NewsArticle)
+Vue.component('by-json-page-footer', PageFooter)
+Vue.component('by-json-page-title', PageTitle)
 Vue.component('price-bar', PriceBar)
-Vue.component('access-my-wallet-options', AccessMyWalletOptions)
-Vue.component('transactions-side-menu', TransactionsSideMenu)
+Vue.component('promo', Promo)
+Vue.component('social', Social)
+Vue.component('software-modal', SoftwareModal)
 Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
 Vue.component('transaction-tokens', TransactionTokens)
+Vue.component('transactions-side-menu', TransactionsSideMenu)
+Vue.component('top-banner', TopBanner)
 
 Vue.component('v-select', vSelect)
 
