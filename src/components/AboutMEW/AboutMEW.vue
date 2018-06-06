@@ -5,7 +5,7 @@
         <div class="circle">
           <img src="~@/assets/images/home/circle.png">
         </div>
-        <div class="star-background" id="pagelink-about-mew">
+        <div class="star-background" id="about-mew">
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">

@@ -4,7 +4,7 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/" v-on:click.native="scrollTop">
+            <router-link v-bind:to="'/'" v-on:click.native="scrollTop">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png">
               </div>
@@ -12,10 +12,10 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-about-mew'">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-faqs'">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#pagelink-news'">{{ $t("header.news") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/'" v-on:click.native="scrollTop"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item v-bind:to="'/#about-mew'">{{ $t("header.about") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#faqs'">{{ $t("reused.faqs") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#news'">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
@@ -62,20 +62,13 @@ export default {
         {lang: 'Chinese', code: 'cn'},
         {lang: 'Russian', code: 'ru'},
         {lang: 'German', code: 'de'}
-      ],
-      url: '/'
+      ]
     }
   },
   methods: {
     scrollTop: function () {
       // Scroll to top of the page
       window.scrollTo(0, 0)
-    },
-    scrollToId: function (id) {
-      const self = this
-      self.$router.push({path: '/', hash: `#${id}`}, function () {
-        console.log(document.getElementById(id))
-      })
     },
     languageItemClicked: function (e) {
       const self = this
