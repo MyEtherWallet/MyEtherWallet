@@ -22,7 +22,11 @@
             <p>Swap</p>
           </router-link>
         </li>
-        <li><p>Dapps</p></li>
+        <li>
+          <router-link to="/dapps">
+            <p>Dapps</p>
+          </router-link>
+        </li>
         <li>
           <p>Contract <i class="fa fa-angle-down" aria-hidden="true"></i></p>
           <ul>
