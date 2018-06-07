@@ -1,8 +1,8 @@
-import GenerateWallet from './GenerateWallet'
+import GenerateKeystoreWallet from './GenerateKeystoreWallet'
 import UnlockWallet from './UnlockWallet'
 
 const Helpers = {
-  GenerateWallet: GenerateWallet,
+  GenerateKeystoreWallet: GenerateKeystoreWallet,
   UnlockWallet: UnlockWallet
 }
 
