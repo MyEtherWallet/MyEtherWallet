@@ -81,5 +81,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "ByJsonFileLayout.scss";
+  @import "ByJsonFileContainer.scss";
 </style>
