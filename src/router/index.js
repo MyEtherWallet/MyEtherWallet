@@ -9,6 +9,11 @@ import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
 import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
 import AccessMyWallet from '@/components/Body/AccessMyWallet/AccessMyWallet'
 import SendEthAndTokens from '@/components/Body/Transactions/SendEthAndTokens/SendEthAndTokens'
+import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
+import Swap from '@/components/Body/Transactions/Swap/Swap'
+import Dapps from '@/components/Body/Transactions/Dapps/Dapps'
+import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDomainENS/RegisterDomainENS'
+import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSale'
 
 Vue.use(Router)
 
@@ -58,6 +63,31 @@ export default new Router({
       path: '/send-eth-and-tokens',
       name: 'SendEthAndTokens',
       component: SendEthAndTokens
+    },
+    {
+      path: '/send-offline',
+      name: 'SendOffline',
+      component: SendOffline
+    },
+    {
+      path: '/swap',
+      name: 'Swap',
+      component: Swap
+    },
+    {
+      path: '/dapps',
+      name: 'Dapps',
+      component: Dapps
+    },
+    {
+      path: '/register-domain',
+      name: 'RegisterDomainENS',
+      component: RegisterDomainENS
+    },
+    {
+      path: '/domain-sale',
+      name: 'DomainSale',
+      component: DomainSale
     }
   ]
 })
