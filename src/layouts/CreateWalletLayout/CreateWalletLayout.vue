@@ -9,32 +9,18 @@
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
               <h3>{{ $t("createWallet.yourPw") }}</h3>
-              <create-wallet-input v-model='value' :switcher="switcher"></create-wallet-input>
-              {{value}}
-              <div class="footer-text">
-                <p>
-                  <span>{{ $t("createWallet.doNotForget") }}</span>
-                  {{ $t("createWallet.doNotForgetDesc") }}
-                  <span>{{ $t("createWallet.keyPass") }}</span>
-                  {{ $t("createWallet.keyPassDesc") }}
-                </p>
-              </div>
+              <create-wallet-input v-model='password' :switcher="switcher" :param="'Json'"></create-wallet-input>
+              <create-wallet-input-footer></create-wallet-input-footer>
             </b-tab>
             <b-tab title="By Mnemonic Phrase" >
               <h3>{{ $t("createWallet.yourPw") }}</h3>
-              <create-wallet-input v-model='value' :switcher="switcher"></create-wallet-input>
-              {{value}}
-              <div class="footer-text">
-                <p>
-                  <span>{{ $t("createWallet.doNotForget") }}</span>
-                  {{ $t("createWallet.doNotForgetDesc") }}
-                  <span>{{ $t("createWallet.keyPass") }}</span>
-                  {{ $t("createWallet.keyPassDesc") }}
-                </p>
-              </div>
+              <create-wallet-input v-model='password' :switcher="switcher" :param="'Mnemonic'"></create-wallet-input>
+              <create-wallet-input-footer></create-wallet-input-footer>
             </b-tab>
           </b-tabs>
         </div>
+        <by-json-file-container v-show="byJson && !byMnemonic"></by-json-file-container>
+        <by-mnemonic-container v-show="!byJson && byMnemonic"></by-mnemonic-container>
       </div>
     </div>
 
@@ -49,12 +35,13 @@ export default {
     return {
       byJson: false,
       byMnemonic: false,
-      value: ''
+      password: ''
     }
   },
   methods: {
     switcher: function (by) {
       const self = this
+      console.log(by)
       if (by === 'Json') {
         self.byJson = true
         self.byMnemonic = false

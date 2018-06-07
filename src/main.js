@@ -15,6 +15,8 @@ import VueI18n from 'vue-i18n'
 // Containers
 import AboutContainer from '@/containers/AboutContainer'
 import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
+import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
+import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
 import FaqsContainer from '@/containers/FaqsContainer'
 import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
@@ -25,6 +27,7 @@ import AccessWalletButton from '@/components/AccessWalletButton'
 import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
 import CreateWalletInput from '@/components/CreateWalletInput'
+import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
 import MetamaskModal from '@/components/MetamaskModal'
@@ -49,6 +52,8 @@ import languages from './translations'
 // Containers
 Vue.component('about', AboutContainer)
 Vue.component('access-my-wallet-container', AccessMyWalletContainer)
+Vue.component('by-json-file-container', ByJsonFileContainer)
+Vue.component('by-mnemonic-container', ByMnemonicContainer)
 Vue.component('faqs', FaqsContainer)
 Vue.component('footer-container', FooterContainer)
 Vue.component('header-container', HeaderContainer)
@@ -58,6 +63,7 @@ Vue.component('news', NewsContainer)
 Vue.component('access-wallet-button', AccessWalletButton)
 Vue.component('by-json-block', ByJsonBlock)
 Vue.component('create-wallet-input', CreateWalletInput)
+Vue.component('create-wallet-input-footer', CreateWalletInputFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
