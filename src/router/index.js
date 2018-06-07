@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HomeLayout from '@/layouts/HomeLayout'
 import CreateWalletLayout from '@/layouts/CreateWalletLayout'
-import ByJsonFileLayout from '@/layouts/ByJsonFileLayout'
-import ByMnemonicLayout from '@/layouts/ByMnemonicLayout'
 import TeamLayout from '@/layouts/TeamLayout'
 import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
 import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
@@ -32,16 +30,6 @@ export default new Router({
       path: '/create-wallet',
       name: 'CreateWalletLayout',
       component: CreateWalletLayout
-    },
-    {
-      path: '/by-json-file',
-      name: 'ByJsonFileLayout',
-      component: ByJsonFileLayout
-    },
-    {
-      path: '/by-mnemonic-phrase',
-      name: 'ByMnemonicLayout',
-      component: ByMnemonicLayout
     },
     {
       path: '/team',

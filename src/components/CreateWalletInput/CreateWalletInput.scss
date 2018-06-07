@@ -13,6 +13,7 @@
   }
 
   .next-button {
+    cursor: pointer;
     display: block;
     margin: 0 auto;
     max-width: 300px;
@@ -24,13 +25,4 @@
       width: 20px;
     }
   }
-}// .user-input
-
-.footer-text {
-  p {
-    span {
-      color: $text-color-5;
-      font-weight: 500;
-    }
-  }
-} // .footer-text
+}

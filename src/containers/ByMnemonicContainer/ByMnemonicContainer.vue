@@ -133,5 +133,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "ByMnemonicLayout.scss";
+  @import "ByMnemonicContainer.scss";
 </style>
