@@ -13,6 +13,7 @@ import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
 import Swap from '@/components/Body/Transactions/Swap/Swap'
 import Dapps from '@/components/Body/Transactions/Dapps/Dapps'
 import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDomainENS/RegisterDomainENS'
+import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSale'
 
 Vue.use(Router)
 
@@ -82,6 +83,11 @@ export default new Router({
       path: '/register-domain',
       name: 'RegisterDomainENS',
       component: RegisterDomainENS
+    },
+    {
+      path: '/domain-sale',
+      name: 'DomainSale',
+      component: DomainSale
     }
   ]
 })

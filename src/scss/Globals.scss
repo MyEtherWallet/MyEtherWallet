@@ -405,6 +405,26 @@ h6 {
   }
 }
 
+.very-small-circle-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 100px;
+  color: $text-color-2;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 56px;
+  padding: 4px 0;
+  text-align: center;
+
+  &.active {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    color: $text-white;
+  }
+}
+
 .small-circle-button-green-filled {
   background-color: $button--background-color-1;
   border: 1px solid $button--border-color-1;
@@ -416,6 +436,20 @@ h6 {
   font-weight: 500;
   min-width: 80px;
   padding: 7px 0;
+  text-align: center;
+}
+
+.very-small-circle-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-1;
+  border-radius: 100px;
+  color: $text-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 56px;
+  padding: 4px 0;
   text-align: center;
 }
 

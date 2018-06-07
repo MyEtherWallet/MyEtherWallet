@@ -291,34 +291,6 @@
               }
             }
 
-            .sub-domain-list {
-              margin-top: 30px;
-
-              .title {
-                margin-bottom: 10px;
-              }
-
-              ul {
-                li {
-                  align-items: center;
-                  border-top: 5px dotted $background-color-1;
-                  display: flex;
-                  padding: 10px 0;
-
-                  .buy-button-container {
-                    align-items: center;
-                    display: flex;
-                    margin-left: auto;
-
-                    p {
-                      margin-right: 10px;
-                    }
-
-                  }
-                }
-              }
-
-            }
           } // .flex-container
 
         } // .submit-button-container
