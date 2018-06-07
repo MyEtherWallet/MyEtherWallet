@@ -42,6 +42,7 @@ import TransactionNetwork from '@/components/TransactionNetwork'
 import TransactionsSideMenu from '@/components/TransactionsSideMenu'
 import TopBanner from '@/components/TopBanner'
 
+// etc
 import languages from './translations'
 
 // Containers
