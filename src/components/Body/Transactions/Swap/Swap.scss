@@ -32,6 +32,7 @@
         .content-title {
           // box-shadow: 0 1px 1px $box-shadow-color-2;
           border-bottom: 2px solid $background-color-1;
+          display: flex;
           padding: 17px 0;
 
           h2 {
@@ -42,6 +43,12 @@
             margin: 0;
             padding: 0;
             padding-left: 27px;
+          }
+
+          img {
+            height: 40px;
+            margin-left: auto;
+            margin-right: 30px;
           }
         }
 
@@ -79,11 +86,18 @@
           .amount-to-address {
             display: grid;
             grid-column-gap: 5px;
-            grid-template-columns: 2fr 3fr;
+            grid-template-columns: 1fr 70px 1fr;
 
             .title {
               margin-bottom: 13px;
               padding: 0 8px;
+            }
+
+            .exchange-icon {
+              color: $text-color-9;
+              font-size: 30px;
+              padding-top: 62px;
+              text-align: center;
             }
 
             .amount {
@@ -217,8 +231,12 @@
         } // .advanced
 
         .submit-button-container {
-          padding: 60px 0;
+          padding: 40px 0;
           text-align: center;
+
+          h4 {
+            margin-bottom: 20px;
+          }
 
           .submit-button {
             margin: 0 auto;

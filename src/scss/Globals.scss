@@ -94,6 +94,44 @@ body {
   box-sizing: border-box;
 }
 
+::placeholder {
+  color: $text-black;
+  opacity: .2;
+}
+
+
+// *********************************************************************
+// Custom Scrollbar
+// *********************************************************************
+
+// width
+::-webkit-scrollbar {
+  border-radius: 10px;
+  width: 5px;
+}
+
+// Track
+::-webkit-scrollbar-track {
+  $background-color: #f1f1f1;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+// Handle
+::-webkit-scrollbar-thumb {
+  $background-color: #888;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+// Handle on hover
+::-webkit-scrollbar-thumb:hover {
+  $background-color: #555;
+  background: $background-color;
+  border-radius: 10px;
+}
+
+
 
 // *********************************************************************
 // Standard list styles
@@ -347,28 +385,72 @@ h6 {
   padding: 21px 55px;
 }
 
+.small-circle-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 100px;
+  color: $text-color-2;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 70px;
+  padding: 6px 0;
+  text-align: center;
 
-// *********************************************************************
-// Custom scroll bar style
-// *********************************************************************
-.custom-scroll-bar {
-  // width
-  &::-webkit-scrollbar {
-    width: 7px;
+  &.active {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    color: $text-white;
   }
-  // Track
-  &::-webkit-scrollbar-track {
-    background: $scrollbar--track-color;
+}
+
+.very-small-circle-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 100px;
+  color: $text-color-2;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 56px;
+  padding: 4px 0;
+  text-align: center;
+
+  &.active {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    color: $text-white;
   }
-  // Handle
-  &::-webkit-scrollbar-thumb {
-    background: $scrollbar--handle-color;
-    border-radius: 10px;
-  }
-  // Handle on hover
-  &::-webkit-scrollbar-thumb:hover {
-    background: $scrollbar--handle-hover-color;
-  }
+}
+
+.small-circle-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-1;
+  border-radius: 100px;
+  color: $text-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 80px;
+  padding: 7px 0;
+  text-align: center;
+}
+
+.very-small-circle-button-green-filled {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-1;
+  border-radius: 100px;
+  color: $text-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 56px;
+  padding: 4px 0;
+  text-align: center;
 }
 
 
@@ -401,9 +483,17 @@ h6 {
   color: $text-base-color;
 }
 
+
 // *********************************************************************
 // [Bootstrap] Tooltip style
 // *********************************************************************
+.custom-tooltip,
+.custom-tooltip:hover {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+}
+
 .tooltip {
   pointer-events: none;
   z-index: 9999999;
@@ -446,25 +536,18 @@ h6 {
   }
 }
 
-/*
-.btn-secondary,
-.btn-secondary:hover {
-  background-color: transparent;
-  border: 0;
-  color: $link-text-color-2;
-}
-*/
 
 // *********************************************************************
 // [Bootstrap] Modal style
 // *********************************************************************
-
 // Modal header
 .modal-header {
   background-color: $bootstrap-modal-header-background-color;
 
   h5 {
     color: $text-white;
+    font-size: 20px;
+    padding: 0 15px;
   }
 
   .close {
@@ -513,6 +596,19 @@ h6 {
     }
   }
 }
+
+.nopadding .modal-body {
+  padding: 0;
+}
+
+
+.max-height-1 .modal-body {
+  max-height: 405px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
 
 // Custom modal style for each pages -------------------------------
 .access-my-wallet-options {
@@ -665,7 +761,68 @@ h6 {
 
 }
 
+.sliding-switch-white {
+  height: 27px;
+  position: relative;
 
+  .switch {
+    display: inline-block;
+    height: 28px;
+    position: relative;
+    width: 52px;
+
+    // Hide default HTML checkbox
+    input {
+      display: none;
+    }
+  }
+
+  // The slider
+  .slider {
+    background-color: $css-toggle-button--slider-background-color;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+
+    &::before {
+      background-color: $text-white;
+      bottom: 3px;
+      content: '';
+      height: 22px;
+      left: 3px;
+      padding: 1px 7px;
+      position: absolute;
+      transition: .4s;
+      width: 23px;
+    }
+
+    // Rounded sliders
+    &.round {
+      border-radius: 34px;
+    }
+
+    &.round::before {
+      border-radius: 100%;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $css-toggle-button--slider--active--background-color;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+  }
+
+  input:checked + .slider::before {
+    transform: translateX(23px);
+  }
+
+}
 
 // *********************************************************************
 // Custom Checkbox
@@ -788,17 +945,19 @@ h6 {
   }
 }
 
-.dropdown-select-search {
+.dropdown-select-search-1 {
   border-radius: 5px;
 
   .dropdown .dropdown-toggle {
     border: 0;
     padding: 6px 5px;
+    padding-left: 30px;
   }
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    border: 1px solid #8a8a8a;
+    $border-color: #8a8a8a;
+    border: 1px solid $border-color;
   }
 
   .v-select .dropdown-menu {
@@ -810,35 +969,60 @@ h6 {
   }
 
   .v-select .open-indicator {
-    position: absolute;
     bottom: 4px;
-    right: 17px;
     cursor: pointer;
-    pointer-events: all;
-    opacity: 1;
     height: 25px;
+    opacity: 1;
+    pointer-events: all;
+    position: absolute;
+    right: 17px;
   }
+}
 
-  /* width */
-  ::-webkit-scrollbar {
-      border-radius: 10px;
-      width: 5px;
+
+.alert-button {
+  position: relative;
+
+  &::before {
+    background-color: $text-color-3;
+    border-radius: 100px;
+    color: $text-white;
+    content: '!';
+    display: inline-block;
+    font-size: 12px;
+    line-height: 17px;
+    margin-left: 10px;
+    position: relative;
+    text-align: center;
+    width: 17px;
   }
+}
 
-  /* Track */
-  ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
+.good-button {
+  color: $text-color-3;
+  display: inline-block;
+  font-size: 20px;
+
+  &.not-good {
+    color: $text-good-button-not-good;
   }
+}
 
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-      background: #888;
-  }
 
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-  }
 
+// *********************************************************************
+// Custom Input
+// *********************************************************************
+.custom-input-text-1 {
+  background-color: $background-color-1;
+  border: 0;
+  border-radius: 4px;
+  padding: 13px 15px;
+}
+
+.custom-select-1 {
+  background-color: $background-color-white;
+  border-radius: 4px;
+  color: $text-black;
+  padding: 0 10px;
 }

@@ -9,7 +9,17 @@
         <div class="block-content">
           <h2>Address</h2>
           <p class="address">0xe5cD582F564991F83bE7A5b3ba<br>742cb4ff5c6FE2</p>
-          <p class="bottom-button">Print <i class="fa fa-chevron-right" aria-hidden="true"></i></p>
+          <div class="icon-container">
+            <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
+              <img src="~@/assets/images/icons/printer-white.svg">
+            </b-btn>
+            <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
+              <img src="~@/assets/images/icons/copy.svg">
+            </b-btn>
+            <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
+              <img src="~@/assets/images/icons/change.svg">
+            </b-btn>
+          </div>
         </div>
       </div>
 
