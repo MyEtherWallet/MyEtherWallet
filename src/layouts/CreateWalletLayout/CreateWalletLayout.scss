@@ -28,40 +28,5 @@
       margin-bottom: 40px;
       text-align: center;
     }
-
-    .user-input {
-      margin-bottom: 40px;
-
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        font-size: 14px;
-        margin-bottom: 40px;
-        padding: 20px;
-        width: 100%;
-      }
-
-      .next-button {
-        display: block;
-        margin: 0 auto;
-        max-width: 300px;
-        padding: 20px 0;
-        text-align: center;
-
-        img {
-          margin-left: 5px;
-          width: 20px;
-        }
-      }
-    }// .user-input
-
-    .footer-text {
-      p {
-        span {
-          color: $text-color-5;
-          font-weight: 500;
-        }
-      }
-    } // .footer-text
   } // .tab-pane
 } // .nav-tab-user-input-box
