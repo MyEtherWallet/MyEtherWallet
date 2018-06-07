@@ -24,6 +24,7 @@ import NewsContainer from '@/containers/NewsContainer'
 import AccessWalletButton from '@/components/AccessWalletButton'
 import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
+import CreateWalletInput from '@/components/CreateWalletInput'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
 import MetamaskModal from '@/components/MetamaskModal'
@@ -56,6 +57,7 @@ Vue.component('news', NewsContainer)
 // Regular Components
 Vue.component('access-wallet-button', AccessWalletButton)
 Vue.component('by-json-block', ByJsonBlock)
+Vue.component('create-wallet-input', CreateWalletInput)
 Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)

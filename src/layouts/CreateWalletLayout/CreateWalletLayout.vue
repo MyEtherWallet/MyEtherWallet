@@ -4,19 +4,13 @@
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
-        <div class="nav-tab-user-input-box">
+        <div class="nav-tab-user-input-box" v-show="!byJson && !byMnemonic">
           <b-tabs class="x100">
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
               <h3>{{ $t("createWallet.yourPw") }}</h3>
-              <div class="user-input">
-                <input type="password" name="password" placeholder="Please Enter At Least 9 Charactors">
-                <router-link to='/by-json-file'>
-                  <div class="next-button large-round-button-green-filled">
-                    {{ $t("reused.next") }}<img src="~@/assets/images/icons/right-arrow.png">
-                  </div>
-                </router-link>
-              </div>
+              <create-wallet-input v-model='value' :switcher="switcher"></create-wallet-input>
+              {{value}}
               <div class="footer-text">
                 <p>
                   <span>{{ $t("createWallet.doNotForget") }}</span>
@@ -28,14 +22,8 @@
             </b-tab>
             <b-tab title="By Mnemonic Phrase" >
               <h3>{{ $t("createWallet.yourPw") }}</h3>
-              <div class="user-input">
-                <input type="password" name="password" placeholder="Please Enter At Least 9 Charactors">
-                <router-link to='/by-mnemonic-phrase'>
-                  <div class="next-button large-round-button-green-filled">
-                    {{ $t("reused.next") }}<img src="~@/assets/images/icons/right-arrow.png">
-                  </div>
-                </router-link>
-              </div>
+              <create-wallet-input v-model='value' :switcher="switcher"></create-wallet-input>
+              {{value}}
               <div class="footer-text">
                 <p>
                   <span>{{ $t("createWallet.doNotForget") }}</span>
@@ -59,6 +47,24 @@
 export default {
   data () {
     return {
+      byJson: false,
+      byMnemonic: false,
+      value: ''
+    }
+  },
+  methods: {
+    switcher: function (by) {
+      const self = this
+      if (by === 'Json') {
+        self.byJson = true
+        self.byMnemonic = false
+      } else if (by === 'Mnemonic') {
+        self.byJson = false
+        self.byMnemonic = true
+      } else {
+        self.byJson = false
+        self.byMnemonic = false
+      }
     }
   }
 }
