@@ -49,17 +49,92 @@
                   <div class="margin-left-auto add-custom-network">
                     <div class="sliding-switch-white">
                       <label class="switch">
-                        <input v-on:click="expendAuth" type="checkbox">
+                        <input v-on:click="expendDomainCheckForm" type="checkbox">
                         <span class="slider round"></span>
                       </label>
                     </div>
                   </div>
                 </div>
-                <div class="domain-check-form">
-                  asasfd
+                <div class="domain-check-form hidden">
+                  <div class="domain-checker">
+                    <input type="number" name="" value="" placeholder="Enter Domain Name">
+                    <div class="check-button" v-on:click="domainAvailabilityCheck">
+                      Check
+                    </div>
+                  </div>
+                </div>
+                <div class="sub-domain-list hidden">
+                  <h4 class="title">All Sub Domains</h4>
+                  <ul>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <p>myetherwallet2018.etherbase.eth</p>
+                      <div class="buy-button-container">
+                        <p>0 ETH</p>
+                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                          Buy
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <p>Have any issues? <a href="/">Learn more</a></p>
+              <div class="bottom-text">
+                <p>Have any issues? <a href="/">Learn more</a></p>
+              </div>
             </div>
 
           </div>
@@ -80,8 +155,16 @@ export default {
     }
   },
   methods: {
-    copyAddress: function () {
-      alert('This doesn\'t work for now.')
+    expendDomainCheckForm: function () {
+      document.querySelector('.domain-check-form').classList.toggle('hidden')
+      document.querySelector('.sub-domain-list').classList.add('hidden')
+    },
+    domainAvailabilityCheck: function () {
+      // document.querySelector('.domain-check-form').classList.toggle('hidden')
+      document.querySelector('.sub-domain-list').classList.remove('hidden')
+    },
+    domainBuyButtonClick: function ($event) {
+      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
     }
   },
   mounted () {
