@@ -84,17 +84,20 @@ export default {
       options: [{
         key: 'Jenny Hess',
         text: 'Jenny Hess',
-        value: 'Jenny Hess'
+        value: 'Jenny Hess',
+        image: { avatar: true, src: 'static/images/icons/btc.png' }
       },
       {
         key: 'Matt',
         text: 'Matt',
-        value: 'Matt'
+        value: 'Matt',
+        image: { avatar: true, src: 'static/images/icons/btc.png' }
       },
       {
         key: 'Justen Kitsune',
         text: 'Justen Kitsune',
-        value: 'Justen Kitsune'
+        value: 'Justen Kitsune',
+        image: { avatar: true, src: 'static/images/icons/btc.png' }
       }]
     }
   },
