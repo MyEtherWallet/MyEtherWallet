@@ -18,119 +18,43 @@
             <transaction-network />
           </div>
           <div class="main-content">
-            <router-link to="/dapps" class="nounderline">
               <div class="content-title">
-                <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
-                <p>Back</p>
+                <router-link to="/dapps" class="nounderline">
+                  <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+                </router-link>
+                <router-link to="/dapps" class="nounderline">
+                  <p>Back</p>
+                </router-link>
               </div>
-            </router-link>
 
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
-                  <h4>Register Domain - ENS</h4>
-                  <p>DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.</p>
+                  <h4>Contract Address</h4>
+                </div>
+                <div class="search-block">
+                  <v-select :options="[{label: 'Choose existing contract', value: 'Foo'}]"></v-select>
                 </div>
               </div>
               <div class="the-form domain-name">
-                <input type="number" name="" value="" placeholder="Please Enter at Least 7 Characters">
-                <span>.eth</span>
+                <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
+              </div>
+            </div>
+
+            <div class="send-form">
+              <div class="title-container">
+                <div class="title">
+                  <h4>ABI/JSON Interface</h4>
+                </div>
+              </div>
+              <div class="the-form domain-name">
+                <textarea class="custom-textarea-1" name=""></textarea>
               </div>
             </div>
 
             <div class="submit-button-container">
               <div class="submit-button large-round-button-green-filled clickable">
-                Check Domain
-              </div>
-
-              <div class="flex-container">
-                <div class="title-container">
-                  <h4 class="modal-title">Sub Domain</h4>
-                  <div class="margin-left-auto add-custom-network">
-                    <div class="sliding-switch-white">
-                      <label class="switch">
-                        <input v-on:click="expendDomainCheckForm" type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="domain-check-form hidden">
-                  <div class="domain-checker">
-                    <input type="number" name="" value="" placeholder="Enter Domain Name">
-                    <div class="check-button" v-on:click="domainAvailabilityCheck">
-                      Check
-                    </div>
-                  </div>
-                </div>
-                <div class="sub-domain-list hidden">
-                  <h4 class="title">All Sub Domains</h4>
-                  <ul>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <p>myetherwallet2018.etherbase.eth</p>
-                      <div class="buy-button-container">
-                        <p>0 ETH</p>
-                        <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                          Buy
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                Continue
               </div>
               <div class="bottom-text">
                 <p>Have any issues? <a href="/">Learn more</a></p>
