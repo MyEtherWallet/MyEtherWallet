@@ -12,7 +12,7 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/'" v-on:click.native="scrollTop"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item v-bind:to="'/'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item v-bind:to="'/#about-mew'">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item v-bind:to="'/#faqs'">{{ $t("reused.faqs") }}</b-nav-item>
                 <b-nav-item v-bind:to="'/#news'">{{ $t("header.news") }}</b-nav-item>

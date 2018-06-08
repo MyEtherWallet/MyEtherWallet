@@ -1,6 +1,6 @@
 <template>
   <div class="your-password">
-    <create-wallet-modal></create-wallet-modal>
+    <!-- <create-wallet-modal></cr  eate-wallet-modal> -->
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
@@ -41,7 +41,6 @@ export default {
   methods: {
     switcher: function (by) {
       const self = this
-      console.log(by)
       if (by === 'Json') {
         self.byJson = true
         self.byMnemonic = false

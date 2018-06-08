@@ -60,6 +60,20 @@ Wallet.fromPrivateKey = function (priv) {
   return new Wallet(priv)
 }
 
+Wallet.prototype.getV3FileName = function (timestamp) {
+  var ts = timestamp ? new Date(timestamp) : new Date()
+  return ['UTC--', ts.toJSON().replace(/:/g, '-'), '--', this.getAddress().toString('hex')].join('')
+}
+
+Wallet.createBlob = function (mime, str) {
+  const string = (typeof str === 'object') ? JSON.stringify(str) : str
+  if (string === null) return ''
+  var blob = new Blob([string], {
+    type: mime
+  })
+  return window.URL.createObjectURL(blob)
+}
+
 Wallet.prototype.createJson = function (password, options) {
   const opts = options || {}
   const salt = opts.salt || crypto.randomBytes(32)

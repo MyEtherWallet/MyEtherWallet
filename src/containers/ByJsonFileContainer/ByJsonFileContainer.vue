@@ -1,6 +1,5 @@
 <template>
   <div class="create-wallet-by-json-file">
-    <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
@@ -17,11 +16,9 @@
                 <by-json-block v-for="content in contents" :img="content.img" :title="content.title" :desc="content.desc" :key="content.title"></by-json-block>
               </div>
               <div class="user-input">
-                <router-link to='/by-json-file'>
-                  <div v-on:click="downloadKeystore" class="next-button large-round-button-green-filled">
-                    {{ $t("byJsonFile.downloadKeyFile")}}
-                  </div>
-                </router-link>
+                <div v-on:click="downloadKeystore" class="next-button large-round-button-green-filled">
+                  {{ $t("byJsonFile.downloadKeyFile")}}
+                </div>
               </div>
               <div class="footer-text">
                 <p>
@@ -39,7 +36,6 @@
         </div>
       </div>
     </div>
-    <by-json-page-footer></by-json-page-footer>
   </div>
 </template>
 

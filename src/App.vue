@@ -8,7 +8,10 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted: function () {
+    this.$store.commit('CHECK_IF_ONLINE')
+  }
 }
 </script>
 
