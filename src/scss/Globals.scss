@@ -1026,3 +1026,13 @@ h6 {
   color: $text-black;
   padding: 0 10px;
 }
+
+.custom-textarea-1 {
+  background-color: $background-color-1;
+  border: 0;
+  border-radius: 4px;
+  height: 200px;
+  padding: 13px 15px;
+  resize: none;
+  width: 100%;
+}
