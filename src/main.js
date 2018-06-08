@@ -10,6 +10,8 @@ import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
+import SuiVue from 'semantic-ui-vue'
+import 'semantic-ui-css/semantic.min.css'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -50,6 +52,8 @@ Vue.component('transaction-tokens', TransactionTokens)
 Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
+
+Vue.use(SuiVue)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)
