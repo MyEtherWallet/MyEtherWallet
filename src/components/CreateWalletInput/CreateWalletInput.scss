@@ -19,10 +19,31 @@
     max-width: 300px;
     padding: 20px 0;
     text-align: center;
+    width: 100%;
+
+    &:disabled {
+      background-color: $disabled;
+    }
 
     img {
       margin-left: 5px;
       width: 20px;
     }
   }
+}
+
+.very-weak {
+  color: $very-weak;
+}
+
+.weak {
+  color: $weak;
+}
+
+.strong {
+  color: $strong;
+}
+
+.very-strong {
+  color: $very-strong;
 }

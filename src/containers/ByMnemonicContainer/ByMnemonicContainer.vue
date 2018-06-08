@@ -16,7 +16,6 @@
     </b-modal>
     <!-- Modal =================================== -->
 
-    <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
@@ -78,9 +77,6 @@
         </div>
       </div>
     </div>
-
-    <by-json-page-footer></by-json-page-footer>
-
   </div>
 </template>
 

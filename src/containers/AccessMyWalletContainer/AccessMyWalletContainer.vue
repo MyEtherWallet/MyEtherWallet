@@ -39,8 +39,11 @@
 
 <script>
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
+// import mewConnectImgOffline from '@/assets/images/icons/button-mewconnect-white.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
+// import hardwareImgOffline from '@/assets/images/icons/button-hardware.svg'
 import metamaskImg from '@/assets/images/icons/button-metamask.svg'
+// import metamaskImgOffline from '@/assets/images/icons/button-metamask-fox.svg'
 import softwareImg from '@/assets/images/icons/button-software.svg'
 export default {
   data () {
@@ -53,6 +56,7 @@ export default {
           desc: self.$t('accessMyWalletOptions.mewConnectDesc'),
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
+          // img: self.$store.getters.all.online ? mewConnectImg: mewConnectImgOffline
           img: mewConnectImg
         },
         {
@@ -61,6 +65,7 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
+          // img: self.$store.getters.all.online ? hardwareImg: hardwareImgOffline
           img: hardwareImg
         },
         {
@@ -69,6 +74,7 @@ export default {
           desc: self.$t('accessMyWalletOptions.metaMaskDesc'),
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
+          // img: self.$store.getters.all.online ? metamaskImg: metamaskImgOffline
           img: metamaskImg
         },
         {
@@ -77,6 +83,7 @@ export default {
           desc: self.$t('accessMyWalletOptions.softwareDesc'),
           recommend: self.$t('accessMyWalletOptions.notRecommended'),
           tooltip: self.$t('reused.toolTip3'),
+          // img: self.$store.getters.all.online ? softwareImg: softwareImgOffline
           img: softwareImg
         }
       ]

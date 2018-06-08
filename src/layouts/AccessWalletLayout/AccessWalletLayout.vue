@@ -1,7 +1,7 @@
 <template>
   <div>
     <access-my-wallet-container></access-my-wallet-container>
-    <price-bar :v-if="online"></price-bar>
+    <price-bar :v-if="$store.getters.all.online && tokens.length > 1" :tokens="tokens"></price-bar>
     <faqs></faqs>
   </div>
 </template>
@@ -11,26 +11,28 @@ export default {
   name: 'AccessWalletContainer',
   data () {
     return {
-      online: true
+      tokens: []
     }
   },
   methods: {
     getRates: async function () {
-      const rates = await fetch('http://still-waters-52916.herokuapp.com/ticker').then((res) => {
+      const rates = await fetch('http://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT,ENG').then((res) => {
         return res.json()
       }).catch((err) => {
         return err
       })
-      return rates
+      return Object.keys(rates.data).map(item => Object.assign(rates.data[item])).sort((a, b) => {
+        if (a.rank < b.rank) return -1
+        if (a.rank > b.rank) return 1
+        return 0
+      })
     }
   },
-  mounted: function () {
+  mounted: async function () {
     const self = this
-    const protocol = window.location.protocol
-    if (protocol !== 'http:' || protocol !== 'https:') {
-      self.online = false
+    if (this.$store.getters.all.online) {
+      self.tokens = await self.getRates()
     }
-    self.getRates() ? self.online = true : self.online = false
   }
 }
 </script>

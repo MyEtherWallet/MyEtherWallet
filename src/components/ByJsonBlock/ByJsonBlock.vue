@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-block">
     <img class="icon" :src="img"/>
     <h6>{{title}}</h6>
     <p>{{desc}}</p>
