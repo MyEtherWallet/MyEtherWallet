@@ -30,7 +30,11 @@
         <li>
           <p>Contract <i class="fa fa-angle-down" aria-hidden="true"></i></p>
           <ul>
-            <li>Interact With Contract</li>
+            <li>
+              <router-link to="/interact-with-contract">
+                Interact With Contract
+              </router-link>
+            </li>
             <li>Deploy Contract</li>
           </ul>
         </li>
