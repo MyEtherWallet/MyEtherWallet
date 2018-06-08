@@ -10,7 +10,7 @@
 
 <script>
 import zxcvbn from 'zxcvbn'
-import {GenerateKeystoreWallet} from '@/workers/'
+import { GenerateKeystoreWallet } from '@/workers'
 export default {
   props: ['value', 'switcher', 'param'],
   data () {
