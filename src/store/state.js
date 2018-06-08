@@ -24,7 +24,8 @@ const state = {
     ETH: {},
     ROP: {}
   },
-  Errors: {}
+  Errors: {},
+  online: true
 }
 
 export default {

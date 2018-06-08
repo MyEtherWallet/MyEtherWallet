@@ -3,7 +3,7 @@
     <top-banner></top-banner>
     <about></about>
     <faqs></faqs>
-    <news></news>
+    <news v-if="$store.getters.all.online"></news>
     <social></social>
     <promo></promo>
   </div>
