@@ -18,23 +18,27 @@
             <transaction-network />
           </div>
           <div class="main-content">
-              <div class="content-title">
-                <router-link to="/dapps" class="nounderline">
-                  <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
-                </router-link>
-                <router-link to="/dapps" class="nounderline">
-                  <p>Back</p>
-                </router-link>
-              </div>
+            <div class="content-title">
+              <router-link to="/dapps" class="nounderline">
+                <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+              </router-link>
+              <router-link to="/dapps" class="nounderline">
+                <p>Back</p>
+              </router-link>
+            </div>
 
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
                   <h4>Contract Address</h4>
                 </div>
-                <div class="search-block">
-                  <v-select :options="[{label: 'Choose existing contract', value: 'Foo'}]"></v-select>
-                </div>
+                <sui-dropdown
+                  fluid
+                  placeholder="Select Friend"
+                  selection
+                  :options="options"
+                  v-model="current"
+                />
               </div>
               <div class="the-form domain-name">
                 <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
@@ -76,6 +80,22 @@
 export default {
   data () {
     return {
+      current: null,
+      options: [{
+        key: 'Jenny Hess',
+        text: 'Jenny Hess',
+        value: 'Jenny Hess'
+      },
+      {
+        key: 'Matt',
+        text: 'Matt',
+        value: 'Matt'
+      },
+      {
+        key: 'Justen Kitsune',
+        text: 'Justen Kitsune',
+        value: 'Justen Kitsune'
+      }]
     }
   },
   methods: {
