@@ -80,7 +80,7 @@ Vue.component('software-modal', SoftwareModal)
 Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
-Vue.component('transaction-tokens', TransactionTokens)
+// Vue.component('transaction-tokens', TransactionTokens)
 Vue.component('transactions-side-menu', TransactionsSideMenu)
 Vue.component('top-banner', TopBanner)
 

@@ -1,7 +1,5 @@
 <template>
   <div class="send-eth-and-tokens">
-
-    <vue-header></vue-header>
     <div class="wrap">
       <div class="side-nav">
         <transactions-side-menu></transactions-side-menu>
@@ -41,7 +39,8 @@
                   <div class="title">
                     <h4>{{ $t("sendTx.toAddr") }}</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
-                    <p v-on:click="copyAddress" class="copy-button">Copy</p>
+                    <!-- <p v-on:click="copyAddress" class="copy-button">Copy</p> -->
+                    <p class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
                     <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
@@ -106,7 +105,7 @@
 
           </div>
           <div class="tokens">
-            <transaction-tokens />
+            <!-- <transaction-tokens /> -->
           </div>
         </div>
       </div>
