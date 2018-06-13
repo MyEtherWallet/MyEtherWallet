@@ -38,6 +38,8 @@ import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
 import InterfaceAddress from '@/components/InterfaceAddress'
 import InterfaceBalance from '@/components/InterfaceBalance'
+import InterfaceBalanceModal from '@/components/InterfaceBalanceModal'
+import InterfaceNetworkModal from '@/components/InterfaceNetworkModal'
 import InterfaceNetwork from '@/components/InterfaceNetwork'
 import InterfaceSideMenu from '@/components/InterfaceSideMenu'
 import InterfaceTokens from '@/components/InterfaceTokens'
@@ -81,8 +83,10 @@ Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
 Vue.component('interface-address', InterfaceAddress)
+Vue.component('interface-balance-modal', InterfaceBalanceModal)
 Vue.component('interface-balance', InterfaceBalance)
 Vue.component('interface-network', InterfaceNetwork)
+Vue.component('interface-network-modal', InterfaceNetworkModal)
 Vue.component('interface-tokens', InterfaceTokens)
 Vue.component('metamask-modal', MetamaskModal)
 Vue.component('mew-connect-modal', MewConnectModal)
