@@ -17,10 +17,16 @@ import AboutContainer from '@/containers/AboutContainer'
 import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
 import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
 import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
+import DappsContainer from '@/containers/DappsContainer'
+import DomainSaleContainer from '@/containers/DomainSaleContainer'
 import FaqsContainer from '@/containers/FaqsContainer'
 import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
 import NewsContainer from '@/containers/NewsContainer'
+import RegisterDomainContainer from '@/containers/RegisterDomainContainer'
+import SendCurrencyContainer from '@/containers/SendCurrencyContainer'
+import SendOfflineContainer from '@/containers/SendOfflineContainer'
+import SwapContainer from '@/containers/SwapContainer'
 
 // Regular Components
 import AccessWalletButton from '@/components/AccessWalletButton'
@@ -30,6 +36,11 @@ import CreateWalletInput from '@/components/CreateWalletInput'
 import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
+import InterfaceAddress from '@/components/InterfaceAddress'
+import InterfaceBalance from '@/components/InterfaceBalance'
+import InterfaceNetwork from '@/components/InterfaceNetwork'
+import InterfaceSideMenu from '@/components/InterfaceSideMenu'
+import InterfaceTokens from '@/components/InterfaceTokens'
 import MetamaskModal from '@/components/MetamaskModal'
 import MewConnectModal from '@/components/MewConnectModal'
 import NetworkAndAddressModal from '@/components/NetworkAndAddressModal'
@@ -40,10 +51,6 @@ import PriceBar from '@/components/PriceBar'
 import Promo from '@/components/Promo'
 import Social from '@/components/Social'
 import SoftwareModal from '@/components/SoftwareModal'
-import TransactionAddress from '@/components/TransactionAddress'
-import TransactionBalance from '@/components/TransactionBalance'
-import TransactionNetwork from '@/components/TransactionNetwork'
-import TransactionsSideMenu from '@/components/TransactionsSideMenu'
 import TopBanner from '@/components/TopBanner'
 
 // etc
@@ -54,10 +61,16 @@ Vue.component('about', AboutContainer)
 Vue.component('access-my-wallet-container', AccessMyWalletContainer)
 Vue.component('by-json-file-container', ByJsonFileContainer)
 Vue.component('by-mnemonic-container', ByMnemonicContainer)
+Vue.component('dapps-container', DappsContainer)
+Vue.component('domain-sale-container', DomainSaleContainer)
 Vue.component('faqs', FaqsContainer)
 Vue.component('footer-container', FooterContainer)
 Vue.component('header-container', HeaderContainer)
 Vue.component('news', NewsContainer)
+Vue.component('register-domain-container', RegisterDomainContainer)
+Vue.component('send-currency-container', SendCurrencyContainer)
+Vue.component('send-offline-container', SendOfflineContainer)
+Vue.component('swap-container', SwapContainer)
 
 // Regular Components
 Vue.component('access-wallet-button', AccessWalletButton)
@@ -67,6 +80,10 @@ Vue.component('create-wallet-input-footer', CreateWalletInputFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
+Vue.component('interface-address', InterfaceAddress)
+Vue.component('interface-balance', InterfaceBalance)
+Vue.component('interface-network', InterfaceNetwork)
+Vue.component('interface-tokens', InterfaceTokens)
 Vue.component('metamask-modal', MetamaskModal)
 Vue.component('mew-connect-modal', MewConnectModal)
 Vue.component('network-and-address-modal', NetworkAndAddressModal)
@@ -77,11 +94,8 @@ Vue.component('price-bar', PriceBar)
 Vue.component('promo', Promo)
 Vue.component('social', Social)
 Vue.component('software-modal', SoftwareModal)
-Vue.component('transaction-address', TransactionAddress)
-Vue.component('transaction-balance', TransactionBalance)
-Vue.component('transaction-network', TransactionNetwork)
 // Vue.component('transaction-tokens', TransactionTokens)
-Vue.component('transactions-side-menu', TransactionsSideMenu)
+Vue.component('interface-side-menu', InterfaceSideMenu)
 Vue.component('top-banner', TopBanner)
 
 Vue.component('v-select', vSelect)
