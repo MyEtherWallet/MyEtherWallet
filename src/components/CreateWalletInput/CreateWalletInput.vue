@@ -10,7 +10,6 @@
 
 <script>
 import zxcvbn from 'zxcvbn'
-import { GenerateKeystoreWallet } from '@/workers'
 export default {
   props: ['value', 'switcher', 'param'],
   data () {
@@ -44,10 +43,6 @@ export default {
           break
       }
     }
-  },
-  mounted: function () {
-    const worker = new Worker(GenerateKeystoreWallet)
-    worker.postMessage({cmd: 'sayHello', msg: 'Hello?'})
   }
 }
 </script>

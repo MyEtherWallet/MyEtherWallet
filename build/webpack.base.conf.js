@@ -57,11 +57,6 @@ module.exports = {
         exclude: [resolve('workers')]
       },
       {
-        test: /\.js$/,
-        loader: 'worker-loader',
-        include: [resolve('workers')]
-      },
-      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
