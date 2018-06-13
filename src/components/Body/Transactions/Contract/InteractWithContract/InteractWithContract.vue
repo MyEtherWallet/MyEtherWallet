@@ -31,14 +31,10 @@
               <div class="title-container">
                 <div class="title">
                   <h4>Contract Address</h4>
+                  <div class="select-contract no-border">
+                    <v-select :options="existingContracts" placeholder="Choose existing contract"></v-select>
+                  </div>
                 </div>
-                <sui-dropdown
-                  fluid
-                  placeholder="Select Friend"
-                  selection
-                  :options="options"
-                  v-model="current"
-                />
               </div>
               <div class="the-form domain-name">
                 <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
@@ -49,6 +45,10 @@
               <div class="title-container">
                 <div class="title">
                   <h4>ABI/JSON Interface</h4>
+                  <div class="copy-buttons">
+                    <span>Clear</span>
+                    <span>Copy</span>
+                  </div>
                 </div>
               </div>
               <div class="the-form domain-name">
@@ -80,25 +80,24 @@
 export default {
   data () {
     return {
-      current: null,
-      options: [{
-        key: 'Jenny Hess',
-        text: 'Jenny Hess',
-        value: 'Jenny Hess',
-        image: { avatar: true, src: 'static/images/icons/btc.png' }
-      },
-      {
-        key: 'Matt',
-        text: 'Matt',
-        value: 'Matt',
-        image: { avatar: true, src: 'static/images/icons/btc.png' }
-      },
-      {
-        key: 'Justen Kitsune',
-        text: 'Justen Kitsune',
-        value: 'Justen Kitsune',
-        image: { avatar: true, src: 'static/images/icons/btc.png' }
-      }]
+      existingContracts: [
+        {
+          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          value: '1'
+        },
+        {
+          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          value: '2'
+        },
+        {
+          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          value: '3'
+        },
+        {
+          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          value: '4'
+        }
+      ]
     }
   },
   methods: {

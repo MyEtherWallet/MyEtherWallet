@@ -131,6 +131,36 @@ body {
   border-radius: 10px;
 }
 
+.v-select {
+  .selected-tag {
+    overflow: hidden;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80%;
+  }
+
+  .clear {
+    display: none;
+  }
+
+  .dropdown-menu a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+}
+
+.no-border {
+  .dropdown .dropdown-toggle {
+    border: 0 !important;
+  }
+
+  .dropdown.open .dropdown-toggle {
+    border: 1px solid rgba(60,60,60,.26) !important;
+  }
+}
 
 
 // *********************************************************************
