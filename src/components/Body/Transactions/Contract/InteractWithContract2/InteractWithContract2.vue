@@ -29,7 +29,9 @@
                 </div>
               </div>
               <div class="the-form contract-address">
-                <p>Contract Address: 0x347389434f387gf394uf90h43g5890304fg390w48fgn3w904fn834w</p>
+                <div class="address">
+                  <p>Contract Address: 0x347389434f387gf394uf90h43g5890304fg390w48fgn3w904fn834w</p>
+                </div>
                 <div class="select-contract">
                   <v-select :options="functions" placeholder="Function"></v-select>
                 </div>
