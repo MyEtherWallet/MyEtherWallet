@@ -43,6 +43,7 @@
 import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
+
 export default {
   props: ['password'],
   data () {
@@ -65,7 +66,8 @@ export default {
           img: makeBackup
         }
       ],
-      pw: self.password
+      downloadable: false,
+      walletJSON: {}
     }
   },
   methods: {
@@ -74,6 +76,10 @@ export default {
       var blob = new Blob(['Hello, world of Tokens!!!!!!!!'], {type: 'text/plain;charset=utf-8'})
       FileSaver.saveAs(blob, 'your-token-keystore.txt')
     }
+  },
+  mounted: function () {
+    const self = this
+    self.$worker.postMessage('createWallet', [self.password])
   }
 }
 </script>
