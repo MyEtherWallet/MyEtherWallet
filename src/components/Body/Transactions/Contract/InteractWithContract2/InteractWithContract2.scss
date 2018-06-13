@@ -137,6 +137,11 @@
             display: flex;
             position: relative;
 
+            .address {
+              border-bottom: 2px solid $border-color-5;
+              padding: 7px 5px;
+            }
+
             .select-contract {
               margin-left: auto;
             }
