@@ -4,7 +4,7 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link v-bind:to="'/'" v-on:click.native="scrollTop">
+            <router-link v-bind:to="'/#home'" v-on:click.native="scrollTop">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png">
               </div>
@@ -12,10 +12,10 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item v-bind:to="'/#home'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item v-bind:to="'/#about-mew'">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item v-bind:to="'/#faqs'">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#news'">{{ $t("header.news") }}</b-nav-item>
+                <b-nav-item v-bind:to="'/#news'" v-show="online">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
@@ -62,7 +62,8 @@ export default {
         {lang: 'Chinese', code: 'cn'},
         {lang: 'Russian', code: 'ru'},
         {lang: 'German', code: 'de'}
-      ]
+      ],
+      online: true
     }
   },
   methods: {
@@ -108,6 +109,12 @@ export default {
   },
   mounted: function () {
     const self = this
+    if (self.$store.getters.all.online) {
+      self.online = true
+    } else {
+      self.online = false
+    }
+
     if (localStorage.getItem('locale') !== null) {
       self.$root._i18n.locale = localStorage.getItem('locale')
       self.switchActiveLanguage(self.$root._i18n.locale)
@@ -131,6 +138,12 @@ export default {
         header.classList.remove('tiny-header')
         logoLarge.classList.remove('logo-small')
       }
+    }
+  },
+  watch: {
+    online: function (newVal) {
+      const self = this
+      self.online = newVal
     }
   }
 }

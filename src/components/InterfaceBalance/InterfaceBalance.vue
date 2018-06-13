@@ -29,8 +29,6 @@ export default {
     balanceModalOpen () {
       this.$children[0].$refs.balance.show()
     }
-  },
-  mounted () {
   }
 }
 </script>

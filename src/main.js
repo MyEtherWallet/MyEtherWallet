@@ -11,6 +11,7 @@ import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
+import VueWorker from 'vue-worker'
 
 // Containers
 import AboutContainer from '@/containers/AboutContainer'
@@ -120,6 +121,8 @@ const i18n = new VueI18n({
   fallbackLocale: 'gb',
   messages: languages
 })
+
+Vue.use(VueWorker)
 
 Vue.filter('capitalize', function (value) {
   if (!value) return ''

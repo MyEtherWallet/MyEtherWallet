@@ -9,8 +9,8 @@
 <script>
 export default {
   name: 'App',
-  mounted: function () {
-    this.$store.commit('CHECK_IF_ONLINE')
+  beforeMount: function () {
+    this.$store.dispatch('checkIfOnline')
   }
 }
 </script>

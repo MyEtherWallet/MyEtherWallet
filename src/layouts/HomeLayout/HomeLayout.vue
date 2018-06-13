@@ -3,7 +3,7 @@
     <top-banner></top-banner>
     <about></about>
     <faqs></faqs>
-    <news v-if="$store.getters.all.online"></news>
+    <news v-show="online"></news>
     <social></social>
     <promo></promo>
   </div>
@@ -14,9 +14,22 @@ export default {
   name: 'HomeContainer',
   data () {
     return {
+      online: true
     }
   },
-  mounted () {
+  mounted: function () {
+    const self = this
+    if (self.$store.getters.all.online) {
+      self.online = true
+    } else {
+      self.online = false
+    }
+  },
+  watch: {
+    online: function (newVal) {
+      const self = this
+      self.online = newVal
+    }
   }
 }
 </script>
