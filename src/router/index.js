@@ -6,15 +6,7 @@ import TeamLayout from '@/layouts/TeamLayout'
 import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
 import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
 import AccessWalletLayout from '@/layouts/AccessWalletLayout'
-import SendTransactionLayout from '@/layouts/SendTransactionLayout'
-
-// CLEANUP
-// import SendEthAndTokens from '@/components/SendEthAndTokens/SendEthAndTokens'
-// import SendOffline from '@/components/Body/Transactions/SendOffline/SendOffline'
-// import Swap from '@/components/Body/Transactions/Swap/Swap'
-// import Dapps from '@/components/Body/Transactions/Dapps/Dapps'
-// import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDomainENS/RegisterDomainENS'
-// import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSale'
+import InterfaceLayout from '@/layouts/InterfaceLayout'
 
 Vue.use(Router)
 
@@ -52,40 +44,9 @@ export default new Router({
       component: AccessWalletLayout
     },
     {
-      path: '/send-eth-and-tokens',
-      name: 'SendTransactionLayout',
-      component: SendTransactionLayout
-    // },
-    // // Update this
-    // // {
-    // //   path: '/send-eth-diff',
-    // //   name: 'SendEthAndTokens',
-    // //   component: SendEthAndTokens
-    // // },
-    // // {
-    // //   path: '/send-offline',
-    // //   name: 'SendOffline',
-    // //   component: SendOffline
-    // // },
-    // // {
-    // //   path: '/swap',
-    // //   name: 'Swap',
-    // //   component: Swap
-    // // },
-    // // {
-    // //   path: '/dapps',
-    // //   name: 'Dapps',
-    // //   component: Dapps
-    // // },
-    // // {
-    // //   path: '/register-domain',
-    // //   name: 'RegisterDomainENS',
-    // //   component: RegisterDomainENS
-    // // },
-    // // {
-    // //   path: '/domain-sale',
-    // //   name: 'DomainSale',
-    // //   component: DomainSale
+      path: '/interface',
+      name: 'InterfaceLayout',
+      component: InterfaceLayout
     }
   ],
   scrollBehavior (to, from, savedPosition) {
