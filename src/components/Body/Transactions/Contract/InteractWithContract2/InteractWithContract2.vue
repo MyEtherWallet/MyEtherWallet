@@ -28,10 +28,10 @@
                   <h4>Read / Write Contract</h4>
                 </div>
               </div>
-              <div class="the-form domain-name">
-                <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
+              <div class="the-form contract-address">
+                <p>Contract Address: 0x347389434f387gf394uf90h43g5890304fg390w48fgn3w904fn834w</p>
                 <div class="select-contract">
-                  <v-select :options="existingContracts" placeholder="Function"></v-select>
+                  <v-select :options="functions" placeholder="Function"></v-select>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@ export default {
   name: 'Interact',
   data () {
     return {
-      existingContracts: [
+      functions: [
         {
           label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
           value: '1'
