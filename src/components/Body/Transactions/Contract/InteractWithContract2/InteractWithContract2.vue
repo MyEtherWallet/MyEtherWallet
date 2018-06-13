@@ -25,38 +25,35 @@
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
-                  <h4>Contract Address</h4>
-                  <div class="select-contract no-border">
-                    <v-select :options="existingContracts" placeholder="Choose existing contract"></v-select>
-                  </div>
+                  <h4>Read / Write Contract</h4>
                 </div>
               </div>
               <div class="the-form domain-name">
                 <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
+                <div class="select-contract">
+                  <v-select :options="existingContracts" placeholder="Function"></v-select>
+                </div>
               </div>
             </div>
 
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
-                  <h4>ABI/JSON Interface</h4>
-                  <div class="copy-buttons">
-                    <span>Clear</span>
-                    <span>Copy</span>
-                  </div>
+                  <h4>String</h4>
                 </div>
               </div>
               <div class="the-form domain-name">
-                <textarea class="custom-textarea-1" name=""></textarea>
+                <input type="number" name="" value="" placeholder="">
               </div>
             </div>
 
             <div class="submit-button-container">
-              <router-link :to="{ name: 'InteractWithContract2', params: {} }">
-                <div class="submit-button large-round-button-green-filled clickable">
-                  Continue
-                </div>
-              </router-link>
+              <div class="submit-button large-round-button-green-filled clickable">
+                Back
+              </div>
+              <div class="submit-button large-round-button-green-filled clickable">
+                Read
+              </div>
               <div class="bottom-text">
                 <p>Have any issues? <a href="/">Learn more</a></p>
               </div>
@@ -75,6 +72,7 @@
 
 <script>
 export default {
+  name: 'Interact',
   data () {
     return {
       existingContracts: [
@@ -116,5 +114,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "InteractWithContract.scss";
+  @import "InteractWithContract2.scss";
 </style>
