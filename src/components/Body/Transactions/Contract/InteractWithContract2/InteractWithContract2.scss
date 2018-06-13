@@ -132,6 +132,16 @@
             }
           }
 
+          .contract-address {
+            align-items: center;
+            display: flex;
+            position: relative;
+
+            .select-contract {
+              margin-left: auto;
+            }
+          }
+
           .domain-name {
             align-items: center;
             display: flex;
