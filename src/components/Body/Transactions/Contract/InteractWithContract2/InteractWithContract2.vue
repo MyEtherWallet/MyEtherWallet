@@ -30,10 +30,12 @@
               </div>
               <div class="the-form contract-address">
                 <div class="address">
-                  <p>Contract Address: 0x347389434f387gf394uf90h43g5890304fg390w48fgn3w904fn834w</p>
+                  <p>Contract Address: 0x34738943904fnrtrth3948fh394hf9348fh934htf934htf39thrth834w</p>
                 </div>
                 <div class="select-contract">
-                  <v-select :options="functions" placeholder="Function"></v-select>
+                  <div class="dropdown-select-search-2">
+                    <v-select :options="functions" placeholder="Function"></v-select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -44,17 +46,22 @@
                   <h4>String</h4>
                 </div>
               </div>
-              <div class="the-form domain-name">
+              <div class="the-form unit">
                 <input type="number" name="" value="" placeholder="">
+                <div class="input-overlay">
+                  256(UNIT) <i aria-hidden="true" class="fa fa-check-circle good-button not-good"></i>
+                </div>
               </div>
             </div>
 
             <div class="submit-button-container">
-              <div class="submit-button large-round-button-green-filled clickable">
-                Back
-              </div>
-              <div class="submit-button large-round-button-green-filled clickable">
-                Read
+              <div class="buttons">
+                <div class="submit-button large-round-button-green-border clickable">
+                  Back
+                </div>
+                <div class="submit-button large-round-button-green-filled clickable">
+                  Read
+                </div>
               </div>
               <div class="bottom-text">
                 <p>Have any issues? <a href="/">Learn more</a></p>
@@ -79,20 +86,16 @@ export default {
     return {
       functions: [
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          label: 'function1',
           value: '1'
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          label: 'function1',
           value: '2'
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          label: 'function1',
           value: '3'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
         }
       ]
     }

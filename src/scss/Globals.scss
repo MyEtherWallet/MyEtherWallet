@@ -377,6 +377,17 @@ h6 {
   padding: 21px 55px;
 }
 
+.large-round-button-green-border {
+  background-color: $background-color-white;
+  border: 1px solid $button--border-color-2;
+  border-radius: 6px;
+  color: $text-color-2;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+}
+
+
 .mid-round-button-green-filled {
   background-color: $button--background-color-1;
   border: 1px solid $button--border-color-1;
@@ -982,6 +993,38 @@ h6 {
     border: 0;
     padding: 6px 5px;
     padding-left: 30px;
+  }
+
+  .dropdown.open .dropdown-toggle,
+  .v-select .dropdown-menu {
+    $border-color: #8a8a8a;
+    border: 1px solid $border-color;
+  }
+
+  .v-select .dropdown-menu {
+    border-top: 0;
+  }
+
+  .clear {
+    display: none;
+  }
+
+  .v-select .open-indicator {
+    bottom: 4px;
+    cursor: pointer;
+    height: 25px;
+    opacity: 1;
+    pointer-events: all;
+    position: absolute;
+    right: 17px;
+  }
+}
+
+.dropdown-select-search-2 {
+  border-radius: 5px;
+
+  .dropdown .dropdown-toggle {
+    padding: 6px 5px;
   }
 
   .dropdown.open .dropdown-toggle,

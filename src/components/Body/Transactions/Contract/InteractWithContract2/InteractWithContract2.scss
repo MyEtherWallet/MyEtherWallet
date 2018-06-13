@@ -73,17 +73,6 @@
           }
         }
 
-        .bottom-text {
-          margin-top: 20px;
-          text-align: center;
-        }
-
-        .submit-button {
-          margin: 0 auto;
-          text-align: center;
-          width: 300px;
-        }
-
         .send-form {
           padding: 40px 60px 0;
 
@@ -133,41 +122,76 @@
           }
 
           .contract-address {
-            align-items: center;
-            display: flex;
+            display: grid;
+            grid-template-columns: 70% 30%;
             position: relative;
 
             .address {
-              border-bottom: 2px solid $border-color-5;
-              padding: 7px 5px;
+
+              p {
+                border-bottom: 2px solid $border-color-5;
+                overflow: hidden;
+                padding: 10px 5px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
             }
 
             .select-contract {
-              margin-left: auto;
+              padding-left: 5px;
+
+              .dropdown-toggle{
+                padding: 10px 5px !important;
+              }
             }
           }
 
-          .domain-name {
-            align-items: center;
-            display: flex;
+          .unit {
             position: relative;
 
             input {
               background-color: $background-color-1;
               border: 0;
               padding: 13px 15px;
+              padding-right: 150px;
               width: 100%;
             }
 
-            span {
-              font-size: 20px;
-              font-weight: 600;
+            .input-overlay {
+              align-items: center;
+              color: $text-color-3;
+              display: flex;
+              position: absolute;
+              right: 15px;
+              top: 13px;
+
+              i {
+                margin-left: 10px;
+              }
             }
           }
         } // .send-form
 
         .submit-button-container {
           padding: 40px 60px;
+
+          .bottom-text {
+            margin-top: 20px;
+            text-align: center;
+          }
+
+          .buttons {
+            display: flex;
+            justify-content: center;
+
+            .submit-button {
+              margin: 0 5px;
+              text-align: center;
+              width: 300px;
+            }
+
+          }
+
         } // .submit-button-container
       }
 
