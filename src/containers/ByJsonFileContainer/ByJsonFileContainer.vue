@@ -44,6 +44,7 @@ import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
 export default {
+  props: ['password'],
   data () {
     const self = this
     return {
@@ -63,7 +64,8 @@ export default {
           desc: self.$t('byJsonFile.makeBackupDesc'),
           img: makeBackup
         }
-      ]
+      ],
+      pw: self.password
     }
   },
   methods: {

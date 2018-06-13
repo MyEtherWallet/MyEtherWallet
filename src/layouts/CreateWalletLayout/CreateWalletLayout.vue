@@ -19,8 +19,8 @@
             </b-tab>
           </b-tabs>
         </div>
-        <by-json-file-container v-show="byJson && !byMnemonic"></by-json-file-container>
-        <by-mnemonic-container v-show="!byJson && byMnemonic"></by-mnemonic-container>
+        <by-json-file-container v-if="byJson && !byMnemonic" :password="password"></by-json-file-container>
+        <by-mnemonic-container v-if="!byJson && byMnemonic"></by-mnemonic-container>
       </div>
     </div>
 
