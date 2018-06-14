@@ -13,7 +13,7 @@
 
               <b-nav>
                 <b-nav-item><router-link to="/" v-on:click.native="scrollTop">Home</router-link></b-nav-item>
-                <b-nav-item href="#pagelink-about-mew">About</b-nav-item>
+                <b-nav-item href="#pagelink-about-mew"><router-link to="/" v-on:click.native="scrollToAbout">About</router-link></b-nav-item>
                 <b-nav-item href="#pagelink-faqs">FAQs</b-nav-item>
                 <b-nav-item href="#pagelink-news">News</b-nav-item>
                 <div class="current-language-flag">
@@ -64,8 +64,11 @@ export default {
   },
   methods: {
     scrollTop: function () {
-      // Scroll to top of the page
       window.scrollTo(0, 0)
+    },
+    scrollToAbout: function () {
+      // document.getElementById('pagelink-about-mew').scrollIntoView()
+      window.scrollTo(0, 970)
     },
     // Update language text
     languageItemClicked: function (e) {
@@ -93,7 +96,7 @@ export default {
   },
   mounted () {
     // Scroll to top of the page
-    window.scrollTo(0, 0)
+    // window.scrollTo(0, 0)
     // Check if user scrolled window, then change header style.
     window.onscroll = function (e) {
       var element = document.querySelector('body')
