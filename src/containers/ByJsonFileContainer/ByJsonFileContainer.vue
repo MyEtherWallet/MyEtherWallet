@@ -16,9 +16,9 @@
                 <by-json-block v-for="content in contents" :img="content.img" :title="content.title" :desc="content.desc" :key="content.title"></by-json-block>
               </div>
               <div class="user-input">
-                <div v-on:click="downloadKeystore" class="next-button large-round-button-green-filled">
+                <a :href="walletJson" class="next-button large-round-button-green-filled" :download="name">
                   {{ $t("byJsonFile.downloadKeyFile")}}
-                </div>
+                </a>
               </div>
               <div class="footer-text">
                 <p>
@@ -43,6 +43,7 @@
 import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
+import { Wallet } from '@/helpers'
 
 export default {
   props: ['password'],
@@ -67,19 +68,16 @@ export default {
         }
       ],
       downloadable: false,
-      walletJSON: {}
-    }
-  },
-  methods: {
-    downloadKeystore: function () {
-      var FileSaver = require('file-saver')
-      var blob = new Blob(['Hello, world of Tokens!!!!!!!!'], {type: 'text/plain;charset=utf-8'})
-      FileSaver.saveAs(blob, 'your-token-keystore.txt')
+      walletJson: {},
+      name: ''
     }
   },
   mounted: function () {
     const self = this
-    self.$worker.postMessage('createWallet', [self.password])
+    const wallet = new Wallet.generate()
+    const walletJson = wallet.createJson(self.password)
+    self.walletJson = Wallet.createBlob('mime', walletJson)
+    self.name = wallet.getV3FileName()
   }
 }
 </script>

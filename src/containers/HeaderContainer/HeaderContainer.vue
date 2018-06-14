@@ -12,10 +12,10 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item v-bind:to="'/#home'" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
-                <b-nav-item v-bind:to="'/#about-mew'">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#faqs'">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item v-bind:to="'/#news'" v-show="online">{{ $t("header.news") }}</b-nav-item>
+                <b-nav-item to="/" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
+                <b-nav-item to="/#faqs">{{ $t("reused.faqs") }}</b-nav-item>
+                <b-nav-item to="/#news" v-show="online">{{ $t("header.news") }}</b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">

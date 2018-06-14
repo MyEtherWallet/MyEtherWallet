@@ -124,7 +124,7 @@ Wallet.prototype.createJson = function (password, options) {
     cipher.update(this.privKey),
     cipher.final()
   ])
-  const mac = web3.sha3(
+  const mac = web3.utils.sha3(
     Buffer.concat([derivedKey.slice(16, 32), Buffer.from(cipherText, 'hex')])
   )
 
