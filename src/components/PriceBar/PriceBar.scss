@@ -1,0 +1,73 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  background-color: $price-bar-background-color;
+  overflow: none;
+  padding: 25px 0;
+}
+
+@media screen and (min-width: 960px) {
+  .wrap {
+    max-height: 98px;
+  }
+
+  .items-container {
+    flex-wrap: nowrap;
+
+    .item {
+      flex: 1;
+      width: auto;
+    }
+  }
+}
+
+
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: none;
+
+  .item {
+    border-right: 1px solid $price-bar-border-color;
+    flex: 50;
+    padding: 0 0 0 20px;
+    width: 100%;
+
+    &:last-child {
+      border-right: 0;
+    }
+
+    .coin-name {
+      font-weight: 500;
+    }
+
+    p {
+      color: $text-white;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+  } // .item
+} // .items-container
+
+.set1fade-enter-active,
+.set2fade-enter-active {
+  transition: opacity .2s linear, transform .4s ease;
+}
+
+.set1fade-leave-active,
+.set2fade-leave-active {
+  transition: opacity .1s ease, transform .1s cubic-bezier(1, .5, .8, 1);
+}
+
+.set1fade-enter,
+.set2fade-enter {
+  opacity: 1;
+  transform: translateY(20px);
+}
+
+.set1fade-leave-to,
+.set2fade-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}

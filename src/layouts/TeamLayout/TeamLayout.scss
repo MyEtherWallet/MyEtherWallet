@@ -1,0 +1,53 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  background-color: $background-color-3;
+  background-image: url('~@/assets/images/background/right.png'), url('~@/assets/images/background/left.png');
+  background-position: right top, left 80px;
+  background-repeat: no-repeat, no-repeat;
+  padding: 60px 0;
+
+  .page-container {
+    padding: 60px 0;
+    text-align: center;
+
+    .page-header {
+      margin-bottom: 110px;
+
+      p {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+    }
+  }
+
+}// .wrap
+
+.team-info {
+  display: grid;
+  grid-row-gap: 80px;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .member {
+    img {
+      width: 100%;
+    }
+
+    .text {
+      padding: 30px 0;
+
+      h4 {
+        font-size: 19px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      h6 {
+        color: $text-color-3;
+        font-size: 13px;
+        font-weight: 400;
+      }
+    }
+
+  }
+}
