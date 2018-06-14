@@ -1,6 +1,22 @@
 <template>
   <div class="swap">
 
+    <!-- Modal =================================== -->
+    <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal">
+      <div class="d-block text-center">
+        <i class="check-icon fa fa-check" aria-hidden="true"></i>
+        <h2 class="title">Succeed</h2>
+      </div>
+      <div class="button-container">
+        <router-link to="/interact-with-contract">
+          <b-btn class="mid-round-button-green-filled close-button" @click="showModal = false">
+            Ok
+          </b-btn>
+        </router-link>
+      </div>
+    </b-modal>
+    <!-- Modal =================================== -->
+
     <vue-header></vue-header>
     <div class="wrap">
       <div class="side-nav">
@@ -59,7 +75,7 @@
                 <div class="submit-button large-round-button-green-border clickable">
                   Back
                 </div>
-                <div class="submit-button large-round-button-green-filled clickable">
+                <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
                   Read
                 </div>
               </div>
@@ -84,6 +100,7 @@ export default {
   name: 'Interact',
   data () {
     return {
+      showModal: true,
       functions: [
         {
           label: 'function1',
@@ -111,9 +128,19 @@ export default {
     },
     domainBuyButtonClick: function ($event) {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+    },
+    successModalOpen () {
+      this.$refs.success.show()
     }
   },
   mounted () {
+  },
+  watch: {
+    showModal: function () {
+      if (this.showModal === false) {
+        this.showModal = true
+      }
+    }
   }
 }
 </script>
