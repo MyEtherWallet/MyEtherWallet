@@ -1,5 +1,28 @@
 @import '~@/scss/GlobalVariables';
 
+.bootstrap-modal {
+  .check-icon {
+    border: 3px solid $border-green;
+    border-radius: 200px;
+    color: $text-color-green;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+
+  .title {
+    // title
+  }
+
+  .content {
+    // content
+  }
+
+  .close-button {
+    // close button
+  }
+}
+
 .select-contract .dropdown-toggle {
   border: 0;
   display: none;
