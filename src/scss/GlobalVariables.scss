@@ -1,3 +1,4 @@
+
 // *********************************************************************
 // Standard window width sizes
 // *********************************************************************
@@ -8,11 +9,13 @@ $mobile-width: 600px;
 // *********************************************************************
 // Box Shadow color styles
 // *********************************************************************
+$box-shadow-color-1: rgba(0, 0, 0, .12);
+$box-shadow-color-2: rgba(0, 0, 0, .10);
 $news-block-box-shadow-color: rgba(0, 0, 0, .05);
 $topbanner-block-box-shadow-color: rgba(0, 0, 0, .15);
 $tiny-header-shadow-color: rgba(0, 0, 0, .1);
 $language-flag-box-shadow: rgba(0, 0, 0, .4);
-
+$language-menu-box-shadow: rgba(0, 0, 0, .12);
 
 // *********************************************************************
 // Elements background color styles
@@ -20,6 +23,9 @@ $language-flag-box-shadow: rgba(0, 0, 0, .4);
 // This background color used for most of the elements background
 $background-color-1: #f9f9f9; // Lite grey background color
 $background-color-2: #05c0a5; // Green background color
+$background-color-3: #f2f4fa; // Team page background
+$background-color-4: #f0f0f0;
+$background-color-5: rgba(255, 255, 255, .25);
 $background-color-white: #fff;
 $background-color-black: #000;
 $nav-tab-background-color: #fff;
@@ -28,6 +34,15 @@ $about-mew-spaceman-background-color: #0b2840;
 $create-wallet-background-color: #5a78f0;
 $unlock-wallet-background-color: $background-color-2;
 $footer-background-color: #132b3f;
+$price-bar-background-color: #476081;
+$bootstrap-modal-header-background-color: #434f61;
+
+$transaction-block-address: #7070e3;
+$transaction-block-balance: #5a78f0;
+$transaction-block-network: #25b0e8;
+$transaction-block-token-search: #536d8b;
+
+$button-background-color-1: #6b87a3;
 
 
 // *********************************************************************
@@ -42,6 +57,10 @@ $social-button-color-1: #adadad; // News block social buttons
 // *********************************************************************
 $border-color-1: #e0e0e0;
 $border-color-2: #fff;
+$border-color-3: #000;
+$border-color-4: #f9f9f9;
+$border-color-5: #e8e8e8;
+$price-bar-border-color: #677890;
 $border-bottom--mnemonic-phrase-key-color: $border-color-1;
 $border-green: #05c0a5;
 
@@ -64,12 +83,17 @@ $z-bootstrap-modal: 601;
 // *********************************************************************
 $text-base-color: #506175;
 $text-white: #fff;
+$text-black: #000;
 $text-color-1: #fff; // White text color
 $text-color-2: #05c0a5; // Green text color
 $text-color-3: #999;
 $text-color-4: #536d8b;
 $text-color-5: #ff2f49; // create-wallet footer text color
 $text-color-6: #003945;
+$text-color-7: #444;
+$text-color-8: #0c5876;
+$text-color-9: #dadada;
+$text-color-red: #f00;
 $text-color-news-content: $text-color-3;
 $text--tooltip-color: #4c4c4c;
 $text--link-color: $text-color-2;
@@ -77,8 +101,11 @@ $text--mnemonic-phrase-key-color: $text-color-6;
 $text--mnemonic-phrase-index-color: $text-color-3;
 $text--footer-link-color: #96a8b6;
 $text-color-green: $text-color-2;
+$text-side-menu-inactive-color: #c7c7c7;
+$text-good-button-not-good: #e2e2e2;
 
 $link-text-color-1: #506175;
+$link-text-color-2: #05c0a5;
 
 
 // *********************************************************************
@@ -133,4 +160,12 @@ $nav-tab--progress-bar-background-color: #05c0a5;
 // *********************************************************************
 $css-toggle-button--slider-background-color: #f2f4fa;
 $css-toggle-button--button-background-color: #05c0a5;
-$css-toggle-button--slider--active--background-color: #f2f4fa;
+
+$css-toggle-button--slider--active--background-color: $background-color-2;
+
+$disabled: #e0e0e0;
+
+$very-weak: #f00;
+$weak: #dadd98;
+$strong: #6f0;
+$very-strong: #008000;

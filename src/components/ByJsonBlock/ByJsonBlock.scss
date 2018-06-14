@@ -1,0 +1,20 @@
+.content-block {
+  flex: 1;
+  padding: 10px 15px;
+  text-align: center;
+
+  .icon {
+    display: block;
+    height: 60px;
+    margin: 0 auto;
+  }
+
+  h6 {
+    margin-top: 15px;
+  }
+
+  p {
+    font-size: 11px;
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,53 @@
+language: node_js
+sudo: required
+dist: trusty
+node_js: '7'
+env: CXX=g++-4.8
+addons:
+  apt:
+    sources: ubuntu-toolchain-r-test
+    packages: g++-4.8
+branches:
+  except:
+  - gh-pages
+stages:
+- name: create release
+  if: branch = master and type != pull_request
+- name: deploy to production
+  if: branch = master and type != pull_request
+jobs:
+  fast_finish: true
+  include:
+  - stage: create release
+    script: skip
+    before_deploy:
+      - rm .gitignore
+      - npm run build
+      - sudo mkdir deploy
+      - ls -a /dist | sort
+      - |
+        PACKAGE_VERSION=$(cat package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[",]//g' \
+          | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
+    deploy:
+      provider: releases
+      api_key: "$GITHUB_TOKEN"
+      file: deploy/*
+      file_glob: true
+      skip_cleanup: true
+  - stage: deploy to production
+    script: skip
+    before_deploy:
+      - bash ./deploy.sh
+    deploy:
+      provider: pages
+      skip-cleanup: true
+      github-token: "$GITHUB_TOKEN"
+      keep-history: false
+      local-dir: ./dist
+      on:
+        branch: master
+      target-branch: gh-pages

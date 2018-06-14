@@ -1,0 +1,85 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  background-color: $background-color-1;
+  padding: 0;
+}
+
+.nav-tab-user-input-box {
+  background-color: $nav-tab-background-color;
+  margin: 0 auto;
+  max-width: 550px;
+
+  .progress-bar {
+    animation-duration: .5s;
+    animation-name: progreesbar-grow;
+    background-color: $nav-tab--progress-bar-background-color;
+    height: 6px;
+    width: 66.66%;
+  }
+
+  @keyframes progreesbar-grow {
+    from {width: 33.33%;}
+    to {width: 66.66%;}
+  }
+
+  .tab-pane {
+    min-height: 500px;
+    padding: 50px;
+
+    h3 {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+  }
+} // .nav-tab-user-input-box
+
+.contents {
+  display: flex;
+  margin-bottom: 40px;
+} // .contents
+
+.user-input {
+  margin-bottom: 25px;
+
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    font-size: 14px;
+    margin-bottom: 40px;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .next-button {
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    max-width: 300px;
+    padding: 20px 0;
+    text-align: center;
+
+    img {
+      margin-left: 5px;
+      width: 20px;
+    }
+  }
+} // .user-input
+
+.footer-text {
+  display: flex;
+
+  p {
+    font-size: 13px;
+    margin: 0 auto;
+
+    .tooltip-icon {
+      margin-left: 5px;
+    }
+
+    .icon {
+      height: 25px;
+      margin-right: 5px;
+    }
+  }
+} // .footer-text

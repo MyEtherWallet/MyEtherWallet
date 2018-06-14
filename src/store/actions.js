@@ -1,8 +1,12 @@
+const checkIfOnline = function ({commit}) {
+  commit('CHECK_IF_ONLINE')
+}
 
-let decryptWallet = function ({commit}, wallet) {
+const decryptWallet = function ({commit}, wallet) {
   commit('DECRYPT_WALLET', wallet)
 }
 
 export default {
+  checkIfOnline,
   decryptWallet
 }

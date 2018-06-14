@@ -1,0 +1,73 @@
+<template>
+  <div class="top-banner">
+    <div class="wrap">
+      <div class="page-container">
+        <div class="flex-col-vertical-center banner">
+          <div class="banner-text">
+            <h1>{{ $t("home.title1") }}</h1>
+            <h1>{{ $t("home.title2") }}</h1>
+            <p>
+              {{ $t("home.subheading") }}
+            </p>
+          </div>
+          <div class="banner-image">
+            <img src="~@/assets/images/home/top-banner.jpg">
+          </div>
+        </div><!-- .banner-image -->
+        <div class="grid-col-2 promo-cards">
+          <router-link to="/create-wallet" class="nounderline">
+            <div class="card-block create-wallet">
+              <div class="flex-col-vertical-center">
+                <div class="card-image">
+                  <img src="~@/assets/images/home/create-wallet.png">
+                </div>
+                <div class="card-content">
+                  <h2 class="color-white">{{ $t("reused.getAFreeWallet") }}</h2>
+                  <p class="color-white">
+                    {{ $t("home.obtainAddress") }}
+                  </p>
+                    <p class="button">
+                      {{ $t("home.getStarted") }}
+                      <img src="~@/assets/images/icons/right-arrow.png">
+                    </p>
+                </div>
+              </div>
+            </div>
+          </router-link>
+          <router-link to="/access-my-wallet" class="nounderline">
+            <div class="card-block unlock-wallet">
+              <div class="flex-col-vertical-center">
+                <div class="card-image">
+                  <img src="~@/assets/images/home/unlock-wallet.png">
+                </div>
+                <div class="card-content">
+                  <h2 class="color-white">{{ $t("reused.accessMyWallet") }}</h2>
+                  <p class="color-white">
+                    {{ $t("home.accessMyWalletDesc") }}
+                  </p>
+                  <p class="button">
+                    {{ $t("home.accessNow") }}
+                    <img src="~@/assets/images/icons/right-arrow.png">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </router-link>
+        </div><!-- .promo-cards -->
+      </div><!-- .page-container -->
+    </div><!-- .wrap -->
+  </div><!-- .top-banner -->
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "TopBanner.scss";
+</style>
