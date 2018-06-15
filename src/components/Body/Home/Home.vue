@@ -2,9 +2,9 @@
   <div class="home">
     <vue-header></vue-header>
     <top-banner></top-banner>
-    <about-mew></about-mew>
-    <faqs></faqs>
-    <news></news>
+    <about-mew class="homepage-about"></about-mew>
+    <faqs class="homepage-faqs"></faqs>
+    <news class="homepage-news"></news>
     <social></social>
     <promo></promo>
     <vue-footer></vue-footer>
@@ -18,6 +18,11 @@ export default {
     }
   },
   mounted () {
+    // Scroll to Menu link
+    var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
+    if (targetEl) {
+      targetEl.scrollIntoView()
+    }
   }
 }
 </script>
