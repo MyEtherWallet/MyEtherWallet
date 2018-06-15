@@ -1,28 +1,28 @@
 <template>
   <div class="main-content">
     <div class="content-title">
-      <h2>Send Offline</h2>
+      <h2>{{ $t("reused.offline") }}</h2>
     </div>
 
     <div class="online-status">
       <div class="">
-        <p class="title">Online</p>
-        <p class="description">Generate Information</p>
+        <p class="title">{{ $t("interface.online") }}</p>
+        <p class="description">{{ $t("interface.generateInfo") }}</p>
       </div>
       <div class="">
-        <p class="title">Offline</p>
-        <p class="description">Generate Transaction</p>
+        <p class="title">{{ $t("interface.offline") }}</p>
+        <p class="description">{{ $t("interface.generateTx") }}</p>
       </div>
       <div class="">
-        <p class="title">Online</p>
-        <p class="description">Send/Publish Transaction</p>
+        <p class="title">{{ $t("interface.online") }}</p>
+        <p class="description">{{ $t("interface.sendPubTx") }}</p>
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Speed of Transaction</h4>
+          <h4>{{ $t('reused.speedTx' )}}</h4>
         </div>
       </div>
 
@@ -32,9 +32,9 @@
     </div>
     <div class="submit-button-container">
       <div class="submit-button large-round-button-green-filled clickable">
-        Generate
+        {{ $t('interface.generate') }}
       </div>
-      <p>Have any issues? <a href="/">Learn more</a></p>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
 
   </div>

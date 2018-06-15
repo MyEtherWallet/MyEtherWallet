@@ -3,15 +3,15 @@
     <div @click.prevent="resetView('')" class="nounderline">
       <div class="content-title">
         <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
-        <p>Back</p>
+        <p>{{ $t('reused.back') }}</p>
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Domain Sale</h4>
-          <p>DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.</p>
+          <h4>{{ $t('interface.domSale') }}</h4>
+          <p>{{ $t('interface.domSaleDesc') }}</p>
         </div>
       </div>
       <div class="the-form domain-name">
@@ -22,12 +22,12 @@
 
     <div class="submit-button-container">
       <div class="submit-button large-round-button-green-filled clickable">
-        Check Domain
+        {{ $t('interface.checkDomain') }}
       </div>
 
       <div class="flex-container">
         <div class="title-container">
-          <h4 class="modal-title">Domain Sale Balance</h4>
+          <h4 class="modal-title">{{ $t('interface.domSaleBal') }}</h4>
           <div class="margin-left-auto add-custom-network">
             <div class="sliding-switch-white">
               <label class="switch">
@@ -41,14 +41,12 @@
           <div class="domain-checker">
             <input type="number" name="" value="" placeholder="Please Enter Sub Domain Name">
             <div class="check-button">
-              Check
+              {{ $t('reused.check') }}
             </div>
           </div>
         </div>
       </div>
-      <div class="bottom-text">
-        <p>Have any issues? <a href="/">Learn more</a></p>
-      </div>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
 
   </div>

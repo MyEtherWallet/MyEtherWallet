@@ -3,9 +3,9 @@
     <b-modal ref="network" hide-footer class="bootstrap-modal network nopadding max-height-1" title="Network">
       <div class="content-block">
         <div class="flex-container">
-          <h4 class="modal-title">Advanced</h4>
+          <h4 class="modal-title">{{ $t('reused.advanced') }}</h4>
           <div class="margin-left-auto add-custom-network">
-            <p>Add Custom Network/Node</p>
+            <p>{{ $t('interface.addCustomNode') }}</p>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input v-on:click="addCustomNetworkToggle" type="checkbox">
@@ -67,7 +67,7 @@
 
         <div class="content-block">
           <div class="flex-container">
-            <h4 class="modal-title">HTTP Basic Access Athentication</h4>
+            <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
             <div class="margin-left-auto add-custom-network">
               <div class="sliding-switch-white">
                 <label class="switch">
@@ -86,9 +86,9 @@
         <div class="content-block">
           <div class="save-button-container">
             <div class="save-button large-round-button-green-filled clickable">
-              Save
+              {{ $t('interface.save') }}
             </div>
-            <p>Don't know what it is? <a href="/">Learn more</a></p>
+            <p>{{ $t('interface.dontKnow') }} <a href="/">{{ $t('interface.learnMore') }}</a></p>
           </div>
         </div>
 

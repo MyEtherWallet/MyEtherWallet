@@ -2,21 +2,21 @@
   <div class="main-content">
     <div v-show="selectedDapp === ''">
       <div class="content-title">
-        <h2>Dapps</h2>
+        <h2>{{ $t('reused.dapps') }}</h2>
       </div>
       <div class="buttons-container">
         <div @click.prevent="switchView('register-domain')">
           <div class="dapps-button">
             <img class="icon" src="~@/assets/images/icons/domain.svg">
-            <h4>Register Domain</h4>
-            <p>This is a function for register domain</p>
+            <h4>{{ $t('interface.registerDom') }}</h4>
+            <p>{{ $t('interface.registerDomDesc') }}</p>
           </div>
         </div>
         <div @click.prevent="switchView('domain-sale')">
           <div class="dapps-button">
             <img class="icon" src="~@/assets/images/icons/domain-sale.svg">
-            <h4>Domain Sale</h4>
-            <p>This is a function for register domain</p>
+            <h4>{{ $t('interface.domSale') }}</h4>
+            <p>{{ $t('interface.domSaleDesc') }}</p>
           </div>
         </div>
       </div>
