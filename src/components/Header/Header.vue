@@ -53,10 +53,17 @@
         </div><!-- .page-container -->
       </div><!-- .fixed-header -->
     </div><!-- .wrap -->
+
+    <div class="" v-for="c in mydata" v-bind:key="c.id">
+      <p>{{c.name}}</p>
+    </div>
+
   </div><!-- .header -->
 </template>
 
 <script>
+// import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -92,6 +99,14 @@ export default {
       // Get flag image for the language and display it
       var newFlagImage = document.querySelector('[data-flag-name=' + flag + ']')
       newFlagImage.classList.add('show')
+    }
+  },
+  computed: {
+    mydata: function () {
+      // console.log(this.$store.state.products)
+      // return this.$store.state
+      console.log(this.$store.state)
+      return this.$store.state.products
     }
   },
   mounted () {
