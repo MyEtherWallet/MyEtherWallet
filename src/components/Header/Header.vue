@@ -4,7 +4,7 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/" v-on:click.native="scrollTop">
+            <router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png">
               </div>
@@ -12,7 +12,7 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item><router-link to="/" v-on:click.native="scrollTop">Home</router-link></b-nav-item>
+                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">Home</router-link></b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')">About</router-link></b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-news')">News</router-link></b-nav-item>
@@ -71,10 +71,8 @@ export default {
       var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
       if (targetEl) {
         targetEl.scrollIntoView()
+        this.$store.state.state.homepage.sublink = ''
       }
-    },
-    scrollTop: function () {
-      window.scrollTo(0, 0)
     },
     // Update language text
     languageItemClicked: function (e) {

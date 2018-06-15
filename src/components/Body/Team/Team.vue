@@ -3,7 +3,7 @@
     <vue-header></vue-header>
 
     <div class="wrap">
-      <div class="page-container">
+      <div class="page-container page-container2">
 
         <div class="page-header">
           <h1>Meet Our Team</h1>
@@ -77,17 +77,19 @@
             </div>
           </div>
           <div class="member">
-            <img src="~@/assets/images/team/Jack.jpg" alt="">
-            <div class="text">
-              <h4>Jack</h4>
-              <h6>UI/UX Designer</h6>
-            </div>
-          </div>
-          <div class="member">
             <img src="~@/assets/images/team/David.jpg" alt="">
             <div class="text">
               <h4>David</h4>
               <h6>Front-End Developer</h6>
+            </div>
+          </div>
+        </div>
+        <div class="team-info team-info2">
+          <div class="member">
+            <img src="~@/assets/images/team/Jack.jpg" alt="">
+            <div class="text">
+              <h4>Jack</h4>
+              <h6>UI/UX Designer</h6>
             </div>
           </div>
           <div class="member">
