@@ -50,9 +50,9 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link to="/"><p>About Us</p></router-link>
+              <router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')"><p>About</p></router-link>
               <router-link to="/team"><p>Team</p></router-link>
-              <router-link to="/"><p>FAQs</p></router-link>
+              <router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')"><p>FAQs</p></router-link>
               <router-link to="/"><p>Customer Support</p></router-link>
             </div>
           </div>
@@ -130,6 +130,13 @@ export default {
     }
   },
   methods: {
+    setHomepageSublink: function (sublink) {
+      this.$store.state.state.homepage.sublink = sublink
+      var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
+      if (targetEl) {
+        targetEl.scrollIntoView()
+      }
+    },
     openContent (element) {
       var openButton = document.querySelector('.' + element + ' .open')
       var closeButton = document.querySelector('.' + element + ' .close')
