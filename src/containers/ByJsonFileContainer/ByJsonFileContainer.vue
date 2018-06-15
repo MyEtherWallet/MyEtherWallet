@@ -74,10 +74,27 @@ export default {
   },
   mounted: function () {
     const self = this
-    const wallet = new Wallet.generate()
-    const walletJson = wallet.createJson(self.password)
-    self.walletJson = Wallet.createBlob('mime', walletJson)
-    self.name = wallet.getV3FileName()
+    console.log('mounted') // todo remove dev item
+    const worker = new Worker('static/js/worker.js')
+    worker.postMessage({type: 'createWallet', data: [self.password]})
+    worker.onmessage = function (e) {
+      let jsonBlob = createBlob('mime', e.walletJson)
+      let jsonFileName = e.name
+
+      // wasn't passing the value back correctly
+      function createBlob (mime, str) {
+        const string = (typeof str === 'object') ? JSON.stringify(str) : str
+        if (string === null) return ''
+        var blob = new Blob([string], {
+          type: mime
+        })
+        return window.URL.createObjectURL(blob)
+      }
+    }
+    worker.onerror = function (e) {
+      console.log(e) // todo remove dev item
+      console.log('onerror received from worker')
+    }
   }
 }
 </script>
