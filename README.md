@@ -11,6 +11,8 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# currently webWorkers do not function with hot reload
+
 # build for production with minification
 npm run build
 
