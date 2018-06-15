@@ -6,11 +6,11 @@
           <p @click.prevent="toggle('openSend')" :class="selectedTab === 'send' || selectedTab === 'offline' ? 'active' : ''">{{ $t("txSideMenu.title") }} <i :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i></p>
           <ul v-show="showSend">
             <li @click.prevent="switchTabs('send')" :class="selectedTab === 'send'? 'active': ''">{{ $t("reused.sendTx") }}</li>
-            <li @click.prevent="switchTabs('offline')" :class="selectedTab === 'offline'? 'active': ''">{{ $t("txSideMenu.offline") }}</li>
+            <li @click.prevent="switchTabs('offline')" :class="selectedTab === 'offline'? 'active': ''">{{ $t("reused.offline") }}</li>
           </ul>
         </li>
         <li @click.prevent="switchTabs('swap')" ><p :class="selectedTab === 'swap'? 'active': ''">{{ $t("reused.swap") }}</p></li>
-        <li @click.prevent="switchTabs('dapps')" ><p :class="selectedTab === 'dapps'? 'active': ''">{{ $t("txSideMenu.dapps") }}</p></li>
+        <li @click.prevent="switchTabs('dapps')" ><p :class="selectedTab === 'dapps'? 'active': ''">{{ $t("reused.dapps") }}</p></li>
         <li>
           <p @click.prevent="toggle('openContract')" :class="selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : ''">{{ $t("txSideMenu.contract") }} <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i></p>
           <ul v-show="showContract">

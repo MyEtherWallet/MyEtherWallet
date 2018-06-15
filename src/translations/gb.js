@@ -24,7 +24,24 @@ const gb = {
     toolTip3: 'Unfortunately, we encounter these phishing scams/attacks on a daily basis.',
     printWallet: 'Print My Wallet',
     previous: 'Previous',
-    next: 'Next'
+    next: 'Next',
+    totalBalance: 'Total Balance',
+    dontHaveEnough: 'You don\'t have enough funds',
+    copy: 'Copy',
+    slow: 'Slow',
+    regular: 'Regular',
+    fast: 'Fast',
+    advanced: 'Advanced',
+    back: 'Back',
+    check: 'Check',
+    buy: 'Buy',
+    offline: 'Send Offline',
+    speedTx: 'Speed of Transaction',
+    swap: 'Swap',
+    from: 'From',
+    to: 'To',
+    txFee: 'Transaction Fee',
+    dapps: 'Dapps',
   },
   header: {
     home: 'Home',
@@ -65,22 +82,6 @@ const gb = {
     securityAndPhishing: 'Security And Phishing',
     transactions: 'Transactions',
     privKeyandPass: 'Private Keys And Passwords'
-  },
-  news: {
-    title: 'News Updated',
-    article1: {
-      title: 'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
-      desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…'
-    },
-    article2: {
-      title: 'Recently the founder of something called',
-      desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…'
-    },
-    article3: {
-      title: 'Another day an anonymous donor set up an $86 million…',
-      desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…'
-    },
-    readMore: 'Read More...'
   },
   social: {
     title: 'Get Involved',
@@ -143,8 +144,6 @@ const gb = {
   sendTx: {
     amount: 'Amount',
     toAddr: 'To Address',
-    speedTx: 'Speed of Transaction',
-    txFee: 'Transaction Fee'
   },
   txAddress: {
     title: 'Address'
@@ -158,8 +157,6 @@ const gb = {
   },
   txSideMenu: {
     title: 'Send',
-    offline: 'Send Offline',
-    dapps: 'Dapps',
     contract: 'Contract',
     interactWcontract: 'Interact with Contract',
     depContract: 'Deploy Contract'
@@ -218,6 +215,34 @@ const gb = {
     doNotForgetDesc: 'to save your password, and it is your private key. You will need this',
     keyPass: 'Password + Keystore',
     keyPassDesc: 'File to unlock your wallet.'
+  },
+  interface: {
+    addCustomNode: 'Add Custom Network/Node',
+    save: 'Save',
+    dontKnow: 'Don\'t know what it is?'
+    learnMore: 'Learn more',
+    httpBasicAccess: 'HTTP Basic Access Athentication',
+    tokens: 'Tokens',
+    customToken: 'Custom Tokens',
+    dataGas: 'Data & Gas Limited',
+    sendTx: 'Send Transaction',
+    haveIssues: 'Have any issues?',
+    registerDns: 'Register Domain - ENS',
+    registerDnsDesc: 'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
+    checkDomain: 'Check Domain',
+    subDomain: 'Sub Domain',
+    allSubDomains: 'All Sub Domains',
+    online: 'Online',
+    generateInfo: 'Generate Information',
+    generateTx: 'Generate Transaction',
+    offline: 'Offline',
+    sendPubTx: 'Send/Publish Transaction',
+    generate: 'Generate',
+    registerDom: 'Register Domain',
+    registerDomDesc: 'This is a function for register domain',
+    domSale: 'Domain Sale',
+    domSaleDesc: 'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
+    domSaleBal: 'Domain Sale Balance'
   }
 }
 export default gb

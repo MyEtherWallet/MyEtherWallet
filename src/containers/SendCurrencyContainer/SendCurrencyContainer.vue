@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="content-title">
-      <h2>Send Eth & Tokens</h2>
+      <h2>{{ $t('reused.sendTx') }}</h2>
     </div>
 
     <div class="send-form">
@@ -24,7 +24,7 @@
             <h4>{{ $t("sendTx.toAddr") }}</h4>
             <img class="icon" src="~@/assets/images/icons/avatar.svg">
             <!-- <p v-on:click="copyAddress" class="copy-button">Copy</p> -->
-            <p class="copy-button">Copy</p>
+            <p class="copy-button">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
             <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
@@ -33,23 +33,23 @@
         </div> <!-- .to-address -->
       </div> <!-- .form-block .amount-to-address -->
       <div class="error-message-container">
-        <p>You don't have enough funds</p>
+        <p>{{ $t('reused.dontHaveEnough') }}</p>
       </div>
     </div> <!-- .send-form -->
 
     <div class="send-form">
       <div class="title">
-        <h4>{{ $t("sendTx.speedTx") }}</h4>
-        <p>{{ $t("sendTx.txFee") }}: 0.000013 ETH ($1.234)</p>
+        <h4>{{ $t("reused.speedTx") }}</h4>
+        <p>{{ $t("reused.txFee") }}: 0.000013 ETH ($1.234)</p>
         <div class="buttons">
           <div class="small-circle-button-green-border">
-            Slow
+            {{ $t('reused.slow') }}
           </div>
           <div class="small-circle-button-green-border active">
-            Regular
+            {{ $t('reused.regular') }}
           </div>
           <div class="small-circle-button-green-border">
-            Fast
+            {{ $t('reused.fast') }}
           </div>
         </div>
       </div>
@@ -65,9 +65,9 @@
 
     <div class="send-form advanced">
       <div class="advanced-content">
-        <h4>Advanced</h4>
+        <h4>{{ $t('reused.advanced') }}</h4>
         <div class="toggle-button">
-          <span>Data & Gas Limited</span>
+          <span>{{ $t('interface.dataGas') }}</span>
           <!-- Rounded switch -->
           <div class="sliding-switch-white">
             <label class="switch">
@@ -82,9 +82,9 @@
 
     <div class="submit-button-container">
       <div class="submit-button large-round-button-green-filled clickable">
-        Send Transaction
+        {{ $t('interface.sendTx') }}
       </div>
-      <p>Have any issues? <a href="/">Learn more</a></p>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
 
   </div>

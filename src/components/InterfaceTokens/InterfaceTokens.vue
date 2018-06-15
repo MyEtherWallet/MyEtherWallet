@@ -4,8 +4,8 @@
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
-            <h4>Tokens</h4>
-            <p>+ Custome Token</p>
+            <h4>{{ $t('interface.tokens') }}</h4>
+            <p>+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block dropdown-select-search-1">
             <v-select :options="['foo','bar']"></v-select>

@@ -19,28 +19,28 @@ export default {
     return {
       articles: [
         {
-          title: this.$t('news.article1.title'),
-          desc: this.$t('news.article1.desc'),
+          title: 'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
+          desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
           fb: 'https://facebook.com',
           twitter: 'https://twitter.com',
-          readMore: this.$t('news.readMore')
+          readMore: 'Read More...'
         },
         {
-          title: this.$t('news.article2.title'),
-          desc: this.$t('news.article2.desc'),
+          title: 'Recently the founder of something called',
+          desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
           fb: 'https://facebook.com',
           twitter: 'https://twitter.com',
-          readMore: this.$t('news.readMore')
+          readMore: 'Read More...'
         },
         {
-          title: this.$t('news.article3.title'),
-          desc: this.$t('news.article3.desc'),
+          title: 'Another day an anonymous donor set up an $86 million…',
+          desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
           fb: 'https://facebook.com',
           twitter: 'https://twitter.com',
-          readMore: this.$t('news.readMore')
+          readMore: 'Read More...'
         }
       ]
     }

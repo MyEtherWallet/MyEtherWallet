@@ -40,6 +40,7 @@ import HardwareModal from '@/components/HardwareModal'
 import InterfaceAddress from '@/components/InterfaceAddress'
 import InterfaceBalance from '@/components/InterfaceBalance'
 import InterfaceBalanceModal from '@/components/InterfaceBalanceModal'
+import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceNetworkModal from '@/components/InterfaceNetworkModal'
 import InterfaceNetwork from '@/components/InterfaceNetwork'
 import InterfaceSideMenu from '@/components/InterfaceSideMenu'
@@ -86,6 +87,7 @@ Vue.component('hardware-modal', HardwareModal)
 Vue.component('interface-address', InterfaceAddress)
 Vue.component('interface-balance-modal', InterfaceBalanceModal)
 Vue.component('interface-balance', InterfaceBalance)
+Vue.component('interface-bottom-text', InterfaceBottomText)
 Vue.component('interface-network', InterfaceNetwork)
 Vue.component('interface-network-modal', InterfaceNetworkModal)
 Vue.component('interface-tokens', InterfaceTokens)
