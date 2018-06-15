@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home homepage-home">
     <vue-header></vue-header>
     <top-banner></top-banner>
     <about-mew class="homepage-about"></about-mew>
@@ -22,6 +22,7 @@ export default {
     var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
     if (targetEl) {
       targetEl.scrollIntoView()
+      this.$store.state.state.homepage.sublink = ''
     }
   }
 }

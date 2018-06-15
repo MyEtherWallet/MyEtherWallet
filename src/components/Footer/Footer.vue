@@ -135,6 +135,7 @@ export default {
       var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
       if (targetEl) {
         targetEl.scrollIntoView()
+        this.$store.state.state.homepage.sublink = ''
       }
     },
     openContent (element) {
