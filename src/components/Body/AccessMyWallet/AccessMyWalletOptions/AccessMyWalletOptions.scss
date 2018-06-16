@@ -202,13 +202,31 @@
         display: flex;
         padding: 30px 0 30px 30px;
         text-align: left;
+        user-select: none;
+
+        * {
+          pointer-events: none;
+        }
 
         span {
           line-height: 16px;
         }
 
-        &:hover {
+        &.active {
           box-shadow: 0 3px 15px $box-shadow-color-1;
+          color: $text-black;
+          font-weight: 500;
+
+          .icon {
+            display: none;
+          }
+
+          .icon-hover {
+            display: block;
+          }
+        }
+
+        &:hover {
           color: $text-black;
           font-weight: 500;
 
@@ -232,8 +250,8 @@
         }
 
       }
-    }
-  }
+    } // .button-options
+  } // .modal-software .modal-hardware
 } // .modal-container
 
 
