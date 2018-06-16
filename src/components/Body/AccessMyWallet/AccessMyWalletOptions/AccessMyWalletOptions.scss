@@ -6,7 +6,7 @@
     .modal-icon {
       display: flex;
       margin-bottom: 35px;
-      margin-top: 20px;
+      margin-top: 10px;
 
       img {
         margin: 0 auto;
@@ -14,10 +14,13 @@
     }
 
     .content-container {
-      margin-bottom: 35px;
+      margin-bottom: 20px;
 
       .modal-large-text {
+        display: inline-block;
         font-weight: 400;
+        line-height: 30px;
+        max-width: 360px;
       }
     }
 
@@ -38,6 +41,23 @@
       }
     }
   } // .bootstrap-modal
+
+  .appstore-button-container {
+    background-color: $background-color-6;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    padding: 30px;
+    text-align: center;
+
+    p {
+      margin: 0;
+    }
+
+    img {
+      margin-bottom: 13px;
+      width: 130px;
+    }
+  }
 
   .support {
     display: flex;

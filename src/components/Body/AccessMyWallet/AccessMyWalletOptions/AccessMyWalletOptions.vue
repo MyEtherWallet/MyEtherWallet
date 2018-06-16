@@ -6,22 +6,21 @@
     <!-- .modal-container ************************ -->
     <div class="modal-container">
       <!-- Modal (MEW Connect) ============================================================================================================================================ -->
-      <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEW Connect">
+      <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEW Connect" centered>
         <div class="modal-icon">
-          <img class="icon" src="~@/assets/images/icons/button-connect.svg">
+          <img class="icon" src="~@/assets/images/icons/qr-code.jpg">
         </div>
         <div class="d-block content-container text-center">
-          <h3 class="modal-large-text">Please Connect With Your Device</h3>
+          <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
         </div>
-        <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button" v-on:click="networkAndAddressOpen">
-            Continue
-          </b-btn>
+        <div class="appstore-button-container">
+          <img src="~@/assets/images/icons/appstore.png">
+          <p>Do not have our App? Download now.</p>
         </div>
         <div class="support">
           <router-link to="/">
             <div class="support-content">
-              <div class="support-icon"><img src="~@/assets/images/home/bell.png"></div>
+              <div class="support-icon"><img src="~@/assets/images/icons/help-center.png"></div>
               <div class="support-label"><h5>Customer Support</h5></div>
             </div>
           </router-link>
@@ -29,7 +28,7 @@
       </b-modal>
 
       <!-- Modal (Network and Address) ============================================================================================================================================ -->
-      <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address">
+      <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address" centered>
         <div class="content-container-1">
           <div class="hd-derivation">
             <h4>HD Derivation Path</h4>
@@ -135,7 +134,7 @@
       </b-modal>
 
       <!-- Modal (Hardware) ============================================================================================================================================ -->
-      <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware">
+      <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
         <div class="d-block content-container text-center">
           <ul class="button-options">
             <li>
@@ -178,7 +177,7 @@
       </b-modal>
 
       <!-- Modal (MetaMask) ============================================================================================================================================ -->
-      <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask">
+      <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
         <div class="modal-multi-icons">
           <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
           <img class="icon" src="~@/assets/images/icons/clip.svg">
@@ -212,7 +211,7 @@
       </b-modal>
 
       <!-- Modal (Software) ============================================================================================================================================ -->
-      <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software">
+      <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software" centered>
         <div class="d-block content-container text-center">
           <ul class="button-options">
             <li>
