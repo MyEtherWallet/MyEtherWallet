@@ -1,5 +1,5 @@
 <template>
-  <div class="send-eth-and-tokens">
+  <div class="swap">
 
     <vue-header></vue-header>
     <div class="wrap">
@@ -19,40 +19,50 @@
           </div>
           <div class="main-content">
             <div class="content-title">
-              <h2>Send ETH & Tokens</h2>
+              <h2>Swap</h2>
+              <img class="icon" src="~@/assets/images/etc/bity.png">
             </div>
 
             <div class="send-form">
               <div class="form-block amount-to-address">
                 <div class="amount">
                   <div class="title">
-                    <h4>Amount</h4>
+                    <h4>From</h4>
                   </div>
                   <div class="dropdown-select-search-1">
                     <v-select :options="['foo','bar']"></v-select>
-                    <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input type="number" name="" value="" placeholder="Amount">
-                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <input type="number" name="" value="" placeholder="Deposit Amount">
                   </div>
                 </div>
-                <div class="to-address">
+                <div class="exchange-icon">
+                  <i class="fa fa-exchange" aria-hidden="true"></i>
+                </div>
+                <div class="amount">
                   <div class="title">
-                    <h4>To Address</h4>
-                    <img class="icon" src="~@/assets/images/icons/avatar.svg">
-                    <p v-on:click="copyAddress" class="copy-button">Copy</p>
+                    <h4>To</h4>
                   </div>
-                  <div class="the-form address-block">
-                    <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
-                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                  <div class="dropdown-select-search-1">
+                    <v-select :options="['foo','bar']"></v-select>
                   </div>
-                </div> <!-- .to-address -->
+                  <div class="the-form amount-number">
+                    <input type="number" name="" value="" placeholder="Received Amount">
+                  </div>
+                </div>
               </div> <!-- .form-block .amount-to-address -->
-              <div class="error-message-container">
-                <p>You don't have enough funds</p>
-              </div>
             </div> <!-- .send-form -->
+
+            <div class="send-form">
+              <div class="title-container">
+                <div class="title">
+                  <h4>Speed of Transaction</h4>
+                </div>
+              </div>
+              <div class="the-form gas-amount">
+                <input type="number" name="" value="" placeholder="Please Enter The Address">
+              </div>
+            </div>
 
             <div class="send-form">
               <div class="title-container">
@@ -82,26 +92,10 @@
               </div>
             </div>
 
-            <div class="send-form advanced">
-              <div class="advanced-content">
-                <h4>Advanced</h4>
-                <div class="toggle-button">
-                  <span>Data & Gas Limited</span>
-                  <!-- Rounded switch -->
-                  <div class="sliding-switch-white">
-                    <label class="switch">
-                      <input type="checkbox">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
             <div class="submit-button-container">
+              <h4>1 ETH = 0.000231 BTC</h4>
               <div class="submit-button large-round-button-green-filled clickable">
-                Send Transaction
+                Continue
               </div>
               <p>Have any issues? <a href="/">Learn more</a></p>
             </div>
@@ -134,5 +128,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "SendEthAndTokens.scss";
+  @import "Swap.scss";
 </style>
