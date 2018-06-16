@@ -136,23 +136,23 @@
       <!-- Modal (Hardware) ============================================================================================================================================ -->
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
         <div class="d-block content-container text-center">
-          <ul class="button-options">
-            <li>
+          <ul class="button-options hardware-button-options">
+            <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-ledger.png">
               <img class="icon-hover" src="~@/assets/images/icons/button-ledger-hover.png">
               <span>Ledger Wallet</span>
             </li>
-            <li>
+            <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-trezor.png">
               <img class="icon-hover" src="~@/assets/images/icons/button-trezor-hover.png">
               <span>Trezor</span>
             </li>
-            <li>
+            <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-bitbox.png">
               <img class="icon-hover" src="~@/assets/images/icons/button-bitbox-hover.png">
               <span>Digital Bitbox</span>
             </li>
-            <li>
+            <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-secalot.png">
               <img class="icon-hover" src="~@/assets/images/icons/button-secalot-hover.png">
               <span>Secalot</span>
@@ -336,6 +336,13 @@ export default {
     }
   },
   methods: {
+    hardwareButtonActivate (e) {
+      var everyButtonEl = document.querySelectorAll('.hardware-button-options li')
+      everyButtonEl.forEach(function (el) {
+        el.classList.remove('active')
+      })
+      e.target.classList.add('active')
+    },
     mewConnectModalOpen () {
       this.$refs.mewConnect.show()
     },
