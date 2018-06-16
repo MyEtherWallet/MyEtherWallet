@@ -57,7 +57,7 @@
     }
 
     .card-block {
-      background-color: $background-color-1;
+      background-color: $background-color-6;
       // border: 1px solid $border-color-1;
       // border-radius: 4px;
       padding: 25px 30px;
@@ -84,6 +84,7 @@
         >a{
           display: block;
           margin-bottom: 15px;
+          text-decoration: none;
         }
 
         p {
