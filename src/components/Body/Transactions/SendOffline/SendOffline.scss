@@ -29,9 +29,11 @@
           background-color: $background-color-white;
         }
 
+        $border-bottom-color: rgba(0, 0, 0, .06);
+
         .content-title {
           // box-shadow: 0 1px 1px $box-shadow-color-2;
-          border-bottom: 2px solid $background-color-1;
+          border-bottom: 1px solid $border-bottom-color;
           padding: 17px 0;
 
           h2 {
@@ -42,6 +44,35 @@
             margin: 0;
             padding: 0;
             padding-left: 27px;
+          }
+        }
+
+        .online-status {
+          $border-bottom-black: #000;
+          background-color: $background-color-5;
+          border-bottom: 1px solid $border-bottom-color;
+          box-shadow: 0 2px 0 $border-bottom-black;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          padding-top: 24px;
+          text-align: center;
+
+          div {
+
+            p {
+              display: block;
+              margin: 0 auto;
+            }
+
+            .title {
+              font-weight: 600;
+            }
+
+            .description {
+              border-bottom: 4px solid black;
+              padding-bottom: 18px;
+              width: 200px;
+            }
           }
         }
 
@@ -217,7 +248,7 @@
         } // .advanced
 
         .submit-button-container {
-          padding: 60px 0;
+          padding: 60px 0 200px;
           text-align: center;
 
           .submit-button {
