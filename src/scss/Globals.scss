@@ -512,18 +512,43 @@ h6 {
   z-index: $z-bootstrap-modal-backdrop;
 }
 
+.language-menu-container {
+  position: relative;
+
+  .arrows {
+    color: $text-color-4;
+    font-size: 18px;
+    position: absolute;
+    right: -2px;
+    top: 5px;
+  }
+
+  .language-menu {
+    .dropdown-menu.show {
+      max-height: 226px;
+      overflow-y: scroll;
+      position: relative;
+    }
+
+    .dropdown-toggle::after {
+      display: none;
+    }
+  }
+}
 
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
 // *********************************************************************
 .dropdown-menu {
-  border: 1px solid $dropdown-menu-border-color;
-  box-shadow: 0 2px 12px $language-menu-box-shadow;
+  border: 1px solid $button--border-color-2;
+  // box-shadow: 0 2px 12px $language-menu-box-shadow;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: $dropdown-menu--active--background-color;
+  background-color: $background-color-white;
+  color: $text-color-6;
+  font-weight: 600 !important;
 }
 
 .nav-link-custom span {

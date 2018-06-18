@@ -23,15 +23,16 @@
                   <img data-flag-name="cn" src="~@/assets/images/flags/cn.svg">
                   <img data-flag-name="ru" src="~@/assets/images/flags/ru.svg">
                   <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
+                  <img data-flag-name="de" src="~@/assets/images/flags/gb.svg">
                 </div>
-                <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                  <b-dropdown-item class="active" v-on:click="languageItemClicked" data-flag-name="gb">English</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="kr">Korean</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="jp">Japanese</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="cn">Chinese</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="ru">Russian</b-dropdown-item>
-                  <b-dropdown-item v-on:click="languageItemClicked" data-flag-name="de">German</b-dropdown-item>
-                </b-nav-item-dropdown>
+                <div class="language-menu-container">
+                  <div class="arrows">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </div>
+                  <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
+                    <b-dropdown-item v-for="lang in supportedLanguages" v-bind:class="lang.status" v-bind:key="lang.key" v-on:click="languageItemClicked" v-bind:data-flag-name="lang.flag">{{lang.name}}</b-dropdown-item>
+                  </b-nav-item-dropdown>
+                </div>
               </b-nav>
 
             </div>
@@ -63,6 +64,30 @@
 export default {
   data () {
     return {
+      supportedLanguages: [
+        { name: 'Deutsch', flag: 'de', status: '' },
+        { name: 'Ελληνικά', flag: '', status: '' },
+        { name: 'English', flag: 'gb', status: 'active' },
+        { name: 'Español', flag: '', status: '' },
+        { name: 'Farsi', flag: '', status: '' },
+        { name: 'Suomi', flag: '', status: '' },
+        { name: 'Magyar', flag: '', status: '' },
+        { name: 'Haitian Creole', flag: '', status: '' },
+        { name: 'Bahasa Indonesia', flag: '', status: '' },
+        { name: 'Italiano', flag: '', status: '' },
+        { name: '日本語', flag: 'jp', status: '' },
+        { name: '한국어', flag: 'kr', status: '' },
+        { name: 'Nederlands', flag: '', status: '' },
+        { name: 'Norsk Bokmål', flag: '', status: '' },
+        { name: 'Polski', flag: '', status: '' },
+        { name: 'Português', flag: '', status: '' },
+        { name: 'Русский', flag: '', status: '' },
+        { name: 'ภาษาไทย', flag: '', status: '' },
+        { name: 'Türkçe', flag: '', status: '' },
+        { name: 'Tiếng Việt', flag: '', status: '' },
+        { name: '简体中文', flag: 'cn', status: '' },
+        { name: '繁體中文', flag: 'cn', status: '' }
+      ]
     }
   },
   methods: {
@@ -73,6 +98,9 @@ export default {
         targetEl.scrollIntoView()
         this.$store.state.state.homepage.sublink = ''
       }
+    },
+    languageMenuClicked: function () {
+      console.log('Clicked !!!!')
     },
     // Update language text
     languageItemClicked: function (e) {
