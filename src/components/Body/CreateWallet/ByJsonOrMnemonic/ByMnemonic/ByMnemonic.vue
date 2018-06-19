@@ -20,11 +20,11 @@
         <p class="block-title">Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
         <div class="phrases">
           <ul>
-            <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
+            <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">{{index + 1}}.<span>{{value}}</span></li>
           </ul>
         </div>
         <div class="button-container">
-          <div class="verify-button large-round-button-green-filled">
+          <div v-on:click="mnemonicDoneModalOpen" class="verify-button large-round-button-green-filled">
             Verify
           </div>
         </div>
@@ -143,6 +143,47 @@ export default {
       this.$refs.done.show()
     },
     mnemonicVerificationModalOpen () {
+      // Generate random numbers to choose which blocks to hide
+      function generateNumArr (limit) {
+        var ret = []
+        for (var i = 1; i < limit; i++) {
+          ret.push(i)
+        }
+
+        return ret
+      }
+
+      function shuffle (array) {
+        var i = array.length
+        var j = 0
+        var temp
+
+        while (i--) {
+          j = Math.floor(Math.random() * (i + 1))
+
+          // swap randomly chosen element with current element
+          temp = array[i]
+          array[i] = array[j]
+          array[j] = temp
+        }
+
+        return array
+      }
+
+      var ranNums
+
+      if (this.mnemonic24 === true) {
+        ranNums = shuffle(generateNumArr(25))
+        console.log(ranNums)
+      } else {
+        ranNums = shuffle(generateNumArr(13))
+        console.log(ranNums)
+      }
+
+      for (var c = 0; c < 5; c++) {
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').classList.add('hidden')
+      }
+
       this.$refs.verification.show()
     }
 
