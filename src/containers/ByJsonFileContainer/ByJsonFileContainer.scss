@@ -84,3 +84,9 @@
     }
   }
 } // .footer-text
+
+.disable {
+  background-color: #eee;
+  cursor: default;
+  pointer-events: none;
+}

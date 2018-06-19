@@ -17,7 +17,7 @@
                                :desc="content.desc" :key="content.title"></by-json-block>
               </div>
               <div class="user-input">
-                <a :href="walletJson" class="next-button large-round-button-green-filled"
+                <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
                    :download="name">
                   {{ $t('byJsonFile.downloadKeyFile')}}
                 </a>
@@ -45,7 +45,6 @@
 import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
-// import { Wallet } from '@/helpers'
 
 export default {
   props: ['password'],
@@ -70,7 +69,7 @@ export default {
         }
       ],
       downloadable: false,
-      walletJson: {},
+      walletJson: '',
       name: ''
     }
   },
@@ -81,7 +80,7 @@ export default {
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape
       self.walletJson = createBlob('mime', e.data.walletJson)
-      self.name = e.data.name
+      self.name = e.data.name.toString()
 
       function createBlob (mime, str) {
         const string = (typeof str === 'object') ? JSON.stringify(str) : str
@@ -89,11 +88,11 @@ export default {
         var blob = new Blob([string], {
           type: mime
         })
+        self.downloadable = true
         return window.URL.createObjectURL(blob)
       }
     }
     worker.onerror = function (e) {
-      console.log(e) // todo remove dev item
       console.log('onerror received from worker')
     }
   }
