@@ -37,11 +37,10 @@ const gb = {
     buy: 'Buy',
     offline: 'Send Offline',
     speedTx: 'Speed of Transaction',
-    swap: 'Swap',
     from: 'From',
     to: 'To',
     txFee: 'Transaction Fee',
-    dapps: 'Dapps',
+    dapps: 'Dapps'
   },
   header: {
     home: 'Home',
@@ -143,7 +142,7 @@ const gb = {
   },
   sendTx: {
     amount: 'Amount',
-    toAddr: 'To Address',
+    toAddr: 'To Address'
   },
   txAddress: {
     title: 'Address'
@@ -219,7 +218,7 @@ const gb = {
   interface: {
     addCustomNode: 'Add Custom Network/Node',
     save: 'Save',
-    dontKnow: 'Don\'t know what it is?'
+    dontKnow: 'Don\'t know what it is?',
     learnMore: 'Learn more',
     httpBasicAccess: 'HTTP Basic Access Athentication',
     tokens: 'Tokens',
