@@ -19,7 +19,10 @@
               <div class="user-input">
                 <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
                    :download="name">
-                  {{ $t('byJsonFile.downloadKeyFile')}}
+                  <span v-if="downloadable"> {{ $t('byJsonFile.downloadKeyFile')}} </span>
+                  <div v-if="!downloadable">
+                    <i class="fa fa-spinner fa-lg fa-spin"></i>
+                  </div>
                 </a>
               </div>
               <div class="footer-text">

@@ -90,3 +90,13 @@
   cursor: default;
   pointer-events: none;
 }
+
+.spinner {
+  animation: spin 2s linear infinite;
+  height: 37px;
+}
+
+@keyframes spin {
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(360deg);}
+}
