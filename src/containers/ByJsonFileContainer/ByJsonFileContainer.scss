@@ -32,12 +32,12 @@
       text-align: center;
     }
   }
-} // .nav-tab-user-input-box
+}
 
 .contents {
   display: flex;
   margin-bottom: 40px;
-} // .contents
+}
 
 .user-input {
   margin-bottom: 25px;
@@ -65,7 +65,7 @@
       width: 20px;
     }
   }
-} // .user-input
+}
 
 .footer-text {
   display: flex;
@@ -83,10 +83,10 @@
       margin-right: 5px;
     }
   }
-} // .footer-text
+}
 
 .disable {
-  background-color: #eee;
+  background-color: $disabled;
   cursor: default;
   pointer-events: none;
 }
