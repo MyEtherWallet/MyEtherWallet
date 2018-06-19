@@ -58,12 +58,12 @@ export default new Router({
       path: '/access-my-wallet',
       name: 'AccessWalletLayout',
       component: AccessWalletLayout
+    },
+    {
+      path: '/interface',
+      name: 'InterfaceLayout',
+      component: InterfaceLayout
     }
-    // {
-    //   path: '/interface',
-    //   name: 'InterfaceLayout',
-    //   component: InterfaceLayout
-    // },
     // {
     //   path: '/swap',
     //   name: 'Swap',

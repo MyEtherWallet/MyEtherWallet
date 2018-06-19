@@ -4,7 +4,7 @@
       <div class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">
+            <router-link to="/" v-on:click.native="scrollTop()">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png">
               </div>
@@ -12,14 +12,11 @@
             <div class="top-menu">
 
               <b-nav>
-                <!-- <b-nav-item to="/" v-on:click="scrollTop"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item to="/#news" v-show="online">{{ $t("header.news") }}</b-nav-item> -->
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">Home</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')">About</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-news')">News</router-link></b-nav-item>
+                <b-nav-item to="/#news" v-show="online">{{ $t("reused.news") }}</b-nav-item>
+
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
@@ -34,7 +31,7 @@
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </div>
                   <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                    <b-dropdown-item v-on:click="languageItemClicked" v-for='language in supportedLanguages' v-bind:class="[{active: $root._i18n.locale === language.code, }, lang.status]" v-bind:key="lang.key" v-bind:data-flag-name="lang.flag">{{lang.name}}</b-dropdown-item>
+                    <b-dropdown-item v-on:click="languageItemClicked" v-for='language in supportedLanguages' v-bind:class="[{active: $root._i18n.locale === language.code, }, language.status]" v-bind:key="language.key" v-bind:data-flag-name="language.flag">{{language.name}}</b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
               </b-nav>
@@ -91,7 +88,9 @@ export default {
         { name: 'Tiếng Việt', flag: '', status: '' },
         { name: '简体中文', flag: 'cn', status: '' },
         { name: '繁體中文', flag: 'cn', status: '' }
-      ]
+      ],
+      online: true,
+      currentUrl: window.location.pathname
     }
   },
   methods: {
@@ -140,6 +139,9 @@ export default {
           document.querySelector('.language-menu a span').innerText = elements[i].innerText
         }
       }
+    },
+    scrollTop: function () {
+      window.scrollTo(0, 0)
     }
   },
   mounted: function () {

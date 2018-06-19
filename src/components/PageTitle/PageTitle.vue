@@ -4,7 +4,7 @@
       <div class="page-container">
         <div class="page-title">
           <h2>{{ $t("reused.createWallet") }}</h2>
-          <h5>{{ $t("pageTitle.alreadyHave") }} <router-link to="/">{{ $t("reused.unlockWallet") }}</router-link></h5>
+          <h5>{{ $t("pageTitle.alreadyHave") }} <router-link to="/access-my-wallet">{{ $t("reused.unlockWallet") }}</router-link></h5>
         </div>
       </div>
     </div>

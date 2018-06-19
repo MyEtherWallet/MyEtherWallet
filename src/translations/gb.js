@@ -40,12 +40,12 @@ const gb = {
     from: 'From',
     to: 'To',
     txFee: 'Transaction Fee',
-    dapps: 'Dapps'
+    dapps: 'Dapps',
+    news: 'News'
   },
   header: {
     home: 'Home',
-    about: 'About',
-    news: 'News'
+    about: 'About'
   },
   home: {
     title1: 'My Security',
