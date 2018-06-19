@@ -76,17 +76,14 @@ export default {
   },
   mounted: function () {
     const self = this
-    console.log('mounted') // todo remove dev item
     const worker = new Worker('static/js/worker.js')
     worker.postMessage({type: 'createWallet', data: [self.password]})
     worker.onmessage = function (e) {
-      console.log(e) // todo remove dev item
       // eslint-disable-next-line no-useless-escape
-      self.walletJson = createBlob('text\/plain', e.data.walletJson)
+      self.walletJson = createBlob('mime', e.data.walletJson)
       self.name = e.data.name
-      // wasn't passing the value back correctly
+
       function createBlob (mime, str) {
-        console.log(str) // todo remove dev item
         const string = (typeof str === 'object') ? JSON.stringify(str) : str
         if (string === null) return ''
         var blob = new Blob([string], {
