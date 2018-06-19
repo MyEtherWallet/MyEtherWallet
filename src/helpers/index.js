@@ -1,3 +1,7 @@
-import Wallet from './Wallet/'
+import Wallet from 'ethereumjs-wallet'
+import Configs from './configs'
 
-export { Wallet }
+export {
+    Wallet,
+    Configs
+}
