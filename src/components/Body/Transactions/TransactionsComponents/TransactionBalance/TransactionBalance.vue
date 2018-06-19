@@ -6,7 +6,7 @@
     <!-- .modal-container ************************ -->
     <div class="modal-container">
       <!-- Modal (MEW Connect) ============================================================================================================================================ -->
-      <b-modal ref="balance" hide-footer class="bootstrap-modal balance nopadding" title="Balance">
+      <b-modal ref="balance" hide-footer centered class="bootstrap-modal balance nopadding" title="Balance">
         <div class="content-block">
           <div class="flex-container">
             <h4 class="modal-title">Total Balance</h4>
