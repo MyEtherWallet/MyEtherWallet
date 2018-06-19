@@ -12,6 +12,7 @@ import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 import VueWorker from 'vue-worker'
+import Vuex from 'vuex'
 
 // Containers
 import AboutContainer from '@/containers/AboutContainer'
@@ -108,6 +109,8 @@ Vue.component('top-banner', TopBanner)
 Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
+
+Vue.use(Vuex)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)

@@ -25,7 +25,10 @@ const state = {
     ROP: {}
   },
   Errors: {},
-  online: true
+  online: true,
+  homepage: {
+    sublink: 'about'
+  }
 }
 
 export default {
