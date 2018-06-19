@@ -6,18 +6,21 @@
       </div>
       <div class="contents">
         <div class="tx-contents">
-          <div class="">
+          <div>
             <interface-address />
           </div>
-          <div class="">
+          <div>
             <interface-balance />
           </div>
-          <div class="">
+          <div>
             <interface-network />
           </div>
           <send-currency-container v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
+          <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
+          <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
+          <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <div class="tokens" v-if="$store.getters.all.online">
             <interface-tokens></interface-tokens>

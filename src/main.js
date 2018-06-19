@@ -20,10 +20,12 @@ import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
 import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
 import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
 import DappsContainer from '@/containers/DappsContainer'
+import DeployContractContainer from '@/containers/DeployContractContainer'
 import DomainSaleContainer from '@/containers/DomainSaleContainer'
 import FaqsContainer from '@/containers/FaqsContainer'
 import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
+import InteractWithContractContainer from '@/containers/InteractWithContractContainer'
 import NewsContainer from '@/containers/NewsContainer'
 import RegisterDomainContainer from '@/containers/RegisterDomainContainer'
 import SendCurrencyContainer from '@/containers/SendCurrencyContainer'
@@ -36,6 +38,7 @@ import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
 import CreateWalletInput from '@/components/CreateWalletInput'
 import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
+import DeployContractModal from '@/components/DeployContractModal'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
 import InterfaceAddress from '@/components/InterfaceAddress'
@@ -68,9 +71,11 @@ Vue.component('by-json-file-container', ByJsonFileContainer)
 Vue.component('by-mnemonic-container', ByMnemonicContainer)
 Vue.component('dapps-container', DappsContainer)
 Vue.component('domain-sale-container', DomainSaleContainer)
+Vue.component('deploy-contract-container', DeployContractContainer)
 Vue.component('faqs', FaqsContainer)
 Vue.component('footer-container', FooterContainer)
 Vue.component('header-container', HeaderContainer)
+Vue.component('interact-with-contract-container', InteractWithContractContainer)
 Vue.component('news', NewsContainer)
 Vue.component('register-domain-container', RegisterDomainContainer)
 Vue.component('send-currency-container', SendCurrencyContainer)
@@ -83,6 +88,7 @@ Vue.component('by-json-block', ByJsonBlock)
 Vue.component('create-wallet-input', CreateWalletInput)
 Vue.component('create-wallet-input-footer', CreateWalletInputFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
+Vue.component('deploy-contract-modal', DeployContractModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
 Vue.component('interface-address', InterfaceAddress)

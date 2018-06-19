@@ -39,16 +39,6 @@
 export default {
   data () {
     return {
-      paragraphs: [
-        'paragraph1',
-        'paragraph2',
-        'paragraph3',
-        'paragraph4',
-        'paragraph5',
-        'paragraph6',
-        'paragraph7',
-        'paragraph8'
-      ]
     }
   }
 }

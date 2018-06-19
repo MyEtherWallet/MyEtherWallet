@@ -8,9 +8,6 @@ import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
 import AccessWalletLayout from '@/layouts/AccessWalletLayout'
 import InterfaceLayout from '@/layouts/InterfaceLayout'
 
-import InteractWithContract from '@/components/Body/Transactions/Contract/InteractWithContract/InteractWithContract'
-import InteractWithContract2 from '@/components/Body/Transactions/Contract/InteractWithContract2/InteractWithContract2'
-
 Vue.use(Router)
 
 export default new Router({
@@ -50,16 +47,6 @@ export default new Router({
       path: '/interface',
       name: 'InterfaceLayout',
       component: InterfaceLayout
-    // },
-    // {
-    //   path: '/interact-with-contract',
-    //   name: 'InteractWithContract',
-    //   component: InteractWithContract
-    // },
-    // {
-    //   path: '/interact-with-contract2',
-    //   name: 'InteractWithContract2',
-    //   component: InteractWithContract2
     }
   ],
   scrollBehavior (to, from, savedPosition) {

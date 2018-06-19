@@ -28,6 +28,7 @@ const gb = {
     totalBalance: 'Total Balance',
     dontHaveEnough: 'You don\'t have enough funds',
     copy: 'Copy',
+    clear: 'Clear',
     slow: 'Slow',
     regular: 'Regular',
     fast: 'Fast',
@@ -41,7 +42,9 @@ const gb = {
     to: 'To',
     txFee: 'Transaction Fee',
     dapps: 'Dapps',
-    news: 'News'
+    news: 'News',
+    interactWcontract: 'Interact with Contract',
+    depContract: 'Deploy Contract'
   },
   header: {
     home: 'Home',
@@ -156,9 +159,7 @@ const gb = {
   },
   txSideMenu: {
     title: 'Send',
-    contract: 'Contract',
-    interactWcontract: 'Interact with Contract',
-    depContract: 'Deploy Contract'
+    contract: 'Contract'
   },
   pageTitle: {
     alreadyHave: 'Already have a wallet?'
@@ -241,7 +242,11 @@ const gb = {
     registerDomDesc: 'This is a function for register domain',
     domSale: 'Domain Sale',
     domSaleDesc: 'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
-    domSaleBal: 'Domain Sale Balance'
+    domSaleBal: 'Domain Sale Balance',
+    readWriteC: 'Read / Write Contract',
+    read: 'Read',
+    contractAddr: 'Contract Address',
+    abiJsonInt: 'ABI/JSON Interface'
   }
 }
 export default gb
