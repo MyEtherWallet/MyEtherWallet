@@ -3,8 +3,8 @@
     <div class="wrap">
       <div class="page-container">
         <div class="page-title">
-          <h2>Create Wallet</h2>
-          <h5>Already have a wallet? <router-link to="/">Unlock wallet</router-link></h5>
+          <h2>Get a Free Wallet</h2>
+          <h5>Already have a wallet? <router-link to="/">Access My Wallet</router-link></h5>
         </div>
       </div>
     </div>

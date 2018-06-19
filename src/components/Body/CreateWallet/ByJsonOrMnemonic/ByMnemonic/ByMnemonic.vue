@@ -2,7 +2,7 @@
   <div class="create-wallet-by-mnemonic">
 
     <!-- Modal =================================== -->
-    <b-modal ref="myModalRef" hide-footer hide-header class="bootstrap-modal">
+    <b-modal ref="myModalRef" hide-footer centered hide-header class="bootstrap-modal">
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true"></i>
         <h2 class="title">Succeed</h2>

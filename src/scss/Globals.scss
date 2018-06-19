@@ -615,6 +615,7 @@ h6 {
 // Modal header
 .modal-header {
   background-color: $bootstrap-modal-header-background-color;
+  border-radius: 0;
 
   h5 {
     color: $text-white;
@@ -639,10 +640,14 @@ h6 {
 }
 
 .modal-content {
+  background-color: transparent;
   border: 0;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .modal-body {
+  background-color: $background-color-white;
   padding: 60px 70px 50px;
 
   .title {
@@ -662,6 +667,11 @@ h6 {
   .button-container {
     display: flex;
     justify-content: center;
+
+    &.fixed-width-1{
+      margin: 0 auto;
+      width: 250px;
+    }
 
     button {
       margin: 0 7px;
@@ -820,7 +830,7 @@ h6 {
   }
 
   input:checked + .slider {
-    background-color: $css-toggle-button--slider--active--background-color;
+    // background-color: $css-toggle-button--slider--active--background-color;
   }
 
   input:focus + .slider {
