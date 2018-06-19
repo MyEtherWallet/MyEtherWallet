@@ -2,7 +2,7 @@
   <div class="create-wallet-by-mnemonic">
 
     <!-- Modal =================================== -->
-    <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal">
+    <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal done">
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true"></i>
         <h2 class="title">Succeed</h2>
@@ -15,16 +15,18 @@
       </div>
     </b-modal>
 
-    <!-- Modal (MEW Connect) ============================================================================================================================================ -->
-    <b-modal ref="verification" hide-footer centered class="bootstrap-modal Verification nopadding" title="Verification">
+    <b-modal ref="verification" hide-footer centered class="bootstrap-modal-wide verification nopadding" title="Verification">
       <div class="content-block">
-        <p>Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
-      </div>
-      <div class="content-block">
+        <p class="block-title">Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
         <div class="phrases">
           <ul>
             <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
           </ul>
+        </div>
+        <div class="button-container">
+          <div class="verify-button large-round-button-green-filled">
+            Verify
+          </div>
         </div>
       </div>
     </b-modal>

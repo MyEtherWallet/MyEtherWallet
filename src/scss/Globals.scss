@@ -635,8 +635,17 @@ h6 {
   }
 }
 
-.modal-dialog {
-  max-width: 530px;
+.bootstrap-modal {
+  .modal-dialog {
+    max-width: 530px;
+  }
+}
+
+
+.bootstrap-modal-wide {
+  .modal-dialog {
+    max-width: 650px;
+  }
 }
 
 .modal-content {
