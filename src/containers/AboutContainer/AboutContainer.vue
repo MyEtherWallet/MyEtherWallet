@@ -18,7 +18,7 @@
                   </span>
                 </p>
                 <div class="watch-video">
-                  <router-link to="/" class="underline">
+                  <router-link to="/">
                     <p>
                       {{ $t("about.watchVideo") }}
                       <i class="fa fa-caret-right" aria-hidden="true"></i>
