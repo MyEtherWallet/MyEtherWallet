@@ -4,19 +4,19 @@
       <div class="page-container">
         <div class="flex-col-vertical-center content">
           <div class="title">
-            <h2>Your Security<br>Ethereum Wallet.</h2>
+            <h2>Your Security<br>Ethereum Wallet</h2>
           </div>
           <div class="buttons">
             <div class="button-block">
               <router-link to="/create-wallet" class="nounderline">
-                <span class="large-round-button-white-border">
+                <span class="large-round-button-white-border get-free-wallet">
                   Get a Free Wallet
                 </span>
               </router-link>
             </div>
             <div class="button-block">
               <router-link to="/create-wallet" class="nounderline">
-                <span class="large-round-button-white-filled green-text-color">
+                <span class="large-round-button-white-filled green-text-color access-my-wallet">
                   Access My Wallet
                 </span>
               </router-link>

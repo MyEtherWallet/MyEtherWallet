@@ -24,7 +24,10 @@ const state = {
     ETH: {},
     ROP: {}
   },
-  Errors: {}
+  Errors: {},
+  homepage: {
+    sublink: 'about'
+  }
 }
 
 export default {

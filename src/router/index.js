@@ -14,6 +14,8 @@ import Swap from '@/components/Body/Transactions/Swap/Swap'
 import Dapps from '@/components/Body/Transactions/Dapps/Dapps'
 import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDomainENS/RegisterDomainENS'
 import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSale'
+import InteractWithContract from '@/components/Body/Transactions/Contract/InteractWithContract/InteractWithContract'
+import InteractWithContract2 from '@/components/Body/Transactions/Contract/InteractWithContract2/InteractWithContract2'
 
 Vue.use(Router)
 
@@ -88,6 +90,16 @@ export default new Router({
       path: '/domain-sale',
       name: 'DomainSale',
       component: DomainSale
+    },
+    {
+      path: '/interact-with-contract',
+      name: 'InteractWithContract',
+      component: InteractWithContract
+    },
+    {
+      path: '/interact-with-contract2',
+      name: 'InteractWithContract2',
+      component: InteractWithContract2
     }
   ]
 })

@@ -10,6 +10,7 @@ import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
+import Vuex from 'vuex'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -50,6 +51,8 @@ Vue.component('transaction-tokens', TransactionTokens)
 Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
+
+Vue.use(Vuex)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)
