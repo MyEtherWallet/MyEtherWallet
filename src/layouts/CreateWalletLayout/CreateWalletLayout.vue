@@ -1,6 +1,6 @@
 <template>
   <div class="your-password">
-    <!-- <create-wallet-modal></cr  eate-wallet-modal> -->
+    <!-- <create-wallet-modal></create-wallet-modal> -->
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
