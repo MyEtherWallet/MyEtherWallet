@@ -92,13 +92,11 @@
       }
 
       .current-language-flag img {
-        // box-shadow: 0 1px 7px $language-flag-box-shadow;
         display: none;
-        height: 16px;
-        left: 5px;
+        height: 25px;
+        // left: 5px;
         margin-left: 30px;
         position: relative;
-        top: -1px;
 
         &.show {
           display: block;
@@ -151,7 +149,7 @@
       color: $text-color-green;
       cursor: pointer;
       font-size: 12px;
-      margin-left: 12px;
+      margin-left: 24px;
       padding: 10px 20px;
       transition: background-color .2s ease;
 

@@ -2,23 +2,20 @@
   <div class="your-password">
 
     <!-- Modal =================================== -->
-    <b-modal ref="myModalRef" hide-footer hide-header class="bootstrap-modal">
+    <b-modal ref="myModalRef" hide-footer centered hide-header class="bootstrap-modal">
       <div class="d-block text-center">
         <h2 class="title">Welcome to MEW</h2>
         <p class="content">
-          MyEtherWallet.com doesn’t hold your keys for you.
-          We can’t access accounts, recover keys, reset passwords,
-          nor reverse transactions. Protect your keys & always check
-          that you are on CORRECT URL.
-          You are responsible for your security.
+          Please take a moment to read through this short introduction. It's
+          extreamely important to pay attention to what we have to say,
+          for your own security. Ignoring this step will highly increase your
+          chances of getting phished.<br>
+          <router-link to="/">Skip</router-link> at your own risk.
         </p>
       </div>
-      <div class="button-container">
+      <div class="button-container fixed-width-1">
         <b-btn class="mid-round-button-green-filled close-button">
-          I'm a Fresher
-        </b-btn>
-        <b-btn class="mid-round-button-green-border close-button">
-          I'm a Experiencer
+          Continue
         </b-btn>
       </div>
     </b-modal>
@@ -34,22 +31,22 @@
             <b-tab title="By JSON File" active>
               <h3>Your Password</h3>
               <div class="user-input">
-                <input type="password" name="password" placeholder="Please Enter At Least 9 Charactors">
+                <input type="password" name="password" placeholder="Please Enter At Least 9 Charactors" v-on:keyup="passwordStrengthCheck">
+                <div class="message-container">
+                  Password Strength: <span id="password-strength-level">Weak</span>
+                </div>
                 <router-link to='/by-json-file'>
                   <div class="next-button large-round-button-green-filled">
-                    Next<img src="~@/assets/images/icons/right-arrow.png">
+                    Continue<img src="~@/assets/images/icons/right-arrow.png">
                   </div>
                 </router-link>
               </div>
               <div class="footer-text">
                 <p>
-                  <span>DO NOT FORGET</span>
-                  to save your password,
-                  and it is your private
-                  key. You will need this
-                  <span>Password + Keystore</span>
-                  File to unlock
-                  your wallet.
+                  We <span>CAN NOT</span> change your password. Please
+                  <span>DO NOT FORGET</span> to save your password, and
+                  it is your private key. You will need this <span>Password + Keystore File</span>
+                  to access your wallet.
                 </p>
               </div>
             </b-tab>
@@ -93,10 +90,25 @@ export default {
     }
   },
   methods: {
+    passwordStrengthCheck: function (event) {
+      console.log('Checking password strength...')
+      var mediumRegex = new RegExp('^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})')
+      var strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})')
+
+      if (strongRegex.test(event.srcElement.value) === true) {
+        document.getElementById('password-strength-level').innerHTML = 'Strong'
+      } else if (mediumRegex.test(event.srcElement.value) === true) {
+        document.getElementById('password-strength-level').innerHTML = 'Medium'
+      } else {
+        document.getElementById('password-strength-level').innerHTML = 'Weak'
+      }
+    }
   },
   mounted () {
     // Welcome Modal open
     this.$refs.myModalRef.show()
+    // Scroll to top
+    window.scrollTo(0, 0)
   }
 }
 </script>
