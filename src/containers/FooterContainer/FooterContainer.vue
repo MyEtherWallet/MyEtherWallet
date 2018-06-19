@@ -14,7 +14,8 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link v-for="(content, index) in item.contents" :to="content.to" :key="content.text+index"><p>{{ content.text }}</p></router-link>
+              <router-link v-for="(content, index) in item.contents" v-if="content.to !== undefined" :to="content.to" :key="content.text+index"><p>{{ content.text }}</p></router-link>
+              <a v-for="(content, index) in item.contents" v-if="content.to === undefined" :href="content.href" target="_blank" :key="content.text+index"><p>{{ content.text }}</p></a>
             </div>
           </div>
           <div class="donate-us">
@@ -27,19 +28,19 @@
             <div class="content-links">
               <p>{{ $t("footer.welcomeDes") }}</p>
 
-              <router-link to="/">
+              <a href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9" target="_blank">
                 <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
                   <img src="~@/assets/images/icons/btc.svg">
                   &nbsp;Bitcoin Donation
                 </p>
-              </router-link>
+              </a>
 
-              <router-link to="/">
+              <a href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D" target="_blank">
                 <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>
-              </router-link>
+              </a>
 
             </div>
           </div>
@@ -115,23 +116,23 @@ export default {
           contents: [
             {
               text: this.$t('footer.ledger'),
-              to: '/'
+              href: 'https://www.ledgerwallet.com/products/?utm_source=&utm_medium=affiliate&utm_campaign=fa4b&utm_content='
             },
             {
               text: this.$t('footer.digital'),
-              to: '/'
+              href: 'https://digitalbitbox.com/?ref=mew'
             },
             {
               text: this.$t('footer.ethCard'),
-              to: '/'
+              href: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
             },
             {
               text: this.$t('footer.trezor'),
-              to: '/'
+              href: 'https://trezor.io/?a=myetherwallet.com'
             },
             {
               text: this.$t('footer.bity'),
-              to: '/'
+              href: 'https://bity.com/af/jshkb37v'
             }
           ]
         },
@@ -141,15 +142,15 @@ export default {
           contents: [
             {
               text: this.$t('footer.about'),
-              to: '/'
+              to: '/#about-mew'
             },
             {
               text: this.$t('footer.team'),
-              to: '/'
+              to: '/team'
             },
             {
               text: this.$t('reused.faqs'),
-              to: '/'
+              to: '/#faqs'
             },
             {
               text: this.$t('reused.customerSupport'),
