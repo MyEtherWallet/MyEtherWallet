@@ -49,7 +49,16 @@
             color: $text--mnemonic-phrase-key-color;
             margin-left: 10px;
           }
+
+          input {
+            border: 0;
+            width: calc(100% - 25px);
+          }
         } // li
+
+        .word.verification {
+          border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color-verification;
+        }
       } // ul
     } // .phrases
 
