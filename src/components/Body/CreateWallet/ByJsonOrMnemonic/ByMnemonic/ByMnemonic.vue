@@ -20,7 +20,10 @@
         <p class="block-title">Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
         <div class="phrases">
           <ul>
-            <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">{{index + 1}}.<span>{{value}}</span></li>
+            <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">
+              {{index + 1}}.<span>{{value}}</span>
+              <input class="hidden" type="text" name="">
+            </li>
           </ul>
         </div>
         <div class="button-container">
@@ -70,7 +73,9 @@
                 </div>
                 <div class="phrases">
                   <ul>
-                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
+                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">
+                      {{index + 1}}.<span>{{value}}</span>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -109,6 +114,7 @@ var bip39 = require('bip39')
 export default {
   data () {
     return {
+      varificationValues: [],
       mnemonicValues: [],
       mnemonic24: false
     }
@@ -140,7 +146,24 @@ export default {
       }
     },
     mnemonicDoneModalOpen () {
-      this.$refs.done.show()
+      // console.log(this.varificationValues)
+
+      var valid = false
+
+      this.varificationValues.forEach(function (value) {
+        var userInputText = document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('input').value
+        // console.log(userInputText)
+
+        if (userInputText === document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('span').textContent) {
+          valid = true
+        } else {
+          valid = false
+        }
+      })
+
+      if (valid === true) {
+        this.$refs.done.show()
+      }
     },
     mnemonicVerificationModalOpen () {
       // Generate random numbers to choose which blocks to hide
@@ -170,18 +193,32 @@ export default {
         return array
       }
 
-      var ranNums
+      var ranNums = []
+      this.varificationValues = []
+
+      document.querySelectorAll('.phrases .word').forEach(function (el) {
+        el.classList.remove('verification')
+        el.querySelector('span').classList.remove('hidden')
+        el.querySelector('input').classList.add('hidden')
+      })
 
       if (this.mnemonic24 === true) {
         ranNums = shuffle(generateNumArr(25))
-        console.log(ranNums)
       } else {
         ranNums = shuffle(generateNumArr(13))
-        console.log(ranNums)
       }
 
+      // Hide 5 random mnemonic blocks
       for (var c = 0; c < 5; c++) {
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').classList.add('verification')
+
         document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').classList.add('hidden')
+        this.varificationValues.push({
+          word: document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').textContent,
+          no: ranNums[c]
+        })
+
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('input').classList.remove('hidden')
       }
 
       this.$refs.verification.show()
