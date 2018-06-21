@@ -15,11 +15,11 @@
 
               <b-nav>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">Home</router-link></b-nav-item>
+                <b-nav-item href="#/neo">ETH</b-nav-item>
                 <b-nav-item href="#/neo">NEO</b-nav-item>
                 <b-nav-item href="#/luv">LUV</b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')">About</router-link></b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-news')">News</router-link></b-nav-item>
                 <div class="current-language-flag">
                   <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
                   <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
