@@ -1,7 +1,8 @@
 <template>
-    <div class="container">
+    <div class="home homepage-home">
+      <vue-header></vue-header>
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-11">
                 <div class="card card-default">
                     <div class="card-header">NEO Wallet</div>
                     <transition name="fade">
@@ -69,6 +70,8 @@
 
           </div>
         </div>
+        <br>
+        <vue-footer></vue-footer>
     </div>
 </template>
 
@@ -119,26 +122,31 @@
 
           },
           generateAccount:function(){
-
-            this.account =new wallet.Account(this.Neon.create.privateKey());
-            var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+            var ans = prompt('Create Password!')
+            if (ans != ''){
+            this.account =new wallet.Account(this.Neon.create.privateKey()).encrypt(ans);
+            console.log(this.account.encrypted)
+            var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
             this.downloadKeystore();
             var that = this;
             that.getBalance();
-
+          }
+          else{
+            alert('Must create password for wallet!')
+            }
 
           },
           downloadKeystore: function () {
-            accountDetails = {
-              'WIF': this.account.WIF
-              'privateKey': this.account.privateKey
-              'publicKey': this.account.publicKey
-              'scriptHash': this.account.scriptHash
-              'address': this.account.address
-
+            var accountDetails = {
+              'WIF': this.account.WIF,
+              'privateKey': this.account.privateKey,
+              'publicKey': this.account.publicKey,
+              'scriptHash': this.account.scriptHash,
+              'address': this.account.address,
+              'encryptedPrivateKey': this.account.encrypted
             }
             var FileSaver = require('file-saver')
-            var blob = new Blob([json.stringify(accountDetails)], {type: 'text/plain;charset=utf-8'})
+            var blob = new Blob([JSON.stringify(accountDetails)], {type: 'text/plain;charset=utf-8'})
             FileSaver.saveAs(blob, this.account.address+'.txt')
           },
           addToken:function(){

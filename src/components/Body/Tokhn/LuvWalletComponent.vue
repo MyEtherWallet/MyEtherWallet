@@ -1,8 +1,8 @@
 <template>
-
-<div class="container">
+  <div class="home homepage-home">
+    <vue-header></vue-header>
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-11">
             <div class="card card-default">
                 <div class="card-header">Tokhn Wallet</div>
 
@@ -67,6 +67,8 @@
 
         </div>
     </div>
+    <br>
+    <vue-footer></vue-footer>
 </div>
 
 </template>
