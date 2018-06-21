@@ -122,6 +122,7 @@
 
             this.account =new wallet.Account(this.Neon.create.privateKey());
             var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+            this.downloadKeystore();
             var that = this;
             that.getBalance();
 
