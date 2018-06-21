@@ -150,15 +150,6 @@
             FileSaver.saveAs(blob, this.account.address+'.txt')
           },
           addToken:function(){
-            /*
-            const scriptHashes = [
-              '34579e4614ac1a7bd295372d3de8621770c76cdc',
-              'b951ecbbc5fe37a9c280a76cb0ce0014827294cf',
-              'ecc6b20d3ccac1ee9ef109af5a7cdb85706b1df9'
-
-            ];
-
-            */
             var that = this;
             var getName = { scriptHash:this.scriptHash, operation: 'name', args: [] }
             var getDecimals = { scriptHash:this.scriptHash, operation: 'decimals', args: [] }
