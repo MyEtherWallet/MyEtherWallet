@@ -127,6 +127,19 @@
 
 
           },
+          downloadKeystore: function () {
+            accountDetails = {
+              'WIF': this.account.WIF
+              'privateKey': this.account.privateKey
+              'publicKey': this.account.publicKey
+              'scriptHash': this.account.scriptHash
+              'address': this.account.address
+
+            }
+            var FileSaver = require('file-saver')
+            var blob = new Blob([json.stringify(accountDetails)], {type: 'text/plain;charset=utf-8'})
+            FileSaver.saveAs(blob, this.account.address+'.txt')
+          },
           addToken:function(){
             /*
             const scriptHashes = [
