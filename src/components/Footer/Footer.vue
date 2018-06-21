@@ -33,7 +33,7 @@
             </div>
             <div class="content-links mobile-hide">
               <router-link to="/"><p>Digital Underground</p></router-link>
-              <router-link to="/"><p>J.A.R.V.I.Z. Inc</p></router-link>            
+              <router-link to="/"><p>J.A.R.V.I.Z. Inc</p></router-link>
               <router-link to="/"><p>SoJay Inc</p></router-link>
               <router-link to="/"><p>The Black Business School</p></router-link>
               <router-link to="/"><p>Trezor</p></router-link>
@@ -50,9 +50,9 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link to="/"><p>About Us</p></router-link>
-              <router-link to="/"><p>Team</p></router-link>
-              <router-link to="/"><p>FAQs</p></router-link>
+              <router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')"><p>About</p></router-link>
+              <router-link to="/team"><p>Team</p></router-link>
+              <router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')"><p>FAQs</p></router-link>
               <router-link to="/"><p>Customer Support</p></router-link>
             </div>
           </div>
@@ -137,6 +137,14 @@ export default {
     }
   },
   methods: {
+    setHomepageSublink: function (sublink) {
+      this.$store.state.state.homepage.sublink = sublink
+      var targetEl = document.querySelector('.' + this.$store.state.state.homepage.sublink)
+      if (targetEl) {
+        targetEl.scrollIntoView()
+        this.$store.state.state.homepage.sublink = ''
+      }
+    },
     openContent (element) {
       var openButton = document.querySelector('.' + element + ' .open')
       var closeButton = document.querySelector('.' + element + ' .close')

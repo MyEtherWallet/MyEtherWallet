@@ -10,6 +10,7 @@ import router from './router'
 import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
+import Vuex from 'vuex'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -27,6 +28,7 @@ import TransactionsSideMenu from '@/components/Body/Transactions/TransactionsSid
 import TransactionAddress from '@/components/Body/Transactions/TransactionsComponents/TransactionAddress/TransactionAddress'
 import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
 import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
+import TransactionTokens from '@/components/Body/Transactions/TransactionsComponents/TransactionTokens/TransactionTokens'
 
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
 
@@ -65,11 +67,15 @@ Vue.component('transactions-side-menu', TransactionsSideMenu)
 Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
+Vue.component('transaction-tokens', TransactionTokens)
+
 Vue.component('v-select', vSelect)
 
 Vue.component('neo-wallet',Neo)
 
 Vue.config.productionTip = false
+
+Vue.use(Vuex)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)

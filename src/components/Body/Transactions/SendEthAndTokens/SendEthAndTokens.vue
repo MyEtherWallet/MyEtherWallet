@@ -1,5 +1,6 @@
 <template>
   <div class="send-eth-and-tokens">
+
     <vue-header></vue-header>
     <div class="wrap">
       <div class="side-nav">
@@ -27,41 +28,87 @@
                   <div class="title">
                     <h4>Amount</h4>
                   </div>
-                  <div class="dropdown-select-search">
-                    <v-select v-model="selected" :options="['foo','bar']"></v-select>
+                  <div class="dropdown-select-search-1">
+                    <v-select :options="['foo','bar']"></v-select>
+                    <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input type="text" name="" value="2.03222">
+                    <input type="number" name="" value="" placeholder="Amount">
+                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div>
                 <div class="to-address">
                   <div class="title">
                     <h4>To Address</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
-                    <p class="copy-button">Copy</p>
+                    <p v-on:click="copyAddress" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
-                    <textarea name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+                    <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div> <!-- .to-address -->
               </div> <!-- .form-block .amount-to-address -->
+              <div class="error-message-container">
+                <p>You don't have enough funds</p>
+              </div>
             </div> <!-- .send-form -->
 
             <div class="send-form">
-              <div class="title">
-                <h4>Speed of Transaction</h4>
-                <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+              <div class="title-container">
+                <div class="title">
+                  <h4>Speed of Transaction<span class="alert-button"></span></h4>
+                  <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+                </div>
+                <div class="buttons">
+                  <div class="small-circle-button-green-border">
+                    Slow
+                  </div>
+                  <div class="small-circle-button-green-border active">
+                    Regular
+                  </div>
+                  <div class="small-circle-button-green-border">
+                    Fast
+                  </div>
+                </div>
               </div>
+
               <div class="the-form gas-amount">
-                <input type="text" name="" value="2.03222">
+                <input type="number" name="" value="" placeholder="Gas Amount">
+                <div class="good-button-container">
+                  <p>Gwei</p>
+                  <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                </div>
               </div>
+            </div>
+
+            <div class="send-form advanced">
+              <div class="advanced-content">
+                <h4>Advanced</h4>
+                <div class="toggle-button">
+                  <span>Data & Gas Limited</span>
+                  <!-- Rounded switch -->
+                  <div class="sliding-switch-white">
+                    <label class="switch">
+                      <input type="checkbox">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="submit-button-container">
+              <div class="submit-button large-round-button-green-filled clickable">
+                Send Transaction
+              </div>
+              <p>Have any issues? <a href="/">Learn more</a></p>
             </div>
 
           </div>
           <div class="tokens">
-            <div class="">
-              wfwgergergerg
-            </div>
+            <transaction-tokens />
           </div>
         </div>
       </div>
@@ -76,7 +123,14 @@ export default {
     return {
     }
   },
+  methods: {
+    copyAddress: function () {
+      alert('This doesn\'t work for now.')
+    }
+  },
   mounted () {
+    // Scroll to top
+    window.scrollTo(0, 0)
   }
 }
 </script>
