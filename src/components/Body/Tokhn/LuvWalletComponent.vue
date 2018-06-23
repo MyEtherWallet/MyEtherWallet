@@ -1,4 +1,5 @@
 <template>
+    <section class="back-cover">
   <div class="home homepage-home">
     <vue-header></vue-header>
     <div class="row justify-content-center">
@@ -15,8 +16,10 @@
                             </div>
                             <input type="file" @change="handleFileChange" />
                         </label>
-                        <button type="submit" class="btn btn-success" v-on:click="createWallet">
+                        <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-gap btn-custom" v-on:click="createWallet">
                             Generate Wallet</button>
+                          </div>
                     </div>
                     <div v-else class="card-body">
                         <b>Network: </b>Luv
@@ -70,7 +73,7 @@
     <br>
     <vue-footer></vue-footer>
 </div>
-
+</section>
 </template>
 
 <script>
@@ -252,4 +255,7 @@ export default {
       .file-select > input[type= "file"] {
         display: none;
     }
+   </style>
+   <style lang="scss" scoped>
+     @import "TokhnWallet.scss";
    </style>

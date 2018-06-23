@@ -44,7 +44,7 @@
                     <p v-on:click="copyAddress" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
-                    <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+                    <textarea id="address" name="name">{{this.eth.address}}</textarea>
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div> <!-- .to-address -->

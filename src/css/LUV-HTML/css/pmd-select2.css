@@ -1,0 +1,31 @@
+/*!
+ * Propeller v1.2.0 (http://propeller.in)
+ * Copyright 2016-2018 Digicorp, Inc.
+ * Licensed under MIT (http://propeller.in/LICENSE)
+ */
+.select2-container--bootstrap .select2-selection {
+  border: none;
+  border-bottom: 1px solid #9d9991;
+  box-shadow: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: #000;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 16px;
+}
+.select2-container--bootstrap .select2-selection--single {
+  padding: 6px 24px 6px 0;
+}
+.select2-container--bootstrap.select2-container--focus .select2-selection, .select2-container--bootstrap.select2-container--open .select2-selection {
+  box-shadow: none;
+  border-color: #ba9146;
+}
+.select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
+  padding: 0;
+}
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+  margin: 5px 5px 0 0;
+  border: 1px solid #9d9991;
+}
+
+/*# sourceMappingURL=pmd-select2.css.map */

@@ -1,38 +1,44 @@
 <template>
+
+      <section class="back-cover">
     <div class="home homepage-home">
       <vue-header></vue-header>
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="card card-default">
-                    <div class="card-header">NEO Wallet</div>
                     <transition name="fade">
                     <div v-if="!loggedin" class="card-body">
                         <input class="form-control" v-model="privateKey" placeholder="Private Key"/>
                         <input class="form-control" placeholder="Phrase" v-model="phrase" type="password">
-                        <button v-on:click="createAccount()" class="btn btn-success">Login With Private Key</button>
-                        <button v-on:click="generateAccount()" class="btn btn-success">Create Wallet</button>
+                        <button v-on:click="createAccount()" class="btn btn-primary btn-gap btn-custom">Login With Private Key</button>
+                        <button v-on:click="generateAccount()" class="btn btn-primary btn-gap btn-custom">Create Wallet</button>
 
 
                     </div>
                     <div v-else class="card-body">
-                        <b>Address: </b>{{balance.address}}
+                      <div class="row">
+                        <div class="col-md-1"><span class="small-logo"><img src="static/images/logo-small.png"></span></div>
+                        <div class="col-md-4 balance-section">
+                        <h2>Account Balance:</h2>
+                        <span class="luv-count">{{parseInt(balance.assets.NEO.balance)}} NEO</span>
                         <br>
-                        <b>NEO: </b> {{parseInt(balance.assets.NEO.balance)}}
-                        <br>
-                        <b>GAS: </b> {{parseFloat(balance.assets.GAS.balance)}}
-                        <br>
+                        <span class="luv-count">{{parseFloat(balance.assets.GAS.balance)}} GAS</span>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="address-title">Address</div>
+                            <div class="address-section">{{balance.address}}</div>
+                        </div>
+                    </div>
+
+
                         Total Balance USD: ${{(gasPrice * parseFloat(balance.assets.GAS.balance) + neoPrice * parseInt(balance.assets.NEO.balance)).toFixed(2) }}
                         <input placeholder="NEP-5 Script Hash" class="form-control" v-model="scriptHash">
-                        <button class="btn btn-sm btn-success" v-on:click="addToken()">Add Token</button>
+                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken()">Add Token</button>
+                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="claimGas">Claim Gas</button>
+                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <ul>
                           <li v-for="token in tokens">{{token.symbol}}: {{parseFloat(token.balance)}}</li>
                         </ul>
-                        <div class="form-group">
-                          <button class="btn btn-sm btn-primary" v-on:click="sendAssetPrompt">Send</button>
-                        </div>
-                        <div class="form-group">
-                          <button class="btn btn-sm btn-success" v-on:click="claimGas">Claim Gas</button>
-                        </div>
                     </div>
                   </transition>
                 </div>
@@ -73,6 +79,7 @@
         <br>
         <vue-footer></vue-footer>
     </div>
+  </section>
 </template>
 
 <script>

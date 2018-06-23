@@ -8,7 +8,7 @@
         </div>
         <div class="block-content">
           <h2>Address</h2>
-          <p class="address">0xe5cD582F564991F83bE7A5b3ba<br>742cb4ff5c6FE2</p>
+          <p class="address">{{this.eth.address}}</p>
           <div class="icon-container">
             <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
               <img src="~@/assets/images/icons/printer-white.svg">
@@ -31,9 +31,16 @@
 export default {
   data () {
     return {
+      eth: {address: ''},
+      web3: {}
     }
   },
+  created(){
+    var Web3 = require('web3');
+    this.web3 = new Web3(new Web3.providers.HttpProvider('https://infuranet.infura.io'));
+  },
   mounted () {
+    this.eth.address = sessionStorage.address;
   }
 }
 </script>

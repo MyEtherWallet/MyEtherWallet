@@ -39,7 +39,7 @@
               </div>
               <div class="user-input">
                 <router-link to='/by-json-file'>
-                  <div v-on:click="downloadKeystore" class="next-button large-round-button-green-filled">
+                  <div v-on:click="createNewEthWallet" class="next-button large-round-button-green-filled">
                     Download Keystore File
                   </div>
                 </router-link>
@@ -70,13 +70,35 @@
 export default {
   data () {
     return {
+      eth: {},
+      web3: {}
     }
   },
   methods: {
+    createNewEthWallet: function(){
+      var ans = prompt('Create Password');
+      var Web3 = require("web3")
+      if (ans != ''){
+        this.web3 = new Web3(new Web3.providers.HttpProvider('https://infuranet.infura.io'));
+        this.eth = this.web3.eth.accounts.create();
+        sessionStorage.address = this.eth.address;
+        sessionStorage.privateKey = this.eth.privateKey;
+        this.web3.eth.accounts.encrypt(this.eth.privateKey, ans);
+        this.web3.eth.getBalance(this.eth.address).then(data => {
+          console.log(data);
+          sessionStorage.setItem('balance',data);
+        });
+        this.downloadKeystore();
+        window.location.href = ('/#/send-eth-and-tokens');
+      }
+      else{
+      alert('Must create a password!');
+      }
+      },
     downloadKeystore: function () {
       var FileSaver = require('file-saver')
-      var blob = new Blob(['Hello, world of Tokens!!!!!!!!'], {type: 'text/plain;charset=utf-8'})
-      FileSaver.saveAs(blob, 'your-token-keystore.txt')
+      var blob = new Blob([JSON.stringify(this.eth)], {type: 'application/json'})
+      FileSaver.saveAs(blob, this.eth.address+'.json')
     }
   },
   mounted () {

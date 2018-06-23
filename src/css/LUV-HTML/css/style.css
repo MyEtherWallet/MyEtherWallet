@@ -1,0 +1,383 @@
+
+@font-face {
+  font-family: "custom-icon";
+  src:url("../fonts/icons/custom-icon.eot");
+  src:url("../fonts/icons/custom-icon.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/icons/custom-icon.woff") format("woff"),
+    url("../fonts/icons/custom-icon.ttf") format("truetype"),
+    url("../fonts/icons/custom-icon.svg#custom-icon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+[data-icon]:before {
+  font-family: "custom-icon" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "custom-icon" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow:before {
+  content: "\61";
+}
+.icon-history:before {
+  content: "\62";
+}
+.icon-my-account:before {
+  content: "\63";
+}
+.icon-send:before {
+  content: "\64";
+}
+
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #eadccc;
+}
+header {
+    background-color: #fff;
+    padding: 15px 0px;
+    text-align: center;
+}
+
+.back-cover {
+    background-color: #eadccc;
+    padding-top: 48px;
+    padding-bottom: 28px;
+    background-image: url("../images/back-cover.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.top-section {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #888888;
+    overflow: hidden;
+}
+.small-logo {
+    display: block;
+    padding: 10px 0px 0px 0px;
+    text-align: center;
+    margin: 15px 0px 0px 15px;
+}
+.balance-section {
+    border-right: 1px dotted #c9b59b;
+    margin: 15px 0px;
+}
+.balance-section h2 {
+    font-size: 16px;
+    color: #000;
+    margin: 0px;
+    padding: 0px;
+}
+.balance-section .luv-count {
+    font-size: 24px;
+    color: #a07736;
+    
+}
+.address-title, 
+.address-section {
+    height: 45px;
+    padding: 10px;
+    text-align: right;
+}
+.address-title {
+    text-transform: uppercase;
+    color: #827f7a;
+    font-size: 20px;
+}
+.address-section {
+background: #ffffff;
+background: -moz-linear-gradient(left, #ffffff 0%, #e3b75a 47%);
+background: -webkit-linear-gradient(left, #ffffff 0%,#e3b75a 47%);
+background: linear-gradient(to right, #ffffff 0%,#e3b75a 47%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e3b75a',GradientType=1 );
+    font-size: 16px;
+    color: #000;
+}
+
+
+/*CSS Added for tab*/
+.nav-tabs { 
+    border-bottom: 0px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+.nav-tabs > li.active > a, 
+.nav-tabs > li.active > a:focus, 
+.nav-tabs > li.active > a:hover { 
+    border-width: 0;
+}
+.nav-tabs > li > a { 
+    border: none; 
+    color: #fff;
+    display: block;
+    margin-right: 50px;
+}
+.nav-tabs > li a.active, 
+.nav-tabs > li > a:hover { 
+    color: #000 !important; 
+    background: transparent;
+    border-bottom: 2px solid #000;
+    text-decoration: none;
+}
+.nav-tabs > li > a::after { 
+    content: "";
+    height: 2px; 
+    position: relative; 
+    width: 100%; 
+    left: 0px; 
+    bottom: -1px; 
+    transition: all 250ms ease 0s; 
+    transform: scale(0); 
+}
+.nav-tabs > li.active > a::after, 
+.nav-tabs > li:hover > a::after { 
+    transform: scale(1);
+    border-bottom: 1px solid red;
+}
+.tab-nav > li > a::after {  
+    color: #fff;
+}
+.tab-content{
+    padding:20px;
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #888888;
+    border: 0px;
+    
+}
+.card {
+    margin-bottom: 30px;
+    background-color: transparent;
+    border: 0px;
+}
+
+.nav-tabs > li > a span {
+    display: block;
+}
+
+.tab-icon {
+    font-size: 30px;
+    text-align: center;
+    line-height: 36px;
+}
+
+.tab-icon i.icon {
+    position: relative;
+    top: 7px;
+}
+.tab-title {
+    font-size: 14px;
+}
+.tab-pane h3 {
+    font-size: 25px;
+    color: #000;
+    margin: 0px 0px 20px 0px;
+    padding: 0px;
+font-family: 'Open Sans Condensed', sans-serif;
+}
+
+
+/*form inpit styling*/
+.mat-label {
+  display: block;
+  font-size: 16px;
+  transform: translateY(25px);
+  color: #9d9991;
+  transition: all 0.5s;
+  margin-bottom: -9px;
+  font-family: 'Open Sans Condensed', sans-serif;  
+}
+.mat-input {
+  position: relative;
+  background: transparent;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 16px;
+  font-family: 'Open Sans Condensed', sans-serif;  
+}
+.mat-div {
+  padding: 0px;
+  position: relative;
+  margin-bottom: 10px;    
+}
+.mat-div:after, .mat-div:before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #9d9991; 
+  bottom: 0;
+  left: 0;
+  transition: all 0.5s;
+}
+.mat-div::after {
+  background-color: #ba9146;
+  transform: scaleX(0);
+}
+.is-active::after {
+  transform: scaleX(1);
+}
+.is-active .mat-label {
+  color: #ba9146;
+  
+}
+.is-completed .mat-label {
+  font-size: 17px;
+  transform: translateY(0);
+    color: #ba9146;
+}
+.btn-gap {
+   margin-top: 50px; 
+}
+.btn-custom {
+    background-color: #ba9146;
+    border: 0px;
+    padding: 0.375rem 50px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-family: 'Open Sans Condensed', sans-serif;
+}
+.btn-custom:hover {
+    background-color: #e9c780;
+    color: #000;
+}
+.note-area {
+    font-size: 14px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    color: #9d9991;
+    display: block;
+    text-align: right;
+}
+.send h4 {
+    margin: 30px 0px 10px 0px;
+    padding: 0px;
+    font-size: 25px;
+    color: #ba9146;
+    font-family: 'Open Sans Condensed', sans-serif;
+    
+}
+.exchange {
+    color: #000;
+    font-size: 16px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    padding-left: 30px;
+}
+.exchange span {
+    border: 1px solid #ba9146;
+    padding: 3px 20px;
+    margin: 0px 10px;
+}
+.send h4 i.icon {
+    font-size: 30px;
+    position: relative;
+    top: 7px;
+    left: 7px;
+}
+
+/*History tab CSS start*/
+.table-responsive .container-fluid {
+    padding: 0px;
+}
+.tab-pane table thead th {
+    padding: 10px 5px;
+    color: #ba9146;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+.tab-pane table td {
+    vertical-align: middle;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    padding: 5px;
+}
+
+.dataTables_wrapper .dataTables_paginate ul.pagination, 
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label
+{
+    font-size: 14px;
+}
+.page-item.active .page-link {
+    background-color: #ba9146;
+    border: 1px solid #ba9146;
+}
+.page-link {
+    color: #ba9146;
+}
+@media only screen and (max-width: 767px) {
+    .logo img {
+        width: 25%;
+    }
+    .small-logo {
+        margin: 0px;
+    }
+    .back-cover {
+        padding-bottom: 0px;
+        background-size: 350%;
+    }
+    .address-section {
+        background: #e3b75a;
+    }
+    .balance-section, .address-title, .address-section {
+        text-align: center;
+    }
+    .btn-custom {
+        display: block;
+        width: 100%;
+    }
+    .dataTables_filter, .dataTables_length {
+        display: none;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .balance-section .luv-count {
+        font-size: 18px;
+    }
+    .address-title, .address-section {
+        height: 38px;
+    }     
+    .address-title {
+        font-size: 16px;
+    }
+    .address-section {
+        font-size: 14px;
+    }
+}
+
+@media only screen 
+  and (min-device-width: 834px) 
+  and (max-device-width: 834px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 2) {
+      .balance-section .luv-count {
+        font-size: 18px;
+    }
+}
