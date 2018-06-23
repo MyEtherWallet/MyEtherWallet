@@ -48,7 +48,7 @@
 import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
-
+import Worker from '@/workers/wallet.worker.js'
 export default {
   props: ['password'],
   data () {
@@ -78,7 +78,7 @@ export default {
   },
   mounted: function () {
     const self = this
-    const worker = new Worker('static/js/worker.js')
+    const worker = new Worker()
     worker.postMessage({type: 'createWallet', data: [self.password]})
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape

@@ -10,7 +10,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const WorkerConfig = require("./webpack.webworker.conf")
 
 
 const env = process.env.NODE_ENV === 'testing'
@@ -176,7 +175,7 @@ const webpackConfig = [merge(baseWebpackConfig, {
       }),
     ],
   },
-}), WorkerConfig]
+})]
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin');

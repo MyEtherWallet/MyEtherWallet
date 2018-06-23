@@ -9,7 +9,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
-const WorkerConfig = require("./webpack.webworker.conf")
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -70,7 +69,7 @@ const devWebpackConfig = [merge(baseWebpackConfig, {
     namedModules: true,
     noEmitOnErrors: true,
   },
-}), WorkerConfig]
+})]
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
