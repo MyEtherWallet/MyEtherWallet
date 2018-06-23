@@ -8,10 +8,25 @@
                 <div class="card card-default">
                     <transition name="fade">
                     <div v-if="!loggedin" class="card-body">
+                      <div class="form-group">
                         <input class="form-control" v-model="privateKey" placeholder="Private Key"/>
                         <input class="form-control" placeholder="Phrase" v-model="phrase" type="password">
-                        <button v-on:click="createAccount()" class="btn btn-primary btn-gap btn-custom">Login With Private Key</button>
-                        <button v-on:click="generateAccount()" class="btn btn-primary btn-gap btn-custom">Create Wallet</button>
+                      </div>
+                        <div class="form-group">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" value="true" v-model="testnet">TestNet
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" value="false" selected v-model="testnet">MainNet
+                            </label>
+                          </div>
+                          <button v-on:click="createAccount()" class="btn btn-primary btn-gap btn-custom">Login With Private Key</button>
+                          <button v-on:click="generateAccount()" class="btn btn-primary btn-gap btn-custom">Create Wallet</button>
+
+                        </div>
 
 
                     </div>
@@ -101,7 +116,8 @@
             gasSend:0,
             sendAddr:'',
             gasPrice: 0.00,
-            neoPrice: 0.00
+            neoPrice: 0.00,
+            testnet: false
           }
         },
         created(){
@@ -122,7 +138,14 @@
           createAccount:function(){
 
             this.account =new wallet.Account(this.privateKey).decrypt(this.phrase);
-            var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+            if(this.testnet){
+              var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
+
+            }
+            else{
+              var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+
+            }
             var that = this;
             that.getBalance();
 
@@ -133,7 +156,14 @@
             if (ans != ''){
             this.account =new wallet.Account(this.Neon.create.privateKey()).encrypt(ans);
             console.log(this.account.encrypted)
-            var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
+            if(this.testnet){
+              var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
+
+            }
+            else{
+              var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+
+            }
             this.downloadKeystore();
             var that = this;
             that.getBalance();

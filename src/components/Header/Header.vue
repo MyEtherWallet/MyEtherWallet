@@ -7,7 +7,7 @@
             <router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">
               <div class="top-logo">
 
-                <img class="logo-large" src="~@/assets/images/home/SULTRY-TOP-TEXT-1.png">
+                <img class="logo-large" src="static/images/logo.png">
 
               </div>
             </router-link>
@@ -19,25 +19,8 @@
                 <b-nav-item href="#/neo">NEO</b-nav-item>
                 <b-nav-item href="#/luv">LUV</b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')">About</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>
-                <div class="current-language-flag">
-                  <img class="show" data-flag-name="gb" src="~@/assets/images/flags/gb.svg">
-                  <img data-flag-name="kr" src="~@/assets/images/flags/kr.svg">
-                  <img data-flag-name="jp" src="~@/assets/images/flags/jp.svg">
-                  <img data-flag-name="cn" src="~@/assets/images/flags/cn.svg">
-                  <img data-flag-name="ru" src="~@/assets/images/flags/ru.svg">
-                  <img data-flag-name="de" src="~@/assets/images/flags/de.svg">
-                  <img data-flag-name="de" src="~@/assets/images/flags/gb.svg">
-                </div>
-                <div class="language-menu-container">
-                  <div class="arrows">
-                    <i class="fa fa-angle-down" aria-hidden="true"></i>
-                  </div>
-                  <b-nav-item-dropdown class="language-menu" id="nav7_ddown" text="English" extra-toggle-classes="nav-link-custom" right>
-                    <b-dropdown-item v-for="lang in supportedLanguages" v-bind:class="lang.status" v-bind:key="lang.key" v-on:click="languageItemClicked" v-bind:data-flag-name="lang.flag">{{lang.name}}</b-dropdown-item>
-                  </b-nav-item-dropdown>
-                </div>
-              </b-nav>
+                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>  
+                </b-nav>
 
             </div>
             <div class="mobile-menu">
