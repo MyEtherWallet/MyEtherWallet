@@ -28,6 +28,7 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    globalObject: 'this',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
@@ -45,6 +46,10 @@ module.exports = {
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
