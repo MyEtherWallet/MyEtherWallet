@@ -29,7 +29,8 @@
       color: $text-white;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      // white-space: nowrap;
+      word-wrap: break-word;
     }
 
     .bottom-button {

@@ -34,11 +34,11 @@
     </div>
 
     <div class="submit-button-container">
-      <router-link :to="{ name: 'InteractWithContract', params: {} }">
+      <!-- <router-link :to="{ name: 'InteractWithContract', params: {} }"> -->
         <div class="submit-button large-round-button-green-filled clickable">
           {{ $t('reused.continue') }}
         </div>
-      </router-link>
+      <!-- </router-link> -->
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
 

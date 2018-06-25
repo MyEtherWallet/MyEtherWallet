@@ -38,7 +38,7 @@ import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
 import CreateWalletInput from '@/components/CreateWalletInput'
 import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
-import DeployContractModal from '@/components/DeployContractModal'
+import SuccessModal from '@/components/SuccessModal'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
 import InterfaceAddress from '@/components/InterfaceAddress'
@@ -88,7 +88,7 @@ Vue.component('by-json-block', ByJsonBlock)
 Vue.component('create-wallet-input', CreateWalletInput)
 Vue.component('create-wallet-input-footer', CreateWalletInputFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
-Vue.component('deploy-contract-modal', DeployContractModal)
+Vue.component('success-modal', SuccessModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
 Vue.component('interface-address', InterfaceAddress)

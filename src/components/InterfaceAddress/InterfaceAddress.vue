@@ -8,7 +8,7 @@
         </div>
         <div class="block-content">
           <h2>{{ $t("reused.address")}}</h2>
-          <p class="address">0xe5cD582F564991F83bE7A5b3ba<br>742cb4ff5c6FE2</p>
+          <p class="address">{{address}}</p>
           <div class="icon-container">
             <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
               <img src="~@/assets/images/icons/printer-white.svg">
@@ -29,10 +29,7 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
-  }
+  props: ['address']
 }
 </script>
 
