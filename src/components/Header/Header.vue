@@ -15,11 +15,11 @@
 
               <b-nav>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-home')">Home</router-link></b-nav-item>
-                <b-nav-item href="#/neo">ETH</b-nav-item>
+                <b-nav-item href="#/by-json-file">ETH</b-nav-item>
                 <b-nav-item href="#/neo">NEO</b-nav-item>
                 <b-nav-item href="#/luv">LUV</b-nav-item>
                 <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-about')">About</router-link></b-nav-item>
-                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>  
+                <b-nav-item><router-link to="/" v-on:click.native="setHomepageSublink('homepage-faqs')">FAQs</router-link></b-nav-item>
                 </b-nav>
 
             </div>

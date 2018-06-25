@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@cityofzion/neon-js": "^3.8.1",
+    "axios": "^0.18.0",
     "bip39": "^2.5.0",
     "bs58": "^4.0.1",
     "ec-key": "0.0.2",

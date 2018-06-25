@@ -121,6 +121,9 @@
 export default {
   data () {
     return {
+      eth: {
+        address: ''
+      }
     }
   },
   methods: {

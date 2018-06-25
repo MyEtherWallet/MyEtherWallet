@@ -51,6 +51,7 @@
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken()">Add Token</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="claimGas">Claim Gas</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
+                        <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
                         <ul>
                           <li v-for="token in tokens">{{token.symbol}}: {{parseFloat(token.balance)}}</li>
                         </ul>
@@ -59,7 +60,52 @@
                 </div>
             </div>
         </div>
+        <!-- Transactions -->
+        <!-- Modal -->
+          <div id="transactionModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
 
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">My Transactions</h4>
+                </div>
+                <div class="modal-body table-responsive">
+                  <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Txid</th>
+                      <th>Transfers</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="transaction in transactions">
+                      <td>{{transaction.type}}</td>
+                      <td>{{transaction.txid}}</td>
+                      <td>
+                        <ul>
+                          <li v-for="transfer in transaction.transfers">
+                            {{transfer.address_from}} -> {{transfer.address_to}}
+                          </li>
+                        </ul>
+                      </td>
+
+                    </tr>
+
+                  </tbody>
+                </table>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        <!---- Transactions -->
         <!-- Modal -->
         <div id="assetModal" class="modal fade" role="dialog">
           <div class="modal-dialog">
@@ -117,7 +163,8 @@
             sendAddr:'',
             gasPrice: 0.00,
             neoPrice: 0.00,
-            testnet: false
+            testnet: false,
+            transactions:{}
           }
         },
         created(){
@@ -135,6 +182,19 @@
 
         },
         methods:{
+          getTransactions: function(){
+            var that = this;
+            var hash = this.Neon.get.scriptHashFromPublicKey(this.account.publicKey);
+            console.log(hash);
+            console.log(this.account.scriptHash);
+
+            axios.get('https://neoscan.io/api/main_net/v1/get_last_transactions_by_address/'+this.account.address+'/1').then(data => {
+
+              that.transactions = data.data;
+            }).catch(err => {
+              alert('There was an error getting transactions')
+            })
+          },
           createAccount:function(){
 
             this.account =new wallet.Account(this.privateKey).decrypt(this.phrase);
@@ -148,6 +208,7 @@
             }
             var that = this;
             that.getBalance();
+            that.getTransactions();
 
 
           },
@@ -167,6 +228,7 @@
             this.downloadKeystore();
             var that = this;
             that.getBalance();
+            that.getTransactions();
           }
           else{
             alert('Must create password for wallet!')
@@ -184,7 +246,7 @@
             }
             var FileSaver = require('file-saver')
             var blob = new Blob([JSON.stringify(accountDetails)], {type: 'text/plain;charset=utf-8'})
-            FileSaver.saveAs(blob, this.account.address+'.txt')
+            FileSaver.saveAs(blob, this.account.address+'.json')
           },
           addToken:function(){
             var that = this;
