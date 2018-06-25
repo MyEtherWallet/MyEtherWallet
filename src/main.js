@@ -11,7 +11,6 @@ import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
-import VueWorker from 'vue-worker'
 import Vuex from 'vuex'
 
 // Containers
@@ -54,6 +53,7 @@ import MewConnectModal from '@/components/MewConnectModal'
 import NetworkAndAddressModal from '@/components/NetworkAndAddressModal'
 import NewsArticle from '@/components/NewsArticle'
 import PageFooter from '@/components/PageFooter'
+import PasswordModal from '@/components/PasswordModal'
 import PageTitle from '@/components/PageTitle'
 import PriceBar from '@/components/PriceBar'
 import Promo from '@/components/Promo'
@@ -103,6 +103,7 @@ Vue.component('mew-connect-modal', MewConnectModal)
 Vue.component('network-and-address-modal', NetworkAndAddressModal)
 Vue.component('news-article', NewsArticle)
 Vue.component('by-json-page-footer', PageFooter)
+Vue.component('password-modal', PasswordModal)
 Vue.component('by-json-page-title', PageTitle)
 Vue.component('price-bar', PriceBar)
 Vue.component('promo', Promo)
@@ -132,8 +133,6 @@ const i18n = new VueI18n({
   fallbackLocale: 'gb',
   messages: languages
 })
-
-Vue.use(VueWorker)
 
 Vue.filter('capitalize', function (value) {
   if (!value) return ''
