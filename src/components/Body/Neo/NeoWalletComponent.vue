@@ -15,12 +15,12 @@
                         <div class="form-group">
                           <div class="form-check">
                             <label class="form-check-label">
-                              <input type="radio" class="form-check-input" value="true" v-model="testnet">TestNet
+                              <input type="radio" class="form-check-input" value="true" selected v-model="testnet">TestNet
                             </label>
                           </div>
                           <div class="form-check">
                             <label class="form-check-label">
-                              <input type="radio" class="form-check-input" value="false" selected v-model="testnet">MainNet
+                              <input type="radio" class="form-check-input" value="false" disabled v-model="testnet">MainNet
                             </label>
                           </div>
                           <button v-on:click="createAccount()" class="btn btn-primary btn-gap btn-custom">Login With Private Key</button>
