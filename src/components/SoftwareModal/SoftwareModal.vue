@@ -2,7 +2,7 @@
   <b-modal ref="software" hide-footer class="bootstrap-modal modal-software" title="Access by Software">
     <div class="d-block content-container text-center">
       <ul class="button-options">
-        <li>
+        <li @click="uploadClick">
           <img class="icon" src="~@/assets/images/icons/button-json.svg">
           <img class="icon-hover" src="~@/assets/images/icons/button-json-hover.svg">
           <span>{{ $t("reused.jsonF") }}</span>
@@ -18,6 +18,7 @@
           <span>{{$t("reused.privKey")}}</span>
         </li>
       </ul>
+      <input type="file" name="file" style="display: none" id="jsonInput" @change="uploadedFile" />
     </div>
     <div class="button-container">
       <b-btn class="mid-round-button-green-filled close-button">
@@ -37,8 +38,27 @@
 
 <script>
 export default {
+  props: ['value', 'openPassword'],
   data: function () {
     return {
+      file: ''
+    }
+  },
+  methods: {
+    uploadClick: function () {
+      let jsonInput = document.getElementById('jsonInput')
+      jsonInput.click()
+    },
+    uploadedFile: function (e) {
+      const self = this
+      let reader = new FileReader()
+      reader.onloadend = function (evt) {
+        self.$emit('file', JSON.parse(evt.target.result))
+      }
+      reader.readAsBinaryString(e.target.files[0])
+
+      self.openPassword()
+      self.$children[0].hide()
     }
   }
 }

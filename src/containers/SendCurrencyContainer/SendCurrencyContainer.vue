@@ -27,7 +27,7 @@
             <p class="copy-button">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
-            <textarea id="address" name="name">{{address}}</textarea>
+            <textarea id="address" name="name" v-model="address"></textarea>
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
         </div> <!-- .to-address -->

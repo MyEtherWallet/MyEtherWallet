@@ -82,7 +82,6 @@ export default {
   mounted: function () {
     const self = this
     const worker = new Worker()
-    // console.log(this)
     worker.postMessage({type: 'createWallet', data: [self.password]})
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape

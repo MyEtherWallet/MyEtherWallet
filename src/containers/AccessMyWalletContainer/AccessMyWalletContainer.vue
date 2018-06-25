@@ -8,7 +8,8 @@
 
     <metamask-modal></metamask-modal>
 
-    <software-modal></software-modal>
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"></software-modal>
+    <password-modal :file="file"></password-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -86,7 +87,8 @@ export default {
           // img: self.$store.getters.all.online ? softwareImg: softwareImgOffline
           img: softwareImg
         }
-      ]
+      ],
+      file: ''
     }
   },
   methods: {
@@ -104,6 +106,12 @@ export default {
     },
     softwareModalOpen () {
       this.$children[4].$refs.software.show()
+    },
+    passwordOpen () {
+      this.$children[5].$refs.password.show()
+    },
+    fileUploaded (e) {
+      this.file = e
     }
   }
 }
