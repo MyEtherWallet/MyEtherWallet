@@ -27,7 +27,7 @@
             <p class="copy-button">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
-            <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
+            <textarea id="address" name="name">{{address}}</textarea>
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
         </div> <!-- .to-address -->
@@ -92,10 +92,7 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
-  }
+  props: ['address']
 }
 </script>
 

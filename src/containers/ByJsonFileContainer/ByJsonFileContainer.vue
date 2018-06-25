@@ -1,5 +1,6 @@
 <template>
   <div class="create-wallet-by-json-file">
+    <success-modal linkTo="/interface" message="You have created a wallet successfully" linkMessage="Access My Wallet"></success-modal>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
@@ -49,6 +50,8 @@ import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
 import Worker from '@/workers/wallet.worker.js'
+import Wallet from 'ethereumjs-wallet'
+
 export default {
   props: ['password'],
   data () {
@@ -79,11 +82,13 @@ export default {
   mounted: function () {
     const self = this
     const worker = new Worker()
+    // console.log(this)
     worker.postMessage({type: 'createWallet', data: [self.password]})
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape
       self.walletJson = createBlob('mime', e.data.walletJson)
       self.name = e.data.name.toString()
+      self.$store.dispatch('decryptWallet', Wallet.fromV3(e.data.walletJson, self.password))
 
       function createBlob (mime, str) {
         const string = (typeof str === 'object') ? JSON.stringify(str) : str
@@ -97,6 +102,14 @@ export default {
     }
     worker.onerror = function (e) {
       console.log('onerror received from worker')
+    }
+  },
+  watch: {
+    downloadable: function () {
+      let self = this
+      setTimeout(function () {
+        self.$children[0].$refs.success.show()
+      }, 15000)
     }
   }
 }
