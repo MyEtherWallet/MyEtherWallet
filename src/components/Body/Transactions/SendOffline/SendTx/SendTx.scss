@@ -20,11 +20,13 @@
     .gas-amount {
       position: relative;
 
-      input {
+      textarea {
         background-color: $background-color-1;
         border: 0;
         padding: 13px 15px;
         width: 100%;
+        resize: none;
+        min-height: 200px;
       }
     }
   } // .send-form

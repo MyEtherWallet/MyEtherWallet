@@ -111,6 +111,11 @@ body {
   user-select: none;
 }
 
+input,
+textarea {
+  border-radius: 4px;
+}
+
 
 // *********************************************************************
 // Disable WebKit Spinners
@@ -617,7 +622,7 @@ h6 {
     padding: 0;
     height: 15px;
     width: 15px;
-    line-height: 1px;
+    line-height: 15px;
 
     &::after {
       font-weight: 600;
@@ -1057,7 +1062,7 @@ h6 {
 }
 
 .dropdown-select-search-1 {
-  border-radius: 5px;
+  border-radius: 4px;
 
   .dropdown .dropdown-toggle {
     border: 0;
