@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import Wallet from 'ethereumjs-wallet'
 import Worker from '@/workers/unlockWallet.worker.js'
 export default {
   props: ['file'],
@@ -25,7 +26,9 @@ export default {
       const worker = new Worker()
       worker.postMessage({type: 'unlockWallet', data: [self.file, self.password]})
       worker.onmessage = function (e) {
-        console.log(e)
+        // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
+        self.$store.dispatch('decryptWallet', Wallet.fromPrivateKey(Buffer.from(e.data._privKey)))
+        self.$router.push({ path: 'interface' })
       }
       worker.onerror = function (e) {
         console.log(e)

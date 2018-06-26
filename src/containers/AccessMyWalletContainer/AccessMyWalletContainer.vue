@@ -92,26 +92,31 @@ export default {
     }
   },
   methods: {
-    mewConnectModalOpen () {
+    mewConnectModalOpen: function () {
       this.$children[0].$refs.mewConnect.show()
     },
-    networkAndAddressOpen () {
+    networkAndAddressOpen: function () {
       this.$children[1].$refs.networkAndAddress.show()
     },
-    hardwareModalOpen () {
+    hardwareModalOpen: function () {
       this.$children[2].$refs.hardware.show()
     },
-    metamaskModalOpen () {
+    metamaskModalOpen: function () {
       this.$children[3].$refs.metamask.show()
     },
-    softwareModalOpen () {
+    softwareModalOpen: function () {
       this.$children[4].$refs.software.show()
     },
-    passwordOpen () {
+    passwordOpen: function () {
       this.$children[5].$refs.password.show()
     },
-    fileUploaded (e) {
+    fileUploaded: function (e) {
       this.file = e
+    }
+  },
+  watch: {
+    file: function () {
+      this.passwordOpen()
     }
   }
 }
