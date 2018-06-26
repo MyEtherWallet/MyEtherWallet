@@ -41,8 +41,10 @@
         <div class="block-content">
           <h2>Balance</h2>
           <h4>7130.000000 ETH</h4>
-          <div class="icon-container">
-            <img src="~@/assets/images/icons/more.svg">
+          <div class="icon-container small-tooltop-1">
+            <div v-b-tooltip.hover title="More" class="custom-tooltip">
+              <img src="~@/assets/images/icons/more.svg">
+            </div>
           </div>
         </div>
       </div>
