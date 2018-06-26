@@ -103,6 +103,15 @@ body {
   outline: none;
 }
 
+.prevent-pointer-events {
+  pointer-events: none;
+}
+
+.prevent-user-select {
+  user-select: none;
+}
+
+
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************

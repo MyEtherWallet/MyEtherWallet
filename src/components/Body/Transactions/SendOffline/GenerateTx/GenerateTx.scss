@@ -1,0 +1,46 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  .send-form {
+    padding: 40px 60px 0;
+
+    .title-container {
+      align-items: flex-end;
+      display: flex;
+      margin-bottom: 10px;
+
+      .title {
+        padding: 0 8px;
+        h4 {
+          margin-bottom: 2px;
+        }
+      }
+    }
+
+    .gas-amount {
+      position: relative;
+
+      input {
+        background-color: $background-color-1;
+        border: 0;
+        padding: 13px 15px;
+        width: 100%;
+      }
+    }
+  } // .send-form
+  
+  .submit-button-container {
+    padding: 60px 0 200px;
+    text-align: center;
+
+    .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
+    }
+
+    p {
+      margin-top: 20px;
+    }
+  }
+}
