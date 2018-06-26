@@ -1,6 +1,6 @@
 <template>
-  <div class="main-content">
-    <success-modal linkTo="/interact-with-contract" message="" link="Ok"></success-modal>
+  <div class="deploy-contract-container">
+    <success-modal linkTo="/interact-with-contract" message="" linkMessage="Ok"></success-modal>
     <div class="content-title">
       <h2>{{ $t('reused.depContract') }}</h2>
     </div>

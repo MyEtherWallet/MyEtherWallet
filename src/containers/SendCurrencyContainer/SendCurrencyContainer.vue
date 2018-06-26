@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="send-currency-container">
     <div class="content-title">
       <h2>{{ $t('reused.sendTx') }}</h2>
     </div>

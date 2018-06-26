@@ -1,6 +1,6 @@
 <template>
   <div class="your-password">
-    <!-- <create-wallet-modal></create-wallet-modal> -->
+    <tutorial-modal :skip="skip"></tutorial-modal>
     <by-json-page-title></by-json-page-title>
     <div class="wrap">
       <div class="page-container">
@@ -51,6 +51,16 @@ export default {
         self.byJson = false
         self.byMnemonic = false
       }
+    },
+    skip: function () {
+      localStorage.setItem('skipTutorial', true)
+      this.$children[0].$refs.tutorial.hide()
+    }
+  },
+  mounted: function () {
+    let skipTutorial = localStorage.getItem('skipTutorial')
+    if (skipTutorial === undefined || skipTutorial === null || skipTutorial === false) {
+      this.$children[0].$refs.tutorial.show()
     }
   }
 }

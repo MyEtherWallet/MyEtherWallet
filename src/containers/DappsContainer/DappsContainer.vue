@@ -1,24 +1,11 @@
 <template>
-  <div class="main-content">
+  <div class="dapps-container">
     <div v-show="selectedDapp === ''">
       <div class="content-title">
         <h2>{{ $t('reused.dapps') }}</h2>
       </div>
       <div class="buttons-container">
-        <div @click.prevent="switchView('register-domain')">
-          <div class="dapps-button">
-            <img class="icon" src="~@/assets/images/icons/domain.svg">
-            <h4>{{ $t('interface.registerDom') }}</h4>
-            <p>{{ $t('interface.registerDomDesc') }}</p>
-          </div>
-        </div>
-        <div @click.prevent="switchView('domain-sale')">
-          <div class="dapps-button">
-            <img class="icon" src="~@/assets/images/icons/domain-sale.svg">
-            <h4>{{ $t('interface.domSale') }}</h4>
-            <p>{{ $t('interface.domSaleDesc') }}</p>
-          </div>
-        </div>
+        <dapp-buttons v-for="dapp in dapps" :key="dapp.title" v-on:click="switchView(dapp.param)" :title="dapp.title" :icon="dapp.icon" :desc="dapp.desc"></dapp-buttons>
       </div>
     </div>
     <register-domain-container v-show="selectedDapp === 'register-domain'" :resetView="switchView"></register-domain-container>
@@ -27,10 +14,26 @@
 </template>
 
 <script>
+import domainSale from '@/assets/images/icons/domain-sale.svg'
+import registerDomain from '@/assets/images/icons/domain.svg'
 export default {
   data () {
     return {
-      selectedDapp: ''
+      selectedDapp: '',
+      dapps: [
+        {
+          param: 'register-domain',
+          icon: registerDomain,
+          title: this.$t('interface.registerDom'),
+          desc: this.$t('interface.registerDomDesc')
+        },
+        {
+          param: 'domain-sale',
+          icon: domainSale,
+          title: this.$t('interface.domSale'),
+          desc: this.$t('interface.domSaleDesc')
+        }
+      ]
     }
   },
   methods: {

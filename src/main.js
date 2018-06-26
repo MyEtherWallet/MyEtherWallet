@@ -37,6 +37,7 @@ import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
 import CreateWalletInput from '@/components/CreateWalletInput'
 import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
+import DappButtons from '@/components/DappButtons'
 import SuccessModal from '@/components/SuccessModal'
 import FaqBlock from '@/components/FaqBlock'
 import HardwareModal from '@/components/HardwareModal'
@@ -60,6 +61,7 @@ import Promo from '@/components/Promo'
 import Social from '@/components/Social'
 import SoftwareModal from '@/components/SoftwareModal'
 import TopBanner from '@/components/TopBanner'
+import TutorialModal from '@/components/TutorialModal'
 
 // etc
 import languages from './translations'
@@ -88,6 +90,7 @@ Vue.component('by-json-block', ByJsonBlock)
 Vue.component('create-wallet-input', CreateWalletInput)
 Vue.component('create-wallet-input-footer', CreateWalletInputFooter)
 Vue.component('create-wallet-modal', CreateWalletModal)
+Vue.component('dapp-buttons', DappButtons)
 Vue.component('success-modal', SuccessModal)
 Vue.component('faq-block', FaqBlock)
 Vue.component('hardware-modal', HardwareModal)
@@ -112,6 +115,7 @@ Vue.component('software-modal', SoftwareModal)
 // Vue.component('transaction-tokens', TransactionTokens)
 Vue.component('interface-side-menu', InterfaceSideMenu)
 Vue.component('top-banner', TopBanner)
+Vue.component('tutorial-modal', TutorialModal)
 
 Vue.component('v-select', vSelect)
 

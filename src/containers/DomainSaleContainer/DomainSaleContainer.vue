@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="domain-sale-container">
     <div @click.prevent="resetView('')" class="nounderline">
       <div class="content-title">
         <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>

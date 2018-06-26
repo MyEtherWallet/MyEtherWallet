@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="swap-container">
     <div class="content-title">
       <h2>{{ $t('reused.swap') }}</h2>
       <img class="icon" src="~@/assets/images/etc/bity.png">

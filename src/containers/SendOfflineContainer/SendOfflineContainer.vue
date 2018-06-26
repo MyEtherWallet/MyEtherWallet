@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="send-offline-container">
     <div class="content-title">
       <h2>{{ $t("reused.offline") }}</h2>
     </div>
