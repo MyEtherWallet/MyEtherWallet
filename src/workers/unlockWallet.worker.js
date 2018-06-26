@@ -3,8 +3,12 @@ import {
 } from '@/helpers'
 
 function unlock(file, password) {
-  console.log(file, password)
-  return Wallet.fromV3(file, password)
+  let newFile = {}
+  // Small hack because non strict wasn't working..
+  Object.keys(file).forEach(key => {
+    newFile[key.toLowerCase()] = file[key]
+  })
+  return Wallet.fromV3(newFile, password, true)
 }
 
 onmessage = function(event) {

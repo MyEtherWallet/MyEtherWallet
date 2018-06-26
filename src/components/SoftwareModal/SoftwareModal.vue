@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword'],
+  props: ['value'],
   data: function () {
     return {
       file: ''
@@ -57,7 +57,6 @@ export default {
       }
       reader.readAsBinaryString(e.target.files[0])
 
-      self.openPassword()
       self.$children[0].hide()
     }
   }
