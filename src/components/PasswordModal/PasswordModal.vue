@@ -1,7 +1,12 @@
 <template>
   <b-modal ref="password" hide-footer class="bootstrap-modal modal-software" title="Password">
     <form class="password-form">
-      <input :type="show ? 'text': 'password'" name="Password" v-model="password">
+      <div class="input-container">
+        <input :type="show ? 'text': 'password'" name="Password" v-model="password">
+        <img @click.prevent="switchViewPassword" v-if="show" src="@/assets/images/icons/show-password.svg"/>
+        <img @click.prevent="switchViewPassword" v-if="!show" src="@/assets/images/icons/hide-password.svg"/>
+      </div>
+      <p class="error" v-show="error !== ''"> {{ error }} </p>
       <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" password === '' && password.length === 0 && password.length < 9">
         Unlock Wallet
       </button>
@@ -17,7 +22,8 @@ export default {
   data: function () {
     return {
       show: false,
-      password: ''
+      password: '',
+      error: ''
     }
   },
   methods: {
@@ -31,8 +37,16 @@ export default {
         self.$router.push({ path: 'interface' })
       }
       worker.onerror = function (e) {
-        console.log(e)
+        self.error = e.message
       }
+    },
+    switchViewPassword: function () {
+      this.show = !this.show
+    }
+  },
+  watch: {
+    password: function () {
+      this.error = ''
     }
   }
 }

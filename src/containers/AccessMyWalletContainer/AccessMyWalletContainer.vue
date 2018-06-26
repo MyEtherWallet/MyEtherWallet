@@ -50,6 +50,7 @@ export default {
   data () {
     const self = this
     return {
+      file: '',
       buttons: [
         {
           func: self.mewConnectModalOpen,
@@ -87,8 +88,7 @@ export default {
           // img: self.$store.getters.all.online ? softwareImg: softwareImgOffline
           img: softwareImg
         }
-      ],
-      file: ''
+      ]
     }
   },
   methods: {
@@ -112,10 +112,6 @@ export default {
     },
     fileUploaded: function (e) {
       this.file = e
-    }
-  },
-  watch: {
-    file: function () {
       this.passwordOpen()
     }
   }

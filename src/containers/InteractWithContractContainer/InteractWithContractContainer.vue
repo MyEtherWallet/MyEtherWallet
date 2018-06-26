@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="interact-with-contract-container">
     <div class="content-title">
       <h2>{{ $t('reused.interactWcontract') }}</h2>
     </div>

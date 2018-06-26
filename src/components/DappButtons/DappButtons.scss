@@ -1,0 +1,17 @@
+@import '~@/scss/GlobalVariables';
+
+.dapps-button {
+  border-radius: 5px;
+  box-shadow: 0 5px 20px $box-shadow-color-1;
+  cursor: pointer;
+  padding: 40px 20px;
+  text-align: center;
+
+  img {
+    margin-bottom: 15px;
+  }
+
+  h4 {
+    margin-bottom: 5px;
+  }
+}

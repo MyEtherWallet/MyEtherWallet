@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  props: ['value'],
+  props: ['value', 'openPassword'],
   data: function () {
     return {
       file: ''
@@ -47,17 +47,20 @@ export default {
   methods: {
     uploadClick: function () {
       let jsonInput = document.getElementById('jsonInput')
-      jsonInput.click()
+      if (this.file === '') {
+        jsonInput.click()
+      } else {
+        this.openPassword()
+      }
     },
     uploadedFile: function (e) {
       const self = this
       let reader = new FileReader()
       reader.onloadend = function (evt) {
         self.$emit('file', JSON.parse(evt.target.result))
+        self.file = JSON.parse(evt.target.result)
       }
       reader.readAsBinaryString(e.target.files[0])
-
-      self.$children[0].hide()
     }
   }
 }
