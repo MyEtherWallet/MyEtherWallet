@@ -1,5 +1,22 @@
 <template>
   <div class="generate-info">
+
+    <!-- Modal =================================== -->
+    <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal">
+      <div class="d-block text-center">
+        <i class="check-icon fa fa-check" aria-hidden="true"></i>
+        <h2 class="title">Succeed</h2>
+      </div>
+      <div class="button-container">
+        <router-link to="/send-offline">
+          <b-btn class="mid-round-button-green-filled close-button" @click="showModal = false">
+            Ok
+          </b-btn>
+        </router-link>
+      </div>
+    </b-modal>
+    <!-- Modal =================================== -->
+
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
@@ -17,7 +34,7 @@
         </div>
       </div>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable">
+        <div class="submit-button large-round-button-green-filled clickable" v-on:click="successModalOpen">
           Send Transaction
         </div>
         <p>Have any issues? <a href="/">Learn more</a></p>
@@ -39,6 +56,9 @@ export default {
     copyTxHex: function () {
       document.querySelector('#tx-hex').select()
       document.execCommand('copy')
+    },
+    successModalOpen () {
+      this.$refs.success.show()
     }
   },
   mounted () {

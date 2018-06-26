@@ -23,19 +23,19 @@
             </div>
 
             <div class="progress-status prevent-user-select">
-              <div class="active" v-on:click="processChange($event, 'gen-info')">
+              <div class="gen-info" v-on:click="processChange($event, 'gen-info')">
                 <div class="prevent-pointer-events">
                   <p class="title">Online</p>
                   <p class="description prevent-pointer-events">Generate Information</p>
                 </div>
               </div>
-              <div class="" v-on:click="processChange($event, 'gen-tx')">
+              <div class="gen-tx" v-on:click="processChange($event, 'gen-tx')">
                 <div class="prevent-pointer-events">
                   <p class="title prevent-pointer-events">Offline</p>
                   <p class="description prevent-pointer-events">Generate Transaction</p>
                 </div>
               </div>
-              <div class="" v-on:click="processChange($event, 'send-tx')">
+              <div class="send-tx" v-on:click="processChange($event, 'send-tx')">
                 <div class="prevent-pointer-events">
                   <p class="title prevent-pointer-events">Online</p>
                   <p class="description prevent-pointer-events">Send/Publish Transaction</p>
@@ -62,7 +62,7 @@
 export default {
   data () {
     return {
-      currentProcess: 'gen-info'
+      currentProcess: this.$store.state.state.pageStates.sendOffline.processLocation
     }
   },
   methods: {
@@ -73,9 +73,12 @@ export default {
 
       e.target.classList.add('active')
       this.currentProcess = process
+      this.$store.state.state.pageStates.sendOffline.processLocation = process
     }
   },
   mounted () {
+    var activeProcess = this.$store.state.state.pageStates.sendOffline.processLocation
+    document.querySelector('.' + activeProcess).classList.add('active')
   }
 }
 </script>
