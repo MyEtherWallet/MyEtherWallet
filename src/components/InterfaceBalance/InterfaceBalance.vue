@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted: function () {
-    if (this.balance.result !== undefined) {
+    if (this.balance && this.balance.result !== undefined) {
       this.parsedBalance = unit.fromWei(this.balance.result, 'ether')
     }
   },

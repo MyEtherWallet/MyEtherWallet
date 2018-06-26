@@ -13,14 +13,14 @@
             <interface-balance :balance="balance"/>
           </div>
           <div>
-            <interface-network />
+            <interface-network :blockNumber="blockNumber" />
           </div>
           <send-currency-container :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
-          <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
+          <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <div class="tokens" v-if="$store.getters.all.online">
             <interface-tokens></interface-tokens>
@@ -43,13 +43,36 @@ export default {
     return {
       currentTab: 'send',
       address: '',
-      balance: ''
+      balance: '',
+      blockNumber: ''
     }
   },
   methods: {
     switchTabs: function (param) {
       const self = this
       self.currentTab = param
+    },
+    getBlock: async function () {
+      const body = {
+        'jsonrpc': '2.0',
+        'method': 'eth_blockNumber',
+        'params': [],
+        'id': 0
+      }
+
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+
+      this.blockNumber = await fetch('https://api.myetherwallet.com/eth', config).then((res) => {
+        return res.json()
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     getBalance: async function () {
       const body = {
@@ -82,6 +105,8 @@ export default {
       self.address = '0x' + self.$store.getters.all.wallet.getAddress().toString('hex')
       self.getBalance()
     }
+
+    setInterval(self.getBlock, 14000)
   }
 }
 </script>
