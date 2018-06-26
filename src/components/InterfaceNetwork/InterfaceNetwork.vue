@@ -9,7 +9,7 @@
         <div class="block-content">
           <h2>{{ $t("txNetwork.title") }}</h2>
           <p>myetherapi.com(ETH)</p>
-          <p>Last Block#: 5699679</p>
+          <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin"></i> </p>
           <div class="icon-container">
             <img src="~@/assets/images/icons/change.svg">
           </div>
@@ -22,8 +22,10 @@
 
 <script>
 export default {
+  props: ['blockNumber'],
   data () {
     return {
+      parsedNetwork: ''
     }
   },
   methods: {
@@ -37,6 +39,16 @@ export default {
     },
     expendAuth () {
       document.querySelector('.auth-form-container').classList.toggle('hidden')
+    }
+  },
+  mounted: function () {
+    if (this.blockNumber && this.blockNumber.result !== undefined) {
+      this.parsedNetwork = parseInt(this.blockNumber.result)
+    }
+  },
+  watch: {
+    blockNumber: function (newVal) {
+      this.parsedNetwork = parseInt(newVal.result)
     }
   }
 }
