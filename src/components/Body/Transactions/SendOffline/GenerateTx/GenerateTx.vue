@@ -21,10 +21,10 @@
             <div class="title">
               <h4>To Address</h4>
               <img class="icon" src="~@/assets/images/icons/avatar.svg">
-              <p v-on:click="copyAddress" class="copy-button">Copy</p>
+              <p v-on:click="copyToAddress" class="copy-button linker-1">Copy</p>
             </div>
             <div class="the-form address-block">
-              <textarea id="address" name="name" placeholder="Please Enter The Address"></textarea>
+              <textarea id="to-address" name="name" placeholder="Please Enter The Address"></textarea>
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
             </div>
           </div> <!-- .to-address -->
@@ -170,6 +170,10 @@ export default {
     }
   },
   methods: {
+    copyToAddress: function () {
+      document.querySelector('#to-address').select()
+      document.execCommand('copy')
+    }
   },
   mounted () {
   }
