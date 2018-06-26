@@ -11,8 +11,20 @@
 
       .title {
         padding: 0 8px;
-        h4 {
-          margin-bottom: 2px;
+        display: flex;
+        width: 100%;
+        div {
+          h4 {
+            margin-bottom: 2px;
+          }
+        }
+        
+        .form-controller {
+          margin-left: auto;
+          display: flex;
+          p {
+            margin-left: 25px;
+          }
         }
       }
     }
