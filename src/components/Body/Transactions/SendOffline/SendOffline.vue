@@ -22,38 +22,30 @@
               <h2>Send Offline</h2>
             </div>
 
-            <div class="online-status">
-              <div class="">
-                <p class="title">Online</p>
-                <p class="description">Generate Information</p>
-              </div>
-              <div class="">
-                <p class="title">Offline</p>
-                <p class="description">Generate Transaction</p>
-              </div>
-              <div class="">
-                <p class="title">Online</p>
-                <p class="description">Send/Publish Transaction</p>
-              </div>
-            </div>
-
-            <div class="send-form">
-              <div class="title-container">
-                <div class="title">
-                  <h4>Speed of Transaction</h4>
+            <div class="progress-status prevent-user-select">
+              <div class="active" v-on:click="processChange($event, 'gen-info')">
+                <div class="prevent-pointer-events">
+                  <p class="title">Online</p>
+                  <p class="description prevent-pointer-events">Generate Information</p>
                 </div>
               </div>
+              <div class="" v-on:click="processChange($event, 'gen-tx')">
+                <div class="prevent-pointer-events">
+                  <p class="title prevent-pointer-events">Offline</p>
+                  <p class="description prevent-pointer-events">Generate Transaction</p>
+                </div>
+              </div>
+              <div class="" v-on:click="processChange($event, 'send-tx')">
+                <div class="prevent-pointer-events">
+                  <p class="title prevent-pointer-events">Online</p>
+                  <p class="description prevent-pointer-events">Send/Publish Transaction</p>
+                </div>
+              </div>
+            </div>
 
-              <div class="the-form gas-amount">
-                <input type="number" name="" value="" placeholder="Please Enter the Address">
-              </div>
-            </div>
-            <div class="submit-button-container">
-              <div class="submit-button large-round-button-green-filled clickable">
-                Generate
-              </div>
-              <p>Have any issues? <a href="/">Learn more</a></p>
-            </div>
+            <send-offline-generate-info v-if="currentProcess === 'gen-info'"></send-offline-generate-info>
+            <send-offline-generate-tx v-if="currentProcess === 'gen-tx'"></send-offline-generate-tx>
+            <send-offline-send-tx v-if="currentProcess === 'send-tx'"></send-offline-send-tx>
 
           </div>
           <div class="tokens">
@@ -70,11 +62,17 @@
 export default {
   data () {
     return {
+      currentProcess: 'gen-info'
     }
   },
   methods: {
-    copyAddress: function () {
-      alert('This doesn\'t work for now.')
+    processChange: function (e, process) {
+      document.querySelectorAll('.progress-status > div').forEach(function (el) {
+        el.classList.remove('active')
+      })
+
+      e.target.classList.add('active')
+      this.currentProcess = process
     }
   },
   mounted () {

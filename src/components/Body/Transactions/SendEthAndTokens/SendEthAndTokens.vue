@@ -33,7 +33,7 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input type="number" name="" value="" placeholder="Amount" v-on:keypress="isNumber">
+                    <input type="number" name="" value="" placeholder="Amount">
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div>
@@ -138,15 +138,6 @@ export default {
   methods: {
     copyAddress: function () {
       alert('This doesn\'t work for now.')
-    },
-    isNumber: function (evt) {
-      evt = window.event
-      var charCode = (evt.which) ? evt.which : evt.keyCode
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-        evt.preventDefault()
-      } else {
-        return true
-      }
     }
   },
   mounted () {
