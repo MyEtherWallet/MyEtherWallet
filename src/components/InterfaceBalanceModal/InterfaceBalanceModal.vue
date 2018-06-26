@@ -5,7 +5,7 @@
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('reused.totalBalance') }}</h4>
           <div class="margin-left-auto total-balance-amount">
-            <span>7130.000000</span> ETH
+            <span>{{ balance }}</span> ETH
           </div>
         </div>
       </div>
@@ -26,6 +26,7 @@
 
 <script>
 export default {
+  props: ['balance'],
   data () {
     return {
     }

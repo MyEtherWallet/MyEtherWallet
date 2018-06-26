@@ -10,7 +10,7 @@
             <interface-address :address="address" />
           </div>
           <div>
-            <interface-balance />
+            <interface-balance :balance="balance"/>
           </div>
           <div>
             <interface-network />
@@ -42,13 +42,34 @@ export default {
   data () {
     return {
       currentTab: 'send',
-      address: ''
+      address: '',
+      balance: ''
     }
   },
   methods: {
     switchTabs: function (param) {
       const self = this
       self.currentTab = param
+    },
+    getBalance: async function () {
+      const body = {
+        'jsonrpc': '2.0',
+        'method': 'eth_getBalance',
+        'params': [this.address, 'latest'],
+        'id': 0
+      }
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+      this.balance = await fetch('https://api.myetherwallet.com/eth', config).then((res) => {
+        return res.json()
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   },
   mounted: function () {
@@ -59,6 +80,7 @@ export default {
 
     if (self.$store.getters.all.wallet !== null && self.$store.getters.all.wallet !== undefined) {
       self.address = '0x' + self.$store.getters.all.wallet.getAddress().toString('hex')
+      self.getBalance()
     }
   }
 }
