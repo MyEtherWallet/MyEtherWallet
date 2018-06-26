@@ -9,12 +9,12 @@
         </div>
 
         <div class="the-form gas-amount">
-          <input type="number" name="" value="" placeholder="Please Enter the Address">
+          <textarea name="" value="" readonly></textarea>
         </div>
       </div>
       <div class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable">
-          Generate
+          Send Transaction
         </div>
         <p>Have any issues? <a href="/">Learn more</a></p>
       </div>
