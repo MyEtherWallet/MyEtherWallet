@@ -54,12 +54,13 @@
           box-shadow: 0 2px 0 $border-bottom-black;
           display: grid;
           grid-template-columns: 27% 27% 27%;
-          padding-top: 24px;
           text-align: center;
           grid-column-gap: 20px;
           justify-content: space-evenly;
 
-          div {
+          >div {
+            padding-top: 24px;
+            padding-bottom: 18px;
             cursor: pointer;
 
             p {
@@ -72,9 +73,6 @@
               font-weight: 600;
             }
 
-            .description {
-              padding-bottom: 18px;
-            }
           }
 
           .active {
