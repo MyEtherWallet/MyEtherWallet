@@ -119,9 +119,11 @@
           </label>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button">
-            Continue
-          </b-btn>
+          <router-link to="/send-eth-and-tokens" class="close-button">
+            <b-btn class="mid-round-button-green-filled">
+              Access My Wallet
+            </b-btn>
+          </router-link>
         </div>
         <div class="support">
           <router-link to="/">
@@ -135,7 +137,7 @@
 
       <!-- Modal (Hardware) ============================================================================================================================================ -->
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
-        <div class="d-block content-container text-center">
+        <div class="d-block text-center">
           <ul class="button-options hardware-button-options">
             <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-ledger.png">
@@ -158,13 +160,11 @@
               <span>Secalot</span>
             </li>
           </ul>
-
-          <h3 class="modal-large-text">Please Connect With Your Device</h3>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button" v-on:click="networkAndAddressOpen">
-            Continue
-          </b-btn>
+          <div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">
+            Please Connect With Your Device
+          </div>
         </div>
         <div class="support">
           <router-link to="/">
@@ -268,11 +268,13 @@
             <h3>MEW Connect</h3>
             <p>Use MEW Connect to access my wallet</p>
             <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
+              <b-btn id="exPopover1" variant="primary">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+              </b-btn>
+              <b-popover target="exPopover1" triggers="hover focus" placement="top">
+                <template slot="title">MEW Connect</template>
+                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
+              </b-popover>
             </div>
           </div>
 
@@ -283,11 +285,13 @@
             <h3>Hardware</h3>
             <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
             <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
+              <b-btn id="exPopover2" variant="primary">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+              </b-btn>
+              <b-popover target="exPopover2" triggers="hover focus" placement="top">
+                <template slot="title">Hardware</template>
+                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
+              </b-popover>
             </div>
           </div>
 
@@ -298,11 +302,16 @@
             <h3>MetaMask</h3>
             <p>Use extention to access my wallet</p>
             <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
+              <b-btn id="exPopover3" variant="primary">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+              </b-btn>
+              <b-popover target="exPopover3" triggers="hover focus" placement="top">
+                <template slot="title">MetaMask</template>
+                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
+                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
+                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+              </b-popover>
             </div>
           </div>
 
@@ -314,11 +323,13 @@
             <p>JSON file, Private key, Mnemonic phrase</p>
             <p class="small-note">Not recommended</p>
             <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
+              <b-btn id="exPopover4" variant="primary">
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+              </b-btn>
+              <b-popover target="exPopover4" triggers="hover focus" placement="top">
+                <template slot="title">Software</template>
+                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
+              </b-popover>
             </div>
           </div>
 
@@ -350,6 +361,10 @@ export default {
       this.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
+      // Reset button state
+      document.querySelectorAll('.hardware-button-options li').forEach(function (el) {
+        el.classList.remove('active')
+      })
       this.$refs.hardware.show()
     },
     metamaskModalOpen () {

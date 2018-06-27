@@ -44,7 +44,7 @@ $transaction-block-network: #25b0e8;
 $transaction-block-token-search: #536d8b;
 
 $button-background-color-1: #6b87a3;
-
+$small-tooltip-shadow: rgba(0, 0, 0, 0.1);
 
 // *********************************************************************
 // Social button styles
@@ -63,6 +63,7 @@ $border-color-4: #f9f9f9;
 $border-color-5: #e8e8e8;
 $price-bar-border-color: #677890;
 $border-bottom--mnemonic-phrase-key-color: $border-color-1;
+$border-bottom--mnemonic-phrase-key-color-verification: #434f60;
 $border-green: #05c0a5;
 
 
@@ -107,7 +108,7 @@ $text-good-button-not-good: #e2e2e2;
 
 $link-text-color-1: #506175;
 $link-text-color-2: #05c0a5;
-
+$link-text-color-3: #afafaf;
 
 // *********************************************************************
 // Button styles
@@ -117,6 +118,7 @@ $button--border-color-1: #fff; // White border color
 $button--border-color-2: #05c0a5; // Green border color
 $button--background-color-1: #05c0a5; // Green background color
 $button--background-color-2: #fff; // White background color
+$button--background-color-3: #989898; // Hardware connection waiting button
 
 
 // *********************************************************************
@@ -139,6 +141,7 @@ $dropdown-menu--active--background-color: #e8e8e8;
 // *********************************************************************
 $tooltip-font-color: #4c4c4c;
 $tooltip-box-shadow-color: rgba(0, 0, 0, .2);
+$tooltip-box-shadow-color2: rgba(0, 0, 0, .6);
 $tooltip-border-color: #c5c5c5;
 $tooltip-background-color: #fff;
 $tooltip--button-background-color: #96a8b6;

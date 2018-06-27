@@ -2,7 +2,7 @@
   <div class="create-wallet-by-mnemonic">
 
     <!-- Modal =================================== -->
-    <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal">
+    <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal done">
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true"></i>
         <h2 class="title">Succeed</h2>
@@ -15,16 +15,21 @@
       </div>
     </b-modal>
 
-    <!-- Modal (MEW Connect) ============================================================================================================================================ -->
-    <b-modal ref="verification" hide-footer centered class="bootstrap-modal Verification nopadding" title="Verification">
+    <b-modal ref="verification" hide-footer centered class="bootstrap-modal-wide verification nopadding" title="Verification">
       <div class="content-block">
-        <p>Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
-      </div>
-      <div class="content-block">
+        <p class="block-title">Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
         <div class="phrases">
           <ul>
-            <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
+            <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">
+              {{index + 1}}.<span>{{value}}</span>
+              <input class="hidden" type="text" name="">
+            </li>
           </ul>
+        </div>
+        <div class="button-container">
+          <div v-on:click="mnemonicDoneModalOpen" class="verify-button large-round-button-green-filled">
+            Verify
+          </div>
         </div>
       </div>
     </b-modal>
@@ -68,7 +73,9 @@
                 </div>
                 <div class="phrases">
                   <ul>
-                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">{{index + 1}}.<span>{{value}}</span></li>
+                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">
+                      {{index + 1}}.<span>{{value}}</span>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -107,6 +114,7 @@ var bip39 = require('bip39')
 export default {
   data () {
     return {
+      varificationValues: [],
       mnemonicValues: [],
       mnemonic24: false
     }
@@ -138,9 +146,81 @@ export default {
       }
     },
     mnemonicDoneModalOpen () {
-      this.$refs.done.show()
+      // console.log(this.varificationValues)
+
+      var valid = false
+
+      this.varificationValues.forEach(function (value) {
+        var userInputText = document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('input').value
+        // console.log(userInputText)
+
+        if (userInputText === document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('span').textContent) {
+          valid = true
+        } else {
+          valid = false
+        }
+      })
+
+      if (valid === true) {
+        this.$refs.done.show()
+      }
     },
     mnemonicVerificationModalOpen () {
+      // Generate random numbers to choose which blocks to hide
+      function generateNumArr (limit) {
+        var ret = []
+        for (var i = 1; i < limit; i++) {
+          ret.push(i)
+        }
+
+        return ret
+      }
+
+      function shuffle (array) {
+        var i = array.length
+        var j = 0
+        var temp
+
+        while (i--) {
+          j = Math.floor(Math.random() * (i + 1))
+
+          // swap randomly chosen element with current element
+          temp = array[i]
+          array[i] = array[j]
+          array[j] = temp
+        }
+
+        return array
+      }
+
+      var ranNums = []
+      this.varificationValues = []
+
+      document.querySelectorAll('.phrases .word').forEach(function (el) {
+        el.classList.remove('verification')
+        el.querySelector('span').classList.remove('hidden')
+        el.querySelector('input').classList.add('hidden')
+      })
+
+      if (this.mnemonic24 === true) {
+        ranNums = shuffle(generateNumArr(25))
+      } else {
+        ranNums = shuffle(generateNumArr(13))
+      }
+
+      // Hide 5 random mnemonic blocks
+      for (var c = 0; c < 5; c++) {
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').classList.add('verification')
+
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').classList.add('hidden')
+        this.varificationValues.push({
+          word: document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').textContent,
+          no: ranNums[c]
+        })
+
+        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('input').classList.remove('hidden')
+      }
+
       this.$refs.verification.show()
     }
 
