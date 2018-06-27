@@ -7,6 +7,7 @@ import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
 import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
 import AccessWalletLayout from '@/layouts/AccessWalletLayout'
 import InterfaceLayout from '@/layouts/InterfaceLayout'
+import Something from '@/components/Body/Transactions/SendOffline/SendOffline'
 
 Vue.use(Router)
 
