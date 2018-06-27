@@ -21,32 +21,56 @@ export default new Router({
     {
       path: '/create-wallet',
       name: 'CreateWalletLayout',
-      component: CreateWalletLayout
+      component: CreateWalletLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     },
     {
       path: '/team',
       name: 'TeamLayout',
-      component: TeamLayout
+      component: TeamLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     },
     {
       path: '/privacy-policy',
       name: 'PrivacyPolicyLayout',
-      component: PrivacyPolicyLayout
+      component: PrivacyPolicyLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     },
     {
       path: '/terms-of-conditions',
       name: 'TermsOfConditionsLayout',
-      component: TermsOfConditionsLayout
+      component: TermsOfConditionsLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     },
     {
       path: '/access-my-wallet',
       name: 'AccessWalletLayout',
-      component: AccessWalletLayout
+      component: AccessWalletLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     },
     {
       path: '/interface',
       name: 'InterfaceLayout',
-      component: InterfaceLayout
+      component: InterfaceLayout,
+      beforeEnter: function (to, from, next) {
+        window.scrollTo(0, 0)
+        next()
+      }
     }
   ],
   scrollBehavior (to, from, savedPosition) {
