@@ -5,6 +5,7 @@ import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPa
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
 import ByMnemonic from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByMnemonic/ByMnemonic'
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
+import Eth from '@/components/Body/Eth/EthWalletComponent'
 import Team from '@/components/Body/Team/Team'
 import PrivacyPolicy from '@/components/Body/PrivacyPolicy/PrivacyPolicy'
 import TermsOfConditions from '@/components/Body/TermsOfConditions/TermsOfConditions'
@@ -52,6 +53,11 @@ export default new Router({
       path: '/luv',
       name: 'Luv',
       component: Luv
+    },
+    {
+      path: '/eth',
+      name: 'Eth',
+      component: Eth
     },
     {
       path: '/team',

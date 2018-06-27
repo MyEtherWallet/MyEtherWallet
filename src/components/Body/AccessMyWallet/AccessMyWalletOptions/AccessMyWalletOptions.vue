@@ -217,7 +217,8 @@
             <li>
               <img class="icon" src="~@/assets/images/icons/button-json.svg">
               <img class="icon-hover" src="~@/assets/images/icons/button-json-hover.svg">
-              <span>JSON File</span>
+              <input type="file" style="position: fixed; top: -100em" id="json-file">
+              <span v-on:click="openJsonFile()">JSON File</span>
             </li>
             <li>
               <img class="icon" src="~@/assets/images/icons/button-mnemonic.svg">
@@ -357,6 +358,11 @@ export default {
     },
     softwareModalOpen () {
       this.$refs.software.show()
+    },
+    openJsonFile: function(e){
+      console.log('JSON clicked')
+      e.preventDefault();
+      $("#json-file").trigger('click');
     }
   },
   mounted () {

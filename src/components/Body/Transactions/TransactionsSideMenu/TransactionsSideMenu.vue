@@ -10,13 +10,14 @@
                 Send ETH & Tokens
               </router-link>
             </li>
-            <li class="active">
+            <!--<li class="active">
               <router-link to="/send-offline">
                 Send Offline
               </router-link>
-            </li>
+            </li> -->
           </ul>
         </li>
+        <!--
         <li>
           <router-link to="/swap">
             <p>Swap</p>
@@ -37,7 +38,7 @@
             </li>
             <li>Deploy Contract</li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

@@ -53,7 +53,7 @@
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
                         <ul>
-                          <li v-for="token in tokens">{{token.symbol}}: {{parseFloat(token.balance)}}</li>
+                          <li v-for="token in tokens">{{token.symbol}}: {{token.balance}}</li>
                         </ul>
                     </div>
                   </transition>
@@ -77,6 +77,7 @@
                       <th>Type</th>
                       <th>Txid</th>
                       <th>Transfers</th>
+                      <th>Amount</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -90,7 +91,13 @@
                           </li>
                         </ul>
                       </td>
-
+                      <td>
+                        <div v-if="transaction.vin.length > 0">
+                          <ul>
+                            <li v-for="vin in transaction.vin">{{vin.value}}</li>
+                          </ul>
+                        </div>
+                      </td>
                     </tr>
 
                   </tbody>

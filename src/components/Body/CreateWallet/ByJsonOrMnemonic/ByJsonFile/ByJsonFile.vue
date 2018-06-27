@@ -83,13 +83,15 @@ export default {
         this.eth = this.web3.eth.accounts.create();
         sessionStorage.address = this.eth.address;
         sessionStorage.privateKey = this.eth.privateKey;
-        this.web3.eth.accounts.encrypt(this.eth.privateKey, ans);
+        sessionStorage.password = ans;
+        this.eth = this.web3.eth.accounts.encrypt(this.eth.privateKey, ans);
+        sessionStorage.ethEncrypt = JSON.stringify(this.eth);
         this.web3.eth.getBalance(this.eth.address).then(data => {
           console.log(data);
           sessionStorage.setItem('balance',data);
         });
         this.downloadKeystore();
-        window.location.href = ('/#/send-eth-and-tokens');
+        this.$router.push('/send-eth-and-tokens');
       }
       else{
       alert('Must create a password!');

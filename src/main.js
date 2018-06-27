@@ -31,7 +31,7 @@ import TransactionNetwork from '@/components/Body/Transactions/TransactionsCompo
 import TransactionTokens from '@/components/Body/Transactions/TransactionsComponents/TransactionTokens/TransactionTokens'
 
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
-
+import Eth from '@/components/Body/Eth/EthWalletComponent'
 //NEO
 window.Neon = require('@cityofzion/neon-js')
 window.wallet = window.Neon.wallet
@@ -72,6 +72,7 @@ Vue.component('transaction-tokens', TransactionTokens)
 Vue.component('v-select', vSelect)
 
 Vue.component('neo-wallet',Neo)
+Vue.component('eth-wallet',Eth)
 
 Vue.config.productionTip = false
 

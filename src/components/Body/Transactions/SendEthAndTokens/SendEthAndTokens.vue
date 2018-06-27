@@ -44,7 +44,7 @@
                     <p v-on:click="copyAddress" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
-                    <textarea id="address" name="name">{{this.eth.address}}</textarea>
+                    <textarea id="address" name="name" v-model="toAddress"></textarea>
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
                 </div> <!-- .to-address -->
@@ -123,7 +123,10 @@ export default {
     return {
       eth: {
         address: ''
-      }
+      },
+      amount: 0,
+      toAddress: '',
+
     }
   },
   methods: {

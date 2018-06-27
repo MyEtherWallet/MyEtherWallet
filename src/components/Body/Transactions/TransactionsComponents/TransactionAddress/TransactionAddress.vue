@@ -31,16 +31,30 @@
 export default {
   data () {
     return {
-      eth: {address: ''},
-      web3: {}
+      eth: {address: '', balance: 0},
+      web3: {},
+      balance: 0
     }
   },
   created(){
     var Web3 = require('web3');
     this.web3 = new Web3(new Web3.providers.HttpProvider('https://infuranet.infura.io'));
+    this.eth = this.web3.eth.accounts.decrypt(JSON.parse(sessionStorage.ethEncrypt), sessionStorage.password);
+    this.web3.eth.accounts.wallet.add(this.eth);
+    this.web3.eth.defaultAccount = this.eth.address;
+    this.getBalance();
+
   },
   mounted () {
-    this.eth.address = sessionStorage.address;
+  },
+  methods: {
+    getBalance: function(){
+      var that = this;
+      this.web3.eth.getBalance(this.eth.address).then(data => {
+        console.log(data);
+        that.balance = data;
+      });
+    }
   }
 }
 </script>

@@ -11,7 +11,7 @@
           <div class="flex-container">
             <h4 class="modal-title">Total Balance</h4>
             <div class="margin-left-auto total-balance-amount">
-              <span>7130.000000</span> ETH
+              <span>{{balance}}</span> ETH
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
         </div>
         <div class="block-content">
           <h2>Balance</h2>
-          <h4>7130.000000 ETH</h4>
+          <h4>{{balance}} ETH</h4>
           <div class="icon-container">
             <img src="~@/assets/images/icons/more.svg">
           </div>
@@ -54,12 +54,21 @@
 export default {
   data () {
     return {
+      balance: 0
     }
   },
   methods: {
     balanceModalOpen () {
       this.$refs.balance.show()
     }
+  },
+  created (){
+    var Web3 = require('web3');
+    this.web3 = new Web3(new Web3.providers.HttpProvider('https://infuranet.infura.io'));
+    this.eth = this.web3.eth.accounts.decrypt(JSON.parse(sessionStorage.ethEncrypt), sessionStorage.password);
+    this.web3.eth.accounts.wallet.add(this.eth);
+    this.web3.eth.defaultAccount = this.eth.address;
+    this.getBalance();
   },
   mounted () {
   }
