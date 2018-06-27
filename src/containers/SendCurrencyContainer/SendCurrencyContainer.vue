@@ -38,9 +38,23 @@
     </div> <!-- .send-form -->
 
     <div class="send-form">
-      <div class="title">
-        <h4>{{ $t("reused.speedTx") }}</h4>
-        <p>{{ $t("reused.txFee") }}: 0.000013 ETH ($1.234)</p>
+      <div class="title-container">
+        <div class="title">
+          <div class="title-helper">
+            <h4>{{ $t("reused.speedTx") }}</h4>
+            <div class="tooltip-box-1">
+              <b-btn id="exPopover1"></b-btn>
+              <b-popover target="exPopover1" triggers="hover focus" placement="top">
+                <template slot="title">MetaMask</template>
+                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
+                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
+                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+              </b-popover>
+            </div>
+          </div>
+          <p>{{ $t("reused.txFee") }}: 0.000013 ETH ($1.234)</p>
+        </div>
         <div class="buttons">
           <div class="small-circle-button-green-border">
             {{ $t('reused.slow') }}
@@ -62,7 +76,6 @@
         </div>
       </div>
     </div>
-
     <div class="send-form advanced">
       <div class="advanced-content">
         <h4>{{ $t('reused.advanced') }}</h4>

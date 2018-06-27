@@ -5,7 +5,7 @@
   grid-area: main;
   overflow: hidden;
 
-  >div {
+  > div {
     background-color: $background-color-white;
   }
 
@@ -36,8 +36,13 @@
       .title {
         padding: 0 8px;
 
-        h4 {
+        .title-helper {
+          display: flex;
           margin-bottom: 2px;
+
+          h4 {
+            margin-right: 5px;
+          }
         }
       }
 
@@ -189,7 +194,7 @@
         display: flex;
         margin-left: auto;
 
-        >span {
+        > span {
           margin-right: 15px;
         }
       }
