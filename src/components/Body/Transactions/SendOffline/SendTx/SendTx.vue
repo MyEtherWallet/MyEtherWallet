@@ -8,11 +8,9 @@
         <h2 class="title">Succeed</h2>
       </div>
       <div class="button-container">
-        <router-link to="/send-offline">
-          <b-btn class="mid-round-button-green-filled close-button" @click="showModal = false">
-            Ok
-          </b-btn>
-        </router-link>
+        <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+          Ok
+        </b-btn>
       </div>
     </b-modal>
     <!-- Modal =================================== -->
@@ -59,6 +57,13 @@ export default {
     },
     successModalOpen () {
       this.$refs.success.show()
+    },
+    hideModal () {
+      this.$refs.success.hide()
+      this.processChange('process1')
+    },
+    processChange: function (process) {
+      this.$store.state.state.pageStates.sendOffline.processLocation = process
     }
   },
   mounted () {
