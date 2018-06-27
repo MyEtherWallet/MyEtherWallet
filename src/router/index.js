@@ -21,56 +21,32 @@ export default new Router({
     {
       path: '/create-wallet',
       name: 'CreateWalletLayout',
-      component: CreateWalletLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: CreateWalletLayout
     },
     {
       path: '/team',
       name: 'TeamLayout',
-      component: TeamLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: TeamLayout
     },
     {
       path: '/privacy-policy',
       name: 'PrivacyPolicyLayout',
-      component: PrivacyPolicyLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: PrivacyPolicyLayout
     },
     {
       path: '/terms-of-conditions',
       name: 'TermsOfConditionsLayout',
-      component: TermsOfConditionsLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: TermsOfConditionsLayout
     },
     {
       path: '/access-my-wallet',
       name: 'AccessWalletLayout',
-      component: AccessWalletLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: AccessWalletLayout
     },
     {
       path: '/interface',
       name: 'InterfaceLayout',
-      component: InterfaceLayout,
-      beforeEnter: function (to, from, next) {
-        window.scrollTo(0, 0)
-        next()
-      }
+      component: InterfaceLayout
     }
   ],
   scrollBehavior (to, from, savedPosition) {
@@ -78,6 +54,8 @@ export default new Router({
       return {
         selector: to.hash
       }
+    } else {
+      window.scrollTo(0, 0)
     }
   }
 })
