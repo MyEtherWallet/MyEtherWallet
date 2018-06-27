@@ -4,38 +4,30 @@
       <h2>{{ $t("reused.offline") }}</h2>
     </div>
 
-    <div class="online-status">
-      <div class="">
-        <p class="title">{{ $t("interface.online") }}</p>
-        <p class="description">{{ $t("interface.generateInfo") }}</p>
-      </div>
-      <div class="">
-        <p class="title">{{ $t("interface.offline") }}</p>
-        <p class="description">{{ $t("interface.generateTx") }}</p>
-      </div>
-      <div class="">
-        <p class="title">{{ $t("interface.online") }}</p>
-        <p class="description">{{ $t("interface.sendPubTx") }}</p>
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('reused.speedTx' )}}</h4>
+    <div class="progress-status prevent-user-select">
+      <div class="process1" v-on:click="processChange('process1')">
+        <div class="prevent-pointer-events">
+          <p class="title">{{ $t("interface.online") }}</p>
+          <p class="description prevent-pointer-events">{{ $t("interface.generateInfo") }}</p>
         </div>
       </div>
+      <div class="process2" v-on:click="processChange('process2')">
+        <div class="prevent-pointer-events">
+          <p class="title prevent-pointer-events">{{ $t("interface.offline") }}</p>
+          <p class="description prevent-pointer-events">{{ $t("interface.generateTx") }}</p>
+        </div>
+      </div>
+      <div class="process3" v-on:click="processChange('process3')">
+        <div class="prevent-pointer-events">
+          <p class="title prevent-pointer-events">{{ $t("interface.online") }}</p>
+          <p class="description prevent-pointer-events">{{ $t("interface.sendPubTx") }}</p>
+        </div>
+      </div>
+    </div>
 
-      <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Please Enter the Address">
-      </div>
-    </div>
-    <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
-        {{ $t('interface.generate') }}
-      </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
-    </div>
+    <generate-info v-if="currentProcess === 'process1'"></generate-info>
+    <generate-tx v-if="currentProcess === 'process2'"></generate-tx>
+    <send-tx v-if="currentProcess === 'process3'"></send-tx>
 
   </div>
 </template>
@@ -47,8 +39,26 @@ export default {
     }
   },
   methods: {
-    copyAddress: function () {
-      alert('This doesn\'t work for now.')
+    processChange: function (process) {
+      this.$store.state.state.pageStates.sendOffline.processLocation = process
+    }
+  },
+  mounted () {
+    var activeProcess = this.$store.state.state.pageStates.sendOffline.processLocation
+    document.querySelector('.' + activeProcess).classList.add('active')
+  },
+  computed: {
+    currentProcess: function () {
+      return this.$store.state.state.pageStates.sendOffline.processLocation
+    }
+  },
+  watch: {
+    currentProcess: function (value) {
+      document.querySelectorAll('.progress-status > div').forEach(function (el) {
+        el.classList.remove('active')
+      })
+
+      document.querySelector('.' + this.currentProcess).classList.add('active')
     }
   }
 }

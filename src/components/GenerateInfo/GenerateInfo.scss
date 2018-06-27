@@ -10,18 +10,20 @@
       margin-bottom: 10px;
 
       .title-and-copy {
-        padding: 0 8px;
         display: flex;
+        padding: 0 8px;
         width: 100%;
+
         div {
           h4 {
             margin-bottom: 2px;
           }
         }
-        
+
         .form-controller {
-          margin-left: auto;
           display: flex;
+          margin-left: auto;
+
           p {
             margin-left: 25px;
           }
@@ -35,10 +37,10 @@
           display: flex;
           margin-bottom: 2px;
 
-          h4 {                  
+          h4 {
             margin-right: 10px;
           }
-        }              
+        }
       }
 
       .buttons {
@@ -187,16 +189,15 @@
         display: flex;
         margin-left: auto;
 
-        >span {
+        > span {
           margin-right: 15px;
         }
       }
     }
   } // .advanced
 
-
   .submit-button-container {
-    padding: 60px 0 60px;
+    padding: 60px 0;
     text-align: center;
 
     .submit-button {

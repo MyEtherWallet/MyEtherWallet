@@ -33,18 +33,20 @@
       margin-bottom: 10px;
 
       .title {
-        padding: 0 8px;
         display: flex;
+        padding: 0 8px;
         width: 100%;
+
         div {
           h4 {
             margin-bottom: 2px;
           }
         }
-        
+
         .form-controller {
-          margin-left: auto;
           display: flex;
+          margin-left: auto;
+
           p {
             margin-left: 25px;
           }
@@ -58,14 +60,14 @@
       textarea {
         background-color: $background-color-1;
         border: 0;
-        padding: 13px 15px;
-        width: 100%;
-        resize: none;
         min-height: 200px;
+        padding: 13px 15px;
+        resize: none;
+        width: 100%;
       }
     }
   } // .send-form
-  
+
   .submit-button-container {
     padding: 60px 0 200px;
     text-align: center;

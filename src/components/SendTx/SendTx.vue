@@ -1,20 +1,6 @@
 <template>
   <div class="generate-info">
-
-    <!-- Modal =================================== -->
-    <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal">
-      <div class="d-block text-center">
-        <i class="check-icon fa fa-check" aria-hidden="true"></i>
-        <h2 class="title">Succeed</h2>
-      </div>
-      <div class="button-container">
-        <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
-          Ok
-        </b-btn>
-      </div>
-    </b-modal>
-    <!-- Modal =================================== -->
-
+    <success-modal message="'Success'" :linkMessage="'Ok'"></success-modal>
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
@@ -35,7 +21,7 @@
         <div class="submit-button large-round-button-green-filled clickable" v-on:click="successModalOpen">
           Send Transaction
         </div>
-        <p>Have any issues? <a href="/">Learn more</a></p>
+        <interface-bottom-text :link="'/'" :linkText="'Learn more'" :question="'Have any issues?'"></interface-bottom-text>
       </div>
     </div>
   </div>

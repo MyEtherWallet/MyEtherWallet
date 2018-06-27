@@ -6,11 +6,9 @@
       <p>{{ message }}</p>
     </div>
     <div class="button-container">
-      <router-link :to="linkTo">
-        <b-btn class="mid-round-button-green-filled close-button" @click="showModal = false">
-          {{ linkMessage }}
-        </b-btn>
-      </router-link>
+      <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+        {{ linkMessage }}
+      </b-btn>
     </div>
   </b-modal>
 </template>
@@ -20,6 +18,11 @@
 </style>
 <script>
 export default {
-  props: ['message', 'linkTo', 'linkMessage']
+  props: ['message', 'linkMessage'],
+  methods: {
+    hideModal: function () {
+      this.$refs.success.hide()
+    }
+  }
 }
 </script>
