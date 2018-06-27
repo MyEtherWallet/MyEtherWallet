@@ -72,9 +72,11 @@
 
             <div class="submit-button-container">
               <div class="buttons">
-                <div class="submit-button large-round-button-green-border clickable">
-                  Back
-                </div>
+                <router-link to="/interact-with-contract">
+                  <div class="submit-button large-round-button-green-border clickable">
+                    Back
+                  </div>
+                </router-link>
                 <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
                   Read
                 </div>
