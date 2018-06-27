@@ -23,19 +23,19 @@
             </div>
 
             <div class="progress-status prevent-user-select">
-              <div class="gen-info" v-on:click="processChange($event, 'gen-info')">
+              <div class="process1" v-on:click="processChange('process1')">
                 <div class="prevent-pointer-events">
                   <p class="title">Online</p>
                   <p class="description prevent-pointer-events">Generate Information</p>
                 </div>
               </div>
-              <div class="gen-tx" v-on:click="processChange($event, 'gen-tx')">
+              <div class="process2" v-on:click="processChange('process2')">
                 <div class="prevent-pointer-events">
                   <p class="title prevent-pointer-events">Offline</p>
                   <p class="description prevent-pointer-events">Generate Transaction</p>
                 </div>
               </div>
-              <div class="send-tx" v-on:click="processChange($event, 'send-tx')">
+              <div class="process3" v-on:click="processChange('process3')">
                 <div class="prevent-pointer-events">
                   <p class="title prevent-pointer-events">Online</p>
                   <p class="description prevent-pointer-events">Send/Publish Transaction</p>
@@ -43,9 +43,9 @@
               </div>
             </div>
 
-            <send-offline-generate-info v-if="currentProcess === 'gen-info'"></send-offline-generate-info>
-            <send-offline-generate-tx v-if="currentProcess === 'gen-tx'"></send-offline-generate-tx>
-            <send-offline-send-tx v-if="currentProcess === 'send-tx'"></send-offline-send-tx>
+            <send-offline-generate-info v-if="currentProcess === 'process1'"></send-offline-generate-info>
+            <send-offline-generate-tx v-if="currentProcess === 'process2'"></send-offline-generate-tx>
+            <send-offline-send-tx v-if="currentProcess === 'process3'"></send-offline-send-tx>
 
           </div>
           <div class="tokens">
@@ -62,23 +62,30 @@
 export default {
   data () {
     return {
-      currentProcess: this.$store.state.state.pageStates.sendOffline.processLocation
     }
   },
   methods: {
-    processChange: function (e, process) {
-      document.querySelectorAll('.progress-status > div').forEach(function (el) {
-        el.classList.remove('active')
-      })
-
-      e.target.classList.add('active')
-      this.currentProcess = process
+    processChange: function (process) {
       this.$store.state.state.pageStates.sendOffline.processLocation = process
     }
   },
   mounted () {
     var activeProcess = this.$store.state.state.pageStates.sendOffline.processLocation
     document.querySelector('.' + activeProcess).classList.add('active')
+  },
+  computed: {
+    currentProcess: function () {
+      return this.$store.state.state.pageStates.sendOffline.processLocation
+    }
+  },
+  watch: {
+    currentProcess: function (value) {
+      document.querySelectorAll('.progress-status > div').forEach(function (el) {
+        el.classList.remove('active')
+      })
+
+      document.querySelector('.' + this.currentProcess).classList.add('active')
+    }
   }
 }
 </script>

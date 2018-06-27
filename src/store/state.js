@@ -31,7 +31,7 @@ const state = {
   },
   pageStates: {
     sendOffline: {
-      processLocation: 'gen-info'
+      processLocation: 'process1'
     }
   }
 }
