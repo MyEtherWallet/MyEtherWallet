@@ -1,10 +1,10 @@
-@import 'GlobalVariables';
+@import "GlobalVariables";
 
 .bootstrap-modal {
   .modal-icon {
     display: flex;
     margin-bottom: 35px;
-    margin-top: 20px;
+    margin-top: 10px;
 
     img {
       margin: 0 auto;
@@ -12,11 +12,7 @@
   }
 
   .content-container {
-    margin-bottom: 35px;
-
-    .modal-large-text {
-      font-weight: 400;
-    }
+    margin-bottom: 20px;
   }
 
   .accept-terms {
@@ -31,11 +27,34 @@
   .button-container {
     margin-bottom: 25px;
 
-    .close-button {
+    .connection-button {
+      cursor: initial;
+      text-align: center;
       width: 100%;
+    }
+
+    .waiting-for-connection {
+      background-color: $button--background-color-3;
     }
   }
 } // .bootstrap-modal
+
+.appstore-button-container {
+  background-color: $background-color-6;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  padding: 30px;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+
+  img {
+    margin-bottom: 13px;
+    width: 130px;
+  }
+}
 
 .support {
   display: flex;

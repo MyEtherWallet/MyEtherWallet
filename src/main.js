@@ -40,6 +40,8 @@ import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
 import DappButtons from '@/components/DappButtons'
 import SuccessModal from '@/components/SuccessModal'
 import FaqBlock from '@/components/FaqBlock'
+import GenerateInfo from '@/components/GenerateInfo'
+import GenerateTx from '@/components/GenerateTx'
 import HardwareModal from '@/components/HardwareModal'
 import InterfaceAddress from '@/components/InterfaceAddress'
 import InterfaceBalance from '@/components/InterfaceBalance'
@@ -58,6 +60,7 @@ import PasswordModal from '@/components/PasswordModal'
 import PageTitle from '@/components/PageTitle'
 import PriceBar from '@/components/PriceBar'
 import Promo from '@/components/Promo'
+import SendTx from '@/components/SendTx'
 import Social from '@/components/Social'
 import SoftwareModal from '@/components/SoftwareModal'
 import TopBanner from '@/components/TopBanner'
@@ -93,6 +96,8 @@ Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('dapp-buttons', DappButtons)
 Vue.component('success-modal', SuccessModal)
 Vue.component('faq-block', FaqBlock)
+Vue.component('generate-info', GenerateInfo)
+Vue.component('generate-tx', GenerateTx)
 Vue.component('hardware-modal', HardwareModal)
 Vue.component('interface-address', InterfaceAddress)
 Vue.component('interface-balance-modal', InterfaceBalanceModal)
@@ -110,6 +115,7 @@ Vue.component('password-modal', PasswordModal)
 Vue.component('by-json-page-title', PageTitle)
 Vue.component('price-bar', PriceBar)
 Vue.component('promo', Promo)
+Vue.component('send-tx', SendTx)
 Vue.component('social', Social)
 Vue.component('software-modal', SoftwareModal)
 Vue.component('interface-side-menu', InterfaceSideMenu)
