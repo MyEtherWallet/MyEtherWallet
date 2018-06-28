@@ -140,7 +140,8 @@ Vue.use(VueI18n)
 const i18n = new VueI18n({
   locale: 'gb',
   fallbackLocale: 'gb',
-  messages: languages
+  messages: languages,
+  silentTranslationWarn: true
 })
 
 Vue.filter('capitalize', function (value) {
