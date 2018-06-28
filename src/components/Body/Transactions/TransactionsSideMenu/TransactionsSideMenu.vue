@@ -3,7 +3,11 @@
     <div class="side-menu">
       <ul>
         <li>
-          <p class="active">Send <i class="fa fa-angle-up" aria-hidden="true"></i></p>
+          <div class="menu-group-title">
+            <img src="~@/assets/images/sidemenu/send-2.svg">
+            <p class="active">Send</p>
+            <i class="fa fa-angle-up" aria-hidden="true"></i>
+          </div>
           <ul>
             <li>
               <router-link to="/send-eth-and-tokens">
@@ -19,23 +23,37 @@
         </li>
         <li>
           <router-link to="/swap">
-            <p>Swap</p>
+            <div class="menu-group-title">
+              <img src="~@/assets/images/sidemenu/swap-2.svg">
+              <p>Swap</p>
+            </div>
           </router-link>
         </li>
         <li>
           <router-link to="/dapps">
-            <p>Dapps</p>
+            <div class="menu-group-title">
+              <img src="~@/assets/images/sidemenu/dapps-2.svg">
+              <p>Dapps</p>
+            </div>
           </router-link>
         </li>
         <li>
-          <p>Contract <i class="fa fa-angle-down" aria-hidden="true"></i></p>
+          <div class="menu-group-title">
+            <img src="~@/assets/images/sidemenu/contract-2.svg">
+            <p>Contract</p>
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </div>
           <ul>
             <li>
               <router-link to="/interact-with-contract">
                 Interact With Contract
               </router-link>
             </li>
-            <li>Deploy Contract</li>
+            <li>
+              <router-link to="/interact-with-contract">
+                Deploy Contract
+              </router-link>
+            </li>
           </ul>
         </li>
       </ul>
