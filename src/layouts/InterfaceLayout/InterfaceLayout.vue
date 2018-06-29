@@ -22,7 +22,7 @@
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
-          <div class="tokens" v-if="$store.getters.all.online">
+          <div class="tokens" v-if="$store.state.online">
             <interface-tokens></interface-tokens>
           </div>
         </div>
@@ -101,8 +101,8 @@ export default {
       self.currentTab = window.localStorage.getItem('curPage')
     }
 
-    if (self.$store.getters.all.wallet !== null && self.$store.getters.all.wallet !== undefined) {
-      self.address = '0x' + self.$store.getters.all.wallet.getAddress().toString('hex')
+    if (self.$store.state.wallet !== null && self.$store.state.wallet !== undefined) {
+      self.address = '0x' + self.$store.state.wallet.getAddress().toString('hex')
       self.getBalance()
     }
 

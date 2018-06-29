@@ -33,6 +33,7 @@ import SwapContainer from '@/containers/SwapContainer'
 
 // Regular Components
 import AccessWalletButton from '@/components/AccessWalletButton'
+import Blockie from '@/components/Blockie'
 import ByJsonBlock from '@/components/ByJsonBlock'
 import CreateWalletModal from '@/components/CreateWalletModal'
 import CreateWalletInput from '@/components/CreateWalletInput'
@@ -89,6 +90,7 @@ Vue.component('swap-container', SwapContainer)
 
 // Regular Components
 Vue.component('access-wallet-button', AccessWalletButton)
+Vue.component('blockie', Blockie)
 Vue.component('by-json-block', ByJsonBlock)
 Vue.component('create-wallet-input', CreateWalletInput)
 Vue.component('create-wallet-input-footer', CreateWalletInputFooter)

@@ -40,16 +40,16 @@ export default {
   },
   methods: {
     processChange: function (process) {
-      this.$store.state.state.pageStates.sendOffline.processLocation = process
+      this.$store.state.pageStates.sendOffline.processLocation = process
     }
   },
   mounted () {
-    var activeProcess = this.$store.state.state.pageStates.sendOffline.processLocation
+    var activeProcess = this.$store.state.pageStates.sendOffline.processLocation
     document.querySelector('.' + activeProcess).classList.add('active')
   },
   computed: {
     currentProcess: function () {
-      return this.$store.state.state.pageStates.sendOffline.processLocation
+      return this.$store.state.pageStates.sendOffline.processLocation
     }
   },
   watch: {

@@ -31,6 +31,13 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
+                <div>
+                  <b-nav-item-dropdown :text='`<div class="address-blockie" style="background-image: url(${blockies}); width: 35px; height: auto; padding-bottom: 35px; background-size: cover; background-repeat: no-repeat; border-radius: 50%; box-shadow: inset rgba(255, 255, 255, 0.5) 0 2px 2px, inset rgba(0, 0, 0, 0.6) 0 -1px 8px;"></div>`' extra-toggle-classes="nav-link-custom" right v-show="wallet !== null" no-caret>
+                    <b-dropdown-item @click="logout">
+                      Log out
+                    </b-dropdown-item>
+                  </b-nav-item-dropdown>
+                </div>
               </b-nav>
 
             </div>
@@ -51,7 +58,8 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
+const identicon = require('ethereum-blockies')
 export default {
   data () {
     return {
@@ -81,7 +89,8 @@ export default {
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'gb'
+      currentFlag: 'gb',
+      blockies: ''
     }
   },
   methods: {
@@ -96,11 +105,16 @@ export default {
     },
     scrollTop: function () {
       window.scrollTo(0, 0)
+    },
+    logout: function () {
+      const self = this
+      self.$store.dispatch('clearWallet')
+      self.$router.push('/')
     }
   },
   mounted: function () {
     const self = this
-    if (self.$store.getters.all.online) {
+    if (self.$store.state.online) {
       self.online = true
     } else {
       self.online = false
@@ -112,6 +126,11 @@ export default {
     } else {
       localStorage.setItem('locale', self.$root._i18n.locale)
       self.currentFlag = self.$root._i18n.locale
+    }
+
+    if (self.wallet !== null) {
+      let address = `0x${self.wallet.getAddress().toString('hex')}`
+      self.blockies = `${identicon.create({seed: address.toLowerCase(), size: 8, scale: 16}).toDataURL()}`
     }
 
     self.currentName = self.supportedLanguages.filter(item => item.flag === self.currentFlag)[0].name
@@ -134,7 +153,22 @@ export default {
     online: function (newVal) {
       const self = this
       self.online = newVal
+    },
+    wallet: function (newVal) {
+      const self = this
+      if (newVal !== null) {
+        let address = `0x${newVal.getAddress().toString('hex').toLowerCase()}`
+        self.blockies = `${identicon.create({seed: address.toLowerCase(), size: 8, scale: 16}).toDataURL()}`
+      }
+    },
+    blockies: function (newVal) {
+      self.blockies = newVal
     }
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   }
 }
 </script>

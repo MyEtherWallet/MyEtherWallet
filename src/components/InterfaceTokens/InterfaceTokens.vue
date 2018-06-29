@@ -51,7 +51,7 @@ export default {
     },
     fetchTokens: async function () {
       const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
-      const userAddress = this.$store.getters.all.wallet.getAddress().toString('hex')
+      const userAddress = this.$store.state.wallet.getAddress().toString('hex')
       const data = `0x80f4ae5c000000000000000000000000${userAddress}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
       const node = 'https://api.myetherwallet.com/eth'
 

@@ -19,7 +19,7 @@ export default {
   },
   mounted: function () {
     const self = this
-    if (self.$store.getters.all.online) {
+    if (self.$store.state.online) {
       self.online = true
     } else {
       self.online = false
