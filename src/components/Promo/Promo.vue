@@ -15,7 +15,7 @@
               </router-link>
             </div>
             <div class="button-block">
-              <router-link :to="$store.getters.all.wallet === null || $store.getters.all.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
+              <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
                 <span class="large-round-button-white-filled green-text-color">
                   {{ $t("reused.accessMyWallet") }}
                 </span>

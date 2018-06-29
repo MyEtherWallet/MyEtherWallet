@@ -34,7 +34,7 @@
               </div>
             </div>
           </router-link>
-          <router-link :to="$store.getters.all.wallet === null || $store.getters.all.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
+          <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
