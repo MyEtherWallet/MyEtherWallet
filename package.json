@@ -15,6 +15,7 @@
     "deploy": "gh-pages -d dist -b gh-pages"
   },
   "dependencies": {
+    "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
     "ethereumjs-wallet": "^0.6.0",
     "ethjs-unit": "^0.1.6",
