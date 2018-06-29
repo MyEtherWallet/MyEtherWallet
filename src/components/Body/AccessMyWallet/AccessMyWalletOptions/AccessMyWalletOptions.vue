@@ -262,27 +262,14 @@
         </div>
         <div class="buttons-container">
 
-          <div class="button-block" v-on:click="mewConnectModalOpen">
-            <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-mewconnect.svg">
-            </div>
-            <h3>MEW Connect</h3>
-            <p>Use MEW Connect to access my wallet</p>
-            <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
-            </div>
-          </div>
+
 
           <div class="button-block" v-on:click="hardwareModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-hardware.svg">
+              <img class="icon" src="~@/assets/images/icons/eth.svg">
             </div>
-            <h3>Hardware</h3>
-            <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
+            <h3>ETH</h3>
+            <p>Login To Your ETH Wallet</p>
             <div class="tooltip-box">
               <span>
                 <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
@@ -294,10 +281,10 @@
 
           <div class="button-block" v-on:click="metamaskModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+              <img class="icon" src="~@/assets/images/icons/neo.png" width="25" height="25">
             </div>
-            <h3>MetaMask</h3>
-            <p>Use extention to access my wallet</p>
+            <h3>NEO</h3>
+            <p>Login To Your NEO Wallet</p>
             <div class="tooltip-box">
               <span>
                 <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
@@ -309,11 +296,10 @@
 
           <div class="button-block" v-on:click="softwareModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-software.svg">
+              <img class="icon" src="~@/assets/images/home/'J'-heart-logo.png" width="25" height="25">
             </div>
-            <h3>Software</h3>
-            <p>JSON file, Private key, Mnemonic phrase</p>
-            <p class="small-note">Not recommended</p>
+            <h3>LUV</h3>
+            <p>Login To Your LUV Wallet</p>
             <div class="tooltip-box">
               <span>
                 <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">

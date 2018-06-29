@@ -169,7 +169,7 @@
             var Web3 = require("web3")
             var that = this;
             if (ans != ''){
-              this.web3 = new Web3(new Web3.providers.HttpProvider(this.testNet));
+              this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
               this.eth = this.web3.eth.accounts.create();
               sessionStorage.address = this.eth.address;
               sessionStorage.privateKey = this.eth.privateKey;

@@ -9,7 +9,8 @@
                     <transition name="fade">
                     <div v-if="!loggedin" class="card-body">
                       <div class="form-group">
-                        <input class="form-control" v-model="privateKey" placeholder="Private Key"/>
+                        <label for="json-file">JSON File</label>
+                        <input  type="file" id="json-file"/>
                         <input class="form-control" placeholder="Phrase" v-model="phrase" type="password">
                       </div>
                         <div class="form-group">
@@ -203,24 +204,34 @@
             })
           },
           createAccount:function(){
-
-            this.account =new wallet.Account(this.privateKey).decrypt(this.phrase);
-            if(this.testnet){
-              var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
-
-            }
-            else{
-              var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
-
-            }
+            var file = document.getElementById('json-file').files[0];
+            var reader = new FileReader();
             var that = this;
-            that.getBalance();
-            that.getTransactions();
+            reader.onload = (event) => {
+              var keyStore = JSON.parse(event.target.result);
+              console.log(keyStore);
+              this.account =new wallet.Account(keyStore.encryptedPrivateKey).decrypt(this.phrase);
+              if(this.testnet){
+                var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
+
+              }
+              else{
+                var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
+
+              }
+              that.getBalance();
+              that.getTransactions();
+
+            };
+
+            reader.readAsText(file);
+
 
 
           },
           generateAccount:function(){
-            var ans = prompt('Create Password!')
+            var ans = prompt('Create Phrase!')
+            var that = this;
             if (ans != ''){
             this.account =new wallet.Account(this.Neon.create.privateKey()).encrypt(ans);
             console.log(this.account.encrypted)
