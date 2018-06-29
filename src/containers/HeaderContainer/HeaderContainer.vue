@@ -42,12 +42,6 @@
               </div>
             </div>
 
-            <router-link to="/create-wallet" class="nounderline">
-              <div class="get-free-wallet">
-                {{ $t("reused.getAFreeWallet") }}
-              </div>
-            </router-link>
-
           </div>
         </div>
       </div>
