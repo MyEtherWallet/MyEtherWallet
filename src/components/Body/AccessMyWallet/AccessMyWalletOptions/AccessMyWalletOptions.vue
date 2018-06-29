@@ -270,13 +270,7 @@
             </div>
             <h3>ETH</h3>
             <p>Login To Your ETH Wallet</p>
-            <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
-            </div>
+
           </div>
 
           <div class="button-block" v-on:click="metamaskModalOpen">
@@ -285,13 +279,7 @@
             </div>
             <h3>NEO</h3>
             <p>Login To Your NEO Wallet</p>
-            <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
-            </div>
+
           </div>
 
           <div class="button-block" v-on:click="softwareModalOpen">
@@ -300,13 +288,7 @@
             </div>
             <h3>LUV</h3>
             <p>Login To Your LUV Wallet</p>
-            <div class="tooltip-box">
-              <span>
-                <b-btn v-b-tooltip.hover title="Unfortunately, we encounter these phishing scams/attacks on a daily basis.">
-                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                </b-btn>
-              </span>
-            </div>
+          
           </div>
 
         </div>
