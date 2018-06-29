@@ -32,6 +32,16 @@ const state = {
   pageStates: {
     sendOffline: {
       processLocation: 'process1'
+    },
+    txSideMenu: {
+      send: false,
+      sendEth: false,
+      sendOffline: false,
+      swap: false,
+      dapps: false,
+      contract: false,
+      interactContract: false,
+      deployContract: false
     }
   }
 }

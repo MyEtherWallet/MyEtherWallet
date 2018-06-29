@@ -2,18 +2,26 @@
 
 .side-menu {
   padding: 40px 20px;
-
-  .active {
-    color: $text-black;
-  }
+  user-select: none;
 
   ul {
     >li {
       margin-bottom: 40px;
+      cursor: pointer;
+
+     .active {
+        color: $text-black;
+      }
 
       .menu-group-title {
         display: flex;
         align-items: center;
+
+        &.active {
+          p {
+            color: $text-color-6;
+          }
+        }
 
         img {
           margin-right: 10px;
@@ -38,6 +46,14 @@
           font-size: 14px;
           font-weight: 400;
           margin: 10px 0 0 37px;
+
+          .active a {
+            color: $text-color-6;
+          }
+
+          a {
+            color: $text-side-menu-inactive-color;
+          }
         }
       }
     }
