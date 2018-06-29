@@ -16,8 +16,8 @@
             <img src="~@/assets/images/home/'J'-heart-logo.png">
           </div>
         </div><!-- .banner-image -->
-        <div class="grid-col-2 promo-cards">
-          <router-link to="/send-eth-and-tokens" class="nounderline">
+        <div class="grid-col-1 promo-cards">
+      <!--    <router-link to="/send-eth-and-tokens" class="nounderline">
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
@@ -36,7 +36,7 @@
                 </div>
               </div>
             </div>
-          </router-link>
+          </router-link> -->
           <router-link to="/access-my-wallet" class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">

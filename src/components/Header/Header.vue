@@ -31,7 +31,7 @@
               </div>
             </div>
 
-            <router-link to="/" class="nounderline">
+            <router-link to="/access-my-wallet" class="nounderline">
               <div class="get-free-wallet">
                 Get a Free Wallet
               </div>

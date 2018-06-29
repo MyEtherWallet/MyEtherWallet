@@ -337,13 +337,13 @@ export default {
       this.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
-      this.$refs.hardware.show()
+      this.$router.push('/eth')
     },
     metamaskModalOpen () {
-      this.$refs.metamask.show()
+      this.$router.push('/neo')
     },
     softwareModalOpen () {
-      this.$refs.software.show()
+      this.$router.push('/luv')
     },
     openJsonFile: function(e){
       console.log('JSON clicked')
