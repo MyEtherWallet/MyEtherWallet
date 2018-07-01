@@ -49,7 +49,7 @@
 
                         Total Balance USD: ${{(gasPrice * parseFloat(balance.assets.GAS.balance) + neoPrice * parseInt(balance.assets.NEO.balance)).toFixed(2) }}
                         <input placeholder="NEP-5 Script Hash" class="form-control" v-model="scriptHash">
-                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken()">Add Token</button>
+                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken(scriptHash)">Add Token</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="claimGas">Claim Gas</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
@@ -155,11 +155,13 @@
     export default {
         mounted() {
             console.log('Component mounted.')
+
         },
         data(){
           return {
             Neon: {},
             account: null,
+            db: {},
             wallet: null,
             balance: null,
             privateKey: '',
@@ -172,11 +174,15 @@
             gasPrice: 0.00,
             neoPrice: 0.00,
             testnet: false,
-            transactions:{}
+            transactions:{},
+            server: {}
           }
         },
         created(){
+          this.db = require('db.js');
+
           this.Neon = Neon.default;
+          this.checkLogin()
           if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
               navigator.serviceWorker.register('/background.js').then(function(registration) {
@@ -190,6 +196,19 @@
 
         },
         methods:{
+          checkLogin: function(){
+            if(sessionStorage.encryptedPrivateKey != null && sessionStorage.phrase != null){
+              this.account = new wallet.Account(sessionStorage.encryptedPrivateKey).decrypt(sessionStorage.phrase);
+              this.getBalance();
+              this.loggedin = true;
+              console.log(this.account)
+              return true
+            }
+            else{
+              return false
+            }
+
+          },
           getTransactions: function(){
             var that = this;
             var hash = this.Neon.get.scriptHashFromPublicKey(this.account.publicKey);
@@ -210,7 +229,10 @@
             reader.onload = (event) => {
               var keyStore = JSON.parse(event.target.result);
               console.log(keyStore);
-              this.account =new wallet.Account(keyStore.encryptedPrivateKey).decrypt(this.phrase);
+              this.account = new wallet.Account(keyStore.encryptedPrivateKey).decrypt(this.phrase);
+              sessionStorage.encryptedPrivateKey = keyStore.encryptedPrivateKey;
+              sessionStorage.phrase = that.phrase;
+
               if(this.testnet){
                 var balance = new wallet.Balance({net: 'TestNet', address: this.account.address})
 
@@ -221,6 +243,7 @@
               }
               that.getBalance();
               that.getTransactions();
+
 
             };
 
@@ -233,6 +256,7 @@
             var ans = prompt('Create Phrase!')
             var that = this;
             if (ans != ''){
+            sessionStorage.phrase = ans;
             this.account =new wallet.Account(this.Neon.create.privateKey()).encrypt(ans);
             console.log(this.account.encrypted)
             if(this.testnet){
@@ -243,10 +267,13 @@
               var balance = new wallet.Balance({net: 'MainNet', address: this.account.address})
 
             }
+
             this.downloadKeystore();
             var that = this;
             that.getBalance();
             that.getTransactions();
+
+
           }
           else{
             alert('Must create password for wallet!')
@@ -262,18 +289,23 @@
               'address': this.account.address,
               'encryptedPrivateKey': this.account.encrypted
             }
+            sessionStorage.encryptedPrivateKey = accountDetails.encryptedPrivateKey;
+
             var FileSaver = require('file-saver')
             var blob = new Blob([JSON.stringify(accountDetails)], {type: 'text/plain;charset=utf-8'})
             FileSaver.saveAs(blob, this.account.address+'.json')
           },
-          addToken:function(){
+          addTokenToDb: function(){
+
+          },
+          addToken:function(scriptHash){
             var that = this;
-            var getName = { scriptHash:this.scriptHash, operation: 'name', args: [] }
-            var getDecimals = { scriptHash:this.scriptHash, operation: 'decimals', args: [] }
-            var getSymbol = { scriptHash:this.scriptHash, operation: 'symbol', args: [] }
-            var getTotalSupply = { scriptHash:this.scriptHash, operation: 'totalSupply', args: [] }
+            var getName = { scriptHash:scriptHash, operation: 'name', args: [] }
+            var getDecimals = { scriptHash:scriptHash, operation: 'decimals', args: [] }
+            var getSymbol = { scriptHash:scriptHash, operation: 'symbol', args: [] }
+            var getTotalSupply = { scriptHash:scriptHash, operation: 'totalSupply', args: [] }
             var getBalance = {
-              scriptHash: this.scriptHash,
+              scriptHash: scriptHash,
               operation: 'balanceOf',
               args:[that.Neon.u.reverseHex(that.Neon.u.str2hexstring(that.account.address))]
             };
@@ -343,6 +375,43 @@
       .catch(config => {
         console.log(config)
       })
+      this.getTokens();
+    },
+    getTokens: function(){
+
+      var that = this;
+      this.db.open({
+          server: 'my-du-wallet',
+          version: 1,
+          schema: {
+              neoTokens: {
+                  key: {keyPath: 'id', autoIncrement: true},
+                  // Optionally add indexes
+                  indexes: {
+
+                      scriptHash: {unique: true}
+                  }
+              },
+              ethTokens: {
+                key: {keyPath: 'id', autoIncrement: true},
+                indexes:{
+                  scriptHash: {unique: true}
+                }
+              }
+          }
+      }).then(function (s) {
+          that.server = s;
+          that.server.neoTokens.query()
+            .all()
+            .execute()
+            .then(function (results) {
+                // do something with the results
+                results.forEach(function(element) {
+                  console.log(element);
+                  that.addToken(element.scriptHash)
+                });
+            });
+      });
     },
           claimGas: function(){
 
