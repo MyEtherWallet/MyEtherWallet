@@ -3,12 +3,12 @@
 .wrap {
   background-color: $price-bar-background-color;
   overflow: none;
-  padding: 25px 0;
+  // padding: 25px 0;
 }
 
 @media screen and (min-width: 960px) {
   .wrap {
-    max-height: 98px;
+    // max-height: 98px;
   }
 
   .items-container {

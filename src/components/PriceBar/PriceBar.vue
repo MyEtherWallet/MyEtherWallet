@@ -1,26 +1,20 @@
 <template>
   <div class="team">
 
-    <div class="wrap">
+    <div class="wrap" style="overflow: hidden;">
       <div class="page-container">
-        <transition name="set1fade">
-          <div class="items-container" id="set1" v-show="set1.length > 0 && showSet">
-            <div class="item" v-for="token in set1" :key="token.symbol">
-              <p class="coin-name">{{token.symbol}}</p>
-              <p>${{token.quotes.USD.price}}</p>
-              <p>{{token.quotes.USD.percent_change_24h }}% <i :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" aria-hidden="true"></i></p>
+        <infinite-slider duration="15s" delay="0s">
+          <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+            <div v-for="token in tokens" :key="token.symbol" style="flex: 33; padding: 0 60px; color: #fff; border-right: 1px solid white;">
+              <p style="color: #fff; font-size: 10px;">{{token.symbol}}</p>
+              <p style="color: #fff; font-size: 10px;">${{token.quotes.USD.price}}</p>
+              <span style="color: #fff; font-size: 10px;">
+                {{token.quotes.USD.percent_change_24h }}% <i :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" aria-hidden="true"></i>
+              </span>
             </div>
           </div>
-        </transition>
-        <transition name="set2fade">
-          <div class="items-container" id="set2" v-show="set2.length > 0 && !showSet">
-            <div class="item" v-for="token in set2" :key="token.symbol">
-              <p class="coin-name">{{token.symbol}}</p>
-              <p>${{token.quotes.USD.price}}</p>
-              <p>{{token.quotes.USD.percent_change_24h }}% <i :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" aria-hidden="true"></i></p>
-            </div>
-          </div>
-        </transition>
+        </infinite-slider>
+
       </div><!-- .page-container -->
     </div><!-- .wrap -->
 
