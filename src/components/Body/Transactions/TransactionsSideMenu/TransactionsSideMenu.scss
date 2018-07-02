@@ -9,15 +9,24 @@
       margin-bottom: 40px;
       cursor: pointer;
 
+      a {
+        text-decoration: none;
+      }
+
      .active {
         color: $text-black;
+        a {
+          color: $text-black;
+        }
       }
 
       .menu-group-title {
         display: flex;
         align-items: center;
+        color: $text-side-menu-inactive-color;
 
         &.active {
+          color: $text-color-6;
           p {
             color: $text-color-6;
           }

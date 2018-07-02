@@ -75,22 +75,36 @@
               <p>Contract</p>
               <i class="fa fa-angle-down" aria-hidden="true"></i>
             </div>
-            <div class="menu-group-title active" v-if="menuStates.contract">
+            <div class="menu-group-title active" v-if="menuStates.contract" v-on:click="setMenuActive(['contract', 'interactContract'])">
               <img src="~@/assets/images/sidemenu/contract-1.svg">
               <p>Contract</p>
-              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <i class="fa fa-angle-up" aria-hidden="true"></i>
             </div>
           </router-link>
           <ul>
             <li>
-              <router-link to="/interact-with-contract">
-                Interact With Contract
-              </router-link>
+              <div v-if="!menuStates.interactContract" v-on:click="setMenuActive(['contract', 'interactContract'])">
+                <router-link to="/interact-with-contract">
+                  Interact With Contract
+                </router-link>
+              </div>
+              <div class="active" v-if="menuStates.interactContract">
+                <router-link to="/interact-with-contract">
+                  Interact With Contract
+                </router-link>
+              </div>
             </li>
             <li>
-              <router-link to="/interact-with-contract">
-                Deploy Contract
-              </router-link>
+              <div v-if="!menuStates.deployContract" v-on:click="setMenuActive(['contract', 'deployContract'])">
+                <router-link to="/deploy-contract">
+                  Deploy Contract
+                </router-link>
+              </div>
+              <div class="active" v-if="menuStates.deployContract">
+                <router-link to="/deploy-contract">
+                  Deploy Contract
+                </router-link>
+              </div>
             </li>
           </ul>
         </li>
@@ -108,7 +122,9 @@ export default {
   },
   methods: {
     setMenuActive: function (theMenuNames) {
+      console.clear()
       console.log(theMenuNames)
+      console.log(this.$store.state.state.pageStates.txSideMenu)
       this.unsetAll()
       for (var i = 0; i < theMenuNames.length; i++) {
         this.$store.state.state.pageStates.txSideMenu[theMenuNames[i]] = true
