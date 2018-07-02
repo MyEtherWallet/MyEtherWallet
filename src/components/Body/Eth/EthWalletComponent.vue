@@ -151,12 +151,13 @@
             file: {},
             mainNet: 'https://infuranet.infura.io',
             testNet: 'https://ropsten.infura.io',
-            keyStore: {}
+            keyStore: {},
+            ethers: null
 
           }
         },
         created(){
-
+          this.ethers = require('ethers');
         },
         methods:{
           getTransactions: function(){
@@ -166,20 +167,25 @@
           },
           createNewEthWallet: function(){
             var ans = prompt('Create Password');
-            var Web3 = require("web3")
             var that = this;
             if (ans != ''){
-              this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
+            /*  this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
               this.eth = this.web3.eth.accounts.create();
               sessionStorage.address = this.eth.address;
               sessionStorage.privateKey = this.eth.privateKey;
               sessionStorage.password = ans;
               this.eth = this.web3.eth.accounts.encrypt(this.eth.privateKey, ans);
               sessionStorage.ethEncrypt = JSON.stringify(this.eth);
-
-              this.getBalance();
-              this.downloadKeystore();
-
+              */
+              this.wallet = this.ethers.Wallet.createRandom();
+              this.wallet.provider = new this.ethers.providers.EtherscanProvider('ropsten','FEUQI8J8SPJKS3Q1I989I31DW5SFGEB6J3')
+              //encrypt Wallet
+              this.wallet.encrypt(ans).then(data => {
+                console.log(data);
+                this.eth = JSON.parse(data);
+                this.downloadKeystore();
+                this.getBalance();
+              });
             }
             else{
             alert('Must create a password!');
@@ -203,6 +209,7 @@
                 that.keyStore = JSON.parse(event.target.result);
                 that.web3 = new Web3(new Web3.providers.HttpProvider(this.testNet));
                 that.eth = that.web3.eth.accounts.decrypt(that.keyStore, ans);
+
                 that.getBalance();
 
               };
@@ -218,19 +225,49 @@
             $("#assetModal").modal()
           },
           addToken: function(){
-            var contract;
-            var abi = [{"constant":true,"inputs":[],"name":"mintingFinished","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"unpause","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"paused","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"finishMinting","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"pause","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"},{"name":"_releaseTime","type":"uint256"}],"name":"mintTimelocked","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[],"name":"MintFinished","type":"event"},{"anonymous":false,"inputs":[],"name":"Pause","type":"event"},{"anonymous":false,"inputs":[],"name":"Unpause","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]
-            contract = new this.web3.eth.Contract(abi, this.scriptHash, {from: '0x'+this.eth.address})
-            console.log(contract);
-            contract.methods.balanceOf(this.eth.address).call().then(function(result){
-              console.log(result)
+
+            var abi = [
+              {
+                "constant": true,
+                "inputs": [
+                  {
+                    "name": "_owner",
+                    "type": "address"
+                  }
+                ],
+                "name": "balanceOf",
+                "outputs": [
+                  {
+                    "name": "balance",
+                    "type": "uint256"
+                  }
+                ],
+                "payable": false,
+                "type": "function"
+              }
+            ]
+            /////////
+            var provider = this.ethers.providers.getDefaultProvider('ropsten');
+
+            var contract = new this.ethers.Contract(this.scriptHash, abi, provider);
+            console.log(contract.functions);
+
+            contract.balanceOf(this.wallet.address).then(data => {
+              console.log(data);
+            }).catch(err => {
+              console.log(err.reason);
+              console.log(err.code);
+              console.log(err);
             });
+            //////////
+
           },
           getBalance: function(){
             var that = this;
-            this.web3.eth.getBalance(this.eth.address).then(data => {
+            var provider = this.ethers.providers.getDefaultProvider('ropsten');
+            provider.getBalance(this.wallet.address).then(data => {
               console.log(data);
-              that.balance = data;
+              that.balance = that.ethers.utils.formatEther(data);
               that.loggedin = true;
             });
             this.getTransactions();
