@@ -123,6 +123,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.state.state.pageStates.activeMenuSetter(['swap'])
   }
 }
 </script>

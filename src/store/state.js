@@ -42,6 +42,19 @@ const state = {
       contract: false,
       interactContract: false,
       deployContract: false
+    },
+    activeMenuSetter: function (theMenuNames) {
+      this.txSideMenu.send = false
+      this.txSideMenu.sendEth = false
+      this.txSideMenu.sendOffline = false
+      this.txSideMenu.swap = false
+      this.txSideMenu.dapps = false
+      this.txSideMenu.contract = false
+      this.txSideMenu.interactContract = false
+      this.txSideMenu.deployContract = false
+      for (var i = 0; i < theMenuNames.length; i++) {
+        this.txSideMenu[theMenuNames[i]] = true
+      }
     }
   }
 }

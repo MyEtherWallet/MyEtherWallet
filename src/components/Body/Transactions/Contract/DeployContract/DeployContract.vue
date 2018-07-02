@@ -25,9 +25,10 @@
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
-                  <h4>Contract Address</h4>
-                  <div class="select-contract no-border">
-                    <v-select :options="existingContracts" placeholder="Choose existing contract"></v-select>
+                  <h4>Byte Code</h4>
+                  <div class="copy-buttons">
+                    <span>Clear</span>
+                    <span>Copy</span>
                   </div>
                 </div>
               </div>
@@ -48,6 +49,34 @@
               </div>
               <div class="the-form domain-name">
                 <textarea class="custom-textarea-1" name=""></textarea>
+              </div>
+            </div>
+
+            <div class="send-form2">
+              <div class="title-container">
+                <div class="title">
+                  <h4>Speed of Transaction<span class="alert-button"></span></h4>
+                  <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+                </div>
+                <div class="buttons">
+                  <div class="small-circle-button-green-border">
+                    Slow
+                  </div>
+                  <div class="small-circle-button-green-border active">
+                    Regular
+                  </div>
+                  <div class="small-circle-button-green-border">
+                    Fast
+                  </div>
+                </div>
+              </div>
+
+              <div class="the-form gas-amount">
+                <input type="number" name="" value="" placeholder="Gas Amount">
+                <div class="good-button-container">
+                  <p>Gwei</p>
+                  <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
 
@@ -77,24 +106,6 @@
 export default {
   data () {
     return {
-      existingContracts: [
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '1'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '2'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '3'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
-        }
-      ]
     }
   },
   methods: {
@@ -111,6 +122,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.state.state.pageStates.activeMenuSetter(['contract', 'deployContract'])
   }
 }
 </script>

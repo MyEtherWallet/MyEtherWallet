@@ -141,8 +141,8 @@ export default {
     }
   },
   mounted () {
-    // Scroll to top
     window.scrollTo(0, 0)
+    this.$store.state.state.pageStates.activeMenuSetter(['send', 'sendEth'])
   }
 }
 </script>
