@@ -34,45 +34,45 @@ export default {
         {
           title: self.$t('faqs.gettingStarted'),
           articles: [
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'}
+            {to: 'https://kb.myetherwallet.com/getting-started/getting-started-new.html', title: 'Getting Started on MyEtherWallet.com'},
+            {to: 'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html', title: 'How To Create a Wallet'},
+            {to: 'https://kb.myetherwallet.com/getting-started/backing-up-your-new-wallet.html', title: 'How to Properly Save & Back Up Your wallet'},
+            {to: 'https://kb.myetherwallet.com/getting-started/accessing-your-new-eth-wallet.html', title: 'How to Access Your Wallet'},
+            {to: 'https://kb.myetherwallet.com/getting-started/protecting-yourself-and-your-funds.html', title: 'Protecting Yourself and Your Funds'},
+            {to: 'https://kb.myetherwallet.com/getting-started/myetherwallet-help-and-quicktips.html', title: 'MyEtherWallet\'s QuickTips'}
           ]
         },
         {
           title: self.$t('faqs.securityAndPhishing'),
           articles: [
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'}
+            {to: 'https://kb.myetherwallet.com/security/securing-your-ethereum.html', title: 'Protecting Yourself and Your Funds'},
+            {to: 'https://kb.myetherwallet.com/security/phish-hacks-thefts-and-stolen-funds-due-to-phishing.html', title: 'Phish, Hacks, Thefts & stolen funds due to phishing messages on Slack / Reddit / Google Ads'},
+            {to: 'https://kb.myetherwallet.com/security/what-to-do-if-youve-had-your-funds-stolen.html', title: 'What to do if you\'ve had your funds stolen?'},
+            {to: 'https://kb.myetherwallet.com/security/turning-of-2fa-on-myetherwallet.html', title: 'Can I turn on 2FA for MyEtherWallet?'},
+            {to: 'https://kb.myetherwallet.com/security/ethereum-two-people-same-private-key.html', title: 'Ensuring MyEtherWallet doesn\'t give different people the same private key'},
+            {to: 'https://kb.myetherwallet.com/security/how-can-we-trust-myetherwallet.html', title: 'How can we trust MyEtherWallet?'}
           ]
         },
         {
           title: self.$t('faqs.transactions'),
           articles: [
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'}
+            {to: 'https://kb.myetherwallet.com/transactions/transactions-not-showing-or-pending.html', title: 'Transactions are Not Showing Up or Pending Forever'},
+            {to: 'https://kb.myetherwallet.com/gas/what-is-gas-ethereum.html', title: 'What is Gas?'},
+            {to: 'https://kb.myetherwallet.com/transactions/what-is-nonce.html', title: 'What is Nonce?'},
+            {to: 'https://kb.myetherwallet.com/transactions/transaction-failed-out-of-gas.html', title: 'Transaction Failed - Out of Gas'},
+            {to: 'https://kb.myetherwallet.com/transactions/transaction-fee-not-refunded.html', title: 'Transaction Failed - TX Fee not Refunded'},
+            {to: 'https://kb.myetherwallet.com/transactions/check-status-of-ethereum-transaction.html', title: 'Checking or Replacing a TX After it\'s Been Sent'}
           ]
         },
         {
           title: self.$t('faqs.privKeyandPass'),
           articles: [
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'},
-            {to: '/'}
+            {to: '/', title: 'Hello There!'},
+            {to: '/', title: 'Hello There!'},
+            {to: '/', title: 'Hello There!'},
+            {to: '/', title: 'Hello There!'},
+            {to: '/', title: 'Hello There!'},
+            {to: '/', title: 'Hello There!'}
           ]
         }
       ]

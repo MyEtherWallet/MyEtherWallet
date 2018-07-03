@@ -2,11 +2,11 @@
   <div class="card-block">
     <h4 class="title">{{ title }}</h4>
     <div class="questions">
-      <router-link v-for="(item, index) in articles" :to="item.to" :key="item+index+`${title}`">
+      <a v-for="(item, index) in articles" :href="item.to" :key="item+index+`${title}`" target="_blank">
         <p>
-          {{ $t(`${"faqs.article" + (index + 1)}`) }}
+          {{item.title}}
         </p>
-      </router-link>
+      </a>
     </div>
   </div>
 </template>
