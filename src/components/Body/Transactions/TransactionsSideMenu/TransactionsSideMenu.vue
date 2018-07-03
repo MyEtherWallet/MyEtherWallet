@@ -16,7 +16,7 @@
               <i class="fa fa-angle-up" aria-hidden="true"></i>
             </div>
           </router-link>
-          <ul v-if="$store.state.state.pageStates.txSideMenu.send">
+          <ul v-if="menuStates.send">
             <li>
               <div v-if="!menuStates.sendEth">
                 <router-link to="/send-eth-and-tokens">
@@ -81,7 +81,7 @@
               <i class="fa fa-angle-up" aria-hidden="true"></i>
             </div>
           </router-link>
-          <ul>
+          <ul v-if="menuStates.contract">
             <li>
               <div v-if="!menuStates.interactContract">
                 <router-link to="/interact-with-contract">

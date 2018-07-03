@@ -99,8 +99,12 @@ body {
   opacity: .2;
 }
 
+button:focus {
+  outline: 0 !important;
+}
+
 *:focus {
-  outline: none;
+  outline: 0 !important;
 }
 
 .prevent-pointer-events {

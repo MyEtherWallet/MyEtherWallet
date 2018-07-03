@@ -17,6 +17,23 @@
   }
 }
 
+.success-modal {
+  .check-icon {
+    border: 3px solid $border-green;
+    border-radius: 200px;
+    color: $text-color-green;
+    font-size: 90px;
+    margin-bottom: 15px;
+    padding-top: 26px;
+    width: 150px;
+    height: 150px;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+}
+
 .confirmation-modal {
   .modal-content {
     padding: 20px;
@@ -112,7 +129,7 @@
 
           .tooltip-box-2 {
             margin-left: 15px;
-            text-align: center;
+            line-height: 35px;
           }
         }
       }

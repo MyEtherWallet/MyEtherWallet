@@ -61,7 +61,7 @@
           <div class="submit-button-container">
             <div class="flex-center-align">
               <div class="button-with-helper">
-                <div class="submit-button large-round-button-green-filled clickable">
+                <div class="submit-button large-round-button-green-filled clickable" v-on:click="successModalOpen">
                   Confirm and Send
                 </div>
                 <div class="tooltip-box-2">
@@ -85,6 +85,19 @@
         </div>
       </b-modal>
     </div>
+
+    <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal success-modal">
+      <div class="d-block text-center">
+        <i class="check-icon fa fa-check" aria-hidden="true"></i>
+        <h2 class="title">Succeed</h2>
+      </div>
+      <p class="text-center">Your transaction is converting. A notification will be sent to you when it is completed.</p>
+      <div class="button-container">
+        <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+          Ok
+        </b-btn>
+      </div>
+    </b-modal>
     <!-- .modal-container ************************ -->
 
     <vue-header></vue-header>
@@ -240,6 +253,13 @@ export default {
     },
     confirmationModalOpen () {
       this.$refs.confirmation.show()
+    },
+    successModalOpen () {
+      this.$refs.success.show()
+    },
+    hideModal () {
+      this.$refs.success.hide()
+      this.processChange('process1')
     }
   },
   mounted () {
