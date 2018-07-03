@@ -109,10 +109,6 @@ export default {
       const self = this
       self.$store.dispatch('clearWallet')
       self.$router.push('/')
-    },
-    toggleLogoutDropdown: function () {
-      console.log(this.$children[7])
-      this.$children[7].toggle()
     }
   },
   mounted: function () {
