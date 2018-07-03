@@ -27,13 +27,13 @@
                 <div class="title">
                   <h4>Byte Code</h4>
                   <div class="copy-buttons">
-                    <span>Clear</span>
-                    <span>Copy</span>
+                    <span v-on:click="deleteInputText('bytecode')">Clear</span>
+                    <span v-on:click="copyToClipboard('bytecode')">Copy</span>
                   </div>
                 </div>
               </div>
               <div class="the-form domain-name">
-                <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
+                <input id="bytecode" type="text" name="" value="" placeholder="Byte Code">
               </div>
             </div>
 
@@ -42,13 +42,13 @@
                 <div class="title">
                   <h4>ABI/JSON Interface</h4>
                   <div class="copy-buttons">
-                    <span>Clear</span>
-                    <span>Copy</span>
+                    <span v-on:click="deleteInputText('abi')">Clear</span>
+                    <span v-on:click="copyToClipboard('abi')">Copy</span>
                   </div>
                 </div>
               </div>
               <div class="the-form domain-name">
-                <textarea class="custom-textarea-1" name=""></textarea>
+                <textarea id="abi" class="custom-textarea-1" name=""></textarea>
               </div>
             </div>
 
@@ -119,6 +119,13 @@ export default {
     },
     domainBuyButtonClick: function ($event) {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+    },
+    copyToClipboard: function (id) {
+      document.querySelector('#' + id).select()
+      document.execCommand('copy')
+    },
+    deleteInputText: function (id) {
+      document.querySelector('#' + id).value = ''
     }
   },
   mounted () {

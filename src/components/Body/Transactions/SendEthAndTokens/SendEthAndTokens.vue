@@ -1,6 +1,92 @@
 <template>
   <div class="send-eth-and-tokens">
 
+    <!-- .modal-container ************************ -->
+    <div class="modal-container">
+      <b-modal ref="confirmation" hide-footer centered class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
+        <div class="modal-content qrcode-modal">
+          <div class="tx-info">
+            <div class="tx-data tx-from">
+              <img src="~@/assets/images/icons/eth2.svg">
+              <h3>1.00000 <span>ETH</span></h3>
+              <div class="address-info">
+                <p class="address-title">From Address</p>
+                <p>0x834rf8i34bh983ubg9i34uekrnegoin5o4inoet</p>
+              </div>
+            </div>
+            <div class="direction">
+              <img src="~@/assets/images/icons/right-arrow.svg">
+            </div>
+            <div class="tx-data tx-to">
+              <img src="~@/assets/images/icons/btc2.svg">
+              <h3>0.006345 <span>BTC</span></h3>
+              <div class="address-info">
+                <p class="address-title">To Address</p>
+                <p>8734fg8734rg938hg034jg0394gj0394g</p>
+              </div>
+            </div>
+          </div>
+          <div class="detail-info">
+            <div class="info">
+              <h4>Detail Information</h4>
+              <div class="sliding-switch-white">
+                <label class="switch">
+                  <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="expended-info" v-if="modalDetailInformation">
+              <div class="grid-block">
+                <p>Network</p><p>ETH by etherapi.com</p>
+              </div>
+              <div class="grid-block">
+                <p>Gas Limit</p><p>ETH by etherapi.com</p>
+              </div>
+              <div class="grid-block">
+                <p>Gas Price</p><p>2100000 GWEI (0.00321 ETH=$1.234)</p>
+              </div>
+              <div class="grid-block">
+                <p>Max Transaction Fee</p><p>441000 GWEI (0.000441)</p>
+              </div>
+              <div class="grid-block">
+                <p>Nonce</p><p>0</p>
+              </div>
+              <div class="grid-block">
+                <p>Data</p><p>None</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-button-container">
+            <div class="flex-center-align">
+              <div class="button-with-helper">
+                <div class="submit-button large-round-button-green-filled clickable">
+                  Confirm and Send
+                </div>
+                <div class="tooltip-box-2">
+                  <b-btn id="exPopover9">
+                    <img class="icon" src="~@/assets/images/icons/qr-code.svg">
+                  </b-btn>
+                  <b-popover target="exPopover9" triggers="hover focus" placement="top">
+                    <div class="qrcode-contents">
+                      <p class="qrcode-title">Scan QR code to send/swap instantly</p>
+                      <div class="qrcode-block">
+                        <qrcode value="Hello, World!" :options="{ size: 100 }"></qrcode>
+                      </div>
+                      <p class="qrcode-helper">What is that?</p>
+                    </div>
+                  </b-popover>
+                </div>
+              </div>
+            </div>
+            <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          </div>
+        </div>
+      </b-modal>
+    </div>
+    <!-- .modal-container ************************ -->
+
     <vue-header></vue-header>
     <div class="wrap">
       <div class="side-nav">
@@ -41,7 +127,7 @@
                   <div class="title">
                     <h4>To Address</h4>
                     <img class="icon" src="~@/assets/images/icons/avatar.svg">
-                    <p v-on:click="copyAddress" class="copy-button">Copy</p>
+                    <p v-on:click="copyToClipboard('address')" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
                     <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
@@ -96,23 +182,33 @@
 
             <div class="send-form advanced">
               <div class="advanced-content">
-                <h4>Advanced</h4>
-                <div class="toggle-button">
-                  <span>Data & Gas Limited</span>
-                  <!-- Rounded switch -->
-                  <div class="sliding-switch-white">
-                    <label class="switch">
-                      <input type="checkbox">
-                      <span class="slider round"></span>
-                    </label>
+                <div class="title">
+                  <h4>Advanced</h4>
+                  <div class="toggle-button">
+                    <span>Data & Gas Limited</span>
+                    <!-- Rounded switch -->
+                    <div class="sliding-switch-white">
+                      <label class="switch">
+                        <input type="checkbox" v-on:click="advancedExpend = !advancedExpend">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
                   </div>
-
+                </div>
+                <div class="input-container" v-if="advancedExpend">
+                  <div class="the-form user-input">
+                    <input type="number" name="" value="" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
+                  </div>
+                  <div class="the-form user-input">
+                    <input type="number" name="" value="" placeholder="Gas Limit">
+                  </div>
                 </div>
               </div>
+
             </div>
 
             <div class="submit-button-container">
-              <div class="submit-button large-round-button-green-filled clickable">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="confirmationModalOpen">
                 Send Transaction
               </div>
               <p>Have any issues? <a href="/">Learn more</a></p>
@@ -133,11 +229,17 @@
 export default {
   data () {
     return {
+      advancedExpend: false,
+      modalDetailInformation: false
     }
   },
   methods: {
-    copyAddress: function () {
-      alert('This doesn\'t work for now.')
+    copyToClipboard: function (id) {
+      document.querySelector('#' + id).select()
+      document.execCommand('copy')
+    },
+    confirmationModalOpen () {
+      this.$refs.confirmation.show()
     }
   },
   mounted () {

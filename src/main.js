@@ -11,6 +11,7 @@ import store from './store'
 import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import Vuex from 'vuex'
+import VueQrcode from '@xkeshi/vue-qrcode'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -59,6 +60,8 @@ Vue.component('v-select', vSelect)
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
+
+Vue.component(VueQrcode.name, VueQrcode)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)

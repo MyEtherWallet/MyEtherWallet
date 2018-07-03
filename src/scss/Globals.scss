@@ -614,6 +614,12 @@ h6 {
   }
 }
 
+.qrcode-modal {
+  .popover {
+    max-width: 180px;
+  }
+}
+
 .tooltip-box-1 {
   button {
     background-color: $button--background-color-1;
@@ -633,6 +639,16 @@ h6 {
   }
 }
 
+.tooltip-box-2 {
+  button {
+    border: 0;
+    padding: 0;
+    background-color: white;
+    &:hover {
+      background-color: white;
+    }
+  }
+}
 
 // *********************************************************************
 // [Bootstrap] Modal style
