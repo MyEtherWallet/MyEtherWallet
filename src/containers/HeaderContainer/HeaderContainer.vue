@@ -31,14 +31,14 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <div>
-                  <blockie v-if="wallet!==null" :address="'0x'+wallet.getAddress().toString('hex')" />
-                  <b-nav-item-dropdown text='' right v-if="wallet !== null" no-caret>
-                    <b-dropdown-item @click="logout">
-                      Log out
-                    </b-dropdown-item>
-                  </b-nav-item-dropdown>
-                </div>
+                <b-nav-item-dropdown right no-caret v-if="wallet !== null" extra-toggle-classes="identicon-dropdown">
+                  <template slot="button-content">
+                    <blockie :address='"0x"+wallet.getAddress().toString("hex")' width="35px" height="35px" />
+                  </template>
+                  <b-dropdown-item @click="logout">
+                    Log out
+                  </b-dropdown-item>
+                </b-nav-item-dropdown>
               </b-nav>
 
             </div>
@@ -60,7 +60,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-const identicon = require('ethereum-blockies')
 export default {
   data () {
     return {
@@ -90,8 +89,7 @@ export default {
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'gb',
-      blockies: ''
+      currentFlag: 'gb'
     }
   },
   methods: {
@@ -111,6 +109,10 @@ export default {
       const self = this
       self.$store.dispatch('clearWallet')
       self.$router.push('/')
+    },
+    toggleLogoutDropdown: function () {
+      console.log(this.$children[7])
+      this.$children[7].toggle()
     }
   },
   mounted: function () {
@@ -127,11 +129,6 @@ export default {
     } else {
       localStorage.setItem('locale', self.$root._i18n.locale)
       self.currentFlag = self.$root._i18n.locale
-    }
-
-    if (self.wallet !== null) {
-      let address = `0x${self.wallet.getAddress().toString('hex')}`
-      self.blockies = `${identicon.create({seed: address.toLowerCase(), size: 8, scale: 16}).toDataURL()}`
     }
 
     self.currentName = self.supportedLanguages.filter(item => item.flag === self.currentFlag)[0].name
@@ -154,16 +151,6 @@ export default {
     online: function (newVal) {
       const self = this
       self.online = newVal
-    },
-    wallet: function (newVal) {
-      const self = this
-      if (newVal !== null) {
-        let address = `0x${newVal.getAddress().toString('hex').toLowerCase()}`
-        self.blockies = `${identicon.create({seed: address.toLowerCase(), size: 8, scale: 16}).toDataURL()}`
-      }
-    },
-    blockies: function (newVal) {
-      self.blockies = newVal
     }
   },
   computed: {

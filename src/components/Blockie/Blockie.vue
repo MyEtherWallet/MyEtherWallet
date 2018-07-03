@@ -31,7 +31,7 @@ export default {
       this.setBlockie()
     }
   },
-  mounted () {
+  mounted: function () {
     this.setBlockie()
   }
 }
