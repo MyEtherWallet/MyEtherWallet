@@ -9,10 +9,10 @@
       <div class="links">
         <p><router-link :to="link">{{readMore}}</router-link></p>
         <div>
-          <a :href="fb" target="_blank">
+          <a :href="fb" v-if="fb !== ''" target="_blank">
             <i class="fa fa-facebook" aria-hidden="true"></i>
           </a>
-          <a :href="twitter" target="_blank">
+          <a :href="twitter" v-if="twitter !== ''" target="_blank">
             <i class="fa fa-twitter" aria-hidden="true"></i>
           </a>
         </div>
