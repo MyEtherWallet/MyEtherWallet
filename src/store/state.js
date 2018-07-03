@@ -1,29 +1,20 @@
+import nodeList from '@/configs/networks'
 const state = {
   web3: {
 
   },
   network: {
-    chainId: 0,
-    RpcUrl: 'default rpc url',
-    port: 8545,
+    chainId: 1,
+    RpcUrl: 'https://api.myetherwallet.com/eth',
+    port: 80,
     username: null,
-    password: null
+    password: null,
+    tokens: [],
+    contracts: []
   },
   wallet: null,
-  ABI: {
-    ETH: [],
-    ROP: [],
-    hashAsKey: {name: '', address: '', ABI: []}
-  },
-  Tokens: {
-    ETH: [],
-    ROP: []
-  },
   Transactions: {},
-  Networks: {
-    ETH: {},
-    ROP: {}
-  },
+  Networks: nodeList,
   Errors: {},
   online: true,
   homepage: {

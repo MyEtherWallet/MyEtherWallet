@@ -32,7 +32,8 @@
                   </b-nav-item-dropdown>
                 </div>
                 <div>
-                  <b-nav-item-dropdown :text='`<div class="address-blockie" style="background-image: url(${blockies}); width: 35px; height: auto; padding-bottom: 35px; background-size: cover; background-repeat: no-repeat; border-radius: 50%; box-shadow: inset rgba(255, 255, 255, 0.5) 0 2px 2px, inset rgba(0, 0, 0, 0.6) 0 -1px 8px;"></div>`' extra-toggle-classes="nav-link-custom" right v-show="wallet !== null" no-caret>
+                  <blockie v-if="wallet!==null" :address="'0x'+wallet.getAddress().toString('hex')" />
+                  <b-nav-item-dropdown text='' right v-if="wallet !== null" no-caret>
                     <b-dropdown-item @click="logout">
                       Log out
                     </b-dropdown-item>

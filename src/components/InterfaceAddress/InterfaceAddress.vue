@@ -4,7 +4,7 @@
 
       <div class="info-block address">
         <div class="block-image">
-          <img class="icon" src="~@/assets/images/icons/avatar.svg">
+           <blockie :address="address" width="64px" height="64px"/>
         </div>
         <div class="block-content">
           <h2>{{ $t("reused.address")}}</h2>
