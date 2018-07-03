@@ -22,24 +22,24 @@ export default {
           title: 'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
           desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
-          fb: 'https://facebook.com',
-          twitter: 'https://twitter.com',
+          fb: '',
+          twitter: '',
           readMore: 'Read More...'
         },
         {
           title: 'Recently the founder of something called',
           desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
-          fb: 'https://facebook.com',
-          twitter: 'https://twitter.com',
+          fb: '',
+          twitter: '',
           readMore: 'Read More...'
         },
         {
           title: 'Another day an anonymous donor set up an $86 million…',
           desc: 'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
           link: '/',
-          fb: 'https://facebook.com',
-          twitter: 'https://twitter.com',
+          fb: '',
+          twitter: '',
           readMore: 'Read More...'
         }
       ]
