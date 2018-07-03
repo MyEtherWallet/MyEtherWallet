@@ -42,24 +42,21 @@ export default {
   data () {
     return {
       currentTab: 'send',
-      address: '',
       balance: '',
       blockNumber: ''
     }
   },
   methods: {
-    switchTabs: function (param) {
-      const self = this
-      self.currentTab = param
+    switchTabs (param) {
+      this.currentTab = param
     },
-    getBlock: async function () {
+    async getBlock () {
       const body = {
         'jsonrpc': '2.0',
         'method': 'eth_blockNumber',
         'params': [],
         'id': 0
       }
-
       const config = {
         method: 'POST',
         headers: {
@@ -74,7 +71,7 @@ export default {
         console.log(err)
       })
     },
-    getBalance: async function () {
+    async getBalance () {
       const body = {
         'jsonrpc': '2.0',
         'method': 'eth_getBalance',
@@ -95,18 +92,21 @@ export default {
       })
     }
   },
-  mounted: function () {
-    const self = this
+  mounted () {
     if (window.localStorage.getItem('curPage') !== undefined) {
-      self.currentTab = window.localStorage.getItem('curPage')
+      this.currentTab = window.localStorage.getItem('curPage')
     }
 
-    if (self.$store.state.wallet !== null && self.$store.state.wallet !== undefined) {
-      self.address = '0x' + self.$store.state.wallet.getAddress().toString('hex')
-      self.getBalance()
+    if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+      this.getBalance()
     }
 
-    setInterval(self.getBlock, 14000)
+    setInterval(this.getBlock, 14000)
+  },
+  computed: {
+    address () {
+      return this.$store.state.wallet.getAddressString()
+    }
   }
 }
 </script>
