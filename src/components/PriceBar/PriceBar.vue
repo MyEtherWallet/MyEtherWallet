@@ -3,14 +3,14 @@
 
     <div class="wrap" style="overflow: hidden;">
       <div class="page-container">
-        <infinite-slider duration="15s" delay="0s">
-          <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
-            <div v-for="token in tokens" :key="token.symbol" style="flex: 33; padding: 0 60px; color: #fff; border-right: 1px solid white;">
-              <p style="color: #fff; font-size: 10px;">{{token.symbol}}</p>
-              <p style="color: #fff; font-size: 10px;">${{token.quotes.USD.price}}</p>
-              <span style="color: #fff; font-size: 10px;">
-                {{token.quotes.USD.percent_change_24h }}% <i :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" aria-hidden="true"></i>
-              </span>
+        <infinite-slider duration="20s" delay="0s">
+          <div class="slider-container">
+            <div v-for="token in tokens" :key="token.symbol" class="token-container">
+              <p class="token-text">{{token.symbol}}</p>
+              <p class="token-text">${{token.quotes.USD.price}}</p>
+              <p class="token-text percent-container">
+                <span>{{token.quotes.USD.percent_change_24h }}%</span> <i :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" aria-hidden="true"></i>
+              </p>
             </div>
           </div>
         </infinite-slider>

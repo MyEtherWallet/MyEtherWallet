@@ -3,71 +3,34 @@
 .wrap {
   background-color: $price-bar-background-color;
   overflow: none;
-  // padding: 25px 0;
 }
 
-@media screen and (min-width: 960px) {
-  .wrap {
-    // max-height: 98px;
-  }
-
-  .items-container {
-    flex-wrap: nowrap;
-
-    .item {
-      flex: 1;
-      width: auto;
-    }
-  }
-}
-
-
-.items-container {
+.slider-container {
+  align-items: center;
   display: flex;
-  flex-wrap: wrap;
-  overflow: none;
-
-  .item {
-    border-right: 1px solid $price-bar-border-color;
-    flex: 50;
-    padding: 0 0 0 20px;
-    width: 100%;
-
-    &:last-child {
-      border-right: 0;
-    }
-
-    .coin-name {
-      font-weight: 500;
-    }
-
-    p {
-      color: $text-white;
-      font-size: 12px;
-      line-height: 16px;
-    }
-
-  } // .item
-} // .items-container
-
-.set1fade-enter-active,
-.set2fade-enter-active {
-  transition: opacity .2s linear, transform .4s ease;
+  justify-content: center;
+  margin: 20px 0;
 }
 
-.set1fade-leave-active,
-.set2fade-leave-active {
-  transition: opacity .1s ease, transform .1s cubic-bezier(1, .5, .8, 1);
-}
+.token-container {
+  border-right: 1px solid $text-white;
+  color: $text-white;
+  flex: 33;
+  padding: 0 60px;
 
-.set1fade-enter,
-.set2fade-enter {
-  opacity: 1;
-  transform: translateY(20px);
-}
+  .token-text {
+    color: $text-white;
+    font-size: 10px;
+  }
 
-.set1fade-leave-to,
-.set2fade-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
+  .percent-container {
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+
+    span {
+      font-size: 10px;
+    }
+  }
 }
