@@ -17,15 +17,17 @@
                 <b-nav-item to="/#faqs">{{ $t("reused.faqs") }}</b-nav-item>
                 <b-nav-item to="/#news" v-show="online">{{ $t("reused.news") }}</b-nav-item>
 
-                <div class="current-language-flag">
-                  <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
-                </div>
-
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </div>
-                  <b-nav-item-dropdown class="language-menu" :text="currentName" extra-toggle-classes="nav-link-custom" right>
+                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
+                    <template slot="button-content">
+                      <div class="current-language-flag">
+                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <p>{{ currentName }}</p>
+                      </div>
+                    </template>
                     <b-dropdown-item v-on:click="languageItemClicked" v-for="language in supportedLanguages" :active="$root._i18n.locale === language.flag" :key="language.key" :data-flag-name="language.flag">
                       {{language.name}}
                     </b-dropdown-item>
