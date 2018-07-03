@@ -143,21 +143,9 @@
       }
     }// .mobile-menu
 
-    .get-free-wallet {
-      border: 1px solid $border-green;
-      border-radius: 4px;
-      color: $text-color-green;
-      cursor: pointer;
-      font-size: 12px;
-      margin-left: 24px;
-      padding: 10px 20px;
-      transition: background-color .2s ease;
-
-      &:hover {
-        background-color: $text-color-green;
-        color: $text-white;
-      }
-    }
-
   }// .header-container
 }// .fixed-header
+
+.identicon-dropdown {
+  padding: 0 !important;
+}

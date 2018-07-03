@@ -2,7 +2,7 @@ import {
   Wallet
 } from '@/helpers'
 
-function unlock(file, password) {
+function unlock (file, password) {
   let newFile = {}
   // Small hack because non strict wasn't working..
   Object.keys(file).forEach(key => {
@@ -11,7 +11,7 @@ function unlock(file, password) {
   return Wallet.fromV3(newFile, password, true)
 }
 
-onmessage = function(event) {
+onmessage = function (event) {
   if (event.data.type === 'unlockWallet') {
     let workerResult = unlock(event.data.data[0], event.data.data[1])
     postMessage(workerResult)
