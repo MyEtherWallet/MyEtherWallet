@@ -56,9 +56,9 @@ export default {
         {
           title: self.$t('faqs.transactions'),
           articles: [
-            {to: 'https://kb.myetherwallet.com/transactions/transactions-not-showing-or-pending.html', title: 'Transactions are Not Showing Up or Pending Forever'},
             {to: 'https://kb.myetherwallet.com/gas/what-is-gas-ethereum.html', title: 'What is Gas?'},
             {to: 'https://kb.myetherwallet.com/transactions/what-is-nonce.html', title: 'What is Nonce?'},
+            {to: 'https://kb.myetherwallet.com/transactions/transactions-not-showing-or-pending.html', title: 'Transactions are Not Showing Up or Pending Forever'},
             {to: 'https://kb.myetherwallet.com/transactions/transaction-failed-out-of-gas.html', title: 'Transaction Failed - Out of Gas'},
             {to: 'https://kb.myetherwallet.com/transactions/transaction-fee-not-refunded.html', title: 'Transaction Failed - TX Fee not Refunded'},
             {to: 'https://kb.myetherwallet.com/transactions/check-status-of-ethereum-transaction.html', title: 'Checking or Replacing a TX After it\'s Been Sent'}
@@ -67,12 +67,12 @@ export default {
         {
           title: self.$t('faqs.privKeyandPass'),
           articles: [
-            {to: '/', title: 'Hello There!'},
-            {to: '/', title: 'Hello There!'},
-            {to: '/', title: 'Hello There!'},
-            {to: '/', title: 'Hello There!'},
-            {to: '/', title: 'Hello There!'},
-            {to: '/', title: 'Hello There!'}
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html', title: 'Lost Private Key'},
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/lost-ethereum-wallet-password.html', title: 'Lost Password'},
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/accessing-different-address-same-private-key-ether.html', title: 'Private Key opens a different account / two addresses'},
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/private-key-not-working.html', title: 'Private Key Not Working'},
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/difference-beween-private-key-and-keystore-file.html', title: 'Differences between wallet types (e.g. private key vs keystore)'},
+            {to: 'https://kb.myetherwallet.com/private-keys-passwords/missing-characters-of-private-key.html', title: 'Missing characters from private key'}
           ]
         }
       ]
