@@ -11,6 +11,9 @@ const state = {
     contracts: []
   },
   wallet: null,
+  account: {
+    balance: 0
+  },
   Transactions: {},
   Networks: nodeList,
   Errors: {},

@@ -118,6 +118,8 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+
+      this.$store.dispatch('setAccountBalance', this.balance)
     }
   },
   mounted () {
