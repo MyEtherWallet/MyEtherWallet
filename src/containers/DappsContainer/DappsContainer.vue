@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    switchView: function (param) {
+    switchView (param) {
       const self = this
       self.selectedDapp = param
     }

@@ -20,9 +20,9 @@
           </div>
         </div>
 
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .team -->
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

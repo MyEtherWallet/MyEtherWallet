@@ -27,12 +27,12 @@
               <textarea id="to-address" name="name" placeholder="Please Enter The Address"></textarea>
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
             </div>
-          </div> <!-- .to-address -->
-        </div> <!-- .form-block .amount-to-address -->
+          </div>
+        </div>
         <div class="error-message-container">
           <p>You don't have enough funds</p>
         </div>
-      </div> <!-- .send-form -->
+      </div>
 
       <div class="send-form">
         <div class="title-container">
@@ -170,12 +170,10 @@ export default {
     }
   },
   methods: {
-    copyToAddress: function () {
+    copyToAddress () {
       document.querySelector('#to-address').select()
       document.execCommand('copy')
     }
-  },
-  mounted () {
   }
 }
 </script>

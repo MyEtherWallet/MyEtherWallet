@@ -7,10 +7,10 @@
         </div>
         <div class="grid-col-3 news-container">
           <news-article v-for="item in articles" v-bind:key="item.id" :link="item.link" :title="item.title" :desc="item.desc" :fb="item.fb" :twitter="item.twitter" :readMore="item.readMore"></news-article>
-        </div><!-- .news-container -->
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .about-mew -->
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

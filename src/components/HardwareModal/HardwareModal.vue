@@ -43,7 +43,7 @@
 <script>
 export default {
   props: ['networkAndAddressOpen'],
-  data: function () {
+  data () {
     return {}
   },
   method: {

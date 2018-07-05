@@ -19,12 +19,11 @@
 
 <script>
 export default {
-  data: function () {
+  data () {
     return {
     }
   },
-  mounted: function () {
-    // Welcome Modal open
+  mounted () {
     this.$refs.myModalRef.show()
   }
 }

@@ -34,7 +34,7 @@ export default {
     }
   },
   methods: {
-    toggle: function (param) {
+    toggle (param) {
       const self = this
       switch (param) {
         case 'openSend':
@@ -50,12 +50,12 @@ export default {
           self.showContract = false
       }
     },
-    storePage: function (param) {
+    storePage (param) {
       window.localStorage.setItem('curPage', param)
     }
   },
   watch: {
-    currentTab: function (newVal) {
+    currentTab (newVal) {
       const self = this
       self.selectedTab = newVal
 

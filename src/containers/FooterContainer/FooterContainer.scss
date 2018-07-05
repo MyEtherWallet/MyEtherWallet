@@ -1,7 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-$border-bottom-color: #506175;
-
 a,
 a:link,
 a:visited,
@@ -31,7 +29,7 @@ a:active {
 
   >div {
     @media all and (max-width: $tablet-width){
-      border-bottom: 1px solid $border-bottom-color;
+      border-bottom: 1px solid $dark-blue-1;
       padding: 25px 0;
     }
 
@@ -119,7 +117,7 @@ a:active {
 
 .foot-note {
   align-items: center;
-  border-top: 1px solid $border-bottom-color;
+  border-top: 1px solid $dark-blue-1;
   margin-top: 40px;
   padding-top: 40px;
 

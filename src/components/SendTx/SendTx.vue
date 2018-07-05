@@ -34,10 +34,10 @@ export default {
     }
   },
   methods: {
-    deleteTxHex: function () {
+    deleteTxHex () {
       document.querySelector('#tx-hex').value = ''
     },
-    copyTxHex: function () {
+    copyTxHex () {
       document.querySelector('#tx-hex').select()
       document.execCommand('copy')
     },
@@ -48,11 +48,9 @@ export default {
       this.$refs.success.hide()
       this.processChange('process1')
     },
-    processChange: function (process) {
+    processChange (process) {
       this.$store.state.state.pageStates.sendOffline.processLocation = process
     }
-  },
-  mounted () {
   }
 }
 </script>

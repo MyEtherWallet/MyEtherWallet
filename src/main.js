@@ -42,6 +42,7 @@ import CreateWalletInputFooter from '@/components/CreateWalletInputFooter'
 import DappButtons from '@/components/DappButtons'
 import SuccessModal from '@/components/SuccessModal'
 import FaqBlock from '@/components/FaqBlock'
+import FinishModal from '@/components/FinishModal'
 import GenerateInfo from '@/components/GenerateInfo'
 import GenerateTx from '@/components/GenerateTx'
 import HardwareModal from '@/components/HardwareModal'
@@ -67,6 +68,7 @@ import Social from '@/components/Social'
 import SoftwareModal from '@/components/SoftwareModal'
 import TopBanner from '@/components/TopBanner'
 import TutorialModal from '@/components/TutorialModal'
+import VerificationModal from '@/components/VerificationModal'
 
 // etc
 import languages from './translations'
@@ -99,6 +101,7 @@ Vue.component('create-wallet-modal', CreateWalletModal)
 Vue.component('dapp-buttons', DappButtons)
 Vue.component('success-modal', SuccessModal)
 Vue.component('faq-block', FaqBlock)
+Vue.component('finish-modal', FinishModal)
 Vue.component('generate-info', GenerateInfo)
 Vue.component('generate-tx', GenerateTx)
 Vue.component('hardware-modal', HardwareModal)
@@ -124,6 +127,7 @@ Vue.component('software-modal', SoftwareModal)
 Vue.component('interface-side-menu', InterfaceSideMenu)
 Vue.component('top-banner', TopBanner)
 Vue.component('tutorial-modal', TutorialModal)
+Vue.component('verification-modal', VerificationModal)
 
 Vue.component('v-select', vSelect)
 Vue.component('infinite-slider', InfiniteSlider)

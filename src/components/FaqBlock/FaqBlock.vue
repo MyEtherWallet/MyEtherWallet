@@ -18,7 +18,7 @@ export default {
     'title',
     'articles'
   ],
-  data: function () {
+  data () {
     return {
     }
   }

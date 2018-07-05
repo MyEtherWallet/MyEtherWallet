@@ -1,5 +1,3 @@
-// const getters = {}
-
 const all = (state) => {
   return state
 }

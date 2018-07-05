@@ -28,4 +28,4 @@ Formatting is pretty standard:
   | index.js # This imports all of them
 ```
 
-Note: Best and easiest way would be to follow `gb.js(English Translations)` or reference it.
+Note: Best and easiest way would be to use `gb.js (English Translations)` as reference.

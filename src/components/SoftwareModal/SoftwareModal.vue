@@ -39,13 +39,13 @@
 <script>
 export default {
   props: ['value', 'openPassword'],
-  data: function () {
+  data () {
     return {
       file: ''
     }
   },
   methods: {
-    uploadClick: function () {
+    uploadClick () {
       let jsonInput = document.getElementById('jsonInput')
       if (this.file === '') {
         jsonInput.click()
@@ -53,7 +53,7 @@ export default {
         this.openPassword()
       }
     },
-    uploadedFile: function (e) {
+    uploadedFile (e) {
       const self = this
       let reader = new FileReader()
       reader.onloadend = function (evt) {

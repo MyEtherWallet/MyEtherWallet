@@ -9,11 +9,8 @@
     background-color: $background-color-white;
   }
 
-  $border-bottom-color: rgba(0, 0, 0, 0.06);
-
   .content-title {
-    // box-shadow: 0 1px 1px $box-shadow-color-2;
-    border-bottom: 1px solid $border-bottom-color;
+    border-bottom: 1px solid $opaque-black-9;
     padding: 17px 0;
 
     h2 {
@@ -28,25 +25,24 @@
   }
 
   .progress-status {
-    $border-bottom-black: #000;
     background-color: $background-color-5;
-    border-bottom: 1px solid $border-bottom-color;
-    box-shadow: 0 2px 0 $border-bottom-black;
+    border-bottom: 1px solid $opaque-black-9;
+    box-shadow: 0 2px 0 $black;
     display: grid;
-    grid-template-columns: 27% 27% 27%;
-    text-align: center;
     grid-column-gap: 20px;
+    grid-template-columns: 27% 27% 27%;
     justify-content: space-evenly;
+    text-align: center;
 
     > div {
-      padding-top: 24px;
-      padding-bottom: 18px;
       cursor: pointer;
+      padding-bottom: 18px;
+      padding-top: 24px;
 
       p {
+        color: $text-color-9;
         display: block;
         margin: 0 auto;
-        color: $text-color-9;
       }
 
       .title {
@@ -55,7 +51,7 @@
     }
 
     .active {
-      border-bottom: 4px solid black;
+      border-bottom: 4px solid $black;
 
       p {
         color: $text-black;
@@ -84,5 +80,5 @@
         }
       }
     }
-  } // .advanced
+  }
 }

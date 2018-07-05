@@ -12,13 +12,13 @@
 
   .progress-bar {
     animation-duration: .5s;
-    animation-name: progreesbar-grow;
+    animation-name: progressbarGrow;
     background-color: $nav-tab--progress-bar-background-color;
     height: 6px;
     width: 66.66%;
   }
 
-  @keyframes progreesbar-grow {
+  @keyframes progressbarGrow {
     from {width: 33.33%;}
     to {width: 66.66%;}
   }
@@ -89,14 +89,4 @@
   background-color: $disabled;
   cursor: default;
   pointer-events: none;
-}
-
-.spinner {
-  animation: spin 2s linear infinite;
-  height: 37px;
-}
-
-@keyframes spin {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
 }

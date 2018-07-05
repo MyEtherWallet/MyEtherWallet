@@ -1,4 +1,4 @@
-@import "GlobalVariables";
+@import 'GlobalVariables';
 
 .bootstrap-modal {
   .modal-icon {
@@ -37,7 +37,7 @@
       background-color: $button--background-color-3;
     }
   }
-} // .bootstrap-modal
+}
 
 .appstore-button-container {
   background-color: $background-color-6;
