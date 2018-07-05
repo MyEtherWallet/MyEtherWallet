@@ -21,9 +21,6 @@ export default {
     if (window.web3) {
       this.$store.dispatch('setWeb3Instance', window.web3)
     }
-  },
-  mounted () {
-    console.log(this)
   }
 }
 </script>

@@ -77,6 +77,7 @@ export default {
     switchTabs (param) {
       this.currentTab = param
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
+      store.set('curPage', param)
     },
     async getBlock () {
       const body = {
@@ -124,7 +125,7 @@ export default {
   },
   mounted () {
     if (store.get('curPage') !== undefined) {
-      this.curPage = store.get('curPage')
+      this.currentTab = store.get('curPage')
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('curPage')])
     }
 

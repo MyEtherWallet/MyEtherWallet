@@ -18,9 +18,12 @@
 </style>
 <script>
 export default {
-  props: ['message', 'linkMessage'],
+  props: ['message', 'linkMessage', 'linkTo'],
   methods: {
     hideModal () {
+      if (this.linkTo !== undefined) {
+        this.$router(this.linkTo)
+      }
       this.$refs.success.hide()
     }
   }
