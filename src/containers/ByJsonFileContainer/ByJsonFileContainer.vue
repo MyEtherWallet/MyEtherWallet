@@ -1,6 +1,6 @@
 <template>
   <div class="create-wallet-by-json-file">
-    <success-modal message="You have created a wallet successfully" linkMessage="Access My Wallet"></success-modal>
+    <success-modal message="You have created a wallet successfully" linkTo="/interface" linkMessage="Access My Wallet"></success-modal>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
