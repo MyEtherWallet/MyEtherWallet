@@ -26,7 +26,12 @@
 </template>
 
 <script>
+import FaqBlock from './components/FaqBlock'
+
 export default {
+  components: {
+    'faq-block': FaqBlock
+  },
   data () {
     return {
       blocks: [

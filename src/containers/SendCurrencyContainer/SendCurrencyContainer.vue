@@ -104,8 +104,13 @@
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+
 export default {
-  props: ['address']
+  props: ['address'],
+  components: {
+    'interface-bottom-text': InterfaceBottomText
+  }
 }
 </script>
 

@@ -21,9 +21,14 @@
 </template>
 
 <script>
+import InterfaceBalanceModal from '../InterfaceBalanceModal'
 const unit = require('ethjs-unit')
+
 export default {
   props: ['balance'],
+  components: {
+    'interface-balance-modal': InterfaceBalanceModal
+  },
   data () {
     return {
       parsedBalance: 0

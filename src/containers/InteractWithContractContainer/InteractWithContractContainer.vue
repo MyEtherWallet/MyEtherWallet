@@ -46,7 +46,12 @@
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+
 export default {
+  components: {
+    'interface-bottom-text': InterfaceBottomText
+  },
   data () {
     return {
       existingContracts: [

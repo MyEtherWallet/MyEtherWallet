@@ -53,8 +53,15 @@
 </template>
 
 <script>
+import SuccessModal from '@/components/SuccessModal'
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+
 export default {
   name: 'Interact',
+  components: {
+    'success-modal': SuccessModal,
+    'interface-bottom-text': InterfaceBottomText
+  },
   data () {
     return {
       showModal: true,

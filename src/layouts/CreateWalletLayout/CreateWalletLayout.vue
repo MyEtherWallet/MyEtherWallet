@@ -30,7 +30,24 @@
 </template>
 
 <script>
+import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
+import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
+import TutorialModal from './components/TutorialModal'
+import CreateWalletInput from './components/CreateWalletInput'
+import CreateWalletInputFooter from './components/CreateWalletInputFooter'
+import PageFooter from './components/PageFooter'
+import PageTitle from './components/PageTitle'
+
 export default {
+  components: {
+    'by-json-file-container': ByJsonFileContainer,
+    'by-mnemonic-container': ByMnemonicContainer,
+    'tutorial-modal': TutorialModal,
+    'by-json-page-title': PageTitle,
+    'create-wallet-input': CreateWalletInput,
+    'create-wallet-input-footer': CreateWalletInputFooter,
+    'by-json-page-footer': PageFooter
+  },
   data () {
     return {
       byJson: false,

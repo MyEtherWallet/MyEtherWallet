@@ -21,7 +21,6 @@
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
-          <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <div class="tokens" v-if="$store.state.online">
             <interface-tokens></interface-tokens>
           </div>
@@ -38,7 +37,33 @@
 </template>
 
 <script>
+import DappsContainer from '@/containers/DappsContainer'
+import DeployContractContainer from '@/containers/DeployContractContainer'
+import InteractWithContractContainer from '@/containers/InteractWithContractContainer'
+import SendCurrencyContainer from '@/containers/SendCurrencyContainer'
+import SendOfflineContainer from '@/containers/SendOfflineContainer'
+import SwapContainer from '@/containers/SwapContainer'
+
+import InterfaceAddress from './components/InterfaceAddress'
+import InterfaceBalance from './components/InterfaceBalance'
+import InterfaceNetwork from './components/InterfaceNetwork'
+import InterfaceSideMenu from './components/InterfaceSideMenu'
+import InterfaceTokens from './components/InterfaceTokens'
+
 export default {
+  components: {
+    'send-currency-container': SendCurrencyContainer,
+    'send-offline-container': SendOfflineContainer,
+    'swap-container': SwapContainer,
+    'dapps-container': DappsContainer,
+    'interact-with-contract-container': InteractWithContractContainer,
+    'deploy-contract-container': DeployContractContainer,
+    'interface-side-menu': InterfaceSideMenu,
+    'interface-address': InterfaceAddress,
+    'interface-balance': InterfaceBalance,
+    'interface-network': InterfaceNetwork,
+    'interface-tokens': InterfaceTokens
+  },
   data () {
     return {
       currentTab: 'send',

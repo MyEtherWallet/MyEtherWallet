@@ -14,7 +14,11 @@
 </template>
 
 <script>
+import NewsArticle from './components/NewsArticle'
 export default {
+  components: {
+    'news-article': NewsArticle
+  },
   data () {
     return {
       articles: [

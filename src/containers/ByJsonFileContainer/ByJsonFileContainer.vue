@@ -46,6 +46,9 @@
 </template>
 
 <script>
+import SuccessModal from '@/components/SuccessModal'
+import ByJsonBlock from './components/ByJsonBlock'
+
 import noLose from '@/assets/images/icons/no-lose.svg'
 import noShare from '@/assets/images/icons/no-share.svg'
 import makeBackup from '@/assets/images/icons/make-a-backup.svg'
@@ -54,6 +57,10 @@ import Wallet from 'ethereumjs-wallet'
 
 export default {
   props: ['password'],
+  components: {
+    'by-json-block': ByJsonBlock,
+    'success-modal': SuccessModal
+  },
   data () {
     return {
       contents: [
@@ -80,12 +87,13 @@ export default {
   },
   mounted () {
     const worker = new Worker()
+    const self = this
     worker.postMessage({type: 'createWallet', data: [this.password]})
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape
-      this.walletJson = createBlob('mime', e.data.walletJson)
-      this.name = e.data.name.toString()
-      this.$store.dispatch('decryptWallet', Wallet.fromV3(e.data.walletJson, this.password))
+      self.walletJson = createBlob('mime', e.data.walletJson)
+      self.name = e.data.name.toString()
+      self.$store.dispatch('decryptWallet', Wallet.fromV3(e.data.walletJson, self.password))
 
       function createBlob (mime, str) {
         const string = (typeof str === 'object') ? JSON.stringify(str) : str
@@ -93,7 +101,7 @@ export default {
         var blob = new Blob([string], {
           type: mime
         })
-        this.downloadable = true
+        self.downloadable = true
         return window.URL.createObjectURL(blob)
       }
     }
@@ -103,8 +111,9 @@ export default {
   },
   watch: {
     downloadable () {
+      const self = this
       setTimeout(function () {
-        this.$children[0].$refs.success.show()
+        self.$children[0].$refs.success.show()
       }, 15000)
     }
   }

@@ -33,7 +33,16 @@
 </template>
 
 <script>
+import GenerateInfo from './components/GenerateInfo'
+import GenerateTx from './components/GenerateTx'
+import SendTx from './components/SendTx'
+
 export default {
+  components: {
+    'generate-info': GenerateInfo,
+    'generate-tx': GenerateTx,
+    'send-tx': SendTx
+  },
   data () {
     return {
     }
