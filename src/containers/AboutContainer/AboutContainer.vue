@@ -31,9 +31,9 @@
                 <img class="mew-icon" src="~@/assets/images/home/mew-icon.png">
               </div>
             </div>
-          </div><!-- .page-container -->
-        </div><!-- .star-background -->
-      </div><!-- .top-section -->
+          </div>
+        </div>
+      </div>
       <div class="bottom-section">
         <div class="page-container">
           <div class="grid-col-2 mew-features">
@@ -80,12 +80,12 @@
                   {{ $t("about.mewConnectDesc") }}
                 </p>
               </div>
-            </dir><!-- .content -->
-          </div><!-- .mew-features -->
-        </div><!-- .page-container -->
-      </div><!-- .bottom-section -->
-    </div><!-- .wrap -->
-  </div><!-- .about-mew -->
+            </dir>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

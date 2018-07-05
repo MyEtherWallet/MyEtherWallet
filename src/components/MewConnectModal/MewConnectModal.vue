@@ -23,10 +23,8 @@
 
 <script>
 export default {
-  props: [
-    'networkAndAddressOpen'
-  ],
-  data: function () {
+  props: ['networkAndAddressOpen'],
+  data () {
     return {
     }
   }

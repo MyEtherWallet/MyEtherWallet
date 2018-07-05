@@ -128,19 +128,17 @@ export default {
     }
   },
   methods: {
-    expendDomainCheckForm: function () {
+    expendDomainCheckForm () {
       document.querySelector('.domain-check-form').classList.toggle('hidden')
       document.querySelector('.sub-domain-list').classList.add('hidden')
     },
-    domainAvailabilityCheck: function () {
+    domainAvailabilityCheck () {
       // document.querySelector('.domain-check-form').classList.toggle('hidden')
       document.querySelector('.sub-domain-list').classList.remove('hidden')
     },
-    domainBuyButtonClick: function ($event) {
+    domainBuyButtonClick ($event) {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
     }
-  },
-  mounted () {
   }
 }
 </script>

@@ -17,18 +17,16 @@ export default {
       online: true
     }
   },
-  mounted: function () {
-    const self = this
-    if (self.$store.state.online) {
-      self.online = true
+  mounted () {
+    if (this.$store.state.online) {
+      this.online = true
     } else {
-      self.online = false
+      this.online = false
     }
   },
   watch: {
-    online: function (newVal) {
-      const self = this
-      self.online = newVal
+    online (newVal) {
+      this.online = newVal
     }
   }
 }

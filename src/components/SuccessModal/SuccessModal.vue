@@ -20,7 +20,7 @@
 export default {
   props: ['message', 'linkMessage'],
   methods: {
-    hideModal: function () {
+    hideModal () {
       this.$refs.success.hide()
     }
   }

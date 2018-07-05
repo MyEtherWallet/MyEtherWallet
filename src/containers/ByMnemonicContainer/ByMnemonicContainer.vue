@@ -1,40 +1,7 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-
-    <!-- Modal =================================== -->
-    <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal done">
-      <div class="d-block text-center">
-        <i class="check-icon fa fa-check" aria-hidden="true"></i>
-        <h2 class="title">{{ $t("byMnemonic.success") }}</h2>
-        <p class="content">{{ $t("byMnemonic.successfullyCreated") }}</p>
-      </div>
-      <div class="button-container">
-        <b-btn class="mid-round-button-green-filled close-button">
-          {{ $t("reused.unlockWallet") }}
-        </b-btn>
-      </div>
-    </b-modal>
-
-    <b-modal ref="verification" hide-footer centered class="bootstrap-modal-wide verification nopadding" title="Verification">
-      <div class="content-block">
-        <p class="block-title">Please enter and fill out the empty boxes below to verify your mnemonic phrase key.</p>
-        <div class="phrases">
-          <ul>
-            <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">
-              {{index + 1}}.<span>{{value}}</span>
-              <input class="hidden" type="text" name="">
-            </li>
-          </ul>
-        </div>
-        <div class="button-container">
-          <div v-on:click="mnemonicDoneModalOpen" class="verify-button large-round-button-green-filled">
-            Verify
-          </div>
-        </div>
-      </div>
-    </b-modal>
-    <!-- Modal =================================== -->
-
+    <finish-modal></finish-modal>
+    <verification-modal :mnemonicValues="mnemonicValues" :mnemonicDoneModalOpen="mnemonicDoneModalOpen"></verification-modal>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
@@ -50,7 +17,6 @@
               <div class="contents">
                 <div class="tools">
                   <div class="value-switch noselect">
-                    <!-- Rounded switch -->
                     <div class="sliding-switch">
                       <label class="switch">
                         <input type="checkbox">
@@ -62,12 +28,12 @@
                       </div>
                     </div>
                     <span class="text__base link switch-label">{{ $t("byMnemonic.value") }}</span>
-                  </div><!-- .value-switch -->
+                  </div>
 
                   <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
                     <span>{{ $t("byMnemonic.random") }}</span>
-                  </div><!-- .random-button -->
+                  </div>
                 </div>
                 <div class="phrases">
                   <ul>
@@ -103,7 +69,7 @@
 
 <script>
 // Mnemonic code for generating deterministic keys
-var bip39 = require('bip39')
+let bip39 = require('bip39')
 
 export default {
   data () {
@@ -122,8 +88,8 @@ export default {
       }
     },
     mnemonicValueBitSizeChange () {
-      var left = document.querySelector('.label-left')
-      var right = document.querySelector('.label-right')
+      const left = document.querySelector('.label-left')
+      const right = document.querySelector('.label-right')
 
       this.mnemonic24 = !this.mnemonic24
 
@@ -140,13 +106,10 @@ export default {
       }
     },
     mnemonicDoneModalOpen () {
-      // console.log(this.varificationValues)
-
-      var valid = false
+      let valid = false
 
       this.varificationValues.forEach(function (value) {
-        var userInputText = document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('input').value
-        // console.log(userInputText)
+        const userInputText = document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('input').value
 
         if (userInputText === document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('span').textContent) {
           valid = true
@@ -156,14 +119,14 @@ export default {
       })
 
       if (valid === true) {
-        this.$refs.done.show()
+        this.$children[0].$refs.done.show()
       }
     },
     mnemonicVerificationModalOpen () {
       // Generate random numbers to choose which blocks to hide
       function generateNumArr (limit) {
-        var ret = []
-        for (var i = 1; i < limit; i++) {
+        let ret = []
+        for (let i = 1; i < limit; i++) {
           ret.push(i)
         }
 
@@ -171,23 +134,20 @@ export default {
       }
 
       function shuffle (array) {
-        var i = array.length
-        var j = 0
-        var temp
-
+        let i = array.length
+        let j = 0
+        let temp
         while (i--) {
           j = Math.floor(Math.random() * (i + 1))
-
           // swap randomly chosen element with current element
           temp = array[i]
           array[i] = array[j]
           array[j] = temp
         }
-
         return array
       }
 
-      var ranNums = []
+      let ranNums = []
       this.varificationValues = []
 
       document.querySelectorAll('.phrases .word').forEach(function (el) {
@@ -203,7 +163,7 @@ export default {
       }
 
       // Hide 5 random mnemonic blocks
-      for (var c = 0; c < 5; c++) {
+      for (let c = 0; c < 5; c++) {
         document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').classList.add('verification')
 
         document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').classList.add('hidden')
@@ -215,13 +175,14 @@ export default {
         document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('input').classList.remove('hidden')
       }
 
-      this.$refs.verification.show()
+      this.$children[1].$refs.verification.show()
     }
 
   },
   mounted () {
     // Generate a random mnemonic
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
+    console.log(this.$children)
   }
 }
 </script>

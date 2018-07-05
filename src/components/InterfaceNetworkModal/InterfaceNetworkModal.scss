@@ -32,23 +32,19 @@
         }
 
         &.dot-green::before {
-          $background-color: #37ce76;
-          background-color: $background-color;
+          background-color: $light-green-3;
         }
 
         &.dot-bluegreen::before {
-          $background-color: #00b3db;
-          background-color: $background-color;
+          background-color: $light-blue-5;
         }
 
         &.dot-blue::before {
-          $background-color: #5c74eb;
-          background-color: $background-color;
+          background-color: $light-violet-1;
         }
 
         &.dot-orange::before {
-          $background-color: #f37240;
-          background-color: $background-color;
+          background-color: $light-orange;
         }
       }
 

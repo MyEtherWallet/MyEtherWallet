@@ -32,19 +32,16 @@
             :tooltip="button.tooltip">
           </access-wallet-button>
         </div>
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script>
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
-// import mewConnectImgOffline from '@/assets/images/icons/button-mewconnect-white.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
-// import hardwareImgOffline from '@/assets/images/icons/button-hardware.svg'
 import metamaskImg from '@/assets/images/icons/button-metamask.svg'
-// import metamaskImgOffline from '@/assets/images/icons/button-metamask-fox.svg'
 import softwareImg from '@/assets/images/icons/button-software.svg'
 export default {
   data () {
@@ -58,7 +55,6 @@ export default {
           desc: self.$t('accessMyWalletOptions.mewConnectDesc'),
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
-          // img: self.$store.state.online ? mewConnectImg: mewConnectImgOffline
           img: mewConnectImg
         },
         {
@@ -67,7 +63,6 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
-          // img: self.$store.state.online ? hardwareImg: hardwareImgOffline
           img: hardwareImg
         },
         {
@@ -76,7 +71,6 @@ export default {
           desc: self.$t('accessMyWalletOptions.metaMaskDesc'),
           recommend: '',
           tooltip: self.$t('reused.toolTip3'),
-          // img: self.$store.state.online ? metamaskImg: metamaskImgOffline
           img: metamaskImg
         },
         {
@@ -85,32 +79,31 @@ export default {
           desc: self.$t('accessMyWalletOptions.softwareDesc'),
           recommend: self.$t('accessMyWalletOptions.notRecommended'),
           tooltip: self.$t('reused.toolTip3'),
-          // img: self.$store.state.online ? softwareImg: softwareImgOffline
           img: softwareImg
         }
       ]
     }
   },
   methods: {
-    mewConnectModalOpen: function () {
+    mewConnectModalOpen () {
       this.$children[0].$refs.mewConnect.show()
     },
-    networkAndAddressOpen: function () {
+    networkAndAddressOpen () {
       this.$children[1].$refs.networkAndAddress.show()
     },
-    hardwareModalOpen: function () {
+    hardwareModalOpen () {
       this.$children[2].$refs.hardware.show()
     },
-    metamaskModalOpen: function () {
+    metamaskModalOpen () {
       this.$children[3].$refs.metamask.show()
     },
-    softwareModalOpen: function () {
+    softwareModalOpen () {
       this.$children[4].$refs.software.show()
     },
-    passwordOpen: function () {
+    passwordOpen () {
       this.$children[5].$refs.password.show()
     },
-    fileUploaded: function (e) {
+    fileUploaded (e) {
       this.file = e
       this.passwordOpen()
     }

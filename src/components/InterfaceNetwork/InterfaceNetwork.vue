@@ -41,7 +41,7 @@ export default {
       document.querySelector('.auth-form-container').classList.toggle('hidden')
     }
   },
-  mounted: function () {
+  mounted () {
     if (this.blockNumber && this.blockNumber.result !== undefined) {
       this.parsedNetwork = parseInt(this.blockNumber.result)
     }

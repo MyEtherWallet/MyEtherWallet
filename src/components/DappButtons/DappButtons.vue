@@ -12,7 +12,7 @@
 export default {
   props: ['title', 'desc', 'icon'],
   methods: {
-    switcher: function () {
+    switcher () {
       this.$emit('click')
     }
   }

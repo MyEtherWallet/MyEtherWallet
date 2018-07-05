@@ -29,10 +29,10 @@
               {{ $t("termsOfConditions.paragraph8") }}
             </p>
           </div>
-        </div><!-- .content-width-limit -->
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .team -->
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

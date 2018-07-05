@@ -95,41 +95,38 @@ export default {
     }
   },
   methods: {
-    languageItemClicked: function (e) {
-      const self = this
+    languageItemClicked (e) {
       let flag = e.target.getAttribute('data-flag-name')
 
-      self.$root._i18n.locale = flag
-      self.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
-      self.currentFlag = flag
+      this.$root._i18n.locale = flag
+      this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
+      this.currentFlag = flag
       localStorage.setItem('locale', flag)
     },
-    scrollTop: function () {
+    scrollTop () {
       window.scrollTo(0, 0)
     },
-    logout: function () {
-      const self = this
-      self.$store.dispatch('clearWallet')
-      self.$router.push('/')
+    logout () {
+      this.$store.dispatch('clearWallet')
+      this.$router.push('/')
     }
   },
-  mounted: function () {
-    const self = this
-    if (self.$store.state.online) {
-      self.online = true
+  mounted () {
+    if (this.$store.state.online) {
+      this.online = true
     } else {
-      self.online = false
+      this.online = false
     }
 
     if (localStorage.getItem('locale') !== null) {
-      self.$root._i18n.locale = localStorage.getItem('locale')
-      self.currentFlag = localStorage.getItem('locale')
+      this.$root._i18n.locale = localStorage.getItem('locale')
+      this.currentFlag = localStorage.getItem('locale')
     } else {
-      localStorage.setItem('locale', self.$root._i18n.locale)
-      self.currentFlag = self.$root._i18n.locale
+      localStorage.setItem('locale', this.$root._i18n.locale)
+      this.currentFlag = this.$root._i18n.locale
     }
 
-    self.currentName = self.supportedLanguages.filter(item => item.flag === self.currentFlag)[0].name
+    this.currentName = this.supportedLanguages.filter(item => item.flag === this.currentFlag)[0].name
 
     window.onscroll = function (e) {
       var element = document.querySelector('body')
@@ -146,9 +143,8 @@ export default {
     }
   },
   watch: {
-    online: function (newVal) {
-      const self = this
-      self.online = newVal
+    online (newVal) {
+      this.online = newVal
     }
   },
   computed: {

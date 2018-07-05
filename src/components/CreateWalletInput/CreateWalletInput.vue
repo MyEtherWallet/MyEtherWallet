@@ -19,27 +19,26 @@ export default {
     }
   },
   methods: {
-    updateValue: async function (value) {
-      const self = this
+    async updateValue (value) {
       let score = await zxcvbn(value).score
 
-      self.$emit('input', value)
+      this.$emit('input', value)
       switch (score) {
         case 1:
-          self.strength = 'Very Weak'
-          self.strengthClass = 'very-weak'
+          this.strength = 'Very Weak'
+          this.strengthClass = 'very-weak'
           break
         case 2:
-          self.strength = 'Weak'
-          self.strengthClass = 'weak'
+          this.strength = 'Weak'
+          this.strengthClass = 'weak'
           break
         case 3:
-          self.strength = 'Strong'
-          self.strengthClass = 'strong'
+          this.strength = 'Strong'
+          this.strengthClass = 'strong'
           break
         case 4:
-          self.strength = 'Very Strong'
-          self.strengthClass = 'very-strong'
+          this.strength = 'Very Strong'
+          this.strengthClass = 'very-strong'
           break
       }
     }

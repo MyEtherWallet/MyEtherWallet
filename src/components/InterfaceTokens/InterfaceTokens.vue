@@ -27,11 +27,11 @@
           <p class="down"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
           <p class="up hidden"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
         </div>
-      </div> <!-- .tokens-container -->
+      </div>
       <div class="bottom-image-container">
         <img class="icon" src="~@/assets/images/etc/oiwjehfowhohweg.png">
       </div>
-    </div><!-- .wrap -->
+    </div>
   </div>
 </template>
 
@@ -44,12 +44,12 @@ export default {
     }
   },
   methods: {
-    tokenListExpend: function () {
+    tokenListExpend () {
       document.querySelector('.token-table-container').classList.toggle('expended')
       document.querySelector('.expend-bar .down').classList.toggle('hidden')
       document.querySelector('.expend-bar .up').classList.toggle('hidden')
     },
-    fetchTokens: async function () {
+    async fetchTokens () {
       const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
       const userAddress = this.$store.state.wallet.getAddress().toString('hex')
       const data = `0x80f4ae5c000000000000000000000000${userAddress}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
@@ -78,7 +78,7 @@ export default {
 
       return response
     },
-    search: function (str) {
+    search (str) {
       return this.tokens.filter(item => {
         if (str !== '' && item.name.includes(str)) {
           return item
@@ -88,7 +88,7 @@ export default {
       })
     }
   },
-  mounted: async function () {
+  async mounted () {
     const hex = await this.fetchTokens()
     this.tokens = parseTokensHex(hex.result).sort((a, b) => {
       if (a.name.toUpperCase() < b.name.toUpperCase()) {
@@ -101,7 +101,7 @@ export default {
     })
   },
   watch: {
-    tokens: function (newVal) {
+    tokens (newVal) {
       this.tokens = newVal
     }
   }

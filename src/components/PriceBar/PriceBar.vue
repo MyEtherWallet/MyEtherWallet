@@ -15,10 +15,10 @@
           </div>
         </infinite-slider>
 
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
+      </div>
+    </div>
 
-  </div><!-- .team -->
+  </div>
 </template>
 
 <script>
@@ -33,25 +33,21 @@ export default {
     }
   },
   methods: {
-    rotate: function () {
-      const self = this
-      self.showSet = !self.showSet
+    rotate () {
+      this.showSet = !this.showSet
     }
   },
-  mounted: function () {
-    const self = this
-    self.rotationInterval = setInterval(self.rotate, 5000)
+  mounted () {
+    this.rotationInterval = setInterval(this.rotate, 5000)
   },
   watch: {
-    tokens: function (val) {
-      const self = this
-      self.set1 = self.tokens.slice(0, 9)
-      self.set2 = self.tokens.slice(10, 19)
+    tokens (val) {
+      this.set1 = this.tokens.slice(0, 9)
+      this.set2 = this.tokens.slice(10, 19)
     }
   },
-  beforeDestroy: function () {
-    const self = this
-    clearInterval(self.rotationInterval)
+  beforeDestroy () {
+    clearInterval(this.rotationInterval)
   }
 }
 </script>

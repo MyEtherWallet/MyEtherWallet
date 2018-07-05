@@ -44,7 +44,7 @@
 
             </div>
           </div>
-        </div><!-- .footer-contents -->
+        </div>
         <div class="flex-space-between foot-note">
           <div class="links">
             <router-link v-for="(link, index) in lowerLinks" :key="link.title + index" :to="link.to"><span>{{ link.title }}</span></router-link>
@@ -59,7 +59,7 @@
               <i :class="'fa '+ link.class"></i>
             </a>
           </div>
-        </div><!-- .foot-note -->
+        </div>
       </div>
     </div>
   </div>

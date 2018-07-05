@@ -113,21 +113,19 @@ export default {
     }
   },
   methods: {
-    generateInfo: function () {
+    generateInfo () {
       this.moreInfoGenerated = true
     },
-    copyFromAddress: function () {
+    copyFromAddress () {
       document.querySelector('#from-address').select()
       document.execCommand('copy')
     },
-    deleteFromAddress: function () {
+    deleteFromAddress () {
       document.querySelector('#from-address').value = ''
     },
-    processChange: function () {
+    processChange () {
       this.$store.state.state.pageStates.sendOffline.processLocation = 'process2'
     }
-  },
-  mounted () {
   }
 }
 </script>

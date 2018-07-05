@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="addressIdenticon" ref="identicon"></div>
+    <div class="address-identicon" ref="identicon"></div>
 </template>
 <script>
 import {Blockies} from '@/helpers'
@@ -31,7 +31,7 @@ export default {
       this.setBlockie()
     }
   },
-  mounted: function () {
+  mounted () {
     this.setBlockie()
   }
 }

@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-    processChange: function (process) {
+    processChange (process) {
       this.$store.state.pageStates.sendOffline.processLocation = process
     }
   },
@@ -48,12 +48,12 @@ export default {
     document.querySelector('.' + activeProcess).classList.add('active')
   },
   computed: {
-    currentProcess: function () {
+    currentProcess () {
       return this.$store.state.pageStates.sendOffline.processLocation
     }
   },
   watch: {
-    currentProcess: function (value) {
+    currentProcess (value) {
       document.querySelectorAll('.progress-status > div').forEach(function (el) {
         el.classList.remove('active')
       })

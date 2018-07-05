@@ -19,7 +19,7 @@ import Wallet from 'ethereumjs-wallet'
 import Worker from '@/workers/unlockWallet.worker.js'
 export default {
   props: ['file'],
-  data: function () {
+  data () {
     return {
       show: false,
       password: '',
@@ -27,7 +27,7 @@ export default {
     }
   },
   methods: {
-    unlockWallet: function () {
+    unlockWallet () {
       const self = this
       const worker = new Worker()
       worker.postMessage({type: 'unlockWallet', data: [self.file, self.password]})
@@ -40,12 +40,12 @@ export default {
         self.error = e.message
       }
     },
-    switchViewPassword: function () {
+    switchViewPassword () {
       this.show = !this.show
     }
   },
   watch: {
-    password: function () {
+    password () {
       this.error = ''
     }
   }

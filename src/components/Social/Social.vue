@@ -16,9 +16,9 @@
             </a>
           </div>
         </div>
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .about-mew -->
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

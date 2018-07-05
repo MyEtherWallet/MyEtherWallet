@@ -39,25 +39,24 @@ export default {
     }
   },
   methods: {
-    switcher: function (by) {
-      const self = this
+    switcher (by) {
       if (by === 'Json') {
-        self.byJson = true
-        self.byMnemonic = false
+        this.byJson = true
+        this.byMnemonic = false
       } else if (by === 'Mnemonic') {
-        self.byJson = false
-        self.byMnemonic = true
+        this.byJson = false
+        this.byMnemonic = true
       } else {
-        self.byJson = false
-        self.byMnemonic = false
+        this.byJson = false
+        this.byMnemonic = false
       }
     },
-    skip: function () {
+    skip () {
       localStorage.setItem('skipTutorial', true)
       this.$children[0].$refs.tutorial.hide()
     }
   },
-  mounted: function () {
+  mounted () {
     let skipTutorial = localStorage.getItem('skipTutorial')
     if (skipTutorial === undefined || skipTutorial === null || skipTutorial === false) {
       this.$children[0].$refs.tutorial.show()

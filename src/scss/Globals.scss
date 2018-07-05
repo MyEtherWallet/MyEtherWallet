@@ -120,10 +120,10 @@ textarea {
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 // *********************************************************************
@@ -138,22 +138,19 @@ input[type=number]::-webkit-outer-spin-button {
 
 // Track
 ::-webkit-scrollbar-track {
-  $background-color: #f1f1f1;
-  background: $background-color;
+  background: $light-grey-9;
   border-radius: 10px;
 }
 
 // Handle
 ::-webkit-scrollbar-thumb {
-  $background-color: #888;
-  background: $background-color;
+  background: $dark-grey-8;
   border-radius: 10px;
 }
 
 // Handle on hover
 ::-webkit-scrollbar-thumb:hover {
-  $background-color: #555;
-  background: $background-color;
+  background: $dark-grey-9;
   border-radius: 10px;
 }
 
@@ -184,7 +181,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   .dropdown.open .dropdown-toggle {
-    border: 1px solid rgba(60,60,60,.26) !important;
+    border: 1px solid $opaque-grey !important;
   }
 }
 
@@ -593,7 +590,7 @@ h6 {
 // *********************************************************************
 
 .popover {
-  pointer-events: none;  
+  pointer-events: none;
 }
 
 .tooltip {
@@ -604,7 +601,7 @@ h6 {
 
   .arrow::before {
     border-top-color: $background-color-white;
-  }  
+  }
 
   .tooltip-inner {
     background-color: $background-color-white;
@@ -968,7 +965,7 @@ h6 {
 
   // On mouse-over, add a grey background color
   &:hover input ~ .checkmark {
-    $check-box-hover-color: #ccc;
+    $check-box-hover-color: $light-grey-12;
     background-color: $check-box-hover-color;
   }
 
@@ -984,7 +981,7 @@ h6 {
 
   // Create a custom checkbox
   .checkmark {
-    $unchecked-box-color: #eee;
+    $unchecked-box-color: $light-grey-13;
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 22px;
@@ -1010,7 +1007,7 @@ h6 {
   }
 
   .checkmark-small {
-    $unchecked-box-color: #eee;
+    $unchecked-box-color: $light-grey-13;
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 19px;
@@ -1072,7 +1069,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    $border-color: #8a8a8a;
+    $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
@@ -1104,7 +1101,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    $border-color: #8a8a8a;
+    $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
@@ -1199,4 +1196,3 @@ h6 {
 .linker-1:hover {
   color: $link-text-color-1;
 }
-

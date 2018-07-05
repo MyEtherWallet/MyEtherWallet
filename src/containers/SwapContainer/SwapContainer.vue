@@ -32,8 +32,8 @@
             <input type="number" name="" value="" placeholder="Received Amount">
           </div>
         </div>
-      </div> <!-- .form-block .amount-to-address -->
-    </div> <!-- .send-form -->
+      </div>
+    </div>
 
     <div class="send-form">
       <div class="title-container">
@@ -91,11 +91,9 @@ export default {
     }
   },
   methods: {
-    copyAddress: function () {
+    copyAddress () {
       alert('This doesn\'t work for now.')
     }
-  },
-  mounted () {
   }
 }
 </script>

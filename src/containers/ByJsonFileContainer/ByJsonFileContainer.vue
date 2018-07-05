@@ -55,22 +55,21 @@ import Wallet from 'ethereumjs-wallet'
 export default {
   props: ['password'],
   data () {
-    const self = this
     return {
       contents: [
         {
-          title: self.$t('byJsonFile.dontLoseTitle'),
-          desc: self.$t('byJsonFile.dontLoseDesc'),
+          title: this.$t('byJsonFile.dontLoseTitle'),
+          desc: this.$t('byJsonFile.dontLoseDesc'),
           img: noLose
         },
         {
-          title: self.$t('byJsonFile.dontShareTitle'),
-          desc: self.$t('byJsonFile.dontShareDesc'),
+          title: this.$t('byJsonFile.dontShareTitle'),
+          desc: this.$t('byJsonFile.dontShareDesc'),
           img: noShare
         },
         {
-          title: self.$t('byJsonFile.makeBackupTitle'),
-          desc: self.$t('byJsonFile.makeBackupDesc'),
+          title: this.$t('byJsonFile.makeBackupTitle'),
+          desc: this.$t('byJsonFile.makeBackupDesc'),
           img: makeBackup
         }
       ],
@@ -79,15 +78,14 @@ export default {
       name: ''
     }
   },
-  mounted: function () {
-    const self = this
+  mounted () {
     const worker = new Worker()
-    worker.postMessage({type: 'createWallet', data: [self.password]})
+    worker.postMessage({type: 'createWallet', data: [this.password]})
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape
-      self.walletJson = createBlob('mime', e.data.walletJson)
-      self.name = e.data.name.toString()
-      self.$store.dispatch('decryptWallet', Wallet.fromV3(e.data.walletJson, self.password))
+      this.walletJson = createBlob('mime', e.data.walletJson)
+      this.name = e.data.name.toString()
+      this.$store.dispatch('decryptWallet', Wallet.fromV3(e.data.walletJson, this.password))
 
       function createBlob (mime, str) {
         const string = (typeof str === 'object') ? JSON.stringify(str) : str
@@ -95,7 +93,7 @@ export default {
         var blob = new Blob([string], {
           type: mime
         })
-        self.downloadable = true
+        this.downloadable = true
         return window.URL.createObjectURL(blob)
       }
     }
@@ -104,10 +102,9 @@ export default {
     }
   },
   watch: {
-    downloadable: function () {
-      let self = this
+    downloadable () {
       setTimeout(function () {
-        self.$children[0].$refs.success.show()
+        this.$children[0].$refs.success.show()
       }, 15000)
     }
   }

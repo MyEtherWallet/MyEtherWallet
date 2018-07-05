@@ -13,7 +13,7 @@
           <div class="banner-image">
             <img src="~@/assets/images/home/top-banner.jpg">
           </div>
-        </div><!-- .banner-image -->
+        </div>
         <div class="grid-col-2 promo-cards">
           <router-link to="/create-wallet" class="nounderline">
             <div class="card-block create-wallet">
@@ -53,10 +53,10 @@
               </div>
             </div>
           </router-link>
-        </div><!-- .promo-cards -->
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .top-banner -->
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

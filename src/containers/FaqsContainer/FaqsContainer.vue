@@ -16,23 +16,22 @@
               <div><h5>{{ $t("reused.customerSupport") }}</h5></div>
             </router-link>
           </div>
-        </div><!-- .top-title -->
+        </div>
         <div class="grid-col-2 qa-cards">
           <faq-block v-for="(block, index) in blocks" :title="block.title" :articles="block.articles" :key="block.title + index"/>
-        </div><!-- .qa-cards -->
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .about-mew -->
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data () {
-    const self = this
     return {
       blocks: [
         {
-          title: self.$t('faqs.gettingStarted'),
+          title: this.$t('faqs.gettingStarted'),
           articles: [
             {to: 'https://kb.myetherwallet.com/getting-started/getting-started-new.html', title: 'Getting Started on MyEtherWallet.com'},
             {to: 'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html', title: 'How To Create a Wallet'},
@@ -43,7 +42,7 @@ export default {
           ]
         },
         {
-          title: self.$t('faqs.securityAndPhishing'),
+          title: this.$t('faqs.securityAndPhishing'),
           articles: [
             {to: 'https://kb.myetherwallet.com/security/securing-your-ethereum.html', title: 'Protecting Yourself and Your Funds'},
             {to: 'https://kb.myetherwallet.com/security/phish-hacks-thefts-and-stolen-funds-due-to-phishing.html', title: 'Phish, Hacks, Thefts & stolen funds due to phishing messages on Slack / Reddit / Google Ads'},
@@ -54,7 +53,7 @@ export default {
           ]
         },
         {
-          title: self.$t('faqs.transactions'),
+          title: this.$t('faqs.transactions'),
           articles: [
             {to: 'https://kb.myetherwallet.com/gas/what-is-gas-ethereum.html', title: 'What is Gas?'},
             {to: 'https://kb.myetherwallet.com/transactions/what-is-nonce.html', title: 'What is Nonce?'},
@@ -65,7 +64,7 @@ export default {
           ]
         },
         {
-          title: self.$t('faqs.privKeyandPass'),
+          title: this.$t('faqs.privKeyandPass'),
           articles: [
             {to: 'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html', title: 'Lost Private Key'},
             {to: 'https://kb.myetherwallet.com/private-keys-passwords/lost-ethereum-wallet-password.html', title: 'Lost Password'},

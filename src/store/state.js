@@ -17,10 +17,6 @@ const state = {
   Networks: nodeList,
   Errors: {},
   online: true,
-  homepage: {
-    // Landing page sublink location
-    sublink: 'about'
-  },
   pageStates: {
     sendOffline: {
       processLocation: 'process1'

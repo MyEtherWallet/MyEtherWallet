@@ -34,13 +34,13 @@ export default {
       this.$children[0].$refs.balance.show()
     }
   },
-  mounted: function () {
+  mounted () {
     if (this.balance && this.balance.result !== undefined) {
       this.parsedBalance = unit.fromWei(this.balance.result, 'ether')
     }
   },
   watch: {
-    balance: function (newVal) {
+    balance (newVal) {
       this.parsedBalance = unit.fromWei(this.balance.result, 'ether')
     }
   }

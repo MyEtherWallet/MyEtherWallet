@@ -33,9 +33,9 @@
             </li>
           </ul>
         </div>
-      </div><!-- .page-container -->
-    </div><!-- .wrap -->
-  </div><!-- .top-banner -->
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
