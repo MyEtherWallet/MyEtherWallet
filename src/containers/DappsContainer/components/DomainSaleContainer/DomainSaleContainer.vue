@@ -53,8 +53,13 @@
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+
 export default {
   props: ['resetView'],
+  components: {
+    'interface-bottom-text': InterfaceBottomText
+  },
   data () {
     return {
     }

@@ -62,6 +62,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import store from 'store'
 import Blockie from '@/components/Blockie'
 export default {
   components: {
@@ -105,7 +106,7 @@ export default {
       this.$root._i18n.locale = flag
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
       this.currentFlag = flag
-      localStorage.setItem('locale', flag)
+      store.set('locale', flag)
     },
     scrollTop () {
       window.scrollTo(0, 0)
@@ -122,11 +123,11 @@ export default {
       this.online = false
     }
 
-    if (localStorage.getItem('locale') !== null) {
-      this.$root._i18n.locale = localStorage.getItem('locale')
-      this.currentFlag = localStorage.getItem('locale')
+    if (store.get('locale') !== null) {
+      this.$root._i18n.locale = store.get('locale')
+      this.currentFlag = store.get('locale')
     } else {
-      localStorage.setItem('locale', this.$root._i18n.locale)
+      store.set('locale', this.$root._i18n.locale)
       this.currentFlag = this.$root._i18n.locale
     }
 

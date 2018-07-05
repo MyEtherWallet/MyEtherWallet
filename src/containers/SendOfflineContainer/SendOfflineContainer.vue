@@ -5,19 +5,19 @@
     </div>
 
     <div class="progress-status prevent-user-select">
-      <div class="process1" v-on:click="processChange('process1')">
+      <div ref="genInfo" class="genInfo" v-on:click="processChange('genInfo')">
         <div class="prevent-pointer-events">
           <p class="title">{{ $t("interface.online") }}</p>
           <p class="description prevent-pointer-events">{{ $t("interface.generateInfo") }}</p>
         </div>
       </div>
-      <div class="process2" v-on:click="processChange('process2')">
+      <div ref="genTx" class="genTx" v-on:click="processChange('genTx')">
         <div class="prevent-pointer-events">
           <p class="title prevent-pointer-events">{{ $t("interface.offline") }}</p>
           <p class="description prevent-pointer-events">{{ $t("interface.generateTx") }}</p>
         </div>
       </div>
-      <div class="process3" v-on:click="processChange('process3')">
+      <div ref="sendPubTx" class="sendPubTx" v-on:click="processChange('sendPubTx')">
         <div class="prevent-pointer-events">
           <p class="title prevent-pointer-events">{{ $t("interface.online") }}</p>
           <p class="description prevent-pointer-events">{{ $t("interface.sendPubTx") }}</p>
@@ -25,9 +25,9 @@
       </div>
     </div>
 
-    <generate-info v-if="currentProcess === 'process1'"></generate-info>
-    <generate-tx v-if="currentProcess === 'process2'"></generate-tx>
-    <send-tx v-if="currentProcess === 'process3'"></send-tx>
+    <generate-info v-if="currentProcess === 'genInfo'"></generate-info>
+    <generate-tx v-if="currentProcess === 'genTx'"></generate-tx>
+    <send-tx v-if="currentProcess === 'sendPubTx'"></send-tx>
 
   </div>
 </template>
@@ -44,30 +44,29 @@ export default {
     'send-tx': SendTx
   },
   data () {
-    return {
-    }
+    return {}
   },
   methods: {
     processChange (process) {
-      this.$store.state.pageStates.sendOffline.processLocation = process
+      this.$store.dispatch('updatePageState', ['interface', 'sendOffline', process])
     }
   },
   mounted () {
-    var activeProcess = this.$store.state.pageStates.sendOffline.processLocation
-    document.querySelector('.' + activeProcess).classList.add('active')
+    var activeProcess = this.$store.state.pageStates.interface.sendOffline
+    this.$refs[activeProcess].classList.add('active')
   },
   computed: {
     currentProcess () {
-      return this.$store.state.pageStates.sendOffline.processLocation
+      return this.$store.state.pageStates.interface.sendOffline
     }
   },
   watch: {
     currentProcess (value) {
-      document.querySelectorAll('.progress-status > div').forEach(function (el) {
-        el.classList.remove('active')
+      const self = this
+      Object.keys(this.$refs).forEach(function (item) {
+        self.$refs[item].classList.remove('active')
       })
-
-      document.querySelector('.' + this.currentProcess).classList.add('active')
+      this.$refs[this.currentProcess].classList.add('active')
     }
   }
 }
