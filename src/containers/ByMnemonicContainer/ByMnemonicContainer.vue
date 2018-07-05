@@ -68,10 +68,16 @@
 </template>
 
 <script>
+import FinishModal from './components/FinishModal'
+import VerificationModal from './components/VerificationModal'
 // Mnemonic code for generating deterministic keys
 let bip39 = require('bip39')
 
 export default {
+  components: {
+    'finish-modal': FinishModal,
+    'verification-modal': VerificationModal
+  },
   data () {
     return {
       varificationValues: [],

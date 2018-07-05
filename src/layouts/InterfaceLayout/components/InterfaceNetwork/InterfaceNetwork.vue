@@ -21,8 +21,13 @@
 </template>
 
 <script>
+import InterfaceNetworkModal from '../InterfaceNetworkModal'
+
 export default {
   props: ['blockNumber'],
+  components: {
+    'interface-network-modal': InterfaceNetworkModal
+  },
   data () {
     return {
       parsedNetwork: ''

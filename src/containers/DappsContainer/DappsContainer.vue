@@ -14,9 +14,18 @@
 </template>
 
 <script>
+import DappButtons from './components/DappButtons'
+import DomainSaleContainer from './components/DomainSaleContainer'
+import RegisterDomainContainer from './components/RegisterDomainContainer'
+
 import domainSale from '@/assets/images/icons/domain-sale.svg'
 import registerDomain from '@/assets/images/icons/domain.svg'
 export default {
+  components: {
+    'dapp-buttons': DappButtons,
+    'domain-sale-container': DomainSaleContainer,
+    'register-domain-container': RegisterDomainContainer
+  },
   data () {
     return {
       selectedDapp: '',
@@ -38,8 +47,7 @@ export default {
   },
   methods: {
     switchView (param) {
-      const self = this
-      self.selectedDapp = param
+      this.selectedDapp = param
     }
   }
 }

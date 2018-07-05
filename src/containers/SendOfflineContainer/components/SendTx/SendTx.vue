@@ -1,6 +1,6 @@
 <template>
   <div class="generate-info">
-    <success-modal message="'Success'" :linkMessage="'Ok'"></success-modal>
+    <success-modal message="Success" :linkMessage="'Ok'"></success-modal>
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
@@ -28,7 +28,13 @@
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+import SuccessModal from '@/components/SuccessModal'
 export default {
+  components: {
+    'interface-bottom-text': InterfaceBottomText,
+    'success-modal': SuccessModal
+  },
   data () {
     return {
     }
@@ -42,10 +48,10 @@ export default {
       document.execCommand('copy')
     },
     successModalOpen () {
-      this.$refs.success.show()
+      this.$children[0].$refs.success.show()
     },
     hideModal () {
-      this.$refs.success.hide()
+      this.$children[0].$refs.success.hide()
       this.processChange('process1')
     },
     processChange (process) {

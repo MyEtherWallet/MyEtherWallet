@@ -17,7 +17,9 @@
           <h2>{{$t("reused.accessMyWallet")}}</h2>
           <h5>
             {{$t("reused.noWallet")}}
-            <router-link to="/">{{$t("reused.getAFreeWallet")}}</router-link>
+            <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
+              {{$t("reused.getAFreeWallet")}}
+            </router-link>
           </h5>
         </div>
         <div class="buttons-container">
@@ -39,46 +41,62 @@
 </template>
 
 <script>
+import AccessWalletButton from './components/AccessWalletButton'
+import HardwareModal from './components/HardwareModal'
+import MetamaskModal from './components/MetamaskModal'
+import MewConnectModal from './components/MewConnectModal'
+import NetworkAndAddressModal from './components/NetworkAndAddressModal'
+import PasswordModal from './components/PasswordModal'
+import SoftwareModal from './components/SoftwareModal'
+
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
 import metamaskImg from '@/assets/images/icons/button-metamask.svg'
 import softwareImg from '@/assets/images/icons/button-software.svg'
 export default {
+  components: {
+    'mew-connect-modal': MewConnectModal,
+    'network-and-address-modal': NetworkAndAddressModal,
+    'hardware-modal': HardwareModal,
+    'metamask-modal': MetamaskModal,
+    'software-modal': SoftwareModal,
+    'password-modal': PasswordModal,
+    'access-wallet-button': AccessWalletButton
+  },
   data () {
-    const self = this
     return {
       file: '',
       buttons: [
         {
-          func: self.mewConnectModalOpen,
-          title: self.$t('reused.mewConnect'),
-          desc: self.$t('accessMyWalletOptions.mewConnectDesc'),
+          func: this.mewConnectModalOpen,
+          title: this.$t('reused.mewConnect'),
+          desc: this.$t('accessMyWalletOptions.mewConnectDesc'),
           recommend: '',
-          tooltip: self.$t('reused.toolTip3'),
+          tooltip: this.$t('reused.toolTip3'),
           img: mewConnectImg
         },
         {
-          func: self.hardwareModalOpen,
-          title: self.$t('reused.hardware'),
+          func: this.hardwareModalOpen,
+          title: this.$t('reused.hardware'),
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
-          tooltip: self.$t('reused.toolTip3'),
+          tooltip: this.$t('reused.toolTip3'),
           img: hardwareImg
         },
         {
-          func: self.metamaskModalOpen,
+          func: this.metamaskModalOpen,
           title: 'MetaMask',
-          desc: self.$t('accessMyWalletOptions.metaMaskDesc'),
+          desc: this.$t('accessMyWalletOptions.metaMaskDesc'),
           recommend: '',
-          tooltip: self.$t('reused.toolTip3'),
+          tooltip: this.$t('reused.toolTip3'),
           img: metamaskImg
         },
         {
-          func: self.softwareModalOpen,
-          title: self.$t('accessMyWalletOptions.software'),
-          desc: self.$t('accessMyWalletOptions.softwareDesc'),
-          recommend: self.$t('accessMyWalletOptions.notRecommended'),
-          tooltip: self.$t('reused.toolTip3'),
+          func: this.softwareModalOpen,
+          title: this.$t('accessMyWalletOptions.software'),
+          desc: this.$t('accessMyWalletOptions.softwareDesc'),
+          recommend: this.$t('accessMyWalletOptions.notRecommended'),
+          tooltip: this.$t('reused.toolTip3'),
           img: softwareImg
         }
       ]

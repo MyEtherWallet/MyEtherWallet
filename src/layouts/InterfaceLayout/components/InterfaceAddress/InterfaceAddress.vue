@@ -28,8 +28,12 @@
 </template>
 
 <script>
+import Blockie from '@/components/Blockie'
 export default {
-  props: ['address']
+  props: ['address'],
+  components: {
+    'blockie': Blockie
+  }
 }
 </script>
 

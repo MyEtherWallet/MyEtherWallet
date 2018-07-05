@@ -62,7 +62,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Blockie from '@/components/Blockie'
 export default {
+  components: {
+    'blockie': Blockie
+  },
   data () {
     return {
       supportedLanguages: [

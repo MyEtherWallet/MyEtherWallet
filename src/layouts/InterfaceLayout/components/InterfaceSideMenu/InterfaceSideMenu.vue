@@ -35,19 +35,18 @@ export default {
   },
   methods: {
     toggle (param) {
-      const self = this
       switch (param) {
         case 'openSend':
-          self.showSend = !self.showSend
-          self.showContract = false
+          this.showSend = !this.showSend
+          this.showContract = false
           break
         case 'openContract':
-          self.showSend = false
-          self.showContract = !self.showContract
+          this.showSend = false
+          this.showContract = !this.showContract
           break
         default:
-          self.showSend = false
-          self.showContract = false
+          this.showSend = false
+          this.showContract = false
       }
     },
     storePage (param) {
@@ -56,29 +55,28 @@ export default {
   },
   watch: {
     currentTab (newVal) {
-      const self = this
-      self.selectedTab = newVal
+      this.selectedTab = newVal
 
       switch (newVal) {
         case 'send':
-          self.showSend = true
-          self.showContract = false
+          this.showSend = true
+          this.showContract = false
           break
         case 'offline':
-          self.showSend = true
-          self.showContract = false
+          this.showSend = true
+          this.showContract = false
           break
         case 'interactC':
-          self.showSend = false
-          self.showContract = true
+          this.showSend = false
+          this.showContract = true
           break
         case 'deployC':
-          self.showSend = false
-          self.showContract = true
+          this.showSend = false
+          this.showContract = true
           break
         default:
-          self.showSend = false
-          self.showContract = false
+          this.showSend = false
+          this.showContract = false
       }
 
       window.localStorage.setItem('curPage', newVal)

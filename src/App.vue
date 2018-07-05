@@ -7,8 +7,15 @@
 </template>
 
 <script>
+import FooterContainer from '@/containers/FooterContainer'
+import HeaderContainer from '@/containers/HeaderContainer'
+
 export default {
   name: 'App',
+  components: {
+    'header-container': HeaderContainer,
+    'footer-container': FooterContainer
+  },
   beforeMount: function () {
     this.$store.dispatch('checkIfOnline')
   }

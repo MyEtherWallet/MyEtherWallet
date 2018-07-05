@@ -7,8 +7,17 @@
 </template>
 
 <script>
+import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
+import FaqsContainer from '@/containers/FaqsContainer'
+import PriceBar from './components/PriceBar'
+
 export default {
-  name: 'AccessWalletContainer',
+  name: 'AccessWalletLayout',
+  components: {
+    'access-my-wallet-container': AccessMyWalletContainer,
+    'faqs': FaqsContainer,
+    'price-bar': PriceBar
+  },
   data () {
     return {
       tokens: []
