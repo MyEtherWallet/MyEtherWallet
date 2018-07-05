@@ -16,8 +16,14 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer
   },
-  beforeMount: function () {
+  beforeMount () {
     this.$store.dispatch('checkIfOnline')
+    if (window.web3) {
+      this.$store.dispatch('setWeb3Instance', window.web3)
+    }
+  },
+  mounted () {
+    console.log(this)
   }
 }
 </script>
