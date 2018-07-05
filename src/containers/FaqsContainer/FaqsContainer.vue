@@ -7,7 +7,7 @@
             <h2>{{ $t("reused.faqs") }}</h2>
             <h5>
               {{ $t("faqs.subheading") }}
-              <router-link to="/">{{ $t("faqs.seeMore") }}</router-link>
+              <a href="https://kb.myetherwallet.com/">{{ $t("faqs.seeMore") }}</a>
             </h5>
           </div>
           <div class="support">
