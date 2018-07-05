@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="domain-check-form hidden">
+        <div class="domain-check-form hidden" ref="checkForm">
           <div class="domain-checker">
             <input type="number" name="" value="" placeholder="Enter Domain Name">
             <div class="check-button" v-on:click="domainAvailabilityCheck">
@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="sub-domain-list hidden">
+        <div class="sub-domain-list hidden" ref="domainList">
           <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
           <ul>
             <li>
@@ -121,20 +121,24 @@
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
 export default {
   props: ['resetView'],
+  components: {
+    'interface-bottom-text': InterfaceBottomText
+  },
   data () {
     return {
     }
   },
   methods: {
     expendDomainCheckForm () {
-      document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.add('hidden')
+      this.$refs['checkForm'].classList.toggle('hidden')
+      this.$refs['domainList'].classList.add('hidden')
     },
     domainAvailabilityCheck () {
-      // document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.remove('hidden')
+      // this.$refs['checkForm'].classList.toggle('hidden')
+      this.$refs['domainList'].classList.add('hidden')
     },
     domainBuyButtonClick ($event) {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')

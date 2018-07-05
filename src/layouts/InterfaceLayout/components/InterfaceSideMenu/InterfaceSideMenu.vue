@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import store from 'store'
 export default {
   props: ['currentTab', 'switchTabs'],
   data () {
@@ -35,6 +36,7 @@ export default {
   },
   methods: {
     toggle (param) {
+      this.storePage(param)
       switch (param) {
         case 'openSend':
           this.showSend = !this.showSend
@@ -50,7 +52,8 @@ export default {
       }
     },
     storePage (param) {
-      window.localStorage.setItem('curPage', param)
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
+      store.set('curPage', param)
     }
   },
   watch: {
@@ -79,7 +82,8 @@ export default {
           this.showContract = false
       }
 
-      window.localStorage.setItem('curPage', newVal)
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
+      store.set('curPage', newVal)
     }
   }
 }

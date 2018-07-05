@@ -10,8 +10,13 @@ const decryptWallet = function ({commit}, wallet) {
   commit('DECRYPT_WALLET', wallet)
 }
 
+const updatePageState = function ({commit}, arr) {
+  commit('CHANGE_PAGE_STATE', arr)
+}
+
 export default {
   checkIfOnline,
   clearWallet,
-  decryptWallet
+  decryptWallet,
+  updatePageState
 }

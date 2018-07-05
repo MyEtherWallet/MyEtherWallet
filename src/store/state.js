@@ -1,8 +1,6 @@
 import nodeList from '@/configs/networks'
 const state = {
-  web3: {
-
-  },
+  web3: {},
   network: {
     chainId: 1,
     RpcUrl: 'https://api.myetherwallet.com/eth',
@@ -18,8 +16,9 @@ const state = {
   Errors: {},
   online: true,
   pageStates: {
-    sendOffline: {
-      processLocation: 'process1'
+    interface: {
+      sendOffline: 'genInfo',
+      sideMenu: 'send'
     }
   }
 }

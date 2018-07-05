@@ -1,5 +1,5 @@
 <template>
-  <div class="send-eth-and-tokens" v-if="address !== ''">
+  <div class="send-eth-and-tokens" v-if="$store.state.wallet !== null">
     <div class="wrap">
       <div class="side-nav">
         <interface-side-menu :currentTab="currentTab" :switchTabs="switchTabs"></interface-side-menu>
@@ -50,6 +50,8 @@ import InterfaceNetwork from './components/InterfaceNetwork'
 import InterfaceSideMenu from './components/InterfaceSideMenu'
 import InterfaceTokens from './components/InterfaceTokens'
 
+import store from 'store'
+
 export default {
   components: {
     'send-currency-container': SendCurrencyContainer,
@@ -66,7 +68,7 @@ export default {
   },
   data () {
     return {
-      currentTab: 'send',
+      currentTab: this.$store.state.pageStates.interface.sideMenu,
       balance: '',
       blockNumber: ''
     }
@@ -74,6 +76,7 @@ export default {
   methods: {
     switchTabs (param) {
       this.currentTab = param
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
     },
     async getBlock () {
       const body = {
@@ -118,8 +121,9 @@ export default {
     }
   },
   mounted () {
-    if (window.localStorage.getItem('curPage') !== undefined) {
-      this.currentTab = window.localStorage.getItem('curPage')
+    if (store.get('curPage') !== undefined) {
+      this.curPage = store.get('curPage')
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('curPage')])
     }
 
     if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
