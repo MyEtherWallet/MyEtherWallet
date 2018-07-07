@@ -20,6 +20,49 @@
     }
   }
 
+  .notification {
+    margin-left: 20px;
+    position: relative;
+    cursor: pointer;
+
+    .notification-dot {
+      background-color: $notification-dot-background-color;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 40px;
+    }
+  }
+
+  .blockies-image{
+    cursor: pointer;
+    margin-left: 30px;
+    // box-shadow: inset 0 2px 2px hsla(0,0%,100%,.5), inset 0 -1px 8px rgba(0,0,0,.6);
+    position: relative;
+    padding-right: 20px;
+
+    #blockies {
+      position: relative;
+      overflow: hidden;
+      border-radius: 100px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .arrows {
+      position: absolute;
+      right: 0px;
+      top: 8px;
+
+      i {
+        color: $text-color-4;
+        font-size: 18px;
+      }
+    }
+  }
+
   .header-container {
     align-items: center;
     display: flex;

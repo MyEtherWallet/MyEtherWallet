@@ -126,6 +126,10 @@ export default {
     menuStates: function () {
       return this.$store.state.state.pageStates.txSideMenu
     }
+  },
+  mounted () {
+    // Set page location variable
+    this.$store.state.state.pageStates.pageLocation = 'tx'
   }
 }
 </script>

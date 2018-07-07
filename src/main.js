@@ -60,10 +60,7 @@ Vue.component('v-select', vSelect)
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
-
 Vue.component(VueQrcode.name, VueQrcode)
-
-/* Init Bootstrap */
 Vue.use(BootstrapVue)
 
 /* Init Lodash */

@@ -24,6 +24,9 @@ export default {
       targetEl.scrollIntoView()
       this.$store.state.state.homepage.sublink = ''
     }
+
+    // Set page location variable
+    this.$store.state.state.pageStates.pageLocation = 'home'
   }
 }
 </script>

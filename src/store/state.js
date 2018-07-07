@@ -30,6 +30,7 @@ const state = {
     sublink: 'about'
   },
   pageStates: {
+    pageLocation: '',
     sendOffline: {
       processLocation: 'process1'
     },
