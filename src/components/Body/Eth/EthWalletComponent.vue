@@ -48,7 +48,7 @@
                         <ul v-if="tokens.length > 0">
                           <li v-for="token in tokens">{{token.name}} - {{token.balance}}</li>
                         </ul>
-                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken()">Add Token</button>
+                        <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken(scriptHash)">Add Token</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
                         <ul>
@@ -161,18 +161,64 @@
             keyStore: {},
             ethers: null,
             tokens: [],
-            erc20Token: ''
+            erc20Token: '',
+            db: {},
+            server: {}
 
           }
         },
         created(){
+          var Web3 = require("web3")
+          this.db = require('db.js');
           this.ethers = require('ethers');
+          if(sessionStorage.ethKeystore && sessionStorage.ethPass){
+            this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
+            this.wallet = this.web3.eth.accounts.decrypt(JSON.parse(sessionStorage.ethKeystore), sessionStorage.ethPass);
+
+            this.getBalance();
+          }
         },
         methods:{
           getTransactions: function(){
             axios.get('http://api.etherscan.io/api?module=account&action=txlist&address='+this.eth.address+'&startblock=0&endblock=99999999&sort=asc&apikey=YourApiKeyToken').then((data) => {
               this.transactions = data.data.result;
             })
+          },
+          getTokens: function(){
+
+            var that = this;
+            this.db.open({
+                server: 'my-du-wallet',
+                version: 1,
+                schema: {
+                    neoTokens: {
+                        key: {keyPath: 'id', autoIncrement: true},
+                        // Optionally add indexes
+                        indexes: {
+
+                            scriptHash: {unique: true}
+                        }
+                    },
+                    ethTokens: {
+                      key: {keyPath: 'id', autoIncrement: true},
+                      indexes:{
+                        scriptHash: {unique: true}
+                      }
+                    }
+                }
+            }).then(function (s) {
+                that.server = s;
+                that.server.ethTokens.query()
+                  .all()
+                  .execute()
+                  .then(function (results) {
+                      // do something with the results
+                      results.forEach(function(element) {
+                        console.log(element.scriptHash);
+                        that.addToken(element.scriptHash)
+                      });
+                  });
+            });
           },
           createNewEthWallet: function(){
             var ans = prompt('Create Password');
@@ -192,6 +238,8 @@
               this.wallet.encrypt(ans).then(data => {
                 console.log(data);
                 this.eth = JSON.parse(data);
+                sessionStorage.ethPass = ans;
+                sessionStorage.ethKeystore = data
                 this.downloadKeystore();
                 this.getBalance();
               });
@@ -269,7 +317,8 @@
                 that.keyStore = JSON.parse(event.target.result);
                 that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
                 that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
-
+                sessionStorage.ethPass = ans;
+                sessionStorage.ethKeystore = event.target.result
                 that.getBalance();
 
               };
@@ -284,7 +333,7 @@
           sendAssetPrompt: function(){
             $("#assetModal").modal()
           },
-          addToken: function(){
+          addToken: function(hash){
 
 
             var contract,abi;
@@ -295,7 +344,7 @@
               abi: null
             }
             var that = this;
-            var url = 'https://api.etherscan.io/api?module=contract&action=getabi&address='+this.scriptHash+'&apikey=YourApiKeyToken'
+            var url = 'https://api.etherscan.io/api?module=contract&action=getabi&address='+hash+'&apikey=YourApiKeyToken'
             axios.get(url).then(data =>{
             //////////////
             console.log(data);
@@ -306,7 +355,7 @@
 
             var contract = new this.ethers.Contract(that.scriptHash, that.abi, provider);
             console.log(contract.functions);
-            token.scriptHash = that.scriptHash;
+            token.scriptHash = hash;
             contract.balanceOf(this.wallet.address).then(data => {
               console.log(data);
               token.balance = that.ethers.utils.toNumber(data._bn)
@@ -320,6 +369,9 @@
               console.log(data);
               token.name = data;
               that.tokens.push(token);
+              that.server.ethTokens.add(token).then(item => {
+                console.log(item);
+              });
             })
             });
           },
@@ -331,6 +383,7 @@
               that.balance = that.ethers.utils.formatEther(data);
               that.loggedin = true;
             });
+            this.getTokens();
             this.getTransactions();
 
           }
