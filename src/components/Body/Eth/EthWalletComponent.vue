@@ -217,7 +217,7 @@
 
             to: this.sendAddr,
 
-            value: this.ethers.utils.parseEther(this.eth),
+            value: this.ethers.utils.parseEther(this.ethSend),
             data: "0x",
 
             // This ensures the transaction cannot be replayed on different networks
