@@ -8,6 +8,7 @@
         </div>
         <div class="block-content">
           <h2>Address</h2>
+
           <p class="address">{{this.eth.address}}</p>
           <div class="icon-container">
             <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
@@ -19,6 +20,7 @@
             <b-btn v-b-tooltip.hover title="I'm a tooltip!" class="custom-tooltip">
               <img src="~@/assets/images/icons/change.svg">
             </b-btn>
+
           </div>
         </div>
       </div>

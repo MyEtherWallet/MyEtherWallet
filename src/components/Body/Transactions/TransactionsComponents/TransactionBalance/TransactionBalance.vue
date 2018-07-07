@@ -40,9 +40,11 @@
         </div>
         <div class="block-content">
           <h2>Balance</h2>
+
           <h4>{{balance}} ETH</h4>
           <div class="icon-container">
             <img src="~@/assets/images/icons/more.svg">
+
           </div>
         </div>
       </div>

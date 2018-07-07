@@ -15,13 +15,6 @@
 
     .content-container {
       margin-bottom: 20px;
-
-      .modal-large-text {
-        display: inline-block;
-        font-weight: 400;
-        line-height: 30px;
-        max-width: 360px;
-      }
     }
 
     .accept-terms {
@@ -36,8 +29,15 @@
     .button-container {
       margin-bottom: 25px;
 
-      .close-button {
+      .connection-button {
+        cursor: initial;
+        text-align: center;
         width: 100%;
+      }
+
+      .waiting-for-connection {
+        background-color: $button--background-color-3;
+
       }
     }
   } // .bootstrap-modal
@@ -154,8 +154,12 @@
           }
         }
       } // .address-block-container
-
     } // .content-container-2
+
+    .close-button,
+    .close-button * {
+      width: 100%;
+    }
   } // .modal-mew-connect2
 
   .modal-metamask {
@@ -189,11 +193,16 @@
 
   .modal-hardware,
   .modal-software {
+
     .button-options {
       display: grid;
       grid-gap: 10px;
       grid-template-columns: 1fr 1fr;
       margin-bottom: 40px;
+
+      &.hardware-button-options {
+        margin-bottom: 30px;
+      }
 
       li {
         align-items: center;

@@ -47,182 +47,43 @@
           }
         }
 
-        .online-status {
+        .progress-status {
           $border-bottom-black: #000;
           background-color: $background-color-5;
           border-bottom: 1px solid $border-bottom-color;
           box-shadow: 0 2px 0 $border-bottom-black;
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          padding-top: 24px;
+          grid-template-columns: 27% 27% 27%;
           text-align: center;
+          grid-column-gap: 20px;
+          justify-content: space-evenly;
 
-          div {
+          >div {
+            padding-top: 24px;
+            padding-bottom: 18px;
+            cursor: pointer;
 
             p {
               display: block;
               margin: 0 auto;
+              color: $text-color-9;
             }
 
             .title {
               font-weight: 600;
             }
 
-            .description {
-              border-bottom: 4px solid black;
-              padding-bottom: 18px;
-              width: 200px;
-            }
-          }
-        }
-
-        .send-form {
-          padding: 40px 60px 0;
-
-          .title-container {
-            align-items: flex-end;
-            display: flex;
-            margin-bottom: 10px;
-
-            .title {
-              padding: 0 8px;
-
-              h4 {
-                margin-bottom: 2px;
-              }
-            }
-
-            .buttons {
-              margin-bottom: 3px;
-              margin-left: auto;
-            }
           }
 
-          .form-block {
-            border-radius: 5px;
+          .active {
+            border-bottom: 4px solid black;
 
-            .the-form {
-              background-color: $background-color-1;
-              border-radius: 5px;
-            }
-          }
-
-          .amount-to-address {
-            display: grid;
-            grid-column-gap: 5px;
-            grid-template-columns: 2fr 3fr;
-
-            .title {
-              margin-bottom: 13px;
-              padding: 0 8px;
-            }
-
-            .amount {
-              .dropdown-select-search-1 {
-                background-color: $background-color-1;
-                margin-bottom: 5px;
-                position: relative;
-
-                i {
-                  color: $text-color-2;
-                  left: 14px;
-                  position: absolute;
-                  top: 16px;
-                }
-              }
-
-              .amount-number {
-                position: relative;
-
-                input {
-                  background-color: transparent;
-                  border: 0;
-                  padding: 13px 15px;
-                  width: 100%;
-                }
-
-                i {
-                  position: absolute;
-                  right: 13px;
-                  top: 13px;
-                }
-              }
-            }
-
-            .to-address {
-              position: relative;
-
-              .title {
-                align-items: center;
-                display: flex;
-                position: relative;
-
-                img {
-                  height: 50px;
-                  left: 98px;
-                  position: absolute;
-                  top: -14px;
-                }
-
-                .copy-button {
-                  color: $text--link-color;
-                  cursor: pointer;
-                  margin-left: auto;
-                }
-              }
-
-              .address-block {
-                height: 98px;
-
-                i {
-                  bottom: 13px;
-                  position: absolute;
-                  right: 13px;
-                }
-
-                textarea {
-                  background-color: transparent;
-                  border: 0;
-                  height: 100%;
-                  padding: 13px 15px;
-                  resize: none;
-                  width: 100%;
-                }
-              }
-            }
-          }
-
-          .gas-amount {
-            position: relative;
-
-            input {
-              background-color: $background-color-1;
-              border: 0;
-              padding: 13px 15px;
-              width: 100%;
-            }
-
-            .good-button-container {
-              align-items: center;
-              display: flex;
-              position: absolute;
-              right: 10px;
-              top: 12px;
-
-              p {
-                color: $text--link-color;
-                margin-right: 10px;
-              }
-            }
-          }
-
-          .error-message-container {
             p {
-              color: $text-color-red;
-              margin: 7px 0 0 15px;
+              color: $text-black;
             }
-          }
-        } // .send-form
+          } 
+
+        }
 
         .advanced {
           padding-top: 10px;
@@ -247,20 +108,6 @@
           }
         } // .advanced
 
-        .submit-button-container {
-          padding: 60px 0 200px;
-          text-align: center;
-
-          .submit-button {
-            margin: 0 auto;
-            text-align: center;
-            width: 300px;
-          }
-
-          p {
-            margin-top: 20px;
-          }
-        }
       }
 
       .tokens {
