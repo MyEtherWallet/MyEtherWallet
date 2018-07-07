@@ -45,6 +45,9 @@
 
 
                         <input placeholder="erc-20 Script Hash" class="form-control" v-model="scriptHash">
+                        <ul v-if="tokens.length > 0">
+                          <li v-for="token in tokens">{{token.name}} - {{token.balance}}</li>
+                        </ul>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken()">Add Token</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
@@ -110,7 +113,11 @@
                 </div>
                 <div class="form-group">
                   <label for="neo-asset">ETH:</label>
-                  <input id="neo-asset" type="number" v-model="ethSend" class="form-control">
+                  <select class="form-control" v-model="erc20Token">
+                    <option value="eth" >ETH</option>
+                    <option v-for="token in tokens" :value="token" >{{token.name}}</option>
+                  </select>
+                  <input id="neo-asset" type="number" v-model="ethSend" class="form-control" placeholder="Amount">
                 </div>
               </div>
               <div class="modal-footer">
@@ -152,7 +159,9 @@
             mainNet: 'https://infuranet.infura.io',
             testNet: 'https://homestead.infura.io',
             keyStore: {},
-            ethers: null
+            ethers: null,
+            tokens: [],
+            erc20Token: ''
 
           }
         },
@@ -197,7 +206,58 @@
             FileSaver.saveAs(blob, this.eth.address+'.json')
           },
           ethSend: function(){},
-          sendAsset: function(){},
+          sendAsset: function(){
+            console.log(this.erc20Token)
+            if(this.erc20Token == 'eth'){
+
+            var transaction = {
+            nonce: 0,
+            gasLimit: 21000,
+            gasPrice: this.ethers.utils.bigNumberify("20000000000"),
+
+            to: this.sendAddr,
+
+            value: this.ethers.utils.parseEther(this.ethSend),
+            data: "0x",
+
+            // This ensures the transaction cannot be replayed on different networks
+            chainId: this.ethers.providers.networks.homestead.chainId
+
+        };
+
+        var signedTransaction = this.wallet.sign(transaction);
+
+        console.log(signedTransaction);
+        // "0xf86c808504a817c8008252089488a5c2d9919e46f883eb62f7b8dd9d0cc45bc2" +
+        //   "90880de0b6b3a7640000801ca0d7b10eee694f7fd9acaa0baf51e91da5c3d324" +
+        //   "f67ad827fbe4410a32967cbc32a06ffb0b4ac0855f146ff82bef010f6f2729b4" +
+        //   "24c57b3be967e2074220fca13e79"
+
+        // This can now be sent to the Ethereum network
+        var provider = this.ethers.providers.getDefaultProvider();
+        provider.sendTransaction(signedTransaction).then(function(hash) {
+            console.log('Hash: ' + hash);
+            alert(hash);
+            // Hash:
+        }).catch(err => {
+          alert(err)
+        });
+
+
+            }else{
+              var contract = new this.ethers.Contract(this.erc20Token.scriptHash, this.erc20Token.abi, this.wallet);
+
+
+
+              // Send tokens
+              contract.transfer(this.sendAddr, this.ethSend).then(function(tx) {
+                  console.log(tx);
+                  alert(tx);
+              }).catch(err => {
+                alert(err);
+              });
+            }
+          },
           loginToWallet: function(){
             var Web3 = require("web3")
             var ans = prompt('Keystore Password')
@@ -207,10 +267,16 @@
               var reader = new FileReader();
               reader.onload = (event) => {
                 that.keyStore = JSON.parse(event.target.result);
-                that.web3 = new Web3(new Web3.providers.HttpProvider(this.testNet));
-                that.eth = that.web3.eth.accounts.decrypt(that.keyStore, ans);
+                //that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
+                //that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
+                console.log(that.keyStore);
+                that.ethers.Wallet.fromEncryptedWallet(that.keyStore, ans).then(function(wallet) {
+                  console.log("Address: " + wallet.address);
+                  // "Address: 0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290"
+                  that.wallet = wallet;
+                  that.getBalance();
+              });
 
-                that.getBalance();
 
               };
 
@@ -226,41 +292,42 @@
           },
           addToken: function(){
 
-            var abi = [
-              {
-                "constant": true,
-                "inputs": [
-                  {
-                    "name": "_owner",
-                    "type": "address"
-                  }
-                ],
-                "name": "balanceOf",
-                "outputs": [
-                  {
-                    "name": "balance",
-                    "type": "uint256"
-                  }
-                ],
-                "payable": false,
-                "type": "function"
-              }
-            ]
-            /////////
+
+            var contract,abi;
+            var token = {
+              name: '',
+              balance: 0,
+              scriptHash: '',
+              abi: null
+            }
+            var that = this;
+            var url = 'https://api.etherscan.io/api?module=contract&action=getabi&address='+this.scriptHash+'&apikey=YourApiKeyToken'
+            axios.get(url).then(data =>{
+            //////////////
+            console.log(data);
+            that.abi = JSON.parse(data.data.result);
+            token.abi = that.abi
+            console.log(that.abi);
             var provider = this.ethers.providers.getDefaultProvider('homestead');
 
-            var contract = new this.ethers.Contract(this.scriptHash, abi, provider);
+            var contract = new this.ethers.Contract(that.scriptHash, that.abi, provider);
             console.log(contract.functions);
-
+            token.scriptHash = that.scriptHash;
             contract.balanceOf(this.wallet.address).then(data => {
               console.log(data);
+              token.balance = that.ethers.utils.toNumber(data._bn)
             }).catch(err => {
               console.log(err.reason);
               console.log(err.code);
               console.log(err);
             });
-            //////////
 
+            contract.name().then(data => {
+              console.log(data);
+              token.name = data;
+              that.tokens.push(token);
+            })
+            });
           },
           getBalance: function(){
             var that = this;
