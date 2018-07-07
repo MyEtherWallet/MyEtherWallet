@@ -119,9 +119,11 @@
           </label>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button">
-            Continue
-          </b-btn>
+          <router-link to="/send-eth-and-tokens" class="close-button">
+            <b-btn class="mid-round-button-green-filled">
+              Access My Wallet
+            </b-btn>
+          </router-link>
         </div>
         <div class="support">
           <router-link to="/">
@@ -135,7 +137,7 @@
 
       <!-- Modal (Hardware) ============================================================================================================================================ -->
       <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
-        <div class="d-block content-container text-center">
+        <div class="d-block text-center">
           <ul class="button-options hardware-button-options">
             <li v-on:click="hardwareButtonActivate($event)">
               <img class="icon" src="~@/assets/images/icons/button-ledger.png">
@@ -158,13 +160,11 @@
               <span>Secalot</span>
             </li>
           </ul>
-
-          <h3 class="modal-large-text">Please Connect With Your Device</h3>
         </div>
         <div class="button-container">
-          <b-btn class="mid-round-button-green-filled close-button" v-on:click="networkAndAddressOpen">
-            Continue
-          </b-btn>
+          <div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">
+            Please Connect With Your Device
+          </div>
         </div>
         <div class="support">
           <router-link to="/">
@@ -264,9 +264,11 @@
 
 
 
+
           <div class="button-block" v-on:click="hardwareModalOpen">
             <div class="button-image">
               <img class="icon" src="~@/assets/images/icons/eth.svg">
+
             </div>
             <h3>ETH</h3>
             <p>Login To Your ETH Wallet</p>
@@ -275,7 +277,9 @@
 
           <div class="button-block" v-on:click="metamaskModalOpen">
             <div class="button-image">
+
               <img class="icon" src="~@/assets/images/icons/neo.png" width="25" height="25">
+
             </div>
             <h3>NEO</h3>
             <p>Login To Your NEO Wallet</p>
@@ -284,7 +288,9 @@
 
           <div class="button-block" v-on:click="softwareModalOpen">
             <div class="button-image">
+
               <img class="icon" src="~@/assets/images/home/'J'-heart-logo.png" width="25" height="25">
+
             </div>
             <h3>LUV</h3>
             <p>Login To Your LUV Wallet</p>
@@ -319,7 +325,9 @@ export default {
       this.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
+
       this.$router.push('/eth')
+
     },
     metamaskModalOpen () {
       this.$router.push('/neo')

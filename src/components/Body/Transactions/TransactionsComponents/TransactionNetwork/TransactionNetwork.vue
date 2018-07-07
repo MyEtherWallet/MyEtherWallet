@@ -114,8 +114,10 @@
           <h2>Network</h2>
           <p>myetherapi.com(ETH)</p>
           <p>Last Block#: 5699679</p>
-          <div class="icon-container">
-            <img src="~@/assets/images/icons/change.svg">
+          <div class="icon-container small-tooltop-1">
+            <div v-b-tooltip.hover title="Refresh" class="custom-tooltip">
+              <img src="~@/assets/images/icons/change.svg">
+            </div>
           </div>
         </div>
       </div>

@@ -29,6 +29,9 @@ import TransactionAddress from '@/components/Body/Transactions/TransactionsCompo
 import TransactionBalance from '@/components/Body/Transactions/TransactionsComponents/TransactionBalance/TransactionBalance'
 import TransactionNetwork from '@/components/Body/Transactions/TransactionsComponents/TransactionNetwork/TransactionNetwork'
 import TransactionTokens from '@/components/Body/Transactions/TransactionsComponents/TransactionTokens/TransactionTokens'
+import SendOfflineGenerateInfo from '@/components/Body/Transactions/SendOffline/GenerateInfo/GenerateInfo'
+import SendOfflineGenerateTx from '@/components/Body/Transactions/SendOffline/GenerateTx/GenerateTx'
+import SendOfflineSendTx from '@/components/Body/Transactions/SendOffline/SendTx/SendTx'
 
 import Neo from '@/components/Body/Neo/NeoWalletComponent'
 import Eth from '@/components/Body/Eth/EthWalletComponent'
@@ -68,6 +71,9 @@ Vue.component('transaction-address', TransactionAddress)
 Vue.component('transaction-balance', TransactionBalance)
 Vue.component('transaction-network', TransactionNetwork)
 Vue.component('transaction-tokens', TransactionTokens)
+Vue.component('send-offline-generate-info', SendOfflineGenerateInfo)
+Vue.component('send-offline-generate-tx', SendOfflineGenerateTx)
+Vue.component('send-offline-send-tx', SendOfflineSendTx)
 
 Vue.component('v-select', vSelect)
 

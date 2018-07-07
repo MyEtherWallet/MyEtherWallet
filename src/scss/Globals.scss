@@ -99,6 +99,32 @@ body {
   opacity: .2;
 }
 
+*:focus {
+  outline: none;
+}
+
+.prevent-pointer-events {
+  pointer-events: none;
+}
+
+.prevent-user-select {
+  user-select: none;
+}
+
+input,
+textarea {
+  border-radius: 4px;
+}
+
+
+// *********************************************************************
+// Disable WebKit Spinners
+// *********************************************************************
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 
 // *********************************************************************
 // Custom Scrollbar
@@ -378,6 +404,7 @@ h6 {
   border: 1px solid $button--border-color-1;
   border-radius: 6px;
   color: $button--text-color-1;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
@@ -388,6 +415,7 @@ h6 {
   border: 1px solid $button--border-color-2;
   border-radius: 6px;
   color: $text-color-2;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
@@ -399,6 +427,7 @@ h6 {
   border: 1px solid $button--border-color-1;
   border-radius: 6px;
   color: $button--text-color-1;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
@@ -409,6 +438,7 @@ h6 {
   border: 1px solid $button--border-color-2;
   border-radius: 6px;
   color: $text-color-2;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
@@ -418,6 +448,7 @@ h6 {
   background-color: $button--background-color-2;
   border: 1px solid $button--border-color-1;
   border-radius: 5px;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
@@ -427,6 +458,7 @@ h6 {
   border: 1px solid $button--border-color-1;
   border-radius: 5px;
   color: $button--text-color-1;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
@@ -557,54 +589,47 @@ h6 {
 
 
 // *********************************************************************
-// [Bootstrap] Tooltip style
+// Tooltip
 // *********************************************************************
-.custom-tooltip,
-.custom-tooltip:hover {
-  background-color: transparent;
-  border-color: transparent;
-  padding: 0;
+
+.popover {
+  pointer-events: none;  
 }
 
 .tooltip {
   pointer-events: none;
-  z-index: 9999999;
-
   &.show {
     opacity: 1;
   }
 
-  .arrow {
-    display: none;
-  }
+  .arrow::before {
+    border-top-color: $background-color-white;
+  }  
 
   .tooltip-inner {
-    background-color: $tooltip-background-color;
-    border: 1px solid $tooltip-border-color;
-    border-radius: 3px;
-    box-shadow: 0 0 15px $tooltip-box-shadow-color;
-    color: $tooltip-font-color;
-    font-size: 13px;
-    line-height: 20px;
-    max-width: 400px;
-    padding: 24px 35px;
-    text-align: left;
+    background-color: $background-color-white;
+    color: $text-black;
+    box-shadow: 0 3px 5px $small-tooltip-shadow;
+    font-size: 12px;
   }
 }
 
-.tooltip-icon {
+.tooltip-box-1 {
   button {
-    background-color: $tooltip--button-background-color;
-    border: 0;
+    background-color: $button--background-color-1;
     border-radius: 100px;
-    color: $tooltip--button-font-color;
-    font-size: 10px;
-    font-weight: 700;
-    height: 17px;
-    margin: 0;
+    border: 0;
     padding: 0;
-    text-align: center;
-    width: 17px;
+    height: 15px;
+    width: 15px;
+    line-height: 15px;
+
+    &::after {
+      font-weight: 600;
+      content: '!';
+      font-size: 13px;
+      padding: 0;
+    }
   }
 }
 
@@ -635,8 +660,10 @@ h6 {
   }
 }
 
+
 .modal-dialog {
   max-width: 1000px;
+
 }
 
 .modal-content {
@@ -1028,7 +1055,7 @@ h6 {
 }
 
 .dropdown-select-search-1 {
-  border-radius: 5px;
+  border-radius: 4px;
 
   .dropdown .dropdown-toggle {
     border: 0;
@@ -1150,3 +1177,19 @@ h6 {
   resize: none;
   width: 100%;
 }
+
+
+
+// *********************************************************************
+// Custom Links
+// *********************************************************************
+
+.linker-1 {
+  color: $link-text-color-3;
+  cursor: pointer;
+}
+
+.linker-1:hover {
+  color: $link-text-color-1;
+}
+
