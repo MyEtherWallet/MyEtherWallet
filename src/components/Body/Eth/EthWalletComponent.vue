@@ -150,7 +150,7 @@
             privateKey:{},
             file: {},
             mainNet: 'https://infuranet.infura.io',
-            testNet: 'https://ropsten.infura.io',
+            testNet: 'https://homestead.infura.io',
             keyStore: {},
             ethers: null
 
@@ -178,7 +178,7 @@
               sessionStorage.ethEncrypt = JSON.stringify(this.eth);
               */
               this.wallet = this.ethers.Wallet.createRandom();
-              this.wallet.provider = new this.ethers.providers.EtherscanProvider('ropsten','FEUQI8J8SPJKS3Q1I989I31DW5SFGEB6J3')
+              this.wallet.provider = new this.ethers.providers.EtherscanProvider('homestead','FEUQI8J8SPJKS3Q1I989I31DW5SFGEB6J3')
               //encrypt Wallet
               this.wallet.encrypt(ans).then(data => {
                 console.log(data);
@@ -247,7 +247,7 @@
               }
             ]
             /////////
-            var provider = this.ethers.providers.getDefaultProvider('ropsten');
+            var provider = this.ethers.providers.getDefaultProvider('homestead');
 
             var contract = new this.ethers.Contract(this.scriptHash, abi, provider);
             console.log(contract.functions);
@@ -264,7 +264,7 @@
           },
           getBalance: function(){
             var that = this;
-            var provider = this.ethers.providers.getDefaultProvider('ropsten');
+            var provider = this.ethers.providers.getDefaultProvider('homestead');
             provider.getBalance(this.wallet.address).then(data => {
               console.log(data);
               that.balance = that.ethers.utils.formatEther(data);
