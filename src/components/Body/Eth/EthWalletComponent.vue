@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-md-7">
                             <div class="address-title">Address</div>
-                            <div class="address-section">{{eth.address}}</div>
+                            <div class="address-section">{{wallet.address}}</div>
                         </div>
                     </div>
 
@@ -217,7 +217,7 @@
 
             to: this.sendAddr,
 
-            value: this.ethers.utils.parseEther(this.ethSend),
+            value: this.ethers.utils.parseEther(this.eth),
             data: "0x",
 
             // This ensures the transaction cannot be replayed on different networks
@@ -267,16 +267,10 @@
               var reader = new FileReader();
               reader.onload = (event) => {
                 that.keyStore = JSON.parse(event.target.result);
-                //that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
-                //that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
-                console.log(that.keyStore);
-                that.ethers.Wallet.fromEncryptedWallet(that.keyStore, ans).then(function(wallet) {
-                  console.log("Address: " + wallet.address);
-                  // "Address: 0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290"
-                  that.wallet = wallet;
-                  that.getBalance();
-              });
+                that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
+                that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
 
+                that.getBalance();
 
               };
 
