@@ -15,12 +15,22 @@
     "deploy": "npm run build; push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@cityofzion/neon-js": "^3.8.1",
+    "axios": "^0.18.0",
     "bip39": "^2.5.0",
+    "bs58": "^4.0.1",
+    "db.js": "^0.15.0",
+    "ec-key": "0.0.2",
+    "elliptic": "^6.4.0",
+    "ethers": "^3.0.25",
     "file-saver": "^1.3.8",
+    "grpc": "^1.11.3",
+    "sha2": "^1.0.2",
     "vue": "^2.5.2",
     "vue-i18n": "^7.6.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -59,6 +69,7 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^22.0.4",
     "jest-serializer-vue": "^0.3.0",
+    "jquery": "^3.2",
     "mini-css-extract-plugin": "^0.4.0",
     "nightwatch": "^0.9.21",
     "node-notifier": "^5.1.2",

@@ -9,13 +9,13 @@
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
-                <h2>About MEW</h2>
+                <h2>About LUV</h2>
                 <p class="color-white">
-                  MyEtherWallet(MEW)  provides a easy to use interface.
+                  The LUV Token Wallet (LTW) provides a easy to use interface.
                   We won’t hold your keys, also we can’t access accounts,
                   recover your keys, reset your passwords, nor reverse your
                   transactions. Please pay attention that you are
-                  on Correct URL.
+                  on the Correct URL.                
                   <br>
                   <span class="color-white text-bold">
                     Please Take Responsible For Your Account Security.
@@ -46,7 +46,7 @@
                 <img src="~@/assets/images/home/icon-wallet.png">
               </div>
               <div class="text">
-                <h3>MEW Wallet</h3>
+                <h3>LUV Wallet</h3>
                 <p>
                   Text here for feature discription, Text here for
                   feature discription, Text here for feature discription,
@@ -88,7 +88,7 @@
                 <img src="~@/assets/images/home/icon-connect.png">
               </div>
               <div class="text">
-                <h3>MEW Connect</h3>
+                <h3>LUV Connect</h3>
                 <p>
                   Text here for feature discription, Text here for
                   feature discription, Text here for feature discription,

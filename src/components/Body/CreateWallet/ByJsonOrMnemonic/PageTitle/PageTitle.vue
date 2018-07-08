@@ -4,7 +4,7 @@
       <div class="page-container">
         <div class="page-title">
           <h2>Get a Free Wallet</h2>
-          <h5>Already have a wallet? <router-link to="/">Access My Wallet</router-link></h5>
+          <h5>Already have a wallet? <router-link to="/access-my-wallet">Access My Wallet</router-link></h5>
         </div>
       </div>
     </div>

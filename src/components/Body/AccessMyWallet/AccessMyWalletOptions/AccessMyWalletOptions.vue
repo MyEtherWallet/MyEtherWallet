@@ -217,7 +217,8 @@
             <li>
               <img class="icon" src="~@/assets/images/icons/button-json.svg">
               <img class="icon-hover" src="~@/assets/images/icons/button-json-hover.svg">
-              <span>JSON File</span>
+              <input type="file" style="position: fixed; top: -100em" id="json-file">
+              <span v-on:click="openJsonFile()">JSON File</span>
             </li>
             <li>
               <img class="icon" src="~@/assets/images/icons/button-mnemonic.svg">
@@ -261,76 +262,39 @@
         </div>
         <div class="buttons-container">
 
-          <div class="button-block" v-on:click="mewConnectModalOpen">
-            <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-mewconnect.svg">
-            </div>
-            <h3>MEW Connect</h3>
-            <p>Use MEW Connect to access my wallet</p>
-            <div class="tooltip-box">
-              <b-btn id="exPopover1" variant="primary">
-                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-              </b-btn>
-              <b-popover target="exPopover1" triggers="hover focus" placement="top">
-                <template slot="title">MEW Connect</template>
-                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
-              </b-popover>
-            </div>
-          </div>
+
+
 
           <div class="button-block" v-on:click="hardwareModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-hardware.svg">
+              <img class="icon" src="~@/assets/images/icons/eth.svg">
+
             </div>
-            <h3>Hardware</h3>
-            <p>Ledger wallet; Trezor; Digital bitbox; Secalot</p>
-            <div class="tooltip-box">
-              <b-btn id="exPopover2" variant="primary">
-                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-              </b-btn>
-              <b-popover target="exPopover2" triggers="hover focus" placement="top">
-                <template slot="title">Hardware</template>
-                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
-              </b-popover>
-            </div>
+            <h3>ETH</h3>
+            <p>Login To Your ETH Wallet</p>
+
           </div>
 
           <div class="button-block" v-on:click="metamaskModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+
+              <img class="icon" src="~@/assets/images/icons/neo.png" width="25" height="25">
+
             </div>
-            <h3>MetaMask</h3>
-            <p>Use extention to access my wallet</p>
-            <div class="tooltip-box">
-              <b-btn id="exPopover3" variant="primary">
-                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-              </b-btn>
-              <b-popover target="exPopover3" triggers="hover focus" placement="top">
-                <template slot="title">MetaMask</template>
-                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-              </b-popover>
-            </div>
+            <h3>NEO</h3>
+            <p>Login To Your NEO Wallet</p>
+
           </div>
 
           <div class="button-block" v-on:click="softwareModalOpen">
             <div class="button-image">
-              <img class="icon" src="~@/assets/images/icons/button-software.svg">
+
+              <img class="icon" src="~@/assets/images/home/'J'-heart-logo.png" width="25" height="25">
+
             </div>
-            <h3>Software</h3>
-            <p>JSON file, Private key, Mnemonic phrase</p>
-            <p class="small-note">Not recommended</p>
-            <div class="tooltip-box">
-              <b-btn id="exPopover4" variant="primary">
-                <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-              </b-btn>
-              <b-popover target="exPopover4" triggers="hover focus" placement="top">
-                <template slot="title">Software</template>
-                Unfortunately, we encounter these <strong>phishing scams/attacks</strong> on a daily basis.
-              </b-popover>
-            </div>
+            <h3>LUV</h3>
+            <p>Login To Your LUV Wallet</p>
+          
           </div>
 
         </div>
@@ -361,17 +325,20 @@ export default {
       this.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
-      // Reset button state
-      document.querySelectorAll('.hardware-button-options li').forEach(function (el) {
-        el.classList.remove('active')
-      })
-      this.$refs.hardware.show()
+
+      this.$router.push('/eth')
+
     },
     metamaskModalOpen () {
-      this.$refs.metamask.show()
+      this.$router.push('/neo')
     },
     softwareModalOpen () {
-      this.$refs.software.show()
+      this.$router.push('/luv')
+    },
+    openJsonFile: function(e){
+      console.log('JSON clicked')
+      e.preventDefault();
+      $("#json-file").trigger('click');
     }
   },
   mounted () {

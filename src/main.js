@@ -33,6 +33,27 @@ import SendOfflineGenerateInfo from '@/components/Body/Transactions/SendOffline/
 import SendOfflineGenerateTx from '@/components/Body/Transactions/SendOffline/GenerateTx/GenerateTx'
 import SendOfflineSendTx from '@/components/Body/Transactions/SendOffline/SendTx/SendTx'
 
+import Neo from '@/components/Body/Neo/NeoWalletComponent'
+import Eth from '@/components/Body/Eth/EthWalletComponent'
+//NEO
+window.Neon = require('@cityofzion/neon-js')
+window.wallet = window.Neon.wallet
+window.api = window.Neon.api
+
+try {
+    window.$ = window.jQuery = require('jquery');
+
+    require('bootstrap');
+} catch (e) {}
+
+/**
+ * We'll load the axios HTTP library which allows us to easily issue requests
+ * to our Laravel back-end. This library automatically handles sending the
+ * CSRF token as a header based on the value of the "XSRF" token cookie.
+ */
+
+window.axios = require('axios');
+
 Vue.component('vue-header', Header)
 Vue.component('vue-footer', Footer)
 Vue.component('top-banner', TopBanner)
@@ -55,6 +76,9 @@ Vue.component('send-offline-generate-tx', SendOfflineGenerateTx)
 Vue.component('send-offline-send-tx', SendOfflineSendTx)
 
 Vue.component('v-select', vSelect)
+
+Vue.component('neo-wallet',Neo)
+Vue.component('eth-wallet',Eth)
 
 Vue.config.productionTip = false
 

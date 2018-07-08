@@ -19,9 +19,9 @@
         </div><!-- .top-title -->
         <div class="grid-col-2 qa-cards">
           <div class="card-block">
-            <h4 class="title">Getting Started With MEW</h4>
+            <h4 class="title">Getting Started With LUV</h4>
             <div class="questions">
-              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>What is LUV?</p></router-link>
               <router-link to="/"><p>How to create a wallet?</p></router-link>
               <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
               <router-link to="/"><p>How to access your wallet</p></router-link>
@@ -32,7 +32,7 @@
           <div class="card-block">
             <h4 class="title">Security And Phishing</h4>
             <div class="questions">
-              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>What is LUV?</p></router-link>
               <router-link to="/"><p>How to create a wallet?</p></router-link>
               <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
               <router-link to="/"><p>How to access your wallet</p></router-link>
@@ -43,7 +43,7 @@
           <div class="card-block">
             <h4 class="title">Transactions</h4>
             <div class="questions">
-              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>What is LUV?</p></router-link>
               <router-link to="/"><p>How to create a wallet?</p></router-link>
               <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
               <router-link to="/"><p>How to access your wallet</p></router-link>
@@ -54,7 +54,7 @@
           <div class="card-block">
             <h4 class="title">Private Keys And Passwords</h4>
             <div class="questions">
-              <router-link to="/"><p>What is MEW?</p></router-link>
+              <router-link to="/"><p>What is LUV?</p></router-link>
               <router-link to="/"><p>How to create a wallet?</p></router-link>
               <router-link to="/"><p>How to properly save and backup your wallet</p></router-link>
               <router-link to="/"><p>How to access your wallet</p></router-link>

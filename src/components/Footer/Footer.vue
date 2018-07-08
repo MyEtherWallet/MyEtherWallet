@@ -23,7 +23,7 @@
           </div>
           <div class="e2">
             <div class="content-title">
-              <h3 class="lite">Affiliates</h3>
+              <h3 class="lite">Partners</h3>
               <p v-on:click="openContent('e2')" class="open">
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </p>
@@ -32,16 +32,16 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link to="/"><p>Ledger Wallet</p></router-link>
-              <router-link to="/"><p>Digital Bitbox</p></router-link>
-              <router-link to="/"><p>Ether Card</p></router-link>
+              <router-link to="/"><p>Digital Underground</p></router-link>
+              <router-link to="/"><p>J.A.R.V.I.Z. Inc</p></router-link>
+              <router-link to="/"><p>SoJay Inc</p></router-link>
+              <router-link to="/"><p>The Black Business School</p></router-link>
               <router-link to="/"><p>Trezor</p></router-link>
-              <router-link to="/"><p>Bity</p></router-link>
             </div>
           </div>
           <div class="e3">
             <div class="content-title">
-              <h3 class="lite">MEW</h3>
+              <h3 class="lite">LUV</h3>
               <p v-on:click="openContent('e3')" class="open">
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </p>
@@ -64,7 +64,7 @@
               </h3>
             </div>
             <div class="content-links">
-              <p>Your donation will help us a lot to build our MEW Community.</p>
+              <p>Your donation will help us a lot to build our LUV Community.</p>
 
               <router-link to="/">
                 <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
@@ -77,6 +77,13 @@
                 <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
+                </p>
+              </router-link>
+
+              <router-link to="/">
+                <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  <img src="~@/assets/images/icons/eth.svg">
+                  &nbsp;NEO Donation
                 </p>
               </router-link>
 
