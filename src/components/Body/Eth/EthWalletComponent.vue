@@ -174,14 +174,8 @@
             this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
             console.log(this.web3)
             var json = JSON.parse(sessionStorage.ethKeystore);
-           that.keyStore = {
-              address : json.address,
-              id: json.id,
-              version: json.version,
-              Crypto: json.Crypto,
-              //"x-ethers": json.x-ethers
-            };
-            that.keyStore = JSON.stringify(that.keyStore)
+
+            that.keyStore = JSON.stringify(json)
             that.ethers.Wallet.fromEncryptedWallet(that.keyStore, sessionStorage.ethPass).then(function(wallet) {
                 console.log("Address: " + wallet.address);
                 // "Address: 0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290"
@@ -331,13 +325,7 @@
               var reader = new FileReader();
               reader.onload = (event) => {
                 var json = JSON.parse(event.target.result);
-                that.keyStore = {
-                  address : json.address,
-                  id: json.id,
-                  version: json.version,
-                  crypto: json.Crypto,
-                  "x-ethers": json.x-ethers
-                };
+                that.keyStore = JSON.stringify(json);
                 /*that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
                 that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
                 sessionStorage.ethPass = ans;
