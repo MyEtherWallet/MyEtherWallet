@@ -51,9 +51,7 @@
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="addToken(scriptHash)">Add Token</button>
                         <button class="btn btn-primary btn-gap btn-custom" v-on:click="sendAssetPrompt">Send <i class="icon" data-icon="d"></i></button>
                         <button class="btn btn-primary btn-gap btn-custom" data-toggle="modal" data-target="#transactionModal">Get Transactions</button>
-                        <ul>
-                          <li v-for="token in tokens">{{token.symbol}}: {{token.balance}}</li>
-                        </ul>
+
                     </div>
                   </transition>
                 </div>
@@ -168,14 +166,29 @@
           }
         },
         created(){
+          var that = this;
           var Web3 = require("web3")
           this.db = require('db.js');
           this.ethers = require('ethers');
           if(sessionStorage.ethKeystore && sessionStorage.ethPass){
             this.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
-            this.wallet = this.web3.eth.accounts.decrypt(JSON.parse(sessionStorage.ethKeystore), sessionStorage.ethPass);
+            console.log(this.web3)
+            var json = JSON.parse(sessionStorage.ethKeystore);
+           that.keyStore = {
+              address : json.address,
+              id: json.id,
+              version: json.version,
+              Crypto: json.Crypto,
+              //"x-ethers": json.x-ethers
+            };
+            that.keyStore = JSON.stringify(that.keyStore)
+            that.ethers.Wallet.fromEncryptedWallet(that.keyStore, sessionStorage.ethPass).then(function(wallet) {
+                console.log("Address: " + wallet.address);
+                // "Address: 0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290"
+                that.wallet = wallet
+                that.getBalance()
+            });
 
-            this.getBalance();
           }
         },
         methods:{
@@ -272,9 +285,12 @@
             chainId: this.ethers.providers.networks.homestead.chainId
 
         };
+        console.log(transaction)
 
-        var signedTransaction = this.wallet.sign(transaction);
-
+        var signedTransaction = this.wallet.send(transaction.to,transaction.value);
+        signedTransaction.then(transactionHash => {
+          console.log(transactionHash)
+        })
         console.log(signedTransaction);
         // "0xf86c808504a817c8008252089488a5c2d9919e46f883eb62f7b8dd9d0cc45bc2" +
         //   "90880de0b6b3a7640000801ca0d7b10eee694f7fd9acaa0baf51e91da5c3d324" +
@@ -314,13 +330,28 @@
               this.file = document.getElementById('json-file').files[0];
               var reader = new FileReader();
               reader.onload = (event) => {
-                that.keyStore = JSON.parse(event.target.result);
-                that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
+                var json = JSON.parse(event.target.result);
+                that.keyStore = {
+                  address : json.address,
+                  id: json.id,
+                  version: json.version,
+                  crypto: json.Crypto,
+                  "x-ethers": json.x-ethers
+                };
+                /*that.web3 = new Web3(new Web3.providers.HttpProvider(this.mainNet));
                 that.wallet = that.web3.eth.accounts.decrypt(that.keyStore, ans);
                 sessionStorage.ethPass = ans;
                 sessionStorage.ethKeystore = event.target.result
                 that.getBalance();
-
+                */
+                that.ethers.Wallet.fromEncryptedWallet(JSON.parse(that.keyStore, ans)).then(function(wallet) {
+                    console.log("Address: " + wallet.address);
+                    // "Address: 0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290"
+                    sessionStorage.ethPass = ans;
+                    sessionStorage.ethKeystore = event.target.result;
+                    that.wallet = wallet;
+                    that.getBalance();
+                });
               };
 
               reader.readAsText(this.file);
@@ -353,9 +384,10 @@
             console.log(that.abi);
             var provider = this.ethers.providers.getDefaultProvider('homestead');
 
-            var contract = new this.ethers.Contract(that.scriptHash, that.abi, provider);
-            console.log(contract.functions);
+            var contract = new this.ethers.Contract(hash, token.abi, provider);
+
             token.scriptHash = hash;
+            console.log(this.wallet.address)
             contract.balanceOf(this.wallet.address).then(data => {
               console.log(data);
               token.balance = that.ethers.utils.toNumber(data._bn)
@@ -366,7 +398,6 @@
             });
 
             contract.name().then(data => {
-              console.log(data);
               token.name = data;
               that.tokens.push(token);
               that.server.ethTokens.add(token).then(item => {
