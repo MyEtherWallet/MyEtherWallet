@@ -1,5 +1,11 @@
 @import '~@/scss/GlobalVariables';
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 
 // *********************************************************************
 // CSS reset
@@ -120,10 +126,10 @@ textarea {
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 // *********************************************************************
@@ -593,7 +599,7 @@ h6 {
 // *********************************************************************
 
 .popover {
-  pointer-events: none;  
+  pointer-events: none;
 }
 
 .tooltip {
@@ -604,7 +610,7 @@ h6 {
 
   .arrow::before {
     border-top-color: $background-color-white;
-  }  
+  }
 
   .tooltip-inner {
     background-color: $background-color-white;
@@ -1192,4 +1198,3 @@ h6 {
 .linker-1:hover {
   color: $link-text-color-1;
 }
-
