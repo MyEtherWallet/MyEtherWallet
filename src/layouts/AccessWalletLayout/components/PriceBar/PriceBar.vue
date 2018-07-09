@@ -26,28 +26,7 @@ export default {
   props: ['tokens'],
   data () {
     return {
-      set1: [],
-      set2: [],
-      rotationInterval: null,
-      showSet: true
     }
-  },
-  methods: {
-    rotate () {
-      this.showSet = !this.showSet
-    }
-  },
-  mounted () {
-    this.rotationInterval = setInterval(this.rotate, 5000)
-  },
-  watch: {
-    tokens (val) {
-      this.set1 = this.tokens.slice(0, 9)
-      this.set2 = this.tokens.slice(10, 19)
-    }
-  },
-  beforeDestroy () {
-    clearInterval(this.rotationInterval)
   }
 }
 </script>
