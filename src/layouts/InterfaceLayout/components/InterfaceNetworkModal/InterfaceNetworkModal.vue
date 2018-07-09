@@ -70,6 +70,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import web3 from 'web3'
 
 export default {
   data () {
@@ -90,6 +91,11 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
+      if (window.web3) {
+        this.$store.dispatch('setWeb3Instance', window.web3)
+      } else {
+        this.$store.dispatch('setWeb3Instance', web3)
+      }
     }
   },
   computed: {
