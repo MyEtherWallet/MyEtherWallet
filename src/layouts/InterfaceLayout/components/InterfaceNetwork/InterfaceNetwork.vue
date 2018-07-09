@@ -13,7 +13,6 @@
           <div class="icon-container">
             <img src="~@/assets/images/icons/change.svg">
           </div>
-          <!-- <p class="bottom-button">{{ $t("txNetwork.change") }} <i class="fa fa-chevron-right" aria-hidden="true"></i></p> -->
         </div>
       </div>
     </div>
@@ -36,14 +35,6 @@ export default {
   methods: {
     networkModalOpen () {
       this.$children[0].$refs.network.show()
-    },
-    addCustomNetworkToggle () {
-      document.querySelector('.network-list').classList.toggle('hidden')
-      document.querySelector('.network-add').classList.toggle('hidden')
-      document.querySelector('.network').classList.toggle('max-height-1')
-    },
-    expendAuth () {
-      document.querySelector('.auth-form-container').classList.toggle('hidden')
     }
   },
   mounted () {

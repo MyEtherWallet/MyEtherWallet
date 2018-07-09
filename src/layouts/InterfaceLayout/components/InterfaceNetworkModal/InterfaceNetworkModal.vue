@@ -15,44 +15,15 @@
           </div>
         </div>
       </div>
-      <div class="network-list">
-        <div class="content-block">
-          <h4 class="dot-green">ETH</h4>
+      <div class="network-list" ref="networkList">
+        <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
+          <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'Ropsten' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
           <div class="grid-3">
-            <p>myetherapi.com</p>
-            <p>infura.io</p>
-            <p>giveth.io</p>
-            <p>etherscan.io</p>
+            <p class="switch-network" v-for="net in $store.state.Networks[key]" :key="net.service" @click="switchNetwork(net)" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">{{net.service}}</p>
           </div>
         </div>
-        <div class="content-block">
-          <h4 class="dot-bluegreen">ETC</h4>
-          <div class="grid-3">
-            <p>Ethereum Commonwealth</p>
-            <p>epool.io</p>
-          </div>
-        </div>
-        <div class="content-block">
-          <h4 class="dot-blue">ROPSTEN ETH <span>(Test environment)</span></h4>
-          <div class="grid-3">
-            <p>myetherapi.com</p>
-            <p>epool.io</p>
-          </div>
-        </div>
-        <div class="content-block">
-          <h4 class="dot-orange">EXP</h4>
-          <div class="grid-3">
-            <p>expense.tech</p>
-          </div>
-        </div>
-        <div class="content-block">
-          <h4 class="dot-green">EXP</h4>
-          <div class="grid-3">
-            <p>expense.tech</p>
-          </div>
-        </div>
-      </div> <!-- .network-list -->
-      <div class="network-add hidden">
+      </div>
+      <div class="network-add hidden" ref="networkAdd">
         <div class="content-block">
           <div class="input-block-container">
             <input class="custom-input-text-1" type="text" name="" value="" placeholder="ETH Node Name">
@@ -77,7 +48,7 @@
               </div>
             </div>
           </div>
-          <div class="auth-form-container hidden">
+          <div class="auth-form-container hidden" ref="authForm">
             <input class="custom-input-text-1" type="text" name="" value="" placeholder="User Name">
             <input class="custom-input-text-1" type="text" name="" value="" placeholder="Password">
           </div>
@@ -98,6 +69,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data () {
     return {
@@ -108,13 +81,21 @@ export default {
       this.$children[0].$refs.network.show()
     },
     addCustomNetworkToggle () {
-      document.querySelector('.network-list').classList.toggle('hidden')
-      document.querySelector('.network-add').classList.toggle('hidden')
-      document.querySelector('.network').classList.toggle('max-height-1')
+      this.$refs.network.$el.classList.toggle('max-height-1')
+      this.$refs.networkList.classList.toggle('hidden')
+      this.$refs.networkAdd.classList.toggle('hidden')
     },
     expendAuth () {
-      document.querySelector('.auth-form-container').classList.toggle('hidden')
+      this.$refs.authForm.classList.toggle('hidden')
+    },
+    switchNetwork (network) {
+      this.$store.dispatch('switchNetwork', network)
     }
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   }
 }
 </script>

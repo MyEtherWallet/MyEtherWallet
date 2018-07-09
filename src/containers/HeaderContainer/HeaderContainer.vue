@@ -1,12 +1,12 @@
 <template>
   <div class="header">
     <div class="wrap">
-      <div class="fixed-header">
+      <div class="fixed-header" ref="fixedHeader">
         <div class="page-container">
           <div class="header-container">
             <router-link to="/" v-on:click.native="scrollTop()">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png">
+                <img class="logo-large" src="~@/assets/images/logo.png" ref="logoLarge">
               </div>
             </router-link>
             <div class="top-menu">
@@ -117,6 +117,7 @@ export default {
     }
   },
   mounted () {
+    const self = this
     if (this.$store.state.online) {
       this.online = true
     } else {
@@ -132,12 +133,10 @@ export default {
     }
 
     this.currentName = this.supportedLanguages.filter(item => item.flag === this.currentFlag)[0].name
-
     window.onscroll = function (e) {
-      var element = document.querySelector('body')
-      var header = document.querySelector('.fixed-header')
-      var logoLarge = document.querySelector('.logo-large')
-      var topPos = element.getBoundingClientRect().top
+      const header = self.$refs.fixedHeader
+      const logoLarge = self.$refs.logoLarge
+      const topPos = self.$root.$el.getBoundingClientRect().top
       if (topPos < -150) {
         header.classList.add('tiny-header')
         logoLarge.classList.add('logo-small')

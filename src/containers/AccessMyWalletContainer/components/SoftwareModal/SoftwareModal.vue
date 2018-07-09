@@ -18,7 +18,7 @@
           <span>{{$t("reused.privKey")}}</span>
         </li>
       </ul>
-      <input type="file" name="file" style="display: none" id="jsonInput" @change="uploadedFile" />
+      <input type="file" name="file" style="display: none" ref="jsonInput" @change="uploadedFile" />
     </div>
     <div class="button-container">
       <b-btn class="mid-round-button-green-filled close-button">
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     uploadClick () {
-      let jsonInput = document.getElementById('jsonInput')
+      let jsonInput = this.$refs.jsonInput
       if (this.file === '') {
         jsonInput.click()
       } else {

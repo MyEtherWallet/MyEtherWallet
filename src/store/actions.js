@@ -22,11 +22,21 @@ const setAccountBalance = function ({commit}, balance) {
   commit('SET_ACCOUNT_BALANCE', balance)
 }
 
+const switchNetwork = function ({commit}, networkObj) {
+  commit('SWITCH_NETWORK', networkObj)
+}
+
+const setState = function ({commit}, stateObj) {
+  commit('INIT_STATES', stateObj)
+}
+
 export default {
   checkIfOnline,
   clearWallet,
   decryptWallet,
   updatePageState,
   setWeb3Instance,
-  setAccountBalance
+  setAccountBalance,
+  switchNetwork,
+  setState
 }

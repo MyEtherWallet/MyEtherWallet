@@ -6,6 +6,10 @@ const wallet = (state) => {
   return state.wallet
 }
 
+const network = (state) => {
+  return state.network
+}
+
 const online = (state) => {
   return state.online
 }
@@ -13,5 +17,6 @@ const online = (state) => {
 export default {
   all,
   wallet,
-  online
+  online,
+  network
 }

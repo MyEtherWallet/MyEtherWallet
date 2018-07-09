@@ -12,7 +12,7 @@
             <i class="fa fa-search" aria-hidden="true"></i>
           </div>
         </div>
-        <div class="token-table-container">
+        <div class="token-table-container" ref="tokenTableContainer">
           <table v-show="tokens.length > 0">
             <tr v-for="(token, index) in tokens" :key="token.name + index">
               <td>{{token.name}}</td>
@@ -24,8 +24,8 @@
           </div>
         </div>
         <div v-on:click="tokenListExpend" class="expend-bar">
-          <p class="down"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
-          <p class="up hidden"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
+          <p class="down" ref="expendDown"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
+          <p class="up hidden" ref="expendUp"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
         </div>
       </div>
       <div class="bottom-image-container">
@@ -45,9 +45,9 @@ export default {
   },
   methods: {
     tokenListExpend () {
-      document.querySelector('.token-table-container').classList.toggle('expended')
-      document.querySelector('.expend-bar .down').classList.toggle('hidden')
-      document.querySelector('.expend-bar .up').classList.toggle('hidden')
+      this.$refs.tokenTableContainer.classList.toggle('expanded')
+      this.$refs.expendDown.classList.toggle('hidden')
+      this.$refs.expendUp.classList.toggle('hidden')
     },
     async fetchTokens () {
       const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'

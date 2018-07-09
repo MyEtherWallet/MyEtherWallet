@@ -106,3 +106,15 @@
     }
   }
 }
+
+.switch-network {
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 10px;
+  width: fit-content;
+}
+
+.current-network {
+  background-color: $light-grey-5;
+}

@@ -1,3 +1,5 @@
+import store from 'store'
+
 const CHECK_IF_ONLINE = function (state) {
   state.online = window.location.protocol === 'http:' || window.location.protocol === 'https:'
 }
@@ -12,6 +14,7 @@ const DECRYPT_WALLET = function (state, wallet) {
 
 const CHANGE_PAGE_STATE = function (state, arr) {
   state.pageStates[arr[0]][arr[1]] = arr[2]
+  store.set('pageStates', arr)
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
@@ -23,11 +26,22 @@ const SET_ACCOUNT_BALANCE = function (state, balance) {
   state.account.balance = balance
 }
 
+const SWITCH_NETWORK = function (state, networkObj) {
+  state.network = networkObj
+  store.set('network', networkObj)
+}
+
+const INIT_STATES = function (state, stateObj) {
+  state = stateObj
+}
+
 export default {
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
   DECRYPT_WALLET,
   CHANGE_PAGE_STATE,
   SET_WEB3_INSTANCE,
-  SET_ACCOUNT_BALANCE
+  SET_ACCOUNT_BALANCE,
+  SWITCH_NETWORK,
+  INIT_STATES
 }
