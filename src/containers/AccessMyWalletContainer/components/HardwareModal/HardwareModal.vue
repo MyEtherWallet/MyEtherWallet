@@ -1,23 +1,23 @@
 <template>
   <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
     <div class="d-block text-center">
-      <ul class="button-options hardware-button-options">
-        <li v-on:click="hardwareButtonActivate($event)">
+      <ul class="button-options hardware-button-options" ref="hardwareList">
+        <li @click="hardwareButtonActivate">
           <img class="icon" src="~@/assets/images/icons/button-ledger.png">
           <img class="icon-hover" src="~@/assets/images/icons/button-ledger-hover.png">
           <span>Ledger Wallet</span>
         </li>
-        <li v-on:click="hardwareButtonActivate($event)">
+        <li @click="hardwareButtonActivate">
           <img class="icon" src="~@/assets/images/icons/button-trezor.png">
           <img class="icon-hover" src="~@/assets/images/icons/button-trezor-hover.png">
           <span>Trezor</span>
         </li>
-        <li v-on:click="hardwareButtonActivate($event)">
+        <li @click="hardwareButtonActivate">
           <img class="icon" src="~@/assets/images/icons/button-bitbox.png">
           <img class="icon-hover" src="~@/assets/images/icons/button-bitbox-hover.png">
           <span>Digital Bitbox</span>
         </li>
-        <li v-on:click="hardwareButtonActivate($event)">
+        <li @click="hardwareButtonActivate">
           <img class="icon" src="~@/assets/images/icons/button-secalot.png">
           <img class="icon-hover" src="~@/assets/images/icons/button-secalot-hover.png">
           <span>Secalot</span>
@@ -46,12 +46,13 @@ export default {
   data () {
     return {}
   },
-  method: {
+  methods: {
     hardwareButtonActivate (e) {
-      var everyButtonEl = document.querySelectorAll('.hardware-button-options li')
-      everyButtonEl.forEach(function (el) {
-        el.classList.remove('active')
-      })
+      const buttonEls = this.$refs.hardwareList.children
+      for (var i = 0; i < buttonEls.length; i++) {
+        buttonEls[i].classList.remove('active')
+      }
+
       e.target.classList.add('active')
     }
   }

@@ -9,6 +9,8 @@
 <script>
 import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
+import store from 'store'
+import nodeList from '@/configs/networks'
 
 export default {
   name: 'App',
@@ -17,6 +19,26 @@ export default {
     'footer-container': FooterContainer
   },
   beforeMount () {
+    const state = {
+      web3: {},
+      network: store.get('network'),
+      wallet: null,
+      account: {
+        balance: 0
+      },
+      Transactions: {},
+      Networks: nodeList,
+      Errors: {},
+      online: true,
+      pageStates: {
+        interface: {
+          sendOffline: store.get('pageStates'),
+          sideMenu: store.get('curPage')
+        }
+      }
+    }
+
+    this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
     if (window.web3) {
       this.$store.dispatch('setWeb3Instance', window.web3)

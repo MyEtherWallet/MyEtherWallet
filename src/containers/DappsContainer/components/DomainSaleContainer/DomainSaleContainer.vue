@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="domain-check-form hidden">
+        <div class="domain-check-form hidden" ref="domainCheckForm">
           <div class="domain-checker">
             <input type="number" name="" value="" placeholder="Please Enter Sub Domain Name">
             <div class="check-button">
@@ -66,15 +66,7 @@ export default {
   },
   methods: {
     expendDomainCheckForm () {
-      document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.add('hidden')
-    },
-    domainAvailabilityCheck () {
-      // document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.remove('hidden')
-    },
-    domainBuyButtonClick ($event) {
-      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+      this.$refs.domainCheckForm.classList.toggle('hidden')
     }
   }
 }

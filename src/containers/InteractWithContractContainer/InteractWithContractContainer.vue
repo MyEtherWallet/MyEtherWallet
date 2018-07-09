@@ -73,19 +73,6 @@ export default {
         }
       ]
     }
-  },
-  methods: {
-    expendDomainCheckForm () {
-      document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.add('hidden')
-    },
-    domainAvailabilityCheck () {
-      // document.querySelector('.domain-check-form').classList.toggle('hidden')
-      document.querySelector('.sub-domain-list').classList.remove('hidden')
-    },
-    domainBuyButtonClick ($event) {
-      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
-    }
   }
 }
 </script>
