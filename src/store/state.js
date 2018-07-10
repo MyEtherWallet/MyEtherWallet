@@ -44,8 +44,9 @@ const state = {
       depositAmount: '',
       toAddress: '',
       data: '',
-      gasLimit: ''
+      gasLimit: '',
       // --- Send Transaction ---
+      signedTransaction: ''
     },
     stateSetter: function (state, data) {
       this.states[state] = data
