@@ -135,22 +135,27 @@
                     <input type="number" name="" value="" placeholder="Amount">
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
+                  <div class="error-message-container">
+                    <p>You don't have enough funds</p>
+                  </div>
                 </div>
                 <div class="to-address">
                   <div class="title">
                     <h4>To Address</h4>
-                    <img class="icon" src="~@/assets/images/icons/avatar.svg">
+                    <div class="blockies-image">
+                      <div class="blockies" id="to-address-blockies" ></div>
+                    </div>
                     <p v-on:click="copyToClipboard('address')" class="copy-button">Copy</p>
                   </div>
                   <div class="the-form address-block">
                     <textarea id="address" name="name">0xe5cD582F564991F83bE7A5b3ba742cb4ff5c6FE2</textarea>
                     <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                   </div>
+                  <div class="error-message-container">
+                    <p>Invalid address</p>
+                  </div>
                 </div> <!-- .to-address -->
               </div> <!-- .form-block .amount-to-address -->
-              <div class="error-message-container">
-                <p>You don't have enough funds</p>
-              </div>
             </div> <!-- .send-form -->
 
             <div class="send-form">
@@ -239,6 +244,7 @@
 </template>
 
 <script>
+import blockies from 'ethereum-blockies'
 export default {
   data () {
     return {
@@ -265,6 +271,14 @@ export default {
   mounted () {
     window.scrollTo(0, 0)
     this.$store.state.state.pageStates.activeMenuSetter(['send', 'sendEth'])
+
+    // Create a blockies and append it
+    var icon = blockies.create({
+      seed: '0x93rh9h3f93h493887h389h4h4f9348h93h4',
+      size: 8,
+      scale: 4
+    })
+    document.getElementById('to-address-blockies').appendChild(icon) // icon is a canvas element
   }
 }
 </script>

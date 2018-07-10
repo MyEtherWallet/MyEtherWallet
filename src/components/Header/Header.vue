@@ -56,7 +56,7 @@
             </router-link>
 
             <div v-show="pageLocation === 'tx'" class="blockies-image">
-              <div id="blockies">
+              <div class="blockies" id="header-blockies">
               </div>
               <div class="arrows">
                 <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -162,13 +162,13 @@ export default {
       }
     }
 
+    // Create a blockies and append it to header
     var icon = blockies.create({
       seed: '0x93rh9h3f93h4938h4f9348h93h4',
       size: 8,
       scale: 4
     })
-
-    document.getElementById('blockies').appendChild(icon) // icon is a canvas element
+    document.getElementById('header-blockies').appendChild(icon) // icon is a canvas element
   },
   beforeDestroy () {
     // Reset page location variable

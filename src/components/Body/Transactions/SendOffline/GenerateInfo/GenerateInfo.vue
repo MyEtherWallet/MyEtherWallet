@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input id="from-address" type="text" name="" value="" placeholder="From Address">
+          <input id="from-address" type="text" placeholder="From Address" v-on:keyup="stateSetter('fromAddress', userInputFromAddress)" v-model="userInputFromAddress">
           <div class="good-button-container">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
@@ -40,19 +40,19 @@
               <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
             </div>
             <div class="buttons">
-              <div class="small-circle-button-green-border">
+              <div class="small-circle-button-green-border" v-on:click="setGasAmount('gweiSlow')">
                 Slow
               </div>
-              <div class="small-circle-button-green-border active">
+              <div class="small-circle-button-green-border active" v-on:click="setGasAmount('gweiRegular')">
                 Regular
               </div>
-              <div class="small-circle-button-green-border">
+              <div class="small-circle-button-green-border" v-on:click="setGasAmount('gweiFast')">
                 Fast
               </div>
             </div>
           </div>
           <div class="the-form gas-amount">
-            <input type="number" name="" value="" placeholder="Gas Amount">
+            <input type="number" placeholder="Gas Amount" v-on:keyup="stateSetter('speedOfTransaction', userInputSpeedOfTransaction)" v-model="userInputSpeedOfTransaction">
             <div class="good-button-container">
               <p>Gwei</p>
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="the-form gas-amount">
-            <input type="number" name="" value="" placeholder="Gas Amount">
+            <input type="number" name="" value="" placeholder="Gas Amount" v-on:keyup="stateSetter('nonce', userInputNonce)" v-model="userInputNonce">
             <div class="good-button-container">
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
             </div>
@@ -109,12 +109,18 @@
 export default {
   data () {
     return {
-      moreInfoGenerated: false
+      moreInfoGenerated: this.stateGetter('generateInfoExpended'),
+      userInputFromAddress: this.stateGetter('fromAddress'),
+      userInputSpeedOfTransaction: this.stateGetter('speedOfTransaction'),
+      userInputNonce: this.stateGetter('nonce')
     }
   },
   methods: {
-    generateInfo: function () {
-      this.moreInfoGenerated = true
+    stateSetter: function (state, data) {
+      this.$store.state.state.sendOfflineData.stateSetter(state, data)
+    },
+    stateGetter: function (state, data) {
+      return this.$store.state.state.sendOfflineData.stateGetter(state)
     },
     copyFromAddress: function () {
       document.querySelector('#from-address').select()
@@ -125,9 +131,21 @@ export default {
     },
     processChange: function () {
       this.$store.state.state.pageStates.sendOffline.processLocation = 'process2'
+    },
+    generateInfo: function () {
+      this.moreInfoGenerated = true
+      this.stateSetter('generateInfoExpended', true)
+    },
+    setGasAmount: function (speedName) {
+      var speedVal = this.stateGetter(speedName)
+      this.stateSetter('speedOfTransaction', speedVal)
+      this.userInputSpeedOfTransaction = speedVal
     }
   },
   mounted () {
+    this.stateSetter('gweiSlow', '7')
+    this.stateSetter('gweiRegular', '12')
+    this.stateSetter('gweiFast', '24')
   }
 }
 </script>

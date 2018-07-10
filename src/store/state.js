@@ -29,6 +29,31 @@ const state = {
     // Landing page sublink location
     sublink: 'about'
   },
+  sendOfflineData: {
+    states: {
+      gweiSlow: '',
+      gweiRegular: '',
+      gweiFast: '',
+      // --- Generate Information ---
+      generateInfoExpended: false,
+      fromAddress: '',
+      speedOfTransaction: '',
+      nonce: '',
+      // --- Generate Transaction ---
+      coinType: {label: 'ETH', value: 'eth'},
+      depositAmount: '',
+      toAddress: '',
+      data: '',
+      gasLimit: ''
+      // --- Send Transaction ---
+    },
+    stateSetter: function (state, data) {
+      this.states[state] = data
+    },
+    stateGetter: function (state) {
+      return this.states[state]
+    }
+  },
   pageStates: {
     pageLocation: '',
     sendOffline: {
