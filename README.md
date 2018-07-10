@@ -1,20 +1,20 @@
 ## !["MyEtherWallet Logo](./src/assets/images/logo.png "MyEtherWallet")  
-  
-  
 
-![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com)
-[![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
-[![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
-[![Build Status](https://travis-ci.org/kvhnuke/etherwallet.svg?branch=mercury)](https://travis-ci.org/kvhnuke/etherwallet)
-[![GitHub version](https://badge.fury.io/gh/MyEtherWallet%2FMyEtherWallet.svg)](https://badge.fury.io/gh/MyEtherWallet%2FMyEtherWallet)
-![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg)
+
+
+[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
+[![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
+[![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
+[![Travis](https://img.shields.io/travis/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://travis-ci.org/MyEtherWallet/MyEtherWallet)
+[![GitHub package version](https://img.shields.io/github/package-json/v/badges/shields.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/master/package.json)
+![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square)
 
 
 
 MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. -*Stephen, #MEWForce*
 
 !["MyEtherWallet Logo](./src/assets/images/mew-screen.png "MyEtherWallet")  
-  
+
 ## Philosophy
 - **Empower the people**: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
 - **Make it easy & free**: Everyone should be able to create a wallet and send Ether & Tokens without additional cost.
@@ -39,5 +39,3 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 - [Github Anti-phish CX: https://github.com/409H/EtherAddressLookup](https://github.com/409H/EtherAddressLookup)
 -  MEW ETH Donation Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D (mewtopia.eth)
 -  MEW BTC Donation Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
-
-
