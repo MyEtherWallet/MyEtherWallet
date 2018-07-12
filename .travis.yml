@@ -21,7 +21,8 @@ branches:
   except:
   - gh-pages
 stages:
-- add to mewbuilds
+- name: add to mewbuilds
+  if: type != pull_request
 - name: create release
   if: branch = master and type != pull_request
 - name: deploy to production
@@ -37,15 +38,9 @@ jobs:
     - aws s3 sync --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
     after_success:
     - |
-      if [ $TRAVIS_PULL_REQUEST == "false" ]; then
-        curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-        -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html\"}" \
-        "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
-      else
-        curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-        -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html\"}" \
-        "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
-      fi
+      curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+      -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html\"}" \
+      "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
   - stage: create release
     script: skip
     before_deploy:
