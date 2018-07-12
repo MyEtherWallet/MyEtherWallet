@@ -87,7 +87,7 @@ export default {
     },
     storePage (param) {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
-      store.set('curPage', param)
+      store.set('sideMenu', param)
     }
   },
   watch: {
@@ -117,7 +117,7 @@ export default {
       }
 
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
-      store.set('curPage', newVal)
+      store.set('sideMenu', newVal)
     }
   }
 }

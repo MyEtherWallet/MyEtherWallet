@@ -14,16 +14,19 @@ const DECRYPT_WALLET = function (state, wallet) {
 
 const CHANGE_PAGE_STATE = function (state, arr) {
   state.pageStates[arr[0]][arr[1]] = arr[2]
-  store.set('pageStates', arr)
+  store.set(arr[1], arr[2])
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
   web3.setProvider(state.network.RpcUrl)
-  state.web3 = web3
 }
 
 const SET_ACCOUNT_BALANCE = function (state, balance) {
   state.account.balance = balance
+}
+
+const SET_ACCOUNT_NONCE = function (state, nonce) {
+  state.account.nonce = nonce
 }
 
 const SWITCH_NETWORK = function (state, networkObj) {
@@ -35,6 +38,11 @@ const INIT_STATES = function (state, stateObj) {
   state = stateObj
 }
 
+const SET_TX_SPEED = function (state, val) {
+  state.txSpeed = val
+  store.set('txSpeed', val)
+}
+
 export default {
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
@@ -42,6 +50,8 @@ export default {
   CHANGE_PAGE_STATE,
   SET_WEB3_INSTANCE,
   SET_ACCOUNT_BALANCE,
+  SET_ACCOUNT_NONCE,
   SWITCH_NETWORK,
-  INIT_STATES
+  INIT_STATES,
+  SET_TX_SPEED
 }

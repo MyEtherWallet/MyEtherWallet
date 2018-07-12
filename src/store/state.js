@@ -23,7 +23,8 @@ const state = {
       sendOffline: 'genInfo',
       sideMenu: 'send'
     }
-  }
+  },
+  txSpeed: 41
 }
 
 export default state
