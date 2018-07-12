@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="bottom-image-container">
-        <img class="icon" src="~@/assets/images/etc/oiwjehfowhohweg.png">
+        <img class="icon" src="~@/assets/images/etc/mewconnectad.png">
       </div>
     </div>
   </div>

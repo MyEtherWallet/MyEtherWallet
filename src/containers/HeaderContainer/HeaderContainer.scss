@@ -4,6 +4,22 @@
   padding-top: 87px;
 }
 
+.notification {
+  cursor: pointer;
+  margin-left: 20px;
+  position: relative;
+
+  .notification-dot {
+    background-color: $notification-dot-background-color;
+    border-radius: 40px;
+    height: 8px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 8px;
+  }
+}
+
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
@@ -147,4 +163,20 @@
 
 .identicon-dropdown {
   padding: 0 !important;
+}
+
+.get-free-wallet {
+  border: 1px solid $border-green;
+  border-radius: 4px;
+  color: $text-color-green;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 24px;
+  padding: 10px 20px;
+  transition: background-color .2s ease;
+
+  &:hover {
+    background-color: $text-color-green;
+    color: $text-white;
+  }
 }

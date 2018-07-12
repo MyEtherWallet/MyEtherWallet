@@ -129,7 +129,7 @@
           height: 98px;
 
           i {
-            bottom: 13px;
+            bottom: 42px;
             position: absolute;
             right: 13px;
           }
@@ -146,7 +146,8 @@
       }
     }
 
-    .gas-amount {
+    .gas-amount,
+    .user-input {
       position: relative;
 
       input {
@@ -184,21 +185,34 @@
     .advanced-content {
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
-      display: flex;
-      padding: 0 8px;
-      padding-bottom: 20px;
-      padding-top: 20px;
 
-      .toggle-button {
-        align-items: center;
-        display: flex;
-        margin-left: auto;
+      .input-container {
+        padding-bottom: 10px;
 
-        > span {
-          margin-right: 15px;
+        .the-form:nth-child(1) {
+          margin-bottom: 5px;
         }
+
       }
-    }
+
+      .title {
+        display: flex;
+        padding: 0 8px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+
+        .toggle-button {
+          align-items: center;
+          display: flex;
+          margin-left: auto;
+          user-select: none;
+
+          >span {
+            margin-right: 15px;
+          }
+        }
+      } // .title-container
+    } //.advanced-content
   } // .advanced
 
   .submit-button-container {
@@ -214,5 +228,9 @@
     p {
       margin-top: 20px;
     }
+  }
+
+  .tokens {
+    border-radius: 5px;
   }
 }

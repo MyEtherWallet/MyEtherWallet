@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="41px" height="41px" viewBox="0 0 41 41" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title>Group 2</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <filter x="-1.9%" y="-29.9%" width="103.9%" height="164.4%" filterUnits="objectBoundingBox" id="filter-1">
+      <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="9" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.0564424819 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="nav-bar" transform="translate(-1265.000000, -24.000000)">
+      <g filter="url(#filter-1)">
+        <rect id="Rectangle-5" fill="#FFFFFF" x="0" y="0" width="1440" height="87"></rect>
+        <g id="text" transform="translate(924.000000, 29.000000)">
+          <g id="Group-26"></g>
+        </g>
+        <g id="Group-2" transform="translate(1265.000000, 24.000000)" fill="#003945" fill-rule="nonzero">
+          <g id="Notification" transform="translate(11.250000, 8.000000)">
+            <path d="M14.025,17.4 L4.675,17.4 L4.675,10.8 C4.675,7.8674 7.0125,6.4 9.3489,6.4 L9.3511,6.4 C11.6875,6.4 14.025,7.8674 14.025,10.8 L14.025,17.4 Z M10.5182,20.7 C10.5182,21.3072 9.9957,21.8 9.35,21.8 C8.7043,21.8 8.1807,21.3072 8.1807,20.7 L8.1807,19.6 L10.5193,19.6 L10.5193,20.7 L10.5182,20.7 Z M16.3625,17.4 L16.3625,10.8 C16.3625,6.8917 13.5949,4.7225 10.5182,4.2869 C10.5182,3.09178468 10.5182,2.32948468 10.5182,2 C10.5182,0.571090698 8.1818,0.598861694 8.1818,2 C8.1818,2.46174017 8.1818,3.22404017 8.1818,4.2869 C5.1051,4.7225 2.3375,6.8917 2.3375,10.8 L2.3375,17.4 L1.1682,17.4 C0.5236,17.4 0,17.8928 0,18.5 C0,19.1072 0.5236,19.6 1.1693,19.6 L5.8443,19.6 L5.8443,20.7 C5.8443,22.5227 7.4129,24 9.35,24 C11.286,24 12.8568,22.5227 12.8568,20.7 L12.8568,19.6 L17.5318,19.6 C18.1764,19.6 18.7,19.1072 18.7,18.5 C18.7,17.8928 18.1764,17.4 17.5307,17.4 L16.3625,17.4 Z" id="notification_bell-[#1398]"></path>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
