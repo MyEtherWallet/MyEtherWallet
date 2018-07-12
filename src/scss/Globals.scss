@@ -1228,7 +1228,6 @@ h6 {
 // *********************************************************************
 
 .blockies-image{
-  // box-shadow: inset 0 2px 2px hsla(0,0%,100%,.5), inset 0 -1px 8px rgba(0,0,0,.6);
   position: relative;
 
   .blockies {
@@ -1237,6 +1236,17 @@ h6 {
     border-radius: 100px;
     width: 32px;
     height: 32px;
+
+    &::after {
+      content: '';
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      box-shadow: 0 -3px 5px 0px inset #0000004d, 0 4px 5px 0px inset #ffffffa8;
+      border-radius: 100px;
+    }
   }
 }
 

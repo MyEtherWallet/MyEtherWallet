@@ -88,6 +88,7 @@
     "vue-select": "^2.4.0",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.2",
+    "web3": "^1.0.0-beta.34",
     "webpack": "^4.6.0",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^2.0.15",
