@@ -31,9 +31,9 @@ const state = {
   },
   sendOfflineData: {
     states: {
-      gweiSlow: '',
-      gweiRegular: '',
-      gweiFast: '',
+      gweiSlow: '7',
+      gweiRegular: '12',
+      gweiFast: '24',
       // --- Generate Information ---
       generateInfoExpended: false,
       fromAddress: '',

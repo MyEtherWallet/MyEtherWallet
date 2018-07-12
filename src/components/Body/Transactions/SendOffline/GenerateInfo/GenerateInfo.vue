@@ -143,9 +143,6 @@ export default {
     }
   },
   mounted () {
-    this.stateSetter('gweiSlow', '7')
-    this.stateSetter('gweiRegular', '12')
-    this.stateSetter('gweiFast', '24')
   }
 }
 </script>

@@ -128,7 +128,7 @@
                     <h4>Amount</h4>
                   </div>
                   <div class="dropdown-select-search-1">
-                    <v-select :options="['foo','bar']"></v-select>
+                    <v-select :options="coinType"></v-select>
                     <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
@@ -181,20 +181,20 @@
                   <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
                 </div>
                 <div class="buttons">
-                  <div class="small-circle-button-green-border">
+                  <div class="small-circle-button-green-border" v-on:click="gasAmount = 7">
                     Slow
                   </div>
-                  <div class="small-circle-button-green-border active">
+                  <div class="small-circle-button-green-border active" v-on:click="gasAmount = 12">
                     Regular
                   </div>
-                  <div class="small-circle-button-green-border">
+                  <div class="small-circle-button-green-border" v-on:click="gasAmount = 24">
                     Fast
                   </div>
                 </div>
               </div>
 
               <div class="the-form gas-amount">
-                <input type="number" name="" value="" placeholder="Gas Amount">
+                <input type="number" placeholder="Gas Amount" v-model="gasAmount">
                 <div class="good-button-container">
                   <p>Gwei</p>
                   <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -254,6 +254,13 @@ import makeBlockie from 'ethereum-blockies-base64'
 export default {
   data () {
     return {
+      coinType: [
+        {label: 'ETH', value: 'eth'},
+        {label: '$FFC', value: 'ffc'},
+        {label: '$FYX', value: 'fyx'},
+        {label: '0xBTC', value: 'oxbtc'}
+      ],
+      gasAmount: '',
       advancedExpend: false,
       modalDetailInformation: false,
       toAddress: '',
