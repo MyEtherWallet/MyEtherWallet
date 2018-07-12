@@ -132,7 +132,7 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input v-on:keyup="amountValidator(amount)" v-model="amount" type="number" name="" value="" placeholder="Amount">
+                    <input v-on:keyup="amountValidator(amount)" v-model="amount" type="number" placeholder="Amount">
                     <i v-if="!amountValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                     <i v-if="amountValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
@@ -155,7 +155,7 @@
                     <i v-if="!toAddressValidationMarker" id="to-address-validation-marker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                     <i v-if="toAddressValidationMarker" id="to-address-validation-marker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
-                  <div v-if="toAddressValidationMarker" class="error-message-container">
+                  <div v-if="!toAddressValidationMarker && toAddress != ''" class="error-message-container">
                     <p>Invalid address</p>
                   </div>
                 </div> <!-- .to-address -->
@@ -181,23 +181,41 @@
                   <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
                 </div>
                 <div class="buttons">
-                  <div class="small-circle-button-green-border" v-on:click="gasAmount = 7">
+                  <div class="small-circle-button-green-border"
+                      v-on:click="gasAmount = 7; txSpeedButtonStatus.slow = true; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = false;"
+                      v-if="!txSpeedButtonStatus.slow">
                     Slow
                   </div>
-                  <div class="small-circle-button-green-border active" v-on:click="gasAmount = 12">
+                  <div class="small-circle-button-green-border active" v-if="txSpeedButtonStatus.slow">
+                    Slow
+                  </div>
+                  <div class="small-circle-button-green-border"
+                      v-on:click="gasAmount = 12; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = true; txSpeedButtonStatus.fast = false;"
+                      v-if="!txSpeedButtonStatus.reg">
                     Regular
                   </div>
-                  <div class="small-circle-button-green-border" v-on:click="gasAmount = 24">
+                  <div class="small-circle-button-green-border active" v-if="txSpeedButtonStatus.reg">
+                    Regular
+                  </div>
+                  <div class="small-circle-button-green-border"
+                      v-on:click="gasAmount = 24; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = true;"
+                      v-if="!txSpeedButtonStatus.fast">
+                    Fast
+                  </div>
+                  <div class="small-circle-button-green-border active" v-if="txSpeedButtonStatus.fast">
                     Fast
                   </div>
                 </div>
               </div>
 
               <div class="the-form gas-amount">
-                <input type="number" placeholder="Gas Amount" v-model="gasAmount">
+                <input type="number" placeholder="Gas Amount"
+                    v-model="gasAmount.gweiValue"
+                    v-on:keyup="txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = false; gasAmountValidator(gasAmount.gweiValue);">
                 <div class="good-button-container">
                   <p>Gwei</p>
-                  <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                  <i v-if="!gasAmount.gweiValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                  <i v-if="gasAmount.gweiValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
@@ -260,7 +278,15 @@ export default {
         {label: '$FYX', value: 'fyx'},
         {label: '0xBTC', value: 'oxbtc'}
       ],
-      gasAmount: '',
+      txSpeedButtonStatus: {
+        slow: false,
+        reg: false,
+        fast: false
+      },
+      gasAmount: {
+        gweiValidationMarker: false,
+        gweiValue: ''
+      },
       advancedExpend: false,
       modalDetailInformation: false,
       toAddress: '',
@@ -304,18 +330,29 @@ export default {
       this.invalidToAddress = !validationValue
     },
     amountValidator (amount) {
-      var valiValue = validate({duration: amount}, {duration: {numericality: true}})
+      var valiValue = validate({duration: amount}, {duration: {numericality: {strict: true}}})
 
       if (typeof valiValue === 'undefined') {
         this.amountValidationMarker = true
       } else {
         this.amountValidationMarker = false
       }
+    },
+    gasAmountValidator (amount) {
+      var valiValue = validate({duration: amount}, {duration: {numericality: {strict: true}}})
+
+      if (typeof valiValue === 'undefined') {
+        this.gasAmount.gweiValidationMarker = true
+      } else {
+        this.gasAmount.gweiValidationMarker = false
+      }
     }
   },
   mounted () {
     window.scrollTo(0, 0)
     this.$store.state.state.pageStates.activeMenuSetter(['send', 'sendEth'])
+  },
+  watch: {
   }
 }
 </script>

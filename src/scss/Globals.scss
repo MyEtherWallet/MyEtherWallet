@@ -493,6 +493,12 @@ h6 {
     border: 1px solid $button--border-color-1;
     color: $text-white;
   }
+
+  &:hover {
+    background-color: $button--background-color-1-dark;
+    border: 1px solid $button--border-color-1;
+    color: $text-white;
+  }
 }
 
 .very-small-circle-button-green-border {
