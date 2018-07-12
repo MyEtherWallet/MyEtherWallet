@@ -247,7 +247,7 @@
 
 <script>
 import web3 from 'web3'
-import blockies from 'ethereum-blockies'
+import makeBlockie from 'ethereum-blockies-base64'
 export default {
   data () {
     return {
@@ -274,20 +274,15 @@ export default {
     },
     toAddressValidator (address) {
       var validationValue = web3.utils.isAddress(address)
-      var canvas = document.getElementById('to-address-blockies')
+      var blockiesContainer = document.getElementById('to-address-blockies')
       // Remove bloickies
-      canvas.innerHTML = ''
+      blockiesContainer.innerHTML = ''
 
       if (validationValue) {
-        // Create a blockies and append it
-        var icon = blockies.create({
-          seed: address,
-          size: 8,
-          scale: 4
-        })
-
         // Add bloickies
-        canvas.appendChild(icon)
+        const img = new Image()
+        img.src = makeBlockie(address)
+        blockiesContainer.appendChild(img)
       }
 
       // Show invalid address alert
@@ -297,8 +292,6 @@ export default {
   mounted () {
     window.scrollTo(0, 0)
     this.$store.state.state.pageStates.activeMenuSetter(['send', 'sendEth'])
-
-    console.log(web3)
   }
 }
 </script>

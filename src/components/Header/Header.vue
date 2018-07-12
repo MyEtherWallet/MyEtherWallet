@@ -73,7 +73,7 @@
 
 <script>
 // import { mapState } from 'vuex'
-import blockies from 'ethereum-blockies'
+import makeBlockie from 'ethereum-blockies-base64'
 export default {
   data () {
     return {
@@ -162,13 +162,11 @@ export default {
       }
     }
 
-    // Create a blockies and append it to header
-    var icon = blockies.create({
-      seed: '0x93rh9h3f93h4938h4f9348h93h4',
-      size: 8,
-      scale: 4
-    })
-    document.getElementById('header-blockies').appendChild(icon) // icon is a canvas element
+    var address = '0x18e4fd8b11ddcb27d39993a322f83fbb5f0a893f'
+    var blockiesContainer = document.getElementById('header-blockies')
+    const img = new Image()
+    img.src = makeBlockie(address)
+    blockiesContainer.appendChild(img)
   },
   beforeDestroy () {
     // Reset page location variable

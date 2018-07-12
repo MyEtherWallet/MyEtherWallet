@@ -1234,18 +1234,23 @@ h6 {
     position: relative;
     overflow: hidden;
     border-radius: 100px;
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
 
     &::after {
       content: '';
-      width: 32px;
-      height: 32px;
+      width: 100%;
+      height: 100%;
       position: absolute;
       left: 0;
       top: 0;
       box-shadow: 0 -3px 5px 0px inset #0000004d, 0 4px 5px 0px inset #ffffffa8;
       border-radius: 100px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
 }
