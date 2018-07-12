@@ -21,8 +21,8 @@
           <div class="title">
             <div><h4>Signed Transaction</h4></div>
             <div class="form-controller">
-              <p class="linker-1" v-on:click="deleteTxHex">Clear</p>
-              <p class="linker-1" v-on:click="copyTxHex">Copy</p>
+              <p class="linker-1 prevent-user-select" v-on:click="deleteTxHex">Clear</p>
+              <p class="linker-1 prevent-user-select" v-on:click="copyTxHex">Copy</p>
             </div>
           </div>
         </div>

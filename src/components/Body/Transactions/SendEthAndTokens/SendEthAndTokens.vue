@@ -132,8 +132,9 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                   </div>
                   <div class="the-form amount-number">
-                    <input type="number" name="" value="" placeholder="Amount">
-                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <input v-on:keyup="amountValidator(amount)" v-model="amount" type="number" name="" value="" placeholder="Amount">
+                    <i v-if="!amountValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <i v-if="amountValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
                   <div class="error-message-container">
                     <p>You don't have enough funds</p>
@@ -147,13 +148,14 @@
                         <div class="inset-shadow"></div>
                       </div>
                     </div>
-                    <p v-on:click="copyToClipboard('address')" class="copy-button">Copy</p>
+                    <p v-on:click="copyToClipboard('address')" class="copy-button prevent-user-select">Copy</p>
                   </div>
                   <div class="the-form address-block">
                     <textarea v-on:keyup="toAddressValidator(toAddress)" v-model="toAddress" id="address" name="name"></textarea>
-                    <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <i v-if="!toAddressValidationMarker" id="to-address-validation-marker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <i v-if="toAddressValidationMarker" id="to-address-validation-marker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
-                  <div v-if="invalidToAddress" class="error-message-container">
+                  <div v-if="toAddressValidationMarker" class="error-message-container">
                     <p>Invalid address</p>
                   </div>
                 </div> <!-- .to-address -->
@@ -246,6 +248,7 @@
 </template>
 
 <script>
+import validate from 'validate.js'
 import web3 from 'web3'
 import makeBlockie from 'ethereum-blockies-base64'
 export default {
@@ -254,7 +257,9 @@ export default {
       advancedExpend: false,
       modalDetailInformation: false,
       toAddress: '',
-      invalidToAddress: false
+      toAddressValidationMarker: false,
+      amount: '',
+      amountValidationMarker: false
     }
   },
   methods: {
@@ -283,10 +288,22 @@ export default {
         const img = new Image()
         img.src = makeBlockie(address)
         blockiesContainer.appendChild(img)
+        this.toAddressValidationMarker = true
+      } else {
+        this.toAddressValidationMarker = false
       }
 
       // Show invalid address alert
       this.invalidToAddress = !validationValue
+    },
+    amountValidator (amount) {
+      var valiValue = validate({duration: amount}, {duration: {numericality: true}})
+
+      if (typeof valiValue === 'undefined') {
+        this.amountValidationMarker = true
+      } else {
+        this.amountValidationMarker = false
+      }
     }
   },
   mounted () {

@@ -21,7 +21,7 @@
             <div class="title">
               <h4>To Address</h4>
               <img class="icon" src="~@/assets/images/icons/avatar.svg">
-              <p v-on:click="copyToAddress" class="copy-button linker-1">Copy</p>
+              <p v-on:click="copyToAddress" class="copy-button linker-1 prevent-user-select">Copy</p>
             </div>
             <div class="the-form address-block">
               <textarea id="to-address" name="name" placeholder="Please Enter The Address" v-on:keyup="stateSetter('toAddress', userInputToAddress)" v-model="userInputToAddress"></textarea>
