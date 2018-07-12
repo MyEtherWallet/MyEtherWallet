@@ -2,7 +2,14 @@ language: node_js
 sudo: required
 dist: trusty
 node_js: '7'
-env: CXX=g++-4.8
+env:
+  matrix:
+  - CXX=g++-4.8
+  global:
+   - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
+cache:
+  directories:
+  - node_modules
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
@@ -11,6 +18,7 @@ branches:
   except:
   - gh-pages
 stages:
+- add to mewbuilds
 - name: create release
   if: branch = master and type != pull_request
 - name: deploy to production
@@ -18,20 +26,47 @@ stages:
 jobs:
   fast_finish: true
   include:
+  - stage: add to mewbuilds
+    script: skip
+    before_deploy:
+    - npm run build
+    deploy:
+      provider: s3
+      access_key_id: AKIAJ7LH3B2WE4GUJA3A
+      secret_access_key:
+        secure: WEaD5Z/TzFKhLndu74N9iTPrhWvJ5gWD6Ak8lE1L5s7Zyp4aF5zATv94FwuzHE+zKvw7UpY4SoAErEZDYkHoeZW7juS6ZoN/TUoZm8w50job0KD+U7yMrjXdzAmNss+eyPjxgnmkv+ZPklheKCtEgpOyiXjS2HvRdJKAye1PDwns+/5BsZjsjTiVIDk/FbEhHSA9TuBJC4flc7J+rztyV9I6jPB1q7/8rpQ0E2F4GyDgeDefDj5jX/GcjIJZxMkSxPV4geAG5xHATiPxVA6IbqQ7Og2ZaeRJ9/l6vtW4vF4wprmh3wUPMTM1bTz56db5qkIsy257BJPjDrsDSV0C6smO9DWykBnOtUogOeiBo04uPwr5VhGM8IqnxwYIsEQudAbiZnI3twLjtaxz3Oeo4ZnevYBvKM0uPDyQSwxNEfzqmbWmG+PKGXvLopDpOuYbhXeEgChUvkH+x5rz4PjptMq8aUcqFFnl6Oe8QtCYP4FUovIU7dVK2XTR3ctRm4z481dk9RKktuA3QfdqXlXxnkIfs+R+/SHsOjOCSk5+nnrsyMM/41bxRJ5amM7r/uAcXQYj2dUKPAsdukFYWlIexbip8FIy1RCkv+wAoaLA97LGGj4yc8XuKX+zjeCWL/pzgQ7KYcmZHZO6yj40YtdtrWFpf0JlgUkd+xmntja/8FI=
+      bucket: mewbuilds
+      skip_cleanup: true
+      local-dir: dist
+      upload-dir: build/$TRAVIS_COMMIT
+      acl: public_read
+      on:
+        branch: mewbuilds
+    after_deploy:
+    - |
+      if [ $TRAVIS_PULL_REQUEST == "false" ]; then
+        curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+        -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}\"}/index.html" \
+        "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
+      else
+        curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+        -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}\"}/index.html" \
+        "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
+      fi
   - stage: create release
     script: skip
     before_deploy:
-      - rm .gitignore
-      - npm run build
-      - sudo mkdir deploy
-      - ls -a /dist | sort
-      - |
-        PACKAGE_VERSION=$(cat package.json \
-          | grep version \
-          | head -1 \
-          | awk -F: '{ print $2 }' \
-          | sed 's/[",]//g' \
-          | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
+    - rm .gitignore
+    - npm run build
+    - sudo mkdir deploy
+    - ls -a /dist | sort
+    - |
+      PACKAGE_VERSION=$(cat package.json \
+        | grep version \
+        | head -1 \
+        | awk -F: '{ print $2 }' \
+        | sed 's/[",]//g' \
+        | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
     deploy:
       provider: releases
       api_key: "$GITHUB_TOKEN"
@@ -41,13 +76,13 @@ jobs:
   - stage: deploy to production
     script: skip
     before_deploy:
-      - bash ./deploy.sh
+    - bash ./deploy.sh
     deploy:
       provider: pages
       skip-cleanup: true
       github-token: "$GITHUB_TOKEN"
       keep-history: false
-      local-dir: ./dist
+      local-dir: "./dist"
       on:
         branch: master
       target-branch: gh-pages
