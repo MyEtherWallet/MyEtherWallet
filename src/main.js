@@ -13,6 +13,7 @@ import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
+import VueQrcode from '@xkeshi/vue-qrcode'
 
 // etc
 import languages from './translations'
@@ -20,6 +21,7 @@ import languages from './translations'
 // Regular Components
 Vue.component('v-select', vSelect)
 Vue.component('infinite-slider', InfiniteSlider)
+Vue.component(VueQrcode.name, VueQrcode)
 
 Vue.config.productionTip = false
 

@@ -1,5 +1,6 @@
 <template>
   <div class="send-currency-container">
+    <confirm-modal></confirm-modal>
     <div class="content-title">
       <h2>{{ $t('reused.sendTx') }}</h2>
     </div>
@@ -8,7 +9,7 @@
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>{{ $t("reused.sendTx") }}</h4>
+            <h4>Amount</h4>
           </div>
           <div class="dropdown-select-search-1">
             <v-select :options="['foo','bar']"></v-select>
@@ -18,17 +19,22 @@
             <input type="number" name="" value="" placeholder="Amount">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
+          <div class="error-message-container">
+            <p>You don't have enough funds</p>
+          </div>
         </div>
         <div class="to-address">
           <div class="title">
             <h4>{{ $t("sendTx.toAddr") }}</h4>
-            <img class="icon" src="~@/assets/images/icons/avatar.svg">
-            <!-- <p v-on:click="copyAddress" class="copy-button">Copy</p> -->
-            <p class="copy-button">{{ $t('reused.copy') }}</p>
+            <blockie :address="address" width="22px" height="22px" v-if="address.length !== 0"></blockie>
+            <p class="copy-button" v-on:click="copyToClipboard('address')">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
-            <textarea id="address" name="name" v-model="address"></textarea>
+            <textarea ref="address" name="name" v-model="address"></textarea>
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          </div>
+          <div class="error-message-container">
+            <p>Invalid address</p>
           </div>
         </div> <!-- .to-address -->
       </div> <!-- .form-block .amount-to-address -->
@@ -84,11 +90,18 @@
           <!-- Rounded switch -->
           <div class="sliding-switch-white">
             <label class="switch">
-              <input type="checkbox">
+              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend">
               <span class="slider round"></span>
             </label>
           </div>
-
+          <div class="input-container" v-if="advancedExpend">
+            <div class="the-form user-input">
+              <input type="number" name="" value="" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
+            </div>
+            <div class="the-form user-input">
+              <input type="number" name="" value="" placeholder="Gas Limit">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -105,11 +118,29 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import ConfirmModal from '@/components/ConfirmModal'
+import Blockie from '@/components/Blockie'
 
 export default {
   props: ['address'],
   components: {
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'confirm-modal': ConfirmModal,
+    'blockie': Blockie
+  },
+  data () {
+    return {
+      advancedExpend: false
+    }
+  },
+  methods: {
+    copyToClipboard (ref) {
+      this.$refs[ref].select()
+      document.execCommand('copy')
+    },
+    confirmationModalOpen () {
+      this.$refs[0].confirmation.show()
+    }
   }
 }
 </script>

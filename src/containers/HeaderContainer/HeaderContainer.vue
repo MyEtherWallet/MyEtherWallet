@@ -33,9 +33,20 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
+                <b-nav-item v-if="wallet !== null">
+                  <div class="notification">
+                    <img class="logo-large" src="~@/assets/images/icons/notification.svg">
+                    <div class="notification-dot"></div>
+                  </div>
+                </b-nav-item>
+                <b-nav-item to="/create-wallet" v-if="wallet === null">
+                  <div class="get-free-wallet">
+                    Get a Free Wallet
+                 </div>
+                </b-nav-item>
                 <b-nav-item-dropdown right no-caret v-if="wallet !== null" extra-toggle-classes="identicon-dropdown">
                   <template slot="button-content">
-                    <blockie :address='"0x"+wallet.getAddress().toString("hex")' width="35px" height="35px" />
+                    <blockie :address='wallet.getAddressString()' width="35px" height="35px" />
                   </template>
                   <b-dropdown-item @click="logout">
                     Log out

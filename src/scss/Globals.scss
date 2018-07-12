@@ -100,7 +100,7 @@ body {
 }
 
 *:focus {
-  outline: none;
+  outline: 0 !important;
 }
 
 .prevent-pointer-events {
@@ -611,21 +611,39 @@ h6 {
   }
 }
 
+.qrcode-modal {
+  .popover {
+    max-width: 180px;
+  }
+}
+
 .tooltip-box-1 {
   button {
     background-color: $button--background-color-1;
-    border-radius: 100px;
     border: 0;
-    padding: 0;
+    border-radius: 100px;
     height: 15px;
-    width: 15px;
     line-height: 15px;
+    padding: 0;
+    width: 15px;
 
     &::after {
-      font-weight: 600;
       content: '!';
       font-size: 13px;
+      font-weight: 600;
       padding: 0;
+    }
+  }
+}
+
+.tooltip-box-2 {
+  button {
+    background-color: $text-white;
+    border: 0;
+    padding: 0;
+
+    &:hover {
+      background-color: $text-white;
     }
   }
 }

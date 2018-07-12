@@ -3,19 +3,53 @@
     <div class="side-menu">
       <ul>
         <li>
-          <p @click.prevent="toggle('openSend')" :class="selectedTab === 'send' || selectedTab === 'offline' ? 'active' : ''">{{ $t("txSideMenu.title") }} <i :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i></p>
+          <div @click.prevent="toggle('openSend')" :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']">
+            <img src="@/assets/images/sidemenu/send.svg" v-show="selectedTab !== 'send' && selectedTab !== 'offline'"/>
+            <img src="@/assets/images/sidemenu/send-active.svg" v-show="selectedTab === 'send' || selectedTab === 'offline'"/>
+            <p>{{ $t("txSideMenu.title") }}</p>
+            <i :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
+          </div>
           <ul v-show="showSend">
-            <li @click.prevent="switchTabs('send')" :class="selectedTab === 'send'? 'active': ''">{{ $t("reused.sendTx") }}</li>
-            <li @click.prevent="switchTabs('offline')" :class="selectedTab === 'offline'? 'active': ''">{{ $t("reused.offline") }}</li>
+            <li @click.prevent="switchTabs('send')" :class="selectedTab === 'send'? 'active': ''">
+              {{ $t("reused.sendTx") }}
+            </li>
+            <li @click.prevent="switchTabs('offline')" :class="selectedTab === 'offline'? 'active': ''">
+              {{ $t("reused.offline") }}
+            </li>
           </ul>
         </li>
-        <li @click.prevent="switchTabs('swap')" ><p :class="selectedTab === 'swap'? 'active': ''">{{ $t("reused.swap") }}</p></li>
-        <li @click.prevent="switchTabs('dapps')" ><p :class="selectedTab === 'dapps'? 'active': ''">{{ $t("reused.dapps") }}</p></li>
+        <li @click.prevent="switchTabs('swap')" >
+          <div :class="[selectedTab === 'swap'? 'active': '', 'menu-group-title']">
+            <img src="@/assets/images/sidemenu/swap.svg" v-show="selectedTab !== 'swap'"/>
+            <img src="@/assets/images/sidemenu/swap-active.svg" v-show="selectedTab === 'swap'"/>
+            <p>
+              {{ $t("reused.swap") }}
+            </p>
+          </div>
+        </li>
+        <li @click.prevent="switchTabs('dapps')" >
+          <div :class="[selectedTab === 'dapps'? 'active': '', 'menu-group-title']">
+            <img src="@/assets/images/sidemenu/dapps.svg" v-show="selectedTab !== 'dapps'"/>
+            <img src="@/assets/images/sidemenu/dapps-active.svg" v-show="selectedTab === 'dapps'"/>
+            <p>
+              {{ $t("reused.dapps") }}
+            </p>
+          </div>
+        </li>
         <li>
-          <p @click.prevent="toggle('openContract')" :class="selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : ''">{{ $t("txSideMenu.contract") }} <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i></p>
+          <div @click.prevent="toggle('openContract')" :class="[selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : '', 'menu-group-title']">
+            <img src="@/assets/images/sidemenu/contract.svg" v-show="selectedTab !== 'interactC' && selectedTab !== 'deployC'"/>
+            <img src="@/assets/images/sidemenu/contract-active.svg" v-show="selectedTab === 'interactC' || selectedTab === 'deployC'"/>
+            <p>{{ $t("txSideMenu.contract") }}</p>
+            <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
+          </div>
           <ul v-show="showContract">
-            <li @click.prevent="switchTabs('interactC')" :class="selectedTab === 'interactC'? 'active': ''">{{ $t("reused.interactWcontract") }}</li>
-            <li @click.prevent="switchTabs('deployC')" :class="selectedTab === 'deployC'? 'active': ''">{{ $t("reused.depContract") }}</li>
+            <li @click.prevent="switchTabs('interactC')" :class="selectedTab === 'interactC'? 'active': ''">
+              {{ $t("reused.interactWcontract") }}
+            </li>
+            <li @click.prevent="switchTabs('deployC')" :class="selectedTab === 'deployC'? 'active': ''">
+              {{ $t("reused.depContract") }}
+            </li>
           </ul>
         </li>
       </ul>

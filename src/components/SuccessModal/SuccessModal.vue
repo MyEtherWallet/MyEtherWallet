@@ -2,7 +2,7 @@
   <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal">
     <div class="d-block text-center">
       <i class="check-icon fa fa-check" aria-hidden="true"></i>
-      <h2 class="title">Succeess</h2>
+      <h2 class="title">Success</h2>
       <p>{{ message }}</p>
     </div>
     <div class="button-container">
