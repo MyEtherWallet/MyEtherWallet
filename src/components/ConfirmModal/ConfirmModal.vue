@@ -85,6 +85,10 @@
   </div>
 </template>
 
+<style lang="scss" scoped>
+@import "ConfirmModal.scss";
+</style>
+
 <script>
 import SuccessModal from '@/components/SuccessModal'
 

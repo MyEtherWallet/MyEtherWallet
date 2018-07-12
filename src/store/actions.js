@@ -30,6 +30,14 @@ const setState = function ({commit}, stateObj) {
   commit('INIT_STATES', stateObj)
 }
 
+const setTxSpeed = function ({commit}, speed) {
+  commit('SET_TX_SPEED', speed)
+}
+
+const setAccountNonce = function ({commit}, nonce) {
+  commit('SET_ACCOUNT_NONCE', nonce)
+}
+
 export default {
   checkIfOnline,
   clearWallet,
@@ -38,5 +46,7 @@ export default {
   setWeb3Instance,
   setAccountBalance,
   switchNetwork,
-  setState
+  setState,
+  setTxSpeed,
+  setAccountNonce
 }

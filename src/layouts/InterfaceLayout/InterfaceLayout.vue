@@ -77,7 +77,7 @@ export default {
     switchTabs (param) {
       this.currentTab = param
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
-      store.set('curPage', param)
+      store.set('sideMenu', param)
     },
     async getBlock () {
       const body = {
@@ -114,23 +114,46 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      this.balance = await fetch('https://api.myetherwallet.com/eth', config).then((res) => {
+      this.balance = await fetch(this.$store.state.network.RpcUrl, config).then((res) => {
         return res.json()
       }).catch((err) => {
         console.log(err)
       })
 
       this.$store.dispatch('setAccountBalance', this.balance)
+    },
+    async getNonce () {
+      const body = {
+        'jsonrpc': '2.0',
+        'method': 'eth_getTransactionCount',
+        'params': [this.address, 'latest'],
+        'id': 0
+      }
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+      const nonce = await fetch(this.$store.state.network.RpcUrl, config).then((res) => {
+        return res.json()
+      }).catch((err) => {
+        console.log(err)
+      })
+
+      this.$store.dispatch('setAccountNonce', Number(nonce.result))
     }
   },
   mounted () {
-    if (store.get('curPage') !== undefined) {
-      this.currentTab = store.get('curPage')
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('curPage')])
+    if (store.get('sideMenu') !== undefined) {
+      this.currentTab = store.get('sideMenu')
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
     if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
       this.getBalance()
+      this.getNonce()
     }
 
     setInterval(this.getBlock, 14000)

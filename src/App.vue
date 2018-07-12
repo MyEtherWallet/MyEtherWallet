@@ -24,7 +24,8 @@ export default {
       network: store.get('network'),
       wallet: null,
       account: {
-        balance: 0
+        balance: 0,
+        nonce: null
       },
       Transactions: {},
       Networks: nodeList,
@@ -32,10 +33,11 @@ export default {
       online: true,
       pageStates: {
         interface: {
-          sendOffline: store.get('pageStates'),
-          sideMenu: store.get('curPage')
+          sendOffline: store.get('sendOffline'),
+          sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
-      }
+      },
+      txSpeed: store.get('txSpeed') !== undefined ?store.get('txSpeed') : 41
     }
 
     this.$store.dispatch('setState', state)

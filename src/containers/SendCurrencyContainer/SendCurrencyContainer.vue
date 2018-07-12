@@ -20,7 +20,7 @@
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
           <div class="error-message-container">
-            <p>You don't have enough funds</p>
+            <p>{{ $t('reused.dontHaveEnough') }}</p>
           </div>
         </div>
         <div class="to-address">
@@ -38,9 +38,6 @@
           </div>
         </div> <!-- .to-address -->
       </div> <!-- .form-block .amount-to-address -->
-      <div class="error-message-container">
-        <p>{{ $t('reused.dontHaveEnough') }}</p>
-      </div>
     </div> <!-- .send-form -->
 
     <div class="send-form">

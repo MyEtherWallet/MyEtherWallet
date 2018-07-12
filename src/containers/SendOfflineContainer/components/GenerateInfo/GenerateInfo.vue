@@ -13,100 +13,37 @@
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input id="from-address" type="text" name="" value="" placeholder="From Address">
+          <input ref="fromaddress" type="text" placeholder="From Address" :value="$store.state.wallet.getAddressString()">
           <div class="good-button-container">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
         </div>
       </div>
-
-      <div v-if="moreInfoGenerated">
-        <div class="send-form">
-          <div class="title-container">
-            <div class="title">
-              <div class="title-helper">
-                <h4>Speed of Transaction</h4>
-                <div class="tooltip-box-1">
-                  <b-btn id="exPopover1"></b-btn>
-                  <b-popover target="exPopover1" triggers="hover focus" placement="top">
-                    <template slot="title">MetaMask</template>
-                    <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                    MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                    It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                    MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-                  </b-popover>
-                </div>
-              </div>
-              <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
-            </div>
-            <div class="buttons">
-              <div class="small-circle-button-green-border">
-                Slow
-              </div>
-              <div class="small-circle-button-green-border active">
-                Regular
-              </div>
-              <div class="small-circle-button-green-border">
-                Fast
-              </div>
-            </div>
-          </div>
-          <div class="the-form gas-amount">
-            <input type="number" name="" value="" placeholder="Gas Amount">
-            <div class="good-button-container">
-              <p>Gwei</p>
-              <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="send-form">
-          <div class="title-container">
-            <div class="title">
-              <div class="title-helper">
-                <h4>Nonce</h4>
-                <div class="tooltip-box-1">
-                  <b-btn id="exPopover2"></b-btn>
-                  <b-popover target="exPopover2" triggers="hover focus" placement="top">
-                    <template slot="title">MetaMask</template>
-                    <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                    MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                    It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                    MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-                  </b-popover>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="the-form gas-amount">
-            <input type="number" name="" value="" placeholder="Gas Amount">
-            <div class="good-button-container">
-              <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <tx-speed-input v-if="moreInfoGenerated"></tx-speed-input>
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable" v-on:click="generateInfo">
           Generate
         </div>
-        <p>Have any issues? <a href="/">Learn more</a></p>
       </div>
 
       <div v-if="moreInfoGenerated" class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable" v-on:click="processChange">
+        <div class="submit-button large-round-button-green-filled clickable" v-on:click="generateTx">
           Continue
         </div>
-        <p>Have any issues? <a href="/">Learn more</a></p>
       </div>
-
+      <interface-bottom-text link="/" question="Have issues?" linkText="Learn More"></interface-bottom-text>
     </div>
   </div>
 </template>
 
 <script>
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+import TxSpeedInput from '../../components/TxSpeedInput'
 export default {
+  components: {
+    'interface-bottom-text': InterfaceBottomText,
+    'tx-speed-input': TxSpeedInput
+  },
   data () {
     return {
       moreInfoGenerated: false
@@ -117,14 +54,14 @@ export default {
       this.moreInfoGenerated = true
     },
     copyFromAddress () {
-      document.querySelector('#from-address').select()
+      this.$refs.fromaddress.select()
       document.execCommand('copy')
     },
     deleteFromAddress () {
-      document.querySelector('#from-address').value = ''
+      this.$refs.fromaddress.value = ''
     },
-    processChange () {
-      this.$store.state.state.pageStates.sendOffline.processLocation = 'process2'
+    generateTx () {
+      this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'genTx'])
     }
   }
 }
