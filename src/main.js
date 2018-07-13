@@ -8,9 +8,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import Vuex from 'vuex'
+import VueQrcode from '@xkeshi/vue-qrcode'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
@@ -55,17 +55,12 @@ Vue.component('send-offline-generate-tx', SendOfflineGenerateTx)
 Vue.component('send-offline-send-tx', SendOfflineSendTx)
 
 Vue.component('v-select', vSelect)
-
-Vue.config.productionTip = false
+Vue.component(VueQrcode.name, VueQrcode)
 
 Vue.use(Vuex)
-
-/* Init Bootstrap */
 Vue.use(BootstrapVue)
 
-/* Init Lodash */
-const options = { name: 'lodash' }
-Vue.use(VueLodash, options)
+Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

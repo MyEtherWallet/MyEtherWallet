@@ -1,0 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
+$green: #05c0a5;
+$text-input-background-color: #f9f9f9;
+$status-checkmark-bad: #e2e2e2;
+$status-checkmark-good: $green;
+
+.standard-input {
+  position: relative;
+
+  input {
+    position: relative;
+    display: block;
+    background-color: $text-input-background-color;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    width: 100%;
+  }
+  .status {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+    font-size: 20px;
+
+    &.good {
+      color: $status-checkmark-good;
+    }
+
+    &.bad {
+      color: $status-checkmark-bad;
+    }
+  }
+}
+

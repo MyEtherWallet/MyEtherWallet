@@ -20,6 +20,38 @@
     }
   }
 
+  .notification {
+    margin-left: 20px;
+    position: relative;
+    cursor: pointer;
+
+    .notification-dot {
+      background-color: $notification-dot-background-color;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 40px;
+    }
+  }
+
+  .blockies-image{
+    margin-left: 30px;
+    padding-right: 20px;
+    cursor: pointer;
+    .arrows {
+      position: absolute;
+      right: 0px;
+      top: 8px;
+
+      i {
+        color: $text-color-4;
+        font-size: 18px;
+      }
+    }
+  }
+
   .header-container {
     align-items: center;
     display: flex;

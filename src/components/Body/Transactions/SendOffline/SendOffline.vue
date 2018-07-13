@@ -72,6 +72,7 @@ export default {
   mounted () {
     var activeProcess = this.$store.state.state.pageStates.sendOffline.processLocation
     document.querySelector('.' + activeProcess).classList.add('active')
+    this.$store.state.state.pageStates.activeMenuSetter(['send', 'sendOffline'])
   },
   computed: {
     currentProcess: function () {

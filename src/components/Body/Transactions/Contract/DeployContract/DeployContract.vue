@@ -19,52 +19,40 @@
           </div>
           <div class="main-content">
             <div class="content-title">
-              <h2>Swap</h2>
-              <img class="icon" src="~@/assets/images/etc/bity.png">
+              <h2>Deploy Contract</h2>
             </div>
-
-            <div class="send-form">
-              <div class="form-block amount-to-address">
-                <div class="amount">
-                  <div class="title">
-                    <h4>From</h4>
-                  </div>
-                  <div class="dropdown-select-search-1">
-                    <v-select :options="['foo','bar']"></v-select>
-                  </div>
-                  <div class="the-form amount-number">
-                    <input type="number" name="" value="" placeholder="Deposit Amount">
-                  </div>
-                </div>
-                <div class="exchange-icon">
-                  <i class="fa fa-exchange" aria-hidden="true"></i>
-                </div>
-                <div class="amount">
-                  <div class="title">
-                    <h4>To</h4>
-                  </div>
-                  <div class="dropdown-select-search-1">
-                    <v-select :options="['foo','bar']"></v-select>
-                  </div>
-                  <div class="the-form amount-number">
-                    <input type="number" name="" value="" placeholder="Received Amount">
-                  </div>
-                </div>
-              </div> <!-- .form-block .amount-to-address -->
-            </div> <!-- .send-form -->
 
             <div class="send-form">
               <div class="title-container">
                 <div class="title">
-                  <h4>Speed of Transaction</h4>
+                  <h4>Byte Code</h4>
+                  <div class="copy-buttons">
+                    <span v-on:click="deleteInputText('bytecode')">Clear</span>
+                    <span v-on:click="copyToClipboard('bytecode')">Copy</span>
+                  </div>
                 </div>
               </div>
-              <div class="the-form gas-amount">
-                <input type="number" name="" value="" placeholder="Please Enter The Address">
+              <div class="the-form domain-name">
+                <input id="bytecode" type="text" name="" value="" placeholder="Byte Code">
               </div>
             </div>
 
             <div class="send-form">
+              <div class="title-container">
+                <div class="title">
+                  <h4>ABI/JSON Interface</h4>
+                  <div class="copy-buttons">
+                    <span v-on:click="deleteInputText('abi')">Clear</span>
+                    <span v-on:click="copyToClipboard('abi')">Copy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="the-form domain-name">
+                <textarea id="abi" class="custom-textarea-1" name=""></textarea>
+              </div>
+            </div>
+
+            <div class="send-form2">
               <div class="title-container">
                 <div class="title">
                   <h4>Speed of Transaction<span class="alert-button"></span></h4>
@@ -93,11 +81,14 @@
             </div>
 
             <div class="submit-button-container">
-              <h4>1 ETH = 0.000231 BTC</h4>
-              <div class="submit-button large-round-button-green-filled clickable">
-                Continue
+              <router-link :to="{ name: 'InteractWithContract2', params: {} }">
+                <div class="submit-button large-round-button-green-filled clickable">
+                  Continue
+                </div>
+              </router-link>
+              <div class="bottom-text">
+                <p>Have any issues? <a href="/">Learn more</a></p>
               </div>
-              <p>Have any issues? <a href="/">Learn more</a></p>
             </div>
 
           </div>
@@ -118,16 +109,31 @@ export default {
     }
   },
   methods: {
-    copyAddress: function () {
-      alert('This doesn\'t work for now.')
+    expendDomainCheckForm: function () {
+      document.querySelector('.domain-check-form').classList.toggle('hidden')
+      document.querySelector('.sub-domain-list').classList.add('hidden')
+    },
+    domainAvailabilityCheck: function () {
+      // document.querySelector('.domain-check-form').classList.toggle('hidden')
+      document.querySelector('.sub-domain-list').classList.remove('hidden')
+    },
+    domainBuyButtonClick: function ($event) {
+      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+    },
+    copyToClipboard: function (id) {
+      document.querySelector('#' + id).select()
+      document.execCommand('copy')
+    },
+    deleteInputText: function (id) {
+      document.querySelector('#' + id).value = ''
     }
   },
   mounted () {
-    this.$store.state.state.pageStates.activeMenuSetter(['swap'])
+    this.$store.state.state.pageStates.activeMenuSetter(['contract', 'deployContract'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "Swap.scss";
+  @import "DeployContract.scss";
 </style>

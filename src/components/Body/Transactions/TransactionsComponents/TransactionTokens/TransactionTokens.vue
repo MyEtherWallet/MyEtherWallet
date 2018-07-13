@@ -110,7 +110,7 @@
         </div>
       </div> <!-- .tokens-container -->
       <div class="bottom-image-container">
-        <img class="icon" src="~@/assets/images/etc/oiwjehfowhohweg.png">
+        <img class="icon" src="~@/assets/images/etc/admewconnect.png">
       </div>
     </div><!-- .wrap -->
   </div>

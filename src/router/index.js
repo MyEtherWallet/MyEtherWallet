@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import DevelopmentElements from '@/components/Development/Elements/Elements'
+
 import Home from '@/components/Body/Home/Home'
 import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPassword/YourPassword'
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
@@ -16,11 +19,17 @@ import RegisterDomainENS from '@/components/Body/Transactions/Dapps/RegisterDoma
 import DomainSale from '@/components/Body/Transactions/Dapps/DomainSale/DomainSale'
 import InteractWithContract from '@/components/Body/Transactions/Contract/InteractWithContract/InteractWithContract'
 import InteractWithContract2 from '@/components/Body/Transactions/Contract/InteractWithContract2/InteractWithContract2'
+import DeployContract from '@/components/Body/Transactions/Contract/DeployContract/DeployContract'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/dev/elements',
+      name: 'DevelopmentElements',
+      component: DevelopmentElements
+    },
     {
       path: '/',
       name: 'Home',
@@ -100,6 +109,11 @@ export default new Router({
       path: '/interact-with-contract2',
       name: 'InteractWithContract2',
       component: InteractWithContract2
+    },
+    {
+      path: '/deploy-contract',
+      name: 'DeployContract',
+      component: DeployContract
     }
   ]
 })

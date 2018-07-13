@@ -44,11 +44,24 @@
               </div>
             </div>
 
-            <router-link to="/" class="nounderline">
+            <div class="notification">
+              <img class="logo-large" src="~@/assets/images/icons/notification.svg">
+              <div class="notification-dot"></div>
+            </div>
+
+            <router-link v-if="pageLocation === 'home'" to="/" class="nounderline">
               <div class="get-free-wallet">
                 Get a Free Wallet
               </div>
             </router-link>
+
+            <div v-show="pageLocation === 'tx'" class="blockies-image">
+              <div class="blockies" id="header-blockies">
+              </div>
+              <div class="arrows">
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+              </div>
+            </div>
 
           </div><!-- .header-container -->
         </div><!-- .page-container -->
@@ -60,7 +73,7 @@
 
 <script>
 // import { mapState } from 'vuex'
-
+import makeBlockie from 'ethereum-blockies-base64'
 export default {
   data () {
     return {
@@ -126,6 +139,11 @@ export default {
       newFlagImage.classList.add('show')
     }
   },
+  computed: {
+    pageLocation: function () {
+      return this.$store.state.state.pageStates.pageLocation
+    }
+  },
   mounted () {
     // Scroll to top of the page
     // window.scrollTo(0, 0)
@@ -143,6 +161,18 @@ export default {
         logoLarge.classList.remove('logo-small')
       }
     }
+
+    var address = '0x18e4fd8b11ddcb27d39993a322f83fbb5f0a893f'
+    var blockiesContainer = document.getElementById('header-blockies')
+    const img = new Image()
+    img.src = makeBlockie(address)
+    blockiesContainer.appendChild(img)
+  },
+  beforeDestroy () {
+    // Reset page location variable
+    this.$store.state.state.pageStates.pageLocation = ''
+  },
+  beforeCreate () {
   }
 }
 </script>

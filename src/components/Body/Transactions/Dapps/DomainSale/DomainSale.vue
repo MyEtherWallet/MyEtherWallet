@@ -100,6 +100,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.state.state.pageStates.activeMenuSetter(['dapps'])
   }
 }
 </script>
