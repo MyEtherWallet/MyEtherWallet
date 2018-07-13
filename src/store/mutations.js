@@ -1,7 +1,9 @@
 import store from 'store'
 
 const CHECK_IF_ONLINE = function (state) {
-  state.online = window.location.protocol === 'http:' || window.location.protocol === 'https:'
+  state.online =
+    window.location.protocol === 'http:' ||
+    window.location.protocol === 'https:'
 }
 
 const CLEAR_WALLET = function (state) {
@@ -40,9 +42,9 @@ const INIT_STATES = function (state, stateObj) {
   })
 }
 
-const SET_TX_SPEED = function (state, val) {
-  state.txSpeed = val
-  store.set('txSpeed', val)
+const SET_GAS_PRICE = function (state, val) {
+  state.gasPrice = val
+  store.set('gasPrice', val)
 }
 
 export default {
@@ -55,5 +57,5 @@ export default {
   SET_ACCOUNT_NONCE,
   SWITCH_NETWORK,
   INIT_STATES,
-  SET_TX_SPEED
+  SET_GAS_PRICE
 }
