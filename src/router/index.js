@@ -7,11 +7,12 @@ import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
 import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
 import AccessWalletLayout from '@/layouts/AccessWalletLayout'
 import InterfaceLayout from '@/layouts/InterfaceLayout'
+import {router as routerConfig} from '@/configs/build'
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
+  mode: routerConfig.mode,
   routes: [
     {
       path: '/',
