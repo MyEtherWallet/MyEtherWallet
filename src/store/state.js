@@ -24,7 +24,7 @@ const state = {
       sideMenu: 'send'
     }
   },
-  txSpeed: 41
+  gasPrice: 41
 }
 
 export default state

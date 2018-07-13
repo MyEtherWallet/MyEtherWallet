@@ -83,10 +83,10 @@ export default {
     },
     async getBlock () {
       const body = {
-        'jsonrpc': '2.0',
-        'method': 'eth_blockNumber',
-        'params': [],
-        'id': 0
+        jsonrpc: '2.0',
+        method: 'eth_blockNumber',
+        params: [],
+        id: 0
       }
       const config = {
         method: 'POST',
@@ -96,18 +96,20 @@ export default {
         body: JSON.stringify(body)
       }
 
-      this.blockNumber = await fetch(this.$store.state.network.url, config).then(res => {
-        return res.json()
-      }).catch(err => {
-        console.log(err)
-      })
+      this.blockNumber = await fetch(this.$store.state.network.url, config)
+        .then(res => {
+          return res.json()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     async getBalance () {
       const body = {
-        'jsonrpc': '2.0',
-        'method': 'eth_getBalance',
-        'params': [this.address, 'latest'],
-        'id': 0
+        jsonrpc: '2.0',
+        method: 'eth_getBalance',
+        params: [this.address, 'latest'],
+        id: 0
       }
       const config = {
         method: 'POST',
@@ -116,20 +118,22 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      this.balance = await fetch(this.$store.state.network.url, config).then(res => {
-        return res.json()
-      }).catch(err => {
-        console.log(err)
-      })
+      this.balance = await fetch(this.$store.state.network.url, config)
+        .then(res => {
+          return res.json()
+        })
+        .catch(err => {
+          console.log(err)
+        })
 
       this.$store.dispatch('setAccountBalance', this.balance)
     },
     async getNonce () {
       const body = {
-        'jsonrpc': '2.0',
-        'method': 'eth_getTransactionCount',
-        'params': [this.address, 'latest'],
-        'id': 0
+        jsonrpc: '2.0',
+        method: 'eth_getTransactionCount',
+        params: [this.address, 'latest'],
+        id: 0
       }
       const config = {
         method: 'POST',
@@ -138,11 +142,13 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      const nonce = await fetch(this.$store.state.network.url, config).then(res => {
-        return res.json()
-      }).catch(err => {
-        console.log(err)
-      })
+      const nonce = await fetch(this.$store.state.network.url, config)
+        .then(res => {
+          return res.json()
+        })
+        .catch(err => {
+          console.log(err)
+        })
 
       this.$store.dispatch('setAccountNonce', Number(nonce.result))
     }
@@ -153,7 +159,7 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
-    if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+    if (this.$store.state.online && this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
       this.getBalance()
       this.getNonce()
     }
@@ -162,7 +168,9 @@ export default {
   },
   computed: {
     address () {
-      return this.$store.state.wallet.getAddressString()
+      if (this.$store.state.wallet !== null) {
+        return this.$store.state.wallet.getAddressString()
+      }
     },
     ...mapGetters({
       network: 'network'
@@ -170,14 +178,16 @@ export default {
   },
   watch: {
     network (newVal) {
-      this.getBalance()
-      this.getNonce()
-      this.getBlock()
+      if (this.$store.state.online) {
+        this.getBalance()
+        this.getNonce()
+        this.getBlock()
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "InterfaceLayout.scss";
+@import "InterfaceLayout.scss";
 </style>

@@ -18,10 +18,10 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer
   },
-  mounted () {
+  mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
     const state = {
       web3: {},
-      network: store.get('network') !== undefined ? store.get('network') : this.$store.Networks.ETH[0],
+      network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
       account: {
         balance: 0,
