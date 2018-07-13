@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import DappsContainer from '@/containers/DappsContainer'
 import DeployContractContainer from '@/containers/DeployContractContainer'
 import InteractWithContractContainer from '@/containers/InteractWithContractContainer'
@@ -94,9 +96,9 @@ export default {
         body: JSON.stringify(body)
       }
 
-      this.blockNumber = await fetch('https://api.myetherwallet.com/eth', config).then((res) => {
+      this.blockNumber = await fetch(this.$store.state.network.url, config).then(res => {
         return res.json()
-      }).catch((err) => {
+      }).catch(err => {
         console.log(err)
       })
     },
@@ -114,9 +116,9 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      this.balance = await fetch(this.$store.state.network.RpcUrl, config).then((res) => {
+      this.balance = await fetch(this.$store.state.network.url, config).then(res => {
         return res.json()
-      }).catch((err) => {
+      }).catch(err => {
         console.log(err)
       })
 
@@ -136,9 +138,9 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      const nonce = await fetch(this.$store.state.network.RpcUrl, config).then((res) => {
+      const nonce = await fetch(this.$store.state.network.url, config).then(res => {
         return res.json()
-      }).catch((err) => {
+      }).catch(err => {
         console.log(err)
       })
 
@@ -161,6 +163,16 @@ export default {
   computed: {
     address () {
       return this.$store.state.wallet.getAddressString()
+    },
+    ...mapGetters({
+      network: 'network'
+    })
+  },
+  watch: {
+    network (newVal) {
+      this.getBalance()
+      this.getNonce()
+      this.getBlock()
     }
   }
 }

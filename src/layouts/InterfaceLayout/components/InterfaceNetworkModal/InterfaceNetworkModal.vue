@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import web3 from 'web3'
 
 export default {
@@ -97,11 +96,6 @@ export default {
         this.$store.dispatch('setWeb3Instance', web3)
       }
     }
-  },
-  computed: {
-    ...mapGetters({
-      network: 'network'
-    })
   }
 }
 </script>

@@ -8,7 +8,7 @@
         </div>
         <div class="block-content">
           <h2>{{ $t("txNetwork.title") }}</h2>
-          <p>myetherapi.com(ETH)</p>
+          <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
           <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin"></i> </p>
           <div class="icon-container">
             <img src="~@/assets/images/icons/change.svg">
@@ -43,7 +43,7 @@ export default {
     }
   },
   watch: {
-    blockNumber: function (newVal) {
+    blockNumber (newVal) {
       this.parsedNetwork = parseInt(newVal.result)
     }
   }

@@ -18,10 +18,10 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer
   },
-  beforeMount () {
+  mounted () {
     const state = {
       web3: {},
-      network: store.get('network'),
+      network: store.get('network') !== undefined ? store.get('network') : this.$store.Networks.ETH[0],
       wallet: null,
       account: {
         balance: 0,
