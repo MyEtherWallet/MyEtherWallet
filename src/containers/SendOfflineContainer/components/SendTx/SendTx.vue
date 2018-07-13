@@ -14,7 +14,7 @@
         </div>
 
         <div class="the-form gas-amount">
-          <textarea id="tx-hex" name="" value="" placeholder="Enter TX Hex">0xb5d0cb3a5f29b24601e39388b75df082a7e88cd3d236b8f7e7612479b21627feb5d0cb3a5f29b24601e39388b7b5d0cb3a5f29b24601e39388b75df082a7e88cd3d236b8f7e7612479b21627feb5d0cb3a5f29b24601e39388b75df082a7e88cd3d236b8f7e7612479b21627fe5df082a7e88cd3d236b8f7e7612479b21627feb5d0cb3a5f29b24601e39388b75df082a7e88cd3d236b8f7e7612479b21627fe</textarea>
+          <textarea ref="txHex" name="" v-model="signedTx" placeholder="Enter TX Hex"></textarea>
         </div>
       </div>
       <div class="submit-button-container">
@@ -37,14 +37,15 @@ export default {
   },
   data () {
     return {
+      signedTx: ''
     }
   },
   methods: {
     deleteTxHex () {
-      document.querySelector('#tx-hex').value = ''
+      this.signedTx = ''
     },
     copyTxHex () {
-      document.querySelector('#tx-hex').select()
+      this.$refs.txHex.select()
       document.execCommand('copy')
     },
     successModalOpen () {

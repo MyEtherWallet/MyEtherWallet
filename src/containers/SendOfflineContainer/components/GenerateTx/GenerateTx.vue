@@ -9,11 +9,11 @@
               <h4>Amount</h4>
             </div>
             <div class="dropdown-select-search-1">
-              <v-select :options="['foo','bar']"></v-select>
+              <v-select :options="coinType" v-model="selectedCoinType"></v-select>
               <i class="fa fa-search" aria-hidden="true"></i>
             </div>
             <div class="the-form amount-number">
-              <input type="number" name="" value="" placeholder="Deposit Amount">
+              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount">
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
             </div>
           </div>
@@ -24,12 +24,12 @@
               <p v-on:click="copyToAddress" class="copy-button linker-1">Copy</p>
             </div>
             <div class="the-form address-block">
-              <textarea ref="toaddress" name="name" placeholder="Please Enter The Address"></textarea>
+              <textarea ref="toaddress" name="name" v-model="toAddress" placeholder="Please Enter The Address"></textarea>
               <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
             </div>
           </div>
         </div>
-        <div class="error-message-container">
+        <div class="error-message-container" v-show="parsedBalance < toAmt">
           <p>You don't have enough funds</p>
         </div>
       </div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input type="number" name="" value="" placeholder="e.g. 0x65746865726d696e652d657531">
+          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531">
           <div class="good-button-container">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
@@ -61,7 +61,7 @@
       </div>
       <tx-speed-input></tx-speed-input>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable">
+        <div class="submit-button large-round-button-green-filled clickable" @click="next">
           Generate
         </div>
         <interface-bottom-text link="/" question="Have issues?" linkText="Learn More"></interface-bottom-text>
@@ -74,6 +74,9 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -81,12 +84,34 @@ export default {
   },
   data () {
     return {
+      toAmt: 0,
+      toAddress: '',
+      toData: '',
+      parsedBalance: 0,
+      coinType: [
+        {label: 'ETH', value: 'eth'},
+        {label: '$FFC', value: 'ffc'},
+        {label: '$FYX', value: 'fyx'},
+        {label: '0xBTC', value: 'oxbtc'}
+      ],
+      selectedCoinType: ''
     }
   },
   methods: {
     copyToAddress () {
       this.$refs('toaddress').select()
       document.execCommand('copy')
+    },
+    next () {
+      this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'sendPubTx'])
+    }
+  },
+  mounted () {
+    this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+  },
+  watch: {
+    parsedBalance (newVal) {
+      this.parsedBalance = newVal
     }
   }
 }

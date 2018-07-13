@@ -37,7 +37,7 @@ export default {
           sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
       },
-      txSpeed: store.get('txSpeed') !== undefined ? store.get('txSpeed') : 41
+      gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
     }
 
     this.$store.dispatch('setState', state)
