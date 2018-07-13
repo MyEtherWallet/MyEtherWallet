@@ -8,8 +8,9 @@
 
     <metamask-modal></metamask-modal>
 
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"></software-modal>
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
+    <private-key-modal></private-key-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -47,6 +48,7 @@ import MetamaskModal from './components/MetamaskModal'
 import MewConnectModal from './components/MewConnectModal'
 import NetworkAndAddressModal from './components/NetworkAndAddressModal'
 import PasswordModal from './components/PasswordModal'
+import PrivateKeyModal from './components/PrivateKeyModal'
 import SoftwareModal from './components/SoftwareModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
@@ -61,6 +63,7 @@ export default {
     'metamask-modal': MetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
+    'private-key-modal': PrivateKeyModal,
     'access-wallet-button': AccessWalletButton
   },
   data () {
@@ -120,6 +123,10 @@ export default {
     },
     passwordOpen () {
       this.$children[5].$refs.password.show()
+    },
+    privateKeyOpen () {
+      this.$children[4].$refs.software.hide()
+      this.$children[6].$refs.privateKey.show()
     },
     fileUploaded (e) {
       this.file = e

@@ -12,7 +12,7 @@
           <img class="icon-hover" src="~@/assets/images/icons/button-mnemonic-hover.svg">
           <span>{{$t("reused.mnemonicP")}}</span>
         </li>
-        <li>
+        <li @click="openPrivateKeyInput">
           <img class="icon" src="~@/assets/images/icons/button-key.svg">
           <img class="icon-hover" src="~@/assets/images/icons/button-key-hover.svg">
           <span>{{$t("reused.privKey")}}</span>
@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword'],
+  props: ['value', 'openPassword', 'openPrivateKeyInput'],
   data () {
     return {
       file: ''
