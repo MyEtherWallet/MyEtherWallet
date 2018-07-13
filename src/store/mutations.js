@@ -18,7 +18,7 @@ const CHANGE_PAGE_STATE = function (state, arr) {
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
-  web3.setProvider(state.network.RpcUrl)
+  web3.setProvider(state.network.url)
 }
 
 const SET_ACCOUNT_BALANCE = function (state, balance) {
@@ -35,7 +35,9 @@ const SWITCH_NETWORK = function (state, networkObj) {
 }
 
 const INIT_STATES = function (state, stateObj) {
-  state = stateObj
+  Object.keys(state).forEach(key => {
+    state[key] = stateObj[key]
+  })
 }
 
 const SET_TX_SPEED = function (state, val) {

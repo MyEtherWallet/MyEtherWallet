@@ -14,17 +14,19 @@
     h2 {
       font-size: 24px;
       font-weight: 500;
-      line-height: initial;
-      margin: 0;
-      margin-bottom: 4px;
     }
 
     h4 {
       font-size: 20px;
       font-weight: 400;
+    }
+
+    h2,
+    h4 {
       line-height: initial;
       margin: 0;
       margin-bottom: 4px;
+      white-space: nowrap;
     }
 
     p {
@@ -64,11 +66,6 @@
 
   .tooltip-block {
     padding-right: 13px;
-    .custom-tooltip {
-      img {
-      
-      }
-    }
   }
-  
+
 }

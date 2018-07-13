@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     toggle (param) {
-      this.storePage(param)
       switch (param) {
         case 'openSend':
           this.showSend = !this.showSend
@@ -83,6 +82,7 @@ export default {
         default:
           this.showSend = false
           this.showContract = false
+          this.storePage(param)
       }
     },
     storePage (param) {
@@ -98,26 +98,31 @@ export default {
         case 'send':
           this.showSend = true
           this.showContract = false
+          this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
+          store.set('sideMenu', newVal)
           break
         case 'offline':
           this.showSend = true
           this.showContract = false
+          this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
+          store.set('sideMenu', newVal)
           break
         case 'interactC':
           this.showSend = false
           this.showContract = true
+          this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
+          store.set('sideMenu', newVal)
           break
         case 'deployC':
           this.showSend = false
           this.showContract = true
+          this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
+          store.set('sideMenu', newVal)
           break
         default:
           this.showSend = false
           this.showContract = false
       }
-
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', newVal])
-      store.set('sideMenu', newVal)
     }
   }
 }
