@@ -23,6 +23,10 @@ branches:
 stages:
 - name: add to mewbuilds
   if: type != pull_request
+- name: add to mewbuilds develop
+  if: branch = develop and type != pull_request
+- name: add to mewbuilds staging
+  if: branch = master and type != pull_request
 - name: create release
   if: branch = master and type != pull_request
 - name: deploy to production
@@ -30,9 +34,23 @@ stages:
 jobs:
   fast_finish: true
   include:
+  - stage: add to mewbuilds staging
+    before_script:
+    - ROUTER_MODE=history npm run build
+    - pip install --user awscli
+    script:
+    - aws s3 rm s3://mewbuilds/staging/ --recursive
+    - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
+  - stage: add to mewbuilds develop
+    before_script:
+    - ROUTER_MODE=history npm run build
+    - pip install --user awscli
+    script:
+    - aws s3 rm s3://mewbuilds/develop/ --recursive
+    - aws s3 sync --acl public-read dist/ s3://mewbuilds/develop/
   - stage: add to mewbuilds
     before_script:
-    - npm run build
+    - ROUTER_MODE=hash npm run build
     - pip install --user awscli
     script:
     - aws s3 sync --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
