@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import DevelopmentElements from '@/components/Development/Elements/Elements'
+
 import Home from '@/components/Body/Home/Home'
 import CreateWallet from '@/components/Body/CreateWallet/ByJsonOrMnemonic/YourPassword/YourPassword'
 import ByJsonFile from '@/components/Body/CreateWallet/ByJsonOrMnemonic/ByJsonFile/ByJsonFile'
@@ -22,6 +25,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/dev/elements',
+      name: 'DevelopmentElements',
+      component: DevelopmentElements
+    },
     {
       path: '/',
       name: 'Home',

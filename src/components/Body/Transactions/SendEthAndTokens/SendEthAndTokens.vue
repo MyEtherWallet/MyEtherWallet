@@ -126,6 +126,7 @@
                 <div class="amount">
                   <div class="title">
                     <h4>Amount</h4>
+                    <p v-on:click="amount = 2000; amountValidator(amount);" class="title-button prevent-user-select">Entire Balance</p>
                   </div>
                   <div class="dropdown-select-search-1">
                     <v-select :options="coinType"></v-select>
@@ -136,7 +137,7 @@
                     <i v-if="!amountValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
                     <i v-if="amountValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
-                  <div class="error-message-container">
+                  <div class="error-message-container" v-if="amount != ''">
                     <p>You don't have enough funds</p>
                   </div>
                 </div>
@@ -182,7 +183,7 @@
                 </div>
                 <div class="buttons">
                   <div class="small-circle-button-green-border"
-                      v-on:click="gasAmount = 7; txSpeedButtonStatus.slow = true; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = false;"
+                      v-on:click="gasAmount.gweiValue = 7; txSpeedButtonStatus.slow = true; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = false;"
                       v-if="!txSpeedButtonStatus.slow">
                     Slow
                   </div>
@@ -190,7 +191,7 @@
                     Slow
                   </div>
                   <div class="small-circle-button-green-border"
-                      v-on:click="gasAmount = 12; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = true; txSpeedButtonStatus.fast = false;"
+                      v-on:click="gasAmount.gweiValue = 12; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = true; txSpeedButtonStatus.fast = false;"
                       v-if="!txSpeedButtonStatus.reg">
                     Regular
                   </div>
@@ -198,7 +199,7 @@
                     Regular
                   </div>
                   <div class="small-circle-button-green-border"
-                      v-on:click="gasAmount = 24; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = true;"
+                      v-on:click="gasAmount.gweiValue = 24; txSpeedButtonStatus.slow = false; txSpeedButtonStatus.reg = false; txSpeedButtonStatus.fast = true;"
                       v-if="!txSpeedButtonStatus.fast">
                     Fast
                   </div>
@@ -238,9 +239,13 @@
                 <div class="input-container" v-if="advancedExpend">
                   <div class="the-form user-input">
                     <input type="number" name="" value="" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
+                    <i v-if="!amountValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <i v-if="amountValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
                   <div class="the-form user-input">
                     <input type="number" name="" value="" placeholder="Gas Limit">
+                    <i v-if="!amountValidationMarker" class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+                    <i v-if="amountValidationMarker" class="fa fa-check-circle good-button" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>

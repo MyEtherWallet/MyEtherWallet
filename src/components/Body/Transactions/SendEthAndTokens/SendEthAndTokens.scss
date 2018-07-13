@@ -229,6 +229,17 @@
             .title {
               margin-bottom: 13px;
               padding: 0 8px;
+              align-items: center;
+              display: flex;
+
+              .title-button {
+                color: $text--link-color;
+                cursor: pointer;
+                margin-left: auto;
+                &:hover {
+                  color: $text--link-color-hover;
+                }
+              }
             }
 
             .amount {
@@ -282,6 +293,10 @@
                   color: $text--link-color;
                   cursor: pointer;
                   margin-left: auto;
+
+                  &:hover {
+                    color: $text--link-color-hover;
+                  }
                 }
               }
 

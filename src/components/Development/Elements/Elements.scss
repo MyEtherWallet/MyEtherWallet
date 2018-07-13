@@ -1,0 +1,31 @@
+@import '~@/scss/GlobalVariables';
+@import '~@/scss/StandardElements';
+
+.elements {
+  background-color: $background-color-1;
+}
+
+.wrap {
+  background-color: white;
+  padding: 50px 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.el {
+  margin-bottom: 40px;
+
+  .el-title {
+    font-size: 20px;
+  }
+
+  .el-subtitle {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .el-container {
+
+  }
+}
+
