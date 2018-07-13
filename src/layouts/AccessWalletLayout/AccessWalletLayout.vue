@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     async getRates () {
-      const rates = await fetch('http://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT,ENG').then((res) => {
+      const rates = await fetch('https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT').then((res) => {
         return res.json()
       }).catch((err) => {
         return err
