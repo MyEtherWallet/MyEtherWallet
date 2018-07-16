@@ -128,10 +128,12 @@ export default {
         gasPrice: this.gasLimit,
         nonce: this.$store.state.account.nonce + 1,
         data: this.data === undefined ? '' : this.data
+        // chainId: 1
       }
 
-      console.log(txObject)
-      return await this.$store.state.web3.eth.estimateGas(txObject).then(res => console.log(res)).catch(err => console.log(err))
+      return await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
+        this.gasLimit = res
+      }).catch(err => console.log(err))
     }
   },
   watch: {

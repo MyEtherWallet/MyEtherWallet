@@ -20,7 +20,7 @@ export default {
     'footer-container': FooterContainer
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
-    let web3 = new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url))
+    let web3 = store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url))
     const state = {
       web3: window.web3 ? window.web3.setProvider(this.$store.state.Networks['ETH'][0].url) : web3,
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
