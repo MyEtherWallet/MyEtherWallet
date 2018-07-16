@@ -76,7 +76,8 @@ $dark-blue-5: #434f60;
 $dark-blue-6: #003945;
 $dark-blue-7: #0c5876;
 
-$dark-green: #008000;
+$dark-green-1: #008000;
+$dark-green-2: #00927d;
 
 // *********************************************************************
 // Standard window width sizes
@@ -194,6 +195,7 @@ $button--text-color-1: $white;
 $button--border-color-1: $white;
 $button--border-color-2: $mew-green;
 $button--background-color-1: $mew-green;
+$button--background-color-1-dark: $dark-green-2;
 $button--background-color-2: $white;
 $button--background-color-3: $dark-grey-7;
 
@@ -249,4 +251,4 @@ $disabled: $light-grey-3;
 $very-weak: $red-1;
 $weak: $dark-yellow;
 $strong: $light-green-2;
-$very-strong: $dark-green;
+$very-strong: $dark-green-1;

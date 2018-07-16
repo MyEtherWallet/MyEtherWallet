@@ -93,7 +93,6 @@
     "vue-i18n": "^8.0.0",
     "vue-jest": "^2.6.0",
     "vue-loader": "^15.2.4",
-    "vue-lodash": "^2.0.0",
     "vue-select": "^2.4.0",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.2",

@@ -7,8 +7,8 @@
           <div class="title-and-copy">
             <div><h4>From Address</h4></div>
             <div class="form-controller">
-              <p class="linker-1" v-on:click="deleteFromAddress">Clear</p>
-              <p class="linker-1" v-on:click="copyFromAddress">Copy</p>
+              <p class="linker-1 prevent-user-select" v-on:click="deleteFromAddress">Clear</p>
+              <p class="linker-1 prevent-user-select" v-on:click="copyFromAddress">Copy</p>
             </div>
           </div>
         </div>
