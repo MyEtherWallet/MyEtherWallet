@@ -79,8 +79,20 @@
       grid-template-columns: 2fr 3fr;
 
       .title {
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 13px;
         padding: 0 8px;
+
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
       }
 
       .amount {

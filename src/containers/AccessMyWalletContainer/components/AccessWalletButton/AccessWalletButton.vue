@@ -1,5 +1,5 @@
 <template>
-  <div class="button-block" v-on:click="func">
+  <div :class="[!disabled ? 'disabled': '','button-block']" v-on:click="func">
     <div class="button-image">
       <img class="icon" :src="img">
     </div>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  props: ['func', 'img', 'title', 'desc', 'recommend', 'tooltip'],
+  props: ['func', 'img', 'title', 'desc', 'recommend', 'tooltip', 'disabled'],
   data () {
     return {
     }

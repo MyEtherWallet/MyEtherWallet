@@ -1,5 +1,5 @@
 <template>
-  <div class="team">
+  <div class="price-bar">
 
     <div class="wrap" style="overflow: hidden;">
       <div class="page-container">
