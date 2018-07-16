@@ -20,7 +20,12 @@ const CHANGE_PAGE_STATE = function (state, arr) {
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
-  web3.setProvider(state.network.url)
+  if (web3.eth === undefined) {
+    // eslint-disable-next-line
+    state.web3 = new web3(new web3.providers.HttpProvider(state.network.url))
+  } else {
+    state.web3 = web3
+  }
 }
 
 const SET_ACCOUNT_BALANCE = function (state, balance) {

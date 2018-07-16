@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" :value="$store.state.account.nonce + 1" placeholder="Nonce">
+        <input type="number" v-model="nonce" placeholder="Nonce">
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -97,13 +97,18 @@
 </style>
 
 <script>
+import web3 from 'web3'
+// const unit = require('ethjs-unit') /*Might use this in the future*/
+
 export default {
-  props: ['gasLimit'],
+  props: ['data', 'toAddress', 'value'],
   data () {
     return {
       fast: 75,
       regular: 45,
-      slow: 5
+      slow: 5,
+      gasLimit: 21000,
+      nonce: this.$store.state.account.nonce + 1
     }
   },
   methods: {
@@ -113,6 +118,30 @@ export default {
       } else {
         this.$store.dispatch('setGasPrice', Number(val))
       }
+    },
+    async generateGasEstimate () {
+      let txObject = {
+        from: this.$store.state.wallet.getAddressString(),
+        to: this.toAddress === undefined ? '' : this.toAddress,
+        value: this.value === undefined ? 0 : this.value,
+        gas: this.$store.state.gasPrice,
+        gasPrice: this.gasLimit,
+        nonce: this.$store.state.account.nonce + 1,
+        data: this.data === undefined ? '' : this.data
+      }
+
+      console.log(txObject)
+      return await this.$store.state.web3.eth.estimateGas(txObject).then(res => console.log(res)).catch(err => console.log(err))
+    }
+  },
+  watch: {
+    toAddress (newVal) {
+      if (web3.utils.isAddress(newVal)) {
+        this.generateGasEstimate()
+      }
+    },
+    nonce (newVal) {
+      this.$store.dispatch('setAccountNonce', Number(newVal))
     }
   }
 }

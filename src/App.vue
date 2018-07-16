@@ -11,6 +11,7 @@ import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
 import store from 'store'
 import nodeList from '@/configs/networks'
+import Web3 from 'web3'
 
 export default {
   name: 'App',
@@ -19,8 +20,9 @@ export default {
     'footer-container': FooterContainer
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
+    let web3 = new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url))
     const state = {
-      web3: {},
+      web3: window.web3 ? window.web3.setProvider(this.$store.state.Networks['ETH'][0].url) : web3,
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
       account: {
