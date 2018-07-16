@@ -60,5 +60,13 @@
       display: block;
     }
   }
+}
 
+.disabled {
+  color: $light-grey-10;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-10;
+  }
 }

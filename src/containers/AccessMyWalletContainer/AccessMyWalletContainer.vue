@@ -32,7 +32,9 @@
             :title="button.title"
             :desc="button.desc"
             :recommend="button.recommend"
-            :tooltip="button.tooltip">
+            :tooltip="button.tooltip"
+            :disabled="button.disabled"
+            >
           </access-wallet-button>
         </div>
       </div>
@@ -55,6 +57,11 @@ import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
 import metamaskImg from '@/assets/images/icons/button-metamask.svg'
 import softwareImg from '@/assets/images/icons/button-software.svg'
+
+import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
+import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
+import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
+
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
@@ -76,7 +83,8 @@ export default {
           desc: this.$t('accessMyWalletOptions.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('reused.toolTip3'),
-          img: mewConnectImg
+          img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
+          disabled: this.$store.state.online
         },
         {
           func: this.hardwareModalOpen,
@@ -84,7 +92,8 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: this.$t('reused.toolTip3'),
-          img: hardwareImg
+          img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
+          disabled: this.$store.state.online
         },
         {
           func: this.metamaskModalOpen,
@@ -92,7 +101,8 @@ export default {
           desc: this.$t('accessMyWalletOptions.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('reused.toolTip3'),
-          img: metamaskImg
+          img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
+          disabled: this.$store.state.online
         },
         {
           func: this.softwareModalOpen,
@@ -100,7 +110,8 @@ export default {
           desc: this.$t('accessMyWalletOptions.softwareDesc'),
           recommend: this.$t('accessMyWalletOptions.notRecommended'),
           tooltip: this.$t('reused.toolTip3'),
-          img: softwareImg
+          img: softwareImg,
+          disabled: true
         }
       ]
     }

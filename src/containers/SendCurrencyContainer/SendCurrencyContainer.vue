@@ -159,6 +159,7 @@ export default {
     },
     changeGas (val) {
       this.gasAmount = val
+      this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
       this.amount = this.parsedBalance
@@ -166,6 +167,7 @@ export default {
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+    this.gasAmount = this.$store.state.gasPrice
   },
   watch: {
     address (newVal) {
@@ -180,6 +182,9 @@ export default {
     },
     parsedBalance (newVal) {
       this.parsedBalance = newVal
+    },
+    gasAmount (newVal) {
+      this.$store.dispatch('setGasPrice', Number(newVal))
     }
   }
 }
