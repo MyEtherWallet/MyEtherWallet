@@ -9,7 +9,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import VueLodash from 'vue-lodash'
 import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
@@ -29,10 +28,6 @@ Vue.use(Vuex)
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue)
-
-/* Init Lodash */
-const options = { name: 'lodash' }
-Vue.use(VueLodash, options)
 
 // Define vue-i18n
 Vue.use(VueI18n)

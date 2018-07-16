@@ -10,16 +10,17 @@
         <div class="amount">
           <div class="title">
             <h4>Amount</h4>
+             <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
           <div class="dropdown-select-search-1">
             <v-select :options="['foo','bar']"></v-select>
             <i class="fa fa-search" aria-hidden="true"></i>
           </div>
           <div class="the-form amount-number">
-            <input type="number" name="" value="" placeholder="Amount">
+            <input type="number" name="" v-model="amount" placeholder="Amount">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
-          <div class="error-message-container">
+          <div class="error-message-container" v-if="amount > parsedBalance">
             <p>{{ $t('reused.dontHaveEnough') }}</p>
           </div>
         </div>
@@ -27,14 +28,16 @@
           <div class="title">
             <h4>{{ $t("sendTx.toAddr") }}</h4>
             <blockie :address="address" width="22px" height="22px" v-if="address.length !== 0"></blockie>
-            <p class="copy-button" v-on:click="copyToClipboard('address')">{{ $t('reused.copy') }}</p>
+            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
             <textarea ref="address" name="name" v-model="address"></textarea>
-            <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+            <i class="fa fa-check-circle not-good" aria-hidden="true" v-if="addressValid === true"></i>
+            <i class="fa fa-check-circle good-button" aria-hidden="true" v-if="addressValid === false"></i>
           </div>
           <div class="error-message-container">
-            <p>Invalid address</p>
+            <p v-if="address.length === 0">Can't be empty</p>
+            <p v-if="addressValid === false && address.length !== 0">Invalid address</p>
           </div>
         </div> <!-- .to-address -->
       </div> <!-- .form-block .amount-to-address -->
@@ -59,20 +62,20 @@
           <p>{{ $t("reused.txFee") }}: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
-          <div class="small-circle-button-green-border">
+          <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
             {{ $t('reused.slow') }}
           </div>
-          <div class="small-circle-button-green-border active">
+          <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(45)">
             {{ $t('reused.regular') }}
           </div>
-          <div class="small-circle-button-green-border">
+          <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(75)">
             {{ $t('reused.fast') }}
           </div>
         </div>
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount">
+        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount">
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -114,9 +117,14 @@
 </template>
 
 <script>
+import web3 from 'web3'
+
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
+
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
   props: ['address'],
@@ -127,7 +135,18 @@ export default {
   },
   data () {
     return {
-      advancedExpend: false
+      advancedExpend: false,
+      addressValid: true,
+      amount: 0,
+      amountValid: true,
+      gasAmount: 0,
+      parsedBalance: 0,
+      coinType: [
+        {label: 'ETH', value: 'eth'},
+        {label: '$FFC', value: 'ffc'},
+        {label: '$FYX', value: 'fyx'},
+        {label: '0xBTC', value: 'oxbtc'}
+      ]
     }
   },
   methods: {
@@ -137,6 +156,30 @@ export default {
     },
     confirmationModalOpen () {
       this.$refs[0].confirmation.show()
+    },
+    changeGas (val) {
+      this.gasAmount = val
+    },
+    setBalanceToAmt () {
+      this.amount = this.parsedBalance
+    }
+  },
+  mounted () {
+    this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+  },
+  watch: {
+    address (newVal) {
+      const valid = web3.utils.isAddress(newVal)
+
+      if (valid) {
+        this.address = newVal
+        this.addressValid = true
+      } else {
+        this.addressValid = false
+      }
+    },
+    parsedBalance (newVal) {
+      this.parsedBalance = newVal
     }
   }
 }

@@ -405,6 +405,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .large-round-button-green-border {
@@ -416,6 +417,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 
@@ -428,6 +430,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
+  user-select: none;
 }
 
 .mid-round-button-green-border {
@@ -439,6 +442,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
+  user-select: none;
 }
 
 .large-round-button-white-filled {
@@ -449,6 +453,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .large-round-button-white-border {
@@ -459,6 +464,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .small-circle-button-green-border {
@@ -473,6 +479,7 @@ h6 {
   min-width: 70px;
   padding: 6px 0;
   text-align: center;
+  user-select: none;
 
   &.active {
     background-color: $button--background-color-1;
@@ -493,6 +500,7 @@ h6 {
   min-width: 56px;
   padding: 4px 0;
   text-align: center;
+  user-select: none;
 
   &.active {
     background-color: $button--background-color-1;
@@ -513,6 +521,7 @@ h6 {
   min-width: 80px;
   padding: 7px 0;
   text-align: center;
+  user-select: none;
 }
 
 .very-small-circle-button-green-filled {
@@ -527,6 +536,7 @@ h6 {
   min-width: 56px;
   padding: 4px 0;
   text-align: center;
+  user-select: none;
 }
 
 
@@ -1162,7 +1172,7 @@ h6 {
 }
 
 .good-button {
-  color: $text-color-3;
+  color: $button--background-color-1;
   display: inline-block;
   font-size: 20px;
 
