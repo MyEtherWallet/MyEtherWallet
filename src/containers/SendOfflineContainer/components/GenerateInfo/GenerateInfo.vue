@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <tx-speed-input v-if="moreInfoGenerated"></tx-speed-input>
+      <tx-speed-input v-show="moreInfoGenerated"></tx-speed-input>
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable" v-on:click="generateInfo">
           Generate

@@ -20,7 +20,7 @@
           <div class="to-address">
             <div class="title">
               <h4>To Address</h4>
-              <img class="icon" src="~@/assets/images/icons/avatar.svg">
+              <blockie :address="toAddress" width="22px" height="22px" v-if="toAddress.length !== 0"></blockie>
               <p v-on:click="copyToAddress" class="copy-button linker-1 prevent-user-select">Copy</p>
             </div>
             <div class="the-form address-block">
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <tx-speed-input></tx-speed-input>
+      <tx-speed-input :toAddress="toAddress"></tx-speed-input>
       <div class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable" @click="next">
           Generate
@@ -74,13 +74,15 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
+import Blockie from '@/components/Blockie'
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'tx-speed-input': TxSpeedInput
+    'tx-speed-input': TxSpeedInput,
+    'blockie': Blockie
   },
   data () {
     return {

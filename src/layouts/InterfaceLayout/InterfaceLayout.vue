@@ -159,12 +159,13 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
-    if (this.$store.state.online && this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
-      this.getBalance()
-      this.getNonce()
+    if (this.$store.state.online) {
+      if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+        this.getBalance()
+        this.getNonce()
+      }
+      setInterval(this.getBlock, 14000)
     }
-
-    setInterval(this.getBlock, 14000)
   },
   computed: {
     address () {
