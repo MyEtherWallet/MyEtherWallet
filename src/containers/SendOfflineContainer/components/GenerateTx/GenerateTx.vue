@@ -72,8 +72,6 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js'
-
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
 import Blockie from '@/components/Blockie'
@@ -136,7 +134,6 @@ export default {
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
-    console.log(this.parsedBalance)
   },
   watch: {
     parsedBalance (newVal) {
