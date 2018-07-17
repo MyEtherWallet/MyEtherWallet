@@ -1,0 +1,39 @@
+@import '~@/scss/GlobalVariables';
+
+.signed-tx-modal {
+  .title {
+    color: $dark-blue-7;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .modal-body {
+    padding: 30px 35px;
+  }
+
+  .signed-tx-container,
+  .raw-tx-container {
+    background: $light-grey-1;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+
+    &.collapsed {
+      padding: 5px 0 0;
+
+      code {
+        display: none;
+      }
+    }
+  }
+
+  .with-toggle {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  code {
+    color: $black;
+    font-weight: 200;
+  }
+}
