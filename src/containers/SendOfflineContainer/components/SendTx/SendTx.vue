@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable" v-on:click="successModalOpen">
+        <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
           Send Transaction
         </div>
         <interface-bottom-text :link="'/'" :linkText="'Learn more'" :question="'Have any issues?'"></interface-bottom-text>
@@ -35,9 +35,10 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'success-modal': SuccessModal
   },
+  props: ['rawTx'],
   data () {
     return {
-      signedTx: ''
+      signedTx: this.rawTx
     }
   },
   methods: {
@@ -48,15 +49,19 @@ export default {
       this.$refs.txHex.select()
       document.execCommand('copy')
     },
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    sendTx () {
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt').then(res => {
+        console.log(res)
+      })
+      // this.$children[0].$refs.success.show()
     },
     hideModal () {
       this.$children[0].$refs.success.hide()
-      this.processChange('process1')
-    },
-    processChange (process) {
-      this.$store.state.state.pageStates.sendOffline.processLocation = process
+    }
+  },
+  watch: {
+    rawTx (newVal) {
+      this.signedTx = newVal
     }
   }
 }

@@ -120,6 +120,7 @@ export default {
       }
       this.balance = await fetch(this.$store.state.network.url, config)
         .then(res => {
+          this.getNonce()
           return res.json()
         })
         .catch(err => {
@@ -162,7 +163,6 @@ export default {
     if (this.$store.state.online) {
       if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
         this.getBalance()
-        this.getNonce()
       }
       setInterval(this.getBlock, 14000)
     }

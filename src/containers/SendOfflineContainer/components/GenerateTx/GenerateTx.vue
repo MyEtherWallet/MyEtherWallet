@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <tx-speed-input :toAddress="toAddress"></tx-speed-input>
+      <tx-speed-input :data="toData" :value="toAmt" :toAddress="toAddress" :gasLimit="gasLimit" v-on:gasLimitUpdate="gasLimitUpdated"></tx-speed-input>
       <div class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable" @click="next">
           Generate
@@ -72,13 +72,18 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js'
+
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
 import Blockie from '@/components/Blockie'
 // eslint-disable-next-line
+const EthTx = require('ethereumjs-tx')
+// eslint-disable-next-line
 const unit = require('ethjs-unit')
 
 export default {
+  props: ['gasLimit'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
@@ -88,8 +93,9 @@ export default {
     return {
       toAmt: 0,
       toAddress: '',
-      toData: '',
+      toData: '0x',
       parsedBalance: 0,
+      localGas: this.gasLimit,
       coinType: [
         {label: 'ETH', value: 'eth'},
         {label: '$FFC', value: 'ffc'},
@@ -105,15 +111,39 @@ export default {
       document.execCommand('copy')
     },
     next () {
+      let newNonce = this.$store.state.account.nonce + 1
+      const raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.localGas,
+        value: unit.toWei(this.toAmt, 'ether'),
+        data: this.toData,
+        nonce: `0x${newNonce.toString(16)}`,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        to: this.toAddress,
+        chainId: this.$store.state.network.type.chainID
+      }
+
+      const tx = new EthTx(raw)
+      tx.sign(this.$store.state.wallet.getPrivateKey())
+      const serializedTx = tx.serialize()
+      const rawTx = `0x${serializedTx.toString('hex')}`
+      this.$emit('createdRawTx', rawTx)
       this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'sendPubTx'])
+    },
+    gasLimitUpdated (e) {
+      this.$emit('gasLimitUpdate', e)
     }
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+    console.log(this.parsedBalance)
   },
   watch: {
     parsedBalance (newVal) {
       this.parsedBalance = newVal
+    },
+    gasLimit (newVal) {
+      this.localGas = newVal
     }
   }
 }

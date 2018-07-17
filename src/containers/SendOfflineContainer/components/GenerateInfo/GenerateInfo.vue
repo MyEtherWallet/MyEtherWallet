@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <tx-speed-input v-show="moreInfoGenerated"></tx-speed-input>
+      <tx-speed-input v-show="moreInfoGenerated" v-on:gasLimitUpdate="gasLimitUpdated" :gasLimit="gasLimit"></tx-speed-input>
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div class="submit-button large-round-button-green-filled clickable" v-on:click="generateInfo">
           Generate
@@ -40,6 +40,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
 export default {
+  props: ['gasLimit'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput
@@ -62,6 +63,9 @@ export default {
     },
     generateTx () {
       this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'genTx'])
+    },
+    gasLimitUpdated (e) {
+      this.$emit('gasLimitUpdate', e)
     }
   }
 }

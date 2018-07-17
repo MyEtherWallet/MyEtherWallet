@@ -25,9 +25,9 @@
       </div>
     </div>
 
-    <generate-info v-if="this.$store.state.pageStates.interface.sendOffline === 'genInfo'"></generate-info>
-    <generate-tx v-if="this.$store.state.pageStates.interface.sendOffline === 'genTx'"></generate-tx>
-    <send-tx v-if="this.$store.state.pageStates.interface.sendOffline === 'sendPubTx'"></send-tx>
+    <generate-info v-if="this.$store.state.pageStates.interface.sendOffline === 'genInfo'" v-on:gasLimitUpdate="gasLimitUpdate" :gasLimit="gasLimit"></generate-info>
+    <generate-tx v-if="this.$store.state.pageStates.interface.sendOffline === 'genTx'" v-on:gasLimitUpdate="gasLimitUpdate" v-on:createdRawTx="createdRawTx" :gasLimit="gasLimit"></generate-tx>
+    <send-tx v-if="this.$store.state.pageStates.interface.sendOffline === 'sendPubTx'" :rawTx="rawTx"></send-tx>
 
   </div>
 </template>
@@ -44,11 +44,25 @@ export default {
     'send-tx': SendTx
   },
   data () {
-    return {}
+    return {
+      rawTx: '',
+      gasLimit: 21000
+    }
   },
   methods: {
     processChange (process) {
       this.$store.dispatch('updatePageState', ['interface', 'sendOffline', process])
+    },
+    createdRawTx (e) {
+      this.rawTx = e
+    },
+    gasLimitUpdate (e) {
+      this.gasLimit = e
+    }
+  },
+  watch: {
+    gasLimit (newVal) {
+      this.gasLimit = newVal
     }
   }
 }
