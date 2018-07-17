@@ -68,12 +68,14 @@
       </div>
 
     </div>
+    <signed-tx-modal :signedTx="signed" :rawTx="raw"></signed-tx-modal>
   </div>
 </template>
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
+import SignedTxModal from '../../components/SignedTxModal'
 import Blockie from '@/components/Blockie'
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -85,7 +87,8 @@ export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
-    'blockie': Blockie
+    'blockie': Blockie,
+    'signed-tx-modal': SignedTxModal
   },
   data () {
     return {
@@ -100,7 +103,9 @@ export default {
         {label: '$FYX', value: 'fyx'},
         {label: '0xBTC', value: 'oxbtc'}
       ],
-      selectedCoinType: ''
+      selectedCoinType: '',
+      raw: '',
+      signed: ''
     }
   },
   methods: {
@@ -124,9 +129,14 @@ export default {
       const tx = new EthTx(raw)
       tx.sign(this.$store.state.wallet.getPrivateKey())
       const serializedTx = tx.serialize()
-      const rawTx = `0x${serializedTx.toString('hex')}`
-      this.$emit('createdRawTx', rawTx)
-      this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'sendPubTx'])
+      const signedTx = `0x${serializedTx.toString('hex')}`
+      this.$emit('createdRawTx', signedTx)
+
+      this.raw = raw
+      this.signed = signedTx
+      this.$children[4].$refs.signedTx.show()
+      window.scrollTo(0, 0)
+      // this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'sendPubTx'])
     },
     gasLimitUpdated (e) {
       this.$emit('gasLimitUpdate', e)

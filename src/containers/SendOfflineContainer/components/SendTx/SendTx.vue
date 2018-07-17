@@ -51,9 +51,9 @@ export default {
     },
     sendTx () {
       this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt').then(res => {
+        this.$children[0].$refs.success.show()
         console.log(res)
       })
-      // this.$children[0].$refs.success.show()
     },
     hideModal () {
       this.$children[0].$refs.success.hide()
