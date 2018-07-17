@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="gasLimit" placeholder="Gas Limit">
+        <input type="number" v-model="gasPrice" placeholder="Gas Limit">
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -97,17 +97,19 @@
 </style>
 
 <script>
+import BigNumber from 'bignumber.js'
 import web3 from 'web3'
-// const unit = require('ethjs-unit') /*Might use this in the future*/
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
-  props: ['data', 'toAddress', 'value'],
+  props: ['data', 'toAddress', 'value', 'gasLimit'],
   data () {
     return {
       fast: 75,
       regular: 45,
       slow: 5,
-      gasLimit: 21000,
+      gasPrice: this.gasLimit,
       nonce: this.$store.state.account.nonce + 1
     }
   },
@@ -123,13 +125,13 @@ export default {
       let txObject = {
         from: this.$store.state.wallet.getAddressString(),
         to: this.toAddress === undefined ? '' : this.toAddress,
-        value: this.value === undefined ? 0 : this.value,
+        value: this.value === undefined ? 0 : unit.toWei(new BigNumber(this.value), 'ether'),
         gasPrice: this.gasLimit,
         nonce: this.$store.state.account.nonce + 1,
         data: this.data === undefined ? '0x' : this.data
       }
 
-      this.gasLimit = await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
+      this.gasPrice = await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
         return res
       }).catch(err => console.log(err))
     }
@@ -143,8 +145,11 @@ export default {
     nonce (newVal) {
       this.$store.dispatch('setAccountNonce', Number(newVal))
     },
-    gasLimit (newVal) {
-      console.log(newVal)
+    gasPrice (newVal) {
+      this.$emit('gasLimitUpdate', newVal)
+    },
+    toAmt (newVal) {
+      console.log(unit.toWei(new BigNumber(newVal), 'ether'))
     }
   }
 }
