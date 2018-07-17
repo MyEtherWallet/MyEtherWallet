@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" :value="gasLimit" placeholder="Gas Limit">
+        <input type="number" v-model="gasLimit" placeholder="Gas Limit">
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -124,26 +124,27 @@ export default {
         from: this.$store.state.wallet.getAddressString(),
         to: this.toAddress === undefined ? '' : this.toAddress,
         value: this.value === undefined ? 0 : this.value,
-        gas: this.$store.state.gasPrice,
         gasPrice: this.gasLimit,
         nonce: this.$store.state.account.nonce + 1,
-        data: this.data === undefined ? '' : this.data
-        // chainId: 1
+        data: this.data === undefined ? '0x' : this.data
       }
 
-      return await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
-        this.gasLimit = res
+      this.gasLimit = await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
+        return res
       }).catch(err => console.log(err))
     }
   },
   watch: {
     toAddress (newVal) {
-      if (web3.utils.isAddress(newVal)) {
+      if (this.$store.state.online && web3.utils.isAddress(newVal)) {
         this.generateGasEstimate()
       }
     },
     nonce (newVal) {
       this.$store.dispatch('setAccountNonce', Number(newVal))
+    },
+    gasLimit (newVal) {
+      console.log(newVal)
     }
   }
 }
