@@ -1,6 +1,5 @@
 <template>
   <div class="send-currency-container">
-    <confirm-modal></confirm-modal>
     <div class="content-title">
       <h2>{{ $t('reused.sendTx') }}</h2>
     </div>
@@ -58,7 +57,7 @@
               </b-popover>
             </div>
           </div>
-          <p>{{ $t("reused.txFee") }}: 0.000013 ETH ($1.234)</p>
+          <p>{{ $t("reused.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
@@ -112,7 +111,7 @@
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-
+    <confirm-modal :fee="transactionFee" :gasLimit="gasLimit" :from="$store.state.wallet.getAddressString()" :to="toAddress" :value="amount" :gas="$store.state.gasPrice" :data="data" :nonce="$store.state.account.nonce + 1"></confirm-modal>
   </div>
 </template>
 
@@ -142,6 +141,7 @@ export default {
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
       toAddress: '',
+      transactionFee: 0,
       coinType: [
         {label: 'ETH', value: 'eth'},
         {label: '$FFC', value: 'ffc'},
@@ -156,14 +156,14 @@ export default {
       document.execCommand('copy')
     },
     confirmationModalOpen () {
-      this.$children[0].$refs.confirmation.show()
+      this.$children[4].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
-      this.amount = this.parsedBalance
+      this.amount = this.parsedBalance - this.transactionFee
     },
     estimateGas () {
       const raw = {
@@ -176,6 +176,7 @@ export default {
       }
 
       this.gasPrice = this.$store.state.web3.eth.estimateGas(raw).then(res => {
+        this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
         return res
       }).catch(err => console.log(err))
     },

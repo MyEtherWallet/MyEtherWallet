@@ -1,26 +1,25 @@
 <template>
   <div class="modal-container">
-    <success-modal message="Your transaction is converting. A notification will be sent to you when it is completed." linkMessage="Ok"></success-modal>
     <b-modal ref="confirmation" hide-footer centered class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
-            <img src="~@/assets/images/icons/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3>
+            <!-- <img src="~@/assets/images/icons/eth.svg">
+            <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
               <p class="address-title">From Address</p>
-              <p>0x834rf8i34bh983ubg9i34uekrnegoin5o4inoet</p>
+              <p>{{from}}</p>
             </div>
           </div>
           <div class="direction">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
           <div class="tx-data tx-to">
-            <img src="~@/assets/images/icons/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3>
+            <!-- <img src="~@/assets/images/icons/btc.svg">
+            <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
               <p class="address-title">To Address</p>
-              <p>8734fg8734rg938hg034jg0394gj0394g</p>
+              <p>{{to}}</p>
             </div>
           </div>
         </div>
@@ -36,22 +35,22 @@
           </div>
           <div class="expended-info" v-if="modalDetailInformation">
             <div class="grid-block">
-              <p>Network</p><p>ETH by etherapi.com</p>
+              <p>Network</p><p>{{$store.state.network.type.name}} by {{$store.state.network.service}}</p>
             </div>
             <div class="grid-block">
-              <p>Gas Limit</p><p>ETH by etherapi.com</p>
+              <p>Gas Limit</p><p>{{gasLimit}} wei</p>
             </div>
             <div class="grid-block">
-              <p>Gas Price</p><p>2100000 GWEI (0.00321 ETH=$1.234)</p>
+              <p>Gas Price</p><p>{{ gas }} gwei</p>
             </div>
             <div class="grid-block">
-              <p>Max Transaction Fee</p><p>441000 GWEI (0.000441)</p>
+              <p>Transaction Fee</p><p> {{fee}} ETH</p>
             </div>
             <div class="grid-block">
-              <p>Nonce</p><p>0</p>
+              <p>Nonce</p><p>{{nonce}}</p>
             </div>
             <div class="grid-block">
-              <p>Data</p><p>None</p>
+              <p>Data</p><p>{{data}}</p>
             </div>
           </div>
         </div>
@@ -87,11 +86,11 @@
 
 <script>
 import SuccessModal from '@/components/SuccessModal'
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
-  components: {
-    'success-modal': SuccessModal
-  },
+  props: ['fee', 'data', 'from', 'gas', 'gasLimit', 'nonce', 'to', 'value'],
   data () {
     return {
       modalDetailInformation: false
@@ -99,7 +98,7 @@ export default {
   },
   methods: {
     successModalOpen () {
-      this.$children[0].$refs.success.show()
+      console.log(this)
     }
   }
 }
