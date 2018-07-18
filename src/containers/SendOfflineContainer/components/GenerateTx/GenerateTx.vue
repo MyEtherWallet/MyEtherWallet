@@ -14,7 +14,7 @@
             </div>
             <div class="the-form amount-number">
               <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount">
-              <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+              <i :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
             </div>
           </div>
           <div class="to-address">

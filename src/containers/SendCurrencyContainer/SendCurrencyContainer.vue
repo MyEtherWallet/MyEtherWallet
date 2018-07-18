@@ -18,7 +18,7 @@
           </div>
           <div class="the-form amount-number">
             <input type="number" name="" v-model="amount" placeholder="Amount">
-            <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+            <i :class="[parsedBalance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
           <div class="error-message-container" v-if="amount > parsedBalance">
             <p>{{ $t('reused.dontHaveEnough') }}</p>
@@ -26,22 +26,21 @@
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t("sendTx.toAddr") }}</h4>
-            <blockie :address="address" width="22px" height="22px" v-if="address.length !== 0"></blockie>
+            <h4>{{ $t("sendTx.toAddr") }}</h4> &nbsp;
+            <blockie :address="toAddress" width="22px" height="22px" v-show="addressValid && toAddress.length !== 0"></blockie>
             <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('reused.copy') }}</p>
           </div>
           <div class="the-form address-block">
-            <textarea ref="address" name="name" v-model="address"></textarea>
-            <i class="fa fa-check-circle not-good" aria-hidden="true" v-if="addressValid === true"></i>
-            <i class="fa fa-check-circle good-button" aria-hidden="true" v-if="addressValid === false"></i>
+            <textarea ref="address" name="name" v-model="toAddress"></textarea>
+            <i :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
           <div class="error-message-container">
-            <p v-if="address.length === 0">Can't be empty</p>
-            <p v-if="addressValid === false && address.length !== 0">Invalid address</p>
+            <p v-if="toAddress.length === 0 && toAddress === ''">Can't be empty</p>
+            <p v-show="!addressValid && toAddress !== ''">Invalid address</p>
           </div>
-        </div> <!-- .to-address -->
-      </div> <!-- .form-block .amount-to-address -->
-    </div> <!-- .send-form -->
+        </div>
+      </div>
+    </div>
 
     <div class="send-form">
       <div class="title-container">
@@ -94,12 +93,13 @@
               <span class="slider round"></span>
             </label>
           </div>
+          <br/>
           <div class="input-container" v-if="advancedExpend">
             <div class="the-form user-input">
-              <input type="number" name="" value="" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
+              <input type="number" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
             </div>
             <div class="the-form user-input">
-              <input type="number" name="" value="" placeholder="Gas Limit">
+              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit">
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable" @click="confirmationModalOpen">
+      <div :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']" @click="confirmationModalOpen">
         {{ $t('interface.sendTx') }}
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -117,8 +117,6 @@
 </template>
 
 <script>
-import web3 from 'web3'
-
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
@@ -139,8 +137,11 @@ export default {
       addressValid: true,
       amount: 0,
       amountValid: true,
-      gasAmount: 0,
+      gasLimit: 21000,
+      data: '0x',
+      gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
+      toAddress: '',
       coinType: [
         {label: 'ETH', value: 'eth'},
         {label: '$FFC', value: 'ffc'},
@@ -163,28 +164,60 @@ export default {
     },
     setBalanceToAmt () {
       this.amount = this.parsedBalance
+    },
+    estimateGas () {
+      const raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        to: this.toAddress,
+        value: this.amount,
+        gas: unit.toWei(this.$store.state.gasPrice, 'gwei'),
+        data: this.data,
+        nonce: this.$store.state.account.nonce + 1
+      }
+
+      this.gasPrice = this.$store.state.web3.eth.estimateGas(raw).then(res => {
+        return res
+      }).catch(err => console.log(err))
+    },
+    verifyAddr () {
+      if (this.toAddress.length !== 0 && this.toAddress !== '') {
+        const valid = this.$store.state.web3.utils.isAddress(this.toAddress)
+        if (!valid) {
+          return true
+        } else {
+          return false
+        }
+      }
     }
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
-    this.gasAmount = this.$store.state.gasPrice
   },
   watch: {
-    address (newVal) {
-      const valid = web3.utils.isAddress(newVal)
-
-      if (valid) {
-        this.address = newVal
-        this.addressValid = true
-      } else {
+    toAddress (newVal) {
+      this.toAddress = newVal
+      if (this.verifyAddr()) {
         this.addressValid = false
+      } else {
+        this.estimateGas()
+        this.addressValid = true
       }
     },
     parsedBalance (newVal) {
       this.parsedBalance = newVal
     },
     gasAmount (newVal) {
+      this.gasAmount = newVal
+      if (!this.verifyAddr()) {
+        this.estimateGas()
+      }
       this.$store.dispatch('setGasPrice', Number(newVal))
+    },
+    amount (newVal) {
+      this.amount = newVal
+      if (!this.verifyAddr()) {
+        this.estimateGas()
+      }
     }
   }
 }
