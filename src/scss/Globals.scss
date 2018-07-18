@@ -236,10 +236,6 @@ a {
   display: none;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .page-container {
   margin: 0 auto;
   max-width: 1024px;
@@ -1223,4 +1219,10 @@ h6 {
 
 .linker-1:hover {
   color: $link-text-color-1;
+}
+
+
+.disabled {
+  background-color: $light-grey-12;
+  pointer-events: none;
 }

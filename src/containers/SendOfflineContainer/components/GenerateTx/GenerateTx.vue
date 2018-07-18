@@ -20,7 +20,7 @@
           <div class="to-address">
             <div class="title">
               <h4>To Address</h4>
-              <blockie :address="toAddress" width="22px" height="22px" v-if="toAddress.length !== 0"></blockie>
+              <blockie :address="toAddress" width="22px" height="22px" v-show="toAddress !== '' && !validAddress"></blockie>
               <p v-on:click="copyToAddress" class="copy-button linker-1 prevent-user-select">Copy</p>
             </div>
             <div class="the-form address-block">
@@ -31,6 +31,9 @@
         </div>
         <div class="error-message-container" v-show="parsedBalance < toAmt">
           <p>You don't have enough funds</p>
+        </div>
+        <div class="error-message-container" v-show="toAddress !== '' && !validAddress">
+          <p>Invalid Address</p>
         </div>
       </div>
 
@@ -59,16 +62,16 @@
           </div>
         </div>
       </div>
-      <tx-speed-input :data="toData" :value="toAmt" :toAddress="toAddress" :gasLimit="gasLimit" v-on:gasLimitUpdate="gasLimitUpdated"></tx-speed-input>
+      <tx-speed-input :nonce="nonce" v-on:nonceUpdate="nonceUpdated" :data="toData" :value="toAmt" :toAddress="toAddress" :gasLimit="gasLimit" v-on:gasLimitUpdate="gasLimitUpdated"></tx-speed-input>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable" @click="next">
+        <div :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']" @click="next">
           Generate
         </div>
         <interface-bottom-text link="/" question="Have issues?" linkText="Learn More"></interface-bottom-text>
       </div>
 
     </div>
-    <signed-tx-modal :signedTx="signed" :rawTx="raw"></signed-tx-modal>
+    <signed-tx-modal :signedTx="signed" :rawTx="raw" :pathUpdate="pathUpdate"></signed-tx-modal>
   </div>
 </template>
 
@@ -83,7 +86,7 @@ const EthTx = require('ethereumjs-tx')
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['gasLimit'],
+  props: ['gasLimit', 'nonce'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
@@ -105,7 +108,9 @@ export default {
       ],
       selectedCoinType: '',
       raw: '',
-      signed: ''
+      signed: '',
+      locNonce: this.nonce,
+      validAddress: false
     }
   },
   methods: {
@@ -114,13 +119,12 @@ export default {
       document.execCommand('copy')
     },
     next () {
-      let newNonce = this.$store.state.account.nonce + 1
       const raw = {
         from: this.$store.state.wallet.getAddressString(),
         gas: this.localGas,
         value: unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
-        nonce: `0x${newNonce.toString(16)}`,
+        nonce: this.locNonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
         to: this.toAddress,
         chainId: this.$store.state.network.type.chainID
@@ -134,12 +138,17 @@ export default {
 
       this.raw = raw
       this.signed = signedTx
-      this.$children[4].$refs.signedTx.show()
+      this.$children[5].$refs.signedTx.show()
       window.scrollTo(0, 0)
-      // this.$store.dispatch('updatePageState', ['interface', 'sendOffline', 'sendPubTx'])
     },
     gasLimitUpdated (e) {
       this.$emit('gasLimitUpdate', e)
+    },
+    nonceUpdated (e) {
+      this.$emit('nonceUpdate', e)
+    },
+    pathUpdate () {
+      this.$emit('pathUpdate', 'sendPubTx')
     }
   },
   mounted () {
@@ -151,6 +160,15 @@ export default {
     },
     gasLimit (newVal) {
       this.localGas = newVal
+    },
+    toAddress (newVal) {
+      if (newVal !== '' && newVal.length !== 0 && this.$store.state.web3.utils.isAddress(newVal)) {
+        this.validAddress = true
+      } else {
+        this.validAddress = false
+      }
+
+      this.toAddress = newVal
     }
   }
 }

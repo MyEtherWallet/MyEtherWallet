@@ -20,7 +20,6 @@ const state = {
   online: true,
   pageStates: {
     interface: {
-      sendOffline: 'genInfo',
       sideMenu: 'send'
     }
   },

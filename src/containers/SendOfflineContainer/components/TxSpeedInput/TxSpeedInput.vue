@@ -16,7 +16,7 @@
               </b-popover>
             </div>
           </div>
-          <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+          <!-- <p>Transcation Fee: 0.000013 ETH ($1.234)</p> -->
         </div>
         <div class="buttons">
           <div :class="[$store.state.gasPrice === 5 ? 'active': '','small-circle-button-green-border']" @click="setSpeed(5)">
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="nonce" placeholder="Nonce">
+        <input type="number" v-model="locNonce" placeholder="Nonce">
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -97,20 +97,15 @@
 </style>
 
 <script>
-import BigNumber from 'bignumber.js'
-import web3 from 'web3'
-// eslint-disable-next-line
-const unit = require('ethjs-unit')
-
 export default {
-  props: ['data', 'toAddress', 'value', 'gasLimit'],
+  props: ['data', 'toAddress', 'value', 'gasLimit', 'nonce'],
   data () {
     return {
       fast: 75,
       regular: 45,
       slow: 5,
       gasPrice: this.gasLimit,
-      nonce: this.$store.state.account.nonce + 1
+      locNonce: this.nonce
     }
   },
   methods: {
@@ -120,36 +115,14 @@ export default {
       } else {
         this.$store.dispatch('setGasPrice', Number(val))
       }
-    },
-    async generateGasEstimate () {
-      let txObject = {
-        from: this.$store.state.wallet.getAddressString(),
-        to: this.toAddress === undefined ? '' : this.toAddress,
-        value: this.value === undefined ? 0 : unit.toWei(new BigNumber(this.value), 'ether'),
-        gasPrice: this.gasLimit,
-        nonce: this.$store.state.account.nonce + 1,
-        data: this.data === undefined ? '0x' : this.data
-      }
-
-      this.gasPrice = await this.$store.state.web3.eth.estimateGas(txObject).then(res => {
-        return res
-      }).catch(err => console.log(err))
     }
   },
   watch: {
-    toAddress (newVal) {
-      if (this.$store.state.online && web3.utils.isAddress(newVal)) {
-        this.generateGasEstimate()
-      }
-    },
-    nonce (newVal) {
-      this.$store.dispatch('setAccountNonce', Number(newVal))
+    locNonce (newVal) {
+      this.$emit('nonceUpdate', newVal)
     },
     gasPrice (newVal) {
       this.$emit('gasLimitUpdate', newVal)
-    },
-    toAmt (newVal) {
-      console.log(unit.toWei(new BigNumber(newVal), 'ether'))
     }
   }
 }
