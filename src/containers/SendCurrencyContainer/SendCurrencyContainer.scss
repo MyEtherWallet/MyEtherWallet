@@ -10,7 +10,7 @@
   }
 
   .content-title {
-    // box-shadow: 0 1px 1px $box-shadow-color-2;
+
     border-bottom: 2px solid $background-color-1;
     padding: 17px 0;
 
@@ -34,9 +34,9 @@
       margin-bottom: 10px;
 
       .title {
-        padding: 0 8px;
-        align-items: center;
         display: flex;
+        flex-direction: column;
+        padding: 0 8px;
 
         .title-button {
           color: $text--link-color;
@@ -155,11 +155,12 @@
 
         .address-block {
           height: 98px;
+          position: relative;
 
           i {
-            bottom: 42px;
+            bottom: 10px;
             position: absolute;
-            right: 13px;
+            right: 10px;
           }
 
           textarea {
@@ -239,9 +240,9 @@
             margin-right: 15px;
           }
         }
-      } // .title-container
-    } //.advanced-content
-  } // .advanced
+      }
+    }
+  }
 
   .submit-button-container {
     padding: 60px 0;

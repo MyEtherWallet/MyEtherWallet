@@ -85,10 +85,6 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import "ConfirmModal.scss";
-</style>
-
 <script>
 import SuccessModal from '@/components/SuccessModal'
 
@@ -103,8 +99,12 @@ export default {
   },
   methods: {
     successModalOpen () {
-      this.$refs[0].success.show()
+      this.$children[0].$refs.success.show()
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "ConfirmModal.scss";
+</style>
