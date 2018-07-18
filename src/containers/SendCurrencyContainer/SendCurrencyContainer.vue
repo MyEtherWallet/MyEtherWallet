@@ -107,7 +107,7 @@
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
+      <div class="submit-button large-round-button-green-filled clickable" @click="confirmationModalOpen">
         {{ $t('interface.sendTx') }}
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -155,7 +155,7 @@ export default {
       document.execCommand('copy')
     },
     confirmationModalOpen () {
-      this.$refs[0].confirmation.show()
+      this.$children[0].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val

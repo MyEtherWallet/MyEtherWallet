@@ -6,6 +6,7 @@
         <code>
           {{ signedTx }}
         </code>
+        <input ref="signedTxInput" style="position: absolute; top: 0; opacity: 0;" :value="signedTx"/>
       </div>
       <div class="with-toggle">
         <p class="title">
@@ -25,8 +26,8 @@
       </div>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
-        Copy It and Continue ------->
+      <b-btn class="mid-round-button-green-filled close-button" @click="copyAndContinue">
+        Copy It and Continue
       </b-btn>
     </div>
   </b-modal>
@@ -35,10 +36,17 @@
 <script type="text/javascript">
 export default {
   name: 'signed-tx-modal',
-  props: ['signedTx', 'rawTx'],
+  props: ['signedTx', 'rawTx', 'pathUpdate'],
   data () {
     return {
       showRaw: false
+    }
+  },
+  methods: {
+    copyAndContinue () {
+      this.$refs.signedTxInput.select()
+      document.execCommand('copy')
+      this.pathUpdate()
     }
   }
 }

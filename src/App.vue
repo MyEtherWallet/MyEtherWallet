@@ -35,7 +35,6 @@ export default {
       online: true,
       pageStates: {
         interface: {
-          sendOffline: store.get('sendOffline'),
           sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
       },
