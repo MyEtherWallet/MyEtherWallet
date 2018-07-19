@@ -39,12 +39,12 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import DappsContainer from '@/containers/DappsContainer'
-import DeployContractContainer from '@/containers/DeployContractContainer'
-import InteractWithContractContainer from '@/containers/InteractWithContractContainer'
-import SendCurrencyContainer from '@/containers/SendCurrencyContainer'
-import SendOfflineContainer from '@/containers/SendOfflineContainer'
-import SwapContainer from '@/containers/SwapContainer'
+import DappsContainer from './containers/DappsContainer'
+import DeployContractContainer from './containers/DeployContractContainer'
+import InteractWithContractContainer from './containers/InteractWithContractContainer'
+import SendCurrencyContainer from './containers/SendCurrencyContainer'
+import SendOfflineContainer from './containers/SendOfflineContainer'
+import SwapContainer from './containers/SwapContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
 import InterfaceBalance from './components/InterfaceBalance'

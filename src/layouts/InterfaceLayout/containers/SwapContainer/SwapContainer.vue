@@ -1,9 +1,6 @@
 <template>
   <div class="swap-container">
-    <div class="content-title">
-      <h2>{{ $t('reused.swap') }}</h2>
-      <img class="icon" src="~@/assets/images/etc/bity.png">
-    </div>
+    <interface-container-title :title="$t('reused.swap')"></interface-container-title>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
@@ -86,10 +83,12 @@
 </template>
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'interface-container-title': InterfaceContainerTitle
   },
   data () {
     return {

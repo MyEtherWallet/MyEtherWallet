@@ -109,14 +109,10 @@
       }
 
       .button {
-        // background-color: transparent;
-        // border: 1.5px solid $border-color-2;
-        // border-radius: 100px;
         color: $text-color-1;
         display: inline-block;
         font-size: 14px;
         font-weight: 500;
-        // padding: 15px 25px;
 
         img {
           margin-left: 5px;
@@ -124,6 +120,6 @@
           width: 20px;
         }
       }
-    } // .card-content
-  } // .card
-}// .promo-cards
+    }
+  }
+}

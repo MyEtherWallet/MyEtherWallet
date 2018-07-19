@@ -1,8 +1,6 @@
 <template>
   <div class="send-currency-container">
-    <div class="content-title">
-      <h2>{{ $t('reused.sendTx') }}</h2>
-    </div>
+    <interface-container-title :title="$t('reused.sendTx')"></interface-container-title>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
@@ -116,6 +114,7 @@
 </template>
 
 <script>
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
@@ -126,6 +125,7 @@ const unit = require('ethjs-unit')
 export default {
   props: ['address'],
   components: {
+    'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'confirm-modal': ConfirmModal,
     'blockie': Blockie

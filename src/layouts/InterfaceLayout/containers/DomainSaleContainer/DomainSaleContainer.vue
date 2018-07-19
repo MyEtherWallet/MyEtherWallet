@@ -1,12 +1,6 @@
 <template>
   <div class="domain-sale-container">
-    <div @click.prevent="resetView('')" class="back-container">
-      <div class="content-title">
-        <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
-        <p>{{ $t('reused.back') }}</p>
-      </div>
-    </div>
-
+    <back-button :resetView="resetView"></back-button>
     <div class="send-form">
       <div class="title-container">
         <div class="title">
@@ -54,11 +48,13 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import BackButton from '../../components/BackButton'
 
 export default {
   props: ['resetView'],
   components: {
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'back-button': BackButton
   },
   data () {
     return {

@@ -1,8 +1,6 @@
 <template>
   <div class="send-offline-container">
-    <div class="content-title">
-      <h2>{{ $t("reused.offline") }}</h2>
-    </div>
+    <interface-container-title :title="$t('reused.offline')"></interface-container-title>
 
     <div class="progress-status prevent-user-select">
       <div :class="[currentPage === 'genInfo' ? 'active' : '' ,'genInfo']" v-on:click="processChange('genInfo')">
@@ -33,12 +31,14 @@
 </template>
 
 <script>
-import GenerateInfo from './components/GenerateInfo'
-import GenerateTx from './components/GenerateTx'
-import SendTx from './components/SendTx'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import GenerateInfo from '../../components/GenerateInfo'
+import GenerateTx from '../../components/GenerateTx'
+import SendTx from '../../components/SendTx'
 
 export default {
   components: {
+    'interface-container-title': InterfaceContainerTitle,
     'generate-info': GenerateInfo,
     'generate-tx': GenerateTx,
     'send-tx': SendTx
