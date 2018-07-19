@@ -1,7 +1,7 @@
 <template>
-  <div class="transaction-info-blocks">
+  <div>
     <interface-network-modal></interface-network-modal>
-    <div v-on:click="networkModalOpen" class="wrap">
+    <div v-on:click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
           <img class="icon" src="~@/assets/images/icons/network.svg">
