@@ -1,0 +1,30 @@
+@import '~@/scss/CustomModal';
+
+.modal-metamask {
+  .modal-multi-icons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    margin-top: 20px;
+
+    img {
+      padding: 0 13px;
+    }
+
+    .logo-small {
+      max-height: 90px;
+    }
+  }
+
+  .content-container {
+    margin-bottom: 20px;
+
+    h4 {
+      font-weight: 400;
+      line-height: 22px;
+      margin: 0 auto 40px;
+      max-width: 340px;
+    }
+  }
+}

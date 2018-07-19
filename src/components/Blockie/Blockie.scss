@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+
+.address-identicon {
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  box-shadow: inset $opaque-white-1 0 2px 2px, inset $opaque-black-8 0 -1px 8px;
+  height: 100%;
+  // padding-bottom: 100%;
+  width: 100%;
+}
