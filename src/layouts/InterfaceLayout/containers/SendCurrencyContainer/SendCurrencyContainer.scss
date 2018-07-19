@@ -1,50 +1,34 @@
-@import '~@/scss/GlobalVariables';
+@import '../InterfaceContainer';
 
-.swap-container {
-  border-radius: 5px;
-  grid-area: main;
-  overflow: hidden;
-
-  >div {
-    background-color: $background-color-white;
-  }
-
-  .content-title {
-    // box-shadow: 0 1px 1px $box-shadow-color-2;
-    border-bottom: 2px solid $background-color-1;
-    display: flex;
-    padding: 17px 0;
-
-    h2 {
-      border-left: 5px solid $background-color-2;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 37px;
-      margin: 0;
-      padding: 0;
-      padding-left: 27px;
-    }
-
-    img {
-      height: 40px;
-      margin-left: auto;
-      margin-right: 30px;
-    }
-  }
+.send-currency-container {
+  @extend %interface-container;
 
   .send-form {
-    padding: 40px 60px 0;
+    @extend %send-form-base;
 
     .title-container {
-      align-items: flex-end;
-      display: flex;
-      margin-bottom: 10px;
-
       .title {
+        display: flex;
+        flex-direction: column;
         padding: 0 8px;
 
-        h4 {
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
+
+        .title-helper {
+          display: flex;
           margin-bottom: 2px;
+
+          h4 {
+            margin-right: 5px;
+          }
         }
       }
 
@@ -55,29 +39,29 @@
     }
 
     .form-block {
-      border-radius: 5px;
-
-      .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
-      }
+      @extend %form-block-base;
     }
 
     .amount-to-address {
       display: grid;
       grid-column-gap: 5px;
-      grid-template-columns: 1fr 70px 1fr;
+      grid-template-columns: 2fr 3fr;
 
       .title {
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 13px;
         padding: 0 8px;
-      }
 
-      .exchange-icon {
-        color: $text-color-9;
-        font-size: 30px;
-        padding-top: 62px;
-        text-align: center;
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
       }
 
       .amount {
@@ -92,6 +76,10 @@
             position: absolute;
             top: 16px;
           }
+        }
+
+        &:hover {
+          color: $text-black;
         }
 
         .amount-number {
@@ -136,11 +124,12 @@
 
         .address-block {
           height: 98px;
+          position: relative;
 
           i {
-            bottom: 13px;
+            bottom: 10px;
             position: absolute;
-            right: 13px;
+            right: 10px;
           }
 
           textarea {
@@ -155,7 +144,8 @@
       }
     }
 
-    .gas-amount {
+    .gas-amount,
+    .user-input {
       position: relative;
 
       input {
@@ -193,30 +183,39 @@
     .advanced-content {
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
-      display: flex;
-      padding: 0 8px;
-      padding-bottom: 20px;
-      padding-top: 20px;
 
-      .toggle-button {
-        align-items: center;
+      .input-container {
+        padding-bottom: 10px;
+
+        .the-form:nth-child(1) {
+          margin-bottom: 5px;
+        }
+
+      }
+
+      .title {
         display: flex;
-        margin-left: auto;
+        padding: 0 8px;
+        padding-bottom: 20px;
+        padding-top: 20px;
 
-        >span {
-          margin-right: 15px;
+        .toggle-button {
+          align-items: center;
+          display: flex;
+          margin-left: auto;
+          user-select: none;
+
+          >span {
+            margin-right: 15px;
+          }
         }
       }
     }
-  } // .advanced
+  }
 
   .submit-button-container {
-    padding: 40px 0;
+    padding: 60px 0;
     text-align: center;
-
-    h4 {
-      margin-bottom: 20px;
-    }
 
     .submit-button {
       margin: 0 auto;
@@ -227,5 +226,9 @@
     p {
       margin-top: 20px;
     }
+  }
+
+  .tokens {
+    border-radius: 5px;
   }
 }

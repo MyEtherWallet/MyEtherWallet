@@ -1,28 +1,7 @@
-@import '~@/scss/GlobalVariables';
+@import '../InterfaceContainer';
 
 .send-offline-container {
-  border-radius: 5px;
-  grid-area: main;
-  overflow: hidden;
-
-  > div {
-    background-color: $background-color-white;
-  }
-
-  .content-title {
-    border-bottom: 1px solid $opaque-black-9;
-    padding: 17px 0;
-
-    h2 {
-      border-left: 5px solid $background-color-2;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 37px;
-      margin: 0;
-      padding: 0;
-      padding-left: 27px;
-    }
-  }
+  @extend %interface-container;
 
   .progress-status {
     background-color: $background-color-5;

@@ -9,45 +9,6 @@
     background-color: $background-color-white;
   }
 
-  .content-title {
-    align-items: center;
-    background-color: $background-color-white;
-    border-bottom: 2px solid $background-color-1;
-    display: flex;
-    padding: 20px 25px;
-
-    i {
-      color: $text-black;
-      font-size: 30px;
-      margin-right: 10px;
-    }
-
-    p {
-      color: $text-black;
-      font-weight: 500;
-    }
-
-    h2 {
-      border-left: 5px solid $background-color-2;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 37px;
-      margin: 0;
-      padding: 0;
-      padding-left: 27px;
-    }
-
-    img {
-      height: 40px;
-      margin-left: auto;
-      margin-right: 30px;
-    }
-  }
-
-  .bottom-text {
-    text-align: center;
-  }
-
   .submit-button {
     margin: 0 auto;
     text-align: center;
@@ -302,8 +263,4 @@
     } // .flex-container
 
   } // .submit-button-container
-}
-
-.back-container {
-  cursor: pointer;
 }

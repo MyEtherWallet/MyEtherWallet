@@ -1,0 +1,19 @@
+@import '~@/scss/GlobalVariables';
+
+.content-title {
+  align-items: center;
+  background-color: $background-color-white;
+  border-bottom: 2px solid $background-color-1;
+  display: flex;
+  padding: 20px 0;
+
+  h2 {
+    border-left: 5px solid $background-color-2;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 37px;
+    margin: 0;
+    padding: 0;
+    padding-left: 27px;
+  }
+}

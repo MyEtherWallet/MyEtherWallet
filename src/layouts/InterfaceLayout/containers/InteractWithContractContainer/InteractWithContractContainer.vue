@@ -1,8 +1,6 @@
 <template>
   <div class="interact-with-contract-container">
-    <div class="content-title">
-      <h2>{{ $t('reused.interactWcontract') }}</h2>
-    </div>
+    <interface-container-title :title="$t('reused.interactWcontract')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">
@@ -46,10 +44,12 @@
 </template>
 
 <script>
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
 export default {
   components: {
+    'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText
   },
   data () {

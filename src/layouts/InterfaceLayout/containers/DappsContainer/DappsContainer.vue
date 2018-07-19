@@ -1,9 +1,7 @@
 <template>
   <div class="dapps-container">
     <div v-show="selectedDapp === ''">
-      <div class="content-title">
-        <h2>{{ $t('reused.dapps') }}</h2>
-      </div>
+      <interface-container-title :title="$t('reused.dapps')"></interface-container-title>
       <div class="buttons-container">
         <dapp-buttons v-for="dapp in dapps" :key="dapp.title" v-on:click="switchView(dapp.param)" :title="dapp.title" :icon="dapp.icon" :desc="dapp.desc"></dapp-buttons>
       </div>
@@ -14,14 +12,16 @@
 </template>
 
 <script>
-import DappButtons from './components/DappButtons'
-import DomainSaleContainer from './components/DomainSaleContainer'
-import RegisterDomainContainer from './components/RegisterDomainContainer'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import DappButtons from '../../components/DappButtons'
+import DomainSaleContainer from '../DomainSaleContainer'
+import RegisterDomainContainer from '../RegisterDomainContainer'
 
 import domainSale from '@/assets/images/icons/domain-sale.svg'
 import registerDomain from '@/assets/images/icons/domain.svg'
 export default {
   components: {
+    'interface-container-title': InterfaceContainerTitle,
     'dapp-buttons': DappButtons,
     'domain-sale-container': DomainSaleContainer,
     'register-domain-container': RegisterDomainContainer

@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import '../InterfaceContainer';
 
 .bootstrap-modal {
   .check-icon {
@@ -11,62 +11,13 @@
   }
 }
 
-.select-contract .dropdown-toggle {
-  border: 0;
-  display: none;
-}
-
 .deploy-contract-container {
-  border-radius: 5px;
-  grid-area: main;
-  overflow: hidden;
-
-  > div {
-    background-color: $background-color-white;
-  }
-
-  .content-title {
-    align-items: center;
-    background-color: $background-color-white;
-    border-bottom: 2px solid $background-color-1;
-    display: flex;
-    padding: 20px 0;
-
-    i {
-      color: $text-black;
-      font-size: 30px;
-      margin-right: 10px;
-    }
-
-    p {
-      color: $text-black;
-      font-weight: 500;
-    }
-
-    h2 {
-      border-left: 5px solid $background-color-2;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 37px;
-      margin: 0;
-      padding: 0;
-      padding-left: 27px;
-    }
-
-    img {
-      height: 40px;
-      margin-left: auto;
-      margin-right: 30px;
-    }
-  }
+  @extend %interface-container;
 
   .send-form {
-    padding: 40px 60px 0;
+    @extend %send-form-base;
 
     .title-container {
-      align-items: flex-end;
-      display: flex;
-      margin-bottom: 5px;
 
       .title {
         align-items: flex-end;
@@ -101,12 +52,7 @@
     }
 
     .form-block {
-      border-radius: 5px;
-
-      .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
-      }
+      @extend %form-block-base;
     }
 
     .domain-name {

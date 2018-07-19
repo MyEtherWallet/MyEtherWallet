@@ -27,6 +27,17 @@
     font-weight: 300;
   }
 
+  .balance-text {
+    font-size: 20px;
+    font-weight: 300;
+
+    p:first-child {
+      font-size: 20px;
+      text-overflow: ellipsis;
+      word-wrap: normal;
+    }
+  }
+
   p {
     color: $text-white;
     font-weight: 300;
@@ -40,6 +51,7 @@
     height: 90px;
     justify-content: center;
     margin-right: 15px;
+    position: relative;
   }
 
   .block-content {

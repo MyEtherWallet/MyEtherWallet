@@ -1,60 +1,18 @@
-@import '~@/scss/GlobalVariables';
+@import '../InterfaceContainer';
 
-.send-currency-container {
-  border-radius: 5px;
-  grid-area: main;
-  overflow: hidden;
+.swap-container {
+  @extend %interface-container;
 
-  > div {
-    background-color: $background-color-white;
-  }
-
-  .content-title {
-
-    border-bottom: 2px solid $background-color-1;
-    padding: 17px 0;
-
-    h2 {
-      border-left: 5px solid $background-color-2;
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 37px;
-      margin: 0;
-      padding: 0;
-      padding-left: 27px;
-    }
-  }
 
   .send-form {
-    padding: 40px 60px 0;
+    @extend %send-form-base;
 
     .title-container {
-      align-items: flex-end;
-      display: flex;
-      margin-bottom: 10px;
-
       .title {
-        display: flex;
-        flex-direction: column;
         padding: 0 8px;
 
-        .title-button {
-          color: $text--link-color;
-          cursor: pointer;
-          margin-left: auto;
-
-          &:hover {
-            color: $text-black;
-          }
-        }
-
-        .title-helper {
-          display: flex;
+        h4 {
           margin-bottom: 2px;
-
-          h4 {
-            margin-right: 5px;
-          }
         }
       }
 
@@ -65,34 +23,24 @@
     }
 
     .form-block {
-      border-radius: 5px;
-
-      .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
-      }
+      @extend %form-block-base;
     }
 
     .amount-to-address {
       display: grid;
       grid-column-gap: 5px;
-      grid-template-columns: 2fr 3fr;
+      grid-template-columns: 1fr 70px 1fr;
 
       .title {
-        display: flex;
-        justify-content: space-between;
         margin-bottom: 13px;
         padding: 0 8px;
+      }
 
-        .title-button {
-          color: $text--link-color;
-          cursor: pointer;
-          margin-left: auto;
-
-          &:hover {
-            color: $text-black;
-          }
-        }
+      .exchange-icon {
+        color: $text-color-9;
+        font-size: 30px;
+        padding-top: 62px;
+        text-align: center;
       }
 
       .amount {
@@ -107,10 +55,6 @@
             position: absolute;
             top: 16px;
           }
-        }
-
-        &:hover {
-          color: $text-black;
         }
 
         .amount-number {
@@ -155,12 +99,11 @@
 
         .address-block {
           height: 98px;
-          position: relative;
 
           i {
-            bottom: 10px;
+            bottom: 13px;
             position: absolute;
-            right: 10px;
+            right: 13px;
           }
 
           textarea {
@@ -175,8 +118,7 @@
       }
     }
 
-    .gas-amount,
-    .user-input {
+    .gas-amount {
       position: relative;
 
       input {
@@ -214,39 +156,30 @@
     .advanced-content {
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
+      display: flex;
+      padding: 0 8px;
+      padding-bottom: 20px;
+      padding-top: 20px;
 
-      .input-container {
-        padding-bottom: 10px;
-
-        .the-form:nth-child(1) {
-          margin-bottom: 5px;
-        }
-
-      }
-
-      .title {
+      .toggle-button {
+        align-items: center;
         display: flex;
-        padding: 0 8px;
-        padding-bottom: 20px;
-        padding-top: 20px;
+        margin-left: auto;
 
-        .toggle-button {
-          align-items: center;
-          display: flex;
-          margin-left: auto;
-          user-select: none;
-
-          >span {
-            margin-right: 15px;
-          }
+        >span {
+          margin-right: 15px;
         }
       }
     }
-  }
+  } // .advanced
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 40px 0;
     text-align: center;
+
+    h4 {
+      margin-bottom: 20px;
+    }
 
     .submit-button {
       margin: 0 auto;
@@ -257,9 +190,5 @@
     p {
       margin-top: 20px;
     }
-  }
-
-  .tokens {
-    border-radius: 5px;
   }
 }

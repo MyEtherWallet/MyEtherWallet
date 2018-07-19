@@ -1,9 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <div class="content-title">
-      <h2>{{ $t('reused.depContract') }}</h2>
-    </div>
+    <interface-container-title :title="$t('reused.depContract')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">
@@ -79,14 +77,16 @@
 </template>
 
 <script>
-import SuccessModal from '@/components/SuccessModal'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import SuccessModal from '@/components/SuccessModal'
 
 export default {
   name: 'Interact',
   components: {
-    'success-modal': SuccessModal,
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'interface-container-title': InterfaceContainerTitle,
+    'success-modal': SuccessModal
   },
   data () {
     return {

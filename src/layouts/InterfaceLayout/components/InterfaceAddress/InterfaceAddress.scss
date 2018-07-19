@@ -4,6 +4,12 @@
   background-color: $transaction-block-address;
 }
 
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: 1;
+}
+
 .custom-tooltip {
   background: none;
   border: 0;
