@@ -28,13 +28,18 @@
   }
 
   .balance-text {
+    display: flex;
     font-size: 20px;
     font-weight: 300;
 
-    p:first-child {
+    p {
       font-size: 20px;
       text-overflow: ellipsis;
       word-wrap: normal;
+    }
+
+    p:first-child {
+      width: 150px;
     }
   }
 
