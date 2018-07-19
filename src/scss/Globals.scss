@@ -100,7 +100,7 @@ body {
 }
 
 *:focus {
-  outline: none;
+  outline: 0 !important;
 }
 
 .prevent-pointer-events {
@@ -120,10 +120,10 @@ textarea {
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 // *********************************************************************
@@ -138,22 +138,19 @@ input[type=number]::-webkit-outer-spin-button {
 
 // Track
 ::-webkit-scrollbar-track {
-  $background-color: #f1f1f1;
-  background: $background-color;
+  background: $light-grey-9;
   border-radius: 10px;
 }
 
 // Handle
 ::-webkit-scrollbar-thumb {
-  $background-color: #888;
-  background: $background-color;
+  background: $dark-grey-8;
   border-radius: 10px;
 }
 
 // Handle on hover
 ::-webkit-scrollbar-thumb:hover {
-  $background-color: #555;
-  background: $background-color;
+  background: $dark-grey-9;
   border-radius: 10px;
 }
 
@@ -184,7 +181,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   .dropdown.open .dropdown-toggle {
-    border: 1px solid rgba(60,60,60,.26) !important;
+    border: 1px solid $opaque-grey !important;
   }
 }
 
@@ -237,10 +234,6 @@ a {
 // *********************************************************************
 .hidden {
   display: none;
-}
-
-.clickable {
-  cursor: pointer;
 }
 
 .page-container {
@@ -408,6 +401,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .large-round-button-green-border {
@@ -419,6 +413,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 
@@ -431,6 +426,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
+  user-select: none;
 }
 
 .mid-round-button-green-border {
@@ -442,6 +438,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 15px 40px;
+  user-select: none;
 }
 
 .large-round-button-white-filled {
@@ -452,6 +449,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .large-round-button-white-border {
@@ -462,6 +460,7 @@ h6 {
   font-size: 14px;
   font-weight: 500;
   padding: 21px 55px;
+  user-select: none;
 }
 
 .small-circle-button-green-border {
@@ -476,6 +475,7 @@ h6 {
   min-width: 70px;
   padding: 6px 0;
   text-align: center;
+  user-select: none;
 
   &.active {
     background-color: $button--background-color-1;
@@ -496,6 +496,7 @@ h6 {
   min-width: 56px;
   padding: 4px 0;
   text-align: center;
+  user-select: none;
 
   &.active {
     background-color: $button--background-color-1;
@@ -516,6 +517,7 @@ h6 {
   min-width: 80px;
   padding: 7px 0;
   text-align: center;
+  user-select: none;
 }
 
 .very-small-circle-button-green-filled {
@@ -530,6 +532,7 @@ h6 {
   min-width: 56px;
   padding: 4px 0;
   text-align: center;
+  user-select: none;
 }
 
 
@@ -593,7 +596,7 @@ h6 {
 // *********************************************************************
 
 .popover {
-  pointer-events: none;  
+  pointer-events: none;
 }
 
 .tooltip {
@@ -604,7 +607,7 @@ h6 {
 
   .arrow::before {
     border-top-color: $background-color-white;
-  }  
+  }
 
   .tooltip-inner {
     background-color: $background-color-white;
@@ -614,21 +617,39 @@ h6 {
   }
 }
 
+.qrcode-modal {
+  .popover {
+    max-width: 180px;
+  }
+}
+
 .tooltip-box-1 {
   button {
     background-color: $button--background-color-1;
-    border-radius: 100px;
     border: 0;
-    padding: 0;
+    border-radius: 100px;
     height: 15px;
-    width: 15px;
     line-height: 15px;
+    padding: 0;
+    width: 15px;
 
     &::after {
-      font-weight: 600;
       content: '!';
       font-size: 13px;
+      font-weight: 600;
       padding: 0;
+    }
+  }
+}
+
+.tooltip-box-2 {
+  button {
+    background-color: $text-white;
+    border: 0;
+    padding: 0;
+
+    &:hover {
+      background-color: $text-white;
     }
   }
 }
@@ -968,7 +989,7 @@ h6 {
 
   // On mouse-over, add a grey background color
   &:hover input ~ .checkmark {
-    $check-box-hover-color: #ccc;
+    $check-box-hover-color: $light-grey-12;
     background-color: $check-box-hover-color;
   }
 
@@ -984,7 +1005,7 @@ h6 {
 
   // Create a custom checkbox
   .checkmark {
-    $unchecked-box-color: #eee;
+    $unchecked-box-color: $light-grey-13;
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 22px;
@@ -1010,7 +1031,7 @@ h6 {
   }
 
   .checkmark-small {
-    $unchecked-box-color: #eee;
+    $unchecked-box-color: $light-grey-13;
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 19px;
@@ -1072,7 +1093,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    $border-color: #8a8a8a;
+    $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
@@ -1104,7 +1125,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle,
   .v-select .dropdown-menu {
-    $border-color: #8a8a8a;
+    $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
@@ -1147,7 +1168,7 @@ h6 {
 }
 
 .good-button {
-  color: $text-color-3;
+  color: $button--background-color-1;
   display: inline-block;
   font-size: 20px;
 
@@ -1200,3 +1221,8 @@ h6 {
   color: $link-text-color-1;
 }
 
+
+.disabled {
+  background-color: $light-grey-12;
+  pointer-events: none;
+}

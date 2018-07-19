@@ -11,11 +11,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
+
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : require('../config/prod.env');
 
-const webpackConfig = merge(baseWebpackConfig, {
+const webpackConfig = [merge(baseWebpackConfig, {
+  name: "version5",
   mode: "production",
   module: {
     rules: utils.styleLoaders({
@@ -173,12 +175,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       }),
     ],
   },
-})
+})]
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
-  webpackConfig.plugins.push(
+  webpackConfig[0].plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
@@ -195,7 +197,7 @@ if (config.build.productionGzip) {
 
 if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+  webpackConfig[0].plugins.push(new BundleAnalyzerPlugin())
 }
 
 module.exports = webpackConfig;

@@ -1,0 +1,36 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  background-color: $price-bar-background-color;
+  overflow: none;
+}
+
+.slider-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.token-container {
+  border-right: 1px solid $text-white;
+  color: $text-white;
+  flex: 33;
+  padding: 0 60px;
+
+  .token-text {
+    color: $text-white;
+    font-size: 10px;
+  }
+
+  .percent-container {
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+
+    span {
+      font-size: 10px;
+    }
+  }
+}

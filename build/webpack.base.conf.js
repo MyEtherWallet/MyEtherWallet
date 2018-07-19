@@ -4,6 +4,7 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const {VueLoaderPlugin} = require('vue-loader')
+const Dotenv = require('dotenv-webpack')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -16,7 +17,8 @@ const createLintingRule = () => ({
   include: [resolve('src'), resolve('test')],
   options: {
     formatter: require('eslint-friendly-formatter'),
-    emitWarning: !config.dev.showEslintErrorsInOverlay
+    emitWarning: !config.dev.showEslintErrorsInOverlay,
+    fix: true
   }
 })
 
@@ -28,12 +30,17 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    globalObject: 'this',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
   plugins: [
     new VueLoaderPlugin(),
+    new Dotenv({
+      systemvars: true,
+      silent: true
+    }),
   ],
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -46,6 +53,10 @@ module.exports = {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
@@ -53,7 +64,8 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')],
+        exclude: [resolve('workers')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
