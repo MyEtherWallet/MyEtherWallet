@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import SuccessModal from '@/components/SuccessModal'
+// import SuccessModal from '@/components/SuccessModal'
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 
