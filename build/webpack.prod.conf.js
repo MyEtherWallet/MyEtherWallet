@@ -10,6 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const safeParser = require('postcss-safe-parser')
 
 
 const env = process.env.NODE_ENV === 'testing'
@@ -70,8 +71,8 @@ const webpackConfig = [merge(baseWebpackConfig, {
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true }
+        ? { parser: safeParser, map: { inline: false } }
+        : { parser: safeParser }
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
