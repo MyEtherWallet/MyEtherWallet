@@ -15,7 +15,7 @@
         <div class="the-form gas-amount">
           <input ref="fromaddress" type="text" placeholder="From Address" :value="$store.state.wallet.getAddressString()">
           <div class="good-button-container">
-            <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+            <i :class="[!checkAddress() ? 'not-good' : '', 'fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
         </div>
       </div>
@@ -47,7 +47,8 @@ export default {
   },
   data () {
     return {
-      moreInfoGenerated: false
+      moreInfoGenerated: false,
+      isValid: false
     }
   },
   methods: {
@@ -69,6 +70,9 @@ export default {
     },
     nonceUpdated (e) {
       this.$emit('nonceUpdate', e)
+    },
+    checkAddress () {
+      return this.$store.state.web3.utils.isAddress(this.$store.state.wallet.getAddressString())
     }
   }
 }
