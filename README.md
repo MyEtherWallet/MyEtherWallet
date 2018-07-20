@@ -1,5 +1,4 @@
-## !["MyEtherWallet Logo](./src/assets/images/logo.png "MyEtherWallet")  
-
+<img src="./src/assets/images/logo.png" width="300px"/>
 
 
 [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
