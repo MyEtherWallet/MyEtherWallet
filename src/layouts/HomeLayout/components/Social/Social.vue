@@ -23,7 +23,6 @@
 
 <script>
 import github from '@/assets/images/icons/github.png'
-import telegram from '@/assets/images/icons/telegram.png'
 import reddit from '@/assets/images/icons/reddit.png'
 import slack from '@/assets/images/icons/slack.png'
 
@@ -31,11 +30,6 @@ export default {
   data () {
     return {
       links: [
-        {
-          img: telegram,
-          to: 'https://www.google.com',
-          name: 'telegram'
-        },
         {
           img: slack,
           to: 'https://www.google.com',
