@@ -103,7 +103,7 @@ export default {
     },
     async setTokens () {
       const hex = await this.fetchTokens()
-      if (this.tokens.length > 0) {
+      if (this.tokens.length === 0) {
         this.tokens = parseTokensHex(hex.result).sort((a, b) => {
           if (a.name.toUpperCase() < b.name.toUpperCase()) {
             return -1
@@ -117,7 +117,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$store.state.online) {
+    if (this.$store.state.online && this.$store.state.network.type.chainID === 1) {
       this.setTokens()
     }
   },
