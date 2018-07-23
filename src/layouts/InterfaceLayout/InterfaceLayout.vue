@@ -15,7 +15,7 @@
           <div>
             <interface-network :blockNumber="blockNumber" />
           </div>
-          <send-currency-container :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
+          <send-currency-container :tokensWithBalance="tokens.filter(token => token.balance !== 0)" :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
