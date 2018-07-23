@@ -39,14 +39,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
-import { parseTokensHex } from '@/helpers'
 export default {
+  props: ['tokens', 'receivedTokens'],
   data () {
     return {
-      tokens: [],
-      receivedTokens: false
     }
   },
   methods: {
@@ -54,43 +50,6 @@ export default {
       this.$refs.tokenTableContainer.classList.toggle('expanded')
       this.$refs.expendDown.classList.toggle('hidden')
       this.$refs.expendUp.classList.toggle('hidden')
-    },
-    async fetchTokens () {
-      if (this.$store.state.network.type.name === 'ETH') {
-        this.receivedTokens = true
-        const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
-        const userAddress = this.$store.state.wallet
-          .getAddress()
-          .toString('hex')
-        const data = `0x80f4ae5c000000000000000000000000${userAddress}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
-
-        const body = {
-          jsonrpc: '2.0',
-          method: 'eth_call',
-          params: [{ to: toAddress, data: data }, 'pending'],
-          id: 0
-        }
-
-        const config = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        }
-
-        const response = await fetch(this.$store.state.network.url, config)
-          .then(res => {
-            return res.json()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        return response
-      } else {
-        this.receivedTokens = false
-        return this.$store.state.network.type.tokens
-      }
     },
     search (str) {
       return this.tokens.filter(item => {
@@ -100,39 +59,7 @@ export default {
           return item
         }
       })
-    },
-    async setTokens () {
-      const hex = await this.fetchTokens()
-      if (this.tokens.length === 0) {
-        this.tokens = parseTokensHex(hex.result).sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1
-          } else {
-            return 0
-          }
-        })
-      }
     }
-  },
-  mounted () {
-    if (this.$store.state.online && this.$store.state.network.type.chainID === 1) {
-      this.setTokens()
-    }
-  },
-  watch: {
-    tokens (newVal) {
-      this.tokens = newVal
-    },
-    network (newVal) {
-      this.setTokens()
-    }
-  },
-  computed: {
-    ...mapGetters({
-      network: 'network'
-    })
   }
 }
 </script>
