@@ -10,7 +10,7 @@
              <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
           <div class="dropdown-select-search-1">
-            <v-select :options="['foo','bar']"></v-select>
+            <v-select :options="tokens"></v-select>
             <i class="fa fa-search" aria-hidden="true"></i>
           </div>
           <div class="the-form amount-number">
@@ -123,7 +123,7 @@ import Blockie from '@/components/Blockie'
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['address'],
+  props: ['address', 'tokensWithBalance'],
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
@@ -142,12 +142,7 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      coinType: [
-        {label: 'ETH', value: 'eth'},
-        {label: '$FFC', value: 'ffc'},
-        {label: '$FYX', value: 'fyx'},
-        {label: '0xBTC', value: 'oxbtc'}
-      ]
+      tokens: []
     }
   },
   methods: {
@@ -193,6 +188,9 @@ export default {
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+    this.tokens = this.tokensWithBalance
+    this.tokens.push({name: 'ETH'})
+    console.log(this.tokens)
   },
   watch: {
     toAddress (newVal) {
