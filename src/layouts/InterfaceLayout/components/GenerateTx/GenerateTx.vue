@@ -8,10 +8,7 @@
             <div class="title">
               <h4>Amount</h4>
             </div>
-            <div class="dropdown-select-search-1">
-              <v-select :options="coinType" v-model="selectedCoinType"></v-select>
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </div>
+            <currency-picker :currency="coinType" page="sendOfflineGenTx" :token="true"></currency-picker>
             <div class="the-form amount-number">
               <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount">
               <i :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
@@ -78,6 +75,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import TxSpeedInput from '../../components/TxSpeedInput'
+import CurrencyPicker from '../CurrencyPicker'
 import SignedTxModal from '../../components/SignedTxModal'
 import Blockie from '@/components/Blockie'
 // eslint-disable-next-line
@@ -91,7 +89,8 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
     'blockie': Blockie,
-    'signed-tx-modal': SignedTxModal
+    'signed-tx-modal': SignedTxModal,
+    'currency-picker': CurrencyPicker
   },
   data () {
     return {
@@ -101,10 +100,9 @@ export default {
       parsedBalance: 0,
       localGas: this.gasLimit,
       coinType: [
-        {label: 'ETH', value: 'eth'},
-        {label: '$FFC', value: 'ffc'},
-        {label: '$FYX', value: 'fyx'},
-        {label: '0xBTC', value: 'oxbtc'}
+        {symbol: '$FFC', name: 'ffc'},
+        {symbol: '$FYX', name: 'fyx'},
+        {symbol: '0xBTC', name: 'oxbtc'}
       ],
       selectedCoinType: '',
       raw: '',

@@ -7,7 +7,7 @@
         <div class="title">
           <h4>{{ $t('interface.contractAddr') }}</h4>
           <div class="select-contract no-border">
-            <v-select :options="existingContracts" placeholder="Choose existing contract"></v-select>
+            <currency-picker :currency="existingContracts" page="interactWContract" :token="false"></currency-picker>
           </div>
         </div>
       </div>
@@ -44,31 +44,33 @@
 </template>
 
 <script>
+import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'currency-picker': CurrencyPicker
   },
   data () {
     return {
       existingContracts: [
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          name: 'Battle Of Thermopy wefweoifjwfo ewrofijweo',
           value: '1'
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          name: 'Battle Of Thermopy wefweoifjwfo ewrofijweo g',
           value: '2'
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          name: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
           value: '3'
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
+          name: 'Battle Of Thermopy wefweoifjwfo ewrofijw',
           value: '4'
         }
       ]

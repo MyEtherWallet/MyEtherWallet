@@ -9,10 +9,7 @@
             <h4>Amount</h4>
              <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
-          <div class="dropdown-select-search-1">
-            <v-select :options="tokens"></v-select>
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </div>
+          <currency-picker :currency="tokensWithBalance" :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" v-model="amount" placeholder="Amount">
             <i :class="[parsedBalance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
@@ -115,6 +112,7 @@
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
@@ -128,7 +126,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'confirm-modal': ConfirmModal,
-    'blockie': Blockie
+    'blockie': Blockie,
+    'currency-picker': CurrencyPicker
   },
   data () {
     return {
@@ -141,8 +140,7 @@ export default {
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
       toAddress: '',
-      transactionFee: 0,
-      tokens: []
+      transactionFee: 0
     }
   },
   methods: {
@@ -188,9 +186,6 @@ export default {
   },
   mounted () {
     this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
-    this.tokens = this.tokensWithBalance
-    this.tokens.push({name: 'ETH'})
-    console.log(this.tokens)
   },
   watch: {
     toAddress (newVal) {
