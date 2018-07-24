@@ -154,27 +154,6 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 10px;
 }
 
-.v-select {
-  .selected-tag {
-    overflow: hidden;
-    position: absolute;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 80%;
-  }
-
-  .clear {
-    display: none;
-  }
-
-  .dropdown-menu a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-  }
-}
-
 .no-border {
   .dropdown .dropdown-toggle {
     border: 0 !important;
@@ -1091,28 +1070,13 @@ h6 {
     padding-left: 30px;
   }
 
-  .dropdown.open .dropdown-toggle,
-  .v-select .dropdown-menu {
+  .dropdown.open .dropdown-toggle {
     $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
-  .v-select .dropdown-menu {
-    border-top: 0;
-  }
-
   .clear {
     display: none;
-  }
-
-  .v-select .open-indicator {
-    bottom: 4px;
-    cursor: pointer;
-    height: 25px;
-    opacity: 1;
-    pointer-events: all;
-    position: absolute;
-    right: 17px;
   }
 }
 
@@ -1123,28 +1087,13 @@ h6 {
     padding: 6px 5px;
   }
 
-  .dropdown.open .dropdown-toggle,
-  .v-select .dropdown-menu {
+  .dropdown.open .dropdown-toggle{
     $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
-  .v-select .dropdown-menu {
-    border-top: 0;
-  }
-
   .clear {
     display: none;
-  }
-
-  .v-select .open-indicator {
-    bottom: 4px;
-    cursor: pointer;
-    height: 25px;
-    opacity: 1;
-    pointer-events: all;
-    position: absolute;
-    right: 17px;
   }
 }
 
