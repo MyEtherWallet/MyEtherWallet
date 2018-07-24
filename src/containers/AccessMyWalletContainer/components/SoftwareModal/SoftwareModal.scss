@@ -9,40 +9,40 @@
 
     li {
       align-items: center;
-      color: $text--link-color;
+      color: $light-grey-11;
       cursor: pointer;
       display: flex;
       padding: 30px 0 30px 30px;
       text-align: left;
 
       span {
+        font-weight: 300;
         line-height: 16px;
       }
 
-      &:hover {
+      &.selected {
         box-shadow: 0 3px 15px $box-shadow-color-1;
         color: $text-black;
         font-weight: 500;
-
-        .icon {
-          display: none;
-        }
-
-        .icon-hover {
-          display: block;
-        }
       }
 
-      .icon,
-      .icon-hover {
+      .icon {
         margin-right: 8px;
         width: 50px;
       }
 
-      .icon-hover {
-        display: none;
-      }
+      // .icon-hover {
+      //   display: none;
+      // }
 
     }
+  }
+}
+
+.button-container {
+  width: 100%;
+
+  button {
+    width: inherit;
   }
 }
