@@ -29,10 +29,7 @@
     </div>
   </div>
   <div v-else>
-    <p> No wallet found </p>
-    <div>
-      Create Wallet | Access Wallet
-    </div>
+    <wallet-not-found-container></wallet-not-found-container>
   </div>
 </template>
 
@@ -46,6 +43,7 @@ import InteractWithContractContainer from './containers/InteractWithContractCont
 import SendCurrencyContainer from './containers/SendCurrencyContainer'
 import SendOfflineContainer from './containers/SendOfflineContainer'
 import SwapContainer from './containers/SwapContainer'
+import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
 import InterfaceBalance from './components/InterfaceBalance'
@@ -67,7 +65,8 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens
+    'interface-tokens': InterfaceTokens,
+    'wallet-not-found-container': WalletNotFoundContainer
   },
   data () {
     return {
