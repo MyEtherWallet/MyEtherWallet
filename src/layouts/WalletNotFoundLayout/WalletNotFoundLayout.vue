@@ -6,7 +6,14 @@
         <div class="content-block">
           <div class="block-title">Oops! Wallet not found :(</div>
           <div class="buttons">
-            <div class="mid-round-button-green-filled-green-border">Access My Wallet</div>
+
+            <router-link to="/create-wallet">
+              <div class="mid__round-button__blue-filled__blue-border">Get a Free Wallet</div>
+            </router-link>
+            <router-link to="/access-my-wallet">
+              <div class="mid-round-button-green-filled-green-border">Access My Wallet</div>
+            </router-link>
+
           </div>
           <div class="spaceman">
             <img src="~@/assets/images/home/spaceman.png">
