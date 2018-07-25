@@ -43,7 +43,9 @@ export default {
     }
   },
   mounted () {
-    this.currency.forEach(curr => this.localCurrency.push(curr))
+    if (this.currency) {
+      this.currency.forEach(curr => this.localCurrency.push(curr))
+    }
   },
   watch: {
     selectedCurrency (newVal) {
@@ -55,7 +57,7 @@ export default {
       } else {
         this.localCurrency = [{name: 'Select an item'}]
       }
-      this.newVal.forEach(curr => this.localCurrency.push(curr))
+      newVal.forEach(curr => this.localCurrency.push(curr))
     },
     search (newVal) {
       if (newVal !== '') {
