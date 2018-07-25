@@ -86,7 +86,7 @@ export default {
       store.set('sideMenu', param)
     },
     async fetchTokens () {
-      if (this.$store.state.network.type.name === 'ETH') {
+      if (this.network.type.name === 'ETH') {
         this.receivedTokens = true
         const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
         const userAddress = this.$store.state.wallet
@@ -109,7 +109,7 @@ export default {
           body: JSON.stringify(body)
         }
 
-        const response = await fetch(this.$store.state.network.url, config)
+        const response = await fetch(this.network.url, config)
           .then(res => {
             return res.json()
           })
@@ -119,7 +119,7 @@ export default {
         return response
       } else {
         this.receivedTokens = false
-        return this.$store.state.network.type.tokens
+        return this.network.type.tokens
       }
     },
     async setTokens () {
@@ -153,7 +153,7 @@ export default {
         body: JSON.stringify(body)
       }
 
-      this.blockNumber = await fetch(this.$store.state.network.url, config)
+      this.blockNumber = await fetch(this.network.url, config)
         .then(res => {
           return res.json()
         })
@@ -175,7 +175,7 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      this.balance = await fetch(this.$store.state.network.url, config)
+      this.balance = await fetch(this.network.url, config)
         .then(res => {
           this.getNonce()
           return res.json()
@@ -200,7 +200,7 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      const nonce = await fetch(this.$store.state.network.url, config)
+      const nonce = await fetch(this.network.url, config)
         .then(res => {
           return res.json()
         })
@@ -222,7 +222,7 @@ export default {
         this.getBalance()
       }
 
-      if (this.$store.state.network.type.chainID === 1) {
+      if (this.network.type.chainID === 1) {
         this.setTokens()
       }
       setInterval(this.getBlock, 14000)

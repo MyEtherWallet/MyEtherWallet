@@ -12,7 +12,7 @@
           </div>
           <div class="support">
             <router-link to="/">
-              <div><img src="~@/assets/images/home/bell.png"></div>
+              <div><img src="~@/assets/images/icons/help-center.svg"></div>
               <div><h5>{{ $t("reused.customerSupport") }}</h5></div>
             </router-link>
           </div>

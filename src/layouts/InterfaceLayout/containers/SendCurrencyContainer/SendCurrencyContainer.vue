@@ -111,6 +111,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
@@ -161,11 +163,14 @@ export default {
     estimateGas () {
       const raw = {
         from: this.$store.state.wallet.getAddressString(),
-        to: this.toAddress,
         value: this.amount,
         gas: unit.toWei(this.$store.state.gasPrice, 'gwei'),
         data: this.data,
         nonce: this.$store.state.account.nonce + 1
+      }
+
+      if (this.toAddress !== '') {
+        raw['to'] = this.toAddress
       }
 
       this.gasPrice = this.$store.state.web3.eth.estimateGas(raw).then(res => {
@@ -185,7 +190,7 @@ export default {
     }
   },
   mounted () {
-    this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
+    this.parsedBalance = unit.fromWei(parseInt(this.account.balance.result), 'ether')
   },
   watch: {
     toAddress (newVal) {
@@ -213,6 +218,11 @@ export default {
         this.estimateGas()
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    })
   }
 }
 </script>
