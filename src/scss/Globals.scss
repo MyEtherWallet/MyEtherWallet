@@ -368,7 +368,7 @@ h6 {
 
 
 // *********************************************************************
-// Standard button styles
+// Standard buttons
 // *********************************************************************
 
 .large-round-button-green-filled {
@@ -396,6 +396,28 @@ h6 {
 }
 
 
+.large-round-button-white-filled {
+  background-color: $button--background-color-2;
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
+.large-round-button-white-border {
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  color: $button--text-color-1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
 .mid-round-button-green-filled {
   background-color: $button--background-color-1;
   border: 1px solid $button--border-color-1;
@@ -420,26 +442,31 @@ h6 {
   user-select: none;
 }
 
-.large-round-button-white-filled {
-  background-color: $button--background-color-2;
-  border: 1px solid $button--border-color-1;
-  border-radius: 5px;
+.mid-round-button-green-filled-green-border {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-2;
+  border-radius: 6px;
+  color: $text-white;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  padding: 21px 55px;
+  padding: 15px 40px;
   user-select: none;
+  display: inline-block;
 }
 
-.large-round-button-white-border {
-  border: 1px solid $button--border-color-1;
-  border-radius: 5px;
-  color: $button--text-color-1;
+
+.mid__round-button__blue-filled__blue-border {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-2;
+  border-radius: 6px;
+  color: $text-white;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  padding: 21px 55px;
+  padding: 15px 40px;
   user-select: none;
+  display: inline-block;
 }
 
 .small-circle-button-green-border {
