@@ -217,15 +217,14 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
-    if (this.$store.state.online) {
-      if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+    if (this.$store.state.online === true) {
+      if (this.$store.state.wallet !== null) {
         this.getBalance()
+        setInterval(this.getBlock, 14000)
+        if (this.network.type.chainID === 1) {
+          this.setTokens()
+        }
       }
-
-      if (this.network.type.chainID === 1) {
-        this.setTokens()
-      }
-      setInterval(this.getBlock, 14000)
     }
   },
   computed: {
@@ -240,11 +239,16 @@ export default {
   },
   watch: {
     network (newVal) {
-      if (this.$store.state.online) {
-        this.getBalance()
-        this.getNonce()
-        this.getBlock()
-        this.setTokens()
+      if (this.$store.state.online === true) {
+        if (this.$store.state.wallet !== null) {
+          this.getBalance()
+          this.getNonce()
+          this.getBlock()
+          setInterval(this.getBlock, 14000)
+          if (this.network.type.chainID === 1) {
+            this.setTokens()
+          }
+        }
       }
     },
     tokens (newVal) {
