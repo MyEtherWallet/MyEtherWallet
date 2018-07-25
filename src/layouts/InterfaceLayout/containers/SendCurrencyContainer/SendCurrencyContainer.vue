@@ -9,7 +9,7 @@
             <h4>Amount</h4>
              <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
-          <currency-picker :currency="tokensWithBalance" :page="'sendEthAndTokens'" :token="true"></currency-picker>
+          <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" v-model="amount" placeholder="Amount">
             <i :class="[parsedBalance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
@@ -142,7 +142,8 @@ export default {
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
       toAddress: '',
-      transactionFee: 0
+      transactionFee: 0,
+      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'}
     }
   },
   methods: {
@@ -151,14 +152,21 @@ export default {
       document.execCommand('copy')
     },
     confirmationModalOpen () {
-      this.$children[4].$refs.confirmation.show()
+      this.$children[5].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
-      this.amount = this.parsedBalance - this.transactionFee
+      if (this.selectedCurrency.name === 'Ethereum') {
+        this.amount = this.parsedBalance - this.transactionFee
+      } else {
+        this.amount = this.selectedCurrency.balance - this.transactionFee
+      }
+    },
+    setSelectedCurrency (e) {
+      this.selectedCurrency = e
     },
     estimateGas () {
       const raw = {
@@ -190,6 +198,9 @@ export default {
     }
   },
   mounted () {
+    // const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+    // const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+    // console.log(contract.methods.transfer(this.toAddress))
     this.parsedBalance = unit.fromWei(parseInt(this.account.balance.result), 'ether')
   },
   watch: {
