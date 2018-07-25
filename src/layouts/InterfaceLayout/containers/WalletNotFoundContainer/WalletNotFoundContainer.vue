@@ -34,5 +34,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "WalletNotFoundLayout.scss";
+@import "WalletNotFoundContainer.scss";
 </style>
