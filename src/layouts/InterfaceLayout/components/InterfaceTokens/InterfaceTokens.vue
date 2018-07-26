@@ -79,6 +79,8 @@ export default {
             return token
           }
         })
+      } else {
+        this.localTokens = this.tokens
       }
     }
   }
