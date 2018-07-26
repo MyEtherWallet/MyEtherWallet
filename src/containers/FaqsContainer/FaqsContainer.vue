@@ -95,10 +95,12 @@
 
 <script>
 import FaqBlock from './components/FaqBlock'
+import FaqContents from '@/components/FaqContents'
 
 export default {
   components: {
-    'faq-block': FaqBlock
+    'faq-block': FaqBlock,
+    'FaqContents': FaqContents
   },
   methods: {
     openFAQ: function (faqToOpen) {
