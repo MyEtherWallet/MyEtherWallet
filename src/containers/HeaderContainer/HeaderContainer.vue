@@ -24,7 +24,7 @@
                   <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <!-- <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)"> -->
                         <p>{{ currentName }}</p>
                       </div>
                     </template>

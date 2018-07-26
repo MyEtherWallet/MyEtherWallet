@@ -17,9 +17,77 @@
             </router-link>
           </div>
         </div>
+
+        <div class="qa-cards">
+          <ul class="qa__contents">
+            <li>
+              <div v-on:click="openFAQ('faq1')" class="qa__contents--title">
+                <h3>Balances not loading or showing on MyEtherWallet</h3>
+                <div class="show-more-buttons">
+                  <span v-if="showFAQs.faq1 == false" class="show-more">+</span>
+                  <span v-if="showFAQs.faq1 == true" class="show-less">-</span>
+                </div>
+              </div>
+              <div v-if="showFAQs.faq1" class="qa__contents--content">
+                Hello
+              </div>
+            </li>
+            <li>
+              <div v-on:click="openFAQ('faq2')" class="qa__contents--title">
+                <h3>Does MyEtherWallet support Bitcoin or other coins (LTC STEEM ZEC)?</h3>
+                <div class="show-more-buttons">
+                  <span v-if="showFAQs.faq2 == false" class="show-more">+</span>
+                  <span v-if="showFAQs.faq2 == true" class="show-less">-</span>
+                </div>
+              </div>
+              <div v-if="showFAQs.faq2" class="qa__contents--content">
+                Hello
+              </div>
+            </li>
+            <li>
+              <div v-on:click="openFAQ('faq3')" class="qa__contents--title">
+                <h3>ETH or Tokens sent to or from exchange haven't shown up</h3>
+                <div class="show-more-buttons">
+                  <span v-if="showFAQs.faq3 == false" class="show-more">+</span>
+                  <span v-if="showFAQs.faq3 == true" class="show-less">-</span>
+                </div>
+              </div>
+              <div v-if="showFAQs.faq3" class="qa__contents--content">
+                Hello
+              </div>
+            </li>
+            <li>
+              <div v-on:click="openFAQ('faq4')" class="qa__contents--title">
+                <h3>Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?</h3>
+                <div class="show-more-buttons">
+                  <span v-if="showFAQs.faq4 == false" class="show-more">+</span>
+                  <span v-if="showFAQs.faq4 == true" class="show-less">-</span>
+                </div>
+              </div>
+              <div v-if="showFAQs.faq4" class="qa__contents--content">
+                Hello
+              </div>
+            </li>
+            <li>
+              <div v-on:click="openFAQ('faq5')" class="qa__contents--title">
+                <h3>What Is An ICO?</h3>
+                <div class="show-more-buttons">
+                  <span v-if="showFAQs.faq5 == false" class="show-more">+</span>
+                  <span v-if="showFAQs.faq5 == true" class="show-less">-</span>
+                </div>
+              </div>
+              <div v-if="showFAQs.faq5" class="qa__contents--content">
+                Hello
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!--
         <div class="grid-col-2 qa-cards">
           <faq-block v-for="(block, index) in blocks" :title="block.title" :articles="block.articles" :key="block.title + index"/>
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -32,8 +100,26 @@ export default {
   components: {
     'faq-block': FaqBlock
   },
+  methods: {
+    openFAQ: function (faqToOpen) {
+      var currentState = this.showFAQs[faqToOpen]
+      this.showFAQs.faq1 = false
+      this.showFAQs.faq2 = false
+      this.showFAQs.faq3 = false
+      this.showFAQs.faq4 = false
+      this.showFAQs.faq5 = false
+      this.showFAQs[faqToOpen] = !currentState
+    }
+  },
   data () {
     return {
+      showFAQs: {
+        faq1: false,
+        faq2: false,
+        faq3: false,
+        faq4: false,
+        faq5: false
+      },
       blocks: [
         {
           title: this.$t('faqs.gettingStarted'),
