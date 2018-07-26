@@ -246,6 +246,9 @@ export default {
           setInterval(this.getBlock, 14000)
           if (this.network.type.chainID === 1) {
             this.setTokens()
+          } else {
+            this.tokens = this.network.type.tokens
+            this.receivedTokens = false
           }
         }
       }
