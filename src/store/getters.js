@@ -14,7 +14,12 @@ const online = (state) => {
   return state.online
 }
 
+const account = (state) => {
+  return state.account
+}
+
 export default {
+  account,
   all,
   wallet,
   online,

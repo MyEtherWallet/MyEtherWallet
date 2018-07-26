@@ -7,22 +7,22 @@
             <h4>{{ $t('interface.tokens') }}</h4>
             <p>+ {{ $t('interface.customToken') }}</p>
           </div>
-          <div class="search-block dropdown-select-search-1">
-            <v-select :options="['foo', 'bar']"></v-select>
+          <div class="search-block">
+            <input v-model="search" placeholder="Search"/>
             <i class="fa fa-search" aria-hidden="true"></i>
           </div>
         </div>
         <div class="token-table-container" ref="tokenTableContainer">
-          <table v-show="tokens.length > 0">
-            <tr v-for="(token, index) in tokens" :key="token.name + index">
+          <table v-show="localTokens.length > 0">
+            <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{token.name}}</td>
               <td>{{token.balance}}</td>
             </tr>
           </table>
-          <div class="spinner-container" v-show="tokens.length === 0 && receivedTokens">
+          <div class="spinner-container" v-show="search === '' && localTokens.length === 0 && receivedTokens">
             <i class="fa fa-spinner fa-spin"></i>
           </div>
-          <div class="spinner-container" v-show="tokens.length === 0 && !receivedTokens">
+          <div class="spinner-container" v-show="localTokens.length === 0 && !receivedTokens">
             No tokens found :(
           </div>
         </div>
@@ -43,7 +43,12 @@ export default {
   props: ['tokens', 'receivedTokens'],
   data () {
     return {
+      search: '',
+      localTokens: []
     }
+  },
+  mounted () {
+    this.assignTokens(this.tokens)
   },
   methods: {
     tokenListExpend () {
@@ -51,14 +56,30 @@ export default {
       this.$refs.expendDown.classList.toggle('hidden')
       this.$refs.expendUp.classList.toggle('hidden')
     },
-    search (str) {
-      return this.tokens.filter(item => {
-        if (str !== '' && item.name.includes(str)) {
-          return item
-        } else {
-          return item
-        }
-      })
+    assignTokens (arr) {
+      if (this.search !== '') {
+        this.localTokens = this.tokens.filter(token => {
+          if (token.name.toLowerCase().includes(this.search.toLowerCase())) {
+            return token
+          }
+        })
+      } else {
+        this.localTokens = arr
+      }
+    }
+  },
+  watch: {
+    tokens (newVal) {
+      this.assignTokens(newVal)
+    },
+    search (newVal) {
+      if (newVal !== '') {
+        this.localTokens = this.tokens.filter(token => {
+          if (token.name.toLowerCase().includes(newVal.toLowerCase())) {
+            return token
+          }
+        })
+      }
     }
   }
 }

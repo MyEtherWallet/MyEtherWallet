@@ -15,7 +15,7 @@
           <div>
             <interface-network :blockNumber="blockNumber" />
           </div>
-          <send-currency-container :tokensWithBalance="tokens.filter(token => token.balance !== 0)" :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
+          <send-currency-container :tokensWithBalance="tokensWithBalance" :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
@@ -29,10 +29,7 @@
     </div>
   </div>
   <div v-else>
-    <p> No wallet found </p>
-    <div>
-      Create Wallet | Access Wallet
-    </div>
+    <wallet-not-found-container></wallet-not-found-container>
   </div>
 </template>
 
@@ -46,6 +43,7 @@ import InteractWithContractContainer from './containers/InteractWithContractCont
 import SendCurrencyContainer from './containers/SendCurrencyContainer'
 import SendOfflineContainer from './containers/SendOfflineContainer'
 import SwapContainer from './containers/SwapContainer'
+import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
 import InterfaceBalance from './components/InterfaceBalance'
@@ -67,7 +65,8 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens
+    'interface-tokens': InterfaceTokens,
+    'wallet-not-found-container': WalletNotFoundContainer
   },
   data () {
     return {
@@ -75,7 +74,8 @@ export default {
       balance: '',
       blockNumber: '',
       tokens: [],
-      receivedTokens: false
+      receivedTokens: false,
+      tokensWithBalance: []
     }
   },
   methods: {
@@ -85,7 +85,7 @@ export default {
       store.set('sideMenu', param)
     },
     async fetchTokens () {
-      if (this.$store.state.network.type.name === 'ETH') {
+      if (this.network.type.name === 'ETH') {
         this.receivedTokens = true
         const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
         const userAddress = this.$store.state.wallet
@@ -108,7 +108,7 @@ export default {
           body: JSON.stringify(body)
         }
 
-        const response = await fetch(this.$store.state.network.url, config)
+        const response = await fetch(this.network.url, config)
           .then(res => {
             return res.json()
           })
@@ -118,7 +118,7 @@ export default {
         return response
       } else {
         this.receivedTokens = false
-        return this.$store.state.network.type.tokens
+        return this.network.type.tokens
       }
     },
     async setTokens () {
@@ -133,6 +133,8 @@ export default {
             return 0
           }
         })
+
+        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
       }
     },
     async getBlock () {
@@ -150,7 +152,7 @@ export default {
         body: JSON.stringify(body)
       }
 
-      this.blockNumber = await fetch(this.$store.state.network.url, config)
+      this.blockNumber = await fetch(this.network.url, config)
         .then(res => {
           return res.json()
         })
@@ -172,7 +174,7 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      this.balance = await fetch(this.$store.state.network.url, config)
+      this.balance = await fetch(this.network.url, config)
         .then(res => {
           this.getNonce()
           return res.json()
@@ -197,7 +199,7 @@ export default {
         },
         body: JSON.stringify(body)
       }
-      const nonce = await fetch(this.$store.state.network.url, config)
+      const nonce = await fetch(this.network.url, config)
         .then(res => {
           return res.json()
         })
@@ -214,15 +216,14 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
-    if (this.$store.state.online) {
-      if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+    if (this.$store.state.online === true) {
+      if (this.$store.state.wallet !== null) {
         this.getBalance()
+        setInterval(this.getBlock, 14000)
+        if (this.network.type.chainID === 1) {
+          this.setTokens()
+        }
       }
-
-      if (this.$store.state.network.type.chainID === 1) {
-        this.setTokens()
-      }
-      setInterval(this.getBlock, 14000)
     }
   },
   computed: {
@@ -237,11 +238,16 @@ export default {
   },
   watch: {
     network (newVal) {
-      if (this.$store.state.online) {
-        this.getBalance()
-        this.getNonce()
-        this.getBlock()
-        this.setTokens()
+      if (this.$store.state.online === true) {
+        if (this.$store.state.wallet !== null) {
+          this.getBalance()
+          this.getNonce()
+          this.getBlock()
+          setInterval(this.getBlock, 14000)
+          if (this.network.type.chainID === 1) {
+            this.setTokens()
+          }
+        }
       }
     },
     tokens (newVal) {

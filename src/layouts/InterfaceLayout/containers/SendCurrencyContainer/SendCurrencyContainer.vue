@@ -9,10 +9,7 @@
             <h4>Amount</h4>
              <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
-          <div class="dropdown-select-search-1">
-            <v-select :options="tokens"></v-select>
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </div>
+          <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" v-model="amount" placeholder="Amount">
             <i :class="[parsedBalance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
@@ -114,7 +111,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
@@ -128,7 +128,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'confirm-modal': ConfirmModal,
-    'blockie': Blockie
+    'blockie': Blockie,
+    'currency-picker': CurrencyPicker
   },
   data () {
     return {
@@ -142,7 +143,7 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      tokens: []
+      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'}
     }
   },
   methods: {
@@ -151,23 +152,33 @@ export default {
       document.execCommand('copy')
     },
     confirmationModalOpen () {
-      this.$children[4].$refs.confirmation.show()
+      this.$children[5].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
-      this.amount = this.parsedBalance - this.transactionFee
+      if (this.selectedCurrency.name === 'Ethereum') {
+        this.amount = this.parsedBalance - this.transactionFee
+      } else {
+        this.amount = this.selectedCurrency.balance - this.transactionFee
+      }
+    },
+    setSelectedCurrency (e) {
+      this.selectedCurrency = e
     },
     estimateGas () {
       const raw = {
         from: this.$store.state.wallet.getAddressString(),
-        to: this.toAddress,
         value: this.amount,
         gas: unit.toWei(this.$store.state.gasPrice, 'gwei'),
         data: this.data,
         nonce: this.$store.state.account.nonce + 1
+      }
+
+      if (this.toAddress !== '') {
+        raw['to'] = this.toAddress
       }
 
       this.gasPrice = this.$store.state.web3.eth.estimateGas(raw).then(res => {
@@ -187,10 +198,10 @@ export default {
     }
   },
   mounted () {
-    this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
-    this.tokens = this.tokensWithBalance
-    this.tokens.push({name: 'ETH'})
-    console.log(this.tokens)
+    // const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+    // const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+    // console.log(contract.methods.transfer(this.toAddress))
+    this.parsedBalance = unit.fromWei(parseInt(this.account.balance.result), 'ether')
   },
   watch: {
     toAddress (newVal) {
@@ -218,6 +229,11 @@ export default {
         this.estimateGas()
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    })
   }
 }
 </script>

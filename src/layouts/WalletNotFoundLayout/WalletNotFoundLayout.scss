@@ -1,12 +1,11 @@
 @import '~@/scss/GlobalVariables';
 
-.not-found {
+.wallet-not-found {
   background-color: $about-mew-spaceman-background-color;
   position: relative;
 }
 
-
-.not-found .wrap{
+.wallet-not-found .wrap{
   height: 700px;
   background-image: url('~@/assets/images/background/404bg.jpg');
   background-size: cover;
@@ -16,35 +15,33 @@
   align-items: center;
   position: relative;
 
-
   .content-block {
     position: relative;
 
     .block-title {
       color: $text-white;
       font-weight: 700;
-      font-size: 220px;
+      font-size: 60px;
       text-align: center;
-      line-height: 216px;
     }
 
-    .block-text {
-      color: $text-white;
+    .buttons {
       text-align: center;
-      font-weight: 600;
-      font-size: 30px;
+      margin-top: 30px;
+       >a {
+        margin: 0 10px;
+       }
     }
 
-    .ailien-spaceship {
+    .spaceman {
       position: absolute;
-      bottom: -124px;
+      bottom: -224px;
       left: -143px;
+
+      img {
+        height: 200px;
+        transform: rotate(-45deg);
+      }
     }
   }
 }
-
-
-
-
-
-

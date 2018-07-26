@@ -8,6 +8,7 @@ const CHECK_IF_ONLINE = function (state) {
 
 const CLEAR_WALLET = function (state) {
   state.wallet = null
+  state.account = {balance: 0}
 }
 
 const DECRYPT_WALLET = function (state, wallet) {

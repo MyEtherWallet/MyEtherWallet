@@ -8,9 +8,7 @@
           <div class="title">
             <h4>{{ $t('reused.from') }}</h4>
           </div>
-          <div class="dropdown-select-search-1">
-            <v-select :options="['foo','bar']"></v-select>
-          </div>
+          <currency-picker :currency="fromArray" :token="true" page="SwapContainerFrom"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" value="" placeholder="Deposit Amount">
           </div>
@@ -22,9 +20,7 @@
           <div class="title">
             <h4>{{ $t('reused.to') }}</h4>
           </div>
-          <div class="dropdown-select-search-1">
-            <v-select :options="['foo','bar']"></v-select>
-          </div>
+          <currency-picker :currency="toArray" :token="true" page="SwapContainerTo"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" value="" placeholder="Received Amount">
           </div>
@@ -82,16 +78,20 @@
   </div>
 </template>
 <script>
+import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle
+    'interface-container-title': InterfaceContainerTitle,
+    'currency-picker': CurrencyPicker
   },
   data () {
     return {
+      toArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}],
+      fromArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}]
     }
   },
   methods: {

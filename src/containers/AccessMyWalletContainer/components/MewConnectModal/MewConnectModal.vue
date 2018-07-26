@@ -13,7 +13,7 @@
     <div class="support">
       <router-link to="/">
         <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.png"></div>
+          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
           <div class="support-label"><h5>Customer Support</h5></div>
         </div>
       </router-link>

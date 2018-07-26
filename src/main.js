@@ -1,3 +1,4 @@
+//
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue'
@@ -9,7 +10,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import vSelect from 'vue-select'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import VueQrcode from '@xkeshi/vue-qrcode'
@@ -18,7 +18,6 @@ import VueQrcode from '@xkeshi/vue-qrcode'
 import languages from './translations'
 
 // Regular Components
-Vue.component('v-select', vSelect)
 Vue.component('infinite-slider', InfiniteSlider)
 Vue.component(VueQrcode.name, VueQrcode)
 
