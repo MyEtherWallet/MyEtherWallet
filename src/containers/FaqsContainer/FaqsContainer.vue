@@ -65,7 +65,7 @@
                 </div>
               </div>
               <div v-if="showFAQs.faq4" class="qa__contents--content">
-                Hello
+                <faq-where-can-i-buy-sell/>
               </div>
             </li>
             <li>
@@ -77,7 +77,7 @@
                 </div>
               </div>
               <div v-if="showFAQs.faq5" class="qa__contents--content">
-                Hello
+                <faq-what-is-an-ico/>
               </div>
             </li>
           </ul>
@@ -98,7 +98,9 @@ import FaqBlock from './components/FaqBlock'
 import {
   BalancesNotLoadingOrShowingOnMyEtherWallet,
   EthOrTokensSentToOrFromExchangeHaventShownUp,
-  DoesMyEtherWalletSupportBitcoinOrOtherCoins
+  DoesMyEtherWalletSupportBitcoinOrOtherCoins,
+  WhereCanIBuySellTradeExchangeMyEthOrTokens,
+  WhatIsAnIco
 } from '@/components/FaqContents'
 
 export default {
@@ -106,7 +108,9 @@ export default {
     'faq-block': FaqBlock,
     'faq-balances-not-loading': BalancesNotLoadingOrShowingOnMyEtherWallet,
     'faq-eth-or-tokens-sent-to': EthOrTokensSentToOrFromExchangeHaventShownUp,
-    'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins
+    'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins,
+    'faq-where-can-i-buy-sell': WhereCanIBuySellTradeExchangeMyEthOrTokens,
+    'faq-what-is-an-ico': WhatIsAnIco
   },
   methods: {
     openFAQ: function (faqToOpen) {
