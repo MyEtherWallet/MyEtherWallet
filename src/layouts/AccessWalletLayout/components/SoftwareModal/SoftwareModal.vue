@@ -15,7 +15,7 @@
           <span>{{$t("reused.privKey")}}</span>
         </li>
       </ul>
-      <input type="file" name="file" style="display: none" ref="jsonInput" @change="uploadedFile" />
+      <input type="file" name="file" style="display: none" ref="jsonInput" v-on:change="uploadFile" />
     </div>
     <div class="button-container">
       <b-btn :class="[selected !== ''? '': 'disabled','mid-round-button-green-filled']" @click="continueAccess">
@@ -45,11 +45,8 @@ export default {
   methods: {
     uploadClick () {
       let jsonInput = this.$refs.jsonInput
-      if (this.file === '') {
-        jsonInput.click()
-      } else {
-        this.openPassword()
-      }
+      jsonInput.value = ''
+      jsonInput.click()
     },
     continueAccess () {
       if (this.selected === 'byJson') {
@@ -67,7 +64,7 @@ export default {
         this.selected = ''
       }
     },
-    uploadedFile (e) {
+    uploadFile (e) {
       const self = this
       let reader = new FileReader()
       reader.onloadend = function (evt) {

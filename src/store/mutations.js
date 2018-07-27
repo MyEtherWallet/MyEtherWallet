@@ -53,6 +53,28 @@ const SET_GAS_PRICE = function (state, val) {
   store.set('gasPrice', val)
 }
 
+const ADD_NOTIFICATION = function (state, val) {
+  const newNotif = {}
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item]
+  })
+
+  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1]})
+  store.set('notifications', newNotif)
+}
+
+const UPDATE_NOTIFICATION = function (state, val) {
+  // address, index, object
+  const newNotif = {}
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item]
+  })
+
+  newNotif[val[0]][val[1]] = val[2]
+  state.notifications = newNotif
+  store.set('notifications', newNotif)
+}
+
 export default {
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
@@ -63,5 +85,7 @@ export default {
   SET_ACCOUNT_NONCE,
   SWITCH_NETWORK,
   INIT_STATES,
-  SET_GAS_PRICE
+  SET_GAS_PRICE,
+  ADD_NOTIFICATION,
+  UPDATE_NOTIFICATION
 }

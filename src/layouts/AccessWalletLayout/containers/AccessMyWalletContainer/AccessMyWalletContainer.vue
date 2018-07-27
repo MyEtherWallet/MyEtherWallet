@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import AccessWalletButton from './components/AccessWalletButton'
-import HardwareModal from './components/HardwareModal'
-import MetamaskModal from './components/MetamaskModal'
-import MewConnectModal from './components/MewConnectModal'
-import NetworkAndAddressModal from './components/NetworkAndAddressModal'
-import PasswordModal from './components/PasswordModal'
-import PrivateKeyModal from './components/PrivateKeyModal'
-import SoftwareModal from './components/SoftwareModal'
+import AccessWalletButton from '../../components/AccessWalletButton'
+import HardwareModal from '../../components/HardwareModal'
+import MetamaskModal from '../../components/MetamaskModal'
+import MewConnectModal from '../../components/MewConnectModal'
+import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
+import PasswordModal from '../../components/PasswordModal'
+import PrivateKeyModal from '../../components/PrivateKeyModal'
+import SoftwareModal from '../../components/SoftwareModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'

@@ -38,10 +38,10 @@
               <p>Network</p><p>{{$store.state.network.type.name}} by {{$store.state.network.service}}</p>
             </div>
             <div class="grid-block">
-              <p>Gas Limit</p><p>{{gasLimit}} wei</p>
+              <p>Gas Limit</p><p>{{gas}} wei</p>
             </div>
             <div class="grid-block">
-              <p>Gas Price</p><p>{{ gas }} gwei</p>
+              <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
             </div>
             <div class="grid-block">
               <p>Transaction Fee</p><p> {{fee}} ETH</p>
@@ -58,7 +58,7 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
-              <div class="submit-button large-round-button-green-filled clickable" v-on:click="successModalOpen">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
@@ -85,20 +85,27 @@
 </template>
 
 <script>
-// import SuccessModal from '@/components/SuccessModal'
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['fee', 'data', 'from', 'gas', 'gasLimit', 'nonce', 'to', 'value'],
+  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
   data () {
     return {
       modalDetailInformation: false
     }
   },
   methods: {
-    successModalOpen () {
-      console.log(this)
+    sendTx () {
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt').then(res => {
+        this.$store.dispatch('setAccountNonce', this.nonce + 1)
+        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      }).catch(err => {
+        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      })
+
+      this.$refs.confirmation.hide()
+      this.showSuccess()
     }
   }
 }

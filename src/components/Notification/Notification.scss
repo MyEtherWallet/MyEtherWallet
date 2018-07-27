@@ -1,0 +1,62 @@
+@import '~@/scss/GlobalVariables';
+
+.notification-count {
+  background: $red-1;
+  border-radius: 50%;
+  color: $white;
+  display: inline-block;
+  padding: 0 10px;
+
+  span {
+    font-size: 20px;
+  }
+}
+
+.notification-container {
+  margin-left: 30px;
+}
+
+.notification-item-container {
+  background-color: $white;
+  height: 300px;
+  overflow-y: scroll;
+
+  .notification-item {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .unexpanded {
+      display: none;
+    }
+  }
+
+  .notification-no-item {
+    text-align: center;
+  }
+
+  .notification-item:nth-child(odd) {
+    background-color: $light-green-1;
+  }
+}
+
+.notification-logo {
+  cursor: pointer;
+  position: relative;
+
+  .notification-dot {
+    background-color: $notification-dot-background-color;
+    border-radius: 40px;
+    height: 8px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 8px;
+  }
+}
