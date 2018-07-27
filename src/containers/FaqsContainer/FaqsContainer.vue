@@ -29,7 +29,7 @@
                 </div>
               </div>
               <div v-if="showFAQs.faq1" class="qa__contents--content">
-                Hello
+                <faq-balances-not-loading/>
               </div>
             </li>
             <li>
@@ -41,7 +41,7 @@
                 </div>
               </div>
               <div v-if="showFAQs.faq2" class="qa__contents--content">
-                Hello
+                <faq-does-myetherwallet-support-bitcoin/>
               </div>
             </li>
             <li>
@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div v-if="showFAQs.faq3" class="qa__contents--content">
-                Hello
+                <faq-eth-or-tokens-sent-to/>
               </div>
             </li>
             <li>
@@ -95,12 +95,18 @@
 
 <script>
 import FaqBlock from './components/FaqBlock'
-import FaqContents from '@/components/FaqContents'
+import {
+  BalancesNotLoadingOrShowingOnMyEtherWallet,
+  EthOrTokensSentToOrFromExchangeHaventShownUp,
+  DoesMyEtherWalletSupportBitcoinOrOtherCoins
+} from '@/components/FaqContents'
 
 export default {
   components: {
     'faq-block': FaqBlock,
-    'FaqContents': FaqContents
+    'faq-balances-not-loading': BalancesNotLoadingOrShowingOnMyEtherWallet,
+    'faq-eth-or-tokens-sent-to': EthOrTokensSentToOrFromExchangeHaventShownUp,
+    'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins
   },
   methods: {
     openFAQ: function (faqToOpen) {
