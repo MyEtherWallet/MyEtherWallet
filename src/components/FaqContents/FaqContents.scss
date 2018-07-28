@@ -35,31 +35,41 @@ code {
 
 abbr {
   font-family: "Courier New", Courier, monospace;
-  padding: 0 5px;
+  padding: 5px 6px;
   background-color: #f7f7f9;
   color: red;
   font-weight: 600;
+  font-size: 12px;
 }
 
 
 ol {
-  margin-left: 15px;
+  margin-left: 18px;
 
-  li {
+  >li {
     list-style-type: decimal;
     padding-left: 10px;
   }
 }
 
+ul {
+  margin-left: 18px;
 
-.sub-list {
+  >li {
+    list-style-type: disc;
+    padding-left: 10px;
+  }
+}
+
+.list-in-block {
   display: inline-flex;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
   padding: 20px 50px;
   background-color: #f7f7f9;
   margin-top: 20px;
-  li {
+  >li {
     list-style-type: disc;
     margin: 0;
     padding: 0;
