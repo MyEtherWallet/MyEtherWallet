@@ -12,9 +12,9 @@
           <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
             <input type="number" name="" v-model="amount" placeholder="Amount">
-            <i :class="[parsedBalance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
+            <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
-          <div class="error-message-container" v-if="amount > parsedBalance">
+          <div class="error-message-container" v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
             <p>{{ $t('reused.dontHaveEnough') }}</p>
           </div>
         </div>
@@ -90,7 +90,7 @@
           <br/>
           <div class="input-container" v-if="advancedExpend">
             <div class="the-form user-input">
-              <input type="number" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
+              <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)">
             </div>
             <div class="the-form user-input">
               <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit">
@@ -106,7 +106,8 @@
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :fee="transactionFee" :gasLimit="gasLimit" :from="$store.state.wallet.getAddressString()" :to="toAddress" :value="amount" :gas="$store.state.gasPrice" :data="data" :nonce="$store.state.account.nonce + 1"></confirm-modal>
+    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="toAddress" :value="amount" :gas="gasLimit" :data="data" :nonce="$store.state.account.nonce + 1"></confirm-modal>
+    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
   </div>
 </template>
 
@@ -118,7 +119,10 @@ import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
+import SuccessModal from '@/components/SuccessModal'
 
+// eslint-disable-next-line
+const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 
@@ -129,7 +133,8 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'confirm-modal': ConfirmModal,
     'blockie': Blockie,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'success-modal': SuccessModal
   },
   data () {
     return {
@@ -143,7 +148,9 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'}
+      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
+      raw: {},
+      signedTx: ''
     }
   },
   methods: {
@@ -151,7 +158,37 @@ export default {
       this.$refs[ref].select()
       document.execCommand('copy')
     },
+    showSuccessModal () {
+      this.$children[6].$refs.success.show()
+    },
+    createTx () {
+      const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+      const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+      const isEth = this.selectedCurrency.symbol === 'ETH'
+      this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, this.amount).encodeABI()
+
+      this.raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.gasLimit,
+        nonce: this.$store.state.account.nonce,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        value: isEth ? this.amount === '' ? 0 : this.amount : 0,
+        to: isEth ? this.toAddress : this.selectedCurrency.addr,
+        data: this.data
+      }
+
+      if (this.toAddress === '') {
+        delete this.raw['to']
+      }
+
+      const tx = new EthTx(this.raw)
+      tx.sign(this.$store.state.wallet.getPrivateKey())
+      const serializedTx = tx.serialize()
+      this.signedTx = `0x${serializedTx.toString('hex')}`
+    },
     confirmationModalOpen () {
+      this.createTx()
+      window.scrollTo(0, 0)
       this.$children[5].$refs.confirmation.show()
     },
     changeGas (val) {
@@ -159,31 +196,25 @@ export default {
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
-      if (this.selectedCurrency.name === 'Ethereum') {
+      if (this.selectedCurrency.name === 'Ether') {
         this.amount = this.parsedBalance - this.transactionFee
-      } else {
-        this.amount = this.selectedCurrency.balance - this.transactionFee
       }
     },
     setSelectedCurrency (e) {
       this.selectedCurrency = e
+      if (e.name !== 'Ether') {
+        const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+        const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+        this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
+      } else {
+        this.data = '0x'
+      }
     },
     estimateGas () {
-      const raw = {
-        from: this.$store.state.wallet.getAddressString(),
-        value: this.amount,
-        gas: unit.toWei(this.$store.state.gasPrice, 'gwei'),
-        data: this.data,
-        nonce: this.$store.state.account.nonce + 1
-      }
-
-      if (this.toAddress !== '') {
-        raw['to'] = this.toAddress
-      }
-
-      this.gasPrice = this.$store.state.web3.eth.estimateGas(raw).then(res => {
+      this.createTx()
+      this.$store.state.web3.eth.estimateGas(this.raw).then(res => {
         this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
-        return res
+        this.gasLimit = res
       }).catch(err => console.log(err))
     },
     verifyAddr () {
@@ -198,9 +229,6 @@ export default {
     }
   },
   mounted () {
-    // const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
-    // const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-    // console.log(contract.methods.transfer(this.toAddress))
     this.parsedBalance = unit.fromWei(parseInt(this.account.balance.result), 'ether')
   },
   watch: {
@@ -228,6 +256,10 @@ export default {
       if (!this.verifyAddr()) {
         this.estimateGas()
       }
+    },
+    selectedCurrency (newVal) {
+      this.estimateGas()
+      this.selectedCurrency = newVal
     }
   },
   computed: {

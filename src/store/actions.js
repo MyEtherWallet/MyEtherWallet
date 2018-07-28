@@ -38,6 +38,14 @@ const setAccountNonce = function ({ commit }, nonce) {
   commit('SET_ACCOUNT_NONCE', nonce)
 }
 
+const addNotification = function ({ commit }, val) {
+  commit('ADD_NOTIFICATION', val)
+}
+
+const updateNotification = function ({ commit }, val) {
+  commit('UPDATE_NOTIFICATION', val)
+}
+
 export default {
   checkIfOnline,
   clearWallet,
@@ -48,5 +56,7 @@ export default {
   switchNetwork,
   setState,
   setGasPrice,
-  setAccountNonce
+  setAccountNonce,
+  addNotification,
+  updateNotification
 }

@@ -100,9 +100,7 @@ export default {
       parsedBalance: 0,
       localGas: this.gasLimit,
       coinType: [
-        {symbol: '$FFC', name: 'ffc'},
-        {symbol: '$FYX', name: 'fyx'},
-        {symbol: '0xBTC', name: 'oxbtc'}
+        {symbol: 'ETH', name: 'Ethereum'}
       ],
       selectedCoinType: '',
       raw: '',

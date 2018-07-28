@@ -48,7 +48,7 @@ export default {
     }
   },
   mounted () {
-    this.assignTokens(this.tokens)
+    this.assignTokens(this.tokens, this.search)
   },
   methods: {
     tokenListExpend () {
@@ -56,10 +56,10 @@ export default {
       this.$refs.expendDown.classList.toggle('hidden')
       this.$refs.expendUp.classList.toggle('hidden')
     },
-    assignTokens (arr) {
-      if (this.search !== '') {
+    assignTokens (arr, query) {
+      if (query !== '') {
         this.localTokens = this.tokens.filter(token => {
-          if (token.name.toLowerCase().includes(this.search.toLowerCase())) {
+          if (token.name.toLowerCase().includes(query.toLowerCase())) {
             return token
           }
         })
@@ -70,16 +70,10 @@ export default {
   },
   watch: {
     tokens (newVal) {
-      this.assignTokens(newVal)
+      this.assignTokens(newVal, this.search)
     },
     search (newVal) {
-      if (newVal !== '') {
-        this.localTokens = this.tokens.filter(token => {
-          if (token.name.toLowerCase().includes(newVal.toLowerCase())) {
-            return token
-          }
-        })
-      }
+      this.assignTokens(this.tokens, newVal)
     }
   }
 }

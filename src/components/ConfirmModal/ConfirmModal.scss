@@ -87,7 +87,9 @@
           padding: 16px 0;
 
           p:nth-child(even) {
+            max-width: 295px;
             text-align: right;
+            text-overflow: ellipsis;
           }
         }
       } // .expended-info
