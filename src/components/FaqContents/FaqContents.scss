@@ -54,6 +54,7 @@ ol {
 
 ul {
   margin-left: 18px;
+  margin-bottom: 20px;
 
   >li {
     list-style-type: disc;
@@ -73,7 +74,7 @@ ul {
     list-style-type: disc;
     margin: 0;
     padding: 0;
-    margin-right: 80px;
+    min-width: 147px;
 
     &:last-child {
       margin-right: 0;
