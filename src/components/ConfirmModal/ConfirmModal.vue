@@ -101,6 +101,7 @@ export default {
         this.$store.dispatch('setAccountNonce', this.nonce + 1)
         this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
       }).on('error', (err) => {
+        console.log(err)
         this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
       })
 
