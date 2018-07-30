@@ -115,11 +115,13 @@ export default {
   methods: {
     openFAQ: function (faqToOpen) {
       var currentState = this.showFAQs[faqToOpen]
+      /*
       this.showFAQs.faq1 = false
       this.showFAQs.faq2 = false
       this.showFAQs.faq3 = false
       this.showFAQs.faq4 = false
       this.showFAQs.faq5 = false
+      */
       this.showFAQs[faqToOpen] = !currentState
     }
   },
