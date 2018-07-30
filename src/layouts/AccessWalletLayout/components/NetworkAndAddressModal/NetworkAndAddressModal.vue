@@ -2,14 +2,14 @@
   <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address">
     <div class="content-container-1">
       <div class="hd-derivation">
-        <h4>{{ $t("accessMyWalletOptions.hdDerivationPath") }}</h4>
+        <h4>{{ $t("accessWallet.hdDerivationPath") }}</h4>
         <div class="dropdown-button-container">
           <b-dropdown id="hd-derivation-path" text="m/44’/60’/0’/0" class="dropdown-button-1">
             <b-dropdown-item class="active">m/44’/60’/0’/0</b-dropdown-item>
             <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
             <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item>{{ $t("accessMyWalletOptions.customPath") }}</b-dropdown-item>
+            <b-dropdown-item>{{ $t("accessWallet.customPath") }}</b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -18,13 +18,13 @@
     <div class="content-container-2">
       <div class="address-block-container">
         <div class="block-title">
-          <h4>{{ $t("accessMyWalletOptions.interactAddr") }}</h4>
+          <h4>{{ $t("accessWallet.interactAddr") }}</h4>
         </div>
 
         <ul class="address-block table-header">
-          <li>{{ $t("accessMyWalletOptions.id") }}</li>
-          <li>{{ $t("reused.address") }}</li>
-          <li>{{ $t("reused.balance") }}</li>
+          <li>{{ $t("accessWallet.id") }}</li>
+          <li>{{ $t("common.address") }}</li>
+          <li>{{ $t("common.balance") }}</li>
           <li></li>
         </ul>
 
@@ -78,27 +78,27 @@
       </div> <!-- .address-block-container -->
 
       <div class="address-nav">
-        <span>&lt; {{ $t("reused.previous") }}</span>
-        <span>{{ $t("reused.next") }} &gt;</span>
+        <span>&lt; {{ $t("common.previous") }}</span>
+        <span>{{ $t("common.next") }} &gt;</span>
       </div>
     </div> <!-- .content-container-2 -->
 
     <div class="accept-terms">
-      <label class="checkbox-container">{{ $t("accessMyWalletOptions.acceptTerms") }} <a href="/">{{ $t("reused.terms") }}</a>.
+      <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
         <input type="checkbox">
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
       <b-btn class="mid-round-button-green-filled close-button">
-        {{ $t("reused.continue") }}
+        {{ $t("common.continue") }}
       </b-btn>
     </div>
     <div class="support">
       <router-link to="/">
         <div class="support-content">
           <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("reused.customerSupport") }}</h5></div>
+          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
         </div>
       </router-link>
     </div>

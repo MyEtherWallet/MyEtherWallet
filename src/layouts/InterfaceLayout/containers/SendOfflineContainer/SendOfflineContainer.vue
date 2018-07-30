@@ -1,6 +1,6 @@
 <template>
   <div class="send-offline-container">
-    <interface-container-title :title="$t('reused.offline')"></interface-container-title>
+    <interface-container-title :title="$t('common.offline')"></interface-container-title>
 
     <div class="progress-status prevent-user-select">
       <div :class="[currentPage === 'genInfo' ? 'active' : '' ,'genInfo']" v-on:click="processChange('genInfo')">

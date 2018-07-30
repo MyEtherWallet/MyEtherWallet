@@ -4,8 +4,8 @@
       <div class="page-container">
         <div class="flex-col-vertical-center content">
           <div class="title">
-            <h2>{{ $t("social.title") }}</h2>
-            <h5>{{ $t("social.subheading") }}</h5>
+            <h2>{{ $t("home.socialTitle") }}</h2>
+            <h5>{{ $t("home.socialSubheading") }}</h5>
           </div>
           <div class="icons">
             <a v-for="(link, index) in links" :href="link.to" target="_blank" :key="link.name + index">
