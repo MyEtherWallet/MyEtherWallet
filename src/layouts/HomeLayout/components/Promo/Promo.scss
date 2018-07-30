@@ -35,24 +35,6 @@
           transition: all .2s ease;
         }
 
-        .get-free-wallet:hover {
-          background-color: $background-color-white;
-          color: $text-color-6;
-        }
-
-        .access-my-wallet:hover {
-          background-color: $text-color-6;
-          border: 1px solid $text-color-6;
-          color: $text-white;
-        }
-
-        &:hover {
-          margin-top: -3px;
-
-          span {
-            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-          }
-        }
       }
 
       @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width){
