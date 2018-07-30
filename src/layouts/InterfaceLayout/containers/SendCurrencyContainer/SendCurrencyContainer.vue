@@ -193,6 +193,7 @@ export default {
     },
     changeGas (val) {
       this.gasAmount = val
+      this.createDataHex()
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
@@ -200,9 +201,8 @@ export default {
         this.amount = this.parsedBalance - this.transactionFee
       }
     },
-    setSelectedCurrency (e) {
-      this.selectedCurrency = e
-      if (e.name !== 'Ether') {
+    createDataHex () {
+      if (this.selectedCurrency.name !== 'Ether') {
         const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
@@ -210,8 +210,13 @@ export default {
         this.data = '0x'
       }
     },
+    setSelectedCurrency (e) {
+      this.selectedCurrency = e
+      this.createDataHex()
+    },
     estimateGas () {
       this.createTx()
+      this.createDataHex()
       this.$store.state.web3.eth.estimateGas(this.raw).then(res => {
         this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
         this.gasLimit = res
