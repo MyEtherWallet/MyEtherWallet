@@ -172,7 +172,7 @@ export default {
         gas: this.gasLimit,
         nonce: this.$store.state.account.nonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        value: isEth ? this.amount === '' ? 0 : this.amount : 0,
+        value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
         to: isEth ? this.toAddress : this.selectedCurrency.addr,
         data: this.data
       }
