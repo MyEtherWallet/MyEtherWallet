@@ -44,7 +44,9 @@ const gb = {
     dapps: 'Dapps',
     news: 'News',
     interactWcontract: 'Interact with Contract',
-    depContract: 'Deploy Contract'
+    depContract: 'Deploy Contract',
+    signMessage: 'Sign Message',
+    verifyMessage: 'Verify Message'
   },
   header: {
     home: 'Home',
@@ -162,7 +164,8 @@ const gb = {
   },
   txSideMenu: {
     title: 'Send',
-    contract: 'Contract'
+    contract: 'Contract',
+    message: 'Message'
   },
   pageTitle: {
     alreadyHave: 'Already have a wallet?'
