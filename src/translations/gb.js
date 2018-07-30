@@ -85,6 +85,9 @@ const gb = {
     transactions: 'Transactions',
     privKeyandPass: 'Private Keys And Passwords'
   },
+  helpCenter: {
+    title: 'Help Center'
+  },
   social: {
     title: 'Get Involved',
     subheading: 'Your Cryptocurrency Masters Are Getting Hilariously Rich.'
