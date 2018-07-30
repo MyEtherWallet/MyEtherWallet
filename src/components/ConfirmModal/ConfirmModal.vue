@@ -97,10 +97,10 @@ export default {
   },
   methods: {
     sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt').then(res => {
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt', (res) => {
         this.$store.dispatch('setAccountNonce', this.nonce + 1)
         this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
-      }).catch(err => {
+      }).on('error', (err) => {
         this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
       })
 
