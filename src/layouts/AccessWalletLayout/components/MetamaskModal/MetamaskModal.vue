@@ -7,25 +7,25 @@
     </div>
     <div class="d-block content-container text-center">
       <h4>
-        {{ $t("accessMyWalletOptions.metaMaskModalDesc")}}
+        {{ $t("accessWallet.metaMaskModalDesc")}}
       </h4>
     </div>
     <div class="accept-terms">
-      <label class="checkbox-container">{{ $t("accessMyWalletOptions.acceptTerms") }} <a href="/">{{ $t("reused.terms") }}</a>.
+      <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
         <input type="checkbox">
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
       <b-btn class="mid-round-button-green-filled close-button">
-        {{ $t("accessMyWalletOptions.unlock")}}
+        {{ $t("accessWallet.unlock")}}
       </b-btn>
     </div>
     <div class="support">
       <router-link to="/">
         <div class="support-content">
           <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("reused.customerSupport") }}</h5></div>
+          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
         </div>
       </router-link>
     </div>

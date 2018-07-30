@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.depContract')"></interface-container-title>
+    <interface-container-title :title="$t('common.depContract')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">
@@ -64,7 +64,7 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div class="submit-button large-round-button-green-border clickable">
-          {{ $t('reused.continue') }}
+          {{ $t('common.continue') }}
         </div>
         <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
           {{ $t('interface.read') }}

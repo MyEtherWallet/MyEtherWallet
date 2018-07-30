@@ -7,7 +7,7 @@
           <img class="icon" src="~@/assets/images/icons/balance.svg">
         </div>
         <div class="block-content">
-          <h2>{{ $t("reused.balance")}}</h2>
+          <h2>{{ $t("common.balance")}}</h2>
           <div class="balance-text-container">
             <div v-show="balance.result !== undefined" class="balance-text"> <p>{{ parsedBalance }}</p> <p>&nbsp;ETH</p></div>
             <i class="fa fa-spin fa-spinner" v-show="balance.result === undefined"> </i>

@@ -3,7 +3,7 @@
     <b-modal ref="network" hide-footer class="bootstrap-modal network nopadding max-height-1" title="Network">
       <div class="content-block">
         <div class="flex-container">
-          <h4 class="modal-title">{{ $t('reused.advanced') }}</h4>
+          <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
           <div class="margin-left-auto add-custom-network">
             <p>{{ $t('interface.addCustomNode') }}</p>
             <div class="sliding-switch-white">

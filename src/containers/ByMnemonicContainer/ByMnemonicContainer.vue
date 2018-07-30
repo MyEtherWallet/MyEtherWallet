@@ -9,9 +9,9 @@
             <div class="progress-bar"></div>
             <b-tab title="By Mnemonic Phrase" active>
               <h3>
-                {{ $t("byMnemonic.writeDown") }}
+                {{ $t("createWallet.byMnemonicWriteDown") }}
                 <span class="tooltip-icon">
-                  <b-btn v-b-tooltip.hover :title="$t('reused.toolTip1')">?</b-btn>
+                  <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
                 </span>
               </h3>
               <div class="contents">
@@ -27,12 +27,12 @@
                         <span class="label-right">24</span>
                       </div>
                     </div>
-                    <span class="text__base link switch-label">{{ $t("byMnemonic.value") }}</span>
+                    <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
                   </div>
 
                   <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
-                    <span>{{ $t("byMnemonic.random") }}</span>
+                    <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
                   </div>
                 </div>
                 <div class="phrases">
@@ -45,17 +45,17 @@
               </div>
               <div class="user-input">
                 <div v-on:click="mnemonicVerificationModalOpen" class="next-button large-round-button-green-filled clickable">
-                  {{ $t("byMnemonic.alreadyWritten") }}
+                  {{ $t("createWallet.byMnemonicAlreadyWritten") }}
                 </div>
               </div>
               <div class="footer-text">
                 <p>
                   <router-link to="/">
                     <img class="icon" src="~@/assets/images/icons/printer.svg">
-                    {{ $t("reused.printWallet") }}
+                    {{ $t("common.printWallet") }}
                   </router-link>
                   <span class="tooltip-icon">
-                    <b-btn v-b-tooltip.hover :title="$t('reused.toolTip2')">?</b-btn>
+                    <b-btn v-b-tooltip.hover :title="$t('common.toolTip2')">?</b-btn>
                   </span>
                 </p>
               </div>

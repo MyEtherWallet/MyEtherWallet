@@ -3,7 +3,7 @@
     <b-modal ref="balance" hide-footer class="bootstrap-modal balance nopadding" title="Balance">
       <div class="content-block">
         <div class="flex-container">
-          <h4 class="modal-title">{{ $t('reused.totalBalance') }}</h4>
+          <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
           <div class="margin-left-auto total-balance-amount">
             <span>{{ balance }}</span> ETH
           </div>

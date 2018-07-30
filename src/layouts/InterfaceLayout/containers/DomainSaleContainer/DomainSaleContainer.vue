@@ -35,7 +35,7 @@
           <div class="domain-checker">
             <input type="number" name="" value="" placeholder="Please Enter Sub Domain Name">
             <div class="check-button">
-              {{ $t('reused.check') }}
+              {{ $t('common.check') }}
             </div>
           </div>
         </div>

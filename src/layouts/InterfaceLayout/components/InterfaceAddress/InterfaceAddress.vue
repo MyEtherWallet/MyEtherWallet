@@ -6,7 +6,7 @@
          <input ref="copyAddress" class="hidden-input" :value="address"/>
       </div>
       <div class="block-content">
-        <h2>{{ $t("reused.address")}}</h2>
+        <h2>{{ $t("common.address")}}</h2>
         <p class="address">{{address}}</p>
         <div class="icon-container">
           <b-btn v-b-tooltip.hover title="Print" class="custom-tooltip">

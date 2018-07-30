@@ -1,12 +1,12 @@
 <template>
   <div class="swap-container">
-    <interface-container-title :title="$t('reused.swap')"></interface-container-title>
+    <interface-container-title :title="$t('common.swap')"></interface-container-title>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>{{ $t('reused.from') }}</h4>
+            <h4>{{ $t('common.from') }}</h4>
           </div>
           <currency-picker :currency="fromArray" :token="true" page="SwapContainerFrom"></currency-picker>
           <div class="the-form amount-number">
@@ -18,7 +18,7 @@
         </div>
         <div class="amount">
           <div class="title">
-            <h4>{{ $t('reused.to') }}</h4>
+            <h4>{{ $t('common.to') }}</h4>
           </div>
           <currency-picker :currency="toArray" :token="true" page="SwapContainerTo"></currency-picker>
           <div class="the-form amount-number">
@@ -31,7 +31,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('reused.speedTx') }}</h4>
+          <h4>{{ $t('common.speedTx') }}</h4>
         </div>
       </div>
       <div class="the-form gas-amount">
@@ -42,18 +42,18 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('reused.speedTx') }}<span class="alert-button"></span></h4>
-          <p>{{ $t('reused.txFee') }}: 0.000013 ETH ($1.234)</p>
+          <h4>{{ $t('common.speedTx') }}<span class="alert-button"></span></h4>
+          <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
           <div class="small-circle-button-green-border">
-            {{ $t('reused.slow') }}
+            {{ $t('common.slow') }}
           </div>
           <div class="small-circle-button-green-border active">
-            {{ $t('reused.regular') }}
+            {{ $t('common.regular') }}
           </div>
           <div class="small-circle-button-green-border">
-            {{ $t('reused.fast') }}
+            {{ $t('common.fast') }}
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
     <div class="submit-button-container">
       <h4>1 ETH = 0.000231 BTC</h4>
       <div class="submit-button large-round-button-green-filled clickable">
-        {{ $t('reused.continue') }}
+        {{ $t('common.continue') }}
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>

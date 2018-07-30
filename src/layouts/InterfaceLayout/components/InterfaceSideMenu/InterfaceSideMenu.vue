@@ -5,15 +5,15 @@
         <li>
           <div @click.prevent="toggle('openSend')" :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']">
             <img :src="selectedTab === 'send' || selectedTab === 'offline'? require(`@/assets/images/sidemenu/send-active.svg`): require(`@/assets/images/sidemenu/send.svg`)"/>
-            <p>{{ $t("txSideMenu.title") }}</p>
+            <p>{{ $t("interface.txSideMenuTitle") }}</p>
             <i :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
           </div>
           <ul v-show="showSend">
             <li @click.prevent="switchTabs('send')" :class="selectedTab === 'send'? 'active': ''">
-              {{ $t("reused.sendTx") }}
+              {{ $t("common.sendTx") }}
             </li>
             <li @click.prevent="switchTabs('offline')" :class="selectedTab === 'offline'? 'active': ''">
-              {{ $t("reused.offline") }}
+              {{ $t("common.offline") }}
             </li>
           </ul>
         </li>
@@ -21,7 +21,7 @@
           <div :class="[selectedTab === 'swap'? 'active': '', 'menu-group-title']">
             <img :src="selectedTab === 'swap'? require(`@/assets/images/sidemenu/swap-active.svg`): require(`@/assets/images/sidemenu/swap.svg`)"/>
             <p>
-              {{ $t("reused.swap") }}
+              {{ $t("common.swap") }}
             </p>
           </div>
         </li>
@@ -29,22 +29,22 @@
           <div :class="[selectedTab === 'dapps'? 'active': '', 'menu-group-title']">
             <img :src="selectedTab === 'dapps'? require(`@/assets/images/sidemenu/dapps-active.svg`): require(`@/assets/images/sidemenu/dapps.svg`)"/>
             <p>
-              {{ $t("reused.dapps") }}
+              {{ $t("common.dapps") }}
             </p>
           </div>
         </li>
         <li>
           <div @click.prevent="toggle('openContract')" :class="[selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : '', 'menu-group-title']">
             <img :src="selectedTab === 'interactC' || selectedTab === 'deployC'? require(`@/assets/images/sidemenu/contract-active.svg`): require(`@/assets/images/sidemenu/contract.svg`)"/>
-            <p>{{ $t("txSideMenu.contract") }}</p>
+            <p>{{ $t("interface.txSideMenuContract") }}</p>
             <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
           </div>
           <ul v-show="showContract">
             <li @click.prevent="switchTabs('interactC')" :class="selectedTab === 'interactC'? 'active': ''">
-              {{ $t("reused.interactWcontract") }}
+              {{ $t("common.interactWcontract") }}
             </li>
             <li @click.prevent="switchTabs('deployC')" :class="selectedTab === 'deployC'? 'active': ''">
-              {{ $t("reused.depContract") }}
+              {{ $t("common.depContract") }}
             </li>
           </ul>
         </li>

@@ -1,6 +1,6 @@
 <template>
   <div class="interact-with-contract-container">
-    <interface-container-title :title="$t('reused.interactWcontract')"></interface-container-title>
+    <interface-container-title :title="$t('common.interactWcontract')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">
@@ -21,8 +21,8 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span>{{ $t('reused.clear') }}</span>
-            <span>{{ $t('reused.copy') }}</span>
+            <span>{{ $t('common.clear') }}</span>
+            <span>{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
     <div class="submit-button-container">
       <!-- <router-link :to="{ name: 'InteractWithContract', params: {} }"> -->
         <div class="submit-button large-round-button-green-filled clickable">
-          {{ $t('reused.continue') }}
+          {{ $t('common.continue') }}
         </div>
       <!-- </router-link> -->
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
