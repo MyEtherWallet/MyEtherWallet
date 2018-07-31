@@ -49,16 +49,16 @@
           </ul>
         </li>
         <li>
-          <div @click.prevent="toggle('openMessage')" :class="[selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : '', 'menu-group-title']">
-            <img :src="selectedTab === 'interactC' || selectedTab === 'deployC'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)"/>
+          <div @click.prevent="toggle('openMessage')" :class="[selectedTab === 'signMessage' || selectedTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']">
+            <img :src="selectedTab === 'signMessage' || selectedTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)"/>
             <p>{{ $t("txSideMenu.message") }}</p>
             <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
           </div>
           <ul v-show="showContract">
-            <li @click.prevent="switchTabs('interactC')" :class="selectedTab === 'interactC'? 'active': ''">
+            <li @click.prevent="switchTabs('signMessage')" :class="selectedTab === 'signMessage'? 'active': ''">
               {{ $t("reused.signMessage") }}
             </li>
-            <li @click.prevent="switchTabs('deployC')" :class="selectedTab === 'deployC'? 'active': ''">
+            <li @click.prevent="switchTabs('verifyMessage')" :class="selectedTab === 'verifyMessage'? 'active': ''">
               {{ $t("reused.verifyMessage") }}
             </li>
           </ul>
