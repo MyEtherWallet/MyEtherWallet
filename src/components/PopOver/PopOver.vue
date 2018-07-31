@@ -6,8 +6,8 @@
         <img src="@/assets/images/icons/exclamation.png">
       </b-btn>
       <b-popover :target="popOverId" triggers="hover focus" placement="top">
-        <template slot="title">{{popdata.title}}</template>
-        {{popdata.content}}
+        <template slot="title">{{poptitle}}</template>
+        {{popcontent}}
       </b-popover>
     </b-col>
 
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  props: ['popdata'],
+  props: ['poptitle', 'popcontent'],
   data () {
     return {
       // Create a random string for each popover instance
