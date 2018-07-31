@@ -36,7 +36,7 @@
           <div class="domain-checker">
             <input type="number" name="" value="" placeholder="Enter Domain Name">
             <div class="check-button" v-on:click="domainAvailabilityCheck">
-              {{ $t('reused.check') }}
+              {{ $t('common.check') }}
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -57,7 +57,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -66,7 +66,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -75,7 +75,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -84,7 +84,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -93,7 +93,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>
@@ -102,7 +102,7 @@
               <div class="buy-button-container">
                 <p>0 ETH</p>
                 <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
-                  {{ $t('reused.buy') }}
+                  {{ $t('common.buy') }}
                 </div>
               </div>
             </li>

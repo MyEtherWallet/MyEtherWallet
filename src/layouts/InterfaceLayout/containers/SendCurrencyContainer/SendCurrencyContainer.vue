@@ -1,12 +1,12 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('reused.sendTx')"></interface-container-title>
+    <interface-container-title :title="$t('common.sendTx')"></interface-container-title>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>Amount</h4>
+            <h4>{{ $t("interface.sendTxAmount") }}</h4>
              <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
           </div>
           <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
@@ -15,14 +15,14 @@
             <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
           <div class="error-message-container" v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
-            <p>{{ $t('reused.dontHaveEnough') }}</p>
+            <p>{{ $t('common.dontHaveEnough') }}</p>
           </div>
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t("sendTx.toAddr") }}</h4> &nbsp;
+            <h4>{{ $t("interface.sendTxToAddr") }}</h4> &nbsp;
             <blockie :address="toAddress" width="22px" height="22px" v-show="addressValid && toAddress.length !== 0"></blockie>
-            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('reused.copy') }}</p>
+            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('common.copy') }}</p>
           </div>
           <div class="the-form address-block">
             <textarea ref="address" name="name" v-model="toAddress"></textarea>
@@ -40,7 +40,7 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t("reused.speedTx") }}</h4>
+            <h4>{{ $t("common.speedTx") }}</h4>
             <div class="tooltip-box-1">
               <b-btn id="exPopover1"></b-btn>
               <b-popover target="exPopover1" triggers="hover focus" placement="top">
@@ -52,17 +52,17 @@
               </b-popover>
             </div>
           </div>
-          <p>{{ $t("reused.txFee") }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
-            {{ $t('reused.slow') }}
+            {{ $t('common.slow') }}
           </div>
           <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(45)">
-            {{ $t('reused.regular') }}
+            {{ $t('common.regular') }}
           </div>
           <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(75)">
-            {{ $t('reused.fast') }}
+            {{ $t('common.fast') }}
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
     </div>
     <div class="send-form advanced">
       <div class="advanced-content">
-        <h4>{{ $t('reused.advanced') }}</h4>
+        <h4>{{ $t('common.advanced') }}</h4>
         <div class="toggle-button">
           <span>{{ $t('interface.dataGas') }}</span>
           <!-- Rounded switch -->
@@ -164,7 +164,7 @@ export default {
     createTx () {
       const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
       const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-      const isEth = this.selectedCurrency.symbol === 'ETH'
+      const isEth = this.selectedCurrency.name === 'Ether'
       this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, this.amount).encodeABI()
 
       this.raw = {
@@ -172,7 +172,7 @@ export default {
         gas: this.gasLimit,
         nonce: this.$store.state.account.nonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        value: isEth ? this.amount === '' ? 0 : this.amount : 0,
+        value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
         to: isEth ? this.toAddress : this.selectedCurrency.addr,
         data: this.data
       }
@@ -180,7 +180,6 @@ export default {
       if (this.toAddress === '') {
         delete this.raw['to']
       }
-
       const tx = new EthTx(this.raw)
       tx.sign(this.$store.state.wallet.getPrivateKey())
       const serializedTx = tx.serialize()
@@ -193,6 +192,7 @@ export default {
     },
     changeGas (val) {
       this.gasAmount = val
+      this.createDataHex()
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
@@ -200,9 +200,8 @@ export default {
         this.amount = this.parsedBalance - this.transactionFee
       }
     },
-    setSelectedCurrency (e) {
-      this.selectedCurrency = e
-      if (e.name !== 'Ether') {
+    createDataHex () {
+      if (this.selectedCurrency.name !== 'Ether') {
         const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
@@ -210,9 +209,17 @@ export default {
         this.data = '0x'
       }
     },
+    setSelectedCurrency (e) {
+      this.selectedCurrency = e
+      this.createDataHex()
+    },
     estimateGas () {
+      const newRaw = this.raw
+      delete newRaw['gas']
+      delete newRaw['nonce']
       this.createTx()
-      this.$store.state.web3.eth.estimateGas(this.raw).then(res => {
+      this.createDataHex()
+      this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
         this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
         this.gasLimit = res
       }).catch(err => console.log(err))

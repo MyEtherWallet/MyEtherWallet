@@ -59,7 +59,7 @@ const ADD_NOTIFICATION = function (state, val) {
     newNotif[item] = state.notifications[item]
   })
 
-  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1]})
+  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false})
   store.set('notifications', newNotif)
 }
 

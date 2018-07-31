@@ -15,11 +15,11 @@
     <div class="wrap">
       <div class="page-container">
         <div class="title">
-          <h2>{{$t("reused.accessMyWallet")}}</h2>
+          <h2>{{$t("common.accessMyWallet")}}</h2>
           <h5>
-            {{$t("reused.noWallet")}}
+            {{$t("common.noWallet")}}
             <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
-              {{$t("reused.getAFreeWallet")}}
+              {{$t("common.getAFreeWallet")}}
             </router-link>
           </h5>
         </div>
@@ -79,37 +79,37 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('reused.mewConnect'),
-          desc: this.$t('accessMyWalletOptions.mewConnectDesc'),
+          title: this.$t('common.mewConnect'),
+          desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
-          tooltip: this.$t('reused.toolTip3'),
+          tooltip: this.$t('common.toolTip3'),
           img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('reused.hardware'),
+          title: this.$t('common.hardware'),
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
-          tooltip: this.$t('reused.toolTip3'),
+          tooltip: this.$t('common.toolTip3'),
           img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.metamaskModalOpen,
           title: 'MetaMask',
-          desc: this.$t('accessMyWalletOptions.metaMaskDesc'),
+          desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
-          tooltip: this.$t('reused.toolTip3'),
+          tooltip: this.$t('common.toolTip3'),
           img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessMyWalletOptions.software'),
-          desc: this.$t('accessMyWalletOptions.softwareDesc'),
-          recommend: this.$t('accessMyWalletOptions.notRecommended'),
-          tooltip: this.$t('reused.toolTip3'),
+          title: this.$t('accessWallet.software'),
+          desc: this.$t('accessWallet.softwareDesc'),
+          recommend: this.$t('accessWallet.notRecommended'),
+          tooltip: this.$t('common.toolTip3'),
           img: softwareImg,
           disabled: true
         }

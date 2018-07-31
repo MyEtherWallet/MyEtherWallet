@@ -1,7 +1,7 @@
 <template>
   <div class="dapps-container">
     <div v-show="selectedDapp === ''">
-      <interface-container-title :title="$t('reused.dapps')"></interface-container-title>
+      <interface-container-title :title="$t('common.dapps')"></interface-container-title>
       <div class="buttons-container">
         <dapp-buttons v-for="dapp in dapps" :key="dapp.title" v-on:click="switchView(dapp.param)" :title="dapp.title" :icon="dapp.icon" :desc="dapp.desc"></dapp-buttons>
       </div>

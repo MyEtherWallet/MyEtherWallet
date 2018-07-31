@@ -4,7 +4,7 @@
       <div class="back-icon-container">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </div>
-      <p>{{ $t('reused.back') }}</p>
+      <p>{{ $t('common.back') }}</p>
     </div>
   </div>
 </template>

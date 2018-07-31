@@ -14,8 +14,8 @@
               <b-nav>
                 <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item to="/#faqs">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item to="/#news" v-show="online">{{ $t("reused.news") }}</b-nav-item>
+                <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
+                <b-nav-item to="/#news" v-show="online">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -24,7 +24,7 @@
                   <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <!-- <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)"> -->
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
