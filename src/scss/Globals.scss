@@ -154,27 +154,6 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 10px;
 }
 
-.v-select {
-  .selected-tag {
-    overflow: hidden;
-    position: absolute;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 80%;
-  }
-
-  .clear {
-    display: none;
-  }
-
-  .dropdown-menu a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-  }
-}
-
 .no-border {
   .dropdown .dropdown-toggle {
     border: 0 !important;
@@ -389,7 +368,7 @@ h6 {
 
 
 // *********************************************************************
-// Standard button styles
+// Standard buttons
 // *********************************************************************
 
 .large-round-button-green-filled {
@@ -417,6 +396,28 @@ h6 {
 }
 
 
+.large-round-button-white-filled {
+  background-color: $button--background-color-2;
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
+.large-round-button-white-border {
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  color: $button--text-color-1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
 .mid-round-button-green-filled {
   background-color: $button--background-color-1;
   border: 1px solid $button--border-color-1;
@@ -441,26 +442,31 @@ h6 {
   user-select: none;
 }
 
-.large-round-button-white-filled {
-  background-color: $button--background-color-2;
-  border: 1px solid $button--border-color-1;
-  border-radius: 5px;
+.mid-round-button-green-filled-green-border {
+  background-color: $button--background-color-1;
+  border: 1px solid $button--border-color-2;
+  border-radius: 6px;
+  color: $text-white;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  padding: 21px 55px;
+  padding: 15px 40px;
   user-select: none;
+  display: inline-block;
 }
 
-.large-round-button-white-border {
-  border: 1px solid $button--border-color-1;
-  border-radius: 5px;
-  color: $button--text-color-1;
+
+.mid__round-button__blue-filled__blue-border {
+  background-color: $button--background-color-4;
+  border: 1px solid $button--background-color-4;
+  border-radius: 6px;
+  color: $text-white;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  padding: 21px 55px;
+  padding: 15px 40px;
   user-select: none;
+  display: inline-block;
 }
 
 .small-circle-button-green-border {
@@ -1091,28 +1097,13 @@ h6 {
     padding-left: 30px;
   }
 
-  .dropdown.open .dropdown-toggle,
-  .v-select .dropdown-menu {
+  .dropdown.open .dropdown-toggle {
     $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
-  .v-select .dropdown-menu {
-    border-top: 0;
-  }
-
   .clear {
     display: none;
-  }
-
-  .v-select .open-indicator {
-    bottom: 4px;
-    cursor: pointer;
-    height: 25px;
-    opacity: 1;
-    pointer-events: all;
-    position: absolute;
-    right: 17px;
   }
 }
 
@@ -1123,28 +1114,13 @@ h6 {
     padding: 6px 5px;
   }
 
-  .dropdown.open .dropdown-toggle,
-  .v-select .dropdown-menu {
+  .dropdown.open .dropdown-toggle{
     $border-color: $dark-grey-10;
     border: 1px solid $border-color;
   }
 
-  .v-select .dropdown-menu {
-    border-top: 0;
-  }
-
   .clear {
     display: none;
-  }
-
-  .v-select .open-indicator {
-    bottom: 4px;
-    cursor: pointer;
-    height: 25px;
-    opacity: 1;
-    pointer-events: all;
-    position: absolute;
-    right: 17px;
   }
 }
 

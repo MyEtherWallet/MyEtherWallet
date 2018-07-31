@@ -8,9 +8,9 @@
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
               <h3>
-                {{ $t('byJsonFile.saveKeystore')}}
+                {{ $t('createWallet.byJsonFileSaveKeystore')}}
                 <span class="tooltip-icon">
-                  <b-btn v-b-tooltip.hover :title="$t('reused.toolTip1')">?</b-btn>
+                  <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
                 </span>
               </h3>
               <div class="contents">
@@ -20,7 +20,7 @@
               <div class="user-input">
                 <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
                    :download="name">
-                  <span v-if="downloadable"> {{ $t('byJsonFile.downloadKeyFile')}} </span>
+                  <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile')}} </span>
                   <div v-if="!downloadable">
                     <i class="fa fa-spinner fa-lg fa-spin"></i>
                   </div>
@@ -30,10 +30,10 @@
                 <p>
                   <router-link to="/">
                     <img class="icon" src="~@/assets/images/icons/printer.svg">
-                    {{ $t('reused.printWallet') }}
+                    {{ $t('common.printWallet') }}
                   </router-link>
                   <span class="tooltip-icon">
-                    <b-btn v-b-tooltip.hover :title="$t('reused.toolTip1')">?</b-btn>
+                    <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
                   </span>
                 </p>
               </div>
@@ -65,18 +65,18 @@ export default {
     return {
       contents: [
         {
-          title: this.$t('byJsonFile.dontLoseTitle'),
-          desc: this.$t('byJsonFile.dontLoseDesc'),
+          title: this.$t('createWallet.byJsonFileDontLoseTitle'),
+          desc: this.$t('createWallet.byJsonFileDontLoseDesc'),
           img: noLose
         },
         {
-          title: this.$t('byJsonFile.dontShareTitle'),
-          desc: this.$t('byJsonFile.dontShareDesc'),
+          title: this.$t('createWallet.byJsonFileDontShareTitle'),
+          desc: this.$t('createWallet.byJsonFileDontShareDesc'),
           img: noShare
         },
         {
-          title: this.$t('byJsonFile.makeBackupTitle'),
-          desc: this.$t('byJsonFile.makeBackupDesc'),
+          title: this.$t('createWallet.byJsonFileMakeBackupTitle'),
+          desc: this.$t('createWallet.byJsonFileMakeBackupDesc'),
           img: makeBackup
         }
       ],

@@ -9,18 +9,18 @@
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
-                <h2>{{ $t("about.title") }}</h2>
+                <h2>{{ $t("home.aboutTitle") }}</h2>
                 <p class="color-white">
-                  {{ $t("about.subheading") }}
+                  {{ $t("home.aboutSubheading") }}
                   <br>
                   <span class="color-white text-bold">
-                    {{ $t("about.beResponsible") }}
+                    {{ $t("home.aboutbeResponsible") }}
                   </span>
                 </p>
                 <div class="watch-video">
                   <router-link to="/">
                     <p>
-                      {{ $t("about.watchVideo") }}
+                      {{ $t("home.aboutWatchVideo") }}
                       <i class="fa fa-caret-right" aria-hidden="true"></i>
                     </p>
                   </router-link>
@@ -39,45 +39,45 @@
           <div class="grid-col-2 mew-features">
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-wallet.png">
+                <img src="~@/assets/images/home/icon-wallet.svg">
               </div>
               <div class="text">
-                <h3>{{ $t("about.mewWallet") }}</h3>
+                <h3>{{ $t("home.aboutMewWallet") }}</h3>
                 <p>
-                  {{ $t("about.mewWalletDesc") }}
+                  {{ $t("home.aboutMewWalletDesc") }}
                 </p>
               </div>
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-hardware.png">
+                <img src="~@/assets/images/home/icon-hardware.svg">
               </div>
               <div class="text">
-                <h3>{{ $t("about.hardwareWallet") }}</h3>
+                <h3>{{ $t("home.aboutHardwareWallet") }}</h3>
                 <p>
-                  {{ $t("about.hardwareWalletDesc") }}
+                  {{ $t("home.aboutHardwareWalletDesc") }}
                 </p>
               </div>
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-swap.png">
+                <img src="~@/assets/images/home/icon-swap.svg">
               </div>
               <div class="text">
-                <h3>{{ $t("reused.swap") }}</h3>
+                <h3>{{ $t("common.swap") }}</h3>
                 <p>
-                  {{ $t("about.swapDesc") }}
+                  {{ $t("home.aboutSwapDesc") }}
                 </p>
               </div>
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-connect.png">
+                <img src="~@/assets/images/home/icon-mew-connect.svg">
               </div>
               <div class="text">
-                <h3>{{$t('reused.mewConnect')}}</h3>
+                <h3>{{$t('common.mewConnect')}}</h3>
                 <p>
-                  {{ $t("about.mewConnectDesc") }}
+                  {{ $t("home.aboutMewConnectDesc") }}
                 </p>
               </div>
             </dir>

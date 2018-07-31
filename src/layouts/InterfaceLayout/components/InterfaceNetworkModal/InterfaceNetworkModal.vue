@@ -3,12 +3,12 @@
     <b-modal ref="network" hide-footer class="bootstrap-modal network nopadding max-height-1" title="Network">
       <div class="content-block">
         <div class="flex-container">
-          <h4 class="modal-title">{{ $t('reused.advanced') }}</h4>
+          <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
           <div class="margin-left-auto add-custom-network">
             <p>{{ $t('interface.addCustomNode') }}</p>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input v-on:click="addCustomNetworkToggle" type="checkbox">
+                <input v-on:click="addCustomNetworkToggle" type="checkbox" />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -26,13 +26,13 @@
       <div class="network-add hidden" ref="networkAdd">
         <div class="content-block">
           <div class="input-block-container">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="ETH Node Name">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="ETH Node Name" autocomplete="off" />
             <select class="custom-select-1">
               <option value="network">Network</option>
               <option value="node">Node</option>
             </select>
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="URL">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Port">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="URL" autocomplete="off" />
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Port" autocomplete="off" />
           </div>
         </div>
 
@@ -42,15 +42,15 @@
             <div class="margin-left-auto add-custom-network">
               <div class="sliding-switch-white">
                 <label class="switch">
-                  <input v-on:click="expendAuth" type="checkbox">
+                  <input v-on:click="expendAuth" type="checkbox" />
                   <span class="slider round"></span>
                 </label>
               </div>
             </div>
           </div>
           <div class="auth-form-container hidden" ref="authForm">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="User Name">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Password">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="User Name" autocomplete="off" />
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Password" autocomplete="off" />
           </div>
         </div>
 

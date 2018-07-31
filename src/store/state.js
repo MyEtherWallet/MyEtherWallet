@@ -23,6 +23,7 @@ const state = {
       sideMenu: 'send'
     }
   },
+  notifications: {},
   gasPrice: 41
 }
 

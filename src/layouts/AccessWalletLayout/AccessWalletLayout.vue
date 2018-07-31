@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import AccessMyWalletContainer from '@/containers/AccessMyWalletContainer'
+import AccessMyWalletContainer from './containers/AccessMyWalletContainer'
 import FaqsContainer from '@/containers/FaqsContainer'
 import PriceBar from './components/PriceBar'
 

@@ -4,22 +4,6 @@
   padding-top: 87px;
 }
 
-.notification {
-  cursor: pointer;
-  margin-left: 20px;
-  position: relative;
-
-  .notification-dot {
-    background-color: $notification-dot-background-color;
-    border-radius: 40px;
-    height: 8px;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 8px;
-  }
-}
-
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
