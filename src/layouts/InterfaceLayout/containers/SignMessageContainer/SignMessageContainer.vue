@@ -2,27 +2,40 @@
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
     <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
-
     <div class="send-form">
-      <p class="">Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.</p>
+      <p>
+        Include your nickname and where
+        you use the nickname so someone
+        else cannot use it.
+        Include a specific reason
+        for the message so it cannot be
+        reused for a different purpose.
+      </p>
 
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
+
           <div class="tooltip-box-1">
             <b-btn id="exPopover1"></b-btn>
             <b-popover target="exPopover1" triggers="hover focus" placement="top">
               <template slot="title">MetaMask</template>
               <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+              MetaMask is a <strong>bridge</strong> that allows you to
+              visit the distributed web of tomorrow in your browser today.
+              It allows you to <strong>run Ethereum dApps right in your
+              browser without running a full Ethereum node.</strong>
+              MetaMask includes a secure identity vault, providing a user
+              interface to manage your identities on different sites
+              and sign blockchain transactions.
             </b-popover>
           </div>
+
         </div>
       </div>
-      <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+
+      <div class="the-form">
+        <textarea class="custom-textarea-1"></textarea>
       </div>
     </div>
 
@@ -30,20 +43,26 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
+
           <div class="tooltip-box-1">
             <b-btn id="exPopover2"></b-btn>
             <b-popover target="exPopover2" triggers="hover focus" placement="top">
               <template slot="title">MetaMask</template>
               <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+              MetaMask is a <strong>bridge</strong> that allows you to
+              visit the distributed web of tomorrow in your browser today.
+              It allows you to <strong>run Ethereum dApps right in your
+              browser without running a full Ethereum node.</strong>
+              MetaMask includes a secure identity vault, providing a user
+              interface to manage your identities on different sites
+              and sign blockchain transactions.
             </b-popover>
           </div>
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
             <span v-on:click="copyToClipboard('abi')">Copy</span>
           </div>
+
         </div>
       </div>
       <div class="the-form domain-name">
@@ -69,7 +88,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/components/SuccessModal'
 
 export default {
-  name: 'Interact',
+  name: 'Send Message',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
@@ -77,44 +96,7 @@ export default {
   },
   data () {
     return {
-      showModal: true,
-      existingContracts: [
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '1'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '2'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '3'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
-        }
-      ]
-    }
-  },
-  methods: {
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
-    },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
-    },
-    deleteInput (ref) {
-      this.$refs[ref].value = ''
-    }
-  },
-  watch: {
-    showModal () {
-      if (this.showModal === false) {
-        this.showModal = true
-      }
+
     }
   }
 }
