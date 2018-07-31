@@ -48,6 +48,21 @@
             </li>
           </ul>
         </li>
+        <li>
+          <div @click.prevent="toggle('openMessage')" :class="[selectedTab === 'signMessage' || selectedTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']">
+            <img :src="selectedTab === 'signMessage' || selectedTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)"/>
+            <p>{{ $t("txSideMenu.message") }}</p>
+            <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
+          </div>
+          <ul v-show="showContract">
+            <li @click.prevent="switchTabs('signMessage')" :class="selectedTab === 'signMessage'? 'active': ''">
+              {{ $t("reused.signMessage") }}
+            </li>
+            <li @click.prevent="switchTabs('verifyMessage')" :class="selectedTab === 'verifyMessage'? 'active': ''">
+              {{ $t("reused.verifyMessage") }}
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
@@ -61,7 +76,8 @@ export default {
     return {
       selectedTab: this.currentTab,
       showSend: false,
-      showContract: false
+      showContract: false,
+      showMessage: false
     }
   },
   methods: {
@@ -70,14 +86,22 @@ export default {
         case 'openSend':
           this.showSend = !this.showSend
           this.showContract = false
+          this.showMessage = false
           break
         case 'openContract':
           this.showSend = false
           this.showContract = !this.showContract
+          this.showMessage = false
+          break
+        case 'openMessage':
+          this.showSend = false
+          this.showContract = false
+          this.showMessage = !this.showMessage
           break
         default:
           this.showSend = false
           this.showContract = false
+          this.showMessage = false
           this.storePage(param)
       }
     },
