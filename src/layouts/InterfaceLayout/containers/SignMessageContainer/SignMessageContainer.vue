@@ -43,21 +43,8 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
+          <popover :popdata="popoverSignature"/>
 
-          <div class="tooltip-box-1">
-            <b-btn id="exPopover2"></b-btn>
-            <b-popover target="exPopover2" triggers="hover focus" placement="top">
-              <template slot="title">MetaMask</template>
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to
-              visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your
-              browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user
-              interface to manage your identities on different sites
-              and sign blockchain transactions.
-            </b-popover>
-          </div>
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
             <span v-on:click="copyToClipboard('abi')">Copy</span>
@@ -86,17 +73,22 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/components/SuccessModal'
+import PopOver from '@/components/PopOver'
 
 export default {
   name: 'Send Message',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'success-modal': SuccessModal,
+    'popover': PopOver
   },
   data () {
     return {
-
+      popoverSignature: {
+        title: 'h1',
+        content: 'gogogo'
+      }
     }
   }
 }
