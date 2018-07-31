@@ -111,7 +111,6 @@ import InterfaceBottomText from '@/components/InterfaceBottomText'
 import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
 import SuccessModal from '@/components/SuccessModal'
-import PopOver from '@/components/PopOver'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -126,8 +125,7 @@ export default {
     'confirm-modal': ConfirmModal,
     'blockie': Blockie,
     'currency-picker': CurrencyPicker,
-    'success-modal': SuccessModal,
-    'popover': PopOver
+    'success-modal': SuccessModal
   },
   data () {
     return {

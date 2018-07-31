@@ -58,15 +58,13 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/components/SuccessModal'
-import PopOver from '@/components/PopOver'
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal,
-    'popover': PopOver
+    'success-modal': SuccessModal
   },
   data () {
     return {
