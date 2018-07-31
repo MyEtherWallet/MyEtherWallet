@@ -15,7 +15,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
-          <popover :popdata="popDataMessage"/>
+          <popover :poptitle="$t('popover.whatIsMessageTitle')" :popcontent="$t('popover.whatIsMessageContent')"/>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
-          <popover :popdata="popDataSignature"/>
+          <popover :poptitle="$t('popover.whatIsSignatureTitle')" :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
@@ -45,7 +45,7 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('interface.sign') }}
+          {{ $t('Sign') }}
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -70,14 +70,12 @@ export default {
   },
   data () {
     return {
-      popDataSignature: {
-        title: 'Signature',
-        content: 'What is signature?'
-      },
-      popDataMessage: {
-        title: 'Message',
-        content: 'What is message'
-      }
+    }
+  },
+  methods: {
+    copyToClipboard (ref) {
+      this.$refs[ref].select()
+      document.execCommand('copy')
     }
   }
 }
