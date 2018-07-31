@@ -38,6 +38,7 @@ export default {
           sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
       },
+      notifications: store.get('notifications') !== undefined ? store.get('notifications') : {},
       gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
     }
 

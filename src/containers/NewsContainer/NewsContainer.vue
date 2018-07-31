@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="page-container">
         <div class="top-title">
-          <h2>{{ $t("reused.news") }}</h2>
+          <h2>{{ $t("common.news") }}</h2>
         </div>
         <div class="grid-col-3 news-container">
           <news-article v-for="item in articles" v-bind:key="item.id" :link="item.link" :title="item.title" :desc="item.desc" :fb="item.fb" :twitter="item.twitter" :readMore="item.readMore"></news-article>

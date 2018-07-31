@@ -1,0 +1,63 @@
+@import '../InterfaceContainer';
+
+.send-offline-container {
+  @extend %interface-container;
+
+  .progress-status {
+    background-color: $background-color-5;
+    border-bottom: 1px solid $opaque-black-9;
+    box-shadow: 0 2px 0 $black;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-template-columns: 27% 27% 27%;
+    justify-content: space-evenly;
+    text-align: center;
+
+    > div {
+      cursor: pointer;
+      padding-bottom: 18px;
+      padding-top: 24px;
+
+      p {
+        color: $text-color-9;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .title {
+        font-weight: 600;
+      }
+    }
+
+    .active {
+      border-bottom: 4px solid $black;
+
+      p {
+        color: $text-black;
+      }
+    }
+  }
+
+  .advanced {
+    padding-top: 10px;
+
+    .advanced-content {
+      border-bottom: 2px solid $background-color-1;
+      border-top: 2px solid $background-color-1;
+      display: flex;
+      padding: 0 8px;
+      padding-bottom: 20px;
+      padding-top: 20px;
+
+      .toggle-button {
+        align-items: center;
+        display: flex;
+        margin-left: auto;
+
+        > span {
+          margin-right: 15px;
+        }
+      }
+    }
+  }
+}

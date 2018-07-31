@@ -6,7 +6,7 @@
         <ul>
           <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">
             {{index + 1}}.<span>{{value}}</span>
-            <input class="hidden" type="text" name="">
+            <input class="hidden" type="text" name="" autocomplete="off" />
           </li>
         </ul>
       </div>

@@ -22,7 +22,7 @@
                   <img src="~@/assets/images/home/create-wallet.png">
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">{{ $t("reused.getAFreeWallet") }}</h2>
+                  <h2 class="color-white">{{ $t("common.getAFreeWallet") }}</h2>
                   <p class="color-white">
                     {{ $t("home.obtainAddress") }}
                   </p>
@@ -41,7 +41,7 @@
                   <img src="~@/assets/images/home/unlock-wallet.png">
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">{{ $t("reused.accessMyWallet") }}</h2>
+                  <h2 class="color-white">{{ $t("common.accessMyWallet") }}</h2>
                   <p class="color-white">
                     {{ $t("home.accessMyWalletDesc") }}
                   </p>

@@ -15,36 +15,39 @@
           <div>
             <interface-network :blockNumber="blockNumber" />
           </div>
-          <send-currency-container :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
+          <send-currency-container :tokensWithBalance="tokensWithBalance" :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
+          <sign-message-container v-show="currentTab === 'signMessage'"></sign-message-container>
+          <verify-message-container v-show="currentTab === 'verifyMessage'"></verify-message-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <div class="tokens" v-if="$store.state.online">
-            <interface-tokens></interface-tokens>
+            <interface-tokens :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div v-else>
-    <p> No wallet found </p>
-    <div>
-      Create Wallet | Access Wallet
-    </div>
+    <wallet-not-found-container></wallet-not-found-container>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { parseTokensHex } from '@/helpers'
 
-import DappsContainer from '@/containers/DappsContainer'
-import DeployContractContainer from '@/containers/DeployContractContainer'
-import InteractWithContractContainer from '@/containers/InteractWithContractContainer'
-import SendCurrencyContainer from '@/containers/SendCurrencyContainer'
-import SendOfflineContainer from '@/containers/SendOfflineContainer'
-import SwapContainer from '@/containers/SwapContainer'
+import DappsContainer from './containers/DappsContainer'
+import DeployContractContainer from './containers/DeployContractContainer'
+import InteractWithContractContainer from './containers/InteractWithContractContainer'
+import SendCurrencyContainer from './containers/SendCurrencyContainer'
+import SendOfflineContainer from './containers/SendOfflineContainer'
+import SwapContainer from './containers/SwapContainer'
+import SignMessageContainer from './containers/SignMessageContainer'
+import VerifyMessageContainer from './containers/VerifyMessageContainer'
+import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
 import InterfaceBalance from './components/InterfaceBalance'
@@ -62,17 +65,23 @@ export default {
     'dapps-container': DappsContainer,
     'interact-with-contract-container': InteractWithContractContainer,
     'deploy-contract-container': DeployContractContainer,
+    'sign-message-container': SignMessageContainer,
+    'verify-message-container': VerifyMessageContainer,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens
+    'interface-tokens': InterfaceTokens,
+    'wallet-not-found-container': WalletNotFoundContainer
   },
   data () {
     return {
       currentTab: this.$store.state.pageStates.interface.sideMenu,
       balance: '',
-      blockNumber: ''
+      blockNumber: '',
+      tokens: [],
+      receivedTokens: false,
+      tokensWithBalance: []
     }
   },
   methods: {
@@ -81,77 +90,52 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param])
       store.set('sideMenu', param)
     },
-    async getBlock () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_blockNumber',
-        params: [],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-
-      this.blockNumber = await fetch(this.$store.state.network.url, config)
-        .then(res => {
-          return res.json()
-        })
-        .catch(err => {
+    async fetchTokens () {
+      if (this.network.type.name === 'ETH') {
+        this.receivedTokens = true
+        const data = `0x80f4ae5c000000000000000000000000${this.$store.state.wallet.getAddress().toString('hex')}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
+        const response = this.$store.state.web3.eth.call({
+          to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
+          data: data
+        }).then(response => {
+          return response
+        }).catch(err => {
           console.log(err)
         })
+
+        return response
+      } else {
+        this.receivedTokens = false
+        return this.network.type.tokens
+      }
+    },
+    async setTokens () {
+      const hex = await this.fetchTokens()
+      if (this.tokens.length === 0) {
+        this.tokens = parseTokensHex(hex).sort((a, b) => {
+          if (a.name.toUpperCase() < b.name.toUpperCase()) {
+            return -1
+          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+
+        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
+      }
+    },
+    async getBlock () {
+      this.$store.state.web3.eth.getBlockNumber().then((res) => {
+        this.blockNumber = res
+      })
     },
     async getBalance () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_getBalance',
-        params: [this.address, 'latest'],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-      this.balance = await fetch(this.$store.state.network.url, config)
-        .then(res => {
-          this.getNonce()
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.$store.dispatch('setAccountBalance', this.balance)
-    },
-    async getNonce () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_getTransactionCount',
-        params: [this.address, 'latest'],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-      const nonce = await fetch(this.$store.state.network.url, config)
-        .then(res => {
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.$store.dispatch('setAccountNonce', Number(nonce.result))
+      const self = this
+      await this.$store.state.web3.eth.getBalance(this.address).then((res) => {
+        self.balance = res
+        this.$store.dispatch('setAccountBalance', this.balance.result)
+      })
     }
   },
   mounted () {
@@ -160,11 +144,14 @@ export default {
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
     }
 
-    if (this.$store.state.online) {
-      if (this.$store.state.wallet !== null && this.$store.state.wallet !== undefined) {
+    if (this.$store.state.online === true) {
+      if (this.$store.state.wallet !== null) {
         this.getBalance()
+        setInterval(this.getBlock, 14000)
+        if (this.network.type.chainID === 1) {
+          this.setTokens()
+        }
       }
-      setInterval(this.getBlock, 14000)
     }
   },
   computed: {
@@ -179,11 +166,22 @@ export default {
   },
   watch: {
     network (newVal) {
-      if (this.$store.state.online) {
-        this.getBalance()
-        this.getNonce()
-        this.getBlock()
+      if (this.$store.state.online === true) {
+        if (this.$store.state.wallet !== null) {
+          this.getBalance()
+          this.getBlock()
+          setInterval(this.getBlock, 14000)
+          if (this.network.type.chainID === 1) {
+            this.setTokens()
+          } else {
+            this.tokens = this.network.type.tokens
+            this.receivedTokens = false
+          }
+        }
       }
+    },
+    tokens (newVal) {
+      this.tokens = newVal
     }
   }
 }

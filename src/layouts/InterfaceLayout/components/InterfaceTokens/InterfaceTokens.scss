@@ -7,37 +7,48 @@
   .token-search {
     background-color: $transaction-block-token-search;
     color: $text-white;
-    padding: 15px 20px;
+    padding: 15px 20px 10px;
 
     .block-title {
       display: flex;
       margin-bottom: 10px;
 
       h4 {
-        font-weight: 500;
+        font-size: 14px;
+        font-weight: 400;
       }
 
       p {
         color: $text-white;
         cursor: pointer;
+        font-size: 12px;
+        font-weight: 300;
         margin-left: auto;
       }
     }
 
-    .dropdown-select-search-1 {
-      background-color: $background-color-1;
-      margin-bottom: 5px;
+    .search-block {
       position: relative;
 
+      input {
+        background-color: $white;
+        border: 0;
+        height: 35px;
+        margin-bottom: 5px;
+        padding-left: 30px;
+        position: relative;
+        width: 100%;
+      }
+
       i {
-        color: $text-color-7;
-        left: 14px;
+        color: $black;
+        left: 10px;
         pointer-events: none;
         position: absolute;
-        top: 16px;
+        top: 10px;
       }
     }
-  } // .token-search
+  }
 
   .token-table-container {
     background-color: $background-color-white;

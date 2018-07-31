@@ -4,7 +4,7 @@
   padding: 40px 20px;
 
   ul {
-    >li {
+    li {
       cursor: pointer;
       margin-bottom: 40px;
 
@@ -35,7 +35,7 @@
           color: $text-side-menu-inactive-color;
           font-size: 14px;
           font-weight: 400;
-          margin: 10px 0 0 20px;
+          margin: 10px 0 0 40px;
         }
       }
     }

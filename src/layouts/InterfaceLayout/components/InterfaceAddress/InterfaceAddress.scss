@@ -1,67 +1,17 @@
-@import '~@/scss/GlobalVariables';
+@import '../InformationBlock';
 
-.wrap {
-  .info-block {
-    border-radius: 5px;
-    color: $text-white;
-    display: flex;
-    min-height: 158px;
-    padding: 25px;
-    position: relative;
-
-    h2 {
-      font-size: 24px;
-      font-weight: 500;
-      line-height: initial;
-      margin: 0;
-      margin-bottom: 4px;
-    }
-
-    h4 {
-      font-size: 20px;
-      font-weight: 400;
-      line-height: initial;
-      margin: 0;
-      margin-bottom: 4px;
-    }
-
-    p {
-      color: $text-white;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      // white-space: nowrap;
-      word-wrap: break-word;
-    }
-
-    .bottom-button {
-      bottom: 25px;
-      position: absolute;
-    }
-
-    .block-image {
-      margin-right: 15px;
-    }
-  }
-
-  .address {
-    background-color: $transaction-block-address;
-  }
-
-  .balance {
-    background-color: $transaction-block-balance;
-  }
-
-  .network {
-    background-color: $transaction-block-network;
-  }
-
+.address {
+  background-color: $transaction-block-address;
 }
 
-.icon-container {
-  display: flex;
-  margin-top: 10px;
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: 1;
+}
 
-  img {
-    margin-right: 13px;
-  }
+.custom-tooltip {
+  background: none;
+  border: 0;
+  padding: 0;
 }

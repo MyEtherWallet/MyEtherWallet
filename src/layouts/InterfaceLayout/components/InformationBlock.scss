@@ -1,0 +1,60 @@
+@import '~@/scss/GlobalVariables';
+
+.info-block {
+  border-radius: 5px;
+  color: $text-white;
+  display: flex;
+  min-height: 140px;
+  min-width: 360px;
+  padding: 25px;
+  position: relative;
+
+  h2,
+  h4 {
+    line-height: initial;
+    margin: 0;
+    margin-bottom: 3px;
+    white-space: nowrap;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  h4 {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  p {
+    color: $text-white;
+    font-weight: 300;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
+  .block-image {
+    display: flex;
+    flex-direction: column;
+    height: 90px;
+    justify-content: center;
+    margin-right: 15px;
+    position: relative;
+  }
+
+  .block-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    max-width: 230px;
+  }
+
+  .icon-container {
+    display: flex;
+
+    img {
+      margin-right: 13px;
+    }
+  }
+}

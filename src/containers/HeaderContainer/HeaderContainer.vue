@@ -14,8 +14,8 @@
               <b-nav>
                 <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item to="/#faqs">{{ $t("reused.faqs") }}</b-nav-item>
-                <b-nav-item to="/#news" v-show="online">{{ $t("reused.news") }}</b-nav-item>
+                <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
+                <b-nav-item to="/#news" v-show="online">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -24,7 +24,7 @@
                   <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <!-- <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)"> -->
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -33,13 +33,8 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <b-nav-item v-if="wallet !== null">
-                  <div class="notification">
-                    <img class="logo-large" src="~@/assets/images/icons/notification.svg">
-                    <div class="notification-dot"></div>
-                  </div>
-                </b-nav-item>
-                <b-nav-item to="/create-wallet" v-if="wallet === null">
+                <notification v-if="wallet !== null"></notification>
+                <b-nav-item to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'">
                   <div class="get-free-wallet">
                     Get a Free Wallet
                  </div>
@@ -67,7 +62,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -75,9 +69,12 @@
 import { mapGetters } from 'vuex'
 import store from 'store'
 import Blockie from '@/components/Blockie'
+import Notification from '@/components/Notification'
+
 export default {
   components: {
-    'blockie': Blockie
+    'blockie': Blockie,
+    'notification': Notification
   },
   data () {
     return {
@@ -125,6 +122,9 @@ export default {
     logout () {
       this.$store.dispatch('clearWallet')
       this.$router.push('/')
+    },
+    showNotifications () {
+      this.$children[6].$refs.notification.show()
     }
   },
   mounted () {
@@ -160,6 +160,9 @@ export default {
   watch: {
     online (newVal) {
       this.online = newVal
+    },
+    notifications (newVal) {
+
     }
   },
   computed: {
