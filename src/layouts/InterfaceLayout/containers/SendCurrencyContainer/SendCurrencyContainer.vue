@@ -11,7 +11,7 @@
           </div>
           <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
-            <input type="number" name="" v-model="amount" placeholder="Amount">
+            <input type="number" name="" v-model="amount" placeholder="Amount" />
             <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
           </div>
           <div class="error-message-container" v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
@@ -68,7 +68,7 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount">
+        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -83,17 +83,17 @@
           <!-- Rounded switch -->
           <div class="sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend">
+              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend" />
               <span class="slider round"></span>
             </label>
           </div>
           <br/>
           <div class="input-container" v-if="advancedExpend">
             <div class="the-form user-input">
-              <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off">
+              <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" />
             </div>
             <div class="the-form user-input">
-              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit">
+              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
             </div>
           </div>
         </div>
@@ -238,7 +238,9 @@ export default {
     }
   },
   mounted () {
-    this.parsedBalance = unit.fromWei(parseInt(this.account.balance), 'ether')
+    if (this.account.balance) {
+      this.parsedBalance = unit.fromWei(parseInt(this.account.balance), 'ether')
+    }
   },
   watch: {
     toAddress (newVal) {

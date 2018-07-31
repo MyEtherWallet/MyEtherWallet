@@ -34,7 +34,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox">
+              <input type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -46,7 +46,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox">
+              <input type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -58,7 +58,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox">
+              <input type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -70,7 +70,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox">
+              <input type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -85,7 +85,7 @@
 
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-        <input type="checkbox">
+        <input type="checkbox" />
         <span class="checkmark"></span>
       </label>
     </div>

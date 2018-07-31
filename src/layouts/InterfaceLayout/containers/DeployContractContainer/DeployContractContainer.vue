@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off">
+        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off" />
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount">
+        <input type="number" name="" value="" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
