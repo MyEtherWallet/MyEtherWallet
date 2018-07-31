@@ -43,6 +43,8 @@ const common = {
   dapps: 'Dapps',
   news: 'News',
   interactWcontract: 'Interact with Contract',
-  depContract: 'Deploy Contract'
+  depContract: 'Deploy Contract',
+  signMessage: 'Sign Message',
+  verifyMessage: 'Verify Message'
 }
 export default common

@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
+    <interface-container-title :title="$t('common.signMessage')"></interface-container-title>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -76,7 +76,7 @@ import SuccessModal from '@/components/SuccessModal'
 import PopOver from '@/components/PopOver'
 
 export default {
-  name: 'Send Message',
+  name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
@@ -89,6 +89,18 @@ export default {
         title: 'h1',
         content: 'gogogo'
       }
+    }
+  },
+  methods: {
+    successModalOpen () {
+      this.$children[0].$refs.success.show()
+    },
+    copyToClipboard (ref) {
+      this.$refs[ref].select()
+      document.execCommand('copy')
+    },
+    deleteInputText (ref) {
+      this.$refs[ref].value = ''
     }
   }
 }
