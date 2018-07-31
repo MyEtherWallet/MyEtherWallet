@@ -51,15 +51,15 @@
         <li>
           <div @click.prevent="toggle('openMessage')" :class="[selectedTab === 'signMessage' || selectedTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']">
             <img :src="selectedTab === 'signMessage' || selectedTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)"/>
-            <p>{{ $t("txSideMenu.message") }}</p>
+            <p>{{ $t("Message") }}</p>
             <i :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']" aria-hidden="true"></i>
           </div>
           <ul v-show="showContract">
             <li @click.prevent="switchTabs('signMessage')" :class="selectedTab === 'signMessage'? 'active': ''">
-              {{ $t("reused.signMessage") }}
+              {{ $t("Sign message") }}
             </li>
             <li @click.prevent="switchTabs('verifyMessage')" :class="selectedTab === 'verifyMessage'? 'active': ''">
-              {{ $t("reused.verifyMessage") }}
+              {{ $t("Verify message") }}
             </li>
           </ul>
         </li>
