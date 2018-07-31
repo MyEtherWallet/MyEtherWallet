@@ -1,5 +1,10 @@
 @import '../InterfaceContainer';
 
+p {
+  margin-bottom: 40px;
+  padding: $interface-text-padding-1;
+}
+
 .bootstrap-modal {
   .check-icon {
     border: 3px solid $border-green;
@@ -23,7 +28,7 @@
         align-items: flex-end;
         display: flex;
         margin-bottom: 10px;
-        padding: 0 8px;
+        padding: $interface-text-padding-1;
         width: 100%;
 
         .select-contract {

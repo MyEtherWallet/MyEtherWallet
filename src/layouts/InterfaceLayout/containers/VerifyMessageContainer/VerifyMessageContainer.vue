@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.depContract')"></interface-container-title>
+    <interface-container-title :title="$t('reused.verifyMessage')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">

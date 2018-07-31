@@ -251,6 +251,7 @@ const gb = {
     domSaleBal: 'Domain Sale Balance',
     readWriteC: 'Read / Write Contract',
     read: 'Read',
+    sign: 'Sign',
     contractAddr: 'Contract Address',
     abiJsonInt: 'ABI/JSON Interface'
   }
