@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
+    <interface-container-title :title="$t('Sign message')"></interface-container-title>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -15,22 +15,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
-
-          <div class="tooltip-box-1">
-            <b-btn id="exPopover1"></b-btn>
-            <b-popover target="exPopover1" triggers="hover focus" placement="top">
-              <template slot="title">MetaMask</template>
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to
-              visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your
-              browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user
-              interface to manage your identities on different sites
-              and sign blockchain transactions.
-            </b-popover>
-          </div>
-
+          <popover :popdata="popDataMessage"/>
         </div>
       </div>
 
@@ -43,7 +28,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
-          <popover :popdata="popoverSignature"/>
+          <popover :popdata="popDataSignature"/>
 
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
@@ -85,9 +70,13 @@ export default {
   },
   data () {
     return {
-      popoverSignature: {
-        title: 'h1',
-        content: 'gogogo'
+      popDataSignature: {
+        title: 'Signature',
+        content: 'What is signature?'
+      },
+      popDataMessage: {
+        title: 'Message',
+        content: 'What is message'
       }
     }
   }
