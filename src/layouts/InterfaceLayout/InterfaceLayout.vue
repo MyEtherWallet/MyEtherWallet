@@ -20,6 +20,8 @@
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
+          <sign-message-container v-show="currentTab === 'signMessage'"></sign-message-container>
+          <verify-message-container v-show="currentTab === 'verifyMessage'"></verify-message-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <div class="tokens" v-if="$store.state.online">
             <interface-tokens :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
@@ -43,6 +45,8 @@ import InteractWithContractContainer from './containers/InteractWithContractCont
 import SendCurrencyContainer from './containers/SendCurrencyContainer'
 import SendOfflineContainer from './containers/SendOfflineContainer'
 import SwapContainer from './containers/SwapContainer'
+import SignMessageContainer from './containers/SignMessageContainer'
+import VerifyMessageContainer from './containers/VerifyMessageContainer'
 import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
@@ -61,6 +65,8 @@ export default {
     'dapps-container': DappsContainer,
     'interact-with-contract-container': InteractWithContractContainer,
     'deploy-contract-container': DeployContractContainer,
+    'sign-message-container': SignMessageContainer,
+    'verify-message-container': VerifyMessageContainer,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
