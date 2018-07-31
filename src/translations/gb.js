@@ -8,6 +8,7 @@ import createWallet from './create-wallet/gb'
 import accessWallet from './access-wallet/gb'
 import interfaceTranslations from './interface/gb'
 import team from './team/gb'
+import popover from './popover/gb'
 
 const gb = {
   common: common,
@@ -19,6 +20,7 @@ const gb = {
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,
-  interface: interfaceTranslations
+  interface: interfaceTranslations,
+  popover: popover
 }
 export default gb
