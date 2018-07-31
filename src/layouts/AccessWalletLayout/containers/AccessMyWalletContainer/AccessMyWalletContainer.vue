@@ -8,9 +8,10 @@
 
     <metamask-modal></metamask-modal>
 
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen" :openMnemonicInput="mnemonicOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
+    <mnemonic-modal></mnemonic-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -51,6 +52,7 @@ import MewConnectModal from '../../components/MewConnectModal'
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
 import PasswordModal from '../../components/PasswordModal'
 import PrivateKeyModal from '../../components/PrivateKeyModal'
+import MnemonicModal from '../../components/MnemonicModal'
 import SoftwareModal from '../../components/SoftwareModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
@@ -71,6 +73,7 @@ export default {
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
+    'mnemonic-modal': MnemonicModal,
     'access-wallet-button': AccessWalletButton
   },
   data () {
@@ -138,6 +141,10 @@ export default {
     privateKeyOpen () {
       this.$children[4].$refs.software.hide()
       this.$children[6].$refs.privateKey.show()
+    },
+    mnemonicOpen () {
+      this.$children[4].$refs.software.hide()
+      this.$children[7].$refs.mnemonic.show()
     },
     fileUploaded (e) {
       this.file = e
