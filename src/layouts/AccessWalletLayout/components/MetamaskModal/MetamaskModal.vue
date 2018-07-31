@@ -12,7 +12,7 @@
     </div>
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-        <input type="checkbox">
+        <input type="checkbox" />
         <span class="checkmark"></span>
       </label>
     </div>
