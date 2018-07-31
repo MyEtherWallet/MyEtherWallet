@@ -6,7 +6,7 @@
         <code>
           {{ signedTx }}
         </code>
-        <input ref="signedTxInput" style="position: absolute; top: 0; opacity: 0;" :value="signedTx"/>
+        <input ref="signedTxInput" style="position: absolute; top: 0; opacity: 0;" :value="signedTx" autocomplete="off"/>
       </div>
       <div class="with-toggle">
         <p class="title">

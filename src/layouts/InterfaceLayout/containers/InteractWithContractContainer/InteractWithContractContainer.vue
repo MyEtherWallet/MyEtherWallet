@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="number" name="" value="" placeholder="Enter Domain Name or Address">
+        <input type="number" name="" value="" placeholder="Enter Domain Name or Address" />
       </div>
     </div>
 

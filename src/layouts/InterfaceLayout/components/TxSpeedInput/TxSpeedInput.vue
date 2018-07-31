@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" name="" :value="$store.state.gasPrice" placeholder="Gas Price" v-on:change="setSpeed">
+        <input type="number" name="" :value="$store.state.gasPrice" placeholder="Gas Price" v-on:change="setSpeed" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="locNonce" placeholder="Nonce">
+        <input type="number" v-model="locNonce" placeholder="Nonce" />
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="gasPrice" placeholder="Gas Limit">
+        <input type="number" v-model="gasPrice" placeholder="Gas Limit" />
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>

@@ -87,12 +87,12 @@ export default {
     async fetchTokens () {
       if (this.network.type.name === 'ETH') {
         this.receivedTokens = true
-        const data = `0x80f4ae5c000000000000000000000000${this.$store.state.wallet.getAddressString()}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
+        const data = `0x80f4ae5c000000000000000000000000${this.$store.state.wallet.getAddress().toString('hex')}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
         const response = this.$store.state.web3.eth.call({
           to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
           data: data
         }).then(response => {
-          return response.json()
+          return response
         }).catch(err => {
           console.log(err)
         })
@@ -106,7 +106,7 @@ export default {
     async setTokens () {
       const hex = await this.fetchTokens()
       if (this.tokens.length === 0) {
-        this.tokens = parseTokensHex(hex.result).sort((a, b) => {
+        this.tokens = parseTokensHex(hex).sort((a, b) => {
           if (a.name.toUpperCase() < b.name.toUpperCase()) {
             return -1
           } else if (a.name.toUpperCase() > b.name.toUpperCase()) {

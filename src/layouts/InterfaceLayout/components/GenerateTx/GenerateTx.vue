@@ -10,7 +10,7 @@
             </div>
             <currency-picker :currency="coinType" page="sendOfflineGenTx" :token="true"></currency-picker>
             <div class="the-form amount-number">
-              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount">
+              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount" />
               <i :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
             </div>
           </div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531">
+          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531" />
           <div class="good-button-container">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>
