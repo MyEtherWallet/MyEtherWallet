@@ -8,7 +8,7 @@
             <p>+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
-            <input v-model="search" placeholder="Search"/>
+            <input v-model="search" placeholder="Search" autocomplete="off"/>
             <i class="fa fa-search" aria-hidden="true"></i>
           </div>
         </div>

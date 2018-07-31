@@ -28,7 +28,7 @@
             <h4>Detail Information</h4>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation">
+                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation" />
                 <span class="slider round"></span>
               </label>
             </div>

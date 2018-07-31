@@ -38,13 +38,13 @@ export default {
     }
   },
   mounted () {
-    if (this.blockNumber && this.blockNumber.result !== undefined) {
-      this.parsedNetwork = parseInt(this.blockNumber.result)
+    if (this.blockNumber && this.blockNumber !== undefined) {
+      this.parsedNetwork = parseInt(this.blockNumber)
     }
   },
   watch: {
     blockNumber (newVal) {
-      this.parsedNetwork = parseInt(newVal.result)
+      this.parsedNetwork = parseInt(newVal)
     }
   }
 }
