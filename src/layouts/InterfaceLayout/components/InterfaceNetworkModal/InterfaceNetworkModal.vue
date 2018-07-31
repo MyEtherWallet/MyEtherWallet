@@ -26,13 +26,13 @@
       <div class="network-add hidden" ref="networkAdd">
         <div class="content-block">
           <div class="input-block-container">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="ETH Node Name">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="ETH Node Name" autocomplete="off">
             <select class="custom-select-1">
               <option value="network">Network</option>
               <option value="node">Node</option>
             </select>
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="URL">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Port">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="URL" autocomplete="off">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Port" autocomplete="off">
           </div>
         </div>
 
@@ -49,8 +49,8 @@
             </div>
           </div>
           <div class="auth-form-container hidden" ref="authForm">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="User Name">
-            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Password">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="User Name" autocomplete="off">
+            <input class="custom-input-text-1" type="text" name="" value="" placeholder="Password" autocomplete="off">
           </div>
         </div>
 

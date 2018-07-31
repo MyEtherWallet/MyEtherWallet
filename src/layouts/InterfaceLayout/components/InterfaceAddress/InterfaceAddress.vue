@@ -3,7 +3,7 @@
     <div class="info-block address">
       <div class="block-image">
          <blockie :address="address" width="64px" height="64px"/>
-         <input ref="copyAddress" class="hidden-input" :value="address"/>
+         <input ref="copyAddress" class="hidden-input" :value="address" autocomplete="off"/>
       </div>
       <div class="block-content">
         <h2>{{ $t("common.address")}}</h2>

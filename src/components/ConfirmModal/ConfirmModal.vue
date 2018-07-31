@@ -97,11 +97,11 @@ export default {
   },
   methods: {
     sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt', (res) => {
-        this.$store.dispatch('setAccountNonce', this.nonce + 1)
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      }).on('receipt', (res) => {
         this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
       }).on('error', (err) => {
-        console.log(err)
         this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
       })
 
