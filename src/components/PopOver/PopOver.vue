@@ -1,16 +1,14 @@
 <template lang="html">
-  <div>
-
+  <div class="popover-container">
     <b-col>
       <b-btn :id="popOverId" class="popover-button">
         <img src="@/assets/images/icons/exclamation.png">
       </b-btn>
       <b-popover :target="popOverId" triggers="hover focus" placement="top">
         <template slot="title">{{poptitle}}</template>
-        {{popcontent}}
+        <p class="popover-content">{{popcontent}}</p>
       </b-popover>
     </b-col>
-
   </div>
 </template>
 

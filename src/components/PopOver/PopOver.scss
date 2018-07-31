@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
+.popover-container {
+
+}
+
 .col {
   margin: 0;
   padding: 0;
@@ -15,4 +19,8 @@
   img {
     width: 15px;
   }
+}
+
+.popover-content {
+  font-size: 12px;
 }
