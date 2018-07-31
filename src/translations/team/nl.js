@@ -1,5 +1,5 @@
 const team = {
-  title: '',
-  desc: ''
+  // title: '',
+  // desc: ''
 }
 export default team

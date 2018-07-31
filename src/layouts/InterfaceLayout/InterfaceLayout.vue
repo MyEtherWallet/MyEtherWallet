@@ -176,38 +176,13 @@ export default {
       }
       this.balance = await fetch(this.network.url, config)
         .then(res => {
-          this.getNonce()
           return res.json()
         })
         .catch(err => {
           console.log(err)
         })
 
-      this.$store.dispatch('setAccountBalance', this.balance)
-    },
-    async getNonce () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_getTransactionCount',
-        params: [this.address, 'latest'],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-      const nonce = await fetch(this.network.url, config)
-        .then(res => {
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.$store.dispatch('setAccountNonce', Number(nonce.result))
+      this.$store.dispatch('setAccountBalance', this.balance.result)
     }
   },
   mounted () {
@@ -241,7 +216,6 @@ export default {
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
           this.getBalance()
-          this.getNonce()
           this.getBlock()
           setInterval(this.getBlock, 14000)
           if (this.network.type.chainID === 1) {

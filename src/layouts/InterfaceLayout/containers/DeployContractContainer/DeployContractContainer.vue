@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code">
+        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off">
       </div>
     </div>
 

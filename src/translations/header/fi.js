@@ -1,5 +1,5 @@
 const header = {
-  home: '',
-  about: ''
+  // home: '',
+  // about: ''
 }
 export default header

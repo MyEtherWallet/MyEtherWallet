@@ -1,5 +1,20 @@
 import store from 'store'
 
+const ADD_NOTIFICATION = function (state, val) {
+  const newNotif = {}
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item]
+  })
+
+  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false})
+  store.set('notifications', newNotif)
+}
+
+const CHANGE_PAGE_STATE = function (state, arr) {
+  state.pageStates[arr[0]][arr[1]] = arr[2]
+  store.set(arr[1], arr[2])
+}
+
 const CHECK_IF_ONLINE = function (state) {
   state.online =
     window.location.protocol === 'http:' ||
@@ -15,9 +30,19 @@ const DECRYPT_WALLET = function (state, wallet) {
   state.wallet = wallet
 }
 
-const CHANGE_PAGE_STATE = function (state, arr) {
-  state.pageStates[arr[0]][arr[1]] = arr[2]
-  store.set(arr[1], arr[2])
+const INIT_STATES = function (state, stateObj) {
+  Object.keys(state).forEach(key => {
+    state[key] = stateObj[key]
+  })
+}
+
+const SET_ACCOUNT_BALANCE = function (state, balance) {
+  state.account.balance = balance
+}
+
+const SET_GAS_PRICE = function (state, val) {
+  state.gasPrice = val
+  store.set('gasPrice', val)
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
@@ -29,38 +54,9 @@ const SET_WEB3_INSTANCE = function (state, web3) {
   }
 }
 
-const SET_ACCOUNT_BALANCE = function (state, balance) {
-  state.account.balance = balance
-}
-
-const SET_ACCOUNT_NONCE = function (state, nonce) {
-  state.account.nonce = nonce
-}
-
 const SWITCH_NETWORK = function (state, networkObj) {
   state.network = networkObj
   store.set('network', networkObj)
-}
-
-const INIT_STATES = function (state, stateObj) {
-  Object.keys(state).forEach(key => {
-    state[key] = stateObj[key]
-  })
-}
-
-const SET_GAS_PRICE = function (state, val) {
-  state.gasPrice = val
-  store.set('gasPrice', val)
-}
-
-const ADD_NOTIFICATION = function (state, val) {
-  const newNotif = {}
-  Object.keys(state.notifications).forEach(item => {
-    newNotif[item] = state.notifications[item]
-  })
-
-  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false})
-  store.set('notifications', newNotif)
 }
 
 const UPDATE_NOTIFICATION = function (state, val) {
@@ -76,16 +72,15 @@ const UPDATE_NOTIFICATION = function (state, val) {
 }
 
 export default {
+  ADD_NOTIFICATION,
+  CHANGE_PAGE_STATE,
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
   DECRYPT_WALLET,
-  CHANGE_PAGE_STATE,
-  SET_WEB3_INSTANCE,
-  SET_ACCOUNT_BALANCE,
-  SET_ACCOUNT_NONCE,
-  SWITCH_NETWORK,
   INIT_STATES,
+  SET_ACCOUNT_BALANCE,
   SET_GAS_PRICE,
-  ADD_NOTIFICATION,
+  SET_WEB3_INSTANCE,
+  SWITCH_NETWORK,
   UPDATE_NOTIFICATION
 }

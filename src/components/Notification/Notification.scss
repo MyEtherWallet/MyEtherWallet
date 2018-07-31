@@ -22,14 +22,22 @@
   overflow-y: scroll;
 
   .notification-item {
-    cursor: pointer;
     display: flex;
     flex-direction: column;
-    padding: 10px 20px;
+
+    .notification-header,
+    .notification-body {
+      padding: 10px 20px;
+    }
 
     .notification-header {
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
+    }
+
+    .notification-body {
+      padding-top: 0;
     }
 
     .unread {
