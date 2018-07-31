@@ -1,27 +1,45 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.depContract')"></interface-container-title>
+    <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
 
     <div class="send-form">
+      <p class="">Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.</p>
+
       <div class="title-container">
         <div class="title">
-          <h4>Byte Code</h4>
-          <div class="copy-buttons">
-            <span v-on:click="deleteInput('bytecode')">Clear</span>
-            <span v-on:click="copyToClipboard('bytecode')">Copy</span>
+          <h4>Message</h4>
+          <div class="tooltip-box-1">
+            <b-btn id="exPopover1"></b-btn>
+            <b-popover target="exPopover1" triggers="hover focus" placement="top">
+              <template slot="title">MetaMask</template>
+              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+              MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
+              It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
+              MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+            </b-popover>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code">
+        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>ABI/JSON Interface</h4>
+          <h4>Signature</h4>
+          <div class="tooltip-box-1">
+            <b-btn id="exPopover2"></b-btn>
+            <b-popover target="exPopover2" triggers="hover focus" placement="top">
+              <template slot="title">MetaMask</template>
+              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
+              MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
+              It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
+              MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
+            </b-popover>
+          </div>
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
             <span v-on:click="copyToClipboard('abi')">Copy</span>
@@ -33,41 +51,10 @@
       </div>
     </div>
 
-    <div class="send-form2">
-      <div class="title-container">
-        <div class="title">
-          <h4>Speed of Transaction<span class="alert-button"></span></h4>
-          <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
-        </div>
-        <div class="buttons">
-          <div class="small-circle-button-green-border">
-            Slow
-          </div>
-          <div class="small-circle-button-green-border active">
-            Regular
-          </div>
-          <div class="small-circle-button-green-border">
-            Fast
-          </div>
-        </div>
-      </div>
-
-      <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount">
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
-
     <div class="submit-button-container">
       <div class="buttons">
-        <div class="submit-button large-round-button-green-border clickable">
-          {{ $t('reused.continue') }}
-        </div>
         <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('interface.read') }}
+          {{ $t('interface.sign') }}
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
