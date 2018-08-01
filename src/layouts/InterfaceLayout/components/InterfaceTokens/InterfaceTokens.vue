@@ -1,11 +1,12 @@
 <template>
   <div class="transaction-tokens">
+    <interface-tokens-modal :addToken="addToken"></interface-tokens-modal>
     <div class="wrap">
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
             <h4>{{ $t('interface.tokens') }}</h4>
-            <p>+ {{ $t('interface.customToken') }}</p>
+            <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
             <input v-model="search" placeholder="Search" autocomplete="off"/>
@@ -13,6 +14,12 @@
           </div>
         </div>
         <div class="token-table-container" ref="tokenTableContainer">
+          <table v-show="customTokens.length > 0">
+            <tr v-for="(token, index) in customTokens" :key="token.name + index">
+              <td>{{token.name}}</td>
+              <td>{{token.balance}}</td>
+            </tr>
+          </table>
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{token.name}}</td>
@@ -22,7 +29,7 @@
           <div class="spinner-container" v-show="search === '' && localTokens.length === 0 && receivedTokens">
             <i class="fa fa-spinner fa-spin"></i>
           </div>
-          <div class="spinner-container" v-show="localTokens.length === 0 && !receivedTokens">
+          <div class="spinner-container" v-show="localTokens.length === 0 && customTokens.length === 0 && !receivedTokens">
             No tokens found :(
           </div>
         </div>
@@ -39,18 +46,56 @@
 </template>
 
 <script>
+import store from 'store'
+import {mapGetters} from 'vuex'
+import InterfaceTokensModal from '../InterfaceTokensModal'
+
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
+
 export default {
-  props: ['tokens', 'receivedTokens'],
+  props: ['tokens', 'receivedTokens', 'getTokenBalance'],
+  components: {
+    'interface-tokens-modal': InterfaceTokensModal
+  },
   data () {
     return {
       search: '',
-      localTokens: []
+      localTokens: [],
+      customTokens: []
     }
   },
   mounted () {
     this.assignTokens(this.tokens, this.search)
   },
   methods: {
+    addTokenModal () {
+      this.$children[0].$refs.token.show()
+    },
+    async addToken (address, symbol, decimal) {
+      const localStorageName = {}
+      let newArray = []
+      let balance = await this.getTokenBalance(address)
+      const token = {
+        addr: address,
+        balance: balance,
+        decimals: decimal,
+        email: '',
+        name: symbol,
+        symbol: symbol,
+        website: ''
+      }
+
+      if (this.customTokens.length > 0) {
+        newArray = this.customTokens.map(item => item)
+      }
+      newArray.push(token)
+      this.customTokens = newArray
+      localStorageName[this.network.type.name] = this.customTokens
+
+      store.set('customTokens', localStorageName)
+      this.$children[0].$refs.token.hide()
+    },
     tokenListExpend () {
       this.$refs.tokenTableContainer.classList.toggle('expanded')
       this.$refs.expendDown.classList.toggle('hidden')
@@ -58,6 +103,11 @@ export default {
     },
     assignTokens (arr, query) {
       if (query !== '') {
+        this.customTokens = this.tokens.filter(token => {
+          if (token.name.toLowerCase().includes(query.toLowerCase())) {
+            return token
+          }
+        })
         this.localTokens = this.tokens.filter(token => {
           if (token.name.toLowerCase().includes(query.toLowerCase())) {
             return token
@@ -65,6 +115,9 @@ export default {
         })
       } else {
         this.localTokens = arr
+        if (store.get('customTokens') !== undefined && store.get('customTokens')[this.network.type.name] !== undefined) {
+          this.customTokens = store.get('customTokens')[this.network.type.name]
+        }
       }
     }
   },
@@ -74,7 +127,22 @@ export default {
     },
     search (newVal) {
       this.assignTokens(this.tokens, newVal)
+    },
+    customTokens (newVal) {
+      this.customTokens = newVal
+    },
+    network (newVal) {
+      if (store.get('customTokens') !== undefined && store.get('customTokens')[newVal.type.name] !== undefined) {
+        this.customTokens = store.get('customTokens')[newVal.type.name]
+      } else {
+        this.customTokens = []
+      }
     }
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   }
 }
 </script>

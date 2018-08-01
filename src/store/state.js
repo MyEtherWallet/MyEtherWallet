@@ -12,7 +12,7 @@ const state = {
       chainID: 3,
       contracts: [],
       homePage: 'https://github.com/ethereum/ropsten',
-      name: 'Ropsten',
+      name: 'ROP',
       name_long: 'Ropsten',
       tokens: []
     },
