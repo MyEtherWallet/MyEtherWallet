@@ -17,7 +17,7 @@
       </div>
       <div class="network-list" ref="networkList">
         <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
-          <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'Ropsten' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+          <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
           <div class="grid-3">
             <p class="switch-network" v-for="net in $store.state.Networks[key]" :key="net.service" @click="switchNetwork(net)" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">{{net.service}}</p>
           </div>
@@ -208,13 +208,13 @@ export default {
         case 'ETC':
           this.chainID = 61
           break
-        case 'Ropsten':
+        case 'ROP':
           this.chainID = 3
           break
-        case 'Kovan':
+        case 'KOV':
           this.chainID = 42
           break
-        case 'Rinkeby':
+        case 'RIN':
           this.chainID = 4
           break
         default:
