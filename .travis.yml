@@ -23,6 +23,8 @@ branches:
 stages:
 - name: add to mewbuilds
   if: type != pull_request
+- name: add to codecov
+  if: type != pull_request
 - name: add to mewbuilds develop
   if: branch = develop and type != pull_request
 - name: add to mewbuilds staging
@@ -34,6 +36,9 @@ stages:
 jobs:
   fast_finish: true
   include:
+  - stage: add to codecov
+    script:
+    - npm run codecov
   - stage: add to mewbuilds staging
     before_script:
     - ROUTER_MODE=history npm run build
