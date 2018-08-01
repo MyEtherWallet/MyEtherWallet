@@ -3,5 +3,9 @@
 
 ### Release v0.0.2
 ### Devop
+- Update footer to match design []()
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
+
+### Release v0.0.1
+### Devop
 - Miscellaneous cleanup and changes. [#14](https://github.com/MyEtherWallet/MyEtherWallet/pull/14)
