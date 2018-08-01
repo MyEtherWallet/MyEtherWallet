@@ -17,7 +17,7 @@
           <table v-show="customTokens.length > 0">
             <tr v-for="(token, index) in customTokens" :key="token.name + index">
               <td>{{token.name}}</td>
-              <td>{{token.balance}}</td>
+              <td>{{token.balance}} <i class="fa fa-times-circle clickable" @click="removeToken(index)"></i></td>
             </tr>
           </table>
           <table v-show="localTokens.length > 0">
@@ -33,7 +33,7 @@
             No tokens found :(
           </div>
         </div>
-        <div v-on:click="tokenListExpend" class="expend-bar">
+        <div v-on:click="tokenListExpend" class="expend-bar" v-if="customTokens.length < 10 || localTokens.length < 15">
           <p class="down" ref="expendDown"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
           <p class="up hidden" ref="expendUp"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
         </div>
@@ -69,6 +69,12 @@ export default {
     addTokenModal () {
       this.$children[0].$refs.token.show()
     },
+    removeToken (idx) {
+      const storedTokens = store.get('customTokens')
+      this.customTokens.splice(idx, 1)
+      storedTokens[this.network.type.name] = this.customTokens
+      store.set('customTokens', storedTokens)
+    },
     async addToken (address, symbol, decimal) {
       const localStorageName = {}
       let newArray = []
@@ -80,7 +86,8 @@ export default {
         email: '',
         name: symbol,
         symbol: symbol,
-        website: ''
+        website: '',
+        type: 'custom'
       }
 
       if (this.customTokens.length > 0) {
@@ -99,8 +106,9 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden')
     },
     assignTokens (arr, query) {
+      const oldArray = this.customTokens.slice()
       if (query !== '') {
-        this.customTokens = this.tokens.filter(token => {
+        this.customTokens = oldArray.filter(token => {
           if (token.name.toLowerCase().includes(query.toLowerCase())) {
             return token
           }
