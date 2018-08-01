@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="number" name="" value="" placeholder="Please Enter at Least 7 Characters" />
+        <input type="text" name="" value="" placeholder="Please Enter at Least 7 Characters" />
         <span>.eth</span>
       </div>
     </div>
