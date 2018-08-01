@@ -50,9 +50,6 @@ import store from 'store'
 import {mapGetters} from 'vuex'
 import InterfaceTokensModal from '../InterfaceTokensModal'
 
-// eslint-disable-next-line
-const unit = require('ethjs-unit')
-
 export default {
   props: ['tokens', 'receivedTokens', 'getTokenBalance'],
   components: {
