@@ -15,7 +15,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
-          <popover :poptitle="$t('popover.whatIsMessageTitle')" :popcontent="$t('popover.whatIsMessageContent')"/>
+          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
-          <popover :poptitle="$t('popover.whatIsSignatureTitle')" :popcontent="$t('popover.whatIsSignatureContent')"/>
+          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
