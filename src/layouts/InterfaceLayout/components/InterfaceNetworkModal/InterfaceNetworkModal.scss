@@ -118,3 +118,14 @@
 .current-network {
   background-color: $light-grey-5;
 }
+
+.custom-network-item {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  i {
+    cursor: pointer;
+    margin-left: 10px;
+  }
+}
