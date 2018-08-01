@@ -41,7 +41,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>{{ $t("common.speedTx") }}</h4>
-            <popover :poptitle="$t('popover.whatIsSpeedOfTransactionTitle')" :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
           <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
