@@ -16,7 +16,13 @@ cache:
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
-    packages: g++-4.8
+    packages:
+      - g++-4.8
+      - build-essential
+      - libcairo2-dev
+      - libjpeg8-dev
+      - libpango1.0-dev
+      - libgif-dev
 branches:
   except:
   - gh-pages
