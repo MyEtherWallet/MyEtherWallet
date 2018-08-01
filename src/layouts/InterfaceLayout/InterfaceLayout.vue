@@ -56,6 +56,8 @@ import InterfaceSideMenu from './components/InterfaceSideMenu'
 import InterfaceTokens from './components/InterfaceTokens'
 
 import store from 'store'
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
   components: {
