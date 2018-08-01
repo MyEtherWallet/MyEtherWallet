@@ -143,10 +143,9 @@ export default {
       })
     },
     async getBalance () {
-      const self = this
       await this.$store.state.web3.eth.getBalance(this.address).then((res) => {
-        self.balance = res
-        this.$store.dispatch('setAccountBalance', self.balance)
+        this.balance = res
+        this.$store.dispatch('setAccountBalance', this.balance)
       })
     }
   },
