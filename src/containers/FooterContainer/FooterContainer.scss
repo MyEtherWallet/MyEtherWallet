@@ -169,6 +169,10 @@ a:active {
   .copyright {
     color: $text--footer-link-color;
     text-align: center;
+
+    span {
+      color: $white;
+    }
   }
 
   .social {
