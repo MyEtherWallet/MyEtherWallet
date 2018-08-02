@@ -39,7 +39,7 @@
           <div class="title">
             <div class="title-helper">
               <h4>Data</h4>
-              <popover :popcontent="$t('popover.WhatIsDataContent')"/>
+              <popover :popcontent="$t('popover.whatIsDataContent')"/>
             </div>
           </div>
         </div>
