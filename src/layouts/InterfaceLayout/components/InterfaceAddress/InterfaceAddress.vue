@@ -6,10 +6,12 @@
          <input ref="copyAddress" class="hidden-input" :value="address" autocomplete="off"/>
       </div>
       <div class="block-content">
-        <h2>{{ $t("common.address")}}</h2>
-        <p class="address">{{address}}</p>
+        <div class="information-container">
+          <h2>{{ $t("common.address") }}</h2>
+          <p class="address">{{address}}</p>
+        </div>
         <div class="icon-container">
-          <b-btn v-b-tooltip.hover title="Print" class="custom-tooltip">
+          <b-btn v-b-tooltip.hover :title="$t('common.address')" class="custom-tooltip">
             <img src="~@/assets/images/icons/printer-white.svg">
           </b-btn>
           <b-btn v-b-tooltip.hover title="Copy" class="custom-tooltip" @click="copy">
