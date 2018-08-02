@@ -5,7 +5,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>Speed of Transaction</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
           </div>
           <!-- <p>Transcation Fee: 0.000013 ETH ($1.234)</p> -->
         </div>
@@ -35,7 +35,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>Nonce</h4>
-            <popover :popcontent="$t('popover.WhatIsNonceContent')"/>
+            <popover :popcontent="$t('popover.whatIsNonce')"/>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>Gas Limit</h4>
-            <popover :popcontent="$t('popover.WhatIsGasContent')"/>
+            <popover :popcontent="$t('popover.whatIsGas')"/>
           </div>
         </div>
       </div>
