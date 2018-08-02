@@ -13,7 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
     "deploy": "gh-pages -d dist -b gh-pages",
-    "codecov": "npm run unit && codecov --root=test/unit"
+    "codecov": "npm run unit && codecov"
   },
   "dependencies": {
     "@xkeshi/vue-qrcode": "^1.0.0",
