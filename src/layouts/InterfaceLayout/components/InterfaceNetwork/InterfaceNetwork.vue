@@ -7,9 +7,11 @@
           <img class="icon" src="~@/assets/images/icons/network.svg">
         </div>
         <div class="block-content">
-          <h2>{{ $t("interface.txNetworkTitle") }}</h2>
-          <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
-          <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin"></i> </p>
+          <div class="information-container">
+            <h2>{{ $t("interface.txNetworkTitle") }}</h2>
+            <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
+            <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin"></i> </p>
+          </div>
           <div class="icon-container">
             <img src="~@/assets/images/icons/change.svg">
           </div>
