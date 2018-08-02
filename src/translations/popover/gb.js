@@ -2,10 +2,12 @@
 const popoverTranslations = {
   whatIsMessageContent: 'So what is Message??? More info needed...',
   whatIsSignatureContent: 'So what is Signature??? More info needed...',
-  whatIsSpeedOfTransactionContent: 'So.... What is Speed of Transaction?',
-  WhatIsNonceContent: 'So... What is Nonce?',
-  WhatIsDataContent: 'So what is data???',
-  WhatIsGasContent: 'So.... What is Gas Limit?',
-  Print: 'Print'
+  whatIsSpeedOfTX: 'So.... What is Speed of Transaction?',
+  whatIsNonce: 'So... What is Nonce?',
+  whatIsDataContent: 'So what is data???',
+  whatIsGas: 'So.... What is Gas Limit?',
+  print: 'Print',
+  copy: 'Copy',
+  switchAddress: 'Switch Address'
 }
 export default popoverTranslations
