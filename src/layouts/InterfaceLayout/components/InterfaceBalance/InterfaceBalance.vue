@@ -7,10 +7,12 @@
           <img class="icon" src="~@/assets/images/icons/balance.svg">
         </div>
         <div class="block-content">
-          <h2>{{ $t("common.balance")}}</h2>
-          <div class="balance-text-container">
-            <div v-show="balance !== undefined" class="balance-text"> <p>{{ parsedBalance }}</p> <p>&nbsp;ETH</p></div>
-            <i class="fa fa-spin fa-spinner" v-show="balance === undefined"> </i>
+          <div class="information-container">
+            <h2>{{ $t("common.balance")}}</h2>
+            <div class="balance-text-container">
+              <div v-show="balance !== undefined" class="balance-text"> <p>{{ parsedBalance }}</p> <p>&nbsp;ETH</p></div>
+              <i class="fa fa-spin fa-spinner" v-show="balance === undefined"> </i>
+            </div>
           </div>
           <div class="icon-container">
             <img src="~@/assets/images/icons/more.svg">
