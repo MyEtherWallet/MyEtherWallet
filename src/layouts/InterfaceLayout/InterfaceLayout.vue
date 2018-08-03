@@ -137,16 +137,16 @@ export default {
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
       }
     },
-    async getBlock () {
+    getBlock () {
       this.$store.state.web3.eth.getBlockNumber().then((res) => {
         this.blockNumber = res
-      })
+      }).catch(err => console.log(err))
     },
-    async getBalance () {
-      await this.$store.state.web3.eth.getBalance(this.address).then((res) => {
+    getBalance () {
+      this.$store.state.web3.eth.getBalance(this.address).then((res) => {
         this.balance = res
         this.$store.dispatch('setAccountBalance', this.balance)
-      })
+      }).catch(err => console.log(err))
     }
   },
   mounted () {

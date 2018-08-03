@@ -1,4 +1,3 @@
-
 const popoverTranslations = {
   whatIsMessageContent: 'So what is Message??? More info needed...',
   whatIsSignatureContent: 'So what is Signature??? More info needed...',

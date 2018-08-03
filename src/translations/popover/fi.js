@@ -1,4 +1,12 @@
-const interfaceTranslations = {
-
+const popoverTranslations = {
+  // whatIsMessageContent: '',
+  // whatIsSignatureContent: '',
+  // whatIsSpeedOfTX: '',
+  // whatIsNonce: '',
+  // whatIsDataContent: '',
+  // whatIsGas: '',
+  // print: '',
+  // copy: '',
+  // switchAddress: ''
 }
-export default interfaceTranslations
+export default popoverTranslations
