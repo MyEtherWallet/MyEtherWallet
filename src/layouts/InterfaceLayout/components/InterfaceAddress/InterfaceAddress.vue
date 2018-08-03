@@ -6,16 +6,18 @@
          <input ref="copyAddress" class="hidden-input" :value="address" autocomplete="off"/>
       </div>
       <div class="block-content">
-        <h2>{{ $t("common.address")}}</h2>
-        <p class="address">{{address}}</p>
+        <div class="information-container">
+          <h2>{{ $t("common.address") }}</h2>
+          <p class="address">{{address}}</p>
+        </div>
         <div class="icon-container">
-          <b-btn v-b-tooltip.hover title="Print" class="custom-tooltip">
+          <b-btn v-b-tooltip.hover :title="$t('popover.print')" class="custom-tooltip">
             <img src="~@/assets/images/icons/printer-white.svg">
           </b-btn>
-          <b-btn v-b-tooltip.hover title="Copy" class="custom-tooltip" @click="copy">
+          <b-btn v-b-tooltip.hover :title="$t('popover.copy')" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg">
           </b-btn>
-          <b-btn v-b-tooltip.hover title="Switch Address" class="custom-tooltip">
+          <b-btn v-b-tooltip.hover :title="$t('popover.switchAddress')" class="custom-tooltip">
             <img src="~@/assets/images/icons/change.svg">
           </b-btn>
         </div>

@@ -2,10 +2,15 @@
 
 .dapps-button {
   border-radius: 5px;
-  box-shadow: 0 5px 20px $box-shadow-color-1;
   cursor: pointer;
   padding: 40px 20px;
   text-align: center;
+  height: 100%;
+  background: rgb(241, 250, 250);
+
+  &:hover {
+    background-color: #c9f2ed;
+  }
 
   img {
     margin-bottom: 15px;

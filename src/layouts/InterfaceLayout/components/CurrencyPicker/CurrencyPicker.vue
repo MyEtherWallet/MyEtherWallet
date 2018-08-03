@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="currency-picker-container">
-    <div :class="[open? 'open':'','dropdown-container']">
-      <div class="dropdown-text-container" @click="openDropdown">
+    <div>
+      <div class="dropdown-text-container" @click="openDropdown" :class="[open? 'open':'','dropdown-container']">
         <p v-show="token"> {{selectedCurrency.symbol}} <span class="subname">- {{ selectedCurrency.name }}</span></p>
         <p v-show="!token"> {{selectedCurrency.name}} </p>
         <i :class="['fa', open ? 'fa-angle-up':'fa-angle-down']"></i>
