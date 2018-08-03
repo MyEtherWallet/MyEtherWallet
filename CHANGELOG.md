@@ -1,3 +1,6 @@
+
+- additional pages [#28](https://github.com/MyEtherWallet/MyEtherWallet/pull/28)
+
 ### Release v0.0.2
 ### Devop
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
