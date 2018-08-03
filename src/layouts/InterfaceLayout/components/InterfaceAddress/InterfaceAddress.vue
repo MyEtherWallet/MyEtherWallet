@@ -11,15 +11,18 @@
           <p class="address">{{address}}</p>
         </div>
         <div class="icon-container">
-          <b-btn v-b-tooltip.hover :title="$t('popover.print')" class="custom-tooltip">
+          <b-btn class="custom-tooltip" id="print">
             <img src="~@/assets/images/icons/printer-white.svg">
           </b-btn>
-          <b-btn v-b-tooltip.hover :title="$t('popover.copy')" class="custom-tooltip" @click="copy">
+          <b-btn class="custom-tooltip" @click="copy" id="copy">
             <img src="~@/assets/images/icons/copy.svg">
           </b-btn>
-          <b-btn v-b-tooltip.hover :title="$t('popover.switchAddress')" class="custom-tooltip">
+          <b-btn class="custom-tooltip" id="switch">
             <img src="~@/assets/images/icons/change.svg">
           </b-btn>
+          <b-popover target="print" placement="top" triggers="hover" title="" :content="$t('popover.print')"></b-popover>
+          <b-popover target="copy" placement="top" triggers="hover" title="" :content="$t('popover.copy')"></b-popover>
+          <b-popover target="switch" placement="top" triggers="hover" title="" :content="$t('popover.switchAddress')"></b-popover>
         </div>
       </div>
     </div>
