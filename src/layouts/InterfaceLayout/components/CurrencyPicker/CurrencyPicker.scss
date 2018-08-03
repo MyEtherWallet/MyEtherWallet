@@ -1,8 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 %open {
+  background-color: $background-color-1;
   border: 1px solid $mew-green;
-  background-color: #f9f9f9;
 }
 
 .currency-picker-container {
@@ -24,14 +24,14 @@
 
 
 .dropdown-text-container {
-  //background-color: $background-color-1;
+  background-color: $background-color-1;
+  border: 1px solid $white;
+  border-bottom: 0;
   border-radius: 4px;
   cursor: pointer;
   padding: 13px 15px;
   user-select: none;
   width: 100%;
-  border: 1px solid white;
-  border-bottom: 0;
 
   i {
     position: absolute;
