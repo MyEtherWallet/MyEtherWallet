@@ -74,7 +74,6 @@ export default {
     copyToClipboard (ref) {
       this.$refs[ref].select()
       document.execCommand('copy')
-<<<<<<< HEAD
     }
   },
   methods: {
@@ -87,8 +86,6 @@ export default {
     },
     deleteInputText (ref) {
       this.$refs[ref].value = ''
-=======
->>>>>>> ebfb9497c74ba9d58c668d795a4c505abc6ebc92
     }
   }
 }
