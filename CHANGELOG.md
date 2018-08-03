@@ -1,7 +1,6 @@
-
+### Feature
 - additional pages [#28](https://github.com/MyEtherWallet/MyEtherWallet/pull/28)
 
-### Release v0.0.2
 ### Devop
 - Update footer to match design [#29](https://github.com/MyEtherWallet/MyEtherWallet/pull/29)
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
