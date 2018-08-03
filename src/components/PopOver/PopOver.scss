@@ -12,7 +12,28 @@
   margin: 0;
   padding: 0;
 
+  .hover-icon {
+    display: none;
+  }
+
   img {
     width: 15px;
+    height: 15px;
+    margin: 0;
+    padding: 0;
+    display: block;
   }
+
+  &:hover {
+    .nohover-icon {
+      display: none;
+    }
+    .hover-icon {
+      display: block;
+    }
+  }
+}
+
+.popover-content {
+  font-size: 12px;
 }

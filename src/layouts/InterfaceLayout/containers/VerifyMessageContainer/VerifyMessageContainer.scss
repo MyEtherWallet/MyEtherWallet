@@ -109,6 +109,10 @@
       .title {
         padding: 0 8px;
 
+        .title-and-popover {
+          display: flex;
+        }
+
         h4 {
           margin-bottom: 2px;
         }

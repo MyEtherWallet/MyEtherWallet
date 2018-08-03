@@ -42,7 +42,10 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('common.speedTx') }}<span class="alert-button"></span></h4>
+          <div class="title-and-popover">
+            <h4>{{ $t('common.speedTx') }}</h4>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
+          </div>
           <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
