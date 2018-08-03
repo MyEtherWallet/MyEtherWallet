@@ -71,12 +71,6 @@ export default {
     }
   },
   methods: {
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
-    }
-  },
-  methods: {
     successModalOpen () {
       this.$children[0].$refs.success.show()
     },
