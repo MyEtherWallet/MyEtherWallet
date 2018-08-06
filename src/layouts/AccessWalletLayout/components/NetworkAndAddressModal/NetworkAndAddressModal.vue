@@ -34,7 +34,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox" />
+              <input v-on:click="unselectAllAddresses" type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -46,7 +46,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox" />
+              <input v-on:click="unselectAllAddresses" type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -58,7 +58,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox" />
+              <input v-on:click="unselectAllAddresses" type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -70,7 +70,7 @@
           <li>2.2233445 ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox" />
+              <input v-on:click="unselectAllAddresses" type="checkbox" />
               <span class="checkmark checkmark-small"></span>
             </label>
           </li>
@@ -85,13 +85,13 @@
 
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-        <input type="checkbox" />
+        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox" />
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
-        {{ $t("common.continue") }}
+      <b-btn class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
+        {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
     <div class="support">
@@ -109,6 +109,15 @@
 export default {
   data () {
     return {
+      accessMyWalletBtnDisabled: true
+    }
+  },
+  methods: {
+    unselectAllAddresses: function (e) {
+      document.querySelectorAll('.user-input-checkbox input').forEach(function (el) {
+        el.checked = false
+      })
+      e.srcElement.checked = true
     }
   }
 }
