@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address">
+  <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address" title="Network and Address" centered>
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t("accessWallet.hdDerivationPath") }}</h4>
