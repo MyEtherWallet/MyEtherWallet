@@ -136,9 +136,9 @@
           position: relative;
 
           i {
-            bottom: 10px;
+            bottom: 13px;
             position: absolute;
-            right: 10px;
+            right: 13px;
           }
 
           textarea {
@@ -228,6 +228,10 @@
   .submit-button-container {
     padding: 60px 0;
     text-align: center;
+
+    .bottom-text {
+      margin-top: 20px;
+    }
 
     .submit-button {
       margin: 0 auto;
