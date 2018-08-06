@@ -116,6 +116,10 @@ textarea {
   border-radius: 4px;
 }
 
+button {
+  box-shadow: none !important;
+}
+
 
 // *********************************************************************
 // Disable WebKit Spinners
@@ -430,6 +434,24 @@ h6 {
   user-select: none;
 }
 
+.mid-round-button-lightgrey-filled {
+  background-color: $light-grey-5;
+  border: 1px solid $button--border-color-1;
+  border-radius: 6px;
+  color: $button--text-color-1;
+  cursor: initial;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 15px 40px;
+  user-select: none;
+
+  &:hover {
+    background-color: $light-grey-5;
+    border: 1px solid $button--border-color-1;
+    cursor: initial;
+  }
+}
+
 .mid-round-button-green-border {
   background-color: $background-color-white;
   border: 1px solid $button--border-color-2;
@@ -575,6 +597,12 @@ h6 {
       display: none;
     }
   }
+}
+
+.dropdown-toggle::after {
+    position: absolute !important;
+    right: 13px !important;
+    top: 16px !important;
 }
 
 // *********************************************************************
