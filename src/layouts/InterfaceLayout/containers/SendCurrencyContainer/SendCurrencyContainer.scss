@@ -100,10 +100,22 @@
       .to-address {
         position: relative;
 
+        .blockie-image {
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          right: -41px;
+          top: -4px;
+        }
+
         .title {
           align-items: center;
           display: flex;
           position: relative;
+
+          h4 {
+            position: relative;
+          }
 
           img {
             height: 50px;
@@ -178,23 +190,16 @@
     padding-top: 10px;
 
     .advanced-content {
+      padding: 20px 0;
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
 
-      .input-container {
-        padding-bottom: 10px;
-
-        .the-form:nth-child(1) {
-          margin-bottom: 5px;
-        }
-
-      }
-
-      .title {
+      .toggle-button-container {
         display: flex;
-        padding: 0 8px;
-        padding-bottom: 20px;
-        padding-top: 20px;
+
+        h4 {
+          padding: 0 8px;
+        }
 
         .toggle-button {
           align-items: center;
@@ -205,8 +210,18 @@
           >span {
             margin-right: 15px;
           }
+        } // .toggle-button
+      } // .toggle-button-container
+
+      .input-container {
+        margin-top: 20px;
+        margin-bottom: -15px;
+
+        .user-input {
+          margin-bottom: 5px;
         }
       }
+
     }
   }
 

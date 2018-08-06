@@ -17,7 +17,7 @@ import Wallet from 'ethereumjs-wallet'
 export default {
   data () {
     return {
-      privateKey: ''
+      privateKey: '563070852154f171267e8a79111f299e42baeda3acd5f0cf82d92e5feba31dea'
     }
   },
   methods: {
