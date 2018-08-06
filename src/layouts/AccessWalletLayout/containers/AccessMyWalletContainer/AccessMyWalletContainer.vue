@@ -4,7 +4,6 @@
     <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
     <network-and-address-modal></network-and-address-modal>
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"></hardware-modal>
-    <install-metamask-modal></install-metamask-modal>
     <metamask-modal></metamask-modal>
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
@@ -50,7 +49,7 @@ import MewConnectModal from '../../components/MewConnectModal'
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
 import PasswordModal from '../../components/PasswordModal'
 import PrivateKeyModal from '../../components/PrivateKeyModal'
-import SoftwareModal from '../../components/jsonFilePasswordModal'
+import SoftwareModal from '../../components/SoftwareModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
