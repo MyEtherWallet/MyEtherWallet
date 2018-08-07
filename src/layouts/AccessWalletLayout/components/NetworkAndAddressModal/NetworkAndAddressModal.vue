@@ -89,6 +89,8 @@
         class="mid-round-button-green-filled close-button"
         @click.prevent="unlockWallet">
         {{ $t("common.accessMyWallet") }}
+      <b-btn class="mid-round-button-green-filled close-button">
+        {{ $t('common.continue') }}
       </b-btn>
     </div>
     <div class="support">
@@ -243,6 +245,13 @@ export default {
         }
       });
     }
+  },
+  mounted () {
+    console.log('MOUNTED', this.hardwareWallet)
+  },
+  methods: {
+
+    // this.addresses = _accounts
   }
 };
 </script>
