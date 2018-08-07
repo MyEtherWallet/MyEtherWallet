@@ -110,6 +110,7 @@ a:active {
         height: 30px;
         margin-top: -7px;
         vertical-align: top;
+        margin-left: -9px;
       }
     }
   }
@@ -167,9 +168,12 @@ a:active {
   }
 
   .copyright {
-    color: $text--footer-link-color;
+    
     text-align: center;
 
+    p {
+      color: $text--footer-link-color;
+    }
     span {
       color: $white;
     }
