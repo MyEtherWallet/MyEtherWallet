@@ -79,7 +79,6 @@
 
 <script>
 import store from 'store'
-import web3 from 'web3'
 
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
@@ -192,7 +191,6 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
-      this.$store.dispatch('setWeb3Instance', web3)
     }
   },
   watch: {
