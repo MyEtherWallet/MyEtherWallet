@@ -20,9 +20,8 @@ export default {
     'footer-container': FooterContainer
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
-    let web3 = store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url))
     const state = {
-      web3: window.web3 ? window.web3.setProvider(this.$store.state.Networks['ETH'][0].url) : web3,
+      web3: store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url)),
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
       account: {
@@ -43,9 +42,6 @@ export default {
 
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
-    if (window.web3) {
-      this.$store.dispatch('setWeb3Instance', window.web3)
-    }
   }
 }
 </script>
