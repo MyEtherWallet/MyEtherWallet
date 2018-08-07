@@ -1,12 +1,6 @@
 import store from 'store'
 
-const ADD_NOTIFICATION = function (state, val) {
-  const newNotif = {}
-  Object.keys(state.notifications).forEach(item => {
-    newNotif[item] = state.notifications[item]
-  })
-
-  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false})
+const ADD_NOTIFICATION = function (state, newNotif) {
   store.set('notifications', newNotif)
 }
 
@@ -46,12 +40,7 @@ const SET_GAS_PRICE = function (state, val) {
 }
 
 const SET_WEB3_INSTANCE = function (state, web3) {
-  if (web3.eth === undefined) {
-    // eslint-disable-next-line
-    state.web3 = new web3(new web3.providers.HttpProvider(state.network.url))
-  } else {
-    state.web3 = web3
-  }
+  state.web3 = web3
 }
 
 const SWITCH_NETWORK = function (state, networkObj) {
@@ -59,14 +48,7 @@ const SWITCH_NETWORK = function (state, networkObj) {
   store.set('network', networkObj)
 }
 
-const UPDATE_NOTIFICATION = function (state, val) {
-  // address, index, object
-  const newNotif = {}
-  Object.keys(state.notifications).forEach(item => {
-    newNotif[item] = state.notifications[item]
-  })
-
-  newNotif[val[0]][val[1]] = val[2]
+const UPDATE_NOTIFICATION = function (state, newNotif) {
   state.notifications = newNotif
   store.set('notifications', newNotif)
 }
