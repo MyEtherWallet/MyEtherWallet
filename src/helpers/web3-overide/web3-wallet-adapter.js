@@ -1,5 +1,6 @@
 // import * as _ from 'lodash'
-import * as utils from 'web3-utils'
+// import * as utils from 'web3-utils'
+import * as ethUtil from 'ethereumjs-util'
 // import EthereumWallet from 'ethereumjs-wallet'
 // import { getObjectInheritance } from '../helpers'
 
@@ -15,45 +16,87 @@ export default class Web3WalletAdapter {
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
   getPrivateKey () {
-    return this.wallet.getPrivateKey()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPrivateKey()
+    } else {
+      return null
+    }
   }
 
   getPrivateKeyString () {
-    return this.wallet.getPrivateKeyString()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPrivateKeyString()
+    } else {
+      return null
+    }
   }
 
   getPublicKey () {
-    return this.wallet.getPublicKey()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPublicKey()
+    } else {
+      return null
+    }
   }
 
   getPublicKeyString () {
-    return this.wallet.getPublicKeyString()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPublicKeyString()
+    } else {
+      return null
+    }
   }
 
   getAddress () {
     return this.wallet.getAddress()
   }
 
+  getAddressString () {
+    const address = this.wallet.getAddress()
+    if (typeof address !== 'string') {
+      let rawAddress = '0x' + address.toString('hex')
+      return ethUtil.toChecksumAddress(rawAddress)
+    } else {
+      return address
+    }
+  }
+
   getChecksumAddressString () {
-    return this.wallet.getChecksumAddressString()
+    return ethUtil.toChecksumAddress(this.address)
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   get privateKey () {
-    return this.wallet.getPrivateKeyString()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPrivateKeyString()
+    } else {
+      return null
+    }
   }
 
   get publicKey () {
-    return this.wallet.getPublicKeyString()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPublicKeyString()
+    } else {
+      return null
+    }
   }
 
   get privateKeyBuffer () {
-    return this.wallet.getPrivateKey()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPrivateKey()
+    } else {
+      return null
+    }
   }
 
   get publicKeyBuffer () {
-    return this.wallet.getPublicKey()
+    if (this.privateKeyAvailable()) {
+      return this.wallet.getPublicKey()
+    } else {
+      return null
+    }
   }
 
   get accounts () {
@@ -71,7 +114,7 @@ export default class Web3WalletAdapter {
   }
 
   get checkSumAddress () {
-    return utils.toChecksumAddress(this.address)
+    return ethUtil.toChecksumAddress(this.address)
   }
 
   signTransaction (tx, privateKey) {
@@ -85,20 +128,20 @@ export default class Web3WalletAdapter {
       }
 
       // Resolve immediately if nonce, chainId and price are provided
-      if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
-        tx.data = tx.data ? tx.data : tx.input || '0x'
-        tx.value = tx.value || '0x'
-
-        this.wallet.signTransaction(tx)
-          .then(_result => {
-            resolve(_result)
-          })
-          .catch(_error => {
-            reject(_error)
-          })
-      } else {
-        reject(Error('one or more of nonce, chainId, or gasPrice are missing'))
-      }
+      // if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
+      tx.data = tx.data ? tx.data : tx.input || '0x'
+      tx.value = tx.value || '0x'
+      console.log(this.wallet) // todo remove dev item
+      this.wallet.signTransaction(tx)
+        .then(_result => {
+          resolve(_result)
+        })
+        .catch(_error => {
+          reject(_error)
+        })
+      // } else {
+      //   reject(Error('one or more of nonce, chainId, or gasPrice are missing'))
+      // }
     })
   }
 
@@ -115,5 +158,4 @@ export default class Web3WalletAdapter {
 
     // return Promise.resolve()
   }
-
 }

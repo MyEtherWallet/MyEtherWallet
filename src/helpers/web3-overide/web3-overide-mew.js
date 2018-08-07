@@ -4,7 +4,8 @@ export default function web3OverideMew (web3, wallet) {
   const methodOverides = {
     signTransaction (tx, privateKey) {
       return new Promise((resolve, reject) => {
-        console.log(tx, privateKey, '-----')
+        console.log(tx, privateKey, '-- HOW COULD I TRIGGER THE CONFIRMATION MODAL IN HERE---')
+        // pass in this?  something else?
         wallet.signTransaction(tx)
           .then(_result => {
             resolve(_result)
@@ -17,7 +18,7 @@ export default function web3OverideMew (web3, wallet) {
     },
     sign (data) {
       return new Promise((resolve, reject) => {
-        console.log(data, '-----')
+        console.log(data, '-- HOW COULD I TRIGGER THE CONFIRMATION MODAL IN HERE---')
         wallet.sign(data)
           .then(_result => {
             resolve(_result)
