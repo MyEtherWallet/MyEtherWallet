@@ -34,6 +34,7 @@
           margin-left: auto;
 
           span {
+            cursor: pointer;
             margin-left: 20px;
           }
         }
@@ -74,5 +75,15 @@
 
   .submit-button-container {
     padding: 40px 60px;
+
+    .submit-button {
+      position: relative;
+      i {
+        position: absolute;
+        right: 20px;
+        top: 16px;
+        font-size: 30px;
+      }
+    }
   }
 }
