@@ -77,6 +77,8 @@ import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
+const unit = require('ethjs-unit')
+
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,

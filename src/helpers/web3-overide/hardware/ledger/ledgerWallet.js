@@ -139,7 +139,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     const matchResult = regExp.exec(derivationPath);
     if (matchResult === null) {
       throw this.makeError(
-        "To get multiple accounts your derivation path must follow pattern 44'/60|61'/x'/n ",
+        'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       );
     }

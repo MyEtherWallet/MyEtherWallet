@@ -246,12 +246,13 @@ export default {
       });
     }
   },
-  mounted () {
-    console.log('MOUNTED', this.hardwareWallet)
-  },
-  methods: {
-
-    // this.addresses = _accounts
+  watch: {
+    hardwareWallet (newValue) {
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = addressSet
+        })
+    }
   }
 };
 </script>
