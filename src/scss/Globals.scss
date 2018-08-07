@@ -411,6 +411,18 @@ h6 {
   user-select: none;
 }
 
+.large-round-button-white-filled__body-text-color {
+  color: $text-base-color;
+  background-color: $button--background-color-2;
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
 .large-round-button-white-border {
   border: 1px solid $button--border-color-1;
   border-radius: 5px;
