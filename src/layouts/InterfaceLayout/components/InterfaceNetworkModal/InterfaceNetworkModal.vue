@@ -79,7 +79,6 @@
 
 <script>
 import store from 'store'
-import web3 from 'web3'
 
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
@@ -178,7 +177,7 @@ export default {
           name_long: this.selectedNetwork.name_long,
           tokens: []
         },
-        url: this.url,
+        url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
       }
 
@@ -192,11 +191,6 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
-      if (window.web3) {
-        this.$store.dispatch('setWeb3Instance', window.web3)
-      } else {
-        this.$store.dispatch('setWeb3Instance', web3)
-      }
     }
   },
   watch: {

@@ -11,7 +11,7 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js",
+    "build": "node fetchEthListData; node build/build.js",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov"
   },
@@ -74,6 +74,7 @@
     "jest-serializer-vue": "^2.0.2",
     "mini-css-extract-plugin": "^0.4.1",
     "nightwatch": "^1.0.6",
+    "node-fetch": "^2.2.0",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.9.2",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
