@@ -79,8 +79,7 @@ export default {
     sortedNotifications () {
       this.countUnread()
 
-      // if (!this.notifications[this.$store.state.wallet.getAddressString()]) return []
-
+      if (!this.notifications[this.$store.state.wallet.getAddressString()]) return []
       // eslint-disable-next-line
       return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
         a = new Date(a.timestamp)
