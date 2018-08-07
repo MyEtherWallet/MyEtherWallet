@@ -1,5 +1,10 @@
 <template>
   <div class="header">
+
+    <div class="scrollup-container" :class="showScrollUpButton ? 'active' : ''">
+      <scrollupbutton></scrollupbutton>
+    </div>
+
     <div class="wrap">
       <div class="fixed-header" ref="fixedHeader">
         <div class="page-container">
@@ -70,11 +75,13 @@ import { mapGetters } from 'vuex'
 import store from 'store'
 import Blockie from '@/components/Blockie'
 import Notification from '@/components/Notification'
+import ScrollUpButton from '@/components/ScrollUpButton'
 
 export default {
   components: {
     'blockie': Blockie,
-    'notification': Notification
+    'notification': Notification,
+    'scrollupbutton': ScrollUpButton
   },
   data () {
     return {
@@ -104,7 +111,8 @@ export default {
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'gb'
+      currentFlag: 'gb',
+      showScrollUpButton: false
     }
   },
   methods: {
@@ -128,6 +136,8 @@ export default {
     }
   },
   mounted () {
+    var _this = this
+
     const self = this
     if (this.$store.state.online) {
       this.online = true
@@ -151,9 +161,11 @@ export default {
       if (topPos < -150) {
         header.classList.add('tiny-header')
         logoLarge.classList.add('logo-small')
+        _this.showScrollUpButton = true
       } else {
         header.classList.remove('tiny-header')
         logoLarge.classList.remove('logo-small')
+        _this.showScrollUpButton = false
       }
     }
   },
