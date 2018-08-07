@@ -16,6 +16,8 @@
     "codecov": "npm run unit && codecov"
   },
   "dependencies": {
+    "@ledgerhq/hw-app-eth": "^4.21.0",
+    "@ledgerhq/hw-transport-u2f": "^4.21.0",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
