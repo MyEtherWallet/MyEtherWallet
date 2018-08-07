@@ -1,3 +1,5 @@
+import overide from '../helpers/web3-overide/web3-overide-mew'
+
 const addNotification = function ({commit, state}, val) {
   const newNotif = {}
   Object.keys(state.notifications).forEach(item => {
@@ -26,8 +28,10 @@ const createAndSignTx = function ({commit}, val) {
   commit('CREATE_AND_SIGN_TX', val)
 }
 
-const decryptWallet = function ({commit}, wallet) {
+const decryptWallet = function ({commit, state}, wallet) {
+  const web3 = overide(state.web3, wallet)
   commit('DECRYPT_WALLET', wallet)
+  commit('SET_WEB3_INSTANCE', web3)
 }
 
 const setAccountBalance = function ({commit}, balance) {
@@ -42,13 +46,13 @@ const setState = function ({commit}, stateObj) {
   commit('INIT_STATES', stateObj)
 }
 
-const setWeb3Instance = function ({commit}, web3) {
+const setWeb3Instance = function ({commit, state}, web3) {
   if (web3.eth === undefined) {
     // eslint-disable-next-line
-    let web3Instance = new web3(new web3.providers.HttpProvider(state.network.url))
-    commit('SET_WEB3_INSTANCE', web3Instance)
+    const web3Instance = new web3(new web3.providers.HttpProvider(state.network.url))
+    commit('SET_WEB3_INSTANCE', overide(web3Instance, state.wallet))
   } else {
-    commit('SET_WEB3_INSTANCE', web3)
+    commit('SET_WEB3_INSTANCE', overide(web3, state.wallet))
   }
 }
 
