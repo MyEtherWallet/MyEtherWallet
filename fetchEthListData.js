@@ -25,7 +25,8 @@ async function fetchContracts () {
   const contractFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/contracts/'
   contractList.forEach(async (contractFile) => {
     let contractsCollection = await fetch(`${contractFileURL + contractFile.name}`).then(res => res.text()).catch(err => console.log(err))
-    fs.writeFileSync(`${contractFolder}/${contractFile.name}`, contractsCollection)
+    contractsCollection = contractsCollection.replace("'", '');
+    fs.writeFileSync(`${contractFolder}/${contractFile.name}`, JSON.stringify(contractsCollection))
   })
 }
 
