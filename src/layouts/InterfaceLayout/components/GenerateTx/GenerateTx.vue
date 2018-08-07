@@ -116,7 +116,7 @@ export default {
         to: this.toAddress,
         chainId: this.$store.state.network.type.chainID
       }
-
+      console.log('make sign: GenerateTx') // todo remove dev item
       this.$store.state.web3.eth.signTransaction(raw)
         .then(signedTx => {
           console.log(signedTx) // todo remove dev item
@@ -127,16 +127,6 @@ export default {
           this.$children[5].$refs.signedTx.show()
           window.scrollTo(0, 0)
         })
-      // const tx = new EthTx(raw)
-      // tx.sign(this.$store.state.wallet.getPrivateKey())
-      // const serializedTx = tx.serialize()
-      // const signedTx = `0x${serializedTx.toString('hex')}`
-      // this.$emit('createdRawTx', signedTx)
-      //
-      // this.raw = raw
-      // this.signed = signedTx
-      // this.$children[5].$refs.signedTx.show()
-      // window.scrollTo(0, 0)
     },
     gasLimitUpdated (e) {
       this.$emit('gasLimitUpdate', e)

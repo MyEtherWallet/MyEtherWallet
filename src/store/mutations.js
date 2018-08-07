@@ -1,6 +1,7 @@
 import store from 'store'
 
 const ADD_NOTIFICATION = function (state, newNotif) {
+  state.notifications = newNotif
   store.set('notifications', newNotif)
 }
 
