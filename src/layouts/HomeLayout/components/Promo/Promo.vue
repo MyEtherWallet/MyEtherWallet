@@ -4,7 +4,7 @@
       <div class="page-container">
         <div class="flex-col-vertical-center content">
           <div class="title">
-            <h2>{{ $t("home.promoTitle1") }}<br>{{ $t("home.promoTitle2") }}</h2>
+            <h2>{{ $t("home.promoTitle") }}</h2>
           </div>
           <div class="buttons">
             <div class="button-block">
