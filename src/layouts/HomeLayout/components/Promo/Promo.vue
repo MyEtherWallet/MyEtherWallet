@@ -16,7 +16,7 @@
             </div>
             <div class="button-block">
               <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
-                <span class="large-round-button-white-filled green-text-color">
+                <span class="large-round-button-white-filled__body-text-color">
                   {{ $t("common.accessMyWallet") }}
                 </span>
               </router-link>
