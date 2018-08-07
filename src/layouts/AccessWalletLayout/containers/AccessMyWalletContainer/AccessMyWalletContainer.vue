@@ -2,24 +2,28 @@
   <div class="access-my-wallet-options">
     <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
-    <network-and-address-modal></network-and-address-modal>
+    <network-and-address-modal :hardwareWallet="hardwareWallet" :hardwareAddresses="hardwareAddresses" v-on:getAddresses="getAddresses"></network-and-address-modal>
 
-    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"></hardware-modal>
+    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
+                    v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
 
     <metamask-modal></metamask-modal>
 
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
+                    :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
 
     <div class="wrap">
       <div class="page-container">
         <div class="title">
-          <h2>{{$t("common.accessMyWallet")}}</h2>
+          <h2>{{$t('common.accessMyWallet')}}</h2>
           <h5>
-            {{$t("common.noWallet")}}
-            <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
-              {{$t("common.getAFreeWallet")}}
+            {{$t('common.noWallet')}}
+            <router-link
+              :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
+              class="nounderline">
+              {{$t('common.getAFreeWallet')}}
             </router-link>
           </h5>
         </div>
@@ -34,7 +38,7 @@
             :recommend="button.recommend"
             :tooltip="button.tooltip"
             :disabled="button.disabled"
-            >
+          >
           </access-wallet-button>
         </div>
       </div>
@@ -76,6 +80,8 @@ export default {
   data () {
     return {
       file: '',
+      hardwareWallet: '',
+      hardwareAddresses: [],
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -142,6 +148,22 @@ export default {
     fileUploaded (e) {
       this.file = e
       this.passwordOpen()
+    },
+    hardwareWalletOpen (e) {
+      this.hardwareWallet = e
+      this.getAddresses(5, 0)
+      this.networkAndAddressOpen()
+    },
+    getAddresses (e) {
+      this.hardwareAddresses = []
+      this.hardwareWallet.getMultipleAccounts(e.count, e.offset)
+        .then(_accounts => {
+          console.log(_accounts) // todo remove dev item
+          for(let account of _accounts){
+            const balance = await this.$store.state.web3.eth.getBalance(address)
+            this.hardwareAddresses.push({index: i, address, balance})
+          }
+        })
     }
   }
 }
