@@ -4,17 +4,16 @@ import EthereumTx from 'ethereumjs-tx'
 import EthereumWallet from 'ethereumjs-wallet'
 
 import * as crypto from 'crypto'
-import * as scrypt from 'scryptsy'
-import assert from 'assert'
-
-import account from 'eth-lib/lib/account'
+// import * as scrypt from 'scryptsy'
+// import assert from 'assert'
+//
+// import account from 'eth-lib/lib/account'
 // var Account = require()
 // This No Longer Has Any HD based wallet Operations
 export default class BasicWallet {
   constructor (options) {
     this.identifier = 'Default' // for Legacy Reasons
     this.active = false // denotes whether the wallet was initiated with a value or not
-    this.mewWallet = null
     this.wallet = null
     if (options) {
       this.decryptWallet(options)
@@ -28,45 +27,45 @@ export default class BasicWallet {
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
   getPrivateKey () {
-    return this.mewWallet.getPrivateKey()
+    return this.wallet.getPrivateKey()
   }
 
   getPrivateKeyString () {
-    return this.mewWallet.getPrivateKeyString()
+    return this.wallet.getPrivateKeyString()
   }
 
   getPublicKey () {
-    return this.mewWallet.getPublicKey()
+    return this.wallet.getPublicKey()
   }
 
   getPublicKeyString () {
-    return this.mewWallet.getPublicKeyString()
+    return this.wallet.getPublicKeyString()
   }
 
   getAddress () {
-    return this.mewWallet.getAddress()
+    return this.wallet.getAddress()
   }
 
   getChecksumAddressString () {
-    return this.mewWallet.getChecksumAddressString()
+    return this.wallet.getChecksumAddressString()
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   get privateKey () {
-    return this.mewWallet.getPrivateKeyString()
+    return this.wallet.getPrivateKeyString()
   }
 
   get publicKey () {
-    return this.mewWallet.getPublicKeyString()
+    return this.wallet.getPublicKeyString()
   }
 
   get privateKeyBuffer () {
-    return this.mewWallet.getPublicKey()
+    return this.wallet.getPrivateKey()
   }
 
   get publicKeyBuffer () {
-    return this.mewWallet.getPrivateKey()
+    return this.wallet.getPublicKey()
   }
 
   // ================== Start Interface Methods ========================================
@@ -107,7 +106,6 @@ export default class BasicWallet {
           s: eTx.s,
           rawTransaction: txData.signedTx
         }
-        console.log(result.rawTransaction) // todo remove dev item
         resolve(result)
       } catch (e) {
         reject(e)
@@ -190,7 +188,7 @@ export default class BasicWallet {
       }
       switch (options.type) {
         case 'fromMyEtherWalletKey': // TODO: STILL NEEDS TESTS
-          this.mewWallet = this.fromMyEtherWalletKey(options.manualPrivateKey, options.privPassword)
+          this.wallet = this.fromMyEtherWalletKey(options.manualPrivateKey, options.privPassword)
           break
         case 'manualPrivateKey':
           console.log(options.manualPrivateKey) // todo remove dev item
@@ -201,20 +199,20 @@ export default class BasicWallet {
             throw Error('BasicWallet decryptWallet manualPrivateKey: Invalid Hex')
             // return;
           } else if (!ethUtil.isValidPrivate(ethUtil.toBuffer(privKey))) {
-            this.mewWallet = null
+            this.wallet = null
             throw Error('BasicWallet decryptWallet manualPrivateKey: Invalid Private Key')
             // return;
           } else {
-            this.mewWallet = BasicWallet.createWallet(this.fixPkey(options.manualPrivateKey))
+            this.wallet = BasicWallet.createWallet(this.fixPkey(options.manualPrivateKey))
             // walletService.password = '';
           }
           break
         case 'fromPrivateKeyFile':
-          this.mewWallet = this.getWalletFromPrivKeyFile(options.fileContent, options.filePassword)
+          this.wallet = this.getWalletFromPrivKeyFile(options.fileContent, options.filePassword)
           // walletService.password = filePassword;
           break
         case 'parity': // TODO: STILL NEEDS TESTS
-          this.mewWallet = this.fromParityPhrase(options.parityPhrase)
+          this.wallet = this.fromParityPhrase(options.parityPhrase)
           break
         default:
           break
@@ -225,10 +223,10 @@ export default class BasicWallet {
       // throw"fromFile decryptWallet catch" +
     }
 
-    if (this.mewWallet !== null) {
-      // errors.simpleError("fromFile decryptWallet this.mewWallet !== null")
-      this.mewWallet.type = 'default'
-      // this._attachWallet(this.mewWallet)
+    if (this.wallet !== null) {
+      // errors.simpleError("fromFile decryptWallet this.wallet !== null")
+      this.wallet.type = 'default'
+      // this._attachWallet(this.wallet)
     }
   };
 
@@ -261,11 +259,11 @@ export default class BasicWallet {
   }
 
   // getAddress () {
-  //   if (!this.mewWallet) throw Error('no wallet present. wallet not have been decrypted')
-  //   if (typeof this.mewWallet.pubKey === 'undefined') {
-  //     return ethUtil.privateToAddress(this.mewWallet.privKey)
+  //   if (!this.wallet) throw Error('no wallet present. wallet not have been decrypted')
+  //   if (typeof this.wallet.pubKey === 'undefined') {
+  //     return ethUtil.privateToAddress(this.wallet.privKey)
   //   } else {
-  //     return ethUtil.publicToAddress(this.mewWallet.pubKey, true)
+  //     return ethUtil.publicToAddress(this.wallet.pubKey, true)
   //   }
   // }
 
