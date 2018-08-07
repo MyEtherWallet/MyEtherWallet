@@ -1,6 +1,6 @@
 export default function web3OverideMew (web3, wallet) {
   if (!wallet) return web3
-  console.log(web3) // todo remove dev item
+
   const methodOverides = {
     signTransaction (tx, privateKey) {
       return new Promise((resolve, reject) => {

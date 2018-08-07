@@ -175,10 +175,16 @@ export default {
           delete this.raw['to']
         }
         console.log(this.raw) // todo remove dev item
-        const tx = new EthTx(this.raw)
-        tx.sign(this.$store.state.wallet.getPrivateKey())
-        const serializedTx = tx.serialize()
-        this.signedTx = `0x${serializedTx.toString('hex')}`
+        this.$store.state.web3.eth.signTransaction(this.raw)
+          .then(_signed => {
+            console.log(_signed) // todo remove dev item
+            this.signedTx = _signed.rawTransaction
+          })
+
+        // const tx = new EthTx(this.raw)
+        // tx.sign(this.$store.state.wallet.getPrivateKey())
+        // const serializedTx = tx.serialize()
+        // this.signedTx = `0x${serializedTx.toString('hex')}`
       })()
     },
     confirmationModalOpen () {

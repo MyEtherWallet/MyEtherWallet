@@ -1,5 +1,4 @@
 import store from 'store'
-import overide from '../helpers/web3-overide/web3-overide-mew'
 
 const ADD_NOTIFICATION = function (state, newNotif) {
   store.set('notifications', newNotif)
@@ -23,8 +22,6 @@ const CLEAR_WALLET = function (state) {
 
 const DECRYPT_WALLET = function (state, wallet) {
   state.wallet = wallet
-  const web3 = overide(state.web3, state.wallet)
-  state.web3 = web3
 }
 
 const INIT_STATES = function (state, stateObj) {

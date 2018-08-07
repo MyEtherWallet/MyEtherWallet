@@ -12,7 +12,8 @@
 </template>
 
 <script>
-import Wallet from 'ethereumjs-wallet'
+// import Wallet from 'ethereumjs-wallet'
+import { BasicWallet } from '@/helpers/web3-overide/software'
 
 export default {
   data () {
@@ -22,7 +23,10 @@ export default {
   },
   methods: {
     unlockWallet () {
-      this.$store.dispatch('decryptWallet', Wallet.fromPrivateKey(Buffer.from(this.privateKey, 'hex')))
+      this.$store.dispatch('decryptWallet', BasicWallet.unlockWallet({
+        type: 'manualPrivateKey',
+        manualPrivateKey: this.privateKey
+      }))
       this.privateKey = ''
       this.$router.push({ path: 'interface' })
     }
