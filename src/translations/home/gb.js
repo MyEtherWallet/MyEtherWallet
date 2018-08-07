@@ -22,9 +22,8 @@ const home = {
   faqsSecurityAndPhishing: 'Security And Phishing',
   faqsTransactions: 'Transactions',
   faqsPrivKeyandPass: 'Private Keys And Passwords',
-  socialTitle: 'Get Involved',
-  socialSubheading: 'Your Cryptocurrency Masters Are Getting Hilariously Rich.',
-  promoTitle1: 'Your Security',
-  promoTitle2: 'Ethereum Wallet.'
+  socialTitle: 'Join MEW Conversation',
+  socialSubheading: 'Get in now and see your balance grow (we hope)!',
+  promoTitle: 'Ethereum\'s Original Wallet'
 }
 export default home
