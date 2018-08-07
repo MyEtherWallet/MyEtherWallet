@@ -178,7 +178,7 @@ export default {
           name_long: this.selectedNetwork.name_long,
           tokens: []
         },
-        url: this.url,
+        url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
       }
 

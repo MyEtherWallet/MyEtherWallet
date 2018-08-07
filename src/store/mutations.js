@@ -2,16 +2,19 @@ import store from 'store'
 import overide from '../helpers/web3-overide/web3-overide-mew'
 
 const ADD_NOTIFICATION = function (state, val) {
+  console.log(val) // todo remove dev item
   const newNotif = {}
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item]
   })
 
+  if (!newNotif[val[0]]) newNotif[val[0]] = []
+
   newNotif[val[0]].push({
     title: val[2],
     read: false,
     timestamp: new Date(),
-    body: val[1],
+    body: val[1].message ? val[1].message : val[1],
     expanded: false
   })
   store.set('notifications', newNotif)

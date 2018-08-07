@@ -154,29 +154,32 @@ export default {
       this.$children[6].$refs.success.show()
     },
     createTx () {
-      const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
-      const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-      const isEth = this.selectedCurrency.name === 'Ether'
-      this.nonce = this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
-      this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
+      (async () => {
+        const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+        const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+        const isEth = this.selectedCurrency.name === 'Ethereum'
+        this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
+        this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
 
-      this.raw = {
-        from: this.$store.state.wallet.getAddressString(),
-        gas: this.gasLimit,
-        nonce: this.nonce + 1,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
-        to: isEth ? this.toAddress : this.selectedCurrency.addr,
-        data: this.data
-      }
+        this.raw = {
+          from: this.$store.state.wallet.getAddressString(),
+          gas: this.gasLimit,
+          nonce: this.nonce /* + 1 */,
+          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
+          to: isEth ? this.toAddress : this.selectedCurrency.addr,
+          data: this.data
+        }
 
-      if (this.toAddress === '') {
-        delete this.raw['to']
-      }
-      const tx = new EthTx(this.raw)
-      tx.sign(this.$store.state.wallet.getPrivateKey())
-      const serializedTx = tx.serialize()
-      this.signedTx = `0x${serializedTx.toString('hex')}`
+        if (this.toAddress === '') {
+          delete this.raw['to']
+        }
+        console.log(this.raw) // todo remove dev item
+        const tx = new EthTx(this.raw)
+        tx.sign(this.$store.state.wallet.getPrivateKey())
+        const serializedTx = tx.serialize()
+        this.signedTx = `0x${serializedTx.toString('hex')}`
+      })()
     },
     confirmationModalOpen () {
       this.createTx()
@@ -189,12 +192,12 @@ export default {
       this.$store.dispatch('setGasPrice', Number(val))
     },
     setBalanceToAmt () {
-      if (this.selectedCurrency.name === 'Ether') {
+      if (this.selectedCurrency.name === 'Ethereum') {
         this.amount = this.parsedBalance - this.transactionFee
       }
     },
     createDataHex () {
-      if (this.selectedCurrency.name !== 'Ether') {
+      if (this.selectedCurrency.name !== 'Ethereum') {
         const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
