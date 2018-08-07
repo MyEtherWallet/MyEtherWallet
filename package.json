@@ -8,8 +8,13 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
+<<<<<<< HEAD
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
     "build": "node build/build.js",
+=======
+    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "build": "node fetchEthListData; node build/build.js",
+>>>>>>> Add network types, fetch tokens and contracts on build
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov",
     "precommit": "npm run unit && npm run lint"
