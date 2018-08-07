@@ -179,6 +179,7 @@ export default {
           delete this.raw['to']
         }
         console.log(this.raw) // todo remove dev item
+        console.log('make sign: SendCurrencyContainer') // todo remove dev item
         this.$store.state.web3.eth.signTransaction(this.raw)
           .then(_signed => {
             console.log(_signed) // todo remove dev item
@@ -223,7 +224,7 @@ export default {
       const newRaw = this.raw
       delete newRaw['gas']
       delete newRaw['nonce']
-      this.createTx()
+      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex()
       this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
         this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')

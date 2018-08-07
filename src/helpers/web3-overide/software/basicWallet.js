@@ -46,6 +46,11 @@ export default class BasicWallet {
     return this.wallet.getAddress()
   }
 
+  getAddressString () {
+    let rawAddress = '0x' + this.getAddress().toString('hex')
+    return ethUtil.toChecksumAddress(rawAddress)
+  }
+
   getChecksumAddressString () {
     return this.wallet.getChecksumAddressString()
   }
@@ -70,17 +75,18 @@ export default class BasicWallet {
 
   // ================== Start Interface Methods ========================================
 
-  getAccounts (callback) {
-    try {
-      let addressAsString = this.getAddressString()
-      callback(null, [addressAsString])
-    } catch (e) {
-      callback(e)
-    }
+  getAccounts () {
+    return new Promise((resolve, reject) => {
+      try {
+        resolve([this.getAddressString()])
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
-  getMultipleAccounts (count, offset, callback) {
-    return this.getAccounts(callback)
+  getMultipleAccounts () {
+    return this.getAccounts()
   }
 
   signTransaction (txData) {
@@ -266,11 +272,6 @@ export default class BasicWallet {
   //     return ethUtil.publicToAddress(this.wallet.pubKey, true)
   //   }
   // }
-
-  getAddressString () {
-    let rawAddress = '0x' + this.getAddress().toString('hex')
-    return ethUtil.toChecksumAddress(rawAddress)
-  }
 
   fixPkey (key) {
     if (key.indexOf('0x') === 0) {
