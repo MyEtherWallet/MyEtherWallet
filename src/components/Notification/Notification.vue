@@ -4,12 +4,18 @@
       <img class="logo-large" src="~@/assets/images/icons/notification.svg">
       <div class="notification-dot" v-show="unreadCount > 0"></div>
     </div>
-    <b-modal ref="notification" hide-footer centered class="bootstrap-modal-wide nopadding" v-on:show="countUnread">
+    <b-modal ref="notification" hide-footer centered class="bootstrap-modal-wide nopadding"
+             v-on:show="countUnread">
       <template slot="modal-title">
-        <h5 class="modal-title"> {{unreadCount > 1 ? 'Notifications':'Notification'}} <div class="notification-count" v-show="unreadCount > 0"><span>{{ unreadCount }}</span></div></h5>
+        <h5 class="modal-title"> {{unreadCount > 1 ? 'Notifications':'Notification'}}
+          <div class="notification-count" v-show="unreadCount > 0"><span>{{ unreadCount }}</span>
+          </div>
+        </h5>
       </template>
       <div class="notification-item-container">
-        <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0" v-for="(notification, idx) in sortedNotifications" class="notification-item" :key="notification.title + notification.timestamp + idx">
+        <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0"
+             v-for="(notification, idx) in sortedNotifications" class="notification-item"
+             :key="notification.title + notification.timestamp + idx">
           <div class="notification-header" @click="expand(idx, notification, $event)">
             <p :class="[notification.read? '': 'unread']"> {{ notification.title }} </p>
             <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
@@ -79,8 +85,7 @@ export default {
     sortedNotifications () {
       this.countUnread()
 
-      // if (!this.notifications[this.$store.state.wallet.getAddressString()]) return []
-
+      if (!this.notifications[this.$store.state.wallet.getAddressString()]) return []
       // eslint-disable-next-line
       return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
         a = new Date(a.timestamp)
