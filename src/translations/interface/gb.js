@@ -35,6 +35,7 @@ const interfaceTranslations = {
   txBalanceDetail: 'Detail',
   txNetworkTitle: 'Network',
   txSideMenuTitle: 'Send',
-  txSideMenuContract: 'Contract'
+  txSideMenuContract: 'Contract',
+  txSideMenuMessage: 'Message'
 }
 export default interfaceTranslations

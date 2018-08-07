@@ -13,6 +13,7 @@ import store from './store'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import VueQrcode from '@xkeshi/vue-qrcode'
+import PopOver from '@/components/PopOver'
 
 // etc
 import languages from './translations'
@@ -20,6 +21,7 @@ import languages from './translations'
 // Regular Components
 Vue.component('infinite-slider', InfiniteSlider)
 Vue.component(VueQrcode.name, VueQrcode)
+Vue.component('popover', PopOver)
 
 Vue.config.productionTip = false
 

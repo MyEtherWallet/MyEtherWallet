@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="number" name="" value="" placeholder="Please Enter at Least 7 Characters">
+        <input type="number" name="" value="" placeholder="Please Enter at Least 7 Characters" />
         <span>.eth</span>
       </div>
     </div>
@@ -25,7 +25,7 @@
           <div class="margin-left-auto add-custom-network">
             <div class="sliding-switch-white">
               <label class="switch">
-                <input v-on:click="expendDomainCheckForm" type="checkbox">
+                <input v-on:click="expendDomainCheckForm" type="checkbox" />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="domain-check-form hidden" ref="domainCheckForm">
           <div class="domain-checker">
-            <input type="number" name="" value="" placeholder="Please Enter Sub Domain Name">
+            <input type="number" name="" value="" placeholder="Please Enter Sub Domain Name" />
             <div class="check-button">
               {{ $t('common.check') }}
             </div>

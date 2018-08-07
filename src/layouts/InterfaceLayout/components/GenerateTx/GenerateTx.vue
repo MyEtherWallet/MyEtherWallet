@@ -10,7 +10,7 @@
             </div>
             <currency-picker :currency="coinType" page="sendOfflineGenTx" :token="true"></currency-picker>
             <div class="the-form amount-number">
-              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount">
+              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount" />
               <i :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
             </div>
           </div>
@@ -39,21 +39,12 @@
           <div class="title">
             <div class="title-helper">
               <h4>Data</h4>
-              <div class="tooltip-box-1">
-                <b-btn id="exPopover4"></b-btn>
-                <b-popover target="exPopover4" triggers="hover focus" placement="top">
-                  <template slot="title">MetaMask</template>
-                  <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                  MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                  It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                  MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-                </b-popover>
-              </div>
+              <popover :popcontent="$t('popover.whatIsDataContent')"/>
             </div>
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531">
+          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531" />
           <div class="good-button-container">
             <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
           </div>

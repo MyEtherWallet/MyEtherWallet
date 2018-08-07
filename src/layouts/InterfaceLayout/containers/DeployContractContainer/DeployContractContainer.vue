@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code">
+        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off" />
       </div>
     </div>
 
@@ -36,7 +36,10 @@
     <div class="send-form2">
       <div class="title-container">
         <div class="title">
-          <h4>Speed of Transaction<span class="alert-button"></span></h4>
+          <div class="title-and-popover">
+            <h4>Speed of Transaction</h4>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+          </div>
           <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
@@ -53,7 +56,7 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount">
+        <input type="number" name="" value="" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>

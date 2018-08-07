@@ -50,11 +50,20 @@
     max-width: 230px;
   }
 
+  .information-container {
+    min-height: 82px;
+  }
+
   .icon-container {
     display: flex;
+    min-height: 23px;
+
+    .custom-tooltip {
+      margin-right: 13px;
+    }
 
     img {
-      margin-right: 13px;
+      
     }
   }
 }

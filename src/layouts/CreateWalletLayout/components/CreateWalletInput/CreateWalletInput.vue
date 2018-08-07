@@ -1,6 +1,6 @@
 <template>
   <form class="user-input">
-    <input type="password" name="password" placeholder="Please Enter At Least 9 Characters" v-bind:value="value" v-on:input="updateValue($event.target.value)">
+    <input type="password" name="password" placeholder="Please Enter At Least 9 Characters" v-bind:value="value" v-on:input="updateValue($event.target.value)" autocomplete="off" />
     <p v-show="value.length > 0">Password strength: <span :class="strengthClass">{{ strength }}</span></p>
     <button class="next-button large-round-button-green-filled" type="submit" @click.prevent="switcher(param)" :disabled="value.length === 0 && value.length < 9 && strength === ''">
       {{ $t("common.next") }}<img src="~@/assets/images/icons/right-arrow.png">

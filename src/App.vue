@@ -26,8 +26,7 @@ export default {
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
       account: {
-        balance: 0,
-        nonce: null
+        balance: 0
       },
       Transactions: {},
       Networks: nodeList,

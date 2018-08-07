@@ -28,7 +28,7 @@
             <h4>Detail Information</h4>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation">
+                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation" />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -97,11 +97,11 @@ export default {
   },
   methods: {
     sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt', (res) => {
-        this.$store.dispatch('setAccountNonce', this.nonce + 1)
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      }).on('receipt', (res) => {
         this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
       }).on('error', (err) => {
-        console.log(err)
         this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
       })
 

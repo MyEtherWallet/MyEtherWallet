@@ -5,16 +5,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>Speed of Transaction</h4>
-            <div class="tooltip-box-1">
-              <b-btn id="exPopover1"></b-btn>
-              <b-popover target="exPopover1" triggers="hover focus" placement="top">
-                <template slot="title">MetaMask</template>
-                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-              </b-popover>
-            </div>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
           </div>
           <!-- <p>Transcation Fee: 0.000013 ETH ($1.234)</p> -->
         </div>
@@ -31,7 +22,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" name="" :value="$store.state.gasPrice" placeholder="Gas Price" v-on:change="setSpeed">
+        <input type="number" name="" :value="$store.state.gasPrice" placeholder="Gas Price" v-on:change="setSpeed" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -44,21 +35,12 @@
         <div class="title">
           <div class="title-helper">
             <h4>Nonce</h4>
-            <div class="tooltip-box-1">
-              <b-btn id="exPopover2"></b-btn>
-              <b-popover target="exPopover2" triggers="hover focus" placement="top">
-                <template slot="title">MetaMask</template>
-                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-              </b-popover>
-            </div>
+            <popover :popcontent="$t('popover.whatIsNonce')"/>
           </div>
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="locNonce" placeholder="Nonce">
+        <input type="number" v-model="locNonce" placeholder="Nonce" />
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>
@@ -69,21 +51,12 @@
         <div class="title">
           <div class="title-helper">
             <h4>Gas Limit</h4>
-            <div class="tooltip-box-1">
-              <b-btn id="exPopover2"></b-btn>
-              <b-popover target="exPopover2" triggers="hover focus" placement="top">
-                <template slot="title">MetaMask</template>
-                <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-              </b-popover>
-            </div>
+            <popover :popcontent="$t('popover.whatIsGas')"/>
           </div>
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" v-model="gasPrice" placeholder="Gas Limit">
+        <input type="number" v-model="gasPrice" placeholder="Gas Limit" />
         <div class="good-button-container">
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
         </div>

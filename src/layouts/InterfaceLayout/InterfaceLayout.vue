@@ -20,9 +20,11 @@
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
           <interact-with-contract-container v-show="currentTab === 'interactC'"></interact-with-contract-container>
+          <sign-message-container v-show="currentTab === 'signMessage'"></sign-message-container>
+          <verify-message-container v-show="currentTab === 'verifyMessage'"></verify-message-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <div class="tokens" v-if="$store.state.online">
-            <interface-tokens :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
+            <interface-tokens :getTokenBalance="getTokenBalance" :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
           </div>
         </div>
       </div>
@@ -43,6 +45,8 @@ import InteractWithContractContainer from './containers/InteractWithContractCont
 import SendCurrencyContainer from './containers/SendCurrencyContainer'
 import SendOfflineContainer from './containers/SendOfflineContainer'
 import SwapContainer from './containers/SwapContainer'
+import SignMessageContainer from './containers/SignMessageContainer'
+import VerifyMessageContainer from './containers/VerifyMessageContainer'
 import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
 
 import InterfaceAddress from './components/InterfaceAddress'
@@ -52,6 +56,8 @@ import InterfaceSideMenu from './components/InterfaceSideMenu'
 import InterfaceTokens from './components/InterfaceTokens'
 
 import store from 'store'
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
   components: {
@@ -61,6 +67,8 @@ export default {
     'dapps-container': DappsContainer,
     'interact-with-contract-container': InteractWithContractContainer,
     'deploy-contract-container': DeployContractContainer,
+    'sign-message-container': SignMessageContainer,
+    'verify-message-container': VerifyMessageContainer,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
@@ -87,44 +95,36 @@ export default {
     async fetchTokens () {
       if (this.network.type.name === 'ETH') {
         this.receivedTokens = true
-        const toAddress = '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56'
-        const userAddress = this.$store.state.wallet
-          .getAddress()
-          .toString('hex')
-        const data = `0x80f4ae5c000000000000000000000000${userAddress}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
+        const data = `0x80f4ae5c000000000000000000000000${this.$store.state.wallet.getAddress().toString('hex')}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
+        const response = this.$store.state.web3.eth.call({
+          to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
+          data: data
+        }).then(response => {
+          return response
+        }).catch(err => {
+          console.log(err)
+        })
 
-        const body = {
-          jsonrpc: '2.0',
-          method: 'eth_call',
-          params: [{ to: toAddress, data: data }, 'pending'],
-          id: 0
-        }
-
-        const config = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        }
-
-        const response = await fetch(this.network.url, config)
-          .then(res => {
-            return res.json()
-          })
-          .catch(err => {
-            console.log(err)
-          })
         return response
       } else {
         this.receivedTokens = false
         return this.network.type.tokens
       }
     },
+    async getTokenBalance (address) {
+      const web3 = this.$store.state.web3
+      const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
+      const contract = new web3.eth.Contract(contractAbi)
+      const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
+      return web3.eth.call({
+        to: web3.utils.toChecksumAddress(address),
+        data: data
+      }).then(res => unit.fromWei(web3.utils.toBN(res).toString(), 'ether')).catch(err => console.log(err))
+    },
     async setTokens () {
       const hex = await this.fetchTokens()
       if (this.tokens.length === 0) {
-        this.tokens = parseTokensHex(hex.result).sort((a, b) => {
+        this.tokens = parseTokensHex(hex).sort((a, b) => {
           if (a.name.toUpperCase() < b.name.toUpperCase()) {
             return -1
           } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
@@ -137,77 +137,16 @@ export default {
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
       }
     },
-    async getBlock () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_blockNumber',
-        params: [],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-
-      this.blockNumber = await fetch(this.network.url, config)
-        .then(res => {
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    getBlock () {
+      this.$store.state.web3.eth.getBlockNumber().then((res) => {
+        this.blockNumber = res
+      }).catch(err => console.log(err))
     },
-    async getBalance () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_getBalance',
-        params: [this.address, 'latest'],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-      this.balance = await fetch(this.network.url, config)
-        .then(res => {
-          this.getNonce()
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.$store.dispatch('setAccountBalance', this.balance)
-    },
-    async getNonce () {
-      const body = {
-        jsonrpc: '2.0',
-        method: 'eth_getTransactionCount',
-        params: [this.address, 'latest'],
-        id: 0
-      }
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-      const nonce = await fetch(this.network.url, config)
-        .then(res => {
-          return res.json()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.$store.dispatch('setAccountNonce', Number(nonce.result))
+    getBalance () {
+      this.$store.state.web3.eth.getBalance(this.address).then((res) => {
+        this.balance = res
+        this.$store.dispatch('setAccountBalance', this.balance)
+      }).catch(err => console.log(err))
     }
   },
   mounted () {
@@ -238,16 +177,18 @@ export default {
   },
   watch: {
     network (newVal) {
+      const self = this
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
           this.getBalance()
-          this.getNonce()
           this.getBlock()
           setInterval(this.getBlock, 14000)
           if (this.network.type.chainID === 1) {
             this.setTokens()
           } else {
-            this.tokens = this.network.type.tokens
+            this.tokens = this.network.type.tokens.map(token => {
+              token.balance = self.getTokenBalance(token.address)
+            })
             this.receivedTokens = false
           }
         }

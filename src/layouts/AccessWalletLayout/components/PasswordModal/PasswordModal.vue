@@ -2,7 +2,7 @@
   <b-modal ref="password" hide-footer class="bootstrap-modal modal-software" title="Password">
     <form class="password-form">
       <div class="input-container">
-        <input :type="show ? 'text': 'password'" name="Password" v-model="password">
+        <input :type="show ? 'text': 'password'" name="Password" v-model="password" autocomplete="off" />
         <img @click.prevent="switchViewPassword" v-if="show" src="@/assets/images/icons/show-password.svg"/>
         <img @click.prevent="switchViewPassword" v-if="!show" src="@/assets/images/icons/hide-password.svg"/>
       </div>

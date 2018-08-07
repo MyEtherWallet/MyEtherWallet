@@ -10,7 +10,7 @@
           </div>
           <currency-picker :currency="fromArray" :token="true" page="SwapContainerFrom"></currency-picker>
           <div class="the-form amount-number">
-            <input type="number" name="" value="" placeholder="Deposit Amount">
+            <input type="number" name="" value="" placeholder="Deposit Amount" />
           </div>
         </div>
         <div class="exchange-icon">
@@ -22,7 +22,7 @@
           </div>
           <currency-picker :currency="toArray" :token="true" page="SwapContainerTo"></currency-picker>
           <div class="the-form amount-number">
-            <input type="number" name="" value="" placeholder="Received Amount">
+            <input type="number" name="" value="" placeholder="Received Amount" />
           </div>
         </div>
       </div>
@@ -35,14 +35,17 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Please Enter The Address">
+        <input type="number" name="" value="" placeholder="Please Enter The Address" />
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('common.speedTx') }}<span class="alert-button"></span></h4>
+          <div class="title-and-popover">
+            <h4>{{ $t('common.speedTx') }}</h4>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
+          </div>
           <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
@@ -59,7 +62,7 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount">
+        <input type="number" name="" value="" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
