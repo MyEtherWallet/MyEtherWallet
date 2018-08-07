@@ -18,6 +18,10 @@
     .title {
       color: $text-color-1;
 
+      h2 {
+        margin: 0;
+      }
+
       @media all and (max-width: $tablet-width){
         margin-bottom: 30px;
       }
