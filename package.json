@@ -11,7 +11,7 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node fetchEthListData; node build/build.js",
+    "build": "node fetchEthListData.js; node build/build.js",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov"
   },
