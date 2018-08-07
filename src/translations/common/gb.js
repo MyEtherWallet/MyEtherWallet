@@ -26,6 +26,7 @@ const common = {
   next: 'Next',
   totalBalance: 'Total Balance',
   dontHaveEnough: 'You don\'t have enough funds',
+  verify: 'Verify',
   copy: 'Copy',
   clear: 'Clear',
   slow: 'Slow',
@@ -45,6 +46,7 @@ const common = {
   interactWcontract: 'Interact with Contract',
   depContract: 'Deploy Contract',
   signMessage: 'Sign Message',
-  verifyMessage: 'Verify Message'
+  verifyMessage: 'Verify Message',
+  signature: 'Signature'
 }
 export default common
