@@ -2,7 +2,7 @@
   <div class="access-my-wallet-options">
     <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
-    <network-and-address-modal :hardwareWallet="hardwareWallet" :hardwareAddresses="hardwareAddresses" v-on:getAddresses="getAddresses"></network-and-address-modal>
+    <network-and-address-modal :hardwareWallet="hardwareWallet" ></network-and-address-modal>
 
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
                     v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
@@ -65,6 +65,8 @@ import softwareImg from '@/assets/images/icons/button-software.svg'
 import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
+
+const unit = require('ethjs-unit')
 
 export default {
   components: {
@@ -151,19 +153,8 @@ export default {
     },
     hardwareWalletOpen (e) {
       this.hardwareWallet = e
-      this.getAddresses(5, 0)
+      // this.getAddresses(5, 0)
       this.networkAndAddressOpen()
-    },
-    getAddresses (e) {
-      this.hardwareAddresses = []
-      this.hardwareWallet.getMultipleAccounts(e.count, e.offset)
-        .then(_accounts => {
-          console.log(_accounts) // todo remove dev item
-          for(let account of _accounts){
-            const balance = await this.$store.state.web3.eth.getBalance(address)
-            this.hardwareAddresses.push({index: i, address, balance})
-          }
-        })
     }
   }
 }

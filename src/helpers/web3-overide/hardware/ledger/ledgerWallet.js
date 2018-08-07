@@ -16,12 +16,14 @@ export default class LedgerWallet {
   constructor (opts) {
     this.identifier = 'LedgerNanoS'
     this.wallet = null
+    this.activeAddress = ''
+    this.activeAddressIndex = ''
     let options = opts || {}
     if (options.transport) this.ledgerTransport = options.transport
-    this.allowedHdPaths = options.options || ["44'/60'", "44'/61'"]
+    this.allowedHdPaths = options.options || ['44\'/60\'', '44\'/61\'']
     this.defaultOptions = {
       networkId: 1, // mainnet
-      path: "44'/60'/0'/0", // ledger default derivation path
+      path: '44\'/60\'/0\'/0', // ledger default derivation path
       askConfirm: false,
       accountsLength: 5,
       accountsOffset: 0
@@ -58,6 +60,24 @@ export default class LedgerWallet {
     // this.getAccounts()
   }
 
+  getAddress () {
+    return this.wallet.address
+  }
+
+  changePath (path) {
+    this.path = path
+  }
+
+  setActiveAddress (address, index) {
+    this.wallet = {}
+    this.wallet.address = address
+    // this.activeAddressIndex = index
+    this.wallet.path = this.pathComponents.basePath + index.toString()
+    this.wallet.hwType = 'ledger'
+    this.wallet.hwTransport = undefined
+    this.wallet.type = 'default'
+  }
+
   changeNetwork (networkId, path) {
     this.networkId = networkId
     this.path = path
@@ -65,11 +85,9 @@ export default class LedgerWallet {
 
   getAccounts (callback) {
     let _this = this
-    console.log(u2fTransport) // todo remove dev item
     if (arguments.length > 1) {
       return _this.getMultipleAccounts(arguments[0], arguments[1], arguments[2])
     } else {
-      console.log('CONSOLE.LOG') // todo remove dev item
       return _this._getAccounts()
     }
   }
@@ -79,15 +97,15 @@ export default class LedgerWallet {
   }
 
   signPersonalMessage (txData, callback) {
-    this._signPersonalMessage(txData)
-      .then(res => callback(null, res))
-      .catch(err => callback(err, null))
+    return this._signPersonalMessage(txData)
+    // .then(res => callback(null, res))
+    // .catch(err => callback(err, null))
   }
 
   signTransaction (txData, callback) {
-    this._signTransaction(txData)
-      .then(res => callback(null, res))
-      .catch(err => callback(err, null))
+    return this._signTransaction(txData)
+    // .then(res => callback(null, res))
+    // .catch(err => callback(err, null))
   }
 
   checkIfAllowedPath (path) {
@@ -116,7 +134,7 @@ export default class LedgerWallet {
     const matchResult = regExp.exec(derivationPath)
     if (matchResult === null) {
       throw this.makeError(
-        "To get multiple accounts your derivation path must follow pattern 44'/60|61'/x'/n ",
+        'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       )
     }
@@ -132,10 +150,10 @@ export default class LedgerWallet {
       this.connectionOpened = true
       // eslint-disable-next-line new-cap
       if (this.ledgerTransport) {
-        return this.ledgerTransport.create(3000, 3000) // todo uncomment after dev
+        return this.ledgerTransport.create(3000, 3000)
       } else {
         // u2fTransport.open();
-        return u2fTransport.create(3000, 3000) // todo uncomment after dev
+        return u2fTransport.create(3000, 3000)
       }
     }
   }
@@ -149,10 +167,10 @@ export default class LedgerWallet {
       const addresses = {}
       for (let i = accountsOffset; i < accountsOffset + accountsLength; i++) {
         const path =
-          this.pathComponents.basePath + (this.pathComponents.index + i).toString()
+          this.pathComponents.basePath + (this.pathComponents.index + i).toString() // (i).toString()
         const address = await eth.getAddress(path, this.askConfirm, false)
         // addresses[path] = address.address
-        addresses[(this.pathComponents.index + i).toString()] = address.address
+        addresses[i] = address.address
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
 
@@ -185,18 +203,17 @@ export default class LedgerWallet {
     if (!this.accountsRetrieved) {
       await this._getAccounts()
       path = this.addressToPathMap[data.from.toLowerCase()]
-      if (!path) throw new Error("address unknown '" + data.from + "'")
+      if (!path) throw new Error('address unknown \'' + data.from + '\'')
       return path
     } else {
       path = this.addressToPathMap[data.from.toLowerCase()]
-      if (!path) throw new Error("address unknown '" + data.from + "'")
+      if (!path) throw new Error('address unknown \'' + data.from + '\'')
       return path
     }
   }
 
   async _signPersonalMessage (msgData) {
     const path = await this.checkIfKnownAddress(msgData)
-    console.log(path) // todo remove dev item
     const transport = await this.getTransport()
     try {
       const eth = new Ledger(transport)

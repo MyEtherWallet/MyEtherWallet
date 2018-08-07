@@ -29,28 +29,15 @@
           <li></li>
         </ul>
 
-        <!--<ul class="address-block address-data" v-for="addresses"></ul>-->
-{{addresses}}
-        <ul class="address-block address-data selected">
-          <li>1.</li>
-          <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
-          <li>2.2233445 ETH</li>
+        <ul class="address-block address-data" v-for="(details, index) in orderedAddresses"
+            v-bind:key="index">
+          <li>{{details.index + 1}}.</li>
+          <li>{{details.address}}</li>
+          <li>{{details.balance}} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
               <input type="checkbox"/>
-              <span class="checkmark checkmark-small"></span>
-            </label>
-          </li>
-        </ul>
-
-        <ul class="address-block address-data">
-          <li>2.</li>
-          <li>0xDECAF9CD2367cd21bbiuwehf34f34f839h</li>
-          <li>2.2233445 ETH</li>
-          <li class="user-input-checkbox">
-            <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox"/>
-              <span class="checkmark checkmark-small"></span>
+              <span class="checkmark checkmark-small" @click="setAddress(details)"></span>
             </label>
           </li>
         </ul>
@@ -58,8 +45,8 @@
       </div> <!-- .address-block-container -->
 
       <div class="address-nav">
-        <span>&lt; {{ $t('common.previous') }}</span>
-        <span>{{ $t('common.next') }} &gt;</span>
+        <span @click="priorAddressSet">&lt; {{ $t('common.previous') }}</span>
+        <span @click="nextAddressSet">{{ $t('common.next') }} &gt;</span>
       </div>
     </div> <!-- .content-container-2 -->
 
@@ -72,7 +59,7 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
+      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button">
         {{ $t('common.continue') }}
       </b-btn>
     </div>
@@ -88,20 +75,73 @@
 </template>
 
 <script>
+const unit = require('ethjs-unit')
+
 export default {
-  props: ['hardwareWallet', 'addresses'],
+  props: ['hardwareWallet'],
   data () {
     return {
       offset: 0,
-      count: 5
+      count: 5,
+      hardwareAddresses: []
     }
   },
-  mounted () {
-    console.log('MOUNTED', this.hardwareWallet)
+  computed: {
+    orderedAddresses () {
+      return this.hardwareAddresses.sort((a, b) => {
+        a = (a.index + 1)
+        b = (b.index + 1)
+        return a < b ? -1 : a > b ? 1 : 0
+      }).slice(this.offset, this.count)
+    }
   },
   methods: {
-
-    // this.addresses = _accounts
+    unlockWallet () {
+      this.$store.dispatch('decryptWallet', this.hardwareWallet)
+      this.$router.push({ path: 'interface' })
+    },
+    setAddress (details) {
+      this.hardwareWallet.setActiveAddress(details.address, details.index)
+    },
+    priorAddressSet () {
+      if (this.offset - this.count >= 0) {
+        this.offset = this.offset - this.count
+      } else {
+        this.offset = 0
+      }
+    },
+    nextAddressSet () {
+      this.offset = this.count + 1
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = [...this.hardwareAddresses, ...addressSet]
+        })
+    },
+    getAddresses (count, offset) {
+      return new Promise((resolve, reject) => {
+        if ((this.offset + this.count) >= this.hardwareAddresses.length) {
+          const web3 = this.$store.state.web3
+          let hardwareAddresses = []
+          this.hardwareWallet.getMultipleAccounts(count, offset)
+            .then(_accounts => {
+              Object.values(_accounts).forEach(async (address, i) => {
+                const rawBalance = await this.$store.state.web3.eth.getBalance(address)
+                const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
+                hardwareAddresses.push({index: i, address, balance})
+              })
+              resolve(hardwareAddresses)
+            })
+        }
+      })
+    }
+  },
+  watch: {
+    hardwareWallet (newValue) {
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = addressSet
+        })
+    }
   }
 }
 </script>

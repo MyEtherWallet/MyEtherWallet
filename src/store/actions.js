@@ -1,10 +1,13 @@
-import overide from '../helpers/web3-overide/web3-overide-mew'
+import overide from '@/helpers/web3-overide/web3-overide-mew'
+import WalletWrapper from '@/helpers/web3-overide/web3-wallet-adapter'
 
 const addNotification = function ({commit, state}, val) {
   const newNotif = {}
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item]
   })
+
+  if (!newNotif[val[0]]) newNotif[val[0]] = []
 
   newNotif[val[0]].push({
     title: val[2],
@@ -29,8 +32,9 @@ const createAndSignTx = function ({commit}, val) {
 }
 
 const decryptWallet = function ({commit, state}, wallet) {
-  const web3 = overide(state.web3, wallet)
-  commit('DECRYPT_WALLET', wallet)
+  const wrappedWallet = new WalletWrapper(wallet)
+  const web3 = overide(state.web3, wrappedWallet)
+  commit('DECRYPT_WALLET', wrappedWallet)
   commit('SET_WEB3_INSTANCE', web3)
 }
 
