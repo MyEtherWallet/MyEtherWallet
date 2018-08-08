@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-eth.json'
-import * as contracts from '@/contracts/contract-abi-eth.json'
+import tokens from '@/tokens/tokens-eth.json'
+import contracts from '@/contracts/contract-abi-eth.json'
+
 export default {
   name: 'ETH',
   name_long: 'Ethereum',
