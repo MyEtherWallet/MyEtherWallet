@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-egem.json'
-import * as contracts from '@/contracts/contract-abi-egem.json'
+import tokens from '@/tokens/tokens-egem.json'
+import contracts from '@/contracts/contract-abi-egem.json'
+
 export default {
   name: 'EGEM',
   name_long: 'EtherGem',
