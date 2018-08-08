@@ -10,20 +10,16 @@
           <div :class="progressBarValue"></div>
         </div>
         <div class="block-progressbar__content">
-          <h4>What is MyEtherWallet?</h4>
+          <h4>Where are my funds stored?</h4>
           <p>
-            MyEtherWallet(MEW) is a free, open-source, client-side interface.
-            MEW allows you to interact directly with the blockchain, while
-            remaining in full control of your keys and funds.
-          </p>
-          <p>
-            Did you read that? YOU are the one who is in control. MEW is not
-            a bank or exchange, we are an interface. This means we don't hold
-            your keys or information, but it also means we can't access accounts,
-            recover keys, reset passwords, or reverse transactions.
+            Your tokens and coins are not on MyEtherWallet. Just like
+            they aren't on your hardware wallet, on MetaMask, or on
+            blockchain explorers. All funds on the blockchain itself.
+            This means that we do not control them. We are only a doorway
+            to interact with them.
           </p>
           <div class="block-progressbar__warning">
-            WARNING: You And Only You Are Responsible For Your Security.
+            WARNING: MyEtherWallet Does Not Control Your Funds. You Do!
           </div>
         </div>
       </dir>

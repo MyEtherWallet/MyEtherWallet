@@ -1,24 +1,26 @@
 <template>
   <div class="create-wallet-warnings">
     <div class="wrap">
-      <what-is-mew :progressBarValue="'__20percent'"></what-is-mew>
-    </div>
+      <what-is-mew :progressBarValue="'__20percent'" />
+      <where-my-funds-stored :progressBarValue="'__40percent'" />
 
-    <div class="create-wallet-warnings__footer-container">
-      <div class="create-wallet-warnings__mouse-scroll">
-        <img src="~@/assets/images/icons/mouse.svg">
-        <p>Scroll</p>
-      </div>
-      <div class="create-wallet-warnings__footer">
-        <div class="create-wallet-warnings__links">
-          <router-link to="/">Home</router-link>
-          <router-link to="/">Privacy</router-link>
-          <router-link to="/">Terms</router-link>
+      <div class="create-wallet-warnings__footer-container">
+        <div class="create-wallet-warnings__mouse-scroll">
+          <img src="~@/assets/images/icons/mouse.svg">
+          <p>Scroll</p>
         </div>
-        <div class="create-wallet-warnings__copyright">
-          <p>© 2018 MyEtherWallet. All rights reserved.</p>
+        <div class="create-wallet-warnings__footer">
+          <div class="create-wallet-warnings__links">
+            <router-link to="/">Home</router-link>
+            <router-link to="/">Privacy</router-link>
+            <router-link to="/">Terms</router-link>
+          </div>
+          <div class="create-wallet-warnings__copyright">
+            <p>© 2018 MyEtherWallet. All rights reserved.</p>
+          </div>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -26,10 +28,12 @@
 
 <script>
 import WhatIsMyEtherWallet from './components/WhatIsMyEtherWallet'
+import WhereAreMyFundsStored from './components/WhereAreMyFundsStored'
 
 export default {
   components: {
-    'what-is-mew': WhatIsMyEtherWallet
+    'what-is-mew': WhatIsMyEtherWallet,
+    'where-my-funds-stored': WhereAreMyFundsStored
   },
   data () {
     return {
