@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-music.json'
-import * as contracts from '@/contracts/contract-abi-music.json'
+import tokens from '@/tokens/tokens-music.json'
+import contracts from '@/contracts/contract-abi-music.json'
+
 export default {
   name: 'MUSIC',
   name_long: 'Music Coin',

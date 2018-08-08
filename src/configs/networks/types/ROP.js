@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-rop.json'
-import * as contracts from '@/contracts/contract-abi-rop.json'
+import tokens from '@/tokens/tokens-rop.json'
+import contracts from '@/contracts/contract-abi-rop.json'
+
 export default {
   name: 'ROP',
   name_long: 'Ropsten',

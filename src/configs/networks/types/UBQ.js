@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-ubq.json'
-import * as contracts from '@/contracts/contract-abi-ubq.json'
+import tokens from '@/tokens/tokens-ubq.json'
+import contracts from '@/contracts/contract-abi-ubq.json'
+
 export default {
   name: 'UBQ',
   name_long: 'Ubiq',
