@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-akroma.json'
-import * as contracts from '@/contracts/contract-abi-akroma.json'
+import tokens from '@/tokens/tokens-akroma.json'
+import contracts from '@/contracts/contract-abi-akroma.json'
+
 export default {
   name: 'AKA',
   name_long: 'Akroma',
