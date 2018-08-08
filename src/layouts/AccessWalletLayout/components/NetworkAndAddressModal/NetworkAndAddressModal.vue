@@ -88,6 +88,7 @@ export default {
   },
   computed: {
     orderedAddresses () {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return this.hardwareAddresses.sort((a, b) => {
         a = (a.index + 1)
         b = (b.index + 1)
@@ -98,7 +99,7 @@ export default {
   methods: {
     unlockWallet () {
       this.$store.dispatch('decryptWallet', this.hardwareWallet)
-      this.$router.push({ path: 'interface' })
+      this.$router.push({path: 'interface'})
     },
     setAddress (details) {
       this.hardwareWallet.setActiveAddress(details.address, details.index)
