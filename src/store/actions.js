@@ -33,7 +33,7 @@ const createAndSignTx = function ({commit}, val) {
 
 const decryptWallet = function ({commit, state}, wallet) {
   const wrappedWallet = new WalletWrapper(wallet)
-  const web3 = overide(state.web3, wrappedWallet)
+  const web3 = overide(state.web3, wrappedWallet, this._vm)
   commit('DECRYPT_WALLET', wrappedWallet)
   commit('SET_WEB3_INSTANCE', web3)
 }
@@ -54,9 +54,9 @@ const setWeb3Instance = function ({commit, state}, web3) {
   if (web3.eth === undefined) {
     // eslint-disable-next-line
     const web3Instance = new web3(new web3.providers.HttpProvider(state.network.url))
-    commit('SET_WEB3_INSTANCE', overide(web3Instance, state.wallet))
+    commit('SET_WEB3_INSTANCE', overide(web3Instance, state.wallet, this._vm))
   } else {
-    commit('SET_WEB3_INSTANCE', overide(web3, state.wallet))
+    commit('SET_WEB3_INSTANCE', overide(web3, state.wallet, this._vm))
   }
 }
 

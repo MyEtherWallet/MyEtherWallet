@@ -17,6 +17,8 @@ import PopOver from '@/components/PopOver'
 // etc
 import languages from './translations'
 
+Vue.prototype.$eventHub = new Vue()
+
 // Regular Components
 Vue.component('infinite-slider', InfiniteSlider)
 Vue.component(VueQrcode.name, VueQrcode)
