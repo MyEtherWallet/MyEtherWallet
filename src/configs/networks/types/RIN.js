@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-rin.json'
-import * as contracts from '@/contracts/contract-abi-rin.json'
+import tokens from '@/tokens/tokens-rin.json'
+import contracts from '@/contracts/contract-abi-rin.json'
+
 export default {
   name: 'RIN',
   name_long: 'Rinkeby',

@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-exp.json'
-import * as contracts from '@/contracts/contract-abi-exp.json'
+import tokens from '@/tokens/tokens-exp.json'
+import contracts from '@/contracts/contract-abi-exp.json'
+
 export default {
   name: 'EXP',
   name_long: 'Expanse',

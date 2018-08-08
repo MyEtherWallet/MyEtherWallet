@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-etsc.json'
-import * as contracts from '@/contracts/contract-abi-etsc.json'
+import tokens from '@/tokens/tokens-etsc.json'
+import contracts from '@/contracts/contract-abi-etsc.json'
+
 export default {
   name: 'ETSC',
   name_long: 'EthereumSocial',
