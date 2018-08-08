@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
+    <interface-container-title :title="$t('common.signMessage')"></interface-container-title>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -15,22 +15,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
-
-          <div class="tooltip-box-1">
-            <b-btn id="exPopover1"></b-btn>
-            <b-popover target="exPopover1" triggers="hover focus" placement="top">
-              <template slot="title">MetaMask</template>
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to
-              visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your
-              browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user
-              interface to manage your identities on different sites
-              and sign blockchain transactions.
-            </b-popover>
-          </div>
-
+          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
         </div>
       </div>
 
@@ -43,7 +28,7 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
-          <popover :popdata="popoverSignature"/>
+          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
             <span v-on:click="deleteInputText('abi')">Clear</span>
@@ -60,7 +45,7 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('interface.sign') }}
+          {{ $t('Sign') }}
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -73,22 +58,28 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/components/SuccessModal'
-import PopOver from '@/components/PopOver'
 
 export default {
-  name: 'Send Message',
+  name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal,
-    'popover': PopOver
+    'success-modal': SuccessModal
   },
   data () {
     return {
-      popoverSignature: {
-        title: 'h1',
-        content: 'gogogo'
-      }
+    }
+  },
+  methods: {
+    successModalOpen () {
+      this.$children[0].$refs.success.show()
+    },
+    copyToClipboard (ref) {
+      this.$refs[ref].select()
+      document.execCommand('copy')
+    },
+    deleteInputText (ref) {
+      this.$refs[ref].value = ''
     }
   }
 }

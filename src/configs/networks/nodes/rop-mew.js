@@ -1,8 +1,8 @@
 import {
-  Ropsten
+  ROP
 } from '../types'
 export default {
-  type: Ropsten,
+  type: ROP,
   service: 'myetherwallet.com',
   url: 'https://api.myetherwallet.com/rop',
   port: 443,
