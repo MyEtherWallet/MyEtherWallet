@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-eosc.json')
-const contracts = require('../../../../contracts/contract-abi-eosc.json')
+import * as tokens from '@/tokens/tokens-eosc.json'
+import * as contracts from '@/contracts/contract-abi-eosc.json'
 export default {
   name: 'EOSC',
   name_long: 'EOS-Classic',
