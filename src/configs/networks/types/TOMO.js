@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-tomo.json'
-import * as contracts from '@/contracts/contract-abi-tomo.json'
+import tokens from '@/tokens/tokens-tomo.json'
+import contracts from '@/contracts/contract-abi-tomo.json'
+
 export default {
   name: 'TOMO',
   name_long: 'Tomo Coin',

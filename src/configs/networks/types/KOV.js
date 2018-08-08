@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-kov.json'
-import * as contracts from '@/contracts/contract-abi-kov.json'
+import tokens from '@/tokens/tokens-kov.json'
+import contracts from '@/contracts/contract-abi-kov.json'
+
 export default {
   name: 'KOV',
   name_long: 'Kovan',
