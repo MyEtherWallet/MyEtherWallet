@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 const fs = require('fs')
-const tokenFolder = './tokens'
-const contractFolder = './contracts'
+const tokenFolder = './src/tokens'
+const contractFolder = './src/contracts'
 
 async function fetchTokens () {
   if(!fs.existsSync(tokenFolder)) {

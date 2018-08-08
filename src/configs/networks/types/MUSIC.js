@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-music.json')
-const contracts = require('../../../../contracts/contract-abi-music.json')
+import * as tokens from '@/tokens/tokens-music.json'
+import * as contracts from '@/contracts/contract-abi-music.json'
 export default {
   name: 'MUSIC',
   name_long: 'Music Coin',
