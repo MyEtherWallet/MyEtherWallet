@@ -107,7 +107,7 @@ export default {
 
         return response
       } else {
-        this.receivedTokens = false
+        this.receivedTokens = true
         return this.network.type.tokens
       }
     },
@@ -116,10 +116,14 @@ export default {
       const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
       const contract = new web3.eth.Contract(contractAbi)
       const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
-      return web3.eth.call({
+      const balance = await web3.eth.call({
         to: web3.utils.toChecksumAddress(address),
         data: data
-      }).then(res => unit.fromWei(web3.utils.toBN(res).toString(), 'ether')).catch(err => console.log(err))
+      }).then(res => {
+        const tokenBalance = unit.fromWei(web3.utils.toBN(res).toString(), 'ether')
+        return tokenBalance
+      }).catch(err => console.log(err))
+      return balance
     },
     async setTokens () {
       const hex = await this.fetchTokens()
@@ -150,6 +154,7 @@ export default {
     }
   },
   mounted () {
+    const self = this
     if (store.get('sideMenu') !== undefined) {
       this.currentTab = store.get('sideMenu')
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
@@ -161,6 +166,14 @@ export default {
         setInterval(this.getBlock, 14000)
         if (this.network.type.chainID === 1) {
           this.setTokens()
+        } else {
+          const tokenWithBalance = []
+          this.network.type.tokens.map(async (token) => {
+            token.balance = await self.getTokenBalance(token.address)
+            tokenWithBalance.push(token)
+          })
+          this.receivedTokens = false
+          this.tokens = tokenWithBalance
         }
       }
     }
@@ -183,19 +196,19 @@ export default {
           this.getBalance()
           this.getBlock()
           setInterval(this.getBlock, 14000)
-          if (this.network.type.chainID === 1) {
+          if (newVal.type.chainID === 1) {
             this.setTokens()
           } else {
-            this.tokens = this.network.type.tokens.map(token => {
-              token.balance = self.getTokenBalance(token.address)
+            const tokenWithBalance = []
+            newVal.type.tokens.map(async (token) => {
+              token.balance = await self.getTokenBalance(token.address)
+              tokenWithBalance.push(token)
             })
             this.receivedTokens = false
+            this.tokens = tokenWithBalance
           }
         }
       }
-    },
-    tokens (newVal) {
-      this.tokens = newVal
     }
   }
 }
