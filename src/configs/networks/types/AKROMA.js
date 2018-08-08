@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-akroma.json')
-const contracts = require('../../../../contracts/contract-abi-akroma.json')
+import * as tokens from '@/tokens/tokens-akroma.json'
+import * as contracts from '@/contracts/contract-abi-akroma.json'
 export default {
   name: 'AKA',
   name_long: 'Akroma',

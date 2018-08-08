@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-rin.json')
-const contracts = require('../../../../contracts/contract-abi-rin.json')
+import * as tokens from '@/tokens/tokens-rin.json'
+import * as contracts from '@/contracts/contract-abi-rin.json'
 export default {
   name: 'RIN',
   name_long: 'Rinkeby',

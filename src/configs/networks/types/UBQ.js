@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-ubq.json')
-const contracts = require('../../../../contracts/contract-abi-ubq.json')
+import * as tokens from '@/tokens/tokens-ubq.json'
+import * as contracts from '@/contracts/contract-abi-ubq.json'
 export default {
   name: 'UBQ',
   name_long: 'Ubiq',
