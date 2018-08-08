@@ -33,7 +33,8 @@ export default function web3OverideMew (web3, wallet) {
 
   web3.eth.sendTransaction.method.accounts = {
     wallet: [{
-      privateKey: true
+      privateKey: true,
+      ...methodOverides
     }],
     ...methodOverides
   }
