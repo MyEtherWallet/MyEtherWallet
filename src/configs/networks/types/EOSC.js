@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-eosc.json'
-import * as contracts from '@/contracts/contract-abi-eosc.json'
+import tokens from '@/tokens/tokens-eosc.json'
+import contracts from '@/contracts/contract-abi-eosc.json'
+
 export default {
   name: 'EOSC',
   name_long: 'EOS-Classic',

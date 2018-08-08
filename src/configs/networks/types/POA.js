@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-poa.json'
-import * as contracts from '@/contracts/contract-abi-poa.json'
+import tokens from '@/tokens/tokens-poa.json'
+import contracts from '@/contracts/contract-abi-poa.json'
+
 export default {
   name: 'POA',
   name_long: 'Proof of Authority',
