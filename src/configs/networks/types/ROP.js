@@ -1,5 +1,5 @@
 export default {
-  name: 'Ropsten',
+  name: 'ROP',
   name_long: 'Ropsten',
   homePage: 'https://github.com/ethereum/ropsten',
   blockExplorerTX: 'https://ropsten.etherscan.io/tx/[[txHash]]',

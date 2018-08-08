@@ -36,5 +36,6 @@ const interfaceTranslations = {
   // txNetworkTitle: '',
   // txSideMenuTitle: '',
   // txSideMenuContract: ''
+  // txSideMenuMessage: ''
 }
 export default interfaceTranslations

@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 %open {
+  background-color: $background-color-1;
   border: 1px solid $mew-green;
 }
 
@@ -24,6 +25,8 @@
 
 .dropdown-text-container {
   background-color: $background-color-1;
+  border: 1px solid $white;
+  border-bottom: 0;
   border-radius: 4px;
   cursor: pointer;
   padding: 13px 15px;
@@ -64,9 +67,8 @@
 
 .dropdown-item-container {
   background-color: $white;
-  left: -1px;
   position: absolute;
-  width: 101%;
+  width: 100%;
   z-index: 2;
 
   &.open {

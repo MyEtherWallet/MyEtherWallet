@@ -18,6 +18,6 @@ const footer = {
   welcomeDes: 'Your donation will help us a lot to build our MEW Community.',
   feedback: 'Feedback',
   privacy: 'Privacy',
-  copyright: 'Copyright 2018 All right reserved by MyEtherWallet, Inc.'
+  copyright: '© 2018 MyEtherWallet. All Rights reserved.'
 }
 export default footer
