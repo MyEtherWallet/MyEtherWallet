@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-go.json')
-const contracts = require('../../../../contracts/contract-abi-go.json')
+import * as tokens from '@/tokens/tokens-go.json'
+import * as contracts from '@/contracts/contract-abi-go.json'
 export default {
   name: 'GO',
   name_long: 'GoChain',
