@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-go.json'
-import * as contracts from '@/contracts/contract-abi-go.json'
+import tokens from '@/tokens/tokens-go.json'
+import contracts from '@/contracts/contract-abi-go.json'
+
 export default {
   name: 'GO',
   name_long: 'GoChain',

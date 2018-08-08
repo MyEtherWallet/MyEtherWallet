@@ -1,5 +1,6 @@
-import * as tokens from '@/tokens/tokens-clo.json'
-import * as contracts from '@/contracts/contract-abi-clo.json'
+import tokens from '@/tokens/tokens-clo.json'
+import contracts from '@/contracts/contract-abi-clo.json'
+
 export default {
   name: 'CLO',
   name_long: 'Callisto',
