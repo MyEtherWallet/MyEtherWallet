@@ -12,10 +12,11 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .create-wallet-warnings__footer-container {
+  background-color: $about-mew-spaceman-background-color;
   z-index: 9999;
   width: 100%;
   position: fixed;
@@ -26,7 +27,7 @@
 
 .create-wallet-warnings__mouse-scroll {
   text-align: center;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   p {
     color: $mew-green;
     margin-top: 5px;
@@ -34,7 +35,7 @@
 }
 
 .create-wallet-warnings__footer {
-  width: 700px;
+  width: 650px;
   margin: 0 auto;
   display: flex;
   align-items: center;
