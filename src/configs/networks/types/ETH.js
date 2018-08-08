@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-eth.json')
-const contracts = require('../../../../contracts/contract-abi-eth.json')
+import * as tokens from '@/tokens/tokens-eth.json'
+import * as contracts from '@/contracts/contract-abi-eth.json'
 export default {
   name: 'ETH',
   name_long: 'Ethereum',

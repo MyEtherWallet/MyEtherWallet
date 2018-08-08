@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-egem.json')
-const contracts = require('../../../../contracts/contract-abi-egem.json')
+import * as tokens from '@/tokens/tokens-egem.json'
+import * as contracts from '@/contracts/contract-abi-egem.json'
 export default {
   name: 'EGEM',
   name_long: 'EtherGem',
