@@ -8,13 +8,8 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-<<<<<<< HEAD
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
-    "build": "node build/build.js",
-=======
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node fetchEthListData; node build/build.js",
->>>>>>> Add network types, fetch tokens and contracts on build
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov",
     "precommit": "npm run unit && npm run lint"
@@ -22,10 +17,7 @@
   "dependencies": {
     "@ledgerhq/hw-app-eth": "^4.21.0",
     "@ledgerhq/hw-transport-u2f": "^4.21.0",
-<<<<<<< HEAD
     "@myetherwallet/mewconnect-web-client": "0.0.1-alpha.3",
-=======
->>>>>>> checkpoint
     "@xkeshi/vue-qrcode": "^1.0.0",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",

@@ -5,6 +5,8 @@
 - Feature/verify message [#52](https://github.com/MyEtherWallet/MyEtherWallet/pull/52)
 - Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
 
+### Devop
+- Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
 
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
