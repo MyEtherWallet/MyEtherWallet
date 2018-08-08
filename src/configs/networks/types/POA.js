@@ -1,5 +1,5 @@
-const tokens = require('../../../../tokens/tokens-poa.json')
-const contracts = require('../../../../contracts/contract-abi-poa.json')
+import * as tokens from '@/tokens/tokens-poa.json'
+import * as contracts from '@/contracts/contract-abi-poa.json'
 export default {
   name: 'POA',
   name_long: 'Proof of Authority',
