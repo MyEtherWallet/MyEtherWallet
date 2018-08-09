@@ -136,6 +136,33 @@
   } // .block-progressbar__warning
 
 
+  .block-progressbar__sliding-switch-expender {
+    margin-top: 20px;
+    padding: 15px 0;
+    border-top: 1px solid $light-grey-1;
+    border-bottom: 1px solid $light-grey-1;
+
+    .title {
+      display: flex;
+      align-items: center;
+
+      h4 {
+        margin: 0;
+      }
+      .sliding-switch {
+        margin-left: auto;
+      }
+    }
+
+    .content {
+      margin-top: 20px;
+
+      p:last-child {
+        margin: 0;
+      }
+    }
+  }
+
 
 } // .block-progressbar
 
