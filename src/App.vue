@@ -1,14 +1,19 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container/>
     <router-view/>
-    <footer-container />
+    <footer-container/>
+    <!--<div v-show="showConfirmModal">-->
+      <confirmation-container :active="showConfirmModal" ref="confirmationModals" />
+    <!--</div>-->
+
   </div>
 </template>
 
 <script>
 import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
+import ConfirmationContainer from '@/containers/ConfirmationContainer'
 import store from 'store'
 import nodeList from '@/configs/networks'
 import Web3 from 'web3'
@@ -17,7 +22,13 @@ export default {
   name: 'App',
   components: {
     'header-container': HeaderContainer,
-    'footer-container': FooterContainer
+    'footer-container': FooterContainer,
+    'confirmation-container': ConfirmationContainer
+  },
+  data () {
+    return {
+      showConfirmModal: false
+    }
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
     let web3 = store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url))
@@ -43,6 +54,17 @@ export default {
 
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
+    //
+    // this.$eventHub.$on('showConfirmModal', (callback) => {
+    //   console.log('showConfirmModal') // todo remove dev item
+    //   this.showConfirmModal = true
+    //   console.log(this.$refs.confirmationModals) // todo remove dev item
+    // })
+  },
+  methods: {
+    broadcast () {
+      this.showConfirmModal = false
+    }
   }
 }
 </script>
