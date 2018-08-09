@@ -1,5 +1,39 @@
 @import '~@/scss/GlobalVariables';
 
+.create-wallet-warnings {
+  position: relative;
+}
+
+.nav-dots {
+  position: absolute;
+  z-index: 9999;
+  right: 10vw;
+  top: calc(50vh - 125px);
+  text-align: center;
+  p {
+    font-size: 17px;
+  }
+  ul {
+    margin: -7px 0;
+
+    li {
+      border-radius: 100px;
+      width: 6px;
+      height: 6px;
+      background-color: $dark-blue-9;
+      margin: 10px;
+      padding: 0;
+      transition: all 0.2s ease;
+
+      &.active {
+        background-color: $white;
+      }
+    }
+  }
+
+}
+
+
 .wrap {
   background-color: $about-mew-spaceman-background-color;
   background-image: url('~@/assets/images/background/404bg.jpg');
@@ -13,11 +47,10 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  //overflow-y: auto;
 
   .cww {
     position: absolute;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     bottom: 0;
     opacity: 1;
   }
