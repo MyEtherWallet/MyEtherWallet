@@ -21,9 +21,7 @@
             <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
           </div>
           <div :class="[notification.expanded?'':'unexpanded', 'notification-body']">
-            <code>
-              {{ notification.body }}
-            </code>
+            {{ notification.body }}
           </div>
         </div>
         <div class="notification-no-item" v-else>
