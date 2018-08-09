@@ -150,7 +150,6 @@ export default {
       const deployArgs = Object.keys(this.inputs).map(key => {
         return web3.utils.toHex(this.inputs[key])
       })
-      this.gasLimit = await contract.deploy({data: this.bytecode, arguments: deployArgs}).estimateGas()
       this.data = contract.deploy({data: this.bytecode, arguments: deployArgs}).encodeABI()
       this.nonce = await web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
 
