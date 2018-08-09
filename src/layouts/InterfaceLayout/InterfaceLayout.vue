@@ -125,7 +125,7 @@ export default {
       const contract = new web3.eth.Contract(contractAbi)
       const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
       const balance = await web3.eth.call({
-        to: web3.utils.toChecksumAddress(token.address),
+        to: token.address ? web3.utils.toChecksumAddress(token.address) : web3.utils.toChecksumAddress(token.addr),
         data: data
       }).then(res => {
         let tokenBalance
@@ -161,8 +161,9 @@ export default {
         this.receivedTokens = false
         this.tokens = tokenWithBalance
       }
-
-      this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
+      const customTokens = store.get('customTokens')[this.network.type.name].filter(token => token.balance > 0)
+      const allTokens = this.tokens.filter(token => token.balance > 0).concat(customTokens)
+      this.tokensWithBalance = allTokens
     },
     getBlock () {
       this.$store.state.web3.eth.getBlockNumber().then((res) => {

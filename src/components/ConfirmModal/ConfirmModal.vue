@@ -1,7 +1,6 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="confirmation" hide-footer centered
-             class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
+    <b-modal ref="confirmation" hide-footer centered class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
@@ -12,10 +11,10 @@
               <p>{{from}}</p>
             </div>
           </div>
-          <div class="direction">
+          <div class="direction" v-show="to !== '' && to !== undefined">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div class="tx-data tx-to">
+          <div class="tx-data tx-to" v-show="to !== '' && to !== undefined">
             <!-- <img src="~@/assets/images/icons/btc.svg">
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
@@ -29,40 +28,29 @@
             <h4>Detail Information</h4>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input type="checkbox"
-                       v-on:click="modalDetailInformation = !modalDetailInformation"/>
+                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation" />
                 <span class="slider round"></span>
               </label>
             </div>
           </div>
           <div class="expended-info" v-if="modalDetailInformation">
             <div class="grid-block">
-              <p>Network</p>
-              <p>{{$store.state.network.type.name}} by {{$store.state.network.service}}</p>
+              <p>Network</p><p>{{$store.state.network.type.name}} by {{$store.state.network.service}}</p>
             </div>
             <div class="grid-block">
-              <p>Gas Limit</p>
-              <p>{{gas}} wei</p>
+              <p>Gas Limit</p><p>{{gas}} wei</p>
             </div>
             <div class="grid-block">
-              <p>Gas Price</p>
-              <p>{{ gasPrice }} gwei</p>
+              <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
             </div>
             <div class="grid-block">
-              <p>Transaction Fee</p>
-              <p> {{fee}} ETH</p>
+              <p>Transaction Fee</p><p> {{fee}} ETH</p>
             </div>
             <div class="grid-block">
-              <p>Nonce</p>
-              <p>{{nonce}}</p>
+              <p>Nonce</p><p>{{nonce}}</p>
             </div>
             <div class="grid-block">
-              <p>Data</p>
-              <p>{{data}}</p>
-            </div>
-            <div class="grid-block">
-              <p>Signed Transaction</p>
-              <p>{{signedTransaction}}</p>
+              <p>Data</p><p>{{data}}</p>
             </div>
           </div>
         </div>
@@ -70,9 +58,7 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
-              <div
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                ref="ConfirmAndSendButton" v-on:click="sendTx">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
@@ -103,32 +89,30 @@
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'isHardwareWallet'],
+  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
   data () {
     return {
-      modalDetailInformation: false,
-      transactionSigned: false
+      modalDetailInformation: false
     }
   },
   methods: {
     sendTx () {
-      if (this.signedTx !== '') {
-        this.confirmSendTx()
-      }
-    }
-  },
-  computed: {
-    signedTransaction () {
-      if (this.signedTx) {
-        return this.signedTx
-      } else {
-        return 'Please Approve on Hardware Wallet'
-      }
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      }).on('receipt', (res) => {
+        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      }).on('error', (err) => {
+        console.log(err)
+        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      })
+
+      this.$refs.confirmation.hide()
+      this.showSuccess()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "ConfirmModal.scss";
+@import "ConfirmModal.scss";
 </style>
