@@ -89,7 +89,7 @@
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
+  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
   data () {
     return {
       modalDetailInformation: false
@@ -97,16 +97,17 @@ export default {
   },
   methods: {
     sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
-        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
-      }).on('receipt', (res) => {
-        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
-      }).on('error', (err) => {
-        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
-      })
+      this.confirmSendTx()
+      // this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+      //   this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      // }).on('receipt', (res) => {
+      //   this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      // }).on('error', (err) => {
+      //   this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      // })
 
-      this.$refs.confirmation.hide()
-      this.showSuccess()
+      /*      this.$refs.confirmation.hide()
+      this.showSuccess() */
     }
   }
 }

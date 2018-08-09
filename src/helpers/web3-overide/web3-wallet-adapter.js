@@ -8,6 +8,8 @@ export default class Web3WalletAdapter {
   constructor (wallet) {
     this.wallet = wallet
     this.length = 1
+    this.signTransaction = this._signTransaction.bind(this)
+    this.sign = this._sign.bind(this)
   }
 
   privateKeyAvailable () {
@@ -117,7 +119,7 @@ export default class Web3WalletAdapter {
     return ethUtil.toChecksumAddress(this.address)
   }
 
-  signTransaction (tx, privateKey) {
+  _signTransaction (tx, privateKey) {
     return new Promise((resolve, reject) => {
       var error = false
 
@@ -145,7 +147,7 @@ export default class Web3WalletAdapter {
     })
   }
 
-  sign (data) {
+  _sign (data) {
     return new Promise((resolve, reject) => {
       this.wallet.signMessage(data)
         .then(_signedMessage => {
