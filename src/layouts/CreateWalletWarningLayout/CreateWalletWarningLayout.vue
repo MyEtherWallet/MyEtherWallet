@@ -2,6 +2,19 @@
   <div class="create-wallet-warnings">
 
     <div class="wrap">
+
+      <div class="nav-dots">
+        <p><i class="fa fa-angle-up" aria-hidden="true"></i></p>
+        <ul>
+          <li :class="cwwCurrent == 0 ? 'active' : ''"></li>
+          <li :class="cwwCurrent == 1 ? 'active' : ''"></li>
+          <li :class="cwwCurrent == 2 ? 'active' : ''"></li>
+          <li :class="cwwCurrent == 3 ? 'active' : ''"></li>
+          <li :class="cwwCurrent == 4 ? 'active' : ''"></li>
+        </ul>
+        <p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
+      </div>
+
       <what-is-mew            :progressBarValue="'__20percent'"   class="cww cww1"                        ref="cww1" />
       <where-my-funds-stored  :progressBarValue="'__40percent'"   class="cww cww2 positionBottom"         ref="cww2" />
       <what-if-i-lose-key     :progressBarValue="'__60percent'"   class="cww cww3 positionBottom"         ref="cww3" />
@@ -47,7 +60,6 @@ export default {
   },
   data () {
     return {
-      cwwCount: this.$refs.length,
       cwwCurrent: 0,
       cwwRefs: [
         'cww1',
@@ -76,10 +88,13 @@ export default {
   },
   mounted: function () {
     var _this = this
+    var navDots = document.querySelectorAll('.nav-dots')
 
     window.addEventListener('wheel', function (e) {
       if (e.deltaY < 0) {
         _this.mouseScrollUp()
+
+        console.log(navDots[0])
       }
       if (e.deltaY > 0) {
         _this.mouseScrollDown()
