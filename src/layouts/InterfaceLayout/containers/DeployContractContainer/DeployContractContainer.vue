@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="the-form domain-name">
-          <input ref="contractName" v-model="inputs[construct.inputs[0].name]"></input>
+          <input ref="contractName" v-model="inputs[construct.inputs[0].name]" :type="construct.inputs[0].type"/>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input ref="contractName" v-model="contractName"></input>
+        <input ref="contractName" v-model="contractName" :placeholder="contractNamePlaceholder"/>
       </div>
     </div>
 
@@ -66,26 +66,26 @@
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
-            <h4>Speed of Transaction</h4>
+            <h4>{{ $t("common.speedTx") }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
+          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
-          <div class="small-circle-button-green-border">
-            Slow
+          <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
+            {{ $t('common.slow') }}
           </div>
-          <div class="small-circle-button-green-border active">
-            Regular
+          <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(45)">
+            {{ $t('common.regular') }}
           </div>
-          <div class="small-circle-button-green-border">
-            Fast
+          <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(75)">
+            {{ $t('common.fast') }}
           </div>
         </div>
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount" />
+        <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -95,40 +95,96 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="signTransaction" :class="[abi === '' || bytecode === ''? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
+        <div v-on:click="confirmationModalOpen" :class="[abi === '' || bytecode === ''? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
           Sign Transaction
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-
+    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>
+    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
   </div>
 </template>
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import ConfirmModal from '@/components/ConfirmModal'
 import SuccessModal from '@/components/SuccessModal'
 
+import store from 'store'
+
+// eslint-disable-next-line
+const EthTx = require('ethereumjs-tx')
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
+    'confirm-modal': ConfirmModal,
     'success-modal': SuccessModal
   },
   data () {
     return {
-      abi: '',
       bytecode: '',
+      abi: '',
       constructors: [],
       inputs: {},
-      contractName: ''
+      contractName: '',
+      contractNamePlaceholder: '',
+      raw: {},
+      signedTx: '',
+      transactionFee: 0,
+      gasAmount: this.$store.state.gasPrice,
+      gasLimit: 21000,
+      data: '',
+      nonce: 0
     }
   },
   methods: {
-    signTransaction () {
-      // this.$children[0].$refs.success.show()
+    async signTransaction () {
+      const web3 = this.$store.state.web3
+      const contract = new web3.eth.Contract(JSON.parse(this.abi))
+      const deployArgs = Object.keys(this.inputs).map(key => {
+        return web3.utils.toHex(this.inputs[key])
+      })
+      this.gasLimit = await contract.deploy({data: this.bytecode, arguments: deployArgs}).estimateGas()
+      this.data = contract.deploy({data: this.bytecode, arguments: deployArgs}).encodeABI()
+      this.nonce = await web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
+
+      this.raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.gasLimit,
+        nonce: this.nonce,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        data: this.data
+      }
+
+      const tx = new EthTx(this.raw)
+      tx.sign(this.$store.state.wallet.getPrivateKey())
+      const signedTx = tx.serialize()
+      this.signedTx = `0x${signedTx.toString('hex')}`
+    },
+    showSuccessModal () {
+      this.$children[5].$refs.success.show()
+    },
+    confirmationModalOpen () {
+      this.signTransaction()
+      window.scrollTo(0, 0)
+      this.$children[4].$refs.confirmation.show()
+    },
+    estimateGas () {
+      if (this.bytecode !== '' && this.abi !== '') {
+        const newRaw = this.raw
+        delete newRaw['gas']
+        delete newRaw['nonce']
+        this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
+          this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
+          this.gasLimit = res
+        }).catch(err => console.log(err))
+      }
     },
     copyToClipboard (ref) {
       this.$refs[ref].select()
@@ -136,23 +192,41 @@ export default {
     },
     deleteInput (ref) {
       this[ref] = ''
+    },
+    changeGas (val) {
+      this.gasAmount = val
+      this.$store.dispatch('setGasPrice', Number(val))
     }
+  },
+  mounted () {
+    this.contractNamePlaceholder = store.get('localContracts') !== undefined ? `myContracts${store.get('localContracts').length}` : 'myContracts'
+    this.constructors = []
+    if (this.abi !== '') {
+      JSON.parse(this.abi).forEach(item => {
+        if (item.type === 'constructor') {
+          this.constructors.push(item)
+        }
+      })
+    }
+    this.estimateGas()
   },
   watch: {
     abi (newVal) {
-      const self = this
+      this.constructors = []
       if (newVal !== '') {
         JSON.parse(newVal).forEach(item => {
           if (item.type === 'constructor') {
-            self.constructors.push(item)
+            this.constructors.push(item)
           }
         })
-      } else {
-        self.constructors = []
       }
+      this.estimateGas()
     },
-    inputs (newVal) {
-      console.log(newVal)
+    bytecode (newVal) {
+      this.estimateGas()
+    },
+    gasAmount (newVal) {
+      this.estimateGas()
     }
   }
 }
