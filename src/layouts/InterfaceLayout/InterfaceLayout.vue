@@ -56,8 +56,6 @@ import InterfaceSideMenu from './components/InterfaceSideMenu'
 import InterfaceTokens from './components/InterfaceTokens'
 
 import store from 'store'
-// eslint-disable-next-line
-const unit = require('ethjs-unit')
 
 export default {
   components: {
@@ -120,7 +118,7 @@ export default {
         to: web3.utils.toChecksumAddress(address),
         data: data
       }).then(res => {
-        const tokenBalance = unit.fromWei(web3.utils.toBN(res).toString(), 'ether')
+        const tokenBalance = web3.utils.toBN(res).div(10^token.decimals)
         return tokenBalance
       }).catch(err => console.log(err))
       return balance

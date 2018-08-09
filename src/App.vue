@@ -21,7 +21,7 @@ export default {
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
     const state = {
-      web3: store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url)),
+      web3: store.get('network') ? new Web3(store.get('network').url) : new Web3(this.$store.state.Networks['ETH'][0].url),
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
       account: {
