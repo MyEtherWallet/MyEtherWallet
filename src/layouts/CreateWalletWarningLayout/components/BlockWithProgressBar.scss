@@ -71,6 +71,14 @@
     background-color: $white;
     padding: 50px 60px;
 
+    &.text-cented {
+      text-align: center;
+    }
+
+    >img {
+      margin-bottom: 40px;
+    }
+
     h4 {
       font-size: 20px;
       margin-bottom: 25px;
@@ -78,7 +86,41 @@
 
     p {
       margin-bottom: 25px;
+      span {
+        font-weight: 600;
+      }
     }
+
+    ul {
+      padding: 20px;
+      padding-left: 40px;
+      background-color: $light-green-4;
+      li {
+        list-style-type: disc;
+        line-height: 25px;
+      }
+    }
+
+    .tips {
+      >div {
+        margin-bottom: 10px;
+        padding: 20px;
+        background-color: $light-green-4;
+
+        a {
+          text-decoration: underline;
+        }
+
+        h5 {
+          font-weight: 600;
+          margin-bottom: 3px;
+        }
+        p {
+          margin: 0;
+          line-height: 20px;
+        }
+      }
+    } // .tips
   } // .block-progressbar__content
 
 
