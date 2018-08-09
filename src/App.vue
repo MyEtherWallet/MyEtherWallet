@@ -43,9 +43,9 @@ export default {
 
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
-    // if (window.web3) {
-    //   this.$store.dispatch('setWeb3Instance', window.web3)
-    // }
+    if (window.web3) {
+      this.$store.dispatch('setWeb3Instance', window.web3)
+    }
   }
 }
 </script>
