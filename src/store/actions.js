@@ -9,7 +9,7 @@ const addNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = [];
 
-  if (!newNotif[val[0]]) newNotif[val[0]] = []
+  if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = []
 
   newNotif[val[0]].push({
     title: val[2],
