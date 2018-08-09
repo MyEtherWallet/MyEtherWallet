@@ -77,11 +77,8 @@ export default {
     },
     async addToken (address, symbol, decimal) {
       const localStorageName = {}
-      let newArray = []
-      let balance = await this.getTokenBalance(address)
       const token = {
         addr: address,
-        balance: balance,
         decimals: decimal,
         email: '',
         name: symbol,
@@ -89,6 +86,8 @@ export default {
         website: '',
         type: 'custom'
       }
+      let newArray = []
+      token['balance'] = await this.getTokenBalance(address)
 
       if (this.customTokens.length > 0) {
         newArray = this.customTokens.map(item => item)
