@@ -17,17 +17,27 @@
 
   .cww {
     position: absolute;
-    bottom: -1000px;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
+    bottom: 0;
   }
 
   .active {
-    bottom: 0;
+    
   }
+
+  .positionTop {
+    bottom: 1000px;
+  }
+
+  .positionBottom {
+    bottom: -1000px;
+  }
+
+
 }
 
 .create-wallet-warnings__footer-container {
-  pointer-events: none;
+  //pointer-events: none;
   background-color: $about-mew-spaceman-background-color;
   z-index: 9999;
   width: 100%;
