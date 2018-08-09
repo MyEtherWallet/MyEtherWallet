@@ -93,7 +93,17 @@ export default {
     async fetchTokens () {
       if (this.network.type.name === 'ETH') {
         this.receivedTokens = true
-        const data = `0x80f4ae5c000000000000000000000000${this.$store.state.wallet.getAddress().toString('hex')}0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000`
+        const abi = [{
+          'constant': true,
+          'inputs': [{'name': '_owner', 'type': 'address'}, {'name': 'name', 'type': 'bool'}, {'name': 'website', 'type': 'bool'}, {'name': 'email', 'type': 'bool'}, {'name': 'count', 'type': 'uint256'}],
+          'name': 'getAllBalance',
+          'outputs': [{'name': '', 'type': 'bytes'}],
+          'payable': false,
+          'stateMutability': 'view',
+          'type': 'function'
+        }]
+        const contract = new this.$store.state.web3.eth.Contract(abi)
+        const data = contract.methods.getAllBalance(this.$store.state.wallet.getAddressString(), true, true, true, 0).encodeABI()
         const response = this.$store.state.web3.eth.call({
           to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
           data: data
@@ -109,35 +119,50 @@ export default {
         return this.network.type.tokens
       }
     },
-    async getTokenBalance (address) {
+    async getTokenBalance (token) {
       const web3 = this.$store.state.web3
       const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
       const contract = new web3.eth.Contract(contractAbi)
       const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
       const balance = await web3.eth.call({
-        to: web3.utils.toChecksumAddress(address),
+        to: web3.utils.toChecksumAddress(token.address),
         data: data
       }).then(res => {
-        const tokenBalance = web3.utils.toBN(res).div(10^token.decimals)
+        let tokenBalance
+        if (Number(res) === 0 || res === '0x') {
+          tokenBalance = 0
+        } else {
+          tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals)
+        }
         return tokenBalance
       }).catch(err => console.log(err))
       return balance
     },
     async setTokens () {
-      const hex = await this.fetchTokens()
-      if (this.tokens.length === 0) {
-        this.tokens = parseTokensHex(hex).sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1
-          } else {
-            return 0
-          }
+      if (this.network.type.chainID === 1) {
+        const hex = await this.fetchTokens()
+        if (this.tokens.length === 0) {
+          this.tokens = parseTokensHex(hex).sort((a, b) => {
+            if (a.name.toUpperCase() < b.name.toUpperCase()) {
+              return -1
+            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        }
+      } else {
+        const tokenWithBalance = []
+        this.network.type.tokens.map(async (token) => {
+          token.balance = await this.getTokenBalance(token)
+          tokenWithBalance.push(token)
         })
-
-        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
+        this.receivedTokens = false
+        this.tokens = tokenWithBalance
       }
+
+      this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
     },
     getBlock () {
       this.$store.state.web3.eth.getBlockNumber().then((res) => {
@@ -152,7 +177,6 @@ export default {
     }
   },
   mounted () {
-    const self = this
     if (store.get('sideMenu') !== undefined) {
       this.currentTab = store.get('sideMenu')
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
@@ -162,17 +186,7 @@ export default {
       if (this.$store.state.wallet !== null) {
         this.getBalance()
         setInterval(this.getBlock, 14000)
-        if (this.network.type.chainID === 1) {
-          this.setTokens()
-        } else {
-          const tokenWithBalance = []
-          this.network.type.tokens.map(async (token) => {
-            token.balance = await self.getTokenBalance(token.address)
-            tokenWithBalance.push(token)
-          })
-          this.receivedTokens = false
-          this.tokens = tokenWithBalance
-        }
+        this.setTokens()
       }
     }
   },
@@ -188,23 +202,12 @@ export default {
   },
   watch: {
     network (newVal) {
-      const self = this
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
           this.getBalance()
           this.getBlock()
           setInterval(this.getBlock, 14000)
-          if (newVal.type.chainID === 1) {
-            this.setTokens()
-          } else {
-            const tokenWithBalance = []
-            newVal.type.tokens.map(async (token) => {
-              token.balance = await self.getTokenBalance(token.address)
-              tokenWithBalance.push(token)
-            })
-            this.receivedTokens = false
-            this.tokens = tokenWithBalance
-          }
+          this.setTokens()
         }
       }
     }
