@@ -198,6 +198,18 @@ export default {
       validAbi: false
     };
   },
+  mounted () {
+    this.contractNamePlaceholder = store.get('localContracts') !== undefined ? `myContracts${store.get('localContracts').length}` : 'myContracts'
+    this.constructors = []
+    if (this.abi !== '') {
+      JSON.parse(this.abi).forEach(item => {
+        if (item.type === 'constructor') {
+          this.constructors.push(item)
+        }
+      })
+    }
+    this.estimateGas()
+  },
   watch: {
     abi(newVal) {
       this.constructors = [];
@@ -314,6 +326,10 @@ export default {
             console.log(err);
           });
       }
+      this.estimateGas()
+    },
+    bytecode (newVal) {
+      this.estimateGas()
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

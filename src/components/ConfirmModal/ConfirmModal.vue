@@ -11,10 +11,10 @@
               <p>{{from}}</p>
             </div>
           </div>
-          <div class="direction">
+          <div class="direction" v-show="to !== '' && to !== undefined">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div class="tx-data tx-to">
+          <div class="tx-data tx-to" v-show="to !== '' && to !== undefined">
             <!-- <img src="~@/assets/images/icons/btc.svg">
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
