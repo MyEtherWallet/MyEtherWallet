@@ -88,13 +88,10 @@ export default {
   },
   mounted: function () {
     var _this = this
-    var navDots = document.querySelectorAll('.nav-dots')
 
     window.addEventListener('wheel', function (e) {
       if (e.deltaY < 0) {
         _this.mouseScrollUp()
-
-        console.log(navDots[0])
       }
       if (e.deltaY > 0) {
         _this.mouseScrollDown()
