@@ -39,14 +39,16 @@
           <h4>Constructor {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
         </div>
       </div>
-      <div v-for="construct in constructors" :key="construct.inputs[0].name">
-        <div class="title-container">
-          <div class="title">
-            <h5>{{construct.inputs[0].name | capitalize }}: </h5>
+      <div v-for="(construct, idx) in constructors" :key="construct.type+idx">
+        <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
+          <div class="title-container">
+            <div class="title">
+              <h5>{{input.name | capitalize }}: </h5>
+            </div>
           </div>
-        </div>
-        <div class="the-form domain-name">
-          <input ref="contractName" v-model="inputs[construct.inputs[0].name]" :type="construct.inputs[0].type"/>
+          <div class="the-form domain-name">
+            <input ref="contractName" v-model="inputs[input.name]"/>
+          </div>
         </div>
       </div>
     </div>
@@ -101,7 +103,7 @@
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>
+    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>
     <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
   </div>
 </template>
@@ -207,6 +209,7 @@ export default {
         }
       })
     }
+
     this.estimateGas()
   },
   watch: {
