@@ -21,6 +21,31 @@
           <div class="block-progressbar__warning">
             WARNING: MyEtherWallet Does Not Control Your Funds. You Do!
           </div>
+          <div class="block-progressbar__sliding-switch-expender">
+            <div class="title">
+              <h4>What is Blockchain?</h4>
+              <div class="sliding-switch sliding-switch-white">
+                <label class="switch">
+                  <input type="checkbox" v-on:click="expenderContentShow = !expenderContentShow">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="content" v-if="expenderContentShow">
+              <p>
+                The term 'blockchain' refers to a public, decentalized spreadsheet, similar to a ledger.
+                It's maintained by people all over the world, who remotely mine
+                transaction to make them a park of the blockchain, permanently.
+              </p>
+
+              <p>
+                When you use MEW, you are accessing the blockchain directly. We are not responsible
+                for theft caused by user error. Please do your research, knowledge is power! Know
+                more about Blockchain <a href="" target="_blank">here</a>.
+              </p>
+            </div>
+
+          </div>
         </div>
       </dir>
     </div>
@@ -36,7 +61,7 @@ export default {
   },
   data () {
     return {
-
+      expenderContentShow: false
     }
   }
 }
