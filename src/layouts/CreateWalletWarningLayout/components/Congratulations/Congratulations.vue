@@ -19,7 +19,7 @@
             <a href="">Help Center</a>. We have many articles to assist you!
           </p>
 
-          <div class="mid-round-button-green-filled-green-border">Get Started</div>
+          <router-link to="/create-wallet"><div class="mid-round-button-green-filled-green-border">Get Started</div></router-link>
 
         </div>
       </dir>
