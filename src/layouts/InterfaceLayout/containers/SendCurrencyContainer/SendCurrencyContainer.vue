@@ -6,27 +6,37 @@
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>{{ $t("interface.sendTxAmount") }}</h4>
-             <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire Balance</p>
+            <h4>{{ $t('interface.sendTxAmount') }}</h4>
+            <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire
+                                                                                     Balance</p>
           </div>
-          <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency" :page="'sendEthAndTokens'" :token="true"></currency-picker>
+          <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency"
+                           :page="'sendEthAndTokens'" :token="true"></currency-picker>
           <div class="the-form amount-number">
-            <input type="number" name="" v-model="amount" placeholder="Amount" />
-            <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
+            <input type="number" name="" v-model="amount" placeholder="Amount"/>
+            <i
+              :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
+              aria-hidden="true"></i>
           </div>
-          <div class="error-message-container" v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
+          <div class="error-message-container"
+               v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
             <p>{{ $t('common.dontHaveEnough') }}</p>
           </div>
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t("interface.sendTxToAddr") }}</h4> &nbsp;
-            <blockie :address="toAddress" width="22px" height="22px" v-show="addressValid && toAddress.length !== 0"></blockie>
-            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('common.copy') }}</p>
+            <h4>{{ $t('interface.sendTxToAddr') }}</h4> &nbsp;
+            <blockie :address="toAddress" width="22px" height="22px"
+                     v-show="addressValid && toAddress.length !== 0"></blockie>
+            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{
+                                                                                               $t('common.copy')
+                                                                                               }}</p>
           </div>
           <div class="the-form address-block">
             <textarea ref="address" name="name" v-model="toAddress" autocomplete="off"></textarea>
-            <i :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']" aria-hidden="true"></i>
+            <i
+              :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
+              aria-hidden="true"></i>
           </div>
           <div class="error-message-container">
             <p v-if="toAddress.length === 0 && toAddress === ''">Can't be empty</p>
@@ -40,26 +50,32 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t("common.speedTx") }}</h4>
+            <h4>{{ $t('common.speedTx') }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
-          <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
+          <div
+            :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
+            @click="changeGas(5)">
             {{ $t('common.slow') }}
           </div>
-          <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(45)">
+          <div
+            :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
+            @click="changeGas(45)">
             {{ $t('common.regular') }}
           </div>
-          <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(75)">
+          <div
+            :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
+            @click="changeGas(75)">
             {{ $t('common.fast') }}
           </div>
         </div>
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount" />
+        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount"/>
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -74,17 +90,18 @@
           <!-- Rounded switch -->
           <div class="sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend" />
+              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend"/>
               <span class="slider round"></span>
             </label>
           </div>
           <br/>
           <div class="input-container" v-if="advancedExpend">
             <div class="the-form user-input">
-              <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" />
+              <input type="text" name="" v-model="data"
+                     placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
             </div>
             <div class="the-form user-input">
-              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
+              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
             </div>
           </div>
         </div>
@@ -92,12 +109,18 @@
     </div>
 
     <div class="submit-button-container">
-      <div :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']" @click="confirmationModalOpen">
+      <div
+        :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+        @click="confirmationModalOpen">
         {{ $t('interface.sendTx') }}
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
+                             :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="toAddress" :value="amount" :gas="gasLimit" :data="data" :nonce="nonce + 1"></confirm-modal>
+    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"
+                   :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"
+                   :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
+                   :nonce="nonce + 1"></confirm-modal>
     <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
   </div>
 </template>
@@ -155,14 +178,21 @@ export default {
     },
     createTx () {
       (async () => {
-        const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+        const jsonInterface = [{
+          'constant': false,
+          'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
+          'name': 'transfer',
+          'outputs': [{'name': 'success', 'type': 'bool'}],
+          'payable': false,
+          'type': 'function'
+        }]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         const isEth = this.selectedCurrency.name === 'Ethereum'
         this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
         this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
 
         this.raw = {
-          from: this.$store.state.wallet.getAddressString(),
+          // from: this.$store.state.wallet.getAddressString(),
           gas: this.gasLimit,
           nonce: this.nonce /* + 1 */,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
@@ -176,22 +206,23 @@ export default {
         }
         console.log(this.raw) // todo remove dev item
         console.log('make sign: SendCurrencyContainer') // todo remove dev item
-        this.$store.state.web3.eth.signTransaction(this.raw)
-          .then(_signed => {
-            console.log(_signed) // todo remove dev item
-            this.signedTx = _signed.rawTransaction
+        const fromAddress = '' // this.raw.from
+        this.$store.state.web3.eth.sendTransaction(this.raw)
+          .once('transactionHash', (hash) => {
+            this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
           })
-
-        // const tx = new EthTx(this.raw)
-        // tx.sign(this.$store.state.wallet.getPrivateKey())
-        // const serializedTx = tx.serialize()
-        // this.signedTx = `0x${serializedTx.toString('hex')}`
+          .on('receipt', (res) => {
+            this.$store.dispatch('addNotification', [fromAddress, res, 'Transaction Receipt'])
+          })
+          .on('error', (err) => {
+            this.$store.dispatch('addNotification', [fromAddress, err, 'Transaction Error'])
+          })
       })()
     },
     confirmationModalOpen () {
       this.createTx()
       window.scrollTo(0, 0)
-      this.$children[5].$refs.confirmation.show()
+      // this.$children[5].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val
@@ -205,7 +236,14 @@ export default {
     },
     createDataHex () {
       if (this.selectedCurrency.name !== 'Ethereum') {
-        const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+        const jsonInterface = [{
+          'constant': false,
+          'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
+          'name': 'transfer',
+          'outputs': [{'name': 'success', 'type': 'bool'}],
+          'payable': false,
+          'type': 'function'
+        }]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
       } else {
