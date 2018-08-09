@@ -2,12 +2,13 @@ import overide from '@/helpers/web3-overide/web3-overide-mew'
 import WalletWrapper from '@/helpers/web3-overide/web3-wallet-adapter'
 
 const addNotification = function ({commit, state}, val) {
+  console.log(val) // todo remove dev item
   const newNotif = {}
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item]
   })
 
-  if (!newNotif[val[0]]) newNotif[val[0]] = []
+  if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = []
 
   newNotif[val[0]].push({
     title: val[2],
@@ -33,9 +34,10 @@ const createAndSignTx = function ({commit}, val) {
 
 const decryptWallet = function ({commit, state}, wallet) {
   const wrappedWallet = new WalletWrapper(wallet)
-  const web3 = overide(state.web3, wrappedWallet, this._vm)
+  let _web3 = state.web3
+  overide(_web3, wrappedWallet, this._vm.$eventHub)
   commit('DECRYPT_WALLET', wrappedWallet)
-  commit('SET_WEB3_INSTANCE', web3)
+  commit('SET_WEB3_INSTANCE', _web3)
 }
 
 const setAccountBalance = function ({commit}, balance) {
@@ -54,9 +56,9 @@ const setWeb3Instance = function ({commit, state}, web3) {
   if (web3.eth === undefined) {
     // eslint-disable-next-line
     const web3Instance = new web3(new web3.providers.HttpProvider(state.network.url))
-    commit('SET_WEB3_INSTANCE', overide(web3Instance, state.wallet, this._vm))
+    commit('SET_WEB3_INSTANCE', overide(web3Instance, state.wallet, this._vm.$eventHub))
   } else {
-    commit('SET_WEB3_INSTANCE', overide(web3, state.wallet, this._vm))
+    commit('SET_WEB3_INSTANCE', overide(web3, state.wallet, this._vm.$eventHub))
   }
 }
 
