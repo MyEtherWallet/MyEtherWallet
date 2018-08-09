@@ -11,9 +11,9 @@
       </p>
     </div>
     <div class="button-container fixed-width-1">
-      <b-btn class="mid-round-button-green-filled close-button">
+      <router-link to="/mew-intro" class="mid-round-button-green-filled close-button">
         Continue
-      </b-btn>
+      </router-link>
     </div>
   </b-modal>
 </template>
