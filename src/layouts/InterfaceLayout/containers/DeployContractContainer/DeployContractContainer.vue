@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off" />
+        <textarea ref="bytecode" class="custom-textarea-1" v-model="bytecode"></textarea>
       </div>
     </div>
 
@@ -23,13 +23,42 @@
         <div class="title">
           <h4>ABI/JSON Interface</h4>
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
+            <span v-on:click="deleteInput('abi')">Clear</span>
             <span v-on:click="copyToClipboard('abi')">Copy</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+        <textarea ref="abi" class="custom-textarea-1" v-model="abi"></textarea>
+      </div>
+    </div>
+
+    <div class="send-form" v-if="constructors.length !== 0">
+      <div class="title-container">
+        <div class="title">
+          <h4>Constructor {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
+        </div>
+      </div>
+      <div v-for="construct in constructors" :key="construct.inputs[0].name">
+        <div class="title-container">
+          <div class="title">
+            <h5>{{construct.inputs[0].name | capitalize }}: </h5>
+          </div>
+        </div>
+        <div class="the-form domain-name">
+          <input ref="contractName" v-model="inputs[construct.inputs[0].name]"></input>
+        </div>
+      </div>
+    </div>
+
+    <div class="send-form">
+      <div class="title-container">
+        <div class="title">
+          <h4>Contract Name</h4>
+        </div>
+      </div>
+      <div class="the-form domain-name">
+        <input ref="contractName" v-model="contractName"></input>
       </div>
     </div>
 
@@ -66,11 +95,8 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div class="submit-button large-round-button-green-border clickable">
-          {{ $t('common.continue') }}
-        </div>
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('interface.read') }}
+        <div v-on:click="signTransaction" :class="[abi === '' || bytecode === ''? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
+          Sign Transaction
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -85,7 +111,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/components/SuccessModal'
 
 export default {
-  name: 'Interact',
+  name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
@@ -93,44 +119,40 @@ export default {
   },
   data () {
     return {
-      showModal: true,
-      existingContracts: [
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '1'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '2'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '3'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
-        }
-      ]
+      abi: '',
+      bytecode: '',
+      constructors: [],
+      inputs: {},
+      contractName: ''
     }
   },
   methods: {
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    signTransaction () {
+      // this.$children[0].$refs.success.show()
     },
     copyToClipboard (ref) {
       this.$refs[ref].select()
       document.execCommand('copy')
     },
     deleteInput (ref) {
-      this.$refs[ref].value = ''
+      this[ref] = ''
     }
   },
   watch: {
-    showModal () {
-      if (this.showModal === false) {
-        this.showModal = true
+    abi (newVal) {
+      const self = this
+      if (newVal !== '') {
+        JSON.parse(newVal).forEach(item => {
+          if (item.type === 'constructor') {
+            self.constructors.push(item)
+          }
+        })
+      } else {
+        self.constructors = []
       }
+    },
+    inputs (newVal) {
+      console.log(newVal)
     }
   }
 }
