@@ -192,9 +192,9 @@ export default {
         this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
 
         this.raw = {
-          // from: this.$store.state.wallet.getAddressString(),
+          from: this.$store.state.wallet.getAddressString(),
           gas: this.gasLimit,
-          nonce: this.nonce /* + 1 */,
+          nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
           value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
           to: isEth ? this.toAddress : this.selectedCurrency.addr,
@@ -204,9 +204,8 @@ export default {
         if (this.toAddress === '') {
           delete this.raw['to']
         }
-        console.log(this.raw) // todo remove dev item
-        console.log('make sign: SendCurrencyContainer') // todo remove dev item
-        const fromAddress = '' // this.raw.from
+
+        const fromAddress = this.raw.from
         this.$store.state.web3.eth.sendTransaction(this.raw)
           .once('transactionHash', (hash) => {
             this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
@@ -222,7 +221,6 @@ export default {
     confirmationModalOpen () {
       this.createTx()
       window.scrollTo(0, 0)
-      // this.$children[5].$refs.confirmation.show()
     },
     changeGas (val) {
       this.gasAmount = val
