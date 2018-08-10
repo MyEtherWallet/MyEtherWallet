@@ -53,7 +53,7 @@ export default class LedgerWallet {
     this.getAccounts = this.getAccounts.bind(this)
     this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
     this.signTransaction = this.signTransaction.bind(this)
-    this.signMessage = this.signPersonalMessage.bind(this)
+    this.signMessage = this.signMessage.bind(this)
     this.changeNetwork = this.changeNetwork.bind(this)
     // this.getLedgerConnection = this.getLedgerConnection.bind(this)
     // this.setDerivationPath = this.setDerivationPath.bind(this)
@@ -151,12 +151,13 @@ export default class LedgerWallet {
       this.connectionOpened = true
       // eslint-disable-next-line new-cap
       if (this.ledgerTransport) {
-        if (this.activeConnection) {
-          return this.activeConnection
-        } else {
-          this.activeConnection = this.ledgerTransport.create(3000, 3000)
-          return this.activeConnection
-        }
+        // NOTE: Ledger transport does have a disconnect event, but requires keeping the connection open
+        // if (this.activeConnection) {
+        //   return this.activeConnection
+        // } else {
+        // this.activeConnection = this.ledgerTransport.create(3000, 3000)
+        return this.ledgerTransport.create(3000, 3000)
+        // }
       } else {
         // u2fTransport.open();
         return u2fTransport.create(3000, 3000)
@@ -222,16 +223,18 @@ export default class LedgerWallet {
     const path = await this.checkIfKnownAddress(msgData)
     const transport = await this.getTransport()
     try {
+      let thisMessage = msgData.data ? msgData.data : msgData
       const eth = new Ledger(transport)
       const result = await eth.signPersonalMessage(
         path,
-        msgData
+        thisMessage
       )
       const v = parseInt(result.v, 10) - 27
       let vHex = v.toString(16)
       if (vHex.length < 2) {
         vHex = `0${v}`
       }
+      console.log(result) // todo remove dev item
       return `0x${result.r}${result.s}${vHex}`
     } finally {
       transport.close()
@@ -242,7 +245,7 @@ export default class LedgerWallet {
 
   async _signTransaction (txData) {
     // const path = this.addressToPathMap[txData.from.toLowerCase()]
-    // if (!path) throw new Error("address unknown '" + txData.from + "'")
+    // if (!path) throw new Error('address unknown \'' + txData.from + '\'')
     const path = await this.checkIfKnownAddress(txData)
     const transport = await this.getTransport()
     try {
@@ -259,8 +262,8 @@ export default class LedgerWallet {
         path,
         tx.serialize().toString('hex')
       )
-
-      // Store signature in transactionf
+      console.log(result) // todo remove dev item
+      // Store signature in transaction
       tx.v = Buffer.from(result.v, 'hex')
       tx.r = Buffer.from(result.r, 'hex')
       tx.s = Buffer.from(result.s, 'hex')
@@ -278,7 +281,14 @@ export default class LedgerWallet {
         )
       }
 
-      return `0x${tx.serialize().toString('hex')}`
+      return {
+        rawTx: txData,
+        messageHash: tx.hash(), // figure out what exactly web3 is putting here
+        v: Buffer.from(result.v, 'hex'),
+        r: Buffer.from(result.r, 'hex'),
+        s: Buffer.from(result.s, 'hex'),
+        rawTransaction: `0x${tx.serialize().toString('hex')}`
+      }
     } finally {
       transport.close()
         .then(() => { this.connectionOpened = false })
