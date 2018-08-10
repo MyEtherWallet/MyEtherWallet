@@ -28,6 +28,7 @@
       </div>
       <div class="the-form domain-name">
         <textarea class="custom-textarea-1" name="" v-model="abi"></textarea>
+        <i :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']" aria-hidden="true"></i>
       </div>
     </div>
 
@@ -49,6 +50,7 @@ import {mapGetters} from 'vuex'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import {Misc} from '@/helpers'
 
 export default {
   components: {
@@ -59,14 +61,20 @@ export default {
   data () {
     return {
       abi: '',
-      address: ''
+      address: '',
+      interact: false,
+      validAbi: false
     }
   },
   methods: {
     selectedCurrency (currency) {
-      console.log(currency.address)
       this.abi = JSON.stringify(currency.abi)
       this.address = currency.address
+    }
+  },
+  watch: {
+    abi (newVal) {
+      this.validAbi = Misc.isJson(newVal)
     }
   },
   computed: {

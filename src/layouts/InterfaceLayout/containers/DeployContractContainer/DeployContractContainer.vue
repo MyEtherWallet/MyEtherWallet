@@ -30,6 +30,7 @@
       </div>
       <div class="the-form domain-name">
         <textarea ref="abi" class="custom-textarea-1" v-model="abi"></textarea>
+        <i :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']" aria-hidden="true"></i>
       </div>
     </div>
 
@@ -97,7 +98,7 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="confirmationModalOpen" :class="[abi === '' || bytecode === ''? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
+        <div v-on:click="confirmationModalOpen" :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
           Sign Transaction
         </div>
       </div>
@@ -113,6 +114,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import ConfirmModal from '@/components/ConfirmModal'
 import SuccessModal from '@/components/SuccessModal'
+import {Misc} from '@/helpers'
 
 import store from 'store'
 
@@ -142,7 +144,8 @@ export default {
       gasAmount: this.$store.state.gasPrice,
       gasLimit: 21000,
       data: '',
-      nonce: 0
+      nonce: 0,
+      validAbi: false
     }
   },
   methods: {
@@ -202,8 +205,9 @@ export default {
   mounted () {
     this.contractNamePlaceholder = store.get('localContracts') !== undefined ? `myContracts${store.get('localContracts').length}` : 'myContracts'
     this.constructors = []
-    if (this.abi !== '') {
-      JSON.parse(this.abi).forEach(item => {
+    this.validAbi = Misc.isJson(this.abi)
+    if (this.abi !== '' && this.validAbi) {
+      JSON.parse(this.abi && this.validAbi).forEach(item => {
         if (item.type === 'constructor') {
           this.constructors.push(item)
         }
@@ -215,7 +219,8 @@ export default {
   watch: {
     abi (newVal) {
       this.constructors = []
-      if (newVal !== '') {
+      this.validAbi = Misc.isJson(newVal)
+      if (newVal !== '' && this.validAbi) {
         JSON.parse(newVal).forEach(item => {
           if (item.type === 'constructor') {
             this.constructors.push(item)
