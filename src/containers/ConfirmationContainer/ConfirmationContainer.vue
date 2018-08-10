@@ -40,33 +40,32 @@ export default {
     }
   },
   created () {
-    console.log(this.$on('hide', () => {
-      console.log('modal hidden') // todo remove dev item
-    })) // todo remove dev item
-
     this.$eventHub.$on('signedTxDetails', (tx, signedDetails) => {
       this.parseRawTx(tx)
     })
 
-    this.$eventHub.$on('showTxConfirmModal', (tx, signer, resolve, reject) => {
+    this.$eventHub.$on('showTxConfirmModal', (tx, signer, resolve) => {
       this.parseRawTx(tx)
-      console.log('showTxConfirmModal', resolve) // todo remove dev item
-      console.log('signer', signer) // todo remove dev item
-
       this.responseFunction = resolve
-      this.signer = signer
-
+      this.signer = signer(tx)
       this.confirmationModalOpen()
-      // console.log(this.$refs.confirmationModals) // todo remove dev item
     })
 
-    // this.$on.
+    this.$eventHub.$on('showMessageConfirmModal', (data, signer, resolve) => {
+      this.responseFunction = resolve
+      this.signer = signer(data)
+      this.confirmationModalOpen()
+    })
+
+    this.$on('bv::modal::hide', () => {
+      console.log('modal hidden') // todo remove dev item
+
+      this.reset()
+    })
   },
   methods: {
     confirmationModalOpen () {
       window.scrollTo(0, 0)
-      console.log(this.$children[0].$refs.confirmation) // todo remove dev item
-      // this.$emit('showConfirmModal', this.raw)
       this.$children[0].$refs.confirmation.show()
     },
     showSuccessModal () {
@@ -83,12 +82,10 @@ export default {
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     sendTx () {
-      console.log('signer', this.signer) // todo remove dev item
-
-      this.signer(this.raw)
+      // this.signer(this.raw)
+      this.signer
         .then(_response => {
           this.responseFunction(_response)
-          console.log(this.$children[0].$refs.confirmation.onLeave) // todo remove dev item
           this.$children[0].$refs.confirmation.hide()
           this.showSuccessModal()
         })

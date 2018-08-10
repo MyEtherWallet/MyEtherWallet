@@ -120,36 +120,37 @@ export default class BasicWallet {
   }
 
   signMessage (message) {
-    // return new Promise((resolve, reject) => {
-    try {
-      if (!this.wallet) throw new Error('no wallet present. wallet may not have been decrypted')
-      let thisMessage = message.data ? message.data : message
-      let hash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage))
-      let signed = ethUtil.ecsign(hash, this.wallet.privKey)
-      let combined = Buffer.concat([Buffer.from(signed.r), Buffer.from(signed.s), Buffer.from([signed.v])])
-      let combinedHex = combined.toString('hex')
-      let signingAddr = this.getAddressString()
-      // eslint-disable-next-line no-unused-vars
-      let signedMsg = JSON.stringify({
-        address: signingAddr,
-        msg: thisMessage,
-        sig: '0x' + combinedHex,
-        version: '3',
-        signer: 'MEW'
-      }, null, 2)
-      return {
-        message: message,
-        messageHash: hash,
-        v: signed.v,
-        r: signed.r,
-        s: signed.s,
-        signature: '0x' + combinedHex
+    return new Promise((resolve, reject) => {
+      try {
+        if (!this.wallet) throw new Error('no wallet present. wallet may not have been decrypted')
+        let thisMessage = message.data ? message.data : message
+        let hash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage))
+        let signed = ethUtil.ecsign(hash, this.wallet.privKey)
+        let combined = Buffer.concat([Buffer.from(signed.r), Buffer.from(signed.s), Buffer.from([signed.v])])
+        let combinedHex = combined.toString('hex')
+        let signingAddr = this.getAddressString()
+        // eslint-disable-next-line no-unused-vars
+        let signedMsg = JSON.stringify({
+          address: signingAddr,
+          msg: thisMessage,
+          sig: '0x' + combinedHex,
+          version: '3',
+          signer: 'MEW'
+        }, null, 2)
+        resolve(signedMsg)
+        // return {
+        //   message: message,
+        //   messageHash: hash,
+        //   v: signed.v,
+        //   r: signed.r,
+        //   s: signed.s,
+        //   signature: '0x' + combinedHex
+        // }
+        // return '0x' + combinedHex
+      } catch (e) {
+        reject(e)
       }
-      // return '0x' + combinedHex
-    } catch (e) {
-      return e
-    }
-    // })
+    })
   }
 
   // ================== End Interface Methods ========================================
@@ -197,7 +198,6 @@ export default class BasicWallet {
           this.wallet = this.fromMyEtherWalletKey(options.manualPrivateKey, options.privPassword)
           break
         case 'manualPrivateKey':
-          console.log(options.manualPrivateKey) // todo remove dev item
           if (typeof options.manualPrivateKey === 'object') throw new Error('Supplied Private Key Must Be A String')
           let privKey = options.manualPrivateKey.indexOf('0x') === 0 ? options.manualPrivateKey : '0x' + options.manualPrivateKey
 
