@@ -14,6 +14,7 @@
 
     .title-container {
       .title {
+        position: relative;
         align-items: flex-end;
         display: flex;
         margin-bottom: 10px;
@@ -22,6 +23,10 @@
 
         .select-contract {
           margin-left: auto;
+          min-width: 330px;
+          position: absolute;
+          right: 0px;
+          top: -17px;
         }
 
         .copy-buttons {

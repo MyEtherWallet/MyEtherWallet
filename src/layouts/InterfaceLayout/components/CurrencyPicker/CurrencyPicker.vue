@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="currency-picker-container">
-    <div :class="[open? 'open':'','dropdown-container']">
-      <div class="dropdown-text-container" @click="openDropdown">
+    <div>
+      <div class="dropdown-text-container" @click="openDropdown" :class="[open? 'open':'','dropdown-container']">
         <p v-show="token"> {{selectedCurrency.symbol}} <span class="subname">- {{ selectedCurrency.name }}</span></p>
         <p v-show="!token"> {{selectedCurrency.name}} </p>
         <i :class="['fa', open ? 'fa-angle-up':'fa-angle-down']"></i>
@@ -27,7 +27,7 @@ export default {
   props: ['currency', 'page', 'token'],
   data () {
     return {
-      localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}] : [{name: 'Select an item'}],
+      localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}] : [{name: 'Select an item'}],
       selectedCurrency: this.token === true ? {name: 'Ether', symbol: 'ETH'} : {name: 'Select an item'},
       open: false,
       search: ''
@@ -53,7 +53,7 @@ export default {
     },
     currency (newVal) {
       if (this.token) {
-        this.localCurrency = [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}]
+        this.localCurrency = [{name: 'Ether', symbol: 'ETH'}]
       } else {
         this.localCurrency = [{name: 'Select an item'}]
       }
@@ -68,7 +68,7 @@ export default {
         })
       } else {
         if (this.token) {
-          this.localCurrency = [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}]
+          this.localCurrency = [{name: 'Ether', symbol: 'ETH'}]
         } else {
           this.localCurrency = [{name: 'Select an item'}]
         }

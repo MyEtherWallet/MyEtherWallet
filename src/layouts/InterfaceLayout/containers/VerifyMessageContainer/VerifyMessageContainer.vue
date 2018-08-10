@@ -1,7 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.verifyMessage')"></interface-container-title>
+    <interface-container-title :title="$t('common.verifyMessage')"></interface-container-title>
 
     <div class="send-form">
       <div class="title-container">
@@ -36,7 +36,10 @@
     <div class="send-form2">
       <div class="title-container">
         <div class="title">
-          <h4>Speed of Transaction<span class="alert-button"></span></h4>
+          <div class="title-and-popover">
+            <h4>Speed of Transaction</h4>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+          </div>
           <p>Transcation Fee: 0.000013 ETH ($1.234)</p>
         </div>
         <div class="buttons">
@@ -64,7 +67,7 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div class="submit-button large-round-button-green-border clickable">
-          {{ $t('reused.continue') }}
+          {{ $t('common.continue') }}
         </div>
         <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
           {{ $t('interface.read') }}

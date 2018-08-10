@@ -24,7 +24,7 @@
           <verify-message-container v-show="currentTab === 'verifyMessage'"></verify-message-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <div class="tokens" v-if="$store.state.online">
-            <interface-tokens :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
+            <interface-tokens :getTokenBalance="getTokenBalance" :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
           </div>
         </div>
       </div>
@@ -56,6 +56,8 @@ import InterfaceSideMenu from './components/InterfaceSideMenu'
 import InterfaceTokens from './components/InterfaceTokens'
 
 import store from 'store'
+// eslint-disable-next-line
+const unit = require('ethjs-unit')
 
 export default {
   components: {
@@ -105,9 +107,23 @@ export default {
 
         return response
       } else {
-        this.receivedTokens = false
+        this.receivedTokens = true
         return this.network.type.tokens
       }
+    },
+    async getTokenBalance (address) {
+      const web3 = this.$store.state.web3
+      const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
+      const contract = new web3.eth.Contract(contractAbi)
+      const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
+      const balance = await web3.eth.call({
+        to: web3.utils.toChecksumAddress(address),
+        data: data
+      }).then(res => {
+        const tokenBalance = unit.fromWei(web3.utils.toBN(res).toString(), 'ether')
+        return tokenBalance
+      }).catch(err => console.log(err))
+      return balance
     },
     async setTokens () {
       const hex = await this.fetchTokens()
@@ -125,20 +141,20 @@ export default {
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0)
       }
     },
-    async getBlock () {
+    getBlock () {
       this.$store.state.web3.eth.getBlockNumber().then((res) => {
         this.blockNumber = res
-      })
+      }).catch(err => console.log(err))
     },
-    async getBalance () {
-      const self = this
-      await this.$store.state.web3.eth.getBalance(this.address).then((res) => {
-        self.balance = res
-        this.$store.dispatch('setAccountBalance', this.balance.result)
-      })
+    getBalance () {
+      this.$store.state.web3.eth.getBalance(this.address).then((res) => {
+        this.balance = res
+        this.$store.dispatch('setAccountBalance', this.balance)
+      }).catch(err => console.log(err))
     }
   },
   mounted () {
+    const self = this
     if (store.get('sideMenu') !== undefined) {
       this.currentTab = store.get('sideMenu')
       this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
@@ -150,6 +166,14 @@ export default {
         setInterval(this.getBlock, 14000)
         if (this.network.type.chainID === 1) {
           this.setTokens()
+        } else {
+          const tokenWithBalance = []
+          this.network.type.tokens.map(async (token) => {
+            token.balance = await self.getTokenBalance(token.address)
+            tokenWithBalance.push(token)
+          })
+          this.receivedTokens = false
+          this.tokens = tokenWithBalance
         }
       }
     }
@@ -166,22 +190,25 @@ export default {
   },
   watch: {
     network (newVal) {
+      const self = this
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
           this.getBalance()
           this.getBlock()
           setInterval(this.getBlock, 14000)
-          if (this.network.type.chainID === 1) {
+          if (newVal.type.chainID === 1) {
             this.setTokens()
           } else {
-            this.tokens = this.network.type.tokens
+            const tokenWithBalance = []
+            newVal.type.tokens.map(async (token) => {
+              token.balance = await self.getTokenBalance(token.address)
+              tokenWithBalance.push(token)
+            })
             this.receivedTokens = false
+            this.tokens = tokenWithBalance
           }
         }
       }
-    },
-    tokens (newVal) {
-      this.tokens = newVal
     }
   }
 }

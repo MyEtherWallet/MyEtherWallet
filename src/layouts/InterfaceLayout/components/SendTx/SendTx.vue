@@ -21,7 +21,8 @@
         <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
           Send Transaction
         </div>
-        <interface-bottom-text :link="'/'" :linkText="'Learn more'" :question="'Have any issues?'"></interface-bottom-text>
+        <interface-bottom-text :link="'/'" :linkText="'Learn more'"
+                               :question="'Have any issues?'"></interface-bottom-text>
       </div>
     </div>
   </div>
@@ -30,6 +31,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import SuccessModal from '@/components/SuccessModal'
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -50,10 +52,15 @@ export default {
       document.execCommand('copy')
     },
     sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).on('receipt').then(res => {
-        this.$children[0].$refs.success.show()
-        console.log(res)
-      })
+      console.log('this.signedTx', this.signedTx) // todo remove dev item
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx)
+        .on('receipt', (txReceipt) => {
+          console.log(txReceipt) // todo remove dev item
+        })
+        .then(res => {
+          this.$children[0].$refs.success.show()
+          console.log('sendSignedTransaction', res)
+        })
     },
     hideModal () {
       this.$children[0].$refs.success.hide()

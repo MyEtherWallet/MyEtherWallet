@@ -39,16 +39,7 @@
           <div class="title">
             <div class="title-helper">
               <h4>Data</h4>
-              <div class="tooltip-box-1">
-                <b-btn id="exPopover4"></b-btn>
-                <b-popover target="exPopover4" triggers="hover focus" placement="top">
-                  <template slot="title">MetaMask</template>
-                  <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-                  MetaMask is a <strong>bridge</strong> that allows you to visit the distributed web of tomorrow in your browser today.
-                  It allows you to <strong>run Ethereum dApps right in your browser without running a full Ethereum node.</strong>
-                  MetaMask includes a secure identity vault, providing a user interface to manage your identities on different sites and sign blockchain transactions.
-                </b-popover>
-              </div>
+              <popover :popcontent="$t('popover.whatIsDataContent')"/>
             </div>
           </div>
         </div>
@@ -125,17 +116,17 @@ export default {
         to: this.toAddress,
         chainId: this.$store.state.network.type.chainID
       }
+      console.log('make sign: GenerateTx') // todo remove dev item
+      this.$store.state.web3.eth.signTransaction(raw)
+        .then(signedTx => {
+          console.log(signedTx) // todo remove dev item
+          this.$emit('createdRawTx', signedTx.rawTransaction)
 
-      const tx = new EthTx(raw)
-      tx.sign(this.$store.state.wallet.getPrivateKey())
-      const serializedTx = tx.serialize()
-      const signedTx = `0x${serializedTx.toString('hex')}`
-      this.$emit('createdRawTx', signedTx)
-
-      this.raw = raw
-      this.signed = signedTx
-      this.$children[5].$refs.signedTx.show()
-      window.scrollTo(0, 0)
+          this.raw = raw
+          this.signed = signedTx.rawTransaction
+          this.$children[5].$refs.signedTx.show()
+          window.scrollTo(0, 0)
+        })
     },
     gasLimitUpdated (e) {
       this.$emit('gasLimitUpdate', e)

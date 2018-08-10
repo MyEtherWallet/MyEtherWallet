@@ -44,5 +44,7 @@ const common = {
   // news: '',
   // interactWcontract: '',
   // depContract: ''
+  // signMessage: '',
+  // verifyMessage: ''
 }
 export default common
