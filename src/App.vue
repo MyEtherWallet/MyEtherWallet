@@ -1,12 +1,9 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container/>
     <router-view/>
     <footer-container/>
-    <!--<div v-show="showConfirmModal">-->
-      <confirmation-container :active="showConfirmModal" ref="confirmationModals" />
-    <!--</div>-->
-
+    <confirmation-container/>
   </div>
 </template>
 
@@ -22,11 +19,11 @@ export default {
   name: 'App',
   components: {
     'header-container': HeaderContainer,
-    'footer-container': FooterContainer
+    'footer-container': FooterContainer,
+    'confirmation-container': ConfirmationContainer
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
     const state = {
-      web3: web3,
       web3: store.get('network') ? new Web3(new Web3.providers.HttpProvider(store.get('network').url)) : new Web3(new Web3.providers.HttpProvider(this.$store.state.Networks['ETH'][0].url)),
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
       wallet: null,
