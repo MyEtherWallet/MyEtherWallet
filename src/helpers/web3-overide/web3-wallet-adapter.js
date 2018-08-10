@@ -1,20 +1,13 @@
-// import * as _ from 'lodash'
-// import * as utils from 'web3-utils'
 import * as ethUtil from 'ethereumjs-util'
-// import EthereumWallet from 'ethereumjs-wallet'
-// import { getObjectInheritance } from '../helpers'
 
 export default class Web3WalletAdapter {
   constructor (wallet) {
     this.wallet = wallet
     this.isHardwareWallet = this.wallet.type === 'hardware'
     this.length = 1
+    // Assign methods to external expected names, and bind to present context
     this.signTransaction = this._signTransaction.bind(this)
     this.signMessage = this._signMessage.bind(this)
-  }
-
-  privateKeyAvailable () {
-    return this.wallet.privateKey && (typeof this.wallet.privateKey !== 'undefined' && this.wallet.privateKey !== null)
   }
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
@@ -69,7 +62,7 @@ export default class Web3WalletAdapter {
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
-
+  // ============== (Start) Getters  ======================
   get privateKey () {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPrivateKeyString()
@@ -124,21 +117,16 @@ export default class Web3WalletAdapter {
     return ethUtil.toChecksumAddress(this.address)
   }
 
-  // _checkForSignedTransactionComponents
+  // ============== (End) Getters  ======================
+  // ============== (Start) Operational Methods ======================
 
-  _signTransaction (tx, privateKey) {
+  _signTransaction (tx) {
     return new Promise((resolve, reject) => {
-      var error = false
-
       if (!tx) {
-        error = new Error('No transaction object given!')
-
-        reject(error)
+        reject(new Error('No transaction object given!'))
       }
       if (this.wallet.isHardware && !tx.from) tx.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
 
-      // Resolve immediately if nonce, chainId and price are provided
-      // if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
       tx.data = tx.data ? tx.data : tx.input || '0x'
       tx.value = tx.value || '0x'
       this.wallet.signTransaction(tx)
@@ -149,9 +137,6 @@ export default class Web3WalletAdapter {
           console.error(_error)
           reject(_error)
         })
-      // } else {
-      //   reject(Error('one or more of nonce, chainId, or gasPrice are missing'))
-      // }
     })
   }
 
@@ -167,7 +152,13 @@ export default class Web3WalletAdapter {
           reject(_error)
         })
     })
-
-    // return Promise.resolve()
   }
+
+  // ============== (End) Operational Methods ======================
+  // ============== (Start) Utility Methods ======================
+  privateKeyAvailable () {
+    return this.wallet.privateKey && (typeof this.wallet.privateKey !== 'undefined' && this.wallet.privateKey !== null)
+  }
+
+  // ============== (End) Utility Methods ======================
 }
