@@ -12,7 +12,7 @@
           <i class="fa fa-search"></i>
         </div>
         <div class="item-container">
-          <div v-for="curr in localCurrency" :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']" @click="selectCurrency(curr)" :key="token?curr.name+curr.symbol + page: curr.name + page">
+          <div v-for="(curr, idx) in localCurrency" :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']" @click="selectCurrency(curr)" :key="token?curr.name+curr.symbol + page: curr.name + page + idx">
             <p v-show="token">{{ curr.symbol }} <span class="subname">- {{ curr.name }}</span><p>
             <p v-show="!token">{{ curr.name }}</p>
           </div>
