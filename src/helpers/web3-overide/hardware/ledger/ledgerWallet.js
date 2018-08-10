@@ -1,8 +1,9 @@
 import EthereumTx from 'ethereumjs-tx'
 import Ledger from '@ledgerhq/hw-app-eth'
 import u2fTransport from '@ledgerhq/hw-transport-u2f'
+import HardwareWalletInterface from '../hardwareWallet-interface'
+import * as ethUtil from 'ethereumjs-util'
 
-// const allowedHdPaths = ["44'/60'", "44'/61'"]
 // const NOT_SUPPORTED_ERROR_MSG =
 //   'LedgerWallet uses U2F which is not supported by your browser. ' +
 //   'Use Chrome, Opera or Firefox with a U2F extension.' +
@@ -11,23 +12,20 @@ import u2fTransport from '@ledgerhq/hw-transport-u2f'
 /**
  * THE CONNECTION STATUS, STATE, AND ACTIONS ALL OPERATE FROM THE TRANSPORT INSTANCE PASSED TO THE LEDGER APP INTERFACE
  */
-// TODO (MAYBE) create a wallet object that can be used for simple operation on the frontent (i.e. balance, display, etc.)
-export default class LedgerWallet {
+export default class LedgerWallet extends HardwareWalletInterface {
   constructor (opts) {
-    this.type = 'hardware'
+    super()
+    let options = opts || {}
+
     this.identifier = 'LedgerNanoS'
     this.wallet = null
     this.activeAddress = ''
     this.activeAddressIndex = ''
-    let options = opts || {}
     if (options.transport) this.ledgerTransport = options.transport
     this.allowedHdPaths = options.options || ['44\'/60\'', '44\'/61\'']
     this.defaultOptions = {
-      networkId: 1, // mainnet
       path: '44\'/60\'/0\'/0', // ledger default derivation path
-      askConfirm: false,
-      accountsLength: 5,
-      accountsOffset: 0
+      askConfirm: false
     }
 
     const currentOptions = {
@@ -36,11 +34,12 @@ export default class LedgerWallet {
     }
     this.checkIfAllowedPath(currentOptions.path)
 
-    this.networkId = currentOptions.networkId
+    this.accountsLength = currentOptions.accountsLength || this.defaultAccountsCount
+    this.accountsOffset = currentOptions.accountsOffset || this.defaultAccountsOffset
+    this.networkId = currentOptions.networkId || this.defaultNetworkId
+
     this.path = currentOptions.path
     this.askConfirm = currentOptions.askConfirm
-    this.accountsLength = currentOptions.accountsLength
-    this.accountsOffset = currentOptions.accountsOffset
     this.addressToPathMap = {}
     this.pathComponents = this.obtainPathComponentsFromDerivationPath(this.path)
 
@@ -55,14 +54,15 @@ export default class LedgerWallet {
     this.signTransaction = this.signTransaction.bind(this)
     this.signMessage = this.signMessage.bind(this)
     this.changeNetwork = this.changeNetwork.bind(this)
-    // this.getLedgerConnection = this.getLedgerConnection.bind(this)
-    // this.setDerivationPath = this.setDerivationPath.bind(this)
-    // this.setDerivationPath(path)
-    // this.getAccounts()
   }
 
   getAddress () {
     return this.wallet.address
+  }
+
+  getAddressString () {
+    // let rawAddress = '0x' + this.getAddress().toString('hex')
+    return ethUtil.toChecksumAddress(this.getAddress())
   }
 
   changePath (path) {
@@ -84,10 +84,10 @@ export default class LedgerWallet {
     this.path = path
   }
 
-  getAccounts (callback) {
+  getAccounts () {
     let _this = this
-    if (arguments.length > 1) {
-      return _this.getMultipleAccounts(arguments[0], arguments[1], arguments[2])
+    if (arguments.length > 1 && arguments.length < 3) {
+      return _this.getMultipleAccounts(arguments[0], arguments[1])
     } else {
       return _this._getAccounts()
     }
@@ -97,16 +97,12 @@ export default class LedgerWallet {
     return this._getAccounts(count, offset)
   }
 
-  signMessage (txData, callback) {
+  signMessage (txData) {
     return this._signPersonalMessage(txData)
-    // .then(res => callback(null, res))
-    // .catch(err => callback(err, null))
   }
 
-  signTransaction (txData, callback) {
+  signTransaction (txData) {
     return this._signTransaction(txData)
-    // .then(res => callback(null, res))
-    // .catch(err => callback(err, null))
   }
 
   checkIfAllowedPath (path) {
@@ -124,7 +120,6 @@ export default class LedgerWallet {
 
   makeError (msg, id) {
     const err = new Error(msg)
-    // $FlowFixMe
     err.id = id
     return err
   }
@@ -149,17 +144,9 @@ export default class LedgerWallet {
       )
     } else {
       this.connectionOpened = true
-      // eslint-disable-next-line new-cap
       if (this.ledgerTransport) {
-        // NOTE: Ledger transport does have a disconnect event, but requires keeping the connection open
-        // if (this.activeConnection) {
-        //   return this.activeConnection
-        // } else {
-        // this.activeConnection = this.ledgerTransport.create(3000, 3000)
         return this.ledgerTransport.create(3000, 3000)
-        // }
       } else {
-        // u2fTransport.open();
         return u2fTransport.create(3000, 3000)
       }
     }
@@ -174,13 +161,11 @@ export default class LedgerWallet {
       const addresses = {}
       for (let i = accountsOffset; i < accountsOffset + accountsLength; i++) {
         const path =
-          this.pathComponents.basePath + (this.pathComponents.index + i).toString() // (i).toString()
+          this.pathComponents.basePath + (this.pathComponents.index + i).toString()
         const address = await eth.getAddress(path, this.askConfirm, false)
-        // addresses[path] = address.address
         addresses[i] = address.address
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
-
       return addresses
     } finally {
       transport.close()
@@ -205,7 +190,6 @@ export default class LedgerWallet {
   }
 
   async checkIfKnownAddress (data) {
-    // await this._getAccounts()
     let path
     if (!this.accountsRetrieved) {
       await this._getAccounts()
@@ -244,8 +228,6 @@ export default class LedgerWallet {
   }
 
   async _signTransaction (txData) {
-    // const path = this.addressToPathMap[txData.from.toLowerCase()]
-    // if (!path) throw new Error('address unknown \'' + txData.from + '\'')
     const path = await this.checkIfKnownAddress(txData)
     const transport = await this.getTransport()
     try {
