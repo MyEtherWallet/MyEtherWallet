@@ -14,6 +14,7 @@ import u2fTransport from '@ledgerhq/hw-transport-u2f'
 // TODO (MAYBE) create a wallet object that can be used for simple operation on the frontent (i.e. balance, display, etc.)
 export default class LedgerWallet {
   constructor (opts) {
+    this.type = 'hardware'
     this.identifier = 'LedgerNanoS'
     this.wallet = null
     this.activeAddress = ''
@@ -96,7 +97,7 @@ export default class LedgerWallet {
     return this._getAccounts(count, offset)
   }
 
-  signPersonalMessage (txData, callback) {
+  signMessage (txData, callback) {
     return this._signPersonalMessage(txData)
     // .then(res => callback(null, res))
     // .catch(err => callback(err, null))
@@ -150,7 +151,12 @@ export default class LedgerWallet {
       this.connectionOpened = true
       // eslint-disable-next-line new-cap
       if (this.ledgerTransport) {
-        return this.ledgerTransport.create(3000, 3000)
+        if (this.activeConnection) {
+          return this.activeConnection
+        } else {
+          this.activeConnection = this.ledgerTransport.create(3000, 3000)
+          return this.activeConnection
+        }
       } else {
         // u2fTransport.open();
         return u2fTransport.create(3000, 3000)

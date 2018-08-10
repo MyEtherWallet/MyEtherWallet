@@ -20,7 +20,7 @@
       </div>
 
       <div class="the-form">
-        <textarea class="custom-textarea-1"></textarea>
+        <textarea class="custom-textarea-1" ref="message"></textarea>
       </div>
     </div>
 
@@ -31,24 +31,26 @@
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
-            <span v-on:click="copyToClipboard('abi')">Copy</span>
+            <span v-on:click="deleteInputText('signature')">Clear</span>
+            <span v-on:click="copyToClipboard('signature')">Copy</span>
           </div>
 
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+        <textarea ref="signature" class="custom-textarea-1" name="" ></textarea>
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
+        <div v-on:click="signMessage"
+             class="submit-button large-round-button-green-filled clickable">
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
+                             :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
 
   </div>
@@ -71,6 +73,12 @@ export default {
     }
   },
   methods: {
+    signMessage () {
+      this.$store.state.web3.eth.sign(this.$refs.message.value, this.$store.state.wallet.getAddressString())
+        .then(_signedMessage => {
+          this.$refs.signature.value = _signedMessage
+        })
+    },
     successModalOpen () {
       this.$children[0].$refs.success.show()
     },
