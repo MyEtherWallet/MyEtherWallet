@@ -1,5 +1,8 @@
 ### Devop
 - Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
+### Feature
+- Intercept and override signTransaction and signMessage to force confirm modal display and approval
+- Integrate Ledger hardware wallet
 
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
