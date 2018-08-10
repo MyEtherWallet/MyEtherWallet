@@ -7,7 +7,7 @@ import * as ethUtil from 'ethereumjs-util'
 export default class Web3WalletAdapter {
   constructor (wallet) {
     this.wallet = wallet
-    this.isHardware = this.wallet.type === 'hardware'
+    this.isHardwareWallet = this.wallet.type === 'hardware'
     this.length = 1
     this.signTransaction = this._signTransaction.bind(this)
     this.signMessage = this._signMessage.bind(this)
@@ -116,9 +116,15 @@ export default class Web3WalletAdapter {
     return this.wallet.getAddressString()
   }
 
+  get isHardware () {
+    return this.isHardwareWallet
+  }
+
   get checkSumAddress () {
     return ethUtil.toChecksumAddress(this.address)
   }
+
+  // _checkForSignedTransactionComponents
 
   _signTransaction (tx, privateKey) {
     return new Promise((resolve, reject) => {
@@ -129,6 +135,7 @@ export default class Web3WalletAdapter {
 
         reject(error)
       }
+      if (this.wallet.isHardware && !tx.from) tx.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
 
       // Resolve immediately if nonce, chainId and price are provided
       // if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
@@ -139,6 +146,7 @@ export default class Web3WalletAdapter {
           resolve(_result)
         })
         .catch(_error => {
+          console.error(_error)
           reject(_error)
         })
       // } else {
@@ -147,9 +155,11 @@ export default class Web3WalletAdapter {
     })
   }
 
-  _signMessage (data) {
+  _signMessage (message) {
     return new Promise((resolve, reject) => {
-      this.wallet.signMessage(data)
+      const msgData = {data: message}
+      if (this.wallet.isHardware && !msgData.from) msgData.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
+      this.wallet.signMessage(msgData)
         .then(_signedMessage => {
           resolve(_signedMessage)
         })

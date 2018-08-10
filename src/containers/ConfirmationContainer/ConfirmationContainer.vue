@@ -1,7 +1,7 @@
 <template>
   <div>
     <confirm-modal :confirmSendTx="sendTx" :showSuccess="showSuccessModal" :signedTx="signedTx"
-                   :fee="transactionFee"
+                   :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
                    :gasPrice="$store.state.gasPrice" :from="fromAddress"
                    :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
                    :nonce="nonce + 1"></confirm-modal>
@@ -21,6 +21,7 @@ export default {
   },
   data () {
     return {
+      isHardwareWallet: false,
       responseFunction: null,
       advancedExpend: false,
       addressValid: true,
@@ -36,6 +37,7 @@ export default {
       selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
       raw: {},
       signer: {},
+      signedTxObject: {},
       signedTx: ''
     }
   },
@@ -44,10 +46,16 @@ export default {
       this.parseRawTx(tx)
     })
 
-    this.$eventHub.$on('showTxConfirmModal', (tx, signer, resolve) => {
+    this.$eventHub.$on('showTxConfirmModal', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx)
+      this.isHardwareWallet = isHardware
       this.responseFunction = resolve
-      this.signer = signer(tx)
+      // this.signer = signer(tx)
+      signer(tx)
+        .then(_response => {
+          this.signedTxObject = _response
+          this.signedTx = this.signedTxObject.rawTransaction
+        })
       this.confirmationModalOpen()
     })
 
@@ -82,13 +90,16 @@ export default {
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     sendTx () {
+      this.responseFunction(this.signedTxObject)
+      this.$children[0].$refs.confirmation.hide()
+      this.showSuccessModal()
       // this.signer(this.raw)
-      this.signer
-        .then(_response => {
-          this.responseFunction(_response)
-          this.$children[0].$refs.confirmation.hide()
-          this.showSuccessModal()
-        })
+      // this.signer
+      //   .then(_response => {
+      //     this.responseFunction(_response)
+      //     this.$children[0].$refs.confirmation.hide()
+      //     this.showSuccessModal()
+      //   })
     },
     reset () {
       this.responseFunction = null
@@ -105,7 +116,6 @@ export default {
       this.transactionFee = 0
       this.selectedCurrency = {symbol: 'ETH', name: 'Ethereum'}
       this.raw = {}
-      this.signedTxObject = {}
       this.signedTx = ''
     }
   },
