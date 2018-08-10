@@ -130,8 +130,6 @@ export default class Web3WalletAdapter {
         reject(error)
       }
 
-      // Resolve immediately if nonce, chainId and price are provided
-      // if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
       tx.data = tx.data ? tx.data : tx.input || '0x'
       tx.value = tx.value || '0x'
       this.wallet.signTransaction(tx)
@@ -141,9 +139,6 @@ export default class Web3WalletAdapter {
         .catch(_error => {
           reject(_error)
         })
-      // } else {
-      //   reject(Error('one or more of nonce, chainId, or gasPrice are missing'))
-      // }
     })
   }
 
@@ -157,7 +152,5 @@ export default class Web3WalletAdapter {
           reject(_error)
         })
     })
-
-    // return Promise.resolve()
   }
 }

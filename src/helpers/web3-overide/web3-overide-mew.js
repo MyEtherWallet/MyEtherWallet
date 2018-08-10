@@ -4,27 +4,17 @@ export default function web3OverideMew (web3, wallet, eventHub) {
   const methodOverides = {
     signTransaction (tx, privateKey) {
       return new Promise((resolve, reject) => {
-        // console.log(tx, privateKey, '-- HOW COULD I TRIGGER THE CONFIRMATION MODAL IN HERE---')
         eventHub.$emit('showTxConfirmModal', tx, wallet.signTransaction.bind(this), (res) => {
-          // console.log('eventHub response', res) // todo remove dev item
           resolve(res)
         })
       })
     },
     signMessage (data) {
       return new Promise((resolve, reject) => {
-        console.log(data, '-- HOW COULD I TRIGGER THE CONFIRMATION MODAL IN HERE---')
-        // eventHub.$emit('showMessageConfirmModal', data, wallet.sign, (res) => {
-        //   console.log('eventHub response', res) // todo remove dev item
-        //   resolve(res)
-        // })
-        wallet.signMessage(data)
-          .then(_result => {
-            resolve(_result)
-          })
-          .catch(_error => {
-            reject(_error)
-          })
+        eventHub.$emit('showMessageConfirmModal', data, wallet.signMessage, (res) => {
+          console.log('eventHub response', res) // todo remove dev item
+          resolve(res)
+        })
       })
     }
   }
