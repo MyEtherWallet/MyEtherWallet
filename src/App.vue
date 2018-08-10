@@ -3,10 +3,7 @@
     <header-container/>
     <router-view/>
     <footer-container/>
-    <!--<div v-show="showConfirmModal">-->
-      <confirmation-container :active="showConfirmModal" ref="confirmationModals" />
-    <!--</div>-->
-
+    <confirmation-container/>
   </div>
 </template>
 
@@ -24,11 +21,6 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer
-  },
-  data () {
-    return {
-      showConfirmModal: false
-    }
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
     const state = {
@@ -53,17 +45,6 @@ export default {
 
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
-    //
-    // this.$eventHub.$on('showConfirmModal', (callback) => {
-    //   console.log('showConfirmModal') // todo remove dev item
-    //   this.showConfirmModal = true
-    //   console.log(this.$refs.confirmationModals) // todo remove dev item
-    // })
-  },
-  methods: {
-    broadcast () {
-      this.showConfirmModal = false
-    }
   }
 }
 </script>
