@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="currency-picker-container">
+  <div class="currency-picker-container" v-click-outside="openDropdown">
     <div>
       <div @click="openDropdown" :class="[open? 'open':'','dropdown-container', token? 'dropdown-text-container': 'dropdown-text-container-white']">
         <p v-show="token"> {{selectedCurrency.symbol}} <span class="subname">- {{ selectedCurrency.name }}</span></p>
