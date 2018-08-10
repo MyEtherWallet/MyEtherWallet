@@ -60,20 +60,26 @@
             <h4>{{selectedMethod.name}}</h4>
           </div>
         </div>
-        <div>
+        <div v-if="selectedMethod.constant !== false">
           <div class="the-form domain-name">
             <input type="text" name="" v-model="result" placeholder="0x00000000000000" disabled />
           </div>
         </div>
+        <div v-else>
+          <div class="the-form domain-name" v-for="(input, idx) in selectedMethod.inputs" :key="input.name + idx">
+            <input type="text" name="" v-model="writeInputs[input.name]" placeholder="0x00000000000000"/>
+            <span>{{input.name}}</span>
+          </div>
+        </div>
       </div>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable">
-          Back
-          <img src="~@/assets/images/icons/right-arrow.png">
-        </div>
-        <div class="submit-button large-round-button-green-filled clickable">
-          Read
-          <img src="~@/assets/images/icons/right-arrow.png">
+        <div class="buttons interact-buttons">
+          <div class="submit-button large-round-button-green-border clickable">
+            {{ $t('common.continue') }}
+          </div>
+          <div class="submit-button large-round-button-green-filled clickable">
+            {{ $t('interface.read') }}
+          </div>
         </div>
         <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
       </div>
@@ -103,7 +109,8 @@ export default {
       validAddress: false,
       methods: [],
       selectedMethod: {},
-      result: ''
+      result: '',
+      writeInputs: {}
     }
   },
   methods: {
