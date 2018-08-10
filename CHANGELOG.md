@@ -1,5 +1,7 @@
 ### Devop
 - Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
+### Feature
+- Intercept and override signTransaction and signMessage to force confirm modal display and approval
 
 ### Release v0.0.2
 ### Feature
