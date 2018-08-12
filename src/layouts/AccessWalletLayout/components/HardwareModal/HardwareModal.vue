@@ -125,6 +125,7 @@ export default {
           console.log('something not right'); // todo remove dev item
           break;
       }
+      // this.hardwareWalletOpen()
     },
     select(ref) {
       if (this.selected !== ref) {
