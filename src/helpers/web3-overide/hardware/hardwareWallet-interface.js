@@ -37,11 +37,16 @@ export default class HardwareWalletInterface {
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
-
+  // ============== (Start) Expected Utility methods ======================
   get isHardware () {
     return this.isHardwareWallet
   }
 
+  setActiveAddress (address, index) {
+    throw new Error('setActiveAddress Not Implemented')
+  }
+
+  // ============== (End) Expected Utility methods methods ======================
   getAccounts () {
     throw new Error('getAccounts Not Implemented')
   }
