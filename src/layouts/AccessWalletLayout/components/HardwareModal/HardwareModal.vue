@@ -58,7 +58,6 @@ export default {
       if (this.selected === 'ledger') {
         const wallet = new LedgerWallet()
         this.$emit('hardwareWalletOpen', wallet)
-        console.log(wallet) // todo remove dev item
       } else if (this.selected === 'byPriv') {
         console.log('something not right') // todo remove dev item
       } else {
@@ -67,7 +66,6 @@ export default {
       // this.hardwareWalletOpen()
     },
     select (ref) {
-      console.log(this.e) // todo remove dev item
       if (this.selected !== ref) {
         this.selected = ref
       } else {
@@ -77,7 +75,6 @@ export default {
     hardwareButtonActivate (e) {
       const buttonEls = this.$refs.hardwareList.children
       for (var i = 0; i < buttonEls.length; i++) {
-        console.log(buttonEls[i]) // todo remove dev item
         buttonEls[i].classList.remove('active')
       }
 

@@ -47,7 +47,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.activeConnection = null
     this.accountsRetrieved = false
     this.connectionOpened = false
-    // console.log(this); // todo remove dev item
     this.getAppConfig = this.getAppConfig.bind(this)
     this.getAccounts = this.getAccounts.bind(this)
     this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
@@ -218,7 +217,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
       if (vHex.length < 2) {
         vHex = `0${v}`
       }
-      console.log(result) // todo remove dev item
       return `0x${result.r}${result.s}${vHex}`
     } finally {
       transport.close()
@@ -244,7 +242,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
         path,
         tx.serialize().toString('hex')
       )
-      console.log(result) // todo remove dev item
       // Store signature in transaction
       tx.v = Buffer.from(result.v, 'hex')
       tx.r = Buffer.from(result.r, 'hex')
