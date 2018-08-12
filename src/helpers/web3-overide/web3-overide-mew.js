@@ -6,7 +6,6 @@ export default function web3OverideMew (web3, wallet, eventHub) {
       return new Promise((resolve, reject) => {
         // console.log(tx, privateKey, '-- HOW COULD I TRIGGER THE CONFIRMATION MODAL IN HERE---')
         eventHub.$emit('showTxConfirmModal', tx, wallet.isHardware, wallet.signTransaction.bind(this), (res) => {
-          // console.log('eventHub response', res) // todo remove dev item
           resolve(res)
         })
       })
