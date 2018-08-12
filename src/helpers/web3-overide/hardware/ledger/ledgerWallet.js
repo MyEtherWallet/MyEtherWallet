@@ -48,12 +48,11 @@ export default class LedgerWallet {
     this.activeConnection = null
     this.accountsRetrieved = false
     this.connectionOpened = false
-    // console.log(this); // todo remove dev item
     this.getAppConfig = this.getAppConfig.bind(this)
     this.getAccounts = this.getAccounts.bind(this)
     this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
     this.signTransaction = this.signTransaction.bind(this)
-    this.signMessage = this.signPersonalMessage.bind(this)
+    this.signMessage = this.signMessage.bind(this)
     this.changeNetwork = this.changeNetwork.bind(this)
     // this.getLedgerConnection = this.getLedgerConnection.bind(this)
     // this.setDerivationPath = this.setDerivationPath.bind(this)

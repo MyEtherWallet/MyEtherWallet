@@ -12,7 +12,6 @@ export default function web3OverideMew (web3, wallet, eventHub) {
     signMessage (data) {
       return new Promise((resolve, reject) => {
         eventHub.$emit('showMessageConfirmModal', data, wallet.signMessage, (res) => {
-          console.log('eventHub response', res) // todo remove dev item
           resolve(res)
         })
       })
