@@ -96,7 +96,6 @@ export default class BasicWallet {
         txData.data = txData.data === '' ? '0x' : txData.data
         // let txData = rawTxData
         txData.data = txData.data === '' ? '0x' : txData.data
-        // console.log('to be signed', txData) // todo remove dev item
         let eTx = new EthereumTx(txData)
         eTx.sign(this.privateKeyBuffer)
         txData.rawTx = JSON.stringify(txData)

@@ -168,7 +168,6 @@ export default {
           let hardwareAddresses = []
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
-              console.log('_accounts', _accounts) // todo remove dev item
               Object.values(_accounts).forEach(async (address, i) => {
                 const rawBalance = await this.$store.state.web3.eth.getBalance(address)
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
