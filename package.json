@@ -101,6 +101,8 @@
     "selenium-server": "^3.13.0",
     "semver": "^5.3.0",
     "shelljs": "^0.8.2",
+    "simple-peer": "^9.1.2",
+    "socket.io-client": "^2.1.1",
     "style-loader": "^0.23.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^1.0.1",
