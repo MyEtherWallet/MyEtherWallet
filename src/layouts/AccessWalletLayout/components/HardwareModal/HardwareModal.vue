@@ -1,5 +1,6 @@
 <template>
-  <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware" title="Access by Hardware" centered>
+  <b-modal ref="hardware" hide-footer class="bootstrap-modal modal-hardware"
+           title="Access by Hardware" centered>
     <div class="d-block text-center">
       <ul class="button-options hardware-button-options" ref="hardwareList">
         <li @click="select('ledger')" :class="selected === 'ledger'? 'active': ''">
@@ -28,7 +29,8 @@
     <div class="button-container">
       <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
       <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
-      <div :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']" @click="continueAccess">
+      <div :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
+           @click="continueAccess">
         Please Connect With Your Device
       </div>
     </div>
@@ -44,7 +46,7 @@
 </template>
 
 <script>
-import { LedgerWallet } from '@/helpers/web3-overide/hardware'
+import { LedgerWallet, TrezorWallet } from '@/helpers/web3-overide/hardware'
 
 export default {
   props: ['networkAndAddressOpen', 'hardwareWalletOpen'],
@@ -55,16 +57,28 @@ export default {
   },
   methods: {
     continueAccess () {
-      if (this.selected === 'ledger') {
-        const wallet = new LedgerWallet()
-        this.$emit('hardwareWalletOpen', wallet)
-        console.log(wallet) // todo remove dev item
-      } else if (this.selected === 'byPriv') {
-        console.log('something not right') // todo remove dev item
-      } else {
-
+      let wallet = null
+      switch (this.selected) {
+        case 'ledger':
+          wallet = new LedgerWallet()
+          this.$emit('hardwareWalletOpen', wallet)
+          console.log(wallet) // todo remove dev item
+          break
+        case 'trezor':
+          wallet = new TrezorWallet()
+          wallet.decryptWallet()
+            .then(() => {
+              console.log(wallet) // todo remove dev item
+              this.$emit('hardwareWalletOpen', wallet)
+            })
+            .catch((_error) => {
+              console.error(_error) // todo replace with proper error
+            })
+          break
+        default:
+          console.log('something not right') // todo remove dev item
+          break
       }
-      // this.hardwareWalletOpen()
     },
     select (ref) {
       console.log(this.e) // todo remove dev item
@@ -88,5 +102,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "HardwareModal.scss";
+  @import "HardwareModal.scss";
 </style>
