@@ -189,11 +189,8 @@ export default {
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         const isEth = this.selectedCurrency.name === 'Ethereum'
         this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
-        console.log(this.$store.state.network) // todo remove dev item
         this.chainId = this.$store.state.network.type.chainID
         this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
-        console.log(this.nonce) // todo remove dev item
-        console.log(this.$store.state.wallet.getAddressString()) // todo remove dev item
         this.raw = {
           chainId: 1,
           from: this.$store.state.wallet.getAddressString(),

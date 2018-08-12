@@ -66,6 +66,7 @@ export default {
     })
 
     this.$on('bv::modal::hide', () => {
+      // need to abort if modal is dismissed
       console.log('modal hidden') // todo remove dev item
 
       this.reset()
