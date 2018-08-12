@@ -116,10 +116,8 @@ export default {
         to: this.toAddress,
         chainId: this.$store.state.network.type.chainID
       }
-      console.log('make sign: GenerateTx') // todo remove dev item
       this.$store.state.web3.eth.signTransaction(raw)
         .then(signedTx => {
-          console.log(signedTx) // todo remove dev item
           this.$emit('createdRawTx', signedTx.rawTransaction)
 
           this.raw = raw
