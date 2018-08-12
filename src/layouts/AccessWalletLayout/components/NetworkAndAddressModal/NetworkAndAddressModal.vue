@@ -5,16 +5,19 @@
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
         <div class="dropdown-button-container">
-          <b-dropdown id="hd-derivation-path" text="m/44’/60’/0’/0" class="dropdown-button-1">
-            <b-dropdown-item class="active">m/44’/60’/0’/0</b-dropdown-item>
-            <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
-            <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
+          <b-dropdown id="hd-derivation-path" :text="selecteDPath.dpath" class="dropdown-button-1">
+            <b-dropdown-item :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+                             v-for="(val, key) in availablePaths"
+                             @click="selectDPath(key)"
+                             :key="key">
+              {{val.dpath}}
+            </b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item>{{ $t('accessWallet.customPath') }}</b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
-      <p class="derivation-brands">Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
+      <p class="derivation-brands">{{selecteDPath.label}}</p>
     </div>
     <div class="content-container-2">
       <div class="address-block-container">
@@ -75,6 +78,13 @@
 </template>
 
 <script>
+import {
+  paths,
+  ledger,
+  trezor,
+  getDerivationPath
+} from '@/helpers/web3-overide/hardware/deterministicWalletPaths'
+
 const unit = require('ethjs-unit')
 
 export default {
@@ -83,7 +93,27 @@ export default {
     return {
       offset: 0,
       count: 5,
-      hardwareAddresses: []
+      hardwareAddresses: [],
+      availablePaths: {},
+      selecteDPath: ''
+    }
+  },
+  mounted () {
+    this.selecteDPath = getDerivationPath(this.$store.state.network.type.name, this.hardwareWallet.brand)
+    if (this.hardwareWallet.brand === 'ledger') {
+      this.availablePaths = {
+        ...paths,
+        ...ledger
+      }
+    } else if (this.hardwareWallet.brand === 'trezor') {
+      this.availablePaths = {
+        ...paths,
+        ...trezor
+      }
+    } else {
+      this.availablePaths = {
+        ...paths
+      }
     }
   },
   computed: {
@@ -97,6 +127,19 @@ export default {
     }
   },
   methods: {
+    selectDPath (key) {
+      this.selecteDPath = this.availablePaths[key]
+      this.hardwareWallet.changePath(this.availablePaths[key].dpath)
+        .then(() => {
+          this.getAddresses()
+            .then(addressSet => {
+              this.hardwareAddresses = addressSet
+            })
+        })
+        .catch(_error => {
+          console.error(_error)
+        })
+    },
     unlockWallet () {
       this.$store.dispatch('decryptWallet', this.hardwareWallet)
       this.$router.push({path: 'interface'})
@@ -118,7 +161,7 @@ export default {
           this.hardwareAddresses = [...this.hardwareAddresses, ...addressSet]
         })
     },
-    getAddresses (count, offset) {
+    getAddresses (count = 5, offset = 0) {
       return new Promise((resolve, reject) => {
         if ((this.offset + this.count) >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3

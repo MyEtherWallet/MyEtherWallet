@@ -56,6 +56,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.changeNetwork = this.changeNetwork.bind(this)
   }
 
+  static async unlock () {
+    try {
+      return new LedgerWallet()
+    } catch (e) {
+      return e
+    }
+  }
+
   getAddress () {
     return this.wallet.address
   }
