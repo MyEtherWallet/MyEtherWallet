@@ -24,6 +24,7 @@ export default class HardwareWalletInterface {
     return null
   }
 
+  // Required interface methods
   getAddress () {
     throw new Error('getAddress Not Implemented')
   }
@@ -37,6 +38,7 @@ export default class HardwareWalletInterface {
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
+
   // ============== (Start) Expected Utility methods ======================
   get isHardware () {
     return this.isHardwareWallet
@@ -47,6 +49,8 @@ export default class HardwareWalletInterface {
   }
 
   // ============== (End) Expected Utility methods methods ======================
+
+  // ============== (Start) wallet usage methods ======================
   getAccounts () {
     throw new Error('getAccounts Not Implemented')
   }
@@ -62,4 +66,6 @@ export default class HardwareWalletInterface {
   signTransaction (txData) {
     throw new Error('signTransaction Not Implemented')
   }
+
+  // ============== (End) wallet usage methods ======================
 }
