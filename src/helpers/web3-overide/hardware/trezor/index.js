@@ -1,3 +1,5 @@
-const TrezorWallet = require('./trezorWallet')
+import TrezorWallet from './trezorWallet'
 
-module.exports = TrezorWallet
+export {
+  TrezorWallet
+}
