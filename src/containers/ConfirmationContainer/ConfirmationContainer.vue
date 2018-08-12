@@ -38,7 +38,8 @@ export default {
       raw: {},
       signer: {},
       signedTxObject: {},
-      signedTx: ''
+      signedTx: '',
+      dismissed: true
     }
   },
   created () {
@@ -65,11 +66,11 @@ export default {
       this.confirmationModalOpen()
     })
 
-    this.$on('bv::modal::hide', () => {
-      // need to abort if modal is dismissed
+    this.$children[0].$refs.confirmation.$on('hidden', () => {
       console.log('modal hidden') // todo remove dev item
-
-      this.reset()
+      if (this.dismissed) {
+        this.reset()
+      }
     })
   },
   methods: {
@@ -91,6 +92,7 @@ export default {
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     sendTx () {
+      this.dismissed = false
       this.responseFunction(this.signedTxObject)
       this.$children[0].$refs.confirmation.hide()
       this.showSuccessModal()
