@@ -1,15 +1,7 @@
 import LedgerWallet from './ledger'
+import TrezorWallet from './trezor'
 
 export {
-  LedgerWallet
+  LedgerWallet,
+  TrezorWallet
 }
-
-// const LedgerWallet = require('./ledger')
-// const MewConnect = require('./mewConnect')
-// const TrezorWallet = require('./trezor')
-//
-// module.exports = {
-//   LedgerWallet,
-//   MewConnect,
-//   TrezorWallet
-// }

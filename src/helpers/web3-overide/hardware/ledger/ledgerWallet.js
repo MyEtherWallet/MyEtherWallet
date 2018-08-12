@@ -16,7 +16,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
   constructor (opts) {
     super()
     let options = opts || {}
-
+    this.brand = 'ledger'
     this.identifier = 'LedgerNanoS'
     this.wallet = null
     this.activeAddress = ''
