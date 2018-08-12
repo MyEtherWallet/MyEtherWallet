@@ -129,7 +129,7 @@ export default {
   methods: {
     selectDPath (key) {
       this.selecteDPath = this.availablePaths[key]
-      this.hardwareWallet.changePath(this.availablePaths[key].dpath)
+      this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
         .then(() => {
           this.getAddresses()
             .then(addressSet => {
