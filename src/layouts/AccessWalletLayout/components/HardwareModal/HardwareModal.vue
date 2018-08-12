@@ -69,9 +69,6 @@ export default {
             .catch(_error => {
               console.error(_error) // todo replace with proper error
             })
-          // wallet = new LedgerWallet()
-          // this.$emit('hardwareWalletOpen', wallet)
-          // console.log(wallet) // todo remove dev item
           break
         case 'trezor':
           TrezorWallet.unlock()
