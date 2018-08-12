@@ -128,16 +128,16 @@ export default class BasicWallet {
         let signed = ethUtil.ecsign(hash, this.wallet.privKey)
         let combined = Buffer.concat([Buffer.from(signed.r), Buffer.from(signed.s), Buffer.from([signed.v])])
         let combinedHex = combined.toString('hex')
-        let signingAddr = this.getAddressString()
+        // let signingAddr = this.getAddressString()
         // eslint-disable-next-line no-unused-vars
-        let signedMsg = JSON.stringify({
-          address: signingAddr,
-          msg: thisMessage,
-          sig: '0x' + combinedHex,
-          version: '3',
-          signer: 'MEW'
-        }, null, 2)
-        resolve(signedMsg)
+        // let signedMsg = JSON.stringify({
+        //   address: signingAddr,
+        //   msg: thisMessage,
+        //   sig: '0x' + combinedHex,
+        //   version: '3',
+        //   signer: 'MEW'
+        // }, null, 2)
+        resolve('0x' + combinedHex)
         // return {
         //   message: message,
         //   messageHash: hash,

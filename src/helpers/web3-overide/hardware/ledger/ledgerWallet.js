@@ -43,8 +43,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.addressToPathMap = {}
     this.pathComponents = this.obtainPathComponentsFromDerivationPath(this.path)
 
-    this.isU2FSupported = true
-    this.activeConnection = null
     this.accountsRetrieved = false
     this.connectionOpened = false
     // console.log(this); // todo remove dev item
@@ -56,9 +54,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.changeNetwork = this.changeNetwork.bind(this)
   }
 
-  static async unlock () {
+  static async unlock (options) {
     try {
-      return new LedgerWallet()
+      return new LedgerWallet(options)
     } catch (e) {
       return e
     }
@@ -73,7 +71,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return ethUtil.toChecksumAddress(this.getAddress())
   }
 
-  changePath (path) {
+  changeDPath (path) {
     this.path = path
   }
 
