@@ -1,5 +1,5 @@
-import LedgerWallet from './ledger'
-import TrezorWallet from './trezor'
+import { LedgerWallet } from './ledger'
+import { TrezorWallet } from './trezor'
 
 export {
   LedgerWallet,

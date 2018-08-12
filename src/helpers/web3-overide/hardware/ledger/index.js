@@ -1,3 +1,5 @@
-const LedgerWallet = require('./ledgerWallet')
+import LedgerWallet from './ledgerWallet'
 
-module.exports = LedgerWallet
+export {
+  LedgerWallet
+}
