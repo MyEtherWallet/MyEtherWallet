@@ -62,18 +62,23 @@ export default {
       // todo: and to allow for any specialized set-up steps a particular constructor/wallet may require
       switch (this.selected) {
         case 'ledger':
-          wallet = new LedgerWallet()
-          this.$emit('hardwareWalletOpen', wallet)
-          console.log(wallet) // todo remove dev item
-          break
-        case 'trezor':
-          wallet = new TrezorWallet()
-          wallet.decryptWallet()
-            .then(() => {
-              console.log(wallet) // todo remove dev item
+          LedgerWallet.unlock()
+            .then((wallet) => {
               this.$emit('hardwareWalletOpen', wallet)
             })
-            .catch((_error) => {
+            .catch(_error => {
+              console.error(_error) // todo replace with proper error
+            })
+          // wallet = new LedgerWallet()
+          // this.$emit('hardwareWalletOpen', wallet)
+          // console.log(wallet) // todo remove dev item
+          break
+        case 'trezor':
+          TrezorWallet.unlock()
+            .then((wallet) => {
+              this.$emit('hardwareWalletOpen', wallet)
+            })
+            .catch(_error => {
               console.error(_error) // todo replace with proper error
             })
           break
@@ -83,7 +88,6 @@ export default {
       }
     },
     select (ref) {
-      console.log(this.e) // todo remove dev item
       if (this.selected !== ref) {
         this.selected = ref
       } else {

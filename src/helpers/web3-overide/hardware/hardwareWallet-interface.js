@@ -39,16 +39,21 @@ export default class HardwareWalletInterface {
 
   // ============== (End) EthereumJs-wallet interface methods ======================
 
-  // ============== (Start) Expected Utility methods ======================
+  // ============== (Start) Required Utility methods ======================
   get isHardware () {
     return this.isHardwareWallet
+  }
+
+  static async unlock () {
+    console.error('unlock should not be an instance method  of the wallet constructor')
+    throw new Error('unlock Not Implemented')
   }
 
   setActiveAddress (address, index) {
     throw new Error('setActiveAddress Not Implemented')
   }
 
-  // ============== (End) Expected Utility methods methods ======================
+  // ============== (End) Required Utility methods ======================
 
   // ============== (Start) wallet usage methods ======================
   getAccounts () {
