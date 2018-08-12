@@ -1,7 +1,9 @@
 <template>
-  <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEW Connect" centered>
+  <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect"
+           title="Access by MEW Connect" centered>
     <div class="modal-icon">
-      <img class="icon" src="~@/assets/images/icons/qr-code.jpg">
+      <qrcode :value="QrCode" :options="{ size: 200 }"></qrcode>
+      <!--<img class="icon" src="~@/assets/images/icons/qr-code.jpg">-->
     </div>
     <div class="d-block content-container text-center">
       <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
@@ -22,10 +24,34 @@
 </template>
 
 <script>
+import { MewConnectWallet } from '@/helpers/web3-overide/hardware'
+
 export default {
   props: ['networkAndAddressOpen'],
   data () {
     return {
+      QrCode: ''
+    }
+  },
+  mounted () {
+    this.$refs.mewConnect.$on('show', () => {
+      const wallet = new MewConnectWallet()
+      console.log(wallet) // todo remove dev item
+      this.setup(wallet)
+      console.log('modal shown') // todo remove dev item
+    })
+    this.$refs.mewConnect.$on('hidden', () => {
+      console.log('modal hidden') // todo remove dev item
+    })
+  },
+  methods: {
+    setup (wallet) {
+      const mewConnect = wallet.getMewConnect()
+      mewConnect.on('codeDisplay', this.codeDisplay)
+      // wallet.signalerConnect()
+    },
+    codeDisplay (qrCode) {
+      this.QrCode = qrCode
     }
   }
 }
