@@ -24,50 +24,57 @@ export default class HardwareWalletInterface {
     return null
   }
 
-  // Required interface methods
+  // Implementation required
   getAddress () {
     throw new Error('getAddress Not Implemented')
   }
 
+  // Implementation required
   getAddressString () {
     throw new Error('getAddressString Not Implemented')
   }
-
-  getChecksumAddressString () {
-    throw new Error('getChecksumAddressString Not Implemented')
-  }
-
   // ============== (End) EthereumJs-wallet interface methods ======================
 
-  // ============== (Start) Required Utility methods ======================
+  // ============== (Start) Utility methods ======================
   get isHardware () {
     return this.isHardwareWallet
   }
 
+  // Implementation required
   static async unlock () {
     console.error('unlock should not be an instance method  of the wallet constructor')
     throw new Error('unlock Not Implemented')
   }
 
+  // Implementation required
   setActiveAddress (address, index) {
     throw new Error('setActiveAddress Not Implemented')
+  }
+
+  // Implementation required
+  changeDPath () {
+    throw new Error('changePath Not Implemented')
   }
 
   // ============== (End) Required Utility methods ======================
 
   // ============== (Start) wallet usage methods ======================
+  // Implementation required
   getAccounts () {
     throw new Error('getAccounts Not Implemented')
   }
 
+  // Implementation required (if only a single account exists, it should be returned)
   getMultipleAccounts (count, offset) {
     throw new Error('getMultipleAccounts Not Implemented')
   }
 
+  // Implementation required
   signMessage (txData) {
     throw new Error('signMessage Not Implemented')
   }
 
+  // Implementation required
   signTransaction (txData) {
     throw new Error('signTransaction Not Implemented')
   }
