@@ -1,6 +1,12 @@
 <template>
   <div class="swap-container">
-    <interface-container-title :title="$t('common.swap')"></interface-container-title>
+    <div class="title-block">
+      <interface-container-title :title="$t('common.swap')"></interface-container-title>
+      <div class="images">
+        <img :src="images.kybernetowrk">
+        <img :src="images.bity">
+      </div>
+    </div>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
@@ -31,7 +37,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('common.speedTx') }}</h4>
+          <h4>{{ $t('common.toAddress') }}</h4>
         </div>
       </div>
       <div class="the-form gas-amount">
@@ -75,7 +81,10 @@
       <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <div class="buy-eth">
+        <span>Buy ETH with</span>
+        <img :src="images.visaMaster">
+      </div>
     </div>
 
   </div>
@@ -85,6 +94,10 @@ import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 
+import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
+import ImageBity from '@/assets/images/etc/bity.png'
+import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -93,6 +106,11 @@ export default {
   },
   data () {
     return {
+      images: {
+        kybernetowrk: ImageKybernetowrk,
+        bity: ImageBity,
+        visaMaster: ImageVisaMaster
+      },
       toArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}],
       fromArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}]
     }

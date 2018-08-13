@@ -47,6 +47,7 @@ const common = {
   depContract: 'Deploy Contract',
   signMessage: 'Sign Message',
   verifyMessage: 'Verify Message',
-  signature: 'Signature'
+  signature: 'Signature',
+  toAddress: 'To Address'
 }
 export default common
