@@ -1,7 +1,7 @@
 <template>
   <div class="interact-with-contract-container">
     <interface-container-title :title="$t('common.interactWcontract')"></interface-container-title>
-    <div v-if="!interact">
+    <div v-if="!interact" class="interact-div">
       <div class="send-form">
         <div class="title-container">
           <div class="title">
@@ -13,7 +13,7 @@
         </div>
         <div class="the-form domain-name">
           <input type="text" name="" v-model="address" placeholder="Enter Domain Name or Address" />
-          <i :class="[validAddress && address !== ''? '': 'not-good' ,'fa fa-check-circle good-button']" aria-hidden="true"></i>
+          <i :class="[validAddress && address !== ''? '': 'not-good' ,'fa fa-check-circle good-button']" aria-hidden="true" class="address-validation-check"></i>
         </div>
       </div>
 
@@ -33,14 +33,14 @@
         </div>
       </div>
       <div class="submit-button-container">
-        <div :class="[(validAbi && validAddress) && (address !== '' && abi !== '')? '': 'disabled' ,'submit-button large-round-button-green-filled clickable']" @click="switchView">
+        <div :class="[(validAbi && validAddress) && (address !== '' && abi !== '')? '': 'disabled' ,'submit-button large-round-button-green-filled clickable']" @click="switchView('forward')">
           {{ $t('common.continue') }}
           <img src="~@/assets/images/icons/right-arrow.png">
         </div>
         <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="interact-div">
       <div class="send-form">
         <div class="title-container">
           <div class="title">
@@ -60,25 +60,39 @@
             <h4>{{selectedMethod.name}}</h4>
           </div>
         </div>
-        <div v-if="selectedMethod.constant !== false">
-          <div class="the-form domain-name">
+        <div>
+          <div class="the-form domain-name" v-if="selectedMethod.constant === false">
             <input type="text" name="" v-model="result" placeholder="0x00000000000000" disabled />
           </div>
-        </div>
-        <div v-else>
-          <div class="the-form domain-name" v-for="(input, idx) in selectedMethod.inputs" :key="input.name + idx">
-            <input type="text" name="" v-model="writeInputs[input.name]" placeholder="0x00000000000000"/>
-            <span>{{input.name}}</span>
+          <div class="the-form domain-name" v-for="(input, idx) in selectedMethod.inputs" :key="input.name + idx" v-else v-show="selectedMethod.inputs.length !== 0">
+            <div v-if="input.type === 'bool'" class="bool-input">
+              <div class="title-container">
+                <div class="title">
+                  <h4>{{ input.name | capitalize }}</h4>
+                </div>
+              </div>
+              <div class="bool-input-container">
+                <div>
+                  <input type="radio" v-model="writeInputs[input.name]" value="true" name="true"/>
+                  <label for="true">true</label>
+                </div>
+                <div>
+                  <input type="radio" v-model="writeInputs[input.name]" value="false" name="false"/>
+                  <label for="false">false</label>
+                </div>
+              </div>
+            </div>
+            <input :type="checkType(input.type)" name="" v-model="writeInputs[input.name]" :placeholder="input.name" v-else class="contract-inputs"/>
           </div>
         </div>
       </div>
       <div class="submit-button-container">
         <div class="buttons interact-buttons">
-          <div class="submit-button large-round-button-green-border clickable">
-            {{ $t('common.continue') }}
+          <div class="submit-button large-round-button-green-border clickable" @click="switchView('backwards')">
+            {{ $t('common.back') }}
           </div>
-          <div class="submit-button large-round-button-green-filled clickable">
-            {{ $t('interface.read') }}
+          <div class="submit-button large-round-button-green-filled clickable" @click="write" v-if="selectedMethod.constant === false">
+            Write
           </div>
         </div>
         <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -122,7 +136,23 @@ export default {
       }
       this.address = currency.address
     },
+    checkType (type) {
+      if (type === 'address' || 'string') {
+        return 'string'
+      } else {
+        return 'number'
+      }
+    },
     selectFunction (method) {
+      const contract = new this.$store.state.web3.eth.Contract([method], this.address)
+      if (method.constant === true) {
+        contract.methods[method.name]().send({from: this.$store.state.wallet.getAddressString()}).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+
       this.selectedMethod = method
     },
     copyToClipboard (ref) {
@@ -132,16 +162,26 @@ export default {
     deleteInput (ref) {
       this.$refs[ref].value = ''
     },
-    switchView () {
-      // const contract = new this.$store.state.web3.eth.Contract(JSON.parse(this.abi))
-      this.methods = JSON.parse(this.abi).map(func => func).filter(func => func.type !== 'constructor')
-      console.log(this.methods)
-      this.interact = true
+    switchView (direction) {
+      switch (direction) {
+        case 'forward':
+          this.methods = JSON.parse(this.abi).map(func => func).filter(func => func.type !== 'constructor').filter(func => func.constant !== undefined)
+          this.interact = true
+          break
+        default:
+          this.interact = false
+      }
+    },
+    write () {
+      console.log('Write!')
     }
   },
   watch: {
     abi (newVal) {
       this.validAbi = Misc.isJson(newVal)
+    },
+    selectedMethod () {
+      this.writeInputs = {}
     },
     address (newVal) {
       this.validAddress = this.$store.state.web3.utils.isAddress(newVal)
