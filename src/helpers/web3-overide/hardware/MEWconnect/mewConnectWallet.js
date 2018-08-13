@@ -88,7 +88,7 @@ export default class MewConnectWallet {
     return this.wallet.address
   }
 
-  // Implementation required
+  // todo: figure out why this isn't receiving the response from the app.  (check out the article about using wireshark to debug webrtc)
   signMessage (msgData) {
     console.log('got data in mewConnectWallet', msgData) // todo remove dev item
     return new Promise((resolve, reject) => {
