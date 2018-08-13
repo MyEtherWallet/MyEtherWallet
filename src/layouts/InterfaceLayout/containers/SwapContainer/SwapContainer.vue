@@ -80,6 +80,7 @@
       <h4>1 ETH = 0.000231 BTC</h4>
       <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
+        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
       </div>
       <div class="buy-eth">
         <span>Buy ETH with</span>

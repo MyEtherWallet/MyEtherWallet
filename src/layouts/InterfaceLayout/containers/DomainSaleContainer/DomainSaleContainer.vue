@@ -22,6 +22,7 @@
       <div class="flex-container">
         <div class="title-container">
           <h4 class="modal-title">{{ $t('interface.domSaleBal') }}</h4>
+          <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
           <div class="margin-left-auto add-custom-network">
             <div class="sliding-switch-white">
               <label class="switch">

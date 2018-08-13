@@ -8,11 +8,26 @@
           <b-tabs class="x100">
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
-              <h3>{{ $t("createWallet.yourPw") }}</h3>
+
+              <div class="title-block">
+                <div class="title-popover">
+                  <h3>{{ $t("createWallet.yourPw") }}</h3>
+                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                </div>
+              </div>
+
               <create-wallet-input v-model='password' :switcher="switcher" :param="'Json'"></create-wallet-input>
               <create-wallet-input-footer></create-wallet-input-footer>
             </b-tab>
             <b-tab title="By Mnemonic Phrase" >
+
+              <div class="title-block">
+                <div class="title-popover">
+                  <h3>{{ $t("createWallet.yourPw") }}</h3>
+                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                </div>
+              </div>
+
               <h3>{{ $t("createWallet.yourPw") }}</h3>
               <create-wallet-input v-model='password' :switcher="switcher" :param="'Mnemonic'"></create-wallet-input>
               <create-wallet-input-footer></create-wallet-input-footer>

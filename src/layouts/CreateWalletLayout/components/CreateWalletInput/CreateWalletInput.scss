@@ -7,10 +7,11 @@
     background-color: $background-color-1;
     border: 0;
     font-size: 14px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     padding: 20px;
     width: 100%;
   }
+
 
   .next-button {
     cursor: pointer;
@@ -20,14 +21,18 @@
     padding: 20px 0;
     text-align: center;
     width: 100%;
+    position: relative;
+    margin-top: 40px;
 
     &:disabled {
       background-color: $disabled;
     }
 
     img {
-      margin-left: 5px;
-      width: 20px;
+      position: absolute;
+      right: 20px;
+      top: 24px;
+      width: 25px;
     }
   }
 }
