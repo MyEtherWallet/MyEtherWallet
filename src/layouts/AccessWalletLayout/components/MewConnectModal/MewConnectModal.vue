@@ -46,12 +46,22 @@ export default {
   },
   methods: {
     setup (wallet) {
-      const mewConnect = wallet.getMewConnect()
-      mewConnect.on('codeDisplay', this.codeDisplay)
-      // wallet.signalerConnect()
+      wallet.registerListener('codeDisplay', this.codeDisplay)
+      wallet.registerListener('RtcConnectedEvent', this.rtcConnected)
+      wallet.registerListener('RtcClosedEvent', this.rtcClosed)
+      // wallet.registerListener('address', makeWallet)
+      // const mewConnect = wallet.getMewConnect()
+      // mewConnect.on('codeDisplay', this.codeDisplay)
+      wallet.signalerConnect()
     },
     codeDisplay (qrCode) {
       this.QrCode = qrCode
+    },
+    rtcConnected () {
+      console.log('RTC Connected') // todo remove dev item
+    },
+    rtcClosed () {
+      console.log('RTC Closed') // todo remove dev item
     }
   }
 }
