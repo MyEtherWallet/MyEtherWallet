@@ -4,6 +4,9 @@ export default class Web3WalletAdapter {
   constructor (wallet) {
     this.wallet = wallet
     this.isHardwareWallet = this.wallet.type === 'hardware'
+    this.identifier = wallet.identifier
+    this.brand = wallet.brand
+    // this.type = wallet.type
     this.length = 1
     // Assign methods to external expected names, and bind to present context
     this.signTransaction = this._signTransaction.bind(this)

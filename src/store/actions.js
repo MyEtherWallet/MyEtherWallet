@@ -24,7 +24,10 @@ const checkIfOnline = function ({commit}) {
   commit('CHECK_IF_ONLINE')
 }
 
-const clearWallet = function ({commit}) {
+const clearWallet = function ({commit, state}) {
+  if (state.wallet.identifier === 'MEWconnect') {
+    state.wallet.wallet.mewConnectDisconnect()
+  }
   commit('CLEAR_WALLET')
 }
 
