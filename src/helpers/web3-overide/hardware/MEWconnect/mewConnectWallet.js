@@ -8,6 +8,8 @@ export default class MewConnectWallet {
     this.isHardwareWallet = true
     this.identifier = 'MEWconnect'
     this.brand = 'MEW'
+    this.type = 'hardware'
+    this.isHardwareWallet = true
     this.wallet = null
 
     options = options || {}
@@ -38,10 +40,11 @@ export default class MewConnectWallet {
     this.signTransaction = this.signTransaction.bind(this)
     this.signMessage = this.signMessage.bind(this)
 
-    // this.mewConnect.on('codeDisplay',  codeDisplay)
-    // this.mewConnect.on('RtcConnectedEvent', rtcConnected)
-    // this.mewConnect.on('RtcClosedEvent', rtcClosed)
-    // this.mewConnect.on('address', makeWallet)
+    this.mewConnect.on('address', this.createWallet)
+  }
+
+  registerListener (event, listener) {
+    this.mewConnect.on(event, listener)
   }
 
   getMewConnect () {
@@ -49,16 +52,21 @@ export default class MewConnectWallet {
   }
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
-  // Implementation required
   getAddress () {
-    throw new Error('getAddress Not Implemented')
+    if (this.wallet) {
+      return this.wallet.address
+    } else {
+      return null
+    }
   }
 
-  // Implementation required
   getAddressString () {
-    throw new Error('getAddressString Not Implemented')
+    if (this.wallet) {
+      return ethUtil.toChecksumAddress(this.getAddress())
+    } else {
+      return null
+    }
   }
-
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   // ============== (Start) Utility methods ======================
@@ -75,13 +83,13 @@ export default class MewConnectWallet {
 
   // ============== (Start) wallet usage methods ======================
   // Implementation required
-  getAccounts () {
-    throw new Error('getAccounts Not Implemented')
+  async getAccounts () {
+    return this.wallet.address
   }
 
   // Implementation required (if only a single account exists, it should be returned)
-  getMultipleAccounts (count, offset) {
-    throw new Error('getMultipleAccounts Not Implemented')
+  async getMultipleAccounts (count, offset) {
+    return this.wallet.address
   }
 
   // Implementation required
@@ -96,9 +104,17 @@ export default class MewConnectWallet {
 
   // ============== (Start) Internally used methods ======================
 
-  setCodeDisplayListener (listener) {
-    this.codeDisplayListener = listener
+  createWallet (address) {
+    this.wallet = {}
+    this.wallet.address = address
+    this.wallet.privKey = undefined
+    this.wallet.pubKey = undefined
+    this.wallet.path = undefined
+    this.wallet.hwType = this.identifier
+    this.wallet.hwTransport = undefined
+    this.wallet.type = this.brand
   }
+
   signalerConnect (url) {
     if (!url) {
       this.mewConnect.initiatorStart(this.signalerUrl)
@@ -118,37 +134,37 @@ export default class MewConnectWallet {
     //   }
     // })
 
-    app.setMewConnect($scope.mewConnect)
-    app.signalerConnect()
-
-    this.connectionCodeTimeout = null
-
-    function rtcConnected (data) {
-      if (this.connectionCodeTimeout) {
-        clearTimeout(this.connectionCodeTimeout)
-      }
-      this.connectionCodeTimeout = null
-      this.mewConnect.sendRtcMessage('address', '')
-      this.mewConnectionStatus = 2
-    }
-
-    function rtcClosed (data) {
-      this.mewConnectionStatus = 0
-      this.wallet = null
-    }
-
-    function codeDisplay (data) {
-      this.mewConnectionStatus = 1
-      this.mewConnectCode = data
-      this.connectionCodeTimeout = setTimeout(() => {
-        this.mewConnectionStatus = 3
-      }, 119800) // 200ms before the actual server timeout happens. (to account for transit time, ui lag, etc.)
-    }
-
-    function makeWallet (data) {
-      // var wallet = app.createWallet(data)
-      // this.wallet = wallet
-    }
+    // app.setMewConnect($scope.mewConnect)
+    // app.signalerConnect()
+    //
+    // this.connectionCodeTimeout = null
+    //
+    // function rtcConnected (data) {
+    //   if (this.connectionCodeTimeout) {
+    //     clearTimeout(this.connectionCodeTimeout)
+    //   }
+    //   this.connectionCodeTimeout = null
+    //   this.mewConnect.sendRtcMessage('address', '')
+    //   this.mewConnectionStatus = 2
+    // }
+    //
+    // function rtcClosed (data) {
+    //   this.mewConnectionStatus = 0
+    //   this.wallet = null
+    // }
+    //
+    // function codeDisplay (data) {
+    //   this.mewConnectionStatus = 1
+    //   this.mewConnectCode = data
+    //   this.connectionCodeTimeout = setTimeout(() => {
+    //     this.mewConnectionStatus = 3
+    //   }, 119800) // 200ms before the actual server timeout happens. (to account for transit time, ui lag, etc.)
+    // }
+    //
+    // function makeWallet (data) {
+    //   // var wallet = app.createWallet(data)
+    //   // this.wallet = wallet
+    // }
   }
 
   mewConnectDisconnect () {
