@@ -77,6 +77,11 @@
         position: absolute;
         right: 3px;
       }
+
+      .address-validation-check {
+        bottom: 13px;
+        right: 6px;
+      }
     }
   }
 
@@ -121,4 +126,27 @@
   .interact-buttons {
     display: flex;
   }
+}
+
+.bool-input {
+  display: flex;
+  flex-direction: column;
+
+  .bool-input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 8px;
+  }
+}
+
+.contract-inputs {
+  margin-bottom: 10px;
+}
+
+.interact-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
 }
