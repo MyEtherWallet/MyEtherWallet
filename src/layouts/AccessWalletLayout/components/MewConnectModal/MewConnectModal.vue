@@ -39,6 +39,14 @@ export default {
       console.log(wallet) // todo remove dev item
       this.setup(wallet)
       console.log('modal shown') // todo remove dev item
+      wallet.signalerConnect()
+        .then(() => {
+          this.$store.dispatch('decryptWallet', wallet)
+          this.$router.push({path: 'interface'})
+        })
+        .catch(_error => {
+          console.error(_error)
+        })
     })
     this.$refs.mewConnect.$on('hidden', () => {
       console.log('modal hidden') // todo remove dev item
@@ -52,7 +60,6 @@ export default {
       // wallet.registerListener('address', makeWallet)
       // const mewConnect = wallet.getMewConnect()
       // mewConnect.on('codeDisplay', this.codeDisplay)
-      wallet.signalerConnect()
     },
     codeDisplay (qrCode) {
       this.QrCode = qrCode
