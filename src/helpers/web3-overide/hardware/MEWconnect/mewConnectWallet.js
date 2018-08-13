@@ -1,7 +1,6 @@
 import MewConnect from '@myetherwallet/mewconnect-web-client'
 import * as ethUtil from 'ethereumjs-util'
-import Peer from 'simple-peer'
-import IO from 'socket.io-client'
+import EthereumjsTx from 'ethereumjs-tx'
 
 export default class MewConnectWallet {
   constructor (options) {
@@ -29,26 +28,22 @@ export default class MewConnectWallet {
     this.signalerUrl = currentOptions.signalerUrl || 'https://connect.mewapi.io'
     this.networkId = 1
 
-    this.mewConnect = MewConnect.Client.init(null, null, {
-      wrtc: Peer,
-      io: IO,
-      ethUtils: ethUtil
-    })
+    this.mewConnect = MewConnect.Client.init(null, null)
 
     this.getAccounts = this.getAccounts.bind(this)
     this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
     this.signTransaction = this.signTransaction.bind(this)
     this.signMessage = this.signMessage.bind(this)
 
-    this.mewConnect.on('address', this.createWallet)
+    this.mewConnect.on('RtcConnectedEvent', this.requestAddress.bind(this))
   }
 
   registerListener (event, listener) {
     this.mewConnect.on(event, listener)
   }
 
-  getMewConnect () {
-    return this.mewConnect
+  requestAddress () {
+    this.mewConnect.sendRtcMessage('address', '')
   }
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
@@ -67,6 +62,7 @@ export default class MewConnectWallet {
       return null
     }
   }
+
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   // ============== (Start) Utility methods ======================
@@ -76,7 +72,7 @@ export default class MewConnectWallet {
 
   // Implementation required
   static async unlock () {
-    console.error('unlock should not be an instance method  of the wallet constructor')
+    return new MewConnectWallet()
   }
 
   // ============== (End) Required Utility methods ======================
@@ -93,78 +89,77 @@ export default class MewConnectWallet {
   }
 
   // Implementation required
-  signMessage (txData) {
-    throw new Error('signMessage Not Implemented')
+  signMessage (msgData) {
+    console.log('got data in mewConnectWallet', msgData) // todo remove dev item
+    return new Promise((resolve, reject) => {
+      try {
+        let thisMessage = msgData.data ? msgData.data : msgData
+        this.mewConnect.sendRtcMessage('signMessage', thisMessage)
+        this.mewConnect.on('signMessage', (data) => {
+          const signedMsg = JSON.parse(data)
+          resolve(signedMsg)
+        })
+      } catch (e) {
+        console.error(e) // todo replace with actual error handler
+        reject(Error('Failed to sign message'))
+      }
+    })
   }
 
   // Implementation required
   signTransaction (txData) {
-    throw new Error('signTransaction Not Implemented')
+    return new Promise((resolve, reject) => {
+      const sendTxData = {
+        nonce: txData.nonce,
+        gasPrice: txData.gasPrice,
+        to: txData.to,
+        value: txData.value,
+        data: txData.data,
+        chainId: txData.chainId,
+        gasLimit: txData.gas
+      }
+      this.mewConnect.sendRtcMessage('signTx', JSON.stringify(sendTxData))
+      this.mewConnect.on('signTx', (data) => {
+        const rawTransaction = `0x${data}`
+        const tx = new EthereumjsTx(rawTransaction)
+        resolve({
+          rawTx: JSON.stringify(txData),
+          messageHash: tx.hash(),
+          v: tx.v,
+          r: tx.r,
+          s: tx.s,
+          rawTransaction: rawTransaction
+        })
+      })
+    })
   }
 
   // ============== (Start) Internally used methods ======================
 
   createWallet (address) {
-    this.wallet = {}
-    this.wallet.address = address
-    this.wallet.privKey = undefined
-    this.wallet.pubKey = undefined
-    this.wallet.path = undefined
-    this.wallet.hwType = this.identifier
-    this.wallet.hwTransport = undefined
-    this.wallet.type = this.brand
+    let wallet = {}
+    wallet.address = address
+    wallet.privKey = undefined
+    wallet.pubKey = undefined
+    wallet.path = undefined
+    wallet.hwType = this.identifier
+    wallet.hwTransport = undefined
+    wallet.type = this.brand
+    return wallet
   }
 
   signalerConnect (url) {
-    if (!url) {
-      this.mewConnect.initiatorStart(this.signalerUrl)
-    } else {
-      this.mewConnect.initiatorStart(url)
-    }
-  }
-
-  scanMewConnect () {
-    // var app = new MewConnectEth()
-
-    //
-    // $scope.$on('$destroy', function () {
-    //   $scope.mewConnect.disconnectRTC()
-    //   if (MewConnect.instance) {
-    //     Reflect.deleteProperty(MewConnect, 'instance')
-    //   }
-    // })
-
-    // app.setMewConnect($scope.mewConnect)
-    // app.signalerConnect()
-    //
-    // this.connectionCodeTimeout = null
-    //
-    // function rtcConnected (data) {
-    //   if (this.connectionCodeTimeout) {
-    //     clearTimeout(this.connectionCodeTimeout)
-    //   }
-    //   this.connectionCodeTimeout = null
-    //   this.mewConnect.sendRtcMessage('address', '')
-    //   this.mewConnectionStatus = 2
-    // }
-    //
-    // function rtcClosed (data) {
-    //   this.mewConnectionStatus = 0
-    //   this.wallet = null
-    // }
-    //
-    // function codeDisplay (data) {
-    //   this.mewConnectionStatus = 1
-    //   this.mewConnectCode = data
-    //   this.connectionCodeTimeout = setTimeout(() => {
-    //     this.mewConnectionStatus = 3
-    //   }, 119800) // 200ms before the actual server timeout happens. (to account for transit time, ui lag, etc.)
-    // }
-    //
-    // function makeWallet (data) {
-    //   // var wallet = app.createWallet(data)
-    //   // this.wallet = wallet
-    // }
+    return new Promise((resolve, reject) => {
+      if (!url) {
+        this.mewConnect.initiatorStart(this.signalerUrl)
+      } else {
+        this.mewConnect.initiatorStart(url)
+      }
+      this.mewConnect.once('address', (data) => {
+        this.wallet = this.createWallet(data.address)
+        resolve()
+      })
+    })
   }
 
   mewConnectDisconnect () {
