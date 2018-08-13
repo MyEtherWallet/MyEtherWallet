@@ -1,17 +1,17 @@
 <template>
   <div class="header">
 
-    <div class="scrollup-container" :class="showScrollUpButton ? 'active' : ''">
+    <div class="scrollup-container" :class="isPageOnTop == false ? 'active' : ''">
       <scrollupbutton></scrollupbutton>
     </div>
 
     <div class="wrap">
-      <div class="fixed-header" ref="fixedHeader">
+      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
             <router-link to="/" v-on:click.native="scrollTop()">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png" ref="logoLarge">
+                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
               </div>
             </router-link>
             <div class="top-menu">
@@ -112,7 +112,7 @@ export default {
       online: true,
       currentName: 'English',
       currentFlag: 'gb',
-      showScrollUpButton: false
+      isPageOnTop: true
     }
   },
   methods: {
@@ -133,12 +133,15 @@ export default {
     },
     showNotifications () {
       this.$children[6].$refs.notification.show()
+    },
+    onPageScroll () {
+      const topPos = this.$root.$el.getBoundingClientRect().top
+      this.isPageOnTop = !(topPos < -150)
     }
   },
   mounted () {
-    var _this = this
-
     const self = this
+
     if (this.$store.state.online) {
       this.online = true
     } else {
@@ -154,19 +157,13 @@ export default {
     }
 
     this.currentName = this.supportedLanguages.filter(item => item.flag === this.currentFlag)[0].name
+
+    // On load, if page is not on top, apply small menu and show scroll top button
+    this.onPageScroll()
+
+    // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = function (e) {
-      const header = self.$refs.fixedHeader
-      const logoLarge = self.$refs.logoLarge
-      const topPos = self.$root.$el.getBoundingClientRect().top
-      if (topPos < -150) {
-        header.classList.add('tiny-header')
-        logoLarge.classList.add('logo-small')
-        _this.showScrollUpButton = true
-      } else {
-        header.classList.remove('tiny-header')
-        logoLarge.classList.remove('logo-small')
-        _this.showScrollUpButton = false
-      }
+      self.onPageScroll()
     }
   },
   watch: {
