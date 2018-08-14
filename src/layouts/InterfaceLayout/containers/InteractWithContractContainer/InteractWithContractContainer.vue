@@ -158,7 +158,7 @@ export default {
     // 'confirm-modal': ConfirmModal,
     // 'success-modal': SuccessModal
   },
-  data () {
+  data() {
     return {
       abi: '',
       address: '',
@@ -360,7 +360,7 @@ export default {
       network: 'network'
     })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

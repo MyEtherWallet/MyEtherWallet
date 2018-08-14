@@ -8,8 +8,10 @@
       </div>
       <div :class="[open? 'open':'hide', 'dropdown-item-container']">
         <div class="dropdown-search-container">
-          <input placeholder="Search" v-model="search"/>
-          <i class="fa fa-search"></i>
+          <input
+            v-model="search"
+            placeholder="Search">
+          <i class="fa fa-search"/>
         </div>
         <div class="item-container">
           <div v-for="(curr, idx) in localCurrency" :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']" @click="selectCurrency(curr)" :key="token?curr.name+curr.symbol + page: curr.name + page + idx">
@@ -24,8 +26,8 @@
 
 <script>
 export default {
-  props: ['currency', 'page', 'token'],
-  data () {
+  props: ["currency", "page", "token"],
+  data() {
     return {
       localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}] : [{name: 'Select an item', abi: '', address: ''}],
       selectedCurrency: this.token === true ? {name: 'Ether', symbol: 'ETH'} : {name: 'Select an item', abi: '', address: ''},
@@ -50,35 +52,49 @@ export default {
     }
   },
   watch: {
-    selectedCurrency (newVal) {
-      this.$emit('selectedCurrency', newVal)
+    selectedCurrency(newVal) {
+      this.$emit("selectedCurrency", newVal);
     },
-    currency (newVal) {
+    currency(newVal) {
       if (this.token) {
         this.localCurrency = [{name: 'Ether', symbol: 'ETH'}]
       } else {
-        this.localCurrency = [{name: 'Select an item'}]
+        this.localCurrency = [{ name: "Select an item" }];
       }
-      newVal.forEach(curr => this.localCurrency.push(curr))
+      newVal.forEach(curr => this.localCurrency.push(curr));
     },
-    search (newVal) {
-      if (newVal !== '') {
+    search(newVal) {
+      if (newVal !== "") {
         this.localCurrency = this.localCurrency.filter(curr => {
           if (curr.name.toLowerCase().includes(newVal.toLowerCase())) {
-            return curr
+            return curr;
           }
-        })
+        });
       } else {
         if (this.token) {
           this.localCurrency = [{name: 'Ether', symbol: 'ETH'}]
         } else {
           this.localCurrency = [{name: 'Select an item', abi: '', address: ''}]
         }
-        this.currency.forEach(curr => this.localCurrency.push(curr))
+        this.currency.forEach(curr => this.localCurrency.push(curr));
       }
     }
+  },
+  mounted() {
+    if (this.currency) {
+      this.currency.forEach(curr => this.localCurrency.push(curr));
+    }
+  },
+  methods: {
+    openDropdown() {
+      this.open = !this.open;
+    },
+    selectCurrency(currency) {
+      this.openDropdown();
+      this.selectedCurrency = currency;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

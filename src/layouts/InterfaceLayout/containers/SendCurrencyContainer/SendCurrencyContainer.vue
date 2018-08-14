@@ -1,6 +1,6 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')"></interface-container-title>
+    <interface-container-title :title="$t('common.sendTx')"/>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
@@ -80,7 +80,9 @@
         <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount"/>
         <div class="good-button-container">
           <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          <i
+            class="fa fa-check-circle good-button not-good"
+            aria-hidden="true"/>
         </div>
       </div>
     </div>
@@ -130,7 +132,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import CurrencyPicker from '../../components/CurrencyPicker'
@@ -145,7 +147,6 @@ const EthTx = require('ethereumjs-tx')
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['address', 'tokensWithBalance'],
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
@@ -154,7 +155,8 @@ export default {
     'currency-picker': CurrencyPicker
     // 'success-modal': SuccessModal
   },
-  data () {
+  props: ["address", "tokensWithBalance"],
+  data() {
     return {
       advancedExpend: false,
       addressValid: true,
@@ -162,23 +164,62 @@ export default {
       amountValid: true,
       nonce: 0,
       gasLimit: 21000,
-      data: '0x',
+      data: "0x",
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
-      toAddress: '',
+      toAddress: "",
       transactionFee: 0,
-      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
+      selectedCurrency: { symbol: "ETH", name: "Ethereum" },
       raw: {},
-      signedTx: ''
+      signedTx: ""
+    };
+  },
+  watch: {
+    toAddress(newVal) {
+      this.toAddress = newVal;
+      if (this.verifyAddr()) {
+        this.addressValid = false;
+      } else {
+        this.estimateGas();
+        this.addressValid = true;
+      }
+    },
+    parsedBalance(newVal) {
+      this.parsedBalance = newVal;
+    },
+    gasAmount(newVal) {
+      this.gasAmount = newVal;
+      if (!this.verifyAddr()) {
+        this.estimateGas();
+      }
+      this.$store.dispatch("setGasPrice", Number(newVal));
+    },
+    amount(newVal) {
+      this.amount = newVal;
+      if (!this.verifyAddr()) {
+        this.estimateGas();
+      }
+    },
+    selectedCurrency(newVal) {
+      this.estimateGas();
+      this.selectedCurrency = newVal;
+    }
+  },
+  mounted() {
+    if (this.account.balance) {
+      this.parsedBalance = unit.fromWei(
+        parseInt(this.account.balance),
+        "ether"
+      );
     }
   },
   methods: {
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand("copy");
     },
-    showSuccessModal () {
-      this.$children[6].$refs.success.show()
+    showSuccessModal() {
+      this.$children[6].$refs.success.show();
     },
     async createTx () {
       const jsonInterface = [{
@@ -202,10 +243,10 @@ export default {
         value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
         to: isEth ? this.toAddress : this.selectedCurrency.addr,
         data: this.data
-      }
+      };
 
-      if (this.toAddress === '') {
-        delete this.raw['to']
+      if (this.toAddress === "") {
+        delete this.raw["to"];
       }
 
       const fromAddress = this.raw.from
@@ -224,10 +265,10 @@ export default {
       this.createTx()
       window.scrollTo(0, 0)
     },
-    changeGas (val) {
-      this.gasAmount = val
-      this.createDataHex()
-      this.$store.dispatch('setGasPrice', Number(val))
+    changeGas(val) {
+      this.gasAmount = val;
+      this.createDataHex();
+      this.$store.dispatch("setGasPrice", Number(val));
     },
     setBalanceToAmt () {
       if (this.selectedCurrency.name === 'Ethereum') {
@@ -247,12 +288,12 @@ export default {
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
       } else {
-        this.data = '0x'
+        this.data = "0x";
       }
     },
-    setSelectedCurrency (e) {
-      this.selectedCurrency = e
-      this.createDataHex()
+    setSelectedCurrency(e) {
+      this.selectedCurrency = e;
+      this.createDataHex();
     },
     estimateGas () {
       const newRaw = this.raw
@@ -265,61 +306,25 @@ export default {
         this.gasLimit = res
       }).catch(err => console.log(err))
     },
-    verifyAddr () {
-      if (this.toAddress.length !== 0 && this.toAddress !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.toAddress)
+    verifyAddr() {
+      if (this.toAddress.length !== 0 && this.toAddress !== "") {
+        const valid = this.$store.state.web3.utils.isAddress(this.toAddress);
         if (!valid) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       }
     }
   },
-  mounted () {
-    if (this.account.balance) {
-      this.parsedBalance = unit.fromWei(parseInt(this.account.balance), 'ether')
-    }
-  },
-  watch: {
-    toAddress (newVal) {
-      this.toAddress = newVal
-      if (this.verifyAddr()) {
-        this.addressValid = false
-      } else {
-        this.estimateGas()
-        this.addressValid = true
-      }
-    },
-    parsedBalance (newVal) {
-      this.parsedBalance = newVal
-    },
-    gasAmount (newVal) {
-      this.gasAmount = newVal
-      if (!this.verifyAddr()) {
-        this.estimateGas()
-      }
-      this.$store.dispatch('setGasPrice', Number(newVal))
-    },
-    amount (newVal) {
-      this.amount = newVal
-      if (!this.verifyAddr()) {
-        this.estimateGas()
-      }
-    },
-    selectedCurrency (newVal) {
-      this.estimateGas()
-      this.selectedCurrency = newVal
-    }
-  },
   computed: {
     ...mapGetters({
-      account: 'account'
+      account: "account"
     })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SendCurrencyContainer.scss";
+@import "SendCurrencyContainer.scss";
 </style>

@@ -96,4 +96,4 @@ export default {
   switchNetwork,
   updateNotification,
   updatePageState
-}
+};

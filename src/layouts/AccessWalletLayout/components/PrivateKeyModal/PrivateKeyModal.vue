@@ -2,9 +2,17 @@
   <b-modal ref="privateKey" hide-footer class="bootstrap-modal modal-software" title="PrivateKey" centered>
     <form class="private-key-form">
       <div class="input-container">
-        <input type="text" name="PrivateKey" v-model="privateKey" autocomplete="off" />
+        <input
+          v-model="privateKey"
+          type="text"
+          name="PrivateKey"
+          autocomplete="off" >
       </div>
-      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9">
+      <button
+        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
+        @click.prevent="unlockWallet">
         Unlock Wallet
       </button>
     </form>
@@ -16,10 +24,10 @@
 import { BasicWallet } from '@/helpers/web3-overide/software'
 
 export default {
-  data () {
+  data() {
     return {
-      privateKey: ''
-    }
+      privateKey: ""
+    };
   },
   methods: {
     unlockWallet () {
@@ -31,8 +39,8 @@ export default {
       this.$router.push({ path: 'interface' })
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "PrivateKeyModal.scss";
+@import "PrivateKeyModal.scss";
 </style>

@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import zxcvbn from 'zxcvbn'
+import zxcvbn from "zxcvbn";
 export default {
-  props: ['value', 'switcher', 'param'],
-  data () {
+  props: ["value", "switcher", "param"],
+  data() {
     return {
       strength: '',
       strengthClass: '',
@@ -45,19 +45,19 @@ export default {
     }
   },
   methods: {
-    async updateValue (value) {
-      let score = await zxcvbn(value).score
+    async updateValue(value) {
+      let score = await zxcvbn(value).score;
 
-      this.$emit('input', value)
+      this.$emit("input", value);
       switch (score) {
         case 1:
-          this.strength = 'Very Weak'
-          this.strengthClass = 'very-weak'
-          break
+          this.strength = "Very Weak";
+          this.strengthClass = "very-weak";
+          break;
         case 2:
-          this.strength = 'Weak'
-          this.strengthClass = 'weak'
-          break
+          this.strength = "Weak";
+          this.strengthClass = "weak";
+          break;
         case 3:
           this.strength = 'Weak'
           this.strengthClass = 'weak'
@@ -72,7 +72,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

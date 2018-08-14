@@ -1,5 +1,9 @@
 <template>
-  <b-modal ref="signedTx" hide-footer class="bootstrap-modal signed-tx-modal" title="Signed Transaction">
+  <b-modal
+    ref="signedTx"
+    hide-footer
+    class="bootstrap-modal signed-tx-modal"
+    title="Signed Transaction">
     <div class="d-block">
       <div class="title-block">
         <h4 class="block-title">Signed Transaction</h4>
@@ -8,7 +12,11 @@
         <code>
           {{ signedTx }}
         </code>
-        <input ref="signedTxInput" style="position: absolute; top: 0; opacity: 0;" :value="signedTx" autocomplete="off"/>
+        <input
+          ref="signedTxInput"
+          :value="signedTx"
+          style="position: absolute; top: 0; opacity: 0;"
+          autocomplete="off">
       </div>
       <div class="raw">
         <div class="title-block">
@@ -30,7 +38,9 @@
       </div>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button" @click="copyAndContinue">
+      <b-btn
+        class="mid-round-button-green-filled close-button"
+        @click="copyAndContinue">
         Copy It and Continue
       </b-btn>
     </div>
@@ -39,23 +49,23 @@
 
 <script type="text/javascript">
 export default {
-  name: 'signed-tx-modal',
-  props: ['signedTx', 'rawTx', 'pathUpdate'],
-  data () {
+  name: "SignedTxModal",
+  props: ["signedTx", "rawTx", "pathUpdate"],
+  data() {
     return {
       showRaw: false
-    }
+    };
   },
   methods: {
-    copyAndContinue () {
-      this.$refs.signedTxInput.select()
-      document.execCommand('copy')
-      this.pathUpdate()
+    copyAndContinue() {
+      this.$refs.signedTxInput.select();
+      document.execCommand("copy");
+      this.pathUpdate();
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-  @import "SignedTxModal.scss";
+@import "SignedTxModal.scss";
 </style>

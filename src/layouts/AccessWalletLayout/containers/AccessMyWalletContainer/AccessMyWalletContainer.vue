@@ -51,36 +51,36 @@
 </template>
 
 <script>
-import AccessWalletButton from '../../components/AccessWalletButton'
-import HardwareModal from '../../components/HardwareModal'
-import MetamaskModal from '../../components/MetamaskModal'
-import MewConnectModal from '../../components/MewConnectModal'
-import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
-import PasswordModal from '../../components/PasswordModal'
-import PrivateKeyModal from '../../components/PrivateKeyModal'
-import SoftwareModal from '../../components/SoftwareModal'
+import AccessWalletButton from "../../components/AccessWalletButton";
+import HardwareModal from "../../components/HardwareModal";
+import MetamaskModal from "../../components/MetamaskModal";
+import MewConnectModal from "../../components/MewConnectModal";
+import NetworkAndAddressModal from "../../components/NetworkAndAddressModal";
+import PasswordModal from "../../components/PasswordModal";
+import PrivateKeyModal from "../../components/PrivateKeyModal";
+import SoftwareModal from "../../components/SoftwareModal";
 
-import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
-import hardwareImg from '@/assets/images/icons/button-hardware.svg'
-import metamaskImg from '@/assets/images/icons/button-metamask.svg'
-import softwareImg from '@/assets/images/icons/button-software.svg'
+import mewConnectImg from "@/assets/images/icons/button-mewconnect.svg";
+import hardwareImg from "@/assets/images/icons/button-hardware.svg";
+import metamaskImg from "@/assets/images/icons/button-metamask.svg";
+import softwareImg from "@/assets/images/icons/button-software.svg";
 
-import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
-import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
-import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
+import mewConnectDisabledImg from "@/assets/images/icons/mewconnect-disable.svg";
+import hardwareDisabledImg from "@/assets/images/icons/hardware-disable.svg";
+import metamaskDisabledImg from "@/assets/images/icons/metamask-disable.svg";
 
 export default {
   components: {
-    'mew-connect-modal': MewConnectModal,
-    'network-and-address-modal': NetworkAndAddressModal,
-    'hardware-modal': HardwareModal,
-    'metamask-modal': MetamaskModal,
-    'software-modal': SoftwareModal,
-    'password-modal': PasswordModal,
-    'private-key-modal': PrivateKeyModal,
-    'access-wallet-button': AccessWalletButton
+    "mew-connect-modal": MewConnectModal,
+    "network-and-address-modal": NetworkAndAddressModal,
+    "hardware-modal": HardwareModal,
+    "metamask-modal": MetamaskModal,
+    "software-modal": SoftwareModal,
+    "password-modal": PasswordModal,
+    "private-key-modal": PrivateKeyModal,
+    "access-wallet-button": AccessWalletButton
   },
-  data () {
+  data() {
     return {
       file: '',
       hardwareWallet: '',
@@ -88,42 +88,42 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('common.mewConnect'),
-          desc: this.$t('accessWallet.mewConnectDesc'),
-          recommend: '',
-          tooltip: this.$t('common.toolTip3'),
+          title: this.$t("common.mewConnect"),
+          desc: this.$t("accessWallet.mewConnectDesc"),
+          recommend: "",
+          tooltip: this.$t("common.toolTip3"),
           img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('common.hardware'),
-          desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
-          recommend: '',
-          tooltip: this.$t('common.toolTip3'),
+          title: this.$t("common.hardware"),
+          desc: "Ledger wallet; Trezor; Digital bitbox; Secalot",
+          recommend: "",
+          tooltip: this.$t("common.toolTip3"),
           img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.metamaskModalOpen,
-          title: 'MetaMask',
-          desc: this.$t('accessWallet.metaMaskDesc'),
-          recommend: '',
-          tooltip: this.$t('common.toolTip3'),
+          title: "MetaMask",
+          desc: this.$t("accessWallet.metaMaskDesc"),
+          recommend: "",
+          tooltip: this.$t("common.toolTip3"),
           img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
           disabled: this.$store.state.online
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessWallet.software'),
-          desc: this.$t('accessWallet.softwareDesc'),
-          recommend: this.$t('accessWallet.notRecommended'),
-          tooltip: this.$t('common.toolTip3'),
+          title: this.$t("accessWallet.software"),
+          desc: this.$t("accessWallet.softwareDesc"),
+          recommend: this.$t("accessWallet.notRecommended"),
+          tooltip: this.$t("common.toolTip3"),
           img: softwareImg,
           disabled: true
         }
       ]
-    }
+    };
   },
   methods: {
     mewConnectModalOpen () {
@@ -157,9 +157,9 @@ export default {
       this.networkAndAddressOpen()
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "AccessMyWalletContainer.scss";
+@import "AccessMyWalletContainer.scss";
 </style>

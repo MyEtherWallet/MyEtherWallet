@@ -1,7 +1,7 @@
 let wallet = {
-  kdf: 'scrypt',
+  kdf: "scrypt",
   n: 131072
-}
+};
 export default {
   wallet
-}
+};

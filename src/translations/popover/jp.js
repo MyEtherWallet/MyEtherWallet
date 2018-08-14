@@ -8,5 +8,5 @@ const popoverTranslations = {
   // print: '',
   // copy: '',
   // switchAddress: ''
-}
-export default popoverTranslations
+};
+export default popoverTranslations;

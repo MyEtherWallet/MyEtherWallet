@@ -6,11 +6,11 @@
 
 <script>
 export default {
-  props: ['title'],
-  data () {
-    return {}
+  props: ["title"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
