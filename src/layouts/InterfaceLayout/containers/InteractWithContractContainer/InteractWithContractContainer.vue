@@ -61,7 +61,7 @@
           </div>
         </div>
         <div>
-          <div class="the-form domain-name" v-if="selectedMethod.constant === false">
+          <div class="the-form domain-name" v-if="selectedMethod.constant === true">
             <input type="text" name="" v-model="result" placeholder="0x00000000000000" disabled />
           </div>
           <div class="the-form domain-name" v-for="(input, idx) in selectedMethod.inputs" :key="input.name + idx" v-else v-show="selectedMethod.inputs.length !== 0">
@@ -146,8 +146,8 @@ export default {
     selectFunction (method) {
       const contract = new this.$store.state.web3.eth.Contract([method], this.address)
       if (method.constant === true) {
-        contract.methods[method.name]().send({from: this.$store.state.wallet.getAddressString()}).then(res => {
-          console.log(res)
+        contract.methods[method.name]().call({from: this.$store.state.wallet.getAddressString()}).then(res => {
+          this.result = res
         }).catch(err => {
           console.log(err)
         })
