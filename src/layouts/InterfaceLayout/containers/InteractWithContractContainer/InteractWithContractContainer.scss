@@ -120,6 +120,7 @@
     .functions {
       border: 1px solid $background-color-1;
       border-radius: 5px;
+      flex: 30;
     }
   }
 
@@ -149,4 +150,23 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 400px;
+}
+
+.result-container {
+  align-items: end !important;
+  flex-direction: column;
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  label {
+    padding: 0 8px;
+  }
+
+  .result-inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 }
