@@ -13,7 +13,11 @@
               {{val.dpath}}
             </b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item>{{ $t('accessWallet.customPath') }}</b-dropdown-item>
+            <b-dropdown-item @click="showCustomPathInput" ref="addCustomPath">{{
+                                                                              $t('accessWallet.customPath')
+                                                                              }}
+            </b-dropdown-item>
+            <b-dropdown-item ref="addCustomPathInput"><input></b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -95,7 +99,8 @@ export default {
       count: 5,
       hardwareAddresses: [],
       availablePaths: {},
-      selecteDPath: ''
+      selecteDPath: '',
+      customPathInput: false
     }
   },
   mounted () {
@@ -127,6 +132,9 @@ export default {
     }
   },
   methods: {
+    showCustomPathInput (e) {
+      console.log(e.target) // todo remove dev item
+    },
     selectDPath (key) {
       this.selecteDPath = this.availablePaths[key]
       this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
@@ -169,6 +177,7 @@ export default {
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
+                console.log(address) // todo remove dev item
                 const rawBalance = await this.$store.state.web3.eth.getBalance(address)
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
                 hardwareAddresses.push({index: i, address, balance})
