@@ -11,18 +11,18 @@ export default function web3OverideMew (web3, wallet, eventHub) {
     },
     signMessage (message) {
       return new Promise((resolve, reject) => {
-        // eventHub.$emit('showMessageConfirmModal', data, wallet.sign, (res) => {
-        //   console.log('eventHub response', res) // todo remove dev item
-        //   resolve(res)
-        // })
+        eventHub.$emit('showMessageConfirmModal', data, wallet.sign, (res) => {
+          console.log('eventHub response', res) // todo remove dev item
+          resolve(res)
+        })
 
-        wallet.signMessage(message)
-          .then(_result => {
-            resolve(_result)
-          })
-          .catch(_error => {
-            reject(_error)
-          })
+        // wallet.signMessage(message)
+        //   .then(_result => {
+        //     resolve(_result)
+        //   })
+        //   .catch(_error => {
+        //     reject(_error)
+        //   })
       })
     }
   }
