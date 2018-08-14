@@ -26,7 +26,10 @@
           {{$t('common.verifyMessage')}}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
 
   </div>
@@ -44,7 +47,7 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle
   },
-  data () {
+  data() {
     return {
       message: '',
       error: {
@@ -101,9 +104,9 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "VerifyMessageContainer.scss";
+@import "VerifyMessageContainer.scss";
 </style>

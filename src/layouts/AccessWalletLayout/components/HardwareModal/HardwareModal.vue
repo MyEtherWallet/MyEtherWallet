@@ -93,13 +93,13 @@ export default {
     hardwareButtonActivate (e) {
       const buttonEls = this.$refs.hardwareList.children
       for (var i = 0; i < buttonEls.length; i++) {
-        buttonEls[i].classList.remove('active')
+        buttonEls[i].classList.remove("active");
       }
 
-      e.target.classList.add('active')
+      e.target.classList.add("active");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

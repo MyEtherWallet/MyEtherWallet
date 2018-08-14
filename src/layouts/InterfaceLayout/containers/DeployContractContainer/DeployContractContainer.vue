@@ -1,15 +1,17 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('common.depContract')"></interface-container-title>
+    <success-modal
+      message=""
+      link-message="Ok"/>
+    <interface-container-title :title="$t('common.depContract')"/>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>Byte Code</h4>
           <div class="copy-buttons">
-            <span v-on:click="deleteInput('bytecode')">Clear</span>
-            <span v-on:click="copyToClipboard('bytecode')">Copy</span>
+            <span @click="deleteInput('bytecode')">Clear</span>
+            <span @click="copyToClipboard('bytecode')">Copy</span>
           </div>
         </div>
       </div>
@@ -91,7 +93,9 @@
         <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
         <div class="good-button-container">
           <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          <i
+            class="fa fa-check-circle good-button not-good"
+            aria-hidden="true"/>
         </div>
       </div>
     </div>
@@ -102,7 +106,10 @@
           Sign Transaction
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
     <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>
     <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
@@ -130,7 +137,7 @@ export default {
     'confirm-modal': ConfirmModal,
     'success-modal': SuccessModal
   },
-  data () {
+  data() {
     return {
       bytecode: '',
       abi: '',
@@ -198,9 +205,9 @@ export default {
         }).catch(err => console.log(err))
       }
     },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand("copy");
     },
     deleteInput (ref) {
       this[ref] = ''
@@ -244,9 +251,9 @@ export default {
       this.estimateGas()
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DeployContractContainer.scss";
+@import "DeployContractContainer.scss";
 </style>

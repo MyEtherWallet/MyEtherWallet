@@ -1,13 +1,19 @@
 <template>
   <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
     <div class="modal-multi-icons">
-      <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
-      <img class="icon" src="~@/assets/images/icons/clip.svg">
-      <img class="icon logo-small" src="~@/assets/images/logo-small.png">
+      <img
+        class="icon"
+        src="~@/assets/images/icons/button-metamask-fox.svg">
+      <img
+        class="icon"
+        src="~@/assets/images/icons/clip.svg">
+      <img
+        class="icon logo-small"
+        src="~@/assets/images/logo-small.png">
     </div>
     <div class="d-block content-container text-center">
       <h4>
-        {{ $t("accessWallet.metaMaskModalDesc")}}
+        {{ $t("accessWallet.metaMaskModalDesc") }}
       </h4>
     </div>
     <div class="accept-terms">
@@ -40,9 +46,9 @@ export default {
       accessMyWalletBtnDisabled: true
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "MetamaskModal.scss";
+@import "MetamaskModal.scss";
 </style>

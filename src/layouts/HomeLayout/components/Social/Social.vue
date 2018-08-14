@@ -8,7 +8,11 @@
             <h5>{{ $t("home.socialSubheading") }}</h5>
           </div>
           <div class="icons">
-            <a v-for="(link, index) in links" :href="link.to" target="_blank" :key="link.name + index">
+            <a
+              v-for="(link, index) in links"
+              :href="link.to"
+              :key="link.name + index"
+              target="_blank">
               <div :class="link.name">
                 <img :src="link.img">
                 <p>{{ link.name | capitalize }}</p>
@@ -27,30 +31,30 @@ import reddit from '@/assets/images/icons/reddit.svg'
 import slack from '@/assets/images/icons/slack.png'
 
 export default {
-  data () {
+  data() {
     return {
       links: [
         {
           img: slack,
-          to: 'https://www.google.com',
-          name: 'slack'
+          to: "https://www.google.com",
+          name: "slack"
         },
         {
           img: reddit,
-          to: 'https://www.reddit.com/r/myetherwallet',
-          name: 'reddit'
+          to: "https://www.reddit.com/r/myetherwallet",
+          name: "reddit"
         },
         {
           img: github,
-          to: 'https://www.github.com/myetherwallet',
-          name: 'github'
+          to: "https://www.github.com/myetherwallet",
+          name: "github"
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "Social.scss";
+@import "Social.scss";
 </style>

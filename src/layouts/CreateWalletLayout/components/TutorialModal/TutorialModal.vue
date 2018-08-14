@@ -1,5 +1,10 @@
 <template>
-  <b-modal ref="tutorial" hide-footer centered hide-header class="bootstrap-modal">
+  <b-modal 
+    ref="tutorial" 
+    hide-footer 
+    centered 
+    hide-header 
+    class="bootstrap-modal">
     <div class="d-block text-center">
       <h2 class="title">Welcome to MEW</h2>
       <p class="content">
@@ -20,14 +25,13 @@
 
 <script>
 export default {
-  props: ['skip'],
-  data () {
-    return {
-    }
+  props: ["skip"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "TutorialModal.scss";
+@import "TutorialModal.scss";
 </style>

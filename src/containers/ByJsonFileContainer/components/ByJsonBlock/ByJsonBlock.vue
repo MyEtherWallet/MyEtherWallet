@@ -12,14 +12,13 @@
 
 <script>
 export default {
-  props: ['img', 'title', 'desc'],
-  data () {
-    return {
-    }
+  props: ["img", "title", "desc"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ByJsonBlock.scss";
+@import "ByJsonBlock.scss";
 </style>

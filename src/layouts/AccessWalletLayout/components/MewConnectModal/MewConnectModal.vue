@@ -72,9 +72,9 @@ export default {
       console.log('RTC Closed') // todo remove dev item
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "MewConnectModal.scss";
+@import "MewConnectModal.scss";
 </style>

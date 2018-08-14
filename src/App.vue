@@ -16,7 +16,7 @@ import nodeList from '@/configs/networks'
 import Web3 from 'web3'
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
@@ -36,20 +36,24 @@ export default {
       online: true,
       pageStates: {
         interface: {
-          sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
+          sideMenu:
+            store.get("sideMenu") !== undefined ? store.get("sideMenu") : "send"
         }
       },
-      notifications: store.get('notifications') !== undefined ? store.get('notifications') : {},
-      gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
-    }
+      notifications:
+        store.get("notifications") !== undefined
+          ? store.get("notifications")
+          : {},
+      gasPrice: store.get("gasPrice") !== undefined ? store.get("gasPrice") : 41
+    };
 
     if (store.get('notifications') === undefined) store.set('notifications', {})
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
   }
-}
+};
 </script>
 
 <style lang="scss">
-  @import "App.scss";
+@import "App.scss";
 </style>

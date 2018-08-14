@@ -10,7 +10,9 @@
            :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/" v-on:click.native="scrollTop()">
+            <router-link
+              to="/"
+              @click.native="scrollTop()">
               <div class="top-logo">
                 <img class="logo-large" src="~@/assets/images/logo.png"
                      :class="isPageOnTop == false ? 'logo-small' : ''">
@@ -22,11 +24,15 @@
                 <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item to="/#news" v-show="online">{{ $t("common.news") }}</b-nav-item>
+                <b-nav-item
+                  v-show="online"
+                  to="/#news">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
-                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    <i
+                      class="fa fa-angle-down"
+                      aria-hidden="true"/>
                   </div>
                   <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom"
                                        right>
@@ -67,9 +73,9 @@
             </div>
             <div class="mobile-menu">
               <div class="mobile-menu-button">
-                <div class="bar-1"></div>
-                <div class="bar-2"></div>
-                <div class="bar-3"></div>
+                <div class="bar-1"/>
+                <div class="bar-2"/>
+                <div class="bar-3"/>
               </div>
             </div>
 
@@ -93,31 +99,31 @@ export default {
     'notification': Notification,
     'scrollupbutton': ScrollUpButton
   },
-  data () {
+  data() {
     return {
       supportedLanguages: [
-        {name: 'Deutsch', flag: 'de'},
-        {name: 'Ελληνικά', flag: 'gr'},
-        {name: 'English', flag: 'gb'},
-        {name: 'Español', flag: 'es'},
-        {name: 'Farsi', flag: 'ir'},
-        {name: 'Suomi', flag: 'fi'},
-        {name: 'Magyar', flag: 'hu'},
-        {name: 'Haitian Creole', flag: 'ht'},
-        {name: 'Bahasa Indonesia', flag: 'id'},
-        {name: 'Italiano', flag: 'it'},
-        {name: '日本語', flag: 'jp'},
-        {name: '한국어', flag: 'kr'},
-        {name: 'Nederlands', flag: 'nl'},
-        {name: 'Norsk Bokmål', flag: 'no'},
-        {name: 'Polski', flag: 'pl'},
-        {name: 'Português', flag: 'pt'},
-        {name: 'Русский', flag: 'ru'},
-        {name: 'ภาษาไทย', flag: 'th'},
-        {name: 'Türkçe', flag: 'tr'},
-        {name: 'Tiếng Việt', flag: 'vn'},
-        {name: '简体中文', flag: 'cn-sim'},
-        {name: '繁體中文', flag: 'cn-tr'}
+        { name: "Deutsch", flag: "de" },
+        { name: "Ελληνικά", flag: "gr" },
+        { name: "English", flag: "gb" },
+        { name: "Español", flag: "es" },
+        { name: "Farsi", flag: "ir" },
+        { name: "Suomi", flag: "fi" },
+        { name: "Magyar", flag: "hu" },
+        { name: "Haitian Creole", flag: "ht" },
+        { name: "Bahasa Indonesia", flag: "id" },
+        { name: "Italiano", flag: "it" },
+        { name: "日本語", flag: "jp" },
+        { name: "한국어", flag: "kr" },
+        { name: "Nederlands", flag: "nl" },
+        { name: "Norsk Bokmål", flag: "no" },
+        { name: "Polski", flag: "pl" },
+        { name: "Português", flag: "pt" },
+        { name: "Русский", flag: "ru" },
+        { name: "ภาษาไทย", flag: "th" },
+        { name: "Türkçe", flag: "tr" },
+        { name: "Tiếng Việt", flag: "vn" },
+        { name: "简体中文", flag: "cn-sim" },
+        { name: "繁體中文", flag: "cn-tr" }
       ],
       online: true,
       currentName: 'English',
@@ -125,21 +131,9 @@ export default {
       isPageOnTop: true
     }
   },
-  methods: {
-    languageItemClicked (e) {
-      let flag = e.target.getAttribute('data-flag-name')
-
-      this.$root._i18n.locale = flag
-      this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
-      this.currentFlag = flag
-      store.set('locale', flag)
-    },
-    scrollTop () {
-      window.scrollTo(0, 0)
-    },
-    logout () {
-      this.$store.dispatch('clearWallet')
-      this.$router.push('/')
+  watch: {
+    online(newVal) {
+      this.online = newVal;
     },
     showNotifications () {
       this.$children[6].$refs.notification.show()
@@ -153,17 +147,17 @@ export default {
     const self = this
 
     if (this.$store.state.online) {
-      this.online = true
+      this.online = true;
     } else {
-      this.online = false
+      this.online = false;
     }
 
     if (store.get('locale') !== null && store.get('locale') !== undefined) {
       this.$root._i18n.locale = store.get('locale')
       this.currentFlag = store.get('locale')
     } else {
-      store.set('locale', this.$root._i18n.locale)
-      this.currentFlag = this.$root._i18n.locale
+      store.set("locale", this.$root._i18n.locale);
+      this.currentFlag = this.$root._i18n.locale;
     }
 
     this.currentName = this.supportedLanguages.filter(item => item.flag === this.currentFlag)[0].name
@@ -176,22 +170,34 @@ export default {
       self.onPageScroll()
     }
   },
-  watch: {
-    online (newVal) {
-      this.online = newVal
-    },
-    notifications (newVal) {
+  methods: {
+    languageItemClicked(e) {
+      let flag = e.target.getAttribute("data-flag-name");
 
+      this.$root._i18n.locale = flag;
+      this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
+      this.currentFlag = flag;
+      store.set("locale", flag);
+    },
+    scrollTop() {
+      window.scrollTo(0, 0);
+    },
+    logout() {
+      this.$store.dispatch("clearWallet");
+      this.$router.push("/");
+    },
+    showNotifications() {
+      this.$children[6].$refs.notification.show();
     }
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      wallet: "wallet"
     })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "HeaderContainer.scss";
+@import "HeaderContainer.scss";
 </style>

@@ -1,7 +1,9 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('common.signMessage')"></interface-container-title>
+    <success-modal
+      message=""
+      link-message="Ok"/>
+    <interface-container-title :title="$t('common.signMessage')"/>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -62,15 +64,14 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
 
 export default {
-  name: 'SignMessage',
+  name: "SignMessage",
   components: {
-    'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    "interface-bottom-text": InterfaceBottomText,
+    "interface-container-title": InterfaceContainerTitle,
+    "success-modal": SuccessModal
   },
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   methods: {
     signMessage () {
@@ -87,13 +88,13 @@ export default {
       document.execCommand('copy')
       window.getSelection().removeAllRanges()
     },
-    deleteInputText (ref) {
-      this.$refs[ref].value = ''
+    deleteInputText(ref) {
+      this.$refs[ref].value = "";
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SignMessageContainer.scss";
+@import "SignMessageContainer.scss";
 </style>

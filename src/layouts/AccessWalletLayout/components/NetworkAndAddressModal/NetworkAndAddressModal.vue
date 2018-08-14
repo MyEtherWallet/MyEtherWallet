@@ -207,9 +207,9 @@ export default {
         })
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "NetworkAndAddressModal.scss";
+@import "NetworkAndAddressModal.scss";
 </style>

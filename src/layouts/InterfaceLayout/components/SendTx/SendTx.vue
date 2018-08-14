@@ -1,24 +1,36 @@
 <template>
   <div class="generate-info">
-    <success-modal message="Success" :linkMessage="'Ok'"></success-modal>
+    <success-modal
+      :link-message="'Ok'"
+      message="Success"/>
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
           <div class="title">
             <div><h4>Signed Transaction</h4></div>
             <div class="form-controller">
-              <p class="linker-1 prevent-user-select" v-on:click="deleteTxHex">Clear</p>
-              <p class="linker-1 prevent-user-select" v-on:click="copyTxHex">Copy</p>
+              <p
+                class="linker-1 prevent-user-select"
+                @click="deleteTxHex">Clear</p>
+              <p
+                class="linker-1 prevent-user-select"
+                @click="copyTxHex">Copy</p>
             </div>
           </div>
         </div>
 
         <div class="the-form gas-amount">
-          <textarea ref="txHex" name="" v-model="signedTx" placeholder="Enter TX Hex"></textarea>
+          <textarea
+            ref="txHex"
+            v-model="signedTx"
+            name=""
+            placeholder="Enter TX Hex"/>
         </div>
       </div>
       <div class="submit-button-container">
-        <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
+        <div
+          class="submit-button large-round-button-green-filled clickable"
+          @click="sendTx">
           Send Transaction
         </div>
         <interface-bottom-text :link="'/'" :linkText="'Learn more'"
@@ -34,22 +46,27 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
-    'success-modal': SuccessModal
+    "interface-bottom-text": InterfaceBottomText,
+    "success-modal": SuccessModal
   },
-  props: ['rawTx'],
-  data () {
+  props: ["rawTx"],
+  data() {
     return {
       signedTx: this.rawTx
+    };
+  },
+  watch: {
+    rawTx(newVal) {
+      this.signedTx = newVal;
     }
   },
   methods: {
-    deleteTxHex () {
-      this.signedTx = ''
+    deleteTxHex() {
+      this.signedTx = "";
     },
-    copyTxHex () {
-      this.$refs.txHex.select()
-      document.execCommand('copy')
+    copyTxHex() {
+      this.$refs.txHex.select();
+      document.execCommand("copy");
     },
     sendTx () {
       this.$store.state.web3.eth.sendSignedTransaction(this.signedTx)
@@ -60,18 +77,13 @@ export default {
           console.log('sendSignedTransaction', res)
         })
     },
-    hideModal () {
-      this.$children[0].$refs.success.hide()
-    }
-  },
-  watch: {
-    rawTx (newVal) {
-      this.signedTx = newVal
+    hideModal() {
+      this.$children[0].$refs.success.hide();
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SendTx.scss";
+@import "SendTx.scss";
 </style>
