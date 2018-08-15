@@ -92,7 +92,7 @@
             </div>
             <input type="text" name="" v-model="value" placeholder="ETH" />
           </div>
-          <div class="the-form domain-name result-container" v-if="result !== ''">
+          <div class="the-form domain-name result-container" v-if="result !== '' && selectedMethod.inputs.length > 0">
             <div class="title-container">
               <div class="title">
                 <h4>Result: </h4>
@@ -115,9 +115,15 @@
           <div class="submit-button large-round-button-green-border clickable" @click="switchView('backwards')">
             {{ $t('common.back') }}
           </div>
-          <div :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']" @click="write">
+          <div :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']" @click="write" v-if="selectedMethod.constant === true && selectedMethod.inputs.length > 0">
             <span v-show="!loading">
-              {{ selectedMethod.constant === true && selectedMethod.inputs.length !== 0 ? 'Read': 'Write'}}
+              Read
+            </span>
+            <i class="fa fa-spinner fa-spin fa-lg" v-show="loading"></i>
+          </div>
+          <div :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']" @click="write" v-if="selectedMethod.constant === false">
+            <span v-show="!loading">
+              Write
             </span>
             <i class="fa fa-spinner fa-spin fa-lg" v-show="loading"></i>
           </div>
@@ -185,7 +191,7 @@ export default {
       this.address = currency.address
     },
     checkType (type) {
-      if (type === 'address' || type === 'string' || type === 'byte') {
+      if (type === 'address' || type === 'string' || type === 'byte' || type.includes('bytes')) {
         return 'string'
       } else {
         return 'number'
@@ -231,8 +237,9 @@ export default {
       }
     },
     async write () {
-      const contract = new this.$store.state.web3.eth.Contract([this.selectedMethod], this.address)
-      const params = Object.keys(this.writeInputs).map(input => this.writeInputs[input])
+      const web3 = this.$store.state.web3
+      const contract = new web3.eth.Contract([this.selectedMethod], this.address)
+      const params = Object.keys(this.writeInputs).map(input => web3.utils.toHex(this.writeInputs[input]))
       this.loading = true
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...params)
@@ -246,7 +253,7 @@ export default {
             this.loading = false
           })
       } else {
-        this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
+        this.nonce = await web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
         this.gasLimit = await contract.methods[this.selectedMethod.name](
           ...params
         )
@@ -271,6 +278,18 @@ export default {
         tx.sign(this.$store.state.wallet.getPrivateKey())
         const serializedTx = tx.serialize()
         this.signedTx = `0x${serializedTx.toString('hex')}`
+        // Waiting on this: https://github.com/ethereum/web3.js/issues/1637
+        // await web3.eth.sendTransaction(this.raw).once('transactionHash', (hash) => {
+        //   this.loading = false
+        //   this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+        // }).on('receipt', (res) => {
+        //   this.loading = false
+        //   this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+        // }).on('error', (err) => {
+        //   console.log(err)
+        //   this.loading = false
+        //   this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+        // })
         this.confirmationModalOpen()
       }
     },
