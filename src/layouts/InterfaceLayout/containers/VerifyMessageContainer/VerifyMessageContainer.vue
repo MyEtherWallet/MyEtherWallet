@@ -12,9 +12,9 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea 
-          ref="signature" 
-          v-model="message" 
+        <textarea
+          ref="signature"
+          v-model="message"
           class="custom-textarea-1"/>
       </div>
       <div>
@@ -25,8 +25,8 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div 
-          class="submit-button large-round-button-green-filled clickable" 
+        <div
+          class="submit-button large-round-button-green-filled clickable"
           @click="verifyMessage">
           {{ $t('common.verifyMessage') }}
         </div>
@@ -117,6 +117,14 @@ export default {
       } else {
         this.showMessage = true;
       }
+      console.log(new Buffer(this.parseSig(json.sig), 'hex')[64])
+      sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64]
+      console.log(sig[64])
+      // try {
+      //
+      // } catch (e) {
+      //
+      // }
     }
   }
 };
