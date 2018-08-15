@@ -11,7 +11,7 @@
       </p>
     </div>
     <div class="button-container fixed-width-1">
-      <router-link to="/mew-intro" class="mid-round-button-green-filled close-button">
+      <router-link to="/getting-started" class="mid-round-button-green-filled close-button">
         Continue
       </router-link>
     </div>
