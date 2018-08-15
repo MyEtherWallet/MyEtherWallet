@@ -20,7 +20,7 @@
       </div>
 
       <p class="passwd-strength" v-show="value.length > 0">
-        Password strength: <span :class="strengthClass">{{ strength }}</span>
+        Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
     <!--=== MEW custom form ========================================-->
