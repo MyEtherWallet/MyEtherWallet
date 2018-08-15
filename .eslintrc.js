@@ -17,7 +17,6 @@ module.exports = {
   ],
   // required to lint *.vue files
   plugins: [
-    'eslint:recommended',
     'vue'
   ],
   // add your custom rules here
