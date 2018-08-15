@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="number" name="" value="" placeholder="Enter Domain Name or Address" />
+        <input type="text" name="" value="" placeholder="Enter Domain Name or Address" />
       </div>
     </div>
 
@@ -21,13 +21,13 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span>{{ $t('common.clear') }}</span>
-            <span>{{ $t('common.copy') }}</span>
+            <span v-on:click="clearInputValues('abi-json-interface')">{{ $t('common.clear') }}</span>
+            <span v-on:click="copyToClipboard('abi-json-interface')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea class="custom-textarea-1" name=""></textarea>
+        <textarea ref="abi-json-interface" class="custom-textarea-1" name=""></textarea>
       </div>
     </div>
 
@@ -35,6 +35,7 @@
       <!-- <router-link :to="{ name: 'InteractWithContract', params: {} }"> -->
         <div class="submit-button large-round-button-green-filled clickable">
           {{ $t('common.continue') }}
+          <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
         </div>
       <!-- </router-link> -->
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -74,6 +75,15 @@ export default {
           value: '4'
         }
       ]
+    }
+  },
+  methods: {
+    copyToClipboard (ref) {
+      this.$refs[ref].select()
+      document.execCommand('copy')
+    },
+    clearInputValues (ref) {
+      this.$refs[ref].value = ''
     }
   }
 }

@@ -7,7 +7,16 @@
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
                     v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
 
+
+    <network-and-address-modal :hardwareWallet="hardwareWallet" ></network-and-address-modal>
+
+    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
+                    v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
+
     <metamask-modal></metamask-modal>
+
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
+                    :openPrivateKeyInput="privateKeyOpen"></software-modal>
 
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
                     :openPrivateKeyInput="privateKeyOpen"></software-modal>
@@ -65,6 +74,8 @@ import softwareImg from '@/assets/images/icons/button-software.svg'
 import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
+
+const unit = require('ethjs-unit')
 
 const unit = require('ethjs-unit')
 
