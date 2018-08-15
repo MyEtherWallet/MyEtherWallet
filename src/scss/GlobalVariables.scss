@@ -44,6 +44,7 @@ $light-green-1: #f2fafa;
 $light-green-2: #6f0;
 $light-green-3: #37ce76;
 $light-green-4: #f1fafa;
+$light-green-5: #00bfa4;
 
 $mew-green: #05c0a5;
 
@@ -54,6 +55,11 @@ $dark-yellow: #dadd98;
 
 $red-1: #f00;
 $red-2: #ff2f49;
+$red-3: #b92b3f;
+$red-4: #ff3c3c;
+
+$light-red-1: #fbe0e3;
+
 
 $grey-1: #adadad;
 $grey-2: #999;
@@ -77,9 +83,12 @@ $dark-blue-5: #434f60;
 $dark-blue-6: #003945;
 $dark-blue-7: #0c5876;
 $dark-blue-8: #485f7e;
+$dark-blue-9: #354858;
+$dark-blue-10: #1d89ff;
 
 $dark-green-1: #008000;
 $dark-green-2: #00927d;
+$dark-green-3: #3f9c00;
 
 // *********************************************************************
 // Standard window width sizes
@@ -251,9 +260,9 @@ $css-toggle-button--slider--active--background-color: $background-color-2;
 
 $disabled: $light-grey-3;
 
-$very-weak: $red-1;
-$weak: $dark-yellow;
-$strong: $light-green-2;
+$very-weak: $red-4;
+$weak: $dark-blue-10;
+$strong: $mew-green;
 $very-strong: $dark-green-1;
 
 

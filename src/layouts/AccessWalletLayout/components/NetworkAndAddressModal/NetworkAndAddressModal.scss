@@ -1,5 +1,10 @@
 @import '~@/scss/CustomModal';
 
+.modal-body .button-container button {
+  width: 100%;
+}
+
+
 .modal-network-and-address {
   .content-container-1 {
     margin: -20px -40px 0;

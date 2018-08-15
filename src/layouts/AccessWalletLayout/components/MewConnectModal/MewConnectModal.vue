@@ -1,4 +1,5 @@
 <template>
+  <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEWConnect" centered>
   <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect"
            title="Access by MEW Connect" centered>
     <div class="modal-icon">
@@ -10,6 +11,7 @@
     </div>
     <div class="appstore-button-container">
       <img src="~@/assets/images/icons/appstore.png">
+      <img src="~@/assets/images/icons/playstore.png">
       <p>Do not have our App? Download now.</p>
     </div>
     <div class="support">

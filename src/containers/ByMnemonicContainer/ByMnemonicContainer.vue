@@ -8,12 +8,10 @@
           <b-tabs>
             <div class="progress-bar"></div>
             <b-tab title="By Mnemonic Phrase" active>
-              <h3>
-                {{ $t("createWallet.byMnemonicWriteDown") }}
-                <span class="tooltip-icon">
-                  <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
-                </span>
-              </h3>
+              <div class="title-popover">
+                <h3>{{ $t("createWallet.byMnemonicWriteDown") }}</h3>
+                <popover :popcontent="$t('popover.whatIsMessageContent')" />
+              </div>
               <div class="contents">
                 <div class="tools">
                   <div class="value-switch noselect">
@@ -47,18 +45,11 @@
                 <div v-on:click="mnemonicVerificationModalOpen" class="next-button large-round-button-green-filled clickable">
                   {{ $t("createWallet.byMnemonicAlreadyWritten") }}
                 </div>
+                <router-link to="/">
+                  <img class="icon" src="~@/assets/images/icons/printer.svg">
+                </router-link>
               </div>
-              <div class="footer-text">
-                <p>
-                  <router-link to="/">
-                    <img class="icon" src="~@/assets/images/icons/printer.svg">
-                    {{ $t("common.printWallet") }}
-                  </router-link>
-                  <span class="tooltip-icon">
-                    <b-btn v-b-tooltip.hover :title="$t('common.toolTip2')">?</b-btn>
-                  </span>
-                </p>
-              </div>
+              <input-footer />
             </b-tab>
           </b-tabs>
         </div>
@@ -68,6 +59,7 @@
 </template>
 
 <script>
+import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter'
 import FinishModal from './components/FinishModal'
 import VerificationModal from './components/VerificationModal'
 // Mnemonic code for generating deterministic keys
@@ -76,7 +68,8 @@ let bip39 = require('bip39')
 export default {
   components: {
     'finish-modal': FinishModal,
-    'verification-modal': VerificationModal
+    'verification-modal': VerificationModal,
+    'input-footer': CreateWalletInputFooter
   },
   data () {
     return {

@@ -7,36 +7,40 @@
           <b-tabs>
             <div class="progress-bar"></div>
             <b-tab title="By JSON File" active>
-              <h3>
-                {{ $t('createWallet.byJsonFileSaveKeystore')}}
-                <span class="tooltip-icon">
-                  <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
-                </span>
-              </h3>
+
+              <div class="title-block">
+                <div class="title-popover">
+                  <h3>
+                    {{ $t('createWallet.byJsonFileSaveKeystore')}}
+                  </h3>
+                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                </div>
+              </div>
+
               <div class="contents">
                 <by-json-block v-for="content in contents" :img="content.img" :title="content.title"
                                :desc="content.desc" :key="content.title"></by-json-block>
               </div>
-              <div class="user-input">
-                <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
-                   :download="name">
-                  <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile')}} </span>
-                  <div v-if="!downloadable">
-                    <i class="fa fa-spinner fa-lg fa-spin"></i>
+
+              <div class="user-input-container">
+                <div class="user-input">
+                  <div class="user-button">
+                    <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
+                       :download="name">
+                      <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile')}} </span>
+                      <div v-if="!downloadable">
+                        <i class="fa fa-spinner fa-lg fa-spin"></i>
+                      </div>
+                    </a>
                   </div>
-                </a>
+                  <div class="printer-icon">
+                    <router-link to="/">
+                      <img class="icon" src="~@/assets/images/icons/printer.svg">
+                    </router-link>
+                  </div>
+                </div>
               </div>
-              <div class="footer-text">
-                <p>
-                  <router-link to="/">
-                    <img class="icon" src="~@/assets/images/icons/printer.svg">
-                    {{ $t('common.printWallet') }}
-                  </router-link>
-                  <span class="tooltip-icon">
-                    <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
-                  </span>
-                </p>
-              </div>
+
             </b-tab>
           </b-tabs>
         </div>

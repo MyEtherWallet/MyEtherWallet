@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask">
+  <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
     <div class="modal-multi-icons">
       <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
       <img class="icon" src="~@/assets/images/icons/clip.svg">
@@ -12,13 +12,13 @@
     </div>
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-        <input type="checkbox" />
+        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox" />
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
-        {{ $t("accessWallet.unlock")}}
+      <b-btn class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
+        {{ $t("accessWallet.accessMyWallet")}}
       </b-btn>
     </div>
     <div class="support">
@@ -37,6 +37,7 @@ export default {
   props: ['networkAndAddressOpen'],
   data () {
     return {
+      accessMyWalletBtnDisabled: true
     }
   }
 }
