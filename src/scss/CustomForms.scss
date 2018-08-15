@@ -1,0 +1,75 @@
+@import '~@/scss/GlobalVariables';
+
+//=======================================================================
+// Password input field
+//=======================================================================
+
+.mew-custom-form {
+  input {
+    background-color: $background-color-1;
+    border: 1px solid $background-color-1;
+    font-size: 14px;
+    padding: 20px;
+    width: 100%;
+  }
+}
+
+.mew-custom-form__container__password-input {
+  position: relative;
+  margin: 0;
+  padding: 0;
+
+  .user-input-field {
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  .password-icons {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 20px;
+    top: 19px;
+    cursor: pointer;
+
+    img {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  
+  input.very-weak {
+    border: 1px solid $very-weak;
+  }
+
+  input.weak {
+    border: 1px solid $weak;
+  }
+
+  input.strong {
+    border: 1px solid $strong;
+  }
+  
+  .passwd-strength {
+    margin-top: 5px;
+    margin-left: 10px;
+
+    .very-weak {
+      color: $very-weak;
+    }
+
+    .weak {
+      color: $weak;
+    }
+
+    .strong {
+      color: $strong;
+    }
+  }
+}
+
+
+
+
