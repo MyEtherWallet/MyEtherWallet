@@ -1,34 +1,25 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
     <interface-container-title :title="$t('common.verifyMessage')"></interface-container-title>
-
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('common.signature') }}</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
+          <h4>Signature: </h4>
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
-            <span v-on:click="copyToClipboard('abi')">Copy</span>
+            <span v-on:click="deleteInput">Clear</span>
+            <span v-on:click="copyToClipboard">Copy</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
-      </div>
-    </div>
-
-    <div class="send-form send-form-small-top-margin">
-      <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code">
+        <textarea ref="signature" class="custom-textarea-1" v-model="message"></textarea>
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('common.verify') }}
+        <div class="submit-button large-round-button-green-filled clickable" @click="verifyMessage">
+          {{$t('common.verifyMessage')}}
         </div>
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
@@ -40,55 +31,44 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/components/SuccessModal'
 
 export default {
-  name: 'Interact',
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'interface-container-title': InterfaceContainerTitle
   },
   data () {
     return {
-      showModal: true,
-      existingContracts: [
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '1'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '2'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '3'
-        },
-        {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
-        }
-      ]
+      message: '',
+      error: false
     }
   },
   methods: {
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
-    },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
+    copyToClipboard () {
+      this.$refs.signature.select()
       document.execCommand('copy')
+      window.getSelection().removeAllRanges()
     },
-    deleteInputText (ref) {
-      this.$refs[ref].value = ''
-    }
-  },
-  watch: {
-    showModal () {
-      if (this.showModal === false) {
-        this.showModal = true
+    deleteInput () {
+      this.$refs.signature.value = ''
+    },
+    parseSig (hex) {
+      return hex.toLowerCase().replace('0x', '')
+    },
+    verifyMessage () {
+      const json = JSON.parse(this.message)
+      const sig = new Buffer(this.parseSig(json.sig), 'hex')
+      if (sig.length !== 65) {
+        this.error = true
       }
+      console.log(new Buffer(this.parseSig(json.sig), 'hex')[64])
+      sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64]
+      console.log(sig[64])
+      // try {
+      //
+      // } catch (e) {
+      //
+      // }
     }
   }
 }
