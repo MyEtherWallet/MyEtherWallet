@@ -58,7 +58,7 @@ export default new Router({
       component: HelpCenterLayout
     },
     {
-      path: '/mew-intro',
+      path: '/getting-started',
       name: 'CreateWalletWarningLayout',
       component: CreateWalletWarningLayout
     },
