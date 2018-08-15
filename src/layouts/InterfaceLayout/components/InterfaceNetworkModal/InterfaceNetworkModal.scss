@@ -31,20 +31,88 @@
           width: 6px;
         }
 
-        &.dot-green::before {
-          background-color: $light-green-3;
+        &.aka::before {
+          background-color: $aka;
         }
 
-        &.dot-bluegreen::before {
-          background-color: $light-blue-5;
+        &.clo::before {
+          background-color: $clo;
         }
 
-        &.dot-blue::before {
-          background-color: $light-violet-1;
+        &.egem::before {
+          background-color: $egem;
         }
 
-        &.dot-orange::before {
-          background-color: $light-orange;
+        &.ella::before {
+          background-color: $ella;
+        }
+
+        &.eosc::before {
+          background-color: $eosc;
+        }
+
+        &.esn::before {
+          background-color: $esn;
+        }
+
+        &.etc::before {
+          background-color: $etc;
+        }
+
+        &.eth::before {
+          background-color: $eth;
+        }
+
+        &.etho::before {
+          background-color: $etho;
+        }
+
+        &.etsc::before {
+          background-color: $etsc;
+        }
+
+        &.exp::before {
+          background-color: $exp;
+        }
+
+        &.go::before {
+          background-color: $go;
+        }
+
+        &.kov::before {
+          background-color: $kov;
+        }
+
+        &.music::before {
+          background-color: $music;
+        }
+
+        &.pirl::before {
+          background-color: $pirl;
+        }
+
+        &.poa::before {
+          background-color: $poa;
+        }
+
+        &.rin::before {
+          background-color: $rin;
+        }
+
+        &.rop::before {
+          background-color: $rop;
+        }
+
+        &.tomo::before {
+          background-color: $tomo;
+        }
+
+        &.ubq::before {
+          background-color: $ubq;
+        }
+
+        &.cust::before {
+          background-color: $cust;
         }
       }
 
