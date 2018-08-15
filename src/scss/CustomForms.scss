@@ -40,6 +40,10 @@
   }
 
   
+  input {
+    padding-right: 50px;
+  }
+
   input.very-weak {
     border: 1px solid $very-weak;
   }
@@ -53,8 +57,14 @@
   }
   
   .passwd-strength {
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: 10px;
+    color: $text-color-3;
+
+    span {
+      font-weight: 600;
+      margin-left: 10px;
+    }
 
     .very-weak {
       color: $very-weak;
