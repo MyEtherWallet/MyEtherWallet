@@ -55,15 +55,52 @@ export default {
     parseSig (hex) {
       return hex.toLowerCase().replace('0x', '')
     },
+    toBuffer (v) {
+      const BN = this.$store.state.web3.utils.BN
+      if (!Buffer.isBuffer(v)) {
+        if (Array.isArray(v)) {
+          v = Buffer.from(v)
+        } else if (typeof v === 'string') {
+          if (exports.isHexString(v)) {
+            v = Buffer.from(exports.padToEven(exports.stripHexPrefix(v)), 'hex')
+          } else {
+            v = Buffer.from(v)
+          }
+        } else if (typeof v === 'number') {
+          v = exports.intToBuffer(v)
+        } else if (v === null || v === undefined) {
+          v = Buffer.allocUnsafe(0)
+        } else if (BN.isBN(v)) {
+          v = v.toArrayLike(Buffer)
+        } else if (v.toArray) {
+          // converts a BN to a Buffer
+          v = Buffer.from(v.toArray())
+        } else {
+          throw new Error('invalid type')
+        }
+      }
+      return v
+    },
+    hashPersonalMessage (message) {
+      const prefix = exports.toBuffer('\x19Ethereum Signed Message:\n' + message.length.toString())
+      return this.$store.state.web3.utils.sha3(Buffer.concat([prefix, message]))
+    },
     verifyMessage () {
       const json = JSON.parse(this.message)
-      const sig = new Buffer(this.parseSig(json.sig), 'hex')
+      const sig = Buffer.from(this.parseSig(json.sig), 'hex')
       if (sig.length !== 65) {
         this.error = true
+        return
       }
-      console.log(new Buffer(this.parseSig(json.sig), 'hex')[64])
+
       sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64]
-      console.log(sig[64])
+      let hash = this.hashPersonalMessage(this.toBuffer(json.msg))
+      if (json.version === 3 || json.version === '3') {
+        if (json.signer === 'trezor') {
+          // Do something
+          // hash =
+        }
+      }
       // try {
       //
       // } catch (e) {
