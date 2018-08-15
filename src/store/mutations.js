@@ -48,7 +48,7 @@ const SET_GAS_PRICE = function (state, val) {
 const SET_WEB3_INSTANCE = function (state, web3) {
   if (web3.eth === undefined) {
     // eslint-disable-next-line
-    state.web3 = new web3(new web3.providers.HttpProvider(state.network.url))
+    state.web3 = new web3(new web3.providers.HttpProvider(state.network.url+`:${state.network.port}`))
   } else {
     state.web3 = web3
   }
