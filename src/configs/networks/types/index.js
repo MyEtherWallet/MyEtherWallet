@@ -6,11 +6,13 @@ import EOSC from './EOSC.js'
 import ESN from './ESN.js'
 import ETC from './ETC.js'
 import ETH from './ETH.js'
+import ETHO from './ETHO.js'
 import ETSC from './ETSC.js'
 import EXP from './EXP.js'
 import GO from './GO.js'
 import KOV from './KOV.js'
 import MUSIC from './MUSIC.js'
+import PIRL from './PIRL.js'
 import POA from './POA.js'
 import RIN from './RIN.js'
 import ROP from './ROP.js'
@@ -25,12 +27,14 @@ export {
   ESN,
   ETC,
   ETH,
+  ETHO,
   ETSC,
   EXP,
   GO,
   KOV,
   MUSIC,
   POA,
+  PIRL,
   RIN,
   ROP,
   TOMO,
