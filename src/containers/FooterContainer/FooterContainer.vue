@@ -14,8 +14,10 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <router-link v-for="(content, index) in item.contents" v-if="content.to !== undefined" :to="content.to" :key="content.text+index"><p>{{ content.text }}</p></router-link>
-              <a v-for="(content, index) in item.contents" v-if="content.to === undefined" :href="content.href" target="_blank" :key="content.text+index"><p>{{ content.text }}</p></a>
+              <div v-for="(content, index) in item.contents" :key="content.text+index">
+                <router-link v-if="content.to !== undefined" :to="content.to"><p>{{ content.text }}</p></router-link>
+                <a v-if="content.to === undefined" :href="content.href" target="_blank"><p>{{ content.text }}</p></a>
+              </div>
             </div>
           </div>
           <div class="donate-us">
