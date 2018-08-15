@@ -3,16 +3,6 @@
 .user-input {
   margin-bottom: 40px;
 
-  input {
-    background-color: $background-color-1;
-    border: 0;
-    font-size: 14px;
-    margin-bottom: 10px;
-    padding: 20px;
-    width: 100%;
-  }
-
-
   .next-button {
     cursor: pointer;
     display: block;
@@ -35,20 +25,4 @@
       width: 25px;
     }
   }
-}
-
-.very-weak {
-  color: $very-weak;
-}
-
-.weak {
-  color: $weak;
-}
-
-.strong {
-  color: $strong;
-}
-
-.very-strong {
-  color: $very-strong;
 }

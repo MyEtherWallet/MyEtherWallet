@@ -12,12 +12,12 @@
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <popover :popcontent="$t('popover.whatIsMessageContent')" />
                 </div>
               </div>
 
-              <create-wallet-input v-model='password' :switcher="switcher" :param="'Json'"></create-wallet-input>
-              <create-wallet-input-footer></create-wallet-input-footer>
+              <create-wallet-input v-model='password' :switcher="switcher" :param="'Json'" />
+              <create-wallet-input-footer />
             </b-tab>
             <b-tab title="By Mnemonic Phrase" >
 
@@ -28,14 +28,13 @@
                 </div>
               </div>
 
-              <h3>{{ $t("createWallet.yourPw") }}</h3>
-              <create-wallet-input v-model='password' :switcher="switcher" :param="'Mnemonic'"></create-wallet-input>
-              <create-wallet-input-footer></create-wallet-input-footer>
+              <create-wallet-input v-model='password' :switcher="switcher" :param="'Mnemonic'" />
+              <create-wallet-input-footer />
             </b-tab>
           </b-tabs>
         </div>
-        <by-json-file-container v-if="byJson && !byMnemonic" :password="password"></by-json-file-container>
-        <by-mnemonic-container v-if="!byJson && byMnemonic"></by-mnemonic-container>
+        <by-json-file-container v-if="byJson && !byMnemonic" :password="password" />
+        <by-mnemonic-container v-if="!byJson && byMnemonic" />
       </div>
     </div>
 
