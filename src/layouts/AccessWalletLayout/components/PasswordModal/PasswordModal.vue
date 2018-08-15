@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="password" hide-footer class="bootstrap-modal modal-software" title="Password">
+  <b-modal ref="password" hide-footer class="bootstrap-modal modal-software" title="Password" centered>
     <form class="password-form">
       <div class="input-container">
         <input :type="show ? 'text': 'password'" name="Password" v-model="password" autocomplete="off" />

@@ -20,8 +20,10 @@
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t("interface.sendTxToAddr") }}</h4> &nbsp;
-            <blockie :address="toAddress" width="22px" height="22px" v-show="addressValid && toAddress.length !== 0"></blockie>
+            <h4>{{ $t("interface.sendTxToAddr") }}
+              <blockie class="blockie-image" :address="toAddress" v-show="addressValid && toAddress.length !== 0"></blockie>
+            </h4>
+
             <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('common.copy') }}</p>
           </div>
           <div class="the-form address-block">
@@ -68,24 +70,26 @@
     </div>
     <div class="send-form advanced">
       <div class="advanced-content">
-        <h4>{{ $t('common.advanced') }}</h4>
-        <div class="toggle-button">
-          <span>{{ $t('interface.dataGas') }}</span>
-          <!-- Rounded switch -->
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend" />
-              <span class="slider round"></span>
-            </label>
+
+        <div class="toggle-button-container">
+          <h4>{{ $t('common.advanced') }}</h4>
+          <div class="toggle-button">
+            <span>{{ $t('interface.dataGas') }}</span>
+            <!-- Rounded switch -->
+            <div class="sliding-switch-white">
+              <label class="switch">
+                <input type="checkbox" v-on:click="advancedExpend = !advancedExpend" />
+                <span class="slider round"></span>
+              </label>
+            </div>
           </div>
-          <br/>
-          <div class="input-container" v-if="advancedExpend">
-            <div class="the-form user-input">
-              <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" />
-            </div>
-            <div class="the-form user-input">
-              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
-            </div>
+        </div>
+        <div class="input-container" v-if="advancedExpend">
+          <div class="the-form user-input">
+            <input type="text" name="" v-model="data" placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" />
+          </div>
+          <div class="the-form user-input">
+            <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
           </div>
         </div>
       </div>

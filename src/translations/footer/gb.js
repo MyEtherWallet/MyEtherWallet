@@ -15,9 +15,11 @@ const footer = {
   about: 'About us',
   team: 'Team',
   welcome: 'Welcome to Donate to Us',
-  welcomeDes: 'Your donation will help us a lot to build our MEW Community.',
+  welcomeDes: 'MyEtherWallet is open-source and free to the community. Your donations go a long way towards making that possible.',
   feedback: 'Feedback',
   privacy: 'Privacy',
-  copyright: '© 2018 MyEtherWallet. All Rights reserved.'
+  copyright: '© 2018 MyEtherWallet. All Rights reserved.',
+  love: 'Love',
+  donate: 'MEW? Donate!'
 }
 export default footer

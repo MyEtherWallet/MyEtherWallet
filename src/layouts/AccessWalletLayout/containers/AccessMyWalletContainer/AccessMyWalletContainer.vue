@@ -1,13 +1,10 @@
 <template>
   <div class="access-my-wallet-options">
+
     <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
-
     <network-and-address-modal></network-and-address-modal>
-
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"></hardware-modal>
-
     <metamask-modal></metamask-modal>
-
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
@@ -45,6 +42,7 @@
 
 <script>
 import AccessWalletButton from '../../components/AccessWalletButton'
+
 import HardwareModal from '../../components/HardwareModal'
 import MetamaskModal from '../../components/MetamaskModal'
 import MewConnectModal from '../../components/MewConnectModal'
