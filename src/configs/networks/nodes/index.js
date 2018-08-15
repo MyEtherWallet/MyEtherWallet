@@ -10,12 +10,14 @@ import ethethscan from './eth-ethscan'
 import ethgiveth from './eth-giveth'
 import ethinfura from './eth-infura'
 import ethmew from './eth-mew'
+import etho from './etho'
 import etsc from './etsc'
 import exp from './exp'
 import go from './go'
 import kovethscan from './kov-ethscan'
 import kovinfura from './kov-infura'
 import music from './music'
+import pirl from './pirl'
 import poa from './poa'
 import rinethscan from './rin-ethscan'
 import rininfura from './rin-infura'
@@ -36,12 +38,14 @@ export {
   ethgiveth,
   ethinfura,
   ethmew,
+  etho,
   etsc,
   exp,
   go,
   kovethscan,
   kovinfura,
   music,
+  pirl,
   poa,
   rinethscan,
   rininfura,
