@@ -1,3 +1,6 @@
+### Feature
+- Verify messages []()
+
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 
