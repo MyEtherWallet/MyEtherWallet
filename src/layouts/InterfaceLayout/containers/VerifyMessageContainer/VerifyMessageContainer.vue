@@ -14,6 +14,10 @@
       <div class="the-form domain-name">
         <textarea ref="signature" class="custom-textarea-1" v-model="message"></textarea>
       </div>
+      <div>
+        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} did sign the message:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
+        <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
+      </div>
     </div>
 
     <div class="submit-button-container">
@@ -31,6 +35,9 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import { MessageUtil } from '@/helpers'
+// eslint-disable-next-line
+const createKeccakHash = require('keccak')
 
 export default {
   components: {
@@ -40,7 +47,11 @@ export default {
   data () {
     return {
       message: '',
-      error: false
+      error: {
+        show: false,
+        msg: ''
+      },
+      showMessage: false
     }
   },
   methods: {
@@ -52,60 +63,42 @@ export default {
     deleteInput () {
       this.$refs.signature.value = ''
     },
-    parseSig (hex) {
-      return hex.toLowerCase().replace('0x', '')
-    },
-    toBuffer (v) {
-      const BN = this.$store.state.web3.utils.BN
-      if (!Buffer.isBuffer(v)) {
-        if (Array.isArray(v)) {
-          v = Buffer.from(v)
-        } else if (typeof v === 'string') {
-          if (exports.isHexString(v)) {
-            v = Buffer.from(exports.padToEven(exports.stripHexPrefix(v)), 'hex')
-          } else {
-            v = Buffer.from(v)
-          }
-        } else if (typeof v === 'number') {
-          v = exports.intToBuffer(v)
-        } else if (v === null || v === undefined) {
-          v = Buffer.allocUnsafe(0)
-        } else if (BN.isBN(v)) {
-          v = v.toArrayLike(Buffer)
-        } else if (v.toArray) {
-          // converts a BN to a Buffer
-          v = Buffer.from(v.toArray())
-        } else {
-          throw new Error('invalid type')
-        }
-      }
-      return v
-    },
-    hashPersonalMessage (message) {
-      const prefix = exports.toBuffer('\x19Ethereum Signed Message:\n' + message.length.toString())
-      return this.$store.state.web3.utils.sha3(Buffer.concat([prefix, message]))
-    },
     verifyMessage () {
       const json = JSON.parse(this.message)
-      const sig = Buffer.from(this.parseSig(json.sig), 'hex')
+      let hash = MessageUtil.hashPersonalMessage(MessageUtil.toBuffer(json.msg))
+      const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex')
       if (sig.length !== 65) {
-        this.error = true
+        this.error.show = true
+        this.error.msg = 'Something went terribly WRONG!!!!' // Should be replaced with actual error message
         return
       }
 
       sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64]
-      let hash = this.hashPersonalMessage(this.toBuffer(json.msg))
-      if (json.version === 3 || json.version === '3') {
+      if (json.version === '3') {
         if (json.signer === 'trezor') {
-          // Do something
-          // hash =
+          hash = MessageUtil.getTrezorHash(json.msg)
+        } else if (json.signer === 'ledger') {
+          hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg))
         }
+      } else if (json.version === '1') {
+        hash = this.$store.state.web3.utils.sha3(json.msg)
       }
-      // try {
-      //
-      // } catch (e) {
-      //
-      // }
+
+      let pubKey = MessageUtil.ecrecover(hash, sig[64], sig.slice(0, 32), sig.slice(32, 64))
+      if (MessageUtil.getNakedAddress(json.address) !== MessageUtil.pubToAddress(pubKey).toString('hex')) {
+        this.error.show = true
+        this.error.msg = 'Something went terribly WRONG!!!!' // Should be replaced with actual error message
+      } else {
+        this.showMessage = true
+      }
+    }
+  },
+  watch: {
+    message () {
+      this.error = {
+        show: false,
+        msg: ''
+      }
     }
   }
 }
