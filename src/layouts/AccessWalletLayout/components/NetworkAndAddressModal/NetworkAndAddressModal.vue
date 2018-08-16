@@ -138,7 +138,6 @@ export default {
         el.checked = false
       })
       e.srcElement.checked = true
-
     },
     showCustomPathInput (e) {
       console.log(e.target) // todo remove dev item
