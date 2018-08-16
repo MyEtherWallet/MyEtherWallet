@@ -21,6 +21,10 @@
         <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} did sign the message:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
         <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
       </div>
+      <div>
+        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} did sign the message:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
+        <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
+      </div>
     </div>
 
     <div class="submit-button-container">
