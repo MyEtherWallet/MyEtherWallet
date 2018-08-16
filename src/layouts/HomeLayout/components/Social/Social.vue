@@ -23,7 +23,7 @@
 
 <script>
 import github from '@/assets/images/icons/github.png'
-import reddit from '@/assets/images/icons/reddit.png'
+import reddit from '@/assets/images/icons/reddit.svg'
 import slack from '@/assets/images/icons/slack.png'
 
 export default {

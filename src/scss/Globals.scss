@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 // *********************************************************************
 // CSS reset
 // *********************************************************************
@@ -114,6 +113,10 @@ body {
 input,
 textarea {
   border-radius: 4px;
+}
+
+button {
+  box-shadow: none !important;
 }
 
 
@@ -363,7 +366,7 @@ h6 {
 
 .grid-col-1-1-1-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr 1.5fr;
 }
 
 
@@ -407,6 +410,18 @@ h6 {
   user-select: none;
 }
 
+.large-round-button-white-filled__body-text-color {
+  color: $text-base-color;
+  background-color: $button--background-color-2;
+  border: 1px solid $button--border-color-1;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+}
+
 .large-round-button-white-border {
   border: 1px solid $button--border-color-1;
   border-radius: 5px;
@@ -428,6 +443,24 @@ h6 {
   font-weight: 500;
   padding: 15px 40px;
   user-select: none;
+}
+
+.mid-round-button-lightgrey-filled {
+  background-color: $light-grey-5;
+  border: 1px solid $button--border-color-1;
+  border-radius: 6px;
+  color: $button--text-color-1;
+  cursor: initial;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 15px 40px;
+  user-select: none;
+
+  &:hover {
+    background-color: $light-grey-5;
+    border: 1px solid $button--border-color-1;
+    cursor: initial;
+  }
 }
 
 .mid-round-button-green-border {
@@ -575,6 +608,12 @@ h6 {
       display: none;
     }
   }
+}
+
+.dropdown-toggle::after {
+    position: absolute !important;
+    right: 13px !important;
+    top: 16px !important;
 }
 
 // *********************************************************************
@@ -1202,3 +1241,5 @@ h6 {
   background-color: $light-grey-12;
   pointer-events: none;
 }
+
+

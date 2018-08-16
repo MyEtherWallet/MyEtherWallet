@@ -1,8 +1,12 @@
 <template>
   <div class="content-block">
-    <img class="icon" :src="img"/>
-    <h6>{{title}}</h6>
-    <p>{{desc}}</p>
+    <div class="icon-block">
+      <img class="icon" :src="img"/>
+    </div>
+    <div class="text-block">
+      <h6>{{title}}</h6>
+      <p>{{desc}}</p>
+    </div>
   </div>
 </template>
 
