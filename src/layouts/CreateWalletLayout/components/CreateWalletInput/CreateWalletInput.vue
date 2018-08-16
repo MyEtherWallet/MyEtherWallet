@@ -2,7 +2,7 @@
   <form class="user-input">
 
     <!--=== MEW custom form ========================================-->
-    <div class="mew-custom-form mew-custom-form__container__password-input">
+    <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
           :class="strengthClass"
@@ -27,9 +27,7 @@
           src="~@/assets/images/icons/show-password.svg" >
       </div>
 
-      <p
-        v-show="value.length > 0"
-        class="passwd-strength">
+      <p class="passwd-strength" v-show="value.length > 0">
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>

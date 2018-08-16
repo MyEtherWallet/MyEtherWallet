@@ -1,9 +1,12 @@
 <template>
   <div class="help-center">
     <div class="wrap">
-      <keyword-search />
-
-      HelpCenterLayout
+      <div>
+        <keyword-search />
+      </div>
+      <div>
+        HelpCenterLayout
+      </div>
     </div>
   </div>
 </template>
