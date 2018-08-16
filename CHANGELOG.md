@@ -1,6 +1,10 @@
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 
+### Devop
+- Add Network logo and change dot colors [#49](https://github.com/MyEtherWallet/MyEtherWallet/pull/49)
+- Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
+
 ### Release v0.0.2
 ### Feature
 - additional pages [#28](https://github.com/MyEtherWallet/MyEtherWallet/pull/28)
