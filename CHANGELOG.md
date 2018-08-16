@@ -1,5 +1,5 @@
 ### Feature
-- Verify messages []()
+- Feature/verify message [#52](https://github.com/MyEtherWallet/MyEtherWallet/pull/52)
 
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
