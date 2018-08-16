@@ -1,5 +1,4 @@
 <template>
-  <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEWConnect" centered>
   <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect"
            title="Access by MEW Connect" centered>
     <div class="modal-icon">
