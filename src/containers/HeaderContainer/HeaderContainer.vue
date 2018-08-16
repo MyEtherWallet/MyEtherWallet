@@ -148,7 +148,7 @@ export default {
       this.online = false
     }
 
-    if (store.get('locale') !== null) {
+    if (store.get('locale') !== undefined) {
       this.$root._i18n.locale = store.get('locale')
       this.currentFlag = store.get('locale')
     } else {
@@ -169,9 +169,6 @@ export default {
   watch: {
     online (newVal) {
       this.online = newVal
-    },
-    notifications (newVal) {
-
     }
   },
   computed: {
