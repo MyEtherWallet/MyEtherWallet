@@ -1,13 +1,19 @@
 <template>
   <div class="help-center">
     <div class="wrap">
+      <keyword-search />
+
       HelpCenterLayout
     </div>
   </div>
 </template>
 
 <script>
+import KeywordSearch from './components/KeywordSearch'
 export default {
+  components: {
+    'keyword-search': KeywordSearch
+  },
   data () {
     return {
     }
