@@ -17,13 +17,13 @@
       </div>
       <div class="network-list" ref="networkList">
         <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
-          <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+          <h4 :class="key.toLowerCase()">{{ key }}</h4>
           <div class="grid-3">
             <p class="switch-network" v-for="net in $store.state.Networks[key]" :key="net.service" @click="switchNetwork(net)" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">{{net.service}}</p>
           </div>
         </div>
         <div class="content-block" v-if="customNetworks.length > 0">
-          <h4>Custom Networks</h4>
+          <h4 class="cust">Custom Networks</h4>
           <div class="grid-3" v-for="(net, idx) in customNetworks" :key="net.service + '('+ net.type.name + ')' + idx">
             <div class="switch-network custom-network-item" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">
               <p @click="switchNetwork(net)">{{net.service}} {{ '('+ net.type.name + ')' }}</p>
@@ -79,7 +79,6 @@
 
 <script>
 import store from 'store'
-import web3 from 'web3'
 
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
@@ -178,7 +177,7 @@ export default {
           name_long: this.selectedNetwork.name_long,
           tokens: []
         },
-        url: this.url,
+        url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
       }
 
@@ -192,11 +191,6 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
-      if (window.web3) {
-        this.$store.dispatch('setWeb3Instance', window.web3)
-      } else {
-        this.$store.dispatch('setWeb3Instance', web3)
-      }
     }
   },
   watch: {

@@ -4,7 +4,8 @@
     <div v-on:click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
-          <img class="icon" src="~@/assets/images/icons/network.svg">
+          <img class="icon" src="~@/assets/images/icons/network.svg" v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'">
+          <img class="icon" :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)" v-else>
         </div>
         <div class="block-content">
           <div class="information-container">
