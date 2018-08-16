@@ -39,7 +39,7 @@
                   </b-nav-item-dropdown>
                 </div>
                 <notification v-if="wallet !== null"></notification>
-                <b-nav-item class="get-free-wallet" to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'" :class="isPageOnTop == true ? 'noshow' : ''">
+                <b-nav-item class="get-free-wallet nopadding" to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'" :class="isPageOnTop == true ? 'noshow' : ''">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
                  </div>
