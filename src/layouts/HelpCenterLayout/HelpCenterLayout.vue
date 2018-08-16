@@ -1,9 +1,12 @@
 <template>
   <div class="help-center">
     <div class="wrap">
-      <keyword-search />
-
-      HelpCenterLayout
+      <div>
+        <keyword-search />
+      </div>
+      <div>
+        HelpCenterLayout
+      </div>
     </div>
   </div>
 </template>
@@ -22,5 +25,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "HelpCenterLayout.scss";
+@import "HelpCenterLayout.scss";
 </style>
