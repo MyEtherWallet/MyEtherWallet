@@ -66,7 +66,7 @@ export default {
       this.confirmationModalOpen()
     })
 
-    this.$children[0].$refs.confirmation.$on('hidden', () => {
+    this.$on('bv::modal::hide', () => {
       console.log('modal hidden') // todo remove dev item
       if (this.dismissed) {
         this.reset()

@@ -52,10 +52,8 @@ export default {
       document.execCommand('copy')
     },
     sendTx () {
-      console.log('this.signedTx', this.signedTx) // todo remove dev item
       this.$store.state.web3.eth.sendSignedTransaction(this.signedTx)
         .on('receipt', (txReceipt) => {
-          console.log(txReceipt) // todo remove dev item
         })
         .then(res => {
           this.$children[0].$refs.success.show()

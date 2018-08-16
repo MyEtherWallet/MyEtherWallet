@@ -8,13 +8,11 @@
                     v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
 
 
+    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
     <network-and-address-modal :hardwareWallet="hardwareWallet" ></network-and-address-modal>
-
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
                     v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
-
     <metamask-modal></metamask-modal>
-
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
                     :openPrivateKeyInput="privateKeyOpen"></software-modal>
 
