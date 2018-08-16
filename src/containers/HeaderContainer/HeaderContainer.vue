@@ -69,7 +69,7 @@
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
-                  class="get-free-wallet"
+                  class="get-free-wallet nopadding"
                   to="/create-wallet">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
@@ -124,28 +124,28 @@ export default {
   data() {
     return {
       supportedLanguages: [
-        { name: 'Deutsch', flag: 'de' },
-        { name: 'Ελληνικά', flag: 'gr' },
-        { name: 'English', flag: 'gb' },
-        { name: 'Español', flag: 'es' },
-        { name: 'Farsi', flag: 'ir' },
-        { name: 'Suomi', flag: 'fi' },
-        { name: 'Magyar', flag: 'hu' },
-        { name: 'Haitian Creole', flag: 'ht' },
-        { name: 'Bahasa Indonesia', flag: 'id' },
-        { name: 'Italiano', flag: 'it' },
-        { name: '日本語', flag: 'jp' },
-        { name: '한국어', flag: 'kr' },
-        { name: 'Nederlands', flag: 'nl' },
-        { name: 'Norsk Bokmål', flag: 'no' },
-        { name: 'Polski', flag: 'pl' },
-        { name: 'Português', flag: 'pt' },
-        { name: 'Русский', flag: 'ru' },
-        { name: 'ภาษาไทย', flag: 'th' },
-        { name: 'Türkçe', flag: 'tr' },
-        { name: 'Tiếng Việt', flag: 'vn' },
-        { name: '简体中文', flag: 'cn-sim' },
-        { name: '繁體中文', flag: 'cn-tr' }
+        {name: 'Deutsch', flag: 'de'},
+        {name: 'Ελληνικά', flag: 'gr'},
+        {name: 'English', flag: 'gb'},
+        {name: 'Español', flag: 'es'},
+        {name: 'Farsi', flag: 'ir'},
+        {name: 'Suomi', flag: 'fi'},
+        {name: 'Magyar', flag: 'hu'},
+        {name: 'Haitian Creole', flag: 'ht'},
+        {name: 'Bahasa Indonesia', flag: 'id'},
+        {name: 'Italiano', flag: 'it'},
+        {name: '日本語', flag: 'jp'},
+        {name: '한국어', flag: 'kr'},
+        {name: 'Nederlands', flag: 'nl'},
+        {name: 'Norsk Bokmål', flag: 'no'},
+        {name: 'Polski', flag: 'pl'},
+        {name: 'Português', flag: 'pt'},
+        {name: 'Русский', flag: 'ru'},
+        {name: 'ภาษาไทย', flag: 'th'},
+        {name: 'Türkçe', flag: 'tr'},
+        {name: 'Tiếng Việt', flag: 'vn'},
+        {name: '简体中文', flag: 'cn-sim'},
+        {name: '繁體中文', flag: 'cn-tr'}
       ],
       online: true,
       currentName: 'English',
@@ -221,5 +221,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'HeaderContainer.scss';
+  @import 'HeaderContainer.scss';
 </style>
