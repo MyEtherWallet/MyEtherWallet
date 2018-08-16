@@ -1,6 +1,6 @@
 <template>
   <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address"
-           title="Network and Address">
+           title="Network and Address" centered>
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
@@ -43,7 +43,7 @@
           <li>{{details.balance}} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox"/>
+              <input v-on:click="unselectAllAddresses" type="checkbox"/>
               <span class="checkmark checkmark-small" @click="setAddress(details)"></span>
             </label>
           </li>
@@ -61,13 +61,13 @@
       <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }} <a href="/">{{
                                                                                          $t('common.terms')
                                                                                          }}</a>.
-        <input type="checkbox"/>
+        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox"/>
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
-      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button">
-        {{ $t('common.continue') }}
+      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
+        {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
     <div class="support">
@@ -95,6 +95,7 @@ export default {
   props: ['hardwareWallet'],
   data () {
     return {
+      accessMyWalletBtnDisabled: true,
       offset: 0,
       count: 5,
       hardwareAddresses: [],
@@ -132,6 +133,13 @@ export default {
     }
   },
   methods: {
+    unselectAllAddresses: function (e) {
+      document.querySelectorAll('.user-input-checkbox input').forEach(function (el) {
+        el.checked = false
+      })
+      e.srcElement.checked = true
+
+    },
     showCustomPathInput (e) {
       console.log(e.target) // todo remove dev item
     },
@@ -176,7 +184,6 @@ export default {
           let hardwareAddresses = []
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
-              console.log('_accounts', _accounts) // todo remove dev item
               Object.values(_accounts).forEach(async (address, i) => {
                 console.log(address) // todo remove dev item
                 const rawBalance = await this.$store.state.web3.eth.getBalance(address)

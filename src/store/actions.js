@@ -2,7 +2,6 @@ import overide from '@/helpers/web3-overide/web3-overide-mew'
 import WalletWrapper from '@/helpers/web3-overide/web3-wallet-adapter'
 
 const addNotification = function ({commit, state}, val) {
-  console.log(val) // todo remove dev item
   const newNotif = {}
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item]
