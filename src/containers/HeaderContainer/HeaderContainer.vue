@@ -8,20 +8,14 @@
     </div>
 
     <div class="wrap">
-      <div
-        ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
-        class="fixed-header">
+      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
             <router-link
               to="/"
               @click.native="scrollTop()">
               <div class="top-logo">
-                <img
-                  :class="isPageOnTop == false ? 'logo-small' : ''"
-                  class="logo-large"
-                  src="~@/assets/images/logo.png">
+                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
               </div>
             </router-link>
             <div class="top-menu">
@@ -43,15 +37,10 @@
                       class="fa fa-angle-down"
                       aria-hidden="true"/>
                   </div>
-                  <b-nav-item-dropdown
-                    class="language-menu"
-                    extra-toggle-classes="nav-link-custom"
-                    right>
+                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img
-                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                          class="show">
+                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -186,12 +175,12 @@ export default {
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    // this.onPageScroll();
+    this.onPageScroll()
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    // window.onscroll = function() {
-    //   self.onPageScroll();
-    // };
+    window.onscroll = function (e) {
+      self.onPageScroll()
+    }
   },
   methods: {
     languageItemClicked(e) {
