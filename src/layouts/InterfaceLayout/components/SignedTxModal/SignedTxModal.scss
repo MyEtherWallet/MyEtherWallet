@@ -1,22 +1,26 @@
 @import '~@/scss/GlobalVariables';
 
 .signed-tx-modal {
-  .title {
-    color: $dark-blue-7;
-    font-size: 15px;
-    margin-bottom: 10px;
+
+  .title-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
   }
 
   .modal-body {
     padding: 30px 35px;
   }
 
+
   .signed-tx-container,
   .raw-tx-container {
     background: $light-grey-1;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    padding: 10px 20px;
+    border-radius: 4px;
+
+    padding: 20px 20px;
+    margin-top: 10px;
 
     &.collapsed {
       padding: 5px 0 0;
@@ -27,13 +31,21 @@
     }
   }
 
-  .with-toggle {
-    display: flex;
-    justify-content: space-between;
-  }
+  .raw {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    padding: 15px 0;
+    border-bottom: 2px solid #f9f9f9;
+    border-top: 2px solid #f9f9f9;
 
-  code {
-    color: $black;
-    font-weight: 200;
+
+    code {
+      color: $black;
+      font-weight: 200;
+    }
+
+    .raw-tx {
+
+    }
   }
 }

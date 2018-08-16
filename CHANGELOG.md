@@ -4,6 +4,9 @@
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval
 - Integrate Ledger hardware wallet
 
+### UI/UX
+- Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
+
 ### Release v0.0.2
 ### Feature
 - additional pages [#28](https://github.com/MyEtherWallet/MyEtherWallet/pull/28)
