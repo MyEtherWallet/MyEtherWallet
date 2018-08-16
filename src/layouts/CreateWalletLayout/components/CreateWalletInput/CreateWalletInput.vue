@@ -2,7 +2,7 @@
   <form class="user-input">
 
     <!--=== MEW custom form ========================================-->
-    <div class="mew-custom-form mew-custom-form__container__password-input">
+    <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
           :class="strengthClass"
@@ -77,5 +77,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "CreateWalletInput.scss";
-@import '~@/scss/CustomForms';
 </style>
