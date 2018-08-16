@@ -15,9 +15,7 @@
             <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
           </div>
           <div :class="[notification.expanded?'':'unexpanded', 'notification-body']">
-            <code>
-              {{ notification.body }}
-            </code>
+            {{ notification.body }}
           </div>
         </div>
         <div class="notification-no-item" v-else>
@@ -30,6 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import store from 'store'
 
 export default {
   data () {
@@ -65,6 +64,10 @@ export default {
     }
   },
   mounted () {
+    if (this.notifications[this.$store.state.wallet.getAddressString()] === undefined) {
+      this.notifications[this.$store.state.wallet.getAddressString()] = []
+      store.set('notifications', this.notifications)
+    }
     this.countUnread()
   },
   watch: {

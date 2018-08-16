@@ -33,7 +33,7 @@
             No tokens found :(
           </div>
         </div>
-        <div v-on:click="tokenListExpend" class="expend-bar" v-if="customTokens.length < 10 || localTokens.length < 15">
+        <div v-on:click="tokenListExpend" class="expend-bar" v-if="(customTokens.length + localTokens.length) > 15">
           <p class="down" ref="expendDown"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
           <p class="up hidden" ref="expendUp"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
         </div>
@@ -77,11 +77,8 @@ export default {
     },
     async addToken (address, symbol, decimal) {
       const localStorageName = {}
-      let newArray = []
-      let balance = await this.getTokenBalance(address)
       const token = {
         addr: address,
-        balance: balance,
         decimals: decimal,
         email: '',
         name: symbol,
@@ -89,6 +86,8 @@ export default {
         website: '',
         type: 'custom'
       }
+      let newArray = []
+      token['balance'] = await this.getTokenBalance(address)
 
       if (this.customTokens.length > 0) {
         newArray = this.customTokens.map(item => item)
@@ -105,7 +104,7 @@ export default {
       this.$refs.expendDown.classList.toggle('hidden')
       this.$refs.expendUp.classList.toggle('hidden')
     },
-    assignTokens (arr, query) {
+    async assignTokens (arr, query) {
       const oldArray = this.customTokens.slice()
       if (query !== '') {
         this.customTokens = oldArray.filter(token => {

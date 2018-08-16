@@ -11,10 +11,10 @@
               <p>{{from}}</p>
             </div>
           </div>
-          <div class="direction">
+          <div class="direction" v-show="to !== '' && to !== undefined">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div class="tx-data tx-to">
+          <div class="tx-data tx-to" v-show="to !== '' && to !== undefined">
             <!-- <img src="~@/assets/images/icons/btc.svg">
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
@@ -89,7 +89,7 @@
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
+  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'contractName', 'abi'],
   data () {
     return {
       modalDetailInformation: false
@@ -102,6 +102,7 @@ export default {
       }).on('receipt', (res) => {
         this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
       }).on('error', (err) => {
+        console.log(err)
         this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
       })
 

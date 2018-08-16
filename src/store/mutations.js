@@ -1,4 +1,5 @@
 import store from 'store'
+import url from 'url'
 
 const ADD_NOTIFICATION = function (state, val) {
   const newNotif = {}
@@ -47,8 +48,9 @@ const SET_GAS_PRICE = function (state, val) {
 
 const SET_WEB3_INSTANCE = function (state, web3) {
   if (web3.eth === undefined) {
+    const hostUrl = url.parse(state.network.url)
     // eslint-disable-next-line
-    state.web3 = new web3(new web3.providers.HttpProvider(state.network.url))
+    state.web3 = new web3(`${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${hostUrl.pathname}`)
   } else {
     state.web3 = web3
   }
