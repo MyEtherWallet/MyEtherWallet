@@ -77,8 +77,6 @@ import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
 
 const unit = require('ethjs-unit')
 
-const unit = require('ethjs-unit')
-
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
