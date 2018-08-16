@@ -12,10 +12,6 @@
                 <h2>{{ $t("home.aboutTitle") }}</h2>
                 <p class="color-white">
                   {{ $t("home.aboutSubheading") }}
-                  <br>
-                  <span class="color-white text-bold">
-                    {{ $t("home.aboutbeResponsible") }}
-                  </span>
                 </p>
                 <div class="watch-video">
                   <router-link to="/">

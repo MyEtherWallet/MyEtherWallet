@@ -3,6 +3,20 @@
 .swap-container {
   @extend %interface-container;
 
+  .title-block {
+    position: relative;
+    .images {
+      top: 22px;
+      right: 25px;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      img {
+        height: 30px;
+        margin-left: 20px;
+      }
+    }
+  }
 
   .send-form {
     @extend %send-form-base;
@@ -188,10 +202,27 @@
       margin: 0 auto;
       text-align: center;
       width: 300px;
+      position: relative;
+
+      i {
+        position: absolute;
+        right: 20px;
+        top: 16px;
+        font-size: 30px;
+      }
     }
 
     p {
       margin-top: 20px;
+    }
+
+    .buy-eth {
+      margin-top: 20px;
+      color: $mew-green;
+      img {
+        height: 20px;
+      }
+
     }
   }
 }
