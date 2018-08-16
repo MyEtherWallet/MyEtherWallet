@@ -21,24 +21,25 @@
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                {{ $t("footer.welcome") }}
+                {{ $t("footer.love") }}
                 <img src="~@/assets/images/icons/heart.svg">
+                {{ $t("footer.donate") }}
               </h3>
             </div>
             <div class="content-links">
               <p>{{ $t("footer.welcomeDes") }}</p>
 
-              <a href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9" target="_blank">
-                <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
-                  <img src="~@/assets/images/icons/btc.svg">
-                  &nbsp;Bitcoin Donation
-                </p>
-              </a>
-
               <a href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D" target="_blank">
                 <p class="crypto-link" data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
+                </p>
+              </a>
+
+              <a href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9" target="_blank">
+                <p class="crypto-link" data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
+                  <img src="~@/assets/images/icons/btc.svg">
+                  &nbsp;Bitcoin Donation
                 </p>
               </a>
 
