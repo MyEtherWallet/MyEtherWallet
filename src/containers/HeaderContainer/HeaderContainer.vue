@@ -6,18 +6,20 @@
     </div>
 
     <div class="wrap">
-      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
+      <div class="fixed-header" ref="fixedHeader"
+           :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
             <router-link to="/" v-on:click.native="scrollTop()">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
+                <img class="logo-large" src="~@/assets/images/logo.png"
+                     :class="isPageOnTop == false ? 'logo-small' : ''">
               </div>
             </router-link>
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
+                <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
                 <b-nav-item to="/#news" v-show="online">{{ $t("common.news") }}</b-nav-item>
@@ -26,27 +28,35 @@
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                   </div>
-                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
+                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom"
+                                       right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <img class="show"
+                             :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
-                    <b-dropdown-item v-on:click="languageItemClicked" v-for="language in supportedLanguages" :active="$root._i18n.locale === language.flag" :key="language.key" :data-flag-name="language.flag">
+                    <b-dropdown-item v-on:click="languageItemClicked"
+                                     v-for="language in supportedLanguages"
+                                     :active="$root._i18n.locale === language.flag"
+                                     :key="language.key" :data-flag-name="language.flag">
                       {{language.name}}
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
                 <notification v-if="wallet !== null"></notification>
-                <b-nav-item class="get-free-wallet" to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'" :class="isPageOnTop == true ? 'noshow' : ''">
+                <b-nav-item class="get-free-wallet" to="/create-wallet"
+                            v-if="wallet === null && $route.fullPath === '/'"
+                            :class="isPageOnTop == true ? 'noshow' : ''">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
-                 </div>
+                  </div>
                 </b-nav-item>
-                <b-nav-item-dropdown right no-caret v-if="wallet !== null" extra-toggle-classes="identicon-dropdown">
+                <b-nav-item-dropdown right no-caret v-if="wallet !== null"
+                                     extra-toggle-classes="identicon-dropdown">
                   <template slot="button-content">
-                    <blockie :address='wallet.getAddressString()' width="35px" height="35px" />
+                    <blockie :address='wallet.getAddressString()' width="35px" height="35px"/>
                   </template>
                   <b-dropdown-item @click="logout">
                     Log out
@@ -148,7 +158,7 @@ export default {
       this.online = false
     }
 
-    if (store.get('locale') !== null) {
+    if (store.get('locale') !== null && store.get('locale') !== undefined) {
       this.$root._i18n.locale = store.get('locale')
       this.currentFlag = store.get('locale')
     } else {

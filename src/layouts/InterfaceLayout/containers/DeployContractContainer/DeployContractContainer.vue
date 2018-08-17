@@ -166,10 +166,18 @@ export default {
         data: this.data
       }
 
-      const tx = new EthTx(this.raw)
-      tx.sign(this.$store.state.wallet.getPrivateKey())
-      const signedTx = tx.serialize()
-      this.signedTx = `0x${signedTx.toString('hex')}`
+      // const tx = new EthTx(this.raw)
+      // tx.sign(this.$store.state.wallet.getPrivateKey())
+      // const signedTx = tx.serialize()
+      // this.signedTx = `0x${signedTx.toString('hex')}`
+      await web3.eth.sendTransaction(this.raw).once('transactionHash', (hash) => {
+        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      }).on('receipt', (res) => {
+        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      }).on('error', (err) => {
+        console.log(err)
+        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      })
     },
     showSuccessModal () {
       this.$children[5].$refs.success.show()
