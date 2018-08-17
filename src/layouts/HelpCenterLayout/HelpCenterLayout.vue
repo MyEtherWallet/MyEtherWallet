@@ -1,12 +1,23 @@
 <template>
   <div class="help-center">
     <div class="wrap">
-      <div>
-        <keyword-search />
+      <keyword-search />
+
+      <div class="page-container">
+        <div class="content">
+          <div class="switcher">
+            <span v-on:click="openFAQs = true, openCategories = false" :class="openFAQs ? 'active' : ''">FAQs</span>
+            <span v-on:click="openFAQs = false, openCategories = true" :class="openCategories ? 'active' : ''">Categories</span>
+          </div>
+          <div v-if="openFAQs">
+            FAQ
+          </div>
+          <div v-if="openCategories">
+            Categories
+          </div>
+        </div>
       </div>
-      <div>
-        HelpCenterLayout
-      </div>
+
     </div>
   </div>
 </template>
@@ -19,6 +30,8 @@ export default {
   },
   data () {
     return {
+      openFAQs: true,
+      openCategories: false
     }
   }
 };
