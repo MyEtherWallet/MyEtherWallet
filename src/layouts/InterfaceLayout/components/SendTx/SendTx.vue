@@ -30,7 +30,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
-import SuccessModal from '@/components/SuccessModal'
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
 
 export default {
   components: {
