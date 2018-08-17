@@ -123,16 +123,9 @@ export default {
         ...paths
       }
     }
-
-    this.$once('getWalletAddresses', () => {
-      this.getAddresses(this.count, this.offset)
-        .then(addressSet => {
-          this.hardwareAddresses = addressSet
-        })
-    })
   },
   destroyed () {
-    console.log('component destroyed') // todo remove dev item
+    // console.log('component destroyed') // todo remove dev item
   },
   computed: {
     orderedAddresses () {
@@ -196,7 +189,6 @@ export default {
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
-                console.log(address) // todo remove dev item
                 const rawBalance = await this.$store.state.web3.eth.getBalance(address)
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
                 hardwareAddresses.push({index: i, address, balance})
@@ -209,16 +201,10 @@ export default {
   },
   watch: {
     hardwareWallet (newValue) {
-      this.$emit('getWalletAddresses')
-      console.log('unlock wallet') // todo remove dev item
-      //
-      // if (!this.walletUnlocked) {
-      //   this.walletUnlocked = true
-      //   this.getAddresses(this.count, this.offset)
-      //     .then(addressSet => {
-      //       this.hardwareAddresses = addressSet
-      //     })
-      // }
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = addressSet
+        })
     }
   }
 }
