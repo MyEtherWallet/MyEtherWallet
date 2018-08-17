@@ -26,8 +26,12 @@
         <div class="to-address">
           <div class="title">
             <h4>{{ $t('interface.sendTxToAddr') }}
-            <blockie class="blockie-image":address="toAddress"  v-show="addressValid && toAddress.length !== 0"></blockie></h4>
-            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{ $t('common.copy') }}</p>
+              <blockie class="blockie-image" :address="toAddress"
+                       v-show="addressValid && toAddress.length !== 0"></blockie>
+            </h4>
+            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{
+                                                                                               $t('common.copy')
+                                                                                               }}</p>
           </div>
           <div class="the-form address-block">
             <textarea ref="address" name="name" v-model="toAddress" autocomplete="off"></textarea>
@@ -98,7 +102,7 @@
         <div class="input-container" v-if="advancedExpend">
           <div class="the-form user-input">
             <input type="text" name="" v-model="data"
-                     placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
+                   placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
           </div>
           <div class="the-form user-input">
             <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
@@ -117,9 +121,9 @@
                              :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
     <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
-                   <!--:nonce="nonce + 1"></confirm-modal>-->
+    <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
+    <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
+    <!--:nonce="nonce + 1"></confirm-modal>-->
     <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>

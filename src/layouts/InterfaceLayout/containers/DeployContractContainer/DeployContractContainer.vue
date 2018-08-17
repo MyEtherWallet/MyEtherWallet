@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="the-form domain-name">
-          <input ref="contractName" v-model="inputs[construct.inputs[0].name]"></input>
+          <input ref="contractName" v-model="inputs[construct.inputs[0].name]">
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input ref="contractName" v-model="contractName"></input>
+        <input ref="contractName" v-model="contractName">
       </div>
     </div>
 
