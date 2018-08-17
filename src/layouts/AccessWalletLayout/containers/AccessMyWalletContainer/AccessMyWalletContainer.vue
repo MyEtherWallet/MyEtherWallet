@@ -157,7 +157,6 @@ export default {
     },
     hardwareWalletOpen (e) {
       this.hardwareWallet = e
-      // this.getAddresses(5, 0)
       this.networkAndAddressOpen()
     }
   }
