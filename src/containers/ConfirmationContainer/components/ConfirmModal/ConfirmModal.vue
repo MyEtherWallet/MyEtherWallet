@@ -119,10 +119,12 @@ export default {
   },
   computed: {
     signedTransaction () {
-      if (this.signedTx) {
-        return this.signedTx
-      } else {
+      if (this.signedMessage) {
+        return this.signedMessage
+      } else if (this.isHardwareWallet) {
         return 'Please Approve on Hardware Wallet'
+      } else {
+        return ''
       }
     }
   }
@@ -130,5 +132,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "ConfirmModal.scss";
+  @import "ConfirmModal";
 </style>

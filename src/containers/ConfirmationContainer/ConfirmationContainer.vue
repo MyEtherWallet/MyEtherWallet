@@ -1,23 +1,31 @@
 <template>
   <div>
-    <confirm-modal :confirmSendTx="sendTx" :showSuccess="showSuccessModal" :signedTx="signedTx"
+    <confirm-modal ref="confirmModal" :confirmSendTx="sendTx" :showSuccess="showSuccessModal"
+                   :signedTx="signedTx"
                    :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
                    :gasPrice="$store.state.gasPrice" :from="fromAddress"
                    :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
                    :nonce="nonce + 1"></confirm-modal>
-    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
+    <confirm-sign-modal ref="signConfirmModal" :confirmSignMessage="messageReturn"
+                        :showSuccess="showSuccessModal" :messageToSign="messageToSign" :signedMessage="signedMessage"
+                        :isHardwareWallet="isHardwareWallet"
+                        :from="fromAddress"
+    ></confirm-sign-modal>
+    <success-modal ref="successModal" message="" linkMessage="Close"></success-modal>
   </div>
 </template>
 
 <script>
-import ConfirmModal from '@/components/ConfirmModal'
-import SuccessModal from '@/components/SuccessModal'
+import ConfirmModal from './components/ConfirmModal'
+import SuccessModal from './components/SuccessModal'
+import ConfirmSignModal from './components/ConfirmSignModal'
 
 export default {
   props: ['active', 'rawTx'],
   components: {
     'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'success-modal': SuccessModal,
+    'confirm-sign-modal': ConfirmSignModal
   },
   data () {
     return {
@@ -39,18 +47,23 @@ export default {
       signer: {},
       signedTxObject: {},
       signedTx: '',
+      messageToSign: '',
+      signedMessage: '',
+      successMessage: '',
       dismissed: true
     }
   },
   created () {
-    this.$eventHub.$on('signedTxDetails', (tx, signedDetails) => {
-      this.parseRawTx(tx)
+    this.$eventHub.$on('showSuccessModal', (message) => {
+      if (!message) message = null
+      this.showSuccessModal(message)
     })
 
     this.$eventHub.$on('showTxConfirmModal', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx)
       this.isHardwareWallet = isHardware
       this.responseFunction = resolve
+      this.successMessage = 'Sending Transaction'
       // this.signer = signer(tx)
       signer(tx)
         .then(_response => {
@@ -60,10 +73,15 @@ export default {
       this.confirmationModalOpen()
     })
 
-    this.$eventHub.$on('showMessageConfirmModal', (data, signer, resolve) => {
+    this.$eventHub.$on('showMessageConfirmModal', (data, isHardware, signer, resolve) => {
       this.responseFunction = resolve
-      this.signer = signer(data)
-      this.confirmationModalOpen()
+      this.messageToSign = data
+      signer(data)
+        .then(_response => {
+          this.signedMessage = _response
+        })
+      // this.signer = signer(data)
+      this.signConfirmationModalOpen()
     })
 
     this.$on('bv::modal::hide', () => {
@@ -76,11 +94,20 @@ export default {
   methods: {
     confirmationModalOpen () {
       window.scrollTo(0, 0)
-      this.$children[0].$refs.confirmation.show()
+      this.$refs.confirmModal.$refs.confirmation.show()
     },
-    showSuccessModal () {
+    signConfirmationModalOpen () {
+      window.scrollTo(0, 0)
+      this.$refs.signConfirmModal.$refs.signConfirmation.show()
+    },
+    showSuccessModal (message) {
+      this.$refs.successModal.$refs.success.$on('hide', () => {
+        this.successMessage = ''
+        console.log('success modal hidden') // todo remove dev item
+      })
       this.reset()
-      this.$children[1].$refs.success.show()
+      if (message !== null) this.successMessage = message
+      this.$refs.successModal.$refs.success.show()
     },
     parseRawTx (tx) {
       this.raw = tx
@@ -91,18 +118,17 @@ export default {
       this.amount = tx.value
       // this.signedTx = this.signedTxObject.rawTransaction
     },
+    messageReturn () {
+      this.dismissed = false
+      this.responseFunction(this.signedMessage)
+      this.$refs.signConfirmModal.$refs.signConfirmation.hide()
+      this.showSuccessModal()
+    },
     sendTx () {
       this.dismissed = false
       this.responseFunction(this.signedTxObject)
-      this.$children[0].$refs.confirmation.hide()
+      this.$refs.confirmModal.$refs.confirmation.hide()
       this.showSuccessModal()
-      // this.signer(this.raw)
-      // this.signer
-      //   .then(_response => {
-      //     this.responseFunction(_response)
-      //     this.$children[0].$refs.confirmation.hide()
-      //     this.showSuccessModal()
-      //   })
     },
     reset () {
       this.responseFunction = null
@@ -120,6 +146,9 @@ export default {
       this.selectedCurrency = {symbol: 'ETH', name: 'Ethereum'}
       this.raw = {}
       this.signedTx = ''
+      this.messageToSign = ''
+      this.signedMessage = ''
+      this.messageToSign = ''
     }
   },
   computed: {
