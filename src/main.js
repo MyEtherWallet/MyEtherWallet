@@ -24,6 +24,32 @@ Vue.component('infinite-slider', InfiniteSlider)
 Vue.component(VueQrcode.name, VueQrcode)
 Vue.component('popover', PopOver)
 
+// Directives!!!
+Vue.directive('click-outside', {
+  bind: function (el, binding, vnode) {
+    document.body.addEventListener('click', function (e) {
+      if (vnode.context.open === true) {
+        vnode.context.openDropdown()
+      }
+    })
+
+    el.addEventListener('click', function (e) {
+      e.stopPropagation()
+    })
+  },
+  unbind: function (el, binding, vnode) {
+    document.body.removeEventListener('click', function (e) {
+      if (vnode.context.open === true) {
+        vnode.context.openDropdown()
+      }
+    })
+
+    el.removeEventListener('click', function (e) {
+      e.stopPropagation()
+    })
+  }
+})
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
