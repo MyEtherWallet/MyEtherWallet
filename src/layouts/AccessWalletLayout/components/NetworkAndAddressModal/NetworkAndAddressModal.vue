@@ -66,7 +66,8 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
+      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button"
+             :disabled="accessMyWalletBtnDisabled">
         {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
@@ -96,6 +97,7 @@ export default {
   data () {
     return {
       accessMyWalletBtnDisabled: true,
+      walletUnlocked: false,
       offset: 0,
       count: 5,
       hardwareAddresses: [],
@@ -121,6 +123,16 @@ export default {
         ...paths
       }
     }
+
+    this.$once('getWalletAddresses', () => {
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = addressSet
+        })
+    })
+  },
+  destroyed () {
+    console.log('component destroyed') // todo remove dev item
   },
   computed: {
     orderedAddresses () {
@@ -197,10 +209,16 @@ export default {
   },
   watch: {
     hardwareWallet (newValue) {
-      this.getAddresses(this.count, this.offset)
-        .then(addressSet => {
-          this.hardwareAddresses = addressSet
-        })
+      this.$emit('getWalletAddresses')
+      console.log('unlock wallet') // todo remove dev item
+      //
+      // if (!this.walletUnlocked) {
+      //   this.walletUnlocked = true
+      //   this.getAddresses(this.count, this.offset)
+      //     .then(addressSet => {
+      //       this.hardwareAddresses = addressSet
+      //     })
+      // }
     }
   }
 }
