@@ -134,7 +134,6 @@ export default class Web3WalletAdapter {
       tx.value = tx.value || '0x'
       this.wallet.signTransaction(tx)
         .then(_result => {
-          if (this.wallet.isHardware) this.wallet.setBusyState()
           resolve(_result)
         })
         .catch(_error => {
@@ -150,7 +149,6 @@ export default class Web3WalletAdapter {
       if (this.wallet.isHardware && !msgData.from) msgData.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
       this.wallet.signMessage(msgData)
         .then(_signedMessage => {
-          if (this.wallet.isHardware) this.wallet.setBusyState()
           let signedMsg = JSON.stringify({
             address: this.wallet.getAddressString(),
             msg: message,
