@@ -1,11 +1,6 @@
 <template>
   <div class="modal-container">
-    <b-modal
-      ref="confirmation"
-      hide-footer
-      centered
-      class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+    <b-modal ref="confirmation" hide-footer centered class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
@@ -13,22 +8,18 @@
             <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
               <p class="address-title">From Address</p>
-              <p>{{ from }}</p>
+              <p>{{from}}</p>
             </div>
           </div>
-          <div
-            v-show="to !== '' && to !== undefined"
-            class="direction">
+          <div class="direction" v-show="to !== '' && to !== undefined">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div
-            v-show="to !== '' && to !== undefined"
-            class="tx-data tx-to">
+          <div class="tx-data tx-to" v-show="to !== '' && to !== undefined">
             <!-- <img src="~@/assets/images/icons/btc.svg">
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
               <p class="address-title">To Address</p>
-              <p>{{ to }}</p>
+              <p>{{to}}</p>
             </div>
           </div>
         </div>
@@ -37,33 +28,29 @@
             <h4>Detail Information</h4>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input
-                  type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation" >
-                <span class="slider round"/>
+                <input type="checkbox" v-on:click="modalDetailInformation = !modalDetailInformation" />
+                <span class="slider round"></span>
               </label>
             </div>
           </div>
-          <div
-            v-if="modalDetailInformation"
-            class="expended-info">
+          <div class="expended-info" v-if="modalDetailInformation">
             <div class="grid-block">
-              <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
+              <p>Network</p><p>{{$store.state.network.type.name}} by {{$store.state.network.service}}</p>
             </div>
             <div class="grid-block">
-              <p>Gas Limit</p><p>{{ gas }} wei</p>
+              <p>Gas Limit</p><p>{{gas}} wei</p>
             </div>
             <div class="grid-block">
               <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
             </div>
             <div class="grid-block">
-              <p>Transaction Fee</p><p> {{ fee }} ETH</p>
+              <p>Transaction Fee</p><p> {{fee}} ETH</p>
             </div>
             <div class="grid-block">
-              <p>Nonce</p><p>{{ nonce }}</p>
+              <p>Nonce</p><p>{{nonce}}</p>
             </div>
             <div class="grid-block">
-              <p>Data</p><p>{{ data }}</p>
+              <p>Data</p><p>{{data}}</p>
             </div>
           </div>
         </div>
@@ -71,28 +58,18 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
-              <div
-                ref="ConfirmAndSendButton"
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="sendTx">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
+                  <img class="icon" src="~@/assets/images/icons/qr-code.svg">
                 </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top">
+                <b-popover target="exPopover9" triggers="hover focus" placement="top">
                   <div class="qrcode-contents">
                     <p class="qrcode-title">Scan QR code to send/swap instantly</p>
                     <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
+                      <qrcode value="Hello, World!" :options="{ size: 100 }"></qrcode>
                     </div>
                     <p class="qrcode-helper">What is that?</p>
                   </div>
@@ -109,82 +86,33 @@
 
 <script>
 // eslint-disable-next-line
-const unit = require('ethjs-unit');
+const unit = require('ethjs-unit')
 
 export default {
-  props: {
-    confirmSendTx: {
-      type: Function,
-      default: function() {}
-    },
-    fee: {
-      type: Number,
-      default: 0
-    },
-    signedTx: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: String,
-      default: ''
-    },
-    from: {
-      type: String,
-      default: ''
-    },
-    gas: {
-      type: Number,
-      default: 0
-    },
-    gasPrice: {
-      type: Number,
-      default: 0
-    },
-    nonce: {
-      type: Number,
-      default: 0
-    },
-    to: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: Number,
-      default: 0
-    },
-    isHardwareWallet: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
+  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
+  data () {
     return {
-      modalDetailInformation: false,
-      transactionSigned: false
-    };
-  },
-  computed: {
-    signedTransaction() {
-      if (this.signedMessage) {
-        return this.signedMessage;
-      } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
-      } else {
-        return '';
-      }
+      modalDetailInformation: false
     }
   },
   methods: {
-    sendTx() {
-      if (this.signedTx !== '') {
-        this.confirmSendTx();
-      }
+    sendTx () {
+      this.confirmSendTx()
+      // this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+      //   this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      // }).on('receipt', (res) => {
+      //   this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      // }).on('error', (err) => {
+      //   this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      // })
+
+      /*      this.$refs.confirmation.hide()
+      this.showSuccess() */
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import 'ConfirmModal.scss';
+@import "ConfirmModal.scss";
 </style>
