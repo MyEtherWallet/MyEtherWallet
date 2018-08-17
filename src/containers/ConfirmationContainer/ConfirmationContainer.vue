@@ -84,6 +84,10 @@ export default {
       this.signConfirmationModalOpen()
     })
 
+    this.$eventHub.$on('checkConnection', () => {
+      this.hardwareConnectCheck()
+    })
+
     this.$on('bv::modal::hide', () => {
       console.log('modal hidden') // todo remove dev item
       if (this.dismissed) {
@@ -92,6 +96,9 @@ export default {
     })
   },
   methods: {
+    hardwareConnectCheck () {
+
+    },
     confirmationModalOpen () {
       window.scrollTo(0, 0)
       this.$refs.confirmModal.$refs.confirmation.show()
