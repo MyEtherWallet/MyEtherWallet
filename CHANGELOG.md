@@ -3,6 +3,7 @@
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval
 - Integrate Ledger hardware wallet
 - Feature/verify message [#52](https://github.com/MyEtherWallet/MyEtherWallet/pull/52)
+- Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
 
 
 ### UI/UX

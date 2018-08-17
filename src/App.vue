@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container/>
+    <header-container />
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -42,6 +42,7 @@ export default {
       gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
     }
 
+    if (store.get('notifications') === undefined) store.set('notifications', {})
     this.$store.dispatch('setState', state)
     this.$store.dispatch('checkIfOnline')
   }

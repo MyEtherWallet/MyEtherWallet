@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="currency-picker-container">
+  <div class="currency-picker-container" v-click-outside="openDropdown">
     <div>
-      <div class="dropdown-text-container" @click="openDropdown" :class="[open? 'open':'','dropdown-container']">
+      <div @click="openDropdown" :class="[open? 'open':'','dropdown-container', token? 'dropdown-text-container': 'dropdown-text-container-white']">
         <p v-show="token"> {{selectedCurrency.symbol}} <span class="subname">- {{ selectedCurrency.name }}</span></p>
         <p v-show="!token"> {{selectedCurrency.name}} </p>
         <i :class="['fa', open ? 'fa-angle-up':'fa-angle-down']"></i>
@@ -12,7 +12,7 @@
           <i class="fa fa-search"></i>
         </div>
         <div class="item-container">
-          <div v-for="curr in localCurrency" :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']" @click="selectCurrency(curr)" :key="token?curr.name+curr.symbol + page: curr.name + page">
+          <div v-for="(curr, idx) in localCurrency" :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']" @click="selectCurrency(curr)" :key="token?curr.name+curr.symbol + page: curr.name + page + idx">
             <p v-show="token">{{ curr.symbol }} <span class="subname">- {{ curr.name }}</span><p>
             <p v-show="!token">{{ curr.name }}</p>
           </div>
@@ -27,10 +27,12 @@ export default {
   props: ['currency', 'page', 'token'],
   data () {
     return {
-      localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}] : [{name: 'Select an item'}],
-      selectedCurrency: this.token === true ? {name: 'Ether', symbol: 'ETH'} : {name: 'Select an item'},
+      localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}] : [{name: 'Select an item', abi: '', address: ''}],
+      selectedCurrency: this.token === true ? {name: 'Ether', symbol: 'ETH'} : {name: 'Select an item', abi: '', address: ''},
       open: false,
-      search: ''
+      search: '',
+      abi: '',
+      address: ''
     }
   },
   methods: {
@@ -70,7 +72,7 @@ export default {
         if (this.token) {
           this.localCurrency = [{name: 'Ether', symbol: 'ETH'}]
         } else {
-          this.localCurrency = [{name: 'Select an item'}]
+          this.localCurrency = [{name: 'Select an item', abi: '', address: ''}]
         }
         this.currency.forEach(curr => this.localCurrency.push(curr))
       }

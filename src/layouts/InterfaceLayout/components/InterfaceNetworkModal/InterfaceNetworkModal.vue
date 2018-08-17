@@ -79,6 +79,7 @@
 
 <script>
 import store from 'store'
+import web3 from 'web3'
 
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 
@@ -117,7 +118,7 @@ export default {
     },
     removeNetwork (net, idx) {
       this.customNetworks.splice(idx, 1)
-      if (net.type.name === this.$store.state.network.type.name) {
+      if (net.service === this.$store.state.network.service) {
         if (this.customNetworks.length > 0) {
           this.switchNetwork(this.customNetworks[0])
         } else {
@@ -171,11 +172,11 @@ export default {
           blockExplorerAddr: `${explorer}address/[[txHash]]`,
           blockExplorerTX: `${explorer}tx/[[txHash]]`,
           chainID: this.chainID,
-          contracts: [],
+          contracts: this.$store.state.Networks[this.selectedNetwork.name][0].type.contracts,
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: []
+          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type.tokens
         },
         url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
@@ -191,7 +192,7 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
-      // this.$store.dispatch('setWeb3Instance', web3)
+      this.$store.dispatch('setWeb3Instance', web3)
     }
   },
   watch: {
