@@ -118,7 +118,7 @@ export default class MewConnectWallet {
         chainId: txData.chainId,
         gasLimit: txData.gas
       }
-      this.mewConnect.sendRtcMessage('signTx', JSON.stringify(sendTxData))
+      this.mewConnect.sendRtcMessage('signTx', JSON.stringify(txData))
       this.mewConnect.on('signTx', (data) => {
         const rawTransaction = `0x${data}`
         const tx = new EthereumjsTx(rawTransaction)
