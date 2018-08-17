@@ -116,11 +116,11 @@
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
                              :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"
-                   :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"
-                   :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
-                   :nonce="nonce + 1"></confirm-modal>
-    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
+    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
+                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
+                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
+                   <!--:nonce="nonce + 1"></confirm-modal>-->
+    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -130,9 +130,9 @@ import { mapGetters } from 'vuex'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
-import ConfirmModal from '@/components/ConfirmModal'
+// import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
-import SuccessModal from '@/components/SuccessModal'
+// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -144,10 +144,10 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'confirm-modal': ConfirmModal,
+    // 'confirm-modal': ConfirmModal,
     'blockie': Blockie,
-    'currency-picker': CurrencyPicker,
-    'success-modal': SuccessModal
+    'currency-picker': CurrencyPicker
+    // 'success-modal': SuccessModal
   },
   data () {
     return {
