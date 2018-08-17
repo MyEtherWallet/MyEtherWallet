@@ -104,6 +104,7 @@ export default {
     copyToAddress () {
       this.$refs('toaddress').select()
       document.execCommand('copy')
+      window.getSelection().removeAllRanges()
     },
     next () {
       const raw = {

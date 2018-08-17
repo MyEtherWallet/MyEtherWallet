@@ -85,6 +85,7 @@ export default {
     copyToClipboard (ref) {
       this.$refs[ref].select()
       document.execCommand('copy')
+      window.getSelection().removeAllRanges()
     },
     deleteInputText (ref) {
       this.$refs[ref].value = ''
