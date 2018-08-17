@@ -10,10 +10,10 @@
             <span v-on:click="openFAQs = false, openCategories = true" :class="openCategories ? 'active' : ''">Categories</span>
           </div>
           <div v-if="openFAQs">
-            FAQ
+            <faqs />
           </div>
           <div v-if="openCategories">
-            Categories
+            <categories />
           </div>
         </div>
       </div>
@@ -24,9 +24,14 @@
 
 <script>
 import KeywordSearch from './components/KeywordSearch'
+import FAQs from './components/FAQs'
+import Categories from './components/Categories'
+
 export default {
   components: {
-    'keyword-search': KeywordSearch
+    'keyword-search': KeywordSearch,
+    'faqs': FAQs,
+    'categories': Categories
   },
   data () {
     return {
