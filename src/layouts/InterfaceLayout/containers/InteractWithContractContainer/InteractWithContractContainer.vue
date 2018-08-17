@@ -131,8 +131,8 @@
         <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
       </div>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="address" :value="value" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>
-    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
+    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="address" :value="value" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>-->
+    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -142,8 +142,8 @@ import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import { Misc } from '@/helpers'
-import ConfirmModal from '@/components/ConfirmModal'
-import SuccessModal from '@/components/SuccessModal'
+// import ConfirmModal from '@/components/ConfirmModal'
+// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -154,9 +154,9 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'currency-picker': CurrencyPicker,
-    'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'currency-picker': CurrencyPicker
+    // 'confirm-modal': ConfirmModal,
+    // 'success-modal': SuccessModal
   },
   data () {
     return {
@@ -274,35 +274,35 @@ export default {
           data: this.data
         }
 
-        const tx = new EthTx(this.raw)
-        tx.sign(this.$store.state.wallet.getPrivateKey())
-        const serializedTx = tx.serialize()
-        this.signedTx = `0x${serializedTx.toString('hex')}`
+        // const tx = new EthTx(this.raw)
+        // tx.sign(this.$store.state.wallet.getPrivateKey())
+        // const serializedTx = tx.serialize()
+        // this.signedTx = `0x${serializedTx.toString('hex')}`
         // Waiting on this: https://github.com/ethereum/web3.js/issues/1637
-        // await web3.eth.sendTransaction(this.raw).once('transactionHash', (hash) => {
-        //   this.loading = false
-        //   this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
-        // }).on('receipt', (res) => {
-        //   this.loading = false
-        //   this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
-        // }).on('error', (err) => {
-        //   console.log(err)
-        //   this.loading = false
-        //   this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
-        // })
+        await web3.eth.sendTransaction(this.raw).once('transactionHash', (hash) => {
+          this.loading = false
+          this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+        }).on('receipt', (res) => {
+          this.loading = false
+          this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+        }).on('error', (err) => {
+          console.log(err)
+          this.loading = false
+          this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+        })
         this.confirmationModalOpen()
       }
     },
-    confirmationModalOpen () {
-      this.loading = false
-      window.scrollTo(0, 0)
-      const confirmation = this.$children.filter(child => child.$refs.hasOwnProperty('confirmation'))
-      confirmation[0].$refs.confirmation.show()
-    },
-    showSuccessModal () {
-      const success = this.$children.filter(child => child.$refs.hasOwnProperty('success'))
-      success[0].$refs.success.show()
-    },
+    // confirmationModalOpen () {
+    // this.loading = false
+    // window.scrollTo(0, 0)
+    // const confirmation = this.$children.filter(child => child.$refs.hasOwnProperty('confirmation'))
+    // confirmation[0].$refs.confirmation.show()
+    // },
+    // showSuccessModal () {
+    //   const success = this.$children.filter(child => child.$refs.hasOwnProperty('success'))
+    //   success[0].$refs.success.show()
+    // },
     checkInputsFilled () {
       const inputs = Object.keys(this.writeInputs)
       for (var i = 0; i < inputs.length; i++) {
