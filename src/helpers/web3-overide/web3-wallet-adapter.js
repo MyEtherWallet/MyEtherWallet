@@ -191,5 +191,13 @@ export default class Web3WalletAdapter {
   //   }
   // }
 
+  // checkConnection () {
+  //   if (this.isHardware) {
+  //     return this.wallet.checkConnection()
+  //   } else {
+  //     return Promise.resolve(true)
+  //   }
+  // }
+
   // ============== (End) Utility Methods ======================
 }
