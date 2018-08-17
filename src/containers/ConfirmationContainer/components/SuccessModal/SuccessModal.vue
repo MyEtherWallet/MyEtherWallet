@@ -14,7 +14,7 @@
 </template>
 
 <style lang="scss" scoped>
-  @import "SuccessModal.scss";
+  @import "SuccessModal";
 </style>
 <script>
 export default {

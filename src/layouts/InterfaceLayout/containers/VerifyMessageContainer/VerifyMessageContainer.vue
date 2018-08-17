@@ -40,7 +40,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/components/SuccessModal'
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
 
 export default {
   name: 'Interact',
