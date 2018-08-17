@@ -21,9 +21,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.wallet = null
     this.activeAddress = ''
     this.activeAddressIndex = ''
-    this.activeTransport = null
-    this.ledgerBusy = false
-    this.pendingRequest = []
     if (options.transport) this.ledgerTransport = options.transport
     this.allowedHdPaths = options.options || ['44\'/60\'', '44\'/61\'']
     this.defaultOptions = {
@@ -93,74 +90,24 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   getAccounts () {
+    let _this = this
     if (arguments.length > 1 && arguments.length < 3) {
-      return this.getMultipleAccounts(arguments[0], arguments[1])
+      return _this.getMultipleAccounts(arguments[0], arguments[1])
     } else {
-      if (this.ledgerBusy) {
-        // throw new Error(
-        //   'You can only have one ledger connection active at a time'
-        // )
-        // return this.collectPendingRequests(this._getAccounts)
-      } else {
-        return this._getAccounts()
-      }
+      return _this._getAccounts()
     }
   }
 
   getMultipleAccounts (count, offset) {
-    if (this.ledgerBusy) {
-      throw new Error(
-        'You can only have one ledger connection active at a time'
-      )
-      // return this.collectPendingRequests(this._getAccounts, count, offset)
-    } else {
-      return this._getAccounts(count, offset)
-    }
+    return this._getAccounts(count, offset)
   }
 
   signMessage (txData) {
-    if (this.ledgerBusy) {
-      throw new Error(
-        'You can only have one ledger connection active at a time'
-      )
-      // return this.collectPendingRequests(this._signPersonalMessage, txData)
-    } else {
-      return this._signPersonalMessage(txData)
-    }
+    return this._signPersonalMessage(txData)
   }
 
   signTransaction (txData) {
-    if (this.ledgerBusy) {
-      throw new Error(
-        'You can only have one ledger connection active at a time'
-      )
-      // return this.collectPendingRequests(this._signTransaction, txData)
-    } else {
-      return this._signTransaction(txData)
-    }
-  }
-
-  collectPendingRequests (...requestDetails) {
-    return new Promise((resolve, reject) => {
-      requestDetails.push(resolve)
-      requestDetails.push(reject)
-      this.pendingRequest.push(requestDetails)
-    })
-  }
-
-  executeNextPending () {
-    const nextPending = this.pendingRequest.shift()
-    const nextPendingError = nextPending.pop()
-    const nextPendingReturn = nextPending.pop()
-    const nextPendingAction = nextPending.shift()
-    const nextPendingPromise = nextPendingAction.apply(this, nextPending)
-    nextPendingPromise
-      .then(_result => {
-        nextPendingReturn(_result)
-      })
-      .catch(_error => {
-        nextPendingError(_error)
-      })
+    return this._signTransaction(txData)
   }
 
   checkIfAllowedPath (path) {
@@ -197,34 +144,17 @@ export default class LedgerWallet extends HardwareWalletInterface {
 
   getTransport () {
     if (this.connectionOpened) {
-      this.ledgerBusy = true
-      return this.activeTransport
-      // throw new Error(
-      //   'You can only have one ledger connection active at a time'
-      // )
+      throw new Error(
+        'You can only have one ledger connection active at a time'
+      )
     } else {
       this.connectionOpened = true
-      this.ledgerBusy = true
       if (this.ledgerTransport) {
-        this.activeTransport = this.ledgerTransport.create(3000, 3000)
-        return this.activeTransport
+        return this.ledgerTransport.create(3000, 3000)
       } else {
-        this.activeTransport = u2fTransport.create(3000, 3000)
-        return this.activeTransport
+        return u2fTransport.create(3000, 3000)
       }
     }
-  }
-
-  setDisconnectListener () {
-    this.activeTransport.on('disconnect', () => {
-
-    })
-  }
-
-  closeTransport () {
-    transport.close()
-      .then(() => { this.connectionOpened = false })
-      .catch((error) => { throw error })
   }
 
   async _getAccounts (_accountsLength, _accountsOffset) {
@@ -242,15 +172,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
       return addresses
-    } catch (e) {
-      console.error(e)
     } finally {
-      this.ledgerBusy = false
-      // if (this.pendingRequest.length > 0) {
-      //   this.executeNextPending()
-      // } else {
-      //   this.ledgerBusy = false
-      // }
+      transport.close()
+        .then(() => { this.connectionOpened = false })
+        .catch((error) => { throw error })
     }
   }
 
@@ -261,14 +186,11 @@ export default class LedgerWallet extends HardwareWalletInterface {
       const appConfig = await eth.getAppConfiguration()
       callback(null, appConfig)
     } catch (e) {
-      console.error(e)
+      callback(e)
     } finally {
-      this.ledgerBusy = false
-      // if (this.pendingRequest.length > 0) {
-      //   this.executeNextPending()
-      // } else {
-      //   this.ledgerBusy = false
-      // }
+      transport.close()
+        .then(() => { this.connectionOpened = false })
+        .catch((error) => { throw error })
     }
   }
 
@@ -302,15 +224,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
         vHex = `0${v}`
       }
       return `0x${result.r}${result.s}${vHex}`
-    } catch (e) {
-      console.error(e)
     } finally {
-      this.ledgerBusy = false
-      // if (this.pendingRequest.length > 0) {
-      //   this.executeNextPending()
-      // } else {
-      //   this.ledgerBusy = false
-      // }
+      transport.close()
+        .then(() => { this.connectionOpened = false })
+        .catch((error) => { throw error })
     }
   }
 
@@ -357,15 +274,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
         s: Buffer.from(result.s, 'hex'),
         rawTransaction: `0x${tx.serialize().toString('hex')}`
       }
-    } catch (e) {
-      console.error(e)
     } finally {
-      this.ledgerBusy = false
-      // if (this.pendingRequest.length > 0) {
-      //   this.executeNextPending()
-      // } else {
-      //   this.ledgerBusy = false
-      // }
+      transport.close()
+        .then(() => { this.connectionOpened = false })
+        .catch((error) => { throw error })
     }
   }
 }
