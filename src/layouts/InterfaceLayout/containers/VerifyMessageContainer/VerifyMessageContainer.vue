@@ -1,13 +1,10 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
     <interface-container-title :title="$t('common.verifyMessage')"></interface-container-title>
-
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('common.signature') }}</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
+          <h4>Signature: </h4>
           <div class="copy-buttons">
             <span v-on:click="deleteInput">Clear</span>
             <span v-on:click="copyToClipboard">Copy</span>
