@@ -216,7 +216,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
       const eth = new Ledger(transport)
       const result = await eth.signPersonalMessage(
         path,
-        thisMessage
+        Buffer.from(thisMessage).toString('hex')
       )
       const v = parseInt(result.v, 10) - 27
       let vHex = v.toString(16)
