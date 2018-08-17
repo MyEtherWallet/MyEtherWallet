@@ -191,7 +191,7 @@ export default {
     },
     switchNetwork (network) {
       this.$store.dispatch('switchNetwork', network)
-      //this.$store.dispatch('setWeb3Instance', web3)
+      // this.$store.dispatch('setWeb3Instance', web3)
     }
   },
   watch: {
