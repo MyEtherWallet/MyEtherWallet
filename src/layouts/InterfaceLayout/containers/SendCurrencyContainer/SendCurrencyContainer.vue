@@ -8,7 +8,7 @@
           <div class="title">
             <h4>{{ $t('interface.sendTxAmount') }}</h4>
             <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire
-                                                                                     Balance</p>
+              Balance</p>
           </div>
           <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency"
                            :page="'sendEthAndTokens'" :token="true"></currency-picker>
@@ -29,8 +29,8 @@
             <blockie :address="toAddress" width="22px" height="22px"
                      v-show="addressValid && toAddress.length !== 0"></blockie>
             <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{
-                                                                                               $t('common.copy')
-                                                                                               }}</p>
+              $t('common.copy')
+              }}</p>
           </div>
           <div class="the-form address-block">
             <textarea ref="address" name="name" v-model="toAddress" autocomplete="off"></textarea>
@@ -131,9 +131,7 @@ import { mapGetters } from 'vuex'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
-// import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie'
-// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -145,10 +143,8 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    // 'confirm-modal': ConfirmModal,
     'blockie': Blockie,
     'currency-picker': CurrencyPicker
-    // 'success-modal': SuccessModal
   },
   data () {
     return {
@@ -257,12 +253,11 @@ export default {
       const newRaw = this.raw
       delete newRaw['gas']
       delete newRaw['nonce']
-      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex()
       this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
         this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
         this.gasLimit = res
-      }).catch(err => console.log(err))
+      }).catch(err => console.log(err)) // todo replace with proper error
     },
     verifyAddr () {
       if (this.toAddress.length !== 0 && this.toAddress !== '') {

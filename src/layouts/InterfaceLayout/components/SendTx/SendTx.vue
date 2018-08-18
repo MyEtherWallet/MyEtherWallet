@@ -57,7 +57,6 @@ export default {
         })
         .then(res => {
           this.$children[0].$refs.success.show()
-          console.log('sendSignedTransaction', res)
         })
     },
     hideModal () {

@@ -9,4 +9,8 @@ function isJson (str) {
   return true
 }
 
-export default {isJson}
+function doesExists (val) {
+  return val !== undefined && val !== null
+}
+
+export default {isJson, doesExists}
