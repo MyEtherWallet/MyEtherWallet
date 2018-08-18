@@ -188,7 +188,6 @@ export default {
     // 'confirm-modal': ConfirmModal,
     blockie: Blockie,
     'currency-picker': CurrencyPicker
-    // 'success-modal': SuccessModal
   },
   props: {
     tokensWithBalance: {
