@@ -110,7 +110,7 @@ export default {
       }
     }
     worker.onerror = function (e) {
-      console.log('onerror received from worker')
+      console.log('onerror received from worker') // todo replace with proper error
     }
   },
   watch: {

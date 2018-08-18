@@ -109,7 +109,7 @@ export default {
       }).then(response => {
         return response
       }).catch(err => {
-        console.log(err)
+        console.log(err) // todo replace with proper error
       })
 
       return response
@@ -130,7 +130,7 @@ export default {
           tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals)
         }
         return tokenBalance
-      }).catch(err => console.log(err))
+      }).catch(err => console.log(err)) // todo replace with proper error
       return balance
     },
     async setTokens () {
@@ -166,13 +166,13 @@ export default {
     getBlock () {
       this.$store.state.web3.eth.getBlockNumber().then((res) => {
         this.blockNumber = res
-      }).catch(err => console.log(err))
+      }).catch(err => console.log(err)) // todo replace with proper error
     },
     getBalance () {
       this.$store.state.web3.eth.getBalance(this.address).then((res) => {
         this.balance = res
         this.$store.dispatch('setAccountBalance', this.balance)
-      }).catch(err => console.log(err))
+      }).catch(err => console.log(err)) // todo replace with proper error
     }
   },
   mounted () {

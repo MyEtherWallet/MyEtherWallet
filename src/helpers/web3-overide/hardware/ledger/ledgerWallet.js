@@ -66,7 +66,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   getAddressString () {
-    // let rawAddress = '0x' + this.getAddress().toString('hex')
     return ethUtil.toChecksumAddress(this.getAddress())
   }
 
@@ -77,7 +76,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
   setActiveAddress (address, index) {
     this.wallet = {}
     this.wallet.address = address
-    // this.activeAddressIndex = index
     this.wallet.path = this.pathComponents.basePath + index.toString()
     this.wallet.hwType = 'ledger'
     this.wallet.hwTransport = undefined

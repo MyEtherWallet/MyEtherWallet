@@ -11,19 +11,9 @@ const trezor = {
 
 const paths = {
   defaultDPath: {label: 'Jaxx, Metamask, Exodus, imToken, TREZOR (ETH) & Digital Bitbox', dpath: 'm/44\'/60\'/0\'/0'}, // first address: m/44'/60'/0'/0/0
-  // alternativeDPath: {label: '', dpath: 'm/44\'/60\'/0\''}, // first address: m/44'/60'/0/0
   classicPath: {label: 'ETC', dpath: 'm/44\'/61\'/0\'/0'}, // first address: m/44'/61'/0'/0/0
   testnetPath: {label: 'Testnets', dpath: 'm/44\'/1\'/0\'/0'}, // first address: m/44'/1'/0'/0/0
   customDPath: {label: 'Custom Path', dpath: 'm/44\'/60\'/1\'/0'}, // first address: m/44'/60'/1'/0/0
-  // trezor: {
-  //   testnetPath: 'm/44\'/1\'/0\'/0', // first address: m/44'/1'/0'/0/0
-  //   classicPath: 'm/44\'/61\'/0\'/0', // first address: m/44'/61'/0'/0/0
-  //   defaultPath: 'm/44\'/60\'/0\'/0' // first address: m/44'/60'/0'/0/0
-  // },
-  // ledger: {
-  //   defaultPath: 'm/44\'/60\'/0\'', // first address: m/44'/60'/0/0
-  //   classicPath: 'm/44\'/60\'/160720\'/0\'', // first address: m/44'/60'/160720'/0/0
-  // },
   hwUbqPath: {label: 'Ubiq (UBQ)', dpath: 'm/44\'/108\'/0\'/0'}, // first address: m/44'/40'/0'/0/0
   hwExpansePath: {label: 'Expanse (EXP)', dpath: 'm/44\'/40\'/0\'/0'}, // first address: m/44'/40'/0'/0/0
   hwEllaismPath: {label: 'Ellaism (ELLA)', dpath: 'm/44\'/163\'/0\'/0'}, // first address: m/44'/163'/0'/0/0

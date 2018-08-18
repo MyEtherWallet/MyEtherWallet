@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     showCustomPathInput (e) {
-      console.log(e.target) // todo remove dev item
+      // console.log(e.target) // todo remove dev item
     },
     selectDPath (key) {
       this.selecteDPath = this.availablePaths[key]

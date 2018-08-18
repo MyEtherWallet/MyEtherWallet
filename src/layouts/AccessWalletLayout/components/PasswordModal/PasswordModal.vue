@@ -15,7 +15,6 @@
 </template>
 
 <script>
-// import Wallet from 'ethereumjs-wallet'
 import Worker from '@/workers/unlockWallet.worker.js'
 import { BasicWallet } from '@/helpers/web3-overide/software'
 export default {

@@ -36,9 +36,7 @@ export default {
   mounted () {
     this.$refs.mewConnect.$on('show', () => {
       const wallet = new MewConnectWallet()
-      console.log(wallet) // todo remove dev item
       this.setup(wallet)
-      console.log('modal shown') // todo remove dev item
       wallet.signalerConnect()
         .then(() => {
           this.$store.dispatch('decryptWallet', wallet)
@@ -49,7 +47,7 @@ export default {
         })
     })
     this.$refs.mewConnect.$on('hidden', () => {
-      console.log('modal hidden') // todo remove dev item
+      // disconnect socket if not connected (the socket should disconnect eventually in all cases)
     })
   },
   methods: {
@@ -57,18 +55,15 @@ export default {
       wallet.registerListener('codeDisplay', this.codeDisplay)
       wallet.registerListener('RtcConnectedEvent', this.rtcConnected)
       wallet.registerListener('RtcClosedEvent', this.rtcClosed)
-      // wallet.registerListener('address', makeWallet)
-      // const mewConnect = wallet.getMewConnect()
-      // mewConnect.on('codeDisplay', this.codeDisplay)
     },
     codeDisplay (qrCode) {
       this.QrCode = qrCode
     },
     rtcConnected () {
-      console.log('RTC Connected') // todo remove dev item
+      console.log('RTC Connected: replace with notification for user')
     },
     rtcClosed () {
-      console.log('RTC Closed') // todo remove dev item
+      console.log('RTC Closed: replace with notification for user')
     }
   }
 }
