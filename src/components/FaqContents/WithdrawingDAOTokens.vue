@@ -261,7 +261,7 @@
 
     <p><strong>Note: You will need minimum 0.01 ETH and 0.01 ETC in order to cover the cost of gas necessary to process the withdrawals.</strong></p>
 
-            <p>
+    <p>
       <em>
         Etherscan.io was kind enough to host this older version of
         MyEtherWallet on their site for 1.5 years. Thank you etherscan!
@@ -269,17 +269,16 @@
       </em>
     </p>
 
-            <p class="col">
-                <a href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/withdrawing-dao-tokens.md" target="_blank" rel="noopener noreferrer">
-                  Found a typo? Want to improve this article? <br> It's easy!
-                </a>
-              </p>
-              <p class="col">
-                <a href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" target="_blank" rel="noopener noreferrer">
-                  Don't know how to submit a pull request? <br> It's also easy!
-                </a>
-              </p>
-
+    <p class="col">
+      <a href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/withdrawing-dao-tokens.md" target="_blank" rel="noopener noreferrer">
+        Found a typo? Want to improve this article? <br> It's easy!
+      </a>
+    </p>
+    <p class="col">
+      <a href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" target="_blank" rel="noopener noreferrer">
+        Don't know how to submit a pull request? <br> It's also easy!
+      </a>
+    </p>
   </div>
 </template>
 
