@@ -13,7 +13,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq1" class="qa__contents--content">
-              <faq-balances-not-loading/>
+              <faq-balances-not-loading />
             </div>
           </li>
           <li>
@@ -25,7 +25,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq2" class="qa__contents--content">
-              <faq-does-myetherwallet-support-bitcoin/>
+              <faq-does-myetherwallet-support-bitcoin />
             </div>
           </li>
           <li>
@@ -37,7 +37,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq3" class="qa__contents--content">
-              <faq-eth-or-tokens-sent-to/>
+              <faq-eth-or-tokens-sent-to />
             </div>
           </li>
           <li>
@@ -49,7 +49,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq4" class="qa__contents--content">
-              <faq-where-can-i-buy-sell/>
+              <faq-where-can-i-buy-sell />
             </div>
           </li>
           <li>
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq5" class="qa__contents--content">
-              <faq-what-is-an-ico/>
+              <faq-what-is-an-ico />
             </div>
           </li>
 
@@ -74,7 +74,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq6" class="qa__contents--content">
-              <faq-how-to-buy-ethereum-with-usd/>
+              <faq-how-to-buy-ethereum-with-usd />
             </div>
           </li>
           <li>
@@ -86,7 +86,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq7" class="qa__contents--content">
-              <faq-couldnt-everybody-put-in-random-private-keys/>
+              <faq-couldnt-everybody-put-in-random-private-keys />
             </div>
           </li>
           <li>
@@ -98,7 +98,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq8" class="qa__contents--content">
-              <faq-what-happens-if-my-ether-wallet-goes-down/>
+              <faq-what-happens-if-my-ether-wallet-goes-down />
             </div>
           </li>
           <li>
@@ -110,7 +110,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq9" class="qa__contents--content">
-              <faq-how-do-i-interact-with-a-multisig-contract/>
+              <faq-how-do-i-interact-with-a-multisig-contract />
             </div>
           </li>
           <li>
@@ -122,7 +122,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq10" class="qa__contents--content">
-              <faq-check-the-current-block-number-on-my-ether-wallet/>
+              <faq-check-the-current-block-number-on-my-ether-wallet />
             </div>
           </li>
           <li>
@@ -134,7 +134,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq11" class="qa__contents--content">
-              <faq-when-i-unlock-via-keystore-file-it-freezes-my-browser/>
+              <faq-when-i-unlock-via-keystore-file-it-freezes-my-browser />
             </div>
           </li>
           <li>
@@ -146,7 +146,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq12" class="qa__contents--content">
-              <faq-withdrawing-dao-tokens': WithdrawingDAOTokens/>
+              <faq-withdrawing-dao-tokens />
             </div>
           </li>
           <li>
@@ -158,7 +158,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq13" class="qa__contents--content">
-              <faq-why-dont-you-make-me-move-my-mouse-to-generate-a-seed/>
+              <faq-why-dont-you-make-me-move-my-mouse-to-generate-a-seed />
             </div>
           </li>
 
@@ -205,13 +205,19 @@ export default {
   methods: {
     openFAQ: function (faqToOpen) {
       var currentState = this.showFAQs[faqToOpen]
-      /*
       this.showFAQs.faq1 = false
       this.showFAQs.faq2 = false
       this.showFAQs.faq3 = false
       this.showFAQs.faq4 = false
       this.showFAQs.faq5 = false
-      */
+      this.showFAQs.faq6 = false
+      this.showFAQs.faq7 = false
+      this.showFAQs.faq8 = false
+      this.showFAQs.faq9 = false
+      this.showFAQs.faq10 = false
+      this.showFAQs.faq11 = false
+      this.showFAQs.faq12 = false
+      this.showFAQs.faq13 = false
       this.showFAQs[faqToOpen] = !currentState
     }
   },
