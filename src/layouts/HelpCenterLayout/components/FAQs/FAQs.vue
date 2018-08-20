@@ -74,7 +74,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq6" class="qa__contents--content">
-              <faq-how-to-buy-ethereum-with-usd/>
+              <faq-how-to-buy-ethereum-with-usd />
             </div>
           </li>
           <li>
@@ -86,7 +86,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq7" class="qa__contents--content">
-              <faq-couldnt-everybody-put-in-random-private-keys/>
+              <faq-couldnt-everybody-put-in-random-private-keys />
             </div>
           </li>
           <li>
@@ -98,7 +98,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq8" class="qa__contents--content">
-              <faq-what-happens-if-my-ether-wallet-goes-down/>
+              <faq-what-happens-if-my-ether-wallet-goes-down />
             </div>
           </li>
           <li>
@@ -110,7 +110,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq9" class="qa__contents--content">
-              <faq-how-do-i-interact-with-a-multisig-contract/>
+              <faq-how-do-i-interact-with-a-multisig-contract />
             </div>
           </li>
           <li>
@@ -122,7 +122,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq10" class="qa__contents--content">
-              <faq-check-the-current-block-number-on-my-ether-wallet/>
+              <faq-check-the-current-block-number-on-my-ether-wallet />
             </div>
           </li>
           <li>
@@ -134,7 +134,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq11" class="qa__contents--content">
-              <faq-when-i-unlock-via-keystore-file-it-freezes-my-browser/>
+              <faq-when-i-unlock-via-keystore-file-it-freezes-my-browser />
             </div>
           </li>
           <li>
@@ -146,7 +146,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq12" class="qa__contents--content">
-              <faq-withdrawing-dao-tokens': WithdrawingDAOTokens/>
+              <faq-withdrawing-dao-tokens />
             </div>
           </li>
           <li>
@@ -158,7 +158,7 @@
               </div>
             </div>
             <div v-if="showFAQs.faq13" class="qa__contents--content">
-              <faq-why-dont-you-make-me-move-my-mouse-to-generate-a-seed/>
+              <faq-why-dont-you-make-me-move-my-mouse-to-generate-a-seed />
             </div>
           </li>
 
