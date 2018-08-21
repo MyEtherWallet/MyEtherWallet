@@ -9,5 +9,5 @@ const privacyPolicy = {
   // paragraph6: '',
   // paragraph7: '',
   // paragraph8: ''
-}
-export default privacyPolicy
+};
+export default privacyPolicy;

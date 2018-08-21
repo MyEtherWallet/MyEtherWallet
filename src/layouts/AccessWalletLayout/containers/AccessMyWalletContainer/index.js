@@ -1,1 +1,1 @@
-export { default } from './AccessMyWalletContainer'
+export { default } from './AccessMyWalletContainer';

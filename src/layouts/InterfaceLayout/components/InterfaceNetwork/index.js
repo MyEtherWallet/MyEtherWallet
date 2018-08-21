@@ -1,1 +1,1 @@
-export { default } from './InterfaceNetwork'
+export { default } from './InterfaceNetwork';

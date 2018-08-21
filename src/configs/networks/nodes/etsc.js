@@ -1,6 +1,4 @@
-import {
-  ETSC
-} from '../types'
+import { ETSC } from '../types';
 export default {
   type: ETSC,
   service: 'EthereumSocial',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

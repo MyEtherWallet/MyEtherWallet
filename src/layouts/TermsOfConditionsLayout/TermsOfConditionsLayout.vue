@@ -13,19 +13,19 @@
             </h6>
             <p>
               {{ $t("termsOfConditions.paragraph1") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph2") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph3") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph4") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph5") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph6") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph7") }}
-              <br /><br />
+              <br ><br >
               {{ $t("termsOfConditions.paragraph8") }}
             </p>
           </div>
@@ -37,13 +37,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "TermsOfConditionsLayout.scss";
+@import 'TermsOfConditionsLayout.scss';
 </style>

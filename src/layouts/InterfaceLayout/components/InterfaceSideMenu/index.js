@@ -1,1 +1,1 @@
-export { default } from './InterfaceSideMenu'
+export { default } from './InterfaceSideMenu';

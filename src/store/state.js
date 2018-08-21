@@ -1,4 +1,4 @@
-import nodeList from '@/configs/networks'
+import nodeList from '@/configs/networks';
 const state = {
   web3: {},
   network: {
@@ -34,6 +34,6 @@ const state = {
   },
   notifications: {},
   gasPrice: 41
-}
+};
 
-export default state
+export default state;

@@ -1,5 +1,3 @@
-import LedgerWallet from './ledgerWallet'
+import LedgerWallet from './ledgerWallet';
 
-export {
-  LedgerWallet
-}
+export { LedgerWallet };

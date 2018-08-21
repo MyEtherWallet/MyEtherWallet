@@ -24,5 +24,5 @@ const createWallet = {
   // byJsonFileDownloadKeyFile: '',
   // pageTitleAlreadyHave: '',
   // pageFooterTitle: ''
-}
-export default createWallet
+};
+export default createWallet;

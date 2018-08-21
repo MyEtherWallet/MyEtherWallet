@@ -1,7 +1,14 @@
 <template lang="html">
-  <b-modal ref="done" hide-footer centered hide-header class="bootstrap-modal done">
+  <b-modal 
+    ref="done" 
+    hide-footer 
+    centered 
+    hide-header 
+    class="bootstrap-modal done">
     <div class="d-block text-center">
-      <i class="check-icon fa fa-check" aria-hidden="true"></i>
+      <i 
+        class="check-icon fa fa-check" 
+        aria-hidden="true"/>
       <h2 class="title">{{ $t("createWallet.byMnemonicSuccess") }}</h2>
       <p class="content">{{ $t("createWallet.byMnemonicSuccessfullyCreated") }}</p>
     </div>
@@ -15,12 +22,12 @@
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FinishModal.scss";
+@import 'FinishModal.scss';
 </style>

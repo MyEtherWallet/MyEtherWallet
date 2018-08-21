@@ -1,1 +1,1 @@
-export { default } from './CreateWalletModal'
+export { default } from './CreateWalletModal';

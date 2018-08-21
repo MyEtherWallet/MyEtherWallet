@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-egem.json'
-import contracts from '@/contracts/contract-abi-egem.json'
+import tokens from '@/tokens/tokens-egem.json';
+import contracts from '@/contracts/contract-abi-egem.json';
 
 export default {
   name: 'EGEM',
@@ -10,4 +10,4 @@ export default {
   chainID: 1987,
   tokens: tokens,
   contracts: contracts
-}
+};

@@ -1,1 +1,1 @@
-export { default } from './MetamaskModal'
+export { default } from './MetamaskModal';

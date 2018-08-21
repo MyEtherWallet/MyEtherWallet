@@ -1,1 +1,1 @@
-export { default } from './CreateWalletInputFooter'
+export { default } from './CreateWalletInputFooter';

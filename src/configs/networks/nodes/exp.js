@@ -1,6 +1,4 @@
-import {
-  EXP
-} from '../types'
+import { EXP } from '../types';
 export default {
   type: EXP,
   service: 'expanse.tech',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};
