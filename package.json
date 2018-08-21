@@ -29,6 +29,7 @@
     "hdkey": "^1.0.0",
     "store": "^2.0.12",
     "trezor-connect": "^5.0.29",
+    "u2f-api": "^1.0.6",
     "vue": "^2.5.16",
     "vue-infinite-slide-bar": "^1.0.8",
     "vue-router": "^3.0.1",

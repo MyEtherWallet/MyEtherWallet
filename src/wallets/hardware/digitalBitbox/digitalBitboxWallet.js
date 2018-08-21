@@ -2,15 +2,20 @@ import EthereumjsTx from 'ethereumjs-tx'
 import * as ethUtil from 'ethereumjs-util'
 import * as HDKey from 'hdkey'
 import HardwareWalletInterface from '../hardwareWallet-interface'
+import { getDerivationPath, paths } from './deterministicWalletPaths'
 
-const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect
+import { DigitalBitboxUsb } from './digitalBitboxUsb'
+import { DigitalBitboxEth } from './digitalBitboxEth'
+import { u2f } from './u2f-api'
 
-export default class TrezorWallet extends HardwareWalletInterface {
+export default class DigitalBitboxWallet extends HardwareWalletInterface {
   constructor (options) {
     super()
-    this.identifier = 'TrezorOne'
-    this.brand = 'trezor'
+    this.identifier = 'DigitalBitbox'
+    this.brand = 'digitalBitbox'
     this.wallet = null
+    this.digitalBitboxSecret = ''
+    this.transport = null
 
     options = options || {}
     this.addressToWalletMap = {}
@@ -22,8 +27,9 @@ export default class TrezorWallet extends HardwareWalletInterface {
     this.numWallets = 0
 
     this.defaultOptions = {
-      path: 'm/44\'/60\'/0\'/0' // trezor default derivation path
+      path: this.getDerivationPath().dpath
     }
+
     const currentOptions = {
       ...this.defaultOptions,
       ...options
@@ -49,12 +55,18 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   static async unlock (options) {
     try {
-      const wallet = new TrezorWallet(options)
-      await wallet.unlockTrezor()
-      return wallet
+      return new DigitalBitboxWallet(options)
     } catch (e) {
       return e
     }
+  }
+
+  get compatibleChains () {
+    return paths
+  }
+
+  getDerivationPath (networkShortName) {
+    return getDerivationPath(networkShortName)
   }
 
   // ============== (End) Expected Utility methods ======================
@@ -106,29 +118,32 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   changeDPath (path) {
     this.path = path
-    return this.unlockTrezor()
+    return this.unlockBitbox()
   }
 
   // ============== (Start) Internally used methods ======================
 
   // (Start) Internal setup methods
-  trezorCallback (response) {
+  digitalBitboxCallback (result, error) {
     return new Promise((resolve, reject) => {
-      if (response.success) {
-        this.HWWalletCreate(response.publicKey, response.chainCode, 'trezor', this.path)
+      this.digitalBitboxSecret = ''
+      if (typeof result !== 'undefined') {
+        this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path)
         resolve()
       } else {
-        reject(Error(response.error))
+        reject(Error(error))
       }
     })
   }
 
-  unlockTrezor () {
+  unlockBitbox () {
     return new Promise((resolve, reject) => {
-      // trezor is using the path without change level id
-      TrezorConnect.getXPubKey(this.path, (response) => {
-        resolve(this.trezorCallback(response))
-      }, '1.5.2')
+      this.transport = new DigitalBitboxUsb()
+      var app = new DigitalBitboxEth(this.transport, this.digitalBitboxSecret)
+      var path = this.path
+      app.getAddress(path, (result, error) => {
+        resolve(this.digitalBitboxCallback(result, error))
+      })
     })
   };
 
@@ -212,6 +227,74 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   decimalToHex (dec) {
     return new ethUtil.BN(dec).toString(16)
+  }
+
+  signTxDigitalBitbox (rawTx, txData, callback) {
+    var localCallback = (result, error) => {
+      if (typeof error !== 'undefined') {
+        error = error.errorCode ? u2f.getErrorByCode(error.errorCode) : error
+        if (callback !== undefined) callback({
+          isError: true,
+          error: error
+        })
+        return
+      }
+      // uiFuncs.notifier.info("The transaction was signed but not sent. Click the blue 'Send Transaction' button to continue.");
+      rawTx.v = this.sanitizeHex(result['v'])
+      rawTx.r = this.sanitizeHex(result['r'])
+      rawTx.s = this.sanitizeHex(result['s'])
+      var eTx_ = new EthereumjsTx(rawTx)
+      rawTx.rawTx = JSON.stringify(rawTx)
+      rawTx.signedTx = this.sanitizeHex(eTx_.serialize().toString('hex'))
+      rawTx.isError = false
+      if (callback !== undefined) callback(rawTx)
+    }
+    // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
+    var app = new DigitalBitboxEth(this.transport, '')
+    const tx = new EthereumjsTx(rawTx)
+    app.signTransaction(txData.path, tx, localCallback)
+  }
+
+  sanitizeHex (hex) {
+    hex = hex.substring(0, 2) === '0x' ? hex.substring(2) : hex
+    if (hex === '') return ''
+    return '0x' + this.padLeftEven(hex)
+  }
+
+  signTxTrezors (rawTx) {
+    return new Promise((resolve, reject) => {
+      var trezorConnectSignCallback = (result) => {
+        if (!result.success) {
+          reject(Error(result.error))
+          return
+        }
+        rawTx.v = '0x' + this.decimalToHex(result.v)
+        rawTx.r = '0x' + result.r
+        rawTx.s = '0x' + result.s
+        const tx = new EthereumjsTx(rawTx)
+        rawTx.rawTx = JSON.stringify(rawTx)
+        resolve({
+          rawTx: rawTx.rawTx,
+          messageHash: tx.hash(), // figure out what exactly web3 is putting here
+          v: Buffer.from(result.v.toString(), 'hex'),
+          r: Buffer.from(result.r, 'hex'),
+          s: Buffer.from(result.s, 'hex'),
+          rawTransaction: `0x${tx.serialize().toString('hex')}`
+        })
+      }
+
+      TrezorConnect.signEthereumTx(
+        this.wallet.path,
+        this.getNakedAddress(rawTx.nonce),
+        this.getNakedAddress(rawTx.gasPrice),
+        this.getNakedAddress(rawTx.gas),
+        this.getNakedAddress(rawTx.to),
+        this.getNakedAddress(rawTx.value),
+        this.getNakedAddress(rawTx.data),
+        +rawTx.chainId,
+        trezorConnectSignCallback
+      )
+    })
   }
 
   signTxTrezor (rawTx) {
