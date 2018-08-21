@@ -58,9 +58,7 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
-              <div
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                ref="ConfirmAndSendButton" v-on:click="sendTx">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
@@ -91,29 +89,25 @@
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'isHardwareWallet'],
+  props: ['fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'contractName', 'abi'],
   data () {
     return {
-      modalDetailInformation: false,
-      transactionSigned: false
+      modalDetailInformation: false
     }
   },
   methods: {
     sendTx () {
-      if (this.signedTx !== '') {
-        this.confirmSendTx()
-      }
-    }
-  },
-  computed: {
-    signedTransaction () {
-      if (this.signedMessage) {
-        return this.signedMessage
-      } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet'
-      } else {
-        return ''
-      }
+      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx).once('transactionHash', (hash) => {
+        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
+      }).on('receipt', (res) => {
+        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
+      }).on('error', (err) => {
+        console.log(err)
+        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
+      })
+
+      this.$refs.confirmation.hide()
+      this.showSuccess()
     }
   }
 }

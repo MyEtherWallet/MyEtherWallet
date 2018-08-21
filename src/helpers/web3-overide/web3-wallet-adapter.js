@@ -51,13 +51,7 @@ export default class Web3WalletAdapter {
   }
 
   getAddressString () {
-    const address = this.wallet.getAddress()
-    if (typeof address !== 'string') {
-      let rawAddress = '0x' + address.toString('hex')
-      return ethUtil.toChecksumAddress(rawAddress)
-    } else {
-      return address
-    }
+    return this.wallet.getAddressString()
   }
 
   getChecksumAddressString () {
@@ -149,14 +143,7 @@ export default class Web3WalletAdapter {
       if (this.wallet.isHardware && !msgData.from) msgData.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
       this.wallet.signMessage(msgData)
         .then(_signedMessage => {
-          let signedMsg = JSON.stringify({
-            address: this.wallet.getAddressString(),
-            msg: message,
-            sig: _signedMessage,
-            version: '3',
-            signer: this.wallet.brand ? this.wallet.brand : 'MEW'
-          }, null, 2)
-          resolve(signedMsg)
+          resolve(_signedMessage)
         })
         .catch(_error => {
           reject(_error)

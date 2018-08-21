@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container/>
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -23,6 +23,7 @@ export default {
     'confirmation-container': ConfirmationContainer
   },
   mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
+    const notifications = store.get('notifications') !== undefined ? store.get('notifications') : {}
     const state = {
       web3: store.get('network') ? new Web3(store.get('network').url) : new Web3(this.$store.state.Networks['ETH'][0].url),
       network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
@@ -39,7 +40,7 @@ export default {
           sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
       },
-      notifications: store.get('notifications') !== undefined ? store.get('notifications') : {},
+      notifications: notifications,
       gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
     }
 

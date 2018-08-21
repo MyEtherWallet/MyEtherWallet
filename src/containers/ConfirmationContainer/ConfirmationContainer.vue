@@ -64,6 +64,7 @@ export default {
       this.isHardwareWallet = isHardware
       this.responseFunction = resolve
       this.successMessage = 'Sending Transaction'
+      // this.signer = signer(tx)
       signer(tx)
         .then(_response => {
           this.signedTxObject = _response
@@ -79,23 +80,18 @@ export default {
         .then(_response => {
           this.signedMessage = _response
         })
+      // this.signer = signer(data)
       this.signConfirmationModalOpen()
     })
 
-    this.$eventHub.$on('checkConnection', () => {
-      this.hardwareConnectCheck()
-    })
-
-    this.$on('bv::modal::hide', () => {
+    this.$children[0].$refs.confirmation.$on('hidden', () => {
+      console.log('modal hidden') // todo remove dev item
       if (this.dismissed) {
         this.reset()
       }
     })
   },
   methods: {
-    hardwareConnectCheck () {
-
-    },
     confirmationModalOpen () {
       window.scrollTo(0, 0)
       this.$refs.confirmModal.$refs.confirmation.show()
@@ -107,6 +103,7 @@ export default {
     showSuccessModal (message) {
       this.$refs.successModal.$refs.success.$on('hide', () => {
         this.successMessage = ''
+        console.log('success modal hidden') // todo remove dev item
       })
       this.reset()
       if (message !== null) this.successMessage = message
@@ -119,6 +116,7 @@ export default {
       this.gasLimit = tx.gas
       this.toAddress = tx.to
       this.amount = tx.value
+      // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn () {
       this.dismissed = false
