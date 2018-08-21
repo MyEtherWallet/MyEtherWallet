@@ -8,11 +8,7 @@ Object.keys(types).forEach((key) => {
 })
 
 Object.keys(nodes).forEach((key) => {
-  if (nodes[key].service === 'myetherwallet.com') {
-    nodeList[nodes[key].type.name].splice(0, 0, nodes[key])
-  } else {
-    nodeList[nodes[key].type.name].push(nodes[key])
-  }
+  nodeList[nodes[key].type.name].push(nodes[key])
 })
 
 export default nodeList

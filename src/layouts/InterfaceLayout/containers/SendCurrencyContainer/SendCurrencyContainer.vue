@@ -6,7 +6,7 @@
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>{{ $t('interface.sendTxAmount') }}</h4>
+            <h4>{{ $t("interface.sendTxAmount") }}</h4>
             <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire
               Balance</p>
           </div>
@@ -25,9 +25,11 @@
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t('interface.sendTxToAddr') }}</h4> &nbsp;
-            <blockie :address="toAddress" width="22px" height="22px"
-                     v-show="addressValid && toAddress.length !== 0"></blockie>
+            <h4>{{ $t("interface.sendTxToAddr") }}
+              <blockie class="blockie-image" :address="toAddress"
+                       v-show="addressValid && toAddress.length !== 0"></blockie>
+            </h4>
+
             <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{
               $t('common.copy')
               }}</p>
@@ -50,10 +52,10 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t('common.speedTx') }}</h4>
+            <h4>{{ $t("common.speedTx") }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div
@@ -84,25 +86,27 @@
     </div>
     <div class="send-form advanced">
       <div class="advanced-content">
-        <h4>{{ $t('common.advanced') }}</h4>
-        <div class="toggle-button">
-          <span>{{ $t('interface.dataGas') }}</span>
-          <!-- Rounded switch -->
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend"/>
-              <span class="slider round"></span>
-            </label>
+
+        <div class="toggle-button-container">
+          <h4>{{ $t('common.advanced') }}</h4>
+          <div class="toggle-button">
+            <span>{{ $t('interface.dataGas') }}</span>
+            <!-- Rounded switch -->
+            <div class="sliding-switch-white">
+              <label class="switch">
+                <input type="checkbox" v-on:click="advancedExpend = !advancedExpend"/>
+                <span class="slider round"></span>
+              </label>
+            </div>
           </div>
-          <br/>
-          <div class="input-container" v-if="advancedExpend">
-            <div class="the-form user-input">
-              <input type="text" name="" v-model="data"
-                     placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
-            </div>
-            <div class="the-form user-input">
-              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
-            </div>
+        </div>
+        <div class="input-container" v-if="advancedExpend">
+          <div class="the-form user-input">
+            <input type="text" name="" v-model="data"
+                   placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
+          </div>
+          <div class="the-form user-input">
+            <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
           </div>
         </div>
       </div>
@@ -118,9 +122,9 @@
                              :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
     <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
-                   <!--:nonce="nonce + 1"></confirm-modal>-->
+    <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
+    <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
+    <!--:nonce="nonce + 1"></confirm-modal>-->
     <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
@@ -172,48 +176,46 @@ export default {
     showSuccessModal () {
       this.$children[6].$refs.success.show()
     },
-    createTx () {
-      (async () => {
-        const jsonInterface = [{
-          'constant': false,
-          'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
-          'name': 'transfer',
-          'outputs': [{'name': 'success', 'type': 'bool'}],
-          'payable': false,
-          'type': 'function'
-        }]
-        const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-        const isEth = this.selectedCurrency.name === 'Ethereum'
-        this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
-        this.chainId = this.$store.state.network.type.chainID
-        this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
-        this.raw = {
-          chainId: 1,
-          from: this.$store.state.wallet.getAddressString(),
-          gas: this.gasLimit,
-          nonce: this.nonce,
-          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-          value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
-          to: isEth ? this.toAddress : this.selectedCurrency.addr,
-          data: this.data
-        }
+    async createTx () {
+      const jsonInterface = [{
+        'constant': false,
+        'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
+        'name': 'transfer',
+        'outputs': [{'name': 'success', 'type': 'bool'}],
+        'payable': false,
+        'type': 'function'
+      }]
+      const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
+      const isEth = this.selectedCurrency.name === 'Ethereum'
+      this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
+      this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
 
-        if (this.toAddress === '') {
-          delete this.raw['to']
-        }
+      this.raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.gasLimit,
+        nonce: this.nonce,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
+        to: isEth ? this.toAddress : this.selectedCurrency.addr,
+        chainId: this.$store.state.network.type.chainID,
+        data: this.data
+      }
+      console.log(this.$store.state.network.type) // todo remove dev item
+      if (this.toAddress === '') {
+        delete this.raw['to']
+      }
 
-        const fromAddress = this.raw.from
-        this.$store.state.web3.eth.sendTransaction(this.raw)
-          .once('transactionHash', (hash) => {
-            this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
-          })
-          .on('receipt', (res) => {
-            this.$store.dispatch('addNotification', [fromAddress, res, 'Transaction Receipt'])
-          })
-          .on('error', (err) => {
-            this.$store.dispatch('addNotification', [fromAddress, err, 'Transaction Error'])
-          })
-      })()
+      const fromAddress = this.raw.from
+      this.$store.state.web3.eth.sendTransaction(this.raw)
+        .once('transactionHash', (hash) => {
+          this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
+        })
+        .on('receipt', (res) => {
+          this.$store.dispatch('addNotification', [fromAddress, res, 'Transaction Receipt'])
+        })
+        .on('error', (err) => {
+          this.$store.dispatch('addNotification', [fromAddress, err, 'Transaction Error'])
+        })
     },
     confirmationModalOpen () {
       this.createTx()
