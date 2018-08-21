@@ -50,13 +50,14 @@ export default {
       messageToSign: '',
       signedMessage: '',
       successMessage: '',
+      linkMessage: 'OK',
       dismissed: true
     }
   },
   created () {
-    this.$eventHub.$on('showSuccessModal', (message) => {
+    this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null
-      this.showSuccessModal(message)
+      this.showSuccessModal(message, linkMessage)
     })
 
     this.$eventHub.$on('showTxConfirmModal', (tx, isHardware, signer, resolve) => {
@@ -100,13 +101,15 @@ export default {
       window.scrollTo(0, 0)
       this.$refs.signConfirmModal.$refs.signConfirmation.show()
     },
-    showSuccessModal (message) {
+    showSuccessModal (message, linkMessage) {
       this.$refs.successModal.$refs.success.$on('hide', () => {
         this.successMessage = ''
+        this.linkMessage = 'OK'
         console.log('success modal hidden') // todo remove dev item
       })
       this.reset()
       if (message !== null) this.successMessage = message
+      if (linkMessage !== null) this.linkMessage = linkMessage
       this.$refs.successModal.$refs.success.show()
     },
     parseRawTx (tx) {
