@@ -4,10 +4,19 @@
 
   padding: 70px 0;
   background-color: $light-grey-2;
+
+  background-image: url('~@/assets/images/background/bg-left.png'), url('~@/assets/images/background/bg-right.png');
+  background-position: top left, top right;
+  background-repeat: no-repeat;
+  background-size: 220px;
+
+
 }
 
 .page-title {
   text-align: center;
+  margin-bottom: 60px;
+
   h2 {
     font-size: 45px;
     margin-bottom: 30px;
@@ -20,14 +29,14 @@
 
 
 .ether-unit-reference-guide {
-  margin-top: 50px;
+  margin-top: 60px;
 
   .block-title {
     text-align: center;
   }
 
   .unit-table {
-    margin-top: 40px;
+    margin-top: 20px;
     table {
       width: 100%;
       border-top: 1px solid $light-grey-3;
