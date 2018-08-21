@@ -1,1 +1,1 @@
-export { default } from './CreateWalletLayout'
+export { default } from './CreateWalletLayout';

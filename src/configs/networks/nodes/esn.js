@@ -1,6 +1,4 @@
-import {
-  ESN
-} from '../types'
+import { ESN } from '../types';
 export default {
   type: ESN,
   service: 'ethersocial.org',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

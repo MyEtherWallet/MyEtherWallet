@@ -46,5 +46,5 @@ const common = {
   // depContract: ''
   // signMessage: '',
   // verifyMessage: ''
-}
-export default common
+};
+export default common;

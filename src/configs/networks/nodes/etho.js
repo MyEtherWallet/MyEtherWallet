@@ -1,6 +1,4 @@
-import {
-  ETHO
-} from '../types'
+import { ETHO } from '../types';
 export default {
   type: ETHO,
   service: 'ether1.org',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

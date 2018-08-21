@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-pirl.json'
-import contracts from '@/contracts/contract-abi-pirl.json'
+import tokens from '@/tokens/tokens-pirl.json';
+import contracts from '@/contracts/contract-abi-pirl.json';
 
 export default {
   name: 'PIRL',
@@ -10,4 +10,4 @@ export default {
   chainID: 3125659152,
   tokens: tokens,
   contracts: contracts
-}
+};

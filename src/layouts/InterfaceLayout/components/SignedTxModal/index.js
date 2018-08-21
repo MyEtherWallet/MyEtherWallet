@@ -1,1 +1,1 @@
-export { default } from './SignedTxModal'
+export { default } from './SignedTxModal';

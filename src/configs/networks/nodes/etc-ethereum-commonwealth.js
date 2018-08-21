@@ -1,6 +1,4 @@
-import {
-  ETC
-} from '../types'
+import { ETC } from '../types';
 export default {
   type: ETC,
   service: 'Ethereum Commonwealth',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

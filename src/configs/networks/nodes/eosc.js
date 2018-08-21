@@ -1,6 +1,4 @@
-import {
-  EOSC
-} from '../types'
+import { EOSC } from '../types';
 export default {
   type: EOSC,
   service: 'eos-classic.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

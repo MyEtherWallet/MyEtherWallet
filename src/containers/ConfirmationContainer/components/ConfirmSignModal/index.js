@@ -1,1 +1,1 @@
-export { default } from './ConfirmSignModal'
+export { default } from './ConfirmSignModal';
