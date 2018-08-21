@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword', 'openPrivateKeyInput', 'openMnemonicPhraseInput'],
+  props: ['value', 'openPassword', 'openPrivateKeyInput'],
   data () {
     return {
       file: '',
@@ -53,8 +53,6 @@ export default {
         this.uploadClick()
       } else if (this.selected === 'byPriv') {
         this.openPrivateKeyInput()
-      } else if (this.selected === 'byMnem') {
-        this.openMnemonicPhraseInput()
       } else {
 
       }

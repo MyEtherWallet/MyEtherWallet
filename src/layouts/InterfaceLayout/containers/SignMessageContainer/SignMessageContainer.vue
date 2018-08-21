@@ -74,18 +74,10 @@ export default {
   },
   methods: {
     signMessage () {
-      const message = this.$refs.message.value
-      this.$store.state.web3.eth.sign(message, this.$store.state.wallet.getAddressString())
+      this.$store.state.web3.eth.sign(this.$refs.message.value, this.$store.state.wallet.getAddressString())
         .then(_signedMessage => {
-          this.$refs.signature.value = JSON.stringify({
-            address: this.$store.state.wallet.getAddressString(),
-            msg: message,
-            sig: _signedMessage,
-            version: '3',
-            signer: this.$store.state.wallet.brand ? this.$store.state.wallet.brand : 'MEW'
-          }, null, 2)
+          this.$refs.signature.value = _signedMessage
         })
-        .catch(console.error)
     },
     successModalOpen () {
       this.$children[0].$refs.success.show()

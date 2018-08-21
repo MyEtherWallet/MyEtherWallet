@@ -31,5 +31,4 @@ export default function web3OverideMew (web3, wallet, eventHub) {
 
   web3.eth.signTransaction = methodOverides.signTransaction
   web3.eth.sign = methodOverides.signMessage
-  return web3 // needs to return web3 for use in vuex
 }

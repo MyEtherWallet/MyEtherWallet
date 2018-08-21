@@ -243,16 +243,8 @@ export default class TrezorWallet extends HardwareWalletInterface {
           },
           rawTransaction: `0x${tx.serialize().toString('hex')}`
         })
-        // resolve({
-        //   rawTx: rawTx.rawTx,
-        //   messageHash: tx.hash(), // figure out what exactly web3 is putting here
-        //   v: Buffer.from(result.v.toString(), 'hex'),
-        //   r: Buffer.from(result.r, 'hex'),
-        //   s: Buffer.from(result.s, 'hex'),
-        //   rawTransaction: `0x${tx.serialize().toString('hex')}`
-        // })
       }
-
+      console.log(rawTx.chainId) // todo remove dev item
       TrezorConnect.signEthereumTx(
         this.wallet.path,
         this.getNakedAddress(rawTx.nonce),

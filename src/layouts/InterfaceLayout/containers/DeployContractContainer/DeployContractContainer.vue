@@ -30,7 +30,8 @@
       </div>
       <div class="the-form domain-name">
         <textarea ref="abi" class="custom-textarea-1" v-model="abi"></textarea>
-        <i :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']" aria-hidden="true"></i>
+        <i :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
+           aria-hidden="true"></i>
       </div>
     </div>
 
@@ -75,20 +76,23 @@
           <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
-          <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(5)">
+          <div :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
+               @click="changeGas(5)">
             {{ $t('common.slow') }}
           </div>
-          <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(45)">
+          <div :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
+               @click="changeGas(45)">
             {{ $t('common.regular') }}
           </div>
-          <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']" @click="changeGas(75)">
+          <div :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
+               @click="changeGas(75)">
             {{ $t('common.fast') }}
           </div>
         </div>
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit" />
+        <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
         <div class="good-button-container">
           <p>Gwei</p>
           <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
@@ -98,13 +102,17 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="confirmationModalOpen" :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
+        <div v-on:click="confirmationModalOpen"
+             :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']">
           Sign Transaction
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
+                             :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>
+    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"
+                   :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit"
+                   :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>
     <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
   </div>
 </template>
@@ -112,14 +120,12 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import ConfirmModal from '@/components/ConfirmModal'
-import SuccessModal from '@/components/SuccessModal'
-import {Misc} from '@/helpers'
+import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal'
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
+import { Misc } from '@/helpers'
 
 import store from 'store'
 
-// eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 export default {
@@ -163,21 +169,25 @@ export default {
         gas: this.gasLimit,
         nonce: this.nonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        data: this.data
+        data: web3.utils.toHex(this.raw.data) // this.data
       }
 
-      // const tx = new EthTx(this.raw)
-      // tx.sign(this.$store.state.wallet.getPrivateKey())
-      // const signedTx = tx.serialize()
-      // this.signedTx = `0x${signedTx.toString('hex')}`
-      await web3.eth.sendTransaction(this.raw).once('transactionHash', (hash) => {
-        this.$store.dispatch('addNotification', [this.from, hash, 'Transaction Hash'])
-      }).on('receipt', (res) => {
-        this.$store.dispatch('addNotification', [this.from, res, 'Transaction Receipt'])
-      }).on('error', (err) => {
-        console.log(err)
-        this.$store.dispatch('addNotification', [this.from, err, 'Transaction Error'])
-      })
+      const fromAddress = this.raw.from
+      const transactionFee = await this.$store.state.web3.eth.estimateGas(this.raw)
+      this.gasLimit = transactionFee
+      this.transactionFee = await unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee, 'ether')
+
+      web3.eth.sendTransaction(this.raw)
+        .once('transactionHash', (hash) => {
+          this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
+        })
+        .on('receipt', (res) => {
+          this.$store.dispatch('addNotification', [fromAddress, res, 'Transaction Receipt'])
+        })
+        .on('error', (err) => {
+          console.log(err) // todo replace with proper error
+          this.$store.dispatch('addNotification', [fromAddress, err, 'Transaction Error'])
+        })
     },
     showSuccessModal () {
       this.$children[5].$refs.success.show()
@@ -192,10 +202,12 @@ export default {
         const newRaw = this.raw
         delete newRaw['gas']
         delete newRaw['nonce']
-        this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
-          this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
-          this.gasLimit = res
-        }).catch(err => console.log(err))
+        this.$store.state.web3.eth.estimateGas(newRaw)
+          .then(res => {
+            this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
+            this.gasLimit = res
+          })
+          .catch(err => console.log(err)) // todo replace with proper error
       }
     },
     copyToClipboard (ref) {
