@@ -11,6 +11,10 @@
           </p>
         </div>
 
+        <div>
+          <unit-input />
+        </div>
+
         <div class="ether-unit-reference-guide">
           <div class="block-title">
             <h3>Ether Unit Reference Guide</h3>
@@ -37,7 +41,12 @@
 </template>
 
 <script>
+import UnitInput from './components/UnitInput'
+
 export default {
+  components: {
+    'unit-input': UnitInput
+  },
   data () {
     return {
       etherUnitRef: [
