@@ -1,21 +1,18 @@
 <template>
   <div class="access-my-wallet-options">
+    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
-    <mew-connect-modal ref="mewconnectModal"
-                       :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
+    <network-and-address-modal :hardwareWallet="hardwareWallet" ></network-and-address-modal>
 
-    <hardware-modal ref="hardwareModal" :networkAndAddressOpen="networkAndAddressOpen"
+    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
                     v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
-    <network-and-address-modal ref="networkandaddressModal"
-                               :hardwareWallet="hardwareWallet"></network-and-address-modal>
 
-    <metamask-modal ref="metamastModal"></metamask-modal>
+    <metamask-modal></metamask-modal>
 
-    <software-modal ref="softwareModal" v-on:file="fileUploaded" :openPassword="passwordOpen"
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
                     :openPrivateKeyInput="privateKeyOpen"></software-modal>
-
-    <password-modal ref="passwordModal" :file="file"></password-modal>
-    <private-key-modal ref="privatekeyModal"></private-key-modal>
+    <password-modal :file="file"></password-modal>
+    <private-key-modal></private-key-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -127,26 +124,26 @@ export default {
   },
   methods: {
     mewConnectModalOpen () {
-      this.$refs.mewconnectModal.$refs.mewConnect.show()
+      this.$children[0].$refs.mewConnect.show()
     },
     networkAndAddressOpen () {
-      this.$refs.networkandaddressModal.$refs.networkAndAddress.show()
+      this.$children[1].$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
-      this.$refs.hardwareModal.$refs.hardware.show()
+      this.$children[2].$refs.hardware.show()
     },
     metamaskModalOpen () {
-      this.$refs.metamastModal.$refs.metamask.show()
+      this.$children[3].$refs.metamask.show()
     },
     softwareModalOpen () {
-      this.$refs.softwareModal.$refs.software.show()
+      this.$children[4].$refs.software.show()
     },
     passwordOpen () {
-      this.$refs.passwordModal.$refs.password.show()
+      this.$children[5].$refs.password.show()
     },
     privateKeyOpen () {
-      this.$refs.softwareModal.$refs.software.hide()
-      this.$refs.privatekeyModal.$refs.privateKey.show()
+      this.$children[4].$refs.software.hide()
+      this.$children[6].$refs.privateKey.show()
     },
     fileUploaded (e) {
       this.file = e

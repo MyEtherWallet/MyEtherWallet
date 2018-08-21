@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     unlockWallet () {
-      this.$store.dispatch('decryptWallet', BasicWallet.unlockWallet({
+      this.$store.dispatch('decryptWallet', BasicWallet.unlock({
         type: 'manualPrivateKey',
         manualPrivateKey: this.privateKey
       }))

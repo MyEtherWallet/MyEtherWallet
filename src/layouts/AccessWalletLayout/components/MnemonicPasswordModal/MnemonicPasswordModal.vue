@@ -7,7 +7,7 @@
         <img @click.prevent="switchViewPassword" v-if="!show" src="@/assets/images/icons/hide-password.svg"/>
       </div>
       <p class="error" v-show="error !== ''"> {{ error }} </p>
-      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" password === '' && password.length === 0 && password.length < 9">
+      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" >
         Unlock Wallet
       </button>
     </form>
@@ -15,10 +15,9 @@
 </template>
 
 <script>
-import Worker from '@/workers/unlockWallet.worker.js'
-import { BasicWallet } from '@/wallets'
+import { MnemonicWallet } from '@/wallets'
 export default {
-  props: ['file'],
+  props: ['phrase', 'networkAndAddressOpen'],
   data () {
     return {
       show: false,
@@ -28,20 +27,21 @@ export default {
   },
   methods: {
     unlockWallet () {
-      const worker = new Worker()
-      const self = this
-      worker.postMessage({type: 'unlockWallet', data: [this.file, this.password]})
-      worker.onmessage = function (e) {
-        // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
-        self.$store.dispatch('decryptWallet', BasicWallet.unlock({
-          type: 'manualPrivateKey',
-          manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
-        }))
-        self.$router.push({ path: 'interface' })
-      }
-      worker.onerror = function (e) {
-        self.error = e.message
-      }
+      // this.$store.dispatch('decryptWallet', )
+      MnemonicWallet.unlock({
+        mnemonicPhrase: this.phrase,
+        mnemonicPassword: this.password
+      })
+        .then((wallet) => {
+          this.$refs.password.hide()
+          this.password = ''
+          this.networkAndAddressOpen(wallet)
+        })
+        .catch(_error => {
+          console.error(_error) // todo replace with proper error
+        })
+
+      // this.$router.push({ path: 'interface' })
     },
     switchViewPassword () {
       this.show = !this.show
@@ -55,5 +55,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import "PasswordModal.scss";
+  @import "MnemonicPasswordModal.scss";
 </style>
