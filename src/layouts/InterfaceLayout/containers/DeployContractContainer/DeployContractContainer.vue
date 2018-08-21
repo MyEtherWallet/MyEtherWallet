@@ -1,6 +1,6 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
+    <!--<success-modal message="" linkMessage="Ok"></success-modal>-->
     <interface-container-title :title="$t('common.depContract')"></interface-container-title>
 
     <div class="send-form">
@@ -104,16 +104,15 @@
       </div>
       <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
     </div>
-    <confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>
-    <success-modal message="Sending Transaction" linkMessage="Close"></success-modal>
+    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>-->
+    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import ConfirmModal from '@/components/ConfirmModal'
-import SuccessModal from '@/components/SuccessModal'
+// import SuccessModal from '@/components/SuccessModal'
 import {Misc} from '@/helpers'
 
 import store from 'store'
@@ -126,9 +125,8 @@ export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'interface-container-title': InterfaceContainerTitle
+    // 'success-modal': SuccessModal
   },
   data () {
     return {
@@ -180,7 +178,8 @@ export default {
       })
     },
     showSuccessModal () {
-      this.$children[5].$refs.success.show()
+      this.$eventHub.$emit('showSuccessModal', 'lkjlkjlkjlkjl')
+      // this.$children[5].$refs.success.show()
     },
     confirmationModalOpen () {
       this.signTransaction()

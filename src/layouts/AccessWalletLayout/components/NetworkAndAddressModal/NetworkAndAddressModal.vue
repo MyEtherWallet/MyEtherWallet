@@ -1,6 +1,6 @@
 <template>
   <b-modal ref="networkAndAddress" hide-footer class="bootstrap-modal modal-network-and-address"
-           title="Network and Address">
+           title="Network and Address" centered>
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
@@ -14,8 +14,8 @@
             </b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item @click="showCustomPathInput" ref="addCustomPath">{{
-                                                                              $t('accessWallet.customPath')
-                                                                              }}
+              $t('accessWallet.customPath')
+              }}
             </b-dropdown-item>
             <b-dropdown-item ref="addCustomPathInput"><input></b-dropdown-item>
           </b-dropdown>
@@ -43,7 +43,7 @@
           <li>{{details.balance}} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input type="checkbox"/>
+              <input v-on:click="unselectAllAddresses" type="checkbox"/>
               <span class="checkmark checkmark-small" @click="setAddress(details)"></span>
             </label>
           </li>
@@ -59,15 +59,16 @@
 
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }} <a href="/">{{
-                                                                                         $t('common.terms')
-                                                                                         }}</a>.
-        <input type="checkbox"/>
+        $t('common.terms')
+        }}</a>.
+        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox"/>
         <span class="checkmark"></span>
       </label>
     </div>
     <div class="button-container">
-      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button">
-        {{ $t('common.continue') }}
+      <b-btn @click.prevent="unlockWallet" class="mid-round-button-green-filled close-button"
+             :disabled="accessMyWalletBtnDisabled">
+        {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
     <div class="support">
@@ -82,12 +83,11 @@
 </template>
 
 <script>
-import {
-  paths,
-  ledger,
-  trezor,
-  getDerivationPath
-} from '@/helpers/web3-overide/hardware/deterministicWalletPaths'
+// import {
+//   paths,
+//   ledger,
+//   trezor
+// } from '@/helpers/web3-overide/hardware/deterministicWalletPaths'
 
 const unit = require('ethjs-unit')
 
@@ -95,6 +95,8 @@ export default {
   props: ['hardwareWallet'],
   data () {
     return {
+      accessMyWalletBtnDisabled: true,
+      walletUnlocked: false,
       offset: 0,
       count: 5,
       hardwareAddresses: [],
@@ -104,22 +106,7 @@ export default {
     }
   },
   mounted () {
-    this.selecteDPath = getDerivationPath(this.$store.state.network.type.name, this.hardwareWallet.brand)
-    if (this.hardwareWallet.brand === 'ledger') {
-      this.availablePaths = {
-        ...paths,
-        ...ledger
-      }
-    } else if (this.hardwareWallet.brand === 'trezor') {
-      this.availablePaths = {
-        ...paths,
-        ...trezor
-      }
-    } else {
-      this.availablePaths = {
-        ...paths
-      }
-    }
+
   },
   computed: {
     orderedAddresses () {
@@ -132,6 +119,12 @@ export default {
     }
   },
   methods: {
+    unselectAllAddresses: function (e) {
+      document.querySelectorAll('.user-input-checkbox input').forEach(function (el) {
+        el.checked = false
+      })
+      e.srcElement.checked = true
+    },
     showCustomPathInput (e) {
       // console.log(e.target) // todo remove dev item
     },
@@ -177,8 +170,7 @@ export default {
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
-                console.log(address) // todo remove dev item
-                const rawBalance = await this.$store.state.web3.eth.getBalance(address)
+                const rawBalance = await this.$store.state.web3.eth.getBalance(address) // <- Throws because network (web3) not yet initialized
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
                 hardwareAddresses.push({index: i, address, balance})
               })
@@ -186,10 +178,15 @@ export default {
             })
         }
       })
+    },
+    getPaths () {
+      this.selecteDPath = this.hardwareWallet.getDerivationPath()
+      this.availablePaths = this.hardwareWallet.compatibleChains
     }
   },
   watch: {
     hardwareWallet (newValue) {
+      this.getPaths()
       this.getAddresses(this.count, this.offset)
         .then(addressSet => {
           this.hardwareAddresses = addressSet
