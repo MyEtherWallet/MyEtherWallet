@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { MewConnectWallet } from '@/helpers/web3-overide/hardware'
+import { MewConnectWallet } from '@/wallets'
 
 export default {
   props: ['networkAndAddressOpen'],

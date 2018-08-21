@@ -3,6 +3,7 @@ import Ledger from '@ledgerhq/hw-app-eth'
 import u2fTransport from '@ledgerhq/hw-transport-u2f'
 import HardwareWalletInterface from '../hardwareWallet-interface'
 import * as ethUtil from 'ethereumjs-util'
+import { paths, getDerivationPath } from './deterministicWalletPaths'
 
 // const NOT_SUPPORTED_ERROR_MSG =
 //   'LedgerWallet uses U2F which is not supported by your browser. ' +
@@ -24,7 +25,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     if (options.transport) this.ledgerTransport = options.transport
     this.allowedHdPaths = options.options || ['44\'/60\'', '44\'/61\'']
     this.defaultOptions = {
-      path: '44\'/60\'/0\'/0', // ledger default derivation path
+      path: this.getDerivationPath().dpath, // '44\'/60\'/0\'/0', // // ledger default derivation path
       askConfirm: false
     }
 
@@ -32,7 +33,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
       ...this.defaultOptions,
       ...options
     }
-    this.checkIfAllowedPath(currentOptions.path)
+    // this.checkIfAllowedPath(currentOptions.path)
 
     this.accountsLength = currentOptions.accountsLength || this.defaultAccountsCount
     this.accountsOffset = currentOptions.accountsOffset || this.defaultAccountsOffset
@@ -61,6 +62,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
     }
   }
 
+  get compatibleChains () {
+    return paths
+  }
+
+  getDerivationPath (networkShortName) {
+    return getDerivationPath(networkShortName)
+  }
+
   getAddress () {
     return this.wallet.address
   }
@@ -70,7 +79,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   changeDPath (path) {
-    this.path = path
+    return new Promise((resolve) => {
+      this.path = path
+      resolve()
+    })
   }
 
   setActiveAddress (address, index) {
@@ -78,8 +90,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.wallet.address = address
     this.wallet.path = this.pathComponents.basePath + index.toString()
     this.wallet.hwType = 'ledger'
+    this.wallet.brand = 'ledger'
     this.wallet.hwTransport = undefined
-    this.wallet.type = 'default'
+    this.wallet.type = 'hardware'
   }
 
   changeNetwork (networkId, path) {
@@ -128,16 +141,21 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   obtainPathComponentsFromDerivationPath (derivationPath) {
+    console.log(derivationPath) // todo remove dev item
     // check if derivation path follows 44'/60'/x'/n pattern
-    const regExp = /^(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
+    // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
+    const regExp = /^m?\/?(44'\/(?:1|60|61)'\/\d'\/)(\d+)$/
+    const regExpAlt = /^m?\/?(44'\/(?:1|60|61)')/
     const matchResult = regExp.exec(derivationPath)
-    if (matchResult === null) {
+    const matchResultAlt = regExpAlt.exec(derivationPath)
+    if (matchResult === null && matchResultAlt === null) {
       throw this.makeError(
         'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       )
     }
-    return {basePath: matchResult[1], index: parseInt(matchResult[2], 10)}
+    if (matchResult !== null) return {basePath: matchResult[1], index: parseInt(matchResult[2], 10)}
+    if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
   }
 
   getTransport () {
@@ -263,13 +281,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
           'InvalidNetworkId'
         )
       }
-
       return {
-        rawTx: txData,
-        messageHash: tx.hash(), // figure out what exactly web3 is putting here
-        v: Buffer.from(result.v, 'hex'),
-        r: Buffer.from(result.r, 'hex'),
-        s: Buffer.from(result.s, 'hex'),
+        tx: {
+          ...txData,
+          v: `0x${tx.v.toString('hex')}`,
+          r: `0x${tx.r.toString('hex')}`,
+          s: `0x${tx.s.toString('hex')}`,
+          hash: tx.hash().toString('hex')
+        },
         rawTransaction: `0x${tx.serialize().toString('hex')}`
       }
     } finally {

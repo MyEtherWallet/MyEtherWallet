@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { BasicWallet } from '@/helpers/web3-overide/software'
+import { BasicWallet } from '@/wallets'
 
 export default {
   data () {
@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     unlockWallet () {
-      this.$store.dispatch('decryptWallet', BasicWallet.unlockWallet({
+      this.$store.dispatch('decryptWallet', BasicWallet.unlock({
         type: 'manualPrivateKey',
         manualPrivateKey: this.privateKey
       }))

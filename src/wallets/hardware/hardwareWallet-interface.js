@@ -33,9 +33,20 @@ export default class HardwareWalletInterface {
   getAddressString () {
     throw new Error('getAddressString Not Implemented')
   }
+
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   // ============== (Start) Utility methods ======================
+  // Implementation required
+  get compatibleChains () {
+    throw new Error('compatibleChains getter Not Implemented')
+  }
+
+  // Implementation required
+  getDerivationPath (/* networkShortName */) {
+    throw new Error('getDerivationPath Not Implemented')
+  }
+
   get isHardware () {
     return this.isHardwareWallet
   }
@@ -47,7 +58,7 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required
-  setActiveAddress (address, index) {
+  setActiveAddress (/* address, index */) {
     throw new Error('setActiveAddress Not Implemented')
   }
 
@@ -65,17 +76,17 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required (if only a single account exists, it should be returned)
-  getMultipleAccounts (count, offset) {
+  getMultipleAccounts (/* count, offset */) {
     throw new Error('getMultipleAccounts Not Implemented')
   }
 
   // Implementation required
-  signMessage (txData) {
+  signMessage (/* txData */) {
     throw new Error('signMessage Not Implemented')
   }
 
   // Implementation required
-  signTransaction (txData) {
+  signTransaction (/* txData */) {
     throw new Error('signTransaction Not Implemented')
   }
 

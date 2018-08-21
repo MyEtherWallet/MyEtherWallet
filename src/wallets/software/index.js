@@ -1,5 +1,5 @@
 import BasicWallet from './basicWallet'
-import MnemonicWallet from './fromMnemonic'
+import { MnemonicWallet } from './mnemonic'
 
 export {
   BasicWallet,

@@ -5,12 +5,17 @@ import * as crypto from 'crypto'
 import * as bip39 from 'bip39'
 import * as HDKey from 'hdkey'
 import EthereumTx from 'ethereumjs-tx'
+import HardwareWalletInterface from './hardwareWallet-interface'
+import { getDerivationPath, paths } from '../../hardware/ledger/deterministicWalletPaths'
 
-export default class FromMnemonic {
+export default class MnemonicWallet extends HardwareWalletInterface {
   constructor (options) {
+    super()
+    this.brand = 'none'
     this.identifier = 'Mnemonic'
     this.wallet = null
     this.isMnemonic = false
+    this.addressToIndexMap = {}
     this.useDefaultdPath = true
     this.userSelectedAddress = false
     this.currentWalletSet = {
@@ -25,54 +30,83 @@ export default class FromMnemonic {
       hdk: null,
       dPath: ''
     }
-    this.defaultDPath = "m/44'/60'/0'/0" // first address: m/44'/60'/0'/0/0
+    this.path = 'm/44\'/60\'/0\'/0' // first address: m/44'/60'/0'/0/0
     if (options) {
       this.decryptWallet(options)
     }
   }
 
-  changeNetwork (networkId, path) {
-    throw Object.create({message: 'ERROR: changeNetwork NOT IMPLEMENTED'})
+  static unlock (options) {
+    return new MnemonicWallet(options)
   }
 
-  setMewDefaults (defaultOptions) {
-    this.defaultGasPrice = defaultOptions.gasPrice || '0x3b9aca00'
-    this.defaultGasLimit = defaultOptions.gas || '0x4bc94fd7000'
+  get compatibleChains () {
+    return paths
+  }
+
+  getDerivationPath (networkShortName) {
+    return getDerivationPath(networkShortName)
+  }
+
+  setActiveAddress (address, index) {
+    if (this.addressToIndexMap[index] === address) {
+      this.wallet = this.HDWallet.wallets[index]
+    } else {
+      console.warn(`Address at index ${index} does not match address ${address}`)
+      console.log(this.addressToIndexMap) // todo remove dev item
+      const foundIndex = Object.values(this.addressToIndexMap).indexOf(address)
+      this.wallet = this.HDWallet.wallets[foundIndex]
+    }
+  }
+
+  getAddress () {
+    return this.wallet.address
+  }
+
+  getAddressString () {
+    return ethUtil.toChecksumAddress(this.getAddress())
+  }
+
+  changeDPath (path) {
+    return new Promise((resolve) => {
+      this.path = path
+      resolve()
+    })
   }
 
   getAccounts (callback) {
-    try {
-      let addressAsString = this.getAddressString()
-      callback(null, addressAsString)
-    } catch (e) {
-      console.error(e) // todo replace with proper error
-      callback(e)
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        let addressAsString = this.getAddressString()
+        resolve(addressAsString)
+      } catch (e) {
+        console.error(e) // todo replace with proper error
+        reject(e)
+      }
+    })
   }
 
-  getMultipleAccounts (count, offset, callback) {
-    try {
-      this.getHDAddresses(this.currentWalletSet.start, this.currentWalletSet.limit, function (err, result) {
-        if (err) {
-          callback(err)
-          return
-        }
-        callback(null, result)
-      })
-      // callback(null, addresses);
-    } catch (e) {
-      console.error(e) // todo replace with proper error
-      callback(e)
-    }
+  getMultipleAccounts (count, offset) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.getHDAddresses(this.currentWalletSet.start, this.currentWalletSet.limit, function (err, result) {
+          if (err) {
+            reject(err)
+            return
+          }
+          resolve(result)
+        })
+      } catch (e) {
+        console.error(e) // todo replace with proper error
+        reject(e)
+      }
+    })
   }
 
-  signTransaction (rawTxData, callback) {
+  async signTransaction (rawTxData) {
     try {
       if (!this.wallet) throw new Error('no wallet present. wallet not have been decrypted')
-      // var _this = this,
-      //   error = false,
-      //   result
-      var txData = {
+      const txData = {
         nonce: rawTxData.nonce,
         gasPrice: rawTxData.gasprice || rawTxData.gasPrice ? rawTxData.gasPrice : this.defaultGasPrice,
         gas: rawTxData.gas || rawTxData.gasLimit ? rawTxData.gasLimit : this.defaultGasLimit,
@@ -82,17 +116,23 @@ export default class FromMnemonic {
         chainId: rawTxData.chainId
       }
       txData.data = txData.data === '' ? '0x' : txData.data
-      let eTx = new EthereumTx(txData)
-      eTx.sign(Buffer.from(this.wallet.privKey, 'hex'))
+      let tx = new EthereumTx(txData)
+      tx.sign(Buffer.from(this.wallet.privKey, 'hex'))
       txData.rawTx = JSON.stringify(txData)
-      txData.signedTx = '0x' + eTx.serialize().toString('hex')
-      callback(null, txData.signedTx)
+      return {
+        rawTx: txData,
+        messageHash: tx.hash(), // figure out what exactly web3 is putting here
+        v: tx.v,
+        r: tx.r,
+        s: tx.s,
+        rawTransaction: `0x${tx.serialize().toString('hex')}`
+      }
     } catch (e) {
-      callback(e)
+      return e
     }
   }
 
-  signMessage (message, callback) {
+  async signMessage (message) {
     try {
       if (!this.wallet) throw new Error('no wallet present. wallet may not have been decrypted')
       let thisMessage = message.data ? message.data : message
@@ -101,20 +141,9 @@ export default class FromMnemonic {
       let signed = ethUtil.ecsign(msg, this.wallet.privKey)
       let combined = Buffer.concat([Buffer.from(signed.r), Buffer.from(signed.s), Buffer.from([signed.v])])
       let combinedHex = combined.toString('hex')
-      let signingAddr = this.getAddressString()
-      // eslint-disable-next-line no-unused-vars
-      let signedMsg = JSON.stringify({
-        address: signingAddr,
-        msg: thisMessage,
-        sig: '0x' + combinedHex,
-        version: '3',
-        signer: 'MEW'
-      }, null, 2)
-      if (!(typeof callback === 'function')) return '0x' + combinedHex
-      callback(null, '0x' + combinedHex)
+      return '0x' + combinedHex
     } catch (e) {
-      if (!(typeof callback === 'function')) return e
-      callback(e)
+      return e
     }
   }
 
@@ -131,32 +160,19 @@ export default class FromMnemonic {
     return wallet
   }
 
-  getAddress () {
-    if (!this.wallet && this.HDWallet.wallets.length === 0) throw Error('no wallet present. wallet not have been decrypted')
-    if (!this.wallet) {
-      if (typeof this.HDWallet.wallets[0].pubKey === 'undefined') {
-        return ethUtil.privateToAddress(this.HDWallet.wallets[0].privKey)
-      } else {
-        return ethUtil.publicToAddress(this.HDWallet.wallets[0].pubKey, true)
-      }
+  deriveAddress (wallet) {
+    if (typeof wallet.pubKey === 'undefined') {
+      return ethUtil.privateToAddress(wallet.privKey).toString('hex')
     } else {
-      if (typeof this.wallet.pubKey === 'undefined') {
-        return ethUtil.privateToAddress(this.wallet.privKey)
-      } else {
-        return ethUtil.publicToAddress(this.wallet.pubKey, true)
-      }
+      return ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
     }
-  }
-
-  getAddressString () {
-    return utils.toChecksumAddress('0x' + this.getAddress().toString('hex'))
   }
 
   // can be accessed via the accessWallet property of MewCore
   decryptWallet (options) {
     try {
-      if (!bip39.validateMnemonic(options.manualmnemonic)) throw new Error('Invalid Mnemonic Supplied')
-      this.HDWallet.hdk = HDKey.fromMasterSeed(bip39.mnemonicToSeed(options.manualmnemonic.trim(), options.mnemonicPassword))
+      if (!bip39.validateMnemonic(options.mnemonicPhrase)) throw new Error('Invalid Mnemonic Supplied')
+      this.HDWallet.hdk = HDKey.fromMasterSeed(bip39.mnemonicToSeed(options.mnemonicPhrase.trim(), options.mnemonicPassword))
       this.setHDAddresses()
       if (options.retrieveIndex) {
         this.getSingleHDAddresses(options.retrieveIndex)
@@ -179,29 +195,19 @@ export default class FromMnemonic {
       start: start,
       limit: limit
     }
-    if (this.useDefaultdPath) {
-      this.HDWallet.dPath = this.defaultDPath
-    }
+
     this.HDWallet.wallets = []
     for (let i = start; i < start + limit; i++) {
-      this.HDWallet.wallets.push(this.createWallet(this.HDWallet.hdk.derive(this.HDWallet.dPath + '/' + i)._privateKey))
+      const tempWallet = this.createWallet(this.HDWallet.hdk.derive(this.path + '/' + i)._privateKey)
+      tempWallet.address = this.deriveAddress(tempWallet)
+      this.addressToIndexMap[i] = tempWallet.address
+      this.HDWallet.wallets.push(tempWallet)
       this.HDWallet.wallets[this.HDWallet.wallets.length - 1].type = 'addressOnly'
       // this.HDWallet.web3-wallets[this.HDWallet.web3-wallets.length - 1].setBalance(false);
     }
 
     this.HDWallet.id = 0
     this.HDWallet.numWallets = start + limit
-    if (!this.userSelectedAddress) {
-      this.wallet = this.HDWallet.wallets[0]
-    }
-  }
-
-  setdPath (path, start = 0, limit = 5) {
-    if (this.HDWallet.hdk) {
-      this.useDefaultdPath = false
-      this.HDWallet.dPath = path
-      this.setHDAddresses(start, limit)
-    }
   }
 
   setHDWallet (index) {
@@ -212,13 +218,6 @@ export default class FromMnemonic {
       console.error(e)
     }
   }
-
-  // getWalletSet(start, limit){
-  //   this.currentWalletSet = {
-  //     start: start,
-  //     limit: limit
-  //   }
-  // }
 
   getHDAddresses (start = 0, limit = 5, callback) {
     if (this.HDWallet.hdk) {
@@ -244,7 +243,7 @@ export default class FromMnemonic {
   getSingleHDAddresses (start = 0, callback) {
     if (this.HDWallet.hdk) {
       let addressArray = []
-      this.HDWallet.wallets.unshift(this.createWallet(this.HDWallet.hdk.derive(this.HDWallet.dPath + '/' + start)._privateKey))
+      this.HDWallet.wallets.unshift(this.createWallet(this.HDWallet.hdk.derive(this.path + '/' + start)._privateKey))
       this.HDWallet.wallets[0].type = 'addressOnly'
       utils.toChecksumAddress(this._getAddress(this.HDWallet.wallets[0]))
       if (typeof callback !== 'function') {

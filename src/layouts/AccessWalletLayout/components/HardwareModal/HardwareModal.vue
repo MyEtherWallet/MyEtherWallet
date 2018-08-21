@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { LedgerWallet, TrezorWallet } from '@/helpers/web3-overide/hardware'
+import { LedgerWallet, TrezorWallet } from '@/wallets'
 
 export default {
   props: ['networkAndAddressOpen', 'hardwareWalletOpen'],
