@@ -33,5 +33,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "CreateWalletModal.scss";
+@import 'CreateWalletModal.scss';
 </style>

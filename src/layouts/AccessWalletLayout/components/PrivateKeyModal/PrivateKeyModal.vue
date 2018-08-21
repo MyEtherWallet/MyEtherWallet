@@ -1,5 +1,10 @@
 <template>
-  <b-modal ref="privateKey" hide-footer class="bootstrap-modal modal-software" title="PrivateKey" centered>
+  <b-modal 
+    ref="privateKey" 
+    hide-footer 
+    class="bootstrap-modal modal-software" 
+    title="PrivateKey" 
+    centered>
     <form class="private-key-form">
       <div class="input-container">
         <input
@@ -21,26 +26,29 @@
 
 <script>
 // import Wallet from 'ethereumjs-wallet'
-import { BasicWallet } from '@/helpers/web3-overide/software'
+import { BasicWallet } from '@/helpers/web3-overide/software';
 
 export default {
   data() {
     return {
-      privateKey: ""
+      privateKey: ''
     };
   },
   methods: {
-    unlockWallet () {
-      this.$store.dispatch('decryptWallet', BasicWallet.unlockWallet({
-        type: 'manualPrivateKey',
-        manualPrivateKey: this.privateKey
-      }))
-      this.privateKey = ''
-      this.$router.push({ path: 'interface' })
+    unlockWallet() {
+      this.$store.dispatch(
+        'decryptWallet',
+        BasicWallet.unlockWallet({
+          type: 'manualPrivateKey',
+          manualPrivateKey: this.privateKey
+        })
+      );
+      this.privateKey = '';
+      this.$router.push({ path: 'interface' });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "PrivateKeyModal.scss";
+@import 'PrivateKeyModal.scss';
 </style>

@@ -6,7 +6,12 @@
 
 <script>
 export default {
-  props: ["title"],
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {};
   }
@@ -14,5 +19,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceContainerTitle.scss";
+@import 'InterfaceContainerTitle.scss';
 </style>

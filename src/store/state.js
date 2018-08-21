@@ -1,23 +1,23 @@
-import nodeList from "@/configs/networks";
+import nodeList from '@/configs/networks';
 const state = {
   web3: {},
   network: {
     auth: false,
-    password: "",
+    password: '',
     port: 443,
-    service: "myetherwallet.com",
+    service: 'myetherwallet.com',
     type: {
-      blockExplorerAddr: "https://ropsten.etherscan.io/address/[[txHash]]",
-      blockExplorerTX: "https://ropsten.etherscan.io/tx/[[txHash]]",
+      blockExplorerAddr: 'https://ropsten.etherscan.io/address/[[txHash]]',
+      blockExplorerTX: 'https://ropsten.etherscan.io/tx/[[txHash]]',
       chainID: 3,
       contracts: [],
-      homePage: "https://github.com/ethereum/ropsten",
-      name: "ROP",
-      name_long: "Ropsten",
+      homePage: 'https://github.com/ethereum/ropsten',
+      name: 'ROP',
+      name_long: 'Ropsten',
       tokens: []
     },
-    url: "https://api.myetherwallet.com/rop",
-    username: ""
+    url: 'https://api.myetherwallet.com/rop',
+    username: ''
   },
   wallet: null,
   account: {
@@ -29,7 +29,7 @@ const state = {
   online: true,
   pageStates: {
     interface: {
-      sideMenu: "send"
+      sideMenu: 'send'
     }
   },
   notifications: {},

@@ -110,11 +110,11 @@
 </template>
 
 <script>
-import InterfaceBottomText from "@/components/InterfaceBottomText";
-import TxSpeedInput from "../../components/TxSpeedInput";
-import CurrencyPicker from "../CurrencyPicker";
-import SignedTxModal from "../../components/SignedTxModal";
-import Blockie from "@/components/Blockie";
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import TxSpeedInput from '../../components/TxSpeedInput';
+import CurrencyPicker from '../CurrencyPicker';
+import SignedTxModal from '../../components/SignedTxModal';
+import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
@@ -122,24 +122,33 @@ const unit = require('ethjs-unit')
 
 export default {
   components: {
-    "interface-bottom-text": InterfaceBottomText,
-    "tx-speed-input": TxSpeedInput,
+    'interface-bottom-text': InterfaceBottomText,
+    'tx-speed-input': TxSpeedInput,
     blockie: Blockie,
-    "signed-tx-modal": SignedTxModal,
-    "currency-picker": CurrencyPicker
+    'signed-tx-modal': SignedTxModal,
+    'currency-picker': CurrencyPicker
   },
-  props: ["gasLimit", "nonce"],
+  props: {
+    gasLimit: {
+      type: Number,
+      default: 0
+    },
+    nonce: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       toAmt: 0,
-      toAddress: "",
-      toData: "0x",
+      toAddress: '',
+      toData: '0x',
       parsedBalance: 0,
       localGas: this.gasLimit,
-      coinType: [{ symbol: "ETH", name: "Ethereum" }],
-      selectedCoinType: "",
-      raw: "",
-      signed: "",
+      coinType: [{ symbol: 'ETH', name: 'Ethereum' }],
+      selectedCoinType: '',
+      raw: '',
+      signed: '',
       locNonce: this.nonce,
       validAddress: false
     };
@@ -153,7 +162,7 @@ export default {
     },
     toAddress(newVal) {
       if (
-        newVal !== "" &&
+        newVal !== '' &&
         newVal.length !== 0 &&
         this.$store.state.web3.utils.isAddress(newVal)
       ) {
@@ -168,49 +177,48 @@ export default {
   mounted() {
     this.parsedBalance = unit.fromWei(
       this.$store.state.account.balance.result,
-      "ether"
+      'ether'
     );
   },
   methods: {
-    copyToAddress () {
-      this.$refs('toaddress').select()
-      document.execCommand('copy')
-      window.getSelection().removeAllRanges()
+    copyToAddress() {
+      this.$refs('toaddress').select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     },
     next() {
       const raw = {
         from: this.$store.state.wallet.getAddressString(),
         gas: this.localGas,
-        value: unit.toWei(this.toAmt, "ether"),
+        value: unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
         nonce: this.locNonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, "gwei")),
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
         to: this.toAddress,
         chainId: this.$store.state.network.type.chainID
-      }
-      this.$store.state.web3.eth.signTransaction(raw)
-        .then(signedTx => {
-          this.$emit('createdRawTx', signedTx.rawTransaction)
+      };
+      this.$store.state.web3.eth.signTransaction(raw).then(signedTx => {
+        this.$emit('createdRawTx', signedTx.rawTransaction);
 
-          this.raw = raw
-          this.signed = signedTx.rawTransaction
-          this.$children[5].$refs.signedTx.show()
-          window.scrollTo(0, 0)
-        })
+        this.raw = raw;
+        this.signed = signedTx.rawTransaction;
+        this.$children[5].$refs.signedTx.show();
+        window.scrollTo(0, 0);
+      });
     },
     gasLimitUpdated(e) {
-      this.$emit("gasLimitUpdate", e);
+      this.$emit('gasLimitUpdate', e);
     },
     nonceUpdated(e) {
-      this.$emit("nonceUpdate", e);
+      this.$emit('nonceUpdate', e);
     },
     pathUpdate() {
-      this.$emit("pathUpdate", "sendPubTx");
+      this.$emit('pathUpdate', 'sendPubTx');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "GenerateTx.scss";
+@import 'GenerateTx.scss';
 </style>

@@ -1,14 +1,14 @@
-import common from "./common/gb";
-import header from "./header/gb";
-import home from "./home/gb";
-import footer from "./footer/gb";
-import privacyPolicy from "./privacy-policy/gb";
-import termsOfConditions from "./terms-of-conditions/gb";
-import createWallet from "./create-wallet/gb";
-import accessWallet from "./access-wallet/gb";
-import interfaceTranslations from "./interface/gb";
-import team from "./team/gb";
-import popover from "./popover/gb";
+import common from './common/gb';
+import header from './header/gb';
+import home from './home/gb';
+import footer from './footer/gb';
+import privacyPolicy from './privacy-policy/gb';
+import termsOfConditions from './terms-of-conditions/gb';
+import createWallet from './create-wallet/gb';
+import accessWallet from './access-wallet/gb';
+import interfaceTranslations from './interface/gb';
+import team from './team/gb';
+import popover from './popover/gb';
 
 const gb = {
   common: common,

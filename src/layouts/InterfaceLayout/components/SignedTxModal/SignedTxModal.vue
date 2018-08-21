@@ -25,12 +25,16 @@
           </h4>
           <div class="sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" v-on:click="showRaw = !showRaw">
-              <span class="slider round"></span>
+              <input
+                type="checkbox"
+                @click="showRaw = !showRaw">
+              <span class="slider round"/>
             </label>
           </div>
         </div>
-        <div v-if="showRaw" class="raw-tx-container">
+        <div
+          v-if="showRaw"
+          class="raw-tx-container">
           <code>
             {{ rawTx }}
           </code>
@@ -49,8 +53,23 @@
 
 <script type="text/javascript">
 export default {
-  name: "SignedTxModal",
-  props: ["signedTx", "rawTx", "pathUpdate"],
+  name: 'SignedTxModal',
+  props: {
+    signedTx: {
+      type: String,
+      default: ''
+    },
+    rawTx: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+    pathUpdate: {
+      type: Function,
+      default: function() {}
+    }
+  },
   data() {
     return {
       showRaw: false
@@ -59,7 +78,7 @@ export default {
   methods: {
     copyAndContinue() {
       this.$refs.signedTxInput.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       this.pathUpdate();
     }
   }
@@ -67,5 +86,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "SignedTxModal.scss";
+@import 'SignedTxModal.scss';
 </style>

@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-poa.json'
-import contracts from '@/contracts/contract-abi-poa.json'
+import tokens from '@/tokens/tokens-poa.json';
+import contracts from '@/contracts/contract-abi-poa.json';
 
 export default {
   name: 'POA',
@@ -10,4 +10,4 @@ export default {
   chainID: 99,
   tokens: tokens,
   contracts: contracts
-}
+};

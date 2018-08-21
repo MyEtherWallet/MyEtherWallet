@@ -1,7 +1,7 @@
 <template>
   <div class="swap-container">
     <div class="title-block">
-      <interface-container-title :title="$t('common.swap')"></interface-container-title>
+      <interface-container-title :title="$t('common.swap')"/>
       <div class="images">
         <img :src="images.kybernetowrk">
         <img :src="images.bity">
@@ -106,7 +106,9 @@
       <h4>1 ETH = 0.000231 BTC</h4>
       <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
-        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        <i 
+          class="fa fa-long-arrow-right" 
+          aria-hidden="true"/>
       </div>
       <div class="buy-eth">
         <span>Buy ETH with</span>
@@ -117,19 +119,19 @@
   </div>
 </template>
 <script>
-import CurrencyPicker from "../../components/CurrencyPicker";
-import InterfaceBottomText from "@/components/InterfaceBottomText";
-import InterfaceContainerTitle from "../../components/InterfaceContainerTitle";
+import CurrencyPicker from '../../components/CurrencyPicker';
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 
-import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
-import ImageBity from '@/assets/images/etc/bity.png'
-import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
+import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
+import ImageBity from '@/assets/images/etc/bity.png';
+import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 
 export default {
   components: {
-    "interface-bottom-text": InterfaceBottomText,
-    "interface-container-title": InterfaceContainerTitle,
-    "currency-picker": CurrencyPicker
+    'interface-bottom-text': InterfaceBottomText,
+    'interface-container-title': InterfaceContainerTitle,
+    'currency-picker': CurrencyPicker
   },
   data() {
     return {
@@ -138,9 +140,17 @@ export default {
         bity: ImageBity,
         visaMaster: ImageVisaMaster
       },
-      toArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}],
-      fromArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}]
-    }
+      toArray: [
+        { symbol: 'BTC', name: 'Bitcoin' },
+        { symbol: 'Aug', name: 'Augur' },
+        { symbol: 'OMG', name: 'OhMyGod' }
+      ],
+      fromArray: [
+        { symbol: 'BTC', name: 'Bitcoin' },
+        { symbol: 'Aug', name: 'Augur' },
+        { symbol: 'OMG', name: 'OhMyGod' }
+      ]
+    };
   },
   methods: {
     copyAddress() {
@@ -151,5 +161,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "SwapContainer.scss";
+@import 'SwapContainer.scss';
 </style>

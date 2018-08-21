@@ -1,6 +1,4 @@
-import {
-  PIRL
-} from '../types'
+import { PIRL } from '../types';
 export default {
   type: PIRL,
   service: 'pirl.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

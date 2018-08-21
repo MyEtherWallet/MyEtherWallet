@@ -1,7 +1,11 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="signConfirmation" hide-footer centered
-             class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
+    <b-modal 
+      ref="signConfirmation" 
+      hide-footer 
+      centered
+      class="bootstrap-modal-wide confirmation-modal nopadding" 
+      title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
@@ -9,7 +13,7 @@
             <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
               <p class="address-title">Signing Address</p>
-              <p>{{from}}</p>
+              <p>{{ from }}</p>
             </div>
           </div>
           <div class="direction">
@@ -20,7 +24,7 @@
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
               <p class="address-title">Message</p>
-              <p>{{messageToSign}}</p>
+              <p>{{ messageToSign }}</p>
             </div>
           </div>
         </div>
@@ -28,19 +32,27 @@
           <div class="flex-center-align">
             <div class="button-with-helper">
               <div
-                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                ref="ConfirmAndSendButton" v-on:click="signMessage">
+                ref="ConfirmAndSendButton"
+                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']" 
+                @click="signMessage">
                 Confirm Signing
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
-                  <img class="icon" src="~@/assets/images/icons/qr-code.svg">
+                  <img 
+                    class="icon" 
+                    src="~@/assets/images/icons/qr-code.svg">
                 </b-btn>
-                <b-popover target="exPopover9" triggers="hover focus" placement="top">
+                <b-popover 
+                  target="exPopover9" 
+                  triggers="hover focus" 
+                  placement="top">
                   <div class="qrcode-contents">
                     <p class="qrcode-title">Scan QR code to send/swap instantly</p>
                     <div class="qrcode-block">
-                      <qrcode value="Hello, World!" :options="{ size: 100 }"></qrcode>
+                      <qrcode 
+                        :options="{ size: 100 }" 
+                        value="Hello, World!"/>
                     </div>
                     <p class="qrcode-helper">What is that?</p>
                   </div>
@@ -56,36 +68,56 @@
 </template>
 
 <script>
-
 export default {
-  props: ['confirmSignMessage', 'signedMessage', 'messageToSign', 'from', 'showSuccess', 'isHardwareWallet'],
-  data () {
+  props: {
+    confirmSignMessage: {
+      type: Function,
+      default: function() {}
+    },
+    signedMessage: {
+      type: String,
+      default: ''
+    },
+    messageToSign: {
+      type: String,
+      default: ''
+    },
+    from: {
+      type: String,
+      default: ''
+    },
+    isHardwareWallet: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
     return {
       modalDetailInformation: false,
       transactionSigned: false
+    };
+  },
+  computed: {
+    signedMessageSignature() {
+      if (this.signedMessage) {
+        return this.signedMessage;
+      } else if (this.isHardwareWallet) {
+        return 'Please Approve on Hardware Wallet';
+      } else {
+        return '';
+      }
     }
   },
   methods: {
-    signMessage () {
+    signMessage() {
       if (this.signedMessage !== '') {
-        this.confirmSignMessage()
-      }
-    }
-  },
-  computed: {
-    signedMessageSignature () {
-      if (this.signedMessage) {
-        return this.signedMessage
-      } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet'
-      } else {
-        return ''
+        this.confirmSignMessage();
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ConfirmModal";
+@import 'ConfirmModal';
 </style>

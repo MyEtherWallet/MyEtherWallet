@@ -23,11 +23,24 @@
 </template>
 
 <style lang="scss" scoped>
-  @import "SuccessModal";
+@import 'SuccessModal';
 </style>
 <script>
 export default {
-  props: ["message", "linkMessage", "linkTo"],
+  props: {
+    message: {
+      type: String,
+      default: ''
+    },
+    linkMessage: {
+      type: String,
+      default: ''
+    },
+    linkTo: {
+      type: String,
+      default: '/'
+    }
+  },
   methods: {
     hideModal() {
       if (this.linkTo !== undefined) {

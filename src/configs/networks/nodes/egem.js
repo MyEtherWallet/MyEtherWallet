@@ -1,6 +1,4 @@
-import {
-  EGEM
-} from '../types'
+import { EGEM } from '../types';
 export default {
   type: EGEM,
   service: 'egem.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

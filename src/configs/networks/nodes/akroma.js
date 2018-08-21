@@ -1,6 +1,4 @@
-import {
-  AKA
-} from '../types'
+import { AKA } from '../types';
 export default {
   type: AKA,
   service: 'akroma.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

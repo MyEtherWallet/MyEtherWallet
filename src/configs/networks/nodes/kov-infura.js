@@ -1,6 +1,4 @@
-import {
-  KOV
-} from '../types'
+import { KOV } from '../types';
 export default {
   type: KOV,
   service: 'infura.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

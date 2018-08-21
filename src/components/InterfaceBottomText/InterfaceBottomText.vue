@@ -1,14 +1,27 @@
 <template>
   <div class="bottom-text">
-    <p>{{ question }} <a 
-      :href="link" 
+    <p>{{ question }} <a
+      :href="link"
       target="_blank">{{ linkText }}</a></p>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["link", "linkText", "question"],
+  props: {
+    link: {
+      type: String,
+      default: ''
+    },
+    linkText: {
+      type: String,
+      default: ''
+    },
+    question: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {};
   }
@@ -16,5 +29,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceBottomText.scss";
+@import 'InterfaceBottomText.scss';
 </style>

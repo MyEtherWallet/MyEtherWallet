@@ -1,231 +1,265 @@
-import EthereumjsTx from 'ethereumjs-tx'
-import * as ethUtil from 'ethereumjs-util'
-import * as HDKey from 'hdkey'
-import HardwareWalletInterface from '../hardwareWallet-interface'
+import EthereumjsTx from 'ethereumjs-tx';
+import * as ethUtil from 'ethereumjs-util';
+import * as HDKey from 'hdkey';
+import HardwareWalletInterface from '../hardwareWallet-interface';
 
-const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect
+const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect;
 
 export default class TrezorWallet extends HardwareWalletInterface {
-  constructor (options) {
-    super()
-    this.identifier = 'TrezorOne'
-    this.brand = 'trezor'
-    this.wallet = null
+  constructor(options) {
+    super();
+    this.identifier = 'TrezorOne';
+    this.brand = 'trezor';
+    this.wallet = null;
 
-    options = options || {}
-    this.addressToWalletMap = {}
-    this.addressesToIndexMap = {}
-    this.walletsRetrieved = []
+    options = options || {};
+    this.addressToWalletMap = {};
+    this.addressesToIndexMap = {};
+    this.walletsRetrieved = [];
 
-    this.id = 0
-    this.hdk = null
-    this.numWallets = 0
+    this.id = 0;
+    this.hdk = null;
+    this.numWallets = 0;
 
     this.defaultOptions = {
-      path: 'm/44\'/60\'/0\'/0' // trezor default derivation path
-    }
+      path: "m/44'/60'/0'/0" // trezor default derivation path
+    };
     const currentOptions = {
       ...this.defaultOptions,
       ...options
-    }
+    };
 
-    this.path = currentOptions.path
-    this.accountsLength = currentOptions.accountsLength || this.defaultAccountsCount
-    this.accountsOffset = currentOptions.accountsOffset || this.defaultAccountsOffset
-    this.networkId = currentOptions.networkId || this.defaultNetworkId
+    this.path = currentOptions.path;
+    this.accountsLength =
+      currentOptions.accountsLength || this.defaultAccountsCount;
+    this.accountsOffset =
+      currentOptions.accountsOffset || this.defaultAccountsOffset;
+    this.networkId = currentOptions.networkId || this.defaultNetworkId;
 
-    this.getAccounts = this.getAccounts.bind(this)
-    this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
-    this.signTransaction = this.signTransaction.bind(this)
-    this.signMessage = this.signMessage.bind(this)
+    this.getAccounts = this.getAccounts.bind(this);
+    this.getMultipleAccounts = this.getMultipleAccounts.bind(this);
+    this.signTransaction = this.signTransaction.bind(this);
+    this.signMessage = this.signMessage.bind(this);
   }
 
   // ============== (Start) Expected Utility methods ======================
 
-  setActiveAddress (address, index) {
-    this.wallet = this.addressToWalletMap[address]
-    this.wallet.address = address
+  setActiveAddress(address) {
+    this.wallet = this.addressToWalletMap[address];
+    this.wallet.address = address;
   }
 
-  static async unlock (options) {
+  static async unlock(options) {
     try {
-      const wallet = new TrezorWallet(options)
-      await wallet.unlockTrezor()
-      return wallet
+      const wallet = new TrezorWallet(options);
+      await wallet.unlockTrezor();
+      return wallet;
     } catch (e) {
-      return e
+      return e;
     }
   }
 
   // ============== (End) Expected Utility methods ======================
 
   // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
-  getAddress () {
+  getAddress() {
     if (this.wallet) {
-      return this.wallet.address
+      return this.wallet.address;
     } else {
-      return null
+      return null;
     }
   }
 
-  getAddressString () {
+  getAddressString() {
     if (this.wallet) {
-      return ethUtil.toChecksumAddress(this.getAddress())
+      return ethUtil.toChecksumAddress(this.getAddress());
     } else {
-      return null
+      return null;
     }
   }
 
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
-  getAccounts (callback) {
-    let _this = this
+  getAccounts() {
+    let _this = this;
     if (arguments.length > 1 && typeof arguments[2] === 'function') {
-      return _this.getMultipleAccounts(arguments[0], arguments[1])
+      return _this.getMultipleAccounts(arguments[0], arguments[1]);
     } else {
-      return _this._getAccounts()
+      return _this._getAccounts();
     }
   }
 
-  getMultipleAccounts (count, offset, callback) {
+  getMultipleAccounts(count, offset) {
     // if the particular wallet does not support multiple accounts this should just return the primary account
-    return this._getAccounts(count, offset)
+    return this._getAccounts(count, offset);
   }
 
-  signTransaction (txData) {
-    return this.signTxTrezor(txData)
+  signTransaction(txData) {
+    return this.signTxTrezor(txData);
   }
 
-  signMessage (msgData) {
-    let thisMessage = msgData.data ? msgData.data : msgData
-    return this.signMessageTrezor(thisMessage)
+  signMessage(msgData) {
+    let thisMessage = msgData.data ? msgData.data : msgData;
+    return this.signMessageTrezor(thisMessage);
   }
 
   // ============== (End) Implementation of wallet usage methods ======================
 
-  changeDPath (path) {
-    this.path = path
-    return this.unlockTrezor()
+  changeDPath(path) {
+    this.path = path;
+    return this.unlockTrezor();
   }
 
   // ============== (Start) Internally used methods ======================
 
   // (Start) Internal setup methods
-  trezorCallback (response) {
+  trezorCallback(response) {
     return new Promise((resolve, reject) => {
       if (response.success) {
-        this.HWWalletCreate(response.publicKey, response.chainCode, 'trezor', this.path)
-        resolve()
+        this.HWWalletCreate(
+          response.publicKey,
+          response.chainCode,
+          'trezor',
+          this.path
+        );
+        resolve();
       } else {
-        reject(Error(response.error))
+        reject(Error(response.error));
       }
-    })
+    });
   }
 
-  unlockTrezor () {
-    return new Promise((resolve, reject) => {
+  unlockTrezor() {
+    return new Promise(resolve => {
       // trezor is using the path without change level id
-      TrezorConnect.getXPubKey(this.path, (response) => {
-        resolve(this.trezorCallback(response))
-      }, '1.5.2')
-    })
-  };
+      TrezorConnect.getXPubKey(
+        this.path,
+        response => {
+          resolve(this.trezorCallback(response));
+        },
+        '1.5.2'
+      );
+    });
+  }
 
-  createWallet (priv, pub, path, hwType, hwTransport) {
-    let wallet = {}
+  createWallet(priv, pub, path, hwType, hwTransport) {
+    let wallet = {};
     if (typeof priv !== 'undefined') {
-      wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex')
+      wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex');
     }
-    wallet.pubKey = pub
-    wallet.path = path
-    wallet.hwType = this.identifier
-    wallet.hwTransport = hwTransport
-    wallet.type = this.brand
-    return wallet
+    wallet.pubKey = pub;
+    wallet.path = path;
+    wallet.hwType = this.identifier;
+    wallet.hwTransport = hwTransport;
+    wallet.type = this.brand;
+    return wallet;
   }
 
-  HWWalletCreate (publicKey, chainCode, walletType, path) {
-    this.hdk = new HDKey()
-    this.hdk.publicKey = Buffer.from(publicKey, 'hex')
-    this.hdk.chainCode = Buffer.from(chainCode, 'hex')
-    this.numWallets = 0
-    this.path = path
-    this.setHDAddressesHWWallet(this.numWallets, this.accountsLength, walletType)
+  HWWalletCreate(publicKey, chainCode, walletType, path) {
+    this.hdk = new HDKey();
+    this.hdk.publicKey = Buffer.from(publicKey, 'hex');
+    this.hdk.chainCode = Buffer.from(chainCode, 'hex');
+    this.numWallets = 0;
+    this.path = path;
+    this.setHDAddressesHWWallet(
+      this.numWallets,
+      this.accountsLength,
+      walletType
+    );
   }
 
-  setHDAddressesHWWallet (start, limit, ledger) {
-    this.walletsRetrieved = []
+  setHDAddressesHWWallet(start, limit) {
+    this.walletsRetrieved = [];
     for (var i = start; i < start + limit; i++) {
-      var derivedKey = this.hdk.derive('m/' + i)
-      const tempWallet = this.createWallet(undefined, derivedKey.publicKey, this.path + '/' + i)
-      this.addressToWalletMap[this._getAddressForWallet(tempWallet)] = tempWallet
-      this.walletsRetrieved.push(tempWallet)
-      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet)
-      this.walletsRetrieved[this.walletsRetrieved.length - 1].type = 'addressOnly'
+      var derivedKey = this.hdk.derive('m/' + i);
+      const tempWallet = this.createWallet(
+        undefined,
+        derivedKey.publicKey,
+        this.path + '/' + i
+      );
+      this.addressToWalletMap[
+        this._getAddressForWallet(tempWallet)
+      ] = tempWallet;
+      this.walletsRetrieved.push(tempWallet);
+      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet);
+      this.walletsRetrieved[this.walletsRetrieved.length - 1].type =
+        'addressOnly';
     }
-    this.id = 0
-    this.numWallets = start + limit
+    this.id = 0;
+    this.numWallets = start + limit;
   }
 
   // (End) Internal setup methods
 
-  AddRemoveHDAddresses (isAdd) {
-    if (isAdd) this.setHDAddressesHWWallet(this.numWallets, this.accountsLength)
-    else this.setHDAddressesHWWallet(this.numWallets - 2 * this.accountsLength, this.accountsLength)
+  AddRemoveHDAddresses(isAdd) {
+    if (isAdd)
+      this.setHDAddressesHWWallet(this.numWallets, this.accountsLength);
+    else
+      this.setHDAddressesHWWallet(
+        this.numWallets - 2 * this.accountsLength,
+        this.accountsLength
+      );
   }
 
-  setHDWallet () {
-    this.wallet = this.walletsRetrieved[this.id]
-    this.wallet.type = 'default'
+  setHDWallet() {
+    this.wallet = this.walletsRetrieved[this.id];
+    this.wallet.type = 'default';
   }
 
   // (Start) Internal methods underlying wallet usage methods
-  async _getAccounts (count, offset) {
-    return new Promise((resolve, reject) => {
-      let collect = {}
-      if (this.addressesToIndexMap[offset] && this.addressesToIndexMap[offset + count - 1]) {
+  async _getAccounts(count, offset) {
+    return new Promise(resolve => {
+      let collect = {};
+      if (
+        this.addressesToIndexMap[offset] &&
+        this.addressesToIndexMap[offset + count - 1]
+      ) {
         for (let i = offset; i < offset + count; i++) {
-          collect[i] = this.addressesToIndexMap[i]
+          collect[i] = this.addressesToIndexMap[i];
         }
       } else {
-        this.setHDAddresses(offset, count)
+        this.setHDAddresses(offset, count);
         for (let i = offset; i < offset + count; i++) {
-          collect[i] = this.addressesToIndexMap[i]
+          collect[i] = this.addressesToIndexMap[i];
         }
       }
-      resolve(collect)
-    })
+      resolve(collect);
+    });
   }
 
-  setHDAddresses (start, limit) {
-    this.walletsRetrieved = []
+  setHDAddresses(start, limit) {
+    this.walletsRetrieved = [];
     for (let i = start; i < start + limit; i++) {
-      const tempWallet = this.createWallet(this.hdk.derive(this.path + '/' + i)._privateKey)
-      this.addressToWalletMap[this._getAddressForWallet(tempWallet)] = tempWallet
-      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet)
-      this.walletsRetrieved.push(tempWallet)
+      const tempWallet = this.createWallet(
+        this.hdk.derive(this.path + '/' + i)._privateKey
+      );
+      this.addressToWalletMap[
+        this._getAddressForWallet(tempWallet)
+      ] = tempWallet;
+      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet);
+      this.walletsRetrieved.push(tempWallet);
     }
-    this.id = 0
-    this.numWallets = start + limit
+    this.id = 0;
+    this.numWallets = start + limit;
   }
 
-  decimalToHex (dec) {
-    return new ethUtil.BN(dec).toString(16)
+  decimalToHex(dec) {
+    return new ethUtil.BN(dec).toString(16);
   }
 
-  signTxTrezor (rawTx) {
+  signTxTrezor(rawTx) {
     return new Promise((resolve, reject) => {
-      var trezorConnectSignCallback = (result) => {
+      var trezorConnectSignCallback = result => {
         if (!result.success) {
-          reject(Error(result.error))
-          return
+          reject(Error(result.error));
+          return;
         }
-        rawTx.v = '0x' + this.decimalToHex(result.v)
-        rawTx.r = '0x' + result.r
-        rawTx.s = '0x' + result.s
-        const tx = new EthereumjsTx(rawTx)
-        rawTx.rawTx = JSON.stringify(rawTx)
+        rawTx.v = '0x' + this.decimalToHex(result.v);
+        rawTx.r = '0x' + result.r;
+        rawTx.s = '0x' + result.s;
+        const tx = new EthereumjsTx(rawTx);
+        rawTx.rawTx = JSON.stringify(rawTx);
         resolve({
           rawTx: rawTx.rawTx,
           messageHash: tx.hash(), // figure out what exactly web3 is putting here
@@ -233,8 +267,8 @@ export default class TrezorWallet extends HardwareWalletInterface {
           r: Buffer.from(result.r, 'hex'),
           s: Buffer.from(result.s, 'hex'),
           rawTransaction: `0x${tx.serialize().toString('hex')}`
-        })
-      }
+        });
+      };
 
       TrezorConnect.signEthereumTx(
         this.wallet.path,
@@ -246,40 +280,47 @@ export default class TrezorWallet extends HardwareWalletInterface {
         this.getNakedAddress(rawTx.data),
         +rawTx.chainId,
         trezorConnectSignCallback
-      )
-    })
+      );
+    });
   }
 
-  signMessageTrezor (stringMessage) {
+  signMessageTrezor(stringMessage) {
     return new Promise((resolve, reject) => {
-      const localCallback = function (result) {
+      const localCallback = function(result) {
         if (!result.success) {
-          reject(result.error)
-          return
+          reject(result.error);
+          return;
         }
-        let signedMessage = '0x' + result.signature
-        resolve(signedMessage)
-      }
-      TrezorConnect.ethereumSignMessage(this.wallet.path, stringMessage, localCallback, '1.5.2')
-    })
+        let signedMessage = '0x' + result.signature;
+        resolve(signedMessage);
+      };
+      TrezorConnect.ethereumSignMessage(
+        this.wallet.path,
+        stringMessage,
+        localCallback,
+        '1.5.2'
+      );
+    });
   }
 
   // (End) Internal methods underlying wallet usage methods
   // (Start) Internal utility methods
-  getNakedAddress (address) {
-    let naked = address.toLowerCase().replace('0x', '')
+  getNakedAddress(address) {
+    let naked = address.toLowerCase().replace('0x', '');
     if (naked.length % 2 === 0) {
-      return naked.toString()
+      return naked.toString();
     } else {
-      return '0' + naked.toString()
+      return '0' + naked.toString();
     }
   }
 
-  _getAddressForWallet (wallet) {
+  _getAddressForWallet(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
-      return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex')
+      return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');
     } else {
-      return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
+      return (
+        '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
+      );
     }
   }
 

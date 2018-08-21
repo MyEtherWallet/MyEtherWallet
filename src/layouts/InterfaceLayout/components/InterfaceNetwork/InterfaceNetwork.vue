@@ -4,8 +4,14 @@
     <div @click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
-          <img class="icon" src="~@/assets/images/icons/network.svg" v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'">
-          <img class="icon" :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)" v-else>
+          <img
+            v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
+            class="icon"
+            src="~@/assets/images/icons/network.svg">
+          <img
+            v-else
+            :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)"
+            class="icon">
         </div>
         <div class="block-content">
           <div class="information-container">
@@ -25,16 +31,21 @@
 </template>
 
 <script>
-import InterfaceNetworkModal from "../InterfaceNetworkModal";
+import InterfaceNetworkModal from '../InterfaceNetworkModal';
 
 export default {
   components: {
-    "interface-network-modal": InterfaceNetworkModal
+    'interface-network-modal': InterfaceNetworkModal
   },
-  props: ["blockNumber"],
+  props: {
+    blockNumber: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
-      parsedNetwork: ""
+      parsedNetwork: ''
     };
   },
   watch: {
@@ -56,5 +67,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceNetwork.scss";
+@import 'InterfaceNetwork.scss';
 </style>

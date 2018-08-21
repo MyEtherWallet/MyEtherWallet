@@ -1,6 +1,4 @@
-import {
-  TOMO
-} from '../types'
+import { TOMO } from '../types';
 export default {
   type: TOMO,
   service: 'TomoCoin',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

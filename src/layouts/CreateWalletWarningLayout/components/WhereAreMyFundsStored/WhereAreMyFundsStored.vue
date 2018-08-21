@@ -7,7 +7,7 @@
           About MyEtherWallet
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"></div>
+          <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
           <h4>Where are my funds stored?</h4>
@@ -26,12 +26,16 @@
               <h4>What is Blockchain?</h4>
               <div class="sliding-switch sliding-switch-white">
                 <label class="switch">
-                  <input type="checkbox" v-on:click="expenderContentShow = !expenderContentShow">
-                  <span class="slider round"></span>
+                  <input
+                    type="checkbox"
+                    @click="expenderContentShow = !expenderContentShow">
+                  <span class="slider round"/>
                 </label>
               </div>
             </div>
-            <div class="content" v-if="expenderContentShow">
+            <div
+              v-if="expenderContentShow"
+              class="content">
               <p>
                 The term 'blockchain' refers to a public, decentalized spreadsheet, similar to a ledger.
                 It's maintained by people all over the world, who remotely mine
@@ -41,7 +45,9 @@
               <p>
                 When you use MEW, you are accessing the blockchain directly. We are not responsible
                 for theft caused by user error. Please do your research, knowledge is power! Know
-                more about Blockchain <a href="" target="_blank">here</a>.
+                more about Blockchain <a
+                  href=""
+                  target="_blank">here</a>.
               </p>
             </div>
 
@@ -54,19 +60,21 @@
 </template>
 
 <script>
-
 export default {
-  props: ['progressBarValue'],
-  components: {
+  props: {
+    progressBarValue: {
+      type: String,
+      default: ''
+    }
   },
-  data () {
+  data() {
     return {
       expenderContentShow: false
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "../BlockWithProgressBar.scss";
+@import '../BlockWithProgressBar.scss';
 </style>

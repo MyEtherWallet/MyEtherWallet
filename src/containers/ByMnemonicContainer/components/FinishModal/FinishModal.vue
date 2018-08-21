@@ -29,5 +29,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "FinishModal.scss";
+@import 'FinishModal.scss';
 </style>

@@ -4,12 +4,12 @@
     class="address-identicon"/>
 </template>
 <script>
-import { Blockies } from "@/helpers";
+import { Blockies } from '@/helpers';
 export default {
   props: {
     address: {
       type: String,
-      default: ""
+      default: ''
     },
     width: {
       type: Number,
@@ -52,5 +52,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "Blockie.scss";
+@import 'Blockie.scss';
 </style>

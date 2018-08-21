@@ -1,13 +1,13 @@
-import common from "./common/tr";
-import header from "./header/tr";
-import home from "./home/tr";
-import footer from "./footer/tr";
-import privacyPolicy from "./privacy-policy/tr";
-import termsOfConditions from "./terms-of-conditions/tr";
-import createWallet from "./create-wallet/tr";
-import accessWallet from "./access-wallet/tr";
-import interfaceTranslations from "./interface/tr";
-import team from "./team/tr";
+import common from './common/tr';
+import header from './header/tr';
+import home from './home/tr';
+import footer from './footer/tr';
+import privacyPolicy from './privacy-policy/tr';
+import termsOfConditions from './terms-of-conditions/tr';
+import createWallet from './create-wallet/tr';
+import accessWallet from './access-wallet/tr';
+import interfaceTranslations from './interface/tr';
+import team from './team/tr';
 
 const tr = {
   common: common,

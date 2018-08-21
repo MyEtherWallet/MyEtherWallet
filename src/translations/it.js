@@ -1,13 +1,13 @@
-import common from "./common/it";
-import header from "./header/it";
-import home from "./home/it";
-import footer from "./footer/it";
-import privacyPolicy from "./privacy-policy/it";
-import termsOfConditions from "./terms-of-conditions/it";
-import createWallet from "./create-wallet/it";
-import accessWallet from "./access-wallet/it";
-import interfaceTranslations from "./interface/it";
-import team from "./team/it";
+import common from './common/it';
+import header from './header/it';
+import home from './home/it';
+import footer from './footer/it';
+import privacyPolicy from './privacy-policy/it';
+import termsOfConditions from './terms-of-conditions/it';
+import createWallet from './create-wallet/it';
+import accessWallet from './access-wallet/it';
+import interfaceTranslations from './interface/it';
+import team from './team/it';
 
 const it = {
   common: common,

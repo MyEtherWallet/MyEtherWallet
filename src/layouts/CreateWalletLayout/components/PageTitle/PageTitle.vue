@@ -20,5 +20,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "PageTitle.scss";
+@import 'PageTitle.scss';
 </style>

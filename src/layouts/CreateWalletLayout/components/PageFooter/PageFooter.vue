@@ -17,5 +17,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "PageFooter.scss";
+@import 'PageFooter.scss';
 </style>

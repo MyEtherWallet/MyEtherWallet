@@ -1,5 +1,5 @@
-import store from 'store'
-import url from 'url'
+import store from 'store';
+import url from 'url';
 
 const ADD_NOTIFICATION = function(state, val) {
   const newNotif = {};
@@ -14,7 +14,7 @@ const ADD_NOTIFICATION = function(state, val) {
     body: val[1],
     expanded: false
   });
-  store.set("notifications", newNotif);
+  store.set('notifications', newNotif);
 };
 
 const CHANGE_PAGE_STATE = function(state, arr) {
@@ -24,8 +24,8 @@ const CHANGE_PAGE_STATE = function(state, arr) {
 
 const CHECK_IF_ONLINE = function(state) {
   state.online =
-    window.location.protocol === "http:" ||
-    window.location.protocol === "https:";
+    window.location.protocol === 'http:' ||
+    window.location.protocol === 'https:';
 };
 
 const CLEAR_WALLET = function(state) {
@@ -49,12 +49,12 @@ const SET_ACCOUNT_BALANCE = function(state, balance) {
 
 const SET_GAS_PRICE = function(state, val) {
   state.gasPrice = val;
-  store.set("gasPrice", val);
+  store.set('gasPrice', val);
 };
 
 const SET_WEB3_INSTANCE = function(state, web3) {
   if (web3.eth === undefined) {
-    const hostUrl = url.parse(state.network.url)
+    const hostUrl = url.parse(state.network.url);
     // eslint-disable-next-line
     state.web3 = new web3(`${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${hostUrl.pathname}`)
   } else {
@@ -64,7 +64,7 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
-  store.set("network", networkObj);
+  store.set('network', networkObj);
 };
 
 const UPDATE_NOTIFICATION = function(state, val) {
@@ -76,7 +76,7 @@ const UPDATE_NOTIFICATION = function(state, val) {
 
   newNotif[val[0]][val[1]] = val[2];
   state.notifications = newNotif;
-  store.set("notifications", newNotif);
+  store.set('notifications', newNotif);
 };
 
 export default {

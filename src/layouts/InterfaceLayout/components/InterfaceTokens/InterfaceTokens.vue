@@ -50,9 +50,20 @@
             No tokens found :(
           </div>
         </div>
-        <div v-on:click="tokenListExpend" class="expend-bar" v-if="(customTokens.length + localTokens.length) > 15">
-          <p class="down" ref="expendDown"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
-          <p class="up hidden" ref="expendUp"><i class="fa fa-angle-double-up" aria-hidden="true"></i></p>
+        <div
+          v-if="(customTokens.length + localTokens.length) > 15"
+          class="expend-bar"
+          @click="tokenListExpend">
+          <p
+            ref="expendDown"
+            class="down"><i
+              class="fa fa-angle-double-down"
+              aria-hidden="true"/></p>
+          <p
+            ref="expendUp"
+            class="up hidden"><i
+              class="fa fa-angle-double-up"
+              aria-hidden="true"/></p>
         </div>
       </div>
       <div class="bottom-image-container">
@@ -65,21 +76,41 @@
 </template>
 
 <script>
-import store from "store";
-import { mapGetters } from "vuex";
-import InterfaceTokensModal from "../InterfaceTokensModal";
+import store from 'store';
+import { mapGetters } from 'vuex';
+import InterfaceTokensModal from '../InterfaceTokensModal';
 
 export default {
   components: {
-    "interface-tokens-modal": InterfaceTokensModal
+    'interface-tokens-modal': InterfaceTokensModal
   },
-  props: ["tokens", "receivedTokens", "getTokenBalance"],
+  props: {
+    tokens: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
+    receivedTokens: {
+      type: Boolean,
+      default: false
+    },
+    getTokenBalance: {
+      type: Function,
+      default: function() {}
+    }
+  },
   data() {
     return {
-      search: "",
+      search: '',
       localTokens: [],
       customTokens: []
     };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   },
   watch: {
     tokens(newVal) {
@@ -93,10 +124,10 @@ export default {
     },
     network(newVal) {
       if (
-        store.get("customTokens") !== undefined &&
-        store.get("customTokens")[newVal.type.name] !== undefined
+        store.get('customTokens') !== undefined &&
+        store.get('customTokens')[newVal.type.name] !== undefined
       ) {
-        this.customTokens = store.get("customTokens")[newVal.type.name];
+        this.customTokens = store.get('customTokens')[newVal.type.name];
       } else {
         this.customTokens = [];
       }
@@ -110,24 +141,24 @@ export default {
       this.$children[0].$refs.token.show();
     },
     removeToken(idx) {
-      const storedTokens = store.get("customTokens");
+      const storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
-      store.set("customTokens", storedTokens);
+      store.set('customTokens', storedTokens);
     },
-    async addToken (address, symbol, decimal) {
-      const localStorageName = {}
+    async addToken(address, symbol, decimal) {
+      const localStorageName = {};
       const token = {
         addr: address,
         decimals: decimal,
-        email: "",
+        email: '',
         name: symbol,
         symbol: symbol,
         website: '',
         type: 'custom'
-      }
-      let newArray = []
-      token['balance'] = await this.getTokenBalance(address)
+      };
+      let newArray = [];
+      token['balance'] = await this.getTokenBalance(address);
 
       if (this.customTokens.length > 0) {
         newArray = this.customTokens.map(item => item);
@@ -136,16 +167,16 @@ export default {
       this.customTokens = newArray;
       localStorageName[this.network.type.name] = this.customTokens;
 
-      store.set("customTokens", localStorageName);
+      store.set('customTokens', localStorageName);
       this.$children[0].$refs.token.hide();
     },
     tokenListExpend() {
-      this.$refs.tokenTableContainer.classList.toggle("expanded");
-      this.$refs.expendDown.classList.toggle("hidden");
-      this.$refs.expendUp.classList.toggle("hidden");
+      this.$refs.tokenTableContainer.classList.toggle('expanded');
+      this.$refs.expendDown.classList.toggle('hidden');
+      this.$refs.expendUp.classList.toggle('hidden');
     },
-    async assignTokens (arr, query) {
-      const oldArray = this.customTokens.slice()
+    async assignTokens(arr, query) {
+      const oldArray = this.customTokens.slice();
       if (query !== '') {
         this.customTokens = oldArray.filter(token => {
           if (token.name.toLowerCase().includes(query.toLowerCase())) {
@@ -160,22 +191,17 @@ export default {
       } else {
         this.localTokens = arr;
         if (
-          store.get("customTokens") !== undefined &&
-          store.get("customTokens")[this.network.type.name] !== undefined
+          store.get('customTokens') !== undefined &&
+          store.get('customTokens')[this.network.type.name] !== undefined
         ) {
-          this.customTokens = store.get("customTokens")[this.network.type.name];
+          this.customTokens = store.get('customTokens')[this.network.type.name];
         }
       }
     }
-  },
-  computed: {
-    ...mapGetters({
-      network: "network"
-    })
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceTokens.scss";
+@import 'InterfaceTokens.scss';
 </style>

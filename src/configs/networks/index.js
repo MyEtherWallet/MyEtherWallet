@@ -1,5 +1,5 @@
-import * as types from "./types";
-import * as nodes from "./nodes";
+import * as types from './types';
+import * as nodes from './nodes';
 
 let nodeList = {};
 

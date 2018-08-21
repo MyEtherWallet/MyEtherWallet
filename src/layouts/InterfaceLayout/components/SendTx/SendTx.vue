@@ -33,23 +33,32 @@
           @click="sendTx">
           Send Transaction
         </div>
-        <interface-bottom-text :link="'/'" :linkText="'Learn more'"
-                               :question="'Have any issues?'"></interface-bottom-text>
+        <interface-bottom-text
+          :link="'/'"
+          :link-text="'Learn more'"
+          :question="'Have any issues?'"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 
 export default {
   components: {
-    "interface-bottom-text": InterfaceBottomText,
-    "success-modal": SuccessModal
+    'interface-bottom-text': InterfaceBottomText,
+    'success-modal': SuccessModal
   },
-  props: ["rawTx"],
+  props: {
+    rawTx: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {
       signedTx: this.rawTx
@@ -62,20 +71,21 @@ export default {
   },
   methods: {
     deleteTxHex() {
-      this.signedTx = "";
+      this.signedTx = '';
     },
     copyTxHex() {
       this.$refs.txHex.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
     },
-    sendTx () {
-      this.$store.state.web3.eth.sendSignedTransaction(this.signedTx)
-        .on('receipt', (txReceipt) => {
-        })
+    sendTx() {
+      this.$store.state.web3.eth
+        .sendSignedTransaction(this.signedTx)
+        .on('receipt', () => {})
         .then(res => {
-          this.$children[0].$refs.success.show()
-          console.log('sendSignedTransaction', res)
-        })
+          this.$children[0].$refs.success.show();
+          // eslint-disable-next-line no-console
+          console.log('sendSignedTransaction', res);
+        });
     },
     hideModal() {
       this.$children[0].$refs.success.hide();
@@ -85,5 +95,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "SendTx.scss";
+@import 'SendTx.scss';
 </style>

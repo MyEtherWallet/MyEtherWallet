@@ -22,19 +22,20 @@
           class="notification-count"><span>{{ unreadCount }}</span></div></h5>
       </template>
       <div class="notification-item-container">
-        <div
-          v-for="(notification, idx) in sortedNotifications"
-          v-if="sortedNotifications !== undefined && sortedNotifications.length > 0"
-          :key="notification.title + notification.timestamp + idx"
-          class="notification-item">
+        <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0">
           <div
-            class="notification-header"
-            @click="expand(idx, notification, $event)">
-            <p :class="[notification.read? '': 'unread']"> {{ notification.title }} </p>
-            <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
-          </div>
-          <div :class="[notification.expanded?'':'unexpanded', 'notification-body']">
-            {{ notification.body }}
+            v-for="(notification, idx) in sortedNotifications"
+            :key="notification.title + notification.timestamp + idx"
+            class="notification-item">
+            <div
+              class="notification-header"
+              @click="expand(idx, notification, $event)">
+              <p :class="[notification.read? '': 'unread']"> {{ notification.title }} </p>
+              <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
+            </div>
+            <div :class="[notification.expanded?'':'unexpanded', 'notification-body']">
+              {{ notification.body }}
+            </div>
           </div>
         </div>
         <div
@@ -48,8 +49,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import store from 'store'
+import { mapGetters } from 'vuex';
+import store from 'store';
 
 export default {
   data() {
@@ -57,12 +58,34 @@ export default {
       unreadCount: 0
     };
   },
+  computed: {
+    ...mapGetters({
+      notifications: 'notifications'
+    }),
+    sortedNotifications() {
+      this.countUnread();
+      // eslint-disable-next-line
+      return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
+        a = new Date(a.timestamp);
+        b = new Date(b.timestamp);
+
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
+    }
+  },
   watch: {
-    notifications(newVal) {
+    notifications() {
       this.countUnread();
     }
   },
   mounted() {
+    if (
+      this.notifications[this.$store.state.wallet.getAddressString()] ===
+      undefined
+    ) {
+      this.notifications[this.$store.state.wallet.getAddressString()] = [];
+      store.set('notifications', this.notifications);
+    }
     this.countUnread();
   },
   methods: {
@@ -87,7 +110,7 @@ export default {
     showNotifications() {
       this.$refs.notification.show();
     },
-    expand(idx, notif, e) {
+    expand(idx, notif) {
       // e.target.nextElementSibling.classList.contains('unexpanded') ? e.target.nextElementSibling.classList.remove('unexpanded') : e.target.nextElementSibling.classList.add('unexpanded')
       const updatedNotif = notif;
       if (notif.expanded !== true) {
@@ -96,39 +119,16 @@ export default {
       } else {
         updatedNotif.expanded = false;
       }
-      this.$store.dispatch('updateNotification', [this.$store.state.wallet.getAddressString(), idx, updatedNotif])
-    }
-  },
-  mounted () {
-    if (this.notifications[this.$store.state.wallet.getAddressString()] === undefined) {
-      this.notifications[this.$store.state.wallet.getAddressString()] = []
-      store.set('notifications', this.notifications)
-    }
-    this.countUnread()
-  },
-  watch: {
-    notifications (newVal) {
-      this.countUnread()
-    }
-  },
-  computed: {
-    ...mapGetters({
-      notifications: "notifications"
-    }),
-    sortedNotifications() {
-      this.countUnread();
-      // eslint-disable-next-line
-      return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
-
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
+      this.$store.dispatch('updateNotification', [
+        this.$store.state.wallet.getAddressString(),
+        idx,
+        updatedNotif
+      ]);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "./Notification.scss";
+@import './Notification.scss';
 </style>

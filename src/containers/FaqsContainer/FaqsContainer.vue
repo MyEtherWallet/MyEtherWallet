@@ -137,7 +137,7 @@ import {
   DoesMyEtherWalletSupportBitcoinOrOtherCoins,
   WhereCanIBuySellTradeExchangeMyEthOrTokens,
   WhatIsAnIco
-} from "@/components/FaqContents";
+} from '@/components/FaqContents';
 
 export default {
   components: {
@@ -147,13 +147,7 @@ export default {
     'faq-where-can-i-buy-sell': WhereCanIBuySellTradeExchangeMyEthOrTokens,
     'faq-what-is-an-ico': WhatIsAnIco
   },
-  methods: {
-    openFAQ: function (faqToOpen) {
-      var currentState = this.showFAQs[faqToOpen]
-      this.showFAQs[faqToOpen] = !currentState
-    }
-  },
-  data () {
+  data() {
     return {
       showFAQs: {
         faq1: false,
@@ -167,13 +161,6 @@ export default {
   methods: {
     openFAQ: function(faqToOpen) {
       var currentState = this.showFAQs[faqToOpen];
-      /*
-      this.showFAQs.faq1 = false
-      this.showFAQs.faq2 = false
-      this.showFAQs.faq3 = false
-      this.showFAQs.faq4 = false
-      this.showFAQs.faq5 = false
-      */
       this.showFAQs[faqToOpen] = !currentState;
     }
   }
@@ -181,5 +168,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "FaqsContainer.scss";
+@import 'FaqsContainer.scss';
 </style>

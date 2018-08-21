@@ -22,35 +22,35 @@
 </template>
 
 <script>
-import InterfaceContainerTitle from "../../components/InterfaceContainerTitle";
-import DappButtons from "../../components/DappButtons";
-import DomainSaleContainer from "../DomainSaleContainer";
-import RegisterDomainContainer from "../RegisterDomainContainer";
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import DappButtons from '../../components/DappButtons';
+import DomainSaleContainer from '../DomainSaleContainer';
+import RegisterDomainContainer from '../RegisterDomainContainer';
 
-import domainSale from "@/assets/images/icons/domain-sale.svg";
-import registerDomain from "@/assets/images/icons/domain.svg";
+import domainSale from '@/assets/images/icons/domain-sale.svg';
+import registerDomain from '@/assets/images/icons/domain.svg';
 export default {
   components: {
-    "interface-container-title": InterfaceContainerTitle,
-    "dapp-buttons": DappButtons,
-    "domain-sale-container": DomainSaleContainer,
-    "register-domain-container": RegisterDomainContainer
+    'interface-container-title': InterfaceContainerTitle,
+    'dapp-buttons': DappButtons,
+    'domain-sale-container': DomainSaleContainer,
+    'register-domain-container': RegisterDomainContainer
   },
   data() {
     return {
-      selectedDapp: "",
+      selectedDapp: '',
       dapps: [
         {
-          param: "register-domain",
+          param: 'register-domain',
           icon: registerDomain,
-          title: this.$t("interface.registerDom"),
-          desc: this.$t("interface.registerDomDesc")
+          title: this.$t('interface.registerDom'),
+          desc: this.$t('interface.registerDomDesc')
         },
         {
-          param: "domain-sale",
+          param: 'domain-sale',
           icon: domainSale,
-          title: this.$t("interface.domSale"),
-          desc: this.$t("interface.domSaleDesc")
+          title: this.$t('interface.domSale'),
+          desc: this.$t('interface.domSaleDesc')
         }
       ]
     };
@@ -64,5 +64,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "DappsContainer.scss";
+@import 'DappsContainer.scss';
 </style>
