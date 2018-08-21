@@ -125,8 +125,6 @@ export default {
   },
   data() {
     return {
-      accessMyWalletBtnDisabled: true,
-      walletUnlocked: false,
       offset: 0,
       count: 5,
       hardwareAddresses: [],
@@ -248,7 +246,6 @@ export default {
   },
   watch: {
     hardwareWallet (newValue) {
-      this.getPaths()
       this.getAddresses(this.count, this.offset)
         .then(addressSet => {
           this.hardwareAddresses = addressSet

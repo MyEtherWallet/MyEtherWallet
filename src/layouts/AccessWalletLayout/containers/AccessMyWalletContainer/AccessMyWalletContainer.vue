@@ -1,5 +1,6 @@
 <template>
   <div class="access-my-wallet-options">
+    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
     <mew-connect-modal
       ref="mewconnectModal"

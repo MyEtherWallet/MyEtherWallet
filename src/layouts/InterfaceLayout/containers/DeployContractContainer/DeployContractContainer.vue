@@ -169,6 +169,8 @@ import { Misc } from '@/helpers';
 import store from 'store';
 
 // eslint-disable-next-line
+const EthTx = require('ethereumjs-tx')
+// eslint-disable-next-line
 const unit = require('ethjs-unit')
 export default {
   name: 'DeployContract',

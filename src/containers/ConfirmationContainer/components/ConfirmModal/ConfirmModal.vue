@@ -58,9 +58,7 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
-              <div
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                ref="ConfirmAndSendButton" v-on:click="sendTx">
+              <div class="submit-button large-round-button-green-filled clickable" v-on:click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
@@ -94,8 +92,7 @@ export default {
   props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess'],
   data () {
     return {
-      modalDetailInformation: false,
-      transactionSigned: false
+      modalDetailInformation: false
     }
   },
   methods: {
