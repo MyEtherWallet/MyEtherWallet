@@ -176,9 +176,8 @@ export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'interface-container-title': InterfaceContainerTitle
+    // 'success-modal': SuccessModal
   },
   data() {
     return {
