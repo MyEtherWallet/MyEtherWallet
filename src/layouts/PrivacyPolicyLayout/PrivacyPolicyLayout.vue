@@ -44,5 +44,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "PrivacyPolicyLayout.scss";
+@import 'PrivacyPolicyLayout.scss';
 </style>

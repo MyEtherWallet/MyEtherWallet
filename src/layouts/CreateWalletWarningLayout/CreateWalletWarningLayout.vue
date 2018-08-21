@@ -4,22 +4,41 @@
     <div class="wrap">
 
       <div class="nav-dots">
-        <p><i class="fa fa-angle-up" aria-hidden="true"></i></p>
+        <p><i 
+          class="fa fa-angle-up" 
+          aria-hidden="true"/></p>
         <ul>
-          <li :class="cwwCurrent == 0 ? 'active' : ''"></li>
-          <li :class="cwwCurrent == 1 ? 'active' : ''"></li>
-          <li :class="cwwCurrent == 2 ? 'active' : ''"></li>
-          <li :class="cwwCurrent == 3 ? 'active' : ''"></li>
-          <li :class="cwwCurrent == 4 ? 'active' : ''"></li>
+          <li :class="cwwCurrent == 0 ? 'active' : ''"/>
+          <li :class="cwwCurrent == 1 ? 'active' : ''"/>
+          <li :class="cwwCurrent == 2 ? 'active' : ''"/>
+          <li :class="cwwCurrent == 3 ? 'active' : ''"/>
+          <li :class="cwwCurrent == 4 ? 'active' : ''"/>
         </ul>
-        <p><i class="fa fa-angle-down" aria-hidden="true"></i></p>
+        <p><i 
+          class="fa fa-angle-down" 
+          aria-hidden="true"/></p>
       </div>
 
-      <what-is-mew            :progressBarValue="'__20percent'"   class="cww cww1"                        ref="cww1" />
-      <where-my-funds-stored  :progressBarValue="'__40percent'"   class="cww cww2 positionBottom"         ref="cww2" />
-      <what-if-i-lose-key     :progressBarValue="'__60percent'"   class="cww cww3 positionBottom"         ref="cww3" />
-      <some-helpful-tips      :progressBarValue="'__80percent'"   class="cww cww4 positionBottom"         ref="cww4" />
-      <congratulations        :progressBarValue="'__100percent'"  class="cww cww5 positionBottom"         ref="cww5" />
+      <what-is-mew 
+        ref="cww1" 
+        :progress-bar-value="'__20percent'" 
+        class="cww cww1" />
+      <where-my-funds-stored 
+        ref="cww2" 
+        :progress-bar-value="'__40percent'" 
+        class="cww cww2 positionBottom" />
+      <what-if-i-lose-key 
+        ref="cww3" 
+        :progress-bar-value="'__60percent'" 
+        class="cww cww3 positionBottom" />
+      <some-helpful-tips 
+        ref="cww4" 
+        :progress-bar-value="'__80percent'" 
+        class="cww cww4 positionBottom" />
+      <congratulations 
+        ref="cww5" 
+        :progress-bar-value="'__100percent'" 
+        class="cww cww5 positionBottom" />
 
       <div class="create-wallet-warnings__footer-container">
         <div class="create-wallet-warnings__mouse-scroll">
@@ -44,11 +63,11 @@
 </template>
 
 <script>
-import WhatIsMyEtherWallet from './components/WhatIsMyEtherWallet'
-import WhereAreMyFundsStored from './components/WhereAreMyFundsStored'
-import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword'
-import SomeHelpfulTips from './components/SomeHelpfulTips'
-import Congratulations from './components/Congratulations'
+import WhatIsMyEtherWallet from './components/WhatIsMyEtherWallet';
+import WhereAreMyFundsStored from './components/WhereAreMyFundsStored';
+import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword';
+import SomeHelpfulTips from './components/SomeHelpfulTips';
+import Congratulations from './components/Congratulations';
 
 export default {
   components: {
@@ -56,51 +75,53 @@ export default {
     'where-my-funds-stored': WhereAreMyFundsStored,
     'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
     'some-helpful-tips': SomeHelpfulTips,
-    'congratulations': Congratulations
+    congratulations: Congratulations
   },
-  data () {
+  data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: [
-        'cww1',
-        'cww2',
-        'cww3',
-        'cww4',
-        'cww5'
-      ]
-    }
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5']
+    };
   },
-  methods: {
-    mouseScrollDown: function () {
-      if (this.cwwCurrent < this.cwwRefs.length - 1) {
-        this.cwwCurrent++
-        this.$refs[this.cwwRefs[this.cwwCurrent - 1]].$el.classList.add('positionTop')
-        this.$refs[this.cwwRefs[this.cwwCurrent]].$el.classList.remove('positionBottom')
-      }
-    },
-    mouseScrollUp: function () {
-      if (this.cwwCurrent > 0) {
-        this.cwwCurrent--
-        this.$refs[this.cwwRefs[this.cwwCurrent + 1]].$el.classList.add('positionBottom')
-        this.$refs[this.cwwRefs[this.cwwCurrent]].$el.classList.remove('positionTop')
-      }
-    }
-  },
-  mounted: function () {
-    var _this = this
+  mounted: function() {
+    var _this = this;
 
-    window.addEventListener('wheel', function (e) {
+    window.addEventListener('wheel', function(e) {
       if (e.deltaY < 0) {
-        _this.mouseScrollUp()
+        _this.mouseScrollUp();
       }
       if (e.deltaY > 0) {
-        _this.mouseScrollDown()
+        _this.mouseScrollDown();
       }
-    })
+    });
+  },
+  methods: {
+    mouseScrollDown: function() {
+      if (this.cwwCurrent < this.cwwRefs.length - 1) {
+        this.cwwCurrent++;
+        this.$refs[this.cwwRefs[this.cwwCurrent - 1]].$el.classList.add(
+          'positionTop'
+        );
+        this.$refs[this.cwwRefs[this.cwwCurrent]].$el.classList.remove(
+          'positionBottom'
+        );
+      }
+    },
+    mouseScrollUp: function() {
+      if (this.cwwCurrent > 0) {
+        this.cwwCurrent--;
+        this.$refs[this.cwwRefs[this.cwwCurrent + 1]].$el.classList.add(
+          'positionBottom'
+        );
+        this.$refs[this.cwwRefs[this.cwwCurrent]].$el.classList.remove(
+          'positionTop'
+        );
+      }
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "CreateWalletWarningLayout.scss";
+@import 'CreateWalletWarningLayout.scss';
 </style>

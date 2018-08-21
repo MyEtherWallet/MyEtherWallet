@@ -1,1 +1,1 @@
-export { default } from "./PageFooter";
+export { default } from './PageFooter';

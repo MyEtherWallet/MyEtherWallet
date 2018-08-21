@@ -17,7 +17,9 @@
               </router-link>
             </div>
             <div class="button-block">
-              <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
+              <router-link 
+                :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" 
+                class="nounderline">
                 <span class="large-round-button-white-filled__body-text-color">
                   {{ $t("common.accessMyWallet") }}
                 </span>
@@ -39,5 +41,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "Promo.scss";
+@import 'Promo.scss';
 </style>

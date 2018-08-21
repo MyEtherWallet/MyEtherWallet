@@ -22,8 +22,13 @@
           </div>
         </div>
       </div>
-      <div class="network-list" ref="networkList">
-        <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
+      <div
+        ref="networkList"
+        class="network-list">
+        <div
+          v-for="(key, index) in Object.keys($store.state.Networks)"
+          :key="key + index"
+          class="content-block">
           <h4 :class="key.toLowerCase()">{{ key }}</h4>
           <div class="grid-3">
             <p
@@ -34,12 +39,21 @@
               @click="switchNetwork(net)">{{ net.service }}</p>
           </div>
         </div>
-        <div class="content-block" v-if="customNetworks.length > 0">
+        <div
+          v-if="customNetworks.length > 0"
+          class="content-block">
           <h4 class="cust">Custom Networks</h4>
-          <div class="grid-3" v-for="(net, idx) in customNetworks" :key="net.service + '('+ net.type.name + ')' + idx">
-            <div class="switch-network custom-network-item" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">
-              <p @click="switchNetwork(net)">{{net.service}} {{ '('+ net.type.name + ')' }}</p>
-              <i class="fa fa-times-circle" @click.prevent="removeNetwork(net, idx)"></i>
+          <div
+            v-for="(net, idx) in customNetworks"
+            :key="net.service + '('+ net.type.name + ')' + idx"
+            class="grid-3">
+            <div
+              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+              class="switch-network custom-network-item">
+              <p @click="switchNetwork(net)">{{ net.service }} {{ '('+ net.type.name + ')' }}</p>
+              <i
+                class="fa fa-times-circle"
+                @click.prevent="removeNetwork(net, idx)"/>
             </div>
           </div>
         </div>
@@ -143,51 +157,51 @@
 </template>
 
 <script>
-import store from "store";
-import web3 from "web3";
+import store from 'store';
+import web3 from 'web3';
 
-import InterfaceBottomText from "@/components/InterfaceBottomText";
+import InterfaceBottomText from '@/components/InterfaceBottomText';
 
 export default {
   components: {
-    "interface-bottom-text": InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText
   },
   data() {
     return {
-      selectedNetwork: { name: "ETH", name_long: "Ethereum" },
+      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
       networks: [
-        { name: "ETH", name_long: "Ethereum" },
-        { name: "ETC", name_long: "Ethereum Classic" },
-        { name: "ROP", name_long: "Ropsten" },
-        { name: "KOV", name_long: "Kovan" },
-        { name: "RIN", name_long: "Rinkeby" },
-        { name: "CUS", name_long: "Custom" }
+        { name: 'ETH', name_long: 'Ethereum' },
+        { name: 'ETC', name_long: 'Ethereum Classic' },
+        { name: 'ROP', name_long: 'Ropsten' },
+        { name: 'KOV', name_long: 'Kovan' },
+        { name: 'RIN', name_long: 'Rinkeby' },
+        { name: 'CUS', name_long: 'Custom' }
       ],
-      chainID: "",
-      port: "",
-      name: "",
-      url: "",
-      username: "",
-      password: "",
+      chainID: '',
+      port: '',
+      name: '',
+      url: '',
+      username: '',
+      password: '',
       customNetworks: []
     };
   },
   watch: {
     selectedNetwork(newVal) {
       switch (newVal.name) {
-        case "ETH":
+        case 'ETH':
           this.chainID = 1;
           break;
-        case "ETC":
+        case 'ETC':
           this.chainID = 61;
           break;
-        case "ROP":
+        case 'ROP':
           this.chainID = 3;
           break;
-        case "KOV":
+        case 'KOV':
           this.chainID = 42;
           break;
-        case "RIN":
+        case 'RIN':
           this.chainID = 4;
           break;
         default:
@@ -196,16 +210,16 @@ export default {
     }
   },
   mounted() {
-    if (store.get("customNetworks") !== undefined) {
-      this.customNetworks = store.get("customNetworks");
+    if (store.get('customNetworks') !== undefined) {
+      this.customNetworks = store.get('customNetworks');
     }
   },
   methods: {
     networkModalOpen() {
       this.$children[0].$refs.network.show();
     },
-    removeNetwork (net, idx) {
-      this.customNetworks.splice(idx, 1)
+    removeNetwork(net, idx) {
+      this.customNetworks.splice(idx, 1);
       if (net.service === this.$store.state.network.service) {
         if (this.customNetworks.length > 0) {
           this.switchNetwork(this.customNetworks[0]);
@@ -213,46 +227,46 @@ export default {
           this.switchNetwork(this.$store.state.Networks.ETH[0]);
         }
       }
-      store.set("customNetworks", this.customNetworks);
+      store.set('customNetworks', this.customNetworks);
     },
     addCustomNetworkToggle() {
-      this.$refs.network.$el.classList.toggle("max-height-1");
-      this.$refs.networkList.classList.toggle("hidden");
-      this.$refs.networkAdd.classList.toggle("hidden");
+      this.$refs.network.$el.classList.toggle('max-height-1');
+      this.$refs.networkList.classList.toggle('hidden');
+      this.$refs.networkAdd.classList.toggle('hidden');
     },
     resetCompState() {
-      this.selectedNetwork = { name: "ETH", name_long: "Ethereum" };
-      this.chainID = "";
-      this.port = "";
-      this.name = "";
-      this.url = "";
-      this.username = "";
-      this.password = "";
+      this.selectedNetwork = { name: 'ETH', name_long: 'Ethereum' };
+      this.chainID = '';
+      this.port = '';
+      this.name = '';
+      this.url = '';
+      this.username = '';
+      this.password = '';
     },
     saveCustomNetwork() {
-      let explorer = "";
+      let explorer = '';
       switch (this.selectedNetwork.name) {
-        case "ETH":
-          explorer = "https://etherscan.io/";
+        case 'ETH':
+          explorer = 'https://etherscan.io/';
           break;
-        case "ETC":
-          explorer = "https://gastracker.io/";
+        case 'ETC':
+          explorer = 'https://gastracker.io/';
           break;
-        case "ROP":
-          explorer = "https://ropsten.etherscan.io/";
+        case 'ROP':
+          explorer = 'https://ropsten.etherscan.io/';
           break;
-        case "KOV":
-          explorer = "https://kovan.etherscan.io/";
+        case 'KOV':
+          explorer = 'https://kovan.etherscan.io/';
           break;
-        case "RIN":
-          explorer = "https://rinkeby.etherscan.io/";
+        case 'RIN':
+          explorer = 'https://rinkeby.etherscan.io/';
           break;
         default:
-          explorer = "https://etherscan.io/";
+          explorer = 'https://etherscan.io/';
       }
 
       const customNetwork = {
-        auth: !!(this.password !== "" && this.username !== ""),
+        auth: !!(this.password !== '' && this.username !== ''),
         password: this.password,
         port: this.port,
         service: this.name,
@@ -260,11 +274,13 @@ export default {
           blockExplorerAddr: `${explorer}address/[[txHash]]`,
           blockExplorerTX: `${explorer}tx/[[txHash]]`,
           chainID: this.chainID,
-          contracts: this.$store.state.Networks[this.selectedNetwork.name][0].type.contracts,
+          contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
+            .type.contracts,
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type.tokens
+          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type
+            .tokens
         },
         url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
@@ -273,42 +289,19 @@ export default {
       this.customNetworks.push(customNetwork);
       this.resetCompState();
       this.$refs.addCustomToggle.click();
-      store.set("customNetworks", this.customNetworks);
+      store.set('customNetworks', this.customNetworks);
     },
     expendAuth() {
-      this.$refs.authForm.classList.toggle("hidden");
+      this.$refs.authForm.classList.toggle('hidden');
     },
-    switchNetwork (network) {
-      this.$store.dispatch('switchNetwork', network)
-      this.$store.dispatch('setWeb3Instance', web3)
-    }
-  },
-  watch: {
-    selectedNetwork (newVal) {
-      switch (newVal.name) {
-        case 'ETH':
-          this.chainID = 1
-          break
-        case 'ETC':
-          this.chainID = 61
-          break
-        case 'ROP':
-          this.chainID = 3
-          break
-        case 'KOV':
-          this.chainID = 42
-          break
-        case 'RIN':
-          this.chainID = 4
-          break
-        default:
-          this.chainID = this.chainID
-      }
+    switchNetwork(network) {
+      this.$store.dispatch('switchNetwork', network);
+      this.$store.dispatch('setWeb3Instance', web3);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceNetworkModal.scss";
+@import 'InterfaceNetworkModal.scss';
 </style>

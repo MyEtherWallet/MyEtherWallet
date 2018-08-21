@@ -1,6 +1,4 @@
-import {
-  RIN
-} from '../types'
+import { RIN } from '../types';
 export default {
   type: RIN,
   service: 'etherscan.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

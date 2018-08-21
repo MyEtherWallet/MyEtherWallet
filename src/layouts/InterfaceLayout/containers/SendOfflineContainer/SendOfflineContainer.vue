@@ -52,24 +52,24 @@
 </template>
 
 <script>
-import InterfaceContainerTitle from "../../components/InterfaceContainerTitle";
-import GenerateInfo from "../../components/GenerateInfo";
-import GenerateTx from "../../components/GenerateTx";
-import SendTx from "../../components/SendTx";
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import GenerateInfo from '../../components/GenerateInfo';
+import GenerateTx from '../../components/GenerateTx';
+import SendTx from '../../components/SendTx';
 
 export default {
   components: {
-    "interface-container-title": InterfaceContainerTitle,
-    "generate-info": GenerateInfo,
-    "generate-tx": GenerateTx,
-    "send-tx": SendTx
+    'interface-container-title': InterfaceContainerTitle,
+    'generate-info': GenerateInfo,
+    'generate-tx': GenerateTx,
+    'send-tx': SendTx
   },
   data() {
     return {
-      rawTx: "",
+      rawTx: '',
       gasLimit: 21000,
       nonce: 0,
-      currentPage: "genInfo"
+      currentPage: 'genInfo'
     };
   },
   watch: {
@@ -81,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.currentPage = "genInfo";
+    this.currentPage = 'genInfo';
   },
   methods: {
     createdRawTx(e) {
@@ -101,5 +101,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "SendOfflineContainer.scss";
+@import 'SendOfflineContainer.scss';
 </style>

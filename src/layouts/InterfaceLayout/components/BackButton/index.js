@@ -1,1 +1,1 @@
-export { default } from "./BackButton";
+export { default } from './BackButton';

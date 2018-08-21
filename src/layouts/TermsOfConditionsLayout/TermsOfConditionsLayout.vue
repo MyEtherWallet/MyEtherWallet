@@ -44,5 +44,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "TermsOfConditionsLayout.scss";
+@import 'TermsOfConditionsLayout.scss';
 </style>

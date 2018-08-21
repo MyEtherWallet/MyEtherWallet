@@ -16,10 +16,14 @@
               <p>{{ from }}</p>
             </div>
           </div>
-          <div class="direction" v-show="to !== '' && to !== undefined">
+          <div
+            v-show="to !== '' && to !== undefined"
+            class="direction">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div class="tx-data tx-to" v-show="to !== '' && to !== undefined">
+          <div
+            v-show="to !== '' && to !== undefined"
+            class="tx-data tx-to">
             <!-- <img src="~@/assets/images/icons/btc.svg">
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
@@ -68,8 +72,9 @@
           <div class="flex-center-align">
             <div class="button-with-helper">
               <div
+                ref="ConfirmAndSendButton"
                 :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                ref="ConfirmAndSendButton" v-on:click="sendTx">
+                @click="sendTx">
                 Confirm and Send
               </div>
               <div class="tooltip-box-2">
@@ -104,31 +109,76 @@
 
 <script>
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 
 export default {
-  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'isHardwareWallet'],
-  data () {
+  props: {
+    confirmSendTx: {
+      type: Function,
+      default: function() {}
+    },
+    fee: {
+      type: Number,
+      default: 0
+    },
+    signedTx: {
+      type: String,
+      default: ''
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    from: {
+      type: String,
+      default: ''
+    },
+    gas: {
+      type: Number,
+      default: 0
+    },
+    gasPrice: {
+      type: Number,
+      default: 0
+    },
+    nonce: {
+      type: Number,
+      default: 0
+    },
+    to: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+    isHardwareWallet: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
     return {
       modalDetailInformation: false,
       transactionSigned: false
-    }
+    };
   },
-  methods: {
-    sendTx () {
-      if (this.signedTx !== '') {
-        this.confirmSendTx()
+  computed: {
+    signedTransaction() {
+      if (this.signedMessage) {
+        return this.signedMessage;
+      } else if (this.isHardwareWallet) {
+        return 'Please Approve on Hardware Wallet';
+      } else {
+        return '';
       }
     }
   },
-  computed: {
-    signedTransaction () {
-      if (this.signedMessage) {
-        return this.signedMessage
-      } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet'
-      } else {
-        return ''
+  methods: {
+    sendTx() {
+      if (this.signedTx !== '') {
+        this.confirmSendTx();
       }
     }
   }
@@ -136,5 +186,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "ConfirmModal.scss";
+@import 'ConfirmModal.scss';
 </style>

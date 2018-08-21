@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import github from '@/assets/images/icons/github.png'
-import reddit from '@/assets/images/icons/reddit.svg'
-import slack from '@/assets/images/icons/slack.png'
+import github from '@/assets/images/icons/github.png';
+import reddit from '@/assets/images/icons/reddit.svg';
+import slack from '@/assets/images/icons/slack.png';
 
 export default {
   data() {
@@ -36,18 +36,18 @@ export default {
       links: [
         {
           img: slack,
-          to: "https://www.google.com",
-          name: "slack"
+          to: 'https://www.google.com',
+          name: 'slack'
         },
         {
           img: reddit,
-          to: "https://www.reddit.com/r/myetherwallet",
-          name: "reddit"
+          to: 'https://www.reddit.com/r/myetherwallet',
+          name: 'reddit'
         },
         {
           img: github,
-          to: "https://www.github.com/myetherwallet",
-          name: "github"
+          to: 'https://www.github.com/myetherwallet',
+          name: 'github'
         }
       ]
     };
@@ -56,5 +56,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "Social.scss";
+@import 'Social.scss';
 </style>

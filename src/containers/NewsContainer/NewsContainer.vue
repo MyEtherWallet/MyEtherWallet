@@ -24,41 +24,41 @@
 </template>
 
 <script>
-import NewsArticle from "./components/NewsArticle";
+import NewsArticle from './components/NewsArticle';
 export default {
   components: {
-    "news-article": NewsArticle
+    'news-article': NewsArticle
   },
   data() {
     return {
       articles: [
         {
           title:
-            "Your Cryptocurrency Masters Are Getting Hilariously Rich, and…",
+            'Your Cryptocurrency Masters Are Getting Hilariously Rich, and…',
           desc:
-            "SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…",
-          link: "/",
-          fb: "",
-          twitter: "",
-          readMore: "Read More..."
+            'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
+          link: '/',
+          fb: '',
+          twitter: '',
+          readMore: 'Read More...'
         },
         {
-          title: "Recently the founder of something called",
+          title: 'Recently the founder of something called',
           desc:
-            "SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…",
-          link: "/",
-          fb: "",
-          twitter: "",
-          readMore: "Read More..."
+            'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
+          link: '/',
+          fb: '',
+          twitter: '',
+          readMore: 'Read More...'
         },
         {
-          title: "Another day an anonymous donor set up an $86 million…",
+          title: 'Another day an anonymous donor set up an $86 million…',
           desc:
-            "SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…",
-          link: "/",
-          fb: "",
-          twitter: "",
-          readMore: "Read More..."
+            'SAN FRANCISCO - Recently the founder of something called Ripple briefly became richer than Mark Zuckerberg. Another day an anonymous donor set up an $86 million…',
+          link: '/',
+          fb: '',
+          twitter: '',
+          readMore: 'Read More...'
         }
       ]
     };
@@ -67,5 +67,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "NewsContainer.scss";
+@import 'NewsContainer.scss';
 </style>

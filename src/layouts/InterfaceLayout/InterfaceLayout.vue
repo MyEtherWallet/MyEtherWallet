@@ -48,181 +48,53 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { parseTokensHex } from "@/helpers";
+import { mapGetters } from 'vuex';
+import { parseTokensHex } from '@/helpers';
 
-import DappsContainer from "./containers/DappsContainer";
-import DeployContractContainer from "./containers/DeployContractContainer";
-import InteractWithContractContainer from "./containers/InteractWithContractContainer";
-import SendCurrencyContainer from "./containers/SendCurrencyContainer";
-import SendOfflineContainer from "./containers/SendOfflineContainer";
-import SwapContainer from "./containers/SwapContainer";
-import SignMessageContainer from "./containers/SignMessageContainer";
-import VerifyMessageContainer from "./containers/VerifyMessageContainer";
-import WalletNotFoundContainer from "./containers/WalletNotFoundContainer";
+import DappsContainer from './containers/DappsContainer';
+import DeployContractContainer from './containers/DeployContractContainer';
+import InteractWithContractContainer from './containers/InteractWithContractContainer';
+import SendCurrencyContainer from './containers/SendCurrencyContainer';
+import SendOfflineContainer from './containers/SendOfflineContainer';
+import SwapContainer from './containers/SwapContainer';
+import SignMessageContainer from './containers/SignMessageContainer';
+import VerifyMessageContainer from './containers/VerifyMessageContainer';
+import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
 
-import InterfaceAddress from "./components/InterfaceAddress";
-import InterfaceBalance from "./components/InterfaceBalance";
-import InterfaceNetwork from "./components/InterfaceNetwork";
-import InterfaceSideMenu from "./components/InterfaceSideMenu";
-import InterfaceTokens from "./components/InterfaceTokens";
+import InterfaceAddress from './components/InterfaceAddress';
+import InterfaceBalance from './components/InterfaceBalance';
+import InterfaceNetwork from './components/InterfaceNetwork';
+import InterfaceSideMenu from './components/InterfaceSideMenu';
+import InterfaceTokens from './components/InterfaceTokens';
 
-import store from 'store'
+import store from 'store';
 
 export default {
   components: {
-    "send-currency-container": SendCurrencyContainer,
-    "send-offline-container": SendOfflineContainer,
-    "swap-container": SwapContainer,
-    "dapps-container": DappsContainer,
-    "interact-with-contract-container": InteractWithContractContainer,
-    "deploy-contract-container": DeployContractContainer,
-    "sign-message-container": SignMessageContainer,
-    "verify-message-container": VerifyMessageContainer,
-    "interface-side-menu": InterfaceSideMenu,
-    "interface-address": InterfaceAddress,
-    "interface-balance": InterfaceBalance,
-    "interface-network": InterfaceNetwork,
-    "interface-tokens": InterfaceTokens,
-    "wallet-not-found-container": WalletNotFoundContainer
+    'send-currency-container': SendCurrencyContainer,
+    'send-offline-container': SendOfflineContainer,
+    'swap-container': SwapContainer,
+    'dapps-container': DappsContainer,
+    'interact-with-contract-container': InteractWithContractContainer,
+    'deploy-contract-container': DeployContractContainer,
+    'sign-message-container': SignMessageContainer,
+    'verify-message-container': VerifyMessageContainer,
+    'interface-side-menu': InterfaceSideMenu,
+    'interface-address': InterfaceAddress,
+    'interface-balance': InterfaceBalance,
+    'interface-network': InterfaceNetwork,
+    'interface-tokens': InterfaceTokens,
+    'wallet-not-found-container': WalletNotFoundContainer
   },
   data() {
     return {
       currentTab: this.$store.state.pageStates.interface.sideMenu,
-      balance: "",
-      blockNumber: "",
+      balance: '',
+      blockNumber: '',
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: []
     };
-  },
-  mounted() {
-    if (store.get("sideMenu") !== undefined) {
-      this.currentTab = store.get("sideMenu");
-      this.$store.dispatch("updatePageState", [
-        "interface",
-        "sideMenu",
-        store.get("sideMenu")
-      ]);
-    }
-
-    if (this.$store.state.online === true) {
-      if (this.$store.state.wallet !== null) {
-        this.getBalance();
-        setInterval(this.getBlock, 14000);
-        if (this.network.type.chainID === 1) {
-          this.setTokens();
-        }
-      }
-    }
-  },
-  methods: {
-    switchTabs(param) {
-      this.currentTab = param;
-      this.$store.dispatch("updatePageState", ["interface", "sideMenu", param]);
-      store.set("sideMenu", param);
-    },
-    async fetchTokens () {
-      this.receivedTokens = true
-      const abi = [{
-        'constant': true,
-        'inputs': [{'name': '_owner', 'type': 'address'}, {'name': 'name', 'type': 'bool'}, {'name': 'website', 'type': 'bool'}, {'name': 'email', 'type': 'bool'}, {'name': 'count', 'type': 'uint256'}],
-        'name': 'getAllBalance',
-        'outputs': [{'name': '', 'type': 'bytes'}],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
-      }]
-      const contract = new this.$store.state.web3.eth.Contract(abi)
-      const data = contract.methods.getAllBalance(this.$store.state.wallet.getAddressString(), true, true, true, 0).encodeABI()
-      const response = this.$store.state.web3.eth.call({
-        to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
-        data: data
-      }).then(response => {
-        return response
-      }).catch(err => {
-        console.log(err)
-      })
-
-      return response
-    },
-    async getTokenBalance (token) {
-      const web3 = this.$store.state.web3
-      const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
-      const contract = new web3.eth.Contract(contractAbi)
-      const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
-      const balance = await web3.eth.call({
-        to: token.address ? web3.utils.toChecksumAddress(token.address) : web3.utils.toChecksumAddress(token.addr),
-        data: data
-      }).then(res => {
-        let tokenBalance
-        if (Number(res) === 0 || res === '0x') {
-          tokenBalance = 0
-        } else {
-          tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals)
-        }
-        return tokenBalance
-      }).catch(err => console.log(err))
-      return balance
-    },
-    async setTokens () {
-      if (this.network.type.chainID === 1) {
-        this.receivedTokens = false
-        const hex = await this.fetchTokens()
-        this.tokens = parseTokensHex(hex).sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          } else {
-            return 0;
-          }
-        })
-      } else {
-        const tokenWithBalance = []
-        this.network.type.tokens.map(async (token) => {
-          token.balance = await this.getTokenBalance(token)
-          tokenWithBalance.push(token)
-        })
-        this.receivedTokens = false
-        this.tokens = tokenWithBalance
-      }
-
-      let customTokens = []
-      if (store.get('customTokens') !== undefined && store.get('customTokens')[this.network.type.name] !== undefined && store.get('customTokens')[this.network.type.name].length > 0) {
-        customTokens = store.get('customTokens')[this.network.type.name].filter(token => token.balance > 0)
-      }
-      const allTokens = this.tokens.filter(token => token.balance > 0).concat(customTokens)
-      this.tokensWithBalance = allTokens
-    },
-    getBlock() {
-      this.$store.state.web3.eth
-        .getBlockNumber()
-        .then(res => {
-          this.blockNumber = res;
-        })
-        .catch(err => console.log(err));
-    },
-    getBalance () {
-      this.$store.state.web3.eth.getBalance(this.address).then((res) => {
-        this.balance = res
-        this.$store.dispatch('setAccountBalance', this.balance)
-      }).catch(err => console.log(err))
-    }
-  },
-  mounted () {
-    if (store.get('sideMenu') !== undefined) {
-      this.currentTab = store.get('sideMenu')
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', store.get('sideMenu')])
-    }
-
-    if (this.$store.state.online === true) {
-      if (this.$store.state.wallet !== null) {
-        this.getBalance()
-        setInterval(this.getBlock, 14000)
-        this.setTokens()
-      }
-    }
   },
   computed: {
     address() {
@@ -231,24 +103,191 @@ export default {
       }
     },
     ...mapGetters({
-      network: "network"
+      network: 'network'
     })
   },
   watch: {
-    network (newVal) {
+    network() {
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
-          this.getBalance()
-          this.getBlock()
-          setInterval(this.getBlock, 14000)
-          this.setTokens()
+          this.getBalance();
+          this.getBlock();
+          setInterval(this.getBlock, 14000);
+          this.setTokens();
         }
       }
+    }
+  },
+  mounted() {
+    if (store.get('sideMenu') !== undefined) {
+      this.currentTab = store.get('sideMenu');
+      this.$store.dispatch('updatePageState', [
+        'interface',
+        'sideMenu',
+        store.get('sideMenu')
+      ]);
+    }
+
+    if (this.$store.state.online === true) {
+      if (this.$store.state.wallet !== null) {
+        this.getBalance();
+        setInterval(this.getBlock, 14000);
+        this.setTokens();
+      }
+    }
+  },
+  methods: {
+    switchTabs(param) {
+      this.currentTab = param;
+      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param]);
+      store.set('sideMenu', param);
+    },
+    async fetchTokens() {
+      this.receivedTokens = true;
+      const abi = [
+        {
+          constant: true,
+          inputs: [
+            { name: '_owner', type: 'address' },
+            { name: 'name', type: 'bool' },
+            { name: 'website', type: 'bool' },
+            { name: 'email', type: 'bool' },
+            { name: 'count', type: 'uint256' }
+          ],
+          name: 'getAllBalance',
+          outputs: [{ name: '', type: 'bytes' }],
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ];
+      const contract = new this.$store.state.web3.eth.Contract(abi);
+      const data = contract.methods
+        .getAllBalance(
+          this.$store.state.wallet.getAddressString(),
+          true,
+          true,
+          true,
+          0
+        )
+        .encodeABI();
+      const response = this.$store.state.web3.eth
+        .call({
+          to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
+          data: data
+        })
+        .then(response => {
+          return response;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+
+      return response;
+    },
+    async getTokenBalance(token) {
+      const web3 = this.$store.state.web3;
+      const contractAbi = [
+        {
+          name: 'balanceOf',
+          type: 'function',
+          constant: true,
+          inputs: [{ name: 'address', type: 'address' }],
+          outputs: [{ name: 'out', type: 'uint256' }]
+        }
+      ];
+      const contract = new web3.eth.Contract(contractAbi);
+      const data = contract.methods
+        .balanceOf(this.$store.state.wallet.getAddressString())
+        .encodeABI();
+      const balance = await web3.eth
+        .call({
+          to: token.address
+            ? web3.utils.toChecksumAddress(token.address)
+            : web3.utils.toChecksumAddress(token.addr),
+          data: data
+        })
+        .then(res => {
+          let tokenBalance;
+          if (Number(res) === 0 || res === '0x') {
+            tokenBalance = 0;
+          } else {
+            tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals);
+          }
+          return tokenBalance;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+      return balance;
+    },
+    async setTokens() {
+      if (this.network.type.chainID === 1) {
+        this.receivedTokens = false;
+        const hex = await this.fetchTokens();
+        this.tokens = parseTokensHex(hex).sort((a, b) => {
+          if (a.name.toUpperCase() < b.name.toUpperCase()) {
+            return -1;
+          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      } else {
+        const tokenWithBalance = [];
+        this.network.type.tokens.map(async token => {
+          token.balance = await this.getTokenBalance(token);
+          tokenWithBalance.push(token);
+        });
+        this.receivedTokens = false;
+        this.tokens = tokenWithBalance;
+      }
+
+      let customTokens = [];
+      if (
+        store.get('customTokens') !== undefined &&
+        store.get('customTokens')[this.network.type.name] !== undefined &&
+        store.get('customTokens')[this.network.type.name].length > 0
+      ) {
+        // eslint-disable-next-line
+        customTokens = store.get('customTokens')[this.network.type.name]
+        .filter(token => token.balance > 0);
+      }
+      const allTokens = this.tokens
+        .filter(token => token.balance > 0)
+        .concat(customTokens);
+      this.tokensWithBalance = allTokens;
+    },
+    getBlock() {
+      this.$store.state.web3.eth
+        .getBlockNumber()
+        .then(res => {
+          this.blockNumber = res;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    },
+    getBalance() {
+      this.$store.state.web3.eth
+        .getBalance(this.address)
+        .then(res => {
+          this.balance = res;
+          this.$store.dispatch('setAccountBalance', this.balance);
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceLayout.scss";
+@import 'InterfaceLayout.scss';
 </style>

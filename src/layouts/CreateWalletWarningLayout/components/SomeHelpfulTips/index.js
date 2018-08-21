@@ -1,1 +1,1 @@
-export { default } from './SomeHelpfulTips'
+export { default } from './SomeHelpfulTips';

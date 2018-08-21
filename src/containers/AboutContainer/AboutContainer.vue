@@ -101,5 +101,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "AboutContainer.scss";
+@import 'AboutContainer.scss';
 </style>

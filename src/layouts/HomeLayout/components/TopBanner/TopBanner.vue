@@ -72,5 +72,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "TopBanner.scss";
+@import 'TopBanner.scss';
 </style>

@@ -1,4 +1,4 @@
-import { Wallet, Configs } from "@/helpers";
+import { Wallet, Configs } from '@/helpers';
 
 function create(password) {
   let createdWallet = {};
@@ -12,7 +12,7 @@ function create(password) {
 }
 
 onmessage = function(event) {
-  if (event.data.type === "createWallet") {
+  if (event.data.type === 'createWallet') {
     let workerResult = create(event.data.data[0]);
     postMessage(workerResult);
   }

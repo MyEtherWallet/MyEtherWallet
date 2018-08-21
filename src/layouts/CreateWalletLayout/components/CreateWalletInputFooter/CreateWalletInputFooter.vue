@@ -18,5 +18,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "CreateWalletInputFooter.scss";
+@import 'CreateWalletInputFooter.scss';
 </style>

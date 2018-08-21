@@ -25,5 +25,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "NotFoundLayout.scss";
+@import 'NotFoundLayout.scss';
 </style>

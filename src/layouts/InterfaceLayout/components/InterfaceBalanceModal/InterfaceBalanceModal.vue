@@ -1,9 +1,9 @@
 <template>
   <div class="modal-container">
-    <b-modal 
-      ref="balance" 
-      hide-footer 
-      class="bootstrap-modal balance nopadding" 
+    <b-modal
+      ref="balance"
+      hide-footer
+      class="bootstrap-modal balance nopadding"
       title="Balance">
       <div class="content-block">
         <div class="flex-container">
@@ -30,7 +30,12 @@
 
 <script>
 export default {
-  props: ["balance"],
+  props: {
+    balance: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {};
   }
@@ -38,5 +43,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceBalanceModal.scss";
+@import 'InterfaceBalanceModal.scss';
 </style>

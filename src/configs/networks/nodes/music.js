@@ -1,6 +1,4 @@
-import {
-  MUSIC
-} from '../types'
+import { MUSIC } from '../types';
 export default {
   type: MUSIC,
   service: 'musicoin.org',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

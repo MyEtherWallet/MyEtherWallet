@@ -149,34 +149,40 @@
 </template>
 
 <script>
-import InterfaceBottomText from "@/components/InterfaceBottomText";
-import BackButton from "../../components/BackButton";
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import BackButton from '../../components/BackButton';
 
 export default {
   components: {
-    "interface-bottom-text": InterfaceBottomText,
-    "back-button": BackButton
+    'interface-bottom-text': InterfaceBottomText,
+    'back-button': BackButton
   },
-  props: ["resetView"],
+  props: {
+    resetView: {
+      type: Function,
+      default: function() {}
+    }
+  },
   data() {
     return {};
   },
   methods: {
     expendDomainCheckForm() {
-      this.$refs["checkForm"].classList.toggle("hidden");
-      this.$refs["domainList"].classList.add("hidden");
+      this.$refs['checkForm'].classList.toggle('hidden');
+      this.$refs['domainList'].classList.add('hidden');
     },
     domainAvailabilityCheck() {
       // this.$refs['checkForm'].classList.toggle('hidden')
-      this.$refs["domainList"].classList.add("hidden");
-    },
-    domainBuyButtonClick($event) {
-      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+      this.$refs['domainList'].classList.add('hidden');
     }
+    // },
+    // domainBuyButtonClick($event) {
+    //   // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+    // }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "RegisterDomainContainer.scss";
+@import 'RegisterDomainContainer.scss';
 </style>

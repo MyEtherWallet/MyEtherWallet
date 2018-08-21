@@ -1,6 +1,4 @@
-import {
-  UBQ
-} from '../types'
+import { UBQ } from '../types';
 export default {
   type: UBQ,
   service: 'ubiqscan',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

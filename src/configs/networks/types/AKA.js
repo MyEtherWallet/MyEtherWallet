@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-akroma.json'
-import contracts from '@/contracts/contract-abi-akroma.json'
+import tokens from '@/tokens/tokens-akroma.json';
+import contracts from '@/contracts/contract-abi-akroma.json';
 
 export default {
   name: 'AKA',
@@ -10,4 +10,4 @@ export default {
   chainID: 200625,
   tokens: tokens,
   contracts: contracts
-}
+};

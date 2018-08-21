@@ -7,7 +7,7 @@
           About MyEtherWallet
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"></div>
+          <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
           <h4>What is MyEtherWallet?</h4>
@@ -33,19 +33,19 @@
 </template>
 
 <script>
-
 export default {
-  props: ['progressBarValue'],
-  components: {
-  },
-  data () {
-    return {
-
+  props: {
+    progressBarValue: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "../BlockWithProgressBar.scss";
+@import '../BlockWithProgressBar.scss';
 </style>

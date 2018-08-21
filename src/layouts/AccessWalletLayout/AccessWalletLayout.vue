@@ -9,16 +9,16 @@
 </template>
 
 <script>
-import AccessMyWalletContainer from "./containers/AccessMyWalletContainer";
-import FaqsContainer from "@/containers/FaqsContainer";
-import PriceBar from "./components/PriceBar";
+import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
+import FaqsContainer from '@/containers/FaqsContainer';
+import PriceBar from './components/PriceBar';
 
 export default {
-  name: "AccessWalletLayout",
+  name: 'AccessWalletLayout',
   components: {
-    "access-my-wallet-container": AccessMyWalletContainer,
+    'access-my-wallet-container': AccessMyWalletContainer,
     faqs: FaqsContainer,
-    "price-bar": PriceBar
+    'price-bar': PriceBar
   },
   data() {
     return {
@@ -33,7 +33,7 @@ export default {
   methods: {
     async getRates() {
       const rates = await fetch(
-        "https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT"
+        'https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT'
       )
         .then(res => {
           return res.json();
@@ -54,5 +54,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "AccessWalletLayout.scss";
+@import 'AccessWalletLayout.scss';
 </style>

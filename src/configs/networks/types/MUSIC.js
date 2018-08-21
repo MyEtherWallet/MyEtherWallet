@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-music.json'
-import contracts from '@/contracts/contract-abi-music.json'
+import tokens from '@/tokens/tokens-music.json';
+import contracts from '@/contracts/contract-abi-music.json';
 
 export default {
   name: 'MUSIC',
@@ -10,4 +10,4 @@ export default {
   chainID: 7762959,
   tokens: tokens,
   contracts: contracts
-}
+};

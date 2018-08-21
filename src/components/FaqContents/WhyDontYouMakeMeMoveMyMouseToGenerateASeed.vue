@@ -55,5 +55,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

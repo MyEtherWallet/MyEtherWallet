@@ -22,7 +22,9 @@
       </div>
 
       <div class="the-form">
-        <textarea class="custom-textarea-1" ref="message"></textarea>
+        <textarea 
+          ref="message" 
+          class="custom-textarea-1"/>
       </div>
     </div>
 
@@ -33,68 +35,78 @@
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('signature')">Clear</span>
-            <span v-on:click="copyToClipboard('signature')">Copy</span>
+            <span @click="deleteInputText('signature')">Clear</span>
+            <span @click="copyToClipboard('signature')">Copy</span>
           </div>
 
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="signature" class="custom-textarea-1" name="" ></textarea>
+        <textarea 
+          ref="signature" 
+          class="custom-textarea-1" 
+          name="" />
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="signMessage"
-             class="submit-button large-round-button-green-filled clickable">
+        <div 
+          class="submit-button large-round-button-green-filled clickable"
+          @click="signMessage">
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
-                             :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text 
+        :link-text="$t('interface.learnMore')" 
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 
 export default {
-  name: "SignMessage",
+  name: 'SignMessage',
   components: {
-    "interface-bottom-text": InterfaceBottomText,
-    "interface-container-title": InterfaceContainerTitle,
-    "success-modal": SuccessModal
+    'interface-bottom-text': InterfaceBottomText,
+    'interface-container-title': InterfaceContainerTitle,
+    'success-modal': SuccessModal
   },
   data() {
     return {};
   },
   methods: {
-    signMessage () {
-      this.$store.state.web3.eth.sign(this.$refs.message.value, this.$store.state.wallet.getAddressString())
+    signMessage() {
+      this.$store.state.web3.eth
+        .sign(
+          this.$refs.message.value,
+          this.$store.state.wallet.getAddressString()
+        )
         .then(_signedMessage => {
-          this.$refs.signature.value = _signedMessage
-        })
+          this.$refs.signature.value = _signedMessage;
+        });
     },
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    successModalOpen() {
+      this.$children[0].$refs.success.show();
     },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
-      window.getSelection().removeAllRanges()
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     },
     deleteInputText(ref) {
-      this.$refs[ref].value = "";
+      this.$refs[ref].value = '';
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "SignMessageContainer.scss";
+@import 'SignMessageContainer.scss';
 </style>

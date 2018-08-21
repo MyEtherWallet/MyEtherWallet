@@ -8,13 +8,15 @@
       <div class="page-container">
         <div class="nav-tab-user-input-box">
           <b-tabs>
-            <div class="progress-bar"></div>
-            <b-tab title="By JSON File" active>
+            <div class="progress-bar"/>
+            <b-tab
+              title="By JSON File"
+              active>
 
               <div class="title-block">
                 <div class="title-popover">
                   <h3>
-                    {{ $t('createWallet.byJsonFileSaveKeystore')}}
+                    {{ $t('createWallet.byJsonFileSaveKeystore') }}
                   </h3>
                   <popover :popcontent="$t('popover.whatIsMessageContent')"/>
                 </div>
@@ -32,17 +34,21 @@
               <div class="user-input-container">
                 <div class="user-input">
                   <div class="user-button">
-                    <a :href="walletJson" :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
-                       :download="name">
-                      <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile')}} </span>
+                    <a
+                      :href="walletJson"
+                      :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
+                      :download="name">
+                      <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
                       <div v-if="!downloadable">
-                        <i class="fa fa-spinner fa-lg fa-spin"></i>
+                        <i class="fa fa-spinner fa-lg fa-spin"/>
                       </div>
                     </a>
                   </div>
                   <div class="printer-icon">
                     <router-link to="/">
-                      <img class="icon" src="~@/assets/images/icons/printer.svg">
+                      <img
+                        class="icon"
+                        src="~@/assets/images/icons/printer.svg">
                     </router-link>
                   </div>
                 </div>
@@ -57,43 +63,48 @@
 </template>
 
 <script>
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue'
-import ByJsonBlock from './components/ByJsonBlock'
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import ByJsonBlock from './components/ByJsonBlock';
 
-import noLose from "@/assets/images/icons/no-lose.svg";
-import noShare from "@/assets/images/icons/no-share.svg";
-import makeBackup from "@/assets/images/icons/make-a-backup.svg";
-import Worker from "@/workers/wallet.worker.js";
-import Wallet from "ethereumjs-wallet";
+import noLose from '@/assets/images/icons/no-lose.svg';
+import noShare from '@/assets/images/icons/no-share.svg';
+import makeBackup from '@/assets/images/icons/make-a-backup.svg';
+import Worker from '@/workers/wallet.worker.js';
+import Wallet from 'ethereumjs-wallet';
 
 export default {
   components: {
-    "by-json-block": ByJsonBlock,
-    "success-modal": SuccessModal
+    'by-json-block': ByJsonBlock,
+    'success-modal': SuccessModal
   },
-  props: ["password"],
+  props: {
+    password: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       contents: [
         {
-          title: this.$t("createWallet.byJsonFileDontLoseTitle"),
-          desc: this.$t("createWallet.byJsonFileDontLoseDesc"),
+          title: this.$t('createWallet.byJsonFileDontLoseTitle'),
+          desc: this.$t('createWallet.byJsonFileDontLoseDesc'),
           img: noLose
         },
         {
-          title: this.$t("createWallet.byJsonFileDontShareTitle"),
-          desc: this.$t("createWallet.byJsonFileDontShareDesc"),
+          title: this.$t('createWallet.byJsonFileDontShareTitle'),
+          desc: this.$t('createWallet.byJsonFileDontShareDesc'),
           img: noShare
         },
         {
-          title: this.$t("createWallet.byJsonFileMakeBackupTitle"),
-          desc: this.$t("createWallet.byJsonFileMakeBackupDesc"),
+          title: this.$t('createWallet.byJsonFileMakeBackupTitle'),
+          desc: this.$t('createWallet.byJsonFileMakeBackupDesc'),
           img: makeBackup
         }
       ],
       downloadable: false,
-      walletJson: "",
-      name: ""
+      walletJson: '',
+      name: ''
     };
   },
   watch: {
@@ -107,19 +118,19 @@ export default {
   mounted() {
     const worker = new Worker();
     const self = this;
-    worker.postMessage({ type: "createWallet", data: [this.password] });
+    worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = function(e) {
       // eslint-disable-next-line no-useless-escape
-      self.walletJson = createBlob("mime", e.data.walletJson);
+      self.walletJson = createBlob('mime', e.data.walletJson);
       self.name = e.data.name.toString();
       self.$store.dispatch(
-        "decryptWallet",
+        'decryptWallet',
         Wallet.fromV3(e.data.walletJson, self.password)
       );
 
       function createBlob(mime, str) {
-        const string = typeof str === "object" ? JSON.stringify(str) : str;
-        if (string === null) return "";
+        const string = typeof str === 'object' ? JSON.stringify(str) : str;
+        if (string === null) return '';
         var blob = new Blob([string], {
           type: mime
         });
@@ -127,13 +138,14 @@ export default {
         return window.URL.createObjectURL(blob);
       }
     };
-    worker.onerror = function(e) {
-      console.log("onerror received from worker");
+    worker.onerror = function() {
+      // eslint-disable-next-line no-console
+      console.log('onerror received from worker'); // replace with debugger
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "ByJsonFileContainer.scss";
+@import 'ByJsonFileContainer.scss';
 </style>

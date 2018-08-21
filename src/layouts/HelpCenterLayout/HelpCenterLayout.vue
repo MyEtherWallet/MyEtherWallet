@@ -15,5 +15,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "HelpCenterLayout.scss";
+@import 'HelpCenterLayout.scss';
 </style>
