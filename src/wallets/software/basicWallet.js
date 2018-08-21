@@ -107,11 +107,13 @@ export default class BasicWallet {
         let hashedtx = eTx.hash();
         // txData.signedTx = '0x' + eTx.serialize().toString('hex')
         let result = {
-          rawTx: txData.rawTx,
-          messageHash: hashedtx, // figure out what exactly web3 is putting here
-          v: eTx.v,
-          r: eTx.r,
-          s: eTx.s,
+          tx: {
+            ...txData.rawTx,
+            v: `0x${eTx.v.toString('hex')}`,
+            r: `0x${eTx.r.toString('hex')}`,
+            s: `0x${eTx.s.toString('hex')}`,
+            hash: hashedtx
+          },
           rawTransaction: txData.signedTx
         };
         resolve(result);

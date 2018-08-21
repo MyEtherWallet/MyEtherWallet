@@ -33,6 +33,7 @@ export default class HardwareWalletInterface {
   getAddressString() {
     throw new Error('getAddressString Not Implemented');
   }
+
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   // ============== (Start) Utility methods ======================

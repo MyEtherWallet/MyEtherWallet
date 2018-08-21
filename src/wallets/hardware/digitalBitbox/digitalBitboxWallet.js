@@ -1,0 +1,371 @@
+import EthereumjsTx from 'ethereumjs-tx'
+import * as ethUtil from 'ethereumjs-util'
+import * as HDKey from 'hdkey'
+import HardwareWalletInterface from '../hardwareWallet-interface'
+import { getDerivationPath, paths } from './deterministicWalletPaths'
+
+import { DigitalBitboxUsb } from './digitalBitboxUsb'
+import { DigitalBitboxEth } from './digitalBitboxEth'
+import { u2f } from './u2f-api'
+
+export default class DigitalBitboxWallet extends HardwareWalletInterface {
+  constructor (options) {
+    super()
+    this.identifier = 'DigitalBitbox'
+    this.brand = 'digitalBitbox'
+    this.wallet = null
+    this.digitalBitboxSecret = ''
+    this.transport = null
+
+    options = options || {}
+    this.addressToWalletMap = {}
+    this.addressesToIndexMap = {}
+    this.walletsRetrieved = []
+
+    this.id = 0
+    this.hdk = null
+    this.numWallets = 0
+
+    this.defaultOptions = {
+      path: this.getDerivationPath().dpath
+    }
+
+    const currentOptions = {
+      ...this.defaultOptions,
+      ...options
+    }
+
+    this.path = currentOptions.path
+    this.accountsLength = currentOptions.accountsLength || this.defaultAccountsCount
+    this.accountsOffset = currentOptions.accountsOffset || this.defaultAccountsOffset
+    this.networkId = currentOptions.networkId || this.defaultNetworkId
+
+    this.getAccounts = this.getAccounts.bind(this)
+    this.getMultipleAccounts = this.getMultipleAccounts.bind(this)
+    this.signTransaction = this.signTransaction.bind(this)
+    this.signMessage = this.signMessage.bind(this)
+  }
+
+  // ============== (Start) Expected Utility methods ======================
+
+  setActiveAddress (address, index) {
+    this.wallet = this.addressToWalletMap[address]
+    this.wallet.address = address
+  }
+
+  static async unlock (options) {
+    try {
+      return new DigitalBitboxWallet(options)
+    } catch (e) {
+      return e
+    }
+  }
+
+  get compatibleChains () {
+    return paths
+  }
+
+  getDerivationPath (networkShortName) {
+    return getDerivationPath(networkShortName)
+  }
+
+  // ============== (End) Expected Utility methods ======================
+
+  // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
+  getAddress () {
+    if (this.wallet) {
+      return this.wallet.address
+    } else {
+      return null
+    }
+  }
+
+  getAddressString () {
+    if (this.wallet) {
+      return ethUtil.toChecksumAddress(this.getAddress())
+    } else {
+      return null
+    }
+  }
+
+  // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
+
+  // ============== (Start) Implementation of wallet usage methods ======================
+  getAccounts (callback) {
+    let _this = this
+    if (arguments.length > 1 && typeof arguments[2] === 'function') {
+      return _this.getMultipleAccounts(arguments[0], arguments[1])
+    } else {
+      return _this._getAccounts()
+    }
+  }
+
+  getMultipleAccounts (count, offset, callback) {
+    // if the particular wallet does not support multiple accounts this should just return the primary account
+    return this._getAccounts(count, offset)
+  }
+
+  signTransaction (txData) {
+    return this.signTxTrezor(txData)
+  }
+
+  signMessage (msgData) {
+    let thisMessage = msgData.data ? msgData.data : msgData
+    return this.signMessageTrezor(thisMessage)
+  }
+
+  // ============== (End) Implementation of wallet usage methods ======================
+
+  changeDPath (path) {
+    this.path = path
+    return this.unlockBitbox()
+  }
+
+  // ============== (Start) Internally used methods ======================
+
+  // (Start) Internal setup methods
+  digitalBitboxCallback (result, error) {
+    return new Promise((resolve, reject) => {
+      this.digitalBitboxSecret = ''
+      if (typeof result !== 'undefined') {
+        this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path)
+        resolve()
+      } else {
+        reject(Error(error))
+      }
+    })
+  }
+
+  unlockBitbox () {
+    return new Promise((resolve, reject) => {
+      this.transport = new DigitalBitboxUsb()
+      var app = new DigitalBitboxEth(this.transport, this.digitalBitboxSecret)
+      var path = this.path
+      app.getAddress(path, (result, error) => {
+        resolve(this.digitalBitboxCallback(result, error))
+      })
+    })
+  };
+
+  createWallet (priv, pub, path, hwType, hwTransport) {
+    let wallet = {}
+    if (typeof priv !== 'undefined') {
+      wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex')
+    }
+    wallet.pubKey = pub
+    wallet.path = path
+    wallet.hwType = this.identifier
+    wallet.hwTransport = hwTransport
+    wallet.type = this.brand
+    return wallet
+  }
+
+  HWWalletCreate (publicKey, chainCode, walletType, path) {
+    this.hdk = new HDKey()
+    this.hdk.publicKey = Buffer.from(publicKey, 'hex')
+    this.hdk.chainCode = Buffer.from(chainCode, 'hex')
+    this.numWallets = 0
+    this.path = path
+    this.setHDAddressesHWWallet(this.numWallets, this.accountsLength, walletType)
+  }
+
+  setHDAddressesHWWallet (start, limit, ledger) {
+    this.walletsRetrieved = []
+    for (var i = start; i < start + limit; i++) {
+      var derivedKey = this.hdk.derive('m/' + i)
+      const tempWallet = this.createWallet(undefined, derivedKey.publicKey, this.path + '/' + i)
+      this.addressToWalletMap[this._getAddressForWallet(tempWallet)] = tempWallet
+      this.walletsRetrieved.push(tempWallet)
+      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet)
+      this.walletsRetrieved[this.walletsRetrieved.length - 1].type = 'addressOnly'
+    }
+    this.id = 0
+    this.numWallets = start + limit
+  }
+
+  // (End) Internal setup methods
+
+  AddRemoveHDAddresses (isAdd) {
+    if (isAdd) this.setHDAddressesHWWallet(this.numWallets, this.accountsLength)
+    else this.setHDAddressesHWWallet(this.numWallets - 2 * this.accountsLength, this.accountsLength)
+  }
+
+  setHDWallet () {
+    this.wallet = this.walletsRetrieved[this.id]
+    this.wallet.type = 'default'
+  }
+
+  // (Start) Internal methods underlying wallet usage methods
+  async _getAccounts (count, offset) {
+    return new Promise((resolve, reject) => {
+      let collect = {}
+      if (this.addressesToIndexMap[offset] && this.addressesToIndexMap[offset + count - 1]) {
+        for (let i = offset; i < offset + count; i++) {
+          collect[i] = this.addressesToIndexMap[i]
+        }
+      } else {
+        this.setHDAddresses(offset, count)
+        for (let i = offset; i < offset + count; i++) {
+          collect[i] = this.addressesToIndexMap[i]
+        }
+      }
+      resolve(collect)
+    })
+  }
+
+  setHDAddresses (start, limit) {
+    this.walletsRetrieved = []
+    for (let i = start; i < start + limit; i++) {
+      const tempWallet = this.createWallet(this.hdk.derive(this.path + '/' + i)._privateKey)
+      this.addressToWalletMap[this._getAddressForWallet(tempWallet)] = tempWallet
+      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet)
+      this.walletsRetrieved.push(tempWallet)
+    }
+    this.id = 0
+    this.numWallets = start + limit
+  }
+
+  decimalToHex (dec) {
+    return new ethUtil.BN(dec).toString(16)
+  }
+
+  signTxDigitalBitbox (rawTx, txData, callback) {
+    var localCallback = (result, error) => {
+      if (typeof error !== 'undefined') {
+        error = error.errorCode ? u2f.getErrorByCode(error.errorCode) : error
+        if (callback !== undefined) callback({
+          isError: true,
+          error: error
+        })
+        return
+      }
+      // uiFuncs.notifier.info("The transaction was signed but not sent. Click the blue 'Send Transaction' button to continue.");
+      rawTx.v = this.sanitizeHex(result['v'])
+      rawTx.r = this.sanitizeHex(result['r'])
+      rawTx.s = this.sanitizeHex(result['s'])
+      var eTx_ = new EthereumjsTx(rawTx)
+      rawTx.rawTx = JSON.stringify(rawTx)
+      rawTx.signedTx = this.sanitizeHex(eTx_.serialize().toString('hex'))
+      rawTx.isError = false
+      if (callback !== undefined) callback(rawTx)
+    }
+    // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
+    var app = new DigitalBitboxEth(this.transport, '')
+    const tx = new EthereumjsTx(rawTx)
+    app.signTransaction(txData.path, tx, localCallback)
+  }
+
+  sanitizeHex (hex) {
+    hex = hex.substring(0, 2) === '0x' ? hex.substring(2) : hex
+    if (hex === '') return ''
+    return '0x' + this.padLeftEven(hex)
+  }
+
+  signTxTrezors (rawTx) {
+    return new Promise((resolve, reject) => {
+      var trezorConnectSignCallback = (result) => {
+        if (!result.success) {
+          reject(Error(result.error))
+          return
+        }
+        rawTx.v = '0x' + this.decimalToHex(result.v)
+        rawTx.r = '0x' + result.r
+        rawTx.s = '0x' + result.s
+        const tx = new EthereumjsTx(rawTx)
+        rawTx.rawTx = JSON.stringify(rawTx)
+        resolve({
+          rawTx: rawTx.rawTx,
+          messageHash: tx.hash(), // figure out what exactly web3 is putting here
+          v: Buffer.from(result.v.toString(), 'hex'),
+          r: Buffer.from(result.r, 'hex'),
+          s: Buffer.from(result.s, 'hex'),
+          rawTransaction: `0x${tx.serialize().toString('hex')}`
+        })
+      }
+
+      TrezorConnect.signEthereumTx(
+        this.wallet.path,
+        this.getNakedAddress(rawTx.nonce),
+        this.getNakedAddress(rawTx.gasPrice),
+        this.getNakedAddress(rawTx.gas),
+        this.getNakedAddress(rawTx.to),
+        this.getNakedAddress(rawTx.value),
+        this.getNakedAddress(rawTx.data),
+        +rawTx.chainId,
+        trezorConnectSignCallback
+      )
+    })
+  }
+
+  signTxTrezor (rawTx) {
+    return new Promise((resolve, reject) => {
+      var trezorConnectSignCallback = (result) => {
+        if (!result.success) {
+          reject(Error(result.error))
+          return
+        }
+        rawTx.v = '0x' + this.decimalToHex(result.v)
+        rawTx.r = '0x' + result.r
+        rawTx.s = '0x' + result.s
+        const tx = new EthereumjsTx(rawTx)
+        rawTx.rawTx = JSON.stringify(rawTx)
+        resolve({
+          rawTx: rawTx.rawTx,
+          messageHash: tx.hash(), // figure out what exactly web3 is putting here
+          v: Buffer.from(result.v.toString(), 'hex'),
+          r: Buffer.from(result.r, 'hex'),
+          s: Buffer.from(result.s, 'hex'),
+          rawTransaction: `0x${tx.serialize().toString('hex')}`
+        })
+      }
+
+      TrezorConnect.signEthereumTx(
+        this.wallet.path,
+        this.getNakedAddress(rawTx.nonce),
+        this.getNakedAddress(rawTx.gasPrice),
+        this.getNakedAddress(rawTx.gas),
+        this.getNakedAddress(rawTx.to),
+        this.getNakedAddress(rawTx.value),
+        this.getNakedAddress(rawTx.data),
+        +rawTx.chainId,
+        trezorConnectSignCallback
+      )
+    })
+  }
+
+  signMessageTrezor (stringMessage) {
+    return new Promise((resolve, reject) => {
+      const localCallback = function (result) {
+        if (!result.success) {
+          reject(result.error)
+          return
+        }
+        let signedMessage = '0x' + result.signature
+        resolve(signedMessage)
+      }
+      TrezorConnect.ethereumSignMessage(this.wallet.path, stringMessage, localCallback, '1.5.2')
+    })
+  }
+
+  // (End) Internal methods underlying wallet usage methods
+  // (Start) Internal utility methods
+  getNakedAddress (address) {
+    let naked = address.toLowerCase().replace('0x', '')
+    if (naked.length % 2 === 0) {
+      return naked.toString()
+    } else {
+      return '0' + naked.toString()
+    }
+  }
+
+  _getAddressForWallet (wallet) {
+    if (typeof wallet.pubKey === 'undefined') {
+      return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex')
+    } else {
+      return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
+    }
+  }
+
+  // (End) Internal utility methods
+  // ============== (End) Internally used methods ======================
+}
