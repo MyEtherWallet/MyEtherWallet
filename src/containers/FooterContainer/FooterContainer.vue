@@ -92,7 +92,7 @@ export default {
           contents: [
             {
               text: this.$t('footer.units'),
-              to: '/'
+              to: '/convert-units'
             },
             {
               text: this.$t('footer.txStat'),
@@ -157,6 +157,10 @@ export default {
             {
               text: this.$t('common.customerSupport'),
               to: '/'
+            },
+            {
+              text: 'Help Center',
+              to: '/help-center'
             }
           ]
         }

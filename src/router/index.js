@@ -8,6 +8,7 @@ import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
 import AccessWalletLayout from '@/layouts/AccessWalletLayout'
 import InterfaceLayout from '@/layouts/InterfaceLayout'
 import HelpCenterLayout from '@/layouts/HelpCenterLayout'
+import ConvertUnits from '@/layouts/ConvertUnits'
 import NotFoundLayout from '@/layouts/NotFoundLayout'
 import CreateWalletWarningLayout from '@/layouts/CreateWalletWarningLayout'
 import {router as routerConfig} from '@/configs/build'
@@ -56,6 +57,11 @@ export default new Router({
       path: '/help-center',
       name: 'HelpCenterLayout',
       component: HelpCenterLayout
+    },
+    {
+      path: '/convert-units',
+      name: 'ConvertUnits',
+      component: ConvertUnits
     },
     {
       path: '/getting-started',
