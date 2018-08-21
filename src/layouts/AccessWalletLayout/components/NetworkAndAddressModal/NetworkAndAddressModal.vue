@@ -248,6 +248,7 @@ export default {
   },
   watch: {
     hardwareWallet (newValue) {
+      this.getPaths()
       this.getAddresses(this.count, this.offset)
         .then(addressSet => {
           this.hardwareAddresses = addressSet

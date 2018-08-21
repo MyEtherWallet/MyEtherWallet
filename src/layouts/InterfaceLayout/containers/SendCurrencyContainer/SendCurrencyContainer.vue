@@ -69,10 +69,10 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t('common.speedTx') }}</h4>
+            <h4>{{ $t("common.speedTx") }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div

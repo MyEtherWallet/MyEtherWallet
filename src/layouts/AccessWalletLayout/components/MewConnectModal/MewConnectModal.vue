@@ -16,6 +16,7 @@
     </div>
     <div class="appstore-button-container">
       <img src="~@/assets/images/icons/appstore.png">
+      <img src="~@/assets/images/icons/playstore.png">
       <p>Do not have our App? Download now.</p>
     </div>
     <div class="support">
