@@ -20,14 +20,52 @@
 </template>
 
 <script>
+// import Web3 from 'web3'
+
 export default {
   props: ['mnemonicValues', 'mnemonicDoneModalOpen'],
   data () {
-    return {}
+    return {
+      mnemonicVerificationItems: [
+        [
+          { value: '', correctItem: false },
+          { value: '', correctItem: false },
+          { value: '', correctItem: false }
+        ],
+        [
+          { value: '', correctItem: false },
+          { value: '', correctItem: false },
+          { value: '', correctItem: false }
+        ],
+        [
+          { value: '', correctItem: false },
+          { value: '', correctItem: false },
+          { value: '', correctItem: false }
+        ]
+      ]
+    }
+  },
+  methods: {
+
+  },
+  watch: {
+    mnemonicValues: function (mnemonicVal) {
+      // When mnemonic value changes, we pick 3 mnemonic values to verification.
+
+      var mnemonicCount = mnemonicVal.length
+
+      var ranItems = []
+      while (ranItems.length < 3) {
+        var randomnumber = Math.floor(Math.random() * mnemonicCount) + 1
+        if (ranItems.indexOf(randomnumber) > -1) continue
+        ranItems[ranItems.length] = randomnumber
+      }
+      console.log(ranItems)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "VerificationModal.scss";
+@import "VerificationModal.scss";
 </style>
