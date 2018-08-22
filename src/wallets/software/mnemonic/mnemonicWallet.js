@@ -137,7 +137,6 @@ export default class MnemonicWallet extends HardwareWalletInterface {
 
   decryptWallet (options) {
     try {
-      console.log(this.path) // todo remove dev item
       if (!bip39.validateMnemonic(options.mnemonicPhrase)) throw new Error('Invalid Mnemonic Supplied')
       this.phrase = options.mnemonicPhrase
       this.password = options.mnemonicPassword
