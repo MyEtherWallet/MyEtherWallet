@@ -1,5 +1,4 @@
-import overide from '@/helpers/web3-overide/web3-overide-mew'
-import WalletWrapper from '@/helpers/web3-overide/web3-wallet-adapter'
+import {overide, WalletWrapper} from '@/wallets'
 
 const addNotification = function ({commit, state}, val) {
   const newNotif = {}

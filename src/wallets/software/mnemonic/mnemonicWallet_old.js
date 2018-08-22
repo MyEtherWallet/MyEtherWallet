@@ -53,7 +53,6 @@ export default class MnemonicWallet extends HardwareWalletInterface {
       this.wallet = this.HDWallet.wallets[index]
     } else {
       console.warn(`Address at index ${index} does not match address ${address}`)
-      console.log(this.addressToIndexMap) // todo remove dev item
       const foundIndex = Object.values(this.addressToIndexMap).indexOf(address)
       this.wallet = this.HDWallet.wallets[foundIndex]
     }
