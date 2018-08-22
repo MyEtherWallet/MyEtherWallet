@@ -7,15 +7,16 @@
       <div class="contents">
         <div class="tx-contents">
           <div>
-            <interface-address :address="address" />
+            <interface-address :address="address"/>
           </div>
           <div>
             <interface-balance :balance="balance"/>
           </div>
           <div>
-            <interface-network :blockNumber="blockNumber" />
+            <interface-network :blockNumber="blockNumber"/>
           </div>
-          <send-currency-container :tokensWithBalance="tokensWithBalance" :address="address" v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
+          <send-currency-container :tokensWithBalance="tokensWithBalance" :address="address"
+                                   v-show="currentTab === 'send' || currentTab === ''"></send-currency-container>
           <send-offline-container v-show="currentTab === 'offline'"></send-offline-container>
           <swap-container v-show="currentTab === 'swap'"></swap-container>
           <dapps-container v-show="currentTab === 'dapps'"></dapps-container>
@@ -24,7 +25,8 @@
           <verify-message-container v-show="currentTab === 'verifyMessage'"></verify-message-container>
           <deploy-contract-container v-show="currentTab === 'deployC'"></deploy-contract-container>
           <div class="tokens" v-if="$store.state.online">
-            <interface-tokens :getTokenBalance="getTokenBalance" :tokens="tokens" :receivedTokens="receivedTokens"></interface-tokens>
+            <interface-tokens :getTokenBalance="getTokenBalance" :tokens="tokens"
+                              :receivedTokens="receivedTokens"></interface-tokens>
           </div>
         </div>
       </div>
@@ -94,7 +96,10 @@ export default {
       this.receivedTokens = true
       const abi = [{
         'constant': true,
-        'inputs': [{'name': '_owner', 'type': 'address'}, {'name': 'name', 'type': 'bool'}, {'name': 'website', 'type': 'bool'}, {'name': 'email', 'type': 'bool'}, {'name': 'count', 'type': 'uint256'}],
+        'inputs': [{'name': '_owner', 'type': 'address'}, {'name': 'name', 'type': 'bool'}, {
+          'name': 'website',
+          'type': 'bool'
+        }, {'name': 'email', 'type': 'bool'}, {'name': 'count', 'type': 'uint256'}],
         'name': 'getAllBalance',
         'outputs': [{'name': '', 'type': 'bytes'}],
         'payable': false,
@@ -116,7 +121,13 @@ export default {
     },
     async getTokenBalance (token) {
       const web3 = this.$store.state.web3
-      const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
+      const contractAbi = [{
+        'name': 'balanceOf',
+        'type': 'function',
+        'constant': true,
+        'inputs': [{'name': 'address', 'type': 'address'}],
+        'outputs': [{'name': 'out', 'type': 'uint256'}]
+      }]
       const contract = new web3.eth.Contract(contractAbi)
       const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
       const balance = await web3.eth.call({
@@ -127,7 +138,7 @@ export default {
         if (Number(res) === 0 || res === '0x') {
           tokenBalance = 0
         } else {
-          tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals)
+          tokenBalance = web3.utils.toBN(res).div(10 ^ parseInt(token.decimals))
         }
         return tokenBalance
       }).catch(err => console.log(err)) // todo replace with proper error
@@ -215,5 +226,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceLayout.scss";
+  @import "InterfaceLayout.scss";
 </style>

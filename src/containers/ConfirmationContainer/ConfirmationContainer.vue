@@ -84,12 +84,19 @@ export default {
       // this.signer = signer(data)
       this.signConfirmationModalOpen()
     })
-
-    this.$children[0].$refs.confirmation.$on('hidden', () => {
+  },
+  mounted () {
+    this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
       console.log('modal hidden') // todo remove dev item
       if (this.dismissed) {
         this.reset()
       }
+    })
+
+    this.$refs.successModal.$refs.success.$on('hide', () => {
+      this.successMessage = ''
+      this.linkMessage = 'OK'
+      console.log('success modal hidden') // todo remove dev item
     })
   },
   methods: {
@@ -102,11 +109,6 @@ export default {
       this.$refs.signConfirmModal.$refs.signConfirmation.show()
     },
     showSuccessModal (message, linkMessage) {
-      this.$refs.successModal.$refs.success.$on('hide', () => {
-        this.successMessage = ''
-        this.linkMessage = 'OK'
-        console.log('success modal hidden') // todo remove dev item
-      })
       this.reset()
       if (message !== null) this.successMessage = message
       if (linkMessage !== null) this.linkMessage = linkMessage

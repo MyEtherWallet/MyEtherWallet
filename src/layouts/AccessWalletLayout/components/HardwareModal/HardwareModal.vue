@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     continueAccess () {
-      let wallet = null
       // todo The actual initiation of a hardware wallet should be moved to a specific file to reduce clutter here as the number of offerings increases
       // todo: and to allow for any specialized set-up steps a particular constructor/wallet may require
       switch (this.selected) {

@@ -141,7 +141,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   obtainPathComponentsFromDerivationPath (derivationPath) {
-    console.log(derivationPath) // todo remove dev item
     // check if derivation path follows 44'/60'/x'/n pattern
     // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
     const regExp = /^m?\/?(44'\/(?:1|60|61)'\/\d'\/)(\d+)$/

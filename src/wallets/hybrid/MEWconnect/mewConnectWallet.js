@@ -108,15 +108,6 @@ export default class MewConnectWallet {
   // Implementation required
   signTransaction (txData) {
     return new Promise((resolve, reject) => {
-      const sendTxData = {
-        nonce: txData.nonce,
-        gasPrice: txData.gasPrice,
-        to: txData.to,
-        value: txData.value,
-        data: txData.data,
-        chainId: txData.chainId,
-        gasLimit: txData.gas
-      }
       this.mewConnect.sendRtcMessage('signTx', JSON.stringify(txData))
       this.mewConnect.on('signTx', (data) => {
         const rawTransaction = `0x${data}`

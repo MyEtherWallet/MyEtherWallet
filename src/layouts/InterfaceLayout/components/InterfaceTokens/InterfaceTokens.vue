@@ -23,13 +23,14 @@
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{token.name}}</td>
-              <td>{{token.balance}}</td>
+              <td>{{token.balance }}</td>
             </tr>
           </table>
           <div class="spinner-container" v-show="search === '' && localTokens.length === 0 && receivedTokens">
             <i class="fa fa-spinner fa-spin"></i>
           </div>
-          <div class="spinner-container" v-show="localTokens.length === 0 && customTokens.length === 0 && !receivedTokens">
+          <div class="spinner-container"
+               v-show="localTokens.length === 0 && customTokens.length === 0 && !receivedTokens">
             No tokens found :(
           </div>
         </div>
@@ -47,7 +48,7 @@
 
 <script>
 import store from 'store'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import InterfaceTokensModal from '../InterfaceTokensModal'
 
 export default {
@@ -87,7 +88,11 @@ export default {
         type: 'custom'
       }
       let newArray = []
-      token['balance'] = await this.getTokenBalance(address)
+      token['balance'] = await this.getTokenBalance(token)
+      if (token['balance'] === undefined) {
+        console.error('Token Balance Returned Undefined')
+        token['balance'] = 'Err' // todo replace with proper error
+      }
 
       if (this.customTokens.length > 0) {
         newArray = this.customTokens.map(item => item)
@@ -152,5 +157,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceTokens.scss";
+  @import "InterfaceTokens.scss";
 </style>
