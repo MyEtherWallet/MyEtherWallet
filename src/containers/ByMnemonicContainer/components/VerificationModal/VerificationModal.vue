@@ -86,9 +86,18 @@ export default {
         this.mnemonicVerificationItems[c] = {
           num: randItems[c],
           data: [
-            [{value: newMnemonicValArray[0]}, {correctItem: false}],
-            [{value: newMnemonicValArray[1]}, {correctItem: false}],
-            [{value: mnemonicValArray[randItems[c]]}, {correctItem: true}]
+            [
+              {value: newMnemonicValArray[0]},
+              {correctItem: false}
+            ],
+            [
+              {value: newMnemonicValArray[1]},
+              {correctItem: false}
+            ],
+            [
+              {value: mnemonicValArray[randItems[c]]},
+              {correctItem: true}
+            ]
           ]
         }
       }
