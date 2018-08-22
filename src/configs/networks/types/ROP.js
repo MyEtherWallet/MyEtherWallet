@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://ropsten.etherscan.io/address/[[address]]',
   chainID: 3,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 };

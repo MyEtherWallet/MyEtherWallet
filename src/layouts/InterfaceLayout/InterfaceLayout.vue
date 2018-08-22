@@ -21,8 +21,7 @@
           </div>
           <send-currency-container
             v-show="currentTab === 'send' || currentTab === ''"
-            :tokens-with-balance="tokensWithBalance"
-            :address="address"/>
+            :tokens-with-balance="tokensWithBalance"/>
           <send-offline-container v-show="currentTab === 'offline'"/>
           <swap-container v-show="currentTab === 'swap'"/>
           <dapps-container v-show="currentTab === 'dapps'"/>
@@ -89,8 +88,8 @@ export default {
   data() {
     return {
       currentTab: this.$store.state.pageStates.interface.sideMenu,
-      balance: '',
-      blockNumber: '',
+      balance: 0,
+      blockNumber: 0,
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: []
@@ -276,8 +275,8 @@ export default {
       this.$store.state.web3.eth
         .getBalance(this.address)
         .then(res => {
-          this.balance = res;
-          this.$store.dispatch('setAccountBalance', this.balance);
+          this.balance = Number(res);
+          this.$store.dispatch('setAccountBalance', Number(this.balance));
         })
         .catch(err => {
           // eslint-disable-next-line no-console

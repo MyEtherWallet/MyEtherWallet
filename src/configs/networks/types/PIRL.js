@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://poseidon.pirl.io/explorer/address/[[address]]',
   chainID: 3125659152,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };
