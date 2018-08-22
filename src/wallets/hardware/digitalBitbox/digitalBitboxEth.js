@@ -34,8 +34,7 @@ DigitalBitboxEth.aes_cbc_b64_decrypt = function (ciphertext, key) {
     var decipher = Crypto.createDecipheriv('aes-256-cbc', key, iv)
     var dec = decipher.update(enc) + decipher.final()
     res = dec.toString('utf8')
-  }
-  catch (err) {
+  } catch (err) {
     res = ciphertext
   }
   return res
@@ -47,18 +46,17 @@ DigitalBitboxEth.aes_cbc_b64_encrypt = function (plaintext, key) {
     var cipher = Crypto.createCipheriv('aes-256-cbc', key, iv)
     var ciphertext = Buffer.concat([iv, cipher.update(plaintext), cipher.final()])
     return ciphertext.toString('base64')
-  }
-  catch (err) {
+  } catch (err) {
     return ''
   }
 }
 
 DigitalBitboxEth.parseError = function (errObject) {
   var errMsg = {
-    err101: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.',// No password set
-    err250: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.',// Wallet not seeded
-    err251: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.',// Wallet not seeded
-    err109: 'The Digital Bitbox received unexpected data. Was the correct password used? ' + errObject.message,
+    err101: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.', // No password set
+    err250: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.', // Wallet not seeded
+    err251: 'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.', // Wallet not seeded
+    err109: 'The Digital Bitbox received unexpected data. Was the correct password used? ' + errObject.message
   }
   var code = 'err' + errObject.code.toString()
   var msg = errMsg[code] || errObject.message
@@ -70,10 +68,9 @@ DigitalBitboxEth.prototype.getAddress = function (path, callback) {
   var cmd = '{"xpub":"' + path + '"}'
   cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, this.key)
   var localCallback = function (response, error) {
-    if (typeof error != 'undefined') {
+    if (typeof error !== 'undefined') {
       callback(undefined, error)
-    }
-    else {
+    } else {
       try {
         response = JSON.parse(response.toString('utf8'))
         if ('error' in response) {
@@ -89,13 +86,12 @@ DigitalBitboxEth.prototype.getAddress = function (path, callback) {
           var hdkey = HDKey.fromExtendedKey(response.xpub)
           var result = {
             publicKey: hdkey.publicKey.toString('hex'),
-            chainCode: hdkey.chainCode.toString('hex'),
+            chainCode: hdkey.chainCode.toString('hex')
           }
           callback(result)
           return
         }
-      }
-      catch (err) {
+      } catch (err) {
         callback(undefined, 'Unexpected error: ' + err.message)
       }
     }
@@ -108,10 +104,9 @@ DigitalBitboxEth.signGeneric = function (self, path, chainId, hashToSign, callba
   cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, self.key)
 
   var localCallback = function (response, error) {
-    if (typeof error != 'undefined') {
+    if (typeof error !== 'undefined') {
       callback(undefined, error)
-    }
-    else {
+    } else {
       try {
         response = JSON.parse(response.toString('utf8'))
         if ('error' in response) {
@@ -138,14 +133,13 @@ DigitalBitboxEth.signGeneric = function (self, path, chainId, hashToSign, callba
             var result = {
               v: v.toString('hex'),
               r: response.sign[0].sig.slice(0, 64),
-              s: response.sign[0].sig.slice(64, 128),
+              s: response.sign[0].sig.slice(64, 128)
             }
             callback(result)
             return
           }
         }
-      }
-      catch (err) {
+      } catch (err) {
         callback(undefined, 'Unexpected error:' + err.message)
       }
     }

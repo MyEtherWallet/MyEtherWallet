@@ -24,12 +24,8 @@ DigitalBitboxUsb.normal64 = function (base64) {
 DigitalBitboxUsb.prototype.u2fCallback = function (response, callback) {
   if ('signatureData' in response) {
     var data = new Buffer((DigitalBitboxUsb.normal64(response.signatureData)), 'base64')
-    if (data.length > 7)
-      callback(data.slice(5))
-    else
-      return// Empty frame received, wait for data
-  }
-  else {
+    if (data.length > 7) { callback(data.slice(5)) } else {}// Empty frame received, wait for data
+  } else {
     callback(undefined, response)
   }
 }
@@ -47,7 +43,7 @@ DigitalBitboxUsb.prototype.exchange = function (msg, callback) {
     var kh = Buffer.concat([Buffer.from([total]), Buffer.from([index]), msg.slice(index * kh_max_len, (index + 1) * kh_max_len)])
     var key = {
       version: 'U2F_V2',
-      keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64')),
+      keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64'))
     }
     u2f.sign(location.origin, DigitalBitboxUsb.webSafe64(challenge.toString('base64')), [key], localCallback, this.timeoutSeconds)
   }
