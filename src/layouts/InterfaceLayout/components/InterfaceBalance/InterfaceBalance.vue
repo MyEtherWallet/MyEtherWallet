@@ -50,17 +50,15 @@ export default {
   },
   watch: {
     balance() {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
+      this.parsedBalance = Number(
+        unit.fromWei(this.$store.state.web3.utils.toBN(this.balance), 'ether')
       );
     }
   },
   mounted() {
     if (this.balance && this.balance !== undefined) {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
+      this.parsedBalance = Number(
+        unit.fromWei(this.$store.state.web3.utils.toBN(this.balance), 'ether')
       );
     }
   },

@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.eos-classic.io/addr/[[address]]',
   chainID: 20,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

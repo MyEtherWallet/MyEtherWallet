@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://poaexplorer.com/address/[[address]]',
   chainID: 99,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.gochain.io/addr/[[address]]',
   chainID: 60,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

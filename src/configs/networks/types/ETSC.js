@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.ethereumsocial.kr/addr/[[address]]',
   chainID: 28,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

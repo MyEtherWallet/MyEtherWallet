@@ -2,10 +2,9 @@
   <div class="transactions-side-menu">
     <div class="side-menu">
       <ul>
-        <li>
+        <li @click.prevent="toggle('openSend')">
           <div
-            :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']"
-            @click.prevent="toggle('openSend')">
+            :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']">
             <img :src="selectedTab === 'send' || selectedTab === 'offline'? require(`@/assets/images/sidemenu/send-active.svg`): require(`@/assets/images/sidemenu/send.svg`)">
             <p>{{ $t("interface.txSideMenuTitle") }}</p>
             <i
