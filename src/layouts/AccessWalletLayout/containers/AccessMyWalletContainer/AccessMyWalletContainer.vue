@@ -1,18 +1,33 @@
 <template>
   <div class="access-my-wallet-options">
-    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
-    <network-and-address-modal :hardwareWallet="hardwareWallet" ></network-and-address-modal>
+    <mew-connect-modal ref="mewconnectModal"
+                       :networkAndAddressOpen="networkAndAddressOpen"/>
 
-    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"
-                    v-on:hardwareWalletOpen="hardwareWalletOpen"></hardware-modal>
+    <hardware-modal ref="hardwareModal"
+                    :networkAndAddressOpen="networkAndAddressOpen"
+                    v-on:hardwareRequiresPassword="hardwarePasswordModalOpen"
+                    v-on:hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <metamask-modal></metamask-modal>
+    <hardware-password-modal ref="hardwarePasswordModal"
+                             :walletConstructor="walletConstructor"
+                             :hardwareBrand="hardwareBrand"
+                             v-on:hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen"
-                    :openPrivateKeyInput="privateKeyOpen"></software-modal>
-    <password-modal :file="file"></password-modal>
-    <private-key-modal></private-key-modal>
+    <network-and-address-modal ref="networkandaddressModal"
+                               :hardwareWallet="hardwareWallet"/>
+
+    <metamask-modal ref="metamastModal"/>
+
+    <software-modal ref="softwareModal"
+                    v-on:file="fileUploaded"
+                    :openPassword="passwordOpen"
+                    :openPrivateKeyInput="privateKeyOpen"/>
+
+    <password-modal ref="passwordModal"
+                    :file="file"/>
+
+    <private-key-modal ref="privatekeyModal"/>
 
     <div class="wrap">
       <div class="page-container">
@@ -50,6 +65,7 @@
 <script>
 import AccessWalletButton from '../../components/AccessWalletButton'
 import HardwareModal from '../../components/HardwareModal'
+import HardwarePasswordModal from '../../components/HardwarePasswordModal'
 import MetamaskModal from '../../components/MetamaskModal'
 import MewConnectModal from '../../components/MewConnectModal'
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
@@ -71,6 +87,7 @@ export default {
     'mew-connect-modal': MewConnectModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
+    'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
@@ -81,7 +98,8 @@ export default {
     return {
       file: '',
       hardwareWallet: '',
-      hardwareAddresses: [],
+      walletConstructor: {},
+      hardwareBrand: '',
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -124,32 +142,39 @@ export default {
   },
   methods: {
     mewConnectModalOpen () {
-      this.$children[0].$refs.mewConnect.show()
+      this.$refs.mewconnectModal.$refs.mewConnect.show()
     },
     networkAndAddressOpen () {
-      this.$children[1].$refs.networkAndAddress.show()
+      this.$refs.networkandaddressModal.$refs.networkAndAddress.show()
     },
     hardwareModalOpen () {
-      this.$children[2].$refs.hardware.show()
+      this.$refs.hardwareModal.$refs.hardware.show()
     },
     metamaskModalOpen () {
-      this.$children[3].$refs.metamask.show()
+      this.$refs.metamastModal.$refs.metamask.show()
     },
     softwareModalOpen () {
-      this.$children[4].$refs.software.show()
+      this.$refs.softwareModal.$refs.software.show()
     },
     passwordOpen () {
-      this.$children[5].$refs.password.show()
+      this.$refs.passwordModal.$refs.password.show()
     },
     privateKeyOpen () {
-      this.$children[4].$refs.software.hide()
-      this.$children[6].$refs.privateKey.show()
+      this.$refs.softwareModal.$refs.software.hide()
+      this.$refs.privatekeyModal.$refs.privateKey.show()
     },
     fileUploaded (e) {
       this.file = e
       this.passwordOpen()
     },
+    hardwarePasswordModalOpen (hardwareNeedingPassword) {
+      this.walletConstructor = hardwareNeedingPassword.walletConstructor
+      this.hardwareBrand = hardwareNeedingPassword.hardwareBrand
+      this.$refs.hardwarePasswordModal.$refs.password.show()
+    },
     hardwareWalletOpen (e) {
+      this.walletConstructor = {}
+      this.hardwareBrand = ''
       this.hardwareWallet = e
       this.networkAndAddressOpen()
     }

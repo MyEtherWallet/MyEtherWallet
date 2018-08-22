@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { LedgerWallet, TrezorWallet } from '@/wallets'
+import { LedgerWallet, TrezorWallet, DigitalBitboxWallet } from '@/wallets'
 
 export default {
   props: ['networkAndAddressOpen', 'hardwareWalletOpen'],
@@ -77,6 +77,16 @@ export default {
             .catch(_error => {
               console.error(_error) // todo replace with proper error
             })
+          break
+        case 'bitbox':
+          this.$emit('hardwareRequiresPassword', {walletConstructor: DigitalBitboxWallet, hardwareBrand: 'DigitalBitbox'})
+          // DigitalBitboxWallet.unlock()
+          //   .then((wallet) => {
+          //     this.$emit('hardwareWalletOpen', wallet)
+          //   })
+          //   .catch(_error => {
+          //     console.error(_error) // todo replace with proper error
+          //   })
           break
         default:
           console.log('something not right') // todo remove dev item
