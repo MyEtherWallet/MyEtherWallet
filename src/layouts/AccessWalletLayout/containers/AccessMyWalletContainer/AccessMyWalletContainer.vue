@@ -1,6 +1,5 @@
 <template>
   <div class="access-my-wallet-options">
-    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
     <mew-connect-modal
       ref="mewconnectModal"
@@ -83,6 +82,7 @@ export default {
     'mew-connect-modal': MewConnectModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
+    'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
