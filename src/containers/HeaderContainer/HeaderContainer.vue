@@ -1,12 +1,17 @@
 <template>
   <div class="header">
+
+    <div class="scrollup-container" :class="isPageOnTop == false ? 'active' : ''">
+      <scrollupbutton></scrollupbutton>
+    </div>
+
     <div class="wrap">
-      <div class="fixed-header" ref="fixedHeader">
+      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
             <router-link to="/" v-on:click.native="scrollTop()">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png" ref="logoLarge">
+                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
               </div>
             </router-link>
             <div class="top-menu">
@@ -24,7 +29,7 @@
                   <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <!-- <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)"> -->
+                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -34,8 +39,8 @@
                   </b-nav-item-dropdown>
                 </div>
                 <notification v-if="wallet !== null"></notification>
-                <b-nav-item to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'">
-                  <div class="get-free-wallet">
+                <b-nav-item class="get-free-wallet" to="/create-wallet" v-if="wallet === null && $route.fullPath === '/'" :class="isPageOnTop == true ? 'noshow' : ''">
+                  <div class="get-free-wallet-button">
                     Get a Free Wallet
                  </div>
                 </b-nav-item>
@@ -70,11 +75,13 @@ import { mapGetters } from 'vuex'
 import store from 'store'
 import Blockie from '@/components/Blockie'
 import Notification from '@/components/Notification'
+import ScrollUpButton from '@/components/ScrollUpButton'
 
 export default {
   components: {
     'blockie': Blockie,
-    'notification': Notification
+    'notification': Notification,
+    'scrollupbutton': ScrollUpButton
   },
   data () {
     return {
@@ -104,7 +111,8 @@ export default {
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'gb'
+      currentFlag: 'gb',
+      isPageOnTop: true
     }
   },
   methods: {
@@ -125,10 +133,15 @@ export default {
     },
     showNotifications () {
       this.$children[6].$refs.notification.show()
+    },
+    onPageScroll () {
+      const topPos = this.$root.$el.getBoundingClientRect().top
+      this.isPageOnTop = !(topPos < -150)
     }
   },
   mounted () {
     const self = this
+
     if (this.$store.state.online) {
       this.online = true
     } else {
@@ -144,17 +157,13 @@ export default {
     }
 
     this.currentName = this.supportedLanguages.filter(item => item.flag === this.currentFlag)[0].name
+
+    // On load, if page is not on top, apply small menu and show scroll top button
+    this.onPageScroll()
+
+    // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = function (e) {
-      const header = self.$refs.fixedHeader
-      const logoLarge = self.$refs.logoLarge
-      const topPos = self.$root.$el.getBoundingClientRect().top
-      if (topPos < -150) {
-        header.classList.add('tiny-header')
-        logoLarge.classList.add('logo-small')
-      } else {
-        header.classList.remove('tiny-header')
-        logoLarge.classList.remove('logo-small')
-      }
+      self.onPageScroll()
     }
   },
   watch: {

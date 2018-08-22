@@ -1,28 +1,32 @@
 <template>
   <b-modal ref="signedTx" hide-footer class="bootstrap-modal signed-tx-modal" title="Signed Transaction">
     <div class="d-block">
-      <p class="title">Signed Transaction</p>
+      <div class="title-block">
+        <h4 class="block-title">Signed Transaction</h4>
+      </div>
       <div class="signed-tx-container">
         <code>
           {{ signedTx }}
         </code>
         <input ref="signedTxInput" style="position: absolute; top: 0; opacity: 0;" :value="signedTx" autocomplete="off"/>
       </div>
-      <div class="with-toggle">
-        <p class="title">
-          Raw
-        </p>
-        <div class="sliding-switch-white">
-          <label class="switch">
-            <input type="checkbox" v-on:click="showRaw = !showRaw">
-            <span class="slider round"></span>
-          </label>
+      <div class="raw">
+        <div class="title-block">
+          <h4 class="block-title">
+            Raw
+          </h4>
+          <div class="sliding-switch-white">
+            <label class="switch">
+              <input type="checkbox" v-on:click="showRaw = !showRaw">
+              <span class="slider round"></span>
+            </label>
+          </div>
         </div>
-      </div>
-      <div :class="[!showRaw ? 'collapsed' : '', 'raw-tx-container']">
-        <code>
-          {{ rawTx }}
-        </code>
+        <div v-if="showRaw" class="raw-tx-container">
+          <code>
+            {{ rawTx }}
+          </code>
+        </div>
       </div>
     </div>
     <div class="button-container">
