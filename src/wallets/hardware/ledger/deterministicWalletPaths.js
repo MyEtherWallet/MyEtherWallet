@@ -6,13 +6,15 @@ const selectableNetworks = new Map()
 const paths = {
   defaultDPath: {symbol: 'ETH', label: 'Ledger (ETH)', dpath: 'm/44\'/60\'/0\''}, // first address: m/44'/60'/0/0
   classicPath: {symbol: 'ETC', label: 'Ledger (ETC)', dpath: 'm/44\'/60\'/160720\'/0\''}, // first address: m/44'/60'/160720'/0/0
-  testnetPath: {symbol: 'Testnets', label: 'Testnets', dpath: 'm/44\'/1\'/0\'/0'}, // first address: m/44'/1'/0'/0/0
+  testnetPath: {symbol: 'Testnets', label: 'TestNets: Ropsten, Kovan, Rinkeby', dpath: 'm/44\'/1\'/0\'/0'}, // first address: m/44'/1'/0'/0/0
   customDPath: {symbol: 'custom', label: 'Custom Path', dpath: 'm/44\'/60\'/1\'/0'} // first address: m/44'/60'/1'/0/0
 }
 
 selectableNetworks.set(paths.defaultDPath.symbol, paths.defaultDPath)
 selectableNetworks.set(paths.classicPath.symbol, paths.classicPath)
-selectableNetworks.set(paths.testnetPath.symbol, paths.testnetPath)
+selectableNetworks.set('ROP', paths.testnetPath)
+selectableNetworks.set('RIN', paths.testnetPath)
+selectableNetworks.set('KOV', paths.testnetPath)
 selectableNetworks.set(paths.customDPath.symbol, paths.customDPath)
 
 additional.forEach((entry) => {
@@ -33,22 +35,6 @@ function getDerivationPath (networkName) {
   } else {
     return paths.defaultDPath
   }
-  // switch (networkName) {
-  //   case 'ETH':
-  //     return paths.defaultDPath
-  //   case 'ETC':
-  //     return paths.classicPath
-  //   case 'EXP':
-  //     return paths.hwExpansePath
-  //   case 'UBQ':
-  //     return paths.hwUbqPath
-  //   case 'POA':
-  //     return paths.defaultDPath
-  //   case 'AKROMA':
-  //     return paths.hwAkromaPath
-  //   default:
-  //     return paths.defaultDPath
-  // }
 }
 
 export {
