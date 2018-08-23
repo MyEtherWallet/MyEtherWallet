@@ -66,6 +66,10 @@ export default {
       }
 
       console.log(trueCount)
+
+      if (trueCount === 3) {
+        this.mnemonicDoneModalOpen()
+      }
     },
     removeElFromArray (arr, value) {
       return arr.filter(function (ele) {
