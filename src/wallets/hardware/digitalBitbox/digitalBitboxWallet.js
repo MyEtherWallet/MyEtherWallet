@@ -134,7 +134,8 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
       console.log(result) // todo remove dev item
       // this.digitalBitboxSecret = ''
       if (typeof result !== 'undefined') {
-        resolve(this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path))
+        this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path)
+        resolve()
       } else {
         reject(error)
       }
