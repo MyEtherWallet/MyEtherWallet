@@ -60,6 +60,7 @@
     margin-bottom: 10px;
     padding: 20px;
     background-color: $light-grey-2;
+    user-select: none;
     ul {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
