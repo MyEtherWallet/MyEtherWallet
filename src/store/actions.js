@@ -93,6 +93,7 @@ const updatePageState = function({ commit }, arr) {
 
 export default {
   addNotification,
+  addCustomPath,
   checkIfOnline,
   clearWallet,
   createAndSignTx,

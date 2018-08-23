@@ -27,7 +27,6 @@
                 $t('accessWallet.customPath')
               }}
             </b-dropdown-item>
-            <b-dropdown-item ref="addCustomPathInput"><input></b-dropdown-item>
           </b-dropdown>
         </div>
       </div>

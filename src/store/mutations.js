@@ -81,6 +81,7 @@ const UPDATE_NOTIFICATION = function(state, val) {
 
 export default {
   ADD_NOTIFICATION,
+  ADD_CUSTOM_PATH,
   CHANGE_PAGE_STATE,
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
