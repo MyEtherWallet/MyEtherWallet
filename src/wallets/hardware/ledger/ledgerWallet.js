@@ -33,8 +33,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
       ...this.defaultOptions,
       ...options
     }
-    // this.checkIfAllowedPath(currentOptions.path)
-
     this.accountsLength = currentOptions.accountsLength || this.defaultAccountsCount
     this.accountsOffset = currentOptions.accountsOffset || this.defaultAccountsOffset
     this.networkId = currentOptions.networkId || this.defaultNetworkId
@@ -56,7 +54,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
 
   static async unlock (options) {
     try {
-      return new LedgerWallet(options)
+      const wallet = new LedgerWallet(options)
+      const appConfig = wallet.getAppConfig()
     } catch (e) {
       return e
     }
@@ -80,9 +79,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
 
   async changeDPath (path) {
     // return new Promise((resolve) => {
+    // this.getAppConfig()
+    //   .then((result) => {
+    //     console.log(result) // todo remove dev item
+    //   })
     try {
-      this.obtainPathComponentsFromDerivationPath(path)
+      this.pathComponents = this.obtainPathComponentsFromDerivationPath(path)
       this.path = path
+      this.addressToPathMap = {}
       return Promise.resolve()
     } catch (e) {
       return Promise.reject(e)
@@ -159,8 +163,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
         'InvalidDerivationPath'
       )
     }
-    console.log(matchResult, matchResultAlt) // todo remove dev item
-    if (matchResult !== null) return {basePath: matchResult[1], index: parseInt(matchResult[2], 10)}
+    console.log('matchResult', matchResult) // todo remove dev item
+    console.log('matchResultAlt', matchResultAlt) // todo remove dev item
+    // if (matchResult !== null && matchResultAlt === null) return {basePath: matchResult[1], index: 0}
     if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
   }
 
@@ -193,6 +198,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
         addresses[i] = address.address
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
+      console.log('addresses', addresses) // todo remove dev item
+      console.log('map', this.addressToPathMap) // todo remove dev item
       return addresses
     } finally {
       transport.close()
@@ -201,14 +208,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
     }
   }
 
-  async getAppConfig (callback) {
+  async getAppConfig () {
     const transport = await this.getTransport()
     try {
       const eth = new Ledger(transport)
       const appConfig = await eth.getAppConfiguration()
-      callback(null, appConfig)
+      return appConfig
     } catch (e) {
-      callback(e)
+      throw e
     } finally {
       transport.close()
         .then(() => { this.connectionOpened = false })

@@ -102,7 +102,7 @@ export default class BasicWallet {
         txData.signedTx = `0x${serializedTx.toString('hex')}`
         const hashedtx = eTx.hash()
 
-        let result = {
+        resolve({
           tx: {
             ...txData.rawTx,
             v: `0x${eTx.v.toString('hex')}`,
@@ -111,8 +111,7 @@ export default class BasicWallet {
             hash: hashedtx
           },
           rawTransaction: txData.signedTx
-        }
-        resolve(result)
+        })
       } catch (e) {
         reject(e)
       }
@@ -245,15 +244,6 @@ export default class BasicWallet {
 
     return wallet
   }
-
-  // getAddress () {
-  //   if (!this.wallet) throw Error('no wallet present. wallet not have been decrypted')
-  //   if (typeof this.wallet.pubKey === 'undefined') {
-  //     return ethUtil.privateToAddress(this.wallet.privKey)
-  //   } else {
-  //     return ethUtil.publicToAddress(this.wallet.pubKey, true)
-  //   }
-  // }
 
   fixPkey (key) {
     if (key.indexOf('0x') === 0) {

@@ -231,11 +231,15 @@ export default class TrezorWallet extends HardwareWalletInterface {
           reject(Error(result.error))
           return
         }
+        if (result.v <= 1) {
+          // for larger chainId, only signature_v returned. simply recalc signature_v
+          result.v += 2 * rawTx.chainId + 35
+        }
+
         rawTx.v = '0x' + this.decimalToHex(result.v)
         rawTx.r = '0x' + result.r
         rawTx.s = '0x' + result.s
         const tx = new EthereumjsTx(rawTx)
-        // rawTx.rawTx = JSON.stringify(rawTx)
         resolve({
           tx: {
             ...rawTx,
@@ -243,14 +247,6 @@ export default class TrezorWallet extends HardwareWalletInterface {
           },
           rawTransaction: `0x${tx.serialize().toString('hex')}`
         })
-        // resolve({
-        //   rawTx: rawTx.rawTx,
-        //   messageHash: tx.hash(), // figure out what exactly web3 is putting here
-        //   v: Buffer.from(result.v.toString(), 'hex'),
-        //   r: Buffer.from(result.r, 'hex'),
-        //   s: Buffer.from(result.s, 'hex'),
-        //   rawTransaction: `0x${tx.serialize().toString('hex')}`
-        // })
       }
 
       TrezorConnect.signEthereumTx(

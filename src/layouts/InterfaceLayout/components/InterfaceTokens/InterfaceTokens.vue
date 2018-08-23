@@ -89,10 +89,8 @@ export default {
       }
       let newArray = []
       token['balance'] = await this.getTokenBalance(token)
-      console.log(token['balance']) // todo remove dev item
       if (token['balance'] === undefined) {
         console.error('Token Balance Returned Undefined')
-        token['balance'] = 'Err' // todo replace with proper error
       }
 
       if (this.customTokens.length > 0) {

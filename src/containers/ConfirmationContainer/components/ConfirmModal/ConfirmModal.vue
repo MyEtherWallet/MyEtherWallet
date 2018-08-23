@@ -103,7 +103,7 @@
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'showSuccess', 'isHardwareWallet'],
+  props: ['confirmSendTx', 'fee', 'signedTx', 'data', 'from', 'gas', 'gasPrice', 'nonce', 'to', 'value', 'isHardwareWallet'],
   data () {
     return {
       modalDetailInformation: false,

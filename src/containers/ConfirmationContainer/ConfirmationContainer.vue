@@ -1,6 +1,12 @@
 <template>
   <div>
-    <confirm-modal ref="confirmModal" :confirmSendTx="sendTx" :showSuccess="showSuccessModal"
+    <confirm-modal ref="confirmModal" :confirmSendTx="sendTx"
+                   :signedTx="signedTx"
+                   :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
+                   :gasPrice="$store.state.gasPrice" :from="fromAddress"
+                   :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
+                   :nonce="nonce + 1"></confirm-modal>
+    <confirm-modal ref="offlineGenerateConfirmModal" :confirmSendTx="generateTx"
                    :signedTx="signedTx"
                    :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
                    :gasPrice="$store.state.gasPrice" :from="fromAddress"
@@ -60,6 +66,20 @@ export default {
       this.showSuccessModal(message, linkMessage)
     })
 
+    this.$eventHub.$on('showConfirmModal', (tx, isHardware, signer, resolve) => {
+      this.parseRawTx(tx)
+      this.isHardwareWallet = isHardware
+      this.responseFunction = resolve
+      this.successMessage = 'Sending Transaction'
+      // this.signer = signer(tx)
+      signer(tx)
+        .then(_response => {
+          this.signedTxObject = _response
+          this.signedTx = this.signedTxObject.rawTransaction
+        })
+      this.confirmationModalOpen()
+    })
+
     this.$eventHub.$on('showTxConfirmModal', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx)
       this.isHardwareWallet = isHardware
@@ -104,6 +124,10 @@ export default {
       window.scrollTo(0, 0)
       this.$refs.confirmModal.$refs.confirmation.show()
     },
+    confirmationOfflineGenerateModalOpen () {
+      window.scrollTo(0, 0)
+      this.$refs.offlineGenerateConfirmModal.$refs.confirmation.show()
+    },
     signConfirmationModalOpen () {
       window.scrollTo(0, 0)
       this.$refs.signConfirmModal.$refs.signConfirmation.show()
@@ -128,6 +152,11 @@ export default {
       this.responseFunction(this.signedMessage)
       this.$refs.signConfirmModal.$refs.signConfirmation.hide()
       this.showSuccessModal()
+    },
+    generateTx () {
+      this.dismissed = false
+      this.responseFunction(this.signedTxObject)
+      this.$refs.confirmModal.$refs.confirmation.hide()
     },
     sendTx () {
       this.dismissed = false
