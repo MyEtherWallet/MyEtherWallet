@@ -19,6 +19,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     let options = opts || {}
     this.brand = 'ledger'
     this.identifier = 'LedgerNanoS'
+    this.version = ''
     this.wallet = null
     this.activeAddress = ''
     this.activeAddressIndex = ''
@@ -55,7 +56,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
   static async unlock (options) {
     try {
       const wallet = new LedgerWallet(options)
-      const appConfig = wallet.getAppConfig()
+      const appConfig = await wallet.getAppConfig()
+      wallet.version = appConfig.version
+      return wallet
     } catch (e) {
       return e
     }
@@ -78,11 +81,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   async changeDPath (path) {
-    // return new Promise((resolve) => {
-    // this.getAppConfig()
-    //   .then((result) => {
-    //     console.log(result) // todo remove dev item
-    //   })
     try {
       this.pathComponents = this.obtainPathComponentsFromDerivationPath(path)
       this.path = path
@@ -91,8 +89,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
     } catch (e) {
       return Promise.reject(e)
     }
-    // resolve()
-    // })
   }
 
   setActiveAddress (address, index) {
@@ -153,20 +149,28 @@ export default class LedgerWallet extends HardwareWalletInterface {
   obtainPathComponentsFromDerivationPath (derivationPath) {
     // check if derivation path follows 44'/60'/x'/n pattern
     // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
-    const regExp = /^m?\/?(44'\/(\d+)'\/\d'\/)(\d+)$/
-    const regExpAlt = /^m?\/?(44'\/(\d+)')/
-    const matchResult = regExp.exec(derivationPath)
-    const matchResultAlt = regExpAlt.exec(derivationPath)
-    if (matchResult === null && matchResultAlt === null) {
+    const compatibilityRegEx = /^m\/44'\/(?:1|60|61)'\//
+    if (!compatibilityRegEx.test(derivationPath) && this.version.split('.')[1] <= 3) {
+      // TODO communicate Error to user
       throw this.makeError(
-        'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
+        'For your Firmware version the derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       )
+    } else {
+      const regExp = /^m?\/?(44'\/(\d+)'\/\d'\/)(\d+)$/
+      const regExpAlt = /^m?\/?(44'\/(\d+)')/
+      const matchResult = regExp.exec(derivationPath)
+      const matchResultAlt = regExpAlt.exec(derivationPath)
+      if (matchResult === null && matchResultAlt === null) {
+        // TODO communicate Error to user
+        throw this.makeError(
+          'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
+          'InvalidDerivationPath'
+        )
+      }
+      // if (matchResult !== null && matchResultAlt === null) return {basePath: matchResult[1], index: 0}
+      if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
     }
-    console.log('matchResult', matchResult) // todo remove dev item
-    console.log('matchResultAlt', matchResultAlt) // todo remove dev item
-    // if (matchResult !== null && matchResultAlt === null) return {basePath: matchResult[1], index: 0}
-    if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
   }
 
   getTransport () {
@@ -198,8 +202,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
         addresses[i] = address.address
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
-      console.log('addresses', addresses) // todo remove dev item
-      console.log('map', this.addressToPathMap) // todo remove dev item
       return addresses
     } finally {
       transport.close()

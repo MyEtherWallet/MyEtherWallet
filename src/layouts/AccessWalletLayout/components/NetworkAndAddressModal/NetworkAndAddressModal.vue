@@ -186,7 +186,6 @@ export default {
         if ((this.offset + this.count) >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3
           let hardwareAddresses = []
-          console.log(this.hardwareWallet) // todo remove dev item
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
@@ -205,7 +204,6 @@ export default {
         ...this.hardwareWallet.compatibleChains,
         ...this.$store.state.customPaths
       }
-      console.log(this.availablePaths) // todo remove dev item
     }
   },
   watch: {

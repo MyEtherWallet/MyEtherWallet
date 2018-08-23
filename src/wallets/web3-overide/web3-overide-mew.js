@@ -3,7 +3,6 @@ export default function web3OverideMew (web3, wallet, eventHub) {
 
   const methodOverides = {
     signTransaction (tx, privateKey) {
-      console.log(tx) // todo remove dev item
       return new Promise((resolve, reject) => {
         if (tx.generateOnly) {
           delete tx['generateOnly']

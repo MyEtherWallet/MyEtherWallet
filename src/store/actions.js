@@ -21,7 +21,6 @@ const addNotification = function ({commit, state}, val) {
 const addCustomPath = function ({commit, state}, val) {
   const newPaths = {...state.customPaths}
   newPaths[val.dpath] = {label: val.label, dpath: val.dpath}
-  console.log(newPaths) // todo remove dev item
   commit('ADD_CUSTOM_PATH', newPaths)
 }
 
