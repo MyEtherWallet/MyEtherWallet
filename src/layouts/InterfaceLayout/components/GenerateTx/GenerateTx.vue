@@ -115,7 +115,8 @@ export default {
         nonce: this.locNonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
         to: this.toAddress,
-        chainId: this.$store.state.network.type.chainID
+        chainId: this.$store.state.network.type.chainID,
+        generateOnly: true
       }
       this.$store.state.web3.eth.signTransaction(raw)
         .then(signedTx => {
