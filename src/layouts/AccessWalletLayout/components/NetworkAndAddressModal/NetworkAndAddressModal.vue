@@ -13,15 +13,23 @@
               {{val.dpath}}
             </b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="showCustomPathInput" ref="addCustomPath">{{
+            <b-dropdown-item @click="showCustomPathInput">{{
               $t('accessWallet.customPath')
               }}
             </b-dropdown-item>
-            <b-dropdown-item ref="addCustomPathInput"><input></b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
-      <p class="derivation-brands">{{selecteDPath.label}}</p>
+      <p class="derivation-brands" v-show="!customPathInput">{{selecteDPath.label}}</p>
+      <div v-show="customPathInput">
+        <!-- TODO: how to structure the path input? -->
+        <input id="customPathLabel" v-model="customPath.label" placeholder="my custom path"/>
+        <br/>
+        <input id="customPathInput" v-model="customPath.dpath" placeholder="m/44'/1'/0'/0"/>
+        <br/>
+        <button @click="addCustomPath">addCustomPath</button>
+        <button @click="showCustomPathInput">cancel</button>
+      </div>
     </div>
     <div class="content-container-2">
       <div class="address-block-container">
@@ -83,11 +91,6 @@
 </template>
 
 <script>
-// import {
-//   paths,
-//   ledger,
-//   trezor
-// } from '@/helpers/web3-overide/hardware/deterministicWalletPaths'
 
 const unit = require('ethjs-unit')
 
@@ -102,8 +105,8 @@ export default {
       hardwareAddresses: [],
       availablePaths: {},
       selecteDPath: '',
-      customPathInput: false
-    }
+      customPathInput: false,
+      customPath: {label: '', dpath: ''}}
   },
   mounted () {
 
@@ -126,7 +129,23 @@ export default {
       e.srcElement.checked = true
     },
     showCustomPathInput (e) {
+      this.customPath = {label: '', dpath: ''}
+      this.customPathInput = !this.customPathInput
       // console.log(e.target) // todo remove dev item
+    },
+    addCustomPath () {
+      // eslint-disable-next-line no-useless-escape
+      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/ // TODO: figure out a more precise regex
+      if (regExp.test(this.customPath.dpath)) {
+        this.$store.dispatch('addCustomPath', this.customPath)
+          .then(() => {
+            this.getPaths()
+          })
+        this.showCustomPathInput() // reset the path input
+      } else {
+        console.log(this.customPath.dpath) // todo remove dev item
+        // TODO: add indication of an invalid path
+      }
     },
     selectDPath (key) {
       this.selecteDPath = this.availablePaths[key]
@@ -167,6 +186,7 @@ export default {
         if ((this.offset + this.count) >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3
           let hardwareAddresses = []
+          console.log(this.hardwareWallet) // todo remove dev item
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
@@ -181,7 +201,11 @@ export default {
     },
     getPaths () {
       this.selecteDPath = this.hardwareWallet.getDerivationPath()
-      this.availablePaths = this.hardwareWallet.compatibleChains
+      this.availablePaths = {
+        ...this.hardwareWallet.compatibleChains,
+        ...this.$store.state.customPaths
+      }
+      console.log(this.availablePaths) // todo remove dev item
     }
   },
   watch: {

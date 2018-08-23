@@ -1,4 +1,4 @@
-import {overide, WalletWrapper} from '@/wallets'
+import { overide, WalletWrapper } from '@/wallets'
 
 const addNotification = function ({commit, state}, val) {
   const newNotif = {}
@@ -16,6 +16,13 @@ const addNotification = function ({commit, state}, val) {
     expanded: false
   })
   commit('ADD_NOTIFICATION', newNotif)
+}
+
+const addCustomPath = function ({commit, state}, val) {
+  const newPaths = {...state.customPaths}
+  newPaths[val.dpath] = {label: val.label, dpath: val.dpath}
+  console.log(newPaths) // todo remove dev item
+  commit('ADD_CUSTOM_PATH', newPaths)
 }
 
 const checkIfOnline = function ({commit}) {
@@ -84,6 +91,7 @@ const updatePageState = function ({commit}, arr) {
 
 export default {
   addNotification,
+  addCustomPath,
   checkIfOnline,
   clearWallet,
   createAndSignTx,
