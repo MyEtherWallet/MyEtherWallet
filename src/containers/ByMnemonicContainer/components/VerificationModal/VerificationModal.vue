@@ -5,10 +5,10 @@
 
       <div class="verificationTest">
         <div v-for="verifyItemRow in mnemonicVerificationItems" v-bind:key="verifyItemRow.key">
-          <p>{{verifyItemRow.num}}.</p>
+          <p>{{verifyItemRow.num + 1}}.</p>
           <ul>
-            <li v-for="items in verifyItemRow.data" v-bind:key="items.key">
-              <label><input type="radio" :name="verifyItemRow.num">{{items.value}}</label>
+            <li v-for="item in verifyItemRow.data" v-bind:key="item.key">
+              <label><input type="radio" :name="verifyItemRow.num" :value="item.correctItem">{{item.value}}</label>
             </li>
           </ul>
         </div>
@@ -136,7 +136,8 @@ export default {
 
         this.shuffleArray(this.mnemonicVerificationItems[c].data)
       }
-      console.log(ranItems)
+
+      // console.log(this.mnemonicVerificationItems)
     }
   }
 }
