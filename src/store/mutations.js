@@ -5,6 +5,11 @@ const ADD_NOTIFICATION = function (state, newNotif) {
   store.set('notifications', newNotif)
 }
 
+const ADD_CUSTOM_PATH = function (state, paths) {
+  state.customPaths = paths
+  store.set('customPaths', paths)
+}
+
 const CHANGE_PAGE_STATE = function (state, arr) {
   state.pageStates[arr[0]][arr[1]] = arr[2]
   store.set(arr[1], arr[2])
@@ -56,6 +61,7 @@ const UPDATE_NOTIFICATION = function (state, newNotif) {
 
 export default {
   ADD_NOTIFICATION,
+  ADD_CUSTOM_PATH,
   CHANGE_PAGE_STATE,
   CHECK_IF_ONLINE,
   CLEAR_WALLET,

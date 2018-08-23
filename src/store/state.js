@@ -32,6 +32,7 @@ const state = {
       sideMenu: 'send'
     }
   },
+  customPaths: {},
   notifications: {},
   gasPrice: 41
 }

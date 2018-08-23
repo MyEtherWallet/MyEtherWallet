@@ -78,11 +78,17 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return ethUtil.toChecksumAddress(this.getAddress())
   }
 
-  changeDPath (path) {
-    return new Promise((resolve) => {
+  async changeDPath (path) {
+    // return new Promise((resolve) => {
+    try {
+      this.obtainPathComponentsFromDerivationPath(path)
       this.path = path
-      resolve()
-    })
+      return Promise.resolve()
+    } catch (e) {
+      return Promise.reject(e)
+    }
+    // resolve()
+    // })
   }
 
   setActiveAddress (address, index) {
@@ -143,8 +149,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
   obtainPathComponentsFromDerivationPath (derivationPath) {
     // check if derivation path follows 44'/60'/x'/n pattern
     // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
-    const regExp = /^m?\/?(44'\/(?:1|60|61)'\/\d'\/)(\d+)$/
-    const regExpAlt = /^m?\/?(44'\/(?:1|60|61)')/
+    const regExp = /^m?\/?(44'\/(\d+)'\/\d'\/)(\d+)$/
+    const regExpAlt = /^m?\/?(44'\/(\d+)')/
     const matchResult = regExp.exec(derivationPath)
     const matchResultAlt = regExpAlt.exec(derivationPath)
     if (matchResult === null && matchResultAlt === null) {
@@ -153,6 +159,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
         'InvalidDerivationPath'
       )
     }
+    console.log(matchResult, matchResultAlt) // todo remove dev item
     if (matchResult !== null) return {basePath: matchResult[1], index: parseInt(matchResult[2], 10)}
     if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
   }
