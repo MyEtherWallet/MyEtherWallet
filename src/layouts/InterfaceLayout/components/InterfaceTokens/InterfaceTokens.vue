@@ -23,7 +23,7 @@
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{token.name}}</td>
-              <td>{{token.balance }}</td>
+              <td>{{token.balance}}</td>
             </tr>
           </table>
           <div class="spinner-container" v-show="search === '' && localTokens.length === 0 && receivedTokens">
@@ -89,6 +89,7 @@ export default {
       }
       let newArray = []
       token['balance'] = await this.getTokenBalance(token)
+      console.log(token['balance']) // todo remove dev item
       if (token['balance'] === undefined) {
         console.error('Token Balance Returned Undefined')
         token['balance'] = 'Err' // todo replace with proper error
