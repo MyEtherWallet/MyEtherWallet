@@ -138,7 +138,8 @@ export default {
         if (Number(res) === 0 || res === '0x') {
           tokenBalance = 0
         } else {
-          tokenBalance = web3.utils.toBN(res).div(10 ^ parseInt(token.decimals))
+          let denominator = web3.utils.toBN(10).pow(web3.utils.toBN(token.decimals))
+          tokenBalance = web3.utils.toBN(res).div(denominator).toString(10)
         }
         return tokenBalance
       }).catch(err => console.log(err)) // todo replace with proper error
