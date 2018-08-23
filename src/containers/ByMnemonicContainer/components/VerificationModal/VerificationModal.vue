@@ -5,10 +5,10 @@
 
       <div class="verificationTest">
         <div v-for="verifyItemRow in mnemonicVerificationItems" v-bind:key="verifyItemRow.key">
-          <p>{{verifyItemRow.num}}.</p>
+          <p>{{verifyItemRow.num + 1}}.</p>
           <ul>
-            <li v-for="items in verifyItemRow.data" v-bind:key="items.key">
-              <label><input type="radio" :name="verifyItemRow.num">{{items.value}}</label>
+            <li v-for="item in verifyItemRow.data" v-bind:key="item.key">
+              <label><input type="radio" :name="verifyItemRow.num" :value="item.correctItem">{{item.value}}</label>
             </li>
           </ul>
         </div>
@@ -26,7 +26,7 @@
       <!-- Old verification is hidden, so if we can use it later in the future if we need it. -->
 
       <div class="button-container">
-        <div v-on:click="mnemonicDoneModalOpen" class="verify-button large-round-button-green-filled">
+        <div v-on:click="checkVerificationPassed" class="verify-button large-round-button-green-filled">
           Verify
         </div>
       </div>
@@ -41,10 +41,32 @@ export default {
   props: ['mnemonicValues', 'mnemonicDoneModalOpen'],
   data () {
     return {
-      mnemonicVerificationItems: []
+      mnemonicVerificationItems: [],
+      randTestItems: []
     }
   },
   methods: {
+    checkVerificationPassed () {
+      var trueCount = 0
+
+      for (let c = 0; c < this.randTestItems.length; c++) {
+        var radios = document.getElementsByName(this.randTestItems[c])
+
+        for (var i = 0, length = radios.length; i < length; i++) {
+          if (radios[i].checked) {
+            // do whatever you want with the checked radio
+            if (radios[i].value === 'true') {
+              trueCount++
+            }
+
+            // only one radio can be logically checked, don't check the rest
+            break
+          }
+        }
+      }
+
+      console.log(trueCount)
+    },
     removeElFromArray (arr, value) {
       return arr.filter(function (ele) {
         return ele !== value
@@ -77,6 +99,7 @@ export default {
     mnemonicValues: function (mnemonicValArray) {
       // Get 3 random "array index" for "mnemonicValues"
       var randItems = this.getRandMnemonicElements(mnemonicValArray, 3)
+      this.randTestItems = randItems
 
       for (let c = 0; c < randItems.length; c++) {
         // Remove randItems from Mnemonic Value Array
@@ -102,9 +125,11 @@ export default {
             }
           ]
         }
+
+        this.shuffleArray(this.mnemonicVerificationItems[c].data)
       }
 
-      console.log(this.mnemonicVerificationItems)
+      // console.log(this.mnemonicVerificationItems)
     }
   }
 }
