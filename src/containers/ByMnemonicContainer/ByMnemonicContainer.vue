@@ -105,6 +105,7 @@ export default {
       }
     },
     mnemonicDoneModalOpen () {
+      /*
       let valid = false
 
       this.varificationValues.forEach(function (value) {
@@ -120,6 +121,9 @@ export default {
       if (valid === true) {
         this.$children[0].$refs.done.show()
       }
+      */
+
+      this.$children[0].$refs.done.show()
     },
     mnemonicVerificationModalOpen () {
       // Generate random numbers to choose which blocks to hide
