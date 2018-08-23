@@ -101,6 +101,10 @@ export default {
   watch: {
     // When "mnemonicValues" changes, reselect verification items.
     mnemonicValues: function (mnemonicValArray) {
+      // Reset all Radio buttons
+      var radios = document.querySelectorAll('input[type="radio"]')
+      for (var i = 0; i < radios.length; i++) { radios[i].checked = false }
+
       // Get 3 random "array index" for "mnemonicValues"
       var randItems = this.getRandMnemonicElements(mnemonicValArray, 3)
       this.randTestItems = randItems
