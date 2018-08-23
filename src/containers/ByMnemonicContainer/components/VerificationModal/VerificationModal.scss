@@ -44,7 +44,7 @@
 
       .verify-button {
         display: inline-block;
-        margin-top: 50px;
+        margin-top: 20px;
         padding: 20px 100px;
       }
     }
@@ -54,10 +54,29 @@
 
 .verificationTest {
   >div{
-
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 1fr 8fr;
+    margin-bottom: 10px;
+    padding: 20px;
+    background-color: $light-grey-2;
     ul {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
+
+      li {
+        label {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        input {
+          height: 20px;
+          width: 20px;
+          margin-right: 10px;
+        }
+      }
     }
   }
 }
