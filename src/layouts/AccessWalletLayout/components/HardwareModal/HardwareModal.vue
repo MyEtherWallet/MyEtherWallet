@@ -96,7 +96,6 @@ export default {
     hardwareButtonActivate (e) {
       const buttonEls = this.$refs.hardwareList.children
       for (var i = 0; i < buttonEls.length; i++) {
-        console.log(buttonEls[i]) // todo remove dev item
         buttonEls[i].classList.remove('active')
       }
 
