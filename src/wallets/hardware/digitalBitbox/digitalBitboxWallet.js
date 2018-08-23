@@ -14,7 +14,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     this.identifier = 'DigitalBitbox'
     this.brand = 'digitalBitbox'
     this.wallet = null
-    this.digitalBitboxSecret = ''
     this.transport = null
 
     options = options || {}
@@ -58,7 +57,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
       const digitalBitboxSecret = options.password || ''
       delete options['password']
       const wallet = new DigitalBitboxWallet(options)
-      console.log(wallet) // todo remove dev item
       await wallet.unlockBitbox(digitalBitboxSecret)
       return wallet
     } catch (e) {
@@ -131,8 +129,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   // (Start) Internal setup methods
   digitalBitboxCallback (result, error) {
     return new Promise((resolve, reject) => {
-      console.log(result) // todo remove dev item
-      // this.digitalBitboxSecret = ''
       if (typeof result !== 'undefined') {
         this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path)
         resolve()
@@ -144,7 +140,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
 
   unlockBitbox (digitalBitboxSecret) {
     return new Promise((resolve, reject) => {
-      console.log(digitalBitboxSecret) // todo remove dev item
       this.transport = new DigitalBitboxUsb()
       let app = new DigitalBitboxEth(this.transport, digitalBitboxSecret)
       let path = this.path
@@ -168,7 +163,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   }
 
   HWWalletCreate (publicKey, chainCode, walletType, path) {
-    console.log(publicKey) // todo remove dev item
     this.hdk = new HDKey()
     this.hdk.publicKey = Buffer.from(publicKey, 'hex')
     this.hdk.chainCode = Buffer.from(chainCode, 'hex')
@@ -267,92 +261,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     if (hex === '') return ''
     return '0x' + this.padLeftEven(hex)
   }
-
-  // signTxTrezors (rawTx) {
-  //   return new Promise((resolve, reject) => {
-  //     let trezorConnectSignCallback = (result) => {
-  //       if (!result.success) {
-  //         reject(Error(result.error))
-  //         return
-  //       }
-  //       rawTx.v = '0x' + this.decimalToHex(result.v)
-  //       rawTx.r = '0x' + result.r
-  //       rawTx.s = '0x' + result.s
-  //       const tx = new EthereumjsTx(rawTx)
-  //       rawTx.rawTx = JSON.stringify(rawTx)
-  //       resolve({
-  //         rawTx: rawTx.rawTx,
-  //         messageHash: tx.hash(), // figure out what exactly web3 is putting here
-  //         v: Buffer.from(result.v.toString(), 'hex'),
-  //         r: Buffer.from(result.r, 'hex'),
-  //         s: Buffer.from(result.s, 'hex'),
-  //         rawTransaction: `0x${tx.serialize().toString('hex')}`
-  //       })
-  //     }
-  //
-  //     TrezorConnect.signEthereumTx(
-  //       this.wallet.path,
-  //       this.getNakedAddress(rawTx.nonce),
-  //       this.getNakedAddress(rawTx.gasPrice),
-  //       this.getNakedAddress(rawTx.gas),
-  //       this.getNakedAddress(rawTx.to),
-  //       this.getNakedAddress(rawTx.value),
-  //       this.getNakedAddress(rawTx.data),
-  //       +rawTx.chainId,
-  //       trezorConnectSignCallback
-  //     )
-  //   })
-  // }
-  //
-  // signTxTrezor (rawTx) {
-  //   return new Promise((resolve, reject) => {
-  //     let trezorConnectSignCallback = (result) => {
-  //       if (!result.success) {
-  //         reject(Error(result.error))
-  //         return
-  //       }
-  //       rawTx.v = '0x' + this.decimalToHex(result.v)
-  //       rawTx.r = '0x' + result.r
-  //       rawTx.s = '0x' + result.s
-  //       const tx = new EthereumjsTx(rawTx)
-  //       rawTx.rawTx = JSON.stringify(rawTx)
-  //       resolve({
-  //         rawTx: rawTx.rawTx,
-  //         messageHash: tx.hash(), // figure out what exactly web3 is putting here
-  //         v: Buffer.from(result.v.toString(), 'hex'),
-  //         r: Buffer.from(result.r, 'hex'),
-  //         s: Buffer.from(result.s, 'hex'),
-  //         rawTransaction: `0x${tx.serialize().toString('hex')}`
-  //       })
-  //     }
-  //
-  //     TrezorConnect.signEthereumTx(
-  //       this.wallet.path,
-  //       this.getNakedAddress(rawTx.nonce),
-  //       this.getNakedAddress(rawTx.gasPrice),
-  //       this.getNakedAddress(rawTx.gas),
-  //       this.getNakedAddress(rawTx.to),
-  //       this.getNakedAddress(rawTx.value),
-  //       this.getNakedAddress(rawTx.data),
-  //       +rawTx.chainId,
-  //       trezorConnectSignCallback
-  //     )
-  //   })
-  // }
-  //
-  // signMessageTrezor (stringMessage) {
-  //   return new Promise((resolve, reject) => {
-  //     const localCallback = function (result) {
-  //       if (!result.success) {
-  //         reject(result.error)
-  //         return
-  //       }
-  //       let signedMessage = '0x' + result.signature
-  //       resolve(signedMessage)
-  //     }
-  //     TrezorConnect.ethereumSignMessage(this.wallet.path, stringMessage, localCallback, '1.5.2')
-  //   })
-  // }
 
   // (End) Internal methods underlying wallet usage methods
   // (Start) Internal utility methods
