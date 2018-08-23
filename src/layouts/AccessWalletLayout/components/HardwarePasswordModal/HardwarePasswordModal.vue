@@ -28,7 +28,6 @@ export default {
     unlockWallet () {
       this.walletConstructor.unlock({password: this.password})
         .then((wallet) => {
-          console.log(wallet) // todo remove dev item
           this.$emit('hardwareWalletOpen', wallet)
         })
         .catch(_error => {
