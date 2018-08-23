@@ -5,14 +5,16 @@
 
       <div class="verificationTest">
         <div v-for="verifyItemRow in mnemonicVerificationItems" v-bind:key="verifyItemRow.key">
-          <p>{{verifyItemRow.num}}</p>
-          <ul v-for="items in verifyItemRow.data" v-bind:key="items.key">
-            <li v-for="item in items" v-bind:key="item.key">{{item.value}}</li>
+          <p>{{verifyItemRow.num}}.</p>
+          <ul>
+            <li v-for="items in verifyItemRow.data" v-bind:key="items.key">
+              <label><input type="radio" :name="verifyItemRow.num">{{items.value}}</label>
+            </li>
           </ul>
         </div>
       </div>
 
-      <!-- Old verification is hidden, so if we can use it later in the future if we need it. -->
+      <!-- Old verification form is hidden, so if we can use it later in the future if we need it. -->
       <div class="phrases hidden">
         <ul>
           <li class="word" v-for="(value, index) in mnemonicValues" v-bind:key="index" v-bind:data-index="index + 1">
