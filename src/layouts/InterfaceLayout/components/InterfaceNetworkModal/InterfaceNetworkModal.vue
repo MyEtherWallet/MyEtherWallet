@@ -213,6 +213,7 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
+    console.log(this.networks)
   },
   methods: {
     networkModalOpen() {
@@ -271,8 +272,8 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: `${explorer}address/[[txHash]]`,
-          blockExplorerTX: `${explorer}tx/[[txHash]]`,
+          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr,
+          blockExplorerTX: this.selectedNetwork.blockExplorerTX,
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,
