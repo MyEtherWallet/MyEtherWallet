@@ -8,6 +8,7 @@
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
+    <install-metamask-modal></install-metamask-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -45,6 +46,8 @@ import AccessWalletButton from '../../components/AccessWalletButton'
 
 import HardwareModal from '../../components/HardwareModal'
 import MetamaskModal from '../../components/MetamaskModal'
+import InstallMetamaskModal from '../../components/InstallMetamaskModal'
+
 import MewConnectModal from '../../components/MewConnectModal'
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
 import PasswordModal from '../../components/PasswordModal'
@@ -66,6 +69,7 @@ export default {
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
     'metamask-modal': MetamaskModal,
+    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
@@ -94,7 +98,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -136,6 +140,9 @@ export default {
     privateKeyOpen () {
       this.$children[4].$refs.software.hide()
       this.$children[6].$refs.privateKey.show()
+    },
+    installMetamaskModalOpen () {
+      this.$children[7].$refs.installmetamask.show()
     },
     fileUploaded (e) {
       this.file = e
