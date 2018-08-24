@@ -2,20 +2,21 @@ import EthereumjsTx from 'ethereumjs-tx'
 import * as ethUtil from 'ethereumjs-util'
 import * as HDKey from 'hdkey'
 import HardwareWalletInterface from '../hardwareWallet-interface'
-import { getDerivationPath, paths } from './deterministicWalletPaths'
+import { getDerivationPath, paths } from './deterministicWalletPath'
 
 import SecalotEth from './secalotEth'
 import SecalotUsb from './secalotUsb'
+import { u2f } from '../utils/u2f-api'
 
 export default class SecalotWallet extends HardwareWalletInterface {
-  constructr(opts) {
-    super();
+  constructor (opts) {
+    super()
     this.identifier = 'Secalot'
     this.brand = 'secalot'
     this.wallet = null
     this.transport = null
 
-    options = options || {}
+    let options = opts || {}
     this.addressToWalletMap = {}
     this.addressesToIndexMap = {}
     this.walletsRetrieved = []
@@ -49,7 +50,7 @@ export default class SecalotWallet extends HardwareWalletInterface {
     this.wallet.address = address
   }
 
-  static async unlock(options) {
+  static async unlock (options) {
     try {
       const secalotSecret = options.password || ''
       delete options['password']
@@ -126,6 +127,7 @@ export default class SecalotWallet extends HardwareWalletInterface {
   }
 
   unlockSecalot (secalotSecret) {
+    typeof secalotSecret === 'string' ? Number(secalotSecret) : secalotSecret
     return new Promise((resolve, reject) => {
       this.transport = new SecalotUsb()
       let app = new SecalotEth(this.transport, secalotSecret)

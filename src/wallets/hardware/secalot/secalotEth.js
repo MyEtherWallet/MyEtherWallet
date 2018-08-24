@@ -72,7 +72,7 @@ SecalotEth.prototype.getAddress = function (path, callback) {
 
   if (typeof this.pinCode !== 'undefined') {
     let pin = Buffer.from(this.pinCode, 'utf8')
-    buffer = Buffer.from(5 + pin.length)
+    buffer = Buffer.alloc(5 + pin.length)
     buffer[0] = 0x80
     buffer[1] = 0x22
     buffer[2] = 0x00
@@ -83,7 +83,7 @@ SecalotEth.prototype.getAddress = function (path, callback) {
     apdus.push(buffer.toString('hex'))
   }
 
-  buffer = Buffer.from(5 + 1 + splitPath.length * 4)
+  buffer = Buffer.alloc(5 + 1 + splitPath.length * 4)
   buffer[0] = 0x80
   buffer[1] = 0x40
   buffer[2] = 0x00
@@ -162,7 +162,7 @@ SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
     offset += chunkSize
   }
 
-  let buffer = Buffer.from(5 + 1 + splitPath.length * 4)
+  let buffer = Buffer.alloc(5 + 1 + splitPath.length * 4)
 
   buffer[0] = 0x80
   buffer[1] = 0xf2
@@ -218,7 +218,7 @@ SecalotEth.prototype.signMessage = function (path, message, callback) {
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize
-    let buffer = Buffer.from(5 + chunkSize)
+    let buffer = Buffer.alloc(5 + chunkSize)
     buffer[0] = 0x80
     buffer[1] = 0xf2
     buffer[2] = offset === 0 ? 0x00 : 0x01
@@ -231,7 +231,7 @@ SecalotEth.prototype.signMessage = function (path, message, callback) {
     offset += chunkSize
   }
 
-  let buffer = new Buffer(5 + 1 + splitPath.length * 4)
+  let buffer = Buffer.alloc(5 + 1 + splitPath.length * 4)
   buffer[0] = 0x80
   buffer[1] = 0xf2
   buffer[2] = 0x02
