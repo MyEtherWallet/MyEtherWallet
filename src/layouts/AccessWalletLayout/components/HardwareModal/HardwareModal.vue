@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { LedgerWallet, TrezorWallet, DigitalBitboxWallet } from '@/wallets'
+import { LedgerWallet, TrezorWallet, DigitalBitboxWallet, SecalotWallet } from '@/wallets'
 
 export default {
   props: ['networkAndAddressOpen', 'hardwareWalletOpen'],
@@ -80,6 +80,9 @@ export default {
           break
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {walletConstructor: DigitalBitboxWallet, hardwareBrand: 'DigitalBitbox'})
+          break
+        case 'secalot':
+          this.$emit('hardwareRequiresPassword', {walletConstructor: SecalotWallet, hardwareBrand: 'Secalot'})
           break
         default:
           console.log('something not right') // todo remove dev item

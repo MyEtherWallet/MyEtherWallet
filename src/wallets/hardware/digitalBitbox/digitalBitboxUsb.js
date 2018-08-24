@@ -5,7 +5,7 @@
 
 'use strict'
 
-import {u2f} from './u2f-api'
+import {u2f} from '../utils/u2f-api'
 
 var DigitalBitboxUsb = function (timeoutSeconds) {
   this.timeoutSeconds = timeoutSeconds
