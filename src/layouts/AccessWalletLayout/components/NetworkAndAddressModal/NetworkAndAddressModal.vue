@@ -101,27 +101,35 @@ export default {
       accessMyWalletBtnDisabled: true,
       walletUnlocked: false,
       offset: 0,
+      displayOffset: 0,
+      currentIndex: 0,
+      maxIndex: 0,
       count: 5,
       hardwareAddresses: [],
+      displayAddresses: [],
       availablePaths: {},
       selecteDPath: '',
       customPathInput: false,
-      customPath: {label: '', dpath: ''}}
+      customPath: {label: '', dpath: ''}
+    }
   },
   mounted () {
 
   },
   computed: {
     orderedAddresses () {
+      let addressSet = [...this.displayAddresses]
+      console.log(addressSet) // todo remove dev item
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.hardwareAddresses.sort((a, b) => {
-        a = (a.index + 1)
-        b = (b.index + 1)
-        return a < b ? -1 : a > b ? 1 : 0
-      }).slice(this.offset, this.count)
+      return addressSet.sort(this.comparator) // .slice(this.offset, this.count)
     }
   },
   methods: {
+    comparator (a, b) {
+      a = (a.index + 1)
+      b = (b.index + 1)
+      return a < b ? -1 : a > b ? 1 : 0
+    },
     unselectAllAddresses: function (e) {
       document.querySelectorAll('.user-input-checkbox input').forEach(function (el) {
         el.checked = false
@@ -168,32 +176,48 @@ export default {
       this.hardwareWallet.setActiveAddress(details.address, details.index)
     },
     priorAddressSet () {
-      if (this.offset - this.count >= 0) {
-        this.offset = this.offset - this.count
+      if (this.currentIndex - this.count >= 0) {
+        this.currentIndex -= this.count
+        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex, this.currentIndex + this.count)
       } else {
         this.offset = 0
+        this.currentIndex = 0
+        this.displayAddresses = this.hardwareAddresses.slice(0, 5)
       }
     },
     nextAddressSet () {
-      this.offset = this.count + 1
-      this.getAddresses(this.count, this.offset)
-        .then(addressSet => {
-          this.hardwareAddresses = [...this.hardwareAddresses, ...addressSet]
-        })
+      if (this.currentIndex > this.offset) {
+        this.offset += this.count
+        this.getAddresses(this.count, this.currentIndex)
+          .then(addressSet => {
+            this.displayAddresses = addressSet
+            // this.hardwareAddresses.sort(this.comparator)
+          })
+      } else {
+        this.currentIndex += this.count
+        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex - this.count, this.currentIndex)
+      }
     },
     getAddresses (count = 5, offset = 0) {
+      this.currentIndex = offset + count
       return new Promise((resolve, reject) => {
+        console.log((this.offset + this.count) <= offset + count, offset, count) // todo remove dev item
         if ((this.offset + this.count) >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3
           let hardwareAddresses = []
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
-                const rawBalance = await this.$store.state.web3.eth.getBalance(address) // <- Throws because network (web3) not yet initialized
+                const rawBalance = await this.$store.state.web3.eth.getBalance(address)
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
-                hardwareAddresses.push({index: i, address, balance})
+                hardwareAddresses.push({index: this.offset + i, address, balance})
+                this.hardwareAddresses.push({index: this.offset + i, address, balance})
               })
-              resolve(hardwareAddresses)
+              this.$nextTick(() => {
+                this.hardwareAddresses.sort(this.comparator)
+              })
+              this.maxIndex = offset + count
+              resolve(hardwareAddresses.sort(this.comparator))
             })
         }
       })
@@ -211,7 +235,8 @@ export default {
       this.getPaths()
       this.getAddresses(this.count, this.offset)
         .then(addressSet => {
-          this.hardwareAddresses = addressSet
+          this.displayAddresses = addressSet
+          // this.hardwareAddresses.sort(this.comparator)
         })
     }
   }
