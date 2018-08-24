@@ -19,8 +19,8 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
-        {{ $t("accessWallet.installMetamask") }}
+      <b-btn class="mid-round-button-green-filled close-button" v-on:click="metamaskmodal">
+        {{ $t("accessWallet.installMetamask")}}
       </b-btn>
     </div>
     <div class="support">
@@ -37,7 +37,7 @@
 <script>
 export default {
   props: {
-    networkAndAddressOpen: {
+    metamaskmodal: {
       type: Function,
       default: function() {}
     }
