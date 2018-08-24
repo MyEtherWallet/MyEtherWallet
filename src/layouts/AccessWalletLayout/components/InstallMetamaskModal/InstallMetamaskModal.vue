@@ -6,7 +6,6 @@
     </div>
     <div class="d-block content-container text-center">
       <h4>
-        install metamask
         {{ $t("accessWallet.installMetaMaskModalDesc")}}
       </h4>
     </div>
