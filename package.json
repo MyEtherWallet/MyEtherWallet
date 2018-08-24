@@ -10,7 +10,7 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
     "build": "node fetchEthListData.js; node build/build.js",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov"

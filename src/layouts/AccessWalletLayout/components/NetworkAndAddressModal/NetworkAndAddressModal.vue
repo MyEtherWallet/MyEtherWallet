@@ -134,8 +134,9 @@ export default {
       // console.log(e.target) // todo remove dev item
     },
     addCustomPath () {
+      // TODO: figure out a more precise regex
       // eslint-disable-next-line no-useless-escape
-      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/ // TODO: figure out a more precise regex
+      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/
       if (regExp.test(this.customPath.dpath)) {
         this.$store.dispatch('addCustomPath', this.customPath)
           .then(() => {
@@ -200,6 +201,7 @@ export default {
       })
     },
     getPaths () {
+      console.log(this.hardwareWallet)
       this.selecteDPath = this.hardwareWallet.getDerivationPath()
       this.availablePaths = {
         ...this.hardwareWallet.compatibleChains,

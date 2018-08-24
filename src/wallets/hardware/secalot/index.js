@@ -1,1 +1,5 @@
-export { default } from './secalotWallet'
+import SecalotWallet from './secalotWallet'
+
+export {
+  SecalotWallet
+}
