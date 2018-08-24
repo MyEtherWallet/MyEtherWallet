@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword', 'openPrivateKeyInput'],
+  props: ['value', 'openPassword', 'openPrivateKeyInput', 'openAccessByMnemonicphraseModal'],
   data () {
     return {
       file: '',
@@ -56,8 +56,8 @@ export default {
         this.uploadClick()
       } else if (this.selected === 'byPriv') {
         this.openPrivateKeyInput()
-      } else {
-
+      } if (this.selected === 'byMnem') {
+        this.openAccessByMnemonicphraseModal()
       }
     },
     select (ref) {

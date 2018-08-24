@@ -185,7 +185,7 @@ export default {
   mounted () {
     // Generate a random mnemonic
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
-    console.log(this.$children)
+    // console.log(this.$children)
   }
 }
 </script>
