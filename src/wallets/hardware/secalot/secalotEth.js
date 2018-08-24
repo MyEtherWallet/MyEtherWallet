@@ -99,7 +99,6 @@ SecalotEth.prototype.getAddress = function (path, callback) {
 }
 
 SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
-  console.log(path, 'signTransaction')
   let splitPath = SecalotEth.splitPath(path)
   let offset = 0
   let rawData
@@ -150,7 +149,7 @@ SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize
-    let buffer = Buffer.from(5, chunkSize)
+    let buffer = Buffer.alloc(5, chunkSize)
 
     buffer[0] = 0x80
     buffer[1] = 0xf2
@@ -176,7 +175,7 @@ SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
     buffer.writeUInt32BE(element, 6 + 4 * index)
   })
 
-  apdus.push(buffer.toStirng('hex'))
+  apdus.push(buffer.toString('hex'))
   self.comm.exchange(apdus.shift(), localCallback)
 }
 
