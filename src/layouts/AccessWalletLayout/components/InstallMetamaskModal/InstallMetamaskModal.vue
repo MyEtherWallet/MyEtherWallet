@@ -1,11 +1,12 @@
 <template>
-  <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
+  <b-modal ref="installmetamask" hide-footer class="bootstrap-modal install-modal-metamask" title="Access by MetaMask" centered>
     <div class="modal-multi-icons">
       <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
 
     </div>
     <div class="d-block content-container text-center">
       <h4>
+        install metamask
         {{ $t("accessWallet.installMetaMaskModalDesc")}}
       </h4>
     </div>
