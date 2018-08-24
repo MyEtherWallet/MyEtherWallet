@@ -146,10 +146,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return err
   }
 
-  obtainPathComponentsFromDerivationPath (derivationPath) {
+  obtainPathComponentsFromDerivationPath (dPath) {
+    const derivationPath = dPath.trim()
     // check if derivation path follows 44'/60'/x'/n pattern
     // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
-    const compatibilityRegEx = /^m\/44'\/(?:1|60|61)'\//
+    const compatibilityRegEx = /^m\/44'\/(?:1|60|61)'\/\d+'\/.*/
+    console.log(this.version.split('.')[1] <= 3) // todo remove dev item
+    console.log(!compatibilityRegEx.test(derivationPath)) // todo remove dev item
+    console.log(compatibilityRegEx.exec(derivationPath)) // todo remove dev item
     if (!compatibilityRegEx.test(derivationPath) && this.version.split('.')[1] <= 3) {
       // TODO communicate Error to user
       throw this.makeError(

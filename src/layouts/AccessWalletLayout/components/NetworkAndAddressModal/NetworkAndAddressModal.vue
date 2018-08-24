@@ -114,7 +114,7 @@ export default {
       customPath: {label: '', dpath: ''}
     }
   },
-  created () {
+  mounted () {
     this.$refs.networkAndAddress.$on('hide', () => {
       this.offset = 0
       this.count = 5
@@ -163,16 +163,38 @@ export default {
     },
     selectDPath (key) {
       this.selecteDPath = this.availablePaths[key]
-      this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
-        .then(() => {
-          this.getAddresses()
-            .then(addressSet => {
-              this.hardwareAddresses = addressSet
+      const baseRegEx = /([1-9]|[0-9]{2,})$/
+      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/
+      if (baseRegEx.test(this.selecteDPath.dpath)) {
+        const indexEx = baseRegEx.exec(this.selecteDPath.dpath)
+        const basePathEx = regExp.exec(this.selecteDPath.dpath)
+        const basePath = baseRegEx[0] + '/0'
+        const index = indexEx[0]
+        console.log(indexEx, basePathEx) // todo remove dev item
+        if (indexEx !== null && basePathEx !== null) {
+          this.hardwareWallet.changeDPath(basePath)
+            .then(() => {
+              this.getAddresses(5, index)
+                .then(addressSet => {
+                  this.hardwareAddresses = addressSet
+                })
             })
-        })
-        .catch(_error => {
-          console.error(_error)
-        })
+            .catch(_error => {
+              console.error(_error)
+            })
+        }
+      } else {
+        this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
+          .then(() => {
+            this.getAddresses()
+              .then(addressSet => {
+                this.hardwareAddresses = addressSet
+              })
+          })
+          .catch(_error => {
+            console.error(_error)
+          })
+      }
     },
     unlockWallet () {
       this.$store.dispatch('decryptWallet', this.hardwareWallet)
@@ -224,6 +246,7 @@ export default {
               this.connectionActive = !this.connectionActive
               resolve(hardwareAddresses)
             })
+            .catch(console.log)
         }
       })
     },
