@@ -1,39 +1,40 @@
 <template>
   <div class="access-my-wallet-options">
 
-    <mew-connect-modal 
+    <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
 
-    <hardware-modal 
+    <hardware-modal
       ref="hardwareModal"
       :network-and-address-open="networkAndAddressOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <hardware-password-modal 
+    <hardware-password-modal
       ref="hardwarePasswordModal"
       :wallet-constructor="walletConstructor"
       :hardware-brand="hardwareBrand"
       @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <network-and-address-modal 
+    <network-and-address-modal
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
     <metamask-modal ref="metamastModal"/>
 
-    <software-modal 
+    <software-modal
       ref="softwareModal"
       :open-password="passwordOpen"
-      :open-private-key-input="privateKeyOpen" 
+      :open-private-key-input="privateKeyOpen"
       @file="fileUploaded"/>
 
-    <password-modal 
+    <password-modal
       ref="passwordModal"
       :file="file"/>
 
     <private-key-modal ref="privatekeyModal"/>
+    <install-metamask-modal></install-metamask-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -71,7 +72,6 @@
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
-import MetamaskModal from '../../components/MetamaskModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
@@ -82,6 +82,8 @@ import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import metamaskImg from '@/assets/images/icons/button-metamask.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
+import MetamaskModal from '../../components/MetamaskModal'
+import InstallMetamaskModal from '../../components/InstallMetamaskModal'
 
 import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
@@ -94,6 +96,7 @@ export default {
     'hardware-modal': HardwareModal,
     'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
+    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
@@ -126,7 +129,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -168,6 +171,9 @@ export default {
     privateKeyOpen() {
       this.$refs.softwareModal.$refs.software.hide();
       this.$refs.privatekeyModal.$refs.privateKey.show();
+    },
+    installMetamaskModalOpen() {
+      this.$children[7].$refs.installmetamask.show()
     },
     fileUploaded(e) {
       this.file = e;
