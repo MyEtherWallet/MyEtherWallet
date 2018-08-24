@@ -4,15 +4,14 @@ import * as HDKey from 'hdkey'
 import HardwareWalletInterface from '../hardwareWallet-interface'
 import { getDerivationPath, paths } from './deterministicWalletPaths'
 
-import { DigitalBitboxUsb } from './digitalBitboxUsb'
-import { DigitalBitboxEth } from './digitalBitboxEth'
-import { u2f } from '../utils/u2f-api'
+import SecalotEth from './secalotEth'
+import SecalotUsb from './secalotUsb'
 
-export default class DigitalBitboxWallet extends HardwareWalletInterface {
-  constructor (options) {
-    super()
-    this.identifier = 'DigitalBitbox'
-    this.brand = 'digitalBitbox'
+export default class SecalotWallet extends HardwareWalletInterface {
+  constructr(opts) {
+    super();
+    this.identifier = 'Secalot'
+    this.brand = 'secalot'
     this.wallet = null
     this.transport = null
 
@@ -45,19 +44,17 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     this.signMessage = this.signMessage.bind(this)
   }
 
-  // ============== (Start) Expected Utility methods ======================
-
   setActiveAddress (address, index) {
     this.wallet = this.addressToWalletMap[address]
     this.wallet.address = address
   }
 
-  static async unlock (options) {
+  static async unlock(options) {
     try {
-      const digitalBitboxSecret = options.password || ''
+      const secalotSecret = options.password || ''
       delete options['password']
-      const wallet = new DigitalBitboxWallet(options)
-      await wallet.unlockBitbox(digitalBitboxSecret)
+      const wallet = new SecalotWallet(options)
+      await wallet.unlockSecalot(secalotSecret)
       return wallet
     } catch (e) {
       return e
@@ -72,9 +69,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     return getDerivationPath(networkShortName)
   }
 
-  // ============== (End) Expected Utility methods ======================
-
-  // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
   getAddress () {
     if (this.wallet) {
       return this.wallet.address
@@ -91,9 +85,6 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     }
   }
 
-  // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
-
-  // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts (callback) {
     let _this = this
     if (arguments.length > 1 && typeof arguments[2] === 'function') {
@@ -108,29 +99,25 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     return this._getAccounts(count, offset)
   }
 
-  signTransaction (txData) {
-    return this.signTxDigitalBitbox(txData)
+  signTransaction (txData) { // Update
+    return this.signTxSecalot(txData)
   }
 
-  signMessage (msgData) {
+  signMessage (msgData) { // Update
     let thisMessage = msgData.data ? msgData.data : msgData
-    return this.signMessageTrezor(thisMessage)
+    let app = new SecalotEth(this.transport, '')
+    return app.signMessage(this.path, thisMessage)
   }
-
-  // ============== (End) Implementation of wallet usage methods ======================
 
   changeDPath (path) {
     this.path = path
-    return this.unlockBitbox()
+    return this.unlockSecalot()
   }
 
-  // ============== (Start) Internally used methods ======================
-
-  // (Start) Internal setup methods
-  digitalBitboxCallback (result, error) {
+  secalotCallback (result, error) {
     return new Promise((resolve, reject) => {
       if (typeof result !== 'undefined') {
-        this.HWWalletCreate(result['publicKey'], result['chainCode'], 'digitalBitbox', this.path)
+        this.HWWalletCreate(result['publicKey'], result['chainCode'], 'secalot', this.path)
         resolve()
       } else {
         reject(error)
@@ -138,13 +125,13 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     })
   }
 
-  unlockBitbox (digitalBitboxSecret) {
+  unlockSecalot (secalotSecret) {
     return new Promise((resolve, reject) => {
-      this.transport = new DigitalBitboxUsb()
-      let app = new DigitalBitboxEth(this.transport, digitalBitboxSecret)
+      this.transport = new SecalotUsb()
+      let app = new SecalotEth(this.transport, secalotSecret)
       let path = this.path
       app.getAddress(path, (result, error) => {
-        resolve(this.digitalBitboxCallback(result, error))
+        resolve(this.secalotCallback(result, error))
       })
     })
   };
@@ -231,7 +218,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
     return new ethUtil.BN(dec).toString(16)
   }
 
-  signTxDigitalBitbox (rawTx) {
+  signTxSecalot (rawTx) {
     return new Promise((resolve, reject) => {
       let localCallback = (result, error) => {
         if (typeof error !== 'undefined') {
@@ -250,7 +237,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
         resolve(rawTx)
       }
       // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
-      let app = new DigitalBitboxEth(this.transport, '')
+      let app = new SecalotEth(this.transport, '')
       const tx = new EthereumjsTx(rawTx)
       app.signTransaction(rawTx.path, tx, localCallback)
     })
@@ -280,7 +267,4 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
       return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
     }
   }
-
-  // (End) Internal utility methods
-  // ============== (End) Internally used methods ======================
 }
