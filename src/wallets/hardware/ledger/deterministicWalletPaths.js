@@ -1,43 +1,37 @@
-import store from 'store'
-import additional from '../deterministicWalletPaths'
+// import {
+//   AKA,
+//   ETC,
+//   ETH,
+//   ETHO,
+//   EXP,
+//   KOV,
+//   POA,
+//   PIRL,
+//   RIN,
+//   ROP,
+//   UBQ
+// } from '../../../configs/networks/types'
 
-const selectableNetworks = new Map()
+import * as nodes from '../../../configs/networks/types'
 
-const paths = {
-  defaultDPath: {symbol: 'ETH', label: 'Ledger (ETH)', dpath: 'm/44\'/60\'/0\''}, // first address: m/44'/60'/0/0
-  classicPath: {symbol: 'ETC', label: 'Ledger (ETC)', dpath: 'm/44\'/60\'/160720\'/0\''}, // first address: m/44'/60'/160720'/0/0
-  testnetPath: {symbol: 'Testnets', label: 'TestNets: Ropsten, Kovan, Rinkeby', dpath: 'm/44\'/1\'/0\'/0'}, // first address: m/44'/1'/0'/0/0
-  customDPath: {symbol: 'custom', label: 'Custom Path', dpath: 'm/44\'/60\'/1\'/0'} // first address: m/44'/60'/1'/0/0
+const derivationPaths = {
+  [nodes.ETH.name]: 'm/44\'/60\'/0\'',
+  [nodes.ETC.name]: 'm/44\'/61\'/0\'/0',
+  [nodes.EXP.name]: 'm/44\'/40\'/0\'/0',
+  [nodes.UBQ.name]: 'm/44\'/108\'/0\'/0',
+  [nodes.POA.name]: 'm/44\'/60\'/0\'/0',
+  [nodes.AKA.name]: 'm/44\'/200625\'/0\'/0',
+  [nodes.PIRL.name]: 'm/44\'/164\'/0\'/0',
+  [nodes.ETHO.name]: 'm/44\'/1313114\'/0\'/0',
+  [nodes.ROP.name]: 'm/44\'/1\'/0\'/0',
+  [nodes.RIN.name]: 'm/44\'/1\'/0\'/0',
+  [nodes.KOV.name]: 'm/44\'/1\'/0\'/0'
 }
 
-selectableNetworks.set(paths.defaultDPath.symbol, paths.defaultDPath)
-selectableNetworks.set(paths.classicPath.symbol, paths.classicPath)
-selectableNetworks.set('ROP', paths.testnetPath)
-selectableNetworks.set('RIN', paths.testnetPath)
-selectableNetworks.set('KOV', paths.testnetPath)
-selectableNetworks.set(paths.customDPath.symbol, paths.customDPath)
+export default derivationPaths
 
-additional.forEach((entry) => {
-  if (entry.valid.includes('ledger')) {
-    paths[entry.chain] = entry.values
-    selectableNetworks.set(entry.values.symbol, entry.values)
+export function getDerivationPath (networkName) {
+  if (derivationPaths[networkName]) {
+    return {label: '', dpath: derivationPaths[networkName]}
   }
-})
-
-function getDerivationPath (networkName) {
-  if (!networkName) {
-    if (store.get('network') !== undefined) {
-      networkName = store.get('network').type.name
-    }
-  }
-  if (selectableNetworks.has(networkName)) {
-    return selectableNetworks.get(networkName)
-  } else {
-    return paths.defaultDPath
-  }
-}
-
-export {
-  paths,
-  getDerivationPath
 }
