@@ -114,7 +114,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
 
   signMessage (msgData) {
     let thisMessage = msgData.data ? msgData.data : msgData
-    return this.signMessageTrezor(thisMessage)
+    return null
   }
 
   // ============== (End) Implementation of wallet usage methods ======================
