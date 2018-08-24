@@ -12,7 +12,7 @@ import FooterContainer from '@/containers/FooterContainer'
 import HeaderContainer from '@/containers/HeaderContainer'
 import ConfirmationContainer from '@/containers/ConfirmationContainer'
 import store from 'store'
-import nodeList from '@/configs/networks'
+import nodeList from '@/networks'
 import Web3 from 'web3'
 
 export default {
