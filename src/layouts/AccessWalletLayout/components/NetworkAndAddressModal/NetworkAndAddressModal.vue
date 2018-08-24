@@ -60,8 +60,9 @@
       </div> <!-- .address-block-container -->
 
       <div class="address-nav">
-        <span @click="priorAddressSet">&lt; {{ $t('common.previous') }}</span>
-        <span @click="nextAddressSet">{{ $t('common.next') }} &gt;</span>
+        <span @click.prevent="priorAddressSet()">&lt; {{ $t('common.previous') }}</span>
+        <span @click.prevent="nextAddressSet()" v-show="!connectionActive">{{ $t('common.next') }} &gt;</span>
+        <span v-show="connectionActive" class="activeConn">{{ $t('common.next') }} &gt;</span>
       </div>
     </div> <!-- .content-container-2 -->
 
@@ -100,11 +101,11 @@ export default {
     return {
       accessMyWalletBtnDisabled: true,
       walletUnlocked: false,
+      connectionActive: false,
       offset: 0,
-      displayOffset: 0,
+      count: 5,
       currentIndex: 0,
       maxIndex: 0,
-      count: 5,
       hardwareAddresses: [],
       displayAddresses: [],
       availablePaths: {},
@@ -113,15 +114,21 @@ export default {
       customPath: {label: '', dpath: ''}
     }
   },
-  mounted () {
-
+  created () {
+    this.$refs.networkAndAddress.$on('hide', () => {
+      this.offset = 0
+      this.count = 5
+      this.currentIndex = 0
+      this.maxIndex = 0
+      this.hardwareAddresses = []
+      this.displayAddresses = []
+    })
   },
   computed: {
     orderedAddresses () {
       let addressSet = [...this.displayAddresses]
-      console.log(addressSet) // todo remove dev item
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return addressSet.sort(this.comparator) // .slice(this.offset, this.count)
+      addressSet.sort(this.comparator)
+      return addressSet.sort(this.comparator)
     }
   },
   methods: {
@@ -139,7 +146,6 @@ export default {
     showCustomPathInput (e) {
       this.customPath = {label: '', dpath: ''}
       this.customPathInput = !this.customPathInput
-      // console.log(e.target) // todo remove dev item
     },
     addCustomPath () {
       // eslint-disable-next-line no-useless-escape
@@ -186,12 +192,10 @@ export default {
       }
     },
     nextAddressSet () {
-      if (this.currentIndex > this.offset) {
-        this.offset += this.count
+      if (this.currentIndex + this.count > this.maxIndex) {
         this.getAddresses(this.count, this.currentIndex)
           .then(addressSet => {
             this.displayAddresses = addressSet
-            // this.hardwareAddresses.sort(this.comparator)
           })
       } else {
         this.currentIndex += this.count
@@ -199,10 +203,9 @@ export default {
       }
     },
     getAddresses (count = 5, offset = 0) {
-      this.currentIndex = offset + count
       return new Promise((resolve, reject) => {
-        console.log((this.offset + this.count) <= offset + count, offset, count) // todo remove dev item
-        if ((this.offset + this.count) >= this.hardwareAddresses.length) {
+        if (offset + count > this.maxIndex) {
+          this.connectionActive = !this.connectionActive
           const web3 = this.$store.state.web3
           let hardwareAddresses = []
           this.hardwareWallet.getMultipleAccounts(count, offset)
@@ -210,14 +213,16 @@ export default {
               Object.values(_accounts).forEach(async (address, i) => {
                 const rawBalance = await this.$store.state.web3.eth.getBalance(address)
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
-                hardwareAddresses.push({index: this.offset + i, address, balance})
-                this.hardwareAddresses.push({index: this.offset + i, address, balance})
+                hardwareAddresses.push({index: offset + i, address, balance})
+                this.hardwareAddresses.push({index: offset + i, address, balance})
               })
               this.$nextTick(() => {
                 this.hardwareAddresses.sort(this.comparator)
               })
               this.maxIndex = offset + count
-              resolve(hardwareAddresses.sort(this.comparator))
+              this.currentIndex = offset + count
+              this.connectionActive = !this.connectionActive
+              resolve(hardwareAddresses)
             })
         }
       })
@@ -233,10 +238,9 @@ export default {
   watch: {
     hardwareWallet (newValue) {
       this.getPaths()
-      this.getAddresses(this.count, this.offset)
+      this.getAddresses(5, this.offset)
         .then(addressSet => {
           this.displayAddresses = addressSet
-          // this.hardwareAddresses.sort(this.comparator)
         })
     }
   }
@@ -245,4 +249,8 @@ export default {
 
 <style lang="scss" scoped>
   @import "NetworkAndAddressModal.scss";
+
+  .activeConn {
+    color: gray;
+  }
 </style>
