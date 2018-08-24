@@ -8,7 +8,7 @@
     <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
-    <install-metamask-modal></install-metamask-modal>
+    <install-metamask-modal :metamaskmodal="metamaskModalOpen"></install-metamask-modal>
 
     <div class="wrap">
       <div class="page-container">
