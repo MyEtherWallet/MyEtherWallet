@@ -99,6 +99,7 @@ SecalotEth.prototype.getAddress = function (path, callback) {
 }
 
 SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
+  console.log(path, 'signTransaction')
   let splitPath = SecalotEth.splitPath(path)
   let offset = 0
   let rawData
@@ -208,8 +209,7 @@ SecalotEth.prototype.signMessage = function (path, message, callback) {
     }
   }
 
-  message =
-    '\x19Ethereum Signed Message:\n' + message.length.toString() + message
+  message = '\x19Ethereum Signed Message:\n' + message.length.toString() + message
   rawData = Buffer.from(Buffer.from(message.toString('hex'), 'hex'))
 
   while (offset !== rawData.length) {
