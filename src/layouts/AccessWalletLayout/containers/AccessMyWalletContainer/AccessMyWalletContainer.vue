@@ -34,7 +34,7 @@
       :file="file"/>
 
     <private-key-modal ref="privatekeyModal"/>
-    <install-metamask-modal></install-metamask-modal>
+    <install-metamask-modal :metamaskmodal="installMetamaskModalOpen"></install-metamask-modal>
 
     <div class="wrap">
       <div class="page-container">
