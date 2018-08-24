@@ -24,10 +24,11 @@
     <metamask-modal ref="metamastModal"/>
 
     <software-modal
-      ref="softwareModal"
-      :open-password="passwordOpen"
-      :open-private-key-input="privateKeyOpen"
-      @file="fileUploaded"/>
+      v-on:file="fileUploaded"
+      :openPassword="passwordOpen"
+      :openPrivateKeyInput="privateKeyOpen"
+      :openAccessByMnemonicphraseModal="accessByMnemonicphraseModalOpen"/>
+
 
     <password-modal
       ref="passwordModal"
@@ -35,6 +36,7 @@
 
     <private-key-modal ref="privatekeyModal"/>
     <install-metamask-modal :metamaskmodal="installMetamaskModalOpen"></install-metamask-modal>
+    <access-by-mnemonic-phrase-modal></access-by-mnemonic-phrase-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -78,16 +80,18 @@ import PasswordModal from '../../components/PasswordModal';
 import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
 
-import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
-import hardwareImg from '@/assets/images/icons/button-hardware.svg';
-import metamaskImg from '@/assets/images/icons/button-metamask.svg';
-import softwareImg from '@/assets/images/icons/button-software.svg';
-import MetamaskModal from '../../components/MetamaskModal'
-import InstallMetamaskModal from '../../components/InstallMetamaskModal'
+import MetamaskModal from '../../components/MetamaskModal';
+import InstallMetamaskModal from '../../components/InstallMetamaskModal';
+import AccessByMnemonicphraseModal from '../../components/AccessByMnemonicphraseModal'
 
-import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
-import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
-import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
+import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
+import hardwareImg from '@/assets/images/icons/button-hardware.svg'
+import metamaskImg from '@/assets/images/icons/button-metamask.svg'
+import softwareImg from '@/assets/images/icons/button-software.svg'
+
+import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
+import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
+import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
 
 export default {
   components: {
@@ -100,7 +104,9 @@ export default {
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
+    'access-by-mnemonic-phrase-modal': AccessByMnemonicphraseModal,
     'access-wallet-button': AccessWalletButton
+
   },
   data() {
     return {
@@ -173,7 +179,10 @@ export default {
       this.$refs.privatekeyModal.$refs.privateKey.show();
     },
     installMetamaskModalOpen() {
-      this.$children[7].$refs.installmetamask.show()
+      this.$children[7].$refs.installmetamask.show();
+    },
+    accessByMnemonicphraseModalOpen () {
+      this.$children[8].$refs.accessbymnemonicphrase.show()
     },
     fileUploaded(e) {
       this.file = e;
