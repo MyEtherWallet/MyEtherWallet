@@ -4,7 +4,7 @@
       <div class="hd-derivation">
         <h4>{{ $t("accessWallet.hdDerivationPath") }}</h4>
         <div class="dropdown-button-container">
-          <b-dropdown id="hd-derivation-path" text="m/44’/60’/0’/0" class="dropdown-button-1">
+          <b-dropdown id="hd-derivation-path" text="m/44’/60’/0’/0" class="dropdown-button-2">
             <b-dropdown-item class="active">m/44’/60’/0’/0</b-dropdown-item>
             <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
             <b-dropdown-item>m/44’/60’/0’/0</b-dropdown-item>
