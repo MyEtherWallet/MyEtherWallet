@@ -2,6 +2,7 @@
   <b-modal ref="accessbymnemonicphrase" hide-footer class="bootstrap-modal modal-metamask" title="Access by Mnemonic Phrase" centered>
 
     <div class="contents">
+      <p class="instruction">Please type in your mnemonic phrases.</p>
       <div class="tools">
         <div class="value-switch noselect">
           <div class="sliding-switch">
@@ -17,26 +18,20 @@
           <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
         </div>
 
-        <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-          <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
-        </div>
       </div>
       <div class="phrases">
         <ul>
-          <li v-for="(value, index) in mnemonicValues" v-bind:key="index">
-            {{index + 1}}.<span>{{value}}</span>
+          <li v-for="index in mnemonicSize" v-bind:key="index">
+            <span>{{index}}.</span><input type="text" name="">
           </li>
         </ul>
       </div>
     </div>
 
     <div class="button-container">
-      <router-link to="interface">
-        <b-btn class="mid-round-button-green-filled close-button">
-          {{ $t("accessWallet.accessMyWallet")}}
-        </b-btn>
-      </router-link>
+      <b-btn v-on:click="openPassword" class="mid-round-button-green-filled close-button">
+        Continue
+      </b-btn>
     </div>
     <div class="support">
       <router-link to="/">
@@ -50,25 +45,16 @@
 </template>
 
 <script>
-// Mnemonic code for generating deterministic keys
-let bip39 = require('bip39')
 
 export default {
-  props: ['networkAndAddressOpen'],
+  props: ['openPassword'],
   data () {
     return {
-      mnemonicValues: [],
-      mnemonic24: false
+      mnemonic24: false,
+      mnemonicSize: 12
     }
   },
   methods: {
-    mnemonicValueRefresh () {
-      if (this.mnemonic24 === true) {
-        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
-      } else {
-        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
-      }
-    },
     mnemonicValueBitSizeChange () {
       const left = document.querySelector('.label-left')
       const right = document.querySelector('.label-right')
@@ -76,21 +62,15 @@ export default {
       this.mnemonic24 = !this.mnemonic24
 
       if (this.mnemonic24 === true) {
-        // Regenerate new 24 Mnemonic phrases
-        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
+        this.mnemonicSize = 24
         left.classList.remove('white')
         right.classList.add('white')
       } else {
-        // Regenerate new 12 Mnemonic phrases
-        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
+        this.mnemonicSize = 12
         left.classList.add('white')
         right.classList.remove('white')
       }
     }
-  },
-  mounted () {
-    // Generate a random mnemonic
-    this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
   }
 }
 </script>

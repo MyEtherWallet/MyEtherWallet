@@ -9,7 +9,8 @@
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
     <install-metamask-modal :metamaskmodal="metamaskModalOpen"></install-metamask-modal>
-    <access-by-mnemonic-phrase-modal></access-by-mnemonic-phrase-modal>
+    <access-by-mnemonic-phrase-modal :openPassword="accessByMnemonicphrasePasswordModalOpen"></access-by-mnemonic-phrase-modal>
+    <access-by-mnemonic-phrase-password-modal></access-by-mnemonic-phrase-password-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -54,6 +55,7 @@ import PasswordModal from '../../components/PasswordModal'
 import PrivateKeyModal from '../../components/PrivateKeyModal'
 import SoftwareModal from '../../components/SoftwareModal'
 import AccessByMnemonicphraseModal from '../../components/AccessByMnemonicphraseModal'
+import AccessByMnemonicphrasePasswordModal from '../../components/AccessByMnemonicphrasePasswordModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
@@ -75,6 +77,7 @@ export default {
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
     'access-by-mnemonic-phrase-modal': AccessByMnemonicphraseModal,
+    'access-by-mnemonic-phrase-password-modal': AccessByMnemonicphrasePasswordModal,
     'access-wallet-button': AccessWalletButton
 
   },
@@ -149,6 +152,9 @@ export default {
     },
     accessByMnemonicphraseModalOpen () {
       this.$children[8].$refs.accessbymnemonicphrase.show()
+    },
+    accessByMnemonicphrasePasswordModalOpen () {
+      this.$children[9].$refs.accessbymnemonicphrasepassword.show()
     },
     fileUploaded (e) {
       this.file = e
