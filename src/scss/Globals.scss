@@ -1118,6 +1118,39 @@ h6 {
   a {
     outline: none;
   }
+
+  a:nth-child(odd) {
+    background-color: #f0f0f0;
+  }
+}
+
+.dropdown-button-2 {
+
+  .dropdown-menu {
+    padding: 0;
+  }
+
+  >button {
+    background-color: $background-color-white;
+    border: solid 1px $button--border-color-2;
+    color: $text-color-6;
+    font-family: arial;
+    min-width: 180px;
+    padding: 8px 15px;
+    text-align: left;
+  }
+
+  .active {
+    color: $text-black;
+  }
+
+  a {
+    outline: none;
+  }
+
+  a:nth-child(odd) {
+    background-color: #f0f0f0;
+  }
 }
 
 .dropdown-select-search-1 {
