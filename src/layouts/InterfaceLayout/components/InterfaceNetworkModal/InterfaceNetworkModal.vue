@@ -82,6 +82,7 @@ import store from 'store'
 import web3 from 'web3'
 
 import InterfaceBottomText from '@/components/InterfaceBottomText'
+import * as types from '@/networks/types'
 
 export default {
   components: {
@@ -90,27 +91,21 @@ export default {
   data () {
     return {
       selectedNetwork: {name: 'ETH', name_long: 'Ethereum'},
-      networks: [
-        {name: 'ETH', name_long: 'Ethereum'},
-        {name: 'ETC', name_long: 'Ethereum Classic'},
-        {name: 'ROP', name_long: 'Ropsten'},
-        {name: 'KOV', name_long: 'Kovan'},
-        {name: 'RIN', name_long: 'Rinkeby'},
-        {name: 'CUS', name_long: 'Custom'}
-      ],
-      chainID: '',
+      chainID: 1,
       port: '',
       name: '',
       url: '',
       username: '',
       password: '',
-      customNetworks: []
+      customNetworks: [],
+      networks: Object.keys(types).map(key => types[key])
     }
   },
   mounted () {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks')
     }
+    console.log(this.networks)
   },
   methods: {
     networkModalOpen () {
@@ -143,25 +138,6 @@ export default {
     },
     saveCustomNetwork () {
       let explorer = ''
-      switch (this.selectedNetwork.name) {
-        case 'ETH':
-          explorer = 'https://etherscan.io/'
-          break
-        case 'ETC':
-          explorer = 'https://gastracker.io/'
-          break
-        case 'ROP':
-          explorer = 'https://ropsten.etherscan.io/'
-          break
-        case 'KOV':
-          explorer = 'https://kovan.etherscan.io/'
-          break
-        case 'RIN':
-          explorer = 'https://rinkeby.etherscan.io/'
-          break
-        default:
-          explorer = 'https://etherscan.io/'
-      }
 
       const customNetwork = {
         auth: !!(this.password !== '' && this.username !== ''),
@@ -169,8 +145,8 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: `${explorer}address/[[txHash]]`,
-          blockExplorerTX: `${explorer}tx/[[txHash]]`,
+          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr,
+          blockExplorerTX: this.selectedNetwork.blockExplorerTX,
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0].type.contracts,
           homePage: '',
@@ -191,31 +167,14 @@ export default {
       this.$refs.authForm.classList.toggle('hidden')
     },
     switchNetwork (network) {
+      this.selectedNetwork = network
       this.$store.dispatch('switchNetwork', network)
       this.$store.dispatch('setWeb3Instance', web3)
     }
   },
   watch: {
     selectedNetwork (newVal) {
-      switch (newVal.name) {
-        case 'ETH':
-          this.chainID = 1
-          break
-        case 'ETC':
-          this.chainID = 61
-          break
-        case 'ROP':
-          this.chainID = 3
-          break
-        case 'KOV':
-          this.chainID = 42
-          break
-        case 'RIN':
-          this.chainID = 4
-          break
-        default:
-          this.chainID = this.chainID
-      }
+      this.chainID = newVal.type.chainID
     }
   }
 }
