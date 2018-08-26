@@ -149,7 +149,7 @@ SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize
-    let buffer = Buffer.from(5, chunkSize)
+    let buffer = Buffer.alloc(5, chunkSize)
 
     buffer[0] = 0x80
     buffer[1] = 0xf2
@@ -175,7 +175,7 @@ SecalotEth.prototype.signTransaction = function (path, eTx, callback) {
     buffer.writeUInt32BE(element, 6 + 4 * index)
   })
 
-  apdus.push(buffer.toStirng('hex'))
+  apdus.push(buffer.toString('hex'))
   self.comm.exchange(apdus.shift(), localCallback)
 }
 
@@ -208,8 +208,7 @@ SecalotEth.prototype.signMessage = function (path, message, callback) {
     }
   }
 
-  message =
-    '\x19Ethereum Signed Message:\n' + message.length.toString() + message
+  message = '\x19Ethereum Signed Message:\n' + message.length.toString() + message
   rawData = Buffer.from(Buffer.from(message.toString('hex'), 'hex'))
 
   while (offset !== rawData.length) {

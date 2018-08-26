@@ -100,14 +100,16 @@ export default class SecalotWallet extends HardwareWalletInterface {
     return this._getAccounts(count, offset)
   }
 
-  signTransaction (txData) { // Update
+  signTransaction (txData) {
     return this.signTxSecalot(txData)
   }
 
-  signMessage (msgData) { // Update
+  signMessage (msgData) {
     let thisMessage = msgData.data ? msgData.data : msgData
     let app = new SecalotEth(this.transport, '')
-    return app.signMessage(this.path, thisMessage)
+    return new Promise((resolve) => {
+      resolve(app.signMessage(this.path, thisMessage))
+    })
   }
 
   changeDerivationPath (path) {
@@ -228,7 +230,6 @@ export default class SecalotWallet extends HardwareWalletInterface {
           reject(error)
           return
         }
-        // uiFuncs.notifier.info("The transaction was signed but not sent. Click the blue 'Send Transaction' button to continue.");
         rawTx.v = this.sanitizeHex(result['v'])
         rawTx.r = this.sanitizeHex(result['r'])
         rawTx.s = this.sanitizeHex(result['s'])
@@ -241,7 +242,7 @@ export default class SecalotWallet extends HardwareWalletInterface {
       // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
       let app = new SecalotEth(this.transport, '')
       const tx = new EthereumjsTx(rawTx)
-      app.signTransaction(rawTx.path, tx, localCallback)
+      app.signTransaction(this.path, tx, localCallback)
     })
   }
 
