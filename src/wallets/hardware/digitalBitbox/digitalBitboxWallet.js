@@ -119,7 +119,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
 
   // ============== (End) Implementation of wallet usage methods ======================
 
-  changeDPath (path) {
+  changeDerivationPath (path) {
     this.path = path
     return this.unlockBitbox()
   }

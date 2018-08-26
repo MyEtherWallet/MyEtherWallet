@@ -9,10 +9,19 @@
             <b-dropdown-item :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
                              v-for="(val, key) in availablePaths"
                              @click="selectDPath(key)"
-                             :key="key">
+                             :key="'base' + key">
               {{val.dpath}}
             </b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item>{{
+              $t('accessWallet.customPaths')
+              }}</b-dropdown-item>
+            <b-dropdown-item :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+                             v-for="(val, key) in customPaths"
+                             @click="selectDPath(key)"
+                             :key="key">
+              {{val.dpath}}
+            </b-dropdown-item>
             <b-dropdown-item @click="showCustomPathInput">{{
               $t('accessWallet.customPath')
               }}
@@ -20,6 +29,9 @@
           </b-dropdown>
         </div>
       </div>
+      <p class="error-message-container" v-show="invalidPath !== ''">
+        The path {{invalidPath}} is not valid for this device
+      </p>
       <p class="derivation-brands" v-show="!customPathInput">{{selecteDPath.label}}</p>
       <div v-show="customPathInput">
         <!-- TODO: how to structure the path input? -->
@@ -45,14 +57,17 @@
         </ul>
 
         <ul class="address-block address-data" v-for="(details, index) in orderedAddresses"
-            v-bind:key="index">
+            v-bind:data-address="'address' + index"
+            v-bind:key="index"
+            @click="setAddress(details)"
+            v-on:click="unselectAllAddresses">
           <li>{{details.index + 1}}.</li>
           <li>{{details.address}}</li>
           <li>{{details.balance}} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
-              <input v-on:click="unselectAllAddresses" type="checkbox"/>
-              <span class="checkmark checkmark-small" @click="setAddress(details)"></span>
+              <input v-bind:id="'address' + index" v-on:click="unselectAllAddresses" type="checkbox"/>
+              <span class="checkmark checkmark-small"></span>
             </label>
           </li>
         </ul>
@@ -91,7 +106,6 @@
 </template>
 
 <script>
-
 const unit = require('ethjs-unit')
 
 export default {
@@ -104,12 +118,27 @@ export default {
       count: 5,
       hardwareAddresses: [],
       availablePaths: {},
+      customPaths: {},
       selecteDPath: '',
+      invalidPath: '',
       customPathInput: false,
-      customPath: {label: '', dpath: ''}}
+      customPath: {label: '', dpath: ''}
+    }
   },
   mounted () {
-
+    // reset component values when modal becomes hidden
+    this.$refs.networkAndAddress.$on('hidden', () => {
+      this.accessMyWalletBtnDisabled = true
+      this.walletUnlocked = false
+      this.offset = 0
+      this.count = 5
+      this.hardwareAddresses = []
+      this.availablePaths = {}
+      this.selecteDPath = ''
+      this.invalidPath = ''
+      this.customPathInput = false
+      this.customPath = {label: '', dpath: ''}
+    })
   },
   computed: {
     orderedAddresses () {
@@ -123,15 +152,16 @@ export default {
   },
   methods: {
     unselectAllAddresses: function (e) {
+      const selected = e.srcElement.parentElement.dataset.address
+        ? e.srcElement.parentElement.dataset.address
+        : e.srcElement.id
       document.querySelectorAll('.user-input-checkbox input').forEach(function (el) {
-        el.checked = false
+        el.checked = el.id === selected
       })
-      e.srcElement.checked = true
     },
     showCustomPathInput (e) {
       this.customPath = {label: '', dpath: ''}
       this.customPathInput = !this.customPathInput
-      // console.log(e.target) // todo remove dev item
     },
     addCustomPath () {
       // TODO: figure out a more precise regex
@@ -149,15 +179,19 @@ export default {
       }
     },
     selectDPath (key) {
-      this.selecteDPath = this.availablePaths[key]
-      this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
+      this.customPathInput = false
+      this.hardwareWallet.changeDerivationPath(this.availablePaths[key].dpath)
         .then(() => {
+          this.selecteDPath = this.availablePaths[key]
+          this.invalidPath = ''
           this.getAddresses()
             .then(addressSet => {
               this.hardwareAddresses = addressSet
             })
         })
         .catch(_error => {
+          // If not a valid path Inform the user
+          this.invalidPath = this.availablePaths[key].dpath
           console.error(_error)
         })
     },
@@ -187,7 +221,6 @@ export default {
         if ((this.offset + this.count) >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3
           let hardwareAddresses = []
-          console.log(this.hardwareWallet) // todo remove dev item
           this.hardwareWallet.getMultipleAccounts(count, offset)
             .then(_accounts => {
               Object.values(_accounts).forEach(async (address, i) => {
@@ -203,11 +236,13 @@ export default {
     getPaths () {
       console.log(this.hardwareWallet)
       this.selecteDPath = this.hardwareWallet.getDerivationPath()
+      // nodes
       this.availablePaths = {
-        ...this.hardwareWallet.compatibleChains,
+        ...this.hardwareWallet.compatibleChains
+      }
+      this.customPaths = {
         ...this.$store.state.customPaths
       }
-      console.log(this.availablePaths) // todo remove dev item
     }
   },
   watch: {

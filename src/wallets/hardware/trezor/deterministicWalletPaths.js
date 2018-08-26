@@ -1,45 +1,27 @@
-import {
-  AKA,
-  CLO,
-  EGEM,
-  ELLA,
-  EOSC,
-  ESN,
-  ETC,
-  ETH,
-  ETHO,
-  ETSC,
-  EXP,
-  GO,
-  KOV,
-  MUSIC,
-  POA,
-  PIRL,
-  RIN,
-  ROP,
-  TOMO,
-  UBQ
-} from '../../../configs/networks/types'
+import * as nodes from '../../../configs/networks/types'
+import store from 'store'
+import derivationPaths from './derivationPaths'
 
-const derivationPaths = {
-  [ETH.name]: 'm/44\'/60\'/0\'/0',
-  [ETC.name]: 'm/44\'/61\'/0\'/0',
-  [ROP.name]: 'm/44\'/1\'/0\'/0',
-  [RIN.name]: 'm/44\'/1\'/0\'/0',
-  [KOV.name]: 'm/44\'/1\'/0\'/0',
-  [EXP.name]: 'm/44\'/40\'/0\'/0',
-  [UBQ.name]: 'm/44\'/108\'/0\'/0',
-  [POA.name]: 'm/44\'/60\'/0\'/0',
-  [AKA.name]: 'm/44\'/200625\'/0\'/0',
-  [PIRL.name]: 'm/44\'/164\'/0\'/0',
-  [ETHO.name]: 'm/44\'/1313114\'/0\'/0',
-  [ELLA.name]: 'm/44\'/1\'/0\'/0',
-  [EGEM.name]: 'm/44\'/1\'/0\'/0',
-  [CLO.name]: 'm/44\'/1\'/0\'/0',
-  [ETSC.name]: 'm/44\'/1\'/0\'/0',
-  [MUSIC.name]: 'm/44\'/1\'/0\'/0',
-  [GO.name]: 'm/44\'/1\'/0\'/0',
-  [EOSC.name]: 'm/44\'/1\'/0\'/0',
-  [ESN.name]: 'm/44\'/1\'/0\'/0'
+function getDerivationPath (networkName) {
+  if (!networkName) {
+    if (store.get('network') !== undefined) {
+      networkName = store.get('network').type.name
+    }
+  }
+  if (paths[networkName]) {
+    return {dpath: paths[networkName], label: nodes[networkName].name_long}
+  } else {
+    return {dpath: paths[nodes.ETH.name], label: nodes[nodes.ETH.name].name_long}
+  }
 }
-export default derivationPaths
+
+const paths = {}
+
+Object.keys(derivationPaths).forEach((key) => {
+  paths[derivationPaths[key]] = {dpath: paths[key], label: nodes[key].name_long}
+})
+
+export {
+  paths,
+  getDerivationPath
+}

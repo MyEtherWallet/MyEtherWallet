@@ -1,3 +1,5 @@
+import { getDerivationPath } from './ledger/deterministicWalletPaths'
+
 export default class HardwareWalletInterface {
   constructor () {
     this.type = 'hardware'
@@ -63,8 +65,12 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required
-  changeDPath () {
-    throw new Error('changePath Not Implemented')
+  changeDerivationPath () {
+    throw new Error('changeDerivationPath Not Implemented')
+  }
+
+  changeNetwork (/* network */) {
+    throw new Error('changeNetwork Not Implemented')
   }
 
   // ============== (End) Required Utility methods ======================

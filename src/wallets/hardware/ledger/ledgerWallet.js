@@ -5,27 +5,17 @@ import HardwareWalletInterface from '../hardwareWallet-interface'
 import * as ethUtil from 'ethereumjs-util'
 import { paths, getDerivationPath } from './deterministicWalletPaths'
 
-// const NOT_SUPPORTED_ERROR_MSG =
-//   'LedgerWallet uses U2F which is not supported by your browser. ' +
-//   'Use Chrome, Opera or Firefox with a U2F extension.' +
-//   "Also make sure you're on an HTTPS connection"
-
-/**
- * THE CONNECTION STATUS, STATE, AND ACTIONS ALL OPERATE FROM THE TRANSPORT INSTANCE PASSED TO THE LEDGER APP INTERFACE
- */
 export default class LedgerWallet extends HardwareWalletInterface {
   constructor (opts) {
     super()
     let options = opts || {}
     this.brand = 'ledger'
     this.identifier = 'LedgerNanoS'
+    this.version = ''
     this.wallet = null
-    this.activeAddress = ''
-    this.activeAddressIndex = ''
     if (options.transport) this.ledgerTransport = options.transport
-    this.allowedHdPaths = options.options || ['44\'/60\'', '44\'/61\'']
     this.defaultOptions = {
-      path: this.getDerivationPath().dpath, // '44\'/60\'/0\'/0', // // ledger default derivation path
+      path: this.getDerivationPath().dpath, // ledger default derivation path
       askConfirm: false
     }
 
@@ -52,10 +42,13 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.changeNetwork = this.changeNetwork.bind(this)
   }
 
+  // ============== (Start) Expected Utility methods ======================
   static async unlock (options) {
     try {
       const wallet = new LedgerWallet(options)
-      const appConfig = wallet.getAppConfig()
+      const appConfig = await wallet.getAppConfig()
+      wallet.version = appConfig.version
+      return wallet
     } catch (e) {
       return e
     }
@@ -69,20 +62,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return getDerivationPath(networkShortName)
   }
 
-  getAddress () {
-    return this.wallet.address
-  }
-
-  getAddressString () {
-    return ethUtil.toChecksumAddress(this.getAddress())
-  }
-
-  async changeDPath (path) {
-    // return new Promise((resolve) => {
-    // this.getAppConfig()
-    //   .then((result) => {
-    //     console.log(result) // todo remove dev item
-    //   })
+  async changeDerivationPath (path) {
     try {
       this.pathComponents = this.obtainPathComponentsFromDerivationPath(path)
       this.path = path
@@ -91,8 +71,17 @@ export default class LedgerWallet extends HardwareWalletInterface {
     } catch (e) {
       return Promise.reject(e)
     }
-    // resolve()
-    // })
+  }
+
+  async changeNetwork (network) {
+    try {
+      const newPath = getDerivationPath(network.type.name)
+      await this.changeDerivationPath(newPath)
+      await this.getAccounts()
+      return Promise.resolve()
+    } catch (e) {
+      return Promise.reject(e)
+    }
   }
 
   setActiveAddress (address, index) {
@@ -105,11 +94,19 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.wallet.type = 'hardware'
   }
 
-  changeNetwork (networkId, path) {
-    this.networkId = networkId
-    this.path = path
+  // ============== (End) Expected Utility methods ======================
+
+  // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
+  getAddress () {
+    return this.wallet.address
   }
 
+  getAddressString () {
+    return ethUtil.toChecksumAddress(this.getAddress())
+  }
+  // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
+
+  // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts () {
     let _this = this
     if (arguments.length > 1 && arguments.length < 3) {
@@ -131,18 +128,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return this._signTransaction(txData)
   }
 
-  checkIfAllowedPath (path) {
-    if (!this.allowedHdPaths.some(hdPref => path.startsWith(hdPref))) {
-      throw this.makeError(
-        'Ledger derivation path allowed are ' +
-        this.allowedHdPaths.join(', ') +
-        '. ' +
-        path +
-        ' is not supported',
-        'InvalidDerivationPath'
-      )
-    }
-  }
+  // ============== (End) Implementation of wallet usage methods ======================
+
+  // ============== (Start) Internally used methods ======================
 
   makeError (msg, id) {
     const err = new Error(msg)
@@ -150,23 +138,42 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return err
   }
 
+  versionCheck (chainRegexResult) {
+    let forChecks = chainRegexResult ? (chainRegexResult.length === 3 ? chainRegexResult[2] : '0') : '0'
+    const versionParts = this.version.split('.')
+    if (/^1$|^60$|^61$/.test(forChecks)) {
+      return true
+    } else {
+      return +versionParts[1] > 3
+    }
+  }
+
   obtainPathComponentsFromDerivationPath (derivationPath) {
-    // check if derivation path follows 44'/60'/x'/n pattern
-    // const regExp = /^m\/(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/
-    const regExp = /^m?\/?(44'\/(\d+)'\/\d'\/)(\d+)$/
+    // eslint-disable-next-line no-useless-escape
+    const REGEX = /^m\s*\/(\s*44'\s*\/\s*(\d+)'\s*\/\s*(\d+)'\s*\/)\s*(\d+)\s*(\/\s*(\d+))?$/
+    const regExp = /^m?\/?(44'\/(\d+)'\/\d+'\/)$/
     const regExpAlt = /^m?\/?(44'\/(\d+)')/
     const matchResult = regExp.exec(derivationPath)
     const matchResultAlt = regExpAlt.exec(derivationPath)
+    const coinCheck = REGEX.exec(derivationPath)
     if (matchResult === null && matchResultAlt === null) {
       throw this.makeError(
         'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       )
     }
-    console.log('matchResult', matchResult) // todo remove dev item
-    console.log('matchResultAlt', matchResultAlt) // todo remove dev item
-    // if (matchResult !== null && matchResultAlt === null) return {basePath: matchResult[1], index: 0}
-    if (matchResultAlt !== null) return {basePath: matchResultAlt[1] + '/0\'/', index: 0}
+    if (matchResult !== null) {
+      return {basePath: matchResult[1], index: 0}
+    } else if (coinCheck !== null && this.versionCheck(coinCheck)) {
+      return {basePath: coinCheck[1], index: 0}
+    } else if (matchResultAlt !== null && this.versionCheck(matchResultAlt)) {
+      return {
+        basePath: matchResultAlt[1] + '/0\'/',
+        index: 0
+      }
+    } else {
+      throw this.makeError('The selected path is not compatible with the attached Ledgers Firmware version')
+    }
   }
 
   getTransport () {
@@ -198,8 +205,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
         addresses[i] = address.address
         this.addressToPathMap[address.address.toLowerCase()] = path
       }
-      console.log('addresses', addresses) // todo remove dev item
-      console.log('map', this.addressToPathMap) // todo remove dev item
       return addresses
     } finally {
       transport.close()
@@ -310,4 +315,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
         .catch((error) => { throw error })
     }
   }
+
+  // ============== (End) Internally used methods ======================
 }

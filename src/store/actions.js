@@ -71,6 +71,7 @@ const setWeb3Instance = function ({commit, state}, web3) {
 }
 
 const switchNetwork = function ({commit}, networkObj) {
+  // check if wallet is hardware.  if true, check if it supports this network. if not, do nothing
   commit('SWITCH_NETWORK', networkObj)
 }
 

@@ -67,6 +67,23 @@ export default class TrezorWallet extends HardwareWalletInterface {
     return getDerivationPath(networkShortName)
   }
 
+  changeDerivationPath (path) {
+    this.path = path
+    this.addressToWalletMap = {}
+    return this.unlockTrezor()
+  }
+
+  async changeNetwork (network) {
+    try {
+      const newPath = getDerivationPath(network.type.name)
+      await this.changeDerivationPath(newPath)
+      await this.getAccounts()
+      return Promise.resolve()
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
   // ============== (End) Expected Utility methods ======================
 
   // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
@@ -113,11 +130,6 @@ export default class TrezorWallet extends HardwareWalletInterface {
   }
 
   // ============== (End) Implementation of wallet usage methods ======================
-
-  changeDPath (path) {
-    this.path = path
-    return this.unlockTrezor()
-  }
 
   // ============== (Start) Internally used methods ======================
 
@@ -179,16 +191,6 @@ export default class TrezorWallet extends HardwareWalletInterface {
   }
 
   // (End) Internal setup methods
-
-  AddRemoveHDAddresses (isAdd) {
-    if (isAdd) this.setHDAddressesHWWallet(this.startindex, this.accountsLength)
-    else this.setHDAddressesHWWallet(this.startindex - 2 * this.accountsLength, this.accountsLength)
-  }
-
-  setHDWallet () {
-    this.wallet = this.walletsRetrieved[this.id]
-    this.wallet.type = 'default'
-  }
 
   // (Start) Internal methods underlying wallet usage methods
   async _getAccounts (count, offset) {
