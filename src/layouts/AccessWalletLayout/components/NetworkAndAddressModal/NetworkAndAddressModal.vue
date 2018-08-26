@@ -15,7 +15,8 @@
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item>{{
               $t('accessWallet.customPaths')
-              }}</b-dropdown-item>
+              }}
+            </b-dropdown-item>
             <b-dropdown-item :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
                              v-for="(val, key) in customPaths"
                              @click="selectDPath(key)"
@@ -75,8 +76,10 @@
       </div> <!-- .address-block-container -->
 
       <div class="address-nav">
-        <span @click.prevent="priorAddressSet()">&lt; {{ $t('common.previous') }}</span>
-        <span @click.prevent="nextAddressSet()" v-show="!connectionActive">{{ $t('common.next') }} &gt;</span>
+        <span v-on:click="priorAddressSet()" v-show="!connectionActive">&lt; {{ $t('common.previous') }}</span>
+        <span v-on:click="nextAddressSet()" v-show="!connectionActive">{{ $t('common.next') }} &gt;</span>
+        <!-- Probably will need to restructure a bit to allow back browsing while new addresses are retrieved-->
+        <span v-show="connectionActive" class="activeConn">&lt; {{ $t('common.previous') }}</span>
         <span v-show="connectionActive" class="activeConn">{{ $t('common.next') }} &gt;</span>
       </div>
     </div> <!-- .content-container-2 -->
@@ -135,20 +138,12 @@ export default {
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.accessMyWalletBtnDisabled = true
       this.walletUnlocked = false
-      this.offset = 0
-      this.count = 5
-      this.hardwareAddresses = []
       this.availablePaths = {}
       this.selecteDPath = ''
       this.invalidPath = ''
       this.customPathInput = false
       this.customPath = {label: '', dpath: ''}
-      this.offset = 0
-      this.count = 5
-      this.currentIndex = 0
-      this.maxIndex = 0
-      this.hardwareAddresses = []
-      this.displayAddresses = []
+      this.resetPaginationValues()
     })
   },
   computed: {
@@ -172,6 +167,14 @@ export default {
         el.checked = el.id === selected
       })
     },
+    resetPaginationValues () {
+      this.offset = 0
+      this.count = 5
+      this.currentIndex = 0
+      this.maxIndex = 0
+      this.displayAddresses = []
+      this.hardwareAddresses = []
+    },
     showCustomPathInput (e) {
       this.customPath = {label: '', dpath: ''}
       this.customPathInput = !this.customPathInput
@@ -192,48 +195,16 @@ export default {
       }
     },
     selectDPath (key) {
-      this.selecteDPath = this.availablePaths[key]
-      const baseRegEx = /([1-9]|[0-9]{2,})$/
-      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/
-      if (baseRegEx.test(this.selecteDPath.dpath)) {
-        const indexEx = baseRegEx.exec(this.selecteDPath.dpath)
-        const basePathEx = regExp.exec(this.selecteDPath.dpath)
-        const basePath = baseRegEx[0] + '/0'
-        const index = indexEx[0]
-        console.log(indexEx, basePathEx) // todo remove dev item
-        if (indexEx !== null && basePathEx !== null) {
-          this.hardwareWallet.changeDPath(basePath)
-            .then(() => {
-              this.getAddresses(5, index)
-                .then(addressSet => {
-                  this.hardwareAddresses = addressSet
-                })
-            })
-            .catch(_error => {
-              console.error(_error)
-            })
-        }
-      } else {
-        this.hardwareWallet.changeDPath(this.availablePaths[key].dpath)
-          .then(() => {
-            this.getAddresses()
-              .then(addressSet => {
-                this.hardwareAddresses = addressSet
-              })
-          })
-          .catch(_error => {
-            console.error(_error)
-          })
-      }
       // rectify with content above
       this.customPathInput = false
+      this.resetPaginationValues()
       this.hardwareWallet.changeDerivationPath(this.availablePaths[key].dpath)
         .then(() => {
           this.selecteDPath = this.availablePaths[key]
           this.invalidPath = ''
           this.getAddresses()
             .then(addressSet => {
-              this.hardwareAddresses = addressSet
+              this.displayAddresses = addressSet
             })
         })
         .catch(_error => {
@@ -250,9 +221,9 @@ export default {
       this.hardwareWallet.setActiveAddress(details.address, details.index)
     },
     priorAddressSet () {
-      if (this.currentIndex - this.count >= 0) {
-        this.currentIndex -= this.count
-        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex, this.currentIndex + this.count)
+      if (this.currentIndex - this.count > 0) {
+        this.currentIndex = this.currentIndex - this.count
+        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex - this.count, this.currentIndex)
       } else {
         this.offset = 0
         this.currentIndex = 0
@@ -260,14 +231,20 @@ export default {
       }
     },
     nextAddressSet () {
-      if (this.currentIndex + this.count > this.maxIndex) {
+      if (this.currentIndex + this.count < this.maxIndex) {
+        this.currentIndex = this.currentIndex + this.count
+        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex, this.currentIndex + this.count)
+      } else if (this.currentIndex + this.count === this.maxIndex) {
+        this.currentIndex = this.currentIndex + this.count
         this.getAddresses(this.count, this.currentIndex)
           .then(addressSet => {
             this.displayAddresses = addressSet
           })
       } else {
-        this.currentIndex += this.count
-        this.displayAddresses = this.hardwareAddresses.slice(this.currentIndex - this.count, this.currentIndex)
+        this.getAddresses(this.count, this.currentIndex)
+          .then(addressSet => {
+            this.displayAddresses = addressSet
+          })
       }
     },
     getAddresses (count = 5, offset = 0) {
@@ -283,9 +260,6 @@ export default {
                 const balance = unit.fromWei(web3.utils.toBN(rawBalance).toString(), 'ether')
                 hardwareAddresses.push({index: offset + i, address, balance})
                 this.hardwareAddresses.push({index: offset + i, address, balance})
-              })
-              this.$nextTick(() => {
-                this.hardwareAddresses.sort(this.comparator)
               })
               this.maxIndex = offset + count
               this.currentIndex = offset + count
