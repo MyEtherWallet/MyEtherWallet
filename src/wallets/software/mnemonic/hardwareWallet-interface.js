@@ -63,7 +63,7 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required
-  changeDPath () {
+  changeDerivationPath () {
     throw new Error('changePath Not Implemented')
   }
 

@@ -1,40 +1,17 @@
-import store from 'store'
-import additional from '../../hardware/deterministicWalletPaths'
-
-const selectableNetworks = new Map()
-
-const paths = {
-  testnetPath: {symbol: 'Testnets', label: 'TestNets: Ropsten, Kovan, Rinkeby', dpath: 'm/44\'/1\'/0\'/0'}, // first address: m/44'/1'/0'/0/0
-  classicPath: {symbol: 'ETC', label: 'TREZOR (ETC)', dpath: 'm/44\'/61\'/0\'/0'}, // first address: m/44'/61'/0'/0/0
-  defaultDPath: {symbol: 'ETH', label: 'Jaxx, Metamask, Exodus, imToken, TREZOR (ETH) & Digital Bitbox', dpath: 'm/44\'/60\'/0\'/0'}, // first address: m/44'/60'/0'/0/0
-  customDPath: {symbol: 'custom', label: 'Custom Path', dpath: 'm/44\'/60\'/1\'/0'} // first address: m/44'/60'/1'/0/0
-}
-
-selectableNetworks.set(paths.defaultDPath.symbol, paths.defaultDPath)
-selectableNetworks.set(paths.classicPath.symbol, paths.classicPath)
-selectableNetworks.set('ROP', paths.testnetPath)
-selectableNetworks.set('RIN', paths.testnetPath)
-selectableNetworks.set('KOV', paths.testnetPath)
-selectableNetworks.set(paths.customDPath.symbol, paths.customDPath)
-
-additional.forEach((entry) => {
-  paths[entry.chain] = entry.values
-  selectableNetworks.set(entry.values.symbol, entry.values)
-})
+import * as nodes from '../../../configs/networks/types'
+import derivationPaths from './derivationPaths'
 
 function getDerivationPath (networkName) {
-  if (!networkName) {
-    if (store.get('network') !== undefined) {
-      networkName = store.get('network').type.name
-    }
-  }
-
-  if (selectableNetworks.has(networkName)) {
-    return selectableNetworks.get(networkName)
-  } else {
-    return paths.defaultDPath
+  if (paths[networkName]) {
+    return {dpath: paths[networkName], label: nodes[networkName].name_long}
   }
 }
+
+const paths = {}
+
+Object.keys(derivationPaths).forEach((key) => {
+  paths[derivationPaths[key]] = {dpath: paths[key], label: nodes[key].name_long}
+})
 
 export {
   paths,

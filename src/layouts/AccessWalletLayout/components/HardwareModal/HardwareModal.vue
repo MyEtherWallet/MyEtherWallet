@@ -55,6 +55,11 @@ export default {
       selected: ''
     }
   },
+  mounted () {
+    this.$refs.hardware.$on('hidden', () => {
+      this.selected = ''
+    })
+  },
   methods: {
     continueAccess () {
       // todo The actual initiation of a hardware wallet should be moved to a specific file to reduce clutter here as the number of offerings increases
@@ -79,7 +84,10 @@ export default {
             })
           break
         case 'bitbox':
-          this.$emit('hardwareRequiresPassword', {walletConstructor: DigitalBitboxWallet, hardwareBrand: 'DigitalBitbox'})
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: DigitalBitboxWallet,
+            hardwareBrand: 'DigitalBitbox'
+          })
           break
         case 'secalot':
           this.$emit('hardwareRequiresPassword', {walletConstructor: SecalotWallet, hardwareBrand: 'Secalot'})

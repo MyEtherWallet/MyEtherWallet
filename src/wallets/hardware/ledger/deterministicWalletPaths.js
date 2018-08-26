@@ -1,37 +1,32 @@
-// import {
-//   AKA,
-//   ETC,
-//   ETH,
-//   ETHO,
-//   EXP,
-//   KOV,
-//   POA,
-//   PIRL,
-//   RIN,
-//   ROP,
-//   UBQ
-// } from '../../../configs/networks/types'
-
+import store from 'store'
 import * as nodes from '../../../configs/networks/types'
+import derivationPaths from './derivationPaths'
 
-const derivationPaths = {
-  [nodes.ETH.name]: 'm/44\'/60\'/0\'',
-  [nodes.ETC.name]: 'm/44\'/61\'/0\'/0',
-  [nodes.EXP.name]: 'm/44\'/40\'/0\'/0',
-  [nodes.UBQ.name]: 'm/44\'/108\'/0\'/0',
-  [nodes.POA.name]: 'm/44\'/60\'/0\'/0',
-  [nodes.AKA.name]: 'm/44\'/200625\'/0\'/0',
-  [nodes.PIRL.name]: 'm/44\'/164\'/0\'/0',
-  [nodes.ETHO.name]: 'm/44\'/1313114\'/0\'/0',
-  [nodes.ROP.name]: 'm/44\'/1\'/0\'/0',
-  [nodes.RIN.name]: 'm/44\'/1\'/0\'/0',
-  [nodes.KOV.name]: 'm/44\'/1\'/0\'/0'
+function getDerivationPath (networkName) {
+  if (!networkName) {
+    if (store.get('network') !== undefined) {
+      networkName = store.get('network').type.name
+    }
+  }
+  if (paths[networkName]) {
+    return {dpath: derivationPaths[networkName], label: derivationPaths[networkName].name_long}
+  } else {
+    return {dpath: derivationPaths[nodes.ETH.name], label: nodes[nodes.ETH.name].name_long}
+  }
 }
 
-export default derivationPaths
+function buildPathsObject () {
+  const paths = {}
 
-export function getDerivationPath (networkName) {
-  if (derivationPaths[networkName]) {
-    return {label: '', dpath: derivationPaths[networkName]}
-  }
+  Object.keys(derivationPaths).forEach((key) => {
+    paths[derivationPaths[key]] = {dpath: derivationPaths[key], label: nodes[key].name_long}
+  })
+  return paths
+}
+
+const paths = buildPathsObject()
+
+export {
+  paths,
+  getDerivationPath
 }

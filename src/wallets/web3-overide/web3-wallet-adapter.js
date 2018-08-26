@@ -121,6 +121,13 @@ export default class Web3WalletAdapter {
   }
 
   // ============== (End) Getters  ======================
+  // ============== (Start) Utility methods ======================
+
+  async changeNetwork (network) {
+    return this.wallet.changeNetwork(network)
+  }
+
+  // ============== (End) Utility methods ======================
   // ============== (Start) Operational Methods ======================
 
   _signTransaction (tx) {
@@ -131,11 +138,6 @@ export default class Web3WalletAdapter {
       if (this.wallet.isHardware && !tx.from) tx.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
 
       tx.data = tx.data ? tx.data : tx.input || '0x'
-      // if(tx.data.length > 2){
-      //   if(!this.isHex(tx.data)){
-      //     tx.data =
-      //   }
-      // }
       tx.value = tx.value || '0x'
       this.wallet.signTransaction(tx)
         .then(_result => {
@@ -173,10 +175,6 @@ export default class Web3WalletAdapter {
   // ============== (Start) Utility Methods ======================
   privateKeyAvailable () {
     return this.wallet.privateKey && (typeof this.wallet.privateKey !== 'undefined' && this.wallet.privateKey !== null)
-  }
-
-  isHex (hex) {
-    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-0x|0x)?[0-9a-f]*$/i.test(hex))
   }
 
   // checkConnection () {

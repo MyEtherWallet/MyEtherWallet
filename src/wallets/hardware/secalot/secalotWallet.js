@@ -110,7 +110,7 @@ export default class SecalotWallet extends HardwareWalletInterface {
     return app.signMessage(this.path, thisMessage)
   }
 
-  changeDPath (path) {
+  changeDerivationPath (path) {
     this.path = path
     return this.unlockSecalot()
   }

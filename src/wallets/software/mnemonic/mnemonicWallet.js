@@ -118,7 +118,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
 
   // ============== (End) Implementation of wallet usage methods ======================
 
-  async changeDPath (path) {
+  async changeDerivationPath (path) {
     this.path = path
     await this.decryptWallet({mnemonicPhrase: phrase, mnemonicPassword: pass})
   }
