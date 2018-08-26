@@ -176,7 +176,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
     this.setHDAddressesHWWallet(this.startindex, this.accountsLength, walletType)
   }
 
-  setHDAddressesHWWallet (start, limit, ledger) {
+  setHDAddressesHWWallet (start, limit) {
     this.walletsRetrieved = []
     for (var i = start; i < start + limit; i++) {
       var derivedKey = this.hdk.derive('m/' + i)
