@@ -1,1 +1,1 @@
-export { default } from './HelpCenterLayout'
+export { default } from './HelpCenterLayout';

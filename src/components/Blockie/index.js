@@ -1,1 +1,1 @@
-export { default } from './Blockie'
+export { default } from './Blockie';

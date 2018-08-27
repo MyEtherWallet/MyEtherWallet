@@ -1,16 +1,19 @@
 @import '~@/scss/GlobalVariables';
 
 %open {
+  background-color: $background-color-1;
   border: 1px solid $mew-green;
 }
 
 .currency-picker-container {
   margin-bottom: 5px;
+  min-width: 150px;
   position: relative;
 }
 
 .dropdown-container {
   border-radius: 4px;
+  display: flex;
   position: relative;
 
   &.open {
@@ -22,8 +25,9 @@
 }
 
 
-.dropdown-text-container {
-  background-color: $background-color-1;
+%dropdown-text-container-base {
+  border: 1px solid $white;
+  border-bottom: 0;
   border-radius: 4px;
   cursor: pointer;
   padding: 13px 15px;
@@ -35,6 +39,20 @@
     right: 20px;
     top: 16px;
   }
+
+  p {
+    padding-right: 15px;
+  }
+}
+
+.dropdown-text-container {
+  @extend %dropdown-text-container-base;
+  background-color: $background-color-1;
+}
+
+.dropdown-text-container-white {
+  @extend %dropdown-text-container-base;
+  background-color: $white;
 }
 
 .dropdown-search-container {
@@ -64,9 +82,8 @@
 
 .dropdown-item-container {
   background-color: $white;
-  left: -1px;
   position: absolute;
-  width: 101%;
+  width: 100%;
   z-index: 2;
 
   &.open {

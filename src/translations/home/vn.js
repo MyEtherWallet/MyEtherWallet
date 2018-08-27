@@ -26,5 +26,5 @@ const home = {
   // socialSubheading: '',
   // promoTitle1: '',
   // promoTitle2: ''
-}
-export default home
+};
+export default home;

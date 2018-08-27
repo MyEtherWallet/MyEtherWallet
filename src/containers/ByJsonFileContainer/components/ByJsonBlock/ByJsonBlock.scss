@@ -1,20 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
 .content-block {
-  flex: 1;
-  padding: 10px 15px;
-  text-align: center;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  border-radius: 4px;
+  background-color: $background-color-1;
 
-  .icon {
-    display: block;
-    height: 60px;
-    margin: 0 auto;
+  .icon-block {
+
+    .icon {
+      display: block;
+      height: 80px;
+      margin: 0 auto;
+      margin-right: 20px;
+    }
   }
 
-  h6 {
-    margin-top: 15px;
-  }
+  .text-block {
+    h6 {
+      margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: 500;
 
-  p {
-    font-size: 11px;
-    margin-top: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 20px;
+    }
   }
 }
+

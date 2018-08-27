@@ -13,19 +13,19 @@
             </h6>
             <p>
               {{ $t("privacyPol.paragraph1") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph2") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph3") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph4") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph5") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph6") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph7") }}
-              <br /><br />
+              <br ><br >
               {{ $t("privacyPol.paragraph8") }}
             </p>
           </div>
@@ -37,13 +37,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "PrivacyPolicyLayout.scss";
+@import 'PrivacyPolicyLayout.scss';
 </style>

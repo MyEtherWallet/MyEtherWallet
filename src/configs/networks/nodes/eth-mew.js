@@ -1,6 +1,4 @@
-import {
-  ETH
-} from '../types'
+import { ETH } from '../types';
 export default {
   type: ETH,
   service: 'myetherwallet.com',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

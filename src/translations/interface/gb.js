@@ -1,7 +1,7 @@
 const interfaceTranslations = {
   addCustomNode: 'Add Custom Network/Node',
   save: 'Save',
-  dontKnow: 'Don\'t know what it is?',
+  dontKnow: "Don't know what it is?",
   learnMore: 'Learn more',
   httpBasicAccess: 'HTTP Basic Access Athentication',
   tokens: 'Tokens',
@@ -10,7 +10,8 @@ const interfaceTranslations = {
   sendTx: 'Send Transaction',
   haveIssues: 'Have any issues?',
   registerDns: 'Register Domain - ENS',
-  registerDnsDesc: 'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
+  registerDnsDesc:
+    'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
   checkDomain: 'Check Domain',
   subDomain: 'Sub Domain',
   allSubDomains: 'All Sub Domains',
@@ -23,7 +24,8 @@ const interfaceTranslations = {
   registerDom: 'Register Domain',
   registerDomDesc: 'This is a function for register domain',
   domSale: 'Domain Sale',
-  domSaleDesc: 'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
+  domSaleDesc:
+    'DomainSale is a secondary market for the Ethereum Name Service that allows you to buy and sell domains that are already owned.',
   domSaleBal: 'Domain Sale Balance',
   readWriteC: 'Read / Write Contract',
   read: 'Read',
@@ -35,6 +37,7 @@ const interfaceTranslations = {
   txBalanceDetail: 'Detail',
   txNetworkTitle: 'Network',
   txSideMenuTitle: 'Send',
-  txSideMenuContract: 'Contract'
-}
-export default interfaceTranslations
+  txSideMenuContract: 'Contract',
+  txSideMenuMessage: 'Message'
+};
+export default interfaceTranslations;

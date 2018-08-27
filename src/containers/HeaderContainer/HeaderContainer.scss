@@ -4,6 +4,18 @@
   padding-top: 87px;
 }
 
+.scrollup-container {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    pointer-events: initial;
+  }
+}
+
+
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
@@ -77,6 +89,10 @@
         }
       }
 
+      .language-menu-container {
+        margin-left: 20px;
+      }
+
       .language-menu {
         margin-left: 0;
 
@@ -93,12 +109,14 @@
 
       .current-language-flag {
         display: flex;
+        align-items: center;
 
         img {
           flex: 45;
           height: 25px;
-          margin-right: 15px;
-          outline: 1px solid;
+          margin-right: 10px;
+          height: 15px;
+          border-radius: 3px;
         }
       }
 
@@ -149,18 +167,66 @@
   padding: 0 !important;
 }
 
-.get-free-wallet {
-  border: 1px solid $border-green;
-  border-radius: 4px;
-  color: $text-color-green;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 24px;
-  padding: 10px 20px;
-  transition: background-color .2s ease;
 
-  &:hover {
-    background-color: $text-color-green;
-    color: $text-white;
+.get-free-wallet {
+  position: relative;
+  animation: fadeInFromNone 0.3s ease-out;
+  animation-fill-mode:forwards;
+
+  .get-free-wallet-button {
+    border: 1px solid $border-green;
+    border-radius: 4px;
+    color: $text-color-green;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 10px 20px;
+    transition: background-color .2s ease;
+    display: block;
+    position: relative;
+
+    &:hover {
+      background-color: $text-color-green;
+      color: $text-white;
+    }
   }
-}
+
+  &.noshow {
+    animation: fadeOutFromBlock 0.3s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fadeInFromNone {
+    0% {
+      opacity: 0;
+      position: relative;
+    }
+
+    1% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+
+  @keyframes fadeOutFromBlock {
+    0% {
+      opacity: 1;
+      position: relative;
+    }
+
+    99% {
+      opacity: 0;
+      position: relative;
+    }
+
+    100% {
+      opacity: 0;
+      z-index: -1;
+      position: absolute;
+    }
+  }
+} // .get-free-wallet
+

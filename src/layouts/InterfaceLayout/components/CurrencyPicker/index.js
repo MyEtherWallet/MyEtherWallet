@@ -1,1 +1,1 @@
-export { default } from './CurrencyPicker'
+export { default } from './CurrencyPicker';

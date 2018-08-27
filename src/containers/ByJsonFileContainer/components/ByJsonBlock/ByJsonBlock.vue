@@ -1,21 +1,39 @@
 <template>
   <div class="content-block">
-    <img class="icon" :src="img"/>
-    <h6>{{title}}</h6>
-    <p>{{desc}}</p>
+    <div class="icon-block">
+      <img
+        :src="img"
+        class="icon">
+    </div>
+    <div class="text-block">
+      <h6>{{ title }}</h6>
+      <p>{{ desc }}</p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['img', 'title', 'desc'],
-  data () {
-    return {
+  props: {
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ByJsonBlock.scss";
+@import 'ByJsonBlock.scss';
 </style>

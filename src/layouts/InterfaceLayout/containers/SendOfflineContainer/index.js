@@ -1,1 +1,1 @@
-export { default } from './SendOfflineContainer'
+export { default } from './SendOfflineContainer';

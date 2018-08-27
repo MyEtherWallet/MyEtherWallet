@@ -1,1 +1,1 @@
-export { default } from './PriceBar'
+export { default } from './PriceBar';

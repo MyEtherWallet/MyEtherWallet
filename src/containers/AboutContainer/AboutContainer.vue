@@ -5,30 +5,34 @@
         <div class="circle">
           <img src="~@/assets/images/home/circle.png">
         </div>
-        <div class="star-background" id="about-mew">
+        <div 
+          id="about-mew" 
+          class="star-background">
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
                 <h2>{{ $t("home.aboutTitle") }}</h2>
                 <p class="color-white">
                   {{ $t("home.aboutSubheading") }}
-                  <br>
-                  <span class="color-white text-bold">
-                    {{ $t("home.aboutbeResponsible") }}
-                  </span>
                 </p>
                 <div class="watch-video">
                   <router-link to="/">
                     <p>
                       {{ $t("home.aboutWatchVideo") }}
-                      <i class="fa fa-caret-right" aria-hidden="true"></i>
+                      <i 
+                        class="fa fa-caret-right" 
+                        aria-hidden="true"/>
                     </p>
                   </router-link>
                 </div>
               </div>
               <div class="image-content">
-                <img class="spaceman" src="~@/assets/images/home/spaceman.png">
-                <img class="mew-icon" src="~@/assets/images/home/mew-icon.png">
+                <img 
+                  class="spaceman" 
+                  src="~@/assets/images/home/spaceman.png">
+                <img 
+                  class="mew-icon" 
+                  src="~@/assets/images/home/mew-icon.png">
               </div>
             </div>
           </div>
@@ -75,7 +79,7 @@
                 <img src="~@/assets/images/home/icon-mew-connect.svg">
               </div>
               <div class="text">
-                <h3>{{$t('common.mewConnect')}}</h3>
+                <h3>{{ $t('common.mewConnect') }}</h3>
                 <p>
                   {{ $t("home.aboutMewConnectDesc") }}
                 </p>
@@ -90,13 +94,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "AboutContainer.scss";
+@import 'AboutContainer.scss';
 </style>

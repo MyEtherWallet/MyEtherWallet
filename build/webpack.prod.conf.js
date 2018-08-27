@@ -36,6 +36,7 @@ const webpackConfig = [merge(baseWebpackConfig, {
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
+    new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new webpack.DefinePlugin({
       'process.env': env
     }),
