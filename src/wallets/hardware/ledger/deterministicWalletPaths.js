@@ -1,5 +1,5 @@
 import store from 'store'
-import * as nodes from '../../../configs/networks/types'
+import * as nodes from '../../../networks/types'
 import derivationPaths from './derivationPaths'
 
 function getDerivationPath (networkName) {
