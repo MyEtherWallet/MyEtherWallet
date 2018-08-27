@@ -1,26 +1,30 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal></finish-modal>
-    <verification-modal :mnemonicValues="mnemonicValues" :mnemonicDoneModalOpen="mnemonicDoneModalOpen"></verification-modal>
+    <finish-modal/>
+    <verification-modal
+      :mnemonic-values="mnemonicValues"
+      :mnemonic-done-modal-open="mnemonicDoneModalOpen"/>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
           <b-tabs>
-            <div class="progress-bar"></div>
-            <b-tab title="By Mnemonic Phrase" active>
-              <h3>
-                {{ $t("createWallet.byMnemonicWriteDown") }}
-                <span class="tooltip-icon">
-                  <b-btn v-b-tooltip.hover :title="$t('common.toolTip1')">?</b-btn>
-                </span>
-              </h3>
+            <div class="progress-bar"/>
+            <b-tab
+              title="By Mnemonic Phrase"
+              active>
+              <div class="title-popover">
+                <h3>{{ $t("createWallet.byMnemonicWriteDown") }}</h3>
+                <popover :popcontent="$t('popover.whatIsMessageContent')" />
+              </div>
               <div class="contents">
                 <div class="tools">
                   <div class="value-switch noselect">
                     <div class="sliding-switch">
                       <label class="switch">
-                        <input type="checkbox" />
-                        <span v-on:click="mnemonicValueBitSizeChange" class="slider round"></span>
+                        <input type="checkbox" >
+                        <span
+                          class="slider round"
+                          @click="mnemonicValueBitSizeChange"/>
                       </label>
                       <div class="labels">
                         <span class="label-left white">12</span>
@@ -30,35 +34,38 @@
                     <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
                   </div>
 
-                  <div v-on:click="mnemonicValueRefresh" class="random-button color-green noselect">
-                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                  <div
+                    class="random-button color-green noselect"
+                    @click="mnemonicValueRefresh">
+                    <i
+                      class="fa fa-refresh"
+                      aria-hidden="true"/>
                     <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
                   </div>
                 </div>
                 <div class="phrases">
                   <ul>
-                    <li v-for="(value, index) in mnemonicValues" v-bind:key="index">
-                      {{index + 1}}.<span>{{value}}</span>
+                    <li
+                      v-for="(value, index) in mnemonicValues"
+                      :key="index">
+                      {{ index + 1 }}.<span>{{ value }}</span>
                     </li>
                   </ul>
                 </div>
               </div>
               <div class="user-input">
-                <div v-on:click="mnemonicVerificationModalOpen" class="next-button large-round-button-green-filled clickable">
+                <div
+                  class="next-button large-round-button-green-filled clickable"
+                  @click="mnemonicVerificationModalOpen">
                   {{ $t("createWallet.byMnemonicAlreadyWritten") }}
                 </div>
+                <router-link to="/">
+                  <img
+                    class="icon"
+                    src="~@/assets/images/icons/printer.svg">
+                </router-link>
               </div>
-              <div class="footer-text">
-                <p>
-                  <router-link to="/">
-                    <img class="icon" src="~@/assets/images/icons/printer.svg">
-                    {{ $t("common.printWallet") }}
-                  </router-link>
-                  <span class="tooltip-icon">
-                    <b-btn v-b-tooltip.hover :title="$t('common.toolTip2')">?</b-btn>
-                  </span>
-                </p>
-              </div>
+              <input-footer />
             </b-tab>
           </b-tabs>
         </div>
@@ -68,131 +75,148 @@
 </template>
 
 <script>
-import FinishModal from './components/FinishModal'
-import VerificationModal from './components/VerificationModal'
+import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
+import FinishModal from './components/FinishModal';
+import VerificationModal from './components/VerificationModal';
 // Mnemonic code for generating deterministic keys
-let bip39 = require('bip39')
+let bip39 = require('bip39');
 
 export default {
   components: {
     'finish-modal': FinishModal,
-    'verification-modal': VerificationModal
+    'verification-modal': VerificationModal,
+    'input-footer': CreateWalletInputFooter
   },
-  data () {
+  data() {
     return {
       varificationValues: [],
       mnemonicValues: [],
       mnemonic24: false
-    }
+    };
+  },
+  mounted() {
+    // Generate a random mnemonic
+    this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
-    mnemonicValueRefresh () {
+    mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {
-        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
+        this.mnemonicValues = bip39.generateMnemonic(256).split(' ');
       } else {
-        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
+        this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
       }
     },
-    mnemonicValueBitSizeChange () {
-      const left = document.querySelector('.label-left')
-      const right = document.querySelector('.label-right')
+    mnemonicValueBitSizeChange() {
+      const left = document.querySelector('.label-left');
+      const right = document.querySelector('.label-right');
 
-      this.mnemonic24 = !this.mnemonic24
+      this.mnemonic24 = !this.mnemonic24;
 
       if (this.mnemonic24 === true) {
         // Regenerate new 24 Mnemonic phrases
-        this.mnemonicValues = bip39.generateMnemonic(256).split(' ')
-        left.classList.remove('white')
-        right.classList.add('white')
+        this.mnemonicValues = bip39.generateMnemonic(256).split(' ');
+        left.classList.remove('white');
+        right.classList.add('white');
       } else {
         // Regenerate new 12 Mnemonic phrases
-        this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
-        left.classList.add('white')
-        right.classList.remove('white')
+        this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
+        left.classList.add('white');
+        right.classList.remove('white');
       }
     },
-    mnemonicDoneModalOpen () {
-      let valid = false
+    mnemonicDoneModalOpen() {
+      let valid = false;
 
-      this.varificationValues.forEach(function (value) {
-        const userInputText = document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('input').value
+      this.varificationValues.forEach(function(value) {
+        const userInputText = document
+          .querySelector('.phrases .word[data-index="' + value.no + '"]')
+          .querySelector('input').value;
 
-        if (userInputText === document.querySelector('.phrases .word[data-index="' + value.no + '"]').querySelector('span').textContent) {
-          valid = true
+        if (
+          userInputText ===
+          document
+            .querySelector('.phrases .word[data-index="' + value.no + '"]')
+            .querySelector('span').textContent
+        ) {
+          valid = true;
         } else {
-          valid = false
+          valid = false;
         }
-      })
+      });
 
       if (valid === true) {
-        this.$children[0].$refs.done.show()
+        this.$children[0].$refs.done.show();
       }
     },
-    mnemonicVerificationModalOpen () {
+    mnemonicVerificationModalOpen() {
       // Generate random numbers to choose which blocks to hide
-      function generateNumArr (limit) {
-        let ret = []
+      function generateNumArr(limit) {
+        let ret = [];
         for (let i = 1; i < limit; i++) {
-          ret.push(i)
+          ret.push(i);
         }
 
-        return ret
+        return ret;
       }
 
-      function shuffle (array) {
-        let i = array.length
-        let j = 0
-        let temp
+      function shuffle(array) {
+        let i = array.length;
+        let j = 0;
+        let temp;
         while (i--) {
-          j = Math.floor(Math.random() * (i + 1))
+          j = Math.floor(Math.random() * (i + 1));
           // swap randomly chosen element with current element
-          temp = array[i]
-          array[i] = array[j]
-          array[j] = temp
+          temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
         }
-        return array
+        return array;
       }
 
-      let ranNums = []
-      this.varificationValues = []
+      let ranNums = [];
+      this.varificationValues = [];
 
-      document.querySelectorAll('.phrases .word').forEach(function (el) {
-        el.classList.remove('verification')
-        el.querySelector('span').classList.remove('hidden')
-        el.querySelector('input').classList.add('hidden')
-      })
+      document.querySelectorAll('.phrases .word').forEach(function(el) {
+        el.classList.remove('verification');
+        el.querySelector('span').classList.remove('hidden');
+        el.querySelector('input').classList.add('hidden');
+      });
 
       if (this.mnemonic24 === true) {
-        ranNums = shuffle(generateNumArr(25))
+        ranNums = shuffle(generateNumArr(25));
       } else {
-        ranNums = shuffle(generateNumArr(13))
+        ranNums = shuffle(generateNumArr(13));
       }
 
       // Hide 5 random mnemonic blocks
       for (let c = 0; c < 5; c++) {
-        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').classList.add('verification')
+        document
+          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
+          .classList.add('verification');
 
-        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').classList.add('hidden')
+        document
+          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
+          .querySelector('span')
+          .classList.add('hidden');
         this.varificationValues.push({
-          word: document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('span').textContent,
+          word: document
+            .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
+            .querySelector('span').textContent,
           no: ranNums[c]
-        })
+        });
 
-        document.querySelector('.phrases .word[data-index="' + ranNums[c] + '"]').querySelector('input').classList.remove('hidden')
+        document
+          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
+          .querySelector('input')
+          .classList.remove('hidden');
       }
 
-      this.$children[1].$refs.verification.show()
+      this.$children[1].$refs.verification.show();
     }
-
-  },
-  mounted () {
-    // Generate a random mnemonic
-    this.mnemonicValues = bip39.generateMnemonic(128).split(' ')
-    console.log(this.$children)
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ByMnemonicContainer.scss";
+@import 'ByMnemonicContainer.scss';
 </style>

@@ -23,6 +23,7 @@ const devWebpackConfig = [merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    https: true,
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
@@ -49,6 +50,7 @@ const devWebpackConfig = [merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),
+    new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new webpack.HotModuleReplacementPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
@@ -85,7 +87,7 @@ module.exports = new Promise((resolve, reject) => {
       // Add FriendlyErrorsPlugin
       devWebpackConfig[0].plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`Your application is running here: http://${devWebpackConfig[0].devServer.host}:${port}`],
+          messages: [`Your application is running here: https://${devWebpackConfig[0].devServer.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
         ? utils.createNotifierCallback()

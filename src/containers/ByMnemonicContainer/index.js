@@ -1,1 +1,1 @@
-export { default } from './ByMnemonicContainer'
+export { default } from './ByMnemonicContainer';

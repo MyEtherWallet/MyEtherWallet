@@ -1,1 +1,1 @@
-export { default } from './NetworkAndAddressModal'
+export { default } from './NetworkAndAddressModal';

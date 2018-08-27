@@ -17,6 +17,8 @@
       font-size: 45px;
       font-weight: 700;
       line-height: 47px;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
     }
 
     p {
@@ -111,7 +113,7 @@
       .button {
         color: $text-color-1;
         display: inline-block;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 500;
 
         img {

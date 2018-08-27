@@ -1,1 +1,1 @@
-export { default } from './GenerateTx'
+export { default } from './GenerateTx';
