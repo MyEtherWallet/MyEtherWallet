@@ -1,4 +1,4 @@
-import * as nodes from '../../../configs/networks/types'
+import * as nodes from '../../../networks/types'
 import store from 'store'
 import derivationPaths from './derivationPaths'
 

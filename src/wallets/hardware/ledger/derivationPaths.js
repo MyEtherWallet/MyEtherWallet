@@ -1,4 +1,4 @@
-import * as nodes from '../../../configs/networks/types'
+import * as nodes from '../../../networks/types'
 
 const derivationPaths = {
   [nodes.ETH.name]: 'm/44\'/60\'/0\'',
