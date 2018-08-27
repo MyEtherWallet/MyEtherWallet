@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
+  <b-modal ref="installmetamask" hide-footer class="bootstrap-modal install-modal-metamask" title="Access by MetaMask" centered>
     <div class="modal-multi-icons">
       <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
 
@@ -16,7 +16,7 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
+      <b-btn class="mid-round-button-green-filled close-button" v-on:click="metamaskmodal">
         {{ $t("accessWallet.installMetamask")}}
       </b-btn>
     </div>
@@ -33,10 +33,12 @@
 
 <script>
 export default {
-  props: ['networkAndAddressOpen'],
+  props: ['metamaskmodal'],
   data () {
     return {
     }
+  },
+  mounted () {
   }
 }
 </script>

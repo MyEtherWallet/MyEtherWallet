@@ -4,14 +4,17 @@
       <ul class="button-options">
         <li @click="select('byJson')" :class="selected === 'byJson'? 'selected': ''">
           <img class="icon" :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-json-hover.svg">
           <span>{{ $t("common.jsonF") }}</span>
         </li>
         <li @click="select('byMnem')" :class="selected === 'byMnem'? 'selected': ''">
           <img class="icon" :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-mnemonic-hover.svg">
           <span>{{$t("common.mnemonicP")}}</span>
         </li>
         <li @click="select('byPriv')" :class="selected === 'byPriv'? 'selected': ''">
           <img class="icon" :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-key-hover.svg">
           <span>{{$t("common.privKey")}}</span>
         </li>
       </ul>
@@ -35,7 +38,7 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword', 'openPrivateKeyInput'],
+  props: ['value', 'openPassword', 'openPrivateKeyInput', 'openAccessByMnemonicphraseModal'],
   data () {
     return {
       file: '',
@@ -53,16 +56,12 @@ export default {
         this.uploadClick()
       } else if (this.selected === 'byPriv') {
         this.openPrivateKeyInput()
-      } else {
-
+      } if (this.selected === 'byMnem') {
+        this.openAccessByMnemonicphraseModal()
       }
     },
     select (ref) {
-      if (this.selected !== ref) {
-        this.selected = ref
-      } else {
-        this.selected = ''
-      }
+      this.selected = ref
     },
     uploadFile (e) {
       const self = this

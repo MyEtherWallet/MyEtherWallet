@@ -5,9 +5,12 @@
     <network-and-address-modal></network-and-address-modal>
     <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"></hardware-modal>
     <metamask-modal></metamask-modal>
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
+    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen" :openAccessByMnemonicphraseModal="accessByMnemonicphraseModalOpen"></software-modal>
     <password-modal :file="file"></password-modal>
     <private-key-modal></private-key-modal>
+    <install-metamask-modal :metamaskmodal="metamaskModalOpen"></install-metamask-modal>
+    <access-by-mnemonic-phrase-modal :openPassword="accessByMnemonicphrasePasswordModalOpen"></access-by-mnemonic-phrase-modal>
+    <access-by-mnemonic-phrase-password-modal></access-by-mnemonic-phrase-password-modal>
 
     <div class="wrap">
       <div class="page-container">
@@ -45,11 +48,14 @@ import AccessWalletButton from '../../components/AccessWalletButton'
 
 import HardwareModal from '../../components/HardwareModal'
 import MetamaskModal from '../../components/MetamaskModal'
+import InstallMetamaskModal from '../../components/InstallMetamaskModal'
 import MewConnectModal from '../../components/MewConnectModal'
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
 import PasswordModal from '../../components/PasswordModal'
 import PrivateKeyModal from '../../components/PrivateKeyModal'
 import SoftwareModal from '../../components/SoftwareModal'
+import AccessByMnemonicphraseModal from '../../components/AccessByMnemonicphraseModal'
+import AccessByMnemonicphrasePasswordModal from '../../components/AccessByMnemonicphrasePasswordModal'
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
 import hardwareImg from '@/assets/images/icons/button-hardware.svg'
@@ -66,10 +72,14 @@ export default {
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
     'metamask-modal': MetamaskModal,
+    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
+    'access-by-mnemonic-phrase-modal': AccessByMnemonicphraseModal,
+    'access-by-mnemonic-phrase-password-modal': AccessByMnemonicphrasePasswordModal,
     'access-wallet-button': AccessWalletButton
+
   },
   data () {
     return {
@@ -94,7 +104,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -136,6 +146,15 @@ export default {
     privateKeyOpen () {
       this.$children[4].$refs.software.hide()
       this.$children[6].$refs.privateKey.show()
+    },
+    installMetamaskModalOpen () {
+      this.$children[7].$refs.installmetamask.show()
+    },
+    accessByMnemonicphraseModalOpen () {
+      this.$children[8].$refs.accessbymnemonicphrase.show()
+    },
+    accessByMnemonicphrasePasswordModalOpen () {
+      this.$children[9].$refs.accessbymnemonicphrasepassword.show()
     },
     fileUploaded (e) {
       this.file = e

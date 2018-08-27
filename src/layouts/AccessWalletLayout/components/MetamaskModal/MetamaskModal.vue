@@ -17,9 +17,11 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
-        {{ $t("accessWallet.accessMyWallet")}}
-      </b-btn>
+      <router-link to="interface">
+        <b-btn class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
+          {{ $t("accessWallet.accessMyWallet")}}
+        </b-btn>
+      </router-link>
     </div>
     <div class="support">
       <router-link to="/">
