@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://kovan.etherscan.io/address/[[address]]',
   chainID: 42,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.musicoin.org/account/[[address]]',
   chainID: 7762959,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

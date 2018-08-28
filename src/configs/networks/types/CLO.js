@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://cloexplorer.org/addr/[[address]]',
   chainID: 820,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };
