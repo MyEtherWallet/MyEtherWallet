@@ -10,6 +10,7 @@
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 
 ### Devop
+- Refactor network modal and sidemenu []()
 - Cleanup linting error [#54](https://github.com/MyEtherWallet/MyEtherWallet/pull/54)
 - Merge all open PRS [#53](https://github.com/MyEtherWallet/MyEtherWallet/pull/53)
 - Add Network logo and change dot colors [#49](https://github.com/MyEtherWallet/MyEtherWallet/pull/49)
