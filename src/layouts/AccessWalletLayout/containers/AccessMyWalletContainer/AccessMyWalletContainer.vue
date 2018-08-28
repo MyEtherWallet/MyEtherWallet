@@ -82,6 +82,7 @@ export default {
     'mew-connect-modal': MewConnectModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
+    'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,

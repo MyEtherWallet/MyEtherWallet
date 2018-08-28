@@ -176,9 +176,8 @@ export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'interface-container-title': InterfaceContainerTitle
+    // 'success-modal': SuccessModal
   },
   data() {
     return {
@@ -197,6 +196,18 @@ export default {
       nonce: 0,
       validAbi: false
     };
+  },
+  mounted () {
+    this.contractNamePlaceholder = store.get('localContracts') !== undefined ? `myContracts${store.get('localContracts').length}` : 'myContracts'
+    this.constructors = []
+    if (this.abi !== '') {
+      JSON.parse(this.abi).forEach(item => {
+        if (item.type === 'constructor') {
+          this.constructors.push(item)
+        }
+      })
+    }
+    this.estimateGas()
   },
   watch: {
     abi(newVal) {
@@ -314,6 +325,10 @@ export default {
             console.log(err);
           });
       }
+      this.estimateGas()
+    },
+    bytecode (newVal) {
+      this.estimateGas()
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

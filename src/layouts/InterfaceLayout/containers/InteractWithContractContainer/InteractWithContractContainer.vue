@@ -230,8 +230,6 @@
           link="/"/>
       </div>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="address" :value="value" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -254,8 +252,6 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker
-    // 'confirm-modal': ConfirmModal,
-    // 'success-modal': SuccessModal
   },
   data() {
     return {
@@ -351,7 +347,7 @@ export default {
       );
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.$store.state.wallet.getAddressString() })
+          .call({from: this.$store.state.wallet.getAddressString()})
           .then(res => {
             this.result = res;
           })
@@ -396,7 +392,7 @@ export default {
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...params)
-          .call({ from: this.$store.state.wallet.getAddressString() })
+          .call({from: this.$store.state.wallet.getAddressString()})
           .then(res => {
             this.result = res;
             this.loading = false;
@@ -413,7 +409,7 @@ export default {
         this.gasLimit = await contract.methods[this.selectedMethod.name](
           ...params
         )
-          .estimateGas({ from: this.$store.state.wallet.getAddressString() })
+          .estimateGas({from: this.$store.state.wallet.getAddressString()})
           .then(res => {
             this.transactionFee = unit.fromWei(
               unit.toWei(this.$store.state.gasPrice, 'gwei') * res,

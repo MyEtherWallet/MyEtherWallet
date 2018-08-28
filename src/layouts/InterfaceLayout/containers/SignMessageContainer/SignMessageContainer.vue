@@ -22,8 +22,8 @@
       </div>
 
       <div class="the-form">
-        <textarea 
-          ref="message" 
+        <textarea
+          ref="message"
           class="custom-textarea-1"/>
       </div>
     </div>
@@ -42,23 +42,23 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea 
-          ref="signature" 
-          class="custom-textarea-1" 
+        <textarea
+          ref="signature"
+          class="custom-textarea-1"
           name="" />
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div 
+        <div
           class="submit-button large-round-button-green-filled clickable"
           @click="signMessage">
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text 
-        :link-text="$t('interface.learnMore')" 
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>

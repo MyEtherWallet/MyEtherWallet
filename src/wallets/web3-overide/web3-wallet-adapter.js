@@ -183,6 +183,18 @@ export default class Web3WalletAdapter {
     );
   }
 
+  isHex (hex) {
+    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-0x|0x)?[0-9a-f]*$/i.test(hex))
+  }
+
+  // checkConnection () {
+  //   if (this.isHardware) {
+  //     return this.wallet.checkConnection()
+  //   } else {
+  //     return Promise.resolve(true)
+  //   }
+  // }
+
   // checkConnection () {
   //   if (this.isHardware) {
   //     return this.wallet.checkConnection()

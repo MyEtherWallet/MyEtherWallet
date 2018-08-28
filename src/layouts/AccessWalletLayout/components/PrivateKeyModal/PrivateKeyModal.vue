@@ -1,9 +1,9 @@
 <template>
-  <b-modal 
-    ref="privateKey" 
-    hide-footer 
-    class="bootstrap-modal modal-software" 
-    title="PrivateKey" 
+  <b-modal
+    ref="privateKey"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="PrivateKey"
     centered>
     <form class="private-key-form">
       <div class="input-container">

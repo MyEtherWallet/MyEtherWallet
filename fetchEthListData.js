@@ -7,7 +7,6 @@ async function fetchTokens () {
   if(!fs.existsSync(tokenFolder)) {
     fs.mkdirSync(tokenFolder)
   }
-
   const tokenList = await fetch('https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/tokens').then(res => res.json()).catch(err => console.log(err))
   const tokenFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/'
   tokenList.forEach(async (tokenFile) => {
@@ -20,7 +19,6 @@ async function fetchContracts () {
   if(!fs.existsSync(contractFolder)) {
     fs.mkdirSync(contractFolder)
   }
-
   const contractList = await fetch('https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/contracts').then(res => res.json()).catch(err => console.log(err))
   const contractFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/'
   contractList.forEach(async (contractFile) => {

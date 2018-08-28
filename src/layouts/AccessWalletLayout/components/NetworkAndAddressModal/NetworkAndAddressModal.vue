@@ -27,7 +27,6 @@
                 $t('accessWallet.customPath')
               }}
             </b-dropdown-item>
-            <b-dropdown-item ref="addCustomPathInput"><input></b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -89,6 +88,8 @@
         class="mid-round-button-green-filled close-button"
         @click.prevent="unlockWallet">
         {{ $t("common.accessMyWallet") }}
+      <b-btn class="mid-round-button-green-filled close-button">
+        {{ $t('common.continue') }}
       </b-btn>
     </div>
     <div class="support">
@@ -242,6 +243,15 @@ export default {
             });
         }
       });
+    }
+  },
+  watch: {
+    hardwareWallet (newValue) {
+      this.getPaths()
+      this.getAddresses(this.count, this.offset)
+        .then(addressSet => {
+          this.hardwareAddresses = addressSet
+        })
     }
   }
 };

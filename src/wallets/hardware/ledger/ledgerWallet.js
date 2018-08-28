@@ -139,7 +139,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     const matchResult = regExp.exec(derivationPath);
     if (matchResult === null) {
       throw this.makeError(
-        "To get multiple accounts your derivation path must follow pattern 44'/60|61'/x'/n ",
+        'To get multiple accounts your derivation path must follow pattern 44\'/60|61\'/x\'/n ',
         'InvalidDerivationPath'
       );
     }
@@ -285,13 +285,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
           'InvalidNetworkId'
         );
       }
-
       return {
-        rawTx: txData,
-        messageHash: tx.hash(), // figure out what exactly web3 is putting here
-        v: Buffer.from(result.v, 'hex'),
-        r: Buffer.from(result.r, 'hex'),
-        s: Buffer.from(result.s, 'hex'),
+        tx: {
+          ...txData,
+          v: `0x${tx.v.toString('hex')}`,
+          r: `0x${tx.r.toString('hex')}`,
+          s: `0x${tx.s.toString('hex')}`,
+          hash: tx.hash().toString('hex')
+        },
         rawTransaction: `0x${tx.serialize().toString('hex')}`
       };
     } finally {

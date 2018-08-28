@@ -59,6 +59,14 @@ export default class TrezorWallet extends HardwareWalletInterface {
     }
   }
 
+  get compatibleChains () {
+    return paths
+  }
+
+  getDerivationPath (networkShortName) {
+    return getDerivationPath(networkShortName)
+  }
+
   // ============== (End) Expected Utility methods ======================
 
   // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
@@ -261,11 +269,10 @@ export default class TrezorWallet extends HardwareWalletInterface {
         const tx = new EthereumjsTx(rawTx);
         rawTx.rawTx = JSON.stringify(rawTx);
         resolve({
-          rawTx: rawTx.rawTx,
-          messageHash: tx.hash(), // figure out what exactly web3 is putting here
-          v: Buffer.from(result.v.toString(), 'hex'),
-          r: Buffer.from(result.r, 'hex'),
-          s: Buffer.from(result.s, 'hex'),
+          tx: {
+            ...rawTx,
+            hash: tx.hash().toString('hex')
+          },
           rawTransaction: `0x${tx.serialize().toString('hex')}`
         });
       };

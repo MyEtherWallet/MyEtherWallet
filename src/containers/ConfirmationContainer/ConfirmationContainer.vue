@@ -64,6 +64,7 @@ export default {
       messageToSign: '',
       signedMessage: '',
       successMessage: '',
+      linkMessage: 'OK',
       dismissed: true
     };
   },
