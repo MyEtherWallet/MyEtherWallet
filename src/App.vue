@@ -14,6 +14,8 @@ import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import store from 'store';
 import nodeList from '@/configs/networks';
 import Web3 from 'web3';
+import ENS from 'ethereum-ens';
+import url from 'url';
 
 export default {
   name: 'App',
@@ -24,14 +26,27 @@ export default {
   },
   mounted() {
     // Can't use before mount because that lifecycle isn't called if serving via static files
+    const network =
+      store.get('network') !== undefined
+        ? store.get('network')
+        : this.$store.state.Networks['ETH'][0];
+    const hostUrl = url.parse(
+      store.get('network').url || this.$store.state.Networks['ETH'][0].url
+    );
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.host}:${network.port}${hostUrl.pathname}`
+    );
+    const sideMenu =
+      store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send';
+    const notifications =
+      store.get('notifications') !== undefined
+        ? store.get('notifications')
+        : {};
+    const gasPrice =
+      store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
     const state = {
-      web3: store.get('network')
-        ? new Web3(store.get('network').url)
-        : new Web3(this.$store.state.Networks['ETH'][0].url),
-      network:
-        store.get('network') !== undefined
-          ? store.get('network')
-          : this.$store.state.Networks['ETH'][0],
+      web3: newWeb3,
+      network: network,
       wallet: null,
       account: {
         balance: 0
@@ -42,17 +57,16 @@ export default {
       online: true,
       pageStates: {
         interface: {
-          sideMenu:
-            store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
+          sideMenu: sideMenu
         }
       },
-      notifications:
-        store.get('notifications') !== undefined
-          ? store.get('notifications')
-          : {},
-      gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
+      notifications: notifications,
+      gasPrice: gasPrice,
+      ens:
+        network.type.ensResolver !== ''
+          ? new ENS(newWeb3.currentProvider, network.type.ensResolver)
+          : {}
     };
-
     if (store.get('notifications') === undefined)
       store.set('notifications', {});
     this.$store.dispatch('setState', state);

@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://rinkeby.etherscan.io/address/[[address]]',
   chainID: 4,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: '0xe7410170f87102DF0055eB195163A03B7F2Bff4A'
 };

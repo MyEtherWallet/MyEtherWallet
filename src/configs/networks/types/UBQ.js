@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://ubiqscan.io/en/address/[[address]]',
   chainID: 8,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };
