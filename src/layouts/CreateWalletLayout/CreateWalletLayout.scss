@@ -65,12 +65,12 @@
 
   .progress-bar {
     animation-name: progreesbar-grow;
-    width: 33.33%;
+    width: 23.33%;
   }
 
   @keyframes progreesbar-grow {
     from {width: 0%;}
-    to {width: 33.33%;}
+    to {width: 23.33%;}
   }
 
   .tab-pane {

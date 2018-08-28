@@ -1,11 +1,7 @@
 <template>
   <div class="modal-container">
-    <b-modal
-      ref="balance"
-      hide-footer
-      class="bootstrap-modal balance nopadding"
-      title="Balance">
-      <div class="content-block">
+    <b-modal ref="balance" hide-footer centered class="bootstrap-modal balance nopadding" title="Balance">
+      <div class="content-block total-balance">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
           <div class="margin-left-auto total-balance-amount">
