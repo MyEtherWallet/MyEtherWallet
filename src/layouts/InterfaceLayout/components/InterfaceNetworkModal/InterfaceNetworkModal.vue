@@ -1,6 +1,6 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="network" hide-footer class="bootstrap-modal network nopadding max-height-1" title="Network">
+    <b-modal ref="network" hide-footer centered class="bootstrap-modal network nopadding max-height-1" title="Network">
       <div class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
