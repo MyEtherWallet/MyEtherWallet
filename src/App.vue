@@ -12,7 +12,7 @@ import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import store from 'store';
-import nodeList from '@/configs/networks';
+import nodeList from '@/networks';
 import Web3 from 'web3';
 import ENS from 'ethereum-ens';
 import url from 'url';
@@ -29,10 +29,8 @@ export default {
     const network =
       store.get('network') !== undefined
         ? store.get('network')
-        : this.$store.state.Networks['ETH'][0];
-    const hostUrl = url.parse(
-      store.get('network').url || this.$store.state.Networks['ETH'][0].url
-    );
+        : this.$store.state.Networks['ETH'][3];
+    const hostUrl = url.parse(network.url);
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.host}:${network.port}${hostUrl.pathname}`
     );
@@ -71,6 +69,7 @@ export default {
       store.set('notifications', {});
     this.$store.dispatch('setState', state);
     this.$store.dispatch('checkIfOnline');
+    this.$store.dispatch('switchNetwork', network);
   }
 };
 </script>
