@@ -1,3 +1,4 @@
+/* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue'
@@ -32,8 +33,8 @@ Vue.use(BootstrapVue)
 // Define vue-i18n
 Vue.use(VueI18n)
 const i18n = new VueI18n({
-  locale: 'gb',
-  fallbackLocale: 'gb',
+  locale: 'en_US',
+  fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true
 })
