@@ -45,6 +45,7 @@ const common = {
   // interactWcontract: '',
   // depContract: ''
   // signMessage: '',
-  // verifyMessage: ''
+  // verifyMessage: '',
+  // To Address: ''
 };
 export default common;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <interface-balance-modal :balance="parsedBalance"/>
+    <interface-balance-modal :balance="balance"/>
     <div @click="balanceModalOpen">
       <div class="info-block balance">
         <div class="block-image">
@@ -14,7 +14,7 @@
             <div class="balance-text-container">
               <div
                 v-show="balance !== undefined"
-                class="balance-text"> <p>{{ parsedBalance }}</p> <p>&nbsp;ETH</p></div>
+                class="balance-text"> <p>{{ balance }}</p> <p>&nbsp;ETH</p></div>
               <i
                 v-show="balance === undefined"
                 class="fa fa-spin fa-spinner"/>
@@ -31,7 +31,6 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-const unit = require('ethjs-unit');
 
 export default {
   components: {
@@ -44,25 +43,7 @@ export default {
     }
   },
   data() {
-    return {
-      parsedBalance: '0'
-    };
-  },
-  watch: {
-    balance() {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
-      );
-    }
-  },
-  mounted() {
-    if (this.balance && this.balance !== undefined) {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
-      );
-    }
+    return {};
   },
   methods: {
     balanceModalOpen() {

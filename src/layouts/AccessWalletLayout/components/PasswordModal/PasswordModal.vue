@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Worker from '@/workers/unlockWallet.worker.js';
+import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 import { BasicWallet } from '@/wallets';
 export default {
   props: {

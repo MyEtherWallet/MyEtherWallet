@@ -1,7 +1,7 @@
 import * as types from './types';
 import * as nodes from './nodes';
 
-let nodeList = {};
+const nodeList = {};
 
 Object.keys(types).forEach(key => {
   nodeList[key] = [];

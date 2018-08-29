@@ -21,8 +21,7 @@
           </div>
           <send-currency-container
             v-show="currentTab === 'send' || currentTab === ''"
-            :tokens-with-balance="tokensWithBalance"
-            :address="address"/>
+            :tokens-with-balance="tokensWithBalance"/>
           <send-offline-container v-show="currentTab === 'offline'"/>
           <swap-container v-show="currentTab === 'swap'"/>
           <dapps-container v-show="currentTab === 'dapps'"/>
@@ -213,7 +212,7 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            let denominator = web3.utils
+            const denominator = web3.utils
               .toBN(10)
               .pow(web3.utils.toBN(token.decimals));
             tokenBalance = web3.utils
@@ -238,9 +237,8 @@ export default {
             return -1;
           } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
             return 1;
-          } else {
-            return 0;
           }
+          return 0;
         });
       } else {
         const tokenWithBalance = [];
@@ -279,10 +277,11 @@ export default {
         });
     },
     getBalance() {
-      this.$store.state.web3.eth
+      const web3 = this.$store.state.web3;
+      web3.eth
         .getBalance(this.address)
         .then(res => {
-          this.balance = res;
+          this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', this.balance);
         })
         .catch(err => {

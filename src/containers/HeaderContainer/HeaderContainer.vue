@@ -164,10 +164,6 @@ export default {
     },
     showNotifications() {
       this.$children[6].$refs.notification.show();
-    },
-    onPageScroll() {
-      const topPos = this.$root.$el.getBoundingClientRect().top;
-      this.isPageOnTop = !(topPos < -150);
     }
   },
   mounted() {
@@ -199,7 +195,7 @@ export default {
   },
   methods: {
     languageItemClicked(e) {
-      let flag = e.target.getAttribute('data-flag-name');
+      const flag = e.target.getAttribute('data-flag-name');
 
       this.$root._i18n.locale = flag;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
@@ -215,6 +211,10 @@ export default {
     },
     showNotifications() {
       this.$children[6].$refs.notification.show();
+    },
+    onPageScroll() {
+      const topPos = this.$root.$el.getBoundingClientRect().top;
+      this.isPageOnTop = !(topPos < -150);
     }
   }
 };

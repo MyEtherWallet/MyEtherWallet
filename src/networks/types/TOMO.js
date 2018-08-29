@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.tomocoin.io/#/address/[[address]]',
   chainID: 40686,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

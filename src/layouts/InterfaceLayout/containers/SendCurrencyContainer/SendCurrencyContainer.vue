@@ -37,8 +37,10 @@
           <div class="title">
             <h4>{{ $t("interface.sendTxToAddr") }}
               <blockie
-                v-show="addressValid && toAddress.length !== 0"
-                :address="toAddress"
+                v-show="validAddress && address.length !== 0"
+                :address="address"
+                width="32px"
+                height="32px"
                 class="blockie-image"/>
             </h4>
 
@@ -50,17 +52,14 @@
           </div>
           <div class="the-form address-block">
             <textarea
+              v-ens-resolver="address"
               ref="address"
-              v-model="toAddress"
+              v-model="address"
               name="name"
               autocomplete="off"/>
             <i
-              :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
+              :class="[validAddress && address.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
               aria-hidden="true"/>
-          </div>
-          <div class="error-message-container">
-            <p v-if="toAddress.length === 0 && toAddress === ''">Can't be empty</p>
-            <p v-show="!addressValid && toAddress !== ''">Invalid address</p>
           </div>
         </div>
       </div>
@@ -149,20 +148,11 @@
 
       <div class="submit-button-container">
         <div
-          :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+          :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
           @click="confirmationModalOpen">
           {{ $t('interface.sendTx') }}
         </div>
-        <interface-bottom-text
-          :link-text="$t('interface.learnMore')"
-          :question="$t('interface.haveIssues')"
-          link="/"/>
       </div>
-      <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-      <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-      <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
-      <!--:nonce="nonce + 1"></confirm-modal>-->
-      <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
     </div>
 </div></template>
 
@@ -187,10 +177,6 @@ export default {
     'currency-picker': CurrencyPicker
   },
   props: {
-    address: {
-      type: String,
-      default: ''
-    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -201,7 +187,7 @@ export default {
   data() {
     return {
       advancedExpend: false,
-      addressValid: true,
+      validAddress: true,
       amount: 0,
       amountValid: true,
       nonce: 0,
@@ -209,11 +195,12 @@ export default {
       data: '0x',
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
-      toAddress: '',
+      address: '',
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
-      signedTx: ''
+      signedTx: '',
+      resolvedAddress: ''
     };
   },
   computed: {
@@ -222,13 +209,13 @@ export default {
     })
   },
   watch: {
-    toAddress(newVal) {
-      this.toAddress = newVal;
+    address(newVal) {
+      this.address = newVal;
       if (this.verifyAddr()) {
-        this.addressValid = false;
+        this.validAddress = false;
       } else {
         this.estimateGas();
-        this.addressValid = true;
+        this.validAddress = true;
       }
     },
     parsedBalance(newVal) {
@@ -290,7 +277,7 @@ export default {
       this.data = isEth
         ? this.data
         : contract.methods
-            .transfer(this.toAddress, unit.toWei(this.amount, 'ether'))
+            .transfer(this.address, unit.toWei(this.amount, 'ether'))
             .encodeABI();
 
       this.raw = {
@@ -303,11 +290,11 @@ export default {
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.toAddress : this.selectedCurrency.addr,
+        to: isEth ? this.address : this.selectedCurrency.addr,
         data: this.data
       };
 
-      if (this.toAddress === '') {
+      if (this.address === '') {
         delete this.raw['to'];
       }
 
@@ -367,7 +354,7 @@ export default {
         ];
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
         this.data = contract.methods
-          .transfer(this.toAddress, this.amount)
+          .transfer(this.address, this.amount)
           .encodeABI();
       } else {
         this.data = '0x';
@@ -397,13 +384,12 @@ export default {
         });
     },
     verifyAddr() {
-      if (this.toAddress.length !== 0 && this.toAddress !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.toAddress);
+      if (this.address.length !== 0 && this.address !== '') {
+        const valid = this.$store.state.web3.utils.isAddress(this.address);
         if (!valid) {
           return true;
-        } else {
-          return false;
         }
+        return false;
       }
     }
   }

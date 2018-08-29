@@ -17,7 +17,7 @@ SecalotUsb.normal64 = base64 =>
 
 SecalotUsb.prototype.u2fCallback = function(response, callback) {
   if (typeof response['signatureData'] !== 'undefined') {
-    let data = Buffer.from(
+    const data = Buffer.from(
       SecalotUsb.normal64(response['signatureData']),
       'base64'
     );
@@ -28,12 +28,12 @@ SecalotUsb.prototype.u2fCallback = function(response, callback) {
 };
 
 SecalotUsb.prototype.exchange = function(apduHex, callback) {
-  let apdu = Buffer.from('1122334455667788' + apduHex, 'hex');
-  let challenge = Buffer.from(
+  const apdu = Buffer.from('1122334455667788' + apduHex, 'hex');
+  const challenge = Buffer.from(
     '0000000000000000000000000000000000000000000000000000000000000000',
     'hex'
   );
-  let key = {};
+  const key = {};
   key['version'] = 'U2F_V2';
   key['keyHandle'] = SecalotUsb.webSafe64(apdu.toString('base64'));
   const self = this;

@@ -1,4 +1,4 @@
-let wallet = {
+const wallet = {
   kdf: 'scrypt',
   n: 131072
 };

@@ -8,7 +8,7 @@ import { paths, getDerivationPath } from './deterministicWalletPaths';
 export default class LedgerWallet extends HardwareWalletInterface {
   constructor(opts) {
     super();
-    let options = opts || {};
+    const options = opts || {};
     this.brand = 'ledger';
     this.identifier = 'LedgerNanoS';
     this.version = '';
@@ -112,12 +112,11 @@ export default class LedgerWallet extends HardwareWalletInterface {
 
   // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts() {
-    let _this = this;
+    const _this = this;
     if (arguments.length > 1 && arguments.length < 3) {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
-    } else {
-      return _this._getAccounts();
     }
+    return _this._getAccounts();
   }
 
   getMultipleAccounts(count, offset) {
@@ -143,7 +142,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   versionCheck(chainRegexResult) {
-    let forChecks = chainRegexResult
+    const forChecks = chainRegexResult
       ? chainRegexResult.length === 3
         ? chainRegexResult[2]
         : '0'
@@ -151,9 +150,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
     const versionParts = this.version.split('.');
     if (/^1$|^60$|^61$/.test(forChecks)) {
       return true;
-    } else {
-      return +versionParts[1] > 3;
     }
+    return +versionParts[1] > 3;
   }
 
   obtainPathComponentsFromDerivationPath(derivationPath) {
@@ -179,11 +177,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
         basePath: matchResultAlt[1] + "/0'/",
         index: 0
       };
-    } else {
-      throw this.makeError(
-        'The selected path is not compatible with the attached Ledgers Firmware version'
-      );
     }
+    throw this.makeError(
+      'The selected path is not compatible with the attached Ledgers Firmware version'
+    );
   }
 
   getTransport() {
@@ -195,9 +192,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
       this.connectionOpened = true;
       if (this.ledgerTransport) {
         return this.ledgerTransport.create(3000, 3000);
-      } else {
-        return u2fTransport.create(3000, 3000);
       }
+      return u2fTransport.create(3000, 3000);
     }
   }
 
@@ -256,18 +252,17 @@ export default class LedgerWallet extends HardwareWalletInterface {
       path = this.addressToPathMap[data.from.toLowerCase()];
       if (!path) throw new Error("address unknown '" + data.from + "'");
       return path;
-    } else {
-      path = this.addressToPathMap[data.from.toLowerCase()];
-      if (!path) throw new Error("address unknown '" + data.from + "'");
-      return path;
     }
+    path = this.addressToPathMap[data.from.toLowerCase()];
+    if (!path) throw new Error("address unknown '" + data.from + "'");
+    return path;
   }
 
   async _signPersonalMessage(msgData) {
     const path = await this.checkIfKnownAddress(msgData);
     const transport = await this.getTransport();
     try {
-      let thisMessage = msgData.data ? msgData.data : msgData;
+      const thisMessage = msgData.data ? msgData.data : msgData;
       const eth = new Ledger(transport);
       const result = await eth.signPersonalMessage(
         path,

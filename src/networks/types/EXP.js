@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'http://www.gander.tech/address/[[address]]',
   chainID: 2,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

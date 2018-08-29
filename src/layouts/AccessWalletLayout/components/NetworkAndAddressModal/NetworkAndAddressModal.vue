@@ -175,7 +175,7 @@ export default {
   },
   computed: {
     orderedAddresses() {
-      let addressSet = [...this.displayAddresses];
+      const addressSet = [...this.displayAddresses];
       addressSet.sort(this.comparator);
       return addressSet.sort(this.comparator);
     }
@@ -304,7 +304,7 @@ export default {
         if (offset + count > this.maxIndex) {
           this.connectionActive = !this.connectionActive;
           const web3 = this.$store.state.web3;
-          let hardwareAddresses = [];
+          const hardwareAddresses = [];
           this.hardwareWallet
             .getMultipleAccounts(count, offset)
             .then(_accounts => {

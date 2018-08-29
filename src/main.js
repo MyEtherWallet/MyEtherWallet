@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue';
 import InfiniteSlider from 'vue-infinite-slide-bar';
+import VueWorker from 'vue-worker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -14,6 +15,9 @@ import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import PopOver from '@/components/PopOver';
 
+// Import Directives
+import ClickOutside from '@/directives/ClickOutside';
+import EnsResolver from '@/directives/EnsResolver';
 // etc
 import languages from './translations';
 
@@ -25,57 +29,8 @@ Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
 // Directives!!!
-Vue.directive('click-outside', {
-  bind: function(el, binding, vnode) {
-    document.body.addEventListener('click', function() {
-      if (vnode.context.open === true) {
-        vnode.context.openDropdown();
-      }
-    });
-
-    el.addEventListener('click', function(e) {
-      e.stopPropagation();
-    });
-  },
-  unbind: function(el, binding, vnode) {
-    document.body.removeEventListener('click', function() {
-      if (vnode.context.open === true) {
-        vnode.context.openDropdown();
-      }
-    });
-    // Directives!!!
-    Vue.directive('click-outside', {
-      bind: function(el, binding, vnode) {
-        document.body.addEventListener('click', function() {
-          if (vnode.context.open === true) {
-            vnode.context.openDropdown();
-          }
-        });
-
-        el.addEventListener('click', function(e) {
-          e.stopPropagation();
-        });
-      },
-      unbind: function(el, binding, vnode) {
-        document.body.removeEventListener('click', function() {
-          if (vnode.context.open === true) {
-            vnode.context.openDropdown();
-          }
-        });
-
-        el.removeEventListener('click', function(e) {
-          e.stopPropagation();
-        });
-      }
-    });
-
-    Vue.config.productionTip = false;
-
-    el.removeEventListener('click', function(e) {
-      e.stopPropagation();
-    });
-  }
-});
+Vue.directive('click-outside', ClickOutside);
+Vue.directive('ens-resolver', EnsResolver);
 
 Vue.config.productionTip = false;
 
@@ -86,6 +41,7 @@ Vue.use(BootstrapVue);
 
 // Define vue-i18n
 Vue.use(VueI18n);
+Vue.use(VueWorker);
 const i18n = new VueI18n({
   locale: 'gb',
   fallbackLocale: 'gb',
@@ -101,10 +57,8 @@ Vue.filter('capitalize', function(value) {
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   i18n,
   router,
   store,
-  components: { App },
-  template: '<App/>'
-});
+  render: h => h(App)
+}).$mount('#app');

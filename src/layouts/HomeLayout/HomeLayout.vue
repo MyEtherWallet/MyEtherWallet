@@ -29,7 +29,9 @@ export default {
   },
   data() {
     return {
-      online: true
+      online: true,
+      address: '',
+      resolvedAddress: ''
     };
   },
   watch: {

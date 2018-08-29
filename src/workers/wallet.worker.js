@@ -1,7 +1,7 @@
 import { Wallet, Configs } from '@/helpers';
 
 function create(password) {
-  let createdWallet = {};
+  const createdWallet = {};
   const wallet = new Wallet.generate();
   createdWallet.walletJson = wallet.toV3(password, {
     kdf: Configs.wallet.kdf,
@@ -13,7 +13,7 @@ function create(password) {
 
 onmessage = function(event) {
   if (event.data.type === 'createWallet') {
-    let workerResult = create(event.data.data[0]);
+    const workerResult = create(event.data.data[0]);
     postMessage(workerResult);
   }
 };
