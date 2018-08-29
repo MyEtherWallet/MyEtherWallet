@@ -3,6 +3,9 @@
     <interface-network-modal></interface-network-modal>
     <div v-on:click="networkModalOpen">
       <div class="info-block network">
+        <div class="helper">
+          <popover :popcontent="$t('popover.whatIsMessageContent')" :popovertype="'A'" />
+        </div>
         <div class="block-image">
           <img class="icon" src="~@/assets/images/icons/network.svg">
         </div>

@@ -1,5 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
+
 .modal-container {
   .network {
     .content-block {
@@ -31,21 +32,6 @@
           width: 6px;
         }
 
-        &.dot-green::before {
-          background-color: $light-green-3;
-        }
-
-        &.dot-bluegreen::before {
-          background-color: $light-blue-5;
-        }
-
-        &.dot-blue::before {
-          background-color: $light-violet-1;
-        }
-
-        &.dot-orange::before {
-          background-color: $light-orange;
-        }
       }
 
       .flex-container {
@@ -57,6 +43,7 @@
       }
 
       .grid-3 {
+        padding: 0 20px;
         display: grid;
         grid-template-columns: auto auto auto;
 
@@ -127,5 +114,14 @@
   i {
     cursor: pointer;
     margin-left: 10px;
+  }
+}
+
+.network-title {
+  display: flex;
+  align-items: center;
+  img {
+    height: 25px;
+    margin-right: 13px;
   }
 }
