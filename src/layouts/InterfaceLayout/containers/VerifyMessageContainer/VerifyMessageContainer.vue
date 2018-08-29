@@ -102,7 +102,7 @@ export default {
         hash = this.$store.state.web3.utils.sha3(json.msg);
       }
 
-      let pubKey = MessageUtil.ecrecover(
+      const pubKey = MessageUtil.ecrecover(
         hash,
         sig[64],
         sig.slice(0, 32),

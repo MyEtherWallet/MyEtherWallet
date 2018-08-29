@@ -231,17 +231,17 @@ export default {
   },
   methods: {
     openContent(element) {
-      var openButton = document.querySelector('.' + element + ' .open');
-      var closeButton = document.querySelector('.' + element + ' .close');
-      var content = document.querySelector('.' + element + ' .content-links');
+      const openButton = document.querySelector('.' + element + ' .open');
+      const closeButton = document.querySelector('.' + element + ' .close');
+      const content = document.querySelector('.' + element + ' .content-links');
       openButton.style.display = 'none';
       closeButton.style.display = 'block';
       content.classList.remove('mobile-hide');
     },
     closeContent(element) {
-      var openButton = document.querySelector('.' + element + ' .open');
-      var closeButton = document.querySelector('.' + element + ' .close');
-      var content = document.querySelector('.' + element + ' .content-links');
+      const openButton = document.querySelector('.' + element + ' .open');
+      const closeButton = document.querySelector('.' + element + ' .close');
+      const content = document.querySelector('.' + element + ' .content-links');
       openButton.style.display = 'block';
       closeButton.style.display = 'none';
       content.classList.add('mobile-hide');

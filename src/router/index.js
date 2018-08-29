@@ -73,8 +73,7 @@ export default new Router({
       return {
         selector: to.hash
       };
-    } else {
-      window.scrollTo(0, 0);
     }
+    window.scrollTo(0, 0);
   }
 });

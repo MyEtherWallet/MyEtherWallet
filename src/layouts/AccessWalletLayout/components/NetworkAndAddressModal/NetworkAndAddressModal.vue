@@ -224,7 +224,7 @@ export default {
       return new Promise(resolve => {
         if (this.offset + this.count >= this.hardwareAddresses.length) {
           const web3 = this.$store.state.web3;
-          let hardwareAddresses = [];
+          const hardwareAddresses = [];
           this.hardwareWallet
             .getMultipleAccounts(count, offset)
             .then(_accounts => {

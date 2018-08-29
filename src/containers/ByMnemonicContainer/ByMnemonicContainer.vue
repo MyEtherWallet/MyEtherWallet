@@ -79,7 +79,7 @@ import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/Cre
 import FinishModal from './components/FinishModal';
 import VerificationModal from './components/VerificationModal';
 // Mnemonic code for generating deterministic keys
-let bip39 = require('bip39');
+const bip39 = require('bip39');
 
 export default {
   components: {
@@ -151,7 +151,7 @@ export default {
     mnemonicVerificationModalOpen() {
       // Generate random numbers to choose which blocks to hide
       function generateNumArr(limit) {
-        let ret = [];
+        const ret = [];
         for (let i = 1; i < limit; i++) {
           ret.push(i);
         }

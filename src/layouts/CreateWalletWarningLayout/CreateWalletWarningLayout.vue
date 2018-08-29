@@ -84,7 +84,7 @@ export default {
     };
   },
   mounted: function() {
-    var _this = this;
+    const _this = this;
 
     window.addEventListener('wheel', function(e) {
       if (e.deltaY < 0) {
