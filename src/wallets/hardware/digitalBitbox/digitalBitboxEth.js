@@ -16,7 +16,7 @@ import * as HDKey from 'hdkey'
 var DigitalBitboxEth = function (comm, sec) {
   this.comm = comm
   DigitalBitboxEth.sec = sec || DigitalBitboxEth.sec
-  this.key = Crypto.createHash('sha256').update(new Buffer(DigitalBitboxEth.sec, 'utf8')).digest()
+  this.key = Crypto.createHash('sha256').update(Buffer.from(DigitalBitboxEth.sec, 'utf8')).digest()
   this.key = Crypto.createHash('sha256').update(this.key).digest()
   clearTimeout(DigitalBitboxEth.to)
   DigitalBitboxEth.to = setTimeout(function () { DigitalBitboxEth.sec = '' }, 60000)
@@ -28,9 +28,9 @@ DigitalBitboxEth.to = null
 DigitalBitboxEth.aes_cbc_b64_decrypt = function (ciphertext, key) {
   var res
   try {
-    var ub64 = new Buffer(ciphertext, 'base64').toString('binary')
-    var iv = new Buffer(ub64.slice(0, 16), 'binary')
-    var enc = new Buffer(ub64.slice(16), 'binary')
+    var ub64 = Buffer.from(ciphertext, 'base64').toString('binary')
+    var iv = Buffer.from(ub64.slice(0, 16), 'binary')
+    var enc = Buffer.from(ub64.slice(16), 'binary')
     var decipher = Crypto.createDecipheriv('aes-256-cbc', key, iv)
     var dec = decipher.update(enc) + decipher.final()
     res = dec.toString('utf8')
@@ -129,7 +129,7 @@ DigitalBitboxEth.signGeneric = function (self, path, chainId, hashToSign, callba
           }
           if ('sign' in response) {
             var vOffset = chainId ? chainId * 2 + 8 : 0
-            var v = new Buffer([parseInt(response.sign[0].recid, 16) + 27 + vOffset])
+            var v = Buffer.from([parseInt(response.sign[0].recid, 16) + 27 + vOffset])
             var result = {
               v: v.toString('hex'),
               r: response.sign[0].sig.slice(0, 64),
