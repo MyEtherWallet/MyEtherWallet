@@ -1,5 +1,4 @@
-import overide from '@/helpers/web3-overide/web3-overide-mew';
-import WalletWrapper from '@/helpers/web3-overide/web3-wallet-adapter';
+import { overide, WalletWrapper } from '@/wallets';
 
 const addNotification = function({ commit, state }, val) {
   const newNotif = {};
@@ -17,6 +16,12 @@ const addNotification = function({ commit, state }, val) {
     expanded: false
   });
   commit('ADD_NOTIFICATION', newNotif);
+};
+
+const addCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
+  commit('ADD_CUSTOM_PATH', newPaths);
 };
 
 const checkIfOnline = function({ commit }) {
@@ -91,6 +96,7 @@ const updatePageState = function({ commit }, arr) {
 
 export default {
   addNotification,
+  addCustomPath,
   checkIfOnline,
   clearWallet,
   createAndSignTx,

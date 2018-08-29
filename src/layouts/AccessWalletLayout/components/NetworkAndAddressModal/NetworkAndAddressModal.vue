@@ -74,9 +74,7 @@
     </div> <!-- .content-container-2 -->
 
     <div class="accept-terms">
-      <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }} <a href="/">{{
-        $t('common.terms')
-      }}</a>.
+      <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }} <a href="/">{{ $t('common.terms') }}</a>
         <input
           type="checkbox"
           @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled">
@@ -103,13 +101,6 @@
 </template>
 
 <script>
-import {
-  paths,
-  ledger,
-  trezor,
-  getDerivationPath
-} from '@/helpers/web3-overide/hardware/deterministicWalletPaths';
-
 const unit = require('ethjs-unit');
 
 export default {
@@ -130,7 +121,8 @@ export default {
       hardwareAddresses: [],
       availablePaths: {},
       selecteDPath: '',
-      customPathInput: false
+      customPathInput: false,
+      customPath: { label: '', dpath: '' }
     };
   },
   computed: {
@@ -147,32 +139,13 @@ export default {
   },
   watch: {
     hardwareWallet() {
+      this.getPaths();
       this.getAddresses(this.count, this.offset).then(addressSet => {
         this.hardwareAddresses = addressSet;
       });
     }
   },
-  mounted() {
-    this.selecteDPath = getDerivationPath(
-      this.$store.state.network.type.name,
-      this.hardwareWallet.brand
-    );
-    if (this.hardwareWallet.brand === 'ledger') {
-      this.availablePaths = {
-        ...paths,
-        ...ledger
-      };
-    } else if (this.hardwareWallet.brand === 'trezor') {
-      this.availablePaths = {
-        ...paths,
-        ...trezor
-      };
-    } else {
-      this.availablePaths = {
-        ...paths
-      };
-    }
-  },
+  mounted() {},
   methods: {
     unselectAllAddresses: function(e) {
       document
@@ -182,9 +155,24 @@ export default {
         });
       e.srcElement.checked = true;
     },
-    showCustomPathInput(e) {
-      // eslint-disable-next-line no-console
-      console.log(e.target); // todo remove dev item
+    showCustomPathInput() {
+      this.customPath = { label: '', dpath: '' };
+      this.customPathInput = !this.customPathInput;
+    },
+    addCustomPath() {
+      // TODO: figure out a more precise regex
+      // eslint-disable-next-line no-useless-escape
+      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
+      if (regExp.test(this.customPath.dpath)) {
+        this.$store.dispatch('addCustomPath', this.customPath).then(() => {
+          this.getPaths();
+        });
+        this.showCustomPathInput(); // reset the path input
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(this.customPath.dpath); // todo remove dev item
+        // TODO: add indication of an invalid path
+      }
     },
     selectDPath(key) {
       this.selecteDPath = this.availablePaths[key];
@@ -231,7 +219,7 @@ export default {
               Object.values(_accounts).forEach(async (address, i) => {
                 const rawBalance = await this.$store.state.web3.eth.getBalance(
                   address
-                );
+                ); // <- Throws because network (web3) not yet initialized
                 const balance = unit.fromWei(
                   web3.utils.toBN(rawBalance).toString(),
                   'ether'
@@ -242,6 +230,13 @@ export default {
             });
         }
       });
+    },
+    getPaths() {
+      this.selecteDPath = this.hardwareWallet.getDerivationPath();
+      this.availablePaths = {
+        ...this.hardwareWallet.compatibleChains,
+        ...this.$store.state.customPaths
+      };
     }
   }
 };

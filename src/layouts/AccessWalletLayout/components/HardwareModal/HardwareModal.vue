@@ -12,7 +12,6 @@
         <li
           :class="selected === 'ledger'? 'active': ''"
           @click="select('ledger')">
-          <!--<img class="icon" :src="selected === 'ledger'? require('@/assets/images/icons/button-ledger.png') : require('@/assets/images/icons/button-ledger-hover.png')">-->
           <img
             class="icon"
             src="~@/assets/images/icons/button-ledger.png">
@@ -57,8 +56,6 @@
       </ul>
     </div>
     <div class="button-container">
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
       <div
         :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
         @click="continueAccess">
@@ -77,7 +74,12 @@
 </template>
 
 <script>
-import { LedgerWallet, TrezorWallet } from '@/helpers/web3-overide/hardware';
+import {
+  LedgerWallet,
+  DigitalBitboxWallet,
+  TrezorWallet,
+  SecalotWallet
+} from '@/wallets';
 
 export default {
   props: {
@@ -119,6 +121,18 @@ export default {
               // eslint-disable-next-line no-console
               console.error(_error); // todo replace with proper error
             });
+          break;
+        case 'bitbox':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: DigitalBitboxWallet,
+            hardwareBrand: 'DigitalBitbox'
+          });
+          break;
+        case 'secalot':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: SecalotWallet,
+            hardwareBrand: 'Secalot'
+          });
           break;
         default:
           // eslint-disable-next-line no-console

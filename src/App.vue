@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container/>
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -40,6 +40,10 @@ export default {
       store.get('notifications') !== undefined
         ? store.get('notifications')
         : {};
+    const ens =
+      network.type.ensResolver !== ''
+        ? new ENS(newWeb3.currentProvider, network.type.ensResolver)
+        : {};
     const gasPrice =
       store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
     const state = {
@@ -60,10 +64,7 @@ export default {
       },
       notifications: notifications,
       gasPrice: gasPrice,
-      ens:
-        network.type.ensResolver !== ''
-          ? new ENS(newWeb3.currentProvider, network.type.ensResolver)
-          : {}
+      ens: ens
     };
     if (store.get('notifications') === undefined)
       store.set('notifications', {});

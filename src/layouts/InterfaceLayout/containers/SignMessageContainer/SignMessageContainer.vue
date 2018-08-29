@@ -22,8 +22,8 @@
       </div>
 
       <div class="the-form">
-        <textarea 
-          ref="message" 
+        <textarea
+          ref="message"
           class="custom-textarea-1"/>
       </div>
     </div>
@@ -42,23 +42,23 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea 
-          ref="signature" 
-          class="custom-textarea-1" 
+        <textarea
+          ref="signature"
+          class="custom-textarea-1"
           name="" />
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div 
+        <div
           class="submit-button large-round-button-green-filled clickable"
           @click="signMessage">
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text 
-        :link-text="$t('interface.learnMore')" 
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
@@ -83,14 +83,26 @@ export default {
   },
   methods: {
     signMessage() {
+      const message = this.$refs.message.value;
       this.$store.state.web3.eth
-        .sign(
-          this.$refs.message.value,
-          this.$store.state.wallet.getAddressString()
-        )
+        .sign(message, this.$store.state.wallet.getAddressString())
         .then(_signedMessage => {
-          this.$refs.signature.value = _signedMessage;
-        });
+          this.$refs.signature.value = JSON.stringify(
+            {
+              address: this.$store.state.wallet.getAddressString(),
+              msg: message,
+              sig: _signedMessage,
+              version: '3',
+              signer: this.$store.state.wallet.brand
+                ? this.$store.state.wallet.brand
+                : 'MEW'
+            },
+            null,
+            2
+          );
+        })
+        // eslint-disable-next-line no-console
+        .catch(console.error);
     },
     successModalOpen() {
       this.$children[0].$refs.success.show();

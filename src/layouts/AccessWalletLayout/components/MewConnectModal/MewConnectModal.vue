@@ -16,7 +16,6 @@
     </div>
     <div class="appstore-button-container">
       <img src="~@/assets/images/icons/appstore.png">
-      <img src="~@/assets/images/icons/playstore.png">
       <p>Do not have our App? Download now.</p>
     </div>
     <div class="support">
@@ -31,7 +30,7 @@
 </template>
 
 <script>
-import { MewConnectWallet } from '@/helpers/web3-overide/hardware';
+import { MewConnectWallet } from '@/wallets';
 
 export default {
   props: {
@@ -61,8 +60,7 @@ export default {
         });
     });
     this.$refs.mewConnect.$on('hidden', () => {
-      // eslint-disable-next-line no-console
-      console.log('modal hidden'); // todo remove dev item
+      // disconnect socket if not connected (the socket should disconnect eventually in all cases)
     });
   },
   methods: {
@@ -70,20 +68,17 @@ export default {
       wallet.registerListener('codeDisplay', this.codeDisplay);
       wallet.registerListener('RtcConnectedEvent', this.rtcConnected);
       wallet.registerListener('RtcClosedEvent', this.rtcClosed);
-      // wallet.registerListener('address', makeWallet)
-      // const mewConnect = wallet.getMewConnect()
-      // mewConnect.on('codeDisplay', this.codeDisplay)
     },
     codeDisplay(qrCode) {
       this.QrCode = qrCode;
     },
     rtcConnected() {
       // eslint-disable-next-line no-console
-      console.log('RTC Connected'); // todo remove dev item
+      console.log('RTC Connected: replace with notification for user');
     },
     rtcClosed() {
       // eslint-disable-next-line no-console
-      console.log('RTC Closed'); // todo remove dev item
+      console.log('RTC Closed: replace with notification for user');
     }
   }
 };

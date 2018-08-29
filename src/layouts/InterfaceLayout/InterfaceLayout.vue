@@ -11,7 +11,7 @@
       <div class="contents">
         <div class="tx-contents">
           <div>
-            <interface-address :address="address" />
+            <interface-address :address="address"/>
           </div>
           <div>
             <interface-balance :balance="balance"/>

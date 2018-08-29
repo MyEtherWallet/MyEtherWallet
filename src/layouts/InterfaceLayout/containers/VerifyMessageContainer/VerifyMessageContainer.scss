@@ -133,9 +133,11 @@
 }
 
 .success-message {
+  @extend %message;
   background-color: $light-green-1;
 }
 
 .error-message {
+  @extend %message;
   background-color: $red-1;
 }

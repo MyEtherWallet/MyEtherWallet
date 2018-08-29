@@ -1,10 +1,10 @@
 <template>
   <div class="modal-container">
     <b-modal 
-      ref="signConfirmation" 
-      hide-footer 
+      ref="signConfirmation"
+      hide-footer
       centered
-      class="bootstrap-modal-wide confirmation-modal nopadding" 
+      class="bootstrap-modal-wide confirmation-modal nopadding"
       title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
@@ -33,25 +33,25 @@
             <div class="button-with-helper">
               <div
                 ref="ConfirmAndSendButton"
-                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']" 
+                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
                 @click="signMessage">
                 Confirm Signing
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
-                  <img 
-                    class="icon" 
+                  <img
+                    class="icon"
                     src="~@/assets/images/icons/qr-code.svg">
                 </b-btn>
-                <b-popover 
-                  target="exPopover9" 
-                  triggers="hover focus" 
+                <b-popover
+                  target="exPopover9"
+                  triggers="hover focus"
                   placement="top">
                   <div class="qrcode-contents">
                     <p class="qrcode-title">Scan QR code to send/swap instantly</p>
                     <div class="qrcode-block">
-                      <qrcode 
-                        :options="{ size: 100 }" 
+                      <qrcode
+                        :options="{ size: 100 }"
                         value="Hello, World!"/>
                     </div>
                     <p class="qrcode-helper">What is that?</p>

@@ -69,10 +69,10 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t("common.speedTx") }}</h4>
+            <h4>{{ $t('common.speedTx') }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div
@@ -158,11 +158,6 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-    <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-    <!--:to="address" :value="amount" :gas="gasLimit" :data="data"-->
-    <!--:nonce="nonce + 1"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -172,9 +167,7 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-// import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie';
-// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -185,10 +178,9 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    // 'confirm-modal': ConfirmModal,
+
     blockie: Blockie,
     'currency-picker': CurrencyPicker
-    // 'success-modal': SuccessModal
   },
   props: {
     tokensWithBalance: {
@@ -269,73 +261,76 @@ export default {
     showSuccessModal() {
       this.$children[6].$refs.success.show();
     },
-    async createTx() {
-      const jsonInterface = [
-        {
-          constant: false,
-          inputs: [
-            { name: '_to', type: 'address' },
-            { name: '_amount', type: 'uint256' }
-          ],
-          name: 'transfer',
-          outputs: [{ name: 'success', type: 'bool' }],
-          payable: false,
-          type: 'function'
+    createTx() {
+      (async () => {
+        const jsonInterface = [
+          {
+            constant: false,
+            inputs: [
+              { name: '_to', type: 'address' },
+              { name: '_amount', type: 'uint256' }
+            ],
+            name: 'transfer',
+            outputs: [{ name: 'success', type: 'bool' }],
+            payable: false,
+            type: 'function'
+          }
+        ];
+        const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+        const isEth = this.selectedCurrency.name === 'Ethereum';
+        this.nonce = await this.$store.state.web3.eth.getTransactionCount(
+          this.$store.state.wallet.getAddressString()
+        );
+        this.chainId = this.$store.state.network.type.chainID;
+        this.data = isEth
+          ? this.data
+          : contract.methods
+              .transfer(this.toAddress, unit.toWei(this.amount, 'ether'))
+              .encodeABI();
+        this.raw = {
+          chainId: 1,
+          from: this.$store.state.wallet.getAddressString(),
+          gas: this.gasLimit,
+          nonce: this.nonce,
+          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          value: isEth
+            ? this.amount === ''
+              ? 0
+              : unit.toWei(this.amount, 'ether')
+            : 0,
+          to: isEth ? this.toAddress : this.selectedCurrency.addr,
+          data: this.data
+        };
+
+        if (this.toAddress === '') {
+          delete this.raw['to'];
         }
-      ];
-      const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
-      const isEth = this.selectedCurrency.name === 'Ethereum';
-      this.nonce = await this.$store.state.web3.eth.getTransactionCount(
-        this.$store.state.wallet.getAddressString()
-      );
-      this.data = isEth
-        ? this.data
-        : contract.methods
-            .transfer(this.address, unit.toWei(this.amount, 'ether'))
-            .encodeABI();
 
-      this.raw = {
-        from: this.$store.state.wallet.getAddressString(),
-        gas: this.gasLimit,
-        nonce: this.nonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        value: isEth
-          ? this.amount === ''
-            ? 0
-            : unit.toWei(this.amount, 'ether')
-          : 0,
-        to: isEth ? this.address : this.selectedCurrency.addr,
-        data: this.data
-      };
-
-      if (this.address === '') {
-        delete this.raw['to'];
-      }
-
-      const fromAddress = this.raw.from;
-      this.$store.state.web3.eth
-        .sendTransaction(this.raw)
-        .once('transactionHash', hash => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            hash,
-            'Transaction Hash'
-          ]);
-        })
-        .on('receipt', res => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            res,
-            'Transaction Receipt'
-          ]);
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            err,
-            'Transaction Error'
-          ]);
-        });
+        const fromAddress = this.raw.from;
+        this.$store.state.web3.eth
+          .sendTransaction(this.raw)
+          .once('transactionHash', hash => {
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              hash,
+              'Transaction Hash'
+            ]);
+          })
+          .on('receipt', res => {
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              res,
+              'Transaction Receipt'
+            ]);
+          })
+          .on('error', err => {
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              err,
+              'Transaction Error'
+            ]);
+          });
+      })();
     },
     confirmationModalOpen() {
       this.createTx();
@@ -382,7 +377,6 @@ export default {
       const newRaw = this.raw;
       delete newRaw['gas'];
       delete newRaw['nonce'];
-      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex();
       this.$store.state.web3.eth
         .estimateGas(newRaw)
@@ -392,11 +386,8 @@ export default {
             'ether'
           );
           this.gasLimit = res;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
+        }) // eslint-disable-next-line no-console
+        .catch(err => console.log(err)); // todo replace with proper error
     },
     verifyAddr() {
       if (this.address.length !== 0 && this.address !== '') {

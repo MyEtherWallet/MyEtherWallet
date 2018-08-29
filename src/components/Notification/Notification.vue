@@ -111,7 +111,6 @@ export default {
       this.$refs.notification.show();
     },
     expand(idx, notif) {
-      // e.target.nextElementSibling.classList.contains('unexpanded') ? e.target.nextElementSibling.classList.remove('unexpanded') : e.target.nextElementSibling.classList.add('unexpanded')
       const updatedNotif = notif;
       if (notif.expanded !== true) {
         updatedNotif.read = true;
