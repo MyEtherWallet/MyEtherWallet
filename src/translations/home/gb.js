@@ -1,6 +1,6 @@
 const home = {
-  title1: "Ethereum's",
-  title2: 'Original Wallet',
+  title1: 'My Security',
+  title2: 'Ethereum Wallet',
   subheading:
     'MEW helps you to generate Ethereum wallets, and interact with the Ethereum blockchain easily and securely. MEW is a free and open-source, client-side interface.',
   obtainAddress:
@@ -11,7 +11,7 @@ const home = {
   accessNow: 'Access Now',
   aboutTitle: 'About MEW',
   aboutSubheading:
-    "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC-20 tokens. We're always here to help, and we're never giving away ETH. Cheers!",
+    'MyEtherWallet(MEW)  provides a easy to use interface. We won’t hold your keys, also we can’t access accounts, recover your keys, reset your passwords, nor reverse your transactions. Please pay attention that you are on Correct URL.',
   aboutBeResponsible: 'Please Take Responsible For Your Account Security.',
   aboutWatchVideo: 'Watch Video',
   aboutMewWallet: 'MEW Wallet',
@@ -30,8 +30,9 @@ const home = {
   faqsSecurityAndPhishing: 'Security And Phishing',
   faqsTransactions: 'Transactions',
   faqsPrivKeyandPass: 'Private Keys And Passwords',
-  socialTitle: 'Join MEW Conversation',
-  socialSubheading: 'Get in now and see your balance grow (we hope)!',
-  promoTitle: "Ethereum's Original Wallet"
+  socialTitle: 'Get Involved',
+  socialSubheading: 'Your Cryptocurrency Masters Are Getting Hilariously Rich.',
+  promoTitle1: 'Your Security',
+  promoTitle2: 'Ethereum Wallet.'
 };
 export default home;

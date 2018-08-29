@@ -1,35 +1,35 @@
 <template>
   <div class="access-my-wallet-options">
 
-    <mew-connect-modal
+    <mew-connect-modal 
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
 
-    <hardware-modal
+    <hardware-modal 
       ref="hardwareModal"
       :network-and-address-open="networkAndAddressOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <hardware-password-modal
+    <hardware-password-modal 
       ref="hardwarePasswordModal"
       :wallet-constructor="walletConstructor"
       :hardware-brand="hardwareBrand"
       @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <network-and-address-modal
+    <network-and-address-modal 
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
     <metamask-modal ref="metamastModal"/>
 
-    <software-modal
+    <software-modal 
       ref="softwareModal"
       :open-password="passwordOpen"
-      :open-private-key-input="privateKeyOpen"
+      :open-private-key-input="privateKeyOpen" 
       @file="fileUploaded"/>
 
-    <password-modal
+    <password-modal 
       ref="passwordModal"
       :file="file"/>
 

@@ -45,7 +45,7 @@
         <textarea
           ref="signature"
           class="custom-textarea-1"
-          name="" />
+          name=""/>
       </div>
     </div>
 

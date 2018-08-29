@@ -43,6 +43,33 @@ Vue.directive('click-outside', {
         vnode.context.openDropdown();
       }
     });
+    // Directives!!!
+    Vue.directive('click-outside', {
+      bind: function(el, binding, vnode) {
+        document.body.addEventListener('click', function() {
+          if (vnode.context.open === true) {
+            vnode.context.openDropdown();
+          }
+        });
+
+        el.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      },
+      unbind: function(el, binding, vnode) {
+        document.body.removeEventListener('click', function() {
+          if (vnode.context.open === true) {
+            vnode.context.openDropdown();
+          }
+        });
+
+        el.removeEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      }
+    });
+
+    Vue.config.productionTip = false;
 
     el.removeEventListener('click', function(e) {
       e.stopPropagation();
