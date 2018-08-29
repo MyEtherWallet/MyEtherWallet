@@ -6,7 +6,6 @@ export default class Web3WalletAdapter {
     this.isHardwareWallet = this.wallet.type === 'hardware'
     this.identifier = wallet.identifier
     this.brand = wallet.brand
-    // this.type = wallet.type
     this.length = 1
     // Assign methods to external expected names, and bind to present context
     this.signTransaction = this._signTransaction.bind(this)
@@ -176,14 +175,5 @@ export default class Web3WalletAdapter {
   privateKeyAvailable () {
     return this.wallet.privateKey && (typeof this.wallet.privateKey !== 'undefined' && this.wallet.privateKey !== null)
   }
-
-  // checkConnection () {
-  //   if (this.isHardware) {
-  //     return this.wallet.checkConnection()
-  //   } else {
-  //     return Promise.resolve(true)
-  //   }
-  // }
-
   // ============== (End) Utility Methods ======================
 }
