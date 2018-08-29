@@ -31,7 +31,7 @@ export default {
         ? store.get('network')
         : this.$store.state.Networks['ETH'][0];
     const hostUrl = url.parse(
-      store.get('network').url || this.$store.state.Networks['ETH'][0].url
+      network.url || this.$store.state.Networks['ETH'][0].url
     );
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.host}:${network.port}${hostUrl.pathname}`
