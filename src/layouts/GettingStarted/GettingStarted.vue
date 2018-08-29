@@ -4,8 +4,8 @@
     <div class="wrap">
 
       <div class="nav-dots">
-        <p><i 
-          class="fa fa-angle-up" 
+        <p><i
+          class="fa fa-angle-up"
           aria-hidden="true"/></p>
         <ul>
           <li :class="cwwCurrent == 0 ? 'active' : ''"/>
@@ -14,30 +14,30 @@
           <li :class="cwwCurrent == 3 ? 'active' : ''"/>
           <li :class="cwwCurrent == 4 ? 'active' : ''"/>
         </ul>
-        <p><i 
-          class="fa fa-angle-down" 
+        <p><i
+          class="fa fa-angle-down"
           aria-hidden="true"/></p>
       </div>
 
-      <what-is-mew 
-        ref="cww1" 
-        :progress-bar-value="'__20percent'" 
+      <what-is-mew
+        ref="cww1"
+        :progress-bar-value="'__20percent'"
         class="cww cww1" />
-      <where-my-funds-stored 
-        ref="cww2" 
-        :progress-bar-value="'__40percent'" 
+      <where-my-funds-stored
+        ref="cww2"
+        :progress-bar-value="'__40percent'"
         class="cww cww2 positionBottom" />
-      <what-if-i-lose-key 
-        ref="cww3" 
-        :progress-bar-value="'__60percent'" 
+      <what-if-i-lose-key
+        ref="cww3"
+        :progress-bar-value="'__60percent'"
         class="cww cww3 positionBottom" />
-      <some-helpful-tips 
-        ref="cww4" 
-        :progress-bar-value="'__80percent'" 
+      <some-helpful-tips
+        ref="cww4"
+        :progress-bar-value="'__80percent'"
         class="cww cww4 positionBottom" />
-      <congratulations 
-        ref="cww5" 
-        :progress-bar-value="'__100percent'" 
+      <congratulations
+        ref="cww5"
+        :progress-bar-value="'__100percent'"
         class="cww cww5 positionBottom" />
 
       <div class="create-wallet-warnings__footer-container">
@@ -123,5 +123,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CreateWalletWarningLayout.scss';
+@import 'GettingStarted.scss';
 </style>
