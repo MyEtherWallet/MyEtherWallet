@@ -15,7 +15,7 @@ import * as ethUtil from 'ethereumjs-util';
 export default class LedgerWallet extends HardwareWalletInterface {
   constructor(opts) {
     super();
-    let options = opts || {};
+    const options = opts || {};
     this.brand = 'ledger';
     this.identifier = 'LedgerNanoS';
     this.wallet = null;
@@ -94,12 +94,11 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   getAccounts() {
-    let _this = this;
+    const _this = this;
     if (arguments.length > 1 && arguments.length < 3) {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
-    } else {
-      return _this._getAccounts();
     }
+    return _this._getAccounts();
   }
 
   getMultipleAccounts(count, offset) {
@@ -155,9 +154,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
       this.connectionOpened = true;
       if (this.ledgerTransport) {
         return this.ledgerTransport.create(3000, 3000);
-      } else {
-        return u2fTransport.create(3000, 3000);
       }
+      return u2fTransport.create(3000, 3000);
     }
   }
 
@@ -216,18 +214,17 @@ export default class LedgerWallet extends HardwareWalletInterface {
       path = this.addressToPathMap[data.from.toLowerCase()];
       if (!path) throw new Error("address unknown '" + data.from + "'");
       return path;
-    } else {
-      path = this.addressToPathMap[data.from.toLowerCase()];
-      if (!path) throw new Error("address unknown '" + data.from + "'");
-      return path;
     }
+    path = this.addressToPathMap[data.from.toLowerCase()];
+    if (!path) throw new Error("address unknown '" + data.from + "'");
+    return path;
   }
 
   async _signPersonalMessage(msgData) {
     const path = await this.checkIfKnownAddress(msgData);
     const transport = await this.getTransport();
     try {
-      let thisMessage = msgData.data ? msgData.data : msgData;
+      const thisMessage = msgData.data ? msgData.data : msgData;
       const eth = new Ledger(transport);
       const result = await eth.signPersonalMessage(
         path,

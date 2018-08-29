@@ -51,17 +51,15 @@ export default class MewConnectWallet {
   getAddress() {
     if (this.wallet) {
       return this.wallet.address;
-    } else {
-      return null;
     }
+    return null;
   }
 
   getAddressString() {
     if (this.wallet) {
       return ethUtil.toChecksumAddress(this.getAddress());
-    } else {
-      return null;
     }
+    return null;
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
@@ -93,7 +91,7 @@ export default class MewConnectWallet {
   signMessage(msgData) {
     return new Promise((resolve, reject) => {
       try {
-        let thisMessage = msgData.data ? msgData.data : msgData;
+        const thisMessage = msgData.data ? msgData.data : msgData;
         this.mewConnect.sendRtcMessage('signMessage', thisMessage);
         this.mewConnect.on('signMessage', data => {
           const signedMsg = JSON.parse(data);
@@ -129,7 +127,7 @@ export default class MewConnectWallet {
   // ============== (Start) Internally used methods ======================
 
   createWallet(address) {
-    let wallet = {};
+    const wallet = {};
     wallet.address = address;
     wallet.privKey = undefined;
     wallet.pubKey = undefined;
