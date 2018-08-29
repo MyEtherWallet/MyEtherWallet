@@ -19,10 +19,11 @@
         </div>
         <div class="the-form domain-name">
           <input
+            v-ens-resolver="address"
             v-model="address"
             type="text"
-            name=""
             placeholder="Enter Domain Name or Address" >
+
           <i
             :class="[validAddress && address !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
             aria-hidden="true"
@@ -268,7 +269,8 @@ export default {
       raw: {},
       nonce: 0,
       signedTx: '',
-      transactionFee: 0
+      transactionFee: 0,
+      resolvedAddress: ''
     };
   },
   computed: {
@@ -289,9 +291,6 @@ export default {
           });
         }
       }
-    },
-    address(newVal) {
-      this.validAddress = this.$store.state.web3.utils.isAddress(newVal);
     },
     writeInputs: {
       // Watches nested values instead
@@ -428,7 +427,12 @@ export default {
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
           value: this.value,
-          to: this.address,
+          to:
+            this.resolvedAddress !== ''
+              ? this.resolvedAddress
+              : this.address !== ''
+                ? this.address
+                : '',
           data: this.data
         };
 

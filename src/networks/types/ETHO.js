@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.ether1.org/addr/[[address]]',
   chainID: 1313114,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

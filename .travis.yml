@@ -1,7 +1,7 @@
 language: node_js
 sudo: required
 dist: trusty
-node_js: '7'
+node_js: '8'
 env:
   matrix:
   - CXX=g++-4.9
@@ -26,6 +26,8 @@ addons:
 branches:
   except:
   - gh-pages
+before_install:
+  - npm install -g npm@'>=6.0.0'
 stages:
 - name: add to mewbuilds
   if: type != pull_request

@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.ellaism.org/addr/[[address]]',
   chainID: 64,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };

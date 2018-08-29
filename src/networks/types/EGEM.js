@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.egem.io/addr/[[address]]',
   chainID: 1987,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };
