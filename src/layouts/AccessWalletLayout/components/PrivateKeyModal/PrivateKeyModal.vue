@@ -1,22 +1,22 @@
 <template>
-  <b-modal
-    ref="privateKey"
-    hide-footer
-    class="bootstrap-modal modal-software"
-    title="PrivateKey"
+  <b-modal 
+    ref="privateKey" 
+    hide-footer 
+    class="bootstrap-modal modal-software" 
+    title="PrivateKey" 
     centered>
     <form class="private-key-form">
       <div class="input-container">
-        <input
-          v-model="privateKey"
-          type="text"
-          name="PrivateKey"
+        <input 
+          v-model="privateKey" 
+          type="text" 
+          name="PrivateKey" 
           autocomplete="off" >
       </div>
-      <button
-        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
-        class="submit-button large-round-button-green-filled"
-        type="submit"
+      <button 
+        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9" 
+        class="submit-button large-round-button-green-filled" 
+        type="submit" 
         @click.prevent="unlockWallet">
         Unlock Wallet
       </button>
@@ -25,8 +25,7 @@
 </template>
 
 <script>
-// import { BasicWallet } from '@/wallets'
-import { BasicWallet } from '@/helpers/web3-overide/software';
+import { BasicWallet } from '@/wallets';
 
 export default {
   data() {
@@ -38,7 +37,7 @@ export default {
     unlockWallet() {
       this.$store.dispatch(
         'decryptWallet',
-        BasicWallet.unlockWallet({
+        BasicWallet.unlock({
           type: 'manualPrivateKey',
           manualPrivateKey: this.privateKey
         })

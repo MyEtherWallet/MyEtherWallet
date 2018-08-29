@@ -1,6 +1,4 @@
-import {
-  CLO
-} from '../types'
+import { CLO } from '../types';
 export default {
   type: CLO,
   service: 'Callisto',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

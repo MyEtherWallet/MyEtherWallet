@@ -160,8 +160,8 @@
 import store from 'store';
 import web3 from 'web3';
 
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import * as types from '@/networks/types'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import * as types from '@/networks/types';
 
 export default {
   components: {
@@ -169,8 +169,7 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: {name: 'ETH', name_long: 'Ethereum'},
-
+      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
       chainID: 1,
       port: '',
       name: '',
@@ -179,6 +178,11 @@ export default {
       password: '',
       customNetworks: [],
       networks: Object.keys(types).map(key => types[key])
+    };
+  },
+  watch: {
+    selectedNetwork(newVal) {
+      this.chainID = newVal.type.chainID;
     }
   },
   mounted() {
@@ -215,9 +219,7 @@ export default {
       this.username = '';
       this.password = '';
     },
-    saveCustomNetwork () {
-      let explorer = ''
-
+    saveCustomNetwork() {
       const customNetwork = {
         auth: !!(this.password !== '' && this.username !== ''),
         password: this.password,
@@ -227,11 +229,13 @@ export default {
           blockExplorerAddr: this.selectedNetwork.blockExplorerAddr,
           blockExplorerTX: this.selectedNetwork.blockExplorerTX,
           chainID: this.chainID,
-          contracts: this.$store.state.Networks[this.selectedNetwork.name][0].type.contracts,
+          contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
+            .type.contracts,
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type.tokens
+          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type
+            .tokens
         },
         url: this.port === '' ? this.url : `${this.url}:${this.port}`,
         username: this.username
@@ -245,15 +249,10 @@ export default {
     expendAuth() {
       this.$refs.authForm.classList.toggle('hidden');
     },
-    switchNetwork (network) {
-      this.selectedNetwork = network
-      this.$store.dispatch('switchNetwork', network)
-      this.$store.dispatch('setWeb3Instance', web3)
-    }
-  },
-  watch: {
-    selectedNetwork (newVal) {
-      this.chainID = newVal.type.chainID
+    switchNetwork(network) {
+      this.selectedNetwork = network;
+      this.$store.dispatch('switchNetwork', network);
+      this.$store.dispatch('setWeb3Instance', web3);
     }
   }
 };

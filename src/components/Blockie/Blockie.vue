@@ -12,12 +12,12 @@ export default {
       default: ''
     },
     width: {
-      type: Number,
-      default: 32
+      type: String,
+      default: '32'
     },
     height: {
-      type: Number,
-      default: 32
+      type: String,
+      default: '32'
     }
   },
   data() {

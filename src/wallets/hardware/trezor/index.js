@@ -1,5 +1,3 @@
-import TrezorWallet from './trezorWallet'
+import TrezorWallet from './trezorWallet';
 
-export {
-  TrezorWallet
-}
+export { TrezorWallet };

@@ -1,5 +1,3 @@
-import { MewConnectWallet } from './MEWconnect'
+import { MewConnectWallet } from './MEWconnect';
 
-export {
-  MewConnectWallet
-}
+export { MewConnectWallet };

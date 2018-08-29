@@ -6,18 +6,30 @@
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
-            <h4>{{ $t('interface.sendTxAmount') }}</h4>
+            <h4>{{ $t("interface.sendTxAmount") }}</h4>
             <p
               class="title-button prevent-user-select"
               @click="setBalanceToAmt">Entire
               Balance</p>
           </div>
-          <currency-picker :currency="tokensWithBalance"  :page="'sendEthAndTokens'" :token="true"@selectedCurrency="setSelectedCurrency"/>
+          <currency-picker
+            :currency="tokensWithBalance"
+            :page="'sendEthAndTokens'"
+            :token="true"
+            @selectedCurrency="setSelectedCurrency"/>
           <div class="the-form amount-number">
-            <inputv-model="amount" type="number" name=""  placeholder="Amount" >
-            <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"/>
+            <input
+              v-model="amount"
+              type="number"
+              name=""
+              placeholder="Amount">
+            <i
+              :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
+              aria-hidden="true"/>
           </div>
-          <div  v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount"class="error-message-container">
+          <div
+            v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount"
+            class="error-message-container">
             <p>{{ $t('common.dontHaveEnough') }}</p>
           </div>
         </div>
@@ -58,10 +70,10 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t('common.speedTx') }}</h4>
+            <h4>{{ $t("common.speedTx") }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
           </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
         </div>
         <div class="buttons">
           <div
@@ -83,8 +95,11 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input  v-model="gasAmount"type="number"
-          name="" placeholder="Gas Amount" >
+        <input
+          v-model="gasAmount"
+          type="number"
+          name=""
+          placeholder="Gas Amount">
         <div class="good-button-container">
           <p>Gwei</p>
           <i
@@ -96,59 +111,73 @@
     <div class="send-form advanced">
       <div class="advanced-content">
 
-
+        <div class="toggle-button-container">
           <h4>{{ $t('common.advanced') }}</h4>
           <div class="toggle-button">
             <span>{{ $t('interface.dataGas') }}</span>
             <!-- Rounded switch -->
             <div class="sliding-switch-white">
               <label class="switch">
-                <input type="checkbox" @click="advancedExpend = !advancedExpend" >
+                <input
+                  type="checkbox"
+                  @click="advancedExpend = !advancedExpend">
                 <span class="slider round"/>
               </label>
-
+            </div>
           </div>
-        <br/>
-        <div  v-if="advancedExpend"class="input-container">
-          <div class="the-form user-input">
-            <inputv-model="data" type="text" name=""  placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" >
-          </div>
-          <div class="the-form user-input">
-            <input  v-model="gasLimit"type="number"
-              name="" placeholder="Gas Limit" ></div>
+          <div
+            v-if="advancedExpend"
+            class="input-container">
+            <div class="the-form user-input">
+              <input
+                v-model="data"
+                type="text"
+                name=""
+                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
+                autocomplete="off">
+            </div>
+            <div class="the-form user-input">
+              <input
+                v-model="gasLimit"
+                type="number"
+                name=""
+                placeholder="Gas Limit">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="submit-button-container">
-      <div
-        :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
-        @click="confirmationModalOpen">
-        {{ $t('interface.sendTx') }}
+      <div class="submit-button-container">
+        <div
+          :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+          @click="confirmationModalOpen">
+          {{ $t('interface.sendTx') }}
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.learnMore')"
+          :question="$t('interface.haveIssues')"
+          link="/"/>
       </div>
-      <interface-bottom-text :link-text="$t('interface.learnMore')" :question="$t('interface.haveIssues')"link="/"/>
+      <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
+      <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
+      <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
+      <!--:nonce="nonce + 1"></confirm-modal>-->
+      <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" -->
-                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" -->
-                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data" -->
-                   <!--:nonce="nonce + 1"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
-  </div>
-</template>
+</div></template>
 
 <script>
 import { mapGetters } from 'vuex';
 
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import CurrencyPicker from '../../components/CurrencyPicker'
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import Blockie from '@/components/Blockie'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import CurrencyPicker from '../../components/CurrencyPicker';
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import Blockie from '@/components/Blockie';
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
+const EthTx = require('ethereumjs-tx');
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 
 export default {
   components: {
@@ -278,27 +307,38 @@ export default {
         data: this.data
       };
 
-        if (this.toAddress === '') {
-          delete this.raw['to']
-        }
+      if (this.toAddress === '') {
+        delete this.raw['to'];
+      }
 
-        const fromAddress = this.raw.from
-        this.$store.state.web3.eth.sendTransaction(this.raw)
-          .once('transactionHash', (hash) => {
-            this.$store.dispatch('addNotification', [fromAddress, hash, 'Transaction Hash'])
-          })
-          .on('receipt', (res) => {
-            this.$store.dispatch('addNotification', [fromAddress, res, 'Transaction Receipt'])
-          })
-          .on('error', (err) => {
-            this.$store.dispatch('addNotification', [fromAddress, err, 'Transaction Error'])
-          })
-      })()
+      const fromAddress = this.raw.from;
+      this.$store.state.web3.eth
+        .sendTransaction(this.raw)
+        .once('transactionHash', hash => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            hash,
+            'Transaction Hash'
+          ]);
+        })
+        .on('receipt', res => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            res,
+            'Transaction Receipt'
+          ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            err,
+            'Transaction Error'
+          ]);
+        });
     },
-    confirmationModalOpen () {
-      this.createTx()
-      window.scrollTo(0, 0)
-      this.$children[5].$refs.confirmation.show()
+    confirmationModalOpen() {
+      this.createTx();
+      window.scrollTo(0, 0);
     },
     changeGas(val) {
       this.gasAmount = val;
@@ -310,12 +350,25 @@ export default {
         this.amount = this.parsedBalance - this.transactionFee;
       }
     },
-    createDataHex () {
+    createDataHex() {
       if (this.selectedCurrency.name !== 'Ethereum') {
-        const jsonInterface = [{constant: false, inputs: [{name: '_to', type: 'address'}, {name: '_amount', type: 'uint256'}],name: 'transfer', outputs: [{name: 'success', type: 'bool'}], payable: false, type: 'function'
-        }
-        ];const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
-        this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI();
+        const jsonInterface = [
+          {
+            constant: false,
+            inputs: [
+              { name: '_to', type: 'address' },
+              { name: '_amount', type: 'uint256' }
+            ],
+            name: 'transfer',
+            outputs: [{ name: 'success', type: 'bool' }],
+            payable: false,
+            type: 'function'
+          }
+        ];
+        const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+        this.data = contract.methods
+          .transfer(this.toAddress, this.amount)
+          .encodeABI();
       } else {
         this.data = '0x';
       }
@@ -328,7 +381,6 @@ export default {
       const newRaw = this.raw;
       delete newRaw['gas'];
       delete newRaw['nonce'];
-      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex();
       this.$store.state.web3.eth
         .estimateGas(newRaw)

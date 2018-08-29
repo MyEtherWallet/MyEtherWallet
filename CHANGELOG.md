@@ -1,9 +1,3 @@
-### Devop
-- Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
-### Feature
-- Intercept and override signTransaction and signMessage to force confirm modal display and approval
-- Integrate Ledger hardware wallet
-
 ### Feature
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval [#51](https://github.com/MyEtherWallet/MyEtherWallet/pull/51)
 - Integrate Ledger hardware wallet [#48](https://github.com/MyEtherWallet/MyEtherWallet/pull/48)
@@ -13,12 +7,6 @@
 
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
-
-### Feature
-- Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
-
-### Devop
-- Fetch tokens and contract abi on build [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
 
 ### Devop
 - Cleanup linting error [#54](https://github.com/MyEtherWallet/MyEtherWallet/pull/54)

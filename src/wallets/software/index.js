@@ -1,7 +1,4 @@
-import BasicWallet from './basicWallet'
-import { MnemonicWallet } from './mnemonic'
+import BasicWallet from './basicWallet';
+import { MnemonicWallet } from './mnemonic';
 
-export {
-  BasicWallet,
-  MnemonicWallet
-}
+export { BasicWallet, MnemonicWallet };

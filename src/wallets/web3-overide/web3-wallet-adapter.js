@@ -1,179 +1,181 @@
-import * as ethUtil from 'ethereumjs-util'
+import * as ethUtil from 'ethereumjs-util';
 
 export default class Web3WalletAdapter {
-  constructor (wallet) {
-    this.wallet = wallet
-    this.isHardwareWallet = this.wallet.type === 'hardware'
-    this.identifier = wallet.identifier
-    this.brand = wallet.brand
-    this.length = 1
+  constructor(wallet) {
+    this.wallet = wallet;
+    this.isHardwareWallet = this.wallet.type === 'hardware';
+    this.identifier = wallet.identifier;
+    this.brand = wallet.brand;
+    this.length = 1;
     // Assign methods to external expected names, and bind to present context
-    this.signTransaction = this._signTransaction.bind(this)
-    this.signMessage = this._signMessage.bind(this)
+    this.signTransaction = this._signTransaction.bind(this);
+    this.signMessage = this._signMessage.bind(this);
   }
 
   // ============== (Start) EthereumJs-wallet interface methods ======================
-  getPrivateKey () {
+  getPrivateKey() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPrivateKey()
+      return this.wallet.getPrivateKey();
     } else {
-      return null
+      return null;
     }
   }
 
-  getPrivateKeyString () {
+  getPrivateKeyString() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPrivateKeyString()
+      return this.wallet.getPrivateKeyString();
     } else {
-      return null
+      return null;
     }
   }
 
-  getPublicKey () {
+  getPublicKey() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPublicKey()
+      return this.wallet.getPublicKey();
     } else {
-      return null
+      return null;
     }
   }
 
-  getPublicKeyString () {
+  getPublicKeyString() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPublicKeyString()
+      return this.wallet.getPublicKeyString();
     } else {
-      return null
+      return null;
     }
   }
 
-  getAddress () {
-    return this.wallet.getAddress()
+  getAddress() {
+    return this.wallet.getAddress();
   }
 
-  getAddressString () {
-    const address = this.wallet.getAddress()
+  getAddressString() {
+    const address = this.wallet.getAddress();
     if (typeof address !== 'string') {
-      let rawAddress = '0x' + address.toString('hex')
-      return ethUtil.toChecksumAddress(rawAddress)
+      let rawAddress = '0x' + address.toString('hex');
+      return ethUtil.toChecksumAddress(rawAddress);
     } else {
-      return address
+      return address;
     }
   }
 
-  getChecksumAddressString () {
-    return ethUtil.toChecksumAddress(this.address)
+  getChecksumAddressString() {
+    return ethUtil.toChecksumAddress(this.address);
   }
 
   // ============== (End) EthereumJs-wallet interface methods ======================
   // ============== (Start) Getters  ======================
-  get privateKey () {
+  get privateKey() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPrivateKeyString()
+      return this.wallet.getPrivateKeyString();
     } else {
-      return null
+      return null;
     }
   }
 
-  get publicKey () {
+  get publicKey() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPublicKeyString()
+      return this.wallet.getPublicKeyString();
     } else {
-      return null
+      return null;
     }
   }
 
-  get privateKeyBuffer () {
+  get privateKeyBuffer() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPrivateKey()
+      return this.wallet.getPrivateKey();
     } else {
-      return null
+      return null;
     }
   }
 
-  get publicKeyBuffer () {
+  get publicKeyBuffer() {
     if (this.privateKeyAvailable()) {
-      return this.wallet.getPublicKey()
+      return this.wallet.getPublicKey();
     } else {
-      return null
+      return null;
     }
   }
 
-  get accounts () {
+  get accounts() {
     return {
       privateKey: this.privateKey,
       privateKeyBuffer: this.privateKeyBuffer,
       publicKey: this.publicKey,
       publicKeyBuffer: this.publicKeyBuffer,
       address: this.address
-    }
+    };
   }
 
-  get address () {
-    return this.wallet.getAddressString()
+  get address() {
+    return this.wallet.getAddressString();
   }
 
-  get isHardware () {
-    return this.isHardwareWallet
+  get isHardware() {
+    return this.isHardwareWallet;
   }
 
-  get checkSumAddress () {
-    return ethUtil.toChecksumAddress(this.address)
+  get checkSumAddress() {
+    return ethUtil.toChecksumAddress(this.address);
   }
 
   // ============== (End) Getters  ======================
   // ============== (Start) Utility methods ======================
 
-  async changeNetwork (network) {
-    return this.wallet.changeNetwork(network)
+  async changeNetwork(network) {
+    return this.wallet.changeNetwork(network);
   }
 
   // ============== (End) Utility methods ======================
   // ============== (Start) Operational Methods ======================
 
-  _signTransaction (tx) {
+  _signTransaction(tx) {
     return new Promise((resolve, reject) => {
       if (!tx) {
-        reject(new Error('No transaction object given!'))
+        reject(new Error('No transaction object given!'));
       }
-      if (this.wallet.isHardware && !tx.from) tx.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
+      if (this.wallet.isHardware && !tx.from)
+        tx.from = this.wallet.getAddressString(); // ledgerWallet checks to see that the address is from the ledger
 
-      tx.data = tx.data ? tx.data : tx.input || '0x'
-      tx.value = tx.value || '0x'
-      this.wallet.signTransaction(tx)
+      tx.data = tx.data ? tx.data : tx.input || '0x';
+      tx.value = tx.value || '0x';
+      this.wallet
+        .signTransaction(tx)
         .then(_result => {
-          resolve(_result)
+          resolve(_result);
         })
         .catch(_error => {
-          console.error(_error)
-          reject(_error)
-        })
-    })
+          // eslint-disable-next-line
+          console.error(_error);
+          reject(_error);
+        });
+    });
   }
 
-  _signMessage (message) {
+  _signMessage(message) {
     return new Promise((resolve, reject) => {
-      const msgData = {data: message}
-      if (this.wallet.isHardware && !msgData.from) msgData.from = this.wallet.getAddressString() // ledgerWallet checks to see that the address is from the ledger
-      this.wallet.signMessage(msgData)
+      const msgData = { data: message };
+      if (this.wallet.isHardware && !msgData.from)
+        msgData.from = this.wallet.getAddressString(); // ledgerWallet checks to see that the address is from the ledger
+      this.wallet
+        .signMessage(msgData)
         .then(_signedMessage => {
-          let signedMsg = JSON.stringify({
-            address: this.wallet.getAddressString(),
-            msg: message,
-            sig: _signedMessage,
-            version: '3',
-            signer: this.wallet.brand ? this.wallet.brand : 'MEW'
-          }, null, 2)
-          resolve(signedMsg)
+          resolve(_signedMessage);
         })
         .catch(_error => {
-          reject(_error)
-        })
-    })
+          reject(_error);
+        });
+    });
   }
 
   // ============== (End) Operational Methods ======================
   // ============== (Start) Utility Methods ======================
-  privateKeyAvailable () {
-    return this.wallet.privateKey && (typeof this.wallet.privateKey !== 'undefined' && this.wallet.privateKey !== null)
+  privateKeyAvailable() {
+    return (
+      this.wallet.privateKey &&
+      (typeof this.wallet.privateKey !== 'undefined' &&
+        this.wallet.privateKey !== null)
+    );
   }
   // ============== (End) Utility Methods ======================
 }

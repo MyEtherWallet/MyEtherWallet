@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-kov.json'
-import contracts from '@/contracts/contract-abi-kov.json'
+import tokens from '@/tokens/tokens-kov.json';
+import contracts from '@/contracts/contract-abi-kov.json';
 
 export default {
   name: 'KOV',
@@ -10,4 +10,4 @@ export default {
   chainID: 42,
   tokens: tokens,
   contracts: contracts
-}
+};

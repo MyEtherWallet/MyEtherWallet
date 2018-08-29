@@ -7,8 +7,7 @@
           <img
             v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
             class="icon"
-            src="~@/assets/images/icons/network.svg" v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'">
-          <img class="icon" :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)" v-else>
+            src="~@/assets/images/icons/network.svg">
           <img
             v-else
             :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)"
@@ -46,7 +45,7 @@ export default {
   },
   data() {
     return {
-      parsedNetwork: ''
+      parsedNetwork: 0
     };
   },
   watch: {

@@ -1,5 +1,3 @@
-import DigitalBitboxWallet from './digitalBitboxWallet'
+import DigitalBitboxWallet from './digitalBitboxWallet';
 
-export {
-  DigitalBitboxWallet
-}
+export { DigitalBitboxWallet };
