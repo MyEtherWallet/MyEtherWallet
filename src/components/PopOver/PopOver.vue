@@ -1,9 +1,13 @@
 <template lang="html">
   <div class="popover-container">
     <b-col>
-      <b-btn :id="popOverId" class="popover-button">
+      <b-btn v-if="!popovertype" :id="popOverId" class="popover-button">
         <img class="nohover-icon" src="@/assets/images/icons/explanation.svg">
         <img class="hover-icon" src="@/assets/images/icons/explanation2.svg">
+      </b-btn>
+      <b-btn v-if="popovertype === 'A'" :id="popOverId" class="popover-button">
+        <img class="nohover-icon" src="@/assets/images/icons/question.png">
+        <img class="hover-icon" src="@/assets/images/icons/question.png">
       </b-btn>
       <b-popover :target="popOverId" triggers="hover focus" placement="top">
         <template v-if="this.poptitle" slot="title">{{poptitle}}</template>
@@ -15,7 +19,7 @@
 
 <script>
 export default {
-  props: ['poptitle', 'popcontent'],
+  props: ['poptitle', 'popcontent', 'popovertype'],
   data () {
     return {
       // Create a random string for each popover instance

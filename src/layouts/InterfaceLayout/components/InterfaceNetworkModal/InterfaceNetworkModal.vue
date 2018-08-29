@@ -17,7 +17,10 @@
       </div>
       <div class="network-list" ref="networkList">
         <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
-          <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+          <div class="network-title">
+            <img src="@/assets/images/networks/eth.svg">
+            <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+          </div>
           <div class="grid-3">
             <p class="switch-network" v-for="net in $store.state.Networks[key]" :key="net.service" @click="switchNetwork(net)" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">{{net.service}}</p>
           </div>
@@ -37,7 +40,9 @@
           <div class="input-block-container">
             <input class="custom-input-text-1" type="text" name="" v-model="name" placeholder="ETH Node Name" autocomplete="off" />
             <select class="custom-select-1" v-model="selectedNetwork">
-              <option v-for="network in networks" :value="network" :key="network.name + network.name_long">{{ network.name | capitalize }} - {{ network.name_long | capitalize }}</option>
+              <option v-for="network in networks" :value="network" :key="network.name + network.name_long">
+                {{ network.name | capitalize }} - {{ network.name_long | capitalize }}
+              </option>
             </select>
             <input class="custom-input-text-1" type="text" name="" v-model="url" placeholder="URL" autocomplete="off" />
             <input class="custom-input-text-1" type="text" name="" v-model="port" placeholder="Port" autocomplete="off" />
