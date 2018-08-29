@@ -17,7 +17,7 @@
                 v-model="toAmt"
                 type="number"
                 name=""
-                placeholder="Deposit Amount" >
+                placeholder="Deposit Amount">
               <i
                 :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']"
                 aria-hidden="true"/>
@@ -27,8 +27,8 @@
             <div class="title">
               <h4>To Address</h4>
               <blockie
-                v-show="toAddress !== '' && !validAddress"
-                :address="toAddress"
+                v-show="(address !== '' || resolvedAddress !== '') && !validAddress"
+                :address="address !== '' ? address: resolvedAddress !== ''? resolvedAddress:''"
                 width="22px"
                 height="22px"/>
               <p
@@ -37,12 +37,13 @@
             </div>
             <div class="the-form address-block">
               <textarea
+                v-ens-resolver="address"
                 ref="toaddress"
-                v-model="toAddress"
+                v-model="address"
                 name="name"
                 placeholder="Please Enter The Address"/>
               <i
-                class="fa fa-check-circle good-button not-good"
+                :class="[validAddress ? '':'not-good', 'fa fa-check-circle good-button']"
                 aria-hidden="true"/>
             </div>
           </div>
@@ -51,11 +52,6 @@
           v-show="parsedBalance < toAmt"
           class="error-message-container">
           <p>You don't have enough funds</p>
-        </div>
-        <div
-          v-show="toAddress !== '' && !validAddress"
-          class="error-message-container">
-          <p>Invalid Address</p>
         </div>
       </div>
 
@@ -85,7 +81,7 @@
         :nonce="nonce"
         :data="toData"
         :value="toAmt"
-        :to-address="toAddress"
+        :to-address="address"
         :gas-limit="gasLimit"
         @nonceUpdate="nonceUpdated"
         @gasLimitUpdate="gasLimitUpdated"/>
@@ -141,7 +137,7 @@ export default {
   data() {
     return {
       toAmt: 0,
-      toAddress: '',
+      address: '',
       toData: '0x',
       parsedBalance: 0,
       localGas: this.gasLimit,
@@ -150,7 +146,8 @@ export default {
       raw: '',
       signed: '',
       locNonce: this.nonce,
-      validAddress: false
+      validAddress: false,
+      resolvedAddress: ''
     };
   },
   watch: {
@@ -159,19 +156,6 @@ export default {
     },
     gasLimit(newVal) {
       this.localGas = newVal;
-    },
-    toAddress(newVal) {
-      if (
-        newVal !== '' &&
-        newVal.length !== 0 &&
-        this.$store.state.web3.utils.isAddress(newVal)
-      ) {
-        this.validAddress = true;
-      } else {
-        this.validAddress = false;
-      }
-
-      this.toAddress = newVal;
     }
   },
   mounted() {
@@ -194,9 +178,13 @@ export default {
         data: this.toData,
         nonce: this.locNonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        to: this.toAddress,
-        chainId: this.$store.state.network.type.chainID,
-        generateOnly: true
+        to:
+          this.resolvedAddress !== ''
+            ? this.resolvedAddress
+            : this.address !== ''
+              ? this.address
+              : '',
+        chainId: this.$store.state.network.type.chainID
       };
       this.$store.state.web3.eth.signTransaction(raw).then(signedTx => {
         this.$emit('createdRawTx', signedTx.rawTransaction);

@@ -13,11 +13,11 @@ export default {
     },
     width: {
       type: String,
-      default: '32'
+      default: '64px'
     },
     height: {
       type: String,
-      default: '32'
+      default: '64px'
     }
   },
   data() {

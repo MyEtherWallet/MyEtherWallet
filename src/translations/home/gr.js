@@ -24,7 +24,6 @@ const home = {
   // faqsPrivKeyandPass: '',
   // socialTitle: '',
   // socialSubheading: '',
-  // promoTitle1: '',
-  // promoTitle2: ''
+  // promoTitle: ''
 };
 export default home;

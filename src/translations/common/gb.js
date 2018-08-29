@@ -48,6 +48,7 @@ const common = {
   interactWcontract: 'Interact with Contract',
   depContract: 'Deploy Contract',
   signMessage: 'Sign Message',
-  verifyMessage: 'Verify Message'
+  verifyMessage: 'Verify Message',
+  toAddress: 'To Address'
 };
 export default common;

@@ -34,7 +34,8 @@ const state = {
   },
   customPaths: {},
   notifications: {},
-  gasPrice: 41
+  gasPrice: 41,
+  ens: {}
 };
 
 export default state;

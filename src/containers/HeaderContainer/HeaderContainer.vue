@@ -164,10 +164,6 @@ export default {
     },
     showNotifications() {
       this.$children[6].$refs.notification.show();
-    },
-    onPageScroll() {
-      const topPos = this.$root.$el.getBoundingClientRect().top;
-      this.isPageOnTop = !(topPos < -150);
     }
   },
   mounted() {
@@ -215,6 +211,10 @@ export default {
     },
     showNotifications() {
       this.$children[6].$refs.notification.show();
+    },
+    onPageScroll() {
+      const topPos = this.$root.$el.getBoundingClientRect().top;
+      this.isPageOnTop = !(topPos < -150);
     }
   }
 };

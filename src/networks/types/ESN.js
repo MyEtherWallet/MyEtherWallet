@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://ethersocial.net/addr/[[address]]',
   chainID: 31102,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ensResolver: ''
 };
