@@ -82,7 +82,7 @@ export default {
     };
   },
   mounted() {
-    let skipTutorial = localStorage.getItem('skipTutorial');
+    const skipTutorial = localStorage.getItem('skipTutorial');
     if (
       skipTutorial === undefined ||
       skipTutorial === null ||

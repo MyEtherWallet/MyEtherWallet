@@ -292,7 +292,7 @@ export default {
     },
     selectedMethod(newVal) {
       this.writeInputs = {};
-      for (let inputs in newVal) {
+      for (const inputs in newVal) {
         if (newVal.hasOwnProperty(inputs)) {
           newVal.inputs.forEach(input => {
             this.$set(this.writeInputs, input.name, '');
@@ -340,9 +340,8 @@ export default {
         type.includes('bytes')
       ) {
         return 'string';
-      } else {
-        return 'number';
       }
+      return 'number';
     },
     selectFunction(method) {
       const contract = new this.$store.state.web3.eth.Contract(
@@ -491,13 +490,12 @@ export default {
     // },
     checkInputsFilled() {
       const inputs = Object.keys(this.writeInputs);
-      for (var i = 0; i < inputs.length; i++) {
+      for (let i = 0; i < inputs.length; i++) {
         if (this.writeInputs[inputs[i]] === '') {
           this.inputsFilled = false;
           return;
-        } else {
-          this.inputsFilled = true;
         }
+        this.inputsFilled = true;
       }
     }
   }

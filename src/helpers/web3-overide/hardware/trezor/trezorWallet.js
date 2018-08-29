@@ -65,29 +65,26 @@ export default class TrezorWallet extends HardwareWalletInterface {
   getAddress() {
     if (this.wallet) {
       return this.wallet.address;
-    } else {
-      return null;
     }
+    return null;
   }
 
   getAddressString() {
     if (this.wallet) {
       return ethUtil.toChecksumAddress(this.getAddress());
-    } else {
-      return null;
     }
+    return null;
   }
 
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts() {
-    let _this = this;
+    const _this = this;
     if (arguments.length > 1 && typeof arguments[2] === 'function') {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
-    } else {
-      return _this._getAccounts();
     }
+    return _this._getAccounts();
   }
 
   getMultipleAccounts(count, offset) {
@@ -100,7 +97,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
   }
 
   signMessage(msgData) {
-    let thisMessage = msgData.data ? msgData.data : msgData;
+    const thisMessage = msgData.data ? msgData.data : msgData;
     return this.signMessageTrezor(thisMessage);
   }
 
@@ -144,7 +141,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
   }
 
   createWallet(priv, pub, path, hwType, hwTransport) {
-    let wallet = {};
+    const wallet = {};
     if (typeof priv !== 'undefined') {
       wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex');
     }
@@ -171,8 +168,8 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   setHDAddressesHWWallet(start, limit) {
     this.walletsRetrieved = [];
-    for (var i = start; i < start + limit; i++) {
-      var derivedKey = this.hdk.derive('m/' + i);
+    for (let i = start; i < start + limit; i++) {
+      const derivedKey = this.hdk.derive('m/' + i);
       const tempWallet = this.createWallet(
         undefined,
         derivedKey.publicKey,
@@ -210,7 +207,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
   // (Start) Internal methods underlying wallet usage methods
   async _getAccounts(count, offset) {
     return new Promise(resolve => {
-      let collect = {};
+      const collect = {};
       if (
         this.addressesToIndexMap[offset] &&
         this.addressesToIndexMap[offset + count - 1]
@@ -250,7 +247,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   signTxTrezor(rawTx) {
     return new Promise((resolve, reject) => {
-      var trezorConnectSignCallback = result => {
+      const trezorConnectSignCallback = result => {
         if (!result.success) {
           reject(Error(result.error));
           return;
@@ -291,7 +288,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
           reject(result.error);
           return;
         }
-        let signedMessage = '0x' + result.signature;
+        const signedMessage = '0x' + result.signature;
         resolve(signedMessage);
       };
       TrezorConnect.ethereumSignMessage(
@@ -306,22 +303,18 @@ export default class TrezorWallet extends HardwareWalletInterface {
   // (End) Internal methods underlying wallet usage methods
   // (Start) Internal utility methods
   getNakedAddress(address) {
-    let naked = address.toLowerCase().replace('0x', '');
+    const naked = address.toLowerCase().replace('0x', '');
     if (naked.length % 2 === 0) {
       return naked.toString();
-    } else {
-      return '0' + naked.toString();
     }
+    return '0' + naked.toString();
   }
 
   _getAddressForWallet(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
       return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');
-    } else {
-      return (
-        '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
-      );
     }
+    return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex');
   }
 
   // (End) Internal utility methods

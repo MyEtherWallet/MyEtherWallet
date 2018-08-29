@@ -160,7 +160,7 @@ export default {
   },
   methods: {
     openFAQ: function(faqToOpen) {
-      var currentState = this.showFAQs[faqToOpen];
+      const currentState = this.showFAQs[faqToOpen];
       this.showFAQs[faqToOpen] = !currentState;
     }
   }

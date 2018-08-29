@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     uploadClick() {
-      let jsonInput = this.$refs.jsonInput;
+      const jsonInput = this.$refs.jsonInput;
       jsonInput.value = '';
       jsonInput.click();
     },
@@ -96,7 +96,7 @@ export default {
     },
     uploadFile(e) {
       const self = this;
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onloadend = function(evt) {
         self.$emit('file', JSON.parse(evt.target.result));
         self.file = JSON.parse(evt.target.result);
