@@ -109,9 +109,8 @@ export default {
   },
   watch: {
     downloadable() {
-      const self = this;
-      setTimeout(function() {
-        self.$children[0].$refs.success.show();
+      setTimeout(() => {
+        this.$children[0].$refs.success.show();
       }, 15000);
     }
   },
@@ -119,19 +118,18 @@ export default {
     const worker = new Worker();
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = e => {
-      // eslint-disable-next-line no-useless-escape
-      this.walletJson = createBlob('mime', e.data.walletJson);
-      this.name = e.data.name.toString();
-
+      console.log(e);
       const createBlob = (mime, str) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
         const blob = new Blob([string], {
           type: mime
         });
-        self.downloadable = true;
+        this.downloadable = true;
         return window.URL.createObjectURL(blob);
       };
+      this.walletJson = createBlob('mime', e.data.walletJson);
+      this.name = e.data.name.toString();
     };
     worker.onerror = function() {
       // eslint-disable-next-line no-console
