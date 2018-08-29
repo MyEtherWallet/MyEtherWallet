@@ -4,12 +4,7 @@ import EthereumTx from 'ethereumjs-tx'
 import EthereumWallet from 'ethereumjs-wallet'
 
 import * as crypto from 'crypto'
-// import * as scrypt from 'scryptsy'
-// import assert from 'assert'
-//
-// import account from 'eth-lib/lib/account'
-// var Account = require()
-// This No Longer Has Any HD based wallet Operations
+
 export default class BasicWallet {
   constructor (options) {
     this.identifier = 'Default' // for Legacy Reasons
@@ -184,19 +179,15 @@ export default class BasicWallet {
 
           if (!utils.isHex(options.manualPrivateKey)) {
             throw Error('BasicWallet decryptWallet manualPrivateKey: Invalid Hex')
-            // return;
           } else if (!ethUtil.isValidPrivate(ethUtil.toBuffer(privKey))) {
             this.wallet = null
             throw Error('BasicWallet decryptWallet manualPrivateKey: Invalid Private Key')
-            // return;
           } else {
             this.wallet = BasicWallet.createWallet(this.fixPkey(options.manualPrivateKey))
-            // walletService.password = '';
           }
           break
         case 'fromPrivateKeyFile':
           this.wallet = this.getWalletFromPrivKeyFile(options.fileContent, options.filePassword)
-          // walletService.password = filePassword;
           break
         case 'parity': // TODO: STILL NEEDS TESTS
           this.wallet = this.fromParityPhrase(options.parityPhrase)
@@ -207,13 +198,10 @@ export default class BasicWallet {
       this.active = true
     } catch (e) {
       throw e
-      // throw"fromFile decryptWallet catch" +
     }
 
     if (this.wallet !== null) {
-      // errors.simpleError("fromFile decryptWallet this.wallet !== null")
       this.wallet.type = 'default'
-      // this._attachWallet(this.wallet)
     }
   };
 
@@ -236,7 +224,6 @@ export default class BasicWallet {
       wallet = EthereumWallet.fromPrivateKey(privateKey)
     }
 
-    // wallet.pubKey = pub
     wallet.path = path
     wallet.hwType = hwType
     wallet.hwTransport = hwTransport

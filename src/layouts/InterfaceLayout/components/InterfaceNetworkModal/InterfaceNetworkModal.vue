@@ -105,7 +105,6 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks')
     }
-    console.log(this.networks)
   },
   methods: {
     networkModalOpen () {

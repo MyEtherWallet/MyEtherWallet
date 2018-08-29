@@ -107,7 +107,6 @@ export default {
   },
   mounted () {
     this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-      console.log('modal hidden') // todo remove dev item
       if (this.dismissed) {
         this.reset()
       }
@@ -116,7 +115,6 @@ export default {
     this.$refs.successModal.$refs.success.$on('hide', () => {
       this.successMessage = ''
       this.linkMessage = 'OK'
-      console.log('success modal hidden') // todo remove dev item
     })
   },
   methods: {

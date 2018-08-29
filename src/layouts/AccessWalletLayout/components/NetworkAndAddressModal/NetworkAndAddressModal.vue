@@ -88,7 +88,7 @@
       <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }} <a href="/">{{
         $t('common.terms')
         }}</a>.
-        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox"/>
+        <input ref="accessMyWalletBtn" v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox"/>
         <span class="checkmark"></span>
       </label>
     </div>
@@ -136,6 +136,7 @@ export default {
   mounted () {
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
+      this.$refs.accessMyWalletBtn.checked = false
       this.accessMyWalletBtnDisabled = true
       this.walletUnlocked = false
       this.availablePaths = {}
@@ -190,7 +191,6 @@ export default {
           })
         this.showCustomPathInput() // reset the path input
       } else {
-        console.log(this.customPath.dpath) // todo remove dev item
         // TODO: add indication of an invalid path
       }
     },
