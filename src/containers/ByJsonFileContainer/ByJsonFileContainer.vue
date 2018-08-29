@@ -118,7 +118,6 @@ export default {
     const worker = new Worker();
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = e => {
-      console.log(e);
       const createBlob = (mime, str) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
