@@ -27,7 +27,7 @@ branches:
   except:
   - gh-pages
 before_install:
-  - npm install - npm@'>=6.0.0'
+  - npm install -g npm@'>=6.0.0'
 stages:
 - name: add to mewbuilds
   if: type != pull_request
