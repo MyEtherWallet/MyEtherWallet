@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue';
 import InfiniteSlider from 'vue-infinite-slide-bar';
+import VueWorker from 'vue-worker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -40,6 +41,7 @@ Vue.use(BootstrapVue);
 
 // Define vue-i18n
 Vue.use(VueI18n);
+Vue.use(VueWorker);
 const i18n = new VueI18n({
   locale: 'gb',
   fallbackLocale: 'gb',
@@ -55,10 +57,8 @@ Vue.filter('capitalize', function(value) {
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   i18n,
   router,
   store,
-  components: { App },
-  template: '<App/>'
-});
+  render: h => h(App)
+}).$mount('#app');

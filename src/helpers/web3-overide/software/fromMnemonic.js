@@ -42,7 +42,7 @@ export default class FromMnemonic {
 
   getAccounts(callback) {
     try {
-      let addressAsString = this.getAddressString();
+      const addressAsString = this.getAddressString();
       callback(null, addressAsString);
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -79,7 +79,7 @@ export default class FromMnemonic {
       // var _this = this,
       //   error = false,
       //   result
-      var txData = {
+      const txData = {
         nonce: rawTxData.nonce,
         gasPrice:
           rawTxData.gasprice || rawTxData.gasPrice
@@ -95,7 +95,7 @@ export default class FromMnemonic {
         chainId: rawTxData.chainId
       };
       txData.data = txData.data === '' ? '0x' : txData.data;
-      let eTx = new EthereumTx(txData);
+      const eTx = new EthereumTx(txData);
       eTx.sign(Buffer.from(this.wallet.privKey, 'hex'));
       txData.rawTx = JSON.stringify(txData);
       txData.signedTx = '0x' + eTx.serialize().toString('hex');
@@ -111,19 +111,19 @@ export default class FromMnemonic {
         throw new Error(
           'no wallet present. wallet may not have been decrypted'
         );
-      let thisMessage = message.data ? message.data : message;
+      const thisMessage = message.data ? message.data : message;
 
-      let msg = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage));
-      let signed = ethUtil.ecsign(msg, this.wallet.privKey);
-      let combined = Buffer.concat([
+      const msg = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage));
+      const signed = ethUtil.ecsign(msg, this.wallet.privKey);
+      const combined = Buffer.concat([
         Buffer.from(signed.r),
         Buffer.from(signed.s),
         Buffer.from([signed.v])
       ]);
-      let combinedHex = combined.toString('hex');
-      let signingAddr = this.getAddressString();
+      const combinedHex = combined.toString('hex');
+      const signingAddr = this.getAddressString();
       // eslint-disable-next-line no-unused-vars
-      let signedMsg = JSON.stringify(
+      const signedMsg = JSON.stringify(
         {
           address: signingAddr,
           msg: thisMessage,
@@ -143,7 +143,7 @@ export default class FromMnemonic {
   }
 
   createWallet(priv, pub, path, hwType, hwTransport) {
-    let wallet = {};
+    const wallet = {};
     if (typeof priv !== 'undefined') {
       wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex');
     }
@@ -161,16 +161,13 @@ export default class FromMnemonic {
     if (!this.wallet) {
       if (typeof this.HDWallet.wallets[0].pubKey === 'undefined') {
         return ethUtil.privateToAddress(this.HDWallet.wallets[0].privKey);
-      } else {
-        return ethUtil.publicToAddress(this.HDWallet.wallets[0].pubKey, true);
       }
-    } else {
-      if (typeof this.wallet.pubKey === 'undefined') {
-        return ethUtil.privateToAddress(this.wallet.privKey);
-      } else {
-        return ethUtil.publicToAddress(this.wallet.pubKey, true);
-      }
+      return ethUtil.publicToAddress(this.HDWallet.wallets[0].pubKey, true);
     }
+    if (typeof this.wallet.pubKey === 'undefined') {
+      return ethUtil.privateToAddress(this.wallet.privKey);
+    }
+    return ethUtil.publicToAddress(this.wallet.pubKey, true);
   }
 
   getAddressString() {
@@ -252,7 +249,7 @@ export default class FromMnemonic {
 
   getHDAddresses(start = 0, limit = 5, callback) {
     if (this.HDWallet.hdk) {
-      let addressArray = [];
+      const addressArray = [];
       if (
         start !== this.currentWalletSet.start ||
         limit !== this.currentWalletSet.limit
@@ -272,15 +269,14 @@ export default class FromMnemonic {
       }
       if (typeof callback !== 'function') {
         return addressArray;
-      } else {
-        callback(null, [...addressArray]);
       }
+      callback(null, [...addressArray]);
     }
   }
 
   getSingleHDAddresses(start = 0, callback) {
     if (this.HDWallet.hdk) {
-      let addressArray = [];
+      const addressArray = [];
       this.HDWallet.wallets.unshift(
         this.createWallet(
           this.HDWallet.hdk.derive(this.HDWallet.dPath + '/' + start)
@@ -291,20 +287,16 @@ export default class FromMnemonic {
       utils.toChecksumAddress(this._getAddress(this.HDWallet.wallets[0]));
       if (typeof callback !== 'function') {
         return addressArray;
-      } else {
-        callback(null, addressArray);
       }
+      callback(null, addressArray);
     }
   }
 
   _getAddress(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
       return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');
-    } else {
-      return (
-        '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
-      );
     }
+    return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex');
   }
 
   fixPkey(key) {
@@ -319,17 +311,16 @@ export default class FromMnemonic {
   }
 
   decodeCryptojsSalt(input) {
-    let ciphertext = Buffer.from(input, 'base64');
+    const ciphertext = Buffer.from(input, 'base64');
     if (ciphertext.slice(0, 8).toString() === 'Salted__') {
       return {
         salt: ciphertext.slice(8, 16),
         ciphertext: ciphertext.slice(16)
       };
-    } else {
-      return {
-        ciphertext: ciphertext
-      };
     }
+    return {
+      ciphertext: ciphertext
+    };
   }
 
   // eslint-disable-next-line camelcase
@@ -350,15 +341,15 @@ export default class FromMnemonic {
       return block;
     }
 
-    let keysize = opts.keysize || 16;
-    let ivsize = opts.ivsize || 16;
-    let ret = [];
+    const keysize = opts.keysize || 16;
+    const ivsize = opts.ivsize || 16;
+    const ret = [];
     let i = 0;
     while (Buffer.concat(ret).length < keysize + ivsize) {
       ret[i] = iter(i === 0 ? Buffer.from(0) : ret[i - 1]);
       i++;
     }
-    let tmp = Buffer.concat(ret);
+    const tmp = Buffer.concat(ret);
     return {
       key: tmp.slice(0, keysize),
       iv: tmp.slice(keysize, keysize + ivsize)

@@ -71,13 +71,12 @@ function setLength(msg, length, right) {
       return buf;
     }
     return msg.slice(0, length);
-  } else {
-    if (msg.length < length) {
-      msg.copy(buf, length - msg.length);
-      return buf;
-    }
-    return msg.slice(-length);
   }
+  if (msg.length < length) {
+    msg.copy(buf, length - msg.length);
+    return buf;
+  }
+  return msg.slice(-length);
 }
 
 function getNakedAddress(address) {
@@ -122,15 +121,14 @@ function getTrezorLenBuf(msgLen) {
   if (msgLen < 253) return Buffer.from([msgLen & 0xff]);
   else if (msgLen < 0x10000) {
     return Buffer.from([253, msgLen & 0xff, (msgLen >> 8) & 0xff]);
-  } else {
-    return Buffer.from([
-      254,
-      msgLen & 0xff,
-      (msgLen >> 8) & 0xff,
-      (msgLen >> 16) & 0xff,
-      (msgLen >> 24) & 0xff
-    ]);
   }
+  return Buffer.from([
+    254,
+    msgLen & 0xff,
+    (msgLen >> 8) & 0xff,
+    (msgLen >> 16) & 0xff,
+    (msgLen >> 24) & 0xff
+  ]);
 }
 function getTrezorHash(msg) {
   return sha3(

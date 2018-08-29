@@ -103,9 +103,8 @@ export default {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
         return 'Please Approve on Hardware Wallet';
-      } else {
-        return '';
       }
+      return '';
     }
   },
   methods: {

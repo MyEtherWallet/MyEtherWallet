@@ -17,33 +17,29 @@ export default class Web3WalletAdapter {
   getPrivateKey() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPrivateKey();
-    } else {
-      return null;
     }
+    return null;
   }
 
   getPrivateKeyString() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPrivateKeyString();
-    } else {
-      return null;
     }
+    return null;
   }
 
   getPublicKey() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPublicKey();
-    } else {
-      return null;
     }
+    return null;
   }
 
   getPublicKeyString() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPublicKeyString();
-    } else {
-      return null;
     }
+    return null;
   }
 
   getAddress() {
@@ -53,11 +49,10 @@ export default class Web3WalletAdapter {
   getAddressString() {
     const address = this.wallet.getAddress();
     if (typeof address !== 'string') {
-      let rawAddress = '0x' + address.toString('hex');
+      const rawAddress = '0x' + address.toString('hex');
       return ethUtil.toChecksumAddress(rawAddress);
-    } else {
-      return address;
     }
+    return address;
   }
 
   getChecksumAddressString() {
@@ -69,33 +64,29 @@ export default class Web3WalletAdapter {
   get privateKey() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPrivateKeyString();
-    } else {
-      return null;
     }
+    return null;
   }
 
   get publicKey() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPublicKeyString();
-    } else {
-      return null;
     }
+    return null;
   }
 
   get privateKeyBuffer() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPrivateKey();
-    } else {
-      return null;
     }
+    return null;
   }
 
   get publicKeyBuffer() {
     if (this.privateKeyAvailable()) {
       return this.wallet.getPublicKey();
-    } else {
-      return null;
     }
+    return null;
   }
 
   get accounts() {
@@ -154,7 +145,7 @@ export default class Web3WalletAdapter {
       this.wallet
         .signMessage(msgData)
         .then(_signedMessage => {
-          let signedMsg = JSON.stringify(
+          const signedMsg = JSON.stringify(
             {
               address: this.wallet.getAddressString(),
               msg: message,

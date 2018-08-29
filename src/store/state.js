@@ -1,4 +1,4 @@
-import nodeList from '@/configs/networks';
+import nodeList from '@/networks';
 const state = {
   web3: {},
   network: {

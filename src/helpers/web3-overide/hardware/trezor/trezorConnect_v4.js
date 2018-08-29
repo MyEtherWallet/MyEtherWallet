@@ -7,7 +7,7 @@
  * Present File retrieved 6/8/2018 from: https://connect.trezor.io/4/connect.js
  */
 
-var TREZOR_CONNECT_VERSION = 4;
+const TREZOR_CONNECT_VERSION = 4;
 
 if (!Array.isArray) {
   Array.isArray = function(arg) {
@@ -16,7 +16,7 @@ if (!Array.isArray) {
 }
 
 // eslint-disable-next-line no-unused-vars
-var HD_HARDENED = 0x80000000;
+const HD_HARDENED = 0x80000000;
 
 // react sometimes adds some other parameters that should not be there
 function _fwStrFix(obj, fw) {
@@ -26,41 +26,43 @@ function _fwStrFix(obj, fw) {
   return obj;
 }
 
-var isBrowser =
+const isBrowser =
   typeof window !== 'undefined' &&
   {}.toString.call(window) === '[object Window]';
 
-this.TrezorConnect = !isBrowser
+window.TrezorConnect = !isBrowser
   ? (function() {})()
   : (function() {
       'use strict';
 
-      var chrome = window.chrome;
-      var IS_CHROME_APP = chrome && chrome.app && chrome.app.window;
+      const chrome = window.chrome;
+      const IS_CHROME_APP = chrome && chrome.app && chrome.app.window;
 
-      var ERR_TIMED_OUT = 'Loading timed out';
-      var ERR_WINDOW_CLOSED = 'Window closed';
-      var ERR_WINDOW_BLOCKED = 'Window blocked';
-      var ERR_ALREADY_WAITING = 'Already waiting for a response';
-      var ERR_CHROME_NOT_CONNECTED = 'Internal Chrome popup is not responding.';
+      const ERR_TIMED_OUT = 'Loading timed out';
+      const ERR_WINDOW_CLOSED = 'Window closed';
+      const ERR_WINDOW_BLOCKED = 'Window blocked';
+      const ERR_ALREADY_WAITING = 'Already waiting for a response';
+      const ERR_CHROME_NOT_CONNECTED =
+        'Internal Chrome popup is not responding.';
 
-      var DISABLE_LOGIN_BUTTONS = window.TREZOR_DISABLE_LOGIN_BUTTONS || false;
-      var CHROME_URL = window.TREZOR_CHROME_URL || './chrome/wrapper.html';
-      var POPUP_ORIGIN =
+      const DISABLE_LOGIN_BUTTONS =
+        window.TREZOR_DISABLE_LOGIN_BUTTONS || false;
+      const CHROME_URL = window.TREZOR_CHROME_URL || './chrome/wrapper.html';
+      const POPUP_ORIGIN =
         window.TREZOR_POPUP_ORIGIN || 'https://connect.trezor.io';
-      var POPUP_PATH =
+      const POPUP_PATH =
         window.TREZOR_POPUP_PATH || POPUP_ORIGIN + '/' + TREZOR_CONNECT_VERSION;
-      var POPUP_URL =
+      const POPUP_URL =
         window.TREZOR_POPUP_URL ||
         POPUP_PATH + '/popup/popup.html?v=' + new Date().getTime();
 
-      var POPUP_INIT_TIMEOUT = 15000;
+      const POPUP_INIT_TIMEOUT = 15000;
 
       /**
        * Public API.
        */
       function TrezorConnect() {
-        var manager = new PopupManager();
+        const manager = new PopupManager();
 
         /**
          * Popup errors.
@@ -78,7 +80,7 @@ this.TrezorConnect = !isBrowser
          * @param {function(?Error)} callback
          */
         this.open = function(callback) {
-          var onchannel = function(result) {
+          const onchannel = function(result) {
             if (result instanceof Error) {
               callback(result);
             } else {
@@ -220,7 +222,7 @@ this.TrezorConnect = !isBrowser
         };
 
         this.getFreshAddress = function(callback, requiredFirmware) {
-          var wrapperCallback = function(result) {
+          const wrapperCallback = function(result) {
             if (result.success) {
               callback({ success: true, address: result.freshAddress });
             } else {
@@ -795,15 +797,15 @@ this.TrezorConnect = !isBrowser
         };
 
         // noinspection CssUnknownTarget
-        var LOGIN_CSS =
+        const LOGIN_CSS =
           '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
-        var LOGIN_ONCLICK =
+        const LOGIN_ONCLICK =
           'TrezorConnect.requestLogin(' +
           "'@hosticon@','@challenge_hidden@','@challenge_visual@','@callback@'" +
           ')';
 
-        var LOGIN_HTML =
+        const LOGIN_HTML =
           '<div id="trezorconnect-wrapper">' +
           '  <a id="trezorconnect-button" onclick="' +
           LOGIN_ONCLICK +
@@ -823,15 +825,15 @@ this.TrezorConnect = !isBrowser
          * `TrezorConnect.requestLogin` directly.
          */
         this.renderLoginButtons = function() {
-          var elements = document.getElementsByTagName('trezor:login');
+          const elements = document.getElementsByTagName('trezor:login');
 
-          for (var i = 0; i < elements.length; i++) {
-            var e = elements[i];
-            var text = e.getAttribute('text') || 'Sign in with TREZOR';
-            var callback = e.getAttribute('callback') || '';
-            var hosticon = e.getAttribute('icon') || '';
-            var challenge_hidden = e.getAttribute('challenge_hidden') || '';
-            var challenge_visual = e.getAttribute('challenge_visual') || '';
+          for (let i = 0; i < elements.length; i++) {
+            const e = elements[i];
+            let text = e.getAttribute('text') || 'Sign in with TREZOR';
+            const callback = e.getAttribute('callback') || '';
+            const hosticon = e.getAttribute('icon') || '';
+            const challenge_hidden = e.getAttribute('challenge_hidden') || '';
+            const challenge_visual = e.getAttribute('challenge_visual') || '';
 
             // it's not valid to put markup into attributes, so let users
             // supply a raw text and make TREZOR bold
@@ -859,7 +861,7 @@ this.TrezorConnect = !isBrowser
             return p !== 'm';
           })
           .map(function(p) {
-            var hardened = false;
+            let hardened = false;
             if (p[p.length - 1] === "'") {
               hardened = true;
               p = p.substr(0, p.length - 1);
@@ -867,7 +869,7 @@ this.TrezorConnect = !isBrowser
             if (isNaN(p)) {
               throw new Error('Not a valid path.');
             }
-            var n = parseInt(p);
+            let n = parseInt(p);
             if (hardened) {
               // hardened index
               n = (n | 0x80000000) >>> 0;
@@ -881,9 +883,9 @@ this.TrezorConnect = !isBrowser
    */
 
       function ChromePopup(url, name, width, height) {
-        var left = (screen.width - width) / 2;
-        var top = (screen.height - height) / 2;
-        var opts = {
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+        const opts = {
           id: name,
           innerBounds: {
             width: width,
@@ -893,13 +895,13 @@ this.TrezorConnect = !isBrowser
           }
         };
 
-        var closed = function() {
+        const closed = function() {
           if (this.onclose) {
             this.onclose(false); // never report as blocked
           }
         }.bind(this);
 
-        var opened = function(w) {
+        const opened = function(w) {
           this.window = w;
           this.window.onClosed.addListener(closed);
         }.bind(this);
@@ -912,17 +914,17 @@ this.TrezorConnect = !isBrowser
       }
 
       function ChromeChannel(popup, waiting) {
-        var port = null;
+        let port = null;
 
-        var respond = function(data) {
+        const respond = function(data) {
           if (waiting) {
-            var w = waiting;
+            const w = waiting;
             waiting = null;
             w(data);
           }
         };
 
-        var setup = function(p) {
+        const setup = function(p) {
           if (p.name === popup.name) {
             port = p;
             port.onMessage.addListener(respond);
@@ -957,9 +959,9 @@ this.TrezorConnect = !isBrowser
       }
 
       function Popup(url, origin, name, width, height) {
-        var left = (screen.width - width) / 2;
-        var top = (screen.height - height) / 2;
-        var opts =
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+        const opts =
           'width=' +
           width +
           ',height=' +
@@ -973,11 +975,11 @@ this.TrezorConnect = !isBrowser
           ',location=no' +
           ',personalbar=no' +
           ',status=no';
-        var w = window.open(url, name, opts);
+        const w = window.open(url, name, opts);
 
-        var interval;
-        var blocked = w.closed;
-        var iterate = function() {
+        let interval = null;
+        const blocked = w.closed;
+        const iterate = function() {
           if (w.closed) {
             clearInterval(interval);
             if (this.onclose) {
@@ -993,19 +995,19 @@ this.TrezorConnect = !isBrowser
       }
 
       function Channel(popup, waiting) {
-        var respond = function(data) {
+        const respond = function(data) {
           if (waiting) {
-            var w = waiting;
+            const w = waiting;
             waiting = null;
             w(data);
           }
         };
 
-        var receive = function(event) {
+        const receive = function(event) {
           // eslint-disable-next-line no-useless-escape
-          var org1 = event.origin.match(/^.+\:\/\/[^\â€Œâ€‹/]+/)[0];
+          const org1 = event.origin.match(/^.+\:\/\/[^\â€Œâ€‹/]+/)[0];
           // eslint-disable-next-line no-useless-escape
-          var org2 = popup.origin.match(/^.+\:\/\/[^\â€Œâ€‹/]+/)[0];
+          const org2 = popup.origin.match(/^.+\:\/\/[^\â€Œâ€‹/]+/)[0];
           // if (event.source === popup.window && event.origin === popup.origin) {
           if (event.source === popup.window && org1 === org2) {
             respond(event.data);
@@ -1031,14 +1033,14 @@ this.TrezorConnect = !isBrowser
       }
 
       function ConnectedChannel(p) {
-        var ready = function() {
+        const ready = function() {
           clearTimeout(this.timeout);
           this.popup.onclose = null;
           this.ready = true;
           this.onready();
         }.bind(this);
 
-        var closed = function(blocked) {
+        const closed = function(blocked) {
           clearTimeout(this.timeout);
           this.channel.close();
           if (blocked) {
@@ -1048,7 +1050,7 @@ this.TrezorConnect = !isBrowser
           }
         }.bind(this);
 
-        var timedout = function() {
+        const timedout = function() {
           this.popup.onclose = null;
           if (this.popup.window) {
             this.popup.window.close();
@@ -1075,15 +1077,15 @@ this.TrezorConnect = !isBrowser
       }
 
       function PopupManager() {
-        var cc = null;
+        let cc = null;
 
-        var closed = function() {
+        const closed = function() {
           cc.channel.respond(new Error(ERR_WINDOW_CLOSED));
           cc.channel.close();
           cc = null;
         };
 
-        var open = function(callback) {
+        const open = function(callback) {
           cc = new ConnectedChannel({
             name: 'trezor-connect',
             width: 600,
@@ -1139,27 +1141,27 @@ this.TrezorConnect = !isBrowser
           message.accountDiscoveryBip44CoinType =
             this.accountDiscoveryBip44CoinType || null;
 
-          var respond = function(response) {
-            var succ = response.success && this.closeAfterSuccess;
-            var fail = !response.success && this.closeAfterFailure;
+          const respond = function(response) {
+            const succ = response.success && this.closeAfterSuccess;
+            const fail = !response.success && this.closeAfterFailure;
             if (succ || fail) {
               this.close();
             }
             callback(response);
           }.bind(this);
 
-          var onresponse = function(response) {
+          const onresponse = function(response) {
             if (response instanceof Error) {
-              var error = response;
+              const error = response;
               respond({ success: false, error: error.message });
             } else {
               respond(response);
             }
           };
 
-          var onchannel = function(channel) {
+          const onchannel = function(channel) {
             if (channel instanceof Error) {
-              var error = channel;
+              const error = channel;
               respond({ success: false, error: error.message });
             } else {
               channel.send(message, onresponse);
@@ -1170,7 +1172,7 @@ this.TrezorConnect = !isBrowser
         };
       }
 
-      var exports = new TrezorConnect();
+      const exports = new TrezorConnect();
 
       if (!IS_CHROME_APP && !DISABLE_LOGIN_BUTTONS) {
         exports.renderLoginButtons();
