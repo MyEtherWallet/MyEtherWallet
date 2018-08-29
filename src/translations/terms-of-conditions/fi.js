@@ -9,5 +9,5 @@ const termsOfConditions = {
   // paragraph6: '',
   // paragraph7: '',
   // paragraph8: ''
-}
-export default termsOfConditions
+};
+export default termsOfConditions;

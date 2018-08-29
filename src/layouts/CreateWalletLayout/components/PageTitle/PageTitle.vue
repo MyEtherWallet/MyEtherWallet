@@ -13,13 +13,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "PageTitle.scss";
+@import 'PageTitle.scss';
 </style>

@@ -15,7 +15,9 @@
           </div>
         </div>
         <div class="grid-col-2 promo-cards">
-          <router-link to="/create-wallet" class="nounderline">
+          <router-link 
+            to="/create-wallet" 
+            class="nounderline">
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
@@ -26,15 +28,17 @@
                   <p class="color-white">
                     {{ $t("home.obtainAddress") }}
                   </p>
-                    <p class="button">
-                      {{ $t("home.getStarted") }}
-                      <img src="~@/assets/images/icons/right-arrow.png">
-                    </p>
+                  <p class="button">
+                    {{ $t("home.getStarted") }}
+                    <img src="~@/assets/images/icons/right-arrow.png">
+                  </p>
                 </div>
               </div>
             </div>
           </router-link>
-          <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
+          <router-link 
+            :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" 
+            class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
@@ -61,13 +65,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "TopBanner.scss";
+@import 'TopBanner.scss';
 </style>

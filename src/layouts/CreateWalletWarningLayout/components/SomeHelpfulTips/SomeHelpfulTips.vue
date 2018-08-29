@@ -7,7 +7,7 @@
           About Security
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"></div>
+          <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
           <h4>Some helpful tips</h4>
@@ -28,7 +28,9 @@
               <h5>Bookmark our website</h5>
               <p>
                 Always check the URL for our 'MyEtherWallet Inc [US]' certification. And install
-                our <a href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en" target="_blank">Chrome extension</a>
+                our <a
+                  href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+                  target="_blank">Chrome extension</a>
                 for an extra layer of security!
               </p>
             </div>
@@ -37,7 +39,9 @@
               <p>
                 We have many great hardware wallets listed on our interface.
                 They're only about $100. It's worth for your security.
-                Buy one <a href="" target="_blank">here</a>.
+                Buy one <a
+                  href=""
+                  target="_blank">here</a>.
               </p>
             </div>
             <div>
@@ -58,19 +62,19 @@
 </template>
 
 <script>
-
 export default {
-  props: ['progressBarValue'],
-  components: {
-  },
-  data () {
-    return {
-
+  props: {
+    progressBarValue: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "../BlockWithProgressBar.scss";
+@import '../BlockWithProgressBar.scss';
 </style>

@@ -1,1 +1,1 @@
-export { default } from './GenerateInfo'
+export { default } from './GenerateInfo';

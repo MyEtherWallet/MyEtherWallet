@@ -1,42 +1,50 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')"></interface-container-title>
+    <interface-container-title :title="$t('common.sendTx')"/>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="title">
             <h4>{{ $t('interface.sendTxAmount') }}</h4>
-            <p v-on:click="setBalanceToAmt" class="title-button prevent-user-select">Entire
+            <p
+              class="title-button prevent-user-select"
+              @click="setBalanceToAmt">Entire
               Balance</p>
           </div>
-          <currency-picker :currency="tokensWithBalance" v-on:selectedCurrency="setSelectedCurrency"
-                           :page="'sendEthAndTokens'" :token="true"></currency-picker>
+          <currency-picker :currency="tokensWithBalance"  :page="'sendEthAndTokens'" :token="true"@selectedCurrency="setSelectedCurrency"/>
           <div class="the-form amount-number">
-            <input type="number" name="" v-model="amount" placeholder="Amount"/>
-            <i
-              :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
-              aria-hidden="true"></i>
+            <inputv-model="amount" type="number" name=""  placeholder="Amount" >
+            <i :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"/>
           </div>
-          <div class="error-message-container"
-               v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount">
+          <div  v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount"class="error-message-container">
             <p>{{ $t('common.dontHaveEnough') }}</p>
           </div>
         </div>
         <div class="to-address">
           <div class="title">
-            <h4>{{ $t('interface.sendTxToAddr') }}</h4> &nbsp;
-            <blockie :address="toAddress" width="22px" height="22px"
-                     v-show="addressValid && toAddress.length !== 0"></blockie>
-            <p class="copy-button prevent-user-select" v-on:click="copyToClipboard('address')">{{
-              $t('common.copy')
+            <h4>{{ $t("interface.sendTxToAddr") }}
+              <blockie
+                v-show="addressValid && toAddress.length !== 0"
+                :address="toAddress"
+                class="blockie-image"/>
+            </h4>
+
+            <p
+              class="copy-button prevent-user-select"
+              @click="copyToClipboard('address')">{{
+                $t('common.copy')
               }}</p>
           </div>
           <div class="the-form address-block">
-            <textarea ref="address" name="name" v-model="toAddress" autocomplete="off"></textarea>
+            <textarea
+              ref="address"
+              v-model="toAddress"
+              name="name"
+              autocomplete="off"/>
             <i
               :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
-              aria-hidden="true"></i>
+              aria-hidden="true"/>
           </div>
           <div class="error-message-container">
             <p v-if="toAddress.length === 0 && toAddress === ''">Can't be empty</p>
@@ -75,34 +83,39 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" v-model="gasAmount" placeholder="Gas Amount"/>
+        <input  v-model="gasAmount"type="number"
+          name="" placeholder="Gas Amount" >
         <div class="good-button-container">
           <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          <i
+            class="fa fa-check-circle good-button not-good"
+            aria-hidden="true"/>
         </div>
       </div>
     </div>
     <div class="send-form advanced">
       <div class="advanced-content">
-        <h4>{{ $t('common.advanced') }}</h4>
-        <div class="toggle-button">
-          <span>{{ $t('interface.dataGas') }}</span>
-          <!-- Rounded switch -->
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input type="checkbox" v-on:click="advancedExpend = !advancedExpend"/>
-              <span class="slider round"></span>
-            </label>
+
+
+          <h4>{{ $t('common.advanced') }}</h4>
+          <div class="toggle-button">
+            <span>{{ $t('interface.dataGas') }}</span>
+            <!-- Rounded switch -->
+            <div class="sliding-switch-white">
+              <label class="switch">
+                <input type="checkbox" @click="advancedExpend = !advancedExpend" >
+                <span class="slider round"/>
+              </label>
+
           </div>
-          <br/>
-          <div class="input-container" v-if="advancedExpend">
-            <div class="the-form user-input">
-              <input type="text" name="" v-model="data"
-                     placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off"/>
-            </div>
-            <div class="the-form user-input">
-              <input type="number" name="" v-model="gasLimit" placeholder="Gas Limit"/>
-            </div>
+        <br/>
+        <div  v-if="advancedExpend"class="input-container">
+          <div class="the-form user-input">
+            <inputv-model="data" type="text" name=""  placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)" autocomplete="off" >
+          </div>
+          <div class="the-form user-input">
+            <input  v-model="gasLimit"type="number"
+              name="" placeholder="Gas Limit" ></div>
           </div>
         </div>
       </div>
@@ -114,19 +127,18 @@
         @click="confirmationModalOpen">
         {{ $t('interface.sendTx') }}
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')"
-                             :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text :link-text="$t('interface.learnMore')" :question="$t('interface.haveIssues')"link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data"-->
+    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" -->
+                   <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" -->
+                   <!--:to="toAddress" :value="amount" :gas="gasLimit" :data="data" -->
                    <!--:nonce="nonce + 1"></confirm-modal>-->
     <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
 import CurrencyPicker from '../../components/CurrencyPicker'
@@ -139,14 +151,25 @@ const EthTx = require('ethereumjs-tx')
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['address', 'tokensWithBalance'],
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'blockie': Blockie,
+    blockie: Blockie,
     'currency-picker': CurrencyPicker
   },
-  data () {
+  props: {
+    address: {
+      type: String,
+      default: ''
+    },
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
+  data() {
     return {
       advancedExpend: false,
       addressValid: true,
@@ -159,44 +182,101 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
+      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       signedTx: ''
+    };
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    })
+  },
+  watch: {
+    toAddress(newVal) {
+      this.toAddress = newVal;
+      if (this.verifyAddr()) {
+        this.addressValid = false;
+      } else {
+        this.estimateGas();
+        this.addressValid = true;
+      }
+    },
+    parsedBalance(newVal) {
+      this.parsedBalance = newVal;
+    },
+    gasAmount(newVal) {
+      this.gasAmount = newVal;
+      if (!this.verifyAddr()) {
+        this.estimateGas();
+      }
+      this.$store.dispatch('setGasPrice', Number(newVal));
+    },
+    amount(newVal) {
+      this.amount = newVal;
+      if (!this.verifyAddr()) {
+        this.estimateGas();
+      }
+    },
+    selectedCurrency(newVal) {
+      this.estimateGas();
+      this.selectedCurrency = newVal;
+    }
+  },
+  mounted() {
+    if (this.account.balance) {
+      this.parsedBalance = unit.fromWei(
+        parseInt(this.account.balance),
+        'ether'
+      );
     }
   },
   methods: {
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
     },
-    showSuccessModal () {
-      this.$children[6].$refs.success.show()
+    showSuccessModal() {
+      this.$children[6].$refs.success.show();
     },
-    createTx () {
-      (async () => {
-        const jsonInterface = [{
-          'constant': false,
-          'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
-          'name': 'transfer',
-          'outputs': [{'name': 'success', 'type': 'bool'}],
-          'payable': false,
-          'type': 'function'
-        }]
-        const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-        const isEth = this.selectedCurrency.name === 'Ethereum'
-        this.nonce = await this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
-        this.chainId = this.$store.state.network.type.chainID
-        this.data = isEth ? this.data : contract.methods.transfer(this.toAddress, unit.toWei(this.amount, 'ether')).encodeABI()
-        this.raw = {
-          chainId: 1,
-          from: this.$store.state.wallet.getAddressString(),
-          gas: this.gasLimit,
-          nonce: this.nonce,
-          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-          value: isEth ? this.amount === '' ? 0 : unit.toWei(this.amount, 'ether') : 0,
-          to: isEth ? this.toAddress : this.selectedCurrency.addr,
-          data: this.data
+    async createTx() {
+      const jsonInterface = [
+        {
+          constant: false,
+          inputs: [
+            { name: '_to', type: 'address' },
+            { name: '_amount', type: 'uint256' }
+          ],
+          name: 'transfer',
+          outputs: [{ name: 'success', type: 'bool' }],
+          payable: false,
+          type: 'function'
         }
+      ];
+      const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+      const isEth = this.selectedCurrency.name === 'Ethereum';
+      this.nonce = await this.$store.state.web3.eth.getTransactionCount(
+        this.$store.state.wallet.getAddressString()
+      );
+      this.data = isEth
+        ? this.data
+        : contract.methods
+            .transfer(this.toAddress, unit.toWei(this.amount, 'ether'))
+            .encodeABI();
+
+      this.raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.gasLimit,
+        nonce: this.nonce,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        value: isEth
+          ? this.amount === ''
+            ? 0
+            : unit.toWei(this.amount, 'ether')
+          : 0,
+        to: isEth ? this.toAddress : this.selectedCurrency.addr,
+        data: this.data
+      };
 
         if (this.toAddress === '') {
           delete this.raw['to']
@@ -218,102 +298,66 @@ export default {
     confirmationModalOpen () {
       this.createTx()
       window.scrollTo(0, 0)
+      this.$children[5].$refs.confirmation.show()
     },
-    changeGas (val) {
-      this.gasAmount = val
-      this.createDataHex()
-      this.$store.dispatch('setGasPrice', Number(val))
+    changeGas(val) {
+      this.gasAmount = val;
+      this.createDataHex();
+      this.$store.dispatch('setGasPrice', Number(val));
     },
-    setBalanceToAmt () {
+    setBalanceToAmt() {
       if (this.selectedCurrency.name === 'Ethereum') {
-        this.amount = this.parsedBalance - this.transactionFee
+        this.amount = this.parsedBalance - this.transactionFee;
       }
     },
     createDataHex () {
       if (this.selectedCurrency.name !== 'Ethereum') {
-        const jsonInterface = [{
-          'constant': false,
-          'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}],
-          'name': 'transfer',
-          'outputs': [{'name': 'success', 'type': 'bool'}],
-          'payable': false,
-          'type': 'function'
-        }]
-        const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
-        this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
+        const jsonInterface = [{constant: false, inputs: [{name: '_to', type: 'address'}, {name: '_amount', type: 'uint256'}],name: 'transfer', outputs: [{name: 'success', type: 'bool'}], payable: false, type: 'function'
+        }
+        ];const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+        this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI();
       } else {
-        this.data = '0x'
+        this.data = '0x';
       }
     },
-    setSelectedCurrency (e) {
-      this.selectedCurrency = e
-      this.createDataHex()
+    setSelectedCurrency(e) {
+      this.selectedCurrency = e;
+      this.createDataHex();
     },
-    estimateGas () {
-      const newRaw = this.raw
-      delete newRaw['gas']
-      delete newRaw['nonce']
-      this.createDataHex()
-      this.$store.state.web3.eth.estimateGas(newRaw).then(res => {
-        this.transactionFee = unit.fromWei(unit.toWei(this.$store.state.gasPrice, 'gwei') * res, 'ether')
-        this.gasLimit = res
-      }).catch(err => console.log(err)) // todo replace with proper error
+    estimateGas() {
+      const newRaw = this.raw;
+      delete newRaw['gas'];
+      delete newRaw['nonce'];
+      // this.createTx() // Is it necessary to generate the signed transaction here?
+      this.createDataHex();
+      this.$store.state.web3.eth
+        .estimateGas(newRaw)
+        .then(res => {
+          this.transactionFee = unit.fromWei(
+            unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
+            'ether'
+          );
+          this.gasLimit = res;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     },
-    verifyAddr () {
+    verifyAddr() {
       if (this.toAddress.length !== 0 && this.toAddress !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.toAddress)
+        const valid = this.$store.state.web3.utils.isAddress(this.toAddress);
         if (!valid) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       }
     }
-  },
-  mounted () {
-    if (this.account.balance) {
-      this.parsedBalance = unit.fromWei(parseInt(this.account.balance), 'ether')
-    }
-  },
-  watch: {
-    toAddress (newVal) {
-      this.toAddress = newVal
-      if (this.verifyAddr()) {
-        this.addressValid = false
-      } else {
-        this.estimateGas()
-        this.addressValid = true
-      }
-    },
-    parsedBalance (newVal) {
-      this.parsedBalance = newVal
-    },
-    gasAmount (newVal) {
-      this.gasAmount = newVal
-      if (!this.verifyAddr()) {
-        this.estimateGas()
-      }
-      this.$store.dispatch('setGasPrice', Number(newVal))
-    },
-    amount (newVal) {
-      this.amount = newVal
-      if (!this.verifyAddr()) {
-        this.estimateGas()
-      }
-    },
-    selectedCurrency (newVal) {
-      this.estimateGas()
-      this.selectedCurrency = newVal
-    }
-  },
-  computed: {
-    ...mapGetters({
-      account: 'account'
-    })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SendCurrencyContainer.scss";
+@import 'SendCurrencyContainer.scss';
 </style>

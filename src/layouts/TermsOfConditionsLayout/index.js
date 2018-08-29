@@ -1,1 +1,1 @@
-export { default } from './TermsOfConditionsLayout'
+export { default } from './TermsOfConditionsLayout';

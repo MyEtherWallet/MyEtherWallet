@@ -1,23 +1,32 @@
 <template>
   <div>
-    <confirm-modal ref="confirmModal" :confirmSendTx="sendTx"
-                   :signedTx="signedTx"
-                   :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
-                   :gasPrice="$store.state.gasPrice" :from="fromAddress"
-                   :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
-                   :nonce="nonce + 1"></confirm-modal>
-    <confirm-modal ref="offlineGenerateConfirmModal" :confirmSendTx="generateTx"
-                   :signedTx="signedTx"
-                   :fee="transactionFee" :isHardwareWallet="isHardwareWallet"
-                   :gasPrice="$store.state.gasPrice" :from="fromAddress"
-                   :to="toAddress" :value="amount" :gas="gasLimit" :data="data"
-                   :nonce="nonce + 1"></confirm-modal>
-    <confirm-sign-modal ref="signConfirmModal" :confirmSignMessage="messageReturn"
-                        :showSuccess="showSuccessModal" :messageToSign="messageToSign" :signedMessage="signedMessage"
-                        :isHardwareWallet="isHardwareWallet"
-                        :from="fromAddress"
-    ></confirm-sign-modal>
-    <success-modal ref="successModal" message="" linkMessage="Close"></success-modal>
+    <confirm-modal
+      ref="confirmModal"
+      :confirm-send-tx="sendTx"
+      :show-success="showSuccessModal"
+      :signed-tx="signedTx"
+      :fee="transactionFee"
+      :is-hardware-wallet="isHardwareWallet"
+      :gas-price="$store.state.gasPrice"
+      :from="fromAddress"
+      :to="toAddress"
+      :value="amount"
+      :gas="gasLimit"
+      :data="data"
+      :nonce="nonce + 1"/>
+    <confirm-sign-modal
+      ref="signConfirmModal"
+      :confirm-sign-message="messageReturn"
+      :show-success="showSuccessModal"
+      :message-to-sign="messageToSign"
+      :signed-message="signedMessage"
+      :is-hardware-wallet="isHardwareWallet"
+      :from="fromAddress"
+    />
+    <success-modal
+      ref="successModal"
+      message=""
+      link-message="Close"/>
   </div>
 </template>
 
@@ -33,7 +42,7 @@ export default {
     'success-modal': SuccessModal,
     'confirm-sign-modal': ConfirmSignModal
   },
-  data () {
+  data() {
     return {
       isHardwareWallet: false,
       responseFunction: null,
@@ -48,7 +57,7 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
+      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       signer: {},
       signedTxObject: {},
