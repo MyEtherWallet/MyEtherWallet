@@ -11,7 +11,7 @@
       <div class="contents">
         <div class="tx-contents">
           <div>
-            <interface-address :address="address" />
+            <interface-address :address="address"/>
           </div>
           <div>
             <interface-balance :balance="balance"/>
@@ -272,11 +272,12 @@ export default {
         });
     },
     getBalance() {
-      this.$store.state.web3.eth
+      const web3 = this.$store.state.web3;
+      web3.eth
         .getBalance(this.address)
         .then(res => {
-          this.balance = Number(res);
-          this.$store.dispatch('setAccountBalance', Number(this.balance));
+          this.balance = web3.utils.fromWei(res, 'ether');
+          this.$store.dispatch('setAccountBalance', this.balance);
         })
         .catch(err => {
           // eslint-disable-next-line no-console

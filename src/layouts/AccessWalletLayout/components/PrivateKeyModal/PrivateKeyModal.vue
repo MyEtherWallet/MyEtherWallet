@@ -1,9 +1,9 @@
 <template>
-  <b-modal 
-    ref="privateKey" 
-    hide-footer 
-    class="bootstrap-modal modal-software" 
-    title="PrivateKey" 
+  <b-modal
+    ref="privateKey"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="PrivateKey"
     centered>
     <form class="private-key-form">
       <div class="input-container">
@@ -25,8 +25,7 @@
 </template>
 
 <script>
-// import Wallet from 'ethereumjs-wallet'
-import { BasicWallet } from '@/helpers/web3-overide/software';
+import { BasicWallet } from '@/wallets';
 
 export default {
   data() {

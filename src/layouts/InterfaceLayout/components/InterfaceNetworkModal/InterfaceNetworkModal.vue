@@ -74,9 +74,9 @@
               v-model="selectedNetwork"
               class="custom-select-1">
               <option
-                v-for="network in networks"
-                :value="network"
-                :key="network.name + network.name_long">{{ network.name | capitalize }} - {{ network.name_long | capitalize }}</option>
+                v-for="type in Object.keys(types)"
+                :value="types[type]"
+                :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long | capitalize }}</option>
             </select>
             <input
               v-model="url"
@@ -161,6 +161,7 @@ import store from 'store';
 import web3 from 'web3';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -168,15 +169,8 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
-      networks: [
-        { name: 'ETH', name_long: 'Ethereum' },
-        { name: 'ETC', name_long: 'Ethereum Classic' },
-        { name: 'ROP', name_long: 'Ropsten' },
-        { name: 'KOV', name_long: 'Kovan' },
-        { name: 'RIN', name_long: 'Rinkeby' },
-        { name: 'CUS', name_long: 'Custom' }
-      ],
+      types: networkTypes,
+      selectedNetwork: networkTypes.ETH,
       chainID: '',
       port: '',
       name: '',
@@ -188,25 +182,7 @@ export default {
   },
   watch: {
     selectedNetwork(newVal) {
-      switch (newVal.name) {
-        case 'ETH':
-          this.chainID = 1;
-          break;
-        case 'ETC':
-          this.chainID = 61;
-          break;
-        case 'ROP':
-          this.chainID = 3;
-          break;
-        case 'KOV':
-          this.chainID = 42;
-          break;
-        case 'RIN':
-          this.chainID = 4;
-          break;
-        default:
-          this.chainID = this.chainID;
-      }
+      this.chainID = newVal.chainID;
     }
   },
   mounted() {
@@ -244,35 +220,14 @@ export default {
       this.password = '';
     },
     saveCustomNetwork() {
-      let explorer = '';
-      switch (this.selectedNetwork.name) {
-        case 'ETH':
-          explorer = 'https://etherscan.io/';
-          break;
-        case 'ETC':
-          explorer = 'https://gastracker.io/';
-          break;
-        case 'ROP':
-          explorer = 'https://ropsten.etherscan.io/';
-          break;
-        case 'KOV':
-          explorer = 'https://kovan.etherscan.io/';
-          break;
-        case 'RIN':
-          explorer = 'https://rinkeby.etherscan.io/';
-          break;
-        default:
-          explorer = 'https://etherscan.io/';
-      }
-
       const customNetwork = {
         auth: !!(this.password !== '' && this.username !== ''),
         password: this.password,
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: `${explorer}address/[[txHash]]`,
-          blockExplorerTX: `${explorer}tx/[[txHash]]`,
+          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr || '',
+          blockExplorerTX: this.selectedNetwork.blockExplorerTX || '',
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,

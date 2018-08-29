@@ -1,29 +1,38 @@
 <template>
   <div class="access-my-wallet-options">
 
-    <mew-connect-modal
+    <mew-connect-modal 
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
 
-    <hardware-modal
+    <hardware-modal 
       ref="hardwareModal"
       :network-and-address-open="networkAndAddressOpen"
+      @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"/>
-    <network-and-address-modal
+
+    <hardware-password-modal 
+      ref="hardwarePasswordModal"
+      :wallet-constructor="walletConstructor"
+      :hardware-brand="hardwareBrand"
+      @hardwareWalletOpen="hardwareWalletOpen"/>
+
+    <network-and-address-modal 
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
     <metamask-modal ref="metamastModal"/>
 
-    <software-modal
+    <software-modal 
       ref="softwareModal"
       :open-password="passwordOpen"
       :open-private-key-input="privateKeyOpen"
       @file="fileUploaded"/>
 
-    <password-modal
+    <password-modal 
       ref="passwordModal"
       :file="file"/>
+
     <private-key-modal ref="privatekeyModal"/>
 
     <div class="wrap">
@@ -61,6 +70,7 @@
 <script>
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
+import HardwarePasswordModal from '../../components/HardwarePasswordModal';
 import MetamaskModal from '../../components/MetamaskModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
@@ -82,6 +92,7 @@ export default {
     'mew-connect-modal': MewConnectModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
+    'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
@@ -90,9 +101,10 @@ export default {
   },
   data() {
     return {
-      file: {},
-      hardwareWallet: {},
-      hardwareAddresses: [],
+      file: '',
+      hardwareWallet: '',
+      walletConstructor: {},
+      hardwareBrand: '',
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -160,7 +172,14 @@ export default {
       this.file = e;
       this.passwordOpen();
     },
+    hardwarePasswordModalOpen(hardwareNeedingPassword) {
+      this.walletConstructor = hardwareNeedingPassword.walletConstructor;
+      this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
+      this.$refs.hardwarePasswordModal.$refs.password.show();
+    },
     hardwareWalletOpen(e) {
+      this.walletConstructor = {};
+      this.hardwareBrand = '';
       this.hardwareWallet = e;
       this.networkAndAddressOpen();
     }

@@ -81,10 +81,8 @@ export default {
       this.$store.state.web3.eth
         .sendSignedTransaction(this.signedTx)
         .on('receipt', () => {})
-        .then(res => {
+        .then(() => {
           this.$children[0].$refs.success.show();
-          // eslint-disable-next-line no-console
-          console.log('sendSignedTransaction', res);
         });
     },
     hideModal() {

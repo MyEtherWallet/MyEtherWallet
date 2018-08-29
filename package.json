@@ -9,7 +9,7 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
-    "build": "node build/build.js",
+    "build": "node fetchEthListData.js; node build/build.js",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run unit && codecov",
     "precommit": "npm run unit && npm run lint"
@@ -92,7 +92,7 @@
     "postcss-import": "^12.0.0",
     "postcss-loader": "^3.0.0",
     "postcss-safe-parser": "^4.0.1",
-    "postcss-url": "^7.2.1",
+    "postcss-url": "^8.0.0",
     "prettier": "^1.14.2",
     "rimraf": "^2.6.0",
     "sass-loader": "^7.0.3",
@@ -122,8 +122,8 @@
     "zxcvbn": "^4.4.2"
   },
   "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 6.0.0"
   },
   "browserslist": [
     "> 1%",

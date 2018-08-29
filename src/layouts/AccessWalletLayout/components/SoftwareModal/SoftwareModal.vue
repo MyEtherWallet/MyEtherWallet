@@ -63,6 +63,10 @@ export default {
     openPrivateKeyInput: {
       type: Function,
       default: function() {}
+    },
+    openMnemonicPhraseInput: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -82,9 +86,8 @@ export default {
         this.uploadClick();
       } else if (this.selected === 'byPriv') {
         this.openPrivateKeyInput();
-      } else {
-        // eslint-disable-next-line
-        console.log("")
+      } else if (this.selected === 'byMnem') {
+        this.openMnemonicPhraseInput();
       }
     },
     select(ref) {

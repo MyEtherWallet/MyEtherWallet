@@ -230,8 +230,6 @@
           link="/"/>
       </div>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :to="address" :value="value" :gas="gasLimit" :data="data" :nonce="nonce"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -241,8 +239,6 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
-// import ConfirmModal from '@/components/ConfirmModal'
-// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx');
@@ -254,8 +250,6 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker
-    // 'confirm-modal': ConfirmModal,
-    // 'success-modal': SuccessModal
   },
   data() {
     return {
@@ -442,12 +436,6 @@ export default {
                 : '',
           data: this.data
         };
-
-        // const tx = new EthTx(this.raw)
-        // tx.sign(this.$store.state.wallet.getPrivateKey())
-        // const serializedTx = tx.serialize()
-        // this.signedTx = `0x${serializedTx.toString('hex')}`
-        // Waiting on this: https://github.com/ethereum/web3.js/issues/1637
         await web3.eth
           .sendTransaction(this.raw)
           .once('transactionHash', hash => {
@@ -479,16 +467,6 @@ export default {
         this.confirmationModalOpen();
       }
     },
-    // confirmationModalOpen () {
-    // this.loading = false
-    // window.scrollTo(0, 0)
-    // const confirmation = this.$children.filter(child => child.$refs.hasOwnProperty('confirmation'))
-    // confirmation[0].$refs.confirmation.show()
-    // },
-    // showSuccessModal () {
-    //   const success = this.$children.filter(child => child.$refs.hasOwnProperty('success'))
-    //   success[0].$refs.success.show()
-    // },
     checkInputsFilled() {
       const inputs = Object.keys(this.writeInputs);
       for (var i = 0; i < inputs.length; i++) {
