@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container/>
+    <header-container />
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import FooterContainer from '@/containers/FooterContainer'
-import HeaderContainer from '@/containers/HeaderContainer'
-import ConfirmationContainer from '@/containers/ConfirmationContainer'
-import store from 'store'
-import nodeList from '@/networks'
-import Web3 from 'web3'
+import FooterContainer from '@/containers/FooterContainer';
+import HeaderContainer from '@/containers/HeaderContainer';
+import ConfirmationContainer from '@/containers/ConfirmationContainer';
+import store from 'store';
+import nodeList from '@/networks';
+import Web3 from 'web3';
 
 export default {
   name: 'App',
@@ -22,13 +22,18 @@ export default {
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer
   },
-  mounted () { // Can't use before mount because that lifecycle isn't called if serving via static files
-    const notifications = store.get('notifications') !== undefined ? store.get('notifications') : {}
-    const customPaths = store.get('customPaths') !== undefined ? store.get('customPaths') : {}
+  mounted() {
+    // Can't use before mount because that lifecycle isn't called if serving via static files
     const state = {
-      web3: store.get('network') ? new Web3(store.get('network').url) : new Web3(this.$store.state.Networks['ETH'][0].url),
-      network: store.get('network') !== undefined ? store.get('network') : this.$store.state.Networks['ETH'][0],
-      customPaths: customPaths,
+      web3: store.get('network')
+        ? new Web3(store.get('network').url)
+        : new Web3(this.$store.state.Networks['ETH'][0].url),
+      network:
+        store.get('network') !== undefined
+          ? store.get('network')
+          : this.$store.state.Networks['ETH'][0],
+      customPaths:
+        store.get('customPaths') !== undefined ? store.get('customPaths') : {},
       wallet: null,
       account: {
         balance: 0
@@ -39,20 +44,25 @@ export default {
       online: true,
       pageStates: {
         interface: {
-          sideMenu: store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
+          sideMenu:
+            store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send'
         }
       },
-      notifications: notifications,
+      notifications:
+        store.get('notifications') !== undefined
+          ? store.get('notifications')
+          : {},
       gasPrice: store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41
-    }
+    };
 
-    if (store.get('notifications') === undefined) store.set('notifications', {})
-    this.$store.dispatch('setState', state)
-    this.$store.dispatch('checkIfOnline')
+    if (store.get('notifications') === undefined)
+      store.set('notifications', {});
+    this.$store.dispatch('setState', state);
+    this.$store.dispatch('checkIfOnline');
   }
-}
+};
 </script>
 
 <style lang="scss">
-  @import "App.scss";
+@import 'App.scss';
 </style>

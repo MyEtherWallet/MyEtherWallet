@@ -1,1 +1,1 @@
-export { default } from './HardwarePasswordModal'
+export { default } from './HardwarePasswordModal';

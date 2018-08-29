@@ -37,7 +37,7 @@
         type="file"
         name="file"
         style="display: none"
-        @change="uploadFile" >
+        @change="uploadFile">
     </div>
     <div class="button-container">
       <b-btn
@@ -59,8 +59,25 @@
 
 <script>
 export default {
-  props: ['value', 'openPassword', 'openPrivateKeyInput', 'openMnemonicPhraseInput'],
-  data () {
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    openPassword: {
+      type: Function,
+      default: function() {}
+    },
+    openMnemonicPhraseInput: {
+      type: Function,
+      default: function() {}
+    },
+    openPrivateKeyInput: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
     return {
       file: '',
       selected: ''
@@ -76,12 +93,9 @@ export default {
       if (this.selected === 'byJson') {
         this.uploadClick();
       } else if (this.selected === 'byPriv') {
-        this.openPrivateKeyInput()
+        this.openPrivateKeyInput();
       } else if (this.selected === 'byMnem') {
-        this.openMnemonicPhraseInput()
-      } else {
-        // eslint-disable-next-line
-        console.log("")
+        this.openMnemonicPhraseInput();
       }
     },
     select(ref) {

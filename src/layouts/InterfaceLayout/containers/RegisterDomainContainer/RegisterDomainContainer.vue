@@ -10,10 +10,10 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input 
-          type="text" 
-          name="" 
-          value="" 
+        <input
+          type="text"
+          name=""
+          value=""
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
@@ -30,32 +30,32 @@
           <div class="margin-left-auto add-custom-network">
             <div class="sliding-switch-white">
               <label class="switch">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   @click="expendDomainCheckForm" >
                 <span class="slider round"/>
               </label>
             </div>
           </div>
         </div>
-        <div 
-          ref="checkForm" 
+        <div
+          ref="checkForm"
           class="domain-check-form hidden">
           <div class="domain-checker">
-            <input 
-              type="number" 
-              name="" 
-              value="" 
+            <input
+              type="number"
+              name=""
+              value=""
               placeholder="Enter Domain Name" >
-            <div 
-              class="check-button" 
+            <div
+              class="check-button"
               @click="domainAvailabilityCheck">
               {{ $t('common.check') }}
             </div>
           </div>
         </div>
-        <div 
-          ref="domainList" 
+        <div
+          ref="domainList"
           class="sub-domain-list hidden">
           <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
           <ul>
@@ -63,8 +63,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -74,8 +74,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled" 
+                <div
+                  class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -85,8 +85,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -96,8 +96,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -107,8 +107,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -118,8 +118,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -129,8 +129,8 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div 
-                  class="buy-button very-small-circle-button-green-border" 
+                <div
+                  class="buy-button very-small-circle-button-green-border"
                   @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
@@ -139,9 +139,9 @@
           </ul>
         </div>
       </div>
-      <interface-bottom-text 
-        :link-text="$t('interface.learnMore')" 
-        :question="$t('interface.haveIssues')" 
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
 
@@ -174,11 +174,10 @@ export default {
     domainAvailabilityCheck() {
       // this.$refs['checkForm'].classList.toggle('hidden')
       this.$refs['domainList'].classList.add('hidden');
+    },
+    domainBuyButtonClick() {
+      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
     }
-    // },
-    // domainBuyButtonClick($event) {
-    //   // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
-    // }
   }
 };
 </script>

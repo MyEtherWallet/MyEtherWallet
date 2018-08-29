@@ -1,6 +1,4 @@
-import {
-  ELLA
-} from '../types'
+import { ELLA } from '../types';
 export default {
   type: ELLA,
   service: 'Ellaism',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

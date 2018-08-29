@@ -1,12 +1,12 @@
-import { overide, WalletWrapper } from '@/wallets'
+import { overide, WalletWrapper } from '@/wallets';
 
-const addNotification = function ({commit, state}, val) {
-  const newNotif = {}
+const addNotification = function({ commit, state }, val) {
+  const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
-    newNotif[item] = state.notifications[item]
-  })
+    newNotif[item] = state.notifications[item];
+  });
 
-  if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = []
+  if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = [];
 
   newNotif[val[0]].push({
     title: val[2],
@@ -14,48 +14,48 @@ const addNotification = function ({commit, state}, val) {
     timestamp: new Date(),
     body: val[1].message ? val[1].message : val[1],
     expanded: false
-  })
-  commit('ADD_NOTIFICATION', newNotif)
-}
+  });
+  commit('ADD_NOTIFICATION', newNotif);
+};
 
-const addCustomPath = function ({commit, state}, val) {
-  const newPaths = {...state.customPaths}
-  newPaths[val.dpath] = {label: val.label, dpath: val.dpath}
-  commit('ADD_CUSTOM_PATH', newPaths)
-}
+const addCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
 
-const checkIfOnline = function({commit}) {
+const checkIfOnline = function({ commit }) {
   commit('CHECK_IF_ONLINE');
 };
 
-const clearWallet = function ({commit, state}) {
+const clearWallet = function({ commit, state }) {
   if (state.wallet.identifier === 'MEWconnect') {
-    state.wallet.wallet.mewConnectDisconnect()
+    state.wallet.wallet.mewConnectDisconnect();
   }
-  commit('CLEAR_WALLET')
-}
+  commit('CLEAR_WALLET');
+};
 
-const createAndSignTx = function({commit}, val) {
+const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function ({commit, state}, wallet) {
-  const wrappedWallet = new WalletWrapper(wallet)
-  let _web3 = state.web3
-  overide(_web3, wrappedWallet, this._vm.$eventHub)
-  commit('DECRYPT_WALLET', wrappedWallet)
-  commit('SET_WEB3_INSTANCE', _web3)
-}
-
-const setAccountBalance = function({commit}, balance) {
-  commit('SET_ACCOUNT_BALANCE', balance);
+const decryptWallet = function({ commit, state }, wallet) {
+  const wrappedWallet = new WalletWrapper(wallet);
+  let _web3 = state.web3;
+  overide(_web3, wrappedWallet, this._vm.$eventHub);
+  commit('DECRYPT_WALLET', wrappedWallet);
+  commit('SET_WEB3_INSTANCE', _web3);
 };
 
-const setGasPrice = function({commit}, gasPrice) {
+const setAccountBalance = function({ commit }, balance) {
+  commit('SET_ACCOUNT_BALANCE', +balance);
+};
+
+const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
-const setState = function({commit}, stateObj) {
+const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
@@ -75,7 +75,7 @@ const setWeb3Instance = function({ commit, state }, web3) {
   }
 };
 
-const switchNetwork = function({commit}, networkObj) {
+const switchNetwork = function({ commit }, networkObj) {
   // check if wallet is hardware.  if true, check if it supports this network. if not, do nothing
   commit('SWITCH_NETWORK', networkObj);
 };
@@ -91,7 +91,7 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
-const updatePageState = function({commit}, arr) {
+const updatePageState = function({ commit }, arr) {
   commit('CHANGE_PAGE_STATE', arr);
 };
 

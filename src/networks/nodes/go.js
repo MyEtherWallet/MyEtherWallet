@@ -1,6 +1,4 @@
-import {
-  GO
-} from '../types'
+import { GO } from '../types';
 export default {
   type: GO,
   service: 'gochain.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

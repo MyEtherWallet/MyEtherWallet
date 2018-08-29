@@ -42,7 +42,10 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="signature" class="custom-textarea-1" name=""/>
+        <textarea
+          ref="signature"
+          class="custom-textarea-1"
+          name="" />
       </div>
     </div>
 
@@ -54,7 +57,10 @@
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text :link-text="$t('interface.learnMore')" :question="$t('interface.haveIssues')"link="/"/>
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
 
   </div>
@@ -76,27 +82,37 @@ export default {
     return {};
   },
   methods: {
-    signMessage () {
-      const message = this.$refs.message.value
-      this.$store.state.web3.eth.sign(message, this.$store.state.wallet.getAddressString())
+    signMessage() {
+      this.$store.state.web3.eth
+        .sign(
+          this.$refs.message.value,
+          this.$store.state.wallet.getAddressString()
+        )
         .then(_signedMessage => {
-          this.$refs.signature.value = JSON.stringify({
-            address: this.$store.state.wallet.getAddressString(),
-            msg: message,
-            sig: _signedMessage,
-            version: '3',
-            signer: this.$store.state.wallet.brand ? this.$store.state.wallet.brand : 'MEW'
-          }, null, 2)
+          this.$refs.signature.value = JSON.stringify(
+            {
+              address: this.$store.state.wallet.getAddressString(),
+              msg: this.$refs.message.value,
+              sig: _signedMessage,
+              version: '3',
+              signer: this.$store.state.wallet.brand
+                ? this.$store.state.wallet.brand
+                : 'MEW'
+            },
+            null,
+            2
+          );
         })
-        .catch(console.error)
+        // eslint-disable-next-line
+        .catch(console.error);
     },
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    successModalOpen() {
+      this.$children[0].$refs.success.show();
     },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
-      window.getSelection().removeAllRanges()
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     },
     deleteInputText(ref) {
       this.$refs[ref].value = '';

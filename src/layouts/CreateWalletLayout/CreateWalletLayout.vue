@@ -4,8 +4,8 @@
     <by-json-page-title/>
     <div class="wrap">
       <div class="page-container">
-        <div
-          v-show="!byJson && !byMnemonic"
+        <div 
+          v-show="!byJson && !byMnemonic" 
           class="nav-tab-user-input-box">
           <b-tabs class="x100">
             <div class="progress-bar"/>

@@ -33,7 +33,10 @@
           @click="sendTx">
           Send Transaction
         </div>
-        <interface-bottom-text:link="'/'" :link-text="'Learn more'" :question="'Have any issues?'"/>
+        <interface-bottom-text
+          :link="'/'"
+          :link-text="'Learn more'"
+          :question="'Have any issues?'"/>
       </div>
     </div>
   </div>

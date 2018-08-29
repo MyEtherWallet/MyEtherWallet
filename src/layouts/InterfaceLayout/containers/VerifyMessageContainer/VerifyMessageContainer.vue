@@ -25,7 +25,9 @@
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div  class="submit-button large-round-button-green-filled clickable"@click="verifyMessage">
+        <div
+          class="submit-button large-round-button-green-filled clickable"
+          @click="verifyMessage">
           {{ $t('common.verifyMessage') }}
         </div>
       </div>
@@ -60,50 +62,33 @@ export default {
       showMessage: false
     };
   },
-  methods: {
-    copyToClipboard () {
-      this.$refs.signature.select()
-      document.execCommand('copy')
-      window.getSelection().removeAllRanges()
-    },
-    deleteInput () {
-      this.$refs.signature.value = ''
-    },
-    verifyMessage () {
-      const json = JSON.parse(this.message)
-      let hash = MessageUtil.hashPersonalMessage(MessageUtil.toBuffer(json.msg))
-      const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex')
-      if (sig.length !== 65) {
-        this.error.show = true
-        this.error.msg = 'Something went terribly WRONG!!!!' // Should be replaced with actual error message
-        return
-      }
-
-      sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64]
-      if (json.version === '3') {
-        if (json.signer === 'trezor') {
-          hash = MessageUtil.getTrezorHash(json.msg)
-        } else if (json.signer === 'ledger') {
-          hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg))
-        }
-      } else if (json.version === '1') {
-        hash = this.$store.state.web3.utils.sha3(json.msg)
-      }
-
-      let pubKey = MessageUtil.ecrecover(hash, sig[64], sig.slice(0, 32), sig.slice(32, 64))
-      if (MessageUtil.getNakedAddress(json.address) !== MessageUtil.pubToAddress(pubKey).toString('hex')) {
-        this.error.show = true
-        this.error.msg = 'Something went terribly WRONG!!!!' // Should be replaced with actual error message
-      } else {
-        this.showMessage = true
-      }
-    }
-  },
   watch: {
-    message () {
+    message() {
       this.error = {
         show: false,
         msg: ''
+      };
+    }
+  },
+  methods: {
+    copyToClipboard() {
+      this.$refs.signature.select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+    },
+    deleteInput() {
+      this.$refs.signature.value = '';
+    },
+    verifyMessage() {
+      const json = JSON.parse(this.message);
+      let hash = MessageUtil.hashPersonalMessage(
+        MessageUtil.toBuffer(json.msg)
+      );
+      const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
+      if (sig.length !== 65) {
+        this.error.show = true;
+        this.error.msg = 'Something went terribly WRONG!!!!'; // Should be replaced with actual error message
+        return;
       }
 
       sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];

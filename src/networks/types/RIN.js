@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-rin.json'
-import contracts from '@/contracts/contract-abi-rin.json'
+import tokens from '@/tokens/tokens-rin.json';
+import contracts from '@/contracts/contract-abi-rin.json';
 
 export default {
   name: 'RIN',
@@ -10,4 +10,4 @@ export default {
   chainID: 4,
   tokens: tokens,
   contracts: contracts
-}
+};

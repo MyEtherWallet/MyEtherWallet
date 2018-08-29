@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-etsc.json'
-import contracts from '@/contracts/contract-abi-etsc.json'
+import tokens from '@/tokens/tokens-etsc.json';
+import contracts from '@/contracts/contract-abi-etsc.json';
 
 export default {
   name: 'ETSC',
@@ -10,4 +10,4 @@ export default {
   chainID: 28,
   tokens: tokens,
   contracts: contracts
-}
+};

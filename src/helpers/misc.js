@@ -1,16 +1,12 @@
 /* Accepts string, returns boolean */
-function isJson (str) {
+function isJson(str) {
   try {
-    JSON.parse(str)
+    JSON.parse(str);
   } catch (e) {
-    return false
+    return false;
   }
 
-  return true
+  return true;
 }
 
-function doesExists (val) {
-  return val !== undefined && val !== null
-}
-
-export default {isJson, doesExists}
+export default { isJson };
