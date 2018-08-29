@@ -39,13 +39,13 @@ export default {
   },
   props: {
     balance: {
-      type: String,
-      default: '0'
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
-      parsedBalance: '0'
+      parsedBalance: 0
     };
   },
   watch: {
