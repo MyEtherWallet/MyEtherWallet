@@ -15,7 +15,7 @@
                 <input
                   ref="addCustomToggle"
                   type="checkbox"
-                  @click="addCustomNetworkToggle" >
+                  @click="addCustomNetworkToggle">
                 <span class="slider round"/>
               </label>
             </div>
@@ -69,14 +69,16 @@
               type="text"
               name=""
               placeholder="ETH Node Name"
-              autocomplete="off" >
+              autocomplete="off">
             <select
               v-model="selectedNetwork"
               class="custom-select-1">
               <option
                 v-for="network in networks"
                 :value="network"
-                :key="network.name + network.name_long">{{ network.name | capitalize }} - {{ network.name_long | capitalize }}</option>
+                :key="network.name + network.name_long">{{ network.name | capitalize }} - {{ network.name_long |
+                capitalize }}
+              </option>
             </select>
             <input
               v-model="url"
@@ -84,14 +86,14 @@
               type="text"
               name=""
               placeholder="URL"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="port"
               class="custom-input-text-1"
               type="text"
               name=""
               placeholder="Port"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-show="selectedNetwork.name === 'Custom'"
               v-model="chainID"
@@ -111,7 +113,7 @@
                 <label class="switch">
                   <input
                     type="checkbox"
-                    @click="expendAuth" >
+                    @click="expendAuth">
                   <span class="slider round"/>
                 </label>
               </div>
@@ -126,14 +128,14 @@
               type="text"
               name=""
               placeholder="User Name"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="password"
               class="custom-input-text-1"
               type="password"
               name=""
               placeholder="Password"
-              autocomplete="off" >
+              autocomplete="off">
           </div>
         </div>
 
