@@ -3,6 +3,9 @@
     <interface-network-modal/>
     <div @click="networkModalOpen">
       <div class="info-block network">
+        <div class="helper">
+          <popover :popcontent="$t('popover.whatIsMessageContent')" :popovertype="'A'" />
+        </div>
         <div class="block-image">
           <img
             v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
