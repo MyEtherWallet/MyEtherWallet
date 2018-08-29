@@ -11,10 +11,15 @@
 
 .popover-button {
   position: absolute;
-  background-color: white;
+  background-color: transparent;
   border: 0;
   margin: 0;
   padding: 0;
+
+  &:active,
+  &:focus {
+    box-shadow: none;
+  }
 
   .hover-icon {
     display: none;
