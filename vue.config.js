@@ -1,7 +1,7 @@
 const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
 module.exports = {
-  // baseUrl: '',
+  baseUrl: './',
   configureWebpack: {
     node: {
       process: true
