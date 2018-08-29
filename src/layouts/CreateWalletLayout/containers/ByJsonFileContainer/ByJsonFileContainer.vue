@@ -64,7 +64,7 @@
 
 <script>
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
-import ByJsonBlock from './components/ByJsonBlock';
+import ByJsonBlock from '../../components/ByJsonBlock';
 
 import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
