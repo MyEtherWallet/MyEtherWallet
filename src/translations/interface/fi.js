@@ -37,5 +37,5 @@ const interfaceTranslations = {
   // txSideMenuTitle: '',
   // txSideMenuContract: ''
   // txSideMenuMessage: ''
-}
-export default interfaceTranslations
+};
+export default interfaceTranslations;

@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-rop.json'
-import contracts from '@/contracts/contract-abi-rop.json'
+import tokens from '@/tokens/tokens-rop.json';
+import contracts from '@/contracts/contract-abi-rop.json';
 
 export default {
   name: 'ROP',
@@ -10,4 +10,4 @@ export default {
   chainID: 3,
   tokens: tokens,
   contracts: contracts
-}
+};

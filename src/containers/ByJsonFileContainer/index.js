@@ -1,1 +1,1 @@
-export { default } from './ByJsonFileContainer'
+export { default } from './ByJsonFileContainer';

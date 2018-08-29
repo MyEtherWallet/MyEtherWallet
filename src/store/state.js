@@ -37,4 +37,4 @@ const state = {
   gasPrice: 41
 }
 
-export default state
+export default state;

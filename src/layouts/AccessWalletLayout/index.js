@@ -1,1 +1,1 @@
-export { default } from './AccessWalletLayout'
+export { default } from './AccessWalletLayout';

@@ -1,1 +1,1 @@
-export { default } from './TxSpeedInput'
+export { default } from './TxSpeedInput';

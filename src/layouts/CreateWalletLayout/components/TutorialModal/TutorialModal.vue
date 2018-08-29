@@ -1,5 +1,10 @@
 <template>
-  <b-modal ref="tutorial" hide-footer centered hide-header class="bootstrap-modal">
+  <b-modal
+    ref="tutorial"
+    hide-footer
+    centered
+    hide-header
+    class="bootstrap-modal">
     <div class="d-block text-center">
       <h2 class="title">Welcome to MEW</h2>
       <p class="content">
@@ -11,7 +16,9 @@
       </p>
     </div>
     <div class="button-container fixed-width-1">
-      <router-link to="/getting-started" class="mid-round-button-green-filled close-button">
+      <router-link
+        to="/getting-started"
+        class="mid-round-button-green-filled close-button">
         Continue
       </router-link>
     </div>
@@ -20,14 +27,18 @@
 
 <script>
 export default {
-  props: ['skip'],
-  data () {
-    return {
+  props: {
+    skip: {
+      type: Function,
+      default: function() {}
     }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "TutorialModal.scss";
+@import 'TutorialModal.scss';
 </style>

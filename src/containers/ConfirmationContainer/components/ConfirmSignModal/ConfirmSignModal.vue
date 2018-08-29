@@ -1,6 +1,6 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="signConfirmation" hide-footer centered
+<b-modal ref="signConfirmation" hide-footer centered
              class="bootstrap-modal-wide confirmation-modal nopadding" title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
@@ -9,7 +9,7 @@
             <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
               <p class="address-title">Signing Address</p>
-              <p>{{from}}</p>
+              <p>{{ from }}</p>
             </div>
           </div>
           <div class="direction">
@@ -20,7 +20,7 @@
             <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
               <p class="address-title">Message</p>
-              <p>{{messageToSign}}</p>
+              <p>{{ messageToSign }}</p>
             </div>
           </div>
         </div>

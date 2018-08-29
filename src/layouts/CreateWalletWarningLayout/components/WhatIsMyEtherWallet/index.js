@@ -1,1 +1,1 @@
-export { default } from './WhatIsMyEtherWallet'
+export { default } from './WhatIsMyEtherWallet';
