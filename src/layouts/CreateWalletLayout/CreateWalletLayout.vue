@@ -9,8 +9,8 @@
           class="nav-tab-user-input-box">
           <b-tabs class="x100">
             <div class="progress-bar"/>
-            <b-tab 
-              title="By JSON File" 
+            <b-tab
+              title="By JSON File"
               active>
 
               <div class="title-block">
@@ -20,9 +20,9 @@
                 </div>
               </div>
 
-              <create-wallet-input 
-                v-model="password" 
-                :switcher="switcher" 
+              <create-wallet-input
+                v-model="password"
+                :switcher="switcher"
                 :param="'Json'" />
               <create-wallet-input-footer />
             </b-tab>
@@ -35,16 +35,16 @@
                 </div>
               </div>
 
-              <create-wallet-input 
-                v-model="password" 
-                :switcher="switcher" 
+              <create-wallet-input
+                v-model="password"
+                :switcher="switcher"
                 :param="'Mnemonic'" />
               <create-wallet-input-footer />
             </b-tab>
           </b-tabs>
         </div>
-        <by-json-file-container 
-          v-if="byJson && !byMnemonic" 
+        <by-json-file-container
+          v-if="byJson && !byMnemonic"
           :password="password" />
         <by-mnemonic-container v-if="!byJson && byMnemonic" />
       </div>
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import ByJsonFileContainer from '@/containers/ByJsonFileContainer';
-import ByMnemonicContainer from '@/containers/ByMnemonicContainer';
+import ByJsonFileContainer from './containers/ByJsonFileContainer';
+import ByMnemonicContainer from './containers/ByMnemonicContainer';
 import TutorialModal from './components/TutorialModal';
 import CreateWalletInput from './components/CreateWalletInput';
 import CreateWalletInputFooter from './components/CreateWalletInputFooter';
@@ -82,7 +82,7 @@ export default {
     };
   },
   mounted() {
-    let skipTutorial = localStorage.getItem('skipTutorial');
+    const skipTutorial = localStorage.getItem('skipTutorial');
     if (
       skipTutorial === undefined ||
       skipTutorial === null ||

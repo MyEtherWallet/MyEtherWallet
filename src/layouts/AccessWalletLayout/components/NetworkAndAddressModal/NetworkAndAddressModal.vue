@@ -304,7 +304,7 @@ export default {
         if (offset + count > this.maxIndex) {
           this.connectionActive = !this.connectionActive;
           const web3 = this.$store.state.web3;
-          let hardwareAddresses = [];
+          const hardwareAddresses = [];
           this.hardwareWallet
             .getMultipleAccounts(count, offset)
             .then(_accounts => {

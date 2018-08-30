@@ -1,7 +1,7 @@
 import { Wallet } from '@/helpers';
 
 function unlock(file, password) {
-  let newFile = {};
+  const newFile = {};
   // Small hack because non strict wasn't working..
   Object.keys(file).forEach(key => {
     newFile[key.toLowerCase()] = file[key];
@@ -11,7 +11,7 @@ function unlock(file, password) {
 
 onmessage = function(event) {
   if (event.data.type === 'unlockWallet') {
-    let workerResult = unlock(event.data.data[0], event.data.data[1]);
+    const workerResult = unlock(event.data.data[0], event.data.data[1]);
     postMessage(workerResult);
   }
 };

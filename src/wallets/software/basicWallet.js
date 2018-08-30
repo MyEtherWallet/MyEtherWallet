@@ -42,7 +42,7 @@ export default class BasicWallet {
   }
 
   getAddressString() {
-    let rawAddress = '0x' + this.getAddress().toString('hex');
+    const rawAddress = '0x' + this.getAddress().toString('hex');
     return ethUtil.toChecksumAddress(rawAddress);
   }
 
@@ -93,7 +93,7 @@ export default class BasicWallet {
           );
         txData.data = txData.data === '' ? '0x' : txData.data;
         txData.data = txData.data === '' ? '0x' : txData.data;
-        let eTx = new EthereumTx(txData);
+        const eTx = new EthereumTx(txData);
         eTx.sign(this.privateKeyBuffer);
         txData.rawTx = JSON.stringify(txData);
         const serializedTx = eTx.serialize();
@@ -123,10 +123,10 @@ export default class BasicWallet {
           throw new Error(
             'no wallet present. wallet may not have been decrypted'
           );
-        let thisMessage = message.data ? message.data : message;
-        let hash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage));
-        let signed = ethUtil.ecsign(hash, this.wallet.privKey);
-        let combined = Buffer.concat([
+        const thisMessage = message.data ? message.data : message;
+        const hash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(thisMessage));
+        const signed = ethUtil.ecsign(hash, this.wallet.privKey);
+        const combined = Buffer.concat([
           Buffer.from(signed.r),
           Buffer.from(signed.s),
           Buffer.from([signed.v])
@@ -148,20 +148,18 @@ export default class BasicWallet {
         fileContent: params[0],
         filePassword: params[1]
       };
-    } else {
-      if (params.length === 2) {
-        return {
-          type: 'fromMyEtherWalletKey',
-          manualPrivateKey: params[0],
-          privPassword: params[1]
-        };
-      } else {
-        return {
-          type: 'manualPrivateKey',
-          manualPrivateKey: params[0]
-        };
-      }
     }
+    if (params.length === 2) {
+      return {
+        type: 'fromMyEtherWalletKey',
+        manualPrivateKey: params[0],
+        privPassword: params[1]
+      };
+    }
+    return {
+      type: 'manualPrivateKey',
+      manualPrivateKey: params[0]
+    };
   }
 
   _isJSON(json) {
@@ -180,18 +178,20 @@ export default class BasicWallet {
         options = this.detectWallet(options);
       }
       switch (options.type) {
-        case 'fromMyEtherWalletKey': // TODO: STILL NEEDS TESTS
+        case 'fromMyEtherWalletKey': {
+          // TODO: STILL NEEDS TESTS
           this.wallet = this.fromMyEtherWalletKey(
             options.manualPrivateKey,
             options.privPassword
           );
           break;
-        case 'manualPrivateKey':
+        }
+        case 'manualPrivateKey': {
           if (typeof options.manualPrivateKey === 'object')
             throw new Error('Supplied Private Key Must Be A String');
 
           // eslint-disable-next-line
-          let privKey =
+          const privKey =
             options.manualPrivateKey.indexOf('0x') === 0
               ? options.manualPrivateKey
               : '0x' + options.manualPrivateKey;
@@ -211,17 +211,22 @@ export default class BasicWallet {
             );
           }
           break;
-        case 'fromPrivateKeyFile':
+        }
+        case 'fromPrivateKeyFile': {
           this.wallet = this.getWalletFromPrivKeyFile(
             options.fileContent,
             options.filePassword
           );
           break;
-        case 'parity': // TODO: STILL NEEDS TESTS
+        }
+        case 'parity': {
+          // TODO: STILL NEEDS TESTS
           this.wallet = this.fromParityPhrase(options.parityPhrase);
           break;
-        default:
+        }
+        default: {
           break;
+        }
       }
       this.active = true;
     } catch (e) {
@@ -284,26 +289,25 @@ export default class BasicWallet {
       return this.fromMyEtherWallet(strjson, password);
     else if (jsonArr.publisher === 'MyEtherWallet')
       return this.fromMyEtherWalletV2(strjson);
-    else {
-      throw Error('Error decoding wallet from file');
-    }
+
+    throw Error('Error decoding wallet from file');
   }
 
   fromMyEtherWalletKey(input, password) {
     let cipher = input.slice(0, 128);
     cipher = this.decodeCryptojsSalt(cipher);
-    let evp = this.evp_kdf(Buffer.from(password), cipher.salt, {
+    const evp = this.evp_kdf(Buffer.from(password), cipher.salt, {
       keysize: 32,
       ivsize: 16
     });
-    let decipher = crypto.createDecipheriv('aes-256-cbc', evp.key, evp.iv);
+    const decipher = crypto.createDecipheriv('aes-256-cbc', evp.key, evp.iv);
     let privKey = this.decipherBuffer(decipher, Buffer.from(cipher.ciphertext));
     privKey = new this(privKey.toString(), 'hex');
     return BasicWallet.createWallet(privKey);
   }
 
   fromMyEtherWallet(input, password) {
-    let json = typeof input === 'object' ? input : JSON.parse(input);
+    const json = typeof input === 'object' ? input : JSON.parse(input);
     let privKey;
     if (!json.locked) {
       if (json.private.length !== 64) {
@@ -319,11 +323,11 @@ export default class BasicWallet {
       }
       let cipher = json.encrypted ? json.private.slice(0, 128) : json.private;
       cipher = this.decodeCryptojsSalt(cipher);
-      let evp = this.evp_kdf(Buffer.from(password), cipher.salt, {
+      const evp = this.evp_kdf(Buffer.from(password), cipher.salt, {
         keysize: 32,
         ivsize: 16
       });
-      let decipher = ethUtil.crypto.createDecipheriv(
+      const decipher = ethUtil.crypto.createDecipheriv(
         'aes-256-cbc',
         evp.key,
         evp.iv
@@ -331,7 +335,7 @@ export default class BasicWallet {
       privKey = this.decipherBuffer(decipher, Buffer.from(cipher.ciphertext));
       privKey = Buffer.from(privKey.toString(), 'hex');
     }
-    let wallet = BasicWallet.createWallet(privKey);
+    const wallet = BasicWallet.createWallet(privKey);
     if (wallet.getAddressString() !== json.address) {
       throw new Error('Invalid private key or address');
     }
@@ -339,12 +343,12 @@ export default class BasicWallet {
   }
 
   fromMyEtherWalletV2(input) {
-    let json = typeof input === 'object' ? input : JSON.parse(input);
+    const json = typeof input === 'object' ? input : JSON.parse(input);
     if (json.privKey.length !== 64) {
       throw new Error('Invalid private key length');
     }
 
-    let privKey = Buffer.from(json.privKey, 'hex');
+    const privKey = Buffer.from(json.privKey, 'hex');
     return BasicWallet.createWallet(privKey);
   }
 
@@ -361,17 +365,16 @@ export default class BasicWallet {
   }
 
   decodeCryptojsSalt(input) {
-    let ciphertext = Buffer.from(input, 'base64');
+    const ciphertext = Buffer.from(input, 'base64');
     if (ciphertext.slice(0, 8).toString() === 'Salted__') {
       return {
         salt: ciphertext.slice(8, 16),
         ciphertext: ciphertext.slice(16)
       };
-    } else {
-      return {
-        ciphertext: ciphertext
-      };
     }
+    return {
+      ciphertext: ciphertext
+    };
   }
 
   // eslint-disable-next-line camelcase
@@ -392,15 +395,15 @@ export default class BasicWallet {
       return block;
     }
 
-    let keysize = opts.keysize || 16;
-    let ivsize = opts.ivsize || 16;
-    let ret = [];
+    const keysize = opts.keysize || 16;
+    const ivsize = opts.ivsize || 16;
+    const ret = [];
     let i = 0;
     while (Buffer.concat(ret).length < keysize + ivsize) {
       ret[i] = iter(i === 0 ? Buffer.from(0) : ret[i - 1]);
       i++;
     }
-    let tmp = Buffer.concat(ret);
+    const tmp = Buffer.concat(ret);
     return {
       key: tmp.slice(0, keysize),
       iv: tmp.slice(keysize, keysize + ivsize)

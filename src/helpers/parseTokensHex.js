@@ -8,7 +8,7 @@ function sizeHex(bytes) {
 function getAscii(hex) {
   hex = hex.substring(0, 2) === '0x' ? hex : '0x' + hex;
 
-  let newHex = hex.toString();
+  const newHex = hex.toString();
   let asc = '';
   for (let i = 0; i < newHex.length && newHex.substr(i, 2) !== '00'; i += 2) {
     asc += String.fromCharCode(parseInt(newHex.substr(i, 2), 16));
@@ -17,22 +17,22 @@ function getAscii(hex) {
 }
 
 function parseTokensHex(hex) {
-  let tokens = [];
+  const tokens = [];
   hex = hex.substring(0, 2) === '0x' ? hex.substring(2) : hex;
   hex = hex.substring(0, hex.lastIndexOf('1') - 1);
   let offset = hex.length;
   offset -= sizeHex(32);
-  let countTokens = hex.substr(offset, sizeHex(32));
+  const countTokens = hex.substr(offset, sizeHex(32));
   offset -= sizeHex(1);
-  let isName = parseInt(hex.substr(offset, sizeHex(1)));
+  const isName = parseInt(hex.substr(offset, sizeHex(1)));
   offset -= sizeHex(1);
-  let isWebSite = parseInt(hex.substr(offset, sizeHex(1)));
+  const isWebSite = parseInt(hex.substr(offset, sizeHex(1)));
   offset -= sizeHex(1);
-  let isEmail = parseInt(hex.substr(offset, sizeHex(1)));
-  let numTokens = new BigNumber('0x' + countTokens).toNumber();
+  const isEmail = parseInt(hex.substr(offset, sizeHex(1)));
+  const numTokens = new BigNumber('0x' + countTokens).toNumber();
 
   for (let i = 0; i < parseInt(numTokens); i++) {
-    let token = {};
+    const token = {};
     offset -= sizeHex(16);
     token.symbol = getAscii(hex.substr(offset, sizeHex(16)));
     offset -= sizeHex(20);

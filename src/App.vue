@@ -29,10 +29,8 @@ export default {
     const network =
       store.get('network') !== undefined
         ? store.get('network')
-        : this.$store.state.Networks['ETH'][0];
-    const hostUrl = url.parse(
-      network.url || this.$store.state.Networks['ETH'][0].url
-    );
+        : this.$store.state.Networks['ETH'][3];
+    const hostUrl = url.parse(network.url);
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.host}:${network.port}${hostUrl.pathname}`
     );
@@ -73,6 +71,7 @@ export default {
       store.set('notifications', {});
     this.$store.dispatch('setState', state);
     this.$store.dispatch('checkIfOnline');
+    this.$store.dispatch('switchNetwork', network);
   }
 };
 </script>

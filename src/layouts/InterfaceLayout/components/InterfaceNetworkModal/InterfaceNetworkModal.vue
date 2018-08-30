@@ -74,9 +74,9 @@
               v-model="selectedNetwork"
               class="custom-select-1">
               <option
-                v-for="network in networks"
-                :value="network"
-                :key="network.name + network.name_long">{{ network.name | capitalize }} - {{ network.name_long |
+                v-for="type in Object.keys(types)"
+                :value="types[type]"
+                :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long |
                 capitalize }}
               </option>
             </select>
@@ -163,7 +163,7 @@ import store from 'store';
 import web3 from 'web3';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import * as types from '@/networks/types';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -171,8 +171,9 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
-      chainID: 1,
+      types: networkTypes,
+      selectedNetwork: networkTypes.ETH,
+      chainID: '',
       port: '',
       name: '',
       url: '',
@@ -184,7 +185,7 @@ export default {
   },
   watch: {
     selectedNetwork(newVal) {
-      this.chainID = newVal.type.chainID;
+      this.chainID = newVal.chainID;
     }
   },
   mounted() {
@@ -228,8 +229,8 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr,
-          blockExplorerTX: this.selectedNetwork.blockExplorerTX,
+          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr || '',
+          blockExplorerTX: this.selectedNetwork.blockExplorerTX || '',
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,
