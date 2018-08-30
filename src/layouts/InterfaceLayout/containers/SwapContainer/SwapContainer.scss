@@ -20,6 +20,24 @@
     }
   }
 
+
+  .title-and-copy {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    h4 {
+      margin: 0;
+    }
+    .copy-button {
+      margin-left: auto;
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+
+
   .send-form {
     @extend %send-form-base;
 

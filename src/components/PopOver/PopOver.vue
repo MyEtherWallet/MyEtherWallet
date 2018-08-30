@@ -11,8 +11,8 @@
           src="@/assets/images/icons/explanation2.svg">
       </b-btn>
       <b-btn v-if="popovertype === 'A'" :id="popOverId" class="popover-button">
-        <img class="nohover-icon" src="@/assets/images/icons/question.png">
-        <img class="hover-icon" src="@/assets/images/icons/question.png">
+        <img class="nohover-icon" src="@/assets/images/icons/question-mark.svg">
+        <img class="hover-icon" src="@/assets/images/icons/question-mark.svg">
       </b-btn>
       <b-popover
         :target="popOverId"

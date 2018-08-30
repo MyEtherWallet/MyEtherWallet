@@ -1,8 +1,43 @@
 @import '~@/scss/GlobalVariables';
 
-.drop-down-address-selector {
+.providers-radio-selector {
   position: relative;
 }
+
+.radio-button-container {
+  padding: 0 15px;
+  background-color: $background-color-1;
+  border-radius: 4px;
+  overflow: hidden;
+
+  ul {
+    li {
+      padding: 15px 0;
+      border-bottom: 2px dotted $light-grey-3;
+      display: grid;
+      grid-template-columns: 50px 2fr 3fr 3fr;
+      align-items: center;
+
+      >div {
+
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.provider-image {
+  img {
+    height: 30px;
+  }
+}
+
+
+
+
 
 .dropdown-input-box {
   position: relative;
