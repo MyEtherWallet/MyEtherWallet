@@ -1,10 +1,12 @@
 ### Feature
+- Integrate secalot []()
+- Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
 - Implement ENS resolver directive, move directives to its own folder [#56](https://github.com/MyEtherWallet/MyEtherWallet/pull/56)
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval [#51](https://github.com/MyEtherWallet/MyEtherWallet/pull/51)
 - Integrate Ledger hardware wallet [#48](https://github.com/MyEtherWallet/MyEtherWallet/pull/48)
 - Feature/verify message [#52](https://github.com/MyEtherWallet/MyEtherWallet/pull/52)
+- override web3 methods [#47](https://github.com/MyEtherWallet/MyEtherWallet/pull/47)
 - Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
-
 
 ### UI/UX
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
