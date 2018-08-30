@@ -210,7 +210,7 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
 
   message =
     '\x19Ethereum Signed Message:\n' + message.length.toString() + message;
-  rawData = Buffer.from(Buffer.from(message, 'hex').toString('hex'));
+  rawData = Buffer.from(Buffer.from(message).toString('hex'), 'hex');
 
   while (offset !== rawData.length) {
     const maxChunkSize = 64;

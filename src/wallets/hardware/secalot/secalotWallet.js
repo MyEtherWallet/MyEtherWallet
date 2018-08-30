@@ -270,7 +270,7 @@ export default class SecalotWallet extends HardwareWalletInterface {
         resolve(rawTx);
       };
       // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
-      const app = new SecalotEth(this.transport, '');
+      const app = new SecalotEth(this.transport);
       const tx = new EthereumjsTx(rawTx);
       app.signTransaction(this.path, tx, localCallback);
     });
