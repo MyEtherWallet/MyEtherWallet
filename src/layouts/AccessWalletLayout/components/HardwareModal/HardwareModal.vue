@@ -77,7 +77,12 @@
 </template>
 
 <script>
-import { LedgerWallet, TrezorWallet } from '@/helpers/web3-overide/hardware';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  DigitalBitboxWallet,
+  SecalotWallet
+} from '@/wallets';
 
 export default {
   props: {
@@ -95,6 +100,11 @@ export default {
       selected: ''
     };
   },
+  mounted() {
+    this.$refs.hardware.$on('hidden', () => {
+      this.selected = '';
+    });
+  },
   methods: {
     continueAccess() {
       // todo The actual initiation of a hardware wallet should be moved to a specific file to reduce clutter here as the number of offerings increases
@@ -106,7 +116,7 @@ export default {
               this.$emit('hardwareWalletOpen', wallet);
             })
             .catch(_error => {
-              // eslint-disable-next-line no-console
+              // eslint-disable-next-line
               console.error(_error); // todo replace with proper error
             });
           break;
@@ -116,12 +126,24 @@ export default {
               this.$emit('hardwareWalletOpen', wallet);
             })
             .catch(_error => {
-              // eslint-disable-next-line no-console
+              // eslint-disable-next-line
               console.error(_error); // todo replace with proper error
             });
           break;
+        case 'bitbox':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: DigitalBitboxWallet,
+            hardwareBrand: 'DigitalBitbox'
+          });
+          break;
+        case 'secalot':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: SecalotWallet,
+            hardwareBrand: 'Secalot'
+          });
+          break;
         default:
-          // eslint-disable-next-line no-console
+          // eslint-disable-next-line
           console.log('something not right'); // todo remove dev item
           break;
       }

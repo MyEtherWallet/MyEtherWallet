@@ -6,7 +6,6 @@ export default class Web3WalletAdapter {
     this.isHardwareWallet = this.wallet.type === 'hardware';
     this.identifier = wallet.identifier;
     this.brand = wallet.brand;
-    // this.type = wallet.type
     this.length = 1;
     // Assign methods to external expected names, and bind to present context
     this.signTransaction = this._signTransaction.bind(this);
@@ -112,6 +111,13 @@ export default class Web3WalletAdapter {
   }
 
   // ============== (End) Getters  ======================
+  // ============== (Start) Utility methods ======================
+
+  async changeNetwork(network) {
+    return this.wallet.changeNetwork(network);
+  }
+
+  // ============== (End) Utility methods ======================
   // ============== (Start) Operational Methods ======================
 
   _signTransaction(tx) {
@@ -130,7 +136,7 @@ export default class Web3WalletAdapter {
           resolve(_result);
         })
         .catch(_error => {
-          // eslint-disable-next-line no-console
+          // eslint-disable-next-line
           console.error(_error);
           reject(_error);
         });
@@ -145,18 +151,7 @@ export default class Web3WalletAdapter {
       this.wallet
         .signMessage(msgData)
         .then(_signedMessage => {
-          const signedMsg = JSON.stringify(
-            {
-              address: this.wallet.getAddressString(),
-              msg: message,
-              sig: _signedMessage,
-              version: '3',
-              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
-            },
-            null,
-            2
-          );
-          resolve(signedMsg);
+          resolve(_signedMessage);
         })
         .catch(_error => {
           reject(_error);
@@ -173,14 +168,5 @@ export default class Web3WalletAdapter {
         this.wallet.privateKey !== null)
     );
   }
-
-  // checkConnection () {
-  //   if (this.isHardware) {
-  //     return this.wallet.checkConnection()
-  //   } else {
-  //     return Promise.resolve(true)
-  //   }
-  // }
-
   // ============== (End) Utility Methods ======================
 }

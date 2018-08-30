@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1 
-      id="articleTitleGUIDEHowtobuyEthereumETHwithUSD" 
-      class="page__title" 
+    <h1
+      id="articleTitleGUIDEHowtobuyEthereumETHwithUSD"
+      class="page__title"
       itemprop="headline">[GUIDE] How to buy Ethereum (ETH) with USD</h1>
     <div class="content">
       <h3 id="hello-and-welcome-to-ethereum-">Hello and welcome to Ethereum!</h3>
@@ -118,17 +118,17 @@
 
     <div class="row">
       <p class="col">
-        <a 
-          href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/how-to-buy-ethereum-with-usd.md" 
-          target="_blank" 
+        <a
+          href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/how-to-buy-ethereum-with-usd.md"
+          target="_blank"
           rel="noopener noreferrer">
           Found a typo? Want to improve this article? <br> It's easy!
         </a>
       </p>
       <p class="col">
-        <a 
-          href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" 
-          target="_blank" 
+        <a
+          href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html"
+          target="_blank"
           rel="noopener noreferrer">
           Don't know how to submit a pull request? <br> It's also easy!
         </a>

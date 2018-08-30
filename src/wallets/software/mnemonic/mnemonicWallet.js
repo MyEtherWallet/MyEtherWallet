@@ -1,15 +1,17 @@
 import EthereumjsTx from 'ethereumjs-tx';
 import * as ethUtil from 'ethereumjs-util';
 import * as HDKey from 'hdkey';
-import HardwareWalletInterface from '../hardwareWallet-interface';
+import HardwareWalletInterface from './hardwareWallet-interface';
+import { getDerivationPath, paths } from './deterministicWalletPaths';
+import * as bip39 from 'bip39';
 
-const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect;
+let phrase = '';
+let pass = '';
 
-export default class TrezorWallet extends HardwareWalletInterface {
+export default class MnemonicWallet extends HardwareWalletInterface {
   constructor(options) {
     super();
-    this.identifier = 'TrezorOne';
-    this.brand = 'trezor';
+    this.identifier = 'Mnemonic';
     this.wallet = null;
 
     options = options || {};
@@ -22,8 +24,9 @@ export default class TrezorWallet extends HardwareWalletInterface {
     this.numWallets = 0;
 
     this.defaultOptions = {
-      path: "m/44'/60'/0'/0" // trezor default derivation path
+      path: this.getDerivationPath().dpath
     };
+
     const currentOptions = {
       ...this.defaultOptions,
       ...options
@@ -40,6 +43,10 @@ export default class TrezorWallet extends HardwareWalletInterface {
     this.getMultipleAccounts = this.getMultipleAccounts.bind(this);
     this.signTransaction = this.signTransaction.bind(this);
     this.signMessage = this.signMessage.bind(this);
+
+    if (options) {
+      this.decryptWallet(options);
+    }
   }
 
   // ============== (Start) Expected Utility methods ======================
@@ -51,12 +58,20 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   static async unlock(options) {
     try {
-      const wallet = new TrezorWallet(options);
-      await wallet.unlockTrezor();
-      return wallet;
+      return new MnemonicWallet(options);
     } catch (e) {
+      // eslint-disable-next-line
+      console.error(e); // todo replace with proper error
       return e;
     }
+  }
+
+  get compatibleChains() {
+    return paths;
+  }
+
+  getDerivationPath(networkShortName) {
+    return getDerivationPath(networkShortName);
   }
 
   // ============== (End) Expected Utility methods ======================
@@ -93,51 +108,52 @@ export default class TrezorWallet extends HardwareWalletInterface {
   }
 
   signTransaction(txData) {
-    return this.signTxTrezor(txData);
+    return this.signTxMnemonic(txData);
   }
 
   signMessage(msgData) {
     const thisMessage = msgData.data ? msgData.data : msgData;
-    return this.signMessageTrezor(thisMessage);
+    return this.signMessageMnemonic(thisMessage);
   }
 
   // ============== (End) Implementation of wallet usage methods ======================
 
-  changeDPath(path) {
+  async changeDerivationPath(path) {
     this.path = path;
-    return this.unlockTrezor();
+    await this.decryptWallet({
+      mnemonicPhrase: phrase,
+      mnemonicPassword: pass
+    });
   }
 
   // ============== (Start) Internally used methods ======================
 
-  // (Start) Internal setup methods
-  trezorCallback(response) {
-    return new Promise((resolve, reject) => {
-      if (response.success) {
-        this.HWWalletCreate(
-          response.publicKey,
-          response.chainCode,
-          'trezor',
-          this.path
-        );
-        resolve();
-      } else {
-        reject(Error(response.error));
-      }
-    });
+  set phrase(mnemonicPhrase) {
+    phrase = mnemonicPhrase;
   }
 
-  unlockTrezor() {
-    return new Promise(resolve => {
-      // trezor is using the path without change level id
-      TrezorConnect.getXPubKey(
-        this.path,
-        response => {
-          resolve(this.trezorCallback(response));
-        },
-        '1.5.2'
+  set password(mnemonicPassword) {
+    pass = mnemonicPassword;
+  }
+
+  // (Start) Internal setup methods
+
+  decryptWallet(options) {
+    try {
+      if (!bip39.validateMnemonic(options.mnemonicPhrase))
+        throw new Error('Invalid Mnemonic Supplied');
+      this.phrase = options.mnemonicPhrase;
+      this.password = options.mnemonicPassword;
+      this.hdk = HDKey.fromMasterSeed(
+        bip39.mnemonicToSeed(
+          options.mnemonicPhrase.trim(),
+          options.mnemonicPassword
+        )
       );
-    });
+      this.setHDAddresses();
+    } catch (e) {
+      throw e;
+    }
   }
 
   createWallet(priv, pub, path, hwType, hwTransport) {
@@ -152,41 +168,6 @@ export default class TrezorWallet extends HardwareWalletInterface {
     wallet.type = this.brand;
     return wallet;
   }
-
-  HWWalletCreate(publicKey, chainCode, walletType, path) {
-    this.hdk = new HDKey();
-    this.hdk.publicKey = Buffer.from(publicKey, 'hex');
-    this.hdk.chainCode = Buffer.from(chainCode, 'hex');
-    this.numWallets = 0;
-    this.path = path;
-    this.setHDAddressesHWWallet(
-      this.numWallets,
-      this.accountsLength,
-      walletType
-    );
-  }
-
-  setHDAddressesHWWallet(start, limit) {
-    this.walletsRetrieved = [];
-    for (let i = start; i < start + limit; i++) {
-      const derivedKey = this.hdk.derive('m/' + i);
-      const tempWallet = this.createWallet(
-        undefined,
-        derivedKey.publicKey,
-        this.path + '/' + i
-      );
-      this.addressToWalletMap[
-        this._getAddressForWallet(tempWallet)
-      ] = tempWallet;
-      this.walletsRetrieved.push(tempWallet);
-      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet);
-      this.walletsRetrieved[this.walletsRetrieved.length - 1].type =
-        'addressOnly';
-    }
-    this.id = 0;
-    this.numWallets = start + limit;
-  }
-
   // (End) Internal setup methods
 
   AddRemoveHDAddresses(isAdd) {
@@ -225,7 +206,8 @@ export default class TrezorWallet extends HardwareWalletInterface {
     });
   }
 
-  setHDAddresses(start, limit) {
+  setHDAddresses(start = 0, limit = 5) {
+    // TODO: Move to a worker thread
     this.walletsRetrieved = [];
     for (let i = start; i < start + limit; i++) {
       const tempWallet = this.createWallet(
@@ -234,82 +216,68 @@ export default class TrezorWallet extends HardwareWalletInterface {
       this.addressToWalletMap[
         this._getAddressForWallet(tempWallet)
       ] = tempWallet;
-      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet);
       this.walletsRetrieved.push(tempWallet);
+      this.addressesToIndexMap[i] = this._getAddressForWallet(tempWallet);
+      this.walletsRetrieved[this.walletsRetrieved.length - 1].type =
+        'addressOnly';
     }
     this.id = 0;
     this.numWallets = start + limit;
   }
 
-  decimalToHex(dec) {
-    return new ethUtil.BN(dec).toString(16);
+  async signTxMnemonic(rawTx) {
+    try {
+      if (!this.wallet)
+        throw new Error('no wallet present. wallet not have been decrypted');
+      const txData = {
+        nonce: rawTx.nonce,
+        gasPrice: rawTx.gasprice,
+        gas: rawTx.gas,
+        to: rawTx.to,
+        value: rawTx.value,
+        data: rawTx.data,
+        chainId: rawTx.chainId
+      };
+      txData.data = txData.data === '' ? '0x' : txData.data;
+      const tx = new EthereumjsTx(txData);
+      tx.sign(Buffer.from(this.wallet.privKey, 'hex'));
+      txData.rawTx = JSON.stringify(txData);
+      return {
+        rawTx: txData,
+        messageHash: tx.hash(), // figure out what exactly web3 is putting here
+        v: tx.v,
+        r: tx.r,
+        s: tx.s,
+        rawTransaction: `0x${tx.serialize().toString('hex')}`
+      };
+    } catch (e) {
+      return e;
+    }
   }
 
-  signTxTrezor(rawTx) {
-    return new Promise((resolve, reject) => {
-      const trezorConnectSignCallback = result => {
-        if (!result.success) {
-          reject(Error(result.error));
-          return;
-        }
-        rawTx.v = '0x' + this.decimalToHex(result.v);
-        rawTx.r = '0x' + result.r;
-        rawTx.s = '0x' + result.s;
-        const tx = new EthereumjsTx(rawTx);
-        rawTx.rawTx = JSON.stringify(rawTx);
-        resolve({
-          rawTx: rawTx.rawTx,
-          messageHash: tx.hash(), // figure out what exactly web3 is putting here
-          v: Buffer.from(result.v.toString(), 'hex'),
-          r: Buffer.from(result.r, 'hex'),
-          s: Buffer.from(result.s, 'hex'),
-          rawTransaction: `0x${tx.serialize().toString('hex')}`
-        });
-      };
+  async signMessageMnemonic(stringMessage) {
+    try {
+      if (!this.wallet)
+        throw new Error(
+          'no wallet present. wallet may not have been decrypted'
+        );
 
-      TrezorConnect.signEthereumTx(
-        this.wallet.path,
-        this.getNakedAddress(rawTx.nonce),
-        this.getNakedAddress(rawTx.gasPrice),
-        this.getNakedAddress(rawTx.gas),
-        this.getNakedAddress(rawTx.to),
-        this.getNakedAddress(rawTx.value),
-        this.getNakedAddress(rawTx.data),
-        +rawTx.chainId,
-        trezorConnectSignCallback
-      );
-    });
-  }
-
-  signMessageTrezor(stringMessage) {
-    return new Promise((resolve, reject) => {
-      const localCallback = function(result) {
-        if (!result.success) {
-          reject(result.error);
-          return;
-        }
-        const signedMessage = '0x' + result.signature;
-        resolve(signedMessage);
-      };
-      TrezorConnect.ethereumSignMessage(
-        this.wallet.path,
-        stringMessage,
-        localCallback,
-        '1.5.2'
-      );
-    });
+      const msg = ethUtil.hashPersonalMessage(ethUtil.toBuffer(stringMessage));
+      const signed = ethUtil.ecsign(msg, this.wallet.privKey);
+      const combined = Buffer.concat([
+        Buffer.from(signed.r),
+        Buffer.from(signed.s),
+        Buffer.from([signed.v])
+      ]);
+      const combinedHex = combined.toString('hex');
+      return '0x' + combinedHex;
+    } catch (e) {
+      return e;
+    }
   }
 
   // (End) Internal methods underlying wallet usage methods
   // (Start) Internal utility methods
-  getNakedAddress(address) {
-    const naked = address.toLowerCase().replace('0x', '');
-    if (naked.length % 2 === 0) {
-      return naked.toString();
-    }
-    return '0' + naked.toString();
-  }
-
   _getAddressForWallet(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
       return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');

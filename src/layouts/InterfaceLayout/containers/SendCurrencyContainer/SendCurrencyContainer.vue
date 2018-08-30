@@ -124,47 +124,37 @@
               </label>
             </div>
           </div>
-        </div>
-        <div
-          v-if="advancedExpend"
-          class="input-container">
-          <div class="the-form user-input">
-            <input
-              v-model="data"
-              type="text"
-              name=""
-              placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-              autocomplete="off">
-          </div>
-          <div class="the-form user-input">
-            <input
-              v-model="gasLimit"
-              type="number"
-              name=""
-              placeholder="Gas Limit">
+          <div
+            v-if="advancedExpend"
+            class="input-container">
+            <div class="the-form user-input">
+              <input
+                v-model="data"
+                type="text"
+                name=""
+                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
+                autocomplete="off">
+            </div>
+            <div class="the-form user-input">
+              <input
+                v-model="gasLimit"
+                type="number"
+                name=""
+                placeholder="Gas Limit">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="submit-button-container">
-      <div
-        :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
-        @click="confirmationModalOpen">
-        {{ $t('interface.sendTx') }}
+      <div class="submit-button-container">
+        <div
+          :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+          @click="confirmationModalOpen">
+          {{ $t('interface.sendTx') }}
+        </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
-        :question="$t('interface.haveIssues')"
-        link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-    <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-    <!--:to="address" :value="amount" :gas="gasLimit" :data="data"-->
-    <!--:nonce="nonce + 1"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
-  </div>
-</template>
+</div></template>
 
 <script>
 import { mapGetters } from 'vuex';
@@ -172,23 +162,19 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-// import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie';
-// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
+const EthTx = require('ethereumjs-tx');
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    // 'confirm-modal': ConfirmModal,
     blockie: Blockie,
     'currency-picker': CurrencyPicker
-    // 'success-modal': SuccessModal
   },
   props: {
     tokensWithBalance: {
@@ -382,7 +368,6 @@ export default {
       const newRaw = this.raw;
       delete newRaw['gas'];
       delete newRaw['nonce'];
-      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex();
       this.$store.state.web3.eth
         .estimateGas(newRaw)

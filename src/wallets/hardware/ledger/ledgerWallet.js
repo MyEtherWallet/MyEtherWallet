@@ -3,28 +3,19 @@ import Ledger from '@ledgerhq/hw-app-eth';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import HardwareWalletInterface from '../hardwareWallet-interface';
 import * as ethUtil from 'ethereumjs-util';
+import { paths, getDerivationPath } from './deterministicWalletPaths';
 
-// const NOT_SUPPORTED_ERROR_MSG =
-//   'LedgerWallet uses U2F which is not supported by your browser. ' +
-//   'Use Chrome, Opera or Firefox with a U2F extension.' +
-//   "Also make sure you're on an HTTPS connection"
-
-/**
- * THE CONNECTION STATUS, STATE, AND ACTIONS ALL OPERATE FROM THE TRANSPORT INSTANCE PASSED TO THE LEDGER APP INTERFACE
- */
 export default class LedgerWallet extends HardwareWalletInterface {
   constructor(opts) {
     super();
     const options = opts || {};
     this.brand = 'ledger';
     this.identifier = 'LedgerNanoS';
+    this.version = '';
     this.wallet = null;
-    this.activeAddress = '';
-    this.activeAddressIndex = '';
     if (options.transport) this.ledgerTransport = options.transport;
-    this.allowedHdPaths = options.options || ["44'/60'", "44'/61'"];
     this.defaultOptions = {
-      path: "44'/60'/0'/0", // ledger default derivation path
+      path: this.getDerivationPath().dpath, // ledger default derivation path
       askConfirm: false
     };
 
@@ -32,8 +23,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
       ...this.defaultOptions,
       ...options
     };
-    this.checkIfAllowedPath(currentOptions.path);
-
     this.accountsLength =
       currentOptions.accountsLength || this.defaultAccountsCount;
     this.accountsOffset =
@@ -57,42 +46,71 @@ export default class LedgerWallet extends HardwareWalletInterface {
     this.changeNetwork = this.changeNetwork.bind(this);
   }
 
+  // ============== (Start) Expected Utility methods ======================
   static async unlock(options) {
     try {
-      return new LedgerWallet(options);
+      const wallet = new LedgerWallet(options);
+      const appConfig = await wallet.getAppConfig();
+      wallet.version = appConfig.version;
+      return wallet;
     } catch (e) {
       return e;
     }
   }
 
-  getAddress() {
-    return this.wallet.address;
+  get compatibleChains() {
+    return paths;
   }
 
-  getAddressString() {
-    // let rawAddress = '0x' + this.getAddress().toString('hex')
-    return ethUtil.toChecksumAddress(this.getAddress());
+  getDerivationPath(networkShortName) {
+    return getDerivationPath(networkShortName);
   }
 
-  changeDPath(path) {
-    this.path = path;
+  async changeDerivationPath(path) {
+    try {
+      this.pathComponents = this.obtainPathComponentsFromDerivationPath(path);
+      this.path = path;
+      this.addressToPathMap = {};
+      return Promise.resolve();
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  async changeNetwork(network) {
+    try {
+      const newPath = getDerivationPath(network.type.name);
+      await this.changeDerivationPath(newPath);
+      await this.getAccounts();
+      return Promise.resolve();
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   setActiveAddress(address, index) {
     this.wallet = {};
     this.wallet.address = address;
-    // this.activeAddressIndex = index
     this.wallet.path = this.pathComponents.basePath + index.toString();
     this.wallet.hwType = 'ledger';
+    this.wallet.brand = 'ledger';
     this.wallet.hwTransport = undefined;
-    this.wallet.type = 'default';
+    this.wallet.type = 'hardware';
   }
 
-  changeNetwork(networkId, path) {
-    this.networkId = networkId;
-    this.path = path;
+  // ============== (End) Expected Utility methods ======================
+
+  // ============== (Start) Implementation of required EthereumJs-wallet interface methods =========
+  getAddress() {
+    return this.wallet.address;
   }
 
+  getAddressString() {
+    return ethUtil.toChecksumAddress(this.getAddress());
+  }
+  // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
+
+  // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts() {
     const _this = this;
     if (arguments.length > 1 && arguments.length < 3) {
@@ -113,18 +131,9 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return this._signTransaction(txData);
   }
 
-  checkIfAllowedPath(path) {
-    if (!this.allowedHdPaths.some(hdPref => path.startsWith(hdPref))) {
-      throw this.makeError(
-        'Ledger derivation path allowed are ' +
-          this.allowedHdPaths.join(', ') +
-          '. ' +
-          path +
-          ' is not supported',
-        'InvalidDerivationPath'
-      );
-    }
-  }
+  // ============== (End) Implementation of wallet usage methods ======================
+
+  // ============== (Start) Internally used methods ======================
 
   makeError(msg, id) {
     const err = new Error(msg);
@@ -132,17 +141,46 @@ export default class LedgerWallet extends HardwareWalletInterface {
     return err;
   }
 
+  versionCheck(chainRegexResult) {
+    const forChecks = chainRegexResult
+      ? chainRegexResult.length === 3
+        ? chainRegexResult[2]
+        : '0'
+      : '0';
+    const versionParts = this.version.split('.');
+    if (/^1$|^60$|^61$/.test(forChecks)) {
+      return true;
+    }
+    return +versionParts[1] > 3;
+  }
+
   obtainPathComponentsFromDerivationPath(derivationPath) {
-    // check if derivation path follows 44'/60'/x'/n pattern
-    const regExp = /^(44'\/(?:1|60|61)'\/\d+'?\/)(\d+)$/;
+    // eslint-disable-next-line no-useless-escape
+    const REGEX = /^m\s*\/(\s*44'\s*\/\s*(\d+)'\s*\/\s*(\d+)'\s*\/)\s*(\d+)\s*(\/\s*(\d+))?$/;
+    const regExp = /^m?\/?(44'\/(\d+)'\/\d+'\/)$/;
+    const regExpAlt = /^m?\/?(44'\/(\d+)')/;
     const matchResult = regExp.exec(derivationPath);
-    if (matchResult === null) {
+    const matchResultAlt = regExpAlt.exec(derivationPath);
+    const coinCheck = REGEX.exec(derivationPath);
+    if (matchResult === null && matchResultAlt === null) {
       throw this.makeError(
         "To get multiple accounts your derivation path must follow pattern 44'/60|61'/x'/n ",
         'InvalidDerivationPath'
       );
     }
-    return { basePath: matchResult[1], index: parseInt(matchResult[2], 10) };
+    if (matchResult !== null) {
+      return { basePath: matchResult[1], index: 0 };
+    } else if (coinCheck !== null && this.versionCheck(coinCheck)) {
+      return { basePath: coinCheck[1], index: 0 };
+    } else if (matchResultAlt !== null && this.versionCheck(matchResultAlt)) {
+      return {
+        basePath: matchResultAlt[1] + "/0'/",
+        index: 0
+      };
+    }
+    throw this.makeError(
+      'The selected path is not compatible with the attached Ledgers Firmware version'
+    );
   }
 
   getTransport() {
@@ -187,14 +225,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
     }
   }
 
-  async getAppConfig(callback) {
+  async getAppConfig() {
     const transport = await this.getTransport();
     try {
       const eth = new Ledger(transport);
       const appConfig = await eth.getAppConfiguration();
-      callback(null, appConfig);
+      return appConfig;
     } catch (e) {
-      callback(e);
+      throw e;
     } finally {
       transport
         .close()
@@ -282,13 +320,14 @@ export default class LedgerWallet extends HardwareWalletInterface {
           'InvalidNetworkId'
         );
       }
-
       return {
-        rawTx: txData,
-        messageHash: tx.hash(), // figure out what exactly web3 is putting here
-        v: Buffer.from(result.v, 'hex'),
-        r: Buffer.from(result.r, 'hex'),
-        s: Buffer.from(result.s, 'hex'),
+        tx: {
+          ...txData,
+          v: `0x${tx.v.toString('hex')}`,
+          r: `0x${tx.r.toString('hex')}`,
+          s: `0x${tx.s.toString('hex')}`,
+          hash: tx.hash().toString('hex')
+        },
         rawTransaction: `0x${tx.serialize().toString('hex')}`
       };
     } finally {
@@ -302,4 +341,6 @@ export default class LedgerWallet extends HardwareWalletInterface {
         });
     }
   }
+
+  // ============== (End) Internally used methods ======================
 }

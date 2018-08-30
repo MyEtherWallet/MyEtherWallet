@@ -4,12 +4,7 @@ import EthereumTx from 'ethereumjs-tx';
 import EthereumWallet from 'ethereumjs-wallet';
 
 import * as crypto from 'crypto';
-// import * as scrypt from 'scryptsy'
-// import assert from 'assert'
-//
-// import account from 'eth-lib/lib/account'
-// var Account = require()
-// This No Longer Has Any HD based wallet Operations
+
 export default class BasicWallet {
   constructor(options) {
     this.identifier = 'Default'; // for Legacy Reasons
@@ -21,7 +16,7 @@ export default class BasicWallet {
     return this;
   }
 
-  static unlockWallet(options) {
+  static unlock(options) {
     return new BasicWallet(options);
   }
 
@@ -97,7 +92,6 @@ export default class BasicWallet {
             'no wallet present. wallet may not have been decrypted'
           );
         txData.data = txData.data === '' ? '0x' : txData.data;
-        // let txData = rawTxData
         txData.data = txData.data === '' ? '0x' : txData.data;
         const eTx = new EthereumTx(txData);
         eTx.sign(this.privateKeyBuffer);
@@ -105,16 +99,17 @@ export default class BasicWallet {
         const serializedTx = eTx.serialize();
         txData.signedTx = `0x${serializedTx.toString('hex')}`;
         const hashedtx = eTx.hash();
-        // txData.signedTx = '0x' + eTx.serialize().toString('hex')
-        const result = {
-          rawTx: txData.rawTx,
-          messageHash: hashedtx, // figure out what exactly web3 is putting here
-          v: eTx.v,
-          r: eTx.r,
-          s: eTx.s,
+
+        resolve({
+          tx: {
+            ...txData.rawTx,
+            v: `0x${eTx.v.toString('hex')}`,
+            r: `0x${eTx.r.toString('hex')}`,
+            s: `0x${eTx.s.toString('hex')}`,
+            hash: hashedtx
+          },
           rawTransaction: txData.signedTx
-        };
-        resolve(result);
+        });
       } catch (e) {
         reject(e);
       }
@@ -137,25 +132,7 @@ export default class BasicWallet {
           Buffer.from([signed.v])
         ]);
         const combinedHex = combined.toString('hex');
-        // let signingAddr = this.getAddressString()
-        // eslint-disable-next-line no-unused-vars
-        // let signedMsg = JSON.stringify({
-        //   address: signingAddr,
-        //   msg: thisMessage,
-        //   sig: '0x' + combinedHex,
-        //   version: '3',
-        //   signer: 'MEW'
-        // }, null, 2)
         resolve('0x' + combinedHex);
-        // return {
-        //   message: message,
-        //   messageHash: hash,
-        //   v: signed.v,
-        //   r: signed.r,
-        //   s: signed.s,
-        //   signature: '0x' + combinedHex
-        // }
-        // return '0x' + combinedHex
       } catch (e) {
         reject(e);
       }
@@ -212,7 +189,8 @@ export default class BasicWallet {
         case 'manualPrivateKey': {
           if (typeof options.manualPrivateKey === 'object')
             throw new Error('Supplied Private Key Must Be A String');
-          // eslint-disable-next-line no-case-declarations
+
+          // eslint-disable-next-line
           const privKey =
             options.manualPrivateKey.indexOf('0x') === 0
               ? options.manualPrivateKey
@@ -222,18 +200,15 @@ export default class BasicWallet {
             throw Error(
               'BasicWallet decryptWallet manualPrivateKey: Invalid Hex'
             );
-            // return;
           } else if (!ethUtil.isValidPrivate(ethUtil.toBuffer(privKey))) {
             this.wallet = null;
             throw Error(
               'BasicWallet decryptWallet manualPrivateKey: Invalid Private Key'
             );
-            // return;
           } else {
             this.wallet = BasicWallet.createWallet(
               this.fixPkey(options.manualPrivateKey)
             );
-            // walletService.password = '';
           }
           break;
         }
@@ -242,7 +217,6 @@ export default class BasicWallet {
             options.fileContent,
             options.filePassword
           );
-          // walletService.password = filePassword;
           break;
         }
         case 'parity': {
@@ -257,13 +231,10 @@ export default class BasicWallet {
       this.active = true;
     } catch (e) {
       throw e;
-      // throw"fromFile decryptWallet catch" +
     }
 
     if (this.wallet !== null) {
-      // errors.simpleError("fromFile decryptWallet this.wallet !== null")
       this.wallet.type = 'default';
-      // this._attachWallet(this.wallet)
     }
   }
 
@@ -286,7 +257,6 @@ export default class BasicWallet {
       wallet = EthereumWallet.fromPrivateKey(privateKey);
     }
 
-    // wallet.pubKey = pub
     wallet.path = path;
     wallet.hwType = hwType;
     wallet.hwTransport = hwTransport;
@@ -294,15 +264,6 @@ export default class BasicWallet {
 
     return wallet;
   }
-
-  // getAddress () {
-  //   if (!this.wallet) throw Error('no wallet present. wallet not have been decrypted')
-  //   if (typeof this.wallet.pubKey === 'undefined') {
-  //     return ethUtil.privateToAddress(this.wallet.privKey)
-  //   } else {
-  //     return ethUtil.publicToAddress(this.wallet.pubKey, true)
-  //   }
-  // }
 
   fixPkey(key) {
     if (key.indexOf('0x') === 0) {

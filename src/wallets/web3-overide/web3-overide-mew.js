@@ -4,15 +4,28 @@ export default function web3OverideMew(web3, wallet, eventHub) {
   const methodOverides = {
     signTransaction(tx) {
       return new Promise(resolve => {
-        eventHub.$emit(
-          'showTxConfirmModal',
-          tx,
-          wallet.isHardware,
-          wallet.signTransaction.bind(this),
-          res => {
-            resolve(res);
-          }
-        );
+        if (tx.generateOnly) {
+          delete tx['generateOnly'];
+          eventHub.$emit(
+            'showTxConfirmModal',
+            tx,
+            wallet.isHardware,
+            wallet.signTransaction.bind(this),
+            res => {
+              resolve(res);
+            }
+          );
+        } else {
+          eventHub.$emit(
+            'showTxConfirmModal',
+            tx,
+            wallet.isHardware,
+            wallet.signTransaction.bind(this),
+            res => {
+              resolve(res);
+            }
+          );
+        }
       });
     },
     signMessage(message) {
@@ -43,4 +56,5 @@ export default function web3OverideMew(web3, wallet, eventHub) {
 
   web3.eth.signTransaction = methodOverides.signTransaction;
   web3.eth.sign = methodOverides.signMessage;
+  return web3; // needs to return web3 for use in vuex
 }

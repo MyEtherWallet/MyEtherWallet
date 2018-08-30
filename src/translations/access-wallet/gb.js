@@ -1,6 +1,7 @@
 const common = {
   hdDerivationPath: 'HD Derivation Path',
   customPath: 'Add Custom Path',
+  customPaths: 'Custom Paths',
   interactAddr: 'Address to Interact With',
   id: 'ID',
   acceptTerms: 'To unlock my wallet, I accept',

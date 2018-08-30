@@ -15,7 +15,7 @@
                 <input
                   ref="addCustomToggle"
                   type="checkbox"
-                  @click="addCustomNetworkToggle" >
+                  @click="addCustomNetworkToggle">
                 <span class="slider round"/>
               </label>
             </div>
@@ -69,7 +69,7 @@
               type="text"
               name=""
               placeholder="ETH Node Name"
-              autocomplete="off" >
+              autocomplete="off">
             <select
               v-model="selectedNetwork"
               class="custom-select-1">
@@ -84,14 +84,14 @@
               type="text"
               name=""
               placeholder="URL"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="port"
               class="custom-input-text-1"
               type="text"
               name=""
               placeholder="Port"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-show="selectedNetwork.name === 'Custom'"
               v-model="chainID"
@@ -111,7 +111,7 @@
                 <label class="switch">
                   <input
                     type="checkbox"
-                    @click="expendAuth" >
+                    @click="expendAuth">
                   <span class="slider round"/>
                 </label>
               </div>
@@ -126,14 +126,14 @@
               type="text"
               name=""
               placeholder="User Name"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="password"
               class="custom-input-text-1"
               type="password"
               name=""
               placeholder="Password"
-              autocomplete="off" >
+              autocomplete="off">
           </div>
         </div>
 
@@ -250,6 +250,7 @@ export default {
       this.$refs.authForm.classList.toggle('hidden');
     },
     switchNetwork(network) {
+      this.selectedNetwork = network;
       this.$store.dispatch('switchNetwork', network);
       this.$store.dispatch('setWeb3Instance', web3);
     }

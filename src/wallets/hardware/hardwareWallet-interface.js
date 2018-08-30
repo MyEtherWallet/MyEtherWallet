@@ -33,16 +33,27 @@ export default class HardwareWalletInterface {
   getAddressString() {
     throw new Error('getAddressString Not Implemented');
   }
+
   // ============== (End) EthereumJs-wallet interface methods ======================
 
   // ============== (Start) Utility methods ======================
+  // Implementation required
+  get compatibleChains() {
+    throw new Error('compatibleChains getter Not Implemented');
+  }
+
+  // Implementation required
+  getDerivationPath(/* networkShortName */) {
+    throw new Error('getDerivationPath Not Implemented');
+  }
+
   get isHardware() {
     return this.isHardwareWallet;
   }
 
   // Implementation required
   static async unlock() {
-    // eslint-disable-next-line no-console
+    // eslint-disable-next-line
     console.error(
       'unlock should not be an instance method  of the wallet constructor'
     );
@@ -50,13 +61,17 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required
-  setActiveAddress() {
+  setActiveAddress(/* address, index */) {
     throw new Error('setActiveAddress Not Implemented');
   }
 
   // Implementation required
-  changeDPath() {
-    throw new Error('changePath Not Implemented');
+  changeDerivationPath() {
+    throw new Error('changeDerivationPath Not Implemented');
+  }
+
+  changeNetwork(/* network */) {
+    throw new Error('changeNetwork Not Implemented');
   }
 
   // ============== (End) Required Utility methods ======================
@@ -68,17 +83,17 @@ export default class HardwareWalletInterface {
   }
 
   // Implementation required (if only a single account exists, it should be returned)
-  getMultipleAccounts() {
+  getMultipleAccounts(/* count, offset */) {
     throw new Error('getMultipleAccounts Not Implemented');
   }
 
   // Implementation required
-  signMessage() {
+  signMessage(/* txData */) {
     throw new Error('signMessage Not Implemented');
   }
 
   // Implementation required
-  signTransaction() {
+  signTransaction(/* txData */) {
     throw new Error('signTransaction Not Implemented');
   }
 
