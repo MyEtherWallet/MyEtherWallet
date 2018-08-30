@@ -237,9 +237,8 @@ export default {
             return -1;
           } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
             return 1;
-          } else {
-            return 0;
           }
+          return 0;
         });
       } else {
         const tokenWithBalance = [];
@@ -278,11 +277,12 @@ export default {
         });
     },
     getBalance() {
-      this.$store.state.web3.eth
+      const web3 = this.$store.state.web3;
+      web3.eth
         .getBalance(this.address)
         .then(res => {
-          this.balance = Number(res);
-          this.$store.dispatch('setAccountBalance', Number(this.balance));
+          this.balance = web3.utils.fromWei(res, 'ether');
+          this.$store.dispatch('setAccountBalance', this.balance);
         })
         .catch(err => {
           // eslint-disable-next-line no-console

@@ -157,7 +157,7 @@ export default {
     },
     hardwareButtonActivate(e) {
       const buttonEls = this.$refs.hardwareList.children;
-      for (var i = 0; i < buttonEls.length; i++) {
+      for (let i = 0; i < buttonEls.length; i++) {
         buttonEls[i].classList.remove('active');
       }
 

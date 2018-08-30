@@ -398,9 +398,8 @@ export default {
         const valid = this.$store.state.web3.utils.isAddress(this.address);
         if (!valid) {
           return true;
-        } else {
-          return false;
         }
+        return false;
       }
     }
   }

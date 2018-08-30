@@ -195,7 +195,7 @@ export default {
   },
   methods: {
     languageItemClicked(e) {
-      let flag = e.target.getAttribute('data-flag-name');
+      const flag = e.target.getAttribute('data-flag-name');
 
       this.$root._i18n.locale = flag;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');

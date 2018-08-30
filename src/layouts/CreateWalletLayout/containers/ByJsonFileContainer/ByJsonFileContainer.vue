@@ -64,13 +64,13 @@
 
 <script>
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
-import ByJsonBlock from './components/ByJsonBlock';
+import ByJsonBlock from '../../components/ByJsonBlock';
 
 import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
-import Worker from '@/workers/wallet.worker.js';
-import Wallet from 'ethereumjs-wallet';
+import Worker from 'worker-loader!@/workers/wallet.worker.js';
+// import Wallet from 'ethereumjs-wallet';
 
 export default {
   components: {
@@ -109,34 +109,26 @@ export default {
   },
   watch: {
     downloadable() {
-      const self = this;
-      setTimeout(function() {
-        self.$children[0].$refs.success.show();
+      setTimeout(() => {
+        this.$children[0].$refs.success.show();
       }, 15000);
     }
   },
   mounted() {
     const worker = new Worker();
-    const self = this;
     worker.postMessage({ type: 'createWallet', data: [this.password] });
-    worker.onmessage = function(e) {
-      // eslint-disable-next-line no-useless-escape
-      self.walletJson = createBlob('mime', e.data.walletJson);
-      self.name = e.data.name.toString();
-      self.$store.dispatch(
-        'decryptWallet',
-        Wallet.fromV3(e.data.walletJson, self.password)
-      );
-
-      function createBlob(mime, str) {
+    worker.onmessage = e => {
+      const createBlob = (mime, str) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
-        var blob = new Blob([string], {
+        const blob = new Blob([string], {
           type: mime
         });
-        self.downloadable = true;
+        this.downloadable = true;
         return window.URL.createObjectURL(blob);
-      }
+      };
+      this.walletJson = createBlob('mime', e.data.walletJson);
+      this.name = e.data.name.toString();
     };
     worker.onerror = function() {
       // eslint-disable-next-line no-console
