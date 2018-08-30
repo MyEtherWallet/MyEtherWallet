@@ -36,9 +36,8 @@
 </template>
 
 <script>
-// import Wallet from 'ethereumjs-wallet'
 import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
-import { BasicWallet } from '@/helpers/web3-overide/software';
+import { BasicWallet } from '@/wallets';
 export default {
   props: {
     file: {
@@ -72,7 +71,7 @@ export default {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch(
           'decryptWallet',
-          BasicWallet.unlockWallet({
+          BasicWallet.unlock({
             type: 'manualPrivateKey',
             manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
           })

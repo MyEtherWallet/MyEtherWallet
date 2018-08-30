@@ -43,8 +43,8 @@ export default {
   },
   methods: {
     hideModal() {
-      if (this.linkTo !== undefined) {
-        this.$router(this.linkTo);
+      if (this.linkTo !== '/') {
+        this.$router.push({ path: this.linkTo });
       }
       this.$refs.success.hide();
     }

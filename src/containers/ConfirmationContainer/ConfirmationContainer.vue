@@ -3,7 +3,19 @@
     <confirm-modal
       ref="confirmModal"
       :confirm-send-tx="sendTx"
-      :show-success="showSuccessModal"
+      :signed-tx="signedTx"
+      :fee="transactionFee"
+      :is-hardware-wallet="isHardwareWallet"
+      :gas-price="$store.state.gasPrice"
+      :from="fromAddress"
+      :to="toAddress"
+      :value="amount"
+      :gas="gasLimit"
+      :data="data"
+      :nonce="nonce + 1"/>
+    <confirm-modal
+      ref="offlineGenerateConfirmModal"
+      :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
       :is-hardware-wallet="isHardwareWallet"
@@ -41,6 +53,18 @@ export default {
     'success-modal': SuccessModal,
     'confirm-sign-modal': ConfirmSignModal
   },
+  props: {
+    active: {
+      type: Boolean,
+      default: false
+    },
+    rawTx: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {
       isHardwareWallet: false,
@@ -64,6 +88,7 @@ export default {
       messageToSign: '',
       signedMessage: '',
       successMessage: '',
+      linkMessage: 'OK',
       dismissed: true
     };
   },
@@ -75,10 +100,26 @@ export default {
     }
   },
   created() {
-    this.$eventHub.$on('showSuccessModal', message => {
+    this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null;
-      this.showSuccessModal(message);
+      this.showSuccessModal(message, linkMessage);
     });
+
+    this.$eventHub.$on(
+      'showConfirmModal',
+      (tx, isHardware, signer, resolve) => {
+        this.parseRawTx(tx);
+        this.isHardwareWallet = isHardware;
+        this.responseFunction = resolve;
+        this.successMessage = 'Sending Transaction';
+        // this.signer = signer(tx)
+        signer(tx).then(_response => {
+          this.signedTxObject = _response;
+          this.signedTx = this.signedTxObject.rawTransaction;
+        });
+        this.confirmationModalOpen();
+      }
+    );
 
     this.$eventHub.$on(
       'showTxConfirmModal',
@@ -87,6 +128,7 @@ export default {
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
+        // this.signer = signer(tx)
         signer(tx).then(_response => {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
@@ -103,51 +145,61 @@ export default {
         signer(data).then(_response => {
           this.signedMessage = _response;
         });
+        // this.signer = signer(data)
         this.signConfirmationModalOpen();
       }
     );
-
-    this.$eventHub.$on('checkConnection', () => {
-      this.hardwareConnectCheck();
-    });
-
-    this.$on('bv::modal::hide', () => {
+  },
+  mounted() {
+    this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
       if (this.dismissed) {
         this.reset();
       }
     });
+
+    this.$refs.successModal.$refs.success.$on('hide', () => {
+      this.successMessage = '';
+      this.linkMessage = 'OK';
+    });
   },
   methods: {
-    hardwareConnectCheck() {},
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
+    },
+    confirmationOfflineGenerateModalOpen() {
+      window.scrollTo(0, 0);
+      this.$refs.offlineGenerateConfirmModal.$refs.confirmation.show();
     },
     signConfirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message) {
-      this.$refs.successModal.$refs.success.$on('hide', () => {
-        this.successMessage = '';
-      });
+    showSuccessModal(message, linkMessage) {
       this.reset();
       if (message !== null) this.successMessage = message;
+      if (linkMessage !== null) this.linkMessage = linkMessage;
       this.$refs.successModal.$refs.success.show();
     },
     parseRawTx(tx) {
       this.raw = tx;
-      this.nonce = tx.nonce;
+      this.nonce = +tx.nonce;
       this.data = tx.data;
-      this.gasLimit = tx.gas;
+      this.gasLimit = +tx.gas;
       this.toAddress = tx.to;
-      this.amount = tx.value;
+      this.amount = +tx.value;
+      // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn() {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
       this.showSuccessModal();
+    },
+    generateTx() {
+      this.dismissed = false;
+      this.responseFunction(this.signedTxObject);
+      this.$refs.confirmModal.$refs.confirmation.hide();
     },
     sendTx() {
       this.dismissed = false;

@@ -167,8 +167,6 @@ export default {
     }
   },
   mounted() {
-    const self = this;
-
     if (this.$store.state.online) {
       this.online = true;
     } else {
@@ -188,12 +186,12 @@ export default {
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    this.onPageScroll();
+    // this.onPageScroll();
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    window.onscroll = function() {
-      self.onPageScroll();
-    };
+    // window.onscroll = function() {
+    //   self.onPageScroll();
+    // };
   },
   methods: {
     languageItemClicked(e) {

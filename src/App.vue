@@ -45,6 +45,8 @@ export default {
     const state = {
       web3: newWeb3,
       network: network,
+      customPaths:
+        store.get('customPaths') !== undefined ? store.get('customPaths') : {},
       wallet: null,
       account: {
         balance: 0

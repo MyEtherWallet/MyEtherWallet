@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return {
-      parsedNetwork: ''
+      parsedNetwork: 0
     };
   },
   watch: {

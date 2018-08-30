@@ -25,15 +25,15 @@
               </p>
             </div>
             <div class="content-links mobile-hide">
-              <div 
-                v-for="(content, index) in item.contents" 
+              <div
+                v-for="(content, index) in item.contents"
                 :key="content.text+index">
-                <router-link 
-                  v-if="content.to !== undefined" 
+                <router-link
+                  v-if="content.to !== undefined"
                   :to="content.to"><p>{{ content.text }}</p></router-link>
-                <a 
-                  v-if="content.to === undefined" 
-                  :href="content.href" 
+                <a
+                  v-if="content.to === undefined"
+                  :href="content.href"
                   target="_blank"><p>{{ content.text }}</p></a>
               </div>
             </div>
@@ -49,22 +49,22 @@
             <div class="content-links">
               <p>{{ $t("footer.welcomeDes") }}</p>
 
-              <a 
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D" 
+              <a
+                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
                 target="_blank">
-                <p 
-                  class="crypto-link" 
+                <p
+                  class="crypto-link"
                   data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>
               </a>
 
-              <a 
-                href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9" 
+              <a
+                href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 target="_blank">
-                <p 
-                  class="crypto-link" 
+                <p
+                  class="crypto-link"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
                   <img src="~@/assets/images/icons/btc.svg">
                   &nbsp;Bitcoin Donation

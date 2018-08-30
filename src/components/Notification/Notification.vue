@@ -17,9 +17,12 @@
       class="bootstrap-modal-wide nopadding"
       @show="countUnread">
       <template slot="modal-title">
-        <h5 class="modal-title"> {{ unreadCount > 1 ? 'Notifications':'Notification' }} <div
-          v-show="unreadCount > 0"
-          class="notification-count"><span>{{ unreadCount }}</span></div></h5>
+        <h5 class="modal-title"> {{ unreadCount > 1 ? 'Notifications':'Notification' }}
+          <div
+            v-show="unreadCount > 0"
+            class="notification-count"><span>{{ unreadCount }}</span>
+          </div>
+        </h5>
       </template>
       <div class="notification-item-container">
         <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0">
@@ -64,6 +67,9 @@ export default {
     }),
     sortedNotifications() {
       this.countUnread();
+
+      if (!this.notifications[this.$store.state.wallet.getAddressString()])
+        return [];
       // eslint-disable-next-line
       return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
         a = new Date(a.timestamp);
@@ -111,7 +117,6 @@ export default {
       this.$refs.notification.show();
     },
     expand(idx, notif) {
-      // e.target.nextElementSibling.classList.contains('unexpanded') ? e.target.nextElementSibling.classList.remove('unexpanded') : e.target.nextElementSibling.classList.add('unexpanded')
       const updatedNotif = notif;
       if (notif.expanded !== true) {
         updatedNotif.read = true;

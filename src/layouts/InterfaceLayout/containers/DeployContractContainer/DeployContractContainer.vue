@@ -1,8 +1,6 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal
-      message=""
-      link-message="Ok"/>
+    <!--<success-modal message="" linkMessage="Ok"></success-modal>-->
     <interface-container-title :title="$t('common.depContract')"/>
 
     <div class="send-form">
@@ -142,43 +140,29 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
-    <confirm-modal
-      :show-success="showSuccessModal"
-      :signed-tx="signedTx"
-      :fee="transactionFee"
-      :gas-price="$store.state.gasPrice"
-      :from="$store.state.wallet.getAddressString()"
-      :gas="gasLimit"
-      :data="data"
-      :nonce="nonce"
-      :contract-name="contractName"
-      :abi="abi"/>
-    <success-modal
-      message="Sending Transaction"
-      link-message="Close"/>
+    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>-->
+    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal';
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+// import SuccessModal from '@/components/SuccessModal'
 import { Misc } from '@/helpers';
 
 import store from 'store';
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
+const EthTx = require('ethereumjs-tx');
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'confirm-modal': ConfirmModal,
-    'success-modal': SuccessModal
+    'interface-container-title': InterfaceContainerTitle
+    // 'success-modal': SuccessModal
   },
   data() {
     return {
@@ -254,46 +238,51 @@ export default {
         gas: this.gasLimit,
         nonce: this.nonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        data: this.data
+        data: this.data.replace(/\s/g, '')
       };
 
-      // const tx = new EthTx(this.raw)
-      // tx.sign(this.$store.state.wallet.getPrivateKey())
-      // const signedTx = tx.serialize()
-      // this.signedTx = `0x${signedTx.toString('hex')}`
+      const fromAddress = this.raw.from;
+      const transactionFee = await this.$store.state.web3.eth.estimateGas(
+        this.raw
+      );
+      this.raw.gas = transactionFee;
+      this.transactionFee = await unit.fromWei(
+        unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee,
+        'ether'
+      );
+
       await web3.eth
         .sendTransaction(this.raw)
         .once('transactionHash', hash => {
           this.$store.dispatch('addNotification', [
-            this.from,
+            fromAddress,
             hash,
-            'Transaction Hash'
+            'Transaction Hash: Contract Deploy'
           ]);
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
-            this.from,
+            fromAddress,
             res,
-            'Transaction Receipt'
+            'Transaction Receipt: Contract Deploy'
           ]);
         })
         .on('error', err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
+          // eslint-disable-next-line
+          console.log(err); // todo replace with proper error
           this.$store.dispatch('addNotification', [
-            this.from,
+            fromAddress,
             err,
             'Transaction Error'
           ]);
         });
     },
     showSuccessModal() {
-      this.$children[5].$refs.success.show();
+      this.$eventHub.$emit('showSuccessModal', 'Sending Transaction', 'Close');
     },
     confirmationModalOpen() {
       this.signTransaction();
       window.scrollTo(0, 0);
-      this.$children[4].$refs.confirmation.show();
     },
     estimateGas() {
       if (this.bytecode !== '' && this.abi !== '') {
