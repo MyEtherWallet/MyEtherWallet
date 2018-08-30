@@ -60,7 +60,12 @@
     "zxcvbn": "^4.4.2"
   },
   "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  }
+    "node": ">= 8.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
