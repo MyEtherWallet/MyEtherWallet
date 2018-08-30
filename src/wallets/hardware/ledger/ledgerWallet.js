@@ -142,7 +142,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
   }
 
   versionCheck(chainRegexResult) {
-    let forChecks = chainRegexResult
+    const forChecks = chainRegexResult
       ? chainRegexResult.length === 3
         ? chainRegexResult[2]
         : '0'
@@ -150,9 +150,8 @@ export default class LedgerWallet extends HardwareWalletInterface {
     const versionParts = this.version.split('.');
     if (/^1$|^60$|^61$/.test(forChecks)) {
       return true;
-    } else {
-      return +versionParts[1] > 3;
     }
+    return +versionParts[1] > 3;
   }
 
   obtainPathComponentsFromDerivationPath(derivationPath) {
@@ -178,11 +177,10 @@ export default class LedgerWallet extends HardwareWalletInterface {
         basePath: matchResultAlt[1] + "/0'/",
         index: 0
       };
-    } else {
-      throw this.makeError(
-        'The selected path is not compatible with the attached Ledgers Firmware version'
-      );
     }
+    throw this.makeError(
+      'The selected path is not compatible with the attached Ledgers Firmware version'
+    );
   }
 
   getTransport() {

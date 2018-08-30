@@ -8,7 +8,7 @@
 
 import { u2f } from '../utils/u2f-api';
 
-var DigitalBitboxUsb = function(timeoutSeconds) {
+const DigitalBitboxUsb = function(timeoutSeconds) {
   this.timeoutSeconds = timeoutSeconds;
 };
 
@@ -31,7 +31,7 @@ DigitalBitboxUsb.normal64 = function(base64) {
 
 DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
   if ('signatureData' in response) {
-    var data = new Buffer(
+    const data = new Buffer(
       DigitalBitboxUsb.normal64(response.signatureData),
       'base64'
     );
@@ -47,23 +47,23 @@ DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
 
 DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
   msg = Buffer.from(msg, 'ascii');
-  var kh_max_len = 128 - 2; // Subtract 2 bytes for `index` and `total` header
-  var challenge = new Buffer(
+  const kh_max_len = 128 - 2; // Subtract 2 bytes for `index` and `total` header
+  const challenge = new Buffer(
     'dbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdb',
     'hex'
   );
-  var total = Math.ceil(msg.length / kh_max_len);
-  var self = this;
-  var localCallback = function(result) {
+  const total = Math.ceil(msg.length / kh_max_len);
+  const self = this;
+  const localCallback = function(result) {
     self.u2fCallback(result, callback);
   };
-  for (var index = 0; index < total; index++) {
-    var kh = Buffer.concat([
+  for (let index = 0; index < total; index++) {
+    const kh = Buffer.concat([
       Buffer.from([total]),
       Buffer.from([index]),
       msg.slice(index * kh_max_len, (index + 1) * kh_max_len)
     ]);
-    var key = {
+    const key = {
       version: 'U2F_V2',
       keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64'))
     };

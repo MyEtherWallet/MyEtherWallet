@@ -13,7 +13,7 @@
 import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
 
-var DigitalBitboxEth = function(comm, sec) {
+const DigitalBitboxEth = function(comm, sec) {
   this.comm = comm;
   DigitalBitboxEth.sec = sec || DigitalBitboxEth.sec;
   this.key = Crypto.createHash('sha256')
@@ -32,13 +32,13 @@ DigitalBitboxEth.sec = '';
 DigitalBitboxEth.to = null;
 
 DigitalBitboxEth.aes_cbc_b64_decrypt = function(ciphertext, key) {
-  var res;
+  let res;
   try {
-    var ub64 = Buffer.from(ciphertext, 'base64').toString('binary');
-    var iv = Buffer.from(ub64.slice(0, 16), 'binary');
-    var enc = Buffer.from(ub64.slice(16), 'binary');
-    var decipher = Crypto.createDecipheriv('aes-256-cbc', key, iv);
-    var dec = decipher.update(enc) + decipher.final();
+    const ub64 = Buffer.from(ciphertext, 'base64').toString('binary');
+    const iv = Buffer.from(ub64.slice(0, 16), 'binary');
+    const enc = Buffer.from(ub64.slice(16), 'binary');
+    const decipher = Crypto.createDecipheriv('aes-256-cbc', key, iv);
+    const dec = decipher.update(enc) + decipher.final();
     res = dec.toString('utf8');
   } catch (err) {
     res = ciphertext;
@@ -48,9 +48,9 @@ DigitalBitboxEth.aes_cbc_b64_decrypt = function(ciphertext, key) {
 
 DigitalBitboxEth.aes_cbc_b64_encrypt = function(plaintext, key) {
   try {
-    var iv = Crypto.pseudoRandomBytes(16);
-    var cipher = Crypto.createCipheriv('aes-256-cbc', key, iv);
-    var ciphertext = Buffer.concat([
+    const iv = Crypto.pseudoRandomBytes(16);
+    const cipher = Crypto.createCipheriv('aes-256-cbc', key, iv);
+    const ciphertext = Buffer.concat([
       iv,
       cipher.update(plaintext),
       cipher.final()
@@ -62,7 +62,7 @@ DigitalBitboxEth.aes_cbc_b64_encrypt = function(plaintext, key) {
 };
 
 DigitalBitboxEth.parseError = function(errObject) {
-  var errMsg = {
+  const errMsg = {
     err101:
       'The Digital Bitbox is not initialized. First use the <a href="https://digitalbitbox.com/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.', // No password set
     err250:
@@ -73,16 +73,16 @@ DigitalBitboxEth.parseError = function(errObject) {
       'The Digital Bitbox received unexpected data. Was the correct password used? ' +
       errObject.message
   };
-  var code = 'err' + errObject.code.toString();
-  var msg = errMsg[code] || errObject.message;
+  const code = 'err' + errObject.code.toString();
+  const msg = errMsg[code] || errObject.message;
   return msg;
 };
 
 DigitalBitboxEth.prototype.getAddress = function(path, callback) {
-  var self = this;
-  var cmd = '{"xpub":"' + path + '"}';
+  const self = this;
+  let cmd = '{"xpub":"' + path + '"}';
   cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, this.key);
-  var localCallback = function(response, error) {
+  const localCallback = function(response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
@@ -100,8 +100,8 @@ DigitalBitboxEth.prototype.getAddress = function(path, callback) {
             callback(undefined, DigitalBitboxEth.parseError(response.error));
             return;
           }
-          var hdkey = HDKey.fromExtendedKey(response.xpub);
-          var result = {
+          const hdkey = HDKey.fromExtendedKey(response.xpub);
+          const result = {
             publicKey: hdkey.publicKey.toString('hex'),
             chainCode: hdkey.chainCode.toString('hex')
           };
@@ -123,7 +123,7 @@ DigitalBitboxEth.signGeneric = function(
   hashToSign,
   callback
 ) {
-  var cmd =
+  let cmd =
     '{"sign":{"data":[{"hash":"' +
     hashToSign +
     '","keypath":"' +
@@ -131,7 +131,7 @@ DigitalBitboxEth.signGeneric = function(
     '"}]}}';
   cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, self.key);
 
-  var localCallback = function(response, error) {
+  const localCallback = function(response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
@@ -152,17 +152,17 @@ DigitalBitboxEth.signGeneric = function(
           if ('echo' in response) {
             // Echo from first sign command. (Smart verification not implemented.)
             // Send second sign command.
-            var cmd = '{"sign":""}';
+            let cmd = '{"sign":""}';
             cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, self.key);
             self.comm.exchange(cmd, localCallback);
             return;
           }
           if ('sign' in response) {
-            var vOffset = chainId ? chainId * 2 + 8 : 0;
-            var v = Buffer.from([
+            const vOffset = chainId ? chainId * 2 + 8 : 0;
+            const v = Buffer.from([
               parseInt(response.sign[0].recid, 16) + 27 + vOffset
             ]);
-            var result = {
+            const result = {
               v: v.toString('hex'),
               r: response.sign[0].sig.slice(0, 64),
               s: response.sign[0].sig.slice(64, 128)
@@ -180,14 +180,14 @@ DigitalBitboxEth.signGeneric = function(
 };
 
 DigitalBitboxEth.prototype.signTransaction = function(path, eTx, callback) {
-  var self = this;
-  var hashToSign = eTx.hash(false).toString('hex');
+  const self = this;
+  const hashToSign = eTx.hash(false).toString('hex');
   DigitalBitboxEth.signGeneric(self, path, eTx._chainId, hashToSign, callback);
 };
 
 DigitalBitboxEth.prototype.signMessage = function(path, messageHex, callback) {
-  var self = this;
-  var hashToSign = messageHex.toString('hex');
+  const self = this;
+  const hashToSign = messageHex.toString('hex');
   DigitalBitboxEth.signGeneric(self, path, 0, hashToSign, callback);
 };
 

@@ -131,7 +131,7 @@ export default class BasicWallet {
           Buffer.from(signed.s),
           Buffer.from([signed.v])
         ]);
-        let combinedHex = combined.toString('hex');
+        const combinedHex = combined.toString('hex');
         resolve('0x' + combinedHex);
       } catch (e) {
         reject(e);

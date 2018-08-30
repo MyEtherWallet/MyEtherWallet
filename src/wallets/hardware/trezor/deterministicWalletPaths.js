@@ -10,12 +10,11 @@ function getDerivationPath(networkName) {
   }
   if (paths[networkName]) {
     return { dpath: paths[networkName], label: nodes[networkName].name_long };
-  } else {
-    return {
-      dpath: paths[nodes.ETH.name],
-      label: nodes[nodes.ETH.name].name_long
-    };
   }
+  return {
+    dpath: paths[nodes.ETH.name],
+    label: nodes[nodes.ETH.name].name_long
+  };
 }
 
 const paths = {};

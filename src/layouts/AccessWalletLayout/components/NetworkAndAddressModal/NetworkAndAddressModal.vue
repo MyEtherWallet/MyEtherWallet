@@ -175,7 +175,7 @@ export default {
   },
   computed: {
     orderedAddresses() {
-      let addressSet = [...this.displayAddresses];
+      const addressSet = [...this.displayAddresses];
       addressSet.sort(this.comparator);
       return addressSet.sort(this.comparator);
     }
