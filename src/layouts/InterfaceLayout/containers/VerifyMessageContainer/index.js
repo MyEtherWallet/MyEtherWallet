@@ -1,1 +1,1 @@
-export { default } from './VerifyMessageContainer'
+export { default } from './VerifyMessageContainer';

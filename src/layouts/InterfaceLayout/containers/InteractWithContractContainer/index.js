@@ -1,1 +1,1 @@
-export { default } from './InteractWithContractContainer'
+export { default } from './InteractWithContractContainer';

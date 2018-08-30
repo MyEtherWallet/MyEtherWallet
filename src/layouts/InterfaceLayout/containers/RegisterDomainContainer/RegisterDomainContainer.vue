@@ -1,6 +1,6 @@
 <template>
   <div class="register-domain-container">
-    <back-button :resetView="resetView"></back-button>
+    <back-button :reset-view="resetView"/>
 
     <div class="send-form">
       <div class="title-container">
@@ -10,7 +10,11 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" name="" value="" placeholder="Please Enter at Least 7 Characters" />
+        <input
+          type="text"
+          name=""
+          value=""
+          placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
     </div>
@@ -26,28 +30,42 @@
           <div class="margin-left-auto add-custom-network">
             <div class="sliding-switch-white">
               <label class="switch">
-                <input v-on:click="expendDomainCheckForm" type="checkbox" />
-                <span class="slider round"></span>
+                <input
+                  type="checkbox"
+                  @click="expendDomainCheckForm" >
+                <span class="slider round"/>
               </label>
             </div>
           </div>
         </div>
-        <div class="domain-check-form hidden" ref="checkForm">
+        <div
+          ref="checkForm"
+          class="domain-check-form hidden">
           <div class="domain-checker">
-            <input type="number" name="" value="" placeholder="Enter Domain Name" />
-            <div class="check-button" v-on:click="domainAvailabilityCheck">
+            <input
+              type="number"
+              name=""
+              value=""
+              placeholder="Enter Domain Name" >
+            <div
+              class="check-button"
+              @click="domainAvailabilityCheck">
               {{ $t('common.check') }}
             </div>
           </div>
         </div>
-        <div class="sub-domain-list hidden" ref="domainList">
+        <div
+          ref="domainList"
+          class="sub-domain-list hidden">
           <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
           <ul>
             <li>
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -56,7 +74,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled">
+                <div
+                  class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -65,7 +85,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -74,7 +96,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -83,7 +107,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -92,7 +118,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -101,7 +129,9 @@
               <p>myetherwallet2018.etherbase.eth</p>
               <div class="buy-button-container">
                 <p>0 ETH</p>
-                <div v-on:click="domainBuyButtonClick($event)" class="buy-button very-small-circle-button-green-border">
+                <div
+                  class="buy-button very-small-circle-button-green-border"
+                  @click="domainBuyButtonClick($event)">
                   {{ $t('common.buy') }}
                 </div>
               </div>
@@ -109,42 +139,49 @@
           </ul>
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import BackButton from '../../components/BackButton'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import BackButton from '../../components/BackButton';
 
 export default {
-  props: ['resetView'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'back-button': BackButton
   },
-  data () {
-    return {
+  props: {
+    resetView: {
+      type: Function,
+      default: function() {}
     }
   },
+  data() {
+    return {};
+  },
   methods: {
-    expendDomainCheckForm () {
-      this.$refs['checkForm'].classList.toggle('hidden')
-      this.$refs['domainList'].classList.add('hidden')
+    expendDomainCheckForm() {
+      this.$refs['checkForm'].classList.toggle('hidden');
+      this.$refs['domainList'].classList.add('hidden');
     },
-    domainAvailabilityCheck () {
+    domainAvailabilityCheck() {
       // this.$refs['checkForm'].classList.toggle('hidden')
-      this.$refs['domainList'].classList.add('hidden')
+      this.$refs['domainList'].classList.add('hidden');
     },
-    domainBuyButtonClick ($event) {
+    domainBuyButtonClick() {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "RegisterDomainContainer.scss";
+@import 'RegisterDomainContainer.scss';
 </style>

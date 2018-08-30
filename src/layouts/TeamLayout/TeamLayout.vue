@@ -11,8 +11,14 @@
         </div>
 
         <div class="team-info">
-          <div class="member" v-for="member in members" :key="member.name">
-            <img :src="member.img" :alt="member.name" :title="member.name">
+          <div 
+            v-for="member in members" 
+            :key="member.name" 
+            class="member">
+            <img 
+              :src="member.img" 
+              :alt="member.name" 
+              :title="member.name">
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
@@ -26,20 +32,20 @@
 </template>
 
 <script>
-import kosala from '@/assets/images/team/Kosala.jpg'
-import brian from '@/assets/images/team/Brian.jpg'
-import olchik from '@/assets/images/team/Olga.jpg'
-import stephen from '@/assets/images/team/Stephen.jpg'
-import richie from '@/assets/images/team/Richie.jpg'
-import brittany from '@/assets/images/team/Brittany.jpg'
-import yel from '@/assets/images/team/Gamaliel.jpg'
-import steve from '@/assets/images/team/Steve.jpg'
-import jack from '@/assets/images/team/Jack.jpg'
-import david from '@/assets/images/team/David.jpg'
-import samantha from '@/assets/images/team/Samantha.jpg'
+import kosala from '@/assets/images/team/Kosala.jpg';
+import brian from '@/assets/images/team/Brian.jpg';
+import olchik from '@/assets/images/team/Olga.jpg';
+import stephen from '@/assets/images/team/Stephen.jpg';
+import richie from '@/assets/images/team/Richie.jpg';
+import brittany from '@/assets/images/team/Brittany.jpg';
+import yel from '@/assets/images/team/Gamaliel.jpg';
+import steve from '@/assets/images/team/Steve.jpg';
+import jack from '@/assets/images/team/Jack.jpg';
+import david from '@/assets/images/team/David.jpg';
+import samantha from '@/assets/images/team/Samantha.jpg';
 
 export default {
-  data () {
+  data() {
     return {
       members: [
         {
@@ -98,11 +104,11 @@ export default {
           img: samantha
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "TeamLayout.scss";
+@import 'TeamLayout.scss';
 </style>

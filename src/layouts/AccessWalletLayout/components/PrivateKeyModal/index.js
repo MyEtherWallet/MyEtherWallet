@@ -1,1 +1,1 @@
-export { default } from './PrivateKeyModal'
+export { default } from './PrivateKeyModal';
