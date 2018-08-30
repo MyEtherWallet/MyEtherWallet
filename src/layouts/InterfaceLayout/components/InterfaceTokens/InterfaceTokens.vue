@@ -158,7 +158,11 @@ export default {
         type: 'custom'
       };
       let newArray = [];
-      token['balance'] = await this.getTokenBalance(address);
+      token['balance'] = await this.getTokenBalance(token);
+      if (token['balance'] === undefined) {
+        // eslint-disable-next-line
+        console.error('Token Balance Returned Undefined');
+      }
 
       if (this.customTokens.length > 0) {
         newArray = this.customTokens.map(item => item);

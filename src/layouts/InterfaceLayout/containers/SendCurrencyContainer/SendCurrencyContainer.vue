@@ -172,23 +172,19 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-// import ConfirmModal from '@/components/ConfirmModal'
 import Blockie from '@/components/Blockie';
-// import SuccessModal from '@/components/SuccessModal'
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
+const EthTx = require('ethereumjs-tx');
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    // 'confirm-modal': ConfirmModal,
     blockie: Blockie,
     'currency-picker': CurrencyPicker
-    // 'success-modal': SuccessModal
   },
   props: {
     tokensWithBalance: {
@@ -382,7 +378,6 @@ export default {
       const newRaw = this.raw;
       delete newRaw['gas'];
       delete newRaw['nonce'];
-      // this.createTx() // Is it necessary to generate the signed transaction here?
       this.createDataHex();
       this.$store.state.web3.eth
         .estimateGas(newRaw)

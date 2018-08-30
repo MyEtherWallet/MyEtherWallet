@@ -180,7 +180,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.log(err); // todo replace with proper error
         });
 
       return response;
@@ -212,7 +212,13 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            tokenBalance = web3.utils.toBN(res).div(10 ^ token.decimals);
+            const denominator = web3.utils
+              .toBN(10)
+              .pow(web3.utils.toBN(token.decimals));
+            tokenBalance = web3.utils
+              .toBN(res)
+              .div(denominator)
+              .toString(10);
           }
           return tokenBalance;
         })
