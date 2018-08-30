@@ -8,29 +8,50 @@
             <div class="title">
               <h4>Amount</h4>
             </div>
-            <currency-picker :currency="coinType" page="sendOfflineGenTx" :token="true"></currency-picker>
+            <currency-picker
+              :currency="coinType"
+              :token="true"
+              page="sendOfflineGenTx"/>
             <div class="the-form amount-number">
-              <input type="number" name="" v-model="toAmt" placeholder="Deposit Amount" />
-              <i :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']" aria-hidden="true"></i>
+              <input
+                v-model="toAmt"
+                type="number"
+                name=""
+                placeholder="Deposit Amount">
+              <i
+                :class="[parsedBalance < toAmt ? 'not-good': '','fa fa-check-circle good-button']"
+                aria-hidden="true"/>
             </div>
           </div>
           <div class="to-address">
             <div class="title">
               <h4>To Address</h4>
-              <blockie :address="toAddress" width="22px" height="22px" v-show="toAddress !== '' && !validAddress"></blockie>
-              <p v-on:click="copyToAddress" class="copy-button linker-1 prevent-user-select">Copy</p>
+              <blockie
+                v-show="(address !== '' || resolvedAddress !== '') && !validAddress"
+                :address="address !== '' ? address: resolvedAddress !== ''? resolvedAddress:''"
+                width="22px"
+                height="22px"/>
+              <p
+                class="copy-button linker-1 prevent-user-select"
+                @click="copyToAddress">Copy</p>
             </div>
             <div class="the-form address-block">
-              <textarea ref="toaddress" name="name" v-model="toAddress" placeholder="Please Enter The Address"></textarea>
-              <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+              <textarea
+                v-ens-resolver="address"
+                ref="toaddress"
+                v-model="address"
+                name="name"
+                placeholder="Please Enter The Address"/>
+              <i
+                :class="[validAddress ? '':'not-good', 'fa fa-check-circle good-button']"
+                aria-hidden="true"/>
             </div>
           </div>
         </div>
-        <div class="error-message-container" v-show="parsedBalance < toAmt">
+        <div
+          v-show="parsedBalance < toAmt"
+          class="error-message-container">
           <p>You don't have enough funds</p>
-        </div>
-        <div class="error-message-container" v-show="toAddress !== '' && !validAddress">
-          <p>Invalid Address</p>
         </div>
       </div>
 
@@ -44,68 +65,112 @@
           </div>
         </div>
         <div class="the-form gas-amount">
-          <input type="number" name="" v-model="toData" placeholder="e.g. 0x65746865726d696e652d657531" />
+          <input
+            v-model="toData"
+            type="number"
+            name=""
+            placeholder="e.g. 0x65746865726d696e652d657531" >
           <div class="good-button-container">
-            <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+            <i
+              class="fa fa-check-circle good-button not-good"
+              aria-hidden="true"/>
           </div>
         </div>
       </div>
-      <tx-speed-input :nonce="nonce" v-on:nonceUpdate="nonceUpdated" :data="toData" :value="toAmt" :toAddress="toAddress" :gasLimit="gasLimit" v-on:gasLimitUpdate="gasLimitUpdated"></tx-speed-input>
+      <tx-speed-input
+        :nonce="nonce"
+        :data="toData"
+        :value="toAmt"
+        :to-address="address"
+        :gas-limit="gasLimit"
+        @nonceUpdate="nonceUpdated"
+        @gasLimitUpdate="gasLimitUpdated"/>
       <div class="submit-button-container">
-        <div :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']" @click="next">
+        <div
+          :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']"
+          @click="next">
           Generate
         </div>
-        <interface-bottom-text link="/" question="Have issues?" linkText="Learn More"></interface-bottom-text>
+        <interface-bottom-text
+          link="/"
+          question="Have issues?"
+          link-text="Learn More"/>
       </div>
 
     </div>
-    <signed-tx-modal :signedTx="signed" :rawTx="raw" :pathUpdate="pathUpdate"></signed-tx-modal>
+    <signed-tx-modal
+      :signed-tx="signed"
+      :raw-tx="raw"
+      :path-update="pathUpdate"/>
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import TxSpeedInput from '../../components/TxSpeedInput'
-import CurrencyPicker from '../CurrencyPicker'
-import SignedTxModal from '../../components/SignedTxModal'
-import Blockie from '@/components/Blockie'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import TxSpeedInput from '../../components/TxSpeedInput';
+import CurrencyPicker from '../CurrencyPicker';
+import SignedTxModal from '../../components/SignedTxModal';
+import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
 
 export default {
-  props: ['gasLimit', 'nonce'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
-    'blockie': Blockie,
+    blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker
   },
-  data () {
+  props: {
+    gasLimit: {
+      type: Number,
+      default: 0
+    },
+    nonce: {
+      type: Number,
+      default: 0
+    }
+  },
+  data() {
     return {
       toAmt: 0,
-      toAddress: '',
+      address: '',
       toData: '0x',
       parsedBalance: 0,
       localGas: this.gasLimit,
-      coinType: [
-        {symbol: 'ETH', name: 'Ethereum'}
-      ],
+      coinType: [{ symbol: 'ETH', name: 'Ethereum' }],
       selectedCoinType: '',
       raw: '',
       signed: '',
       locNonce: this.nonce,
-      validAddress: false
+      validAddress: false,
+      resolvedAddress: ''
+    };
+  },
+  watch: {
+    parsedBalance(newVal) {
+      this.parsedBalance = newVal;
+    },
+    gasLimit(newVal) {
+      this.localGas = newVal;
     }
   },
+  mounted() {
+    this.parsedBalance = unit.fromWei(
+      this.$store.state.account.balance.result,
+      'ether'
+    );
+  },
   methods: {
-    copyToAddress () {
-      this.$refs('toaddress').select()
-      document.execCommand('copy')
+    copyToAddress() {
+      this.$refs('toaddress').select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
     },
-    next () {
+    next() {
       const raw = {
         from: this.$store.state.wallet.getAddressString(),
         gas: this.localGas,
@@ -113,54 +178,36 @@ export default {
         data: this.toData,
         nonce: this.locNonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        to: this.toAddress,
+        to:
+          this.resolvedAddress !== ''
+            ? this.resolvedAddress
+            : this.address !== ''
+              ? this.address
+              : '',
         chainId: this.$store.state.network.type.chainID
-      }
+      };
+      this.$store.state.web3.eth.signTransaction(raw).then(signedTx => {
+        this.$emit('createdRawTx', signedTx.rawTransaction);
 
-      const tx = new EthTx(raw)
-      tx.sign(this.$store.state.wallet.getPrivateKey())
-      const serializedTx = tx.serialize()
-      const signedTx = `0x${serializedTx.toString('hex')}`
-      this.$emit('createdRawTx', signedTx)
-
-      this.raw = raw
-      this.signed = signedTx
-      this.$children[5].$refs.signedTx.show()
-      window.scrollTo(0, 0)
+        this.raw = raw;
+        this.signed = signedTx.rawTransaction;
+        this.$children[5].$refs.signedTx.show();
+        window.scrollTo(0, 0);
+      });
     },
-    gasLimitUpdated (e) {
-      this.$emit('gasLimitUpdate', e)
+    gasLimitUpdated(e) {
+      this.$emit('gasLimitUpdate', e);
     },
-    nonceUpdated (e) {
-      this.$emit('nonceUpdate', e)
+    nonceUpdated(e) {
+      this.$emit('nonceUpdate', e);
     },
-    pathUpdate () {
-      this.$emit('pathUpdate', 'sendPubTx')
-    }
-  },
-  mounted () {
-    this.parsedBalance = unit.fromWei(this.$store.state.account.balance.result, 'ether')
-  },
-  watch: {
-    parsedBalance (newVal) {
-      this.parsedBalance = newVal
-    },
-    gasLimit (newVal) {
-      this.localGas = newVal
-    },
-    toAddress (newVal) {
-      if (newVal !== '' && newVal.length !== 0 && this.$store.state.web3.utils.isAddress(newVal)) {
-        this.validAddress = true
-      } else {
-        this.validAddress = false
-      }
-
-      this.toAddress = newVal
+    pathUpdate() {
+      this.$emit('pathUpdate', 'sendPubTx');
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "GenerateTx.scss";
+@import 'GenerateTx.scss';
 </style>

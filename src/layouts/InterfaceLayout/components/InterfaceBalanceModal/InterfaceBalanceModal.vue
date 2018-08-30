@@ -1,6 +1,10 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="balance" hide-footer class="bootstrap-modal balance nopadding" title="Balance">
+    <b-modal
+      ref="balance"
+      hide-footer
+      class="bootstrap-modal balance nopadding"
+      title="Balance">
       <div class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
@@ -26,14 +30,18 @@
 
 <script>
 export default {
-  props: ['balance'],
-  data () {
-    return {
+  props: {
+    balance: {
+      type: String,
+      default: '0'
     }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "InterfaceBalanceModal.scss";
+@import 'InterfaceBalanceModal.scss';
 </style>

@@ -1,18 +1,18 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HomeLayout from '@/layouts/HomeLayout'
-import CreateWalletLayout from '@/layouts/CreateWalletLayout'
-import TeamLayout from '@/layouts/TeamLayout'
-import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout'
-import TermsOfConditionsLayout from '@/layouts/TermsOfConditionsLayout'
-import AccessWalletLayout from '@/layouts/AccessWalletLayout'
-import InterfaceLayout from '@/layouts/InterfaceLayout'
-import HelpCenterLayout from '@/layouts/HelpCenterLayout'
-import NotFoundLayout from '@/layouts/NotFoundLayout'
-import CreateWalletWarningLayout from '@/layouts/CreateWalletWarningLayout'
-import {router as routerConfig} from '@/configs/build'
+import Vue from 'vue';
+import Router from 'vue-router';
+import HomeLayout from '@/layouts/HomeLayout';
+import CreateWalletLayout from '@/layouts/CreateWalletLayout';
+import TeamLayout from '@/layouts/TeamLayout';
+import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
+import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
+import AccessWalletLayout from '@/layouts/AccessWalletLayout';
+import InterfaceLayout from '@/layouts/InterfaceLayout';
+import HelpCenterLayout from '@/layouts/HelpCenterLayout';
+import NotFoundLayout from '@/layouts/NotFoundLayout';
+import GettingStarted from '@/layouts/GettingStarted';
+import { router as routerConfig } from '@/configs/build';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: routerConfig.mode,
@@ -38,9 +38,9 @@ export default new Router({
       component: PrivacyPolicyLayout
     },
     {
-      path: '/terms-of-conditions',
-      name: 'TermsOfConditionsLayout',
-      component: TermsOfConditionsLayout
+      path: '/terms-and-conditions',
+      name: 'TermsAndConditionsLayout',
+      component: TermsAndConditionsLayout
     },
     {
       path: '/access-my-wallet',
@@ -59,8 +59,8 @@ export default new Router({
     },
     {
       path: '/getting-started',
-      name: 'CreateWalletWarningLayout',
-      component: CreateWalletWarningLayout
+      name: 'GettingStarted',
+      component: GettingStarted
     },
     {
       path: '*',
@@ -68,13 +68,12 @@ export default new Router({
       component: NotFoundLayout
     }
   ],
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to) {
     if (to.hash) {
       return {
         selector: to.hash
-      }
-    } else {
-      window.scrollTo(0, 0)
+      };
     }
+    window.scrollTo(0, 0);
   }
-})
+});

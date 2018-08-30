@@ -1,1 +1,1 @@
-export { default } from './DappButtons'
+export { default } from './DappButtons';

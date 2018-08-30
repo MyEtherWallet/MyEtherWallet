@@ -1,4 +1,4 @@
-import nodeList from '@/configs/networks'
+import nodeList from '@/networks';
 const state = {
   web3: {},
   network: {
@@ -32,8 +32,10 @@ const state = {
       sideMenu: 'send'
     }
   },
+  customPaths: {},
   notifications: {},
-  gasPrice: 41
-}
+  gasPrice: 41,
+  ens: {}
+};
 
-export default state
+export default state;

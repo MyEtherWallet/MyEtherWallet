@@ -27,12 +27,12 @@
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "WalletNotFoundContainer.scss";
+@import 'WalletNotFoundContainer.scss';
 </style>

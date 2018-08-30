@@ -22,7 +22,7 @@
       .title {
         align-items: flex-end;
         display: flex;
-        align-items: center;
+        // align-items: center;
         margin-bottom: 10px;
         padding: 0 8px;
         width: 100%;
@@ -97,7 +97,7 @@
         }
       }
     }
-  } // .send-form
+  }
 
 
   .send-form-small-top-margin {
@@ -122,6 +122,22 @@
         width: 300px;
       }
     }
-  } // .submit-button-container
+  }
+}
 
-} // .deploy-contract-container
+%message {
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 10px 5px;
+  text-align: center;
+}
+
+.success-message {
+  @extend %message;
+  background-color: $light-green-1;
+}
+
+.error-message {
+  @extend %message;
+  background-color: $red-1;
+}
