@@ -2,9 +2,9 @@
   <div class="swap-container">
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div class="images">
-        <img :src="images.kybernetowrk">
-        <img :src="images.bity">
+      <div class="buy-eth">
+        <span>Buy ETH with</span>
+        <img :src="images.visaMaster">
       </div>
     </div>
 
@@ -27,9 +27,7 @@
           </div>
         </div>
         <div class="exchange-icon">
-          <i
-            class="fa fa-exchange"
-            aria-hidden="true"/>
+          <img :src="images.swap">
         </div>
         <div class="amount">
           <div class="title">
@@ -57,11 +55,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input
-          type="number"
-          name=""
-          value=""
-          placeholder="Please Enter The Address" >
+        <drop-down-address-selector></drop-down-address-selector>
       </div>
     </div>
 
@@ -110,35 +104,34 @@
           class="fa fa-long-arrow-right"
           aria-hidden="true"/>
       </div>
-      <div class="buy-eth">
-        <span>Buy ETH with</span>
-        <img :src="images.visaMaster">
-      </div>
     </div>
 
   </div>
 </template>
 <script>
-import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-
-import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
-import ImageBity from '@/assets/images/etc/bity.png';
-import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
+import CurrencyPicker from '../../components/CurrencyPicker'
+import DropDownAddressSelector from '@/components/DropDownAddressSelector'
+import InterfaceBottomText from '@/components/InterfaceBottomText'
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import swapIcon from '@/assets/images/icons/swap.svg'
+import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
+import ImageBity from '@/assets/images/etc/bity.png'
+import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'drop-down-address-selector': DropDownAddressSelector
   },
   data() {
     return {
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
-        visaMaster: ImageVisaMaster
+        visaMaster: ImageVisaMaster,
+        swap: swapIcon
       },
       toArray: [
         { symbol: 'BTC', name: 'Bitcoin' },
