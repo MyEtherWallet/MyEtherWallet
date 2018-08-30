@@ -13,7 +13,7 @@
 import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
 
-var DigitalBitboxEth = function(comm, sec) {
+const DigitalBitboxEth = function(comm, sec) {
   this.comm = comm;
   DigitalBitboxEth.sec = sec || DigitalBitboxEth.sec;
   this.key = Crypto.createHash('sha256')
@@ -131,7 +131,7 @@ DigitalBitboxEth.signGeneric = function(
     '"}]}}';
   cmd = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, self.key);
 
-  var localCallback = function(response, error) {
+  const localCallback = function(response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {

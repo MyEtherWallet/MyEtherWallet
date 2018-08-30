@@ -101,7 +101,7 @@ SecalotEth.prototype.getAddress = function(path, callback) {
 SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
-  let rawData;
+  let rawData = '';
   const apdus = [];
   const self = this;
   const localCallback = function(response, error) {
@@ -182,7 +182,7 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
 SecalotEth.prototype.signMessage = function(path, message, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
-  let rawData;
+  let rawData = '';
   const apdus = [];
   const self = this;
   const localCallback = function(response, error) {
@@ -210,7 +210,7 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
 
   message =
     '\x19Ethereum Signed Message:\n' + message.length.toString() + message;
-  rawData = Buffer.from(Buffer.from(message.toString('hex'), 'hex'));
+  rawData = Buffer.from(Buffer.from(message, 'hex').toString('hex'));
 
   while (offset !== rawData.length) {
     const maxChunkSize = 64;
