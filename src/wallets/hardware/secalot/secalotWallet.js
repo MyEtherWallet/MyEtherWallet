@@ -106,8 +106,13 @@ export default class SecalotWallet extends HardwareWalletInterface {
   signMessage(msgData) {
     const thisMessage = msgData.data ? msgData.data : msgData;
     const app = new SecalotEth(this.transport, '');
-    return new Promise(resolve => {
-      resolve(app.signMessage(this.path, thisMessage));
+    return new Promise((resolve, reject) => {
+      app.signMessage(this.path, thisMessage, function(res, err) {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
+      });
     });
   }
 
