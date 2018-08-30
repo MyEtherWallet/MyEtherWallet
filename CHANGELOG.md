@@ -1,5 +1,5 @@
 ### Feature
-- Integrate secalot []()
+- Integrate secalot [#76](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/76)
 - Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
 - Implement ENS resolver directive, move directives to its own folder [#56](https://github.com/MyEtherWallet/MyEtherWallet/pull/56)
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval [#51](https://github.com/MyEtherWallet/MyEtherWallet/pull/51)
