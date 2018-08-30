@@ -5,15 +5,17 @@
 
   .title-block {
     position: relative;
-    .images {
-      top: 22px;
-      right: 25px;
+    .buy-eth {
+      display: 22px;
+      right: 30px;
+      top: 28px;
       position: absolute;
       display: flex;
       align-items: center;
+      color: $mew-green;
       img {
-        height: 30px;
-        margin-left: 20px;
+        height: 20px;
+        margin-left: 10px;
       }
     }
   }
@@ -26,6 +28,7 @@
         padding: 0 8px;
         .title-and-popover {
           display: flex;
+          align-items: center;
         }
         h4 {
           margin-bottom: 2px;
@@ -214,15 +217,6 @@
 
     p {
       margin-top: 20px;
-    }
-
-    .buy-eth {
-      margin-top: 20px;
-      color: $mew-green;
-      img {
-        height: 20px;
-      }
-
     }
   }
 }
