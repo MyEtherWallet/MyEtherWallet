@@ -80,29 +80,26 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   getAddress() {
     if (this.wallet) {
       return this.wallet.address;
-    } else {
-      return null;
     }
+    return null;
   }
 
   getAddressString() {
     if (this.wallet) {
       return ethUtil.toChecksumAddress(this.getAddress());
-    } else {
-      return null;
     }
+    return null;
   }
 
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts() {
-    let _this = this;
+    const _this = this;
     if (arguments.length > 1 && typeof arguments[2] === 'function') {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
-    } else {
-      return _this._getAccounts();
     }
+    return _this._getAccounts();
   }
 
   getMultipleAccounts(count, offset) {
@@ -115,7 +112,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   }
 
   signMessage(msgData) {
-    let thisMessage = msgData.data ? msgData.data : msgData;
+    const thisMessage = msgData.data ? msgData.data : msgData;
     return this.signMessageMnemonic(thisMessage);
   }
 
@@ -160,7 +157,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   }
 
   createWallet(priv, pub, path, hwType, hwTransport) {
-    let wallet = {};
+    const wallet = {};
     if (typeof priv !== 'undefined') {
       wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex');
     }
@@ -191,7 +188,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   // (Start) Internal methods underlying wallet usage methods
   async _getAccounts(count, offset) {
     return new Promise(resolve => {
-      let collect = {};
+      const collect = {};
       if (
         this.addressesToIndexMap[offset] &&
         this.addressesToIndexMap[offset + count - 1]
@@ -242,7 +239,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
         chainId: rawTx.chainId
       };
       txData.data = txData.data === '' ? '0x' : txData.data;
-      let tx = new EthereumjsTx(txData);
+      const tx = new EthereumjsTx(txData);
       tx.sign(Buffer.from(this.wallet.privKey, 'hex'));
       txData.rawTx = JSON.stringify(txData);
       return {
@@ -265,14 +262,14 @@ export default class MnemonicWallet extends HardwareWalletInterface {
           'no wallet present. wallet may not have been decrypted'
         );
 
-      let msg = ethUtil.hashPersonalMessage(ethUtil.toBuffer(stringMessage));
-      let signed = ethUtil.ecsign(msg, this.wallet.privKey);
-      let combined = Buffer.concat([
+      const msg = ethUtil.hashPersonalMessage(ethUtil.toBuffer(stringMessage));
+      const signed = ethUtil.ecsign(msg, this.wallet.privKey);
+      const combined = Buffer.concat([
         Buffer.from(signed.r),
         Buffer.from(signed.s),
         Buffer.from([signed.v])
       ]);
-      let combinedHex = combined.toString('hex');
+      const combinedHex = combined.toString('hex');
       return '0x' + combinedHex;
     } catch (e) {
       return e;
@@ -284,11 +281,8 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   _getAddressForWallet(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
       return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');
-    } else {
-      return (
-        '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
-      );
     }
+    return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex');
   }
 
   // (End) Internal utility methods

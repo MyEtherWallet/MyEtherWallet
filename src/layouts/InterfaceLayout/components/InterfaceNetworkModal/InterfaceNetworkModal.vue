@@ -179,8 +179,7 @@ export default {
       url: '',
       username: '',
       password: '',
-      customNetworks: [],
-      networks: Object.keys(types).map(key => types[key])
+      customNetworks: []
     };
   },
   watch: {

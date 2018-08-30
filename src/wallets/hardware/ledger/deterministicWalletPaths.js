@@ -13,12 +13,11 @@ function getDerivationPath(networkName) {
       dpath: derivationPaths[networkName],
       label: derivationPaths[networkName].name_long
     };
-  } else {
-    return {
-      dpath: derivationPaths[nodes.ETH.name],
-      label: nodes[nodes.ETH.name].name_long
-    };
   }
+  return {
+    dpath: derivationPaths[nodes.ETH.name],
+    label: nodes[nodes.ETH.name].name_long
+  };
 }
 
 function buildPathsObject() {

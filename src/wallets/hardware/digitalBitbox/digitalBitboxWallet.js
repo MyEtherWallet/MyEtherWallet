@@ -80,29 +80,26 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   getAddress() {
     if (this.wallet) {
       return this.wallet.address;
-    } else {
-      return null;
     }
+    return null;
   }
 
   getAddressString() {
     if (this.wallet) {
       return ethUtil.toChecksumAddress(this.getAddress());
-    } else {
-      return null;
     }
+    return null;
   }
 
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
   getAccounts() {
-    let _this = this;
+    const _this = this;
     if (arguments.length > 1 && typeof arguments[2] === 'function') {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
-    } else {
-      return _this._getAccounts();
     }
+    return _this._getAccounts();
   }
 
   getMultipleAccounts(count, offset) {
@@ -148,8 +145,8 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   unlockBitbox(digitalBitboxSecret) {
     return new Promise(resolve => {
       this.transport = new DigitalBitboxUsb();
-      let app = new DigitalBitboxEth(this.transport, digitalBitboxSecret);
-      let path = this.path;
+      const app = new DigitalBitboxEth(this.transport, digitalBitboxSecret);
+      const path = this.path;
       app.getAddress(path, (result, error) => {
         resolve(this.digitalBitboxCallback(result, error));
       });
@@ -157,7 +154,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   }
 
   createWallet(priv, pub, path, hwType, hwTransport) {
-    let wallet = {};
+    const wallet = {};
     if (typeof priv !== 'undefined') {
       wallet.privKey = priv.length === 32 ? priv : Buffer.from(priv, 'hex');
     }
@@ -185,7 +182,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   setHDAddressesHWWallet(start, limit) {
     this.walletsRetrieved = [];
     for (let i = start; i < start + limit; i++) {
-      let derivedKey = this.hdk.derive('m/' + i);
+      const derivedKey = this.hdk.derive('m/' + i);
       const tempWallet = this.createWallet(
         undefined,
         derivedKey.publicKey,
@@ -223,7 +220,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   // (Start) Internal methods underlying wallet usage methods
   async _getAccounts(count, offset) {
     return new Promise(resolve => {
-      let collect = {};
+      const collect = {};
       if (
         this.addressesToIndexMap[offset] &&
         this.addressesToIndexMap[offset + count - 1]
@@ -263,7 +260,7 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
 
   signTxDigitalBitbox(rawTx) {
     return new Promise((resolve, reject) => {
-      let localCallback = (result, error) => {
+      const localCallback = (result, error) => {
         if (typeof error !== 'undefined') {
           error = error.errorCode ? u2f.getErrorByCode(error.errorCode) : error;
           reject(error);
@@ -273,14 +270,14 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
         rawTx.v = this.sanitizeHex(result['v']);
         rawTx.r = this.sanitizeHex(result['r']);
         rawTx.s = this.sanitizeHex(result['s']);
-        let eTx_ = new EthereumjsTx(rawTx);
+        const eTx_ = new EthereumjsTx(rawTx);
         rawTx.rawTx = JSON.stringify(rawTx);
         rawTx.signedTx = this.sanitizeHex(eTx_.serialize().toString('hex'));
         rawTx.isError = false;
         resolve(rawTx);
       };
       // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
-      let app = new DigitalBitboxEth(this.transport, '');
+      const app = new DigitalBitboxEth(this.transport, '');
       const tx = new EthereumjsTx(rawTx);
       app.signTransaction(rawTx.path, tx, localCallback);
     });
@@ -295,22 +292,18 @@ export default class DigitalBitboxWallet extends HardwareWalletInterface {
   // (End) Internal methods underlying wallet usage methods
   // (Start) Internal utility methods
   getNakedAddress(address) {
-    let naked = address.toLowerCase().replace('0x', '');
+    const naked = address.toLowerCase().replace('0x', '');
     if (naked.length % 2 === 0) {
       return naked.toString();
-    } else {
-      return '0' + naked.toString();
     }
+    return '0' + naked.toString();
   }
 
   _getAddressForWallet(wallet) {
     if (typeof wallet.pubKey === 'undefined') {
       return '0x' + ethUtil.privateToAddress(wallet.privKey).toString('hex');
-    } else {
-      return (
-        '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex')
-      );
     }
+    return '0x' + ethUtil.publicToAddress(wallet.pubKey, true).toString('hex');
   }
 
   // (End) Internal utility methods

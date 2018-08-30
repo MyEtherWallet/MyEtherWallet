@@ -212,7 +212,7 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            let denominator = web3.utils
+            const denominator = web3.utils
               .toBN(10)
               .pow(web3.utils.toBN(token.decimals));
             tokenBalance = web3.utils

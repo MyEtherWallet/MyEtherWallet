@@ -6,8 +6,8 @@ const SecalotEth = function(comm, pinCode) {
 };
 
 SecalotEth.splitPath = function(path) {
-  let result = [];
-  let components = path.split('/');
+  const result = [];
+  const components = path.split('/');
 
   components.forEach(element => {
     let number = parseInt(element, 10);
@@ -45,8 +45,8 @@ SecalotEth.getErrorMessage = function(sw, operation) {
 };
 
 SecalotEth.prototype.getAddress = function(path, callback) {
-  let splitPath = SecalotEth.splitPath(path);
-  let apdus = [];
+  const splitPath = SecalotEth.splitPath(path);
+  const apdus = [];
   let buffer;
   const self = this;
   const localCallback = function(response, error) {
@@ -55,7 +55,7 @@ SecalotEth.prototype.getAddress = function(path, callback) {
     } else {
       const result = {};
       response = Buffer.from(response, 'hex');
-      let sw = response.readUInt16BE(response.length - 2);
+      const sw = response.readUInt16BE(response.length - 2);
       if (sw !== 0x9000) {
         callback(undefined, SecalotEth.getErrorMessage(sw, 'getPublicKey'));
         return;
@@ -71,7 +71,7 @@ SecalotEth.prototype.getAddress = function(path, callback) {
   };
 
   if (typeof this.pinCode !== 'undefined') {
-    let pin = Buffer.from(this.pinCode, 'utf8');
+    const pin = Buffer.from(this.pinCode, 'utf8');
     buffer = Buffer.alloc(5 + pin.length);
     buffer[0] = 0x80;
     buffer[1] = 0x22;
@@ -99,17 +99,17 @@ SecalotEth.prototype.getAddress = function(path, callback) {
 };
 
 SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
-  let splitPath = SecalotEth.splitPath(path);
+  const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
-  let rawData;
-  let apdus = [];
+  let rawData = '';
+  const apdus = [];
   const self = this;
   const localCallback = function(response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
       response = Buffer.from(response, 'hex');
-      let sw = response.readUInt16BE(response.length - 2);
+      const sw = response.readUInt16BE(response.length - 2);
 
       if (sw !== 0x9000) {
         callback(undefined, SecalotEth.getErrorMessage(sw, 'signTransaction'));
@@ -117,7 +117,7 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
       }
 
       if (apdus.length === 0) {
-        let result = {};
+        const result = {};
         let v = response[0] + 27;
 
         if (eTx._chainId > 0) {
@@ -134,22 +134,22 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
     }
   };
 
-  let savedRaw = eTx.raw.slice();
+  const savedRaw = eTx.raw.slice();
   eTx.v = eTx._chainId;
   eTx.r = 0;
   eTx.s = 0;
-  let dataToHash = eTx.serialize();
+  const dataToHash = eTx.serialize();
   eTx.raw = savedRaw;
 
   rawData = Buffer.from(dataToHash, 'hex');
 
   while (offset !== rawData.length) {
-    let maxChunkSize = 64;
-    let chunkSize =
+    const maxChunkSize = 64;
+    const chunkSize =
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize;
-    let buffer = Buffer.alloc(5, chunkSize);
+    const buffer = Buffer.alloc(5, chunkSize);
 
     buffer[0] = 0x80;
     buffer[1] = 0xf2;
@@ -162,7 +162,7 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
     offset += chunkSize;
   }
 
-  let buffer = Buffer.alloc(5 + 1 + splitPath.length * 4);
+  const buffer = Buffer.alloc(5 + 1 + splitPath.length * 4);
 
   buffer[0] = 0x80;
   buffer[1] = 0xf2;
@@ -180,24 +180,24 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
 };
 
 SecalotEth.prototype.signMessage = function(path, message, callback) {
-  let splitPath = SecalotEth.splitPath(path);
+  const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
-  let rawData;
-  let apdus = [];
+  let rawData = '';
+  const apdus = [];
   const self = this;
   const localCallback = function(response, error) {
     if (typeof error !== 'undefined') {
       callback(undefined, error);
     } else {
       response = Buffer.from(response, 'hex');
-      let sw = response.readUInt16BE(response.length - 2);
+      const sw = response.readUInt16BE(response.length - 2);
       if (sw !== 0x9000) {
         callback(undefined, SecalotEth.getErrorMessage(sw, 'signMessage'));
         return;
       }
       if (apdus.length === 0) {
-        let result = {};
-        let v = response[0] + 27;
+        const result = {};
+        const v = response[0] + 27;
         result['v'] = Buffer.from([v]).toString('hex');
         result['r'] = response.slice(1, 1 + 32).toString('hex');
         result['s'] = response.slice(1 + 32, 1 + 32 + 32).toString('hex');
@@ -213,12 +213,12 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
   rawData = Buffer.from(Buffer.from(message.toString('hex'), 'hex'));
 
   while (offset !== rawData.length) {
-    let maxChunkSize = 64;
-    let chunkSize =
+    const maxChunkSize = 64;
+    const chunkSize =
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize;
-    let buffer = Buffer.alloc(5 + chunkSize);
+    const buffer = Buffer.alloc(5 + chunkSize);
     buffer[0] = 0x80;
     buffer[1] = 0xf2;
     buffer[2] = offset === 0 ? 0x00 : 0x01;
@@ -231,7 +231,7 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
     offset += chunkSize;
   }
 
-  let buffer = Buffer.alloc(5 + 1 + splitPath.length * 4);
+  const buffer = Buffer.alloc(5 + 1 + splitPath.length * 4);
   buffer[0] = 0x80;
   buffer[1] = 0xf2;
   buffer[2] = 0x02;
