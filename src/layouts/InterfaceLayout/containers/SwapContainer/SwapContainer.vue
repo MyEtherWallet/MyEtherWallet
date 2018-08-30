@@ -36,8 +36,9 @@
 
     <div class="send-form">
       <div class="title-container">
-        <div class="title">
+        <div class="title title-and-copy">
           <h4>{{ $t('common.toAddress') }}</h4>
+          <p class="copy-button prevent-user-select">Copy</p>
         </div>
       </div>
       <div class="the-form gas-amount">
@@ -46,6 +47,15 @@
     </div>
 
     <div class="send-form">
+      <div class="title-container">
+        <div class="title title-and-copy">
+          <h4>Providers</h4>
+        </div>
+      </div>
+      <providers-radio-selector></providers-radio-selector>
+    </div>
+
+    <div class="send-form" v-if="false">
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
@@ -77,7 +87,7 @@
     </div>
 
     <div class="submit-button-container">
-      <h4>1 ETH = 0.000231 BTC</h4>
+      <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
       <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
         <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
@@ -87,6 +97,7 @@
   </div>
 </template>
 <script>
+import ProvidersRadioSelector from '../../components/ProvidersRadioSelector'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import DropDownAddressSelector from '@/components/DropDownAddressSelector'
 import InterfaceBottomText from '@/components/InterfaceBottomText'
@@ -101,7 +112,8 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker,
-    'drop-down-address-selector': DropDownAddressSelector
+    'drop-down-address-selector': DropDownAddressSelector,
+    'providers-radio-selector': ProvidersRadioSelector
   },
   data () {
     return {
