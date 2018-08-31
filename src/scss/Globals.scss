@@ -385,6 +385,8 @@ h6 {
   font-weight: 500;
   padding: 21px 55px;
   user-select: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .large-round-button-green-border {
@@ -781,14 +783,15 @@ h6 {
   }
 }
 
-.bootstrap-modal.no-padding .modal-body{
+.bootstrap-modal.no-padding .modal-body,
+.bootstrap-modal.nopadding .modal-body{
   padding: 0;
 }
 
-.nopadding .modal-body {
-  padding: 0;
-}
 
+.bootstrap-modal.padding-40-20 .modal-body{
+  padding: 40px 20px;
+}
 
 
 
