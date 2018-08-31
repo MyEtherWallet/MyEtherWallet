@@ -314,13 +314,11 @@ export default {
   },
   computed: {
     openedFAQ(faqToOpen) {
-      console.log('openedFAQ', faqToOpen); // todo remove dev item
       return this.expanded.indexOf(faqToOpen) > -1;
     }
   },
   methods: {
     openFAQ: function(faqToOpen) {
-      console.log('openedFAQ', faqToOpen); // todo remove dev item
       if (this.expanded.indexOf(faqToOpen) > -1) {
         const idx = this.expanded.indexOf(faqToOpen);
         this.expanded.splice(idx, 1);
