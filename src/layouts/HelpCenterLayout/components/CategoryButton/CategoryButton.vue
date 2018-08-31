@@ -5,7 +5,7 @@
         <img :src="content.icon">
       </div>
       <div class="button-title">
-        {{content.title}}
+        {{ content.title }}
       </div>
     </div>
   </div>
@@ -14,13 +14,12 @@
 <script>
 export default {
   props: ['content'],
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "CategoryButton.scss";
+@import 'CategoryButton.scss';
 </style>
