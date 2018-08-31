@@ -2,7 +2,9 @@
   <div>
     <h5>Some sites generate entropy ("seed") the private key via mouse movements.</h5>
     <h5>Since MyEtherWallet.com doesn't do this, does it mean my private key isn't really random? Is this safe?</h5>
-    <p><img src="https://s3.amazonaws.com/groovehq/uploaded/3ixnwrg3w8ko1uki8tu5tg4mjpurb4sn2xgfr1lx21w8rnfdzi?1494563756" alt=""></p>
+    <p><img 
+      src="https://s3.amazonaws.com/groovehq/uploaded/3ixnwrg3w8ko1uki8tu5tg4mjpurb4sn2xgfr1lx21w8rnfdzi?1494563756" 
+      alt=""></p>
     <p>
       While the mouse shaking thing is clever and we understand
       why people enjoy it (?), the reality is the Crypto API ensures
@@ -39,14 +41,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

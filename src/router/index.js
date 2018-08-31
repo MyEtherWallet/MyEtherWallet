@@ -8,7 +8,7 @@ import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout';
 import InterfaceLayout from '@/layouts/InterfaceLayout';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout';
-import ConvertUnits from '@/layouts/ConvertUnits'
+import ConvertUnits from '@/layouts/ConvertUnits';
 import NotFoundLayout from '@/layouts/NotFoundLayout';
 import GettingStarted from '@/layouts/GettingStarted';
 import { router as routerConfig } from '@/configs/build';
