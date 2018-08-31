@@ -14,18 +14,19 @@
 
     .title-container {
       .title {
-        position: relative;
         align-items: flex-end;
+        color: $dark-blue-7;
         display: flex;
         margin-bottom: 10px;
         padding: 0 8px;
+        position: relative;
         width: 100%;
 
         .select-contract {
           margin-left: auto;
           min-width: 330px;
           position: absolute;
-          right: 0px;
+          right: 0;
           top: -17px;
         }
 
@@ -70,6 +71,17 @@
         font-size: 20px;
         font-weight: 600;
       }
+
+      i {
+        bottom: 3px;
+        position: absolute;
+        right: 3px;
+      }
+
+      .address-validation-check {
+        bottom: 13px;
+        right: 6px;
+      }
     }
   }
 
@@ -78,12 +90,91 @@
 
     .submit-button {
       position: relative;
-      i {
-        position: absolute;
-        right: 20px;
-        top: 16px;
-        font-size: 30px;
-      }
     }
+
+    img {
+      position: absolute;
+      right: 25px;
+      top: 25px;
+      width: 30px;
+    }
+  }
+
+  .copy-buttons {
+    span {
+      cursor: pointer;
+    }
+  }
+
+  .address-container {
+    align-items: center;
+    color: $dark-blue-7;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px;
+
+    .address {
+      border-bottom: 2px solid $background-color-1;
+    }
+
+    .functions {
+      border: 1px solid $background-color-1;
+      border-radius: 5px;
+      flex: 30;
+    }
+  }
+
+  .interact-buttons {
+    display: flex;
+  }
+}
+
+.bool-input {
+  display: flex;
+  flex-direction: column;
+
+  .bool-input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 8px;
+  }
+}
+
+.contract-inputs {
+  margin-bottom: 10px;
+}
+
+.interact-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+}
+
+.result-container {
+  align-items: end !important;
+  flex-direction: column;
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  label {
+    padding: 0 8px;
+  }
+
+  .result-inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.with-resolver {
+  display: block !important;
+
+  i {
+    bottom: 33px !important;
   }
 }

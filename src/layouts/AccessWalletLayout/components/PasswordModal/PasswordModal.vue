@@ -1,13 +1,34 @@
 <template>
-  <b-modal ref="password" hide-footer class="bootstrap-modal modal-software" title="Password" centered>
+  <b-modal
+    ref="password"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="Password"
+    centered>
     <form class="password-form">
       <div class="input-container">
-        <input :type="show ? 'text': 'password'" name="Password" v-model="password" autocomplete="off" />
-        <img @click.prevent="switchViewPassword" v-if="show" src="@/assets/images/icons/show-password.svg"/>
-        <img @click.prevent="switchViewPassword" v-if="!show" src="@/assets/images/icons/hide-password.svg"/>
+        <input
+          :type="show ? 'text': 'password'"
+          v-model="password"
+          name="Password"
+          autocomplete="off" >
+        <img
+          v-if="show"
+          src="@/assets/images/icons/show-password.svg"
+          @click.prevent="switchViewPassword">
+        <img
+          v-if="!show"
+          src="@/assets/images/icons/hide-password.svg"
+          @click.prevent="switchViewPassword">
       </div>
-      <p class="error" v-show="error !== ''"> {{ error }} </p>
-      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" password === '' && password.length === 0 && password.length < 9">
+      <p
+        v-show="error !== ''"
+        class="error"> {{ error }} </p>
+      <button
+        :disabled=" password === '' && password.length === 0 && password.length < 9"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
+        @click.prevent="unlockWallet">
         Unlock Wallet
       </button>
     </form>
@@ -15,42 +36,58 @@
 </template>
 
 <script>
-import Wallet from 'ethereumjs-wallet'
-import Worker from '@/workers/unlockWallet.worker.js'
+import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
+import { BasicWallet } from '@/wallets';
 export default {
-  props: ['file'],
-  data () {
+  props: {
+    file: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
+  data() {
     return {
       show: false,
       password: '',
       error: ''
+    };
+  },
+  watch: {
+    password() {
+      this.error = '';
     }
   },
   methods: {
-    unlockWallet () {
-      const worker = new Worker()
-      const self = this
-      worker.postMessage({type: 'unlockWallet', data: [this.file, this.password]})
-      worker.onmessage = function (e) {
+    unlockWallet() {
+      const worker = new Worker();
+      const self = this;
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
+      });
+      worker.onmessage = function(e) {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
-        self.$store.dispatch('decryptWallet', Wallet.fromPrivateKey(Buffer.from(e.data._privKey)))
-        self.$router.push({ path: 'interface' })
-      }
-      worker.onerror = function (e) {
-        self.error = e.message
-      }
+        self.$store.dispatch(
+          'decryptWallet',
+          BasicWallet.unlock({
+            type: 'manualPrivateKey',
+            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
+          })
+        );
+        self.$router.push({ path: 'interface' });
+      };
+      worker.onerror = function(e) {
+        self.error = e.message;
+      };
     },
-    switchViewPassword () {
-      this.show = !this.show
-    }
-  },
-  watch: {
-    password () {
-      this.error = ''
+    switchViewPassword() {
+      this.show = !this.show;
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "PasswordModal.scss";
+@import 'PasswordModal.scss';
 </style>

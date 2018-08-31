@@ -1,18 +1,19 @@
 language: node_js
 sudo: required
 dist: trusty
-node_js: '7'
+node_js: '8'
 env:
   matrix:
-  - CXX=g++-4.9
+    - CXX=g++-4.9
   global:
-  - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
-  - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
-  - secure: Ce9JEDfoZhC7m249y2DtgcTaFeONsL9W5DKgR+NpSIASJ4sHLReDy+KGyFTysjUBSREUkEPnh6hd+wAbRhllEy+5iDRzgbt+Zn3FZbHXQJcRRme7Ej4ghZ0Z8qAKYiDWBv/oHBydNPpliAxA9GhfGGmBSXK+OJ8kPnH3OO4PnyR+7KWDKAHz1v7pdw5MKzvIe42ackVK9sTky94FYy/WEZRiNM0ZLHXuoApecwAUMiYlOL4LUgZ2t4W759dofHtf8zt00VSaTKSJoWogMRYDANktHP7K3NJRQzEyzY+uKuYTcP8ZLsUQikJqz9Es+QWO/DHlN/IHkS+Nula3kjR9nHVITpfEkwRg4e5n72xwTxtr3+BBKNFbly0lREvKgTS2+CAV+l/2ftTyMXEmk3Wjca/gzmZ+PnpcBLjL16CHrNgQU/OAcATH0wBYYN059fj1c2SZIwAB+o63/2znskpNKm5A1yS7H6AfKizj1OXZF+qWzUBW3msNqzyhsWecxjx0bxxIAYhcpG5+jcANVXaNlxbrdR8DClJ0T31ilqthCYkKNFlMzbYAx0pT2OG3z4UTwDbLK8ZOla+G7CXAtxcx5yRBlK3W2iTMOP1FjW/sMGWqYNRxss5Wxn/T4VgKQcERLy+AKr/OoIZ3g+BDC+02/aTvhHZlf/xxEOE9zq8VLgM=
-  - secure: Z/bpi72Z4VLH/uEgTfrZmv3rEHnxrwj52sTZmWhPsooAkYsTuJuYhU2V60jmrbuMfHShY5TOix88CzYdZUIvil8jnNwnIK7RlkgvZrGVrugOtsZZgyJuZnLRAwAcMRQ/toK+EKJ0AlPMFzO5yPrS4n83044MElvbh8nZfNarudl9DzB4Rubr5KIkIGZa+yCEqOAh533Bmdrr2Nsrf8eFssmQ9tPGIBBw1YGSBXy1paUTTUawzO1f67YV70AexF156jeCADH0j8h9v6Sj9O5hfAVP0tZYj3GJ6ctCVgQP1B0j1GVBIMgg3mXKRy+Q1LiwDq6fivbdJQ2+49cjjeDuqLFAW0dzZ3FFNInASxNGA3mjlLWknSHmwAwYBzfL3oNkg6ux3mzhUPccz8wN6pfcxPv3+HavQaViPMNAinedXH119urROTigrLt9udyzCl8P9tiFkv5g2Y4b4wln3twMXSuT1qDHpaES5xOHvzLcyY+oZWmrxBXUQUTaoiED9NSnko8HTvOlNvj0uCNFbIAvff/NDwwkgEf58e9y24YfPZQge+XDOhfqu8eVv75islH1Fh5tZ8WdGKSwHVnILkF3zvC1Lfj3qi+DGJq1LJLXqKelrJIv2iS2Cp+W9kSGxk1hsrjrrQeNLETyZeQPcOG6PkQkccbbYtiu+dyTAWtbwDo=
+    - NODE_OPTIONS=--max-old-space-size=4096
+    - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
+    - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
+    - secure: Ce9JEDfoZhC7m249y2DtgcTaFeONsL9W5DKgR+NpSIASJ4sHLReDy+KGyFTysjUBSREUkEPnh6hd+wAbRhllEy+5iDRzgbt+Zn3FZbHXQJcRRme7Ej4ghZ0Z8qAKYiDWBv/oHBydNPpliAxA9GhfGGmBSXK+OJ8kPnH3OO4PnyR+7KWDKAHz1v7pdw5MKzvIe42ackVK9sTky94FYy/WEZRiNM0ZLHXuoApecwAUMiYlOL4LUgZ2t4W759dofHtf8zt00VSaTKSJoWogMRYDANktHP7K3NJRQzEyzY+uKuYTcP8ZLsUQikJqz9Es+QWO/DHlN/IHkS+Nula3kjR9nHVITpfEkwRg4e5n72xwTxtr3+BBKNFbly0lREvKgTS2+CAV+l/2ftTyMXEmk3Wjca/gzmZ+PnpcBLjL16CHrNgQU/OAcATH0wBYYN059fj1c2SZIwAB+o63/2znskpNKm5A1yS7H6AfKizj1OXZF+qWzUBW3msNqzyhsWecxjx0bxxIAYhcpG5+jcANVXaNlxbrdR8DClJ0T31ilqthCYkKNFlMzbYAx0pT2OG3z4UTwDbLK8ZOla+G7CXAtxcx5yRBlK3W2iTMOP1FjW/sMGWqYNRxss5Wxn/T4VgKQcERLy+AKr/OoIZ3g+BDC+02/aTvhHZlf/xxEOE9zq8VLgM=
+    - secure: Z/bpi72Z4VLH/uEgTfrZmv3rEHnxrwj52sTZmWhPsooAkYsTuJuYhU2V60jmrbuMfHShY5TOix88CzYdZUIvil8jnNwnIK7RlkgvZrGVrugOtsZZgyJuZnLRAwAcMRQ/toK+EKJ0AlPMFzO5yPrS4n83044MElvbh8nZfNarudl9DzB4Rubr5KIkIGZa+yCEqOAh533Bmdrr2Nsrf8eFssmQ9tPGIBBw1YGSBXy1paUTTUawzO1f67YV70AexF156jeCADH0j8h9v6Sj9O5hfAVP0tZYj3GJ6ctCVgQP1B0j1GVBIMgg3mXKRy+Q1LiwDq6fivbdJQ2+49cjjeDuqLFAW0dzZ3FFNInASxNGA3mjlLWknSHmwAwYBzfL3oNkg6ux3mzhUPccz8wN6pfcxPv3+HavQaViPMNAinedXH119urROTigrLt9udyzCl8P9tiFkv5g2Y4b4wln3twMXSuT1qDHpaES5xOHvzLcyY+oZWmrxBXUQUTaoiED9NSnko8HTvOlNvj0uCNFbIAvff/NDwwkgEf58e9y24YfPZQge+XDOhfqu8eVv75islH1Fh5tZ8WdGKSwHVnILkF3zvC1Lfj3qi+DGJq1LJLXqKelrJIv2iS2Cp+W9kSGxk1hsrjrrQeNLETyZeQPcOG6PkQkccbbYtiu+dyTAWtbwDo=
 cache:
   directories:
-  - node_modules
+    - node_modules
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
@@ -25,81 +26,83 @@ addons:
       - librsvg2-dev
 branches:
   except:
-  - gh-pages
+    - gh-pages
+before_install:
+  - npm install -g npm@'>=6.0.0'
 stages:
-- name: add to mewbuilds
-  if: type != pull_request
-- name: add to codecov
-  if: type != pull_request
-- name: add to mewbuilds develop
-  if: branch = develop and type != pull_request
-- name: add to mewbuilds staging
-  if: branch = master and type != pull_request
-- name: create release
-  if: branch = master and type != pull_request
-- name: deploy to production
-  if: branch = master and type != pull_request
+  - name: add to mewbuilds
+    if: type != pull_request
+  - name: add to codecov
+    if: type != pull_request
+  - name: add to mewbuilds develop
+    if: branch = develop and type != pull_request
+  - name: add to mewbuilds staging
+    if: branch = master and type != pull_request
+  - name: create release
+    if: branch = master and type != pull_request
+  - name: deploy to production
+    if: branch = master and type != pull_request
 jobs:
   fast_finish: true
   include:
-  - stage: add to codecov
-    script:
-    - npm run codecov
-  - stage: add to mewbuilds staging
-    before_script:
-    - ROUTER_MODE=history npm run build
-    - pip install --user awscli
-    script:
-    - aws s3 rm s3://mewbuilds/staging/ --recursive
-    - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
-  - stage: add to mewbuilds develop
-    before_script:
-    - ROUTER_MODE=history npm run build
-    - pip install --user awscli
-    script:
-    - aws s3 rm s3://mewbuilds/develop/ --recursive
-    - aws s3 sync --acl public-read dist/ s3://mewbuilds/develop/
-  - stage: add to mewbuilds
-    before_script:
-    - ROUTER_MODE=hash npm run build
-    - pip install --user awscli
-    script:
-    - aws s3 sync --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
-    after_success:
-    - |
-      curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-      -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html\"}" \
-      "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
-  - stage: create release
-    script: skip
-    before_deploy:
-    - rm .gitignore
-    - npm run build
-    - sudo mkdir deploy
-    - ls -a /dist | sort
-    - |
-      PACKAGE_VERSION=$(cat package.json \
-        | grep version \
-        | head -1 \
-        | awk -F: '{ print $2 }' \
-        | sed 's/[",]//g' \
-        | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
-    deploy:
-      provider: releases
-      api_key: "$GITHUB_TOKEN"
-      file: deploy/*
-      file_glob: true
-      skip_cleanup: true
-  - stage: deploy to production
-    script: skip
-    before_deploy:
-    - bash ./deploy.sh
-    deploy:
-      provider: pages
-      skip-cleanup: true
-      github-token: "$GITHUB_TOKEN"
-      keep-history: false
-      local-dir: "./dist"
-      on:
-        branch: master
-      target-branch: gh-pages
+    - stage: add to codecov
+      script:
+        - npm run codecov
+    - stage: add to mewbuilds staging
+      before_script:
+        - ROUTER_MODE=history npm run build
+        - pip install --user awscli
+      script:
+        - aws s3 rm s3://mewbuilds/staging/ --recursive
+        - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
+    - stage: add to mewbuilds develop
+      before_script:
+        - ROUTER_MODE=history npm run build
+        - pip install --user awscli
+      script:
+        - aws s3 rm s3://mewbuilds/develop/ --recursive
+        - aws s3 sync --acl public-read dist/ s3://mewbuilds/develop/
+    - stage: add to mewbuilds
+      before_script:
+        - ROUTER_MODE=hash npm run build
+        - pip install --user awscli
+      script:
+        - aws s3 sync --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
+      after_success:
+        - |
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+          -d "{\"body\": \"Copy of this build can be found at https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html\"}" \
+          "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
+    - stage: create release
+      script: skip
+      before_deploy:
+        - rm .gitignore
+        - npm run build
+        - sudo mkdir deploy
+        - ls -a /dist | sort
+        - |
+          PACKAGE_VERSION=$(cat package.json \
+            | grep version \
+            | head -1 \
+            | awk -F: '{ print $2 }' \
+            | sed 's/[",]//g' \
+            | tr -d '[[:space:]]'); sudo zip -r ./deploy/release-"$PACKAGE_VERSION".zip ./dist; git tag v$PACKAGE_VERSION
+      deploy:
+        provider: releases
+        api_key: '$GITHUB_TOKEN'
+        file: deploy/*
+        file_glob: true
+        skip_cleanup: true
+    - stage: deploy to production
+      script: skip
+      before_deploy:
+        - bash ./deploy.sh
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: '$GITHUB_TOKEN'
+        keep-history: false
+        local-dir: './dist'
+        on:
+          branch: master
+        target-branch: gh-pages
