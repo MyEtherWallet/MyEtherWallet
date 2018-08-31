@@ -1,6 +1,5 @@
 @import '../InterfaceContainer';
 
-
 p {
   margin-bottom: 40px;
   padding: $interface-text-padding-1;
@@ -24,7 +23,6 @@ p {
     @extend %send-form-base;
 
     .title-container {
-
       .title {
         align-items: center;
         display: flex;

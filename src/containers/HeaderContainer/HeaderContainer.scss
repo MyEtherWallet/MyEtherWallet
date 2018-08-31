@@ -15,7 +15,6 @@
   }
 }
 
-
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
@@ -36,9 +35,9 @@
     align-items: center;
     display: flex;
     padding: 12px 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
-    @media all and (max-width: $tablet-width){
+    @media all and (max-width: $tablet-width) {
       padding: 15px 0;
     }
 
@@ -47,7 +46,7 @@
 
       img {
         height: 33px;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
       }
 
       .logo-small {
@@ -70,7 +69,7 @@
         color: $text-base-color;
       }
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         display: none;
       }
 
@@ -99,6 +98,7 @@
         .dropdown-menu {
           a {
             $language-item-padding-value: 8px;
+
             font-size: 13px;
             padding-bottom: $language-item-padding-value;
             padding-left: 15px;
@@ -113,15 +113,14 @@
 
         img {
           flex: 45;
-          height: 25px;
           margin-right: 10px;
           height: 15px;
           border-radius: 3px;
         }
       }
 
-      >ul {
-        >li {
+      > ul {
+        > li {
           display: inline-block;
           font-size: 14px;
           margin-left: 26px;
@@ -132,13 +131,13 @@
           }
         }
       }
-    }// .top-menu
+    } // .top-menu
 
     .mobile-menu {
       display: none;
       margin-left: auto;
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         display: block;
       }
 
@@ -158,20 +157,18 @@
           width: 15px;
         }
       }
-    }// .mobile-menu
-
-  }// .header-container
-}// .fixed-header
+    } // .mobile-menu
+  } // .header-container
+} // .fixed-header
 
 .identicon-dropdown {
   padding: 0 !important;
 }
 
-
 .get-free-wallet {
   position: relative;
   animation: fadeInFromNone 0.3s ease-out;
-  animation-fill-mode:forwards;
+  animation-fill-mode: forwards;
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -180,7 +177,7 @@
     cursor: pointer;
     font-size: 12px;
     padding: 10px 20px;
-    transition: background-color .2s ease;
+    transition: background-color 0.2s ease;
     display: block;
     position: relative;
 
@@ -210,7 +207,6 @@
     }
   }
 
-
   @keyframes fadeOutFromBlock {
     0% {
       opacity: 1;
@@ -229,4 +225,3 @@
     }
   }
 } // .get-free-wallet
-
