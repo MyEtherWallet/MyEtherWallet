@@ -101,9 +101,9 @@
       <li>
         To safely keep your account you have 3 pieces of information:
         <ul>
-            <li>Your address (0x7573aB.....)</li>
-            <li>Your password</li>
-            <li>Your private key</li>
+          <li>Your address (0x7573aB.....)</li>
+          <li>Your password</li>
+          <li>Your private key</li>
         </ul>
       </li>
     </ol>
@@ -116,11 +116,11 @@
     </p>
     <p>
       In Ethereum Wallet, go to the top bar and find
-      <abbr>ACCOUNTS</abbr> <i 
-        class="fa fa-long-arrow-right" 
+      <abbr>ACCOUNTS</abbr> <i
+        class="fa fa-long-arrow-right"
         aria-hidden="true"/>
-      <abbr>BACKUP</abbr> <i 
-        class="fa fa-long-arrow-right" 
+      <abbr>BACKUP</abbr> <i
+        class="fa fa-long-arrow-right"
         aria-hidden="true"/>
       <abbr>ACCOUNTS</abbr>.
       It'll open up a folder and inside you will see a file. This file is your
@@ -132,8 +132,8 @@
     <p>
       If you already have BTC, you can use Shapeshift.io, Bity.com, or Changelly
       to convert your BTC into ETH. Start a BTC
-      <i 
-        class="fa fa-long-arrow-right" 
+      <i
+        class="fa fa-long-arrow-right"
         aria-hidden="true"/>
       ETH exchange and it'll tell you where to send your BTC.
       (If you have your BTC on an exchange, you can likely exchange them for ETH on that
@@ -212,12 +212,14 @@
       </li>
     </ul>
 
-      <h5 id="enjoy-">Enjoy!</h5>
-
-      <p><em>Originally posted on StackExchange: <a href="https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd">https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd
+    <h5 id="enjoy-">Enjoy!</h5>
+    <p>
+      <em>Originally posted on StackExchange:
+        <a href="https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd">
+          https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd
         </a>
       </em>
-      </p >
+    </p >
 
   </div>
 </template>
