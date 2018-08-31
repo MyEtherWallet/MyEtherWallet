@@ -1,90 +1,90 @@
 <template>
   <div class="header">
 
-    <div
-      :class="isPageOnTop == false ? 'active' : ''"
+    <div 
+      :class="isPageOnTop == false ? 'active' : ''" 
       class="scrollup-container">
       <scrollupbutton/>
     </div>
 
     <div class="wrap">
-      <div
-        ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
+      <div 
+        ref="fixedHeader" 
+        :class="isPageOnTop == false ? 'tiny-header' : ''" 
         class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link
-              to="/"
+            <router-link 
+              to="/" 
               @click.native="scrollTop()">
               <div class="top-logo">
-                <img
-                  :class="isPageOnTop == false ? 'logo-small' : ''"
-                  class="logo-large"
+                <img 
+                  :class="isPageOnTop == false ? 'logo-small' : ''" 
+                  class="logo-large" 
                   src="~@/assets/images/logo.png">
               </div>
             </router-link>
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item
-                  to="/"
-                  exact
-                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
+                <b-nav-item 
+                  to="/" 
+                  exact 
+                  @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item
-                  v-show="online"
+                <b-nav-item 
+                  v-show="online" 
                   to="/#news">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
-                    <i
-                      class="fa fa-angle-down"
+                    <i 
+                      class="fa fa-angle-down" 
                       aria-hidden="true"/>
                   </div>
-                  <b-nav-item-dropdown
-                    class="language-menu"
-                    extra-toggle-classes="nav-link-custom"
+                  <b-nav-item-dropdown 
+                    class="language-menu" 
+                    extra-toggle-classes="nav-link-custom" 
                     right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img
-                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                        <img 
+                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)" 
                           class="show">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
-                    <b-dropdown-item
-                      v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.flag"
-                      :key="language.key"
-                      :data-flag-name="language.flag"
+                    <b-dropdown-item 
+                      v-for="language in supportedLanguages" 
+                      :active="$root._i18n.locale === language.flag" 
+                      :key="language.key" 
+                      :data-flag-name="language.flag" 
                       @click="languageItemClicked">
                       {{ language.name }}
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
                 <notification v-if="wallet !== null"/>
-                <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop == true ? 'noshow' : ''"
-                  class="get-free-wallet"
+                <b-nav-item 
+                  v-if="wallet === null && $route.fullPath === '/'" 
+                  :class="isPageOnTop == true ? 'noshow' : ''" 
+                  class="get-free-wallet nopadding" 
                   to="/create-wallet">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
                   </div>
                 </b-nav-item>
-                <b-nav-item-dropdown
-                  v-if="wallet !== null"
-                  right
-                  no-caret
+                <b-nav-item-dropdown 
+                  v-if="wallet !== null" 
+                  right 
+                  no-caret 
                   extra-toggle-classes="identicon-dropdown">
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"/>
+                    <blockie 
+                      :address="wallet.getAddressString()" 
+                      width="35px" 
+                      height="35px" />
                   </template>
                   <b-dropdown-item @click="logout">
                     Log out
@@ -153,27 +153,22 @@ export default {
       isPageOnTop: true
     };
   },
-  computed: {
-    ...mapGetters({
-      wallet: 'wallet'
-    })
-  },
   watch: {
     online(newVal) {
       this.online = newVal;
     },
-    showNotifications() {
-      this.$children[6].$refs.notification.show();
-    }
+    notifications(newVal) {}
   },
   mounted() {
+    const self = this;
+
     if (this.$store.state.online) {
       this.online = true;
     } else {
       this.online = false;
     }
 
-    if (store.get('locale') !== null && store.get('locale') !== undefined) {
+    if (store.get('locale') !== null) {
       this.$root._i18n.locale = store.get('locale');
       this.currentFlag = store.get('locale');
     } else {
@@ -186,12 +181,12 @@ export default {
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    // this.onPageScroll();
+    this.onPageScroll();
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    // window.onscroll = function() {
-    //   self.onPageScroll();
-    // };
+    window.onscroll = function(e) {
+      self.onPageScroll();
+    };
   },
   methods: {
     languageItemClicked(e) {
@@ -216,6 +211,11 @@ export default {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
     }
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   }
 };
 </script>

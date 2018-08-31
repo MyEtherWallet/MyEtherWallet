@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@import '~@/scss/CustomForms';
 
 // *********************************************************************
 // CSS reset
@@ -802,14 +803,6 @@ h6 {
   .modal-body {
     padding: 40px;
   }
-}
-
-.your-password .modal-body {
-  background-image: url('~@/assets/images/modal/garlands.png');
-  background-position: center 20px;
-  background-repeat: no-repeat;
-  background-size: 91%;
-
 }
 
 
