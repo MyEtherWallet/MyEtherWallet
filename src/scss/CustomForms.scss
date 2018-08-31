@@ -135,7 +135,7 @@
   input[type="radio"] + label {
     $radio-button-size: 17px;
     position: relative;
-    border: 1px solid $mew-green;
+    border: 1px solid $light-grey-7;
     border-radius: 100%;
     height: $radio-button-size;
     width: $radio-button-size;
@@ -143,6 +143,8 @@
   }
 
   input[type="radio"]:checked + label {
+
+    border: 1px solid $mew-green;
 
     &::after {
       $radio-button-dot-size: 9px;

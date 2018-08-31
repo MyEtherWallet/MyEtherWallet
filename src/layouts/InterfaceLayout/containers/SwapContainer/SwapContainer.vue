@@ -1,5 +1,7 @@
 <template>
   <div class="swap-container">
+    <swap-confirmation-modal></swap-confirmation-modal>
+
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"></interface-container-title>
       <div class="buy-eth">
@@ -88,7 +90,7 @@
 
     <div class="submit-button-container">
       <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div class="submit-button large-round-button-green-filled clickable">
+      <div class="submit-button large-round-button-green-filled clickable" v-on:click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
         <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
       </div>
@@ -106,6 +108,7 @@ import swapIcon from '@/assets/images/icons/swap.svg'
 import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
 import ImageBity from '@/assets/images/etc/bity.png'
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
+import SwapConfirmationModal from './components/SwapConfirmationModal'
 
 export default {
   components: {
@@ -113,7 +116,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker,
     'drop-down-address-selector': DropDownAddressSelector,
-    'providers-radio-selector': ProvidersRadioSelector
+    'providers-radio-selector': ProvidersRadioSelector,
+    'swap-confirmation-modal': SwapConfirmationModal
   },
   data () {
     return {
@@ -128,8 +132,8 @@ export default {
     }
   },
   methods: {
-    copyAddress () {
-      alert('This doesn\'t work for now.')
+    swapConfirmationModalOpen () {
+      this.$children[0].$refs.swapconfirmation.show()
     }
   }
 }
