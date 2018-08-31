@@ -221,5 +221,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import 'HeaderContainer.scss';
+@import 'HeaderContainer.scss';
 </style>

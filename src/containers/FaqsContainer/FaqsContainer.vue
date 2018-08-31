@@ -23,7 +23,9 @@
         <div class="qa-cards">
           <ul class="qa__contents">
             <li>
-              <div v-on:click="openCloseFAQ" class="qa__contents--title">
+              <div
+                class="qa__contents--title"
+                @click="openCloseFAQ">
                 <h3>Balances not loading or showing on MyEtherWallet</h3>
                 <div class="show-more-buttons">
                   <span
@@ -41,7 +43,9 @@
               </div>
             </li>
             <li>
-              <div v-on:click="openCloseFAQ" class="qa__contents--title">
+              <div
+                class="qa__contents--title"
+                @click="openCloseFAQ">
                 <h3>Does MyEtherWallet support Bitcoin or other coins (LTC STEEM ZEC)?</h3>
                 <div class="show-more-buttons">
                   <span
@@ -59,7 +63,9 @@
               </div>
             </li>
             <li>
-              <div v-on:click="openCloseFAQ" class="qa__contents--title">
+              <div
+                class="qa__contents--title"
+                @click="openCloseFAQ">
                 <h3>ETH or Tokens sent to or from exchange haven't shown up</h3>
                 <div class="show-more-buttons">
                   <span
@@ -77,7 +83,9 @@
               </div>
             </li>
             <li>
-              <div v-on:click="openCloseFAQ" class="qa__contents--title">
+              <div
+                class="qa__contents--title"
+                @click="openCloseFAQ">
                 <h3>Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?</h3>
                 <div class="show-more-buttons">
                   <span
@@ -95,7 +103,9 @@
               </div>
             </li>
             <li>
-              <div v-on:click="openCloseFAQ('faq5')" class="qa__contents--title">
+              <div
+                class="qa__contents--title"
+                @click="openCloseFAQ('faq5')">
                 <h3>What Is An ICO?</h3>
                 <div class="show-more-buttons">
                   <span
@@ -121,18 +131,16 @@
 </template>
 
 <script>
-import FaqBlock from './components/FaqBlock'
 import {
   BalancesNotLoadingOrShowingOnMyEtherWallet,
   EthOrTokensSentToOrFromExchangeHaventShownUp,
   DoesMyEtherWalletSupportBitcoinOrOtherCoins,
   WhereCanIBuySellTradeExchangeMyEthOrTokens,
   WhatIsAnIco
-} from '@/components/FaqContents'
+} from '@/components/FaqContents';
 
 export default {
   components: {
-    'faq-block': FaqBlock,
     'faq-balances-not-loading': BalancesNotLoadingOrShowingOnMyEtherWallet,
     'faq-eth-or-tokens-sent-to': EthOrTokensSentToOrFromExchangeHaventShownUp,
     'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins,
