@@ -4,17 +4,17 @@
       <div class="block-left">
         <div class="select-block">
           <select>
-            <option 
-              v-for="data in leftDropDown" 
-              :key="data.key" 
+            <option
+              v-for="data in leftDropDown"
+              :key="data.key"
               value="data.value">{{ data.label }}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input 
-            type="text" 
-            name="" 
+          <input
+            type="text"
+            name=""
             placeholder="Amount">
         </div>
       </div>
@@ -28,17 +28,17 @@
       <div class="block-right">
         <div class="select-block">
           <select>
-            <option 
-              v-for="data in rightDropDown" 
-              :key="data.key" 
+            <option
+              v-for="data in rightDropDown"
+              :key="data.key"
               value="data.value">{{ data.label }}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input 
-            type="text" 
-            name="" 
+          <input
+            type="text"
+            name=""
             placeholder="Amount">
         </div>
       </div>
@@ -48,7 +48,12 @@
 
 <script>
 export default {
-  props: ['content'],
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       leftDropDown: [

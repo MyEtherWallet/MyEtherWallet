@@ -1,64 +1,90 @@
 <template>
   <div class="header">
 
-    <div :class="isPageOnTop == false ? 'active' : ''"
-         class="scrollup-container">
+    <div
+      :class="isPageOnTop == false ? 'active' : ''"
+      class="scrollup-container">
       <scrollupbutton/>
     </div>
 
     <div class="wrap">
-      <div ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''"
-           class="fixed-header">
+      <div
+        ref="fixedHeader"
+        :class="isPageOnTop == false ? 'tiny-header' : ''"
+        class="fixed-header">
         <div class="page-container">
           <div class="header-container">
-            <router-link to="/" @click.native="scrollTop()">
+            <router-link
+              to="/"
+              @click.native="scrollTop()">
               <div class="top-logo">
-                <img :class="isPageOnTop == false ? 'logo-small' : ''" class="logo-large"
-                     src="~@/assets/images/logo.png">
+                <img
+                  :class="isPageOnTop == false ? 'logo-small' : ''"
+                  class="logo-large"
+                  src="~@/assets/images/logo.png">
               </div>
             </router-link>
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item to="/" exact @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
+                <b-nav-item
+                  to="/"
+                  exact
+                  @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item v-show="online" to="/#news">{{ $t("common.news") }}</b-nav-item>
+                <b-nav-item
+                  v-show="online"
+                  to="/#news">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
-                    <i class="fa fa-angle-down" aria-hidden="true"/>
+                    <i
+                      class="fa fa-angle-down"
+                      aria-hidden="true"/>
                   </div>
-                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom"
-                                       right>
+                  <b-nav-item-dropdown
+                    class="language-menu"
+                    extra-toggle-classes="nav-link-custom"
+                    right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                             class="show">
+                        <img
+                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                          class="show">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
-                    <b-dropdown-item v-for="language in supportedLanguages"
-                                     :active="$root._i18n.locale === language.flag"
-                                     :key="language.key" :data-flag-name="language.flag"
-                                     @click="languageItemClicked">
-                      {{language.name}}
+                    <b-dropdown-item
+                      v-for="language in supportedLanguages"
+                      :active="$root._i18n.locale === language.flag"
+                      :key="language.key"
+                      :data-flag-name="language.flag"
+                      @click="languageItemClicked">
+                      {{ language.name }}
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
                 <notification v-if="wallet !== null"/>
-                <b-nav-item v-if="wallet === null && $route.fullPath === '/'"
-                            :class="isPageOnTop == true ? 'noshow' : ''"
-                            class="get-free-wallet nopadding"
-                            to="/create-wallet">
+                <b-nav-item
+                  v-if="wallet === null && $route.fullPath === '/'"
+                  :class="isPageOnTop == true ? 'noshow' : ''"
+                  class="get-free-wallet nopadding"
+                  to="/create-wallet">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
                   </div>
                 </b-nav-item>
-                <b-nav-item-dropdown v-if="wallet !== null" right
-                                     no-caret extra-toggle-classes="identicon-dropdown">
+                <b-nav-item-dropdown
+                  v-if="wallet !== null"
+                  right
+                  no-caret
+                  extra-toggle-classes="identicon-dropdown">
                   <template slot="button-content">
-                    <blockie :address="wallet.getAddressString()" width="35px" height="35px"/>
+                    <blockie
+                      :address="wallet.getAddressString()"
+                      width="35px"
+                      height="35px" />
                   </template>
                   <b-dropdown-item @click="logout">
                     Log out
@@ -98,28 +124,28 @@ export default {
   data() {
     return {
       supportedLanguages: [
-        {name: 'Deutsch', flag: 'de'},
-        {name: 'Ελληνικά', flag: 'gr'},
-        {name: 'English', flag: 'gb'},
-        {name: 'Español', flag: 'es'},
-        {name: 'Farsi', flag: 'ir'},
-        {name: 'Suomi', flag: 'fi'},
-        {name: 'Magyar', flag: 'hu'},
-        {name: 'Haitian Creole', flag: 'ht'},
-        {name: 'Bahasa Indonesia', flag: 'id'},
-        {name: 'Italiano', flag: 'it'},
-        {name: '日本語', flag: 'jp'},
-        {name: '한국어', flag: 'kr'},
-        {name: 'Nederlands', flag: 'nl'},
-        {name: 'Norsk Bokmål', flag: 'no'},
-        {name: 'Polski', flag: 'pl'},
-        {name: 'Português', flag: 'pt'},
-        {name: 'Русский', flag: 'ru'},
-        {name: 'ภาษาไทย', flag: 'th'},
-        {name: 'Türkçe', flag: 'tr'},
-        {name: 'Tiếng Việt', flag: 'vn'},
-        {name: '简体中文', flag: 'cn-sim'},
-        {name: '繁體中文', flag: 'cn-tr'}
+        { name: 'Deutsch', flag: 'de' },
+        { name: 'Ελληνικά', flag: 'gr' },
+        { name: 'English', flag: 'gb' },
+        { name: 'Español', flag: 'es' },
+        { name: 'Farsi', flag: 'ir' },
+        { name: 'Suomi', flag: 'fi' },
+        { name: 'Magyar', flag: 'hu' },
+        { name: 'Haitian Creole', flag: 'ht' },
+        { name: 'Bahasa Indonesia', flag: 'id' },
+        { name: 'Italiano', flag: 'it' },
+        { name: '日本語', flag: 'jp' },
+        { name: '한국어', flag: 'kr' },
+        { name: 'Nederlands', flag: 'nl' },
+        { name: 'Norsk Bokmål', flag: 'no' },
+        { name: 'Polski', flag: 'pl' },
+        { name: 'Português', flag: 'pt' },
+        { name: 'Русский', flag: 'ru' },
+        { name: 'ภาษาไทย', flag: 'th' },
+        { name: 'Türkçe', flag: 'tr' },
+        { name: 'Tiếng Việt', flag: 'vn' },
+        { name: '简体中文', flag: 'cn-sim' },
+        { name: '繁體中文', flag: 'cn-tr' }
       ],
       online: true,
       currentName: 'English',
