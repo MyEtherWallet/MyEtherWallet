@@ -7,6 +7,7 @@
 
 
 ### UI/UX
+- Add Swap confirmation modal [#78](https://github.com/MyEtherWallet/MyEtherWallet/pull/78)
 - Add FAQs page [#58](https://github.com/MyEtherWallet/MyEtherWallet/pull/58)
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 
