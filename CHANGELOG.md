@@ -1,4 +1,5 @@
 ### Feature
+- Decompress images on build [#77](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/77)
 - Integrate secalot [#76](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/76)
 - Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
 - Implement ENS resolver directive, move directives to its own folder [#56](https://github.com/MyEtherWallet/MyEtherWallet/pull/56)
