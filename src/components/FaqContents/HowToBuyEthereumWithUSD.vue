@@ -219,7 +219,7 @@
           https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd
         </a>
       </em>
-    </p >
+    </p>
 
   </div>
 </template>
