@@ -14,31 +14,31 @@
           @input="updateValue($event.target.value)"
         >
       </div>
-      <div 
-        class="password-icons" 
+      <div
+        class="password-icons"
         @click="password.showPassword = !password.showPassword">
-        <img 
-          v-if="!password.showPassword" 
-          class="hide-password" 
+        <img
+          v-if="!password.showPassword"
+          class="hide-password"
           src="~@/assets/images/icons/hide-password.svg" >
-        <img 
-          v-if="password.showPassword" 
-          class="show-password" 
+        <img
+          v-if="password.showPassword"
+          class="show-password"
           src="~@/assets/images/icons/show-password.svg" >
       </div>
 
-      <p 
-        v-show="value.length > 0" 
+      <p
+        v-show="value.length > 0"
         class="passwd-strength">
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
     <!--=== MEW custom form ========================================-->
 
-    <button 
-      :disabled="value.length === 0 && value.length < 9 && strength === ''" 
-      class="next-button large-round-button-green-filled" 
-      type="submit" 
+    <button
+      :disabled="value.length === 0 && value.length < 9 && strength === ''"
+      class="next-button large-round-button-green-filled"
+      type="submit"
       @click.prevent="switcher(param)">
       {{ $t("common.next") }}<img src="~@/assets/images/icons/right-arrow.png">
     </button>
@@ -48,7 +48,20 @@
 <script>
 import zxcvbn from 'zxcvbn';
 export default {
-  props: ['value', 'switcher', 'param'],
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    switcher: {
+      type: Function,
+      default: function() {}
+    },
+    param: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       strength: '',
@@ -91,4 +104,5 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CreateWalletInput.scss';
+@import '~@/scss/CustomForms';
 </style>

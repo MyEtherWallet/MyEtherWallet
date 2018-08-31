@@ -13,7 +13,12 @@
 
 <script>
 export default {
-  props: ['content'],
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {};
   }
