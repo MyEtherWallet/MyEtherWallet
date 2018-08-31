@@ -11,7 +11,7 @@
 
   &.dropdown-open {
     border: 1px solid $grey-1;
-    border-bottom: 0;
+    border-bottom: 1px solid $background-color-1;
     border-radius: 4px 4px 0 0;
   }
 
