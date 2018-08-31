@@ -13,7 +13,7 @@
     "build": "vue-cli-service build",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run test:unit && codecov",
-    "precommit": "npm run lint && npm run test && npm run build"
+    "precommit": "npm run lint && npm run test"
   },
   "dependencies": {
     "vue": "^2.5.17",
