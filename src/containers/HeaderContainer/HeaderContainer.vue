@@ -69,7 +69,7 @@
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
-                  class="get-free-wallet"
+                  class="get-free-wallet nopadding"
                   to="/create-wallet">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
