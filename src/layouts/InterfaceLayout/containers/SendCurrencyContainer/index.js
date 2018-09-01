@@ -1,1 +1,1 @@
-export { default } from './SendCurrencyContainer'
+export { default } from './SendCurrencyContainer';

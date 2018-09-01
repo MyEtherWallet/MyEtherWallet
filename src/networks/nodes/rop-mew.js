@@ -1,6 +1,4 @@
-import {
-  ROP
-} from '../types'
+import { ROP } from '../types';
 export default {
   type: ROP,
   service: 'myetherwallet.com',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

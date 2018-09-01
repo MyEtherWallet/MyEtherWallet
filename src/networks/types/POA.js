@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-poa.json'
-import contracts from '@/contracts/contract-abi-poa.json'
+import tokens from '@/tokens/tokens-poa.json';
+import contracts from '@/contracts/contract-abi-poa.json';
 
 export default {
   name: 'POA',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://poaexplorer.com/address/[[address]]',
   chainID: 99,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

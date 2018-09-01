@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-eosc.json'
-import contracts from '@/contracts/contract-abi-eosc.json'
+import tokens from '@/tokens/tokens-eosc.json';
+import contracts from '@/contracts/contract-abi-eosc.json';
 
 export default {
   name: 'EOSC',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.eos-classic.io/addr/[[address]]',
   chainID: 20,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

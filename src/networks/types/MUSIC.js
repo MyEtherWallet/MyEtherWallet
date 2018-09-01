@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-music.json'
-import contracts from '@/contracts/contract-abi-music.json'
+import tokens from '@/tokens/tokens-music.json';
+import contracts from '@/contracts/contract-abi-music.json';
 
 export default {
   name: 'MUSIC',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.musicoin.org/account/[[address]]',
   chainID: 7762959,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

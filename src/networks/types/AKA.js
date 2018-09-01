@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-akroma.json'
-import contracts from '@/contracts/contract-abi-akroma.json'
+import tokens from '@/tokens/tokens-akroma.json';
+import contracts from '@/contracts/contract-abi-akroma.json';
 
 export default {
   name: 'AKA',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://akroma.io/explorer/address/[[address]]',
   chainID: 200625,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

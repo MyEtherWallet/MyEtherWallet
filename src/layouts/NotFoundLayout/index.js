@@ -1,1 +1,1 @@
-export { default } from './NotFoundLayout'
+export { default } from './NotFoundLayout';

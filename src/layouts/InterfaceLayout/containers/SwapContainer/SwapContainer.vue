@@ -1,7 +1,7 @@
 <template>
   <div class="swap-container">
     <div class="title-block">
-      <interface-container-title :title="$t('common.swap')"></interface-container-title>
+      <interface-container-title :title="$t('common.swap')"/>
       <div class="images">
         <img :src="images.kybernetowrk">
         <img :src="images.bity">
@@ -14,21 +14,37 @@
           <div class="title">
             <h4>{{ $t('common.from') }}</h4>
           </div>
-          <currency-picker :currency="fromArray" :token="true" page="SwapContainerFrom"></currency-picker>
+          <currency-picker
+            :currency="fromArray"
+            :token="true"
+            page="SwapContainerFrom"/>
           <div class="the-form amount-number">
-            <input type="number" name="" value="" placeholder="Deposit Amount" />
+            <input
+              type="number"
+              name=""
+              value=""
+              placeholder="Deposit Amount" >
           </div>
         </div>
         <div class="exchange-icon">
-          <i class="fa fa-exchange" aria-hidden="true"></i>
+          <i
+            class="fa fa-exchange"
+            aria-hidden="true"/>
         </div>
         <div class="amount">
           <div class="title">
             <h4>{{ $t('common.to') }}</h4>
           </div>
-          <currency-picker :currency="toArray" :token="true" page="SwapContainerTo"></currency-picker>
+          <currency-picker
+            :currency="toArray"
+            :token="true"
+            page="SwapContainerTo"/>
           <div class="the-form amount-number">
-            <input type="number" name="" value="" placeholder="Received Amount" />
+            <input
+              type="number"
+              name=""
+              value=""
+              placeholder="Received Amount" >
           </div>
         </div>
       </div>
@@ -41,7 +57,11 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Please Enter The Address" />
+        <input
+          type="number"
+          name=""
+          value=""
+          placeholder="Please Enter The Address" >
       </div>
     </div>
 
@@ -68,10 +88,16 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount" />
+        <input
+          type="number"
+          name=""
+          value=""
+          placeholder="Gas Amount" >
         <div class="good-button-container">
           <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          <i
+            class="fa fa-check-circle good-button not-good"
+            aria-hidden="true"/>
         </div>
       </div>
     </div>
@@ -80,7 +106,9 @@
       <h4>1 ETH = 0.000231 BTC</h4>
       <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
-        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        <i
+          class="fa fa-long-arrow-right"
+          aria-hidden="true"/>
       </div>
       <div class="buy-eth">
         <span>Buy ETH with</span>
@@ -91,13 +119,13 @@
   </div>
 </template>
 <script>
-import CurrencyPicker from '../../components/CurrencyPicker'
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
+import CurrencyPicker from '../../components/CurrencyPicker';
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 
-import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
-import ImageBity from '@/assets/images/etc/bity.png'
-import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
+import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
+import ImageBity from '@/assets/images/etc/bity.png';
+import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 
 export default {
   components: {
@@ -105,25 +133,33 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker
   },
-  data () {
+  data() {
     return {
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
         visaMaster: ImageVisaMaster
       },
-      toArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}],
-      fromArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}]
-    }
+      toArray: [
+        { symbol: 'BTC', name: 'Bitcoin' },
+        { symbol: 'Aug', name: 'Augur' },
+        { symbol: 'OMG', name: 'OhMyGod' }
+      ],
+      fromArray: [
+        { symbol: 'BTC', name: 'Bitcoin' },
+        { symbol: 'Aug', name: 'Augur' },
+        { symbol: 'OMG', name: 'OhMyGod' }
+      ]
+    };
   },
   methods: {
-    copyAddress () {
-      alert('This doesn\'t work for now.')
+    copyAddress() {
+      alert("This doesn't work for now.");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SwapContainer.scss";
+@import 'SwapContainer.scss';
 </style>
