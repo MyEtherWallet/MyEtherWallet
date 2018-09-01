@@ -13,4 +13,9 @@ function doesExists(val) {
   return val !== undefined && val !== null;
 }
 
-export default { isJson, doesExists };
+function padLeftEven(hex) {
+  hex = hex.length % 2 !== 0 ? '0' + hex : hex;
+  return hex;
+}
+
+export default { isJson, doesExists, padLeftEven };

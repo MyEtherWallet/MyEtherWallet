@@ -2,14 +2,13 @@
 
 .wrap {
   background-color: $about-mew-spaceman-background-color;
-  background-image: url('~@/assets/images/etc/help-left-bg.png'), url('~@/assets/images/etc/help-right-bg.png');
-
+  background-image: url('~@/assets/images/etc/help-left-bg.png'),
+    url('~@/assets/images/etc/help-right-bg.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center, right center;
   padding: 90px 0;
 }
-
 
 .block-title {
   color: white;
@@ -22,7 +21,6 @@
   }
 }
 
-
 .search-form {
   position: relative;
 
@@ -31,10 +29,8 @@
     width: 700px;
     margin: 0 auto;
     display: block;
-
   }
 }
-
 
 .searchable-contents {
   margin-top: 30px;
@@ -43,4 +39,3 @@
     color: white;
   }
 }
-

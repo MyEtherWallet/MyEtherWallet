@@ -11,7 +11,7 @@
   max-width: 550px;
 
   .progress-bar {
-    animation-duration: .5s;
+    animation-duration: 0.5s;
     animation-name: progressbarGrow;
     background-color: $nav-tab--progress-bar-background-color;
     height: 6px;
@@ -19,14 +19,17 @@
   }
 
   @keyframes progressbarGrow {
-    from {width: 33.33%;}
-    to {width: 66.66%;}
+    from {
+      width: 33.33%;
+    }
+    to {
+      width: 66.66%;
+    }
   }
 
   .tab-pane {
     min-height: 500px;
     padding: 50px;
-
   }
 }
 
@@ -34,9 +37,9 @@
   margin-bottom: 40px;
 }
 
-
 .user-input-container {
   display: flex;
+
   .user-input {
     margin: 0 auto;
     display: flex;
@@ -51,12 +54,12 @@
         width: 280px;
         text-decoration: none;
         text-align: center;
-
       }
     }
 
     .printer-icon {
       margin-left: 20px;
+
       .icon {
         height: 30px;
       }
@@ -88,19 +91,13 @@
   pointer-events: none;
 }
 
-
 .title-block {
   display: flex;
   margin-bottom: 40px;
+
   .title-popover {
     display: flex;
     margin: 0 auto;
     align-items: center;
   }
 }
-
-
-
-
-
-
