@@ -5,12 +5,14 @@
 
   .title-block {
     position: relative;
+
     .images {
       top: 22px;
       right: 25px;
       position: absolute;
       display: flex;
       align-items: center;
+
       img {
         height: 30px;
         margin-left: 20px;
@@ -24,9 +26,11 @@
     .title-container {
       .title {
         padding: 0 8px;
+
         .title-and-popover {
           display: flex;
         }
+
         h4 {
           margin-bottom: 2px;
         }
@@ -50,7 +54,6 @@
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
-
       }
 
       .exchange-icon {
@@ -183,7 +186,7 @@
         display: flex;
         margin-left: auto;
 
-        >span {
+        > span {
           margin-right: 15px;
         }
       }
@@ -219,10 +222,10 @@
     .buy-eth {
       margin-top: 20px;
       color: $mew-green;
+
       img {
         height: 20px;
       }
-
     }
   }
 }

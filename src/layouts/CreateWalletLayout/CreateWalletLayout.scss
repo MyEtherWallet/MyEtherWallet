@@ -1,7 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
-
 .wrap {
   background-color: $background-color-1;
   padding: 0;
@@ -10,13 +8,13 @@
 .title-block {
   margin-bottom: 40px;
   display: flex;
+
   .title-popover {
     margin: 0 auto;
     display: flex;
     align-items: center;
   }
 }
-
 
 .nav-tab-user-input-box {
   background-color: $background-color-white;
@@ -29,13 +27,16 @@
   }
 
   @keyframes progreesbar-grow {
-    from {width: 0%;}
-    to {width: 33.33%;}
+    from {
+      width: 0%;
+    }
+    to {
+      width: 33.33%;
+    }
   }
 
   .tab-pane {
     min-height: 500px;
     padding: 50px;
-
   }
 }
