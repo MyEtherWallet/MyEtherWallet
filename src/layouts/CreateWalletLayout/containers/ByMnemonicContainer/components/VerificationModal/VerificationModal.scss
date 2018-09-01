@@ -34,7 +34,8 @@
         }
 
         .word.verification {
-          border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color-verification;
+          border-bottom: 1px solid
+            $border-bottom--mnemonic-phrase-key-color-verification;
         }
       }
     }

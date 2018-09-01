@@ -3,7 +3,7 @@ import * as ethUtil from 'ethereumjs-util';
 import * as HDKey from 'hdkey';
 import HardwareWalletInterface from '../hardwareWallet-interface';
 import { getDerivationPath, paths } from './deterministicWalletPath';
-
+import { Misc } from '@/helpers';
 import SecalotEth from './secalotEth';
 import SecalotUsb from './secalotUsb';
 import { u2f } from '../utils/u2f-api';
@@ -253,33 +253,34 @@ export default class SecalotWallet extends HardwareWalletInterface {
   }
 
   signTxSecalot(rawTx) {
+    const app = new SecalotEth(this.transport);
+    const tx = new EthereumjsTx(rawTx);
+
     return new Promise((resolve, reject) => {
-      const localCallback = (result, error) => {
-        if (typeof error !== 'undefined') {
-          error = error.errorCode ? u2f.getErrorByCode(error.errorCode) : error;
-          reject(error);
+      app.signTransaction(this.path, tx, (res, err) => {
+        if (typeof err !== 'undefined') {
+          err = err.errorCode ? u2f.getErrorByCode(err.errorCode) : err;
+          reject(err);
           return;
         }
-        rawTx.v = this.sanitizeHex(result['v']);
-        rawTx.r = this.sanitizeHex(result['r']);
-        rawTx.s = this.sanitizeHex(result['s']);
+        rawTx.v = this.sanitizeHex(res['v']);
+        rawTx.r = this.sanitizeHex(res['r']);
+        rawTx.s = this.sanitizeHex(res['s']);
         const eTx_ = new EthereumjsTx(rawTx);
         rawTx.rawTx = JSON.stringify(rawTx);
-        rawTx.signedTx = this.sanitizeHex(eTx_.serialize().toString('hex'));
+        rawTx.rawTransaction = this.sanitizeHex(
+          eTx_.serialize().toString('hex')
+        );
         rawTx.isError = false;
         resolve(rawTx);
-      };
-      // uiFuncs.notifier.info("Touch the LED for 3 seconds to sign the transaction. Or tap the LED to cancel.");
-      const app = new SecalotEth(this.transport);
-      const tx = new EthereumjsTx(rawTx);
-      app.signTransaction(this.path, tx, localCallback);
+      });
     });
   }
 
   sanitizeHex(hex) {
     hex = hex.substring(0, 2) === '0x' ? hex.substring(2) : hex;
     if (hex === '') return '';
-    return '0x' + this.padLeftEven(hex);
+    return '0x' + Misc.padLeftEven(hex);
   }
 
   // (End) Internal methods underlying wallet usage methods

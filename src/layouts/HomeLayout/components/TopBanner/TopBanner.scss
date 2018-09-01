@@ -1,11 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
-
 .banner {
   padding: 30px;
   padding-right: 0;
 
-  @media all and (max-width: 1100px){
+  @media all and (max-width: 1100px) {
     padding: 40px 0 50px;
   }
 
@@ -31,7 +30,7 @@
   .banner-image {
     flex: 1;
 
-    @media all and (max-width: 700px){
+    @media all and (max-width: 700px) {
       display: none;
     }
 
@@ -40,22 +39,21 @@
       height: 452px;
       margin: 0 0 0 auto;
 
-      @media all and (max-width: 1100px){
+      @media all and (max-width: 1100px) {
         height: initial;
         margin-left: 20px;
         width: 300px;
       }
     }
   }
-}// .banner
+} // .banner
 
 .promo-cards {
   grid-column-gap: 30px;
 
-  @media all and (max-width: $tablet-width){
+  @media all and (max-width: $tablet-width) {
     display: block;
   }
-
 
   .card-block {
     border-radius: 4px;
@@ -72,9 +70,9 @@
       background-color: $unlock-wallet-background-color;
     }
 
-    @media all and (min-width: $tablet-width + 1){
+    @media all and (min-width: $tablet-width + 1) {
       top: 0;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
 
       &:hover {
         box-shadow: 0 5px 24px $topbanner-block-box-shadow-color;
@@ -82,14 +80,14 @@
       }
     }
 
-    @media all and (max-width: $mobile-width){
+    @media all and (max-width: $mobile-width) {
       padding: 30px;
     }
 
     .card-image {
       padding-right: 40px;
 
-      @media all and (max-width: $mobile-width){
+      @media all and (max-width: $mobile-width) {
         display: none;
       }
 
