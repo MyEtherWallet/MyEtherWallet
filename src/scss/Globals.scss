@@ -95,7 +95,7 @@ body {
 
 ::placeholder {
   color: $text-black;
-  opacity: .2;
+  opacity: 0.2;
 }
 
 *:focus {
@@ -123,8 +123,8 @@ button {
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -823,7 +823,7 @@ h6 {
   overflow: hidden;
 
   .progress-bar {
-    animation-duration: .5s;
+    animation-duration: 0.5s;
     background-color: $nav-tab--progress-bar-background-color;
     height: 6px;
   }
@@ -880,7 +880,7 @@ h6 {
       pointer-events: none;
       position: absolute;
       top: 6px;
-      transition: all .5s ease;
+      transition: all 0.5s ease;
 
       &.white {
         color: $text-color-1;
@@ -905,7 +905,7 @@ h6 {
     position: absolute;
     right: 0;
     top: 0;
-    transition: .4s;
+    transition: 0.4s;
 
     &::before {
       background-color: $css-toggle-button--button-background-color;
@@ -915,7 +915,7 @@ h6 {
       left: 4px;
       padding: 1px 7px;
       position: absolute;
-      transition: .4s;
+      transition: 0.4s;
       width: 25px;
     }
 
@@ -968,7 +968,7 @@ h6 {
     position: absolute;
     right: 0;
     top: 0;
-    transition: .4s;
+    transition: 0.4s;
 
     &::before {
       background-color: $text-white;
@@ -978,7 +978,7 @@ h6 {
       left: 3px;
       padding: 1px 7px;
       position: absolute;
-      transition: .4s;
+      transition: 0.4s;
       width: 23px;
     }
 
@@ -1112,7 +1112,7 @@ h6 {
     background-color: $background-color-white;
     border: solid 1px $button--border-color-2;
     color: $text-color-6;
-    font-family: arial;
+    font-family: Arial, sans-serif;
     min-width: 180px;
     padding: 8px 15px;
     text-align: left;

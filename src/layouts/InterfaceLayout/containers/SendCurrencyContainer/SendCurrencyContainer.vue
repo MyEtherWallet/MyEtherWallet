@@ -158,11 +158,6 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee"-->
-    <!--:gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()"-->
-    <!--:to="address" :value="amount" :gas="gasLimit" :data="data"-->
-    <!--:nonce="nonce + 1"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -261,9 +256,6 @@ export default {
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
-    },
-    showSuccessModal() {
-      this.$children[6].$refs.success.show();
     },
     async createTx() {
       const jsonInterface = [
