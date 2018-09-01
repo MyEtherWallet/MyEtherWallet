@@ -17,7 +17,6 @@
     "precommit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "node-fetch": "^2.2.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
@@ -49,7 +48,9 @@
     "ethjs-unit": "^0.1.6",
     "hdkey": "^1.1.0",
     "husky": "^0.14.3",
+    "imagemin-webpack-plugin": "^2.2.0",
     "keccak": "^1.4.0",
+    "node-fetch": "^2.2.0",
     "node-sass": "^4.9.0",
     "postcss-import": "^12.0.0",
     "postcss-url": "^8.0.0",
