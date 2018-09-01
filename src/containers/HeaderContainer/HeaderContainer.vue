@@ -30,7 +30,7 @@
                 <b-nav-item
                   to="/"
                   exact
-                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
+                  @click="scrollTop()"> {{ $t("header.home") }} </b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
                 <b-nav-item
@@ -69,7 +69,7 @@
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
-                  class="get-free-wallet"
+                  class="get-free-wallet nopadding"
                   to="/create-wallet">
                   <div class="get-free-wallet-button">
                     Get a Free Wallet
@@ -84,7 +84,7 @@
                     <blockie
                       :address="wallet.getAddressString()"
                       width="35px"
-                      height="35px"/>
+                      height="35px" />
                   </template>
                   <b-dropdown-item @click="logout">
                     Log out

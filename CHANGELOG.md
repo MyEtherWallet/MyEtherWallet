@@ -10,6 +10,7 @@
 - Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
 
 ### UI/UX
+- Add FAQs page [#58](https://github.com/MyEtherWallet/MyEtherWallet/pull/58)
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 
 ### Devop
