@@ -6,13 +6,13 @@
   align-items: center;
 }
 
-select, input {
+select,
+input {
   width: 100%;
   border: 0;
   background-color: white;
   padding: 13px 13px;
   border-radius: 4px;
-
 }
 
 select {
@@ -21,25 +21,20 @@ select {
   position: relative;
 }
 
-input {
-  
-}
-
 .select-block {
   position: relative;
 
   .select-down-arrow {
     position: absolute;
     top: 8px;
-    right: 0px;
+    right: 0;
     font-size: 22px;
     background-color: white;
     width: 34px;
     pointer-events: none;
     font-weight: 400;
-  }  
+  }
 }
-
 
 .block-center {
   text-align: center;
