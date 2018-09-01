@@ -149,7 +149,7 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
       offset + maxChunkSize > rawData.length
         ? rawData.length - offset
         : maxChunkSize;
-    const buffer = Buffer.alloc(5, chunkSize);
+    const buffer = Buffer.alloc(5 + chunkSize);
 
     buffer[0] = 0x80;
     buffer[1] = 0xf2;

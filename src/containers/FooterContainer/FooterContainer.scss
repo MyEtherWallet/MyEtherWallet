@@ -68,7 +68,7 @@ a:active {
       margin-top: 20px;
       max-height: 600px;
       overflow: hidden;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
 
       @media all and (max-width: $tablet-width) {
         .mobile-hide {
@@ -168,7 +168,7 @@ a:active {
   }
 
   .copyright {
-    
+
     text-align: center;
 
     p {

@@ -11,7 +11,11 @@
 
     <p>
       Here is a list of default ERC-20 tokens that MEW supports (as of May 28, 2017).
-      However, <a href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html">any ERC-20 token can be added to your local interface by following these instructions</a>.
+      However,
+      <a href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html">
+        any ERC-20 token can be added to your local
+        interface by following these instructions.
+      </a>
     </p>
 
     <h5>Related Reading</h5>

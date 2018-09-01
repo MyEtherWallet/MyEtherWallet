@@ -74,7 +74,7 @@
 
     @media all and (min-width: $tablet-width + 1){
       top: 0;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
 
       &:hover {
         box-shadow: 0 5px 24px $topbanner-block-box-shadow-color;
