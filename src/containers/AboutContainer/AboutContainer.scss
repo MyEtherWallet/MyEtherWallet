@@ -26,7 +26,7 @@
     position: relative;
 
     .text-content {
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         left: 0;
         position: absolute;
         top: 50px;
@@ -38,13 +38,12 @@
         line-height: 19px;
         margin-bottom: 30px;
 
-        @media all and (min-width: $tablet-width + 1){
+        @media all and (min-width: $tablet-width + 1) {
           width: 380px;
         }
       }
 
       .watch-video {
-
         a {
           color: $text-color-1;
         }
@@ -72,12 +71,12 @@
       height: 515px;
       position: relative;
 
-      @media all and (max-width: $mobile-width){
+      @media all and (max-width: $mobile-width) {
         height: 715px;
       }
 
       .spaceman {
-        @media all and (max-width: $tablet-width){
+        @media all and (max-width: $tablet-width) {
           height: 200px;
         }
 
@@ -89,26 +88,56 @@
         z-index: 1;
 
         @keyframes spaceman-fly {
-          0% { bottom: 89px; right: 75%; }
-          25% { bottom: 60px; right: 70%; }
-          50% { bottom: 80px; }
-          75% { bottom: 40px; }
-          100% { bottom: 89px; right: 75%; }
+          0% {
+            bottom: 89px;
+            right: 75%;
+          }
+
+          25% {
+            bottom: 60px;
+            right: 70%;
+          }
+
+          50% {
+            bottom: 80px;
+          }
+
+          75% {
+            bottom: 40px;
+          }
+
+          100% {
+            bottom: 89px;
+            right: 75%;
+          }
         }
 
-        @media all and (max-width: $tablet-width){
+        @media all and (max-width: $tablet-width) {
           @keyframes spaceman-fly {
-            0% { bottom: 109px; right: 43%; }
-            25% { bottom: 80px; right: 40%; }
-            50% { bottom: 100px; }
-            75% { bottom: 60px; }
-            100% { bottom: 109px; right: 43%; }
+            0% {
+              bottom: 109px;
+              right: 43%;
+            }
+            25% {
+              bottom: 80px;
+              right: 40%;
+            }
+            50% {
+              bottom: 100px;
+            }
+            75% {
+              bottom: 60px;
+            }
+            100% {
+              bottom: 109px;
+              right: 43%;
+            }
           }
         }
       } // .spaceman
 
       .mew-icon {
-        @media all and (max-width: $tablet-width){
+        @media all and (max-width: $tablet-width) {
           height: 200px;
           top: 170px;
         }
@@ -132,7 +161,7 @@
       grid-column-gap: 130px;
       grid-row-gap: 90px;
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         grid-row-gap: 70px;
         grid-template-columns: 1fr;
       }
@@ -143,7 +172,7 @@
         margin: 0;
         padding: 0;
 
-        @media all and (max-width: $mobile-width){
+        @media all and (max-width: $mobile-width) {
           flex-direction: column;
 
           .image {
@@ -164,7 +193,7 @@
         .image {
           padding-right: 30px;
 
-          @media all and (max-width: $mobile-width){
+          @media all and (max-width: $mobile-width) {
             padding-right: 0;
           }
 

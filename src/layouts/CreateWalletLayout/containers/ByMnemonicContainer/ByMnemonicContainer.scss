@@ -14,8 +14,12 @@
     }
 
     @keyframes progressGrow {
-      from {width: 33.33%;}
-      to {width: 66.66%;}
+      from {
+        width: 33.33%;
+      }
+      to {
+        width: 66.66%;
+      }
     }
 
     .tab-pane {
