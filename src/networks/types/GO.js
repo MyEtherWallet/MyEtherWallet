@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-go.json'
-import contracts from '@/contracts/contract-abi-go.json'
+import tokens from '@/tokens/tokens-go.json';
+import contracts from '@/contracts/contract-abi-go.json';
 
 export default {
   name: 'GO',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.gochain.io/addr/[[address]]',
   chainID: 60,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

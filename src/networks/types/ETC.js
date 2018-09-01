@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-etc.json'
-import contracts from '@/contracts/contract-abi-etc.json'
+import tokens from '@/tokens/tokens-etc.json';
+import contracts from '@/contracts/contract-abi-etc.json';
 
 export default {
   name: 'ETC',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://gastracker.io/address/[[address]]',
   chainID: 61,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

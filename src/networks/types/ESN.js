@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-esn.json'
-import contracts from '@/contracts/contract-abi-esn.json'
+import tokens from '@/tokens/tokens-esn.json';
+import contracts from '@/contracts/contract-abi-esn.json';
 
 export default {
   name: 'ESN',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://ethersocial.net/addr/[[address]]',
   chainID: 31102,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

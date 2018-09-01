@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-clo.json'
-import contracts from '@/contracts/contract-abi-clo.json'
+import tokens from '@/tokens/tokens-clo.json';
+import contracts from '@/contracts/contract-abi-clo.json';
 
 export default {
   name: 'CLO',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://cloexplorer.org/addr/[[address]]',
   chainID: 820,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

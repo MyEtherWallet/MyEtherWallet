@@ -1,10 +1,23 @@
 <template>
-  <b-modal ref="mnemonicPhrase" hide-footer class="bootstrap-modal modal-software" title="Enter Mnemonic Phrase" centered>
+  <b-modal
+    ref="mnemonicPhrase"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="Enter Mnemonic Phrase"
+    centered>
     <form class="private-key-form">
       <div class="input-container">
-        <input type="text" name="PrivateKey" v-model="mnemonicPhrase" autocomplete="off" />
+        <input
+          v-model="mnemonicPhrase"
+          type="text"
+          name="PrivateKey"
+          autocomplete="off">
       </div>
-      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" mnemonicPhrase === '' && mnemonicPhrase.length === 0">
+      <button
+        :disabled=" mnemonicPhrase === '' && mnemonicPhrase.length === 0"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
+        @click.prevent="unlockWallet">
         Continue
       </button>
     </form>
@@ -12,17 +25,21 @@
 </template>
 
 <script>
-
 export default {
-  props: ['openMnemonicPasswordModal'],
-  data () {
-    return {
-      mnemonicPhrase: ''
+  props: {
+    openMnemonicPasswordModal: {
+      type: Function,
+      default: function() {}
     }
   },
+  data() {
+    return {
+      mnemonicPhrase: ''
+    };
+  },
   methods: {
-    unlockWallet () {
-      this.openMnemonicPasswordModal(this.mnemonicPhrase)
+    unlockWallet() {
+      this.openMnemonicPasswordModal(this.mnemonicPhrase);
       // this.$store.dispatch('decryptWallet', MnemonicWallet.unlock({
       //   mnemonicPhrase: 'manualPrivateKey',
       //   mnemonicPassword: this.privateKey
@@ -31,8 +48,8 @@ export default {
       // this.$router.push({ path: 'interface' })
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "MnemonicModal.scss";
+@import 'MnemonicModal.scss';
 </style>

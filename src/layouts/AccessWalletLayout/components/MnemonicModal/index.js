@@ -1,1 +1,1 @@
-export { default } from './MnemonicModal'
+export { default } from './MnemonicModal';

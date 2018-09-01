@@ -1,1 +1,1 @@
-export { default } from './HardwareModal'
+export { default } from './HardwareModal';

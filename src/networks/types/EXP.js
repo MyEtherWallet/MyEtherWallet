@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-exp.json'
-import contracts from '@/contracts/contract-abi-exp.json'
+import tokens from '@/tokens/tokens-exp.json';
+import contracts from '@/contracts/contract-abi-exp.json';
 
 export default {
   name: 'EXP',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'http://www.gander.tech/address/[[address]]',
   chainID: 2,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

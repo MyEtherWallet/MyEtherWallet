@@ -15,14 +15,14 @@
     </p>
 
     <h5>Related Reading</h5>
-      <ul>
-        <li>
-          <a href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html">How can I add a non-default token to MEW?</a>
-        </li>
-        <li>
-          <a href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html">I am throwing a #FOMOFest (aka a token sale, token creation period, ICO) and want to add my token to MEW for all my investors. What do I do?</a>
-        </li>
-      </ul>
+    <ul>
+      <li>
+        <a href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html">How can I add a non-default token to MEW?</a>
+      </li>
+      <li>
+        <a href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html">I am throwing a #FOMOFest (aka a token sale, token creation period, ICO) and want to add my token to MEW for all my investors. What do I do?</a>
+      </li>
+    </ul>
 
     <h5>Default Tokens</h5>
 
@@ -128,14 +128,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

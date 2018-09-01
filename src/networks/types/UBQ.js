@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-ubq.json'
-import contracts from '@/contracts/contract-abi-ubq.json'
+import tokens from '@/tokens/tokens-ubq.json';
+import contracts from '@/contracts/contract-abi-ubq.json';
 
 export default {
   name: 'UBQ',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://ubiqscan.io/en/address/[[address]]',
   chainID: 8,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

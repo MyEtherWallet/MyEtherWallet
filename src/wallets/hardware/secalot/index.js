@@ -1,5 +1,3 @@
-import SecalotWallet from './secalotWallet'
+import SecalotWallet from './secalotWallet';
 
-export {
-  SecalotWallet
-}
+export { SecalotWallet };

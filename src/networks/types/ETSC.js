@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-etsc.json'
-import contracts from '@/contracts/contract-abi-etsc.json'
+import tokens from '@/tokens/tokens-etsc.json';
+import contracts from '@/contracts/contract-abi-etsc.json';
 
 export default {
   name: 'ETSC',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://explorer.ethereumsocial.kr/addr/[[address]]',
   chainID: 28,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: ''
+};

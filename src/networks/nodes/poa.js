@@ -1,6 +1,4 @@
-import {
-  POA
-} from '../types'
+import { POA } from '../types';
 export default {
   type: POA,
   service: 'infura.io',
@@ -9,4 +7,4 @@ export default {
   auth: false,
   username: '',
   password: ''
-}
+};

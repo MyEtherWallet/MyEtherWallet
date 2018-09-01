@@ -1,1 +1,1 @@
-export { default } from './InterfaceTokensModal'
+export { default } from './InterfaceTokensModal';

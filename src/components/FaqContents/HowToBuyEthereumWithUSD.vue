@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1 class="page__title" itemprop="headline" id="articleTitleGUIDEHowtobuyEthereumETHwithUSD">[GUIDE] How to buy Ethereum (ETH) with USD</h1>
+    <h1
+      id="articleTitleGUIDEHowtobuyEthereumETHwithUSD"
+      class="page__title"
+      itemprop="headline">[GUIDE] How to buy Ethereum (ETH) with USD</h1>
     <div class="content">
       <h3 id="hello-and-welcome-to-ethereum-">Hello and welcome to Ethereum!</h3>
       <p>Ethereum and digital currencies are a pretty new world and in this new world, things can be a little bit different. First, you are responsible for your stuff. Your investments, your choices, your security. There are no babysitters or undo buttons or a bank to call up and reverse your transaction. The power of the blockchain is this, but it's also a dangerous thing if you are expecting to have all the cushy things you've come to enjoy.</p>
@@ -52,9 +55,9 @@
         </li>
         <li><p>To safely keep your account you have 3 pieces of information:</p>
           <ul>
-          <li>Your address (0x7573aB.....)</li>
-          <li>Your password</li>
-          <li>Your private key</li>
+            <li>Your address (0x7573aB.....)</li>
+            <li>Your password</li>
+            <li>Your private key</li>
           </ul>
         </li>
       </ol>
@@ -115,12 +118,18 @@
 
     <div class="row">
       <p class="col">
-        <a href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/how-to-buy-ethereum-with-usd.md" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/how-to-buy-ethereum-with-usd.md"
+          target="_blank"
+          rel="noopener noreferrer">
           Found a typo? Want to improve this article? <br> It's easy!
         </a>
       </p>
       <p class="col">
-        <a href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html"
+          target="_blank"
+          rel="noopener noreferrer">
           Don't know how to submit a pull request? <br> It's also easy!
         </a>
       </p>
@@ -131,14 +140,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

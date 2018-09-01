@@ -1,5 +1,3 @@
-import MnemonicWallet from './mnemonicWallet'
+import MnemonicWallet from './mnemonicWallet';
 
-export {
-  MnemonicWallet
-}
+export { MnemonicWallet };

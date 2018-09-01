@@ -1,1 +1,1 @@
-export { default } from './InterfaceBottomText'
+export { default } from './InterfaceBottomText';

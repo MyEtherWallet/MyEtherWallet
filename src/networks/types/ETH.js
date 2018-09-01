@@ -1,5 +1,5 @@
-import tokens from '@/tokens/tokens-eth.json'
-import contracts from '@/contracts/contract-abi-eth.json'
+import tokens from '@/tokens/tokens-eth.json';
+import contracts from '@/contracts/contract-abi-eth.json';
 
 export default {
   name: 'ETH',
@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
   chainID: 1,
   tokens: tokens,
-  contracts: contracts
-}
+  contracts: contracts,
+  ensResolver: '0x314159265dd8dbb310642f98f50c066173c1259b'
+};
