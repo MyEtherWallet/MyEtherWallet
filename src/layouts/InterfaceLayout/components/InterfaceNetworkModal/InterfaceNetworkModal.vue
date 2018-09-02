@@ -3,6 +3,7 @@
     <b-modal
       ref="network"
       hide-footer
+      centered
       class="bootstrap-modal network nopadding max-height-1"
       title="Network">
       <div class="content-block">
@@ -29,132 +30,161 @@
           v-for="(key, index) in Object.keys($store.state.Networks)"
           :key="key + index"
           class="content-block">
-          <h4 :class="key.toLowerCase()">{{ key }}</h4>
-          <div class="grid-3">
-            <p
-              v-for="net in $store.state.Networks[key]"
-              :key="net.service"
-              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
-              class="switch-network"
-              @click="switchNetwork(net)">{{ net.service }}</p>
+          <div class="network-title">
+            <img src="@/assets/images/networks/eth.svg">
+            <h4
+              :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">
+              {{ key }}</h4>
           </div>
-        </div>
-        <div
-          v-if="customNetworks.length > 0"
-          class="content-block">
-          <h4 class="cust">Custom Networks</h4>
           <div
-            v-for="(net, idx) in customNetworks"
-            :key="net.service + '('+ net.type.name + ')' + idx"
-            class="grid-3">
+            ref="networkList"
+            class="network-list">
             <div
-              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
-              class="switch-network custom-network-item">
-              <p @click="switchNetwork(net)">{{ net.service }} {{ '('+ net.type.name + ')' }}</p>
-              <i
-                class="fa fa-times-circle"
-                @click.prevent="removeNetwork(net, idx)"/>
+              v-for="(key, index) in Object.keys($store.state.Networks)"
+              :key="key + index"
+              class="content-block">
+              <h4 :class="key.toLowerCase()">{{ key }}</h4>
+              <div class="grid-3">
+                <p
+                  v-for="net in $store.state.Networks[key]"
+                  :key="net.service"
+                  :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+                  class="switch-network"
+                  @click="switchNetwork(net)">{{ net.service }}</p>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <form
-        ref="networkAdd"
-        class="network-add hidden">
-        <div class="content-block">
-          <div class="input-block-container">
-            <input
-              v-model="name"
-              class="custom-input-text-1"
-              type="text"
-              name=""
-              placeholder="ETH Node Name"
-              autocomplete="off">
-            <select
-              v-model="selectedNetwork"
-              class="custom-select-1">
-              <option
-                v-for="type in Object.keys(types)"
-                :value="types[type]"
-                :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long |
-                capitalize }}
-              </option>
-            </select>
-            <input
-              v-model="url"
-              class="custom-input-text-1"
-              type="text"
-              name=""
-              placeholder="URL"
-              autocomplete="off">
-            <input
-              v-model="port"
-              class="custom-input-text-1"
-              type="text"
-              name=""
-              placeholder="Port"
-              autocomplete="off">
-            <input
-              v-show="selectedNetwork.name === 'Custom'"
-              v-model="chainID"
-              class="custom-input-text-1"
-              type="number"
-              name=""
-              placeholder="Chain ID"
-              autocomplete="off">
-          </div>
-        </div>
-
-        <div class="content-block">
-          <div class="flex-container">
-            <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
-            <div class="margin-left-auto add-custom-network">
-              <div class="sliding-switch-white">
-                <label class="switch">
-                  <input
-                    type="checkbox"
-                    @click="expendAuth">
-                  <span class="slider round"/>
-                </label>
+            <div
+              v-if="customNetworks.length > 0"
+              class="content-block">
+              <h4 class="cust">Custom Networks</h4>
+              <div
+                v-for="(net, idx) in customNetworks"
+                :key="net.service + '('+ net.type.name + ')' + idx"
+                class="grid-3">
+                <div
+                  :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+                  class="switch-network custom-network-item">
+                  <p @click="switchNetwork(net)">{{ net.service }} {{ '('+ net.type.name + ')' }}</p>
+                  <i
+                    class="fa fa-times-circle"
+                    @click.prevent="removeNetwork(net, idx)"/>
+                </div>
               </div>
             </div>
           </div>
-          <div
-            ref="authForm"
-            class="auth-form-container hidden">
-            <input
-              v-model="username"
-              class="custom-input-text-1"
-              type="text"
-              name=""
-              placeholder="User Name"
-              autocomplete="off">
-            <input
-              v-model="password"
-              class="custom-input-text-1"
-              type="password"
-              name=""
-              placeholder="Password"
-              autocomplete="off">
-          </div>
-        </div>
+          <form
+            ref="networkAdd"
+            class="network-add hidden">
+            <div class="content-block">
+              <div class="input-block-container">
+                <input
+                  v-model="name"
+                  class="custom-input-text-1"
+                  type="text"
+                  name=""
+                  placeholder="ETH Node Name"
+                  autocomplete="off">
+                <select
+                  v-model="selectedNetwork"
+                  class="custom-select-1">
+                  <option
+                    v-for="network in networks"
+                    :value="network"
+                    :key="network.name + network.name_long">
+                    {{ network.name | capitalize }} - {{ network.name_long | capitalize }}
+                  </option>
+                  <input
+                    v-model="name"
+                    class="custom-input-text-1"
+                    type="text"
+                    name=""
+                    placeholder="ETH Node Name"
+                    autocomplete="off">
+                  <select
+                    v-model="selectedNetwork"
+                    class="custom-select-1">
+                    <option
+                      v-for="type in Object.keys(types)"
+                      :value="types[type]"
+                      :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long |
+                      capitalize }}
+                    </option>
+                  </select>
+                  <input
+                    v-model="url"
+                    class="custom-input-text-1"
+                    type="text"
+                    name=""
+                    placeholder="URL"
+                    autocomplete="off">
+                  <input
+                    v-model="port"
+                    class="custom-input-text-1"
+                    type="text"
+                    name=""
+                    placeholder="Port"
+                    autocomplete="off">
+                  <input
+                    v-show="selectedNetwork.name === 'Custom'"
+                    v-model="chainID"
+                    class="custom-input-text-1"
+                    type="number"
+                    name=""
+                    placeholder="Chain ID"
+                    autocomplete="off">
+              </select></div>
+            </div>
 
-        <div class="content-block">
-          <div class="save-button-container">
-            <button
-              class="save-button large-round-button-green-filled clickable"
-              @click.prevent="saveCustomNetwork">
-              {{ $t('interface.save') }}
-            </button>
-            <interface-bottom-text
-              :link-text="$t('interface.learnMore')"
-              :question="$t('interface.dontKnow')"
-              link="/"/>
-          </div>
-        </div>
+            <div class="content-block">
+              <div class="flex-container">
+                <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
+                <div class="margin-left-auto add-custom-network">
+                  <div class="sliding-switch-white">
+                    <label class="switch">
+                      <input
+                        type="checkbox"
+                        @click="expendAuth">
+                      <span class="slider round"/>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                ref="authForm"
+                class="auth-form-container hidden">
+                <input
+                  v-model="username"
+                  class="custom-input-text-1"
+                  type="text"
+                  name=""
+                  placeholder="User Name"
+                  autocomplete="off">
+                <input
+                  v-model="password"
+                  class="custom-input-text-1"
+                  type="password"
+                  name=""
+                  placeholder="Password"
+                  autocomplete="off">
+              </div>
+            </div>
 
-      </form>
-    </b-modal>
+            <div class="content-block">
+              <div class="save-button-container">
+                <button
+                  class="save-button large-round-button-green-filled clickable"
+                  @click.prevent="saveCustomNetwork">
+                  {{ $t('interface.save') }}
+                </button>
+                <interface-bottom-text
+                  :link-text="$t('interface.learnMore')"
+                  :question="$t('interface.dontKnow')"
+                  link="/"/>
+              </div>
+            </div>
+
+          </form>
+    </div></div></b-modal>
   </div>
 </template>
 

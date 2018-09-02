@@ -3,11 +3,11 @@
 
     <install-metamask-modal
       ref="installMetamaskModal"
-      :metamaskmodal="metamaskModalOpen"/>
-    <access-by-mnemonic-phrase-modal
-      ref="accessByMnemonicPhraseModal"
+      :metamaskmodal="installMetamaskModalOpen"/>
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
       :open-password="accessByMnemonicphrasePasswordModalOpen"/>
-    <access-by-mnemonic-phrase-password-modal ref="accessByMnemonicPhrasePassword"/>
+    <mnemonic-password-modal ref="mnemonicPhrasePassword"/>
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
@@ -34,6 +34,7 @@
       ref="softwareModal"
       :open-password="passwordOpen"
       :open-private-key-input="privateKeyOpen"
+      :open-mnemonic-phrase-input="mnemonicphraseModalOpen"
       @file="fileUploaded"/>
 
     <password-modal
@@ -85,8 +86,8 @@ import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
 import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
-import AccessByMnemonicphraseModal from '../../components/MnemonicPasswordModal';
-import AccessByMnemonicphrasePasswordModal from '../../components/NetworkAndAddressModal';
+import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
+import MnemonicModal from '../../components/MnemonicModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -108,8 +109,8 @@ export default {
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
-    'access-by-mnemonic-phrase-modal': AccessByMnemonicphraseModal,
-    'access-by-mnemonic-phrase-password-modal': AccessByMnemonicphrasePasswordModal,
+    'mnemonic-modal': MnemonicModal,
+    'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton
   },
   data() {
@@ -139,7 +140,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -185,11 +186,11 @@ export default {
     installMetamaskModalOpen() {
       this.$refs.installMetamaskModal.$refs.installmetamask.show();
     },
-    accessByMnemonicphraseModalOpen() {
-      this.$refs.accessByMnemonicPhraseModal.$refs.accessbymnemonicphrase.show();
+    mnemonicphraseModalOpen() {
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
     },
     accessByMnemonicphrasePasswordModalOpen() {
-      this.$refs.accessByMnemonicPhrasePassword.$refs.accessbymnemonicphrasepassword.show();
+      this.$refs.mnemonicPhrasePassword.$refs.password.show();
     },
     fileUploaded(e) {
       this.file = e;

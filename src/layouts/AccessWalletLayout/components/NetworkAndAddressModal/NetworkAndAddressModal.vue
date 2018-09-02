@@ -78,6 +78,7 @@
           v-for="(details, index) in orderedAddresses"
           :data-address="'address' + index"
           :key="index"
+          :class="selectedId === 'address' + index ? 'selected' : ''"
           class="address-block address-data"
           @click="setAddress(details, 'address' + index)">
           <li>{{ details.index + 1 }}.</li>
@@ -156,6 +157,7 @@ export default {
   },
   data() {
     return {
+      selectedId: '',
       accessMyWalletBtnDisabled: true,
       walletUnlocked: false,
       connectionActive: false,
@@ -265,10 +267,12 @@ export default {
       this.$router.push({ path: 'interface' });
     },
     setAddress(details, element) {
+      this.selectedId = element;
       this.unselectAllAddresses(element);
       this.hardwareWallet.setActiveAddress(details.address, details.index);
     },
     priorAddressSet() {
+      this.selectedId = '';
       if (this.currentIndex - this.count > 0) {
         this.currentIndex = this.currentIndex - this.count;
         this.displayAddresses = this.hardwareAddresses.slice(
@@ -282,6 +286,7 @@ export default {
       }
     },
     nextAddressSet() {
+      this.selectedId = '';
       if (this.currentIndex + this.count < this.maxIndex) {
         this.currentIndex = this.currentIndex + this.count;
         this.displayAddresses = this.hardwareAddresses.slice(

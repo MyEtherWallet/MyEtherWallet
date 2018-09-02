@@ -1,17 +1,45 @@
 <template>
   <div class="your-password">
-    <tutorial-modal :skip="skip"/>
+    <tutorial-modal
+      ref="tutorialModal"
+      :skip="skip"/>
+    <scan-to-download-modal ref="scanToDownloadModal"/>
+
     <by-json-page-title/>
     <div class="wrap">
       <div class="page-container">
-        <div 
-          v-show="!byJson && !byMnemonic" 
+        <div
+          v-show="!byJson && !byMnemonic"
           class="nav-tab-user-input-box">
           <b-tabs class="x100">
             <div class="progress-bar"/>
             <b-tab
-              title="By JSON File"
+              class="mew-connect-block"
+              title="MEWconnect"
               active>
+
+              <div class="title-block">
+                <div class="title-popover">
+                  <h3>Our App is Available On the App Store and Google Play</h3>
+                </div>
+              </div>
+
+              <div class="appstores">
+                <div class="icons">
+                  <img src="@/assets/images/icons/appstore.png">
+                  <img src="@/assets/images/icons/playstore.png">
+                </div>
+                <div class="download">
+                  <p @click="scanToDownloadModalOpen">Scan to Download</p>
+                </div>
+              </div>
+
+              <div class="bottom-image">
+                <img src="@/assets/images/etc/phones.png">
+              </div>
+
+            </b-tab>
+            <b-tab title="By JSON File">
 
               <div class="title-block">
                 <div class="title-popover">
@@ -59,6 +87,7 @@
 import ByJsonFileContainer from './containers/ByJsonFileContainer';
 import ByMnemonicContainer from './containers/ByMnemonicContainer';
 import TutorialModal from './components/TutorialModal';
+import ScanToDownloadModal from './components/ScanToDownloadModal';
 import CreateWalletInput from './components/CreateWalletInput';
 import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
@@ -69,6 +98,7 @@ export default {
     'by-json-file-container': ByJsonFileContainer,
     'by-mnemonic-container': ByMnemonicContainer,
     'tutorial-modal': TutorialModal,
+    'scan-to-download-modal': ScanToDownloadModal,
     'by-json-page-title': PageTitle,
     'create-wallet-input': CreateWalletInput,
     'create-wallet-input-footer': CreateWalletInputFooter,
@@ -106,7 +136,10 @@ export default {
     },
     skip() {
       localStorage.setItem('skipTutorial', true);
-      this.$children[0].$refs.tutorial.hide();
+      this.$refs.tutorialModal.$refs.tutorial.hide();
+    },
+    scanToDownloadModalOpen() {
+      this.$refs.scanToDownloadModal.$refs.scantodownload.show();
     }
   }
 };
