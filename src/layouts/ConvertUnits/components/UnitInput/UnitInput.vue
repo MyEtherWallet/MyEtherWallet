@@ -4,18 +4,12 @@
       <div class="block-left">
         <div class="select-block">
           <select>
-            <option
-              v-for="data in leftDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}</option>
+            <option v-for="data in leftDropDown" v-bind:key="data.key" value="data.value">{{data.label}}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input
-            type="text"
-            name=""
-            placeholder="Amount">
+          <input type="text" name="" placeholder="Amount">
         </div>
       </div>
 
@@ -28,18 +22,12 @@
       <div class="block-right">
         <div class="select-block">
           <select>
-            <option
-              v-for="data in rightDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}</option>
+            <option v-for="data in rightDropDown" v-bind:key="data.key" value="data.value">{{data.label}}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input
-            type="text"
-            name=""
-            placeholder="Amount">
+          <input type="text" name="" placeholder="Amount">
         </div>
       </div>
     </div>
@@ -48,13 +36,8 @@
 
 <script>
 export default {
-  props: {
-    content: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
+  props: ['content'],
+  data () {
     return {
       leftDropDown: [
         {
@@ -148,11 +131,11 @@ export default {
           value: ''
         }
       ]
-    };
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import 'UnitInput.scss';
+@import "UnitInput.scss";
 </style>

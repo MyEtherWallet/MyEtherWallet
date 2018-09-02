@@ -103,6 +103,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CreateWalletInput.scss';
-@import '~@/scss/CustomForms';
+@import "CreateWalletInput.scss";
 </style>
