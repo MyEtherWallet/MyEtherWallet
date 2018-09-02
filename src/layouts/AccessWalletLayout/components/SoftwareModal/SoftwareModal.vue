@@ -13,6 +13,9 @@
           <img
             :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-json-hover.svg">
           <span>{{ $t("common.jsonF") }}</span>
         </li>
         <li
@@ -21,6 +24,9 @@
           <img
             :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-mnemonic-hover.svg">
           <span>{{ $t("common.mnemonicP") }}</span>
         </li>
         <li
@@ -29,6 +35,9 @@
           <img
             :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-key-hover.svg">
           <span>{{ $t("common.privKey") }}</span>
         </li>
       </ul>
@@ -99,11 +108,7 @@ export default {
       }
     },
     select(ref) {
-      if (this.selected !== ref) {
-        this.selected = ref;
-      } else {
-        this.selected = '';
-      }
+      this.selected = ref;
     },
     uploadFile(e) {
       const self = this;
