@@ -34,8 +34,7 @@
         }
 
         .word.verification {
-          border-bottom: 1px solid
-            $border-bottom--mnemonic-phrase-key-color-verification;
+          border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color-verification;
         }
       }
     }
@@ -52,8 +51,9 @@
   }
 }
 
+
 .verificationTest {
-  > div {
+  >div{
     border-radius: 5px;
     display: grid;
     grid-template-columns: 1fr 8fr;
@@ -81,3 +81,10 @@
     }
   }
 }
+
+
+
+
+
+
+

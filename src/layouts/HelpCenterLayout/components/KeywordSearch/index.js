@@ -1,1 +1,1 @@
-export { default } from './KeywordSearch';
+export { default } from './KeywordSearch'

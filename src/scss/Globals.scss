@@ -96,7 +96,7 @@ body {
 
 ::placeholder {
   color: $text-black;
-  opacity: 0.2;
+  opacity: .2;
 }
 
 *:focus {
@@ -120,11 +120,12 @@ button {
   box-shadow: none !important;
 }
 
+
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -167,12 +168,14 @@ input[type='number']::-webkit-outer-spin-button {
   }
 }
 
+
 // *********************************************************************
 // Standard list styles
 // *********************************************************************
 ul li {
   list-style-type: none;
 }
+
 
 // *********************************************************************
 // Standard link styles
@@ -208,6 +211,7 @@ a {
   text-decoration: underline;
 }
 
+
 // *********************************************************************
 // Standard elements
 // *********************************************************************
@@ -220,14 +224,17 @@ a {
   max-width: 1024px;
   padding: 0;
 
-  @media all and (max-width: $tablet-width) {
+  @media all and (max-width: $tablet-width){
     padding: 0 15px;
   }
 }
 
 .page-container2 {
+
   max-width: 1280px;
+
 }
+
 
 // *********************************************************************
 // Standard text styles
@@ -289,6 +296,7 @@ h6 {
   font-weight: 600;
 }
 
+
 // *********************************************************************
 // Standard flex-box styles
 // *********************************************************************
@@ -318,7 +326,7 @@ h6 {
   align-items: center;
   display: flex;
 
-  > * {
+  >* {
     flex: 1;
   }
 }
@@ -343,6 +351,7 @@ h6 {
   justify-content: space-between;
 }
 
+
 // *********************************************************************
 // Standard grid styles
 // *********************************************************************
@@ -361,6 +370,7 @@ h6 {
   grid-template-columns: 1fr 1fr 1fr 1.5fr;
 }
 
+
 // *********************************************************************
 // Standard buttons
 // *********************************************************************
@@ -375,8 +385,6 @@ h6 {
   font-weight: 500;
   padding: 21px 55px;
   user-select: none;
-  display: inline-block;
-  text-align: center;
 }
 
 .large-round-button-green-border {
@@ -390,6 +398,7 @@ h6 {
   padding: 21px 55px;
   user-select: none;
 }
+
 
 .large-round-button-white-filled {
   background-color: $button--background-color-2;
@@ -480,6 +489,7 @@ h6 {
   display: inline-block;
 }
 
+
 .mid__round-button__blue-filled__blue-border {
   background-color: $button--background-color-4;
   border: 1px solid $button--background-color-4;
@@ -565,6 +575,7 @@ h6 {
   user-select: none;
 }
 
+
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
 // *********************************************************************
@@ -601,9 +612,9 @@ h6 {
 }
 
 .dropdown-toggle::after {
-  position: absolute !important;
-  right: 13px !important;
-  top: 16px !important;
+    position: absolute !important;
+    right: 13px !important;
+    top: 16px !important;
 }
 
 // *********************************************************************
@@ -624,6 +635,7 @@ h6 {
 .nav-link-custom span {
   color: $text-base-color;
 }
+
 
 // *********************************************************************
 // Tooltip
@@ -688,6 +700,7 @@ h6 {
   }
 }
 
+
 // *********************************************************************
 // [Bootstrap] Modal style
 // *********************************************************************
@@ -695,7 +708,6 @@ h6 {
 .modal-header {
   background-color: $bootstrap-modal-header-background-color;
   border-radius: 0;
-  border: 0;
 
   h5 {
     color: $text-white;
@@ -720,6 +732,7 @@ h6 {
     max-width: 530px;
   }
 }
+
 
 .bootstrap-modal-wide {
   .modal-dialog {
@@ -756,7 +769,7 @@ h6 {
     display: flex;
     justify-content: center;
 
-    &.fixed-width-1 {
+    &.fixed-width-1{
       margin: 0 auto;
       width: 250px;
     }
@@ -767,14 +780,18 @@ h6 {
   }
 }
 
-.bootstrap-modal.no-padding .modal-body,
-.bootstrap-modal.nopadding .modal-body {
+.nopadding .modal-body {
   padding: 0;
 }
 
-.bootstrap-modal.padding-40-20 .modal-body {
-  padding: 40px 20px;
+
+.max-height-1 .modal-body {
+  max-height: 405px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
+
+
 
 // Custom modal style for each pages -------------------------------
 .access-my-wallet-options {
@@ -788,6 +805,7 @@ h6 {
   }
 }
 
+
 // *********************************************************************
 // [Bootstrap] Nav tab style
 // @ Create Wallet pages
@@ -798,7 +816,7 @@ h6 {
   overflow: hidden;
 
   .progress-bar {
-    animation-duration: 0.5s;
+    animation-duration: .5s;
     background-color: $nav-tab--progress-bar-background-color;
     height: 6px;
   }
@@ -827,6 +845,7 @@ h6 {
   }
 }
 
+
 // *********************************************************************
 // CSS Toggle Button(Switch) style
 // *********************************************************************
@@ -854,7 +873,7 @@ h6 {
       pointer-events: none;
       position: absolute;
       top: 6px;
-      transition: all 0.5s ease;
+      transition: all .5s ease;
 
       &.white {
         color: $text-color-1;
@@ -879,7 +898,7 @@ h6 {
     position: absolute;
     right: 0;
     top: 0;
-    transition: 0.4s;
+    transition: .4s;
 
     &::before {
       background-color: $css-toggle-button--button-background-color;
@@ -889,7 +908,7 @@ h6 {
       left: 4px;
       padding: 1px 7px;
       position: absolute;
-      transition: 0.4s;
+      transition: .4s;
       width: 25px;
     }
 
@@ -914,6 +933,7 @@ h6 {
   input:checked + .slider::before {
     transform: translateX(26px);
   }
+
 }
 
 .sliding-switch-white {
@@ -941,7 +961,7 @@ h6 {
     position: absolute;
     right: 0;
     top: 0;
-    transition: 0.4s;
+    transition: .4s;
 
     &::before {
       background-color: $text-white;
@@ -951,7 +971,7 @@ h6 {
       left: 3px;
       padding: 1px 7px;
       position: absolute;
-      transition: 0.4s;
+      transition: .4s;
       width: 23px;
     }
 
@@ -976,6 +996,7 @@ h6 {
   input:checked + .slider::before {
     transform: translateX(23px);
   }
+
 }
 
 // *********************************************************************
@@ -1001,12 +1022,12 @@ h6 {
     cursor: pointer;
     opacity: 0;
     position: absolute;
+
   }
 
   // On mouse-over, add a grey background color
   &:hover input ~ .checkmark {
     $check-box-hover-color: $light-grey-12;
-
     background-color: $check-box-hover-color;
   }
 
@@ -1023,7 +1044,6 @@ h6 {
   // Create a custom checkbox
   .checkmark {
     $unchecked-box-color: $light-grey-13;
-
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 22px;
@@ -1050,7 +1070,6 @@ h6 {
 
   .checkmark-small {
     $unchecked-box-color: $light-grey-13;
-
     background-color: $unchecked-box-color;
     border-radius: 100px;
     height: 19px;
@@ -1076,15 +1095,17 @@ h6 {
   }
 }
 
+
 // *********************************************************************
 // Dropdown Buttons
 // *********************************************************************
 .dropdown-button-1 {
-  > button {
+
+  >button {
     background-color: $background-color-white;
     border: solid 1px $button--border-color-2;
     color: $text-color-6;
-    font-family: arial, sans-serif;
+    font-family: arial;
     min-width: 180px;
     padding: 8px 15px;
     text-align: left;
@@ -1096,38 +1117,6 @@ h6 {
 
   a {
     outline: none;
-  }
-
-  a:nth-child(odd) {
-    background-color: #f0f0f0;
-  }
-}
-
-.dropdown-button-2 {
-  .dropdown-menu {
-    padding: 0;
-  }
-
-  > button {
-    background-color: $background-color-white;
-    border: solid 1px $button--border-color-2;
-    color: $text-color-6;
-    font-family: arial, sans-serif;
-    min-width: 180px;
-    padding: 8px 15px;
-    text-align: left;
-  }
-
-  .active {
-    color: $text-black;
-  }
-
-  a {
-    outline: none;
-  }
-
-  a:nth-child(odd) {
-    background-color: #f0f0f0;
   }
 }
 
@@ -1142,7 +1131,6 @@ h6 {
 
   .dropdown.open .dropdown-toggle {
     $border-color: $dark-grey-10;
-
     border: 1px solid $border-color;
   }
 
@@ -1158,9 +1146,8 @@ h6 {
     padding: 6px 5px;
   }
 
-  .dropdown.open .dropdown-toggle {
+  .dropdown.open .dropdown-toggle{
     $border-color: $dark-grey-10;
-
     border: 1px solid $border-color;
   }
 
@@ -1168,6 +1155,7 @@ h6 {
     display: none;
   }
 }
+
 
 .alert-button {
   position: relative;
@@ -1197,6 +1185,8 @@ h6 {
   }
 }
 
+
+
 // *********************************************************************
 // Custom Input
 // *********************************************************************
@@ -1224,6 +1214,8 @@ h6 {
   width: 100%;
 }
 
+
+
 // *********************************************************************
 // Custom Links
 // *********************************************************************
@@ -1237,7 +1229,10 @@ h6 {
   color: $link-text-color-1;
 }
 
+
 .disabled {
   background-color: $light-grey-12;
   pointer-events: none;
 }
+
+

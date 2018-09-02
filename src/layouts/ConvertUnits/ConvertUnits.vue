@@ -23,13 +23,11 @@
           <div class="unit-table">
             <table>
               <tbody>
-                <tr 
-                  v-for="eu in etherUnitRef" 
-                  :key="eu.key">
-                  <td>{{ eu.name }}</td>
-                  <td>{{ eu.unit1 }}</td>
-                  <td>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></td>
-                  <td>{{ eu.desc }}</td>
+                <tr v-for="eu in etherUnitRef" v-bind:key="eu.key">
+                  <td>{{eu.name}}</td>
+                  <td>{{eu.unit1}}</td>
+                  <td>{{eu.unit2}}<span>{{eu.unit2e}}</span></td>
+                  <td>{{eu.desc}}</td>
                 </tr>
               </tbody>
             </table>
@@ -43,13 +41,13 @@
 </template>
 
 <script>
-import UnitInput from './components/UnitInput';
+import UnitInput from './components/UnitInput'
 
 export default {
   components: {
     'unit-input': UnitInput
   },
-  data() {
+  data () {
     return {
       etherUnitRef: [
         {
@@ -130,11 +128,11 @@ export default {
           desc: ''
         }
       ]
-    };
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import 'ConvertUnits.scss';
+  @import "ConvertUnits.scss";
 </style>
