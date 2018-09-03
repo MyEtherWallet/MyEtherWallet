@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 a,
 a:link,
 a:visited,
@@ -9,7 +8,6 @@ a:active {
   color: blue;
   text-decoration: underline;
 }
-
 
 p {
   margin-bottom: 20px;
@@ -41,7 +39,7 @@ code {
 }
 
 abbr {
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
   padding: 5px 6px;
   background-color: #f7f7f9;
   color: red;
@@ -49,11 +47,10 @@ abbr {
   font-size: 12px;
 }
 
-
 ol {
   margin-left: 18px;
 
-  >li {
+  > li {
     list-style-type: decimal;
     padding-left: 10px;
     margin-bottom: 10px;
@@ -64,7 +61,7 @@ ul {
   margin-left: 18px;
   margin-bottom: 20px;
 
-  >li {
+  > li {
     list-style-type: disc;
     padding-left: 10px;
   }
@@ -78,7 +75,7 @@ ul {
   padding: 20px 50px;
   background-color: #f7f7f9;
   margin-top: 20px;
-  >li {
+  > li {
     list-style-type: disc;
     margin: 0;
     padding: 0;
@@ -89,7 +86,6 @@ ul {
     }
   }
 }
-
 
 blockquote p {
   font-size: 20px;
@@ -103,4 +99,3 @@ blockquote p {
   font-size: 13px;
   line-height: 27px;
 }
-

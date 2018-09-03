@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 //=======================================================================
 // Common element style
 //=======================================================================
@@ -9,8 +8,7 @@
   padding: 20px;
   border: 0;
 }
-
-
+/* stylelint-disable */
 //=======================================================================
 // Password input field
 //=======================================================================
@@ -21,6 +19,7 @@
 
   input {
     @extend %input-1;
+
     background-color: $background-color-1;
     border: 1px solid $background-color-1;
     width: 100%;
@@ -46,7 +45,6 @@
     }
   }
 
-  
   input {
     padding-right: 50px;
   }
@@ -62,7 +60,7 @@
   input.strong {
     border: 1px solid $strong;
   }
-  
+
   .passwd-strength {
     margin-top: 10px;
     margin-left: 10px;
@@ -86,8 +84,7 @@
     }
   }
 }
-
-
+/* stylelint-enable */
 //=======================================================================
 // Text input
 //=======================================================================
@@ -112,6 +109,7 @@
     }
     input {
       @extend %input-1;
+
       padding-left: 60px;
       position: relative;
       display: block;
@@ -120,6 +118,51 @@
 
 
 }
+
+
+
+//=======================================================================
+// Custom Radio Button
+//=======================================================================
+.mew-custom-form__radio-button {
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  input[type="radio"] + label {
+    $radio-button-size: 17px;
+    position: relative;
+    border: 1px solid $light-grey-7;
+    border-radius: 100%;
+    height: $radio-button-size;
+    width: $radio-button-size;
+
+  }
+
+  input[type="radio"]:checked + label {
+
+    border: 1px solid $mew-green;
+
+    &::after {
+      $radio-button-dot-size: 9px;
+      $radio-button-dot-position: 3px;
+      content: '';
+      position: absolute;
+      border-radius: 100%;
+      height: $radio-button-dot-size;
+      width: $radio-button-dot-size;
+      background-color: $mew-green;
+      top: $radio-button-dot-position;
+      left: $radio-button-dot-position;
+    }
+
+  }
+}
+
+
+
+
 
 
 

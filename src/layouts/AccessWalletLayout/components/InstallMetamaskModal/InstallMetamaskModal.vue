@@ -29,19 +29,17 @@
         {{ $t("accessWallet.installMetamask") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     metamaskmodal: {
       type: Function,

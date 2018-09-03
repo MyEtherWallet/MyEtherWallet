@@ -1,9 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
 .modal-container {
-  .modal-title {
-    color: $text-color-8;
-  }
+  /* stylelint-disable */
+  .modal-title {}
+  /* stylelint-enable */
 
   .balance {
     .content-block {

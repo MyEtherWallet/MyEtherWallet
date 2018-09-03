@@ -116,7 +116,7 @@ export default {
         },
         {
           title: this.$t('common.terms'),
-          to: '/terms-of-conditions'
+          to: '/terms-and-conditions'
         }
       ],
       footerContent: [
