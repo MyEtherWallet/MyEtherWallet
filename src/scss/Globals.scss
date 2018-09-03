@@ -123,8 +123,8 @@ button {
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -1080,7 +1080,6 @@ h6 {
 // Dropdown Buttons
 // *********************************************************************
 .dropdown-button-1 {
-
   > button {
     background-color: $background-color-white;
     border: solid 1px $button--border-color-2;
@@ -1105,7 +1104,6 @@ h6 {
 }
 
 .dropdown-button-2 {
-
   .dropdown-menu {
     padding: 0;
   }
@@ -1144,6 +1142,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle {
     $border-color: $dark-grey-10;
+
     border: 1px solid $border-color;
   }
 
@@ -1161,6 +1160,7 @@ h6 {
 
   .dropdown.open .dropdown-toggle {
     $border-color: $dark-grey-10;
+
     border: 1px solid $border-color;
   }
 
