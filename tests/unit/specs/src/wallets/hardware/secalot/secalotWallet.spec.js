@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('secalotWallet.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('secalotWallet.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('secalotWallet.js Methods', () => {
-
-  })
-})
+  describe('secalotWallet.js Methods', () => {});
+});

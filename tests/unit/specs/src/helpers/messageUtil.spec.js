@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('messageUtil.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('messageUtil.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('messageUtil.js Methods', () => {
-
-  })
-})
+  describe('messageUtil.js Methods', () => {});
+});

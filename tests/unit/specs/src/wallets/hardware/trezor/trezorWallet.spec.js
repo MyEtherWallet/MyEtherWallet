@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('trezorWallet.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('trezorWallet.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('trezorWallet.js Methods', () => {
-
-  })
-})
+  describe('trezorWallet.js Methods', () => {});
+});

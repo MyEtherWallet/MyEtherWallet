@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('Promo.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('Promo.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('Promo.vue Methods', () => {
-
-  })
-})
+  describe('Promo.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('MnemonicPasswordModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('MnemonicPasswordModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('MnemonicPasswordModal.vue Methods', () => {
-
-  })
-})
+  describe('MnemonicPasswordModal.vue Methods', () => {});
+});

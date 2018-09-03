@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('CreateWalletWarningLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('CreateWalletWarningLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('CreateWalletWarningLayout.vue Methods', () => {
-
-  })
-})
+  describe('CreateWalletWarningLayout.vue Methods', () => {});
+});

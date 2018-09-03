@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('localStorageKeys.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('localStorageKeys.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('localStorageKeys.js Methods', () => {
-
-  })
-})
+  describe('localStorageKeys.js Methods', () => {});
+});

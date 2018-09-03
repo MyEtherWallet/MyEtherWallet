@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('FooterContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('FooterContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('FooterContainer.vue Methods', () => {
-
-  })
-})
+  describe('FooterContainer.vue Methods', () => {});
+});

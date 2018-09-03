@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WithdrawingDAOTokens.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WithdrawingDAOTokens.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WithdrawingDAOTokens.vue Methods', () => {
-
-  })
-})
+  describe('WithdrawingDAOTokens.vue Methods', () => {});
+});

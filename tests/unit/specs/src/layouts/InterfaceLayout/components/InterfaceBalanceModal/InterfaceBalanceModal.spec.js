@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('InterfaceBalanceModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('InterfaceBalanceModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('InterfaceBalanceModal.vue Methods', () => {
-
-  })
-})
+  describe('InterfaceBalanceModal.vue Methods', () => {});
+});

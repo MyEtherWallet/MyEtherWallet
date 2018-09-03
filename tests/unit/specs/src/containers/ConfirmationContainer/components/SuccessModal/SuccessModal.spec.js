@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('SuccessModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('SuccessModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('SuccessModal.vue Methods', () => {
-
-  })
-})
+  describe('SuccessModal.vue Methods', () => {});
+});

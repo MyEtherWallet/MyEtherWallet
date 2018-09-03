@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('CreateWalletLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('CreateWalletLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('CreateWalletLayout.vue Methods', () => {
-
-  })
-})
+  describe('CreateWalletLayout.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhatIsMyEtherWallet.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhatIsMyEtherWallet.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhatIsMyEtherWallet.vue Methods', () => {
-
-  })
-})
+  describe('WhatIsMyEtherWallet.vue Methods', () => {});
+});

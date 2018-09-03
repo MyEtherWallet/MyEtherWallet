@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhereAreMyFundsStored.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhereAreMyFundsStored.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhereAreMyFundsStored.vue Methods', () => {
-
-  })
-})
+  describe('WhereAreMyFundsStored.vue Methods', () => {});
+});

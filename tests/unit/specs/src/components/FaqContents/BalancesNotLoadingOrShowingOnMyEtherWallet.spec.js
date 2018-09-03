@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('BalancesNotLoadingOrShowingOnMyEtherWallet.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('BalancesNotLoadingOrShowingOnMyEtherWallet.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('BalancesNotLoadingOrShowingOnMyEtherWallet.vue Methods', () => {
-
-  })
-})
+  describe('BalancesNotLoadingOrShowingOnMyEtherWallet.vue Methods', () => {});
+});

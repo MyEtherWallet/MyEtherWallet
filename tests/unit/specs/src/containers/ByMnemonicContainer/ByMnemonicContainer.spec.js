@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ByMnemonicContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ByMnemonicContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ByMnemonicContainer.vue Methods', () => {
-
-  })
-})
+  describe('ByMnemonicContainer.vue Methods', () => {});
+});

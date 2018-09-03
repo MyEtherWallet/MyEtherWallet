@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('state.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('state.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('state.js Methods', () => {
-
-  })
-})
+  describe('state.js Methods', () => {});
+});

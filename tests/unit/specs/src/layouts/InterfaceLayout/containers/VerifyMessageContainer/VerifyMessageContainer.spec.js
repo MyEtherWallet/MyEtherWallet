@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('VerifyMessageContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('VerifyMessageContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('VerifyMessageContainer.vue Methods', () => {
-
-  })
-})
+  describe('VerifyMessageContainer.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhatHappensIfMyEtherWalletGoesDown.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhatHappensIfMyEtherWalletGoesDown.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhatHappensIfMyEtherWalletGoesDown.vue Methods', () => {
-
-  })
-})
+  describe('WhatHappensIfMyEtherWalletGoesDown.vue Methods', () => {});
+});

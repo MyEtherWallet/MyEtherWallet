@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('digitalBitboxWallet.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('digitalBitboxWallet.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('digitalBitboxWallet.js Methods', () => {
-
-  })
-})
+  describe('digitalBitboxWallet.js Methods', () => {});
+});

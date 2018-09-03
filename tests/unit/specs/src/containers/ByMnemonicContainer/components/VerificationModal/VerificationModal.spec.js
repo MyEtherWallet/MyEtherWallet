@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('VerificationModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('VerificationModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('VerificationModal.vue Methods', () => {
-
-  })
-})
+  describe('VerificationModal.vue Methods', () => {});
+});

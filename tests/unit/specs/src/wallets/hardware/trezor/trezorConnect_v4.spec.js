@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('trezorConnect_v4.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('trezorConnect_v4.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('trezorConnect_v4.js Methods', () => {
-
-  })
-})
+  describe('trezorConnect_v4.js Methods', () => {});
+});

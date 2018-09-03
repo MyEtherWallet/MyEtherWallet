@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('InterfaceContainerTitle.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('InterfaceContainerTitle.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('InterfaceContainerTitle.vue Methods', () => {
-
-  })
-})
+  describe('InterfaceContainerTitle.vue Methods', () => {});
+});

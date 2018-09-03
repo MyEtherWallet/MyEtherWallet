@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('PageFooter.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('PageFooter.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('PageFooter.vue Methods', () => {
-
-  })
-})
+  describe('PageFooter.vue Methods', () => {});
+});

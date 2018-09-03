@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('InteractWithContractContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('InteractWithContractContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('InteractWithContractContainer.vue Methods', () => {
-
-  })
-})
+  describe('InteractWithContractContainer.vue Methods', () => {});
+});

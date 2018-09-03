@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('PriceBar.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('PriceBar.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('PriceBar.vue Methods', () => {
-
-  })
-})
+  describe('PriceBar.vue Methods', () => {});
+});

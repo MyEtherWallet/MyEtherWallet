@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('TeamLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('TeamLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('TeamLayout.vue Methods', () => {
-
-  })
-})
+  describe('TeamLayout.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('HeaderContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('HeaderContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('HeaderContainer.vue Methods', () => {
-
-  })
-})
+  describe('HeaderContainer.vue Methods', () => {});
+});

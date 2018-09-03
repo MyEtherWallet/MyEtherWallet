@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('secalotEth.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('secalotEth.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('secalotEth.js Methods', () => {
-
-  })
-})
+  describe('secalotEth.js Methods', () => {});
+});

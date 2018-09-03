@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('SignedTxModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('SignedTxModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('SignedTxModal.vue Methods', () => {
-
-  })
-})
+  describe('SignedTxModal.vue Methods', () => {});
+});

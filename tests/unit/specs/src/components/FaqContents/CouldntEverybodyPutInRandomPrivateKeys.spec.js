@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('CouldntEverybodyPutInRandomPrivateKeys.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('CouldntEverybodyPutInRandomPrivateKeys.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('CouldntEverybodyPutInRandomPrivateKeys.vue Methods', () => {
-
-  })
-})
+  describe('CouldntEverybodyPutInRandomPrivateKeys.vue Methods', () => {});
+});

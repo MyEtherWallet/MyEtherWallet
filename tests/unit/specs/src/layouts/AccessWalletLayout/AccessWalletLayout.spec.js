@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('AccessWalletLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('AccessWalletLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('AccessWalletLayout.vue Methods', () => {
-
-  })
-})
+  describe('AccessWalletLayout.vue Methods', () => {});
+});

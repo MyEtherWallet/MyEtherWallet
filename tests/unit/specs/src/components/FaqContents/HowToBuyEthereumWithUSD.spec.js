@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('HowToBuyEthereumWithUSD.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('HowToBuyEthereumWithUSD.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('HowToBuyEthereumWithUSD.vue Methods', () => {
-
-  })
-})
+  describe('HowToBuyEthereumWithUSD.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('NetworkAndAddressModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('NetworkAndAddressModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('NetworkAndAddressModal.vue Methods', () => {
-
-  })
-})
+  describe('NetworkAndAddressModal.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('blockies.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('blockies.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('blockies.js Methods', () => {
-
-  })
-})
+  describe('blockies.js Methods', () => {});
+});

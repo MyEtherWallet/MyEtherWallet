@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('InterfaceNetwork.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('InterfaceNetwork.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('InterfaceNetwork.vue Methods', () => {
-
-  })
-})
+  describe('InterfaceNetwork.vue Methods', () => {});
+});

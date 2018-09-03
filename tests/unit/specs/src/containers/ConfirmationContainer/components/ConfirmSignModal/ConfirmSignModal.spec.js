@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ConfirmSignModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ConfirmSignModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ConfirmSignModal.vue Methods', () => {
-
-  })
-})
+  describe('ConfirmSignModal.vue Methods', () => {});
+});
