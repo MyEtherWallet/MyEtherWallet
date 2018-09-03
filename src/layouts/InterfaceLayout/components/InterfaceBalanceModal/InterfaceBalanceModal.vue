@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="balance"
+      :title="$t('interface.balance')"
       hide-footer
       centered
-      class="bootstrap-modal balance nopadding"
-      title="Balance">
+      class="bootstrap-modal balance nopadding">
       <div class="content-block total-balance">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="content-block">
-        <h4 class="equivalent-values-title">Equivalent Values</h4>
+        <h4 class="equivalent-values-title">{{ $t('interface.equivalentValues') }}</h4>
         <ul class="equivalent-values">
           <li
             v-for="ev in equivalentValues"

@@ -1,13 +1,6 @@
 <template>
   <div class="access-my-wallet-options">
 
-    <install-metamask-modal
-      ref="installMetamaskModal"
-      :metamaskmodal="installMetamaskModalOpen"/>
-    <mnemonic-modal
-      ref="mnemonicPhraseModal"
-      :open-password="accessByMnemonicphrasePasswordModalOpen"/>
-    <mnemonic-password-modal ref="mnemonicPhrasePassword"/>
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
@@ -28,6 +21,10 @@
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
+    <install-metamask-modal
+      ref="installMetamaskModal"
+      :metamaskmodal="installMetamaskModalOpen"/>
+
     <metamask-modal ref="metamastModal"/>
 
     <software-modal
@@ -42,6 +39,15 @@
       :file="file"/>
 
     <private-key-modal ref="privatekeyModal"/>
+
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"/>
+
+    <mnemonic-password-modal
+      ref="mnemonicPhrasePassword"
+      :hardware-wallet-open="hardwareWalletOpen"
+      :phrase="phrase"/>
 
     <div class="wrap">
       <div class="page-container">
@@ -116,6 +122,7 @@ export default {
   data() {
     return {
       file: {},
+      phrase: '',
       hardwareWallet: {},
       hardwareAddresses: [],
       walletConstructor: {},
@@ -189,7 +196,9 @@ export default {
     mnemonicphraseModalOpen() {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
     },
-    accessByMnemonicphrasePasswordModalOpen() {
+    mnemonicphrasePasswordModalOpen(phrase) {
+      this.phrase = phrase;
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
       this.$refs.mnemonicPhrasePassword.$refs.password.show();
     },
     fileUploaded(e) {

@@ -1,10 +1,10 @@
 <template>
-  <b-modal 
-    ref="scantodownload" 
-    hide-footer 
-    centered 
-    class="bootstrap-modal no-padding" 
-    title="Scan To Download">
+  <b-modal
+    ref="scantodownload"
+    :title="$t('createWallet.scanToDownload')"
+    hide-footer
+    centered
+    class="bootstrap-modal no-padding">
 
     <div class="qr-divider">
       <div class="ios">
@@ -17,7 +17,7 @@
             <p>iOS</p>
           </div>
         </div>
-        <p>iOS 9.0 or up</p>
+        <p>{{ $t("createWallet.iosVersions") }}</p>
       </div>
       <div class="android">
         <div class="qr-image">
@@ -29,7 +29,7 @@
             <p>Android</p>
           </div>
         </div>
-        <p>Android 8.0 or up</p>
+        <p>{{ $t("createWallet.androidVersions") }}</p>
       </div>
     </div>
 

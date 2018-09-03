@@ -1,16 +1,13 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-
   padding: 70px 0;
   background-color: $light-grey-2;
-
-  background-image: url('~@/assets/images/background/bg-left.png'), url('~@/assets/images/background/bg-right.png');
+  background-image: url('~@/assets/images/background/bg-left.png'),
+    url('~@/assets/images/background/bg-right.png');
   background-position: top left, top right;
   background-repeat: no-repeat;
   background-size: 220px;
-
-
 }
 
 .page-title {
@@ -26,7 +23,6 @@
     margin: 0 auto;
   }
 }
-
 
 .ether-unit-reference-guide {
   margin-top: 60px;
@@ -59,5 +55,3 @@
     }
   }
 }
-
-

@@ -9,7 +9,7 @@ function isJson(str) {
   return true;
 }
 
-function doesExists(val) {
+function doesExist(val) {
   return val !== undefined && val !== null;
 }
 
@@ -18,4 +18,4 @@ function padLeftEven(hex) {
   return hex;
 }
 
-export default { isJson, doesExists, padLeftEven };
+export default { isJson, doesExist, padLeftEven };

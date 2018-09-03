@@ -270,12 +270,18 @@
     </p>
 
     <p class="col">
-      <a href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/withdrawing-dao-tokens.md" target="_blank" rel="noopener noreferrer">
+      <a 
+        href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/withdrawing-dao-tokens.md" 
+        target="_blank" 
+        rel="noopener noreferrer">
         Found a typo? Want to improve this article? <br> It's easy!
       </a>
     </p>
     <p class="col">
-      <a href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" target="_blank" rel="noopener noreferrer">
+      <a 
+        href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html" 
+        target="_blank" 
+        rel="noopener noreferrer">
         Don't know how to submit a pull request? <br> It's also easy!
       </a>
     </p>
@@ -284,14 +290,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

@@ -1,10 +1,11 @@
 <template>
   <b-modal
     ref="networkAndAddress"
+    :title="$t('accessWallet.networkAndAddress')"
     hide-footer
     class="bootstrap-modal modal-network-and-address"
-    title="Network and Address"
     centered>
+    <!-- Derivation Path Drop down-->
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
@@ -12,7 +13,7 @@
           <b-dropdown
             id="hd-derivation-path"
             :text="selecteDPath.dpath"
-            class="dropdown-button-1">
+            class="dropdown-button-2">
             <b-dropdown-item
               v-for="(val, key) in availablePaths"
               :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
@@ -32,7 +33,7 @@
               {{ val.dpath }}
             </b-dropdown-item>
             <b-dropdown-item @click="showCustomPathInput">
-              {{ $t('accessWallet.customPath') }}
+              {{ $t('accessWallet.addCustomPath') }}
             </b-dropdown-item>
           </b-dropdown>
         </div>
@@ -61,6 +62,7 @@
         <button @click="showCustomPathInput">cancel</button>
       </div>
     </div>
+    <!-- Address List -->
     <div class="content-container-2">
       <div class="address-block-container">
         <div class="block-title">
@@ -132,21 +134,18 @@
         {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t('common.customerSupport') }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
 const unit = require('ethjs-unit');
 
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     hardwareWallet: {
       type: Object,

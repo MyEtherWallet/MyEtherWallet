@@ -116,8 +116,12 @@
     </p>
     <p>
       In Ethereum Wallet, go to the top bar and find
-      <abbr>ACCOUNTS</abbr> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-      <abbr>BACKUP</abbr> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+      <abbr>ACCOUNTS</abbr> <i 
+        class="fa fa-long-arrow-right" 
+        aria-hidden="true"/>
+      <abbr>BACKUP</abbr> <i 
+        class="fa fa-long-arrow-right" 
+        aria-hidden="true"/>
       <abbr>ACCOUNTS</abbr>.
       It'll open up a folder and inside you will see a file. This file is your
       private key. Copy this to a USB drive and safely store the USB drive in a
@@ -128,7 +132,9 @@
     <p>
       If you already have BTC, you can use Shapeshift.io, Bity.com, or Changelly
       to convert your BTC into ETH. Start a BTC
-      <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+      <i 
+        class="fa fa-long-arrow-right" 
+        aria-hidden="true"/>
       ETH exchange and it'll tell you where to send your BTC.
       (If you have your BTC on an exchange, you can likely exchange them for ETH on that
       exchange without the need for Shapeshift.)
@@ -220,14 +226,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import 'FaqContents.scss';
 </style>

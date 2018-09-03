@@ -20,7 +20,7 @@
 
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>Our App is Available On the App Store and Google Play</h3>
+                  <h3>{{ $t("createWallet.availableAppleGoogleStores") }}</h3>
                 </div>
               </div>
 
@@ -30,7 +30,7 @@
                   <img src="@/assets/images/icons/playstore.png">
                 </div>
                 <div class="download">
-                  <p @click="scanToDownloadModalOpen">Scan to Download</p>
+                  <p @click="scanToDownloadModalOpen">{{ $t("createWallet.scanToDownload") }}</p>
                 </div>
               </div>
 
@@ -44,17 +44,17 @@
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')" />
+                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
                 </div>
               </div>
 
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Json'" />
-              <create-wallet-input-footer />
+                :param="'Json'"/>
+              <create-wallet-input-footer/>
             </b-tab>
-            <b-tab title="By Mnemonic Phrase" >
+            <b-tab title="By Mnemonic Phrase">
 
               <div class="title-block">
                 <div class="title-popover">
@@ -66,15 +66,15 @@
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Mnemonic'" />
-              <create-wallet-input-footer />
+                :param="'Mnemonic'"/>
+              <create-wallet-input-footer/>
             </b-tab>
           </b-tabs>
         </div>
         <by-json-file-container
           v-if="byJson && !byMnemonic"
-          :password="password" />
-        <by-mnemonic-container v-if="!byJson && byMnemonic" />
+          :password="password"/>
+        <by-mnemonic-container v-if="!byJson && byMnemonic"/>
       </div>
     </div>
 
