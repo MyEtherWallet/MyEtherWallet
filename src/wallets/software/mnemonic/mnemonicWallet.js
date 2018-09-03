@@ -58,10 +58,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
 
   static async unlock(options) {
     try {
-      console.log(options); // todo remove dev item
-      const wall = new MnemonicWallet(options);
-      console.log(wall); // todo remove dev item
-      return wall;
+      return new MnemonicWallet(options);
     } catch (e) {
       // eslint-disable-next-line
       console.error(e); // todo replace with proper error

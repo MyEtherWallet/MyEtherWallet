@@ -211,6 +211,9 @@ export default {
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(e) {
+      if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
+        this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      }
       this.walletConstructor = {};
       this.hardwareBrand = '';
       this.hardwareWallet = e;
