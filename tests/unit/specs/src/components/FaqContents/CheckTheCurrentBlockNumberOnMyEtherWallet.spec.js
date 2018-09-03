@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('CheckTheCurrentBlockNumberOnMyEtherWallet.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('CheckTheCurrentBlockNumberOnMyEtherWallet.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('CheckTheCurrentBlockNumberOnMyEtherWallet.vue Methods', () => {
-
-  })
-})
+  describe('CheckTheCurrentBlockNumberOnMyEtherWallet.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('RegisterDomainContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('RegisterDomainContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('RegisterDomainContainer.vue Methods', () => {
-
-  })
-})
+  describe('RegisterDomainContainer.vue Methods', () => {});
+});

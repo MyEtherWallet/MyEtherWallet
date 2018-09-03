@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhyDontYouMakeMeMoveMyMouseToGenerateASeed.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhyDontYouMakeMeMoveMyMouseToGenerateASeed.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhyDontYouMakeMeMoveMyMouseToGenerateASeed.vue Methods', () => {
-
-  })
-})
+  describe('WhyDontYouMakeMeMoveMyMouseToGenerateASeed.vue Methods', () => {});
+});

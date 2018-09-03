@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ScrollUpButton.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ScrollUpButton.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ScrollUpButton.vue Methods', () => {
-
-  })
-})
+  describe('ScrollUpButton.vue Methods', () => {});
+});

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('TermsOfConditionsLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('TermsOfConditionsLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('TermsOfConditionsLayout.vue Methods', () => {
-
-  })
-})
+  describe('TermsOfConditionsLayout.vue Methods', () => {});
+});

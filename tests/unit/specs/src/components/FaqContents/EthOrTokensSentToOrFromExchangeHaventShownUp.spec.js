@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('EthOrTokensSentToOrFromExchangeHaventShownUp.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('EthOrTokensSentToOrFromExchangeHaventShownUp.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('EthOrTokensSentToOrFromExchangeHaventShownUp.vue Methods', () => {
-
-  })
-})
+  describe('EthOrTokensSentToOrFromExchangeHaventShownUp.vue Methods', () => {});
+});

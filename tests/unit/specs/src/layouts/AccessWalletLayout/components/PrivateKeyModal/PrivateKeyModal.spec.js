@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('PrivateKeyModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('PrivateKeyModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('PrivateKeyModal.vue Methods', () => {
-
-  })
-})
+  describe('PrivateKeyModal.vue Methods', () => {});
+});

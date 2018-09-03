@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('web3-wallet-adapter.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('web3-wallet-adapter.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('web3-wallet-adapter.js Methods', () => {
-
-  })
-})
+  describe('web3-wallet-adapter.js Methods', () => {});
+});

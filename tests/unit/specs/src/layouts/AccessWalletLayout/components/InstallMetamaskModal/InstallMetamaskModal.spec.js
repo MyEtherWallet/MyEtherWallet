@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('InstallMetamaskModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('InstallMetamaskModal.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('InstallMetamaskModal.vue Methods', () => {
-
-  })
-})
+  describe('InstallMetamaskModal.vue Methods', () => {});
+});

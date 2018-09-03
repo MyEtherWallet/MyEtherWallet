@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('deterministicWalletPaths.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('deterministicWalletPaths.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('deterministicWalletPaths.js Methods', () => {
-
-  })
-})
+  describe('deterministicWalletPaths.js Methods', () => {});
+});

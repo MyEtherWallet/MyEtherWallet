@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ledgerWallet.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ledgerWallet.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ledgerWallet.js Methods', () => {
-
-  })
-})
+  describe('ledgerWallet.js Methods', () => {});
+});

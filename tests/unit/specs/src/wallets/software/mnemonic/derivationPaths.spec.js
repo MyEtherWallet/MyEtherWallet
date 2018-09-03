@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('derivationPaths.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('derivationPaths.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('derivationPaths.js Methods', () => {
-
-  })
-})
+  describe('derivationPaths.js Methods', () => {});
+});

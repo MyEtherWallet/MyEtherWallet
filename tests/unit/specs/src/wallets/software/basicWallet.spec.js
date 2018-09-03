@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('basicWallet.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('basicWallet.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('basicWallet.js Methods', () => {
-
-  })
-})
+  describe('basicWallet.js Methods', () => {});
+});

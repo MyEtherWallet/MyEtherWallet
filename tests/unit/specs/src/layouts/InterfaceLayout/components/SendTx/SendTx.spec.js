@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('SendTx.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('SendTx.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('SendTx.vue Methods', () => {
-
-  })
-})
+  describe('SendTx.vue Methods', () => {});
+});

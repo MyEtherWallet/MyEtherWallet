@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('bitbox_notes.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('bitbox_notes.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('bitbox_notes.js Methods', () => {
-
-  })
-})
+  describe('bitbox_notes.js Methods', () => {});
+});

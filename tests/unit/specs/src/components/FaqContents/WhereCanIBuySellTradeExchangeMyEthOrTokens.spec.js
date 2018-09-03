@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhereCanIBuySellTradeExchangeMyEthOrTokens.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhereCanIBuySellTradeExchangeMyEthOrTokens.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhereCanIBuySellTradeExchangeMyEthOrTokens.vue Methods', () => {
-
-  })
-})
+  describe('WhereCanIBuySellTradeExchangeMyEthOrTokens.vue Methods', () => {});
+});

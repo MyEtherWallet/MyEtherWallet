@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('DappButtons.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('DappButtons.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('DappButtons.vue Methods', () => {
-
-  })
-})
+  describe('DappButtons.vue Methods', () => {});
+});

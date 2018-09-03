@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhenIUnlockViaKeystoreFileItFreezesMyBrowser.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhenIUnlockViaKeystoreFileItFreezesMyBrowser.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhenIUnlockViaKeystoreFileItFreezesMyBrowser.vue Methods', () => {
-
-  })
-})
+  describe('WhenIUnlockViaKeystoreFileItFreezesMyBrowser.vue Methods', () => {});
+});

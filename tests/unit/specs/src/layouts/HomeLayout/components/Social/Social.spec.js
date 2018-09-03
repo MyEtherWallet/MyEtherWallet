@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('Social.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('Social.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('Social.vue Methods', () => {
-
-  })
-})
+  describe('Social.vue Methods', () => {});
+});

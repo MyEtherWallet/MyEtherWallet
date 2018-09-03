@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ByJsonBlock.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ByJsonBlock.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ByJsonBlock.vue Methods', () => {
-
-  })
-})
+  describe('ByJsonBlock.vue Methods', () => {});
+});

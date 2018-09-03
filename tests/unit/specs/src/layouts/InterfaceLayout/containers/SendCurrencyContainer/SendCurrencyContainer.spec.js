@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('SendCurrencyContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('SendCurrencyContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('SendCurrencyContainer.vue Methods', () => {
-
-  })
-})
+  describe('SendCurrencyContainer.vue Methods', () => {});
+});

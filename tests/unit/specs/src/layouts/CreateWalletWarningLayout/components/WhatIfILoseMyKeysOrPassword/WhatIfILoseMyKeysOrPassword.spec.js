@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WhatIfILoseMyKeysOrPassword.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WhatIfILoseMyKeysOrPassword.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {
-
-  })
-})
+  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {});
+});

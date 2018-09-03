@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('getters.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('getters.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('getters.js Methods', () => {
-
-  })
-})
+  describe('getters.js Methods', () => {});
+});

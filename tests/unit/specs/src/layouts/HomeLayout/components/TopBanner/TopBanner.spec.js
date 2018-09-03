@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('TopBanner.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('TopBanner.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('TopBanner.vue Methods', () => {
-
-  })
-})
+  describe('TopBanner.vue Methods', () => {});
+});

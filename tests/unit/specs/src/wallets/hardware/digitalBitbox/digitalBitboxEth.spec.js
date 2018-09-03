@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('digitalBitboxEth.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('digitalBitboxEth.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('digitalBitboxEth.js Methods', () => {
-
-  })
-})
+  describe('digitalBitboxEth.js Methods', () => {});
+});

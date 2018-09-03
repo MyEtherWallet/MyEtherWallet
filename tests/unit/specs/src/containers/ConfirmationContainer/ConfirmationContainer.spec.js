@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('ConfirmationContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('ConfirmationContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('ConfirmationContainer.vue Methods', () => {
-
-  })
-})
+  describe('ConfirmationContainer.vue Methods', () => {});
+});

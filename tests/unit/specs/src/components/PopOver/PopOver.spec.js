@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('PopOver.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('PopOver.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('PopOver.vue Methods', () => {
-
-  })
-})
+  describe('PopOver.vue Methods', () => {});
+});

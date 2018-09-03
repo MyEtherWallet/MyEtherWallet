@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('WalletNotFoundContainer.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('WalletNotFoundContainer.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('WalletNotFoundContainer.vue Methods', () => {
-
-  })
-})
+  describe('WalletNotFoundContainer.vue Methods', () => {});
+});

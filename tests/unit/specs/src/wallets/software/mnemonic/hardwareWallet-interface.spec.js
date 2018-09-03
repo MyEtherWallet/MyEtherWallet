@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('hardwareWallet-interface.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('hardwareWallet-interface.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('hardwareWallet-interface.js Methods', () => {
-
-  })
-})
+  describe('hardwareWallet-interface.js Methods', () => {});
+});

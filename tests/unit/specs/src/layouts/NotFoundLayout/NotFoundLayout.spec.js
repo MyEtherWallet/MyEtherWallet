@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('NotFoundLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('NotFoundLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('NotFoundLayout.vue Methods', () => {
-
-  })
-})
+  describe('NotFoundLayout.vue Methods', () => {});
+});

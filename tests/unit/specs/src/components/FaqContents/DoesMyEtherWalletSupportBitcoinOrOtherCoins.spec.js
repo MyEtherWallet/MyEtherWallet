@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('DoesMyEtherWalletSupportBitcoinOrOtherCoins.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('DoesMyEtherWalletSupportBitcoinOrOtherCoins.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('DoesMyEtherWalletSupportBitcoinOrOtherCoins.vue Methods', () => {
-
-  })
-})
+  describe('DoesMyEtherWalletSupportBitcoinOrOtherCoins.vue Methods', () => {});
+});

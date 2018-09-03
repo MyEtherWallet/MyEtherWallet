@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('CurrencyPicker.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('CurrencyPicker.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('CurrencyPicker.vue Methods', () => {
-
-  })
-})
+  describe('CurrencyPicker.vue Methods', () => {});
+});

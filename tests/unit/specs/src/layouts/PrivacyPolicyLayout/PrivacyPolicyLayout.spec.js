@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('PrivacyPolicyLayout.vue', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('PrivacyPolicyLayout.vue', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('PrivacyPolicyLayout.vue Methods', () => {
-
-  })
-})
+  describe('PrivacyPolicyLayout.vue Methods', () => {});
+});

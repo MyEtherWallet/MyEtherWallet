@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 xdescribe('mutations.js', () => {
   it('should render correct contents', () => {
@@ -11,9 +11,7 @@ xdescribe('mutations.js', () => {
         expect(vm.$el.style['background-image'])
           .toEqual('')
           */
-  })
+  });
 
-  describe('mutations.js Methods', () => {
-
-  })
-})
+  describe('mutations.js Methods', () => {});
+});
