@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       currentTab: this.$store.state.pageStates.interface.sideMenu,
-      balance: 0,
+      balance: '0',
       blockNumber: 0,
       tokens: [],
       receivedTokens: false,

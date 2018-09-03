@@ -1,8 +1,8 @@
 <template>
   <b-modal
-    ref="metamask"
+    ref="installmetamask"
     hide-footer
-    class="bootstrap-modal modal-metamask"
+    class="bootstrap-modal install-modal-metamask"
     title="Access by MetaMask"
     centered>
     <div class="modal-multi-icons">
@@ -23,25 +23,25 @@
       </label>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
+      <b-btn
+        class="mid-round-button-green-filled close-button"
+        @click="metamaskmodal">
         {{ $t("accessWallet.installMetamask") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
-    networkAndAddressOpen: {
+    metamaskmodal: {
       type: Function,
       default: function() {}
     }

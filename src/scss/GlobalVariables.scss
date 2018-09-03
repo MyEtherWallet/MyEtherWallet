@@ -1,17 +1,17 @@
 // Standard colors to reuse instead of renaming variables.
-$opaque-black-1: rgba(0, 0, 0, .12);
-$opaque-black-2: rgba(0, 0, 0, .10);
-$opaque-black-3: rgba(0, 0, 0, .05);
-$opaque-black-4: rgba(0, 0, 0, .15);
-$opaque-black-5: rgba(0, 0, 0, .1);
-$opaque-black-6: rgba(0, 0, 0, .4);
-$opaque-black-7: rgba(0, 0, 0, .2);
-$opaque-black-8: rgba(0, 0, 0, .6);
-$opaque-black-9: rgba(0, 0, 0, .06);
+$opaque-black-1: rgba(0, 0, 0, 0.12);
+$opaque-black-2: rgba(0, 0, 0, 0.1);
+$opaque-black-3: rgba(0, 0, 0, 0.05);
+$opaque-black-4: rgba(0, 0, 0, 0.15);
+$opaque-black-5: rgba(0, 0, 0, 0.1);
+$opaque-black-6: rgba(0, 0, 0, 0.4);
+$opaque-black-7: rgba(0, 0, 0, 0.2);
+$opaque-black-8: rgba(0, 0, 0, 0.6);
+$opaque-black-9: rgba(0, 0, 0, 0.06);
 
-$opaque-white-1: rgba(255, 255, 255, .25);
+$opaque-white-1: rgba(255, 255, 255, 0.25);
 
-$opaque-grey: rgba(60, 60, 60, .26);
+$opaque-grey: rgba(60, 60, 60, 0.26);
 
 $light-grey-1: #f9f9f9;
 $light-grey-2: #f2f4fa;
@@ -60,9 +60,9 @@ $red-4: #ff3c3c;
 
 $light-red-1: #fbe0e3;
 
-
 $grey-1: #adadad;
 $grey-2: #999;
+$grey-3: #3766aa;
 
 $dark-grey-1: #434f61;
 $dark-grey-2: #536d8b;
@@ -85,6 +85,7 @@ $dark-blue-7: #0c5876;
 $dark-blue-8: #485f7e;
 $dark-blue-9: #354858;
 $dark-blue-10: #1d89ff;
+$dark-blue-11: #003b46;
 
 $dark-green-1: #008000;
 $dark-green-2: #00927d;
@@ -234,7 +235,6 @@ $button--background-color-2: $white;
 $button--background-color-3: $dark-grey-7;
 $button--background-color-4: $light-blue-1;
 
-
 // *********************************************************************
 // Custom scroll bar style
 // *********************************************************************
@@ -242,13 +242,11 @@ $scrollbar--track-color: $light-grey-9;
 $scrollbar--handle-color: $dark-grey-8;
 $scrollbar--handle-hover-color: $dark-grey-9;
 
-
 // *********************************************************************
 // [Bootstrap] Dropdown language menu style
 // *********************************************************************
 $dropdown-menu-border-color: $light-grey-10;
 $dropdown-menu--active--background-color: $light-grey-4;
-
 
 // *********************************************************************
 // [Bootstrap] Tooltip style
@@ -261,7 +259,6 @@ $tooltip-background-color: $white;
 $tooltip--button-background-color: $light-blue-2;
 $tooltip--button-font-color: $white;
 
-
 // *********************************************************************
 // [Bootstrap] Nav tab style
 // @ Create Wallet pages
@@ -271,7 +268,6 @@ $nav-tab--button-background-color: $light-grey-3;
 $nav-tab--button--active--background-color: $dark-grey-1;
 $nav-tab--button--active--font-color: $white;
 $nav-tab--progress-bar-background-color: $mew-green;
-
 
 // *********************************************************************
 // CSS Toggle Button(Switch) style
@@ -287,8 +283,6 @@ $very-weak: $red-4;
 $weak: $dark-blue-10;
 $strong: $mew-green;
 $very-strong: $dark-green-1;
-
-
 
 // *********************************************************************
 // Padding, Margin sizes

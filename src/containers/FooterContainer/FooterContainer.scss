@@ -17,18 +17,18 @@ a:active {
   color: $text-color-1;
   padding: 70px 0 20px;
 
-  @media all and (max-width: $tablet-width){
+  @media all and (max-width: $tablet-width) {
     padding: 30px 0;
   }
 }
 
 .footer-contents {
-  @media all and (max-width: $tablet-width){
+  @media all and (max-width: $tablet-width) {
     display: block;
   }
 
-  >div {
-    @media all and (max-width: $tablet-width){
+  > div {
+    @media all and (max-width: $tablet-width) {
       border-bottom: 1px solid $dark-blue-1;
       padding: 25px 0;
     }
@@ -45,11 +45,11 @@ a:active {
       }
 
       p {
-        @media all and (min-width: $tablet-width + 1){
+        @media all and (min-width: $tablet-width + 1) {
           display: none;
         }
 
-        @media all and (max-width: $tablet-width){
+        @media all and (max-width: $tablet-width) {
           cursor: pointer;
           display: block;
           font-size: 20px;
@@ -68,7 +68,7 @@ a:active {
       margin-top: 20px;
       max-height: 600px;
       overflow: hidden;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
 
       @media all and (max-width: $tablet-width) {
         .mobile-hide {
@@ -90,7 +90,6 @@ a:active {
         margin-bottom: 3px;
       }
     }
-
   }
 
   .donate-us {
@@ -114,7 +113,7 @@ a:active {
       }
     }
   }
-}// .footer-contents
+} // .footer-contents
 
 .foot-note {
   align-items: center;
@@ -122,7 +121,7 @@ a:active {
   margin-top: 40px;
   padding-top: 40px;
 
-  @media all and (max-width: $tablet-width){
+  @media all and (max-width: $tablet-width) {
     border-top: 0;
     flex-direction: column;
     margin-top: 0;
@@ -148,7 +147,7 @@ a:active {
     }
   }
 
-  >div {
+  > div {
     //margin: 0 auto;
     margin-bottom: 20px;
   }
@@ -157,7 +156,6 @@ a:active {
     span {
       border-right: 1px solid $border-color-2;
       color: $text-color-1;
-
       margin-right: 15px;
       padding-right: 15px;
     }
@@ -168,7 +166,6 @@ a:active {
   }
 
   .copyright {
-    
     text-align: center;
 
     p {
@@ -181,7 +178,7 @@ a:active {
   }
 
   .social {
-    @media all and (max-width: $tablet-width){
+    @media all and (max-width: $tablet-width) {
       text-align: center;
     }
 
@@ -190,7 +187,7 @@ a:active {
       font-size: 19px;
       margin-left: 15px;
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         font-size: 24px;
         line-height: 40px;
       }

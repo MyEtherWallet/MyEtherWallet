@@ -57,7 +57,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     padding: 15px 30px;
-    transition: max-height .6s ease;
+    transition: max-height 0.6s ease;
 
     &.expanded {
       max-height: 800px;
@@ -67,7 +67,6 @@
       width: 100%;
 
       tr {
-
         td {
           padding: 6px 0;
         }
