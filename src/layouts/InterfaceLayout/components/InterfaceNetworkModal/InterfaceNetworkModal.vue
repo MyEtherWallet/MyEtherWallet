@@ -2,9 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="network"
+      :title="$t('interface.network')"
       hide-footer
-      class="bootstrap-modal network nopadding max-height-1"
-      title="Network">
+      centered
+      class="bootstrap-modal network nopadding max-height-1">
       <div class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
@@ -15,7 +16,7 @@
                 <input
                   ref="addCustomToggle"
                   type="checkbox"
-                  @click="addCustomNetworkToggle">
+                  @click="addCustomNetworkToggle" >
                 <span class="slider round"/>
               </label>
             </div>
@@ -29,7 +30,10 @@
           v-for="(key, index) in Object.keys($store.state.Networks)"
           :key="key + index"
           class="content-block">
-          <h4 :class="key.toLowerCase()">{{ key }}</h4>
+          <div class="network-title">
+            <img src="@/assets/images/networks/eth.svg">
+            <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+          </div>
           <div class="grid-3">
             <p
               v-for="net in $store.state.Networks[key]"
@@ -42,7 +46,7 @@
         <div
           v-if="customNetworks.length > 0"
           class="content-block">
-          <h4 class="cust">Custom Networks</h4>
+          <h4>Custom Networks</h4>
           <div
             v-for="(net, idx) in customNetworks"
             :key="net.service + '('+ net.type.name + ')' + idx"
@@ -69,15 +73,15 @@
               type="text"
               name=""
               placeholder="ETH Node Name"
-              autocomplete="off">
+              autocomplete="off" >
             <select
               v-model="selectedNetwork"
               class="custom-select-1">
               <option
-                v-for="type in Object.keys(types)"
-                :value="types[type]"
-                :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long |
-                capitalize }}
+                v-for="network in types"
+                :value="network"
+                :key="network.name + network.name_long">
+                {{ network.name | capitalize }} - {{ network.name_long | capitalize }}
               </option>
             </select>
             <input
@@ -86,14 +90,14 @@
               type="text"
               name=""
               placeholder="URL"
-              autocomplete="off">
+              autocomplete="off" >
             <input
               v-model="port"
               class="custom-input-text-1"
               type="text"
               name=""
               placeholder="Port"
-              autocomplete="off">
+              autocomplete="off" >
             <input
               v-show="selectedNetwork.name === 'Custom'"
               v-model="chainID"
@@ -113,7 +117,7 @@
                 <label class="switch">
                   <input
                     type="checkbox"
-                    @click="expendAuth">
+                    @click="expendAuth" >
                   <span class="slider round"/>
                 </label>
               </div>
@@ -128,14 +132,14 @@
               type="text"
               name=""
               placeholder="User Name"
-              autocomplete="off">
+              autocomplete="off" >
             <input
               v-model="password"
               class="custom-input-text-1"
               type="password"
               name=""
               placeholder="Password"
-              autocomplete="off">
+              autocomplete="off" >
           </div>
         </div>
 

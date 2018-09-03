@@ -9,8 +9,13 @@ function isJson(str) {
   return true;
 }
 
-function doesExists(val) {
+function doesExist(val) {
   return val !== undefined && val !== null;
 }
 
-export default { isJson, doesExists };
+function padLeftEven(hex) {
+  hex = hex.length % 2 !== 0 ? '0' + hex : hex;
+  return hex;
+}
+
+export default { isJson, doesExist, padLeftEven };

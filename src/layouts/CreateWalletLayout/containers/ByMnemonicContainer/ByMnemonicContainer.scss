@@ -14,8 +14,12 @@
     }
 
     @keyframes progressGrow {
-      from {width: 33.33%;}
-      to {width: 66.66%;}
+      from {
+        width: 33.33%;
+      }
+      to {
+        width: 66.66%;
+      }
     }
 
     .tab-pane {
@@ -30,7 +34,7 @@
       } // .title-popover
 
       .contents {
-        margin-bottom: 120px;
+        margin-bottom: 60px;
 
         .tools {
           align-items: center;

@@ -3,12 +3,12 @@
 .wrap {
   padding: 80px 0;
 
-  @media all and (max-width: $tablet-width){
+  @media all and (max-width: $tablet-width) {
     padding: 40px 0 60px;
   }
 
   .content {
-    @media all and (max-width: $tablet-width){
+    @media all and (max-width: $tablet-width) {
       display: block;
     }
 
@@ -22,23 +22,23 @@
       display: flex;
       margin-left: auto;
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         margin-top: 50px;
       }
 
-      @media all and (max-width: $mobile-width){
+      @media all and (max-width: $mobile-width) {
         justify-content: space-around;
       }
 
-      a:first-child>div {
+      a:first-child > div {
         margin-left: 0;
       }
 
-      a>div {
+      a > div {
         flex-direction: column;
         margin-left: 40px;
 
-        @media all and (max-width: $mobile-width){
+        @media all and (max-width: $mobile-width) {
           margin-left: 0;
           margin-right: 0;
         }
@@ -58,11 +58,13 @@
       div {
         img {
           $icon-size: 64px;
+
           height: $icon-size;
           width: $icon-size;
 
-          @media all and (max-width: $mobile-width){
+          @media all and (max-width: $mobile-width) {
             $mobile-icon-size: $icon-size - $mobile-subtract-value;
+
             height: $mobile-icon-size;
             width: $mobile-icon-size;
           }
