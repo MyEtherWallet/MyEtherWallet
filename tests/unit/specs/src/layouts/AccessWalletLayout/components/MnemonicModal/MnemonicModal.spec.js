@@ -13,7 +13,72 @@ const shortMnemonic = TestValues.shortMnemonic;
 
 describe('MnemonicModal.vue', () => {
 
-  it('should render correct contents', () => {
+  describe('MnemonicModal.vue', () => {
+    let localVue, i18n, wrapper;
+
+    beforeAll(() => {
+      const baseSetup = Tooling.createLocalVueInstance();
+      localVue = baseSetup.localVue;
+      i18n = baseSetup.i18n;
+    });
+
+    beforeEach(() => {
+      wrapper = shallowMount(MnemonicModal, {
+        localVue,
+        i18n,
+        attachToDocument: true,
+        propsData: {
+          mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
+            expect(MnemonicPhrase).toEqual(longMnemonic);
+          }
+        }
+      });
+    });
+
+    it('should check the switch to change the number of words', () => {
+      const checkboxInput = wrapper.find('input[type="checkbox"]');
+      expect(checkboxInput.element.checked).toEqual(false);
+      checkboxInput.setChecked();
+      expect(checkboxInput.element.checked).toEqual(true);
+    });
+
+    it('should click the element that changes the number of words display', () => {
+      expect(wrapper.vm.mnemonic24).toEqual(false);
+      let btn = wrapper.find('.slider');
+      btn.trigger('click');
+      expect(wrapper.vm.mnemonic24).toEqual(true);
+    });
+
+    it('should start with 12 input fields', () => {
+      let btn = wrapper.findAll('input[type="text"]');
+      for (let i = 0; i < 12; i++) {
+        const inputField = btn.at(i);
+        expect(inputField.element.value).toEqual('');
+      }
+    });
+
+    it('should not have more than 12 input fields', () => {
+      let btn = wrapper.findAll('input[type="text"]');
+      let didFail = false;
+      try {
+        btn.at(14);
+        expect(didFail).toEqual(true);
+      } catch (e) {
+        didFail = true;
+        expect(didFail).toEqual(true);
+      }
+    });
+
+    it('should start with 12 input fields then change to 24', () => {
+      let btn = wrapper.find('.slider');
+      btn.trigger('click');
+      let input = wrapper.findAll('input[type="text"]');
+      for (let i = 0; i < 24; i++) {
+        const inputField = input.at(i);
+        expect(inputField.element.value).toEqual('');
+      }
+    });
+
   });
 
   describe('MnemonicModal.vue Methods', () => {
