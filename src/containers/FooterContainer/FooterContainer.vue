@@ -100,11 +100,11 @@ export default {
             },
             {
               text: this.$t('footer.debugs'),
-              to: '/'
+              to: '/debugs'
             },
             {
               text: this.$t('footer.extension'),
-              to: '/'
+              to: '/extensions'
             },
             {
               text: this.$t('footer.others'),

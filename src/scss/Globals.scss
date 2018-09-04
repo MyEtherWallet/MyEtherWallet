@@ -121,6 +121,29 @@ button {
 }
 
 
+
+// *********************************************************************
+// Bootstrap Style Reset
+// *********************************************************************
+.btn:focus, .btn.focus, .btn:active, .form-control:focus {
+  box-shadow: none;
+}
+
+
+.btn-info:not(:disabled):not(.disabled):active, .btn-info:not(:disabled):not(.disabled).active, .show > .btn-info.dropdown-toggle {
+  color: initial;
+  background-color: initial;
+  border-color: initial;
+}
+
+.btn-info:not(:disabled):not(.disabled):active:focus, .btn-info:not(:disabled):not(.disabled).active:focus, .show > .btn-info.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+
+
+
+
 // *********************************************************************
 // Disable WebKit Spinners
 // *********************************************************************

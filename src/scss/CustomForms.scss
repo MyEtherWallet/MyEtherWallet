@@ -6,13 +6,14 @@
 //=======================================================================
 %input-1 {
   font-size: 14px;
-  padding: 20px;
+  padding: 15px;
   border: 0;
+  background-color: $background-color-1;
 }
 
 
 //=======================================================================
-// Password input field
+// Password Input
 //=======================================================================
 .mew-custom-form__password {
   position: relative;
@@ -21,8 +22,6 @@
 
   input {
     @extend %input-1;
-    background-color: $background-color-1;
-    border: 1px solid $background-color-1;
     width: 100%;
   }
 
@@ -89,7 +88,7 @@
 
 
 //=======================================================================
-// Text input
+// Text Input
 //=======================================================================
 .mew-custom-form__search {
   position: relative;
@@ -117,8 +116,16 @@
       display: block;
     }
   }
+}
 
+.mew-custom-form__text {
+  position: relative;
 
+  input {
+    @extend %input-1;
+    position: relative;
+    display: block;
+  }
 }
 
 
