@@ -12,7 +12,7 @@
           <b-dropdown
             id="hd-derivation-path"
             :text="selecteDPath.dpath"
-            class="dropdown-button-1">
+            class="dropdown-button-2">
             <b-dropdown-item
               v-for="(val, key) in availablePaths"
               :class="selecteDPath.dpath === val.dpath ? 'active' : ''"

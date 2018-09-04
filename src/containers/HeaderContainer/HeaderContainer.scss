@@ -126,6 +126,10 @@
           margin-left: 26px;
           padding: 13px 0;
 
+          &.nopadding {
+            padding: 0;
+          }
+
           a {
             color: $text-color-3;
           }
@@ -169,8 +173,9 @@
 
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.3s ease-out;
+  animation: fadeInFromNone 0.5s ease-out;
   animation-fill-mode:forwards;
+  opacity: 1;
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -182,6 +187,7 @@
     transition: background-color 0.2s ease;
     display: block;
     position: relative;
+    overflow: hidden;
 
     &:hover {
       background-color: $text-color-green;
@@ -190,41 +196,54 @@
   }
 
   &.noshow {
-    animation: fadeOutFromBlock 0.3s ease-out;
+    animation: fadeOutFromBlock 0.5s ease-out;
     animation-fill-mode: forwards;
   }
 
   @keyframes fadeInFromNone {
     0% {
+      width: 0px;
+      height: 0px;
       opacity: 0;
-      position: relative;
+      margin-left: 0px;
     }
 
-    1% {
+    50% {
+      width: 173px;
+      height: 54px;
       opacity: 0;
+      margin-left: 20px;
     }
 
     100% {
+      width: 173px;
+      height: 54px;
       opacity: 1;
+      margin-left: 20px;
     }
   }
 
 
   @keyframes fadeOutFromBlock {
     0% {
+      width: 173px;
+      height: 54px;
       opacity: 1;
-      position: relative;
+      margin-left: 20px;
     }
 
-    99% {
+    50% {
+      width: 173px;
+      height: 54px;
       opacity: 0;
-      position: relative;
+      margin-left: 20px;
     }
 
     100% {
+      width: 0px;
+      height: 0px;
       opacity: 0;
-      z-index: -1;
-      position: absolute;
+      margin-left: 0px;
     }
   }
 } // .get-free-wallet

@@ -7,29 +7,20 @@
     title="Access by Software">
     <div class="d-block content-container text-center">
       <ul class="button-options">
-        <li
-          :class="selected === 'byJson'? 'selected': ''"
-          @click="select('byJson')">
-          <img
-            :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
-            class="icon">
+        <li @click="select('byJson')" :class="selected === 'byJson'? 'selected': ''">
+          <img class="icon" :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-json-hover.svg">
           <span>{{ $t("common.jsonF") }}</span>
         </li>
-        <li
-          :class="selected === 'byMnem'? 'selected': ''"
-          @click="select('byMnem')">
-          <img
-            :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
-            class="icon">
-          <span>{{ $t("common.mnemonicP") }}</span>
+        <li @click="select('byMnem')" :class="selected === 'byMnem'? 'selected': ''">
+          <img class="icon" :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-mnemonic-hover.svg">
+          <span>{{$t("common.mnemonicP")}}</span>
         </li>
-        <li
-          :class="selected === 'byPriv'? 'selected': ''"
-          @click="select('byPriv')">
-          <img
-            :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
-            class="icon">
-          <span>{{ $t("common.privKey") }}</span>
+        <li @click="select('byPriv')" :class="selected === 'byPriv'? 'selected': ''">
+          <img class="icon" :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')">
+          <img class="hover-icon" src="@/assets/images/icons/button-key-hover.svg">
+          <span>{{$t("common.privKey")}}</span>
         </li>
       </ul>
       <input
