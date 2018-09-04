@@ -14,6 +14,7 @@
       ref="notification"
       hide-footer
       centered
+      no-padding
       class="bootstrap-modal-wide nopadding"
       @show="countUnread">
       <template slot="modal-title">

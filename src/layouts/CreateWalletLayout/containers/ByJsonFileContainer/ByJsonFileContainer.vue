@@ -132,7 +132,7 @@ export default {
     };
     worker.onerror = function() {
       // eslint-disable-next-line no-console
-      console.log('onerror received from worker'); // replace with debugger
+      console.error('onerror received from worker'); // replace with debugger
     };
   }
 };

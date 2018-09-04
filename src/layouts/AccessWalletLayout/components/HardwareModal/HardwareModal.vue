@@ -141,7 +141,7 @@ export default {
           break;
         default:
           // eslint-disable-next-line
-          console.log('something not right'); // todo remove dev item
+          console.error('something not right'); // todo remove dev item
           break;
       }
     },

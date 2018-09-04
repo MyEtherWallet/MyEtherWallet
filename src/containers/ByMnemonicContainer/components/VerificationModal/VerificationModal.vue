@@ -119,8 +119,6 @@ export default {
 
         this.shuffleArray(this.mnemonicVerificationItems[c].data);
       }
-
-      // console.log(this.mnemonicVerificationItems)
     }
   },
   methods: {
@@ -143,7 +141,7 @@ export default {
         }
       }
 
-      console.log(trueCount);
+      // console.log(trueCount);
 
       if (trueCount === 3) {
         this.mnemonicDoneModalOpen();

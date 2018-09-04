@@ -154,8 +154,6 @@ import { Misc } from '@/helpers';
 import store from 'store';
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx');
-// eslint-disable-next-line
 const unit = require('ethjs-unit');
 export default {
   name: 'DeployContract',
@@ -239,7 +237,8 @@ export default {
           // gas: this.gasLimit,
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-          data: this.data.replace(/\s/g, '')
+          data: this.data.replace(/\s/g, ''),
+          chainId: this.$store.state.network.type.chainID || 1
         };
 
         const fromAddress = this.raw.from;
@@ -271,7 +270,7 @@ export default {
           })
           .on('error', err => {
             // eslint-disable-next-line
-            console.log(err); // todo replace with proper error
+            console.error(err); // todo replace with proper error
             this.$store.dispatch('addNotification', [
               fromAddress,
               err,
@@ -305,7 +304,7 @@ export default {
           })
           .catch(err => {
             // eslint-disable-next-line no-console
-            console.log(err);
+            console.error(err);
           });
       }
     },
