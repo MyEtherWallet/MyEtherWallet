@@ -8,20 +8,14 @@
     </div>
 
     <div class="wrap">
-      <div
-        ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
-        class="fixed-header">
+      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
         <div class="page-container">
           <div class="header-container">
             <router-link
               to="/"
               @click.native="scrollTop()">
               <div class="top-logo">
-                <img
-                  :class="isPageOnTop == false ? 'logo-small' : ''"
-                  class="logo-large"
-                  src="~@/assets/images/logo.png">
+                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
               </div>
             </router-link>
             <div class="top-menu">
@@ -43,15 +37,10 @@
                       class="fa fa-angle-down"
                       aria-hidden="true"/>
                   </div>
-                  <b-nav-item-dropdown
-                    class="language-menu"
-                    extra-toggle-classes="nav-link-custom"
-                    right>
+                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img
-                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                          class="show">
+                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -124,28 +113,28 @@ export default {
   data() {
     return {
       supportedLanguages: [
-        { name: 'Deutsch', flag: 'de' },
-        { name: 'Ελληνικά', flag: 'gr' },
-        { name: 'English', flag: 'gb' },
-        { name: 'Español', flag: 'es' },
-        { name: 'Farsi', flag: 'ir' },
-        { name: 'Suomi', flag: 'fi' },
-        { name: 'Magyar', flag: 'hu' },
-        { name: 'Haitian Creole', flag: 'ht' },
-        { name: 'Bahasa Indonesia', flag: 'id' },
-        { name: 'Italiano', flag: 'it' },
-        { name: '日本語', flag: 'jp' },
-        { name: '한국어', flag: 'kr' },
-        { name: 'Nederlands', flag: 'nl' },
-        { name: 'Norsk Bokmål', flag: 'no' },
-        { name: 'Polski', flag: 'pl' },
-        { name: 'Português', flag: 'pt' },
-        { name: 'Русский', flag: 'ru' },
-        { name: 'ภาษาไทย', flag: 'th' },
-        { name: 'Türkçe', flag: 'tr' },
-        { name: 'Tiếng Việt', flag: 'vn' },
-        { name: '简体中文', flag: 'cn-sim' },
-        { name: '繁體中文', flag: 'cn-tr' }
+        {name: 'Deutsch', flag: 'de'},
+        {name: 'Ελληνικά', flag: 'gr'},
+        {name: 'English', flag: 'gb'},
+        {name: 'Español', flag: 'es'},
+        {name: 'Farsi', flag: 'ir'},
+        {name: 'Suomi', flag: 'fi'},
+        {name: 'Magyar', flag: 'hu'},
+        {name: 'Haitian Creole', flag: 'ht'},
+        {name: 'Bahasa Indonesia', flag: 'id'},
+        {name: 'Italiano', flag: 'it'},
+        {name: '日本語', flag: 'jp'},
+        {name: '한국어', flag: 'kr'},
+        {name: 'Nederlands', flag: 'nl'},
+        {name: 'Norsk Bokmål', flag: 'no'},
+        {name: 'Polski', flag: 'pl'},
+        {name: 'Português', flag: 'pt'},
+        {name: 'Русский', flag: 'ru'},
+        {name: 'ภาษาไทย', flag: 'th'},
+        {name: 'Türkçe', flag: 'tr'},
+        {name: 'Tiếng Việt', flag: 'vn'},
+        {name: '简体中文', flag: 'cn-sim'},
+        {name: '繁體中文', flag: 'cn-tr'}
       ],
       online: true,
       currentName: 'English',
@@ -186,12 +175,12 @@ export default {
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    // this.onPageScroll();
+    this.onPageScroll()
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    // window.onscroll = function() {
-    //   self.onPageScroll();
-    // };
+    window.onscroll = function (e) {
+      self.onPageScroll()
+    }
   },
   methods: {
     languageItemClicked(e) {
@@ -221,5 +210,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'HeaderContainer.scss';
+  @import 'HeaderContainer.scss';
 </style>
