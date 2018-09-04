@@ -210,10 +210,10 @@ export default {
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
-    hardwareWalletOpen(e) {
+    hardwareWalletOpen(wallet) {
       this.walletConstructor = {};
       this.hardwareBrand = '';
-      this.hardwareWallet = e;
+      this.hardwareWallet = wallet;
       this.networkAndAddressOpen();
     }
   }

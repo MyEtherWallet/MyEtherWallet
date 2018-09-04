@@ -2,9 +2,10 @@ import EthereumjsTx from 'ethereumjs-tx';
 import * as ethUtil from 'ethereumjs-util';
 import * as HDKey from 'hdkey';
 import HardwareWalletInterface from '../hardwareWallet-interface';
-import { getDerivationPath, paths } from '../trezor/deterministicWalletPaths';
+import { getDerivationPath, paths } from './deterministicWalletPaths';
+import TrezorConnect from './trezorConnect_v4.js';
 
-const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect;
+// const TrezorConnect = require('./trezorConnect_v4.js').TrezorConnect;
 
 export default class TrezorWallet extends HardwareWalletInterface {
   constructor(options) {
@@ -277,17 +278,31 @@ export default class TrezorWallet extends HardwareWalletInterface {
         });
       };
 
-      TrezorConnect.signEthereumTx(
-        this.wallet.path,
-        this.getNakedAddress(rawTx.nonce),
-        this.getNakedAddress(rawTx.gasPrice),
-        this.getNakedAddress(rawTx.gas),
-        this.getNakedAddress(rawTx.to),
-        this.getNakedAddress(rawTx.value),
-        this.getNakedAddress(rawTx.data),
-        +rawTx.chainId,
-        trezorConnectSignCallback
-      );
+      if (rawTx.to) {
+        TrezorConnect.signEthereumTx(
+          this.wallet.path,
+          this.getNakedAddress(rawTx.nonce),
+          this.getNakedAddress(rawTx.gasPrice),
+          this.getNakedAddress(rawTx.gas),
+          this.getNakedAddress(rawTx.to),
+          this.getNakedAddress(rawTx.value),
+          this.getNakedAddress(rawTx.data),
+          +rawTx.chainId,
+          trezorConnectSignCallback
+        );
+      } else {
+        TrezorConnect.signEthereumTx(
+          this.wallet.path,
+          this.getNakedAddress(rawTx.nonce),
+          this.getNakedAddress(rawTx.gasPrice),
+          this.getNakedAddress(rawTx.gas),
+          '',
+          this.getNakedAddress(rawTx.value),
+          this.getNakedAddress(rawTx.data),
+          +rawTx.chainId,
+          trezorConnectSignCallback
+        );
+      }
     });
   }
 
