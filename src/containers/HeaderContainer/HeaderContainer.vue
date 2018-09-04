@@ -30,14 +30,12 @@
                 <b-nav-item
                   to="/"
                   exact
-                  @click="scrollTop()"> {{ $t("header.home") }}
-                </b-nav-item>
+                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
                 <b-nav-item
                   v-show="online"
-                  to="/#news">{{ $t("common.news") }}
-                </b-nav-item>
+                  to="/#news">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -113,7 +111,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -129,7 +126,7 @@ export default {
       supportedLanguages: [
         { name: 'Deutsch', flag: 'de' },
         { name: 'Ελληνικά', flag: 'gr' },
-        { name: 'English', flag: 'en' },
+        { name: 'English', flag: 'gb' },
         { name: 'Español', flag: 'es' },
         { name: 'Farsi', flag: 'ir' },
         { name: 'Suomi', flag: 'fi' },
@@ -137,8 +134,8 @@ export default {
         { name: 'Haitian Creole', flag: 'ht' },
         { name: 'Bahasa Indonesia', flag: 'id' },
         { name: 'Italiano', flag: 'it' },
-        { name: '日本語', flag: 'ja' },
-        { name: '한국어', flag: 'ko' },
+        { name: '日本語', flag: 'jp' },
+        { name: '한국어', flag: 'kr' },
         { name: 'Nederlands', flag: 'nl' },
         { name: 'Norsk Bokmål', flag: 'no' },
         { name: 'Polski', flag: 'pl' },
@@ -147,12 +144,12 @@ export default {
         { name: 'ภาษาไทย', flag: 'th' },
         { name: 'Türkçe', flag: 'tr' },
         { name: 'Tiếng Việt', flag: 'vn' },
-        { name: '简体中文', flag: 'zh-Hans' },
-        { name: '繁體中文', flag: 'zh-Hant' }
+        { name: '简体中文', flag: 'cn-sim' },
+        { name: '繁體中文', flag: 'cn-tr' }
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'en',
+      currentFlag: 'gb',
       isPageOnTop: true
     };
   },
@@ -165,20 +162,18 @@ export default {
     online(newVal) {
       this.online = newVal;
     },
-    notifications() {
+    showNotifications() {
       this.$children[6].$refs.notification.show();
     }
   },
   mounted() {
-    const self = this;
-
     if (this.$store.state.online) {
       this.online = true;
     } else {
       this.online = false;
     }
 
-    if (Misc.doesExist(store.get('locale'))) {
+    if (store.get('locale') !== null && store.get('locale') !== undefined) {
       this.$root._i18n.locale = store.get('locale');
       this.currentFlag = store.get('locale');
     } else {
@@ -186,23 +181,17 @@ export default {
       this.currentFlag = this.$root._i18n.locale;
     }
 
-    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
-    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    if (!/zh[-_]/.test(this.currentFlag)) {
-      this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    }
-
     this.currentName = this.supportedLanguages.filter(
       item => item.flag === this.currentFlag
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    this.onPageScroll();
+    // this.onPageScroll();
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    window.onscroll = function() {
-      self.onPageScroll();
-    };
+    // window.onscroll = function() {
+    //   self.onPageScroll();
+    // };
   },
   methods: {
     languageItemClicked(e) {

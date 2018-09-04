@@ -104,4 +104,5 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CreateWalletInput.scss';
+@import '~@/scss/CustomForms';
 </style>

@@ -67,11 +67,7 @@ export default class HardwareWalletInterface {
 
   // Implementation required
   changeDerivationPath() {
-    throw new Error('changeDerivationPath Not Implemented');
-  }
-
-  changeNetwork(/* network */) {
-    throw new Error('changeNetwork Not Implemented');
+    throw new Error('changePath Not Implemented');
   }
 
   // ============== (End) Required Utility methods ======================

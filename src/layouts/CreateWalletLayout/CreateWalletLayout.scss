@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+
+
 .wrap {
   background-color: $background-color-1;
   padding: 0;
@@ -12,45 +14,9 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
-    text-align: center;
-    h3 {
-      max-width: 320px;
-      line-height: 28px;
-    }
   }
 }
 
-.mew-connect-block {
-  padding-bottom: 0 !important;
-
-  .appstores {
-    .icons {
-      text-align: center;
-      margin-bottom: 25px;
-      img {
-        height: 40px;
-        margin: 0 3px;
-      }
-    }
-
-    .download {
-      text-align: center;
-      p {
-        color: $mew-green;
-        cursor: pointer;
-        display: inline-block;
-      }
-    }
-  }
-
-  .bottom-image {
-    margin-top: 50px;
-    text-align: center;
-    img {
-      width: 60%;
-    }
-  }
-}
 
 .nav-tab-user-input-box {
   background-color: $background-color-white;
@@ -59,20 +25,17 @@
 
   .progress-bar {
     animation-name: progreesbar-grow;
-    width: 23.33%;
+    width: 33.33%;
   }
 
   @keyframes progreesbar-grow {
-    from {
-      width: 0%;
-    }
-    to {
-      width: 23.33%;
-    }
+    from {width: 0%;}
+    to {width: 33.33%;}
   }
 
   .tab-pane {
     min-height: 500px;
     padding: 50px;
+
   }
 }

@@ -15,6 +15,7 @@
   }
 }
 
+
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
@@ -37,7 +38,7 @@
     padding: 12px 0;
     transition: all 0.3s ease;
 
-    @media all and (max-width: $tablet-width) {
+    @media all and (max-width: $tablet-width){
       padding: 15px 0;
     }
 
@@ -69,7 +70,7 @@
         color: $text-base-color;
       }
 
-      @media all and (max-width: $tablet-width) {
+      @media all and (max-width: $tablet-width){
         display: none;
       }
 
@@ -98,7 +99,6 @@
         .dropdown-menu {
           a {
             $language-item-padding-value: 8px;
-
             font-size: 13px;
             padding-bottom: $language-item-padding-value;
             padding-left: 15px;
@@ -119,29 +119,25 @@
         }
       }
 
-      > ul {
-        > li {
+      >ul {
+        >li {
           display: inline-block;
           font-size: 14px;
           margin-left: 26px;
           padding: 13px 0;
-
-          &.nopadding {
-            padding: 0;
-          }
 
           a {
             color: $text-color-3;
           }
         }
       }
-    } // .top-menu
+    }// .top-menu
 
     .mobile-menu {
       display: none;
       margin-left: auto;
 
-      @media all and (max-width: $tablet-width) {
+      @media all and (max-width: $tablet-width){
         display: block;
       }
 
@@ -161,19 +157,20 @@
           width: 15px;
         }
       }
-    } // .mobile-menu
-  } // .header-container
-} // .fixed-header
+    }// .mobile-menu
+
+  }// .header-container
+}// .fixed-header
 
 .identicon-dropdown {
   padding: 0 !important;
 }
 
+
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.5s ease-out;
-  animation-fill-mode: forwards;
-  opacity: 1;
+  animation: fadeInFromNone 0.3s ease-out;
+  animation-fill-mode:forwards;
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -185,7 +182,6 @@
     transition: background-color 0.2s ease;
     display: block;
     position: relative;
-    overflow: hidden;
 
     &:hover {
       background-color: $text-color-green;
@@ -194,53 +190,42 @@
   }
 
   &.noshow {
-    animation: fadeOutFromBlock 0.5s ease-out;
+    animation: fadeOutFromBlock 0.3s ease-out;
     animation-fill-mode: forwards;
   }
 
   @keyframes fadeInFromNone {
     0% {
-      width: 0;
-      height: 0;
       opacity: 0;
-      margin-left: 0;
+      position: relative;
     }
 
-    50% {
-      width: 173px;
-      height: 54px;
+    1% {
       opacity: 0;
-      margin-left: 20px;
     }
 
     100% {
-      width: 173px;
-      height: 54px;
       opacity: 1;
-      margin-left: 20px;
     }
   }
+
 
   @keyframes fadeOutFromBlock {
     0% {
-      width: 173px;
-      height: 54px;
       opacity: 1;
-      margin-left: 20px;
+      position: relative;
     }
 
-    50% {
-      width: 173px;
-      height: 54px;
+    99% {
       opacity: 0;
-      margin-left: 20px;
+      position: relative;
     }
 
     100% {
-      width: 0;
-      height: 0;
       opacity: 0;
-      margin-left: 0;
+      z-index: -1;
+      position: absolute;
     }
   }
 } // .get-free-wallet
+

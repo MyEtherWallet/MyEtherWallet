@@ -1,95 +1,51 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
-    class="bootstrap-modal modal-metamask"
+    class="bootstrap-modal modal-software"
+    title="Enter Mnemonic Phrase"
     centered>
-
-    <div class="contents">
-      <p class="instruction">{{ $t("accessWallet.pleaseTypeInMnemonicPhrase") }}</p>
-      <div class="tools">
-        <div class="value-switch noselect">
-          <div class="sliding-switch">
-            <label class="switch">
-              <input type="checkbox">
-              <span
-                class="slider round"
-                @click="mnemonicValueBitSizeChange"/>
-            </label>
-            <div class="labels">
-              <span class="label-left white">12</span>
-              <span class="label-right">24</span>
-            </div>
-          </div>
-          <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
-        </div>
-
+    <form class="private-key-form">
+      <div class="input-container">
+        <input
+          v-model="mnemonicPhrase"
+          type="text"
+          name="PrivateKey"
+          autocomplete="off">
       </div>
-      <div class="phrases">
-        <ul>
-          <li
-            v-for="index in mnemonicSize"
-            :key="index">
-            <span>{{ index }}.</span><input
-              v-model="mnemonicPhrase[index - 1]"
-              type="text"
-              name="">
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="button-container">
-      <b-btn
-        class="mid-round-button-green-filled close-button"
-        @click="openPasswordModal">
-        {{ $t("common.continue") }}
-      </b-btn>
-    </div>
-    <customer-support/>
+      <button
+        :disabled=" mnemonicPhrase === '' && mnemonicPhrase.length === 0"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
+        @click.prevent="unlockWallet">
+        Continue
+      </button>
+    </form>
   </b-modal>
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
-
 export default {
-  components: {
-    'customer-support': CustomerSupport
-  },
   props: {
-    mnemonicPhrasePasswordModalOpen: {
+    openMnemonicPasswordModal: {
       type: Function,
       default: function() {}
     }
   },
   data() {
     return {
-      mnemonicPhrase: [].fill(' ', 0, 11),
-      mnemonic24: false,
-      mnemonicSize: 12
+      mnemonicPhrase: ''
     };
   },
   methods: {
-    mnemonicValueBitSizeChange() {
-      const left = document.querySelector('.label-left');
-      const right = document.querySelector('.label-right');
-      this.mnemonic24 = !this.mnemonic24;
-      if (this.mnemonic24 === true) {
-        this.mnemonicSize = 24;
-        this.mnemonicPhrase.fill(' ', 12, this.mnemonicSize);
-        left.classList.remove('white');
-        right.classList.add('white');
-      } else {
-        this.mnemonicSize = 12;
-        this.mnemonicPhrase.splice(12, 12);
-        left.classList.add('white');
-        right.classList.remove('white');
-      }
-    },
-    openPasswordModal() {
-      this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
+    unlockWallet() {
+      this.openMnemonicPasswordModal(this.mnemonicPhrase);
+      // this.$store.dispatch('decryptWallet', MnemonicWallet.unlock({
+      //   mnemonicPhrase: 'manualPrivateKey',
+      //   mnemonicPassword: this.privateKey
+      // }))
+      // this.privateKey = ''
+      // this.$router.push({ path: 'interface' })
     }
   }
 };

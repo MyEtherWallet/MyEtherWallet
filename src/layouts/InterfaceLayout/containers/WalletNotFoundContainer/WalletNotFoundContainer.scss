@@ -5,7 +5,8 @@
   position: relative;
 }
 
-.wallet-not-found .wrap {
+
+.wallet-not-found .wrap{
   height: 700px;
   background-image: url('~@/assets/images/background/404bg.jpg');
   background-size: cover;
@@ -14,6 +15,7 @@
   display: flex;
   align-items: center;
   position: relative;
+
 
   .content-block {
     position: relative;
@@ -28,9 +30,9 @@
     .buttons {
       text-align: center;
       margin-top: 30px;
-      > a {
+       >a {
         margin: 0 10px;
-      }
+       }
     }
 
     .spaceman {
@@ -45,3 +47,9 @@
     }
   }
 }
+
+
+
+
+
+

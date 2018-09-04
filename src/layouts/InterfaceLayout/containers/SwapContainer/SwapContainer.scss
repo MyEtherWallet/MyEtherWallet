@@ -5,33 +5,16 @@
 
   .title-block {
     position: relative;
-    .buy-eth {
-      right: 30px;
-      top: 28px;
+    .images {
+      top: 22px;
+      right: 25px;
       position: absolute;
       display: flex;
       align-items: center;
-      color: $mew-green;
       img {
-        height: 20px;
-        margin-left: 10px;
+        height: 30px;
+        margin-left: 20px;
       }
-    }
-  }
-
-  .title-and-copy {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-
-    h4 {
-      margin: 0;
-    }
-    .copy-button {
-      margin-left: auto;
-      color: $mew-green;
-      cursor: pointer;
     }
   }
 
@@ -43,7 +26,6 @@
         padding: 0 8px;
         .title-and-popover {
           display: flex;
-          align-items: center;
         }
         h4 {
           margin-bottom: 2px;
@@ -68,6 +50,7 @@
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
+
       }
 
       .exchange-icon {
@@ -200,7 +183,7 @@
         display: flex;
         margin-left: auto;
 
-        > span {
+        >span {
           margin-right: 15px;
         }
       }
@@ -231,6 +214,15 @@
 
     p {
       margin-top: 20px;
+    }
+
+    .buy-eth {
+      margin-top: 20px;
+      color: $mew-green;
+      img {
+        height: 20px;
+      }
+
     }
   }
 }

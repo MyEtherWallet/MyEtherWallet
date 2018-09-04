@@ -6,11 +6,11 @@
       <div class="page-container">
         <div class="content">
           <div class="switcher">
-            <span 
-              :class="openFAQs ? 'active' : ''" 
+            <span
+              :class="openFAQs ? 'active' : ''"
               @click="openFAQs = true, openCategories = false">FAQs</span>
-            <span 
-              :class="openCategories ? 'active' : ''" 
+            <span
+              :class="openCategories ? 'active' : ''"
               @click="openFAQs = false, openCategories = true">Categories</span>
           </div>
           <div v-if="openFAQs">

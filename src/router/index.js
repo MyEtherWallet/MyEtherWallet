@@ -40,7 +40,7 @@ export default new Router({
     },
     {
       path: '/terms-and-conditions',
-      name: 'TermsOfConditionsLayout',
+      name: 'TermsAndConditionsLayout',
       component: TermsAndConditionsLayout
     },
     {
@@ -65,7 +65,7 @@ export default new Router({
     },
     {
       path: '/getting-started',
-      name: 'CreateWalletWarningLayout',
+      name: 'GettingStarted',
       component: GettingStarted
     },
     {

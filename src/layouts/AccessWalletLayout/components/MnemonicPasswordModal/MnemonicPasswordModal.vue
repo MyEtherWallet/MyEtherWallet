@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
+    title="Password"
     centered>
     <form class="password-form">
       <div class="input-container">
@@ -28,7 +28,7 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet" >
-        {{ $t("common.continue") }}
+        Unlock Wallet
       </button>
     </form>
   </b-modal>
@@ -38,7 +38,7 @@
 import { MnemonicWallet } from '@/wallets';
 export default {
   props: {
-    hardwareWalletOpen: {
+    networkAndAddressOpen: {
       type: Function,
       default: function() {}
     },
@@ -61,6 +61,7 @@ export default {
   },
   methods: {
     unlockWallet() {
+      // this.$store.dispatch('decryptWallet', )
       MnemonicWallet.unlock({
         mnemonicPhrase: this.phrase,
         mnemonicPassword: this.password
@@ -68,7 +69,7 @@ export default {
         .then(wallet => {
           this.$refs.password.hide();
           this.password = '';
-          this.hardwareWalletOpen(wallet);
+          this.networkAndAddressOpen(wallet);
         })
         .catch(_error => {
           // eslint-disable-next-line no-console

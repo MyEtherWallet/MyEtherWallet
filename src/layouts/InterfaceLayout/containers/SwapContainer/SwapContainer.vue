@@ -1,12 +1,10 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal/>
-
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div class="buy-eth">
-        <span>Buy ETH with</span>
-        <img :src="images.visaMaster">
+      <div class="images">
+        <img :src="images.kybernetowrk">
+        <img :src="images.bity">
       </div>
     </div>
 
@@ -29,7 +27,9 @@
           </div>
         </div>
         <div class="exchange-icon">
-          <img :src="images.swap">
+          <i
+            class="fa fa-exchange"
+            aria-hidden="true"/>
         </div>
         <div class="amount">
           <div class="title">
@@ -52,28 +52,20 @@
 
     <div class="send-form">
       <div class="title-container">
-        <div class="title title-and-copy">
+        <div class="title">
           <h4>{{ $t('common.toAddress') }}</h4>
-          <p class="copy-button prevent-user-select">Copy</p>
         </div>
       </div>
       <div class="the-form gas-amount">
-        <drop-down-address-selector/>
+        <input
+          type="number"
+          name=""
+          value=""
+          placeholder="Please Enter The Address" >
       </div>
     </div>
 
     <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>Providers</h4>
-        </div>
-      </div>
-      <providers-radio-selector/>
-    </div>
-
-    <div
-      v-if="false"
-      class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
@@ -111,47 +103,42 @@
     </div>
 
     <div class="submit-button-container">
-      <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div
-        class="submit-button large-round-button-green-filled clickable"
-        @click="swapConfirmationModalOpen">
+      <h4>1 ETH = 0.000231 BTC</h4>
+      <div class="submit-button large-round-button-green-filled clickable">
         {{ $t('common.continue') }}
         <i
           class="fa fa-long-arrow-right"
           aria-hidden="true"/>
+      </div>
+      <div class="buy-eth">
+        <span>Buy ETH with</span>
+        <img :src="images.visaMaster">
       </div>
     </div>
 
   </div>
 </template>
 <script>
-import ProvidersRadioSelector from '../../components/ProvidersRadioSelector';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import swapIcon from '@/assets/images/icons/swap.svg';
+
 import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
-import SwapConfirmationModal from './components/SwapConfirmationModal';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'currency-picker': CurrencyPicker,
-    'drop-down-address-selector': DropDownAddressSelector,
-    'providers-radio-selector': ProvidersRadioSelector,
-    'swap-confirmation-modal': SwapConfirmationModal
+    'currency-picker': CurrencyPicker
   },
   data() {
     return {
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
-        visaMaster: ImageVisaMaster,
-        swap: swapIcon
+        visaMaster: ImageVisaMaster
       },
       toArray: [
         { symbol: 'BTC', name: 'Bitcoin' },
@@ -166,8 +153,8 @@ export default {
     };
   },
   methods: {
-    swapConfirmationModalOpen() {
-      this.$children[0].$refs.swapconfirmation.show();
+    copyAddress() {
+      alert("This doesn't work for now.");
     }
   }
 };

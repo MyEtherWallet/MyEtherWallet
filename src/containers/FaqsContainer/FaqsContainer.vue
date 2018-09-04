@@ -12,7 +12,12 @@
               <a href="https://kb.myetherwallet.com/">{{ $t("home.faqsSeeMore") }}</a>
             </h5>
           </div>
-          <customer-support/>
+          <div class="support">
+            <router-link to="/">
+              <div><img src="~@/assets/images/icons/help-center.svg"></div>
+              <div><h5>{{ $t("common.customerSupport") }}</h5></div>
+            </router-link>
+          </div>
         </div>
 
         <div class="qa-cards">
@@ -126,7 +131,6 @@
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
 import {
   BalancesNotLoadingOrShowingOnMyEtherWallet,
   EthOrTokensSentToOrFromExchangeHaventShownUp,
@@ -137,7 +141,6 @@ import {
 
 export default {
   components: {
-    'customer-support': CustomerSupport,
     'faq-balances-not-loading': BalancesNotLoadingOrShowingOnMyEtherWallet,
     'faq-eth-or-tokens-sent-to': EthOrTokensSentToOrFromExchangeHaventShownUp,
     'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins,
