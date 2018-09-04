@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
+    title="Password"
     centered>
     <form class="password-form">
       <div class="input-container">
@@ -29,7 +29,7 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlockWallet") }}
+        Unlock Wallet
       </button>
     </form>
   </b-modal>

@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="hardware"
-    :title="$t('accessWallet.accessByHardware')"
     hide-footer
     class="bootstrap-modal modal-hardware"
+    title="Access by Hardware"
     centered>
     <div class="d-block text-center">
       <ul
@@ -62,15 +62,21 @@
       <div
         :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
         @click="continueAccess">
-        {{ $t("accessWallet.accessDeviceAddresses") }}
+        Please Connect With Your Device
       </div>
     </div>
-    <customer-support/>
+    <div class="support">
+      <router-link to="/">
+        <div class="support-content">
+          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
+          <div class="support-label"><h5>Customer Support</h5></div>
+        </div>
+      </router-link>
+    </div>
   </b-modal>
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -79,9 +85,6 @@ import {
 } from '@/wallets';
 
 export default {
-  components: {
-    'customer-support': CustomerSupport
-  },
   props: {
     networkAndAddressOpen: {
       type: Function,

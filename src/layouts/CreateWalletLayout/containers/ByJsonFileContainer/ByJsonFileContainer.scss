@@ -19,23 +19,21 @@
   }
 
   @keyframes progressbarGrow {
-    from {
-      width: 33.33%;
-    }
-    to {
-      width: 66.66%;
-    }
+    from {width: 33.33%;}
+    to {width: 66.66%;}
   }
 
   .tab-pane {
     min-height: 500px;
     padding: 50px;
+
   }
 }
 
 .contents {
   margin-bottom: 40px;
 }
+
 
 .user-input-container {
   display: flex;
@@ -53,6 +51,7 @@
         width: 280px;
         text-decoration: none;
         text-align: center;
+
       }
     }
 
@@ -89,6 +88,7 @@
   pointer-events: none;
 }
 
+
 .title-block {
   display: flex;
   margin-bottom: 40px;
@@ -98,3 +98,9 @@
     align-items: center;
   }
 }
+
+
+
+
+
+

@@ -1,18 +1,12 @@
 <template>
   <div>
     <p>
-      Here is a list of reputable services you can use the following services
-      to buy and sell ETH / Tokens / fiat (USD, EUR, etc.). There are many,
-      many more out there but these are the ones I am familar with.
+      Here is a list of reputable services you can use the following services to buy and sell ETH / Tokens / fiat (USD, EUR, etc.). There are many, many more out there but these are the ones I am familar with.
     </p>
-    <p>
-      Always google " scam" and read about people's experiences before
-      choosing to send to a random service or website.
-    </p>
-    <p>
-      Not all exchanges support all coin types and fiat types, so take a
-      look around to find one that fits your location and circumstances.
-    </p>
+
+    <p>Always google " scam" and read about people's experiences before choosing to send to a random service or website.</p>
+
+    <p>Not all exchanges support all coin types and fiat types, so take a look around to find one that fits your location and circumstances.</p>
 
     <ul>
       <li>Bitfinex: <a href="https://www.bitfinex.com/">Website</a> · <a href="https://www.bitfinex.com/support">Support</a></li>

@@ -18,12 +18,12 @@
 
   &.open {
     @extend %open;
-
     border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
 }
+
 
 %dropdown-text-container-base {
   border: 1px solid $white;
@@ -47,13 +47,11 @@
 
 .dropdown-text-container {
   @extend %dropdown-text-container-base;
-
   background-color: $background-color-1;
 }
 
 .dropdown-text-container-white {
   @extend %dropdown-text-container-base;
-
   background-color: $white;
 }
 
@@ -90,7 +88,6 @@
 
   &.open {
     @extend %open;
-
     border-radius: 4px;
     border-top: 0;
     border-top-left-radius: 0;

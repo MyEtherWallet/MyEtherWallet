@@ -30,7 +30,9 @@
       }
     }
   }
+
 }
+
 
 .wrap {
   background-color: $about-mew-spaceman-background-color;
@@ -64,6 +66,8 @@
     opacity: 0;
     pointer-events: none;
   }
+
+
 }
 
 .create-wallet-warnings__footer-container {
@@ -94,6 +98,7 @@
 }
 
 .create-wallet-warnings__links {
+
   a:not(:last-child) {
     padding-right: 15px;
     margin-right: 15px;
@@ -109,3 +114,4 @@
     color: $mew-green;
   }
 }
+

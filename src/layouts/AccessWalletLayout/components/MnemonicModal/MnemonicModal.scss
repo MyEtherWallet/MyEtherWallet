@@ -1,71 +1,36 @@
-@import '~@/scss/CustomModal';
+@import '~@/scss/GlobalVariables';
 
-.button-container {
-  a {
+.private-key-form {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    font-size: 14px;
+    margin-bottom: 40px;
+    padding: 20px;
     width: 100%;
   }
-  button {
-    display: inline-block;
+
+  .submit-button {
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    max-width: 300px;
+    padding: 20px 0;
+    text-align: center;
     width: 100%;
+
+    &:disabled {
+      background-color: $disabled;
+      cursor: auto;
+      pointer-events: none;
+    }
+
+    img {
+      margin-left: 5px;
+      width: 20px;
+    }
   }
 }
-
-.contents {
-  margin-bottom: 60px;
-
-  .instruction {
-    margin-bottom: 40px;
-  }
-
-  .tools {
-    align-items: center;
-    display: flex;
-    margin-bottom: 10px;
-
-    .value-switch {
-      align-items: center;
-      display: flex;
-
-      .switch-label {
-        color: $text-color-4;
-        font-size: 14px;
-        margin-left: 10px;
-      }
-    }
-
-    .random-button {
-      cursor: pointer;
-      font-size: 14px;
-      margin-left: auto;
-
-      i {
-        margin-right: 5px;
-      }
-    }
-  }
-
-  .phrases {
-    ul {
-      display: grid;
-      grid-column-gap: 20px;
-      grid-row-gap: 20px;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      margin-bottom: 20px;
-
-      li {
-        border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
-        color: $text--mnemonic-phrase-index-color;
-        font-size: 14px;
-        padding: 10px 0;
-
-        input {
-          display: inline-block;
-          color: $text--mnemonic-phrase-key-color;
-          margin-left: 10px;
-          border: 0;
-          width: 70px;
-        }
-      } // li
-    } // ul
-  } // .phrases
-} // .contents

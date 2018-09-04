@@ -3,19 +3,4 @@
 .network {
   background-color: $transaction-block-network;
   cursor: pointer;
-  position: relative;
-}
-
-.block-content {
-  position: relative;
-}
-
-.helper {
-  position: absolute;
-  right: 19px;
-  top: 16px;
-
-  .popover-container button {
-    background: transparent !important;
-  }
 }

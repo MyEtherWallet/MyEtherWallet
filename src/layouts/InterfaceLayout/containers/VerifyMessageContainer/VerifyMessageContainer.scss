@@ -18,6 +18,7 @@
     @extend %send-form-base;
 
     .title-container {
+
       .title {
         align-items: flex-end;
         display: flex;
@@ -98,6 +99,7 @@
     }
   }
 
+
   .send-form-small-top-margin {
     padding-top: 10px;
   }
@@ -132,12 +134,10 @@
 
 .success-message {
   @extend %message;
-
   background-color: $light-green-1;
 }
 
 .error-message {
   @extend %message;
-
   background-color: $red-1;
 }

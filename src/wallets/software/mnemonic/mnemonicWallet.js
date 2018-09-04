@@ -58,10 +58,7 @@ export default class MnemonicWallet extends HardwareWalletInterface {
 
   static async unlock(options) {
     try {
-      console.log(options); // todo remove dev item
-      const wall = new MnemonicWallet(options);
-      console.log(wall); // todo remove dev item
-      return wall;
+      return new MnemonicWallet(options);
     } catch (e) {
       // eslint-disable-next-line
       console.error(e); // todo replace with proper error
@@ -97,15 +94,15 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
-  async getAccounts() {
+  getAccounts() {
     const _this = this;
-    if (arguments.length > 1) {
+    if (arguments.length > 1 && typeof arguments[2] === 'function') {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
     }
     return _this._getAccounts();
   }
 
-  async getMultipleAccounts(count, offset) {
+  getMultipleAccounts(count, offset) {
     // if the particular wallet does not support multiple accounts this should just return the primary account
     return this._getAccounts(count, offset);
   }
