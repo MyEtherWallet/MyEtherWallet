@@ -3,7 +3,7 @@
 
     <install-metamask-modal
       ref="installMetamaskModal"
-      :metamaskmodal="metamaskModalOpen"/>
+      :metamaskmodal="installMetamaskModalOpen"/>
     <access-by-mnemonic-phrase-modal
       ref="accessByMnemonicPhraseModal"
       :open-password="accessByMnemonicphrasePasswordModalOpen"/>
@@ -41,6 +41,9 @@
       :file="file"/>
 
     <private-key-modal ref="privatekeyModal"/>
+    <!--<install-metamask-modal :metamaskmodal="installMetamaskModalOpen"></install-metamask-modal>-->
+    <!--<access-by-mnemonic-phrase-modal :openPassword="accessByMnemonicphrasePasswordModalOpen"></access-by-mnemonic-phrase-modal>-->
+    <!--<access-by-mnemonic-phrase-password-modal></access-by-mnemonic-phrase-password-modal>-->
 
     <div class="wrap">
       <div class="page-container">
@@ -78,8 +81,6 @@
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
-import MetamaskModal from '../../components/MetamaskModal';
-import InstallMetamaskModal from '../../components/InstallMetamaskModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
@@ -88,14 +89,19 @@ import SoftwareModal from '../../components/SoftwareModal';
 import AccessByMnemonicphraseModal from '../../components/MnemonicPasswordModal';
 import AccessByMnemonicphrasePasswordModal from '../../components/NetworkAndAddressModal';
 
-import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
-import hardwareImg from '@/assets/images/icons/button-hardware.svg';
-import metamaskImg from '@/assets/images/icons/button-metamask.svg';
-import softwareImg from '@/assets/images/icons/button-software.svg';
+import MetamaskModal from '../../components/MetamaskModal';
+import InstallMetamaskModal from '../../components/InstallMetamaskModal';
+import AccessByMnemonicphraseModal from '../../components/AccessByMnemonicphraseModal'
+import AccessByMnemonicphrasePasswordModal from '../../components/AccessByMnemonicphrasePasswordModal'
 
-import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
-import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
-import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
+import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
+import hardwareImg from '@/assets/images/icons/button-hardware.svg'
+import metamaskImg from '@/assets/images/icons/button-metamask.svg'
+import softwareImg from '@/assets/images/icons/button-software.svg'
+
+import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
+import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
+import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
 
 export default {
   components: {
@@ -111,6 +117,7 @@ export default {
     'access-by-mnemonic-phrase-modal': AccessByMnemonicphraseModal,
     'access-by-mnemonic-phrase-password-modal': AccessByMnemonicphrasePasswordModal,
     'access-wallet-button': AccessWalletButton
+
   },
   data() {
     return {
@@ -139,7 +146,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',

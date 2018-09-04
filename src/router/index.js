@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HomeLayout from '@/layouts/HomeLayout';
 import CreateWalletLayout from '@/layouts/CreateWalletLayout';
+import ConvertUnits from '@/layouts/ConvertUnits';
 import TeamLayout from '@/layouts/TeamLayout';
 import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
 import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';

@@ -27,21 +27,21 @@
 </template>
 
 <script>
-import KeywordSearch from './components/KeywordSearch';
-import FAQs from './components/FAQs';
-import Categories from './components/Categories';
+import KeywordSearch from './components/KeywordSearch'
+import FAQs from './components/FAQs'
+import Categories from './components/Categories'
 
 export default {
   components: {
     'keyword-search': KeywordSearch,
-    faqs: FAQs,
-    categories: Categories
+    'faqs': FAQs,
+    'categories': Categories
   },
-  data() {
+  data () {
     return {
       openFAQs: true,
       openCategories: false
-    };
+    }
   }
 };
 </script>

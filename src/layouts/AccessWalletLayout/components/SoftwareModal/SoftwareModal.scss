@@ -8,6 +8,7 @@
     margin-bottom: 40px;
 
     li {
+      user-select: none;
       align-items: center;
       color: $light-grey-11;
       cursor: pointer;
@@ -15,8 +16,31 @@
       padding: 30px 10px 30px 30px;
       text-align: left;
 
+      .hover-icon{
+        display: none;
+        height: 50px;
+        width: 50px;
+        margin-right: 8px;
+      }
+
+      &:hover,
+      &.selected {
+        .icon {
+          display: none;
+        }
+        .hover-icon {
+          display: block;
+        }
+
+        span {
+          font-weight: 500;
+          color: black;
+        }
+      }
+
       span {
-        font-weight: 300;
+        color: #05c0a5;
+        font-weight: 500;
         line-height: 16px;
       }
 

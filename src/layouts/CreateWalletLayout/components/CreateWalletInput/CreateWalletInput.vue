@@ -27,9 +27,7 @@
           src="~@/assets/images/icons/show-password.svg" >
       </div>
 
-      <p
-        v-show="value.length > 0"
-        class="passwd-strength">
+      <p class="passwd-strength" v-show="value.length > 0">
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
