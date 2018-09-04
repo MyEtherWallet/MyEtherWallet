@@ -278,7 +278,6 @@ export default {
     },
     getBalance() {
       const web3 = this.$store.state.web3;
-      console.log(this.address); // todo remove dev item
       web3.eth
         .getBalance(this.address)
         .then(res => {
