@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@import '~@/scss/CustomForms';
 
 // *********************************************************************
 // CSS reset
@@ -384,6 +385,8 @@ h6 {
   font-weight: 500;
   padding: 21px 55px;
   user-select: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .large-round-button-green-border {
@@ -707,6 +710,7 @@ h6 {
 .modal-header {
   background-color: $bootstrap-modal-header-background-color;
   border-radius: 0;
+  border: 0;
 
   h5 {
     color: $text-white;
@@ -779,15 +783,14 @@ h6 {
   }
 }
 
-.nopadding .modal-body {
+.bootstrap-modal.no-padding .modal-body,
+.bootstrap-modal.nopadding .modal-body{
   padding: 0;
 }
 
 
-.max-height-1 .modal-body {
-  max-height: 405px;
-  overflow-x: hidden;
-  overflow-y: auto;
+.bootstrap-modal.padding-40-20 .modal-body{
+  padding: 40px 20px;
 }
 
 
@@ -802,14 +805,6 @@ h6 {
   .modal-body {
     padding: 40px;
   }
-}
-
-.your-password .modal-body {
-  background-image: url('~@/assets/images/modal/garlands.png');
-  background-position: center 20px;
-  background-repeat: no-repeat;
-  background-size: 91%;
-
 }
 
 
@@ -1124,6 +1119,39 @@ h6 {
 
   a {
     outline: none;
+  }
+
+  a:nth-child(odd) {
+    background-color: #f0f0f0;
+  }
+}
+
+.dropdown-button-2 {
+
+  .dropdown-menu {
+    padding: 0;
+  }
+
+  >button {
+    background-color: $background-color-white;
+    border: solid 1px $button--border-color-2;
+    color: $text-color-6;
+    font-family: arial;
+    min-width: 180px;
+    padding: 8px 15px;
+    text-align: left;
+  }
+
+  .active {
+    color: $text-black;
+  }
+
+  a {
+    outline: none;
+  }
+
+  a:nth-child(odd) {
+    background-color: #f0f0f0;
   }
 }
 

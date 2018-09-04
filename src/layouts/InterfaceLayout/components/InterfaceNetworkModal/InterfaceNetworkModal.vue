@@ -1,10 +1,6 @@
 <template>
   <div class="modal-container">
-    <b-modal
-      ref="network"
-      hide-footer
-      class="bootstrap-modal network nopadding max-height-1"
-      title="Network">
+    <b-modal ref="network" hide-footer centered class="bootstrap-modal network nopadding max-height-1" title="Network">
       <div class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
@@ -29,7 +25,10 @@
           v-for="(key, index) in Object.keys($store.state.Networks)"
           :key="key + index"
           class="content-block">
-          <h4 :class="key.toLowerCase()">{{ key }}</h4>
+          <div class="network-title">
+            <img src="@/assets/images/networks/eth.svg">
+            <h4 :class="key.toLowerCase()">{{ key }}</h4>
+          </div>
           <div class="grid-3">
             <p
               v-for="net in $store.state.Networks[key]"
@@ -76,7 +75,8 @@
               <option
                 v-for="type in Object.keys(types)"
                 :value="types[type]"
-                :key="types[type].name + types[type].name_long">{{ types[type].name | capitalize }} - {{ types[type].name_long |
+                :key="types[type].name + types[type].name_long">
+                {{ types[type].name | capitalize }} - {{ types[type].name_long |
                 capitalize }}
               </option>
             </select>
