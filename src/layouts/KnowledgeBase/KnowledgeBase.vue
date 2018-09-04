@@ -1,17 +1,15 @@
 <template>
-  <div class="knowledge-base">
-
-  </div>
+  <div class="knowledge-base"/>
 </template>
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "KnowledgeBase.scss";
+@import 'KnowledgeBase.scss';
 </style>

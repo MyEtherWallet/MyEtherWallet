@@ -1,18 +1,13 @@
 <template>
-  <div>
-    
-  </div>
+  <div/>
 </template>
 
 <script>
 export default {
-  props: [],
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DropDownButton.scss";
+@import 'DropDownButton.scss';
 </style>

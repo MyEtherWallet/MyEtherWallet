@@ -172,7 +172,7 @@
 .get-free-wallet {
   position: relative;
   animation: fadeInFromNone 0.5s ease-out;
-  animation-fill-mode:forwards;
+  animation-fill-mode: forwards;
   opacity: 1;
 
   .get-free-wallet-button {
@@ -200,10 +200,10 @@
 
   @keyframes fadeInFromNone {
     0% {
-      width: 0px;
-      height: 0px;
+      width: 0;
+      height: 0;
       opacity: 0;
-      margin-left: 0px;
+      margin-left: 0;
     }
 
     50% {
@@ -237,10 +237,10 @@
     }
 
     100% {
-      width: 0px;
-      height: 0px;
+      width: 0;
+      height: 0;
       opacity: 0;
-      margin-left: 0px;
+      margin-left: 0;
     }
   }
 } // .get-free-wallet

@@ -1,24 +1,52 @@
 <template>
   <div class="drop-down-address-selector">
-    <div class="dropdown-input-box" :class="dropdownOpen ? 'dropdown-open' : ''">
-      <input type="text" placeholder="Please enter the address" v-on:focus="dropdownOpen = false" v-model="selectedAddress">
-      <div class="blockie-place-holder-image" v-if="!validAddress">
+    <div
+      :class="dropdownOpen ? 'dropdown-open' : ''"
+      class="dropdown-input-box">
+      <input
+        v-model="selectedAddress"
+        type="text"
+        placeholder="Please enter the address"
+        @focus="dropdownOpen = false">
+      <div
+        v-if="!validAddress"
+        class="blockie-place-holder-image"/>
+      <div
+        v-if="validAddress"
+        class="selected-address-blockie">
+        <blockie
+          :address="selectedAddress"
+          width="30px"
+          height="30px"/>
       </div>
-      <div class="selected-address-blockie" v-if="validAddress">
-        <blockie :address="selectedAddress" width="30px" height="30px"/>
-      </div>
-      <div class="dropdown-open-button" v-on:click="dropdownOpen = !dropdownOpen">
-        <i v-if="!dropdownOpen" class="fa fa-chevron-down" aria-hidden="true"></i>
-        <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true"></i>
+      <div
+        class="dropdown-open-button"
+        @click="dropdownOpen = !dropdownOpen">
+        <i
+          v-if="!dropdownOpen"
+          class="fa fa-chevron-down"
+          aria-hidden="true"/>
+        <i
+          v-if="dropdownOpen"
+          class="fa fa-chevron-up"
+          aria-hidden="true"/>
       </div>
     </div>
-    <div class="dropdown-list-box" v-if="dropdownOpen">
+    <div
+      v-if="dropdownOpen"
+      class="dropdown-list-box">
       <ul>
-        <li v-for="addr in addresses" v-bind:key="addr.key" v-on:click="listedAddressClick(addr)">
+        <li
+          v-for="addr in addresses"
+          :key="addr.key"
+          @click="listedAddressClick(addr)">
           <div class="list-blockie">
-            <blockie :address="addr" width="30px" height="30px"/>
+            <blockie
+              :address="addr"
+              width="30px"
+              height="30px"/>
           </div>
-          <p class="listed-address">{{addr}}</p>
+          <p class="listed-address">{{ addr }}</p>
         </li>
       </ul>
     </div>
@@ -26,21 +54,14 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie'
-import web3 from 'web3'
+import Blockie from '@/components/Blockie';
+import web3 from 'web3';
 
 export default {
-  props: [],
   components: {
-    'blockie': Blockie
+    blockie: Blockie
   },
-  methods: {
-    listedAddressClick: function (address) {
-      this.dropdownOpen = !this.dropdownOpen
-      this.selectedAddress = address
-    }
-  },
-  data () {
+  data() {
     return {
       selectedAddress: '',
       validAddress: false,
@@ -52,20 +73,26 @@ export default {
         '0x7515196a4339daf3fad6979208b2042f06e8c884',
         '0x7545296a4339daf3fad6979208b2042f06e8c885'
       ]
-    }
+    };
   },
   watch: {
-    selectedAddress: function (address) {
+    selectedAddress: function(address) {
       if (web3.utils.isAddress(address)) {
-        this.validAddress = true
+        this.validAddress = true;
       } else {
-        this.validAddress = false
+        this.validAddress = false;
       }
     }
+  },
+  methods: {
+    listedAddressClick: function(address) {
+      this.dropdownOpen = !this.dropdownOpen;
+      this.selectedAddress = address;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DropDownAddressSelector.scss";
+@import 'DropDownAddressSelector.scss';
 </style>

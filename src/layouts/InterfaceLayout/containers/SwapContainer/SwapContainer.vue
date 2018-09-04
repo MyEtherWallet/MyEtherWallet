@@ -1,6 +1,6 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal></swap-confirmation-modal>
+    <swap-confirmation-modal/>
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <drop-down-address-selector></drop-down-address-selector>
+        <drop-down-address-selector/>
       </div>
     </div>
 
@@ -68,10 +68,12 @@
           <h4>Providers</h4>
         </div>
       </div>
-      <providers-radio-selector></providers-radio-selector>
+      <providers-radio-selector/>
     </div>
 
-    <div class="send-form" v-if="false">
+    <div 
+      v-if="false" 
+      class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
@@ -110,7 +112,9 @@
 
     <div class="submit-button-container">
       <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div class="submit-button large-round-button-green-filled clickable" v-on:click="swapConfirmationModalOpen">
+      <div 
+        class="submit-button large-round-button-green-filled clickable" 
+        @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
         <i
           class="fa fa-long-arrow-right"
@@ -121,16 +125,16 @@
   </div>
 </template>
 <script>
-import ProvidersRadioSelector from '../../components/ProvidersRadioSelector'
-import CurrencyPicker from '../../components/CurrencyPicker'
-import DropDownAddressSelector from '@/components/DropDownAddressSelector'
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import swapIcon from '@/assets/images/icons/swap.svg'
-import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png'
-import ImageBity from '@/assets/images/etc/bity.png'
-import ImageVisaMaster from '@/assets/images/etc/visamaster.png'
-import SwapConfirmationModal from './components/SwapConfirmationModal'
+import ProvidersRadioSelector from '../../components/ProvidersRadioSelector';
+import CurrencyPicker from '../../components/CurrencyPicker';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import swapIcon from '@/assets/images/icons/swap.svg';
+import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
+import ImageBity from '@/assets/images/etc/bity.png';
+import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
+import SwapConfirmationModal from './components/SwapConfirmationModal';
 
 export default {
   components: {
@@ -162,8 +166,8 @@ export default {
     };
   },
   methods: {
-    swapConfirmationModalOpen () {
-      this.$children[0].$refs.swapconfirmation.show()
+    swapConfirmationModalOpen() {
+      this.$children[0].$refs.swapconfirmation.show();
     }
   }
 };

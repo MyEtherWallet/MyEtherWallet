@@ -1,1 +1,1 @@
-export { default } from './SwapConfirmationModal'
+export { default } from './SwapConfirmationModal';

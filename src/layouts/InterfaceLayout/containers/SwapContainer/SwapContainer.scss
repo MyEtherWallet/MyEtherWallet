@@ -6,7 +6,6 @@
   .title-block {
     position: relative;
     .buy-eth {
-      display: 22px;
       right: 30px;
       top: 28px;
       position: absolute;
@@ -20,7 +19,6 @@
       }
     }
   }
-
 
   .title-and-copy {
     width: 100%;
@@ -37,7 +35,6 @@
       cursor: pointer;
     }
   }
-
 
   .send-form {
     @extend %send-form-base;

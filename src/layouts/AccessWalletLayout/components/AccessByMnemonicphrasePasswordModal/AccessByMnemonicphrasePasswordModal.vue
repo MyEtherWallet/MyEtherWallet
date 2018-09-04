@@ -1,24 +1,43 @@
 <template>
-  <b-modal ref="accessbymnemonicphrasepassword" hide-footer class="bootstrap-modal modal-software" title="Password" centered>
+  <b-modal
+    ref="accessbymnemonicphrasepassword"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="Password"
+    centered>
     <form class="password-form">
       <div class="input-container">
-        <input :type="show ? 'text': 'password'" name="Password" v-model="password" autocomplete="off" />
-        <img @click.prevent="switchViewPassword" v-if="show" src="@/assets/images/icons/show-password.svg"/>
-        <img @click.prevent="switchViewPassword" v-if="!show" src="@/assets/images/icons/hide-password.svg"/>
+        <input
+          :type="show ? 'text': 'password'"
+          v-model="password"
+          name="Password"
+          autocomplete="off" >
+        <img
+          v-if="show"
+          src="@/assets/images/icons/show-password.svg"
+          @click.prevent="switchViewPassword">
+        <img
+          v-if="!show"
+          src="@/assets/images/icons/hide-password.svg"
+          @click.prevent="switchViewPassword">
       </div>
-      <p class="error" v-show="error !== ''"> {{ error }} </p>
+      <p
+        v-show="error !== ''"
+        class="error"> {{ error }} </p>
 
       <div class="accept-terms">
         <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-          <input v-on:click="acceptedTerms = !acceptedTerms" type="checkbox" />
-          <span class="checkmark"></span>
+          <input
+            type="checkbox"
+            @click="acceptedTerms = !acceptedTerms" >
+          <span class="checkmark"/>
         </label>
       </div>
       <router-link
+        :class="(password === '' && password.length === 0) || acceptedTerms === false ? 'disabled' : ''"
         to="/interface"
         class="submit-button large-round-button-green-filled"
-        @click.prevent="unlockWallet"
-        :class="(password === '' && password.length === 0) || acceptedTerms === false ? 'disabled' : ''">
+        @click.prevent="unlockWallet">
         Access My Wallet
       </router-link>
     </form>
@@ -27,7 +46,7 @@
       <router-link to="/">
         <div class="support-content">
           <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{$t("common.customerSupport")}}</h5></div>
+          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
         </div>
       </router-link>
     </div>
@@ -36,30 +55,33 @@
 
 <script>
 export default {
-  props: ['file'],
-  data () {
+  props: {
+    phrase: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
     return {
       show: false,
       password: '',
       error: '',
       acceptedTerms: false
+    };
+  },
+  watch: {
+    password() {
+      this.error = '';
     }
   },
   methods: {
-    unlockWallet () {
-
-    },
-    switchViewPassword () {
-      this.show = !this.show
-    }
-  },
-  watch: {
-    password () {
-      this.error = ''
+    unlockWallet() {},
+    switchViewPassword() {
+      this.show = !this.show;
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "AccessByMnemonicphrasePasswordModal.scss";
+@import 'AccessByMnemonicphrasePasswordModal.scss';
 </style>

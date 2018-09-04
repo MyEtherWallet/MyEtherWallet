@@ -36,28 +36,29 @@
           <div class="title">
             <h4>{{ $t("interface.sendTxToAddr") }}
               <blockie
-                v-show="addressValid && toAddress.length !== 0"
-                :address="toAddress"
+                v-show="validAddress && address.length !== 0"
+                :address="address"
+                width="32px"
+                height="32px"
                 class="blockie-image"/>
             </h4>
 
             <p
               class="copy-button prevent-user-select"
-              @click="copyToClipboard('address')">{{ $t('common.copy') }}</p>
+              @click="copyToClipboard('address')">{{
+                $t('common.copy')
+              }}</p>
           </div>
           <div class="the-form address-block">
             <textarea
+              v-ens-resolver="address"
               ref="address"
-              v-model="toAddress"
+              v-model="address"
               name="name"
               autocomplete="off"/>
             <i
-              :class="[addressValid && toAddress.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
+              :class="[validAddress && address.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
               aria-hidden="true"/>
-          </div>
-          <div class="error-message-container">
-            <p v-if="toAddress.length === 0 && toAddress === ''">Can't be empty</p>
-            <p v-show="!addressValid && toAddress !== ''">Invalid address</p>
           </div>
         </div>
       </div>
@@ -147,7 +148,7 @@
 
     <div class="submit-button-container">
       <div
-        :class="[addressValid && toAddress.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+        :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
         @click="confirmationModalOpen">
         {{ $t('interface.sendTx') }}
       </div>
@@ -165,29 +166,32 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import ConfirmModal from '@/components/ConfirmModal';
 import Blockie from '@/components/Blockie';
-import SuccessModal from '@/components/SuccessModal';
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
-const unit = require('ethjs-unit')
+const unit = require('ethjs-unit');
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'confirm-modal': ConfirmModal,
     blockie: Blockie,
-    'currency-picker': CurrencyPicker,
-    'success-modal': SuccessModal
+    'currency-picker': CurrencyPicker
   },
-  props: ['address', 'tokensWithBalance'],
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       advancedExpend: false,
-      addressValid: true,
+      validAddress: true,
       amount: 0,
       amountValid: true,
       nonce: 0,
@@ -195,21 +199,27 @@ export default {
       data: '0x',
       gasAmount: this.$store.state.gasPrice,
       parsedBalance: 0,
-      toAddress: '',
+      address: '',
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
-      signedTx: ''
+      signedTx: '',
+      resolvedAddress: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    })
+  },
   watch: {
-    toAddress(newVal) {
-      this.toAddress = newVal;
+    address(newVal) {
+      this.address = newVal;
       if (this.verifyAddr()) {
-        this.addressValid = false;
+        this.validAddress = false;
       } else {
         this.estimateGas();
-        this.addressValid = true;
+        this.validAddress = true;
       }
     },
     parsedBalance(newVal) {
@@ -261,42 +271,62 @@ export default {
         }
       ];
       const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
-      const isEth = this.selectedCurrency.name === 'Ether';
-      this.nonce = this.$store.state.web3.eth.getTransactionCount(
+      const isEth = this.selectedCurrency.name === 'Ethereum';
+      this.nonce = await this.$store.state.web3.eth.getTransactionCount(
         this.$store.state.wallet.getAddressString()
       );
       this.data = isEth
         ? this.data
         : contract.methods
-            .transfer(this.toAddress, unit.toWei(this.amount, 'ether'))
+            .transfer(this.address, unit.toWei(this.amount, 'ether'))
             .encodeABI();
 
       this.raw = {
         from: this.$store.state.wallet.getAddressString(),
         gas: this.gasLimit,
-        nonce: this.nonce + 1,
+        nonce: this.nonce,
         gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
         value: isEth
           ? this.amount === ''
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.toAddress : this.selectedCurrency.addr,
+        to: isEth ? this.address : this.selectedCurrency.addr,
         data: this.data
       };
 
-      if (this.toAddress === '') {
+      if (this.address === '') {
         delete this.raw['to'];
       }
-      const tx = new EthTx(this.raw);
-      tx.sign(this.$store.state.wallet.getPrivateKey());
-      const serializedTx = tx.serialize();
-      this.signedTx = `0x${serializedTx.toString('hex')}`;
+
+      const fromAddress = this.raw.from;
+      this.$store.state.web3.eth
+        .sendTransaction(this.raw)
+        .once('transactionHash', hash => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            hash,
+            'Transaction Hash'
+          ]);
+        })
+        .on('receipt', res => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            res,
+            'Transaction Receipt'
+          ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            fromAddress,
+            err,
+            'Transaction Error'
+          ]);
+        });
     },
     confirmationModalOpen() {
       this.createTx();
       window.scrollTo(0, 0);
-      this.$children[5].$refs.confirmation.show();
     },
     changeGas(val) {
       this.gasAmount = val;
@@ -304,12 +334,12 @@ export default {
       this.$store.dispatch('setGasPrice', Number(val));
     },
     setBalanceToAmt() {
-      if (this.selectedCurrency.name === 'Ether') {
+      if (this.selectedCurrency.name === 'Ethereum') {
         this.amount = this.parsedBalance - this.transactionFee;
       }
     },
     createDataHex() {
-      if (this.selectedCurrency.name !== 'Ether') {
+      if (this.selectedCurrency.name !== 'Ethereum') {
         const jsonInterface = [
           {
             constant: false,
@@ -325,7 +355,7 @@ export default {
         ];
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
         this.data = contract.methods
-          .transfer(this.toAddress, this.amount)
+          .transfer(this.address, this.amount)
           .encodeABI();
       } else {
         this.data = '0x';
@@ -339,7 +369,6 @@ export default {
       const newRaw = this.raw;
       delete newRaw['gas'];
       delete newRaw['nonce'];
-      this.createTx();
       this.createDataHex();
       this.$store.state.web3.eth
         .estimateGas(newRaw)
@@ -350,22 +379,20 @@ export default {
           );
           this.gasLimit = res;
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     },
     verifyAddr() {
-      if (this.toAddress.length !== 0 && this.toAddress !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.toAddress);
+      if (this.address.length !== 0 && this.address !== '') {
+        const valid = this.$store.state.web3.utils.isAddress(this.address);
         if (!valid) {
           return true;
         }
         return false;
       }
     }
-  },
-  computed: {
-    ...mapGetters({
-      account: 'account'
-    })
   }
 };
 </script>

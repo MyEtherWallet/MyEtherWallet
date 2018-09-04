@@ -27,7 +27,9 @@
           src="~@/assets/images/icons/show-password.svg" >
       </div>
 
-      <p class="passwd-strength" v-show="value.length > 0">
+      <p
+        v-show="value.length > 0"
+        class="passwd-strength">
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
@@ -102,5 +104,5 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CreateWalletInput.scss';
-@import '~@/scss/CustomForms';
+/*@import ''*/ /*TODO check if redering correctly*/
 </style>

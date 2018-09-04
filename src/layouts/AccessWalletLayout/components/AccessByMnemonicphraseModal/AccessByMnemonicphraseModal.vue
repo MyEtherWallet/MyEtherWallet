@@ -1,5 +1,10 @@
 <template>
-  <b-modal ref="accessbymnemonicphrase" hide-footer class="bootstrap-modal modal-metamask" title="Access by Mnemonic Phrase" centered>
+  <b-modal
+    ref="accessbymnemonicphrase"
+    hide-footer
+    class="bootstrap-modal modal-metamask"
+    title="Access by Mnemonic Phrase"
+    centered>
 
     <div class="contents">
       <p class="instruction">Please type in your mnemonic phrases.</p>
@@ -7,8 +12,10 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input type="checkbox" />
-              <span v-on:click="mnemonicValueBitSizeChange" class="slider round"></span>
+              <input type="checkbox" >
+              <span
+                class="slider round"
+                @click="mnemonicValueBitSizeChange"/>
             </label>
             <div class="labels">
               <span class="label-left white">12</span>
@@ -21,15 +28,21 @@
       </div>
       <div class="phrases">
         <ul>
-          <li v-for="index in mnemonicSize" v-bind:key="index">
-            <span>{{index}}.</span><input type="text" name="">
+          <li
+            v-for="index in mnemonicSize"
+            :key="index">
+            <span>{{ index }}.</span><input
+              type="text"
+              name="">
           </li>
         </ul>
       </div>
     </div>
 
     <div class="button-container">
-      <b-btn v-on:click="openPassword" class="mid-round-button-green-filled close-button">
+      <b-btn
+        class="mid-round-button-green-filled close-button"
+        @click="openPassword">
         Continue
       </b-btn>
     </div>
@@ -45,36 +58,40 @@
 </template>
 
 <script>
-
 export default {
-  props: ['openPassword'],
-  data () {
+  props: {
+    openPassword: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
     return {
       mnemonic24: false,
       mnemonicSize: 12
-    }
+    };
   },
   methods: {
-    mnemonicValueBitSizeChange () {
-      const left = document.querySelector('.label-left')
-      const right = document.querySelector('.label-right')
+    mnemonicValueBitSizeChange() {
+      const left = document.querySelector('.label-left');
+      const right = document.querySelector('.label-right');
 
-      this.mnemonic24 = !this.mnemonic24
+      this.mnemonic24 = !this.mnemonic24;
 
       if (this.mnemonic24 === true) {
-        this.mnemonicSize = 24
-        left.classList.remove('white')
-        right.classList.add('white')
+        this.mnemonicSize = 24;
+        left.classList.remove('white');
+        right.classList.add('white');
       } else {
-        this.mnemonicSize = 12
-        left.classList.add('white')
-        right.classList.remove('white')
+        this.mnemonicSize = 12;
+        left.classList.add('white');
+        right.classList.remove('white');
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "AccessByMnemonicphraseModal.scss";
+@import 'AccessByMnemonicphraseModal.scss';
 </style>

@@ -1,6 +1,11 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="swapconfirmation" hide-footer centered class="bootstrap-modal bootstrap-modal-wide padding-40-20" title="Confirmation">
+    <b-modal
+      ref="swapconfirmation"
+      hide-footer
+      centered
+      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      title="Confirmation">
       <div class="time-remaining">
         <h1>09:25</h1>
         <p>Time Remaining</p>
@@ -10,9 +15,9 @@
           <div class="icon">
             <img :src="fromAddress.image">
           </div>
-          <p class="value">{{fromAddress.value}} <span>{{fromAddress.name}}</span></p>
+          <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
           <p class="block-title">From Address</p>
-          <p class="address">{{fromAddress.address}}</p>
+          <p class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
           <img :src="arrowImage">
@@ -21,31 +26,33 @@
           <div class="icon">
             <img :src="toAddress.image">
           </div>
-          <p class="value">{{toAddress.value}} <span>{{toAddress.name}}</span></p>
+          <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
           <p class="block-title">To Address</p>
-          <p class="address">{{toAddress.address}}</p>
+          <p class="address">{{ toAddress.address }}</p>
         </div>
       </div>
 
-      <detail-information :details="detailInfo"></detail-information>
+      <detail-information :details="detailInfo"/>
 
       <div class="confirm-send-button">
-        <button-with-qrcode :qrcode="qrcode" buttonname="Confirm and Send"></button-with-qrcode>
+        <button-with-qrcode
+          :qrcode="qrcode"
+          buttonname="Confirm and Send"/>
       </div>
 
-      <help-center-button></help-center-button>
+      <help-center-button/>
 
     </b-modal>
   </div>
 </template>
 
 <script>
-import Arrow from '@/assets/images/etc/single-arrow.svg'
-import iconBtc from '@/assets/images/currency/btc.svg'
-import iconEth from '@/assets/images/currency/eth.svg'
-import DetailInformation from './components/DetailInformation'
-import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode'
-import HelpCenterButton from '@/components/Buttons/HelpCenterButton'
+import Arrow from '@/assets/images/etc/single-arrow.svg';
+import iconBtc from '@/assets/images/currency/btc.svg';
+import iconEth from '@/assets/images/currency/eth.svg';
+import DetailInformation from './components/DetailInformation';
+import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
+import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
 export default {
   components: {
@@ -53,8 +60,7 @@ export default {
     'button-with-qrcode': ButtonWithQrCode,
     'help-center-button': HelpCenterButton
   },
-  props: [],
-  data () {
+  data() {
     return {
       qrcode: '',
       arrowImage: Arrow,
@@ -96,11 +102,11 @@ export default {
           value: 'None'
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SwapConfirmationModal.scss";
+@import 'SwapConfirmationModal.scss';
 </style>

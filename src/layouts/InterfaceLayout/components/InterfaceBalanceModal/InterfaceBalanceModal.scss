@@ -1,14 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .modal-container {
-  .modal-title {
-
-  }
-
   .balance {
-
     .content-block {
-
       margin: 0;
       padding: 25px 35px;
 
@@ -39,7 +33,6 @@
           margin-left: auto;
         }
       }
-
     } // .content-block
 
     .total-balance {
@@ -68,9 +61,6 @@
           font-weight: 600;
         }
       }
-
     }
-
-
   } // .network
 } // .modal-container

@@ -2,19 +2,24 @@
   <div class="providers-radio-selector">
     <div class="radio-button-container">
       <ul>
-        <li v-for="provider in providers" v-bind:key="provider.key">
+        <li
+          v-for="provider in providers"
+          :key="provider.key">
           <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" :id="provider.name">
-            <label :for="provider.name"></label>
+            <input
+              :id="provider.name"
+              type="radio"
+              name="provider">
+            <label :for="provider.name"/>
           </div>
           <div class="provider-image">
             <img :src="provider.image">
           </div>
           <div>
-            {{provider.swapValue1}}
+            {{ provider.swapValue1 }}
           </div>
           <div>
-            {{provider.swapValue2}}
+            {{ provider.swapValue2 }}
           </div>
         </li>
       </ul>
@@ -23,18 +28,12 @@
 </template>
 
 <script>
-import KyberNetwork from '@/assets/images/etc/kybernetowrk.png'
-import Bity from '@/assets/images/etc/bity.png'
+import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
+import Bity from '@/assets/images/etc/bity.png';
 
 export default {
-  props: [],
-  components: {
-
-  },
-  methods: {
-
-  },
-  data () {
+  components: {},
+  data() {
     return {
       providers: [
         {
@@ -50,14 +49,13 @@ export default {
           swapValue2: '1 ETH = 16.34285 REP'
         }
       ]
-    }
+    };
   },
-  watch: {
-
-  }
-}
+  watch: {},
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ProvidersRadioSelector.scss";
+@import 'ProvidersRadioSelector.scss';
 </style>

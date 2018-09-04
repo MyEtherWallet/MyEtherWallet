@@ -1,21 +1,26 @@
 <template>
   <div class="your-password">
-    <tutorial-modal :skip="skip"></tutorial-modal>
-    <scan-to-download-modal></scan-to-download-modal>
+    <tutorial-modal
+      ref="tutorialModal"
+      :skip="skip"/>
+    <scan-to-download-modal ref="scanToDownloadModal"/>
 
-    <by-json-page-title></by-json-page-title>
+    <by-json-page-title/>
     <div class="wrap">
       <div class="page-container">
         <div
           v-show="!byJson && !byMnemonic"
           class="nav-tab-user-input-box">
           <b-tabs class="x100">
-            <div class="progress-bar"></div>
-            <b-tab class="mew-connect-block" title="MEWconnect" active>
+            <div class="progress-bar"/>
+            <b-tab
+              class="mew-connect-block"
+              title="MEWconnect"
+              active>
 
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>Our App is Available On the App Store and Google Play</h3>
+                  <h3>{{ $t("createWallet.availableAppleGoogleStores") }}</h3>
                 </div>
               </div>
 
@@ -25,7 +30,7 @@
                   <img src="@/assets/images/icons/playstore.png">
                 </div>
                 <div class="download">
-                  <p v-on:click="scanToDownloadModalOpen">Scan to Download</p>
+                  <p @click="scanToDownloadModalOpen">{{ $t("createWallet.scanToDownload") }}</p>
                 </div>
               </div>
 
@@ -39,17 +44,17 @@
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')" />
+                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
                 </div>
               </div>
 
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Json'" />
-              <create-wallet-input-footer />
+                :param="'Json'"/>
+              <create-wallet-input-footer/>
             </b-tab>
-            <b-tab title="By Mnemonic Phrase" >
+            <b-tab title="By Mnemonic Phrase">
 
               <div class="title-block">
                 <div class="title-popover">
@@ -61,15 +66,15 @@
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Mnemonic'" />
-              <create-wallet-input-footer />
+                :param="'Mnemonic'"/>
+              <create-wallet-input-footer/>
             </b-tab>
           </b-tabs>
         </div>
         <by-json-file-container
           v-if="byJson && !byMnemonic"
-          :password="password" />
-        <by-mnemonic-container v-if="!byJson && byMnemonic" />
+          :password="password"/>
+        <by-mnemonic-container v-if="!byJson && byMnemonic"/>
       </div>
     </div>
 
@@ -79,14 +84,14 @@
 </template>
 
 <script>
-import ByJsonFileContainer from '@/containers/ByJsonFileContainer'
-import ByMnemonicContainer from '@/containers/ByMnemonicContainer'
-import TutorialModal from './components/TutorialModal'
-import ScanToDownloadModal from './components/ScanToDownloadModal'
-import CreateWalletInput from './components/CreateWalletInput'
-import CreateWalletInputFooter from './components/CreateWalletInputFooter'
-import PageFooter from './components/PageFooter'
-import PageTitle from './components/PageTitle'
+import ByJsonFileContainer from './containers/ByJsonFileContainer';
+import ByMnemonicContainer from './containers/ByMnemonicContainer';
+import TutorialModal from './components/TutorialModal';
+import ScanToDownloadModal from './components/ScanToDownloadModal';
+import CreateWalletInput from './components/CreateWalletInput';
+import CreateWalletInputFooter from './components/CreateWalletInputFooter';
+import PageFooter from './components/PageFooter';
+import PageTitle from './components/PageTitle';
 
 export default {
   components: {
@@ -129,18 +134,12 @@ export default {
         this.byMnemonic = false;
       }
     },
-    skip () {
-      localStorage.setItem('skipTutorial', true)
-      this.$children[0].$refs.tutorial.hide()
+    skip() {
+      localStorage.setItem('skipTutorial', true);
+      this.$refs.tutorialModal.$refs.tutorial.hide();
     },
-    scanToDownloadModalOpen () {
-      this.$children[1].$refs.scantodownload.show()
-    }
-  },
-  mounted () {
-    let skipTutorial = localStorage.getItem('skipTutorial')
-    if (skipTutorial === undefined || skipTutorial === null || skipTutorial === false) {
-      this.$children[0].$refs.tutorial.show()
+    scanToDownloadModalOpen() {
+      this.$refs.scanToDownloadModal.$refs.scantodownload.show();
     }
   }
 };

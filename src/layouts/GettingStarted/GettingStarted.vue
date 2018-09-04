@@ -22,23 +22,23 @@
       <what-is-mew
         ref="cww1"
         :progress-bar-value="'__20percent'"
-        class="cww cww1" />
+        class="cww cww1"/>
       <where-my-funds-stored
         ref="cww2"
         :progress-bar-value="'__40percent'"
-        class="cww cww2 positionBottom" />
+        class="cww cww2 positionBottom"/>
       <what-if-i-lose-key
         ref="cww3"
         :progress-bar-value="'__60percent'"
-        class="cww cww3 positionBottom" />
+        class="cww cww3 positionBottom"/>
       <some-helpful-tips
         ref="cww4"
         :progress-bar-value="'__80percent'"
-        class="cww cww4 positionBottom" />
+        class="cww cww4 positionBottom"/>
       <congratulations
         ref="cww5"
         :progress-bar-value="'__100percent'"
-        class="cww cww5 positionBottom" />
+        class="cww cww5 positionBottom"/>
 
       <div class="create-wallet-warnings__footer-container">
         <div class="create-wallet-warnings__mouse-scroll">
@@ -80,20 +80,24 @@ export default {
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5']
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5'],
+      scrollListener: function() {}
     };
   },
   mounted: function() {
-    const _this = this;
-
-    window.addEventListener('wheel', function(e) {
+    this.scrollListener = e => {
       if (e.deltaY < 0) {
-        _this.mouseScrollUp();
+        this.mouseScrollUp();
       }
       if (e.deltaY > 0) {
-        _this.mouseScrollDown();
+        this.mouseScrollDown();
       }
-    });
+    };
+
+    window.addEventListener('wheel', this.scrollListener);
+  },
+  beforeDestroy() {
+    window.removeEventListener('wheel', this.scrollListener);
   },
   methods: {
     mouseScrollDown: function() {

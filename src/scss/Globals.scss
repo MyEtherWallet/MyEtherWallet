@@ -770,12 +770,11 @@ h6 {
 }
 
 .bootstrap-modal.no-padding .modal-body,
-.bootstrap-modal.nopadding .modal-body{
+.bootstrap-modal.nopadding .modal-body {
   padding: 0;
 }
 
-
-.bootstrap-modal.padding-40-20 .modal-body{
+.bootstrap-modal.padding-40-20 .modal-body {
   padding: 40px 20px;
 }
 
@@ -790,7 +789,6 @@ h6 {
     padding: 40px;
   }
 }
-
 
 // *********************************************************************
 // [Bootstrap] Nav tab style
@@ -1108,12 +1106,11 @@ h6 {
 }
 
 .dropdown-button-2 {
-
   .dropdown-menu {
     padding: 0;
   }
 
-  >button {
+  > button {
     background-color: $background-color-white;
     border: solid 1px $button--border-color-2;
     color: $text-color-6;
