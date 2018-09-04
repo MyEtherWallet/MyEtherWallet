@@ -22,11 +22,9 @@
 }
 
 .mew-connect-block {
-
   padding-bottom: 0 !important;
 
   .appstores {
-
     .icons {
       text-align: center;
       margin-bottom: 25px;
@@ -51,7 +49,6 @@
     text-align: center;
     img {
       width: 60%;
-
     }
   }
 }
@@ -71,7 +68,7 @@
       width: 0%;
     }
     to {
-      width: 33.33%;
+      width: 33.33%; //check that this is correct and not 23.33%
     }
   }
 

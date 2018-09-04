@@ -1,10 +1,11 @@
 <template>
   <b-modal
     ref="networkAndAddress"
+    :title="$t('accessWallet.networkAndAddress')"
     hide-footer
     class="bootstrap-modal modal-network-and-address"
-    title="Network and Address"
     centered>
+    <!-- Derivation Path Drop down-->
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
@@ -32,7 +33,7 @@
               {{ val.dpath }}
             </b-dropdown-item>
             <b-dropdown-item @click="showCustomPathInput">
-              {{ $t('accessWallet.customPath') }}
+              {{ $t('accessWallet.addCustomPath') }}
             </b-dropdown-item>
           </b-dropdown>
         </div>
@@ -61,6 +62,7 @@
         <button @click="showCustomPathInput">cancel</button>
       </div>
     </div>
+    <!-- Address List -->
     <div class="content-container-2">
       <div class="address-block-container">
         <div class="block-title">
@@ -78,6 +80,7 @@
           v-for="(details, index) in orderedAddresses"
           :data-address="'address' + index"
           :key="index"
+          :class="selectedId === 'address' + index ? 'selected' : ''"
           class="address-block address-data"
           @click="setAddress(details, 'address' + index)">
           <li>{{ details.index + 1 }}.</li>
@@ -131,21 +134,18 @@
         {{ $t("common.accessMyWallet") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t('common.customerSupport') }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
 const unit = require('ethjs-unit');
 
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     hardwareWallet: {
       type: Object,
@@ -156,6 +156,7 @@ export default {
   },
   data() {
     return {
+      selectedId: '',
       accessMyWalletBtnDisabled: true,
       walletUnlocked: false,
       connectionActive: false,
@@ -265,10 +266,12 @@ export default {
       this.$router.push({ path: 'interface' });
     },
     setAddress(details, element) {
+      this.selectedId = element;
       this.unselectAllAddresses(element);
       this.hardwareWallet.setActiveAddress(details.address, details.index);
     },
     priorAddressSet() {
+      this.selectedId = '';
       if (this.currentIndex - this.count > 0) {
         this.currentIndex = this.currentIndex - this.count;
         this.displayAddresses = this.hardwareAddresses.slice(
@@ -282,6 +285,7 @@ export default {
       }
     },
     nextAddressSet() {
+      this.selectedId = '';
       if (this.currentIndex + this.count < this.maxIndex) {
         this.currentIndex = this.currentIndex + this.count;
         this.displayAddresses = this.hardwareAddresses.slice(

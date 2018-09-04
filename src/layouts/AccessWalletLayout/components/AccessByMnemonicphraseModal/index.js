@@ -1,1 +1,1 @@
-export { default } from './AccessByMnemonicphraseModal'
+export { default } from './AccessByMnemonicphraseModal';

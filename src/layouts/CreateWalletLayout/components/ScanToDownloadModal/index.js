@@ -1,1 +1,1 @@
-export { default } from './ScanToDownloadModal'
+export { default } from './ScanToDownloadModal';

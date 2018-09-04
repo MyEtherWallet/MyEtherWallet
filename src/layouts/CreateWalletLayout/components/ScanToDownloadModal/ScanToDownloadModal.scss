@@ -3,8 +3,8 @@
 .qr-divider {
   padding: 25px 0;
 
-  >div {
-    padding: 0px 20px;
+  > div {
+    padding: 0 20px;
     padding-bottom: 10px;
     text-align: center;
   }
@@ -26,7 +26,6 @@
       display: flex;
       align-items: center;
 
-
       img {
         height: 23px;
         margin-right: 10px;
@@ -38,6 +37,7 @@
         color: $black;
       }
     }
+
     margin-bottom: 17px;
   }
 
@@ -47,5 +47,4 @@
 
   display: grid;
   grid-template-columns: 1fr 1fr;
-
 }

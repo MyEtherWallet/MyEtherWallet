@@ -8,14 +8,20 @@
     </div>
 
     <div class="wrap">
-      <div class="fixed-header" ref="fixedHeader" :class="isPageOnTop == false ? 'tiny-header' : ''">
+      <div
+        ref="fixedHeader"
+        :class="isPageOnTop == false ? 'tiny-header' : ''"
+        class="fixed-header">
         <div class="page-container">
           <div class="header-container">
             <router-link
               to="/"
               @click.native="scrollTop()">
               <div class="top-logo">
-                <img class="logo-large" src="~@/assets/images/logo.png" :class="isPageOnTop == false ? 'logo-small' : ''">
+                <img
+                  :class="isPageOnTop == false ? 'logo-small' : ''"
+                  class="logo-large"
+                  src="~@/assets/images/logo.png">
               </div>
             </router-link>
             <div class="top-menu">
@@ -37,10 +43,15 @@
                       class="fa fa-angle-down"
                       aria-hidden="true"/>
                   </div>
-                  <b-nav-item-dropdown class="language-menu" extra-toggle-classes="nav-link-custom" right>
+                  <b-nav-item-dropdown
+                    class="language-menu"
+                    extra-toggle-classes="nav-link-custom"
+                    right>
                     <template slot="button-content">
                       <div class="current-language-flag">
-                        <img class="show" :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
+                        <img
+                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                          class="show">
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -100,6 +111,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -113,32 +125,32 @@ export default {
   data() {
     return {
       supportedLanguages: [
-        {name: 'Deutsch', flag: 'de'},
-        {name: 'Ελληνικά', flag: 'gr'},
-        {name: 'English', flag: 'gb'},
-        {name: 'Español', flag: 'es'},
-        {name: 'Farsi', flag: 'ir'},
-        {name: 'Suomi', flag: 'fi'},
-        {name: 'Magyar', flag: 'hu'},
-        {name: 'Haitian Creole', flag: 'ht'},
-        {name: 'Bahasa Indonesia', flag: 'id'},
-        {name: 'Italiano', flag: 'it'},
-        {name: '日本語', flag: 'jp'},
-        {name: '한국어', flag: 'kr'},
-        {name: 'Nederlands', flag: 'nl'},
-        {name: 'Norsk Bokmål', flag: 'no'},
-        {name: 'Polski', flag: 'pl'},
-        {name: 'Português', flag: 'pt'},
-        {name: 'Русский', flag: 'ru'},
-        {name: 'ภาษาไทย', flag: 'th'},
-        {name: 'Türkçe', flag: 'tr'},
-        {name: 'Tiếng Việt', flag: 'vn'},
-        {name: '简体中文', flag: 'cn-sim'},
-        {name: '繁體中文', flag: 'cn-tr'}
+        { name: 'Deutsch', flag: 'de' },
+        { name: 'Ελληνικά', flag: 'gr' },
+        { name: 'English', flag: 'en' },
+        { name: 'Español', flag: 'es' },
+        { name: 'Farsi', flag: 'ir' },
+        { name: 'Suomi', flag: 'fi' },
+        { name: 'Magyar', flag: 'hu' },
+        { name: 'Haitian Creole', flag: 'ht' },
+        { name: 'Bahasa Indonesia', flag: 'id' },
+        { name: 'Italiano', flag: 'it' },
+        { name: '日本語', flag: 'ja' },
+        { name: '한국어', flag: 'ko' },
+        { name: 'Nederlands', flag: 'nl' },
+        { name: 'Norsk Bokmål', flag: 'no' },
+        { name: 'Polski', flag: 'pl' },
+        { name: 'Português', flag: 'pt' },
+        { name: 'Русский', flag: 'ru' },
+        { name: 'ภาษาไทย', flag: 'th' },
+        { name: 'Türkçe', flag: 'tr' },
+        { name: 'Tiếng Việt', flag: 'vn' },
+        { name: '简体中文', flag: 'zh-Hans' },
+        { name: '繁體中文', flag: 'zh-Hant' }
       ],
       online: true,
       currentName: 'English',
-      currentFlag: 'gb',
+      currentFlag: 'en',
       isPageOnTop: true
     };
   },
@@ -151,7 +163,7 @@ export default {
     online(newVal) {
       this.online = newVal;
     },
-    showNotifications() {
+    notifications() {
       this.$children[6].$refs.notification.show();
     }
   },
@@ -162,7 +174,7 @@ export default {
       this.online = false;
     }
 
-    if (store.get('locale') !== null && store.get('locale') !== undefined) {
+    if (Misc.doesExist(store.get('locale'))) {
       this.$root._i18n.locale = store.get('locale');
       this.currentFlag = store.get('locale');
     } else {
@@ -170,17 +182,23 @@ export default {
       this.currentFlag = this.$root._i18n.locale;
     }
 
+    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
+    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
+    if (!/zh[-_]/.test(this.currentFlag)) {
+      this.currentFlag = this.currentFlag.split(/[-_]/)[0];
+    }
+
     this.currentName = this.supportedLanguages.filter(
       item => item.flag === this.currentFlag
     )[0].name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
-    this.onPageScroll()
+    this.onPageScroll();
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    window.onscroll = function (e) {
-      self.onPageScroll()
-    }
+    window.onscroll = () => {
+      this.onPageScroll();
+    };
   },
   methods: {
     languageItemClicked(e) {
@@ -210,5 +228,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import 'HeaderContainer.scss';
+@import 'HeaderContainer.scss';
 </style>

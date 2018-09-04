@@ -15,7 +15,9 @@
         </div>
         <div class="block-content">
           <div class="helper">
-            <popover :popcontent="$t('popover.whatIsMessageContent')" :popovertype="'A'" />
+            <popover 
+              :popcontent="$t('popover.whatIsMessageContent')" 
+              :popovertype="'A'" />
           </div>
           <div class="information-container">
             <h2>{{ $t("interface.txNetworkTitle") }}</h2>

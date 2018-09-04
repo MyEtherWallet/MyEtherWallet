@@ -1,22 +1,22 @@
 <template>
   <div>
-    <interface-balance-modal :balance="parsedBalance"/>
+    <interface-balance-modal :balance="balance"/>
     <div @click="balanceModalOpen">
       <div class="info-block balance">
         <div class="block-image">
-          <img 
-            class="icon" 
+          <img
+            class="icon"
             src="~@/assets/images/icons/balance.svg">
         </div>
         <div class="block-content">
           <div class="information-container">
             <h2>{{ $t("common.balance") }}</h2>
             <div class="balance-text-container">
-              <div 
-                v-show="balance !== undefined" 
-                class="balance-text"> <p>{{ parsedBalance }}</p> <p>&nbsp;ETH</p></div>
-              <i 
-                v-show="balance === undefined" 
+              <div
+                v-show="balance !== undefined"
+                class="balance-text"> <p>{{ balance }}</p> <p>&nbsp;ETH</p></div>
+              <i
+                v-show="balance === undefined"
                 class="fa fa-spin fa-spinner"/>
             </div>
           </div>
@@ -31,34 +31,40 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-const unit = require('ethjs-unit');
+// const unit = require('ethjs-unit');
 
 export default {
   components: {
     'interface-balance-modal': InterfaceBalanceModal
   },
-  props: ['balance'],
+  props: {
+    balance: {
+      type: String,
+      default: '0'
+    }
+  },
   data() {
     return {
-      parsedBalance: 0
+      // balance: '0'
     };
   },
-  watch: {
-    balance(newVal) {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
-      );
-    }
-  },
-  mounted() {
-    if (this.balance && this.balance !== undefined) {
-      this.parsedBalance = unit.fromWei(
-        this.$store.state.web3.utils.toBN(this.balance),
-        'ether'
-      );
-    }
-  },
+  // TODO REMOVE
+  // watch: {
+  //   balance() {
+  //     this.parsedBalance = unit.fromWei(
+  //       this.$store.state.web3.utils.toBN(this.balance),
+  //       'ether'
+  //     );
+  //   }
+  // },
+  // mounted() {
+  //   if (this.balance && this.balance !== undefined) {
+  //     this.parsedBalance = unit.fromWei(
+  //       this.$store.state.web3.utils.toBN(this.balance),
+  //       'ether'
+  //     );
+  //   }
+  // },
   methods: {
     balanceModalOpen() {
       this.$children[0].$refs.balance.show();

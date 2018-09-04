@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="privateKey"
+    :title="$t('accessWallet.accessByPrivateKey')"
     hide-footer
     class="bootstrap-modal modal-software"
-    title="PrivateKey"
     centered>
     <form class="private-key-form">
       <div class="input-container">
@@ -18,7 +18,7 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        Unlock Wallet
+        {{ $t("accessWallet.unlockWallet") }}
       </button>
     </form>
   </b-modal>

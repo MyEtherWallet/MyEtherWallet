@@ -94,15 +94,15 @@ export default class MnemonicWallet extends HardwareWalletInterface {
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
-  getAccounts() {
+  async getAccounts() {
     const _this = this;
-    if (arguments.length > 1 && typeof arguments[2] === 'function') {
+    if (arguments.length > 1) {
       return _this.getMultipleAccounts(arguments[0], arguments[1]);
     }
     return _this._getAccounts();
   }
 
-  getMultipleAccounts(count, offset) {
+  async getMultipleAccounts(count, offset) {
     // if the particular wallet does not support multiple accounts this should just return the primary account
     return this._getAccounts(count, offset);
   }

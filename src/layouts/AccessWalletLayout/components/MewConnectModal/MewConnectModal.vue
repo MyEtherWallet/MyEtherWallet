@@ -9,7 +9,6 @@
       <qrcode
         :value="QrCode"
         :options="{ size: 200 }"/>
-        <!--<img class="icon" src="~@/assets/images/icons/qr-code.jpg">-->
     </div>
     <div class="d-block content-container text-center">
       <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
@@ -18,21 +17,18 @@
       <img src="~@/assets/images/icons/appstore.png">
       <p>Do not have our App? Download now.</p>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>Customer Support</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     networkAndAddressOpen: {
       type: Function,

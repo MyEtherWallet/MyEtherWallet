@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container/>
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -31,8 +31,12 @@ export default {
         ? store.get('network')
         : this.$store.state.Networks['ETH'][3];
     const hostUrl = url.parse(network.url);
+    console.log(hostUrl); // todo remove dev item
+    console.log(`${hostUrl.protocol}//${hostUrl.hostname}:${network.port}`); // todo remove dev item
     const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.host}:${network.port}${hostUrl.pathname}`
+      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+        hostUrl.pathname
+      }`
     );
     const sideMenu =
       store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send';
