@@ -94,14 +94,14 @@ export default {
   },
   data () {
     return {
-      selectedNetwork: {name: 'ETH', name_long: 'Ethereum'},
+      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
       networks: [
-        {name: 'ETH', name_long: 'Ethereum'},
-        {name: 'ETC', name_long: 'Ethereum Classic'},
-        {name: 'ROP', name_long: 'Ropsten'},
-        {name: 'KOV', name_long: 'Kovan'},
-        {name: 'RIN', name_long: 'Rinkeby'},
-        {name: 'CUS', name_long: 'Custom'}
+        { name: 'ETH', name_long: 'Ethereum' },
+        { name: 'ETC', name_long: 'Ethereum Classic' },
+        { name: 'ROP', name_long: 'Ropsten' },
+        { name: 'KOV', name_long: 'Kovan' },
+        { name: 'RIN', name_long: 'Rinkeby' },
+        { name: 'CUS', name_long: 'Custom' }
       ],
       chainID: '',
       port: '',
@@ -138,7 +138,7 @@ export default {
       this.$refs.networkAdd.classList.toggle('hidden')
     },
     resetCompState () {
-      this.selectedNetwork = {name: 'ETH', name_long: 'Ethereum'}
+      this.selectedNetwork = { name: 'ETH', name_long: 'Ethereum' }
       this.chainID = ''
       this.port = ''
       this.name = ''

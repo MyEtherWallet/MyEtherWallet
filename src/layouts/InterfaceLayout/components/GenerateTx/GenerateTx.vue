@@ -91,7 +91,7 @@ export default {
       parsedBalance: 0,
       localGas: this.gasLimit,
       coinType: [
-        {symbol: 'ETH', name: 'Ethereum'}
+        { symbol: 'ETH', name: 'Ethereum' }
       ],
       selectedCoinType: '',
       raw: '',

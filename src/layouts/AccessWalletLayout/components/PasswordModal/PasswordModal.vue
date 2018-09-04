@@ -30,7 +30,7 @@ export default {
     unlockWallet () {
       const worker = new Worker()
       const self = this
-      worker.postMessage({type: 'unlockWallet', data: [this.file, this.password]})
+      worker.postMessage({ type: 'unlockWallet', data: [this.file, this.password] })
       worker.onmessage = function (e) {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch('decryptWallet', Wallet.fromPrivateKey(Buffer.from(e.data._privKey)))

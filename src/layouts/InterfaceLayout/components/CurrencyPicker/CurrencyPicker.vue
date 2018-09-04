@@ -27,8 +27,8 @@ export default {
   props: ['currency', 'page', 'token'],
   data () {
     return {
-      localCurrency: this.token === true ? [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}] : [{name: 'Select an item'}],
-      selectedCurrency: this.token === true ? {name: 'Ether', symbol: 'ETH'} : {name: 'Select an item'},
+      localCurrency: this.token === true ? [{ name: 'Ether', symbol: 'ETH' }, { name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1' }] : [{ name: 'Select an item' }],
+      selectedCurrency: this.token === true ? { name: 'Ether', symbol: 'ETH' } : { name: 'Select an item' },
       open: false,
       search: ''
     }
@@ -53,9 +53,9 @@ export default {
     },
     currency (newVal) {
       if (this.token) {
-        this.localCurrency = [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}]
+        this.localCurrency = [{ name: 'Ether', symbol: 'ETH' }, { name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1' }]
       } else {
-        this.localCurrency = [{name: 'Select an item'}]
+        this.localCurrency = [{ name: 'Select an item' }]
       }
       newVal.forEach(curr => this.localCurrency.push(curr))
     },
@@ -68,9 +68,9 @@ export default {
         })
       } else {
         if (this.token) {
-          this.localCurrency = [{name: 'Ether', symbol: 'ETH'}, {name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1'}]
+          this.localCurrency = [{ name: 'Ether', symbol: 'ETH' }, { name: 'Ayyyyyy Love Me Angel Orangutans', symbol: 'AYLMAO', addr: '0xe22B83879001D43866656D28C64d353F8e6378F1' }]
         } else {
-          this.localCurrency = [{name: 'Select an item'}]
+          this.localCurrency = [{ name: 'Select an item' }]
         }
         this.currency.forEach(curr => this.localCurrency.push(curr))
       }

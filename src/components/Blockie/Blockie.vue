@@ -2,7 +2,7 @@
     <div class="address-identicon" ref="identicon"></div>
 </template>
 <script>
-import {Blockies} from '@/helpers'
+import { Blockies } from '@/helpers'
 export default {
   props: ['address', 'width', 'height'],
   data () {
