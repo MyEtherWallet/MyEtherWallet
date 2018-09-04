@@ -12,6 +12,7 @@ import ConvertUnits from '@/layouts/ConvertUnits'
 import NotFoundLayout from '@/layouts/NotFoundLayout'
 import CreateWalletWarningLayout from '@/layouts/CreateWalletWarningLayout'
 import ExtensionsLayout from '@/layouts/ExtensionsLayout'
+import DebugsLayout from '@/layouts/DebugsLayout'
 import { router as routerConfig } from '@/configs/build'
 
 Vue.use(Router)
@@ -73,6 +74,11 @@ export default new Router({
       path: '/extensions',
       name: 'ExtensionsLayout',
       component: ExtensionsLayout
+    },
+    {
+      path: '/debugs',
+      name: 'DebugsLayout',
+      component: DebugsLayout
     },
     {
       path: '*',
