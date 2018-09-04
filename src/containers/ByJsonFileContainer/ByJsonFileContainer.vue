@@ -92,7 +92,7 @@ export default {
   mounted () {
     const worker = new Worker()
     const self = this
-    worker.postMessage({type: 'createWallet', data: [this.password]})
+    worker.postMessage({ type: 'createWallet', data: [this.password] })
     worker.onmessage = function (e) {
       // eslint-disable-next-line no-useless-escape
       self.walletJson = createBlob('mime', e.data.walletJson)

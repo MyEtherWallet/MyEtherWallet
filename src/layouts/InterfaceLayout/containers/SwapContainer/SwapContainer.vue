@@ -127,8 +127,8 @@ export default {
         visaMaster: ImageVisaMaster,
         swap: swapIcon
       },
-      toArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}],
-      fromArray: [{symbol: 'BTC', name: 'Bitcoin'}, {symbol: 'Aug', name: 'Augur'}, {symbol: 'OMG', name: 'OhMyGod'}]
+      toArray: [{ symbol: 'BTC', name: 'Bitcoin' }, { symbol: 'Aug', name: 'Augur' }, { symbol: 'OMG', name: 'OhMyGod' }],
+      fromArray: [{ symbol: 'BTC', name: 'Bitcoin' }, { symbol: 'Aug', name: 'Augur' }, { symbol: 'OMG', name: 'OhMyGod' }]
     }
   },
   methods: {

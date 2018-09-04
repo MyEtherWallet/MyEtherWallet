@@ -144,7 +144,7 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: {symbol: 'ETH', name: 'Ethereum'},
+      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       signedTx: ''
     }
@@ -158,7 +158,7 @@ export default {
       this.$children[6].$refs.success.show()
     },
     createTx () {
-      const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+      const jsonInterface = [{ 'constant': false, 'inputs': [{ 'name': '_to', 'type': 'address' }, { 'name': '_amount', 'type': 'uint256' }], 'name': 'transfer', 'outputs': [{ 'name': 'success', 'type': 'bool' }], 'payable': false, 'type': 'function' }]
       const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
       const isEth = this.selectedCurrency.name === 'Ether'
       this.nonce = this.$store.state.web3.eth.getTransactionCount(this.$store.state.wallet.getAddressString())
@@ -199,7 +199,7 @@ export default {
     },
     createDataHex () {
       if (this.selectedCurrency.name !== 'Ether') {
-        const jsonInterface = [{'constant': false, 'inputs': [{'name': '_to', 'type': 'address'}, {'name': '_amount', 'type': 'uint256'}], 'name': 'transfer', 'outputs': [{'name': 'success', 'type': 'bool'}], 'payable': false, 'type': 'function'}]
+        const jsonInterface = [{ 'constant': false, 'inputs': [{ 'name': '_to', 'type': 'address' }, { 'name': '_amount', 'type': 'uint256' }], 'name': 'transfer', 'outputs': [{ 'name': 'success', 'type': 'bool' }], 'payable': false, 'type': 'function' }]
         const contract = new this.$store.state.web3.eth.Contract(jsonInterface)
         this.data = contract.methods.transfer(this.toAddress, this.amount).encodeABI()
       } else {

@@ -47,7 +47,7 @@
 
 <script>
 import store from 'store'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import InterfaceTokensModal from '../InterfaceTokensModal'
 
 export default {

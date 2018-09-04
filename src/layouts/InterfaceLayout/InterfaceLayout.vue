@@ -113,7 +113,7 @@ export default {
     },
     async getTokenBalance (address) {
       const web3 = this.$store.state.web3
-      const contractAbi = [{'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }]}]
+      const contractAbi = [{ 'name': 'balanceOf', 'type': 'function', 'constant': true, 'inputs': [{ 'name': 'address', 'type': 'address' }], 'outputs': [{ 'name': 'out', 'type': 'uint256' }] }]
       const contract = new web3.eth.Contract(contractAbi)
       const data = contract.methods.balanceOf(this.$store.state.wallet.getAddressString()).encodeABI()
       return web3.eth.call({

@@ -11,7 +11,8 @@ import HelpCenterLayout from '@/layouts/HelpCenterLayout'
 import ConvertUnits from '@/layouts/ConvertUnits'
 import NotFoundLayout from '@/layouts/NotFoundLayout'
 import CreateWalletWarningLayout from '@/layouts/CreateWalletWarningLayout'
-import {router as routerConfig} from '@/configs/build'
+import ExtensionsLayout from '@/layouts/ExtensionsLayout'
+import { router as routerConfig } from '@/configs/build'
 
 Vue.use(Router)
 
@@ -67,6 +68,11 @@ export default new Router({
       path: '/getting-started',
       name: 'CreateWalletWarningLayout',
       component: CreateWalletWarningLayout
+    },
+    {
+      path: '/extensions',
+      name: 'ExtensionsLayout',
+      component: ExtensionsLayout
     },
     {
       path: '*',

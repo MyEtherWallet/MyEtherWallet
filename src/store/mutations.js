@@ -6,7 +6,7 @@ const ADD_NOTIFICATION = function (state, val) {
     newNotif[item] = state.notifications[item]
   })
 
-  newNotif[val[0]].push({title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false})
+  newNotif[val[0]].push({ title: val[2], read: false, timestamp: new Date(), body: val[1], expanded: false })
   store.set('notifications', newNotif)
 }
 
@@ -23,7 +23,7 @@ const CHECK_IF_ONLINE = function (state) {
 
 const CLEAR_WALLET = function (state) {
   state.wallet = null
-  state.account = {balance: 0}
+  state.account = { balance: 0 }
 }
 
 const DECRYPT_WALLET = function (state, wallet) {
