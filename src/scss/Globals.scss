@@ -769,9 +769,19 @@ h6 {
   }
 }
 
+.nopadding .modal-body {
+  padding: 0;
+}
+
 .bootstrap-modal.no-padding .modal-body,
 .bootstrap-modal.nopadding .modal-body {
   padding: 0;
+}
+
+.max-height-1 .modal-body {
+  max-height: 405px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .bootstrap-modal.padding-40-20 .modal-body {
