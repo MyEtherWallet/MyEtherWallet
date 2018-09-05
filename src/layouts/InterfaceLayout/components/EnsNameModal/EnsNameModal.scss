@@ -1,0 +1,76 @@
+@import '~@/scss/GlobalVariables';
+
+.bootstrap-modal {
+  .modal-dialog {
+    width: 400px !important;
+  }
+}
+
+.ens-modal-body {
+  padding: 15px 35px;
+}
+
+.content-header {
+  border-bottom: 1px dashed $light-grey-3;
+  padding: 10px 0 15px;
+
+  h3 {
+    color: $mew-green;
+  }
+
+  p {
+    font-weight: 300;
+  }
+
+  >div {
+    padding: 0 5px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      color: $dark-blue-7;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 0;
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      padding: 20px;
+      width: 100%;
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 10px;
+
+    button {
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 20px;
+      width: 150px;
+    }
+
+    .cancel {
+      border: 1px solid $black;
+    }
+
+    .submit {
+      background-color: $mew-green;
+      border: 1px solid $mew-green;
+      color: $white;
+    }
+  }
+}

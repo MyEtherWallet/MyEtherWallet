@@ -1,5 +1,6 @@
 <template>
   <div class="register-domain-container">
+    <ens-name-modal :ens-name="domainName"/>
     <back-button :reset-view="resetView"/>
 
     <div class="send-form">
@@ -24,8 +25,13 @@
     </div>
 
     <div class="submit-button-container">
-      <div :class="[domainName.length <= 7 ? 'disabled' : '','submit-button large-round-button-green-filled clickable']">
-        {{ $t('interface.checkDomain') }}
+      <div
+        :class="[domainName.length <= 7 ? 'disabled' : '','submit-button large-round-button-green-filled clickable']"
+        @click="checkDomain">
+        <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
+        <i
+          v-show="loading"
+          class="fa fa-spinner fa-spin"/>
       </div>
 
     </div>
@@ -155,13 +161,16 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BackButton from '../../components/BackButton';
+import EnsNameModal from '../../components/EnsNameModal';
 import EnsAbi from '@/helpers/ensAbi';
 import RegistrarAbi from '@/helpers/registrarAbi';
+import Misc from '@/helpers/misc';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'ens-name-modal': EnsNameModal
   },
   props: {
     resetView: {
@@ -171,19 +180,70 @@ export default {
   },
   data() {
     return {
-      domainName: ''
+      domainName: '',
+      loading: false
     };
   },
-  mounted() {
-    // eslint-disable-next-line no-unused-vars
-    const ensContract = new this.$store.state.web3.eth.Contract(EnsAbi);
-    const auctionRegistrarContract = new this.$store.state.web3.eth.Contract(
-      RegistrarAbi
-    );
-    // const ens = ensContract.at(this.$store.state.network.type.ensResolver);
-    console.log(auctionRegistrarContract.methods);
-  },
   methods: {
+    async forEth() {
+      const web3 = this.$store.state.web3;
+      const ensContract = new web3.eth.Contract(
+        EnsAbi,
+        '0x314159265dd8dbb310642f98f50c066173c1259b'
+      );
+
+      const ownerAddress = await ensContract.methods
+        .owner(Misc.nameHash('eth', web3))
+        .call();
+
+      const auctionRegistrarContract = new web3.eth.Contract(
+        RegistrarAbi,
+        ownerAddress
+      );
+
+      const domainStatus = await auctionRegistrarContract.methods
+        .entries(web3.utils.sha3(this.domainName))
+        .call();
+
+      console.log('Ayyyy');
+      this.processResult(domainStatus[0]);
+    },
+    async checkDomain() {
+      const network = this.$store.state.network;
+      this.loading = true;
+      switch (network.type.name) {
+        case 'ETH':
+          await this.forEth();
+          break;
+        default:
+          console.log('Lmao');
+      }
+      this.loading = false;
+    },
+    processResult(res) {
+      switch (res) {
+        case '0':
+          this.$children[0].$refs.registerEns.show();
+          break;
+        case '1':
+          console.log('Name is available and the auction has been started');
+          break;
+        case '2':
+          console.log('Name is taken and currently owned by someone');
+          break;
+        case '3':
+          console.log('Name is forbidden');
+          break;
+        case '4':
+          console.log('Name is currently in the ‘reveal’ stage of the auction');
+          break;
+        case '5':
+          console.log(
+            'Name is not yet available due to the ‘soft launch’ of names.'
+          );
+          break;
+      }
+    },
     expendDomainCheckForm() {
       this.$refs['checkForm'].classList.toggle('hidden');
       this.$refs['domainList'].classList.add('hidden');
