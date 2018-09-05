@@ -1,1 +1,1 @@
-export { default } from './TutorialModal'
+export { default } from './TutorialModal';

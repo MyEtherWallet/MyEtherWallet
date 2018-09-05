@@ -1,1 +1,1 @@
-export {default} from './InterfaceNetworkModal'
+export { default } from './InterfaceNetworkModal';

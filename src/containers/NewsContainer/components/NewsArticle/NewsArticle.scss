@@ -7,7 +7,7 @@
 
   @media all and (min-width: $tablet-width + 1) {
     top: 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
     &:hover {
       box-shadow: 0 10px 24px $news-block-box-shadow-color;

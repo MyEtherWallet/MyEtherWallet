@@ -18,12 +18,12 @@
 
 <script>
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "NotFoundLayout.scss";
+@import 'NotFoundLayout.scss';
 </style>

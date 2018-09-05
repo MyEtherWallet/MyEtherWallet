@@ -1,1 +1,1 @@
-export { default } from './CreateWalletInput'
+export { default } from './CreateWalletInput';

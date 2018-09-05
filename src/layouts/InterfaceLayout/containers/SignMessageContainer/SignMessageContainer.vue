@@ -1,7 +1,9 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('reused.signMessage')"></interface-container-title>
+    <success-modal
+      message=""
+      link-message="Ok"/>
+    <interface-container-title :title="$t('common.signMessage')"/>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -15,27 +17,14 @@
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
-
-          <div class="tooltip-box-1">
-            <b-btn id="exPopover1"></b-btn>
-            <b-popover target="exPopover1" triggers="hover focus" placement="top">
-              <template slot="title">MetaMask</template>
-              <img class="icon" src="~@/assets/images/icons/button-metamask.svg">
-              MetaMask is a <strong>bridge</strong> that allows you to
-              visit the distributed web of tomorrow in your browser today.
-              It allows you to <strong>run Ethereum dApps right in your
-              browser without running a full Ethereum node.</strong>
-              MetaMask includes a secure identity vault, providing a user
-              interface to manage your identities on different sites
-              and sign blockchain transactions.
-            </b-popover>
-          </div>
-
+          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
         </div>
       </div>
 
       <div class="the-form">
-        <textarea class="custom-textarea-1"></textarea>
+        <textarea
+          ref="message"
+          class="custom-textarea-1"/>
       </div>
     </div>
 
@@ -43,57 +32,95 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature</h4>
-          <popover :popdata="popoverSignature"/>
+          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
-            <span v-on:click="copyToClipboard('abi')">Copy</span>
+            <span @click="deleteInputText('signature')">Clear</span>
+            <span @click="copyToClipboard('signature')">Copy</span>
           </div>
 
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+        <textarea
+          ref="signature"
+          class="custom-textarea-1"
+          name=""/>
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
-          {{ $t('interface.sign') }}
+        <div
+          class="submit-button large-round-button-green-filled clickable"
+          @click="signMessage">
+          {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/components/SuccessModal'
-import PopOver from '@/components/PopOver'
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 
 export default {
-  name: 'Send Message',
+  name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal,
-    'popover': PopOver
+    'success-modal': SuccessModal
   },
-  data () {
-    return {
-      popoverSignature: {
-        title: 'h1',
-        content: 'gogogo'
-      }
+  data() {
+    return {};
+  },
+  methods: {
+    signMessage() {
+      this.$store.state.web3.eth
+        .sign(
+          this.$refs.message.value,
+          this.$store.state.wallet.getAddressString()
+        )
+        .then(_signedMessage => {
+          this.$refs.signature.value = JSON.stringify(
+            {
+              address: this.$store.state.wallet.getAddressString(),
+              msg: this.$refs.message.value,
+              sig: _signedMessage,
+              version: '3',
+              signer: this.$store.state.wallet.brand
+                ? this.$store.state.wallet.brand
+                : 'MEW'
+            },
+            null,
+            2
+          );
+        })
+        // eslint-disable-next-line
+        .catch(console.error);
+    },
+    successModalOpen() {
+      this.$children[0].$refs.success.show();
+    },
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+    },
+    deleteInputText(ref) {
+      this.$refs[ref].value = '';
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SignMessageContainer.scss";
+@import 'SignMessageContainer.scss';
 </style>

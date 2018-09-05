@@ -3,16 +3,46 @@
 .col {
   margin: 0;
   padding: 0;
-  margin-left: 7px;
+  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+  position: relative;
 }
 
 .popover-button {
-  background-color: white;
+  position: absolute;
+  background-color: transparent;
   border: 0;
   margin: 0;
   padding: 0;
 
-  img {
-    width: 15px;
+  &:active,
+  &:focus {
+    box-shadow: none;
   }
+
+  .hover-icon {
+    display: none;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+
+  &:hover {
+    .nohover-icon {
+      display: none;
+    }
+    .hover-icon {
+      display: block;
+    }
+  }
+}
+
+.popover-content {
+  font-size: 12px;
 }

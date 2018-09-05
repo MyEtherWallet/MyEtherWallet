@@ -1,0 +1,57 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  padding: 70px 0;
+  background-color: $light-grey-2;
+  background-image: url('~@/assets/images/background/bg-left.png'),
+    url('~@/assets/images/background/bg-right.png');
+  background-position: top left, top right;
+  background-repeat: no-repeat;
+  background-size: 220px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 60px;
+
+  h2 {
+    font-size: 45px;
+    margin-bottom: 30px;
+  }
+  p {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+.ether-unit-reference-guide {
+  margin-top: 60px;
+
+  .block-title {
+    text-align: center;
+  }
+
+  .unit-table {
+    margin-top: 20px;
+    table {
+      width: 100%;
+      border-top: 1px solid $light-grey-3;
+      tr {
+        position: relative;
+        border-bottom: 1px solid $light-grey-3;
+        td {
+          padding: 18px 10px;
+          position: relative;
+
+          span {
+            position: absolute;
+            top: 23px;
+            left: 26px;
+            font-size: 9px;
+            margin-top: -10px;
+          }
+        }
+      }
+    }
+  }
+}

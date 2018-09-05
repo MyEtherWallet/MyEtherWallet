@@ -1,34 +1,53 @@
 <template>
-  <b-modal ref="privateKey" hide-footer class="bootstrap-modal modal-software" title="PrivateKey">
+  <b-modal
+    ref="privateKey"
+    :title="$t('accessWallet.accessByPrivateKey')"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    centered>
     <form class="private-key-form">
       <div class="input-container">
-        <input type="text" name="PrivateKey" v-model="privateKey" autocomplete="off" />
+        <input
+          v-model="privateKey"
+          type="text"
+          name="PrivateKey"
+          autocomplete="off" >
       </div>
-      <button class="submit-button large-round-button-green-filled" type="submit" @click.prevent="unlockWallet" :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9">
-        Unlock Wallet
+      <button
+        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
+        @click.prevent="unlockWallet">
+        {{ $t("accessWallet.unlockWallet") }}
       </button>
     </form>
   </b-modal>
 </template>
 
 <script>
-import Wallet from 'ethereumjs-wallet'
+import { BasicWallet } from '@/wallets';
 
 export default {
-  data () {
+  data() {
     return {
       privateKey: ''
-    }
+    };
   },
   methods: {
-    unlockWallet () {
-      this.$store.dispatch('decryptWallet', Wallet.fromPrivateKey(Buffer.from(this.privateKey, 'hex')))
-      this.privateKey = ''
-      this.$router.push({ path: 'interface' })
+    unlockWallet() {
+      this.$store.dispatch(
+        'decryptWallet',
+        BasicWallet.unlock({
+          type: 'manualPrivateKey',
+          manualPrivateKey: this.privateKey
+        })
+      );
+      this.privateKey = '';
+      this.$router.push({ path: 'interface' });
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "PrivateKeyModal.scss";
+@import 'PrivateKeyModal.scss';
 </style>

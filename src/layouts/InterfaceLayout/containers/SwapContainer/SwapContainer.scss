@@ -3,6 +3,37 @@
 .swap-container {
   @extend %interface-container;
 
+  .title-block {
+    position: relative;
+    .buy-eth {
+      right: 30px;
+      top: 28px;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      color: $mew-green;
+      img {
+        height: 20px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .title-and-copy {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    h4 {
+      margin: 0;
+    }
+    .copy-button {
+      margin-left: auto;
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
 
   .send-form {
     @extend %send-form-base;
@@ -10,7 +41,10 @@
     .title-container {
       .title {
         padding: 0 8px;
-
+        .title-and-popover {
+          display: flex;
+          align-items: center;
+        }
         h4 {
           margin-bottom: 2px;
         }
@@ -166,7 +200,7 @@
         display: flex;
         margin-left: auto;
 
-        >span {
+        > span {
           margin-right: 15px;
         }
       }
@@ -185,6 +219,14 @@
       margin: 0 auto;
       text-align: center;
       width: 300px;
+      position: relative;
+
+      i {
+        position: absolute;
+        right: 20px;
+        top: 16px;
+        font-size: 30px;
+      }
     }
 
     p {

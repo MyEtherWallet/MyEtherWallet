@@ -1,1 +1,1 @@
-export { default } from './TeamLayout'
+export { default } from './TeamLayout';

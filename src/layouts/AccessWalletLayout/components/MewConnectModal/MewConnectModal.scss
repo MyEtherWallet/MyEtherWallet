@@ -1,5 +1,23 @@
 @import '~@/scss/CustomModal';
 
+.modal-large-text {
+  font-weight: 400;
+  max-width: 330px;
+  display: inline-block;
+}
+
+.appstore-button-container {
+  margin-bottom: 20px;
+  img {
+    margin: 0 5px 20px;
+    width: 160px;
+  }
+}
+
+.bootstrap-modal .content-container {
+  margin-bottom: 0;
+}
+
 .modal-mew-connect {
   .content-container-1 {
     margin: -20px -40px 0;
@@ -71,6 +89,5 @@
         }
       }
     }
-
   }
 }

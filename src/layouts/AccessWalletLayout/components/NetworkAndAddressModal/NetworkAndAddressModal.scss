@@ -1,5 +1,14 @@
 @import '~@/scss/CustomModal';
 
+.modal-body .button-container button {
+  width: 100%;
+}
+
+.error-message-container {
+  color: $red-1 !important;
+  margin: 7px 0 0 15px;
+}
+
 .modal-network-and-address {
   .content-container-1 {
     margin: -20px -40px 0;
@@ -71,6 +80,5 @@
         }
       }
     }
-
   }
 }

@@ -1,1 +1,1 @@
-export { default } from './InterfaceBalance'
+export { default } from './InterfaceBalance';

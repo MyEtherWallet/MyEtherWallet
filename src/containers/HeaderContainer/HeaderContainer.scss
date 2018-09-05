@@ -4,6 +4,17 @@
   padding-top: 87px;
 }
 
+.scrollup-container {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    pointer-events: initial;
+  }
+}
+
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
@@ -24,9 +35,9 @@
     align-items: center;
     display: flex;
     padding: 12px 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
-    @media all and (max-width: $tablet-width){
+    @media all and (max-width: $tablet-width) {
       padding: 15px 0;
     }
 
@@ -35,7 +46,7 @@
 
       img {
         height: 33px;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
       }
 
       .logo-small {
@@ -58,7 +69,7 @@
         color: $text-base-color;
       }
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         display: none;
       }
 
@@ -77,12 +88,17 @@
         }
       }
 
+      .language-menu-container {
+        margin-left: 20px;
+      }
+
       .language-menu {
         margin-left: 0;
 
         .dropdown-menu {
           a {
             $language-item-padding-value: 8px;
+
             font-size: 13px;
             padding-bottom: $language-item-padding-value;
             padding-left: 15px;
@@ -93,34 +109,39 @@
 
       .current-language-flag {
         display: flex;
+        align-items: center;
 
         img {
           flex: 45;
-          height: 25px;
-          margin-right: 15px;
-          outline: 1px solid;
+          margin-right: 10px;
+          height: 15px;
+          border-radius: 3px;
         }
       }
 
-      >ul {
-        >li {
+      > ul {
+        > li {
           display: inline-block;
           font-size: 14px;
           margin-left: 26px;
           padding: 13px 0;
+
+          &.nopadding {
+            padding: 0;
+          }
 
           a {
             color: $text-color-3;
           }
         }
       }
-    }// .top-menu
+    } // .top-menu
 
     .mobile-menu {
       display: none;
       margin-left: auto;
 
-      @media all and (max-width: $tablet-width){
+      @media all and (max-width: $tablet-width) {
         display: block;
       }
 
@@ -140,27 +161,86 @@
           width: 15px;
         }
       }
-    }// .mobile-menu
-
-  }// .header-container
-}// .fixed-header
+    } // .mobile-menu
+  } // .header-container
+} // .fixed-header
 
 .identicon-dropdown {
   padding: 0 !important;
 }
 
 .get-free-wallet {
-  border: 1px solid $border-green;
-  border-radius: 4px;
-  color: $text-color-green;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 24px;
-  padding: 10px 20px;
-  transition: background-color .2s ease;
+  position: relative;
+  animation: fadeInFromNone 0.5s ease-out;
+  animation-fill-mode: forwards;
+  opacity: 1;
 
-  &:hover {
-    background-color: $text-color-green;
-    color: $text-white;
+  .get-free-wallet-button {
+    border: 1px solid $border-green;
+    border-radius: 4px;
+    color: $text-color-green;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 10px 20px;
+    transition: background-color 0.2s ease;
+    display: block;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      background-color: $text-color-green;
+      color: $text-white;
+    }
   }
-}
+
+  &.noshow {
+    animation: fadeOutFromBlock 0.5s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fadeInFromNone {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 0;
+      margin-left: 0;
+    }
+
+    50% {
+      width: 173px;
+      height: 54px;
+      opacity: 0;
+      margin-left: 20px;
+    }
+
+    100% {
+      width: 173px;
+      height: 54px;
+      opacity: 1;
+      margin-left: 20px;
+    }
+  }
+
+  @keyframes fadeOutFromBlock {
+    0% {
+      width: 173px;
+      height: 54px;
+      opacity: 1;
+      margin-left: 20px;
+    }
+
+    50% {
+      width: 173px;
+      height: 54px;
+      opacity: 0;
+      margin-left: 20px;
+    }
+
+    100% {
+      width: 0;
+      height: 0;
+      opacity: 0;
+      margin-left: 0;
+    }
+  }
+} // .get-free-wallet
