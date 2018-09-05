@@ -8,20 +8,14 @@
 </template>
 
 <script>
-
 export default {
-
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   },
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "HelpCenterButton.scss";
+@import 'HelpCenterButton.scss';
 </style>
