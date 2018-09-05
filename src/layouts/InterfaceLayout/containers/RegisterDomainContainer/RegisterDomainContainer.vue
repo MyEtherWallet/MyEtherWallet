@@ -155,6 +155,8 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BackButton from '../../components/BackButton';
+import EnsAbi from '@/helpers/ensAbi';
+import RegistrarAbi from '@/helpers/registrarAbi';
 
 export default {
   components: {
@@ -172,18 +174,24 @@ export default {
       domainName: ''
     };
   },
+  mounted() {
+    // eslint-disable-next-line no-unused-vars
+    const ensContract = new this.$store.state.web3.eth.Contract(EnsAbi);
+    const auctionRegistrarContract = new this.$store.state.web3.eth.Contract(
+      RegistrarAbi
+    );
+    // const ens = ensContract.at(this.$store.state.network.type.ensResolver);
+    console.log(auctionRegistrarContract.methods);
+  },
   methods: {
     expendDomainCheckForm() {
       this.$refs['checkForm'].classList.toggle('hidden');
       this.$refs['domainList'].classList.add('hidden');
     },
     domainAvailabilityCheck() {
-      // this.$refs['checkForm'].classList.toggle('hidden')
       this.$refs['domainList'].classList.add('hidden');
     },
-    domainBuyButtonClick() {
-      // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
-    }
+    domainBuyButtonClick() {}
   }
 };
 </script>
