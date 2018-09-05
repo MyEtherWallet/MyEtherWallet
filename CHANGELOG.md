@@ -1,4 +1,5 @@
 ### Feature
+- Add light border to flags []()
 - Decompress images on build [#77](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/77)
 - Integrate secalot [#76](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/76)
 - Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
