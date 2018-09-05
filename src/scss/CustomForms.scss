@@ -21,6 +21,7 @@
 
   input {
     @extend %input-1;
+
     width: 100%;
   }
 
@@ -122,6 +123,7 @@
 
   input {
     @extend %input-1;
+
     position: relative;
     display: block;
   }
