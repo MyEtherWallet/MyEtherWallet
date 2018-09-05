@@ -96,7 +96,7 @@ export default {
             },
             {
               text: this.$t('footer.txStat'),
-              to: '/'
+              to: '/txstatus'
             },
             {
               text: this.$t('footer.debugs'),

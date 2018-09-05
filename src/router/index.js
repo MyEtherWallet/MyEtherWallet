@@ -13,6 +13,7 @@ import NotFoundLayout from '@/layouts/NotFoundLayout'
 import CreateWalletWarningLayout from '@/layouts/CreateWalletWarningLayout'
 import ExtensionsLayout from '@/layouts/ExtensionsLayout'
 import DebugsLayout from '@/layouts/DebugsLayout'
+import TxStatusLayout from '@/layouts/TxStatusLayout'
 import { router as routerConfig } from '@/configs/build'
 
 Vue.use(Router)
@@ -79,6 +80,11 @@ export default new Router({
       path: '/debugs',
       name: 'DebugsLayout',
       component: DebugsLayout
+    },
+    {
+      path: '/txstatus',
+      name: 'TxStatusLayout',
+      component: TxStatusLayout
     },
     {
       path: '*',

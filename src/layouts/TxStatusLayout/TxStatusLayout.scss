@@ -1,0 +1,48 @@
+@import '~@/scss/GlobalVariables';
+
+a:active {
+  color: inherit;
+}
+
+.wrap {
+  padding: 70px 0;
+  padding-bottom: 200px;
+  background-color: $light-grey-2;
+  background-image: url('~@/assets/images/background/bg-left.png'), url('~@/assets/images/background/bg-right.png');
+  background-position: top left, top right;
+  background-repeat: no-repeat;
+  background-size: 220px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 60px;
+
+  h2 {
+    font-size: 45px;
+    margin-bottom: 30px;
+  }
+  p {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+
+
+
+.content-container {
+
+  max-width: 700px;
+  margin: 0 auto;  
+
+
+  .check-button {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+
+
+
+
