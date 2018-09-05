@@ -292,7 +292,8 @@ export default {
             : unit.toWei(this.amount, 'ether')
           : 0,
         to: isEth ? this.address : this.selectedCurrency.addr,
-        data: this.data
+        data: this.data,
+        chainId: this.$store.state.network.type.chainID || 1
       };
 
       if (this.address === '') {

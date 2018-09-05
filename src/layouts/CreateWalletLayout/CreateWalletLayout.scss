@@ -64,8 +64,12 @@
   }
 
   @keyframes progreesbar-grow {
-    from {width: 0%;}
-    to {width: 23.33%;}
+    from {
+      width: 0%;
+    }
+    to {
+      width: 23.33%;
+    }
   }
 
   .tab-pane {
