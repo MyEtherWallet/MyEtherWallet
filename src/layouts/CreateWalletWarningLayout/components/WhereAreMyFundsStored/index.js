@@ -1,1 +1,1 @@
-export { default } from './WhereAreMyFundsStored'
+export { default } from "./WhereAreMyFundsStored";

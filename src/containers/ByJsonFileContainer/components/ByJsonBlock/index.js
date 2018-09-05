@@ -1,1 +1,1 @@
-export { default } from './ByJsonBlock'
+export { default } from "./ByJsonBlock";

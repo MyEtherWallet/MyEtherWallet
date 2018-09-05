@@ -1,5 +1,10 @@
 <template>
-  <b-modal ref="scantodownload" hide-footer centered class="bootstrap-modal no-padding" title="Scan To Download">
+  <b-modal 
+    ref="scantodownload" 
+    hide-footer 
+    centered 
+    class="bootstrap-modal no-padding" 
+    title="Scan To Download">
 
     <div class="qr-divider">
       <div class="ios">
@@ -33,13 +38,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ScanToDownloadModal.scss";
+@import "ScanToDownloadModal.scss";
 </style>

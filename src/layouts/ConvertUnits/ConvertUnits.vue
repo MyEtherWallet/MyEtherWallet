@@ -23,11 +23,13 @@
           <div class="unit-table">
             <table>
               <tbody>
-                <tr v-for="eu in etherUnitRef" v-bind:key="eu.key">
-                  <td>{{eu.name}}</td>
-                  <td>{{eu.unit1}}</td>
-                  <td>{{eu.unit2}}<span>{{eu.unit2e}}</span></td>
-                  <td>{{eu.desc}}</td>
+                <tr 
+                  v-for="eu in etherUnitRef" 
+                  :key="eu.key">
+                  <td>{{ eu.name }}</td>
+                  <td>{{ eu.unit1 }}</td>
+                  <td>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></td>
+                  <td>{{ eu.desc }}</td>
                 </tr>
               </tbody>
             </table>
@@ -41,98 +43,98 @@
 </template>
 
 <script>
-import UnitInput from './components/UnitInput'
+import UnitInput from "./components/UnitInput";
 
 export default {
   components: {
-    'unit-input': UnitInput
+    "unit-input": UnitInput
   },
-  data () {
+  data() {
     return {
       etherUnitRef: [
         {
-          name: 'Wei',
-          unit1: '1',
-          unit2: '1',
-          unit2e: '',
-          desc: ''
+          name: "Wei",
+          unit1: "1",
+          unit2: "1",
+          unit2e: "",
+          desc: ""
         },
         {
-          name: 'Kwei',
-          unit1: '1,000',
-          unit2: '10',
-          unit2e: '3',
-          desc: 'ada, femtoether'
+          name: "Kwei",
+          unit1: "1,000",
+          unit2: "10",
+          unit2e: "3",
+          desc: "ada, femtoether"
         },
         {
-          name: 'Mwei',
-          unit1: '1,000,000',
-          unit2: '10',
-          unit2e: '6',
-          desc: 'babbage, picoether'
+          name: "Mwei",
+          unit1: "1,000,000",
+          unit2: "10",
+          unit2e: "6",
+          desc: "babbage, picoether"
         },
         {
-          name: 'Gwei',
-          unit1: '1,000,000,000',
-          unit2: '10',
-          unit2e: '9',
-          desc: 'shannon, nanoether, nano'
+          name: "Gwei",
+          unit1: "1,000,000,000",
+          unit2: "10",
+          unit2e: "9",
+          desc: "shannon, nanoether, nano"
         },
         {
-          name: 'Szabo',
-          unit1: '1,000,000,000,000',
-          unit2: '10',
-          unit2e: '12',
-          desc: 'microether, micro'
+          name: "Szabo",
+          unit1: "1,000,000,000,000",
+          unit2: "10",
+          unit2e: "12",
+          desc: "microether, micro"
         },
         {
-          name: 'Finney',
-          unit1: '1,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '15',
-          desc: 'milliether, milli'
+          name: "Finney",
+          unit1: "1,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "15",
+          desc: "milliether, milli"
         },
         {
-          name: 'Ether',
-          unit1: '1,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '18',
-          desc: ''
+          name: "Ether",
+          unit1: "1,000,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "18",
+          desc: ""
         },
         {
-          name: 'Kether',
-          unit1: '1,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '21',
-          desc: 'grand, einstein'
+          name: "Kether",
+          unit1: "1,000,000,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "21",
+          desc: "grand, einstein"
         },
         {
-          name: 'Mether',
-          unit1: '1,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '24',
-          desc: ''
+          name: "Mether",
+          unit1: "1,000,000,000,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "24",
+          desc: ""
         },
         {
-          name: 'Gether',
-          unit1: '1,000,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '27',
-          desc: ''
+          name: "Gether",
+          unit1: "1,000,000,000,000,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "27",
+          desc: ""
         },
         {
-          name: 'Tether',
-          unit1: '1,000,000,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '30',
-          desc: ''
+          name: "Tether",
+          unit1: "1,000,000,000,000,000,000,000,000,000,000",
+          unit2: "10",
+          unit2e: "30",
+          desc: ""
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ConvertUnits.scss";
+@import "ConvertUnits.scss";
 </style>

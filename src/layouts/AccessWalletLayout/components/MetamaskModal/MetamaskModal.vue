@@ -1,25 +1,40 @@
 <template>
-  <b-modal ref="metamask" hide-footer class="bootstrap-modal modal-metamask" title="Access by MetaMask" centered>
+  <b-modal 
+    ref="metamask" 
+    hide-footer 
+    class="bootstrap-modal modal-metamask" 
+    title="Access by MetaMask" 
+    centered>
     <div class="modal-multi-icons">
-      <img class="icon" src="~@/assets/images/icons/button-metamask-fox.svg">
-      <img class="icon" src="~@/assets/images/icons/clip.svg">
-      <img class="icon logo-small" src="~@/assets/images/logo-small.png">
+      <img 
+        class="icon" 
+        src="~@/assets/images/icons/button-metamask-fox.svg">
+      <img 
+        class="icon" 
+        src="~@/assets/images/icons/clip.svg">
+      <img 
+        class="icon logo-small" 
+        src="~@/assets/images/logo-small.png">
     </div>
     <div class="d-block content-container text-center">
       <h4>
-        {{ $t("accessWallet.metaMaskModalDesc")}}
+        {{ $t("accessWallet.metaMaskModalDesc") }}
       </h4>
     </div>
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-        <input v-on:click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" type="checkbox" />
-        <span class="checkmark"></span>
+        <input 
+          type="checkbox" 
+          @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" >
+        <span class="checkmark"/>
       </label>
     </div>
     <div class="button-container">
       <router-link to="interface">
-        <b-btn class="mid-round-button-green-filled close-button" :disabled="accessMyWalletBtnDisabled">
-          {{ $t("accessWallet.accessMyWallet")}}
+        <b-btn 
+          :disabled="accessMyWalletBtnDisabled" 
+          class="mid-round-button-green-filled close-button">
+          {{ $t("accessWallet.accessMyWallet") }}
         </b-btn>
       </router-link>
     </div>
@@ -36,15 +51,15 @@
 
 <script>
 export default {
-  props: ['networkAndAddressOpen'],
-  data () {
+  props: ["networkAndAddressOpen"],
+  data() {
     return {
       accessMyWalletBtnDisabled: true
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "MetamaskModal.scss";
+@import "MetamaskModal.scss";
 </style>

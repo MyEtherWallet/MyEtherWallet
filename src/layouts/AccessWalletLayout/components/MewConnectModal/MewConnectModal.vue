@@ -1,7 +1,14 @@
 <template>
-  <b-modal ref="mewConnect" hide-footer class="bootstrap-modal modal-mew-connect" title="Access by MEWConnect" centered>
+  <b-modal 
+    ref="mewConnect" 
+    hide-footer 
+    class="bootstrap-modal modal-mew-connect" 
+    title="Access by MEWConnect" 
+    centered>
     <div class="modal-icon">
-      <img class="icon" src="~@/assets/images/icons/qr-code.jpg">
+      <img 
+        class="icon" 
+        src="~@/assets/images/icons/qr-code.jpg">
     </div>
     <div class="d-block content-container text-center">
       <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
@@ -24,14 +31,13 @@
 
 <script>
 export default {
-  props: ['networkAndAddressOpen'],
-  data () {
-    return {
-    }
+  props: ["networkAndAddressOpen"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "MewConnectModal.scss";
+@import "MewConnectModal.scss";
 </style>

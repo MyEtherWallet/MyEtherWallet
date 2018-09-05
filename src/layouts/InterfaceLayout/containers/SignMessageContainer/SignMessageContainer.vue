@@ -1,7 +1,9 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('common.signMessage')"></interface-container-title>
+    <success-modal 
+      message="" 
+      link-message="Ok"/>
+    <interface-container-title :title="$t('common.signMessage')"/>
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -20,7 +22,7 @@
       </div>
 
       <div class="the-form">
-        <textarea class="custom-textarea-1"></textarea>
+        <textarea class="custom-textarea-1"/>
       </div>
     </div>
 
@@ -31,60 +33,67 @@
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
-            <span v-on:click="copyToClipboard('abi')">Copy</span>
+            <span @click="deleteInputText('abi')">Clear</span>
+            <span @click="copyToClipboard('abi')">Copy</span>
           </div>
 
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+        <textarea 
+          ref="abi" 
+          class="custom-textarea-1" 
+          name=""/>
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
+        <div 
+          class="submit-button large-round-button-green-filled clickable" 
+          @click="successModalOpen">
           {{ $t('Sign') }}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text 
+        :link-text="$t('interface.learnMore')" 
+        :question="$t('interface.haveIssues')" 
+        link="/"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/components/SuccessModal'
+import InterfaceBottomText from "@/components/InterfaceBottomText";
+import InterfaceContainerTitle from "../../components/InterfaceContainerTitle";
+import SuccessModal from "@/components/SuccessModal";
 
 export default {
-  name: 'SignMessage',
+  name: "SignMessage",
   components: {
-    'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    "interface-bottom-text": InterfaceBottomText,
+    "interface-container-title": InterfaceContainerTitle,
+    "success-modal": SuccessModal
   },
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   methods: {
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    successModalOpen() {
+      this.$children[0].$refs.success.show();
     },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand("copy");
     },
-    deleteInputText (ref) {
-      this.$refs[ref].value = ''
+    deleteInputText(ref) {
+      this.$refs[ref].value = "";
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "SignMessageContainer.scss";
+@import "SignMessageContainer.scss";
 </style>

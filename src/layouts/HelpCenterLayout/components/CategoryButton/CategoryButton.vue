@@ -5,7 +5,7 @@
         <img :src="content.icon">
       </div>
       <div class="button-title">
-        {{content.title}}
+        {{ content.title }}
       </div>
     </div>
   </div>
@@ -13,12 +13,11 @@
 
 <script>
 export default {
-  props: ['content'],
-  data () {
-    return {
-    }
+  props: ["content"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

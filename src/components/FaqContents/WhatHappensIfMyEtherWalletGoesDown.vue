@@ -2,9 +2,9 @@
   <div>
     <p>
       MyEtherWallet is not a web wallet. You don't have a login, and nothing ever
-       gets saved to our servers. It is simply an interface that allows you to
-       interact with the blockchain.
-     </p>
+      gets saved to our servers. It is simply an interface that allows you to
+      interact with the blockchain.
+    </p>
     <p>
       If MyEtherWallet.com goes down, you would have to find another way
       (like geth or Ethereum Wallet / Mist) to do what we are doing. But you wouldn't
@@ -30,14 +30,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqContents.scss";
+@import "FaqContents.scss";
 </style>

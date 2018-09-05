@@ -19,5 +19,5 @@ const footer = {
   // feedback: '',
   // privacy: '',
   // copyright: ''
-}
-export default footer
+};
+export default footer;

@@ -1,9 +1,11 @@
 <template>
   <div class="modal-container">
     <div class="wrap">
-      <div class="the-button large-round-button-green-filled">{{buttonname}}</div>
+      <div class="the-button large-round-button-green-filled">{{ buttonname }}</div>
       <div class="qrcode-container">
-        <img class="dummy-qrcode" :src="qrcodeIconImage">
+        <img 
+          :src="qrcodeIconImage" 
+          class="dummy-qrcode">
         <div class="real-qrcode">
           <img src="">
         </div>
@@ -13,19 +15,17 @@
 </template>
 
 <script>
-import QrcodeIcon from '@/assets/images/icons/qr-code.svg'
+import QrcodeIcon from "@/assets/images/icons/qr-code.svg";
 
 export default {
-  props: ['qrcode', 'buttonname'],
-  data () {
+  props: ["qrcode", "buttonname"],
+  data() {
     return {
       qrcodeIconImage: QrcodeIcon
-    }
+    };
   },
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>

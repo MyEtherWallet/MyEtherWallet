@@ -1,6 +1,11 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="balance" hide-footer centered class="bootstrap-modal balance nopadding" title="Balance">
+    <b-modal 
+      ref="balance" 
+      hide-footer 
+      centered 
+      class="bootstrap-modal balance nopadding" 
+      title="Balance">
       <div class="content-block total-balance">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
@@ -13,10 +18,12 @@
       <div class="content-block">
         <h4 class="equivalent-values-title">Equivalent Values</h4>
         <ul class="equivalent-values">
-          <li v-for="ev in equivalentValues" v-bind:key="ev.key">
+          <li 
+            v-for="ev in equivalentValues" 
+            :key="ev.key">
             <img :src="ev.image">
-            <p>{{ev.name}}</p>
-            <p class="ev-value">{{ev.value}}</p>
+            <p>{{ ev.name }}</p>
+            <p class="ev-value">{{ ev.value }}</p>
           </li>
         </ul>
       </div>
@@ -25,54 +32,54 @@
 </template>
 
 <script>
-import iconBtc from '@/assets/images/currency/btc.svg'
-import iconRep from '@/assets/images/currency/rep.svg'
-import iconEur from '@/assets/images/currency/eur.svg'
-import iconChf from '@/assets/images/currency/chf.svg'
-import iconGbp from '@/assets/images/currency/gbp.svg'
-import iconUsd from '@/assets/images/currency/usd.svg'
+import iconBtc from "@/assets/images/currency/btc.svg";
+import iconRep from "@/assets/images/currency/rep.svg";
+import iconEur from "@/assets/images/currency/eur.svg";
+import iconChf from "@/assets/images/currency/chf.svg";
+import iconGbp from "@/assets/images/currency/gbp.svg";
+import iconUsd from "@/assets/images/currency/usd.svg";
 
 export default {
-  props: ['balance'],
-  data () {
+  props: ["balance"],
+  data() {
     return {
       equivalentValues: [
         {
           image: iconBtc,
-          name: 'BTC',
-          value: '102.22453'
+          name: "BTC",
+          value: "102.22453"
         },
         {
           image: iconRep,
-          name: 'REP',
-          value: '5656.22'
+          name: "REP",
+          value: "5656.22"
         },
         {
           image: iconChf,
-          name: 'CHF',
-          value: '12410004.22453'
+          name: "CHF",
+          value: "12410004.22453"
         },
         {
           image: iconUsd,
-          name: 'USD',
-          value: '312004.53'
+          name: "USD",
+          value: "312004.53"
         },
         {
           image: iconEur,
-          name: 'EUR',
-          value: '12410.22'
+          name: "EUR",
+          value: "12410.22"
         },
         {
           image: iconGbp,
-          name: 'GBP',
-          value: '687867.53'
+          name: "GBP",
+          value: "687867.53"
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "InterfaceBalanceModal.scss";
+@import "InterfaceBalanceModal.scss";
 </style>

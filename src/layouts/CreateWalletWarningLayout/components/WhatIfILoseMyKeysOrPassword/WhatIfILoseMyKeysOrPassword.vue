@@ -7,7 +7,7 @@
           About Security
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"></div>
+          <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
           <h4>What if I lose my keys or password?</h4>
@@ -22,9 +22,7 @@
             <li>Don't Store Your Keys And Password on Your Computer or Phone.</li>
           </ul>
 
-          <div class="block-progressbar__warning hidden">
-
-          </div>
+          <div class="block-progressbar__warning hidden"/>
         </div>
       </dir>
     </div>
@@ -33,19 +31,15 @@
 </template>
 
 <script>
-
 export default {
-  props: ['progressBarValue'],
-  components: {
-  },
-  data () {
-    return {
-
-    }
+  components: {},
+  props: ["progressBarValue"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "../BlockWithProgressBar.scss";
+@import "../BlockWithProgressBar.scss";
 </style>

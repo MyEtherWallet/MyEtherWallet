@@ -4,12 +4,18 @@
       <div class="block-left">
         <div class="select-block">
           <select>
-            <option v-for="data in leftDropDown" v-bind:key="data.key" value="data.value">{{data.label}}</option>
+            <option 
+              v-for="data in leftDropDown" 
+              :key="data.key" 
+              value="data.value">{{ data.label }}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input type="text" name="" placeholder="Amount">
+          <input 
+            type="text" 
+            name="" 
+            placeholder="Amount">
         </div>
       </div>
 
@@ -22,12 +28,18 @@
       <div class="block-right">
         <div class="select-block">
           <select>
-            <option v-for="data in rightDropDown" v-bind:key="data.key" value="data.value">{{data.label}}</option>
+            <option 
+              v-for="data in rightDropDown" 
+              :key="data.key" 
+              value="data.value">{{ data.label }}</option>
           </select>
           <p class="select-down-arrow">⌄</p>
         </div>
         <div>
-          <input type="text" name="" placeholder="Amount">
+          <input 
+            type="text" 
+            name="" 
+            placeholder="Amount">
         </div>
       </div>
     </div>
@@ -36,104 +48,104 @@
 
 <script>
 export default {
-  props: ['content'],
-  data () {
+  props: ["content"],
+  data() {
     return {
       leftDropDown: [
         {
-          label: 'Wei',
-          value: ''
+          label: "Wei",
+          value: ""
         },
         {
-          label: 'Kwei',
-          value: ''
+          label: "Kwei",
+          value: ""
         },
         {
-          label: 'Mwei',
-          value: ''
+          label: "Mwei",
+          value: ""
         },
         {
-          label: 'Gwei',
-          value: ''
+          label: "Gwei",
+          value: ""
         },
         {
-          label: 'Szabo',
-          value: ''
+          label: "Szabo",
+          value: ""
         },
         {
-          label: 'Finney',
-          value: ''
+          label: "Finney",
+          value: ""
         },
         {
-          label: 'Ether',
-          value: ''
+          label: "Ether",
+          value: ""
         },
         {
-          label: 'Kether',
-          value: ''
+          label: "Kether",
+          value: ""
         },
         {
-          label: 'Mether',
-          value: ''
+          label: "Mether",
+          value: ""
         },
         {
-          label: 'Gether',
-          value: ''
+          label: "Gether",
+          value: ""
         },
         {
-          label: 'Tether',
-          value: ''
+          label: "Tether",
+          value: ""
         }
       ],
       rightDropDown: [
         {
-          label: 'Wei',
-          value: ''
+          label: "Wei",
+          value: ""
         },
         {
-          label: 'Kwei',
-          value: ''
+          label: "Kwei",
+          value: ""
         },
         {
-          label: 'Mwei',
-          value: ''
+          label: "Mwei",
+          value: ""
         },
         {
-          label: 'Gwei',
-          value: ''
+          label: "Gwei",
+          value: ""
         },
         {
-          label: 'Szabo',
-          value: ''
+          label: "Szabo",
+          value: ""
         },
         {
-          label: 'Finney',
-          value: ''
+          label: "Finney",
+          value: ""
         },
         {
-          label: 'Ether',
-          value: ''
+          label: "Ether",
+          value: ""
         },
         {
-          label: 'Kether',
-          value: ''
+          label: "Kether",
+          value: ""
         },
         {
-          label: 'Mether',
-          value: ''
+          label: "Mether",
+          value: ""
         },
         {
-          label: 'Gether',
-          value: ''
+          label: "Gether",
+          value: ""
         },
         {
-          label: 'Tether',
-          value: ''
+          label: "Tether",
+          value: ""
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

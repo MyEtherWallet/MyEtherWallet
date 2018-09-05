@@ -1,13 +1,13 @@
-import common from './common/pl'
-import header from './header/pl'
-import home from './home/pl'
-import footer from './footer/pl'
-import privacyPolicy from './privacy-policy/pl'
-import termsOfConditions from './terms-of-conditions/pl'
-import createWallet from './create-wallet/pl'
-import accessWallet from './access-wallet/pl'
-import interfaceTranslations from './interface/pl'
-import team from './team/pl'
+import common from "./common/pl";
+import header from "./header/pl";
+import home from "./home/pl";
+import footer from "./footer/pl";
+import privacyPolicy from "./privacy-policy/pl";
+import termsOfConditions from "./terms-of-conditions/pl";
+import createWallet from "./create-wallet/pl";
+import accessWallet from "./access-wallet/pl";
+import interfaceTranslations from "./interface/pl";
+import team from "./team/pl";
 
 const pl = {
   common: common,
@@ -20,5 +20,5 @@ const pl = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations
-}
-export default pl
+};
+export default pl;

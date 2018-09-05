@@ -7,16 +7,22 @@
           <h4>Detail Information</h4>
           <div class="sliding-switch sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" v-on:click="isExpended = !isExpended" />
-              <span class="slider round"></span>
+              <input 
+                type="checkbox" 
+                @click="isExpended = !isExpended" >
+              <span class="slider round"/>
             </label>
           </div>
         </div>
-        <div class="expending-block" v-if="isExpended">
+        <div 
+          v-if="isExpended" 
+          class="expending-block">
           <ul>
-            <li v-for="d in details" v-bind:key="d.key">
-              <p class="name">{{d.name}}</p>
-              <p class="value">{{d.value}}</p>
+            <li 
+              v-for="d in details" 
+              :key="d.key">
+              <p class="name">{{ d.name }}</p>
+              <p class="value">{{ d.value }}</p>
             </li>
           </ul>
         </div>
@@ -27,19 +33,17 @@
 </template>
 
 <script>
-
 export default {
-  props: ['details'],
-  data () {
+  props: ["details"],
+  data() {
     return {
       isExpended: false
-    }
+    };
   },
-  mounted () {
-  }
-}
+  mounted() {}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DetailInformation.scss";
+@import "DetailInformation.scss";
 </style>

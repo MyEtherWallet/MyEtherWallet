@@ -1,20 +1,26 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal message="" linkMessage="Ok"></success-modal>
-    <interface-container-title :title="$t('common.depContract')"></interface-container-title>
+    <success-modal 
+      message="" 
+      link-message="Ok"/>
+    <interface-container-title :title="$t('common.depContract')"/>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>Byte Code</h4>
           <div class="copy-buttons">
-            <span v-on:click="deleteInput('bytecode')">Clear</span>
-            <span v-on:click="copyToClipboard('bytecode')">Copy</span>
+            <span @click="deleteInput('bytecode')">Clear</span>
+            <span @click="copyToClipboard('bytecode')">Copy</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <input type="text" ref="bytecode" placeholder="Byte code" autocomplete="off" />
+        <input 
+          ref="bytecode" 
+          type="text" 
+          placeholder="Byte code" 
+          autocomplete="off" >
       </div>
     </div>
 
@@ -23,13 +29,16 @@
         <div class="title">
           <h4>ABI/JSON Interface</h4>
           <div class="copy-buttons">
-            <span v-on:click="deleteInputText('abi')">Clear</span>
-            <span v-on:click="copyToClipboard('abi')">Copy</span>
+            <span @click="deleteInputText('abi')">Clear</span>
+            <span @click="copyToClipboard('abi')">Copy</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="abi" class="custom-textarea-1" name=""></textarea>
+        <textarea 
+          ref="abi" 
+          class="custom-textarea-1" 
+          name=""/>
       </div>
     </div>
 
@@ -56,10 +65,16 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount" />
+        <input 
+          type="number" 
+          name="" 
+          value="" 
+          placeholder="Gas Amount" >
         <div class="good-button-container">
           <p>Gwei</p>
-          <i class="fa fa-check-circle good-button not-good" aria-hidden="true"></i>
+          <i 
+            class="fa fa-check-circle good-button not-good" 
+            aria-hidden="true"/>
         </div>
       </div>
     </div>
@@ -69,73 +84,78 @@
         <div class="submit-button large-round-button-green-border clickable">
           {{ $t('common.continue') }}
         </div>
-        <div v-on:click="successModalOpen" class="submit-button large-round-button-green-filled clickable">
+        <div 
+          class="submit-button large-round-button-green-filled clickable" 
+          @click="successModalOpen">
           {{ $t('interface.read') }}
         </div>
       </div>
-      <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.haveIssues')"></interface-bottom-text>
+      <interface-bottom-text 
+        :link-text="$t('interface.learnMore')" 
+        :question="$t('interface.haveIssues')" 
+        link="/"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText'
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle'
-import SuccessModal from '@/components/SuccessModal'
+import InterfaceBottomText from "@/components/InterfaceBottomText";
+import InterfaceContainerTitle from "../../components/InterfaceContainerTitle";
+import SuccessModal from "@/components/SuccessModal";
 
 export default {
-  name: 'Interact',
+  name: "Interact",
   components: {
-    'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    "interface-bottom-text": InterfaceBottomText,
+    "interface-container-title": InterfaceContainerTitle,
+    "success-modal": SuccessModal
   },
-  data () {
+  data() {
     return {
       showModal: true,
       existingContracts: [
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '1'
+          label: "Battle Of Thermopy wefweoifjwfo ewrofijweo gf",
+          value: "1"
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '2'
+          label: "Battle Of Thermopy wefweoifjwfo ewrofijweo gf",
+          value: "2"
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '3'
+          label: "Battle Of Thermopy wefweoifjwfo ewrofijweo gf",
+          value: "3"
         },
         {
-          label: 'Battle Of Thermopy wefweoifjwfo ewrofijweo gf',
-          value: '4'
+          label: "Battle Of Thermopy wefweoifjwfo ewrofijweo gf",
+          value: "4"
         }
       ]
+    };
+  },
+  watch: {
+    showModal() {
+      if (this.showModal === false) {
+        this.showModal = true;
+      }
     }
   },
   methods: {
-    successModalOpen () {
-      this.$children[0].$refs.success.show()
+    successModalOpen() {
+      this.$children[0].$refs.success.show();
     },
-    copyToClipboard (ref) {
-      this.$refs[ref].select()
-      document.execCommand('copy')
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand("copy");
     },
-    deleteInput (ref) {
-      this.$refs[ref].value = ''
-    }
-  },
-  watch: {
-    showModal () {
-      if (this.showModal === false) {
-        this.showModal = true
-      }
+    deleteInput(ref) {
+      this.$refs[ref].value = "";
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DeployContractContainer.scss";
+@import "DeployContractContainer.scss";
 </style>

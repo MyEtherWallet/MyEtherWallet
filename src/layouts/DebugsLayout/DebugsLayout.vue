@@ -11,12 +11,25 @@
           </p>
         </div>
 
-        <div class="accordion-container" role="tablist">
-          <b-card no-body class="accordion-block">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-btn block href="#" v-b-toggle.accordion1 variant="info">
+        <div 
+          class="accordion-container" 
+          role="tablist">
+          <b-card 
+            no-body 
+            class="accordion-block">
+            <b-card-header 
+              header-tag="header" 
+              class="" 
+              role="tab">
+              <b-btn 
+                v-b-toggle.accordion1 
+                block 
+                href="#" 
+                variant="info">
                 <div class="arrow">
-                  <i class="fa fa-angle-up up" aria-hidden="true"></i>
+                  <i 
+                    class="fa fa-angle-up up" 
+                    aria-hidden="true"/>
                 </div>
 
                 <p class="accordion-title">ENS Debugger & Data Grabber</p>
@@ -26,27 +39,37 @@
                 </p>
               </b-btn>
             </b-card-header>
-            <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
+            <b-collapse 
+              id="accordion1" 
+              visible 
+              accordion="my-accordion" 
+              role="tabpanel">
               <b-card-body>
 
                 <div class="form-grid form-grid-1fr">
                   <h4>Address You Bid From</h4>
                   <div class="mew-custom-form__text">
-                    <input type="" name="">
+                    <input 
+                      type="" 
+                      name="">
                   </div>
                 </div>
 
                 <div class="form-grid form-grid-1fr">
                   <h4>ENS Name You Bid On (No ".eth" at The End!)</h4>
                   <div class="mew-custom-form__text">
-                    <input type="" name="">
+                    <input 
+                      type="" 
+                      name="">
                   </div>
                 </div>
 
                 <div class="form-grid form-grid-1fr">
                   <h4>Hashed ENS Name (Label Hash)</h4>
                   <div class="mew-custom-form__text">
-                    <input type="" name="">
+                    <input 
+                      type="" 
+                      name="">
                   </div>
                 </div>
 
@@ -54,13 +77,17 @@
                   <div>
                     <h4>Amount Your ETH Bid</h4>
                     <div class="mew-custom-form__text">
-                      <input type="" name="">
+                      <input 
+                        type="" 
+                        name="">
                     </div>
                   </div>
                   <div>
                     <h4>Amount Your Wei Bid</h4>
                     <div class="mew-custom-form__text">
-                      <input type="" name="">
+                      <input 
+                        type="" 
+                        name="">
                     </div>
                   </div>
                 </div>
@@ -69,13 +96,17 @@
                   <div>
                     <h4>Your Secret</h4>
                     <div class="mew-custom-form__text">
-                      <input type="" name="">
+                      <input 
+                        type="" 
+                        name="">
                     </div>
                   </div>
                   <div>
                     <h4>Your Secret (Hashed)</h4>
                     <div class="mew-custom-form__text">
-                      <input type="" name="">
+                      <input 
+                        type="" 
+                        name="">
                     </div>
                   </div>
                 </div>
@@ -83,18 +114,31 @@
                 <div class="form-grid form-grid-1fr">
                   <h4>Hashed ENS Name (Label Hash)</h4>
                   <div class="mew-custom-form__text">
-                    <input type="" name="">
+                    <input 
+                      type="" 
+                      name="">
                   </div>
                 </div>
 
               </b-card-body>
             </b-collapse>
           </b-card>
-          <b-card no-body class="accordion-block">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-btn block href="#" v-b-toggle.accordion2 variant="info">
+          <b-card 
+            no-body 
+            class="accordion-block">
+            <b-card-header 
+              header-tag="header" 
+              class="" 
+              role="tab">
+              <b-btn 
+                v-b-toggle.accordion2 
+                block 
+                href="#" 
+                variant="info">
                 <div class="arrow">
-                  <i class="fa fa-angle-up up" aria-hidden="true"></i>
+                  <i 
+                    class="fa fa-angle-up up" 
+                    aria-hidden="true"/>
                 </div>
 
                 <p class="accordion-title">Convert Decimal to Hexadecimal & Hex to Decimal</p>
@@ -104,7 +148,10 @@
                 </p>
               </b-btn>
             </b-card-header>
-            <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+            <b-collapse 
+              id="accordion2" 
+              accordion="my-accordion" 
+              role="tabpanel">
               <b-card-body>
                 <p class="card-text">
                   {{ text }}
@@ -112,11 +159,22 @@
               </b-card-body>
             </b-collapse>
           </b-card>
-          <b-card no-body class="accordion-block">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-btn block href="#" v-b-toggle.accordion3 variant="info">
+          <b-card 
+            no-body 
+            class="accordion-block">
+            <b-card-header 
+              header-tag="header" 
+              class="" 
+              role="tab">
+              <b-btn 
+                v-b-toggle.accordion3 
+                block 
+                href="#" 
+                variant="info">
                 <div class="arrow">
-                  <i class="fa fa-angle-up up" aria-hidden="true"></i>
+                  <i 
+                    class="fa fa-angle-up up" 
+                    aria-hidden="true"/>
                 </div>
 
                 <p class="accordion-title">ENS Debugger & Data Grabber</p>
@@ -126,7 +184,10 @@
                 </p>
               </b-btn>
             </b-card-header>
-            <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
+            <b-collapse 
+              id="accordion3" 
+              accordion="my-accordion" 
+              role="tabpanel">
               <b-card-body>
                 <p class="card-text">
                   {{ text }}
@@ -134,11 +195,22 @@
               </b-card-body>
             </b-collapse>
           </b-card>
-          <b-card no-body class="accordion-block">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-btn block href="#" v-b-toggle.accordion4 variant="info">
+          <b-card 
+            no-body 
+            class="accordion-block">
+            <b-card-header 
+              header-tag="header" 
+              class="" 
+              role="tab">
+              <b-btn 
+                v-b-toggle.accordion4 
+                block 
+                href="#" 
+                variant="info">
                 <div class="arrow">
-                  <i class="fa fa-angle-up up" aria-hidden="true"></i>
+                  <i 
+                    class="fa fa-angle-up up" 
+                    aria-hidden="true"/>
                 </div>
 
                 <p class="accordion-title">"SHA3" (Keccak-256) It!</p>
@@ -148,7 +220,10 @@
                 </p>
               </b-btn>
             </b-card-header>
-            <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
+            <b-collapse 
+              id="accordion4" 
+              accordion="my-accordion" 
+              role="tabpanel">
               <b-card-body>
                 <p class="card-text">
                   {{ text }}
@@ -166,12 +241,9 @@
 
 <script>
 export default {
-  components: {
-
-  },
-  data () {
+  components: {},
+  data() {
     return {
-
       text: `
         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
         richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
@@ -182,11 +254,11 @@ export default {
         vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
         synth nesciunt you probably haven't heard of them accusamus labore VHS.
       `
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DebugsLayout.scss";
+@import "DebugsLayout.scss";
 </style>

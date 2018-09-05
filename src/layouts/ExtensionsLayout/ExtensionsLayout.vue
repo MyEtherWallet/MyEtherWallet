@@ -45,17 +45,13 @@
 
 <script>
 export default {
-  components: {
-
-  },
-  data () {
-    return {
-
-    }
+  components: {},
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "ExtensionsLayout.scss";
+@import "ExtensionsLayout.scss";
 </style>
