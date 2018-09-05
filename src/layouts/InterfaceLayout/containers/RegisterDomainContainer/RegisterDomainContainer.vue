@@ -11,16 +11,20 @@
       </div>
       <div class="the-form domain-name">
         <input
+          v-model="domainName"
+          :class="[domainName.length <= 7 && domainName !== '' ? 'errored' : '']"
           type="text"
           name=""
-          domainName=""
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
+      <p
+        v-show="domainName.length <= 7 && domainName !== ''"
+        class="erroredMsg"> Domain name is less than 7 characters. </p>
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
+      <div :class="[domainName.length <= 7 ? 'disabled' : '','submit-button large-round-button-green-filled clickable']">
         {{ $t('interface.checkDomain') }}
       </div>
 
@@ -164,7 +168,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      domainName: ''
+    };
   },
   methods: {
     expendDomainCheckForm() {
