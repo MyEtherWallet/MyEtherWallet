@@ -71,8 +71,8 @@
       <providers-radio-selector/>
     </div>
 
-    <div 
-      v-if="false" 
+    <div
+      v-if="false"
       class="send-form">
       <div class="title-container">
         <div class="title">
@@ -112,8 +112,8 @@
 
     <div class="submit-button-container">
       <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div 
-        class="submit-button large-round-button-green-filled clickable" 
+      <div
+        class="submit-button large-round-button-green-filled clickable"
         @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
         <i

@@ -15,8 +15,8 @@
         </div>
         <div class="block-content">
           <div class="helper">
-            <popover 
-              :popcontent="$t('popover.whatIsMessageContent')" 
+            <popover
+              :popcontent="$t('popover.whatIsMessageContent')"
               :popovertype="'A'" />
           </div>
           <div class="information-container">

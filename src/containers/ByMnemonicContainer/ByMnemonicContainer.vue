@@ -1,16 +1,16 @@
 <template>
   <div class="create-wallet-by-mnemonic">
     <finish-modal/>
-    <verification-modal 
-      :mnemonic-values="mnemonicValues" 
+    <verification-modal
+      :mnemonic-values="mnemonicValues"
       :mnemonic-done-modal-open="mnemonicDoneModalOpen"/>
     <div class="wrap">
       <div class="page-container">
         <div class="nav-tab-user-input-box">
           <b-tabs>
             <div class="progress-bar"/>
-            <b-tab 
-              title="By Mnemonic Phrase" 
+            <b-tab
+              title="By Mnemonic Phrase"
               active>
               <div class="title-popover">
                 <h3>{{ $t("createWallet.byMnemonicWriteDown") }}</h3>
@@ -22,8 +22,8 @@
                     <div class="sliding-switch">
                       <label class="switch">
                         <input type="checkbox" >
-                        <span 
-                          class="slider round" 
+                        <span
+                          class="slider round"
                           @click="mnemonicValueBitSizeChange"/>
                       </label>
                       <div class="labels">
@@ -34,19 +34,19 @@
                     <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
                   </div>
 
-                  <div 
-                    class="random-button color-green noselect" 
+                  <div
+                    class="random-button color-green noselect"
                     @click="mnemonicValueRefresh">
-                    <i 
-                      class="fa fa-refresh" 
+                    <i
+                      class="fa fa-refresh"
                       aria-hidden="true"/>
                     <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
                   </div>
                 </div>
                 <div class="phrases">
                   <ul>
-                    <li 
-                      v-for="(value, index) in mnemonicValues" 
+                    <li
+                      v-for="(value, index) in mnemonicValues"
                       :key="index">
                       {{ index + 1 }}.<span>{{ value }}</span>
                     </li>
@@ -54,14 +54,14 @@
                 </div>
               </div>
               <div class="user-input">
-                <div 
-                  class="next-button large-round-button-green-filled clickable" 
+                <div
+                  class="next-button large-round-button-green-filled clickable"
                   @click="mnemonicVerificationModalOpen">
                   {{ $t("createWallet.byMnemonicAlreadyWritten") }}
                 </div>
                 <router-link to="/">
-                  <img 
-                    class="icon" 
+                  <img
+                    class="icon"
                     src="~@/assets/images/icons/printer.svg">
                 </router-link>
               </div>
