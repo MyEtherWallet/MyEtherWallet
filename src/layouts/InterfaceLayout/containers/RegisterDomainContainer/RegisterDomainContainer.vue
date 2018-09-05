@@ -13,7 +13,7 @@
         <input
           type="text"
           name=""
-          value=""
+          domainName=""
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
@@ -24,126 +24,126 @@
         {{ $t('interface.checkDomain') }}
       </div>
 
-      <div class="flex-container">
-        <div class="title-container">
-          <h4 class="modal-title">{{ $t('interface.subDomain') }}</h4>
-          <div class="margin-left-auto add-custom-network">
-            <div class="sliding-switch-white">
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  @click="expendDomainCheckForm" >
-                <span class="slider round"/>
-              </label>
-            </div>
+    </div>
+    <div class="flex-container">
+      <div class="title-container">
+        <h4 class="modal-title">{{ $t('interface.subDomain') }}</h4>
+        <div class="margin-left-auto add-custom-network">
+          <div class="sliding-switch-white">
+            <label class="switch">
+              <input
+                type="checkbox"
+                @click="expendDomainCheckForm" >
+              <span class="slider round"/>
+            </label>
           </div>
-        </div>
-        <div
-          ref="checkForm"
-          class="domain-check-form hidden">
-          <div class="domain-checker">
-            <input
-              type="number"
-              name=""
-              value=""
-              placeholder="Enter Domain Name" >
-            <div
-              class="check-button"
-              @click="domainAvailabilityCheck">
-              {{ $t('common.check') }}
-            </div>
-          </div>
-        </div>
-        <div
-          ref="domainList"
-          class="sub-domain-list hidden">
-          <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
-          <ul>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-            <li>
-              <p>myetherwallet2018.etherbase.eth</p>
-              <div class="buy-button-container">
-                <p>0 ETH</p>
-                <div
-                  class="buy-button very-small-circle-button-green-border"
-                  @click="domainBuyButtonClick($event)">
-                  {{ $t('common.buy') }}
-                </div>
-              </div>
-            </li>
-          </ul>
         </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
-        :question="$t('interface.haveIssues')"
-        link="/"/>
+      <div
+        ref="checkForm"
+        class="domain-check-form hidden">
+        <div class="domain-checker">
+          <input
+            type="number"
+            name=""
+            value=""
+            placeholder="Enter Domain Name" >
+          <div
+            class="check-button"
+            @click="domainAvailabilityCheck">
+            {{ $t('common.check') }}
+          </div>
+        </div>
+      </div>
+      <div
+        ref="domainList"
+        class="sub-domain-list hidden">
+        <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
+        <ul>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border very-small-circle-button-green-filled"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>myetherwallet2018.etherbase.eth</p>
+            <div class="buy-button-container">
+              <p>0 ETH</p>
+              <div
+                class="buy-button very-small-circle-button-green-border"
+                @click="domainBuyButtonClick($event)">
+                {{ $t('common.buy') }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+    <interface-bottom-text
+      :link-text="$t('interface.learnMore')"
+      :question="$t('interface.haveIssues')"
+      link="/"/>
 
   </div>
 </template>
