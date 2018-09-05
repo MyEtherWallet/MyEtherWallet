@@ -1,0 +1,20 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  background-color: $red-5;
+  border: 1px solid $red-2;
+  
+  p {
+    color: $red-3;
+    font-weight: 500;
+  }
+
+}
+
+

@@ -9,7 +9,7 @@
             MyEtherWallet is comprised of talented, inspiring, and hardworking
             indivisuals from around the world. We share the passion to code.
           </p>
-          <p>
+          <p class="other-message">
             This is not typically something you can do. It should not be relied upon & will only work when th TX Pools are full. Please read more here.
           </p>
         </div>

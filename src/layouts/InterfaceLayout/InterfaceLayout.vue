@@ -5,6 +5,7 @@
         <interface-side-menu :currentTab="currentTab" :switchTabs="switchTabs"></interface-side-menu>
       </div>
       <div class="contents">
+        <disconnect-notification></disconnect-notification>
         <div class="tx-contents">
           <div>
             <interface-address :address="address" />
@@ -48,6 +49,7 @@ import SwapContainer from './containers/SwapContainer'
 import SignMessageContainer from './containers/SignMessageContainer'
 import VerifyMessageContainer from './containers/VerifyMessageContainer'
 import WalletNotFoundContainer from './containers/WalletNotFoundContainer'
+import DisconnectNotification from '@/components/DisconnectNotification'
 
 import InterfaceAddress from './components/InterfaceAddress'
 import InterfaceBalance from './components/InterfaceBalance'
@@ -74,7 +76,8 @@ export default {
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
-    'wallet-not-found-container': WalletNotFoundContainer
+    'wallet-not-found-container': WalletNotFoundContainer,
+    'disconnect-notification': DisconnectNotification
   },
   data () {
     return {
