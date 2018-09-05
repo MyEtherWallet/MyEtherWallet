@@ -1,1 +1,1 @@
-export { default } from "./FinishModal";
+export { default } from './FinishModal';

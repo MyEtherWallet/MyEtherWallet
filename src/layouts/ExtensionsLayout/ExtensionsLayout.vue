@@ -53,5 +53,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "ExtensionsLayout.scss";
+@import 'ExtensionsLayout.scss';
 </style>

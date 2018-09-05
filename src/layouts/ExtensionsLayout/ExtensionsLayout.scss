@@ -1,17 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-
   padding: 70px 0;
   padding-bottom: 400px;
   background-color: $light-grey-2;
-
-  background-image: url('~@/assets/images/background/bg-left.png'), url('~@/assets/images/background/bg-right.png');
+  background-image: url('~@/assets/images/background/bg-left.png'),
+    url('~@/assets/images/background/bg-right.png');
   background-position: top left, top right;
   background-repeat: no-repeat;
   background-size: 220px;
-
-
 }
 
 .page-title {
@@ -29,7 +26,6 @@
 }
 
 .extension-buttons {
-
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 10px;
@@ -54,7 +50,5 @@
       height: 100%;
       margin-right: 20px;
     }
-
   }
-
 }
