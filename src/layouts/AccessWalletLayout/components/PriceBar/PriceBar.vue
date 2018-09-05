@@ -1,23 +1,23 @@
 <template>
   <div class="price-bar">
 
-    <div
-      class="wrap"
+    <div 
+      class="wrap" 
       style="overflow: hidden;">
       <div class="page-container">
-        <infinite-slider
-          duration="20s"
+        <infinite-slider 
+          duration="20s" 
           delay="0s">
           <div class="slider-container">
-            <div
-              v-for="token in tokens"
-              :key="token.symbol"
+            <div 
+              v-for="token in tokens" 
+              :key="token.symbol" 
               class="token-container">
               <p class="token-text">{{ token.symbol }}</p>
               <p class="token-text">${{ token.quotes.USD.price }}</p>
               <p class="token-text percent-container">
-                <span>{{ token.quotes.USD.percent_change_24h }}%</span> <i
-                  :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"
+                <span>{{ token.quotes.USD.percent_change_24h }}%</span> <i 
+                  :class="token.quotes.USD.percent_change_24h > 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'" 
                   aria-hidden="true"/>
               </p>
             </div>
@@ -32,14 +32,7 @@
 
 <script>
 export default {
-  props: {
-    tokens: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
-  },
+  props: ["tokens"],
   data() {
     return {};
   }
@@ -47,5 +40,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'PriceBar.scss';
+@import "PriceBar.scss";
 </style>
