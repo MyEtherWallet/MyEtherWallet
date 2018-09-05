@@ -1,8 +1,8 @@
 <template>
   <div class="content-block">
     <div class="icon-block">
-      <img 
-        :src="img" 
+      <img
+        :src="img"
         class="icon">
     </div>
     <div class="text-block">
@@ -14,7 +14,20 @@
 
 <script>
 export default {
-  props: ["img", "title", "desc"],
+  props: {
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {};
   }
@@ -22,5 +35,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "ByJsonBlock.scss";
+@import 'ByJsonBlock.scss';
 </style>

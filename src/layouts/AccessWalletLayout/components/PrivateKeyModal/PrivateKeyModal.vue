@@ -25,27 +25,27 @@
 </template>
 
 <script>
-import Wallet from "ethereumjs-wallet";
+import Wallet from 'ethereumjs-wallet';
 
 export default {
   data() {
     return {
       privateKey:
-        "563070852154f171267e8a79111f299e42baeda3acd5f0cf82d92e5feba31dea"
+        '563070852154f171267e8a79111f299e42baeda3acd5f0cf82d92e5feba31dea'
     };
   },
   methods: {
     unlockWallet() {
       this.$store.dispatch(
-        "decryptWallet",
-        Wallet.fromPrivateKey(Buffer.from(this.privateKey, "hex"))
+        'decryptWallet',
+        Wallet.fromPrivateKey(Buffer.from(this.privateKey, 'hex'))
       );
-      this.privateKey = "";
-      this.$router.push({ path: "interface" });
+      this.privateKey = '';
+      this.$router.push({ path: 'interface' });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "PrivateKeyModal.scss";
+@import 'PrivateKeyModal.scss';
 </style>

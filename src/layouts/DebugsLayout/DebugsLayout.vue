@@ -260,5 +260,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "DebugsLayout.scss";
+@import 'DebugsLayout.scss';
 </style>

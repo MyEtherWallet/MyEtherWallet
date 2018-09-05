@@ -1,33 +1,33 @@
 <template>
-  <b-modal 
-    ref="password" 
-    hide-footer 
-    class="bootstrap-modal modal-software" 
-    title="Password" 
+  <b-modal
+    ref="password"
+    hide-footer
+    class="bootstrap-modal modal-software"
+    title="Password"
     centered>
     <form class="password-form">
       <div class="input-container">
-        <input 
-          :type="show ? 'text': 'password'" 
-          v-model="password" 
-          name="Password" 
+        <input
+          :type="show ? 'text': 'password'"
+          v-model="password"
+          name="Password"
           autocomplete="off" >
-        <img 
-          v-if="show" 
-          src="@/assets/images/icons/show-password.svg" 
+        <img
+          v-if="show"
+          src="@/assets/images/icons/show-password.svg"
           @click.prevent="switchViewPassword">
-        <img 
-          v-if="!show" 
-          src="@/assets/images/icons/hide-password.svg" 
+        <img
+          v-if="!show"
+          src="@/assets/images/icons/hide-password.svg"
           @click.prevent="switchViewPassword">
       </div>
-      <p 
-        v-show="error !== ''" 
+      <p
+        v-show="error !== ''"
         class="error"> {{ error }} </p>
-      <button 
-        :disabled=" password === '' && password.length === 0 && password.length < 9" 
-        class="submit-button large-round-button-green-filled" 
-        type="submit" 
+      <button
+        :disabled=" password === '' && password.length === 0 && password.length < 9"
+        class="submit-button large-round-button-green-filled"
+        type="submit"
         @click.prevent="unlockWallet">
         Unlock Wallet
       </button>
@@ -36,20 +36,27 @@
 </template>
 
 <script>
-import Wallet from "ethereumjs-wallet";
-import Worker from "@/workers/unlockWallet.worker.js";
+import Wallet from 'ethereumjs-wallet';
+import Worker from '@/workers/unlockWallet.worker.js';
 export default {
-  props: ["file"],
+  props: {
+    file: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {
       show: false,
-      password: "",
-      error: ""
+      password: '',
+      error: ''
     };
   },
   watch: {
     password() {
-      this.error = "";
+      this.error = '';
     }
   },
   methods: {
@@ -57,16 +64,16 @@ export default {
       const worker = new Worker();
       const self = this;
       worker.postMessage({
-        type: "unlockWallet",
+        type: 'unlockWallet',
         data: [this.file, this.password]
       });
       worker.onmessage = function(e) {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch(
-          "decryptWallet",
+          'decryptWallet',
           Wallet.fromPrivateKey(Buffer.from(e.data._privKey))
         );
-        self.$router.push({ path: "interface" });
+        self.$router.push({ path: 'interface' });
       };
       worker.onerror = function(e) {
         self.error = e.message;
@@ -79,5 +86,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "PasswordModal.scss";
+@import 'PasswordModal.scss';
 </style>
