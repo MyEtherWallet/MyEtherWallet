@@ -1,12 +1,21 @@
 <template>
-  <b-modal ref="success" centered hide-footer hide-header class="bootstrap-modal">
+  <b-modal 
+    ref="success" 
+    centered 
+    hide-footer 
+    hide-header 
+    class="bootstrap-modal">
     <div class="d-block text-center">
-      <i class="check-icon fa fa-check" aria-hidden="true"></i>
+      <i 
+        class="check-icon fa fa-check" 
+        aria-hidden="true"/>
       <h2 class="title">Success</h2>
       <p>{{ message }}</p>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button" @click="hideModal">
+      <b-btn 
+        class="mid-round-button-green-filled close-button" 
+        @click="hideModal">
         {{ linkMessage }}
       </b-btn>
     </div>
@@ -14,18 +23,18 @@
 </template>
 
 <style lang="scss" scoped>
-  @import "SuccessModal.scss";
+@import "SuccessModal.scss";
 </style>
 <script>
 export default {
-  props: ['message', 'linkMessage', 'linkTo'],
+  props: ["message", "linkMessage", "linkTo"],
   methods: {
-    hideModal () {
+    hideModal() {
       if (this.linkTo !== undefined) {
-        this.$router(this.linkTo)
+        this.$router(this.linkTo);
       }
-      this.$refs.success.hide()
+      this.$refs.success.hide();
     }
   }
-}
+};
 </script>

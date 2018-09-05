@@ -2,9 +2,13 @@
   <div class="card-block">
     <h4 class="title">{{ title }}</h4>
     <div class="questions">
-      <a v-for="(item, index) in articles" :href="item.to" :key="item+index+`${title}`" target="_blank">
+      <a 
+        v-for="(item, index) in articles" 
+        :href="item.to" 
+        :key="item+index+`${title}`" 
+        target="_blank">
         <p>
-          {{item.title}}
+          {{ item.title }}
         </p>
       </a>
     </div>
@@ -13,18 +17,14 @@
 
 <script>
 export default {
-  name: 'FaqBlock',
-  props: [
-    'title',
-    'articles'
-  ],
-  data () {
-    return {
-    }
+  name: "FaqBlock",
+  props: ["title", "articles"],
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "FaqBlock.scss";
+@import "FaqBlock.scss";
 </style>

@@ -11,5 +11,5 @@ const accessWallet = {
   // softwareDesc: '',
   // notRecommended: '',
   // unlock: ''
-}
-export default accessWallet
+};
+export default accessWallet;

@@ -9,7 +9,10 @@
 
         <div class="search-form mew-custom-form__search">
           <div class="search-input-block">
-            <input type="text" name="" placeholder="Search the keyword here...">
+            <input 
+              type="text" 
+              name="" 
+              placeholder="Search the keyword here...">
           </div>
         </div>
 
@@ -24,11 +27,10 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

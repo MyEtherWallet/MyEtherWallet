@@ -1,6 +1,11 @@
 <template>
   <div class="modal-container">
-    <b-modal ref="network" hide-footer centered class="bootstrap-modal network nopadding max-height-1" title="Network">
+    <b-modal 
+      ref="network" 
+      hide-footer 
+      centered 
+      class="bootstrap-modal network nopadding max-height-1" 
+      title="Network">
       <div class="content-block">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
@@ -8,45 +13,99 @@
             <p>{{ $t('interface.addCustomNode') }}</p>
             <div class="sliding-switch-white">
               <label class="switch">
-                <input v-on:click="addCustomNetworkToggle" type="checkbox" ref="addCustomToggle" />
-                <span class="slider round"></span>
+                <input 
+                  ref="addCustomToggle" 
+                  type="checkbox" 
+                  @click="addCustomNetworkToggle" >
+                <span class="slider round"/>
               </label>
             </div>
           </div>
         </div>
       </div>
-      <div class="network-list" ref="networkList">
-        <div class="content-block" v-for="(key, index) in Object.keys($store.state.Networks)" :key="key + index">
+      <div 
+        ref="networkList" 
+        class="network-list">
+        <div 
+          v-for="(key, index) in Object.keys($store.state.Networks)" 
+          :key="key + index" 
+          class="content-block">
           <div class="network-title">
             <img src="@/assets/images/networks/eth.svg">
             <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
           </div>
           <div class="grid-3">
-            <p class="switch-network" v-for="net in $store.state.Networks[key]" :key="net.service" @click="switchNetwork(net)" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">{{net.service}}</p>
+            <p 
+              v-for="net in $store.state.Networks[key]" 
+              :key="net.service" 
+              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''" 
+              class="switch-network" 
+              @click="switchNetwork(net)">{{ net.service }}</p>
           </div>
         </div>
-        <div class="content-block" v-if="customNetworks.length > 0">
+        <div 
+          v-if="customNetworks.length > 0" 
+          class="content-block">
           <h4>Custom Networks</h4>
-          <div class="grid-3" v-for="(net, idx) in customNetworks" :key="net.service + '('+ net.type.name + ')' + idx">
-            <div class="switch-network custom-network-item" :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''">
-              <p @click="switchNetwork(net)">{{net.service}} {{ '('+ net.type.name + ')' }}</p>
-              <i class="fa fa-times-circle" @click.prevent="removeNetwork(net, idx)"></i>
+          <div 
+            v-for="(net, idx) in customNetworks" 
+            :key="net.service + '('+ net.type.name + ')' + idx" 
+            class="grid-3">
+            <div 
+              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''" 
+              class="switch-network custom-network-item">
+              <p @click="switchNetwork(net)">{{ net.service }} {{ '('+ net.type.name + ')' }}</p>
+              <i 
+                class="fa fa-times-circle" 
+                @click.prevent="removeNetwork(net, idx)"/>
             </div>
           </div>
         </div>
       </div>
-      <form class="network-add hidden" ref="networkAdd">
+      <form 
+        ref="networkAdd" 
+        class="network-add hidden">
         <div class="content-block">
           <div class="input-block-container">
-            <input class="custom-input-text-1" type="text" name="" v-model="name" placeholder="ETH Node Name" autocomplete="off" />
-            <select class="custom-select-1" v-model="selectedNetwork">
-              <option v-for="network in networks" :value="network" :key="network.name + network.name_long">
+            <input 
+              v-model="name" 
+              class="custom-input-text-1" 
+              type="text" 
+              name="" 
+              placeholder="ETH Node Name" 
+              autocomplete="off" >
+            <select 
+              v-model="selectedNetwork" 
+              class="custom-select-1">
+              <option 
+                v-for="network in networks" 
+                :value="network" 
+                :key="network.name + network.name_long">
                 {{ network.name | capitalize }} - {{ network.name_long | capitalize }}
               </option>
             </select>
-            <input class="custom-input-text-1" type="text" name="" v-model="url" placeholder="URL" autocomplete="off" />
-            <input class="custom-input-text-1" type="text" name="" v-model="port" placeholder="Port" autocomplete="off" />
-            <input class="custom-input-text-1" type="number" name="" v-model="chainID" placeholder="Chain ID" autocomplete="off" v-show="selectedNetwork.name === 'Custom'"/>
+            <input 
+              v-model="url" 
+              class="custom-input-text-1" 
+              type="text" 
+              name="" 
+              placeholder="URL" 
+              autocomplete="off" >
+            <input 
+              v-model="port" 
+              class="custom-input-text-1" 
+              type="text" 
+              name="" 
+              placeholder="Port" 
+              autocomplete="off" >
+            <input 
+              v-show="selectedNetwork.name === 'Custom'" 
+              v-model="chainID" 
+              class="custom-input-text-1" 
+              type="number" 
+              name="" 
+              placeholder="Chain ID" 
+              autocomplete="off">
           </div>
         </div>
 
@@ -56,24 +115,45 @@
             <div class="margin-left-auto add-custom-network">
               <div class="sliding-switch-white">
                 <label class="switch">
-                  <input v-on:click="expendAuth" type="checkbox" />
-                  <span class="slider round"></span>
+                  <input 
+                    type="checkbox" 
+                    @click="expendAuth" >
+                  <span class="slider round"/>
                 </label>
               </div>
             </div>
           </div>
-          <div class="auth-form-container hidden" ref="authForm">
-            <input class="custom-input-text-1" type="text" name="" v-model="username" placeholder="User Name" autocomplete="off" />
-            <input class="custom-input-text-1" type="password" name="" v-model="password" placeholder="Password" autocomplete="off" />
+          <div 
+            ref="authForm" 
+            class="auth-form-container hidden">
+            <input 
+              v-model="username" 
+              class="custom-input-text-1" 
+              type="text" 
+              name="" 
+              placeholder="User Name" 
+              autocomplete="off" >
+            <input 
+              v-model="password" 
+              class="custom-input-text-1" 
+              type="password" 
+              name="" 
+              placeholder="Password" 
+              autocomplete="off" >
           </div>
         </div>
 
         <div class="content-block">
           <div class="save-button-container">
-            <button class="save-button large-round-button-green-filled clickable" @click.prevent="saveCustomNetwork">
+            <button 
+              class="save-button large-round-button-green-filled clickable" 
+              @click.prevent="saveCustomNetwork">
               {{ $t('interface.save') }}
             </button>
-            <interface-bottom-text link="/" :linkText="$t('interface.learnMore')" :question="$t('interface.dontKnow')"></interface-bottom-text>
+            <interface-bottom-text 
+              :link-text="$t('interface.learnMore')" 
+              :question="$t('interface.dontKnow')" 
+              link="/"/>
           </div>
         </div>
 
@@ -83,93 +163,116 @@
 </template>
 
 <script>
-import store from 'store'
-import web3 from 'web3'
+import store from "store";
+import web3 from "web3";
 
-import InterfaceBottomText from '@/components/InterfaceBottomText'
+import InterfaceBottomText from "@/components/InterfaceBottomText";
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText
+    "interface-bottom-text": InterfaceBottomText
   },
-  data () {
+  data() {
     return {
-      selectedNetwork: { name: 'ETH', name_long: 'Ethereum' },
+      selectedNetwork: { name: "ETH", name_long: "Ethereum" },
       networks: [
-        { name: 'ETH', name_long: 'Ethereum' },
-        { name: 'ETC', name_long: 'Ethereum Classic' },
-        { name: 'ROP', name_long: 'Ropsten' },
-        { name: 'KOV', name_long: 'Kovan' },
-        { name: 'RIN', name_long: 'Rinkeby' },
-        { name: 'CUS', name_long: 'Custom' }
+        { name: "ETH", name_long: "Ethereum" },
+        { name: "ETC", name_long: "Ethereum Classic" },
+        { name: "ROP", name_long: "Ropsten" },
+        { name: "KOV", name_long: "Kovan" },
+        { name: "RIN", name_long: "Rinkeby" },
+        { name: "CUS", name_long: "Custom" }
       ],
-      chainID: '',
-      port: '',
-      name: '',
-      url: '',
-      username: '',
-      password: '',
+      chainID: "",
+      port: "",
+      name: "",
+      url: "",
+      username: "",
+      password: "",
       customNetworks: []
+    };
+  },
+  watch: {
+    selectedNetwork(newVal) {
+      switch (newVal.name) {
+        case "ETH":
+          this.chainID = 1;
+          break;
+        case "ETC":
+          this.chainID = 61;
+          break;
+        case "ROP":
+          this.chainID = 3;
+          break;
+        case "KOV":
+          this.chainID = 42;
+          break;
+        case "RIN":
+          this.chainID = 4;
+          break;
+        default:
+          this.chainID = this.chainID;
+      }
     }
   },
-  mounted () {
-    if (store.get('customNetworks') !== undefined) {
-      this.customNetworks = store.get('customNetworks')
+  mounted() {
+    if (store.get("customNetworks") !== undefined) {
+      this.customNetworks = store.get("customNetworks");
     }
   },
   methods: {
-    networkModalOpen () {
-      this.$children[0].$refs.network.show()
+    networkModalOpen() {
+      this.$children[0].$refs.network.show();
     },
-    removeNetwork (net, idx) {
-      this.customNetworks.splice(idx, 1)
+    removeNetwork(net, idx) {
+      this.customNetworks.splice(idx, 1);
       if (net.type.name === this.$store.state.network.type.name) {
         if (this.customNetworks.length > 0) {
-          this.switchNetwork(this.customNetworks[0])
+          this.switchNetwork(this.customNetworks[0]);
         } else {
-          this.switchNetwork(this.$store.state.Networks.ETH[0])
+          this.switchNetwork(this.$store.state.Networks.ETH[0]);
         }
       }
-      store.set('customNetworks', this.customNetworks)
+      store.set("customNetworks", this.customNetworks);
     },
-    addCustomNetworkToggle () {
-      this.$refs.network.$el.classList.toggle('max-height-1')
-      this.$refs.networkList.classList.toggle('hidden')
-      this.$refs.networkAdd.classList.toggle('hidden')
+    addCustomNetworkToggle() {
+      this.$refs.network.$el.classList.toggle("max-height-1");
+      this.$refs.networkList.classList.toggle("hidden");
+      this.$refs.networkAdd.classList.toggle("hidden");
     },
-    resetCompState () {
-      this.selectedNetwork = { name: 'ETH', name_long: 'Ethereum' }
-      this.chainID = ''
-      this.port = ''
-      this.name = ''
-      this.url = ''
-      this.username = ''
-      this.password = ''
+    resetCompState() {
+      this.selectedNetwork = { name: "ETH", name_long: "Ethereum" };
+      this.chainID = "";
+      this.port = "";
+      this.name = "";
+      this.url = "";
+      this.username = "";
+      this.password = "";
     },
-    saveCustomNetwork () {
-      let explorer = ''
+    saveCustomNetwork() {
+      let explorer = "";
       switch (this.selectedNetwork.name) {
-        case 'ETH':
-          explorer = 'https://etherscan.io/'
-          break
-        case 'ETC':
-          explorer = 'https://gastracker.io/'
-          break
-        case 'ROP':
-          explorer = 'https://ropsten.etherscan.io/'
-          break
-        case 'KOV':
-          explorer = 'https://kovan.etherscan.io/'
-          break
-        case 'RIN':
-          explorer = 'https://rinkeby.etherscan.io/'
-          break
+        case "ETH":
+          explorer = "https://etherscan.io/";
+          break;
+        case "ETC":
+          explorer = "https://gastracker.io/";
+          break;
+        case "ROP":
+          explorer = "https://ropsten.etherscan.io/";
+          break;
+        case "KOV":
+          explorer = "https://kovan.etherscan.io/";
+          break;
+        case "RIN":
+          explorer = "https://rinkeby.etherscan.io/";
+          break;
         default:
-          explorer = 'https://etherscan.io/'
+          explorer = "https://etherscan.io/";
       }
 
       const customNetwork = {
-        auth: !!(this.password !== '' && this.username !== ''),
+        auth: !!(this.password !== "" && this.username !== ""),
         password: this.password,
         port: this.port,
         service: this.name,
@@ -178,58 +281,35 @@ export default {
           blockExplorerTX: `${explorer}tx/[[txHash]]`,
           chainID: this.chainID,
           contracts: [],
-          homePage: '',
+          homePage: "",
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
           tokens: []
         },
         url: this.url,
         username: this.username
-      }
+      };
 
-      this.customNetworks.push(customNetwork)
-      this.resetCompState()
-      this.$refs.addCustomToggle.click()
-      store.set('customNetworks', this.customNetworks)
+      this.customNetworks.push(customNetwork);
+      this.resetCompState();
+      this.$refs.addCustomToggle.click();
+      store.set("customNetworks", this.customNetworks);
     },
-    expendAuth () {
-      this.$refs.authForm.classList.toggle('hidden')
+    expendAuth() {
+      this.$refs.authForm.classList.toggle("hidden");
     },
-    switchNetwork (network) {
-      this.$store.dispatch('switchNetwork', network)
+    switchNetwork(network) {
+      this.$store.dispatch("switchNetwork", network);
       if (window.web3) {
-        this.$store.dispatch('setWeb3Instance', window.web3)
+        this.$store.dispatch("setWeb3Instance", window.web3);
       } else {
-        this.$store.dispatch('setWeb3Instance', web3)
-      }
-    }
-  },
-  watch: {
-    selectedNetwork (newVal) {
-      switch (newVal.name) {
-        case 'ETH':
-          this.chainID = 1
-          break
-        case 'ETC':
-          this.chainID = 61
-          break
-        case 'ROP':
-          this.chainID = 3
-          break
-        case 'KOV':
-          this.chainID = 42
-          break
-        case 'RIN':
-          this.chainID = 4
-          break
-        default:
-          this.chainID = this.chainID
+        this.$store.dispatch("setWeb3Instance", web3);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "InterfaceNetworkModal.scss";
+@import "InterfaceNetworkModal.scss";
 </style>

@@ -10,15 +10,15 @@
 
 <script>
 export default {
-  props: ['title', 'desc', 'icon'],
+  props: ["title", "desc", "icon"],
   methods: {
-    switcher () {
-      this.$emit('click')
+    switcher() {
+      this.$emit("click");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "DappButtons.scss";
+@import "DappButtons.scss";
 </style>

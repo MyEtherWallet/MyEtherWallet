@@ -1,1 +1,1 @@
-export { default } from './LinkBlock'
+export { default } from "./LinkBlock";

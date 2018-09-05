@@ -1,1 +1,1 @@
-export { default } from './HelpCenterButton'
+export { default } from "./HelpCenterButton";

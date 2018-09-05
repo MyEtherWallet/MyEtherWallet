@@ -1,1 +1,1 @@
-export { default } from './AccessByMnemonicphrasePasswordModal'
+export { default } from "./AccessByMnemonicphrasePasswordModal";

@@ -1,1 +1,1 @@
-export { default } from './CreateWalletWarningLayout'
+export { default } from "./CreateWalletWarningLayout";

@@ -6,8 +6,12 @@
       <div class="page-container">
         <div class="content">
           <div class="switcher">
-            <span v-on:click="openFAQs = true, openCategories = false" :class="openFAQs ? 'active' : ''">FAQs</span>
-            <span v-on:click="openFAQs = false, openCategories = true" :class="openCategories ? 'active' : ''">Categories</span>
+            <span 
+              :class="openFAQs ? 'active' : ''" 
+              @click="openFAQs = true, openCategories = false">FAQs</span>
+            <span 
+              :class="openCategories ? 'active' : ''" 
+              @click="openFAQs = false, openCategories = true">Categories</span>
           </div>
           <div v-if="openFAQs">
             <faqs />
@@ -23,23 +27,23 @@
 </template>
 
 <script>
-import KeywordSearch from './components/KeywordSearch'
-import FAQs from './components/FAQs'
-import Categories from './components/Categories'
+import KeywordSearch from "./components/KeywordSearch";
+import FAQs from "./components/FAQs";
+import Categories from "./components/Categories";
 
 export default {
   components: {
-    'keyword-search': KeywordSearch,
-    'faqs': FAQs,
-    'categories': Categories
+    "keyword-search": KeywordSearch,
+    faqs: FAQs,
+    categories: Categories
   },
-  data () {
+  data() {
     return {
       openFAQs: true,
       openCategories: false
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

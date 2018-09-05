@@ -1,1 +1,1 @@
-export { default } from './ButtonWithQrCode'
+export { default } from "./ButtonWithQrCode";
