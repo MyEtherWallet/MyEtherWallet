@@ -2,7 +2,7 @@
   <div class="register-domain-container">
     <back-button :reset-view="resetView"/>
     <ens-bid
-      v-show="uiState === 'nameAvailableAuctionNotStarted'" 
+      v-show="uiState === 'nameAvailableAuctionNotStarted'"
       :cancel="cancel"
       :bid-amount="bidAmount"
       :bid-mask="bidMask"
@@ -217,7 +217,6 @@ export default {
         .entries(web3.utils.sha3(this.domainName))
         .call();
 
-      console.log('Ayyyy');
       this.processResult(domainStatus[0]);
     },
     async checkDomain() {
