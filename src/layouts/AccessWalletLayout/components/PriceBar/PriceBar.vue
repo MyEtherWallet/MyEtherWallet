@@ -34,9 +34,9 @@
 export default {
   props: {
     tokens: {
-      type: Object,
+      type: Array,
       default: function() {
-        return {};
+        return [];
       }
     }
   },

@@ -223,7 +223,8 @@ export default {
         const web3 = this.$store.state.web3;
         const contract = new web3.eth.Contract(JSON.parse(this.abi));
         const deployArgs = Object.keys(this.inputs).map(key => {
-          return web3.utils.toHex(this.inputs[key]);
+          return this.inputs[key];
+          // return web3.utils.toHex(this.inputs[key]);
         });
         this.data = contract
           .deploy({ data: this.bytecode, arguments: deployArgs })
@@ -237,8 +238,7 @@ export default {
           // gas: this.gasLimit,
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-          data: this.data.replace(/\s/g, ''),
-          chainId: this.$store.state.network.type.chainID || 1
+          data: this.data.replace(/\s/g, '')
         };
 
         const fromAddress = this.raw.from;
@@ -251,6 +251,8 @@ export default {
           unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee,
           'ether'
         );
+        // estimateGas was failing if chainId in present
+        this.raw.chainId = this.$store.state.network.type.chainID || 1;
 
         await web3.eth
           .sendTransaction(this.raw)
