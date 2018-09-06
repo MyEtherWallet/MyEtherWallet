@@ -184,7 +184,7 @@ export default {
             : this.address !== ''
               ? this.address
               : '',
-        chainId: this.$store.state.network.type.chainID
+        chainId: this.$store.state.network.type.chainID || 1
       };
       this.$store.state.web3.eth.signTransaction(raw).then(signedTx => {
         this.$emit('createdRawTx', signedTx.rawTransaction);

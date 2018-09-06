@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="password"
+    :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    title="Password"
     centered>
     <form class="password-form">
       <div class="input-container">
@@ -29,15 +29,15 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        Unlock Wallet
+        {{ $t("accessWallet.unlockWallet") }}
       </button>
     </form>
   </b-modal>
 </template>
 
 <script>
-import Wallet from 'ethereumjs-wallet';
-import Worker from '@/workers/unlockWallet.worker.js';
+import { BasicWallet } from '@/wallets';
+import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 export default {
   props: {
     file: {
@@ -71,7 +71,10 @@ export default {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch(
           'decryptWallet',
-          Wallet.fromPrivateKey(Buffer.from(e.data._privKey))
+          BasicWallet.unlock({
+            type: 'manualPrivateKey',
+            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
+          })
         );
         self.$router.push({ path: 'interface' });
       };
