@@ -105,12 +105,28 @@
               placeholder="Port"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'Custom'"
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerTX"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/tx/"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
               name=""
               placeholder="Chain ID"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerAddr"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/address/"
               autocomplete="off">
           </div>
         </div>
@@ -189,7 +205,9 @@ export default {
       url: '',
       username: '',
       password: '',
-      customNetworks: []
+      customNetworks: [],
+      blockExplorerAddr: '',
+      blockExplorerTX: ''
     };
   },
   watch: {
@@ -201,6 +219,18 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
+
+    this.types['custom'] = {
+      name: 'CUS',
+      name_long: 'CUSTOM',
+      homePage: '',
+      blockExplorerTX: '',
+      blockExplorerAddr: '',
+      chainID: '',
+      tokens: [],
+      contracts: [],
+      ensResolver: ''
+    };
   },
   methods: {
     networkModalOpen() {
@@ -230,6 +260,8 @@ export default {
       this.url = '';
       this.username = '';
       this.password = '';
+      this.blockExplorerAddr = '';
+      this.blockExplorerTX = '';
     },
     saveCustomNetwork() {
       const customNetwork = {
@@ -238,8 +270,12 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr || '',
-          blockExplorerTX: this.selectedNetwork.blockExplorerTX || '',
+          blockExplorerAddr:
+            this.selectedNetwork.blockExplorerAddr ||
+            this.blockExplorerAddr ||
+            '',
+          blockExplorerTX:
+            this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,
