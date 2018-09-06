@@ -31,7 +31,12 @@
           :key="key + index"
           class="content-block">
           <div class="network-title">
-            <img src="@/assets/images/networks/eth.svg">
+            <img 
+              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
+              src="~@/assets/images/icons/network.svg">
+            <img 
+              v-else 
+              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
