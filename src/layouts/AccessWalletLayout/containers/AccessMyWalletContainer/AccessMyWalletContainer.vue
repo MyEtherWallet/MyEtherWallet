@@ -218,6 +218,7 @@ export default {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e); // todo replace with proper error
         // close the open modal and present the user with a reason for the error (if appropriate)
       }
