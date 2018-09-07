@@ -31,6 +31,7 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
+// const unit = require('ethjs-unit');
 
 export default {
   components: {
@@ -43,8 +44,27 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      // balance: '0'
+    };
   },
+  // TODO REMOVE
+  // watch: {
+  //   balance() {
+  //     this.parsedBalance = unit.fromWei(
+  //       this.$store.state.web3.utils.toBN(this.balance),
+  //       'ether'
+  //     );
+  //   }
+  // },
+  // mounted() {
+  //   if (this.balance && this.balance !== undefined) {
+  //     this.parsedBalance = unit.fromWei(
+  //       this.$store.state.web3.utils.toBN(this.balance),
+  //       'ether'
+  //     );
+  //   }
+  // },
   methods: {
     balanceModalOpen() {
       this.$children[0].$refs.balance.show();

@@ -1,0 +1,122 @@
+@import '~@/scss/GlobalVariables';
+
+.providers-radio-selector {
+  position: relative;
+}
+
+.radio-button-container {
+  padding: 0 15px;
+  background-color: $background-color-1;
+  border-radius: 4px;
+  overflow: hidden;
+
+  ul {
+    li {
+      padding: 15px 0;
+      border-bottom: 2px dotted $light-grey-3;
+      display: grid;
+      grid-template-columns: 50px 2fr 3fr 3fr;
+      align-items: center;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.provider-image {
+  img {
+    height: 30px;
+  }
+}
+
+.dropdown-input-box {
+  position: relative;
+  border: 1px solid $background-color-1;
+  border-radius: 4px;
+
+  &.dropdown-open {
+    border: 1px solid $grey-1;
+    border-bottom: 0;
+    border-radius: 4px 4px 0 0;
+  }
+
+  input {
+    background-color: $background-color-1;
+    padding: 15px;
+    border: 0;
+    width: 100%;
+    padding-left: 55px;
+    padding-right: 70px;
+  }
+
+  .blockie-place-holder-image {
+    height: 30px;
+    width: 30px;
+    border-radius: 100px;
+    background-color: $light-grey-3;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+  }
+
+  .selected-address-blockie {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+  }
+
+  .dropdown-open-button {
+    user-select: none;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    i {
+      font-size: 9px;
+      border-left: 1px solid #e0e0e0;
+      padding: 10px 22px;
+      color: #3766aa;
+      margin-top: 11px;
+    }
+  }
+} // .dropdown-input-box
+
+.dropdown-list-box {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  position: absolute;
+  user-select: none;
+  background-color: $background-color-1;
+  border: 1px solid $grey-1;
+  border-radius: 0 0 4px 4px;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 230px;
+
+  ul {
+    li {
+      cursor: pointer;
+      padding: 10px 15px;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      &:nth-child(odd) {
+        background-color: $white;
+      }
+
+      &:hover {
+        background-color: $light-grey-3;
+      }
+
+      .list-blockie {
+        margin-right: 10px;
+      }
+    }
+  }
+}

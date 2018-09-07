@@ -1,11 +1,12 @@
 <template>
   <b-modal
     ref="hardware"
+    :title="$t('accessWallet.accessByHardware')"
     hide-footer
     class="bootstrap-modal modal-hardware"
-    title="Access by Hardware"
     centered>
     <div class="d-block text-center">
+      <span v-show="mayNotBeAttached">(TEMP implementation) Please check if your device is connected</span>
       <ul
         ref="hardwareList"
         class="button-options hardware-button-options">
@@ -62,21 +63,15 @@
       <div
         :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
         @click="continueAccess">
-        Please Connect With Your Device
+        {{ $t("accessWallet.accessDeviceAddresses") }}
       </div>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>Customer Support</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -85,6 +80,9 @@ import {
 } from '@/wallets';
 
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     networkAndAddressOpen: {
       type: Function,
@@ -97,7 +95,8 @@ export default {
   },
   data() {
     return {
-      selected: ''
+      selected: '',
+      mayNotBeAttached: false
     };
   },
   mounted() {
@@ -109,10 +108,14 @@ export default {
     continueAccess() {
       // todo The actual initiation of a hardware wallet should be moved to a specific file to reduce clutter here as the number of offerings increases
       // todo: and to allow for any specialized set-up steps a particular constructor/wallet may require
+      const showPluggedInReminder = setTimeout(() => {
+        this.mayNotBeAttached = true;
+      }, 1000);
       switch (this.selected) {
         case 'ledger':
           LedgerWallet.unlock()
             .then(wallet => {
+              clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', wallet);
             })
             .catch(_error => {
@@ -123,6 +126,7 @@ export default {
         case 'trezor':
           TrezorWallet.unlock()
             .then(wallet => {
+              clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', wallet);
             })
             .catch(_error => {
@@ -144,7 +148,7 @@ export default {
           break;
         default:
           // eslint-disable-next-line
-          console.log('something not right'); // todo remove dev item
+          console.error('something not right'); // todo remove dev item
           break;
       }
     },

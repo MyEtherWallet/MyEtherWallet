@@ -1,18 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
 .modal-container {
-  .modal-title {
-    color: $text-color-8;
-  }
-
   .balance {
     .content-block {
-      border-bottom: 1px solid $border-color-5;
-      margin: 0 20px;
-      padding: 25px 15px;
+      margin: 0;
+      padding: 25px 35px;
 
       h4 {
         font-weight: 600;
+        color: $text-color-8;
 
         span {
           color: $text--link-color;
@@ -37,15 +33,34 @@
           margin-left: auto;
         }
       }
-
-      .grid-3 {
-        display: grid;
-        grid-template-columns: auto auto auto;
-
-        p {
-          margin-top: 13px;
-        }
-      } // .grid-3
     } // .content-block
+
+    .total-balance {
+      background-color: $light-grey-1;
+      padding: 15px 35px;
+    }
+
+    .equivalent-values-title {
+      margin-bottom: 20px;
+    }
+
+    .equivalent-values {
+      li {
+        display: flex;
+        padding: 14px;
+        background-color: $light-grey-1;
+        margin-bottom: 5px;
+        align-items: center;
+
+        img {
+          margin-right: 10px;
+        }
+
+        .ev-value {
+          margin-left: auto;
+          font-weight: 600;
+        }
+      }
+    }
   } // .network
 } // .modal-container

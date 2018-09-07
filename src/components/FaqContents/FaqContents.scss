@@ -13,6 +13,13 @@ p {
   margin-bottom: 20px;
 }
 
+h3 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-top: 65px;
+  margin-bottom: 25px;
+}
+
 h5 {
   font-size: 16px;
   font-weight: 600;
@@ -46,6 +53,7 @@ ol {
   > li {
     list-style-type: decimal;
     padding-left: 10px;
+    margin-bottom: 10px;
   }
 }
 
@@ -78,4 +86,17 @@ ul {
       margin-right: 0;
     }
   }
+}
+
+blockquote p {
+  font-size: 20px;
+  line-height: 30px;
+  padding: 35px 54px;
+  background-color: aliceblue;
+  border-radius: 20px;
+}
+
+.codes {
+  font-size: 13px;
+  line-height: 27px;
 }

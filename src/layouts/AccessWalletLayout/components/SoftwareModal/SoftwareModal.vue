@@ -1,10 +1,10 @@
 <template>
   <b-modal
     ref="software"
+    :title="$t('accessWallet.accessBySoftware')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered
-    title="Access by Software">
+    centered>
     <div class="d-block content-container text-center">
       <ul class="button-options">
         <li
@@ -13,6 +13,9 @@
           <img
             :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-json-hover.svg">
           <span>{{ $t("common.jsonF") }}</span>
         </li>
         <li
@@ -21,6 +24,9 @@
           <img
             :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-mnemonic-hover.svg">
           <span>{{ $t("common.mnemonicP") }}</span>
         </li>
         <li
@@ -29,6 +35,9 @@
           <img
             :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
             class="icon">
+          <img
+            class="hover-icon"
+            src="@/assets/images/icons/button-key-hover.svg">
           <span>{{ $t("common.privKey") }}</span>
         </li>
       </ul>
@@ -46,19 +55,17 @@
         {{ $t("common.continue") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     value: {
       type: String,
@@ -99,11 +106,7 @@ export default {
       }
     },
     select(ref) {
-      if (this.selected !== ref) {
-        this.selected = ref;
-      } else {
-        this.selected = '';
-      }
+      this.selected = ref;
     },
     uploadFile(e) {
       const self = this;

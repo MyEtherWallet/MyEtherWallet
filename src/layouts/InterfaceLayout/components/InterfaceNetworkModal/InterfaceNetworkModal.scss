@@ -30,90 +30,6 @@
           position: absolute;
           width: 6px;
         }
-
-        &.aka::before {
-          background-color: $aka;
-        }
-
-        &.clo::before {
-          background-color: $clo;
-        }
-
-        &.egem::before {
-          background-color: $egem;
-        }
-
-        &.ella::before {
-          background-color: $ella;
-        }
-
-        &.eosc::before {
-          background-color: $eosc;
-        }
-
-        &.esn::before {
-          background-color: $esn;
-        }
-
-        &.etc::before {
-          background-color: $etc;
-        }
-
-        &.eth::before {
-          background-color: $eth;
-        }
-
-        &.etho::before {
-          background-color: $etho;
-        }
-
-        &.etsc::before {
-          background-color: $etsc;
-        }
-
-        &.exp::before {
-          background-color: $exp;
-        }
-
-        &.go::before {
-          background-color: $go;
-        }
-
-        &.kov::before {
-          background-color: $kov;
-        }
-
-        &.music::before {
-          background-color: $music;
-        }
-
-        &.pirl::before {
-          background-color: $pirl;
-        }
-
-        &.poa::before {
-          background-color: $poa;
-        }
-
-        &.rin::before {
-          background-color: $rin;
-        }
-
-        &.rop::before {
-          background-color: $rop;
-        }
-
-        &.tomo::before {
-          background-color: $tomo;
-        }
-
-        &.ubq::before {
-          background-color: $ubq;
-        }
-
-        &.cust::before {
-          background-color: $cust;
-        }
       }
 
       .flex-container {
@@ -125,6 +41,7 @@
       }
 
       .grid-3 {
+        padding: 0 20px;
         display: grid;
         grid-template-columns: auto auto auto;
 
@@ -195,5 +112,14 @@
   i {
     cursor: pointer;
     margin-left: 10px;
+  }
+}
+
+.network-title {
+  display: flex;
+  align-items: center;
+  img {
+    height: 25px;
+    margin-right: 13px;
   }
 }
