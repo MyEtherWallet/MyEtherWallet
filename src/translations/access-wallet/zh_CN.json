@@ -1,10 +1,20 @@
 {
   "hdDerivationPath": "高清衍生路径",
-  "customPath": "添加定制路径",
+  "customPaths": "Custom Paths",
+  "addCustomPath": "Add Custom Path",
   "interactAddr": "互动地址",
   "id": "身份码",
   "acceptTerms": "要访问我的钱包，我接受",
   "accessMyWallet": "访问我的钱包",
+  "accessBySoftware": "Access by Software",
+  "accessByHardware": "Access by Hardware",
+  "accessByMnemonicPhrase": "Access by Mnemonic Phrase",
+  "accessByMetaMask": "Access by MetaMask",
+  "accessByPrivateKey": "Access by Private Key",
+  "networkAndAddress": "Network and Address",
+  "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
+  "accessDeviceAddresses": "Please Connect With Your Device",
+  "password": "Password",
   "mewConnectDesc": "使用 MEW 访问我们钱包",
   "metaMaskDesc": "使用延伸访问我的钱包",
   "installMetaMaskModalDesc": "啊哦！首先，你需要安装 MetaMask 延伸来访问你的钱包。",
@@ -13,5 +23,6 @@
   "softwareDesc": "JSON 文档、私人密钥、助记短语",
   "notRecommended": "不推荐",
   "unlock": "解锁",
+  "unlockWallet": "Unlock Wallet",
   "installMetamask": "安装 MetaMask"
 }
