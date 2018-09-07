@@ -196,12 +196,14 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
         return;
       }
       if (apdus.length === 0) {
-        const result = {};
+        const obj = {};
         const v = response[0] + 27;
-        result['v'] = Buffer.from([v]).toString('hex');
-        result['r'] = response.slice(1, 1 + 32).toString('hex');
-        result['s'] = response.slice(1 + 32, 1 + 32 + 32).toString('hex');
-        callback(result);
+        obj['v'] = Buffer.from([v]).toString('hex');
+        obj['r'] = response.slice(1, 1 + 32).toString('hex');
+        obj['s'] = response.slice(1 + 32, 1 + 32 + 32).toString('hex');
+        const result = obj['r'] + obj['s'] + obj['v'];
+
+        callback('0x' + result.toString('hex'));
       } else {
         self.comm.exchange(apdus.shift(), localCallback);
       }
