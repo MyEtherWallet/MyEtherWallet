@@ -23,5 +23,9 @@
   "byJsonFileMakeBackupDesc": "有一天它可能价值数百万美元，请像保护那么多钱一样保护好它。",
   "byJsonFileDownloadKeyFile": "下载密钥库文档",
   "pageTitleAlreadyHave": "已经有一个钱包了？",
-  "pageFooterTitle": "想了解更多有关区块链或 MEW 的信息？请到"
+  "pageFooterTitle": "想了解更多有关区块链或 MEW 的信息？请到",
+  "availableAppleGoogleStores": "Our App is Available On the App Store and Google Play",
+  "scanToDownload": "Scan to Download",
+  "iosVersions": "iOS 9.0 or up0",
+  "androidVersions": "Android 8.0 or up"
 }
