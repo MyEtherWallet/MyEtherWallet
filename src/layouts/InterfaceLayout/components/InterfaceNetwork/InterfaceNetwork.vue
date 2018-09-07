@@ -14,6 +14,11 @@
             class="icon">
         </div>
         <div class="block-content">
+          <div class="helper">
+            <popover
+              :popcontent="$t('popover.whatIsMessageContent')"
+              :popovertype="'A'" />
+          </div>
           <div class="information-container">
             <h2>{{ $t("interface.txNetworkTitle") }}</h2>
             <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>

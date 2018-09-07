@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       currentTab: this.$store.state.pageStates.interface.sideMenu,
-      balance: 0,
+      balance: '0',
       blockNumber: 0,
       tokens: [],
       receivedTokens: false,
@@ -180,7 +180,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err); // todo replace with proper error
+          console.error(err); // todo replace with proper error
         });
 
       return response;
@@ -224,7 +224,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.error(err);
         });
       return balance;
     },
@@ -273,7 +273,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.error(err);
         });
     },
     getBalance() {
@@ -286,7 +286,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.error(err);
         });
     }
   }

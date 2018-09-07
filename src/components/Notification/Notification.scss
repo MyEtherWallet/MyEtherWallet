@@ -1,4 +1,11 @@
 @import '~@/scss/GlobalVariables';
+@import '~@/scss/CustomModal';
+
+/* stylelint-disable */
+.modal-body {
+  padding: 0 !important;
+}
+/* stylelint-enable */
 
 .notification-count {
   background: $red-1;

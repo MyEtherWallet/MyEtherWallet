@@ -108,6 +108,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
   getAddressString() {
     return ethUtil.toChecksumAddress(this.getAddress());
   }
+
   // ============== (End) Implementation of required EthereumJs-wallet interface methods ===========
 
   // ============== (Start) Implementation of wallet usage methods ======================
@@ -292,6 +293,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
     try {
       const eth = new Ledger(transport);
       const tx = new EthereumTx(txData);
+      this.networkId = txData.chainId || this.networkId;
 
       // Set the EIP155 bits
       tx.raw[6] = Buffer.from([this.networkId]); // v
@@ -310,7 +312,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
 
       // EIP155: v should be chain_id * 2 + {35, 36}
       const signedChainId = Math.floor((tx.v[0] - 35) / 2);
-      const validChainId = this.networkId & 0xff; // FIXME this is to fixed a current workaround that app don't support > 0xff
+      const validChainId = this.networkId;
       if (signedChainId !== validChainId) {
         throw this.makeError(
           'Invalid networkId signature returned. Expected: ' +
@@ -320,6 +322,7 @@ export default class LedgerWallet extends HardwareWalletInterface {
           'InvalidNetworkId'
         );
       }
+
       return {
         tx: {
           ...txData,

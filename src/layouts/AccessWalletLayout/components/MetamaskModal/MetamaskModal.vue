@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="metamask"
+    :title="$t('accessWallet.accessByMetaMask')"
     hide-footer
     class="bootstrap-modal modal-metamask"
-    title="Access by MetaMask"
     centered>
     <div class="modal-multi-icons">
       <img
@@ -30,25 +30,30 @@
       </label>
     </div>
     <div class="button-container">
+      <router-link to="interface">
+        <b-btn
+          :disabled="accessMyWalletBtnDisabled"
+          class="mid-round-button-green-filled close-button">
+          {{ $t("accessWallet.accessMyWallet") }}
+        </b-btn>
+      </router-link>
       <b-btn
         :disabled="accessMyWalletBtnDisabled"
         class="mid-round-button-green-filled close-button">
         {{ $t("accessWallet.accessMyWallet") }}
       </b-btn>
     </div>
-    <div class="support">
-      <router-link to="/">
-        <div class="support-content">
-          <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-          <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
-        </div>
-      </router-link>
-    </div>
+    <customer-support/>
   </b-modal>
 </template>
 
 <script>
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'customer-support': CustomerSupport
+  },
   props: {
     networkAndAddressOpen: {
       type: Function,

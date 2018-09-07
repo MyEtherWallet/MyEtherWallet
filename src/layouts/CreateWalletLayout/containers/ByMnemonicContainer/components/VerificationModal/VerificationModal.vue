@@ -44,8 +44,8 @@ export default {
       }
     },
     mnemonicDoneModalOpen: {
-      type: Boolean,
-      default: false
+      type: Function,
+      default: function() {}
     }
   },
   data() {

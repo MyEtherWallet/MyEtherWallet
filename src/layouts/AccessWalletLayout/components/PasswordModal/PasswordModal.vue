@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="password"
+    :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    title="Password"
     centered>
     <form class="password-form">
       <div class="input-container">
@@ -29,15 +29,15 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        Unlock Wallet
+        {{ $t("accessWallet.unlockWallet") }}
       </button>
     </form>
   </b-modal>
 </template>
 
 <script>
-import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 import { BasicWallet } from '@/wallets';
+import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 export default {
   props: {
     file: {
