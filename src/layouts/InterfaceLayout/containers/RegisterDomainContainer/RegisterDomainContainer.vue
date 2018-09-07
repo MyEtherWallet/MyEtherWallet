@@ -1,5 +1,6 @@
 <template>
   <div class="register-domain-container">
+    <register-domain-modal></register-domain-modal>
     <back-button :resetView="resetView"></back-button>
 
     <div class="send-form">
@@ -16,7 +17,7 @@
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
+      <div v-on:click="RegisterDomainModalOpen" class="submit-button large-round-button-green-filled clickable">
         {{ $t('interface.checkDomain') }}
       </div>
 
@@ -118,12 +119,14 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText'
 import BackButton from '../../components/BackButton'
+import RegisterDomainModal from './components/RegisterDomainModal'
 
 export default {
   props: ['resetView'],
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'register-domain-modal': RegisterDomainModal
   },
   data () {
     return {
@@ -140,6 +143,9 @@ export default {
     },
     domainBuyButtonClick ($event) {
       // $event.toElement.classList.toggle('very-small-circle-button-green-filled')
+    },
+    RegisterDomainModalOpen () {
+      this.$children[0].$refs.registerdomain.show()
     }
   }
 }

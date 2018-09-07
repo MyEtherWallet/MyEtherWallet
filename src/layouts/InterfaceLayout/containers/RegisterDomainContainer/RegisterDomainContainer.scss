@@ -9,11 +9,7 @@
     background-color: $background-color-white;
   }
 
-  .submit-button {
-    margin: 0 auto;
-    text-align: center;
-    width: 300px;
-  }
+
 
   .send-form {
     padding: 40px 60px 0;
@@ -194,6 +190,14 @@
 
   .submit-button-container {
     padding: 40px 60px;
+    
+
+    .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
+      display: block;
+    }
 
     .flex-container {
       border-bottom: 2px solid $background-color-1;
