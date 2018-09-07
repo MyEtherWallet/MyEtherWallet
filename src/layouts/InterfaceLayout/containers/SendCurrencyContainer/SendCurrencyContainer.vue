@@ -387,12 +387,9 @@ export default {
     },
     verifyAddr() {
       if (this.address.length !== 0 && this.address !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.address);
-        if (!valid) {
-          return true;
-        }
-        return false;
+        return true;
       }
+      return false;
     }
   }
 };
