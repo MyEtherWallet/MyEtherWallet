@@ -1,10 +1,20 @@
 {
   "hdDerivationPath": "Путь деривации HD",
-  "customPath": "Добавить произвольный путь",
+  "customPaths": "Custom Paths",
+  "addCustomPath": "Add Custom Path",
   "interactAddr": "Адрес для взаимодействия",
   "id": "ID",
   "acceptTerms": "Чтобы получить доступ к своему кошельку, я принимаю",
   "accessMyWallet": "Войти в мой кошелек",
+  "accessBySoftware": "Access by Software",
+  "accessByHardware": "Access by Hardware",
+  "accessByMnemonicPhrase": "Access by Mnemonic Phrase",
+  "accessByMetaMask": "Access by MetaMask",
+  "accessByPrivateKey": "Access by Private Key",
+  "networkAndAddress": "Network and Address",
+  "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
+  "accessDeviceAddresses": "Please Connect With Your Device",
+  "password": "Password",
   "mewConnectDesc": "Использовать MEW Connect для доступа к моему кошельку",
   "metaMaskDesc": "Использовать расширение для доступа к моему кошельку",
   "installMetaMaskModalDesc": "Ой! Чтобы получить доступ к своему кошельку, вам нужно установить расширение MetaMask.",
@@ -13,5 +23,6 @@
   "softwareDesc": "JSON-файл, закрытый ключ, мнемоническая фраза",
   "notRecommended": "Не рекомендуется",
   "unlock": "Открыть",
+  "unlockWallet": "Unlock Wallet",
   "installMetamask": "Установить MetaMask"
 }
