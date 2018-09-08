@@ -7,7 +7,7 @@
 .scrollup-container {
   opacity: 0;
   pointer-events: none;
-  transition: all 0.3s ease;
+  transition: all .3s ease;
 
   &.active {
     opacity: 1;
@@ -35,7 +35,7 @@
     align-items: center;
     display: flex;
     padding: 12px 0;
-    transition: all 0.3s ease;
+    transition: all .3s ease;
 
     @media all and (max-width: $tablet-width) {
       padding: 15px 0;
@@ -46,7 +46,7 @@
 
       img {
         height: 33px;
-        transition: all 0.3s ease;
+        transition: all .3s ease;
       }
 
       .logo-small {
@@ -108,14 +108,15 @@
       }
 
       .current-language-flag {
-        display: flex;
         align-items: center;
+        display: flex;
 
         img {
-          flex: 45;
-          margin-right: 10px;
-          height: 15px;
           border-radius: 3px;
+          box-shadow: 0 0 2pt 1pt $mew-green;
+          flex: 45;
+          height: 16px;
+          margin-right: 10px;
         }
       }
 
@@ -180,10 +181,9 @@
     border-radius: 4px;
     color: $text-color-green;
     cursor: pointer;
+    display: block;
     font-size: 12px;
     padding: 10px 20px;
-    transition: background-color 0.2s ease;
-    display: block;
     position: relative;
     overflow: hidden;
 
