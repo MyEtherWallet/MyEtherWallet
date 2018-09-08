@@ -5,7 +5,7 @@
   grid-area: main;
   overflow: hidden;
 
-  >div {
+  > div {
     background-color: $background-color-white;
   }
 
@@ -25,6 +25,10 @@
 
       .title {
         padding: 0 8px;
+
+        p {
+          max-width: 760px;
+        }
 
         h4 {
           margin-bottom: 10px;
@@ -181,7 +185,7 @@
         display: flex;
         margin-left: auto;
 
-        >span {
+        > span {
           margin-right: 15px;
         }
       }
@@ -254,13 +258,10 @@
               p {
                 margin-right: 10px;
               }
-
             }
           }
         }
-
       }
     } // .flex-container
-
   } // .submit-button-container
 }

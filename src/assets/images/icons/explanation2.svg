@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>explanation</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Speed-of-Tx" transform="translate(-172.000000, -3.000000)">
+            <g id="explanation">
+                <g transform="translate(172.000000, 3.000000)">
+                    <g>
+                        <circle id="Oval-2" fill="#05C0A5" cx="8" cy="8" r="8"></circle>
+                        <text id="!" font-family="AvenirNext-Bold, Avenir Next" font-size="11" font-weight="bold" fill="#FFFFFF">
+                            <tspan x="6" y="12">!</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,5 +1,9 @@
 <template>
-  <b-modal ref="myModalRef" hide-footer hide-header class="bootstrap-modal">
+  <b-modal 
+    ref="myModalRef" 
+    hide-footer 
+    hide-header 
+    class="bootstrap-modal">
     <div class="d-block text-center">
       <h2 class="title">{{ $t("createWallet.title") }}</h2>
       <p class="content">
@@ -19,16 +23,15 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
-  mounted () {
-    this.$refs.myModalRef.show()
+  mounted() {
+    this.$refs.myModalRef.show();
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "CreateWalletModal.scss";
+@import 'CreateWalletModal.scss';
 </style>

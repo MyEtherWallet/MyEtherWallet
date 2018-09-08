@@ -1,25 +1,64 @@
 <template>
   <div class="access-my-wallet-options">
-    <mew-connect-modal :networkAndAddressOpen="networkAndAddressOpen"></mew-connect-modal>
 
-    <network-and-address-modal></network-and-address-modal>
+    <mew-connect-modal
+      ref="mewconnectModal"
+      :network-and-address-open="networkAndAddressOpen"/>
 
-    <hardware-modal :networkAndAddressOpen="networkAndAddressOpen"></hardware-modal>
+    <hardware-modal
+      ref="hardwareModal"
+      :network-and-address-open="networkAndAddressOpen"
+      @hardwareRequiresPassword="hardwarePasswordModalOpen"
+      @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <metamask-modal></metamask-modal>
+    <hardware-password-modal
+      ref="hardwarePasswordModal"
+      :wallet-constructor="walletConstructor"
+      :hardware-brand="hardwareBrand"
+      @hardwareWalletOpen="hardwareWalletOpen"/>
 
-    <software-modal v-on:file="fileUploaded" :openPassword="passwordOpen" :openPrivateKeyInput="privateKeyOpen"></software-modal>
-    <password-modal :file="file"></password-modal>
-    <private-key-modal></private-key-modal>
+    <network-and-address-modal
+      ref="networkandaddressModal"
+      :hardware-wallet="hardwareWallet"/>
+
+    <install-metamask-modal
+      ref="installMetamaskModal"
+      :metamaskmodal="installMetamaskModalOpen"/>
+
+    <metamask-modal ref="metamastModal"/>
+
+    <software-modal
+      ref="softwareModal"
+      :open-password="passwordOpen"
+      :open-private-key-input="privateKeyOpen"
+      :open-mnemonic-phrase-input="mnemonicphraseModalOpen"
+      @file="fileUploaded"/>
+
+    <password-modal
+      ref="passwordModal"
+      :file="file"/>
+
+    <private-key-modal ref="privatekeyModal"/>
+
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"/>
+
+    <mnemonic-password-modal
+      ref="mnemonicPhrasePassword"
+      :hardware-wallet-open="hardwareWalletOpen"
+      :phrase="phrase"/>
 
     <div class="wrap">
       <div class="page-container">
         <div class="title">
-          <h2>{{$t("common.accessMyWallet")}}</h2>
+          <h2>{{ $t('common.accessMyWallet') }}</h2>
           <h5>
-            {{$t("common.noWallet")}}
-            <router-link :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" class="nounderline">
-              {{$t("common.getAFreeWallet")}}
+            {{ $t('common.noWallet') }}
+            <router-link
+              :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
+              class="nounderline">
+              {{ $t('common.getAFreeWallet') }}
             </router-link>
           </h5>
         </div>
@@ -34,8 +73,7 @@
             :recommend="button.recommend"
             :tooltip="button.tooltip"
             :disabled="button.disabled"
-            >
-          </access-wallet-button>
+          />
         </div>
       </div>
     </div>
@@ -44,38 +82,51 @@
 </template>
 
 <script>
-import AccessWalletButton from '../../components/AccessWalletButton'
-import HardwareModal from '../../components/HardwareModal'
-import MetamaskModal from '../../components/MetamaskModal'
-import MewConnectModal from '../../components/MewConnectModal'
-import NetworkAndAddressModal from '../../components/NetworkAndAddressModal'
-import PasswordModal from '../../components/PasswordModal'
-import PrivateKeyModal from '../../components/PrivateKeyModal'
-import SoftwareModal from '../../components/SoftwareModal'
+import AccessWalletButton from '../../components/AccessWalletButton';
+import HardwareModal from '../../components/HardwareModal';
+import HardwarePasswordModal from '../../components/HardwarePasswordModal';
+import MetamaskModal from '../../components/MetamaskModal';
+import InstallMetamaskModal from '../../components/InstallMetamaskModal';
+import MewConnectModal from '../../components/MewConnectModal';
+import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
+import PasswordModal from '../../components/PasswordModal';
+import PrivateKeyModal from '../../components/PrivateKeyModal';
+import SoftwareModal from '../../components/SoftwareModal';
+import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
+import MnemonicModal from '../../components/MnemonicModal';
 
-import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg'
-import hardwareImg from '@/assets/images/icons/button-hardware.svg'
-import metamaskImg from '@/assets/images/icons/button-metamask.svg'
-import softwareImg from '@/assets/images/icons/button-software.svg'
+import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
+import hardwareImg from '@/assets/images/icons/button-hardware.svg';
+import metamaskImg from '@/assets/images/icons/button-metamask.svg';
+import softwareImg from '@/assets/images/icons/button-software.svg';
 
-import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
-import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg'
-import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg'
+import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
+import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
+import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
+    'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
+    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
+    'mnemonic-modal': MnemonicModal,
+    'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton
   },
-  data () {
+  data() {
     return {
-      file: '',
+      file: {},
+      phrase: '',
+      hardwareWallet: {},
+      hardwareAddresses: [],
+      walletConstructor: function() {},
+      hardwareBrand: '',
       buttons: [
         {
           func: this.mewConnectModalOpen,
@@ -96,7 +147,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.installMetamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -114,39 +165,68 @@ export default {
           disabled: true
         }
       ]
-    }
+    };
   },
   methods: {
-    mewConnectModalOpen () {
-      this.$children[0].$refs.mewConnect.show()
+    mewConnectModalOpen() {
+      this.$refs.mewconnectModal.$refs.mewConnect.show();
     },
-    networkAndAddressOpen () {
-      this.$children[1].$refs.networkAndAddress.show()
+    networkAndAddressOpen() {
+      this.$refs.networkandaddressModal.$refs.networkAndAddress.show();
     },
-    hardwareModalOpen () {
-      this.$children[2].$refs.hardware.show()
+    hardwareModalOpen() {
+      this.$refs.hardwareModal.$refs.hardware.show();
     },
-    metamaskModalOpen () {
-      this.$children[3].$refs.metamask.show()
+    metamaskModalOpen() {
+      this.$refs.metamastModal.$refs.metamask.show();
     },
-    softwareModalOpen () {
-      this.$children[4].$refs.software.show()
+    softwareModalOpen() {
+      this.$refs.softwareModal.$refs.software.show();
     },
-    passwordOpen () {
-      this.$children[5].$refs.password.show()
+    passwordOpen() {
+      this.$refs.passwordModal.$refs.password.show();
     },
-    privateKeyOpen () {
-      this.$children[4].$refs.software.hide()
-      this.$children[6].$refs.privateKey.show()
+    privateKeyOpen() {
+      this.$refs.softwareModal.$refs.software.hide();
+      this.$refs.privatekeyModal.$refs.privateKey.show();
     },
-    fileUploaded (e) {
-      this.file = e
-      this.passwordOpen()
+    installMetamaskModalOpen() {
+      this.$refs.installMetamaskModal.$refs.installmetamask.show();
+    },
+    mnemonicphraseModalOpen() {
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
+    },
+    mnemonicphrasePasswordModalOpen(phrase) {
+      this.phrase = phrase;
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    },
+    fileUploaded(e) {
+      this.file = e;
+      this.passwordOpen();
+    },
+    hardwarePasswordModalOpen(hardwareNeedingPassword) {
+      this.walletConstructor = hardwareNeedingPassword.walletConstructor;
+      this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
+      this.$refs.hardwarePasswordModal.$refs.password.show();
+    },
+    hardwareWalletOpen(wallet) {
+      try {
+        this.walletConstructor = function() {};
+        this.hardwareBrand = '';
+        wallet.getDerivationPath(); // hacky way to check. should throw an error if not ready (need to implement a better mechanism)
+        this.hardwareWallet = wallet;
+        this.networkAndAddressOpen();
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e); // todo replace with proper error
+        // close the open modal and present the user with a reason for the error (if appropriate)
+      }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "AccessMyWalletContainer.scss";
+@import 'AccessMyWalletContainer.scss';
 </style>

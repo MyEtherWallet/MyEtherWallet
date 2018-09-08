@@ -1,1 +1,1 @@
-export { default } from './MewConnectModal'
+export { default } from './MewConnectModal';

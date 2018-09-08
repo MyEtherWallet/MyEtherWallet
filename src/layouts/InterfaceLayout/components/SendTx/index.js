@@ -1,1 +1,1 @@
-export { default } from './SendTx'
+export { default } from './SendTx';

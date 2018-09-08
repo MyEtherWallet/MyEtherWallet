@@ -6,13 +6,18 @@
 
 <script>
 export default {
-  props: ['title'],
-  data () {
-    return {}
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {};
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import "InterfaceContainerTitle.scss";
+@import 'InterfaceContainerTitle.scss';
 </style>

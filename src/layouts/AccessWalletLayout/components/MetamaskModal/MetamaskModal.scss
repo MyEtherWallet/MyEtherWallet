@@ -1,12 +1,18 @@
 @import '~@/scss/CustomModal';
 
+.button-container {
+  button {
+    display: inline-block;
+    width: 100%;
+  }
+}
+
 .modal-metamask {
   .modal-multi-icons {
     align-items: center;
     display: flex;
     justify-content: center;
     margin-bottom: 25px;
-    margin-top: 20px;
 
     img {
       padding: 0 13px;
@@ -18,13 +24,13 @@
   }
 
   .content-container {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     h4 {
       font-weight: 400;
       line-height: 22px;
-      margin: 0 auto 40px;
-      max-width: 340px;
+      margin: 0 auto;
+      max-width: 400px;
     }
   }
 }

@@ -1,1 +1,1 @@
-export { default } from './InterfaceBalanceModal'
+export { default } from './InterfaceBalanceModal';
