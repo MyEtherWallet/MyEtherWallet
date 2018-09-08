@@ -1,1 +1,1 @@
-export { default } from './WalletNotFoundContainer'
+export { default } from './WalletNotFoundContainer';

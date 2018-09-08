@@ -41,6 +41,10 @@
     justify-content: center;
     margin-right: 15px;
     position: relative;
+
+    img {
+      height: 100%;
+    }
   }
 
   .block-content {
@@ -50,10 +54,15 @@
     max-width: 230px;
   }
 
+  .information-container {
+    min-height: 82px;
+  }
+
   .icon-container {
     display: flex;
+    min-height: 23px;
 
-    img {
+    .custom-tooltip {
       margin-right: 13px;
     }
   }
