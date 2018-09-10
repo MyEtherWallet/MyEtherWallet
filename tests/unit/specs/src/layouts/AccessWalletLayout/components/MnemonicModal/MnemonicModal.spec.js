@@ -4,12 +4,12 @@
 import { shallowMount } from '@vue/test-utils';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import {
-  TestValues,
+  Mnemonic,
   Tooling
 } from '@@/helpers';
 
-const longMnemonic = TestValues.longMnemonic;
-const shortMnemonic = TestValues.shortMnemonic;
+const longMnemonic = Mnemonic.long;
+const shortMnemonic = Mnemonic.short;
 
 describe('MnemonicModal.vue', () => {
 

@@ -1,7 +1,12 @@
-import TestValues from './values'
+// import TestValues from './testValues'
 import Tooling from './setupTooling'
+import Mnemonic from './testValues/mnemonic';
+import JsonFile from './testValues/jsonFile';
+import PrivateKey from './testValues/privateKey';
 
 export {
-  TestValues,
+  Mnemonic,
+  JsonFile,
+  PrivateKey,
   Tooling
 }
