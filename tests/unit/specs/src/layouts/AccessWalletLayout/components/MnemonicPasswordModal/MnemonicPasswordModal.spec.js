@@ -2,12 +2,12 @@ import { shallowMount } from '@vue/test-utils';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import { MnemonicWallet } from '@/wallets';
 import {
-  TestValues,
+  Mnemonic,
   Tooling
 } from '@@/helpers';
 
-const longMnemonic = TestValues.longMnemonic;
-const shortMnemonic = TestValues.shortMnemonic;
+const longMnemonic = Mnemonic.long;
+const shortMnemonic = Mnemonic.short;
 
 describe('MnemonicPasswordModal.vue', () => {
   xit('should render correct contents', () => {
@@ -34,12 +34,12 @@ describe('MnemonicPasswordModal.vue', () => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(TestValues.longMnemonicAddresses[0].toLowerCase());
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.longAddresses[0].toLowerCase());
           done();
         },
         phrase: longMnemonic
       });
-      wrapper.setData({ password: TestValues.longMnemonicPassword });
+      wrapper.setData({ password: Mnemonic.longPassword });
       wrapper.vm.$nextTick(() => {
         wrapper.vm.unlockWallet();
       });
@@ -49,14 +49,14 @@ describe('MnemonicPasswordModal.vue', () => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(TestValues.shortMnemonicAddresses[0].toLowerCase());
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.shortAddresses[0].toLowerCase());
           done();
         },
         phrase: shortMnemonic
       });
 
       const input = wrapper.find('input');
-      input.setValue(TestValues.shortMnemonicPassword);
+      input.setValue(Mnemonic.shortPassword);
       wrapper.vm.$nextTick(() => {
         wrapper.vm.unlockWallet();
       });
@@ -66,10 +66,10 @@ describe('MnemonicPasswordModal.vue', () => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(TestValues.noPasswordShortMnemonicAddresses[0].toLowerCase());
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.noPasswordShortAddresses[0].toLowerCase());
           done();
         },
-        phrase: TestValues.noPasswordShortMnemonic
+        phrase: Mnemonic.noPasswordShort
       });
       // wrapper.setData({ password: Tooling.shortMnemonicPassword });
       wrapper.vm.$nextTick(() => {
