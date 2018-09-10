@@ -25,7 +25,15 @@ const longMnemonicAddresses = [
   '0xF1217c2b1d4fc298bB66a0967650E92BAD430F45',
   '0x98Be7C455cC3AA5559C193962e63a7BF183A3aA1'
 ];
+const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
+const privateKeyAddress = '0xB783eA3D37757f201C8e46dB7A30fB9dDe4EeCd3';
 
+const jsonFileContent = '{"version":3,"id":"82b3808e-92cd-45f9-8a1d-e60b129d9cbb","address":"09386c7cd7fc28479d81a0551d149ea20ca56460","crypto":{"ciphertext":"07550b2704c50033c37f3cf614a849c2f7486b88438d839b2ceaf3ddc8166f22","cipherparams":{"iv":"90561e0e22c138a0f70251ce3d1c04fa"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"dklen":32,"salt":"ae157b7f6233e9b84f8663732187083f24a360f69096816badccf05a3783e785","n":131072,"r":8,"p":1},"mac":"1853b643514e6d11fd2968dd4996caf1d82b386cfdb1b0a6d296ce5810096a95"}}';
+const jsonFilePassword = '123456789';
+
+const rawTransactionDetails = {
+
+}
 
 export default {
   shortMnemonic,
