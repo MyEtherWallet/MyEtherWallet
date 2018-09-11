@@ -2,13 +2,13 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HomeLayout from '@/layouts/HomeLayout';
 import CreateWalletLayout from '@/layouts/CreateWalletLayout';
+import ConvertUnits from '@/layouts/ConvertUnits';
 import TeamLayout from '@/layouts/TeamLayout';
 import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
 import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout';
 import InterfaceLayout from '@/layouts/InterfaceLayout';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout';
-import ConvertUnits from '@/layouts/ConvertUnits';
 import NotFoundLayout from '@/layouts/NotFoundLayout';
 import GettingStarted from '@/layouts/GettingStarted';
 import { router as routerConfig } from '@/configs/build';
@@ -40,7 +40,7 @@ export default new Router({
     },
     {
       path: '/terms-and-conditions',
-      name: 'TermsOfConditionsLayout',
+      name: 'TermsAndConditionsLayout',
       component: TermsAndConditionsLayout
     },
     {
@@ -65,7 +65,7 @@ export default new Router({
     },
     {
       path: '/getting-started',
-      name: 'CreateWalletWarningLayout',
+      name: 'GettingStarted',
       component: GettingStarted
     },
     {

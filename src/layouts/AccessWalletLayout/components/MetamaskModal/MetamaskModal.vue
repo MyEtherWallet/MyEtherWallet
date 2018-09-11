@@ -30,6 +30,13 @@
       </label>
     </div>
     <div class="button-container">
+      <router-link to="interface">
+        <b-btn
+          :disabled="accessMyWalletBtnDisabled"
+          class="mid-round-button-green-filled close-button">
+          {{ $t("accessWallet.accessMyWallet") }}
+        </b-btn>
+      </router-link>
       <b-btn
         :disabled="accessMyWalletBtnDisabled"
         class="mid-round-button-green-filled close-button">

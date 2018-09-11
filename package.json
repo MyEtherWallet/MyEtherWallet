@@ -14,8 +14,7 @@
     "build": "npm run update:lists && vue-cli-service build",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run test:unit && codecov",
-    "update:lists": "node fetchEthListData.js",
-    "precommit": "npm run lint && npm run test"
+    "update:lists": "node fetchEthListData.js"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
@@ -31,7 +30,6 @@
     "@ledgerhq/hw-app-eth": "^4.21.0",
     "@ledgerhq/hw-transport-u2f": "^4.21.0",
     "@myetherwallet/mewconnect-web-client": "0.0.1-alpha.3",
-    "@vue/cli": "^3.0.1",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-plugin-unit-jest": "^3.0.1",
@@ -41,15 +39,12 @@
     "@xkeshi/vue-qrcode": "^1.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
-    "babel-loader": "^8.0.1",
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "canvas": "^1.6.11",
     "codecov": "^3.0.4",
     "dotenv-webpack": "^1.5.7",
-    "eslint": "^5.5.0",
-    "eslint-loader": "^2.1.0",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
     "ethereumjs-tx": "^1.3.7",
     "ethereumjs-util": "^5.2.0",

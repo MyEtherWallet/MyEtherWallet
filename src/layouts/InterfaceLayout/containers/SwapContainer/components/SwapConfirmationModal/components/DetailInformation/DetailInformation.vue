@@ -9,7 +9,7 @@
             <label class="switch">
               <input
                 type="checkbox"
-                @click="isExpended = !isExpended">
+                @click="isExpended = !isExpended" >
               <span class="slider round"/>
             </label>
           </div>

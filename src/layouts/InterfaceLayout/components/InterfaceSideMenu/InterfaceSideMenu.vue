@@ -2,10 +2,11 @@
   <div class="transactions-side-menu">
     <div class="side-menu">
       <!-- <ul>
-        <li @click.prevent="toggle('openSend')">
+        <li>
           <div
-            :class="[currentTab === 'send' || currentTab === 'offline' ? 'active' : '', 'menu-group-title']">
-            <img :src="currentTab === 'send' || currentTab === 'offline'? require(`@/assets/images/sidemenu/send-active.svg`): require(`@/assets/images/sidemenu/send.svg`)">
+            :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']"
+            @click.prevent="toggle('openSend')">
+            <img :src="selectedTab === 'send' || selectedTab === 'offline'? require(`@/assets/images/sidemenu/send-active.svg`): require(`@/assets/images/sidemenu/send.svg`)">
             <p>{{ $t("interface.txSideMenuTitle") }}</p>
             <i
               :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']"
@@ -13,38 +14,38 @@
           </div>
           <ul v-show="showSend">
             <li
-              :class="currentTab === 'send'? 'active': ''"
+              :class="selectedTab === 'send'? 'active': ''"
               @click.prevent="switchTabs('send')">
               {{ $t("common.sendTx") }}
             </li>
             <li
-              :class="currentTab === 'offline'? 'active': ''"
+              :class="selectedTab === 'offline'? 'active': ''"
               @click.prevent="switchTabs('offline')">
               {{ $t("common.offline") }}
             </li>
           </ul>
         </li>
         <li @click.prevent="switchTabs('swap')" >
-          <div :class="[currentTab === 'swap'? 'active': '', 'menu-group-title']">
-            <img :src="currentTab === 'swap'? require(`@/assets/images/sidemenu/swap-active.svg`): require(`@/assets/images/sidemenu/swap.svg`)">
+          <div :class="[selectedTab === 'swap'? 'active': '', 'menu-group-title']">
+            <img :src="selectedTab === 'swap'? require(`@/assets/images/sidemenu/swap-active.svg`): require(`@/assets/images/sidemenu/swap.svg`)">
             <p>
               {{ $t("common.swap") }}
             </p>
           </div>
         </li>
         <li @click.prevent="switchTabs('dapps')" >
-          <div :class="[currentTab === 'dapps'? 'active': '', 'menu-group-title']">
-            <img :src="currentTab === 'dapps'? require(`@/assets/images/sidemenu/dapps-active.svg`): require(`@/assets/images/sidemenu/dapps.svg`)">
+          <div :class="[selectedTab === 'dapps'? 'active': '', 'menu-group-title']">
+            <img :src="selectedTab === 'dapps'? require(`@/assets/images/sidemenu/dapps-active.svg`): require(`@/assets/images/sidemenu/dapps.svg`)">
             <p>
               {{ $t("common.dapps") }}
             </p>
           </div>
         </li>
-        <li @click.prevent="toggle('openContract')">
+        <li>
           <div
-            :class="[currentTab === 'interactC' || currentTab === 'deployC' ? 'active' : '', 'menu-group-title']"
-          >
-            <img :src="currentTab === 'interactC' || currentTab === 'deployC'? require(`@/assets/images/sidemenu/contract-active.svg`): require(`@/assets/images/sidemenu/contract.svg`)">
+            :class="[selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : '', 'menu-group-title']"
+            @click.prevent="toggle('openContract')">
+            <img :src="selectedTab === 'interactC' || selectedTab === 'deployC'? require(`@/assets/images/sidemenu/contract-active.svg`): require(`@/assets/images/sidemenu/contract.svg`)">
             <p>{{ $t("interface.txSideMenuContract") }}</p>
             <i
               :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']"
@@ -52,22 +53,22 @@
           </div>
           <ul v-show="showContract">
             <li
-              :class="currentTab === 'interactC'? 'active': ''"
+              :class="selectedTab === 'interactC'? 'active': ''"
               @click.prevent="switchTabs('interactC')">
               {{ $t("common.interactWcontract") }}
             </li>
             <li
-              :class="currentTab === 'deployC'? 'active': ''"
+              :class="selectedTab === 'deployC'? 'active': ''"
               @click.prevent="switchTabs('deployC')">
               {{ $t("common.depContract") }}
             </li>
           </ul>
         </li>
-        <li @click.prevent="toggle('openMessage')">
+        <li>
           <div
-            :class="[currentTab === 'signMessage' || currentTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']"
+            :class="[selectedTab === 'signMessage' || selectedTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']"
             @click.prevent="toggle('openMessage')">
-            <img :src="currentTab === 'signMessage' || currentTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)">
+            <img :src="selectedTab === 'signMessage' || selectedTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)">
             <p>{{ $t("interface.txSideMenuMessage") }}</p>
             <i
               :class="['fa', showMessage ? 'fa-angle-up':'fa-angle-down']"
@@ -75,12 +76,12 @@
           </div>
           <ul v-show="showMessage">
             <li
-              :class="currentTab === 'signMessage'? 'active': ''"
+              :class="selectedTab === 'signMessage'? 'active': ''"
               @click.prevent="switchTabs('signMessage')">
               {{ $t("common.signMessage") }}
             </li>
             <li
-              :class="currentTab === 'verifyMessage'? 'active': ''"
+              :class="selectedTab === 'verifyMessage'? 'active': ''"
               @click.prevent="switchTabs('verifyMessage')">
               {{ $t("common.verifyMessage") }}
             </li>

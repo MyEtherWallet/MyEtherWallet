@@ -30,7 +30,7 @@ const isBrowser =
   typeof window !== 'undefined' &&
   {}.toString.call(window) === '[object Window]';
 
-window.TrezorConnect = !isBrowser
+const TrezorConnect = !isBrowser
   ? (function() {})()
   : (function() {
       'use strict';
@@ -850,8 +850,8 @@ window.TrezorConnect = !isBrowser
       }
 
       /*
-   * `getXPubKey()`
-   */
+ * `getXPubKey()`
+ */
 
       function parseHDPath(string) {
         return string
@@ -879,8 +879,8 @@ window.TrezorConnect = !isBrowser
       }
 
       /*
-   * Popup management
-   */
+ * Popup management
+ */
 
       function ChromePopup(url, name, width, height) {
         const left = (screen.width - width) / 2;
@@ -1180,3 +1180,5 @@ window.TrezorConnect = !isBrowser
 
       return exports;
     })();
+
+export default TrezorConnect;

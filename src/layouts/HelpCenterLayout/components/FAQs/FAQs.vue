@@ -328,19 +328,6 @@ export default {
   methods: {
     openFAQ: function(faqToOpen) {
       const currentState = this.showFAQs[faqToOpen];
-      this.showFAQs.faq1 = false;
-      this.showFAQs.faq2 = false;
-      this.showFAQs.faq3 = false;
-      this.showFAQs.faq4 = false;
-      this.showFAQs.faq5 = false;
-      this.showFAQs.faq6 = false;
-      this.showFAQs.faq7 = false;
-      this.showFAQs.faq8 = false;
-      this.showFAQs.faq9 = false;
-      this.showFAQs.faq10 = false;
-      this.showFAQs.faq11 = false;
-      this.showFAQs.faq12 = false;
-      this.showFAQs.faq13 = false;
       this.showFAQs[faqToOpen] = !currentState;
     }
   }

@@ -12,6 +12,7 @@
       display: flex;
       align-items: center;
       color: $mew-green;
+
       img {
         height: 20px;
         margin-left: 10px;
@@ -41,10 +42,12 @@
     .title-container {
       .title {
         padding: 0 8px;
+
         .title-and-popover {
           display: flex;
           align-items: center;
         }
+
         h4 {
           margin-bottom: 2px;
         }
@@ -231,6 +234,15 @@
 
     p {
       margin-top: 20px;
+    }
+
+    .buy-eth {
+      margin-top: 20px;
+      color: $mew-green;
+
+      img {
+        height: 20px;
+      }
     }
   }
 }

@@ -92,10 +92,19 @@ export default class MewConnectWallet {
     return new Promise((resolve, reject) => {
       try {
         const thisMessage = msgData.data ? msgData.data : msgData;
-        this.mewConnect.sendRtcMessage('signMessage', thisMessage);
+        this.mewConnect.sendRtcMessage('signMessage', {
+          hash: ethUtil
+            .hashPersonalMessage(Buffer.from(thisMessage))
+            .toString('hex'),
+          text: thisMessage
+        });
         this.mewConnect.on('signMessage', data => {
-          const signedMsg = JSON.parse(data);
-          resolve(signedMsg);
+          if (this.isJSON(data)) {
+            const signedMsg = JSON.parse(data);
+            resolve(signedMsg);
+          } else {
+            resolve(data.sig);
+          }
         });
       } catch (e) {
         // eslint-disable-next-line no-console
@@ -154,5 +163,14 @@ export default class MewConnectWallet {
 
   mewConnectDisconnect() {
     this.mewConnect.disconnectRTC();
+  }
+
+  isJSON(json) {
+    try {
+      JSON.parse(json);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

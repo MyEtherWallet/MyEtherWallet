@@ -137,12 +137,12 @@ import {
 
 export default {
   components: {
-    'customer-support': CustomerSupport,
     'faq-balances-not-loading': BalancesNotLoadingOrShowingOnMyEtherWallet,
     'faq-eth-or-tokens-sent-to': EthOrTokensSentToOrFromExchangeHaventShownUp,
     'faq-does-myetherwallet-support-bitcoin': DoesMyEtherWalletSupportBitcoinOrOtherCoins,
     'faq-where-can-i-buy-sell': WhereCanIBuySellTradeExchangeMyEthOrTokens,
-    'faq-what-is-an-ico': WhatIsAnIco
+    'faq-what-is-an-ico': WhatIsAnIco,
+    'customer-support': CustomerSupport
   },
   data() {
     return {

@@ -30,14 +30,12 @@
                 <b-nav-item
                   to="/"
                   exact
-                  @click="scrollTop()"> {{ $t("header.home") }}
-                </b-nav-item>
+                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
                 <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
                 <b-nav-item
                   v-show="online"
-                  to="/#news">{{ $t("common.news") }}
-                </b-nav-item>
+                  to="/#news">{{ $t("common.news") }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -170,8 +168,6 @@ export default {
     }
   },
   mounted() {
-    const self = this;
-
     if (this.$store.state.online) {
       this.online = true;
     } else {
@@ -204,8 +200,8 @@ export default {
     this.onPageScroll();
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
-    window.onscroll = function() {
-      self.onPageScroll();
+    window.onscroll = () => {
+      this.onPageScroll();
     };
   },
   methods: {

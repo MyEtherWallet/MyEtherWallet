@@ -232,6 +232,7 @@ a {
 // *********************************************************************
 // Standard text styles
 // *********************************************************************
+
 p {
   color: $text-base-color;
   line-height: 21px;
@@ -635,6 +636,7 @@ h6 {
 
 .tooltip {
   pointer-events: none;
+
   &.show {
     opacity: 1;
   }
@@ -767,9 +769,19 @@ h6 {
   }
 }
 
+.nopadding .modal-body {
+  padding: 0;
+}
+
 .bootstrap-modal.no-padding .modal-body,
 .bootstrap-modal.nopadding .modal-body {
   padding: 0;
+}
+
+.max-height-1 .modal-body {
+  max-height: 405px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .bootstrap-modal.padding-40-20 .modal-body {
@@ -1084,7 +1096,7 @@ h6 {
     background-color: $background-color-white;
     border: solid 1px $button--border-color-2;
     color: $text-color-6;
-    font-family: arial, sans-serif;
+    font-family: Arial, sans-serif;
     min-width: 180px;
     padding: 8px 15px;
     text-align: left;

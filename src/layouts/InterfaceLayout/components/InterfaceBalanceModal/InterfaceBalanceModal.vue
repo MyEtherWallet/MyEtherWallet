@@ -14,6 +14,7 @@
           </div>
         </div>
       </div>
+
       <div class="content-block">
         <h4 class="equivalent-values-title">{{ $t('interface.equivalentValues') }}</h4>
         <ul class="equivalent-values">

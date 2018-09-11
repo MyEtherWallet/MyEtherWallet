@@ -39,6 +39,7 @@
 
 .user-input-container {
   display: flex;
+
   .user-input {
     margin: 0 auto;
     display: flex;
@@ -58,6 +59,7 @@
 
     .printer-icon {
       margin-left: 20px;
+
       .icon {
         height: 30px;
       }
@@ -92,6 +94,7 @@
 .title-block {
   display: flex;
   margin-bottom: 40px;
+
   .title-popover {
     display: flex;
     margin: 0 auto;

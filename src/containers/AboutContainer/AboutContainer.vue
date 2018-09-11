@@ -5,8 +5,8 @@
         <div class="circle">
           <img src="~@/assets/images/home/circle.png">
         </div>
-        <div 
-          id="about-mew" 
+        <div
+          id="about-mew"
           class="star-background">
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
@@ -19,19 +19,19 @@
                   <router-link to="/">
                     <p>
                       {{ $t("home.aboutWatchVideo") }}
-                      <i 
-                        class="fa fa-caret-right" 
+                      <i
+                        class="fa fa-caret-right"
                         aria-hidden="true"/>
                     </p>
                   </router-link>
                 </div>
               </div>
               <div class="image-content">
-                <img 
-                  class="spaceman" 
+                <img
+                  class="spaceman"
                   src="~@/assets/images/home/spaceman.png">
-                <img 
-                  class="mew-icon" 
+                <img
+                  class="mew-icon"
                   src="~@/assets/images/home/mew-icon.png">
               </div>
             </div>

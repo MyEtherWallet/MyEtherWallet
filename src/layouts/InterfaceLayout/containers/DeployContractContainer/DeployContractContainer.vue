@@ -117,7 +117,7 @@
           v-model="gasLimit"
           type="number"
           name=""
-          placeholder="Gas Limit" >
+          placeholder="Gas Limit">
         <div class="good-button-container">
           <p>Gwei</p>
           <i
@@ -153,8 +153,6 @@ import { Misc } from '@/helpers';
 
 import store from 'store';
 
-// eslint-disable-next-line
-const EthTx = require('ethereumjs-tx');
 // eslint-disable-next-line
 const unit = require('ethjs-unit');
 export default {
@@ -221,61 +219,70 @@ export default {
   },
   methods: {
     async signTransaction() {
-      const web3 = this.$store.state.web3;
-      const contract = new web3.eth.Contract(JSON.parse(this.abi));
-      const deployArgs = Object.keys(this.inputs).map(key => {
-        return web3.utils.toHex(this.inputs[key]);
-      });
-      this.data = contract
-        .deploy({ data: this.bytecode, arguments: deployArgs })
-        .encodeABI();
-      this.nonce = await web3.eth.getTransactionCount(
-        this.$store.state.wallet.getAddressString()
-      );
-
-      this.raw = {
-        from: this.$store.state.wallet.getAddressString(),
-        gas: this.gasLimit,
-        nonce: this.nonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        data: this.data.replace(/\s/g, '')
-      };
-
-      const fromAddress = this.raw.from;
-      const transactionFee = await this.$store.state.web3.eth.estimateGas(
-        this.raw
-      );
-      this.raw.gas = transactionFee;
-      this.transactionFee = await unit.fromWei(
-        unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee,
-        'ether'
-      );
-
-      await web3.eth
-        .sendTransaction(this.raw)
-        .once('transactionHash', hash => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            hash,
-            'Transaction Hash: Contract Deploy'
-          ]);
-        })
-        .on('receipt', res => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            res,
-            'Transaction Receipt: Contract Deploy'
-          ]);
-        })
-        .on('error', err => {
-          // eslint-disable-next-line
-          console.log(err); // todo replace with proper error
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            err,
-            'Transaction Error'
-          ]);
+      try {
+        const web3 = this.$store.state.web3;
+        const contract = new web3.eth.Contract(JSON.parse(this.abi));
+        const deployArgs = Object.keys(this.inputs).map(key => {
+          return this.inputs[key];
+          // return web3.utils.toHex(this.inputs[key]);
         });
+        this.data = contract
+          .deploy({ data: this.bytecode, arguments: deployArgs })
+          .encodeABI();
+        this.nonce = await web3.eth.getTransactionCount(
+          this.$store.state.wallet.getAddressString()
+        );
+
+        this.raw = {
+          from: this.$store.state.wallet.getAddressString(),
+          // gas: this.gasLimit,
+          nonce: this.nonce,
+          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          data: this.data.replace(/\s/g, '')
+        };
+
+        const fromAddress = this.raw.from;
+        const transactionFee = await this.$store.state.web3.eth.estimateGas(
+          this.raw
+        );
+
+        this.raw.gas = transactionFee;
+        this.transactionFee = await unit.fromWei(
+          unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee,
+          'ether'
+        );
+        // estimateGas was failing if chainId in present
+        this.raw.chainId = this.$store.state.network.type.chainID || 1;
+
+        await web3.eth
+          .sendTransaction(this.raw)
+          .once('transactionHash', hash => {
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              hash,
+              'Transaction Hash: Contract Deploy'
+            ]);
+          })
+          .on('receipt', res => {
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              res,
+              'Transaction Receipt: Contract Deploy'
+            ]);
+          })
+          .on('error', err => {
+            // eslint-disable-next-line
+            console.error(err); // todo replace with proper error
+            this.$store.dispatch('addNotification', [
+              fromAddress,
+              err,
+              'Transaction Error'
+            ]);
+          });
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e); // todo replace with proper error
+      }
     },
     showSuccessModal() {
       this.$eventHub.$emit('showSuccessModal', 'Sending Transaction', 'Close');
@@ -300,7 +307,7 @@ export default {
           })
           .catch(err => {
             // eslint-disable-next-line no-console
-            console.log(err);
+            console.error(err);
           });
       }
     },
