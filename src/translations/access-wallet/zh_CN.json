@@ -20,7 +20,7 @@
   "installMetaMaskModalDesc": "啊哦！你需要先安装 MetaMask 插件来访问你的钱包。",
   "metaMaskModalDesc": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
   "software": "软件",
-  "softwareDesc": "JSON 文档、密钥、短语",
+  "softwareDesc": "JSON 文档、私钥、助记短语",
   "notRecommended": "不推荐",
   "unlock": "Unlock",
   "unlockWallet": "Unlock Wallet",
