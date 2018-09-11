@@ -21,11 +21,11 @@
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
-    <install-metamask-modal
+    <!-- <install-metamask-modal
       ref="installMetamaskModal"
-      :metamaskmodal="installMetamaskModalOpen"/>
+      :metamaskmodal="installMetamaskModalOpen"/> -->
 
-    <metamask-modal ref="metamastModal"/>
+    <metamask-modal ref="metamaskModal"/>
 
     <software-modal
       ref="softwareModal"
@@ -147,7 +147,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.installMetamaskModalOpen,
+          func: this.metamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -178,7 +178,7 @@ export default {
       this.$refs.hardwareModal.$refs.hardware.show();
     },
     metamaskModalOpen() {
-      this.$refs.metamastModal.$refs.metamask.show();
+      this.$refs.metamaskModal.$refs.metamask.show();
     },
     softwareModalOpen() {
       this.$refs.softwareModal.$refs.software.show();
