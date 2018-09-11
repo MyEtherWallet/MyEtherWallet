@@ -9,8 +9,7 @@
             <h4>{{ $t("interface.sendTxAmount") }}</h4>
             <p
               class="title-button prevent-user-select"
-              @click="setBalanceToAmt">Entire
-              Balance</p>
+              @click="setBalanceToAmt">Entire Balance</p>
           </div>
           <currency-picker
             :currency="tokensWithBalance"
@@ -22,7 +21,7 @@
               v-model="amount"
               type="number"
               name=""
-              placeholder="Amount">
+              placeholder="Amount" >
             <i
               :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
               aria-hidden="true"/>
@@ -98,7 +97,7 @@
           v-model="gasAmount"
           type="number"
           name=""
-          placeholder="Gas Amount">
+          placeholder="Gas Amount" >
         <div class="good-button-container">
           <p>Gwei</p>
           <i
@@ -119,7 +118,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="advancedExpend = !advancedExpend">
+                  @click="advancedExpend = !advancedExpend" >
                 <span class="slider round"/>
               </label>
             </div>
@@ -134,14 +133,14 @@
               type="text"
               name=""
               placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-              autocomplete="off">
+              autocomplete="off" >
           </div>
           <div class="the-form user-input">
             <input
               v-model="gasLimit"
               type="number"
               name=""
-              placeholder="Gas Limit">
+              placeholder="Gas Limit" >
           </div>
         </div>
       </div>
@@ -170,7 +169,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx');
+const EthTx = require('ethereumjs-tx')
 // eslint-disable-next-line
 const unit = require('ethjs-unit');
 
@@ -293,7 +292,8 @@ export default {
             : unit.toWei(this.amount, 'ether')
           : 0,
         to: isEth ? this.address : this.selectedCurrency.addr,
-        data: this.data
+        data: this.data,
+        chainId: this.$store.state.network.type.chainID || 1
       };
 
       if (this.address === '') {
@@ -382,7 +382,7 @@ export default {
         })
         .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(err);
+          console.error(err);
         });
     },
     verifyAddr() {

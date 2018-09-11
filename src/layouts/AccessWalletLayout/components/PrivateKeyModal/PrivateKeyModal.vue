@@ -26,7 +26,6 @@
 
 <script>
 import { BasicWallet } from '@/wallets';
-
 export default {
   data() {
     return {

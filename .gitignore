@@ -14,3 +14,4 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+/tests/unit/coverage/

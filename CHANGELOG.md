@@ -1,12 +1,18 @@
 ### Feature
+- Adds some more inputs for custom network [#86](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/86)
+- Add light border to flags [#85](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/85)
+- Decompress images on build [#77](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/77)
+- Integrate secalot [#76](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/76)
+- Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
 - Implement ENS resolver directive, move directives to its own folder [#56](https://github.com/MyEtherWallet/MyEtherWallet/pull/56)
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval [#51](https://github.com/MyEtherWallet/MyEtherWallet/pull/51)
 - Integrate Ledger hardware wallet [#48](https://github.com/MyEtherWallet/MyEtherWallet/pull/48)
 - Feature/verify message [#52](https://github.com/MyEtherWallet/MyEtherWallet/pull/52)
+- override web3 methods [#47](https://github.com/MyEtherWallet/MyEtherWallet/pull/47)
 - Let users deploy and/or interact with contracts [#45](https://github.com/MyEtherWallet/MyEtherWallet/pull/45)
 
-
 ### UI/UX
+- Add Swap confirmation modal [#78](https://github.com/MyEtherWallet/MyEtherWallet/pull/78)
 - Add FAQs page [#58](https://github.com/MyEtherWallet/MyEtherWallet/pull/58)
 - Add Create Wallet warning page [#46](https://github.com/MyEtherWallet/MyEtherWallet/pull/46)
 

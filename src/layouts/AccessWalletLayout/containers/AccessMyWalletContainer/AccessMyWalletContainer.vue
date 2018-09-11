@@ -125,7 +125,7 @@ export default {
       phrase: '',
       hardwareWallet: {},
       hardwareAddresses: [],
-      walletConstructor: {},
+      walletConstructor: function() {},
       hardwareBrand: '',
       buttons: [
         {
@@ -210,14 +210,21 @@ export default {
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
-    hardwareWalletOpen(e) {
+    hardwareWalletOpen(wallet) {
       if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
         this.$refs.mnemonicPhrasePassword.$refs.password.hide();
       }
-      this.walletConstructor = {};
-      this.hardwareBrand = '';
-      this.hardwareWallet = e;
-      this.networkAndAddressOpen();
+      try {
+        this.walletConstructor = function() {};
+        this.hardwareBrand = '';
+        wallet.getDerivationPath(); // hacky way to check. should throw an error if not ready (need to implement a better mechanism)
+        this.hardwareWallet = wallet;
+        this.networkAndAddressOpen();
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e); // todo replace with proper error
+        // close the open modal and present the user with a reason for the error (if appropriate)
+      }
     }
   }
 };

@@ -13,6 +13,10 @@ export default class BasicWallet {
     if (options) {
       this.decryptWallet(options);
     }
+
+    this.signTransaction = this._signTransaction.bind(this);
+    this.signMessage = this._signMessage.bind(this);
+
     return this;
   }
 
@@ -84,7 +88,9 @@ export default class BasicWallet {
     return this.getAccounts();
   }
 
-  signTransaction(txData) {
+  // ================== End Interface Methods ========================================
+
+  _signTransaction(txData) {
     return new Promise((resolve, reject) => {
       try {
         if (!this.wallet)
@@ -116,7 +122,7 @@ export default class BasicWallet {
     });
   }
 
-  signMessage(message) {
+  _signMessage(message) {
     return new Promise((resolve, reject) => {
       try {
         if (!this.wallet)
@@ -138,8 +144,6 @@ export default class BasicWallet {
       }
     });
   }
-
-  // ================== End Interface Methods ========================================
 
   detectWallet(params) {
     if (this._isJSON(params[0])) {

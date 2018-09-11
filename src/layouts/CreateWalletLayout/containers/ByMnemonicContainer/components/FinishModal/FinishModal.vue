@@ -1,13 +1,13 @@
 <template lang="html">
-  <b-modal 
-    ref="done" 
-    hide-footer 
-    centered 
-    hide-header 
+  <b-modal
+    ref="done"
+    hide-footer
+    centered
+    hide-header
     class="bootstrap-modal done">
     <div class="d-block text-center">
-      <i 
-        class="check-icon fa fa-check" 
+      <i
+        class="check-icon fa fa-check"
         aria-hidden="true"/>
       <h2 class="title">{{ $t("createWallet.byMnemonicSuccess") }}</h2>
       <p class="content">{{ $t("createWallet.byMnemonicSuccessfullyCreated") }}</p>

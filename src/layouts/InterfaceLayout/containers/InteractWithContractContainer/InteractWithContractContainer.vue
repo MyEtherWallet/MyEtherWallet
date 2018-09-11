@@ -348,7 +348,7 @@ export default {
           })
           .catch(err => {
             // eslint-disable-next-line
-            console.log(err); // todo replace with proper error
+            console.error(err); // todo replace with proper error
           });
       } else {
         this.result = '';
@@ -394,7 +394,7 @@ export default {
           })
           .catch(err => {
             // eslint-disable-next-line
-            console.log(err); // todo replace with proper error
+            console.error(err); // todo replace with proper error
             this.loading = false;
           });
       } else {
@@ -414,7 +414,7 @@ export default {
           })
           .catch(err => {
             // eslint-disable-next-line
-            console.log(err);
+            console.error(err);
           });
         this.data = contract.methods[this.selectedMethod.name](
           ...params
@@ -456,7 +456,7 @@ export default {
           })
           .on('error', err => {
             // eslint-disable-next-line
-            console.log(err); // todo replace with proper error
+            console.error(err); // todo replace with proper error
             this.loading = false;
             this.$store.dispatch('addNotification', [
               fromAddress,

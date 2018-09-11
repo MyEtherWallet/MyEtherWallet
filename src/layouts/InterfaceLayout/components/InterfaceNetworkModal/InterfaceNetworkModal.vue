@@ -16,7 +16,7 @@
                 <input
                   ref="addCustomToggle"
                   type="checkbox"
-                  @click="addCustomNetworkToggle" >
+                  @click="addCustomNetworkToggle">
                 <span class="slider round"/>
               </label>
             </div>
@@ -31,8 +31,13 @@
           :key="key + index"
           class="content-block">
           <div class="network-title">
-            <img src="@/assets/images/networks/eth.svg">
-            <h4 :class="key === 'ETH' ? 'dot-green' : key === 'ETC' ? 'dot-bluegreen' : key === 'ROP' ? 'dot-blue' : key === 'EXP' ? 'dot-orange' : key === 'EXP' ? 'dot-green': ''">{{ key }}</h4>
+            <img 
+              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
+              src="~@/assets/images/icons/network.svg">
+            <img 
+              v-else 
+              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+            <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
             <p
@@ -46,7 +51,7 @@
         <div
           v-if="customNetworks.length > 0"
           class="content-block">
-          <h4>Custom Networks</h4>
+          <h4 class="cust">Custom Networks</h4>
           <div
             v-for="(net, idx) in customNetworks"
             :key="net.service + '('+ net.type.name + ')' + idx"
@@ -73,15 +78,16 @@
               type="text"
               name=""
               placeholder="ETH Node Name"
-              autocomplete="off" >
+              autocomplete="off">
             <select
               v-model="selectedNetwork"
               class="custom-select-1">
               <option
-                v-for="network in types"
-                :value="network"
-                :key="network.name + network.name_long">
-                {{ network.name | capitalize }} - {{ network.name_long | capitalize }}
+                v-for="type in Object.keys(types)"
+                :value="types[type]"
+                :key="types[type].name + types[type].name_long">
+                {{ types[type].name | capitalize }} - {{ types[type].name_long |
+                capitalize }}
               </option>
             </select>
             <input
@@ -90,21 +96,37 @@
               type="text"
               name=""
               placeholder="URL"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="port"
               class="custom-input-text-1"
               type="text"
               name=""
               placeholder="Port"
-              autocomplete="off" >
+              autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'Custom'"
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerTX"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/tx/"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
               name=""
               placeholder="Chain ID"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerAddr"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/address/"
               autocomplete="off">
           </div>
         </div>
@@ -117,7 +139,7 @@
                 <label class="switch">
                   <input
                     type="checkbox"
-                    @click="expendAuth" >
+                    @click="expendAuth">
                   <span class="slider round"/>
                 </label>
               </div>
@@ -132,14 +154,14 @@
               type="text"
               name=""
               placeholder="User Name"
-              autocomplete="off" >
+              autocomplete="off">
             <input
               v-model="password"
               class="custom-input-text-1"
               type="password"
               name=""
               placeholder="Password"
-              autocomplete="off" >
+              autocomplete="off">
           </div>
         </div>
 
@@ -183,7 +205,9 @@ export default {
       url: '',
       username: '',
       password: '',
-      customNetworks: []
+      customNetworks: [],
+      blockExplorerAddr: '',
+      blockExplorerTX: ''
     };
   },
   watch: {
@@ -195,6 +219,18 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
+
+    this.types['custom'] = {
+      name: 'CUS',
+      name_long: 'CUSTOM',
+      homePage: '',
+      blockExplorerTX: '',
+      blockExplorerAddr: '',
+      chainID: '',
+      tokens: [],
+      contracts: [],
+      ensResolver: ''
+    };
   },
   methods: {
     networkModalOpen() {
@@ -224,6 +260,8 @@ export default {
       this.url = '';
       this.username = '';
       this.password = '';
+      this.blockExplorerAddr = '';
+      this.blockExplorerTX = '';
     },
     saveCustomNetwork() {
       const customNetwork = {
@@ -232,8 +270,12 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr || '',
-          blockExplorerTX: this.selectedNetwork.blockExplorerTX || '',
+          blockExplorerAddr:
+            this.selectedNetwork.blockExplorerAddr ||
+            this.blockExplorerAddr ||
+            '',
+          blockExplorerTX:
+            this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,

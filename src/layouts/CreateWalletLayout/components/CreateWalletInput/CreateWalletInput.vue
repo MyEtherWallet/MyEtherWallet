@@ -104,4 +104,5 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CreateWalletInput.scss';
+/*@import ''*/ /*TODO check if redering correctly*/
 </style>
