@@ -1,4 +1,5 @@
 import { overide, WalletWrapper } from '@/wallets';
+import url from 'url';
 
 const addNotification = function({ commit, state }, val) {
   const newNotif = {};
@@ -61,17 +62,13 @@ const setState = function({ commit }, stateObj) {
 
 const setWeb3Instance = function({ commit, state }, web3) {
   if (web3.eth === undefined) {
-    const usePort =
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'eth' ||
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'rop' ||
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'kov' ||
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'mew' ||
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'rin' ||
-      state.network.url.substr(state.network.url.length - 3, 3) !== 'api'
-        ? false
-        : true;
+    const hostUrl = url.parse(state.network.url);
     // eslint-disable-next-line
-    const web3Instance = usePort ? new web3(new web3.providers.HttpProvider(`${state.network.url}:${state.network.port}`)): new web3(new web3.providers.HttpProvider(state.network.url));
+    const web3Instance = new web3(
+      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
+        hostUrl.pathname
+      }`
+    );
     commit(
       'SET_WEB3_INSTANCE',
       overide(web3Instance, state.wallet, this._vm.$eventHub)
