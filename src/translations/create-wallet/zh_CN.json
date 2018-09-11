@@ -1,9 +1,9 @@
 {
   "title": "欢迎来到 MEW",
-  "subheading": "MyEtherWallet 不为你保管你的密钥。我们无法访问账户、找回密钥、重置密码或逆转交易。保护好你的密钥并务必检查网站的「正确 URL」。你需要为你的安全负责。",
-  "firstTime": "我是新人",
-  "veteran": "我有经验",
-  "yourPw": "你的密码",
+  "subheading": "MyEtherWallet 不为您保管密钥。我们无法访问您的账户、找回您的密钥、重置您的密码还有逆转您的交易。请保护好你的密钥并务必检查正确的网址。您需要为您自己的网络安全负责。",
+  "firstTime": "新人",
+  "veteran": "有经验",
+  "yourPw": "您的密碼",
   "doNotForget": "不要忘记",
   "doNotForgetDesc": "保存密码，而且这是你的私人密码。",
   "keyPass": "密码 + 密钥库",
