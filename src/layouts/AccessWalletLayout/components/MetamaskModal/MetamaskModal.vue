@@ -83,7 +83,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import EthereumWallet from 'ethereumjs-wallet';
+import { MetamaskWallet } from '@/wallets/software';
 
 export default {
   components: {
@@ -126,9 +126,10 @@ export default {
         if (!accounts.length) this.unlockMetamask = true;
         const address = accounts[0];
         // const addrBuffer = Buffer.from(address.slice(2), 'hex');
-        const wallet = new EthereumWallet(address);
+        const wallet = new MetamaskWallet(address);
         // eslint-disable-next-line no-console
-        console.log(wallet);
+        this.$store.dispatch('setMetamaskWallet', wallet);
+        this.$router.push({ path: 'interface' });
       });
     }
   }

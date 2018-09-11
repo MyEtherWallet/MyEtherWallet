@@ -21,10 +21,6 @@
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
-    <!-- <install-metamask-modal
-      ref="installMetamaskModal"
-      :metamaskmodal="installMetamaskModalOpen"/> -->
-
     <metamask-modal ref="metamaskModal"/>
 
     <software-modal
@@ -86,7 +82,6 @@ import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
 import MetamaskModal from '../../components/MetamaskModal';
-import InstallMetamaskModal from '../../components/InstallMetamaskModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
@@ -111,7 +106,6 @@ export default {
     'hardware-modal': HardwareModal,
     'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
-    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
