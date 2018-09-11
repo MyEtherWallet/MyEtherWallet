@@ -43,10 +43,10 @@
   "txFee": "交易费",
   "dapps": "去中心化应用",
   "news": "新闻",
-  "interactWcontract": "与合约互动",
+  "interactWcontract": "合约交互",
   "depContract": "配置合约",
   "signMessage": "签署消息",
   "verifyMessage": "验证消息",
   "signature": "签字",
-  "toAddress": "处理"
+  "toAddress": "目的地址"
 }
