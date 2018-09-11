@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-etsc.json';
 import contracts from '@/contracts/contract-abi-etsc.json';
+import etsc from '@/assets/images/networks/etsc.svg';
 
 export default {
   name: 'ETSC',
@@ -10,5 +11,6 @@ export default {
   chainID: 28,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  icon: etsc
 };

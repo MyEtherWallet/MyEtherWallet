@@ -1,16 +1,11 @@
 <template>
   <div>
-    <interface-network-modal :icon-exist="iconExist"/>
+    <interface-network-modal/>
     <div @click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
           <img
-            v-if="iconExist($store.state.network.type.name)"
-            class="icon"
-            src="~@/assets/images/icons/network.svg">
-          <img
-            v-else
-            :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)"
+            :src="$store.state.network.type.icon"
             class="icon">
         </div>
         <div class="block-content">
@@ -66,11 +61,6 @@ export default {
   methods: {
     networkModalOpen() {
       this.$children[0].$refs.network.show();
-    },
-    iconExist(name) {
-      if (name === 'ROP' || name === 'RIN' || name === 'KOV' || name === 'ATH')
-        return true;
-      return false;
     }
   }
 };
