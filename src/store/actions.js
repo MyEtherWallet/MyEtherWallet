@@ -56,6 +56,10 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setMetamaskWallet = function({ commit }, wallet) {
+  commit('SET_METAMASK_WALLET', wallet);
+};
+
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
@@ -110,6 +114,7 @@ export default {
   decryptWallet,
   setAccountBalance,
   setGasPrice,
+  setMetamaskWallet,
   setState,
   setWeb3Instance,
   switchNetwork,
