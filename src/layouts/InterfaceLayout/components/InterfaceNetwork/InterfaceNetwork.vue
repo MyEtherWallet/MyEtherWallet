@@ -5,7 +5,7 @@
       <div class="info-block network">
         <div class="block-image">
           <img
-            v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
+            v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV' || $store.state.network.type.name === 'ATH'"
             class="icon"
             src="~@/assets/images/icons/network.svg">
           <img
