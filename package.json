@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.0",
+  "version": "5.0.3",
   "description": "Client side ethereum wallet",
   "scripts": {
     "dev": "vue-cli-service serve",
