@@ -7,7 +7,7 @@
 .scrollup-container {
   opacity: 0;
   pointer-events: none;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 
   &.active {
     opacity: 1;
@@ -35,7 +35,7 @@
     align-items: center;
     display: flex;
     padding: 12px 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
     @media all and (max-width: $tablet-width) {
       padding: 15px 0;
@@ -46,7 +46,7 @@
 
       img {
         height: 33px;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
       }
 
       .logo-small {

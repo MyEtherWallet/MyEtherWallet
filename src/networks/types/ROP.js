@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-rop.json';
 import contracts from '@/contracts/contract-abi-rop.json';
+import rop from '@/assets/images/icons/network.svg';
 
 export default {
   name: 'ROP',
@@ -10,5 +11,6 @@ export default {
   chainID: 3,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+  ensResolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+  icon: rop
 };
