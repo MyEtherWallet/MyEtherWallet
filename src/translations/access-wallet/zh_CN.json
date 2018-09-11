@@ -4,7 +4,7 @@
   "addCustomPath": "Add Custom Path",
   "interactAddr": "互动地址",
   "id": "身份码",
-  "acceptTerms": "要访问我的钱包，我接受",
+  "acceptTerms": "To access my wallet, I accept",
   "accessMyWallet": "访问我的钱包",
   "accessBySoftware": "Access by Software",
   "accessByHardware": "Access by Hardware",
@@ -15,14 +15,14 @@
   "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
   "accessDeviceAddresses": "Please Connect With Your Device",
   "password": "Password",
-  "mewConnectDesc": "使用 MEW 访问我们钱包",
-  "metaMaskDesc": "使用延伸访问我的钱包",
+  "mewConnectDesc": "Use MEW Connect to access my wallet",
+  "metaMaskDesc": "使用插件访问我的钱包",
   "installMetaMaskModalDesc": "啊哦！你需要先安装 MetaMask 插件来访问你的钱包。",
   "metaMaskModalDesc": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
   "software": "软件",
   "softwareDesc": "JSON 文档、私人密钥、助记短语",
   "notRecommended": "不推荐",
-  "unlock": "解锁",
+  "unlock": "Unlock",
   "unlockWallet": "Unlock Wallet",
-  "installMetamask": "安装 MetaMask"
+  "installMetamask": "Install MetaMask"
 }
