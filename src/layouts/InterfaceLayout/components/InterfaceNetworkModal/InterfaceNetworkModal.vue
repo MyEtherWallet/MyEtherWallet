@@ -32,11 +32,7 @@
           class="content-block">
           <div class="network-title">
             <img
-              v-if="iconExist(key)"
-              src="~@/assets/images/icons/network.svg">
-            <img
-              v-else
-              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+              :src="$store.state.Networks[key][0].type.icon">
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
@@ -194,12 +190,6 @@ import * as networkTypes from '@/networks/types';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
-  },
-  props: {
-    iconExist: {
-      type: Function,
-      default: function() {}
-    }
   },
   data() {
     return {

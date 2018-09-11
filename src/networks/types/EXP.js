@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-exp.json';
 import contracts from '@/contracts/contract-abi-exp.json';
+import exp from '@/assets/images/networks/exp.svg';
 
 export default {
   name: 'EXP',
@@ -10,5 +11,6 @@ export default {
   chainID: 2,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  icon: exp
 };
