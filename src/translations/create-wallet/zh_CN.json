@@ -24,8 +24,8 @@
   "byJsonFileDownloadKeyFile": "下载密钥库文档",
   "pageTitleAlreadyHave": "已经有钱包了？",
   "pageFooterTitle": "想了解更多有关区块链或 MEW 的信息？请到",
-  "availableAppleGoogleStores": "Our App is Available On the App Store and Google Play",
-  "scanToDownload": "Scan to Download",
-  "iosVersions": "iOS 9.0 or up0",
-  "androidVersions": "Android 8.0 or up"
+  "availableAppleGoogleStores": "我们的应用程序可在 App Store 和 Google Play 下载",
+  "scanToDownload": "扫描下载",
+  "iosVersions": "iOS 9.0 以上版本",
+  "androidVersions": "安卓8.0以上版本"
 }
