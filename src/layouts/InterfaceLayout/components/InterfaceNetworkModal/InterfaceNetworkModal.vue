@@ -32,7 +32,7 @@
           class="content-block">
           <div class="network-title">
             <img
-              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV' || key === 'ATH'"
+              v-if="iconExist(key)"
               src="~@/assets/images/icons/network.svg">
             <img
               v-else
@@ -194,6 +194,12 @@ import * as networkTypes from '@/networks/types';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
+  },
+  props: {
+    iconExist: {
+      type: Function,
+      default: function() {}
+    }
   },
   data() {
     return {
