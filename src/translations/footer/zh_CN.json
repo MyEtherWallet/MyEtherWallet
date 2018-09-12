@@ -11,14 +11,14 @@
   "ethCard": "Ether Card",
   "trezor": "Trezor",
   "bity": "Bity",
-  "mew": "关于我们",
+  "mew": "关于MEW",
   "about": "关于我们",
-  "team": "团队",
-  "welcome": "欢迎给我们捐款",
-  "welcomeDes": "MyEtherWallet 是一个开源且免费的社区。你的捐款会对保持开源和免费大有助益。",
-  "feedback": "反馈",
-  "privacy": "隐私",
-  "copyright": "© 2018 MyEtherWallet。版权所有。",
+  "team": "团队介绍",
+  "welcome": "欢迎捐赠给我们",
+  "welcomeDes": "MyEtherWallet 是一个开源且免费的社区。你的捐款会对产品的保持开源与免费使用将大有助益。",
+  "feedback": "用户反馈",
+  "privacy": "隐私条款",
+  "copyright": "© 2018 MyEtherWallet 版权所有。",
   "love": "爱",
-  "donate": "以太坊钱包？捐款！"
+  "donate": "MEW？捐赠我们！"
 }
