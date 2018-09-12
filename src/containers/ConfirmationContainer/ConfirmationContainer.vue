@@ -143,6 +143,7 @@ export default {
         this.responseFunction = resolve;
         this.messageToSign = data;
         signer(data).then(_response => {
+          console.log(_response);
           this.signedMessage = _response;
         });
         // this.signer = signer(data)
