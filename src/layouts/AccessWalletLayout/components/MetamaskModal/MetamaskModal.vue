@@ -18,8 +18,11 @@
           src="~@/assets/images/logo-small.png">
       </div>
       <div class="d-block content-container text-center">
-        <h4>
+        <h4 v-show="!unlockMetamask">
           {{ $t("accessWallet.metaMaskModalDesc") }}
+        </h4>
+        <h4 v-show="unlockMetamask">
+          {{ $t("accessWallet.unlockMetamaskWallet") }}
         </h4>
       </div>
       <div class="accept-terms">
@@ -32,10 +35,19 @@
       </div>
       <div class="button-container">
         <b-btn
+          v-show="!unlockMetamask"
           :disabled="accessMyWalletBtnDisabled"
           class="mid-round-button-green-filled close-button"
           @click="getMetamaskWallet">
           {{ $t("accessWallet.accessMyWallet") }}
+        </b-btn>
+        <b-btn
+          v-show="unlockMetamask"
+          class="mid-round-button-green-filled close-button"
+          @click="getMetamaskWallet"
+        >
+
+          {{ $t("accessWallet.tryAgain") }}
         </b-btn>
       </div>
     </div>
@@ -46,11 +58,8 @@
           src="~@/assets/images/icons/button-metamask-fox.svg">
       </div>
       <div class="d-block content-container text-center">
-        <h4 v-if="unlockMetamask">
+        <h4>
           {{ $t("accessWallet.installMetaMaskModalDesc") }}
-        </h4>
-        <h4 v-else>
-          {{ $t("accessWallet.unlockMetamaskWallet") }}
         </h4>
       </div>
       <div class="accept-terms hidden">
@@ -61,19 +70,18 @@
       </div>
       <div class="button-container">
         <a
-          v-if="unlockMetamask"
+          v-show="!refreshPage"
           href="https://metamask.io/"
           target="_blank"
-          class="mid-round-button-green-filled close-button">
+          class="mid-round-button-green-filled close-button"
+          @click="refreshPage=true">
           {{ $t("accessWallet.installMetamask") }}
         </a>
         <b-btn
-          v-else
+          v-show="refreshPage"
           class="mid-round-button-green-filled close-button"
-          @click="getMetamaskWallet"
-        >
-
-          {{ $t("accessWallet.tryAgain") }}
+          @click="reload">
+          Refresh
         </b-btn>
       </div>
     </div>
@@ -98,16 +106,18 @@ export default {
   data() {
     return {
       accessMyWalletBtnDisabled: true,
-      unlockMetamask: true
+      unlockMetamask: false,
+      metamaskInstalled: false,
+      refreshPage: false
     };
   },
-  computed: {
-    metamaskInstalled() {
-      if (window.web3 !== undefined) return true;
-      return false;
-    }
+  mounted() {
+    this.metamaskInstalled = this.checkWeb3();
   },
   methods: {
+    reload() {
+      window.location.reload();
+    },
     getMetamaskWallet() {
       // NOTE: Uncomment code and debug when metamask's new version launches
       // if (window.web3 === undefined) {
@@ -122,16 +132,26 @@ export default {
       //   );
       // }
 
+      if (this.checkWeb3() !== true) return;
+
       window.web3.eth.getAccounts((err, accounts) => {
-        if (err) this.metamaskInstalled = false;
-        if (!accounts.length) this.unlockMetamask = true;
+        if (err) {
+          this.metamaskInstalled = false;
+          return;
+        }
+        if (!accounts.length) {
+          this.unlockMetamask = true;
+          return;
+        }
         const address = accounts[0];
-        // const addrBuffer = Buffer.from(address.slice(2), 'hex');
         const wallet = new MetamaskWallet(address);
-        // eslint-disable-next-line no-console
         this.$store.dispatch('setMetamaskWallet', wallet);
         this.$router.push({ path: 'interface' });
       });
+    },
+    checkWeb3() {
+      if (window.web3 !== undefined) return true;
+      return false;
     }
   }
 };

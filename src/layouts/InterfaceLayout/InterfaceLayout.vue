@@ -65,6 +65,7 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import { MetamaskWallet } from '@/wallets/software';
 
 import store from 'store';
 
@@ -129,6 +130,10 @@ export default {
 
     if (this.$store.state.online === true) {
       if (this.$store.state.wallet !== null) {
+        if (this.$store.state.wallet.type === 'metamask') {
+          this.checkMetamaskAddrChange();
+          this.matchMetamaskNetwork();
+        }
         this.getBalance();
         setInterval(this.getBlock, 14000);
         this.setTokens();
@@ -288,6 +293,64 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err);
         });
+    },
+    checkMetamaskAddrChange() {
+      const self = this;
+      setInterval(function() {
+        window.web3.eth.getAccounts((err, accounts) => {
+          if (err) {
+            // eslint-disable-next-line no-console
+            console.error(err);
+            return;
+          }
+          if (!accounts.length) {
+            // eslint-disable-next-line no-console
+            console.error('Please unlock metamask');
+            return;
+          }
+          const address = accounts[0];
+          if (address !== self.$store.state.wallet.getAddressString()) {
+            const wallet = new MetamaskWallet(address);
+            this.$store.dispatch('setMetamaskWallet', wallet);
+          }
+        });
+      }, 500);
+    },
+    matchMetamaskNetwork() {
+      const self = this;
+      setInterval(function() {
+        window.web3.version.getNetwork((err, netId) => {
+          if (err) return;
+          if (self.$store.state.network.type.chainID.toString() !== netId) {
+            switch (netId) {
+              case '1':
+                self.$store.dispatch(
+                  'switchNetwork',
+                  self.$store.state.Networks['ETH'][0]
+                );
+                break;
+              case '3':
+                self.$store.dispatch(
+                  'switchNetwork',
+                  self.$store.state.Networks['ROP'][0]
+                );
+                break;
+              case '4':
+                self.$store.dispatch(
+                  'switchNetwork',
+                  self.$store.state.Networks['RIN'][1]
+                );
+                break;
+              case '42':
+                self.$store.dispatch(
+                  'switchNetwork',
+                  self.$store.state.Networks['KOV'][1]
+                );
+                break;
+            }
+          }
+        });
+      }, 500);
     }
   }
 };

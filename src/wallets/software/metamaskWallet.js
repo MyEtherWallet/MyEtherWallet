@@ -16,7 +16,8 @@ export default class MetamaskWallet {
     return this.address;
   }
 
-  signMessage(message, address, web3) {
+  signMessage(message, address) {
+    const web3 = window.web3;
     const msg = ethUtil.bufferToHex(Buffer.from(message, 'utf8'));
     const params = [msg, address];
     const method = 'personal_sign';

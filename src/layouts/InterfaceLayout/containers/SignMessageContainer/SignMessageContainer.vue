@@ -88,14 +88,17 @@ export default {
     })
   },
   methods: {
-    async signMessage() {
+    signMessage() {
       if (this.wallet.type === 'metamask') {
-        const signedMessage = await this.wallet.signMessage(
-          this.$refs.message.value,
-          this.wallet.getAddress(),
-          window.web3
-        );
-        this.$refs.signature.value = JSON.stringify(signedMessage, null, 2);
+        this.wallet
+          .signMessage(this.$refs.message.value, this.wallet.getAddress())
+          .then(res => {
+            this.$refs.signature.value = JSON.stringify(res, null, 2);
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.log(err);
+          });
       } else {
         this.$store.state.web3.eth
           .sign(this.$refs.message.value, this.wallet.getAddressString())

@@ -17,7 +17,7 @@
   "password": "Password",
   "mewConnectDesc": "Use MEW Connect to access my wallet",
   "metaMaskDesc": "Use extension to access my wallet",
-  "installMetaMaskModalDesc": "Oops! First of all, you need to install MetaMask extension in order to access your wallet.",
+  "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
   "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
   "software": "Software",
