@@ -1,5 +1,5 @@
 @import '~@/scss/GlobalVariables';
-@media all and (min-width: calc($tablet-width + 1px)) {
+@media all and (max-width: $mobile-width) {
 
 // *********************************************************************
 // CSS reset
@@ -85,7 +85,7 @@ mark,
 audio,
 video {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
+  font-size: 24px;
   margin: 0;
   padding: 0;
 }
@@ -1253,6 +1253,7 @@ h6 {
 
 
 } // @media ----------------------------------------------------------------------------------------
+
 
 
 
