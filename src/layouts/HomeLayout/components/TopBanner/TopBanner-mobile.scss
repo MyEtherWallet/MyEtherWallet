@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and ( max-width: $mobile-width ) {
 
 .banner {
   padding: 30px;
@@ -13,11 +14,11 @@
 
     h1 {
       color: $text-color-6;
-      font-size: 45px;
+      font-size: 33px;
       font-weight: 700;
-      line-height: 47px;
-      margin-bottom: 8px;
+      line-height: 42px;
       letter-spacing: -1px;
+      margin: 0;
     }
 
     p {
@@ -29,10 +30,7 @@
 
   .banner-image {
     flex: 1;
-
-    @media all and (max-width: 700px) {
-      display: none;
-    }
+    display: none;
 
     img {
       display: block;
@@ -123,3 +121,5 @@
     }
   }
 }
+
+} //@media all and ( max-width: $mobile-width )
