@@ -301,6 +301,11 @@ export default {
       }
 
       const fromAddress = this.raw.from;
+      // if(this.$store.state.wallet.type === 'metamask') {
+      //
+      // } else {
+      //
+      // }
       this.$store.state.web3.eth
         .sendTransaction(this.raw)
         .once('transactionHash', hash => {

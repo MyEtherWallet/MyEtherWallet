@@ -65,24 +65,26 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ commit, state }, web3) {
-  if (web3.eth === undefined) {
-    const hostUrl = url.parse(state.network.url);
-    // eslint-disable-next-line
-    const web3Instance = new web3(
-      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-        hostUrl.pathname
-      }`
-    );
-    commit(
-      'SET_WEB3_INSTANCE',
-      overide(web3Instance, state.wallet, this._vm.$eventHub)
-    );
-  } else {
+  const hostUrl = url.parse(state.network.url);
+  try {
+    new web3();
+  } catch (e) {
     commit(
       'SET_WEB3_INSTANCE',
       overide(web3, state.wallet, this._vm.$eventHub)
     );
+    return;
   }
+  // eslint-disable-next-line
+  const web3Instance = new web3(
+    `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
+      hostUrl.pathname
+    }`
+  );
+  commit(
+    'SET_WEB3_INSTANCE',
+    overide(web3Instance, state.wallet, this._vm.$eventHub)
+  );
 };
 
 const switchNetwork = function({ commit }, networkObj) {

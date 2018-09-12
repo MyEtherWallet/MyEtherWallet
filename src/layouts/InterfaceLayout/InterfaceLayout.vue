@@ -116,6 +116,9 @@ export default {
           this.setTokens();
         }
       }
+    },
+    address() {
+      this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -128,17 +131,7 @@ export default {
       ]);
     }
 
-    if (this.$store.state.online === true) {
-      if (this.$store.state.wallet !== null) {
-        if (this.$store.state.wallet.type === 'metamask') {
-          this.checkMetamaskAddrChange();
-          this.matchMetamaskNetwork();
-        }
-        this.getBalance();
-        setInterval(this.getBlock, 14000);
-        this.setTokens();
-      }
-    }
+    this.setupOnlineEnvironment();
   },
   methods: {
     switchTabs(param) {
@@ -311,7 +304,7 @@ export default {
           const address = accounts[0];
           if (address !== self.$store.state.wallet.getAddressString()) {
             const wallet = new MetamaskWallet(address);
-            this.$store.dispatch('setMetamaskWallet', wallet);
+            self.$store.dispatch('setMetamaskWallet', wallet);
           }
         });
       }, 500);
@@ -351,6 +344,19 @@ export default {
           }
         });
       }, 500);
+    },
+    setupOnlineEnvironment() {
+      if (this.$store.state.online === true) {
+        if (this.$store.state.wallet !== null) {
+          if (this.$store.state.wallet.type === 'metamask') {
+            this.checkMetamaskAddrChange();
+            this.matchMetamaskNetwork();
+          }
+          this.getBalance();
+          setInterval(this.getBlock, 14000);
+          this.setTokens();
+        }
+      }
     }
   }
 };

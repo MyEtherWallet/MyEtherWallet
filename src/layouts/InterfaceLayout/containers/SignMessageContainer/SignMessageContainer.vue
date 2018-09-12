@@ -89,35 +89,23 @@ export default {
   },
   methods: {
     signMessage() {
-      if (this.wallet.type === 'metamask') {
-        this.wallet
-          .signMessage(this.$refs.message.value, this.wallet.getAddress())
-          .then(res => {
-            this.$refs.signature.value = JSON.stringify(res, null, 2);
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.log(err);
-          });
-      } else {
-        this.$store.state.web3.eth
-          .sign(this.$refs.message.value, this.wallet.getAddressString())
-          .then(_signedMessage => {
-            this.$refs.signature.value = JSON.stringify(
-              {
-                address: this.wallet.getAddressString(),
-                msg: this.$refs.message.value,
-                sig: _signedMessage,
-                version: '3',
-                signer: this.wallet.brand ? this.wallet.brand : 'MEW'
-              },
-              null,
-              2
-            );
-          })
-          // eslint-disable-next-line
-          .catch(console.error);
-      }
+      this.$store.state.web3.eth
+        .sign(this.$refs.message.value)
+        .then(_signedMessage => {
+          this.$refs.signature.value = JSON.stringify(
+            {
+              address: this.wallet.getAddressString(),
+              msg: this.$refs.message.value,
+              sig: _signedMessage,
+              version: '3',
+              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
+            },
+            null,
+            2
+          );
+        })
+        // eslint-disable-next-line
+        .catch(console.error);
     },
     successModalOpen() {
       this.$children[0].$refs.success.show();
