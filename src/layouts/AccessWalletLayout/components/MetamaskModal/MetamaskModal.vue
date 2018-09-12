@@ -109,6 +109,7 @@ export default {
   },
   methods: {
     getMetamaskWallet() {
+      // NOTE: Uncomment code and debug when metamask's new version launches
       // if (window.web3 === undefined) {
       //   window.addEventListener('message', ({ data }) => {
       //     if (data && data.type && data.type === 'ETHEREUM_PROVIDER_SUCCESS') {
