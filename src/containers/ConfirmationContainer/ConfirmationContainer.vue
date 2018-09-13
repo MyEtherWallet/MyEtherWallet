@@ -128,7 +128,6 @@ export default {
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
-        // this.signer = signer(tx)
         signer(tx).then(_response => {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
@@ -143,10 +142,8 @@ export default {
         this.responseFunction = resolve;
         this.messageToSign = data;
         signer(data).then(_response => {
-          console.log(_response);
           this.signedMessage = _response;
         });
-        // this.signer = signer(data)
         this.signConfirmationModalOpen();
       }
     );
