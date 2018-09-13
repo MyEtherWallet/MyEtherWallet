@@ -20,19 +20,9 @@ export default class MetamaskWallet {
 
   _signMessage(message) {
     const address = this.address;
-    return new Promise((resolve, reject) => {
-      web3.eth.sign(message, address, function(err, res) {
-        if (!err) {
-          resolve(res);
-        }
-        reject(err);
-      });
-      // .then(res => {
-      //   resolve(res);
-      // })
-      // .error(err => {
-      //   reject(err);
-      // });
+    const promise = web3.eth.personal.sign(message, address);
+    return new Promise(function(resolve) {
+      resolve(promise);
     });
   }
 }
