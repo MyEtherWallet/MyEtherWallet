@@ -101,5 +101,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AboutContainer.scss';
+@import 'AboutContainer-desktop.scss';
+@import 'AboutContainer-tablet.scss';
+@import 'AboutContainer-mobile.scss';
 </style>

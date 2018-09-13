@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-
   .wrap {
     margin-bottom: 50px;
   }
@@ -50,7 +49,6 @@
       padding: 11px;
       position: relative;
 
-
       &.create-wallet {
         background-color: $create-wallet-background-color;
       }
@@ -76,7 +74,7 @@
         h2 {
           font-size: 14px;
           font-weight: 500;
-          margin-bottom: 0px;
+          margin-bottom: 0;
           text-align: center;
           display: block;
         }
@@ -88,7 +86,6 @@
         }
 
         .button {
-
           color: $text-color-1;
           display: none;
           font-size: 15px;
