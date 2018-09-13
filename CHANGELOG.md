@@ -1,5 +1,5 @@
 ### Devop
-- Adds some more inputs for custom network [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
+- Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
 
 ### Release v5.0.3
 ### Feature
