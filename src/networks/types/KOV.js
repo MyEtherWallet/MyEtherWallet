@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-kov.json';
 import contracts from '@/contracts/contract-abi-kov.json';
+import kov from '@/assets/images/icons/network.svg';
 
 export default {
   name: 'KOV',
@@ -10,5 +11,6 @@ export default {
   chainID: 42,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  icon: kov
 };
