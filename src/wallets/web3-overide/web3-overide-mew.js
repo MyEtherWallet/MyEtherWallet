@@ -15,6 +15,18 @@ export default function web3OverideMew(web3, wallet, eventHub) {
               resolve(res);
             }
           );
+        } else if (tx.metamaskOnly) {
+          delete tx['metamaskOnly'];
+          eventHub.$emit(
+            'showMetamaskModal',
+            tx,
+            wallet.isHardware,
+            // This just sends the tx. Metamask doesn't support signing https://github.com/MetaMask/metamask-extension/issues/3475
+            wallet.signTransaction.bind(this),
+            res => {
+              resolve(res);
+            }
+          );
         } else {
           eventHub.$emit(
             'showTxConfirmModal',

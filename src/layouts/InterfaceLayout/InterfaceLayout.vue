@@ -21,7 +21,8 @@
           </div>
           <send-currency-container
             v-show="currentTab === 'send' || currentTab === ''"
-            :tokens-with-balance="tokensWithBalance"/>
+            :tokens-with-balance="tokensWithBalance"
+            :get-balance="getBalance"/>
           <send-offline-container v-show="currentTab === 'offline'"/>
           <swap-container v-show="currentTab === 'swap'"/>
           <dapps-container v-show="currentTab === 'dapps'"/>

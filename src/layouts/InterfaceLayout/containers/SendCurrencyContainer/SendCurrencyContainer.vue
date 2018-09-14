@@ -186,6 +186,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    getBalance: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -300,12 +304,11 @@ export default {
         delete this.raw['to'];
       }
 
+      if (window.web3) {
+        this.raw['metamaskOnly'] = true;
+      }
+
       const fromAddress = this.raw.from;
-      // if(this.$store.state.wallet.type === 'metamask') {
-      //
-      // } else {
-      //
-      // }
       this.$store.state.web3.eth
         .sendTransaction(this.raw)
         .once('transactionHash', hash => {
@@ -314,6 +317,7 @@ export default {
             hash,
             'Transaction Hash'
           ]);
+          this.getBalance();
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
@@ -321,6 +325,7 @@ export default {
             res,
             'Transaction Receipt'
           ]);
+          this.getBalance();
         })
         .on('error', err => {
           this.$store.dispatch('addNotification', [
