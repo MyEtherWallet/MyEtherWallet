@@ -2,6 +2,9 @@
 ### Devop
 - Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
 
+### Feature
+- Metamask Integration [#96](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/96)
+
 ### Release v5.0.3
 ### Feature
 - Adds some more inputs for custom network [#86](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/86)
