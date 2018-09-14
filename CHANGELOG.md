@@ -1,3 +1,7 @@
+### Devop
+- Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
+
+### Release v5.0.3
 ### Feature
 - Adds some more inputs for custom network [#86](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/86)
 - Add light border to flags [#85](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/85)
@@ -24,7 +28,7 @@
 - Add Network logo and change dot colors [#49](https://github.com/MyEtherWallet/MyEtherWallet/pull/49)
 - Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
 
-### Release v0.0.2
+### Release v5.0.2
 ### Feature
 - additional pages [#28](https://github.com/MyEtherWallet/MyEtherWallet/pull/28)
 - Adding custom tokens and Adding custom networks [#27](https://github.com/MyEtherWallet/MyEtherWallet/pull/27)
@@ -33,6 +37,6 @@
 - Update footer to match design [#29](https://github.com/MyEtherWallet/MyEtherWallet/pull/29)
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
 
-### Release v0.0.1
+### Release v5.0.1
 ### Devop
 - Miscellaneous cleanup and changes. [#14](https://github.com/MyEtherWallet/MyEtherWallet/pull/14)
