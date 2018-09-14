@@ -5,7 +5,7 @@
     <faqs/>
     <news v-show="online"/>
     <social/>
-    <promo/>
+    <promo class="promo" />
   </div>
 </template>
 

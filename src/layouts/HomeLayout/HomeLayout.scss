@@ -1,1 +1,10 @@
 @import '~@/scss/GlobalVariables';
+
+
+@media all and (max-width: $mobile-width) {
+
+.promo {
+  display: none;
+}
+
+}

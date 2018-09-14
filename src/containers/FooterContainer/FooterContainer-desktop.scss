@@ -1,5 +1,5 @@
 @import '~@/scss/GlobalVariables';
-
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 a,
 a:link,
 a:visited,
@@ -93,10 +93,19 @@ a:active {
   }
 
   .donate-us {
+    .content-title {
+      margin-bottom: 20px;
+    }
+
     .crypto-link {
       color: $link-text-color-2;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    p {
+      color: $text--footer-link-color;
+      margin-bottom: 15px;
     }
 
     i {
@@ -198,3 +207,4 @@ a:active {
     }
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
