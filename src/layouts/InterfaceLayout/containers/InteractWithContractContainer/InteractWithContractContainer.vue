@@ -268,7 +268,6 @@ export default {
       data: '',
       raw: {},
       nonce: 0,
-      signedTx: '',
       transactionFee: 0,
       resolvedAddress: ''
     };
