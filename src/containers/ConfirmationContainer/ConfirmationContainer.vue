@@ -37,8 +37,8 @@
     />
     <success-modal
       ref="successModal"
-      message=""
-      link-message="Close"/>
+      :message="successMessage"
+      :link-message="linkMessage"/>
   </div>
 </template>
 
@@ -89,7 +89,9 @@ export default {
       signedMessage: '',
       successMessage: '',
       linkMessage: 'OK',
-      dismissed: true
+      dismissed: true,
+      metamaskHash: '',
+      metamaskRes: ''
     };
   },
   computed: {
@@ -97,6 +99,32 @@ export default {
       if (this.$store.state.wallet) {
         return this.$store.state.wallet.getAddressString();
       }
+    }
+  },
+  watch: {
+    metamaskHash(newVal) {
+      const self = this;
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        newVal,
+        'Transaction Hash'
+      ]);
+      const pollReceipt = setInterval(function() {
+        self.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
+          if (res !== null) {
+            self.metamaskRes = res;
+            self.showSuccessModal('Transaction sent!', 'Okay');
+            clearInterval(pollReceipt);
+          }
+        });
+      }, 500);
+    },
+    metamaskRes(newVal) {
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        newVal,
+        'Transaction Receipt'
+      ]);
     }
   },
   created() {
@@ -112,7 +140,6 @@ export default {
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
-        // this.signer = signer(tx)
         signer(tx).then(_response => {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
@@ -133,6 +160,20 @@ export default {
           this.signedTx = this.signedTxObject.rawTransaction;
         });
         this.confirmationModalOpen();
+      }
+    );
+
+    this.$eventHub.$on(
+      'showMetamaskModal',
+      (tx, isHardware, signer, resolve) => {
+        this.parseRawTx(tx);
+        this.isHardwareWallet = isHardware;
+        this.responseFunction = resolve;
+        this.successMessage = 'Sending Transaction';
+        signer(tx).then(_response => {
+          this.metamaskHash = _response;
+        });
+        this.showSuccessModal('Continue transaction with Metamask.', 'Close');
       }
     );
 
