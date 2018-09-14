@@ -13,7 +13,7 @@ const addNotification = function({ commit, state }, val) {
     title: val[2],
     read: false,
     timestamp: new Date(),
-    body: val[1].message ? val[1].message : val[1],
+    body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
     expanded: false
   });
   commit('ADD_NOTIFICATION', newNotif);
