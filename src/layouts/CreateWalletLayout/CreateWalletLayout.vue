@@ -1,6 +1,5 @@
 <template>
   <div class="your-password">
-    <h1>{{ $mq }}</h1>
     <tutorial-modal
       ref="tutorialModal"
       :skip="skip"/>
