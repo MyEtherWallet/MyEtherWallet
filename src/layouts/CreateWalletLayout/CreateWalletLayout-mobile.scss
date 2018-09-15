@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
 
 .wrap {
   background-color: $background-color-1;
@@ -7,13 +8,15 @@
 
 .title-block {
   margin-bottom: 40px;
-  display: flex;
+  display: block;
 
   .title-popover {
     margin: 0 auto;
     display: flex;
     align-items: center;
     text-align: center;
+    margin-bottom: 10px;
+
     h3 {
       max-width: 320px;
       line-height: 28px;
@@ -27,9 +30,9 @@
   .appstores {
     .icons {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 13px;
       img {
-        height: 40px;
+        height: 30px;
         margin: 0 3px;
       }
     }
@@ -48,7 +51,7 @@
     margin-top: 50px;
     text-align: center;
     img {
-      width: 60%;
+      width: 78%;
     }
   }
 }
@@ -73,11 +76,12 @@
   }
 
   .tab-pane {
-    min-height: 500px;
-    padding: 50px;
+    min-height: 420px;
+    padding: 35px 25px;
   }
 }
 
 .nav-item {
   border: 2px solid black !important;
 }
+} // @media all and (max-width: $mobile-width)

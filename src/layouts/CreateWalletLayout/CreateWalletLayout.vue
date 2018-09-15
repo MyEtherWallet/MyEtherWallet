@@ -20,8 +20,10 @@
 
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>{{ $t("createWallet.availableAppleGoogleStores") }}</h3>
+                  <h3>{{ $t("createWallet.titleMEWConnect") }}</h3>
+                  <popover :popcontent="'Hi yoyoyoyo'"/>
                 </div>
+                <p>Saft and easy ways to access wallets.</p>
               </div>
 
               <div class="appstores">
@@ -146,5 +148,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CreateWalletLayout.scss';
+@import 'CreateWalletLayout-desktop.scss';
+@import 'CreateWalletLayout-tablet.scss';
+@import 'CreateWalletLayout-mobile.scss';
 </style>
