@@ -1,5 +1,5 @@
 @import '~@/scss/GlobalVariables';
-
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
 .create-wallet-warnings {
   position: relative;
 }
@@ -113,3 +113,4 @@
     color: $mew-green;
   }
 }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

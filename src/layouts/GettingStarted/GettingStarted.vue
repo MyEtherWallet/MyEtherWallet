@@ -127,5 +127,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'GettingStarted.scss';
+@import 'GettingStarted-desktop.scss';
+@import 'GettingStarted-tablet.scss';
+@import 'GettingStarted-mobile.scss';
 </style>
