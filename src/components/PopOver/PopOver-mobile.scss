@@ -1,11 +1,11 @@
 @import '~@/scss/GlobalVariables';
-
+@media all and (max-width: $mobile-width) {
 .col {
   margin: 0;
   padding: 0;
   //margin-left: 10px;
-  width: 16px;
-  height: 16px;
+  width: 21px;
+  height: 21px;
   position: relative;
 }
 
@@ -26,8 +26,8 @@
   }
 
   img {
-    width: 16px;
-    height: 16px;
+    width: 21px;
+    height: 21px;
     margin: 0;
     padding: 0;
     display: block;
@@ -47,3 +47,4 @@
 .popover-content {
   font-size: 12px;
 }
+} // @media all and (max-width: $mobile-width)

@@ -1,9 +1,10 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
 
 //=======================================================================
 // Common element style
 //=======================================================================
-%input-1 {
+@mixin input-1() {
   font-size: 14px;
   padding: 15px;
   border: 0;
@@ -20,7 +21,7 @@
   padding: 0;
 
   input {
-    @extend %input-1;
+    @include input-1();
 
     width: 100%;
   }
@@ -36,7 +37,7 @@
     padding: 0;
     position: absolute;
     right: 20px;
-    top: 19px;
+    top: 13px;
     cursor: pointer;
 
     img {
@@ -109,7 +110,7 @@
       background-position: center;
     }
     input {
-      @extend %input-1;
+      @include input-1();
 
       padding-left: 60px;
       position: relative;
@@ -122,7 +123,7 @@
   position: relative;
 
   input {
-    @extend %input-1;
+    @include input-1();
 
     position: relative;
     display: block;
@@ -165,3 +166,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

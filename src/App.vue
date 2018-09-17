@@ -80,8 +80,12 @@ export default {
 
 <style lang="scss">
 @import 'App.scss';
+
 @import '~@/scss/Global-desktop';
 @import '~@/scss/Global-tablet';
 @import '~@/scss/Global-mobile';
-@import '~@/scss/CustomForms';
+
+@import '~@/scss/CustomForms-desktop';
+@import '~@/scss/CustomForms-tablet';
+@import '~@/scss/CustomForms-mobile';
 </style>
