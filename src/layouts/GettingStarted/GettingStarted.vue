@@ -67,6 +67,7 @@
     </div>
 
     <div 
+      v-if="cwwCurrent != '4'"
       class="next-button" 
       @click="mouseScrollDown">
       Next

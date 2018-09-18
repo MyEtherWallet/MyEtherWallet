@@ -1,7 +1,8 @@
 @import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
 
 .content-block {
-  padding: 10px 20px;
+  padding: 10px 15px;
   display: flex;
   align-items: center;
   margin-bottom: 7px;
@@ -13,7 +14,7 @@
       display: block;
       height: 80px;
       margin: 0 auto;
-      margin-right: 20px;
+      margin-right: 15px;
     }
   }
 
@@ -30,3 +31,4 @@
     }
   }
 }
+} // @media all and (max-width: $mobile-width)
