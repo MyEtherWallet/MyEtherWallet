@@ -1,6 +1,13 @@
 <template>
   <div class="create-wallet-warnings">
 
+    <div
+      v-if="cwwCurrent != '0'" 
+      class="back-button" 
+      @click="mouseScrollUp">
+      &lt; Back
+    </div>
+
     <div class="wrap">
 
       <div class="nav-dots">
@@ -57,6 +64,12 @@
         </div>
       </div>
 
+    </div>
+
+    <div 
+      class="next-button" 
+      @click="mouseScrollDown">
+      Next
     </div>
 
   </div>

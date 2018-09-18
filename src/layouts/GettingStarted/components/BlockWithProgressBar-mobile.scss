@@ -11,9 +11,11 @@
     .block-progressbar__container {
       width: 650px;
       border-radius: 4px;
-      overflow: hidden;
       padding: 0;
       margin: 10px 10px;
+
+      overflow-y: auto;
+      max-height: calc(100vh - 123px);
     }
 
     .block-progressbar__title {

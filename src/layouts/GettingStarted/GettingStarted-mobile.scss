@@ -5,6 +5,7 @@
   }
 
   .nav-dots {
+    display: none;
     position: absolute;
     z-index: 9999;
     right: 10vw;
@@ -40,7 +41,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 999;
+    z-index: 100;
     position: fixed;
     top: 0;
     left: 0;
@@ -51,7 +52,7 @@
     .cww {
       position: absolute;
       transition: all 0.6s ease;
-      bottom: 0;
+      top: 40px;
       opacity: 1;
     }
 
@@ -114,4 +115,28 @@
       color: $mew-green;
     }
   }
+
+  .next-button {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 999;
+    width: 100%;
+    background-color: $mew-green;
+    text-align: center;
+    padding: 20px 0;
+    color: $white;
+  }
+
+  .back-button {
+   color: $white;
+   position: fixed;
+   top: 0px;
+   left: 0px;
+   z-index: 999; 
+   padding: 13px;
+   font-weight: 600;
+  }
+
+
 } // @media all and (max-width: $mobile-width)

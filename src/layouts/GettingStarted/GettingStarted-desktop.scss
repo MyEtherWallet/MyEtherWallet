@@ -113,4 +113,9 @@
       color: $mew-green;
     }
   }
+
+  .next-button,
+  .back-button {
+    display: none;
+  }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
