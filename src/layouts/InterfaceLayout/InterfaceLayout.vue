@@ -297,7 +297,10 @@ export default {
             return;
           }
           const address = accounts[0];
-          if (address !== self.$store.state.wallet.getAddressString()) {
+          if (
+            self.$store.state.wallet !== null &&
+            address !== self.$store.state.wallet.getAddressString()
+          ) {
             const wallet = new MetamaskWallet(address);
             self.$store.dispatch('setMetamaskWallet', wallet);
             clearInterval(pollAddress);
@@ -327,7 +330,7 @@ export default {
     setupOnlineEnvironment() {
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
-          if (this.$store.state.wallet.type === 'Web3') {
+          if (this.$store.state.wallet.type === 'Metamask') {
             this.checkMetamaskAddrChange();
             this.matchMetamaskNetwork();
           }
