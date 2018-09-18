@@ -3,20 +3,20 @@
     <div v-show="selectedDapp === ''">
       <interface-container-title :title="$t('common.dapps')"/>
       <div class="buttons-container">
-        <dapp-buttons 
-          v-for="dapp in dapps" 
-          :key="dapp.title" 
-          :title="dapp.title" 
-          :icon="dapp.icon" 
-          :desc="dapp.desc" 
+        <dapp-buttons
+          v-for="dapp in dapps"
+          :key="dapp.title"
+          :title="dapp.title"
+          :icon="dapp.icon"
+          :desc="dapp.desc"
           @click="switchView(dapp.param)"/>
       </div>
     </div>
-    <register-domain-container 
-      v-show="selectedDapp === 'register-domain'" 
+    <register-domain-container
+      v-show="selectedDapp === 'register-domain'"
       :reset-view="switchView"/>
-    <domain-sale-container 
-      v-show="selectedDapp === 'domain-sale'" 
+    <domain-sale-container
+      v-show="selectedDapp === 'domain-sale'"
       :reset-view="switchView"/>
   </div>
 </template>
@@ -24,8 +24,8 @@
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
-import DomainSaleContainer from '../DomainSaleContainer';
-import RegisterDomainContainer from '../RegisterDomainContainer';
+import DomainSaleContainer from '@/dapps/DomainSaleContainer';
+import RegisterDomainContainer from '@/dapps/RegisterDomainContainer';
 
 import domainSale from '@/assets/images/icons/domain-sale.svg';
 import registerDomain from '@/assets/images/icons/domain.svg';

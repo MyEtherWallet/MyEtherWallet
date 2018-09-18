@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="send-form">
+    <form class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('interface.registerDns') }}</h4>
@@ -9,29 +9,29 @@
       </div>
       <div class="the-form domain-name">
         <input
-          v-model="domainName"
-          :class="[domainName.length <= 7 && domainName !== '' ? 'errored' : '']"
+          v-model="localDomainName"
+          :class="[localDomainName.length < 7 && localDomainName !== '' ? 'errored' : '']"
           type="text"
           name=""
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
       <p
-        v-show="domainName.length <= 7 && domainName !== ''"
+        v-show="localDomainName.length < 7 && localDomainName !== ''"
         class="erroredMsg"> Domain name is less than 7 characters. </p>
-    </div>
+      <div class="submit-button-container">
+        <button
+          :class="[localDomainName.length < 7 ? 'disabled' : '','submit-button large-round-button-green-filled clickable']"
+          @click.prevent="checkDomain">
+          <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
+          <i
+            v-show="loading"
+            class="fa fa-spinner fa-spin"/>
+        </button>
 
-    <div class="submit-button-container">
-      <div
-        :class="[domainName.length <= 7 ? 'disabled' : '','submit-button large-round-button-green-filled clickable']"
-        @click="checkDomain">
-        <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
-        <i
-          v-show="loading"
-          class="fa fa-spinner fa-spin"/>
       </div>
+    </form>
 
-    </div>
     <div class="flex-container">
       <div class="title-container">
         <h4 class="modal-title">{{ $t('interface.subDomain') }}</h4>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div
+      <!-- <div
         ref="domainList"
         class="sub-domain-list hidden">
         <h4 class="title">{{ $t('interface.allSubDomains') }}</h4>
@@ -145,7 +145,7 @@
             </div>
           </li>
         </ul>
-      </div>
+      </div> -->
     </div>
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
@@ -172,16 +172,23 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    domainName: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      domainName: ''
+      localDomainName: this.domainName
     };
   },
   watch: {
-    domainName(newVal) {
+    localDomainName(newVal) {
       this.$emit('domainNameChange', newVal);
+    },
+    domainName(newVal) {
+      this.localDomainName = newVal;
     }
   },
   methods: {

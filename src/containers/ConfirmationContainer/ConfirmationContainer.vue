@@ -13,6 +13,21 @@
       :gas="gasLimit"
       :data="data"
       :nonce="nonce + 1"/>
+    <ens-confirm-modal
+      ref="ensBidModalOpen"
+      :confirm-send-tx="sendTx"
+      :signed-tx="signedTx"
+      :fee="transactionFee"
+      :is-hardware-wallet="isHardwareWallet"
+      :gas-price="$store.state.gasPrice"
+      :from="fromAddress"
+      :to="toAddress"
+      :value="amount"
+      :gas="gasLimit"
+      :data="data"
+      :nonce="nonce + 1"
+      :ens="ens"
+    />
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -46,12 +61,14 @@
 import ConfirmModal from './components/ConfirmModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
+import EnsConfirmModal from './components/EnsConfirmModal';
 
 export default {
   components: {
     'confirm-modal': ConfirmModal,
     'success-modal': SuccessModal,
-    'confirm-sign-modal': ConfirmSignModal
+    'confirm-sign-modal': ConfirmSignModal,
+    'ens-confirm-modal': EnsConfirmModal
   },
   props: {
     active: {
@@ -82,6 +99,7 @@ export default {
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
+      ens: {},
       signer: {},
       signedTxObject: {},
       signedTx: '',
@@ -143,7 +161,7 @@ export default {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         });
-        this.confirmationModalOpen();
+        this.openAModal('regular');
       }
     );
 
@@ -151,6 +169,9 @@ export default {
       'showTxConfirmModal',
       (tx, isHardware, signer, resolve) => {
         this.parseRawTx(tx);
+        if (tx.hasOwnProperty('ensObj')) {
+          delete tx['ensObj'];
+        }
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
@@ -158,22 +179,22 @@ export default {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         });
-        this.confirmationModalOpen();
+        this.openAModal('regular');
       }
     );
 
     this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx);
+      if (tx.hasOwnProperty('ensObj')) {
+        delete tx['ensObj'];
+      }
       this.isHardwareWallet = isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       signer(tx).then(_response => {
         this.web3WalletHash = _response;
       });
-      this.showSuccessModal(
-        'Continue transaction with Web3 Wallet Provider.',
-        'Close'
-      );
+      this.openAModal('web3wallet');
     });
 
     this.$eventHub.$on(
@@ -201,9 +222,25 @@ export default {
     });
   },
   methods: {
+    openAModal(type) {
+      if (this.ens.hasOwnProperty('name')) {
+        this.ensBidModalOpen();
+      } else if (type === 'regular') {
+        this.confirmationModalOpen();
+      } else if (type === 'web3wallet') {
+        this.showSuccessModal(
+          'Continue transaction with Web3 Wallet Provider.',
+          'Close'
+        );
+      }
+    },
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
+    },
+    ensBidModalOpen() {
+      window.scrollTo(0, 0);
+      this.$refs.ensBidModalOpen.$refs.confirmation.show();
     },
     confirmationOfflineGenerateModalOpen() {
       window.scrollTo(0, 0);
@@ -226,6 +263,10 @@ export default {
       this.gasLimit = +tx.gas;
       this.toAddress = tx.to;
       this.amount = +tx.value;
+      this.ens = {};
+      if (tx.hasOwnProperty('ensObj')) {
+        this.ens = Object.assign({}, tx.ensObj);
+      }
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn() {

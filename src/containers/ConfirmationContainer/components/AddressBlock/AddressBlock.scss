@@ -1,0 +1,27 @@
+@import '~@/scss/GlobalVariables';
+
+.address-container {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  color: $dark-blue-1;
+  height: 122px;
+  padding: 18px 24px;
+  width: 248px;
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .identicon-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .address {
+    width: 100%;
+    word-wrap: break-word;
+  }
+}

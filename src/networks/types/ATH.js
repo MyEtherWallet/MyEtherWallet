@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-ath.json';
 import contracts from '@/contracts/contract-abi-ath.json';
 import ath from '@/assets/images/icons/network.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'ATH',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: ath
 };

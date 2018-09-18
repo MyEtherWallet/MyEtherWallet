@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-akroma.json';
 import contracts from '@/contracts/contract-abi-akroma.json';
 import aka from '@/assets/images/networks/aka.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'AKA',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: aka
 };

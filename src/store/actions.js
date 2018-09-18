@@ -93,6 +93,9 @@ const switchNetwork = function({ commit }, networkObj) {
   // check if wallet is hardware.  if true, check if it supports this network. if not, do nothing
   commit('SWITCH_NETWORK', networkObj);
 };
+const setENS = function({ commit }, ens) {
+  commit('SET_ENS', ens);
+};
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
@@ -120,6 +123,7 @@ export default {
   setGasPrice,
   setWeb3Wallet,
   setState,
+  setENS,
   setWeb3Instance,
   switchNetwork,
   updateNotification,

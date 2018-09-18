@@ -1,6 +1,7 @@
 const Dotenv = require('dotenv-webpack');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const webpack = require('webpack');
+
 module.exports = {
   baseUrl: './',
   configureWebpack: {

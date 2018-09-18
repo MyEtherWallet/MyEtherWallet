@@ -1,4 +1,4 @@
-const EnsAbi = [
+const EthAbi = [
   {
     constant: true,
     inputs: [{ name: 'node', type: 'bytes32' }],
@@ -107,4 +107,4 @@ const EnsAbi = [
   }
 ];
 
-export default EnsAbi;
+export default EthAbi;

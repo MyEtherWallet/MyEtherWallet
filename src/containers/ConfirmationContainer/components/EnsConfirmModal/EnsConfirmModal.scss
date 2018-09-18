@@ -1,0 +1,118 @@
+@import '~@/scss/GlobalVariables';
+
+.bootstrap-modal .modal-dialog {
+  max-width: 700px;
+}
+
+.modal-content {
+  padding: 23px;
+
+  .direction {
+    display: flex;
+    margin: 0 auto;
+  }
+
+  .addresses-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .ens-name {
+    padding: 25px 10px 0;
+  }
+}
+
+.submit-button-container {
+  padding: 60px 0;
+  text-align: center;
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    width: 300px;
+  }
+
+  p {
+    margin-top: 20px;
+  }
+}
+
+.detail-info {
+  border-bottom: 1px solid $border-color-6;
+  border-top: 1px solid $border-color-6;
+  padding: 20px 10px 18px;
+
+  .detail-info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 10px;
+
+    .detail-title {
+      color: $dark-grey-11;
+      font-size: 14px;
+    }
+
+    .detail-value {
+      color: $dark-blue-12;
+      font-size: 14px;
+    }
+  }
+}
+
+.json-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 5px;
+
+  .json-title {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .json-copy {
+    color: $mew-green;
+    cursor: pointer;
+    font-size: 14px;
+  }
+}
+
+.json-content {
+  background-color: $light-grey-1;
+  border: 0;
+  border-radius: 4px;
+  height: 95px;
+  overflow-y: scroll;
+  padding: 15px 10px;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+%button {
+  border-radius: 4px;
+  cursor: pointer;
+  height: 64px;
+  width: 227px;
+}
+
+.button-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 55px;
+
+  .cancel-button {
+    @extend %button;
+
+    border: 1px solid $mew-green;
+    color: $mew-green;
+  }
+
+  .submit-button {
+    @extend %button;
+
+    background-color: $mew-green;
+    color: $white;
+  }
+}

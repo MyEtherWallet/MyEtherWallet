@@ -65,9 +65,7 @@ export default {
       notifications: notifications,
       gasPrice: gasPrice,
       ens:
-        network.type.ensResolver !== ''
-          ? new ENS(newWeb3.currentProvider, network.type.ensResolver)
-          : {}
+        network.type.ensResolver !== '' ? new ENS(newWeb3.currentProvider) : {}
     };
     if (store.get('notifications') === undefined)
       store.set('notifications', {});

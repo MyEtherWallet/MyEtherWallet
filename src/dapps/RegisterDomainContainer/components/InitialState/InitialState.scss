@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import '../../RegisterDomainContainer';
 
 .advanced {
   padding-top: 10px;
@@ -214,14 +214,4 @@
       margin-right: 10px;
     }
   }
-}
-
-.errored {
-  border: 1px solid $red-1 !important;
-  border-radius: 5px;
-  padding: 11px 13px;
-}
-
-.erroredMsg {
-  color: $red-1;
 }

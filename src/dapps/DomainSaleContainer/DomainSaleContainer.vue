@@ -64,7 +64,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import BackButton from '../../components/BackButton';
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 
 export default {
   components: {

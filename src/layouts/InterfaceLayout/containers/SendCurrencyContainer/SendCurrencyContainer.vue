@@ -169,8 +169,6 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
-// eslint-disable-next-line
 const unit = require('ethjs-unit');
 
 export default {

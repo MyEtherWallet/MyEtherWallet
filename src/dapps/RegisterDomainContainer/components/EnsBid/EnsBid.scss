@@ -1,13 +1,7 @@
-@import '~@/scss/GlobalVariables';
+@import '../../RegisterDomainContainer';
 
-.bootstrap-modal {
-  .modal-dialog {
-    width: 400px !important;
-  }
-}
-
-.ens-modal-body {
-  padding: 15px 35px;
+.name-available-container {
+  @extend %template-container;
 }
 
 .content-header {
