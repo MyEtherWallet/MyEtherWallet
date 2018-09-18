@@ -118,8 +118,8 @@
 
   .next-button {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
+    bottom: 0;
+    left: 0;
     z-index: 999;
     width: 100%;
     background-color: $mew-green;
@@ -129,14 +129,12 @@
   }
 
   .back-button {
-   color: $white;
-   position: fixed;
-   top: 0px;
-   left: 0px;
-   z-index: 999; 
-   padding: 13px;
-   font-weight: 600;
+    color: $white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    padding: 13px;
+    font-weight: 600;
   }
-
-
 } // @media all and (max-width: $mobile-width)
