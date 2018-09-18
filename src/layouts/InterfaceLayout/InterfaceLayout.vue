@@ -67,6 +67,7 @@ import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import { MetamaskWallet } from '@/wallets/software';
+import * as networkTypes from '@/networks/types';
 
 import store from 'store';
 
@@ -109,14 +110,7 @@ export default {
   },
   watch: {
     network() {
-      if (this.$store.state.online === true) {
-        if (this.$store.state.wallet !== null) {
-          this.getBalance();
-          this.getBlock();
-          setInterval(this.getBlock, 14000);
-          this.setTokens();
-        }
-      }
+      this.setupOnlineEnvironment();
     },
     address() {
       this.setupOnlineEnvironment();
@@ -290,7 +284,7 @@ export default {
     },
     checkMetamaskAddrChange() {
       const self = this;
-      setInterval(function() {
+      const pollAddress = setInterval(function() {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
             // eslint-disable-next-line no-console
@@ -306,42 +300,26 @@ export default {
           if (address !== self.$store.state.wallet.getAddressString()) {
             const wallet = new MetamaskWallet(address);
             self.$store.dispatch('setMetamaskWallet', wallet);
+            clearInterval(pollAddress);
           }
         });
       }, 500);
     },
     matchMetamaskNetwork() {
       const self = this;
-      setInterval(function() {
+      const pollNetwork = setInterval(function() {
         window.web3.version.getNetwork((err, netId) => {
           if (err) return;
           if (self.$store.state.network.type.chainID.toString() !== netId) {
-            switch (netId) {
-              case '1':
+            Object.keys(networkTypes).forEach(net => {
+              if (networkTypes[net].chainID.toString() === netId) {
                 self.$store.dispatch(
                   'switchNetwork',
-                  self.$store.state.Networks['ETH'][0]
+                  self.$store.state.Networks[net][0]
                 );
-                break;
-              case '3':
-                self.$store.dispatch(
-                  'switchNetwork',
-                  self.$store.state.Networks['ROP'][0]
-                );
-                break;
-              case '4':
-                self.$store.dispatch(
-                  'switchNetwork',
-                  self.$store.state.Networks['RIN'][1]
-                );
-                break;
-              case '42':
-                self.$store.dispatch(
-                  'switchNetwork',
-                  self.$store.state.Networks['KOV'][1]
-                );
-                break;
-            }
+                clearInterval(pollNetwork);
+              }
+            });
           }
         });
       }, 500);
@@ -349,7 +327,7 @@ export default {
     setupOnlineEnvironment() {
       if (this.$store.state.online === true) {
         if (this.$store.state.wallet !== null) {
-          if (this.$store.state.wallet.type === 'metamask') {
+          if (this.$store.state.wallet.type === 'Web3') {
             this.checkMetamaskAddrChange();
             this.matchMetamaskNetwork();
           }
