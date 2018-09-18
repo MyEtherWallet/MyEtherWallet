@@ -1,0 +1,10 @@
+@import '~@/scss/GlobalVariables';
+
+.name-forbidden-container {
+  margin: 20px 59px;
+
+  h3 {
+    color: $light-orange-1;
+    font-size: 24px;
+  }
+}
