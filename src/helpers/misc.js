@@ -33,4 +33,4 @@ function nameHash(name, web3) {
   return node.toString();
 }
 
-export default { isJson, doesExists, padLeftEven, nameHash };
+export default { isJson, doesExist, padLeftEven, nameHash };
