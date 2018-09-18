@@ -5,6 +5,7 @@
   }
 
   .nav-dots {
+    display: none;
     position: absolute;
     z-index: 9999;
     right: 10vw;
@@ -51,7 +52,7 @@
     .cww {
       position: absolute;
       transition: all 0.6s ease;
-      bottom: 0;
+      top: 40px;
       opacity: 1;
     }
 
@@ -69,6 +70,7 @@
   }
 
   .create-wallet-warnings__footer-container {
+    display: none;
     background-color: $about-mew-spaceman-background-color;
     z-index: 9999;
     width: 100%;
@@ -112,5 +114,27 @@
     p {
       color: $mew-green;
     }
+  }
+
+  .next-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: $mew-green;
+    text-align: center;
+    padding: 20px 0;
+    color: $white;
+  }
+
+  .back-button {
+    color: $white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 13px;
+    font-weight: 600;
   }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
