@@ -27,7 +27,7 @@
   "devDependencies": {
     "@ledgerhq/hw-app-eth": "^4.21.0",
     "@ledgerhq/hw-transport-u2f": "^4.21.0",
-    "@myetherwallet/mewconnect-web-client": "0.0.1-alpha.3",
+    "@myetherwallet/mewconnect-web-client": "1.0.0",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-plugin-unit-jest": "^3.0.1",
