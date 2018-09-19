@@ -296,7 +296,6 @@ export default {
             self.wallet !== null &&
             address !== self.wallet.getAddressString()
           ) {
-            console.log('Probably here', self.wallet);
             const wallet = new MetamaskWallet(address);
             self.$store.dispatch('setMetamaskWallet', wallet);
             clearInterval(pollAddress);
