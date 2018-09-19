@@ -2,7 +2,7 @@ import Web3 from 'web3';
 const web3 = new Web3(window.web3.currentProvider);
 // import EthereumTx from 'ethereumjs-tx';
 
-export default class MetamaskWallet {
+export default class Web3Wallet {
   constructor(address) {
     this.address = address;
     this.identifier = 'Web3';
