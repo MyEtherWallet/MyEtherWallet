@@ -355,7 +355,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'NetworkAndAddressModal.scss';
+@import 'NetworkAndAddressModal-desktop.scss';
+@import 'NetworkAndAddressModal-tablet.scss';
+@import 'NetworkAndAddressModal-mobile.scss';
 
 .activeConn {
   color: gray;

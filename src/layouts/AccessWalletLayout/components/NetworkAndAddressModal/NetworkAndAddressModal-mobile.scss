@@ -1,4 +1,5 @@
 @import '~@/scss/CustomModal';
+@media all and (max-width: $mobile-width) {
 
 .modal-body .button-container button {
   width: 100%;
@@ -82,3 +83,4 @@
     }
   }
 }
+} // @media all and (max-width: $mobile-width)

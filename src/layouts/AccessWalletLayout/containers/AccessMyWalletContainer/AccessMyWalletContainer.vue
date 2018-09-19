@@ -1,6 +1,6 @@
 <template>
   <div class="access-my-wallet-options">
-
+    <p @click="networkAndAddressOpen">open</p>
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
