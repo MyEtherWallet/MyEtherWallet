@@ -100,12 +100,13 @@ export default {
   },
   computed: {
     address() {
-      if (this.$store.state.wallet !== null) {
-        return this.$store.state.wallet.getAddressString();
+      if (this.wallet !== null) {
+        return this.wallet.getAddressString();
       }
     },
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      wallet: 'wallet'
     })
   },
   watch: {
@@ -155,13 +156,7 @@ export default {
       ];
       const contract = new this.$store.state.web3.eth.Contract(abi);
       const data = contract.methods
-        .getAllBalance(
-          this.$store.state.wallet.getAddressString(),
-          true,
-          true,
-          true,
-          0
-        )
+        .getAllBalance(this.wallet.getAddressString(), true, true, true, 0)
         .encodeABI();
       const response = this.$store.state.web3.eth
         .call({
@@ -191,7 +186,7 @@ export default {
       ];
       const contract = new web3.eth.Contract(contractAbi);
       const data = contract.methods
-        .balanceOf(this.$store.state.wallet.getAddressString())
+        .balanceOf(this.wallet.getAddressString())
         .encodeABI();
       const balance = await web3.eth
         .call({
@@ -298,9 +293,10 @@ export default {
           }
           const address = accounts[0];
           if (
-            self.$store.state.wallet !== null &&
-            address !== self.$store.state.wallet.getAddressString()
+            self.wallet !== null &&
+            address !== self.wallet.getAddressString()
           ) {
+            console.log('Probably here', self.wallet);
             const wallet = new MetamaskWallet(address);
             self.$store.dispatch('setMetamaskWallet', wallet);
             clearInterval(pollAddress);
@@ -329,8 +325,8 @@ export default {
     },
     setupOnlineEnvironment() {
       if (this.$store.state.online === true) {
-        if (this.$store.state.wallet !== null) {
-          if (this.$store.state.wallet.type === 'Metamask') {
+        if (this.wallet !== null) {
+          if (this.wallet.identifier === 'Web3') {
             this.checkMetamaskAddrChange();
             this.matchMetamaskNetwork();
           }
