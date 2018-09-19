@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .verification {
   .content-block {
@@ -81,3 +82,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

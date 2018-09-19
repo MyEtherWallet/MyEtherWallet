@@ -228,5 +228,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccessMyWalletContainer.scss';
+@import 'AccessMyWalletContainer-desktop.scss';
+@import 'AccessMyWalletContainer-tablet.scss';
+@import 'AccessMyWalletContainer-mobile.scss';
 </style>
