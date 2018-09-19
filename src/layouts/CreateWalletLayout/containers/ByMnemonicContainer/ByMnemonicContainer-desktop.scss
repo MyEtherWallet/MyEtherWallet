@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .wrap {
   background-color: $background-color-1;
@@ -24,7 +25,7 @@
 
     .tab-pane {
       min-height: 500px;
-      padding: 50px;
+      padding: 25px;
 
       .title-popover {
         display: flex;
@@ -68,7 +69,7 @@
             display: grid;
             grid-column-gap: 20px;
             grid-row-gap: 20px;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             margin-bottom: 20px;
 
             li {
@@ -100,3 +101,4 @@
     } // .tab-pane
   } // .nav-tab-user-input-box
 } // .wrap
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
