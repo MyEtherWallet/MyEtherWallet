@@ -92,7 +92,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import Web3 from 'web3';
-import { MetamaskWallet } from '@/wallets/software';
+import { Web3Wallet } from '@/wallets/software';
 
 export default {
   components: {
@@ -145,9 +145,9 @@ export default {
           return;
         }
         const address = accounts[0];
-        const wallet = new MetamaskWallet(address);
+        const wallet = new Web3Wallet(address);
         const web3 = new Web3(window.web3.currentProvider);
-        this.$store.dispatch('setMetamaskWallet', wallet);
+        this.$store.dispatch('setWeb3Wallet', wallet);
         this.$store.dispatch('setWeb3Instance', web3);
         this.$router.push({ path: 'interface' });
       });

@@ -66,7 +66,7 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
-import { MetamaskWallet } from '@/wallets/software';
+import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
 
 import store from 'store';
@@ -96,9 +96,9 @@ export default {
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: [],
-      pollNetwork: function() {},
-      pollBlock: function() {},
-      pollAddress: function() {}
+      pollNetwork: () => {},
+      pollBlock: () => {},
+      pollAddress: () => {}
     };
   },
   computed: {
@@ -303,8 +303,8 @@ export default {
             self.wallet !== null &&
             address !== self.wallet.getAddressString()
           ) {
-            const wallet = new MetamaskWallet(address);
-            self.$store.dispatch('setMetamaskWallet', wallet);
+            const wallet = new Web3Wallet(address);
+            self.$store.dispatch('setWeb3Wallet', wallet);
             clearInterval(this.pollAddress);
           }
         });
