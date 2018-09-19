@@ -2,7 +2,7 @@
   <b-modal
     ref="accessbymnemonicphrase"
     hide-footer
-    class="bootstrap-modal modal-metamask"
+    class="bootstrap-modal mnemonic-phrase-modal"
     title="Access by Mnemonic Phrase"
     centered>
 
@@ -93,5 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccessByMnemonicphraseModal.scss';
+@import 'AccessByMnemonicphraseModal-desktop.scss';
+@import 'AccessByMnemonicphraseModal-tablet.scss';
+@import 'AccessByMnemonicphraseModal-mobile.scss';
 </style>

@@ -1,4 +1,5 @@
 @import '~@/scss/CustomModal';
+@media all and (max-width: $mobile-width) {
 
 .button-container {
   a {
@@ -69,3 +70,4 @@
     } // ul
   } // .phrases
 } // .contents
+} // @media all and (max-width: $mobile-width)

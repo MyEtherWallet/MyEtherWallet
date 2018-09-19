@@ -95,5 +95,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'MnemonicModal.scss';
+@import 'MnemonicModal-desktop.scss';
+@import 'MnemonicModal-tablet.scss';
+@import 'MnemonicModal-mobile.scss';
 </style>
