@@ -32,7 +32,7 @@ async function fetchContracts () {
 
     const contractList = await fetch('https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/contracts').then(res => res.json()).catch(err => console.log(err));
     const contractFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
-    if (contractList) {
+    if (contractList !== undefined) {
       contractList.forEach(async (contractFile) => {
         let contractsCollection = await fetch(`${contractFileURL + contractFile.name}/contract-abi-${contractFile.name}.json`).then(res => res.json()).catch(err => console.log(err));
         if (contractsCollection !== undefined) {
