@@ -723,6 +723,7 @@
     border: 0;
     border-radius: 5px;
     overflow: hidden;
+    margin: 0 7px;
   }
 
   .modal-body {
@@ -771,6 +772,10 @@
     max-height: 405px;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+
+  .bootstrap-modal.padding-25-20 .modal-body {
+    padding: 25px 20px;
   }
 
   .bootstrap-modal.padding-40-20 .modal-body {

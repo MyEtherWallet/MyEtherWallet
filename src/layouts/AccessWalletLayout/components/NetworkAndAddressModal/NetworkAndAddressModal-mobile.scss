@@ -11,15 +11,10 @@
 
   .modal-network-and-address {
     .content-container-1 {
-      margin: -20px -40px 0;
-      padding: 0 25px;
-
       .hd-derivation {
-        align-items: center;
-        display: flex;
-
-        .dropdown-button-container {
-          margin-left: auto;
+        p {
+          margin-top: 10px;
+          margin-bottom: 10px;
         }
       }
 
@@ -32,7 +27,8 @@
 
     .content-container-2 {
       background-color: $background-color-1;
-      margin: 0 -40px;
+      margin: 0 -20px;
+      margin-top: 30px;
       margin-bottom: 30px;
       padding: 0;
 
