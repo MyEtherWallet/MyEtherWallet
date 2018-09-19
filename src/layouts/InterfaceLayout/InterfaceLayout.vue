@@ -95,7 +95,10 @@ export default {
       blockNumber: 0,
       tokens: [],
       receivedTokens: false,
-      tokensWithBalance: []
+      tokensWithBalance: [],
+      pollNetwork: function() {},
+      pollBlock: function() {},
+      pollAddress: function() {}
     };
   },
   computed: {
@@ -128,6 +131,10 @@ export default {
     }
 
     this.setupOnlineEnvironment();
+  },
+  destroyed() {
+    console.log(this);
+    this.clearIntervals();
   },
   methods: {
     switchTabs(param) {
@@ -279,7 +286,7 @@ export default {
     },
     checkMetamaskAddrChange() {
       const self = this;
-      const pollAddress = setInterval(function() {
+      this.pollAddress = setInterval(function() {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
             // eslint-disable-next-line no-console
@@ -298,14 +305,14 @@ export default {
           ) {
             const wallet = new MetamaskWallet(address);
             self.$store.dispatch('setMetamaskWallet', wallet);
-            clearInterval(pollAddress);
+            clearInterval(this.pollAddress);
           }
         });
       }, 500);
     },
     matchMetamaskNetwork() {
       const self = this;
-      const pollNetwork = setInterval(function() {
+      this.pollNetwork = setInterval(function() {
         window.web3.version.getNetwork((err, netId) => {
           if (err) return;
           if (self.$store.state.network.type.chainID.toString() !== netId) {
@@ -315,12 +322,20 @@ export default {
                   'switchNetwork',
                   self.$store.state.Networks[net][0]
                 );
-                clearInterval(pollNetwork);
+                clearInterval(this.pollNetwork);
               }
             });
           }
         });
       }, 500);
+    },
+    clearIntervals() {
+      const self = this;
+      if (self.wallet === null) {
+        clearInterval(self.pollNetwork);
+        clearInterval(self.pollBlock);
+        clearInterval(self.pollAddress);
+      }
     },
     setupOnlineEnvironment() {
       if (this.$store.state.online === true) {
@@ -330,7 +345,7 @@ export default {
             this.matchMetamaskNetwork();
           }
           this.getBalance();
-          setInterval(this.getBlock, 14000);
+          this.pollBlock = setInterval(this.getBlock, 10000);
           this.setTokens();
         }
       }
