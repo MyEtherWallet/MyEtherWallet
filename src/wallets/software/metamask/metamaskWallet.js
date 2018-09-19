@@ -5,7 +5,7 @@ const web3 = new Web3(window.web3.currentProvider);
 export default class MetamaskWallet {
   constructor(address) {
     this.address = address;
-    this.type = 'Metamask';
+    this.identifier = 'Web3';
     this.getAddress = this.getAddress.bind(this);
     this.getAddressString = this.getAddressString.bind(this);
     this.signMessage = this._signMessage.bind(this);
