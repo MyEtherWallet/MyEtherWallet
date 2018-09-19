@@ -133,7 +133,6 @@ export default {
     this.setupOnlineEnvironment();
   },
   destroyed() {
-    console.log(this);
     this.clearIntervals();
   },
   methods: {
