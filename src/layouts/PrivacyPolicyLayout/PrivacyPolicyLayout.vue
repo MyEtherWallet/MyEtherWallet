@@ -44,5 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'PrivacyPolicyLayout.scss';
+@import 'PrivacyPolicyLayout-desktop.scss';
+@import 'PrivacyPolicyLayout-tablet.scss';
+@import 'PrivacyPolicyLayout-mobile.scss';
 </style>

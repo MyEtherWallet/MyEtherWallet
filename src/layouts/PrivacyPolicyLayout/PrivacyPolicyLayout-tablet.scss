@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
 
 .wrap {
   background-color: $background-color-3;
@@ -9,7 +10,7 @@
   padding: 60px 0;
 
   .page-container {
-    padding: 60px 0;
+    padding: 60px 20px;
 
     .content-width-limit {
       margin: 0 auto;
@@ -40,3 +41,4 @@
     font-weight: 400;
   }
 }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

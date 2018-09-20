@@ -44,5 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TermsAndConditionsLayout.scss';
+@import 'TermsAndConditionsLayout-desktop.scss';
+@import 'TermsAndConditionsLayout-tablet.scss';
+@import 'TermsAndConditionsLayout-mobile.scss';
 </style>
