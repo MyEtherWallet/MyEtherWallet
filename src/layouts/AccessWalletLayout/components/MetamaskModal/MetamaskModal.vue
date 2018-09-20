@@ -5,7 +5,7 @@
     hide-footer
     class="bootstrap-modal modal-metamask"
     centered>
-    <div v-if="metamaskInstalled">
+    <div v-if="web3WalletExists">
       <div class="modal-multi-icons">
         <img
           class="icon"
@@ -18,10 +18,10 @@
           src="~@/assets/images/logo-small.png">
       </div>
       <div class="d-block content-container text-center">
-        <h4 v-show="!unlockMetamask">
+        <h4 v-show="!unlockWeb3Wallet">
           {{ $t("accessWallet.metaMaskModalDesc") }}
         </h4>
-        <h4 v-show="unlockMetamask">
+        <h4 v-show="unlockWeb3Wallet">
           {{ $t("accessWallet.unlockMetamaskWallet") }}
         </h4>
       </div>
@@ -35,16 +35,16 @@
       </div>
       <div class="button-container">
         <b-btn
-          v-show="!unlockMetamask"
+          v-show="!unlockWeb3Wallet"
           :disabled="accessMyWalletBtnDisabled"
           class="mid-round-button-green-filled close-button"
-          @click="getMetamaskWallet">
+          @click="getWeb3Wallet">
           {{ $t("accessWallet.accessMyWallet") }}
         </b-btn>
         <b-btn
-          v-show="unlockMetamask"
+          v-show="unlockWeb3Wallet"
           class="mid-round-button-green-filled close-button"
-          @click="getMetamaskWallet"
+          @click="getWeb3Wallet"
         >
 
           {{ $t("accessWallet.tryAgain") }}
@@ -91,7 +91,6 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import Web3 from 'web3';
 import { Web3Wallet } from '@/wallets/software';
 
 export default {
@@ -107,19 +106,19 @@ export default {
   data() {
     return {
       accessMyWalletBtnDisabled: true,
-      unlockMetamask: false,
-      metamaskInstalled: false,
+      unlockWeb3Wallet: false,
+      web3WalletExists: false,
       refreshPage: false
     };
   },
   mounted() {
-    this.metamaskInstalled = this.checkWeb3();
+    this.web3WalletExists = this.checkWeb3();
   },
   methods: {
     reload() {
       window.location.reload();
     },
-    getMetamaskWallet() {
+    getWeb3Wallet() {
       // NOTE: Uncomment code and debug when metamask's new version launches
       // if (window.web3 === undefined) {
       //   window.addEventListener('message', ({ data }) => {
@@ -137,18 +136,17 @@ export default {
 
       window.web3.eth.getAccounts((err, accounts) => {
         if (err) {
-          this.metamaskInstalled = false;
+          this.web3WalletExists = false;
           return;
         }
         if (!accounts.length) {
-          this.unlockMetamask = true;
+          this.unlockWeb3Wallet = true;
           return;
         }
         const address = accounts[0];
         const wallet = new Web3Wallet(address);
-        const web3 = new Web3(window.web3.currentProvider);
         this.$store.dispatch('setWeb3Wallet', wallet);
-        this.$store.dispatch('setWeb3Instance', web3);
+        this.$store.dispatch('setWeb3Instance', window.web3.currentProvider);
         this.$router.push({ path: 'interface' });
       });
     },

@@ -15,8 +15,8 @@ export default function web3OverideMew(web3, wallet, eventHub) {
               resolve(res);
             }
           );
-        } else if (tx.metamaskOnly) {
-          delete tx['metamaskOnly'];
+        } else if (tx.web3WalletOnly) {
+          delete tx['web3WalletOnly'];
           eventHub.$emit(
             'showMetamaskModal',
             tx,

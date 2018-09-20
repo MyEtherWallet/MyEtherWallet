@@ -305,7 +305,7 @@ export default {
       }
 
       if (window.web3) {
-        this.raw['metamaskOnly'] = true;
+        this.raw['web3WalletOnly'] = true;
       }
 
       const fromAddress = this.raw.from;
