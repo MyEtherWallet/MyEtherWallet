@@ -283,9 +283,8 @@ export default {
           console.error(err);
         });
     },
-    checkMetamaskAddrChange() {
-      const self = this;
-      this.pollAddress = setInterval(function() {
+    checkWeb3WalletAddrChange() {
+      this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
             // eslint-disable-next-line no-console
@@ -299,27 +298,26 @@ export default {
           }
           const address = accounts[0];
           if (
-            self.wallet !== null &&
-            address !== self.wallet.getAddressString()
+            this.wallet !== null &&
+            address !== this.wallet.getAddressString()
           ) {
             const wallet = new Web3Wallet(address);
-            self.$store.dispatch('setWeb3Wallet', wallet);
+            this.$store.dispatch('setWeb3Wallet', wallet);
             clearInterval(this.pollAddress);
           }
         });
       }, 500);
     },
-    matchMetamaskNetwork() {
-      const self = this;
-      this.pollNetwork = setInterval(function() {
+    matchWeb3WalletNetwork() {
+      this.pollNetwork = setInterval(() => {
         window.web3.version.getNetwork((err, netId) => {
           if (err) return;
-          if (self.$store.state.network.type.chainID.toString() !== netId) {
+          if (this.$store.state.network.type.chainID.toString() !== netId) {
             Object.keys(networkTypes).forEach(net => {
               if (networkTypes[net].chainID.toString() === netId) {
-                self.$store.dispatch(
+                this.$store.dispatch(
                   'switchNetwork',
-                  self.$store.state.Networks[net][0]
+                  this.$store.state.Networks[net][0]
                 );
                 clearInterval(this.pollNetwork);
               }
@@ -340,8 +338,8 @@ export default {
       if (this.$store.state.online === true) {
         if (this.wallet !== null) {
           if (this.wallet.identifier === 'Web3') {
-            this.checkMetamaskAddrChange();
-            this.matchMetamaskNetwork();
+            this.checkWeb3WalletAddrChange();
+            this.matchWeb3WalletNetwork();
           }
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 10000);
