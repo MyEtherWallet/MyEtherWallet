@@ -228,5 +228,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'HeaderContainer.scss';
+@import 'HeaderContainer-desktop.scss';
+@import 'HeaderContainer-tablet.scss';
+@import 'HeaderContainer-mobile.scss';
 </style>

@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
 
 .wrap {
   padding-top: 71px;
@@ -244,3 +245,4 @@
     }
   }
 } // .get-free-wallet
+} // @media all and (max-width: $mobile-width)
