@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .private-key-form {
   display: flex;
@@ -34,3 +35,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

@@ -3,7 +3,7 @@
     ref="mnemonicPhrase"
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
-    class="bootstrap-modal modal-metamask"
+    class="bootstrap-modal padding-20 modal-metamask"
     centered>
 
     <div class="contents">

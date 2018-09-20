@@ -1,4 +1,4 @@
-@import '~@/scss/CustomModal';
+@import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .modal-body .button-container button {
     width: 100%;

@@ -1,4 +1,13 @@
-@import '~@/scss/CustomModal';
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+
+.modal-icon {
+  canvas {
+    width: 130px;
+    height: 130px;
+  }
+}
+
 
 .modal-large-text {
   font-weight: 400;
@@ -11,7 +20,14 @@
 
   img {
     margin: 0 5px 20px;
-    width: 160px;
+    width: 130px;
+  }
+}
+
+
+.bootstrap-modal {
+  .modal-icon {
+    justify-content: center;
   }
 }
 
@@ -92,3 +108,4 @@
     }
   }
 }
+} // @media all and (max-width: $mobile-width)

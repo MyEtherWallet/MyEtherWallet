@@ -88,4 +88,8 @@ export default {
 @import '~@/scss/CustomForms-desktop';
 @import '~@/scss/CustomForms-tablet';
 @import '~@/scss/CustomForms-mobile';
+
+@import '~@/scss/CustomModal-desktop';
+@import '~@/scss/CustomModal-tablet';
+@import '~@/scss/CustomModal-mobile';
 </style>

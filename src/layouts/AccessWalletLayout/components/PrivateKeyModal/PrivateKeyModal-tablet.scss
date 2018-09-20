@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
 
-.password-form {
+.private-key-form {
   display: flex;
   flex-direction: column;
 
@@ -34,18 +35,4 @@
     }
   }
 }
-
-.error {
-  color: $text-color-red;
-}
-
-.input-container {
-  position: relative;
-
-  img {
-    cursor: pointer;
-    position: absolute;
-    right: 15px;
-    top: 22px;
-  }
-}
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
