@@ -37,7 +37,6 @@
       padding: 12px 0;
       transition: all 0.3s ease;
 
-
       .top-logo {
         line-height: 10px;
 
@@ -155,7 +154,6 @@
           } // .menu-open
 
           .menu-close {
-            
             div {
               width: 30px;
               height: 3px;
@@ -166,7 +164,7 @@
               transform: rotate(45deg);
             }
             div:nth-child(2) {
-             transform: rotate(-45deg); 
+              transform: rotate(-45deg);
             }
           }
         }
