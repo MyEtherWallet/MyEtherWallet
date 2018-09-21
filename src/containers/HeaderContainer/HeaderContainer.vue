@@ -93,23 +93,102 @@
               </b-nav>
 
             </div>
-            <div class="mobile-menu">
-              <div class="mobile-menu-button">
-                <div class="menu-open">
-                  <div class="bar-1"/>
-                  <div class="bar-2"/>
-                  <div class="bar-3"/>
-                </div>
-                <div class="menu-close">
-                  <div/>
-                  <div/>
-                </div>
+            <div class="mobile-menu-buttons">
+              
+              <div 
+                v-if="!mobileMenuOpen"
+                class="menu-open"
+                @click="mobileMenuOpen = !mobileMenuOpen">
+                <div class="bar-1"/>
+                <div class="bar-2"/>
+                <div class="bar-3"/>
               </div>
+                
+              <div 
+                v-if="mobileMenuOpen" 
+                class="menu-close"
+                @click="mobileMenuOpen = !mobileMenuOpen">
+                <div/>
+                <div/>
+              </div>
+              
             </div>
 
           </div>
         </div>
       </div>
+
+      <div 
+        v-if="mobileMenuOpen" 
+        class="mobile-menu">
+        <b-nav>
+          <b-nav-item
+            to="/"
+            exact
+            @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
+          <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
+          <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
+          <b-nav-item
+            v-show="online"
+            to="/#news">{{ $t("common.news") }}</b-nav-item>
+
+          <div class="language-menu-container">
+            <div class="arrows">
+              <i
+                class="fa fa-angle-down"
+                aria-hidden="true"/>
+            </div>
+            <b-nav-item-dropdown
+              class="language-menu"
+              extra-toggle-classes="nav-link-custom"
+              right>
+              <template slot="button-content">
+                <div class="current-language-flag">
+                  <img
+                    :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                    class="show">
+                  <p>{{ currentName }}</p>
+                </div>
+              </template>
+              <b-dropdown-item
+                v-for="language in supportedLanguages"
+                :active="$root._i18n.locale === language.flag"
+                :key="language.key"
+                :data-flag-name="language.flag"
+                @click="languageItemClicked">
+                {{ language.name }}
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+          </div>
+          <notification v-if="wallet !== null"/>
+          <b-nav-item
+            v-if="wallet === null && $route.fullPath === '/'"
+            :class="isPageOnTop == true ? 'noshow' : ''"
+            class="get-free-wallet nopadding"
+            to="/create-wallet">
+            <div class="get-free-wallet-button">
+              Get a Free Wallet
+            </div>
+          </b-nav-item>
+          <b-nav-item-dropdown
+            v-if="wallet !== null"
+            right
+            no-caret
+            extra-toggle-classes="identicon-dropdown">
+            <template slot="button-content">
+              <blockie
+                :address="wallet.getAddressString()"
+                width="35px"
+                height="35px"/>
+            </template>
+            <b-dropdown-item @click="logout">
+              Log out
+            </b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-nav>
+      </div><!-- .mobile-menu -->
+
+
     </div>
   </div>
 </template>
@@ -157,7 +236,8 @@ export default {
       online: true,
       currentName: 'English',
       currentFlag: 'en',
-      isPageOnTop: true
+      isPageOnTop: true,
+      mobileMenuOpen: false
     };
   },
   computed: {

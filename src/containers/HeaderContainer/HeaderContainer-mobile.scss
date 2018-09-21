@@ -131,44 +131,63 @@
         }
       } // .top-menu
 
-      .mobile-menu {
+      .mobile-menu-buttons {
         margin-left: auto;
         display: block;
+        position: relative;
 
-        .mobile-menu-button {
-          padding: 10px 5px;
+        > div {
+          position: relative;
+          height: 35px;
+          width: 35px;
+          padding: 0;
+        }
 
-          .menu-open {
-            div {
-              background-color: $background-color-black;
-              border-radius: 2px;
-              height: 4px;
-              margin-bottom: 5px;
-              width: 26px;
-            }
+        .menu-open {
+          div {
+            width: 26px;
+            height: 3px;
+            background-color: $background-color-black;
+            border-radius: 2px;
+            position: absolute;
+            left: 4px;
+          }
 
-            .bar-3 {
-              margin: 0;
-              width: 15px;
-            }
-          } // .menu-open
+          $top-position: 8px;
+          $increment-value: 8px;
 
-          .menu-close {
-            div {
-              width: 30px;
-              height: 3px;
-              background-color: $background-color-black;
-              border-radius: 2px;
-            }
-            div:nth-child(1) {
-              transform: rotate(45deg);
-            }
-            div:nth-child(2) {
-              transform: rotate(-45deg);
-            }
+          .bar-1 {
+            top: $top-position;
+          }
+
+          .bar-2 {
+            top: $top-position + $increment-value;
+          }
+
+          .bar-3 {
+            top: $top-position + ($increment-value * 2);
+            width: 18px;
+          }
+        } // .menu-open
+
+        .menu-close {
+          div {
+            width: 30px;
+            height: 3px;
+            background-color: $background-color-black;
+            border-radius: 2px;
+            position: absolute;
+            top: 16px;
+            left: 2px;
+          }
+          div:nth-child(1) {
+            transform: rotate(45deg);
+          }
+          div:nth-child(2) {
+            transform: rotate(-45deg);
           }
         }
-      } // .mobile-menu
+      } // .mobile-menu-buttons
     } // .header-container
   } // .fixed-header
 
@@ -250,4 +269,20 @@
       }
     }
   } // .get-free-wallet
+
+  .mobile-menu {
+    .nav {
+      display: block;
+
+      .nav-item {
+        display: block;
+      }
+    }
+
+    .language-menu-container {
+      img {
+        width: 50px;
+      }
+    }
+  }
 } // @media all and (max-width: $mobile-width)
