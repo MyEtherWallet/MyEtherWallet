@@ -95,9 +95,15 @@
             </div>
             <div class="mobile-menu">
               <div class="mobile-menu-button">
-                <div class="bar-1"/>
-                <div class="bar-2"/>
-                <div class="bar-3"/>
+                <div class="menu-open">
+                  <div class="bar-1"/>
+                  <div class="bar-2"/>
+                  <div class="bar-3"/>
+                </div>
+                <div class="menu-close">
+                  <div/>
+                  <div/>
+                </div>
               </div>
             </div>
 
