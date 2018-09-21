@@ -103,17 +103,16 @@ export default {
   },
   watch: {
     metamaskHash(newVal) {
-      const self = this;
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
         'Transaction Hash'
       ]);
-      const pollReceipt = setInterval(function() {
-        self.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
+      const pollReceipt = setInterval(() => {
+        this.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
           if (res !== null) {
-            self.metamaskRes = res;
-            self.showSuccessModal('Transaction sent!', 'Okay');
+            this.metamaskRes = res;
+            this.showSuccessModal('Transaction sent!', 'Okay');
             clearInterval(pollReceipt);
           }
         });
@@ -163,19 +162,16 @@ export default {
       }
     );
 
-    this.$eventHub.$on(
-      'showMetamaskModal',
-      (tx, isHardware, signer, resolve) => {
-        this.parseRawTx(tx);
-        this.isHardwareWallet = isHardware;
-        this.responseFunction = resolve;
-        this.successMessage = 'Sending Transaction';
-        signer(tx).then(_response => {
-          this.metamaskHash = _response;
-        });
-        this.showSuccessModal('Continue transaction with Metamask.', 'Close');
-      }
-    );
+    this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
+      this.parseRawTx(tx);
+      this.isHardwareWallet = isHardware;
+      this.responseFunction = resolve;
+      this.successMessage = 'Sending Transaction';
+      signer(tx).then(_response => {
+        this.metamaskHash = _response;
+      });
+      this.showSuccessModal('Continue transaction with Metamask.', 'Close');
+    });
 
     this.$eventHub.$on(
       'showMessageConfirmModal',
