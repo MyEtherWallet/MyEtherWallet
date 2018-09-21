@@ -304,7 +304,7 @@ export default {
         delete this.raw['to'];
       }
 
-      if (window.web3) {
+      if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
         this.raw['web3WalletOnly'] = true;
       }
 
