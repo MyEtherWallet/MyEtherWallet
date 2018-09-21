@@ -90,8 +90,8 @@ export default {
       successMessage: '',
       linkMessage: 'OK',
       dismissed: true,
-      metamaskHash: '',
-      metamaskRes: ''
+      web3WalletHash: '',
+      web3WalletRes: ''
     };
   },
   computed: {
@@ -102,7 +102,7 @@ export default {
     }
   },
   watch: {
-    metamaskHash(newVal) {
+    web3WalletHash(newVal) {
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
@@ -111,14 +111,14 @@ export default {
       const pollReceipt = setInterval(() => {
         this.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
           if (res !== null) {
-            this.metamaskRes = res;
+            this.web3WalletRes = res;
             this.showSuccessModal('Transaction sent!', 'Okay');
             clearInterval(pollReceipt);
           }
         });
       }, 500);
     },
-    metamaskRes(newVal) {
+    web3WalletRes(newVal) {
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
@@ -168,9 +168,12 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       signer(tx).then(_response => {
-        this.metamaskHash = _response;
+        this.web3WalletHash = _response;
       });
-      this.showSuccessModal('Continue transaction with Metamask.', 'Close');
+      this.showSuccessModal(
+        'Continue transaction with Web3 Wallet Provider.',
+        'Close'
+      );
     });
 
     this.$eventHub.$on(

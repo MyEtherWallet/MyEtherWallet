@@ -1,4 +1,4 @@
-import { overide, WalletWrapper } from '@/wallets';
+import { override, WalletWrapper } from '@/wallets';
 import url from 'url';
 import web3 from 'web3';
 
@@ -44,7 +44,7 @@ const createAndSignTx = function({ commit }, val) {
 const decryptWallet = function({ commit, state }, wallet) {
   const wrappedWallet = new WalletWrapper(wallet);
   const _web3 = state.web3;
-  overide(_web3, wrappedWallet, this._vm.$eventHub);
+  override(_web3, wrappedWallet, this._vm.$eventHub);
   commit('DECRYPT_WALLET', wrappedWallet);
   commit('SET_WEB3_INSTANCE', _web3);
 };
@@ -69,7 +69,11 @@ const setWeb3Instance = function({ commit, state }, provider) {
   if (provider && provider.currentProvider) {
     commit(
       'SET_WEB3_INSTANCE',
-      overide(provider, state.wallet, this._vm.$eventHub)
+      override(
+        new web3(provider.currentProvider),
+        state.wallet,
+        this._vm.$eventHub
+      )
     );
   } else {
     const hostUrl = url.parse(state.network.url);
@@ -80,7 +84,7 @@ const setWeb3Instance = function({ commit, state }, provider) {
     );
     commit(
       'SET_WEB3_INSTANCE',
-      overide(web3Instance, state.wallet, this._vm.$eventHub)
+      override(web3Instance, state.wallet, this._vm.$eventHub)
     );
   }
 };
