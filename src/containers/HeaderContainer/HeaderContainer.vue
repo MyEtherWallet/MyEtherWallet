@@ -126,12 +126,17 @@
             <b-nav-item
               to="/"
               exact
-              @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
-            <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-            <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
+              @click="scrollTop(); mobileMenuOpen = false;"> {{ $t("header.home") }}</b-nav-item>
+            <b-nav-item 
+              to="/#about-mew" 
+              @click="mobileMenuOpen = false">{{ $t("header.about") }}</b-nav-item>
+            <b-nav-item 
+              to="/#faqs" 
+              @click="mobileMenuOpen = false">{{ $t("common.faqs") }}</b-nav-item>
             <b-nav-item
               v-show="online"
-              to="/#news">{{ $t("common.news") }}</b-nav-item>
+              to="/#news"
+              @click="mobileMenuOpen = false">{{ $t("common.news") }}</b-nav-item>
 
             <div class="language-menu-container">
               <div class="arrows">
@@ -286,6 +291,7 @@ export default {
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', flag);
+      this.mobileMenuOpen = false;
     },
     scrollTop() {
       window.scrollTo(0, 0);
