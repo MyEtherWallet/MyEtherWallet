@@ -1,16 +1,27 @@
 import Vue from 'vue';
-
-xdescribe('Social.vue', () => {
+import { shallowMount } from '@vue/test-utils'
+import Social from '@/layouts/HomeLayout/components/Social/Social.vue';
+const $t = ()=>{}
+describe('Social.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+      const wrapper = shallowMount(Social, {
+      	      mocks:{$t}
+      });
+    
+      const linkElements = wrapper.vm.$el.querySelector('.icons').getElementsByTagName('a');	
+      const imgElements = wrapper.vm.$el.getElementsByTagName('img');
+      for(var i=0; i<imgElements.length; i++) {
+      	console.log(imgElements[i].src)
+      	console.log(imgElements[i].parentElement.className)
+      }
+      
+      // for(var i =0 ; i < wrapper.vm.$data.links.length; i++) {
+      // 	var data = wrapper.vm.$data.links[i];
+
+      // 	var link = data.to + "/"
+      // 	expect( link ).toEqual(linkElements[i].href)
+      // 	expect(data.name).toEqual(imgElements[i].parentElement.className)
+      // }
   });
 
   describe('Social.vue Methods', () => {});

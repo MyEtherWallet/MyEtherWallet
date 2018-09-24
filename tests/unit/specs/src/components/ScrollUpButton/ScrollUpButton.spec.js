@@ -1,16 +1,27 @@
 import Vue from 'vue';
+import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton.vue';
 
-xdescribe('ScrollUpButton.vue', () => {
+import { shallowMount } from '@vue/test-utils'
+
+
+describe('ScrollUpButton.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const wrapper = shallowMount(ScrollUpButton, {});
+    const buttonBlock = wrapper.find('.button-block');
+
+    window.pageXOffset = 100;
+    window.pageYOffset = 100;
+    console.log('before scroll window pageXOffset: %O' , window.pageXOffset);
+    console.log('before scroll window pageYOffset: %O' , window.pageYOffset);
+
+    buttonBlock.trigger('click');
+
+    console.log('after scroll window pageXOffset: %O' , window.pageXOffset);
+    console.log('afer scroll window pageYOffset: %O' , window.pageYOffset);
+
+    expect(window.pageXOffset).toBe(0);
+    expect(window.pageYOffset).toBe(0);
+
   });
 
   describe('ScrollUpButton.vue Methods', () => {});

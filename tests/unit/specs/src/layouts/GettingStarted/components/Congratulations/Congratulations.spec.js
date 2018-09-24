@@ -1,17 +1,21 @@
 import Vue from 'vue';
 
-xdescribe('Congratulations.vue', () => {
+import { shallowMount } from '@vue/test-utils'
+import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
+
+
+describe('Congratulations.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const progressBarValue = 'Congratulations progressBarValue';
+  
+    const wrapper = shallowMount(Congratulations, {
+      propsData: { progressBarValue }
+    });
+
+    console.log('Congratulations component:%O', wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className);
+    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
   });
 
   describe('Congratulations.vue Methods', () => {});
 });
+

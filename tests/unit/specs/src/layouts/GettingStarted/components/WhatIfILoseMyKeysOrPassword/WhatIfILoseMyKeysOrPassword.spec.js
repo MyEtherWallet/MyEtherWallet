@@ -1,16 +1,19 @@
 import Vue from 'vue';
 
-xdescribe('WhatIfILoseMyKeysOrPassword.vue', () => {
+import { shallowMount } from '@vue/test-utils'
+import WhatIfILoseMyKeysOrPassword from '@/layouts/GettingStarted/components/WhatIfILoseMyKeysOrPassword/WhatIfILoseMyKeysOrPassword.vue';
+
+
+describe('WhatIfILoseMyKeysOrPassword.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const progressBarValue = 'WhatIfILoseMyKeysOrPassword progressBarValue';
+  
+    const wrapper = shallowMount(WhatIfILoseMyKeysOrPassword, {
+      propsData: { progressBarValue }
+    });
+
+    console.log('WhatIfILoseMyKeysOrPassword component:%O', wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className);
+    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
   });
 
   describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {});

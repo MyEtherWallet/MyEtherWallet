@@ -1,16 +1,17 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 
-xdescribe('InterfaceContainerTitle.vue', () => {
+describe('InterfaceContainerTitle.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const title = 'InterfaceContainerTitle title';
+  
+    const wrapper = shallowMount(InterfaceContainerTitle, {
+      propsData: { title }
+    });
+
+    console.log('InterfaceContainerTitle component title:%O', wrapper.vm.$el.querySelector('.content-title h2').textContent.trim());
+    expect(wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()).toEqual(title);
   });
 
   describe('InterfaceContainerTitle.vue Methods', () => {});

@@ -1,16 +1,17 @@
 import Vue from 'vue';
+import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode/ButtonWithQrCode.vue';
+import { shallowMount } from '@vue/test-utils'
 
-xdescribe('ButtonWithQrCode.vue', () => {
+describe('ButtonWithQrCode.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const buttonname = 'QRCode';
+    const qrcode = 'qrcode';
+    const wrapper = shallowMount(ButtonWithQrCode, {
+      propsData: { buttonname , qrcode}
+    });
+
+    console.log('button text:%O', wrapper.vm.$el.querySelector('div div .the-button').textContent.trim());
+    expect(wrapper.vm.$el.querySelector('div div .the-button').textContent.trim()).toEqual(buttonname);
   });
 
   describe('ButtonWithQrCode.vue Methods', () => {});

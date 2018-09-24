@@ -1,17 +1,36 @@
 import Vue from 'vue';
+import { shallowMount, RouterLink } from '@vue/test-utils'
+import NewsArticle from '@/containers/NewsContainer/components/NewsArticle/NewsArticle.vue';
 
-xdescribe('NewsArticle.vue', () => {
+describe('NewsArticle.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const title = 'NewsArticle title';
+    const desc = 'NewsArticle desc';
+    const fb = 'fb';
+    const twitter = 'twitter';
+    const readMore = 'NewsArticle readMore';
+    const link = 'NewsArticle link';
+
+
+    const wrapper = shallowMount(NewsArticle, {
+      propsData: { title, desc, fb, twitter, readMore, link }
+    });
+
+    console.log('NewsArticle component title:%O', wrapper.vm.$el.querySelector('.news-text h4').textContent.trim());
+    expect(wrapper.vm.$el.querySelector('.news-text h4').textContent.trim()).toEqual(title);
+
+    console.log('NewsArticle component desc:%O', wrapper.vm.$el.querySelector('.news-text p').textContent.trim());
+    expect(wrapper.vm.$el.querySelector('.news-text p').textContent.trim()).toEqual(desc);
+
+    console.log('NewsArticle component link:%O', wrapper.vm.$el.querySelector('.links p').textContent.trim());
+    expect(wrapper.vm.$el.querySelector('.links p').textContent.trim()).toEqual(readMore);
+
+    console.log('NewsArticle component icon:%O', wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href);
+    expect(wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + fb);
+
+    console.log('NewsArticle component icon:%O', wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href);
+    expect(wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + twitter);
   });
 
-  describe('NewsArticle.vue Methods', () => {});
+  describe('NewsArticle.vue Methods', () => { });
 });
