@@ -25,10 +25,6 @@
 
     &.tiny-header {
       box-shadow: 0 2px 13px $tiny-header-shadow-color;
-
-      .header-container {
-        padding: 5px 0;
-      }
     }
 
     .header-container {
@@ -36,6 +32,10 @@
       display: flex;
       padding: 12px 0;
       transition: all 0.3s ease;
+
+      &.tiny-header-container {
+        padding: 5px 0;
+      }
 
       .top-logo {
         line-height: 10px;
@@ -271,18 +271,59 @@
   } // .get-free-wallet
 
   .mobile-menu {
+    padding: 15px 0 25px;
+    border-top: 1px solid $border-color-5;
+    border-bottom: 1px solid $border-color-5;
+    transition: all 0.3s ease;
+    overflow: hidden;
+
     .nav {
       display: block;
 
       .nav-item {
         display: block;
+
+        a {
+          font-size: 20px;
+          color: $text-base-color;
+          padding: 25px 40px;
+        }
       }
     }
 
     .language-menu-container {
-      img {
-        width: 50px;
+      .arrows {
+        right: 37px;
+        top: 22px;
+      }
+
+      .current-language-flag {
+        display: flex;
+        align-items: center;
+        padding: 25px 40px;
+
+        img {
+          //width: 50px;
+          height: 20px;
+        }
+
+        p {
+          font-size: 20px;
+          color: $text-base-color;
+          padding-right: 20px;
+        }
       }
     }
+  }
+
+  .mobile-menu-opened {
+    max-height: 1000px;
+    opacity: 1;
+  }
+
+  .mobile-menu-closed {
+    padding: 0;
+    max-height: 0;
+    opacity: 0;
   }
 } // @media all and (max-width: $mobile-width)

@@ -10,10 +10,12 @@
     <div class="wrap">
       <div
         ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
+        :class="isPageOnTop == false || mobileMenuOpen ? 'tiny-header' : ''"
         class="fixed-header">
         <div class="page-container">
-          <div class="header-container">
+          <div 
+            :class="isPageOnTop == false ? 'tiny-header-container' : ''" 
+            class="header-container">
             <router-link
               to="/"
               @click.native="scrollTop()">
@@ -118,7 +120,7 @@
         </div>
 
         <div 
-          v-if="mobileMenuOpen" 
+          :class="mobileMenuOpen ? 'mobile-menu-opened' : 'mobile-menu-closed'"
           class="mobile-menu">
           <b-nav>
             <b-nav-item
@@ -134,7 +136,7 @@
             <div class="language-menu-container">
               <div class="arrows">
                 <i
-                  class="fa fa-angle-down"
+                  class="fa fa-angle-right"
                   aria-hidden="true"/>
               </div>
               <b-nav-item-dropdown
@@ -143,10 +145,11 @@
                 right>
                 <template slot="button-content">
                   <div class="current-language-flag">
+                    <p>{{ currentName }}</p>
                     <img
                       :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
                       class="show">
-                    <p>{{ currentName }}</p>
+                    
                   </div>
                 </template>
                 <b-dropdown-item

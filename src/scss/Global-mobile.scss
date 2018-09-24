@@ -569,6 +569,15 @@
   .language-menu-container {
     position: relative;
 
+    .dropdown-menu {
+      transform: initial !important;
+      position: fixed !important;
+      top: 150px !important;
+      left: 5px !important;
+      width: calc(100% - 10px);
+      z-index: 9999;
+    }
+
     .arrows {
       color: $text-color-4;
       font-size: 18px;
@@ -578,6 +587,10 @@
     }
 
     .language-menu {
+      .nav-link {
+        padding: 0;
+      }
+
       .dropdown-menu.show {
         max-height: 226px;
         overflow-y: scroll;
