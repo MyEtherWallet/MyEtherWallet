@@ -1,16 +1,19 @@
 import Vue from 'vue';
 
-xdescribe('WhatIsMyEtherWallet.vue', () => {
+import { shallowMount } from '@vue/test-utils'
+import WhatIsMyEtherWallet from '@/layouts/GettingStarted/components/WhatIsMyEtherWallet/WhatIsMyEtherWallet.vue';
+
+
+describe('WhatIsMyEtherWallet.vue', () => {
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const progressBarValue = 'WhatIsMyEtherWallet progressBarValue';
+  
+    const wrapper = shallowMount(WhatIsMyEtherWallet, {
+      propsData: { progressBarValue }
+    });
+
+    console.log('WhatIsMyEtherWallet component:%O', wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className);
+    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
   });
 
   describe('WhatIsMyEtherWallet.vue Methods', () => {});

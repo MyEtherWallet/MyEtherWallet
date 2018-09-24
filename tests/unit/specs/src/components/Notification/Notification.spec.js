@@ -1,16 +1,44 @@
-import Vue from 'vue';
+import Vue from 'vue'
+import VueX from 'vuex'
+import { shallowMount , createLocalVue} from '@vue/test-utils'
+import Notification from '@/components/Notification/Notification.vue'
 
-xdescribe('Notification.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+const localVue = createLocalVue()
+localVue.use(VueX)
+  
+
+
+describe('Notification.vue', () => {
+  
+    let store
+    let getters
+
+    beforeEach(() => {
+      console.log('beforeEach Notification Test')
+      getters = {
+        notifications: () => []
+      }
+
+      store = new VueX.Store({
+        getters,
+        state: {
+          wallet: {
+            getAddressString: jest.fn(x=> 0)
           }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+        }
+      })
+    })
+
+  it('should render correct contents', () => {
+  
+    const wrapper = shallowMount(Notification , { store, localVue });
+    console.log('notification:%O', wrapper.find('.notification-logo'));
+  
+    var notificationLogo = wrapper.find('.notification-logo');
+
+    console.log('notification:%O', notificationLogo);
+
+    // notificationLogo.trigger('click');
   });
 
   describe('Notification.vue Methods', () => {});

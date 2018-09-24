@@ -1,16 +1,19 @@
 import Vue from 'vue';
+import PopOver from '@/components/PopOver/PopOver.vue';
+import { shallowMount } from '@vue/test-utils'
 
-xdescribe('PopOver.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+describe('PopOver.vue', () => {
+  it('validate address when dropdown is selected', () => {
+
+    const poptitle = 'poptitle';
+    const popcontent = 'popcontent';
+    const popovertype = 'popovertype';
+
+    const wrapper = shallowMount(PopOver, {
+      propsData: { poptitle , popcontent, popovertype}
+    });
+
+    expect(wrapper.vm.$el.querySelector('p.popover-content').textContent).toEqual(popcontent);
   });
 
   describe('PopOver.vue Methods', () => {});
