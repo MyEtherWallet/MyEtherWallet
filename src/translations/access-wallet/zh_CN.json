@@ -16,13 +16,14 @@
   "accessDeviceAddresses": "请连接您的设备",
   "password": "密码",
   "mewConnectDesc": "使用 MEWconnect 访问我的钱包",
-  "metaMaskDesc": "使用插件访问我的钱包",
-  "installMetaMaskModalDesc": "啊哦！你需要先安装 MetaMask 插件来访问你的钱包。",
+  "metaMaskDesc": "Use extension to access my wallet",
+  "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
+  "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
   "software": "软件",
   "softwareDesc": "JSON 文档、私钥、助记短语",
   "notRecommended": "不推荐",
-  "unlock": "解锁",
-  "unlockWallet": "解锁钱包",
-  "installMetamask": "安装 MetaMask"
+  "unlock": "Unlock wallet",
+  "installMetamask": "安装 MetaMask",
+  "tryAgain": "Try Again"
 }
