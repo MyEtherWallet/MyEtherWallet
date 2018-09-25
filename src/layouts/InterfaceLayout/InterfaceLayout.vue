@@ -21,7 +21,8 @@
           </div>
           <send-currency-container
             v-show="currentTab === 'send' || currentTab === ''"
-            :tokens-with-balance="tokensWithBalance"/>
+            :tokens-with-balance="tokensWithBalance"
+            :get-balance="getBalance"/>
           <send-offline-container v-show="currentTab === 'offline'"/>
           <swap-container v-show="currentTab === 'swap'"/>
           <dapps-container v-show="currentTab === 'dapps'"/>
@@ -65,6 +66,8 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import { Web3Wallet } from '@/wallets/software';
+import * as networkTypes from '@/networks/types';
 
 import store from 'store';
 
@@ -92,29 +95,29 @@ export default {
       blockNumber: 0,
       tokens: [],
       receivedTokens: false,
-      tokensWithBalance: []
+      tokensWithBalance: [],
+      pollNetwork: () => {},
+      pollBlock: () => {},
+      pollAddress: () => {}
     };
   },
   computed: {
     address() {
-      if (this.$store.state.wallet !== null) {
-        return this.$store.state.wallet.getAddressString();
+      if (this.wallet !== null) {
+        return this.wallet.getAddressString();
       }
     },
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      wallet: 'wallet'
     })
   },
   watch: {
     network() {
-      if (this.$store.state.online === true) {
-        if (this.$store.state.wallet !== null) {
-          this.getBalance();
-          this.getBlock();
-          setInterval(this.getBlock, 14000);
-          this.setTokens();
-        }
-      }
+      this.setupOnlineEnvironment();
+    },
+    address() {
+      this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -127,13 +130,10 @@ export default {
       ]);
     }
 
-    if (this.$store.state.online === true) {
-      if (this.$store.state.wallet !== null) {
-        this.getBalance();
-        setInterval(this.getBlock, 14000);
-        this.setTokens();
-      }
-    }
+    this.setupOnlineEnvironment();
+  },
+  destroyed() {
+    this.clearIntervals();
   },
   methods: {
     switchTabs(param) {
@@ -162,13 +162,7 @@ export default {
       ];
       const contract = new this.$store.state.web3.eth.Contract(abi);
       const data = contract.methods
-        .getAllBalance(
-          this.$store.state.wallet.getAddressString(),
-          true,
-          true,
-          true,
-          0
-        )
+        .getAllBalance(this.wallet.getAddressString(), true, true, true, 0)
         .encodeABI();
       const response = this.$store.state.web3.eth
         .call({
@@ -198,7 +192,7 @@ export default {
       ];
       const contract = new web3.eth.Contract(contractAbi);
       const data = contract.methods
-        .balanceOf(this.$store.state.wallet.getAddressString())
+        .balanceOf(this.wallet.getAddressString())
         .encodeABI();
       const balance = await web3.eth
         .call({
@@ -288,6 +282,70 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err);
         });
+    },
+    checkWeb3WalletAddrChange() {
+      this.pollAddress = setInterval(() => {
+        window.web3.eth.getAccounts((err, accounts) => {
+          if (err) {
+            // eslint-disable-next-line no-console
+            console.error(err);
+            return;
+          }
+          if (!accounts.length) {
+            // eslint-disable-next-line no-console
+            console.error('Please unlock metamask');
+            return;
+          }
+          const address = accounts[0];
+          if (
+            this.wallet !== null &&
+            address !== this.wallet.getAddressString()
+          ) {
+            const wallet = new Web3Wallet(address);
+            this.$store.dispatch('setWeb3Wallet', wallet);
+            clearInterval(this.pollAddress);
+          }
+        });
+      }, 500);
+    },
+    matchWeb3WalletNetwork() {
+      this.pollNetwork = setInterval(() => {
+        window.web3.version.getNetwork((err, netId) => {
+          if (err) return;
+          if (this.$store.state.network.type.chainID.toString() !== netId) {
+            Object.keys(networkTypes).forEach(net => {
+              if (networkTypes[net].chainID.toString() === netId) {
+                this.$store.dispatch(
+                  'switchNetwork',
+                  this.$store.state.Networks[net][0]
+                );
+                clearInterval(this.pollNetwork);
+              }
+            });
+          }
+        });
+      }, 500);
+    },
+    clearIntervals() {
+      const self = this;
+      if (self.wallet === null) {
+        clearInterval(self.pollNetwork);
+        clearInterval(self.pollBlock);
+        clearInterval(self.pollAddress);
+      }
+    },
+    setupOnlineEnvironment() {
+      if (this.$store.state.online === true) {
+        if (this.wallet !== null) {
+          if (this.wallet.identifier === 'Web3') {
+            this.checkWeb3WalletAddrChange();
+            this.matchWeb3WalletNetwork();
+          }
+          this.getBalance();
+          this.pollBlock = setInterval(this.getBlock, 10000);
+          this.setTokens();
+        }
+      }
     }
   }
 };
