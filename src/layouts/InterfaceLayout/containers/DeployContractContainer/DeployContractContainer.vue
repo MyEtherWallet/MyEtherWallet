@@ -140,8 +140,6 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -171,7 +169,6 @@ export default {
       contractName: '',
       contractNamePlaceholder: '',
       raw: {},
-      signedTx: '',
       transactionFee: 0,
       gasAmount: this.$store.state.gasPrice,
       gasLimit: 21000,

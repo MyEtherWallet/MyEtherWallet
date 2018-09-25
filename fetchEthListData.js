@@ -11,10 +11,14 @@ async function fetchTokens () {
 
     const tokenList = await fetch('https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/tokens').then(res => res.json()).catch(err => console.log(err));
     const tokenFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
-    tokenList.forEach(async (tokenFile) => {
-      let tokensCollection = await fetch(`${tokenFileURL + tokenFile.name}/tokens-${tokenFile.name}.json`).then(res => res.json()).catch(err => console.log(err));
-      fs.writeFileSync(`${tokenFolder}/tokens-${tokenFile.name}.json`, JSON.stringify(tokensCollection));
-    })
+    if (tokenList !== undefined && tokenList.length > 0) {
+      tokenList.forEach(async (tokenFile) => {
+        let tokensCollection = await fetch(`${tokenFileURL + tokenFile.name}/tokens-${tokenFile.name}.json`).then(res => res.json()).catch(err => console.log(err));
+        if (tokensCollection !== undefined) {
+          fs.writeFileSync(`${tokenFolder}/tokens-${tokenFile.name}.json`, JSON.stringify(tokensCollection));
+        }
+      })
+    }
   } catch (e) {
     console.error(e); // todo replace with proper error
   }
@@ -28,10 +32,14 @@ async function fetchContracts () {
 
     const contractList = await fetch('https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/contracts').then(res => res.json()).catch(err => console.log(err));
     const contractFileURL = 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
-    contractList.forEach(async (contractFile) => {
-      let contractsCollection = await fetch(`${contractFileURL + contractFile.name}/contract-abi-${contractFile.name}.json`).then(res => res.json()).catch(err => console.log(err));
-      fs.writeFileSync(`${contractFolder}/contract-abi-${contractFile.name}.json`, JSON.stringify(contractsCollection));
-    })
+    if (contractList !== undefined && contractList.length > 0) {
+      contractList.forEach(async (contractFile) => {
+        let contractsCollection = await fetch(`${contractFileURL + contractFile.name}/contract-abi-${contractFile.name}.json`).then(res => res.json()).catch(err => console.log(err));
+        if (contractsCollection !== undefined) {
+          fs.writeFileSync(`${contractFolder}/contract-abi-${contractFile.name}.json`, JSON.stringify(contractsCollection));
+        }
+      })
+    }
   } catch (e) {
     console.error(e); // todo replace with proper error
   }
