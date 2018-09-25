@@ -3,7 +3,9 @@
     v-if="$store.state.wallet !== null"
     class="send-eth-and-tokens">
     <div class="wrap">
-      <div class="side-nav">
+      <div 
+        v-if="sidemenuOpen || $mq ==='lg'"
+        class="side-nav">
         <interface-side-menu
           :current-tab="currentTab"
           :switch-tabs="switchTabs"/>
@@ -92,7 +94,8 @@ export default {
       blockNumber: 0,
       tokens: [],
       receivedTokens: false,
-      tokensWithBalance: []
+      tokensWithBalance: [],
+      sidemenuOpen: false
     };
   },
   computed: {
@@ -294,5 +297,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceLayout.scss';
+@import 'InterfaceLayout-desktop.scss';
+@import 'InterfaceLayout-tablet.scss';
+@import 'InterfaceLayout-mobile.scss';
 </style>

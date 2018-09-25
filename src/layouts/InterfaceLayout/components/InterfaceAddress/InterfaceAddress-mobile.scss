@@ -1,0 +1,22 @@
+@import '../InformationBlock';
+@media all and (max-width: $mobile-width) {
+  .address {
+    background-color: $transaction-block-address;
+  }
+
+  .info-block {
+    min-width: initial;
+  }
+
+  .hidden-input {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .custom-tooltip {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+} // @media all and (max-width: $mobile-width)

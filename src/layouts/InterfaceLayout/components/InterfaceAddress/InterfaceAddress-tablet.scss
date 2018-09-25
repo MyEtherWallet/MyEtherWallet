@@ -1,0 +1,18 @@
+@import '../InformationBlock';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .address {
+    background-color: $transaction-block-address;
+  }
+
+  .hidden-input {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .custom-tooltip {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

@@ -74,5 +74,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceBalance.scss';
+@import 'InterfaceBalance-desktop.scss';
+@import 'InterfaceBalance-tablet.scss';
+@import 'InterfaceBalance-mobile.scss';
 </style>

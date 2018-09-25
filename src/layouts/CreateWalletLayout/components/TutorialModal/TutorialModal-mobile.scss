@@ -13,6 +13,13 @@
     padding: 15px 20px;
   }
 
+  .button-container {
+    a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
   .modal-content .modal-body {
     background-image: url('~@/assets/images/modal/garlands.png');
     background-position: center 20px;
@@ -24,7 +31,7 @@
       color: $text-color-6;
       font-size: 25px;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     .content {

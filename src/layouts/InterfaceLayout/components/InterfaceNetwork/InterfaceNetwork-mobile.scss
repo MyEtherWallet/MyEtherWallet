@@ -1,0 +1,26 @@
+@import '../InformationBlock';
+@media all and (max-width: $mobile-width) {
+  .info-block {
+    min-width: initial;
+  }
+
+  .network {
+    background-color: $transaction-block-network;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .block-content {
+    position: relative;
+  }
+
+  .helper {
+    position: absolute;
+    right: 60px;
+    top: 5px;
+
+    .popover-container button {
+      background: transparent !important;
+    }
+  }
+} // @media all and (max-width: $mobile-width)

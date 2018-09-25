@@ -1,0 +1,71 @@
+@import '~@/scss/GlobalVariables';
+@import '../InterfaceContainer';
+
+@media all and (max-width: $mobile-width) {
+  .send-currency-container {
+    border-radius: 5px;
+    grid-area: main;
+    overflow: hidden;
+    background: $background-color-white;
+
+    .send-form {
+      .amount-to-address {
+        display: grid;
+        grid-column-gap: 5px;
+        grid-template-columns: 2fr 3fr;
+      }
+
+      .gas-amount,
+      .user-input {
+        position: relative;
+
+        input {
+          background-color: $background-color-1;
+          border: 0;
+          padding: 13px 15px;
+          width: 100%;
+        }
+
+        .good-button-container {
+          align-items: center;
+          display: flex;
+          position: absolute;
+          right: 10px;
+          top: 12px;
+
+          p {
+            color: $text--link-color;
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .error-message-container {
+        p {
+          color: $text-color-red;
+          margin: 7px 0 0 15px;
+        }
+      }
+    } // .send-form
+
+
+    .submit-button-container {
+      padding: 60px 0;
+      text-align: center;
+
+      .bottom-text {
+        margin-top: 20px;
+      }
+
+      .submit-button {
+        margin: 0 auto;
+        text-align: center;
+        width: 300px;
+      }
+    }
+
+    .tokens {
+      border-radius: 5px;
+    }
+  }
+} // @media all and (max-width: $mobile-width)

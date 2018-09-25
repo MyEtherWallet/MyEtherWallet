@@ -483,5 +483,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceSideMenu.scss';
+@import 'InterfaceSideMenu-desktop.scss';
+@import 'InterfaceSideMenu-tablet.scss';
+@import 'InterfaceSideMenu-mobile.scss';
 </style>

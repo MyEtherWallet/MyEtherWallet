@@ -72,5 +72,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceNetwork.scss';
+@import 'InterfaceNetwork-desktop.scss';
+@import 'InterfaceNetwork-tablet.scss';
+@import 'InterfaceNetwork-mobile.scss';
 </style>

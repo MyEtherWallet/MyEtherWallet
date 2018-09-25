@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    .contents {
+      background-color: $light-grey-2;
+      padding: 10px;
+
+      .tx-contents {
+        .tokens {
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+
+  .side-nav {
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    width: 100vw;
+  }
+} // @media all and (max-width: $mobile-width)

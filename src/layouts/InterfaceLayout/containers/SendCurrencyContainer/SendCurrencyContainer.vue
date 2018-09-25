@@ -5,66 +5,65 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t("interface.sendTxAmount") }}</h4>
-            <p
-              class="title-button prevent-user-select"
-              @click="setBalanceToAmt">Entire Balance</p>
+          <div class="title-with-button">
+            <h4>Type</h4>
           </div>
           <currency-picker
             :currency="tokensWithBalance"
             :page="'sendEthAndTokens'"
             :token="true"
             @selectedCurrency="setSelectedCurrency"/>
-          <div class="the-form amount-number">
-            <input
-              v-model="amount"
-              type="number"
-              name=""
-              placeholder="Amount" >
-            <i
-              :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
-              aria-hidden="true"/>
-          </div>
+
           <div
             v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount"
             class="error-message-container">
             <p>{{ $t('common.dontHaveEnough') }}</p>
           </div>
         </div>
-        <div class="to-address">
-          <div class="title">
-            <h4>{{ $t("interface.sendTxToAddr") }}
-              <blockie
-                v-show="validAddress && address.length !== 0"
-                :address="address"
-                width="32px"
-                height="32px"
-                class="blockie-image"/>
-            </h4>
 
+        <div class="to-address">
+          <div class="title-with-button">
+            <h4>{{ $t("interface.sendTxAmount") }}</h4>
             <p
-              class="copy-button prevent-user-select"
-              @click="copyToClipboard('address')">{{
-                $t('common.copy')
-              }}</p>
+              class="the-button prevent-user-select"
+              @click="setBalanceToAmt">Entire Balance</p>
           </div>
-          <div class="the-form address-block">
-            <textarea
-              v-ens-resolver="address"
-              ref="address"
-              v-model="address"
-              name="name"
-              autocomplete="off"/>
-            <i
-              :class="[validAddress && address.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
-              aria-hidden="true"/>
+          <div class="the-form amount-number">
+            <input
+              v-model="amount"
+              class="custom-input-text-2"
+              type="number"
+              name=""
+              placeholder="Amount" >
           </div>
+
         </div>
       </div>
     </div>
 
     <div class="send-form">
+
+      <div class="title-with-button">
+        <h4>{{ $t("interface.sendTxToAddr") }}
+          <blockie
+            v-show="validAddress && address.length !== 0"
+            :address="address"
+            width="32px"
+            height="32px"
+            class="blockie-image"/>
+        </h4>
+
+        <p
+          class="the-button copy-button prevent-user-select"
+          @click="copyToClipboard('address')">{{
+            $t('common.copy')
+          }}</p>
+      </div>
+      <div class="the-form address-block">
+        <dropdown-address-selector />
+      </div>
+
+      <!--
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
@@ -92,6 +91,7 @@
         </div>
       </div>
 
+
       <div class="the-form gas-amount">
         <input
           v-model="gasAmount"
@@ -105,9 +105,11 @@
             aria-hidden="true"/>
         </div>
       </div>
+      -->
+
     </div>
-    <div class="send-form advanced">
-      <div class="advanced-content">
+    <div class="send-form expending-block">
+      <div class="expending-block-content">
 
         <div class="toggle-button-container">
           <h4>{{ $t('common.advanced') }}</h4>
@@ -162,7 +164,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -175,6 +177,7 @@ const unit = require('ethjs-unit');
 
 export default {
   components: {
+    'dropdown-address-selector': DropDownAddressSelector,
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
@@ -399,5 +402,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SendCurrencyContainer.scss';
+@import 'SendCurrencyContainer-desktop.scss';
+@import 'SendCurrencyContainer-tablet.scss';
+@import 'SendCurrencyContainer-mobile.scss';
 </style>

@@ -80,5 +80,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceAddress.scss';
+@import 'InterfaceAddress-desktop.scss';
+@import 'InterfaceAddress-tablet.scss';
+@import 'InterfaceAddress-mobile.scss';
 </style>
