@@ -16,13 +16,14 @@
   "accessDeviceAddresses": "Please Connect With Your Device",
   "password": "Password",
   "mewConnectDesc": "Использовать MEW Connect для доступа к моему кошельку",
-  "metaMaskDesc": "Использовать расширение для доступа к моему кошельку",
-  "installMetaMaskModalDesc": "Ой! Чтобы получить доступ к своему кошельку, вам нужно установить расширение MetaMask.",
+  "metaMaskDesc": "Use extension to access my wallet",
+  "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
+  "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "Пожалуйста, используйте MyEtherWallet с безопасным подключением (SSL/HTTPS) для соединения.",
   "software": "Программа",
   "softwareDesc": "JSON-файл, закрытый ключ, мнемоническая фраза",
   "notRecommended": "Не рекомендуется",
-  "unlock": "Открыть",
-  "unlockWallet": "Unlock Wallet",
-  "installMetamask": "Установить MetaMask"
+  "unlock": "Unlock wallet",
+  "installMetamask": "Установить MetaMask",
+  "tryAgain": "Try Again"
 }
