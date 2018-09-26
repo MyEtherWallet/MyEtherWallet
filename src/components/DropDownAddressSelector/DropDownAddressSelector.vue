@@ -46,7 +46,12 @@
               width="30px"
               height="30px"/>
           </div>
-          <p class="listed-address">{{ addr }}</p>
+          <p 
+            v-if="$mq === 'lg'" 
+            class="listed-address">{{ addr }}</p>
+          <p 
+            v-if="$mq !== 'lg'" 
+            class="listed-address">{{ shortenAddress(addr) }}</p>
         </li>
       </ul>
     </div>
@@ -84,10 +89,30 @@ export default {
       }
     }
   },
+  beforeMount() {
+    // Detect all clicks on the document
+    document.addEventListener('click', this.clickEvent, false);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.clickEvent, false);
+  },
   methods: {
+    clickEvent: function(event) {
+      for (let count = 0; count < event.path.length; count++) {
+        if (event.path[count].className === 'drop-down-address-selector') {
+          return;
+        }
+      }
+      this.dropdownOpen = false;
+    },
     listedAddressClick: function(address) {
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
+    },
+    shortenAddress: function(address) {
+      const front = address.slice(0, 15);
+      const end = address.slice(-4);
+      return front + '...' + end;
     }
   }
 };
