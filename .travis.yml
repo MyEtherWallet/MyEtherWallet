@@ -16,8 +16,6 @@ cache:
   directories:
     - node_modules
 addons:
-  ssh_known_hosts:
-    -
   apt:
     sources: ubuntu-toolchain-r-test
     packages:
@@ -71,7 +69,7 @@ jobs:
       before_script:
         - ROUTER_MODE=hash npm run build
         - pip install --user awscli
-        - ssh-keyscan -t $TRAVIS_SSH_KEY_TYPES -H $IPFS_NODE 2>&1 | tee -a $HOME/.ssh/known_hosts
+        - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
       script:
         - hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh --`
         - HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
