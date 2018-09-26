@@ -1,4 +1,4 @@
-@import '../../RegisterDomainContainer';
+@import '../../RegisterDomain';
 
 .name-available-container {
   @extend %template-container;
@@ -19,6 +19,11 @@
   > div {
     padding: 0 5px;
   }
+}
+
+.auction-started {
+  color: $light-blue-1;
+  padding: 10px 0 15px;
 }
 
 .form {

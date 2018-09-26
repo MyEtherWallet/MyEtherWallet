@@ -1,26 +1,4 @@
-@import '~@/scss/GlobalVariables';
-
-.bootstrap-modal .modal-dialog {
-  max-width: 700px;
-}
-
-.modal-content {
-  padding: 23px;
-
-  .direction {
-    display: flex;
-    margin: 0 auto;
-  }
-
-  .addresses-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .ens-name {
-    padding: 25px 10px 0;
-  }
-}
+@import '../../RegisterDomain';
 
 .submit-button-container {
   padding: 60px 0;
@@ -91,6 +69,7 @@
 
 %button {
   border-radius: 4px;
+  color: $white;
   cursor: pointer;
   height: 64px;
   width: 227px;
@@ -102,17 +81,16 @@
   justify-content: space-around;
   padding: 30px 55px;
 
-  .cancel-button {
+  button {
     @extend %button;
+  }
 
+  .cancel-button {
     border: 1px solid $mew-green;
     color: $mew-green;
   }
 
   .submit-button {
-    @extend %button;
-
     background-color: $mew-green;
-    color: $white;
   }
 }

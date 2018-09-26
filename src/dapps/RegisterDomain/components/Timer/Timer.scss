@@ -1,0 +1,23 @@
+@import '~@/scss/GlobalVariables';
+
+.timer-container {
+  align-items: center;
+  background-color: $light-grey-1;
+  display: flex;
+  height: 62px;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  padding: 23px 27px;
+  width: 100%;
+
+  .deadline {
+    color: $dark-blue-12;
+    font-size: 14px;
+  }
+
+  .actual-timer {
+    display: flex;
+    color: $red-5;
+    justify-content: space-between;
+  }
+}

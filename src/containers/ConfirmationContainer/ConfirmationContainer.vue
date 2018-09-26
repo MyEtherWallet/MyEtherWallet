@@ -13,21 +13,6 @@
       :gas="gasLimit"
       :data="data"
       :nonce="nonce + 1"/>
-    <ens-confirm-modal
-      ref="ensBidModalOpen"
-      :confirm-send-tx="sendTx"
-      :signed-tx="signedTx"
-      :fee="transactionFee"
-      :is-hardware-wallet="isHardwareWallet"
-      :gas-price="$store.state.gasPrice"
-      :from="fromAddress"
-      :to="toAddress"
-      :value="amount"
-      :gas="gasLimit"
-      :data="data"
-      :nonce="nonce + 1"
-      :ens="ens"
-    />
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -61,14 +46,12 @@
 import ConfirmModal from './components/ConfirmModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import EnsConfirmModal from './components/EnsConfirmModal';
 
 export default {
   components: {
     'confirm-modal': ConfirmModal,
     'success-modal': SuccessModal,
-    'confirm-sign-modal': ConfirmSignModal,
-    'ens-confirm-modal': EnsConfirmModal
+    'confirm-sign-modal': ConfirmSignModal
   },
   props: {
     active: {
@@ -105,7 +88,7 @@ export default {
       signedTx: '',
       messageToSign: '',
       signedMessage: '',
-      successMessage: '',
+      successMessage: 'Success',
       linkMessage: 'OK',
       dismissed: true,
       web3WalletHash: '',
@@ -161,7 +144,7 @@ export default {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         });
-        this.openAModal('regular');
+        this.confirmationModalOpen();
       }
     );
 
@@ -179,7 +162,7 @@ export default {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         });
-        this.openAModal('regular');
+        this.confirmationModalOpen();
       }
     );
 
@@ -194,7 +177,10 @@ export default {
       signer(tx).then(_response => {
         this.web3WalletHash = _response;
       });
-      this.openAModal('web3wallet');
+      this.showSuccessModal(
+        'Continue transaction with Web3 Wallet Provider.',
+        'Close'
+      );
     });
 
     this.$eventHub.$on(
@@ -222,25 +208,9 @@ export default {
     });
   },
   methods: {
-    openAModal(type) {
-      if (this.ens.hasOwnProperty('name')) {
-        this.ensBidModalOpen();
-      } else if (type === 'regular') {
-        this.confirmationModalOpen();
-      } else if (type === 'web3wallet') {
-        this.showSuccessModal(
-          'Continue transaction with Web3 Wallet Provider.',
-          'Close'
-        );
-      }
-    },
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
-    },
-    ensBidModalOpen() {
-      window.scrollTo(0, 0);
-      this.$refs.ensBidModalOpen.$refs.confirmation.show();
     },
     confirmationOfflineGenerateModalOpen() {
       window.scrollTo(0, 0);

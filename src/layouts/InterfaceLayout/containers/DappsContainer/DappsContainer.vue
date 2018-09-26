@@ -9,10 +9,11 @@
           :title="dapp.title"
           :icon="dapp.icon"
           :desc="dapp.desc"
+          :active="dapp.active"
           @click="switchView(dapp.param)"/>
       </div>
     </div>
-    <register-domain-container
+    <register-domain
       v-show="selectedDapp === 'register-domain'"
       :reset-view="switchView"/>
     <domain-sale-container
@@ -25,7 +26,7 @@
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
 import DomainSaleContainer from '@/dapps/DomainSaleContainer';
-import RegisterDomainContainer from '@/dapps/RegisterDomainContainer';
+import RegisterDomain from '@/dapps/RegisterDomain';
 
 import domainSale from '@/assets/images/icons/domain-sale.svg';
 import registerDomain from '@/assets/images/icons/domain.svg';
@@ -34,7 +35,7 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'dapp-buttons': DappButtons,
     'domain-sale-container': DomainSaleContainer,
-    'register-domain-container': RegisterDomainContainer
+    'register-domain': RegisterDomain
   },
   data() {
     return {
@@ -44,13 +45,15 @@ export default {
           param: 'register-domain',
           icon: registerDomain,
           title: this.$t('interface.registerDom'),
-          desc: this.$t('interface.registerDomDesc')
+          desc: this.$t('interface.registerDomDesc'),
+          active: this.$store.state.network.type.chainID === 1
         },
         {
           param: 'domain-sale',
           icon: domainSale,
           title: this.$t('interface.domSale'),
-          desc: this.$t('interface.domSaleDesc')
+          desc: this.$t('interface.domSaleDesc'),
+          active: true
         }
       ]
     };

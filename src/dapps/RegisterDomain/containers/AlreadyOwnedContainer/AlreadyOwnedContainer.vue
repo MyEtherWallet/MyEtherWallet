@@ -99,5 +99,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AlreadyOwned.scss';
+@import 'AlreadyOwnedContainer.scss';
 </style>
