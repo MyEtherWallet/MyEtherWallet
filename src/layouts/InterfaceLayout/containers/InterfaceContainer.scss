@@ -93,10 +93,14 @@
     .input-container {
       margin-top: 20px;
       margin-bottom: -15px;
-      max-height: 0px;
+      max-height: 0;
       transition: all 0.4s ease;
       overflow: hidden;
       opacity: 1;
+
+      @media all and (max-width: $mobile-width) {
+        margin-bottom: 0;
+      }
 
       &.expended {
         max-height: 300px;
@@ -114,39 +118,31 @@
   }
 }
 
-
 @media all and (max-width: $mobile-width) {
-
-
-.submit-button-container {
-
-
-
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  text-align: center;
-  z-index: 9;
-  transition: all 0.3s ease;
-
-  &.hide-mobile-button {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .bottom-text {
-    display: none;
-  }
-
-  .submit-button {
-    margin: 0 auto;
+  .submit-button-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     text-align: center;
-    width: 100vw;
-    border-radius: 0;
-    background-color: $mew-green;
-    border: 0;
+    z-index: 9;
+    transition: all 0.3s ease;
 
+    &.hide-mobile-button {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .bottom-text {
+      display: none;
+    }
+
+    .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 100vw;
+      border-radius: 0;
+      background-color: $mew-green;
+      border: 0;
+    }
   }
-}
-
 }

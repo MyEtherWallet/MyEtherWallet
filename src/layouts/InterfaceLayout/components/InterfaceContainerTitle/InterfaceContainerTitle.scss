@@ -9,6 +9,10 @@
   border-radius: 10px;
   overflow: hidden;
 
+  @media all and (max-width: $mobile-width) {
+    padding: 15px 0;
+  }
+
   h2 {
     border-left: 5px solid $background-color-2;
     font-size: 24px;

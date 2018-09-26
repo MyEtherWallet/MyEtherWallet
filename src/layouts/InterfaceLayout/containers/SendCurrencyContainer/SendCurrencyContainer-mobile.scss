@@ -11,7 +11,7 @@
     .send-form {
       margin-top: 15px;
 
-      >.form-block>div:first-child {
+      > .form-block > div:first-child {
         margin-bottom: 35px;
       }
 
@@ -47,7 +47,6 @@
         }
       }
     } // .send-form
-
 
     .tokens {
       border-radius: 5px;

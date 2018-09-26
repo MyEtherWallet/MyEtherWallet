@@ -256,11 +256,12 @@ export default {
         'ether'
       );
     }
-
-    // Check if user is on bottom of page
-    window.onscroll = () => {
-      this.onPageScroll();
-    };
+  },
+  beforeMount() {
+    window.addEventListener('scroll', this.onPageScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onPageScroll);
   },
   methods: {
     onPageScroll() {
