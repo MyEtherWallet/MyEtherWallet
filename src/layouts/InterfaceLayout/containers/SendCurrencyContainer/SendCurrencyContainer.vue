@@ -127,7 +127,7 @@
           </div>
         </div>
         <div
-          v-if="advancedExpend"
+          :class="advancedExpend ? 'expended' : 'unexpended'"
           class="input-container">
           <div class="the-form user-input">
             <input
@@ -148,7 +148,9 @@
       </div>
     </div>
 
-    <div class="submit-button-container">
+    <div 
+      :class="onBottomOfPage ? 'hide-mobile-button' : ''" 
+      class="submit-button-container">
       <div
         :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
         @click="confirmationModalOpen">
@@ -207,7 +209,8 @@ export default {
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       signedTx: '',
-      resolvedAddress: ''
+      resolvedAddress: '',
+      onBottomOfPage: false
     };
   },
   computed: {
@@ -253,8 +256,23 @@ export default {
         'ether'
       );
     }
+
+    // Check if user is on bottom of page
+    window.onscroll = () => {
+      this.onPageScroll();
+    };
   },
   methods: {
+    onPageScroll() {
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight
+      ) {
+        this.onBottomOfPage = true;
+      } else {
+        this.onBottomOfPage = false;
+      }
+    },
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');

@@ -3,9 +3,14 @@
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
-      class="scrollup-container">
+      class="scrollup-container hidden">
       <scrollupbutton/>
     </div>
+
+    <div 
+      :class="mobileMenuOpen ? 'background-fill-active' : ''"
+      class="mobile-menu-background-fill" 
+      @click="mobileMenuOpen = !mobileMenuOpen"/>
 
     <div class="wrap">
       <div

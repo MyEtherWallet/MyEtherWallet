@@ -56,11 +56,14 @@
 .send-form {
   padding: 40px 60px 0;
 
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+
   input {
     width: 100%;
   }
 }
-
 
 .expending-block {
   padding-top: 30px;
@@ -73,7 +76,8 @@
     .toggle-button-container {
       display: flex;
       padding: 0 8px;
-      
+      align-items: center;
+
       .toggle-button {
         align-items: center;
         display: flex;
@@ -89,10 +93,60 @@
     .input-container {
       margin-top: 20px;
       margin-bottom: -15px;
+      max-height: 0px;
+      transition: all 0.4s ease;
+      overflow: hidden;
+      opacity: 1;
+
+      &.expended {
+        max-height: 300px;
+        opacity: 1;
+      }
+
+      &.unexpended {
+        margin: 0;
+      }
 
       .user-input {
         margin-bottom: 5px;
       }
     }
   }
+}
+
+
+@media all and (max-width: $mobile-width) {
+
+
+.submit-button-container {
+
+
+
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  text-align: center;
+  z-index: 9;
+  transition: all 0.3s ease;
+
+  &.hide-mobile-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .bottom-text {
+    display: none;
+  }
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    width: 100vw;
+    border-radius: 0;
+    background-color: $mew-green;
+    border: 0;
+
+  }
+}
+
 }

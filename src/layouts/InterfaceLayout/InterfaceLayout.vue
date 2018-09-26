@@ -12,13 +12,13 @@
       </div>
       <div class="contents">
         <div class="tx-contents">
-          <div>
+          <div v-if="infoInterfaceOpen || $mq === 'lg'">
             <interface-address :address="address" />
           </div>
-          <div>
+          <div v-if="infoInterfaceOpen || $mq === 'lg'">
             <interface-balance :balance="balance"/>
           </div>
-          <div>
+          <div v-if="infoInterfaceOpen || $mq === 'lg'">
             <interface-network :block-number="blockNumber" />
           </div>
           <send-currency-container
@@ -95,7 +95,8 @@ export default {
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: [],
-      sidemenuOpen: false
+      sidemenuOpen: false,
+      infoInterfaceOpen: false
     };
   },
   computed: {

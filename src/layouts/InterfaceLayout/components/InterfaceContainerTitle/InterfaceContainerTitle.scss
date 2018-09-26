@@ -6,6 +6,8 @@
   border-bottom: 2px solid $background-color-1;
   display: flex;
   padding: 20px 0;
+  border-radius: 10px;
+  overflow: hidden;
 
   h2 {
     border-left: 5px solid $background-color-2;
@@ -15,5 +17,10 @@
     margin: 0;
     padding: 0;
     padding-left: 27px;
+
+    @media all and (max-width: $mobile-width) {
+      padding-left: 17px;
+      font-size: 20px;
+    }
   }
 }

@@ -274,7 +274,7 @@
     padding: 15px 0 25px;
     border-top: 1px solid $border-color-5;
     border-bottom: 1px solid $border-color-5;
-    transition: all 0.3s ease;
+    transition: max-height 0.2s linear, padding 0.1s linear;
     overflow: hidden;
 
     .nav {
@@ -318,12 +318,31 @@
 
   .mobile-menu-opened {
     max-height: 1000px;
-    opacity: 1;
   }
 
   .mobile-menu-closed {
     padding: 0;
     max-height: 0;
+    border: 0;
+  }
+
+  .mobile-menu-background-fill {
+    position: fixed;
+    top: 0;
+    left: 0;
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
     opacity: 0;
+    background-color: $black;
+    transition: opacity 0.2s linear;
+    pointer-events: none;
+
+    &.background-fill-active {
+      pointer-events: auto;
+      opacity: 0.6;
+    }
+
   }
 } // @media all and (max-width: $mobile-width)
