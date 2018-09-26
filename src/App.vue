@@ -53,7 +53,9 @@ export default {
       account: {
         balance: 0
       },
-      Transactions: {},
+      Transactions: {
+        sidemenuOpen: false
+      },
       Networks: nodeList,
       Errors: {},
       online: true,

@@ -8,23 +8,48 @@
   padding: 20px 0;
   border-radius: 10px;
   overflow: hidden;
+  user-select: none;
+
+}
+
+
+h2 {
+  border-left: 5px solid $background-color-2;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 37px;
+  margin: 0;
+  padding: 0;
+  padding-left: 27px;
 
   @media all and (max-width: $mobile-width) {
+    padding-left: 17px;
+    font-size: 20px;
+  }
+}
+
+
+@media all and (max-width: $mobile-width) {
+  .content-title {
     padding: 15px 0;
   }
 
-  h2 {
-    border-left: 5px solid $background-color-2;
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 37px;
-    margin: 0;
-    padding: 0;
-    padding-left: 27px;
+  .side-menu-button {
+    margin-left: auto;
+    color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 20px;
+    padding: 6px 13px;
+    margin-right: 10px;
+    user-select: none;
 
-    @media all and (max-width: $mobile-width) {
-      padding-left: 17px;
-      font-size: 20px;
+    &:active {
+      color: $white;
+      background-color: $mew-green;
     }
   }
+
 }
+
+
+

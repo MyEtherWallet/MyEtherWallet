@@ -95,11 +95,13 @@ export default {
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: [],
-      sidemenuOpen: false,
       infoInterfaceOpen: false
     };
   },
   computed: {
+    sidemenuOpen() {
+      return this.$store.state.Transactions.sidemenuOpen;
+    },
     address() {
       if (this.$store.state.wallet !== null) {
         return this.$store.state.wallet.getAddressString();
