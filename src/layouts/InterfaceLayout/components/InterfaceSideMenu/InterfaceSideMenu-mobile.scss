@@ -1,6 +1,13 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 200;
+    background-color: $white;
     padding: 40px 20px;
 
     ul {
