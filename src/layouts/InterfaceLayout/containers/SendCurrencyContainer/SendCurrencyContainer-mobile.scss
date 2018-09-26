@@ -2,7 +2,8 @@
 @import '../InterfaceContainer';
 
 @media all and (max-width: $mobile-width) {
-  p, h4 {
+  p,
+  h4 {
     user-select: none;
   }
 

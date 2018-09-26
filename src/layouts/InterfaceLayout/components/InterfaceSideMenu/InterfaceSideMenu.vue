@@ -170,6 +170,7 @@ export default {
         {
           click: function() {
             self.switchTabs('swap');
+            self.sidemenuClose();
           },
           isActive: self.currentTab === 'swap',
           iconSrc:
@@ -181,6 +182,7 @@ export default {
         {
           click: function() {
             self.switchTabs('dapps');
+            self.sidemenuClose();
           },
           isActive: self.currentTab === 'dapps',
           iconSrc:
@@ -322,6 +324,10 @@ export default {
     }
   },
   methods: {
+    sidemenuClose() {
+      this.$store.state.Transactions.sidemenuOpen = false;
+      console.log('======> ' + this.$store.state.Transactions.sidemenuOpen);
+    },
     updateTabData() {
       const self = this;
       this.tabData = [
@@ -343,6 +349,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('send');
+                self.sidemenuClose();
               }
             },
             {
@@ -351,6 +358,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('offline');
+                self.sidemenuClose();
               }
             }
           ]
@@ -402,6 +410,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('interactC');
+                self.sidemenuClose();
               }
             },
             {
@@ -410,6 +419,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('deployC');
+                self.sidemenuClose();
               }
             }
           ]
@@ -435,6 +445,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('signMessage');
+                self.sidemenuClose();
               }
             },
             {
@@ -443,6 +454,7 @@ export default {
               itemClick: function(e) {
                 e.cancelBubble = true;
                 self.switchTabs('verifyMessage');
+                self.sidemenuClose();
               }
             }
           ]
