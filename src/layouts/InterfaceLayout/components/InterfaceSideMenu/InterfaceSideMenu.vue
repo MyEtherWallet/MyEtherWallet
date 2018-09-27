@@ -1,5 +1,6 @@
 <template>
   <div class="transactions-side-menu">
+
     <div class="side-menu">
       <!-- <ul>
         <li>
@@ -88,7 +89,27 @@
           </ul>
         </li>
       </ul> -->
-      <ul>
+
+
+      <div class="side-menu-header">
+        <div class="top-logo">
+          <img
+            :class="isPageOnTop == false ? 'logo-small' : ''"
+            class="logo-large"
+            src="~@/assets/images/logo.png">
+        </div>
+        <div class="mobile-menu-buttons">
+
+          <div 
+            class="menu-close"
+            @click="sidemenuClose">
+            <div/>
+            <div/>
+          </div>
+        </div>
+      </div>
+
+      <ul class="menu">
         <li
           v-for="(tab, idx) in tabData"
           :key="tab.title + idx + tab.caret"

@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .wrap {
-    padding-top: 61px;
+    padding-top: 70px;
   }
 
   .scrollup-container {
@@ -30,18 +30,18 @@
     .header-container {
       align-items: center;
       display: flex;
-      padding: 12px 0;
+      padding: 17px 8px;
       transition: all 0.3s ease;
 
       &.tiny-header-container {
-        padding: 5px 0;
+        padding: 10px 8px;
       }
 
       .top-logo {
         line-height: 10px;
 
         img {
-          height: 33px;
+          height: 36px;
           transition: all 0.3s ease;
         }
 

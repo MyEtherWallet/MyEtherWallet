@@ -32,7 +32,6 @@
               </div>
             </router-link>
             <div class="top-menu">
-
               <b-nav>
                 <b-nav-item
                   to="/"
