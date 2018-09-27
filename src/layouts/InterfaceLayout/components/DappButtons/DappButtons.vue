@@ -1,11 +1,11 @@
 <template>
-  <div @click.prevent="switcher">
+  <router-link :to="param">
     <div :class="['dapps-button', active ? '': 'disabled']">
       <img :src="icon">
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -26,11 +26,10 @@ export default {
     active: {
       type: Boolean,
       default: true
-    }
-  },
-  methods: {
-    switcher() {
-      this.$emit('click');
+    },
+    param: {
+      type: String,
+      default: ''
     }
   }
 };

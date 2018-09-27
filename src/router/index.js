@@ -20,6 +20,10 @@ import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOffli
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
+
+import RegisterDomain from '@/dapps/RegisterDomain';
+import DomainSaleContainer from '@/dapps/DomainSaleContainer';
+
 import { router as routerConfig } from '@/configs/build';
 
 Vue.use(Router);
@@ -71,6 +75,18 @@ export default new Router({
           path: 'dapps',
           name: 'Dapps',
           component: DappsContainer
+        },
+        {
+          path: 'dapps/register-domain',
+          name: 'Register Domain',
+          component: RegisterDomain,
+          props: true
+        },
+        {
+          path: 'dapps/domain-sale',
+          name: 'Domain Sale',
+          component: DomainSaleContainer,
+          props: true
         },
         {
           path: 'deploy-contract',

@@ -1,6 +1,6 @@
 <template>
   <div class="register-domain-container">
-    <back-button :reset-view="resetView"/>
+    <back-button/>
     <ens-bid-container
       v-if="uiState === 'nameAvailableAuctionNotStarted' || uiState === 'nameAvailableAuctionStarted'"
       :cancel="cancel"
@@ -67,12 +67,6 @@ export default {
     'initial-state-container': InitialStateContainer,
     'name-forbidden-container': NameForbiddenContainer,
     'already-owned-container': AlreadyOwnedContainer
-  },
-  props: {
-    resetView: {
-      type: Function,
-      default: function() {}
-    }
   },
   data() {
     return {

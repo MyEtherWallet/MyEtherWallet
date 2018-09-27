@@ -1,6 +1,6 @@
 <template>
   <div class="domain-sale-container">
-    <back-button :reset-view="resetView"/>
+    <back-button/>
     <div class="send-form">
       <div class="title-container">
         <div class="title">
@@ -70,12 +70,6 @@ export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'back-button': BackButton
-  },
-  props: {
-    resetView: {
-      type: Function,
-      default: function() {}
-    }
   },
   data() {
     return {};

@@ -2,6 +2,7 @@
 
 .dapps-button {
   border-radius: 5px;
+  color: $black;
   cursor: pointer;
   padding: 40px 20px;
   text-align: center;
@@ -9,6 +10,7 @@
   background: $light-green-4;
 
   &:hover {
+    border: 1px solid $mew-green;
     background-color: $light-green-6;
     box-shadow: 2px 10px 20px $light-grey-10;
   }
@@ -23,5 +25,9 @@
 
   p {
     padding: 0 10px;
+  }
+
+  a {
+    color: black
   }
 }

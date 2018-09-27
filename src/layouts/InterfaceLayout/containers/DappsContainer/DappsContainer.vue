@@ -1,6 +1,6 @@
 <template>
   <div class="dapps-container">
-    <div v-show="selectedDapp === ''">
+    <div>
       <interface-container-title :title="$t('common.dapps')"/>
       <div class="buttons-container">
         <dapp-buttons
@@ -10,15 +10,9 @@
           :icon="dapp.icon"
           :desc="dapp.desc"
           :active="dapp.active"
-          @click="switchView(dapp.param)"/>
+          :param="dapp.param"/>
       </div>
     </div>
-    <register-domain
-      v-show="selectedDapp === 'register-domain'"
-      :reset-view="switchView"/>
-    <domain-sale-container
-      v-show="selectedDapp === 'domain-sale'"
-      :reset-view="switchView"/>
   </div>
 </template>
 
@@ -42,14 +36,14 @@ export default {
       selectedDapp: '',
       dapps: [
         {
-          param: 'register-domain',
+          param: '/interface/dapps/register-domain',
           icon: registerDomain,
           title: this.$t('interface.registerDom'),
           desc: this.$t('interface.registerDomDesc'),
           active: this.$store.state.network.type.chainID === 1
         },
         {
-          param: 'domain-sale',
+          param: '/interface/dapps/domain-sale',
           icon: domainSale,
           title: this.$t('interface.domSale'),
           desc: this.$t('interface.domSaleDesc'),
@@ -57,11 +51,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    switchView(param) {
-      this.selectedDapp = param;
-    }
   }
 };
 </script>

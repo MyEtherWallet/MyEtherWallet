@@ -101,6 +101,7 @@ export default {
             self.$route.path === '/interface/send-offline-transaction' ||
             self.$route.path === '/interface/send-transaction',
           iconSrc:
+            self.$route.path === '/interface' ||
             self.$route.path === '/interface/send-offline-transaction' ||
             self.$route.path === '/interface/send-transaction'
               ? require(`@/assets/images/sidemenu/send-active.svg`)
@@ -111,7 +112,8 @@ export default {
             {
               itemActive: self.$route.path === '/interface/send-transaction',
               itemTitle: self.$t('common.sendTx'),
-              itemClick: function() {
+              itemClick: function(e) {
+                e.cancelBubble = true;
                 self.$router.push({ path: '/interface/send-transaction' });
               }
             },
@@ -131,6 +133,7 @@ export default {
         {
           click: function() {
             self.$router.push({ path: '/interface/swap' });
+            self.toggle();
           },
           isActive: self.$route.path === '/interface/swap',
           iconSrc:
@@ -142,6 +145,7 @@ export default {
         {
           click: function() {
             self.$router.push({ path: '/interface/dapps' });
+            self.toggle();
           },
           isActive: self.$route.path === '/interface/dapps',
           iconSrc:
