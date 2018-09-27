@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="send-form">
+    <div 
+      v-if="false" 
+      class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
@@ -64,7 +66,9 @@
         </div>
       </div>
     </div>
-    <div class="send-form">
+    <div 
+      v-if="false" 
+      class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
@@ -89,7 +93,9 @@
 </template>
 
 <style lang="scss" scoped>
-@import 'TxSpeedInput.scss';
+@import 'TxSpeedInput-desktop.scss';
+@import 'TxSpeedInput-tablet.scss';
+@import 'TxSpeedInput-mobile.scss';
 </style>
 
 <script>

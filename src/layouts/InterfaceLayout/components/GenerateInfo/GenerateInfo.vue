@@ -18,16 +18,21 @@
         </div>
         <div class="the-form gas-amount">
           <input
+            v-show="false"
             ref="fromaddress"
             :value="$store.state.wallet.getAddressString()"
             type="text"
             placeholder="From Address"
             autocomplete="off" >
-          <div class="good-button-container">
+          
+          <div 
+            v-show="false" 
+            class="good-button-container">
             <i
               :class="[isValid ? 'not-good' : '', 'fa fa-check-circle good-button']"
               aria-hidden="true"/>
           </div>
+          <dropdown-address-selector />
         </div>
       </div>
       <tx-speed-input
@@ -36,8 +41,10 @@
         :gas-limit="gasLimit"
         @gasLimitUpdate="gasLimitUpdated"
         @nonceUpdate="nonceUpdated"/>
+
       <div
-        v-if="!moreInfoGenerated"
+        v-if="!moreInfoGenerated" 
+        :class="onBottomOfPage ? 'hide-mobile-button' : ''"
         class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
@@ -47,7 +54,8 @@
       </div>
 
       <div
-        v-if="moreInfoGenerated"
+        v-if="moreInfoGenerated" 
+        :class="onBottomOfPage ? 'hide-mobile-button' : ''"
         class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
@@ -55,6 +63,7 @@
           Continue
         </div>
       </div>
+
       <interface-bottom-text
         link="/"
         question="Have issues?"
@@ -66,10 +75,13 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../../components/TxSpeedInput';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'tx-speed-input': TxSpeedInput
+    'tx-speed-input': TxSpeedInput,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     gasLimit: {
@@ -84,10 +96,27 @@ export default {
   data() {
     return {
       moreInfoGenerated: false,
-      isValid: false
+      isValid: false,
+      onBottomOfPage: false
     };
   },
+  beforeMount() {
+    window.addEventListener('scroll', this.onPageScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onPageScroll);
+  },
   methods: {
+    onPageScroll() {
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight
+      ) {
+        this.onBottomOfPage = true;
+      } else {
+        this.onBottomOfPage = false;
+      }
+    },
     generateInfo() {
       this.moreInfoGenerated = true;
     },
@@ -120,5 +149,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'GenerateInfo.scss';
+@import 'GenerateInfo-desktop.scss';
+@import 'GenerateInfo-tablet.scss';
+@import 'GenerateInfo-mobile.scss';
 </style>

@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .wrap {
   .send-form {
@@ -207,3 +208,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
