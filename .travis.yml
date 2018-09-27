@@ -32,7 +32,7 @@ before_install:
   - npm install -g npm@'>=6.0.0'
 stages:
   - name: run on pull requests
-    if: type = pull_request
+    if: type = pull_request and repo != myetherwallet/myetherwallet
   - name: add to mewbuilds
     if: type != pull_request
   - name: add to codecov
