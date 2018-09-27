@@ -34,6 +34,8 @@ before_install:
   - chmod 400 ipfs-host.pem
   - npm install -g npm@'>=6.0.0'
 stages:
+  - name: run on pull requests
+    if: type = pull_request
   - name: add to mewbuilds
     if: type != pull_request
   - name: add to codecov
@@ -49,6 +51,11 @@ stages:
 jobs:
   fast_finish: true
   include:
+    - stage: run on pull requests
+      script:
+        - npm run lint
+        - npm run test
+        - ROUTER_MODE=history npm run build
     - stage: add to codecov
       script:
         - npm run codecov
