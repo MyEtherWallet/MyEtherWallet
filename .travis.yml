@@ -54,7 +54,7 @@ jobs:
     - stage: run on pull requests
       script:
         - npm run lint
-        - npm run test
+        - npm run codecov
         - ROUTER_MODE=history npm run build
     - stage: add to codecov
       script:
