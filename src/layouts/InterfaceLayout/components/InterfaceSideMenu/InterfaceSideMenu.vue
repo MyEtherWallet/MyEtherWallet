@@ -1,93 +1,6 @@
 <template>
   <div class="transactions-side-menu">
     <div class="side-menu">
-      <!-- <ul>
-        <li>
-          <div
-            :class="[selectedTab === 'send' || selectedTab === 'offline' ? 'active' : '', 'menu-group-title']"
-            @click.prevent="toggle('openSend')">
-            <img :src="selectedTab === 'send' || selectedTab === 'offline'? require(`@/assets/images/sidemenu/send-active.svg`): require(`@/assets/images/sidemenu/send.svg`)">
-            <p>{{ $t("interface.txSideMenuTitle") }}</p>
-            <i
-              :class="['fa', showSend ? 'fa-angle-up':'fa-angle-down']"
-              aria-hidden="true"/>
-          </div>
-          <ul v-show="showSend">
-            <li
-              :class="selectedTab === 'send'? 'active': ''"
-              @click.prevent="switchTabs('send')">
-              {{ $t("common.sendTx") }}
-            </li>
-            <li
-              :class="selectedTab === 'offline'? 'active': ''"
-              @click.prevent="switchTabs('offline')">
-              {{ $t("common.offline") }}
-            </li>
-          </ul>
-        </li>
-        <li @click.prevent="switchTabs('swap')" >
-          <div :class="[selectedTab === 'swap'? 'active': '', 'menu-group-title']">
-            <img :src="selectedTab === 'swap'? require(`@/assets/images/sidemenu/swap-active.svg`): require(`@/assets/images/sidemenu/swap.svg`)">
-            <p>
-              {{ $t("common.swap") }}
-            </p>
-          </div>
-        </li>
-        <li @click.prevent="switchTabs('dapps')" >
-          <div :class="[selectedTab === 'dapps'? 'active': '', 'menu-group-title']">
-            <img :src="selectedTab === 'dapps'? require(`@/assets/images/sidemenu/dapps-active.svg`): require(`@/assets/images/sidemenu/dapps.svg`)">
-            <p>
-              {{ $t("common.dapps") }}
-            </p>
-          </div>
-        </li>
-        <li>
-          <div
-            :class="[selectedTab === 'interactC' || selectedTab === 'deployC' ? 'active' : '', 'menu-group-title']"
-            @click.prevent="toggle('openContract')">
-            <img :src="selectedTab === 'interactC' || selectedTab === 'deployC'? require(`@/assets/images/sidemenu/contract-active.svg`): require(`@/assets/images/sidemenu/contract.svg`)">
-            <p>{{ $t("interface.txSideMenuContract") }}</p>
-            <i
-              :class="['fa', showContract ? 'fa-angle-up':'fa-angle-down']"
-              aria-hidden="true"/>
-          </div>
-          <ul v-show="showContract">
-            <li
-              :class="selectedTab === 'interactC'? 'active': ''"
-              @click.prevent="switchTabs('interactC')">
-              {{ $t("common.interactWcontract") }}
-            </li>
-            <li
-              :class="selectedTab === 'deployC'? 'active': ''"
-              @click.prevent="switchTabs('deployC')">
-              {{ $t("common.depContract") }}
-            </li>
-          </ul>
-        </li>
-        <li>
-          <div
-            :class="[selectedTab === 'signMessage' || selectedTab === 'verifyMessage' ? 'active' : '', 'menu-group-title']"
-            @click.prevent="toggle('openMessage')">
-            <img :src="selectedTab === 'signMessage' || selectedTab === 'verifyMessage'? require(`@/assets/images/sidemenu/message-active.svg`): require(`@/assets/images/sidemenu/message.svg`)">
-            <p>{{ $t("interface.txSideMenuMessage") }}</p>
-            <i
-              :class="['fa', showMessage ? 'fa-angle-up':'fa-angle-down']"
-              aria-hidden="true"/>
-          </div>
-          <ul v-show="showMessage">
-            <li
-              :class="selectedTab === 'signMessage'? 'active': ''"
-              @click.prevent="switchTabs('signMessage')">
-              {{ $t("common.signMessage") }}
-            </li>
-            <li
-              :class="selectedTab === 'verifyMessage'? 'active': ''"
-              @click.prevent="switchTabs('verifyMessage')">
-              {{ $t("common.verifyMessage") }}
-            </li>
-          </ul>
-        </li>
-      </ul> -->
       <ul>
         <li
           v-for="(tab, idx) in tabData"
@@ -119,141 +32,13 @@
 </template>
 
 <script>
-import store from 'store';
 export default {
-  props: {
-    currentTab: {
-      type: String,
-      default: ''
-    },
-    switchTabs: {
-      type: Function,
-      default: function() {}
-    }
-  },
   data() {
-    const self = this;
     return {
       showSend: false,
       showContract: false,
       showMessage: false,
-      tabData: [
-        {
-          click: function() {
-            self.toggle('openSend');
-          },
-          isActive: self.currentTab === 'send' || self.currentTab === 'offline',
-          iconSrc:
-            self.currentTab === 'send' || self.currentTab === 'offline'
-              ? require(`@/assets/images/sidemenu/send-active.svg`)
-              : require(`@/assets/images/sidemenu/send.svg`),
-          title: self.$t('interface.txSideMenuTitle'),
-          caret: self.showSend,
-          contents: [
-            {
-              itemActive: self.currentTab === 'send',
-              itemTitle: self.$t('common.sendTx'),
-              itemClick: function() {
-                self.switchTabs('send');
-              }
-            },
-            {
-              itemActive: self.currentTab === 'offline',
-              itemTitle: self.$t('common.offline'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('offline');
-              }
-            }
-          ]
-        },
-        {
-          click: function() {
-            self.switchTabs('swap');
-          },
-          isActive: self.currentTab === 'swap',
-          iconSrc:
-            self.currentTab === 'swap'
-              ? require(`@/assets/images/sidemenu/swap-active.svg`)
-              : require(`@/assets/images/sidemenu/swap.svg`),
-          title: self.$t('common.swap')
-        },
-        {
-          click: function() {
-            self.switchTabs('dapps');
-          },
-          isActive: self.currentTab === 'dapps',
-          iconSrc:
-            self.currentTab === 'dapps'
-              ? require(`@/assets/images/sidemenu/dapps-active.svg`)
-              : require(`@/assets/images/sidemenu/dapps.svg`),
-          title: self.$t('common.dapps')
-        },
-        {
-          click: function() {
-            self.toggle('openContract');
-          },
-          isActive:
-            self.currentTab === 'interactC' || self.currentTab === 'deployC',
-          iconSrc:
-            self.currentTab === 'interactC' || self.currentTab === 'deployC'
-              ? require(`@/assets/images/sidemenu/contract-active.svg`)
-              : require(`@/assets/images/sidemenu/contract.svg`),
-          title: self.$t('interface.txSideMenuContract'),
-          caret: self.showContract,
-          contents: [
-            {
-              itemActive: self.currentTab === 'interactC',
-              itemTitle: self.$t('common.interactWcontract'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('interactC');
-              }
-            },
-            {
-              itemActive: self.currentTab === 'deployC',
-              itemTitle: self.$t('common.depContract'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('deployC');
-              }
-            }
-          ]
-        },
-        {
-          click: function() {
-            self.toggle('openMessage');
-          },
-          isActive:
-            self.currentTab === 'signMessage' ||
-            self.currentTab === 'verifyMessage',
-          iconSrc:
-            self.currentTab === 'signMessage' ||
-            self.currentTab === 'verifyMessage'
-              ? require(`@/assets/images/sidemenu/message-active.svg`)
-              : require(`@/assets/images/sidemenu/message.svg`),
-          title: self.$t('interface.txSideMenuMessage'),
-          caret: self.showMessage,
-          contents: [
-            {
-              itemActive: self.currentTab === 'signMessage',
-              itemTitle: self.$t('common.signMessage'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('signMessage');
-              }
-            },
-            {
-              itemActive: self.currentTab === 'verifyMessage',
-              itemTitle: self.$t('common.verifyMessage'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('verifyMessage');
-              }
-            }
-          ]
-        }
-      ]
+      tabData: []
     };
   },
   watch: {
@@ -263,42 +48,18 @@ export default {
         case 'send':
           this.showSend = true;
           this.showContract = false;
-          this.$store.dispatch('updatePageState', [
-            'interface',
-            'sideMenu',
-            newVal
-          ]);
-          store.set('sideMenu', newVal);
           break;
         case 'offline':
           this.showSend = true;
           this.showContract = false;
-          this.$store.dispatch('updatePageState', [
-            'interface',
-            'sideMenu',
-            newVal
-          ]);
-          store.set('sideMenu', newVal);
           break;
         case 'interactC':
           this.showSend = false;
           this.showContract = true;
-          this.$store.dispatch('updatePageState', [
-            'interface',
-            'sideMenu',
-            newVal
-          ]);
-          store.set('sideMenu', newVal);
           break;
         case 'deployC':
           this.showSend = false;
           this.showContract = true;
-          this.$store.dispatch('updatePageState', [
-            'interface',
-            'sideMenu',
-            newVal
-          ]);
-          store.set('sideMenu', newVal);
           break;
         default:
           this.showSend = false;
@@ -319,7 +80,13 @@ export default {
         this.tabData = newVal;
       },
       deep: true
+    },
+    $route: function() {
+      this.updateTabData();
     }
+  },
+  mounted() {
+    this.updateTabData();
   },
   methods: {
     updateTabData() {
@@ -329,56 +96,56 @@ export default {
           click: function() {
             self.toggle('openSend');
           },
-          isActive: self.currentTab === 'send' || self.currentTab === 'offline',
+          isActive:
+            self.$route.path === '/interface' ||
+            self.$route.path === '/interface/send-offline-transaction' ||
+            self.$route.path === '/interface/send-transaction',
           iconSrc:
-            self.currentTab === 'send' || self.currentTab === 'offline'
+            self.$route.path === '/interface/send-offline-transaction' ||
+            self.$route.path === '/interface/send-transaction'
               ? require(`@/assets/images/sidemenu/send-active.svg`)
               : require(`@/assets/images/sidemenu/send.svg`),
           title: self.$t('interface.txSideMenuTitle'),
           caret: self.showSend,
           contents: [
             {
-              itemActive: self.currentTab === 'send',
+              itemActive: self.$route.path === '/interface/send-transaction',
               itemTitle: self.$t('common.sendTx'),
-              itemClick: function(e) {
-                e.cancelBubble = true;
-                self.switchTabs('send');
+              itemClick: function() {
+                self.$router.push({ path: '/interface/send-transaction' });
               }
             },
             {
-              itemActive: self.currentTab === 'offline',
+              itemActive:
+                self.$route.path === '/interface/send-offline-transaction',
               itemTitle: self.$t('common.offline'),
               itemClick: function(e) {
                 e.cancelBubble = true;
-                self.switchTabs('offline');
+                self.$router.push({
+                  path: '/interface/send-offline-transaction'
+                });
               }
             }
           ]
         },
         {
           click: function() {
-            self.showSend = false;
-            self.showContract = false;
-            self.showMessage = false;
-            self.switchTabs('swap');
+            self.$router.push({ path: '/interface/swap' });
           },
-          isActive: self.currentTab === 'swap',
+          isActive: self.$route.path === '/interface/swap',
           iconSrc:
-            self.currentTab === 'swap'
+            self.$route.path === '/interface/swap'
               ? require(`@/assets/images/sidemenu/swap-active.svg`)
               : require(`@/assets/images/sidemenu/swap.svg`),
           title: self.$t('common.swap')
         },
         {
           click: function() {
-            self.showSend = false;
-            self.showContract = false;
-            self.showMessage = false;
-            self.switchTabs('dapps');
+            self.$router.push({ path: '/interface/dapps' });
           },
-          isActive: self.currentTab === 'dapps',
+          isActive: self.$route.path === '/interface/dapps',
           iconSrc:
-            self.currentTab === 'dapps'
+            self.$route.path === '/interface/dapps'
               ? require(`@/assets/images/sidemenu/dapps-active.svg`)
               : require(`@/assets/images/sidemenu/dapps.svg`),
           title: self.$t('common.dapps')
@@ -388,28 +155,33 @@ export default {
             self.toggle('openContract');
           },
           isActive:
-            self.currentTab === 'interactC' || self.currentTab === 'deployC',
+            self.$route.path === '/interface/interact-with-contract' ||
+            self.$route.path === '/interface/deploy-contract',
           iconSrc:
-            self.currentTab === 'interactC' || self.currentTab === 'deployC'
+            self.$route.path === '/interface/interact-with-contract' ||
+            self.$route.path === '/interface/deploy-contract'
               ? require(`@/assets/images/sidemenu/contract-active.svg`)
               : require(`@/assets/images/sidemenu/contract.svg`),
           title: self.$t('interface.txSideMenuContract'),
           caret: self.showContract,
           contents: [
             {
-              itemActive: self.currentTab === 'interactC',
+              itemActive:
+                self.$route.path === '/interface/interact-with-contract',
               itemTitle: self.$t('common.interactWcontract'),
               itemClick: function(e) {
                 e.cancelBubble = true;
-                self.switchTabs('interactC');
+                self.$router.push({
+                  path: '/interface/interact-with-contract'
+                });
               }
             },
             {
-              itemActive: self.currentTab === 'deployC',
+              itemActive: self.$route.path === '/interface/deploy-contract',
               itemTitle: self.$t('common.depContract'),
               itemClick: function(e) {
                 e.cancelBubble = true;
-                self.switchTabs('deployC');
+                self.$router.push({ path: '/interface/deploy-contract' });
               }
             }
           ]
@@ -419,30 +191,30 @@ export default {
             self.toggle('openMessage');
           },
           isActive:
-            self.currentTab === 'signMessage' ||
-            self.currentTab === 'verifyMessage',
+            self.$route.path === '/interface/sign-message' ||
+            self.$route.path === '/interface/verify-message',
           iconSrc:
-            self.currentTab === 'signMessage' ||
-            self.currentTab === 'verifyMessage'
+            self.$route.path === '/interface/sign-message' ||
+            self.$route.path === '/interface/verify-message'
               ? require(`@/assets/images/sidemenu/message-active.svg`)
               : require(`@/assets/images/sidemenu/message.svg`),
           title: self.$t('interface.txSideMenuMessage'),
           caret: self.showMessage,
           contents: [
             {
-              itemActive: self.currentTab === 'signMessage',
+              itemActive: self.$route.path === '/interface/sign-message',
               itemTitle: self.$t('common.signMessage'),
               itemClick: function(e) {
                 e.cancelBubble = true;
-                self.switchTabs('signMessage');
+                self.$router.push({ path: '/interface/sign-message' });
               }
             },
             {
-              itemActive: self.currentTab === 'verifyMessage',
+              itemActive: self.$route.path === '/interface/verify-message',
               itemTitle: self.$t('common.verifyMessage'),
               itemClick: function(e) {
                 e.cancelBubble = true;
-                self.switchTabs('verifyMessage');
+                self.$router.push({ path: '/interface/verify-message' });
               }
             }
           ]
@@ -470,13 +242,7 @@ export default {
           this.showSend = false;
           this.showContract = false;
           this.showMessage = false;
-          this.switchTabs(param);
-          this.storePage(param);
       }
-    },
-    storePage(param) {
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param]);
-      store.set('sideMenu', param);
     }
   }
 };

@@ -12,7 +12,7 @@ module.exports = {
     },
     devServer: {
       https: true,
-      host: '0.0.0.0',
+      host: 'localhost',
       hotOnly: true,
       port: 8080
     },

@@ -4,9 +4,7 @@
     class="send-eth-and-tokens">
     <div class="wrap">
       <div class="side-nav">
-        <interface-side-menu
-          :current-tab="currentTab"
-          :switch-tabs="switchTabs"/>
+        <interface-side-menu/>
       </div>
       <div class="contents">
         <div class="tx-contents">
@@ -19,17 +17,9 @@
           <div>
             <interface-network :block-number="blockNumber" />
           </div>
-          <send-currency-container
-            v-show="currentTab === 'send' || currentTab === ''"
+          <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"/>
-          <send-offline-container v-show="currentTab === 'offline'"/>
-          <swap-container v-show="currentTab === 'swap'"/>
-          <dapps-container v-show="currentTab === 'dapps'"/>
-          <interact-with-contract-container v-show="currentTab === 'interactC'"/>
-          <sign-message-container v-show="currentTab === 'signMessage'"/>
-          <verify-message-container v-show="currentTab === 'verifyMessage'"/>
-          <deploy-contract-container v-show="currentTab === 'deployC'"/>
           <div
             v-if="$store.state.online"
             class="tokens">
@@ -51,14 +41,6 @@
 import { mapGetters } from 'vuex';
 import { parseTokensHex } from '@/helpers';
 
-import DappsContainer from './containers/DappsContainer';
-import DeployContractContainer from './containers/DeployContractContainer';
-import InteractWithContractContainer from './containers/InteractWithContractContainer';
-import SendCurrencyContainer from './containers/SendCurrencyContainer';
-import SendOfflineContainer from './containers/SendOfflineContainer';
-import SwapContainer from './containers/SwapContainer';
-import SignMessageContainer from './containers/SignMessageContainer';
-import VerifyMessageContainer from './containers/VerifyMessageContainer';
 import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
 
 import InterfaceAddress from './components/InterfaceAddress';
@@ -73,14 +55,6 @@ import store from 'store';
 
 export default {
   components: {
-    'send-currency-container': SendCurrencyContainer,
-    'send-offline-container': SendOfflineContainer,
-    'swap-container': SwapContainer,
-    'dapps-container': DappsContainer,
-    'interact-with-contract-container': InteractWithContractContainer,
-    'deploy-contract-container': DeployContractContainer,
-    'sign-message-container': SignMessageContainer,
-    'verify-message-container': VerifyMessageContainer,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
@@ -90,7 +64,6 @@ export default {
   },
   data() {
     return {
-      currentTab: this.$store.state.pageStates.interface.sideMenu,
       balance: '0',
       blockNumber: 0,
       tokens: [],
@@ -136,11 +109,6 @@ export default {
     this.clearIntervals();
   },
   methods: {
-    switchTabs(param) {
-      this.currentTab = param;
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param]);
-      store.set('sideMenu', param);
-    },
     async fetchTokens() {
       this.receivedTokens = true;
       const abi = [
