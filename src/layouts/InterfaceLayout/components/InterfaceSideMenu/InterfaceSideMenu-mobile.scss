@@ -1,7 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-
-
   .side-menu-header {
     padding: 17px 23px;
     border-bottom: 1px solid $light-grey-3;
@@ -71,7 +69,6 @@
         }
       }
     } // .mobile-menu-buttons
-    
   }
 
   .side-menu {
@@ -82,7 +79,7 @@
     width: 100vw;
     z-index: 200;
     background-color: $white;
-    
+
     .menu {
       padding: 30px 23px;
     }
@@ -139,5 +136,4 @@
       }
     }
   }
-
 } // @media all and (max-width: $mobile-width)
