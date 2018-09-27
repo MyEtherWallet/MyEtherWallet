@@ -15,3 +15,4 @@ xdescribe('@filename@', () => {
 
   describe('@filename@ Methods', () => {});
 });
+
