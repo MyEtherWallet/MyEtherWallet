@@ -98,19 +98,19 @@ export default {
           },
           isActive:
             self.$route.path === '/interface' ||
-            self.$route.path === '/interface/send-offline-transaction' ||
-            self.$route.path === '/interface/send-transaction',
+            self.$route.path.search('send-offline-transaction') !== -1 ||
+            self.$route.path.search('send-transaction') !== -1,
           iconSrc:
             self.$route.path === '/interface' ||
-            self.$route.path === '/interface/send-offline-transaction' ||
-            self.$route.path === '/interface/send-transaction'
+            self.$route.path.search('send-offline-transaction') !== -1 ||
+            self.$route.path.search('send-transaction') !== -1
               ? require(`@/assets/images/sidemenu/send-active.svg`)
               : require(`@/assets/images/sidemenu/send.svg`),
           title: self.$t('interface.txSideMenuTitle'),
           caret: self.showSend,
           contents: [
             {
-              itemActive: self.$route.path === '/interface/send-transaction',
+              itemActive: self.$route.path.search('send-transaction') !== -1,
               itemTitle: self.$t('common.sendTx'),
               itemClick: function(e) {
                 e.cancelBubble = true;
@@ -119,7 +119,7 @@ export default {
             },
             {
               itemActive:
-                self.$route.path === '/interface/send-offline-transaction',
+                self.$route.path.search('send-offline-transaction') !== -1,
               itemTitle: self.$t('common.offline'),
               itemClick: function(e) {
                 e.cancelBubble = true;
@@ -135,9 +135,9 @@ export default {
             self.$router.push({ path: '/interface/swap' });
             self.toggle();
           },
-          isActive: self.$route.path === '/interface/swap',
+          isActive: self.$route.path.search('swap') !== -1,
           iconSrc:
-            self.$route.path === '/interface/swap'
+            self.$route.path.search('swap') !== -1
               ? require(`@/assets/images/sidemenu/swap-active.svg`)
               : require(`@/assets/images/sidemenu/swap.svg`),
           title: self.$t('common.swap')
@@ -147,14 +147,9 @@ export default {
             self.$router.push({ path: '/interface/dapps' });
             self.toggle();
           },
-          isActive:
-            self.$route.path === '/interface/dapps' ||
-            self.$route.path === '/interface/dapps/register-domain' ||
-            self.$route.path === '/interface/dapps/domain-sale',
+          isActive: self.$route.path.search('dapps') !== -1,
           iconSrc:
-            self.$route.path === '/interface/dapps' ||
-            self.$route.path === '/interface/dapps/register-domain' ||
-            self.$route.path === '/interface/dapps/domain-sale'
+            self.$route.path.search('dapps') !== -1
               ? require(`@/assets/images/sidemenu/dapps-active.svg`)
               : require(`@/assets/images/sidemenu/dapps.svg`),
           title: self.$t('common.dapps')
@@ -164,11 +159,11 @@ export default {
             self.toggle('openContract');
           },
           isActive:
-            self.$route.path === '/interface/interact-with-contract' ||
-            self.$route.path === '/interface/deploy-contract',
+            self.$route.path.search('interact-with-contract') !== -1 ||
+            self.$route.path.search('deploy-contract') !== -1,
           iconSrc:
-            self.$route.path === '/interface/interact-with-contract' ||
-            self.$route.path === '/interface/deploy-contract'
+            self.$route.path.search('interact-with-contract') !== -1 ||
+            self.$route.path.search('deploy-contract') !== -1
               ? require(`@/assets/images/sidemenu/contract-active.svg`)
               : require(`@/assets/images/sidemenu/contract.svg`),
           title: self.$t('interface.txSideMenuContract'),
@@ -176,7 +171,7 @@ export default {
           contents: [
             {
               itemActive:
-                self.$route.path === '/interface/interact-with-contract',
+                self.$route.path.search('interact-with-contract') !== -1,
               itemTitle: self.$t('common.interactWcontract'),
               itemClick: function(e) {
                 e.cancelBubble = true;
@@ -186,7 +181,7 @@ export default {
               }
             },
             {
-              itemActive: self.$route.path === '/interface/deploy-contract',
+              itemActive: self.$route.path.search('deploy-contract') !== -1,
               itemTitle: self.$t('common.depContract'),
               itemClick: function(e) {
                 e.cancelBubble = true;
@@ -199,9 +194,7 @@ export default {
           click: function() {
             self.toggle('openMessage');
           },
-          isActive:
-            self.$route.path === '/interface/sign-message' ||
-            self.$route.path === '/interface/verify-message',
+          isActive: self.$route.path.search('message') !== -1,
           iconSrc:
             self.$route.path === '/interface/sign-message' ||
             self.$route.path === '/interface/verify-message'
