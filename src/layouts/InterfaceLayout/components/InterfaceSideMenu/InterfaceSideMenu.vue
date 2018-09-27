@@ -147,9 +147,14 @@ export default {
             self.$router.push({ path: '/interface/dapps' });
             self.toggle();
           },
-          isActive: self.$route.path === '/interface/dapps',
+          isActive:
+            self.$route.path === '/interface/dapps' ||
+            self.$route.path === '/interface/dapps/register-domain' ||
+            self.$route.path === '/interface/dapps/domain-sale',
           iconSrc:
-            self.$route.path === '/interface/dapps'
+            self.$route.path === '/interface/dapps' ||
+            self.$route.path === '/interface/dapps/register-domain' ||
+            self.$route.path === '/interface/dapps/domain-sale'
               ? require(`@/assets/images/sidemenu/dapps-active.svg`)
               : require(`@/assets/images/sidemenu/dapps.svg`),
           title: self.$t('common.dapps')
