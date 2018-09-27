@@ -72,13 +72,19 @@
   }
 
   .side-menu {
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
     position: fixed;
     top: 0;
-    left: 0;
+    left: -800px;
     height: 100vh;
     width: 100vw;
     z-index: 200;
     background-color: $white;
+    transition: all 0.7s ease;
+
+    &.side-menu-open {
+      left: 0px;
+    }
 
     .menu {
       padding: 30px 23px;

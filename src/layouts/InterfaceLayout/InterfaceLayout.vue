@@ -4,7 +4,7 @@
     class="send-eth-and-tokens">
     <div class="wrap">
       <div 
-        v-if="sidemenuOpen || $mq ==='lg'"
+        
         class="side-nav">
         <interface-side-menu
           :current-tab="currentTab"

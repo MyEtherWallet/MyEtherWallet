@@ -1,7 +1,9 @@
 <template>
   <div class="transactions-side-menu">
 
-    <div class="side-menu">
+    <div 
+      :class="isSidemenuOpen ? 'side-menu-open' : ''" 
+      class="side-menu">
       <!-- <ul>
         <li>
           <div
@@ -94,8 +96,6 @@
       <div class="side-menu-header">
         <div class="top-logo">
           <img
-            :class="isPageOnTop == false ? 'logo-small' : ''"
-            class="logo-large"
             src="~@/assets/images/logo.png">
         </div>
         <div class="mobile-menu-buttons">
@@ -279,6 +279,11 @@ export default {
       ]
     };
   },
+  computed: {
+    isSidemenuOpen() {
+      return this.$store.state.Transactions.sidemenuOpen;
+    }
+  },
   watch: {
     currentTab(newVal) {
       this.updateTabData();
@@ -347,7 +352,6 @@ export default {
   methods: {
     sidemenuClose() {
       this.$store.state.Transactions.sidemenuOpen = false;
-      console.log('======> ' + this.$store.state.Transactions.sidemenuOpen);
     },
     updateTabData() {
       const self = this;

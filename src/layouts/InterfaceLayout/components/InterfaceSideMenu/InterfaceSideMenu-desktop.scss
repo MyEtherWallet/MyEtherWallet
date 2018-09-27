@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .side-menu-header {
+    display: none;
+  }
+
   .side-menu {
     padding: 40px 20px;
 
