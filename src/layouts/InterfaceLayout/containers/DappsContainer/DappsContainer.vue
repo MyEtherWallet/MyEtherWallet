@@ -36,14 +36,14 @@ export default {
       selectedDapp: '',
       dapps: [
         {
-          param: '/interface/dapps/register-domain',
+          param: '/interface/dapps',
           icon: registerDomain,
           title: this.$t('interface.registerDom'),
           desc: this.$t('interface.registerDomDesc'),
           active: this.$store.state.network.type.chainID === 1
         },
         {
-          param: '/interface/dapps/domain-sale',
+          param: '/interface/dapps',
           icon: domainSale,
           title: this.$t('interface.domSale'),
           desc: this.$t('interface.domSaleDesc'),
