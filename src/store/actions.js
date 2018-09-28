@@ -65,14 +65,15 @@ const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
-const setWeb3Instance = function({ commit, state }, provider) {
+const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   if (provider && provider.currentProvider) {
     commit(
       'SET_WEB3_INSTANCE',
       override(
         new web3(provider.currentProvider),
         state.wallet,
-        this._vm.$eventHub
+        this._vm.$eventHub,
+        dispatch
       )
     );
   } else {
@@ -84,7 +85,7 @@ const setWeb3Instance = function({ commit, state }, provider) {
     );
     commit(
       'SET_WEB3_INSTANCE',
-      override(web3Instance, state.wallet, this._vm.$eventHub)
+      override(web3Instance, state.wallet, this._vm.$eventHub, dispatch)
     );
   }
 };
@@ -108,10 +109,6 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
-const updatePageState = function({ commit }, arr) {
-  commit('CHANGE_PAGE_STATE', arr);
-};
-
 export default {
   addNotification,
   addCustomPath,
@@ -126,6 +123,5 @@ export default {
   setENS,
   setWeb3Instance,
   switchNetwork,
-  updateNotification,
-  updatePageState
+  updateNotification
 };

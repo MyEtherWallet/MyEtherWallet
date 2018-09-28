@@ -1,3 +1,6 @@
+// const Web3 = require('web3');
+// const url = require('url');
+// export default function web3OverrideMew(web3, wallet, eventHub, dispatch) {
 export default function web3OverrideMew(web3, wallet, eventHub) {
   if (!wallet) return web3;
 
@@ -53,6 +56,43 @@ export default function web3OverrideMew(web3, wallet, eventHub) {
         );
       });
     }
+    // async sendTransaction(tx) {
+    //   // const hostUrl = web3.currentProvider.hasOwnProperty('host') ? url.parse(web3.currentProvider.host) : null
+    //   // const locWeb3 = hostUrl !== null ? new Web3(`${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${hostUrl.pathname}`) :
+    //   const localTx = Object.assign({}, tx);
+    //   delete localTx['gas'];
+    //   delete localTx['nonce'];
+
+    //   tx.nonce = !tx.hasOwnProperty('nonce')
+    //     ? await web3.eth.getTransactionCount(wallet.getAddressString())
+    //     : tx.nonce;
+    //   tx.gas = !tx.hasOwnProperty('gas')
+    //     ? await web3.eth.estimateGas(localTx)
+    //     : tx.gas;
+
+    //   if (web3.currentProvider.hasOwnProperty('host')) {
+    //     await web3.eth
+    //       .sendTransaction(tx)
+    //       .once('transactionHash', hash => {
+    //         dispatch('addNotification', [tx.from, hash, 'Transaction Hash']);
+    //       })
+    //       .on('receipt', res => {
+    //         dispatch('addNotification', [tx.from, res, 'Transaction Receipt']);
+    //       })
+    //       .on('error', err => {
+    //         dispatch('addNotification', [tx.from, err, 'Transaction Error']);
+    //       });
+    //   } else {
+    //     return new Promise(function(resolve, reject) {
+    //       web3.eth.sendTransaction(tx, function(err, res) {
+    //         if (err) {
+    //           reject(err);
+    //         }
+    //         resolve(res);
+    //       });
+    //     });
+    //   }
+    // }
   };
   web3.defaultAccount = wallet.getAddressString().toLowerCase();
   web3.eth.defaultAccount = wallet.getAddressString().toLowerCase();
@@ -68,5 +108,6 @@ export default function web3OverrideMew(web3, wallet, eventHub) {
 
   web3.eth.signTransaction = methodOverrides.signTransaction;
   web3.eth.sign = methodOverrides.signMessage;
+  // web3.eth.sendTransaction = methodOverrides.sendTransaction;
   return web3; // needs to return web3 for use in vuex
 }

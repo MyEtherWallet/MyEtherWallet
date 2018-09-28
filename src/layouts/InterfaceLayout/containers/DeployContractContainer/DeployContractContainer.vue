@@ -236,7 +236,6 @@ export default {
           data: this.data.replace(/\s/g, '')
         };
 
-        const fromAddress = this.raw.from;
         const transactionFee = await this.$store.state.web3.eth.estimateGas(
           this.raw
         );
@@ -249,29 +248,7 @@ export default {
         // estimateGas was failing if chainId in present
         this.raw.chainId = this.$store.state.network.type.chainID || 1;
 
-        await web3.eth
-          .sendTransaction(this.raw)
-          .once('transactionHash', hash => {
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              hash,
-              'Transaction Hash: Contract Deploy'
-            ]);
-          })
-          .on('receipt', res => {
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              res,
-              'Transaction Receipt: Contract Deploy'
-            ]);
-          })
-          .on('error', err => {
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              err,
-              'Transaction Error'
-            ]);
-          });
+        await web3.eth.sendTransaction(this.raw);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e); // todo replace with proper error

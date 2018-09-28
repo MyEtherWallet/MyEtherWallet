@@ -36,8 +36,6 @@ export default {
         hostUrl.pathname
       }`
     );
-    const sideMenu =
-      store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send';
     const notifications =
       store.get('notifications') !== undefined
         ? store.get('notifications')
@@ -57,11 +55,6 @@ export default {
       Networks: nodeList,
       Errors: {},
       online: true,
-      pageStates: {
-        interface: {
-          sideMenu: sideMenu
-        }
-      },
       notifications: notifications,
       gasPrice: gasPrice,
       ens:

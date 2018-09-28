@@ -306,32 +306,7 @@ export default {
         this.raw['web3WalletOnly'] = true;
       }
 
-      const fromAddress = this.raw.from;
-      this.$store.state.web3.eth
-        .sendTransaction(this.raw)
-        .once('transactionHash', hash => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            hash,
-            'Transaction Hash'
-          ]);
-          this.getBalance();
-        })
-        .on('receipt', res => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            res,
-            'Transaction Receipt'
-          ]);
-          this.getBalance();
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            err,
-            'Transaction Error'
-          ]);
-        });
+      this.$store.state.web3.eth.sendTransaction(this.raw);
     },
     confirmationModalOpen() {
       this.createTx();

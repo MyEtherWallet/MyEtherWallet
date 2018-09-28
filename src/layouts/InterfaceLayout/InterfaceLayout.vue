@@ -95,15 +95,6 @@ export default {
     }
   },
   mounted() {
-    if (store.get('sideMenu') !== undefined) {
-      this.currentTab = store.get('sideMenu');
-      this.$store.dispatch('updatePageState', [
-        'interface',
-        'sideMenu',
-        store.get('sideMenu')
-      ]);
-    }
-
     this.setupOnlineEnvironment();
   },
   destroyed() {

@@ -434,35 +434,7 @@ export default {
           data: this.data
         };
 
-        const fromAddress = this.raw.from;
-        await web3.eth
-          .sendTransaction(this.raw)
-          .once('transactionHash', hash => {
-            this.loading = false;
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              hash,
-              'Transaction Hash'
-            ]);
-          })
-          .on('receipt', res => {
-            this.loading = false;
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              res,
-              'Transaction Receipt'
-            ]);
-          })
-          .on('error', err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
-            this.loading = false;
-            this.$store.dispatch('addNotification', [
-              fromAddress,
-              err,
-              'Transaction Error'
-            ]);
-          });
+        await web3.eth.sendTransaction(this.raw);
       }
     },
     checkInputsFilled() {
