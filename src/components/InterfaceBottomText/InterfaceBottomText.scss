@@ -1,4 +1,14 @@
+@import '~@/scss/GlobalVariables';
+
 .bottom-text {
   padding-top: 20px;
   text-align: center;
+}
+
+@media all and (max-width: $mobile-width) {
+  .bottom-text {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: center;
+  }
 }

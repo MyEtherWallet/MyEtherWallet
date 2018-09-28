@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27px" height="14px" viewBox="0 0 27 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Back Arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="send-offline-2" transform="translate(-362.000000, -1459.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group" transform="translate(0.000000, 1433.000000)">
+                <g id="Back-Arrow" transform="translate(375.500000, 33.000000) scale(-1, 1) translate(-375.500000, -33.000000) translate(362.000000, 26.000000)">
+                    <polygon id="Icon_8_" points="27 6.05030488 3.32775866 6.05030488 8.16808344 1.2099801 6.91463415 0 0 6.91463415 6.91463415 13.8292683 8.12457381 12.6192478 3.32775866 7.77896341 27 7.77896341"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

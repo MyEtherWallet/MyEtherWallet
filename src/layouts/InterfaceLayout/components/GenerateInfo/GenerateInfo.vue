@@ -49,7 +49,9 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="generateInfo">
-          Generate
+          <div class="button-content">
+            <p>Generate</p>
+          </div>
         </div>
       </div>
 
@@ -60,7 +62,10 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="generateTx">
-          Continue
+          <div class="button-content">
+            <p>Continue</p>
+            <img :src="arrow">
+          </div>
         </div>
       </div>
 
@@ -73,6 +78,7 @@
 </template>
 
 <script>
+import ContinueArrow from '@/assets/images/icons/continue-arrow.svg';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../../components/TxSpeedInput';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
@@ -97,7 +103,8 @@ export default {
     return {
       moreInfoGenerated: false,
       isValid: false,
-      onBottomOfPage: false
+      onBottomOfPage: false,
+      arrow: ContinueArrow
     };
   },
   beforeMount() {
