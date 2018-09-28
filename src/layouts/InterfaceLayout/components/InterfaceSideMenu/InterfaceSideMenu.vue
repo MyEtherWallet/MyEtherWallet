@@ -5,8 +5,8 @@
         <li
           v-for="(tab, idx) in tabData"
           :key="tab.name + idx">
-          <div 
-            :class="[isTabActive(tab.routes) ? 'active' : '', 'menu-group-title']" 
+          <div
+            :class="[isTabActive(tab.routes) ? 'active' : '', 'menu-group-title']"
             @click.prevent="tabAction(tab)">
             <img :src="isTabActive(tab.routes) ? tab.icons.active : tab.icons.inactive">
             <p>{{ $t(tab.titleKey) }}</p>
@@ -40,7 +40,6 @@ export default {
       tabData: tabsConfig.tabs
     };
   },
-  mounted() {},
   methods: {
     isTabActive(routes) {
       return routes.includes(this.$route.path);

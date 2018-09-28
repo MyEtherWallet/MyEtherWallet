@@ -101,7 +101,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: ''
+          titleKey: 'common.signMessage'
         },
         {
           name: 'verify-message',
@@ -110,7 +110,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: ''
+          titleKey: 'common.verifyMessage'
         }
       ]
     }
