@@ -111,6 +111,7 @@ export default {
           .call();
         this.processResult(domainStatus);
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     },
@@ -137,7 +138,6 @@ export default {
         case '4':
           this.loading = false;
           this.uiState = 'nameAvailableAuctionStartedBidUnavailable';
-          console.log('Name is currently in the ‘reveal’ stage of the auction');
           break;
       }
     },
