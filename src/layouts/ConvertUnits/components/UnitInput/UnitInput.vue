@@ -3,19 +3,18 @@
     <div class="wrap">
       <div class="block-left">
         <div class="select-block">
-          <select>
+          <select v-model="selectedLeft">
             <option
-              v-for="data in leftDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}
+              v-for="(opt, idx) in options"
+              :key="opt + idx"
+              :value="opt">{{ opt | capitalize }}
             </option>
           </select>
-          <p class="select-down-arrow">⌄</p>
         </div>
         <div>
           <input
-            type="text"
-            name=""
+            v-model="valueLeft"
+            type="number"
             placeholder="Amount">
         </div>
       </div>
@@ -28,19 +27,18 @@
 
       <div class="block-right">
         <div class="select-block">
-          <select>
+          <select v-model="selectedRight">
             <option
-              v-for="data in rightDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}
+              v-for="(opt, idx) in options"
+              :key="opt + idx"
+              :value="opt">{{ opt | capitalize }}
             </option>
           </select>
-          <p class="select-down-arrow">⌄</p>
         </div>
         <div>
           <input
-            type="text"
-            name=""
+            v-model="valueRight"
+            type="number"
             placeholder="Amount">
         </div>
       </div>
@@ -51,106 +49,66 @@
 <script>
 export default {
   props: {
-    content: {
-      type: String,
-      default: ''
+    options: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
     return {
-      leftDropDown: [
-        {
-          label: 'Wei',
-          value: ''
-        },
-        {
-          label: 'Kwei',
-          value: ''
-        },
-        {
-          label: 'Mwei',
-          value: ''
-        },
-        {
-          label: 'Gwei',
-          value: ''
-        },
-        {
-          label: 'Szabo',
-          value: ''
-        },
-        {
-          label: 'Finney',
-          value: ''
-        },
-        {
-          label: 'Ether',
-          value: ''
-        },
-        {
-          label: 'Kether',
-          value: ''
-        },
-        {
-          label: 'Mether',
-          value: ''
-        },
-        {
-          label: 'Gether',
-          value: ''
-        },
-        {
-          label: 'Tether',
-          value: ''
-        }
-      ],
-      rightDropDown: [
-        {
-          label: 'Wei',
-          value: ''
-        },
-        {
-          label: 'Kwei',
-          value: ''
-        },
-        {
-          label: 'Mwei',
-          value: ''
-        },
-        {
-          label: 'Gwei',
-          value: ''
-        },
-        {
-          label: 'Szabo',
-          value: ''
-        },
-        {
-          label: 'Finney',
-          value: ''
-        },
-        {
-          label: 'Ether',
-          value: ''
-        },
-        {
-          label: 'Kether',
-          value: ''
-        },
-        {
-          label: 'Mether',
-          value: ''
-        },
-        {
-          label: 'Gether',
-          value: ''
-        },
-        {
-          label: 'Tether',
-          value: ''
-        }
-      ]
+      selectedLeft: 'wei',
+      selectedRight: 'ether',
+      valueLeft: 1000000000000000000,
+      valueRight: 1
     };
+  },
+  watch: {
+    valueLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        newVal,
+        this.selectedLeft,
+        this.selectedRight
+      );
+    },
+    valueRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        newVal,
+        this.selectedRight,
+        this.selectedLeft
+      );
+    },
+    selectedLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        this.valueLeft,
+        newVal,
+        this.selectedRight
+      );
+    },
+    selectedRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        this.valueRight,
+        newVal,
+        this.selectedLeft
+      );
+    }
+  },
+  methods: {
+    getValueOfUnit(unit) {
+      const utils = this.$store.state.web3.utils;
+      const BN = utils.BN;
+      unit = unit ? unit.toLowerCase() : 'ether';
+      const unitValue = utils.unitMap[unit];
+      return new BN(unitValue, 10);
+    },
+    convertFromTo(amt, from, to) {
+      const BN = this.$store.state.web3.utils.BN;
+      return new BN(String(amt))
+        .mul(this.getValueOfUnit(from.toLowerCase()))
+        .div(this.getValueOfUnit(to.toLowerCase()))
+        .toString();
+    }
   }
 };
 </script>
