@@ -55,10 +55,11 @@ import NameForbiddenContainer from './containers/NameForbiddenContainer';
 import InitialStateContainer from './containers/InitialStateContainer';
 import AlreadyOwnedContainer from './containers/AlreadyOwnedContainer';
 import RegistrarAbi from '@/helpers/registrarAbi';
-import { Misc } from '@/helpers';
 import bip39 from 'bip39';
 // eslint-disable-next-line
 const unit = require('ethjs-unit');
+// eslint-disable-next-line
+const nameHashPckg = require('eth-ens-namehash');
 export default {
   components: {
     'back-button': BackButton,
@@ -168,9 +169,8 @@ export default {
         resolverAddress = '0x';
       }
 
-      this.nameHash = Misc.nameHash(
-        this.domainName + '.eth',
-        this.$store.state.web3
+      this.nameHash = nameHashPckg.hash(
+        this.domainName + '.eth'
       );
 
       this.deedOwner = deedOwner;

@@ -18,20 +18,6 @@ function padLeftEven(hex) {
   return hex;
 }
 
-function nameHash(name, web3) {
-  let node =
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-  if (name !== '') {
-    const labels = name.split('.');
-    for (let i = labels.length - 1; i >= 0; i--) {
-      node = web3.utils.sha3(node + web3.utils.sha3(labels[i]).slice(2), {
-        encoding: 'hex'
-      });
-    }
-  }
-
-  return node.toString();
-}
 
 function formatDate(date) {
   const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
@@ -57,4 +43,4 @@ function formatDate(date) {
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
 }
 
-export default { isJson, doesExist, padLeftEven, nameHash, formatDate };
+export default { isJson, doesExist, padLeftEven, formatDate };
