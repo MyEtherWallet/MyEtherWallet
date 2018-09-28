@@ -97,16 +97,16 @@ export default {
   methods: {
     getValueOfUnit(unit) {
       const utils = this.$store.state.web3.utils;
-      const BN = utils.BN;
+      const toBN = utils.toBN;
       unit = unit ? unit.toLowerCase() : 'ether';
       const unitValue = utils.unitMap[unit];
-      return new BN(unitValue, 10);
+      return toBN(unitValue, 10);
     },
     convertFromTo(amt, from, to) {
-      const BN = this.$store.state.web3.utils.BN;
-      return new BN(String(amt))
-        .mul(this.getValueOfUnit(from.toLowerCase()))
-        .div(this.getValueOfUnit(to.toLowerCase()))
+      const toBN = this.$store.state.web3.utils.toBN;
+      return toBN(String(amt))
+        .mul(this.getValueOfUnit(from))
+        .div(this.getValueOfUnit(to))
         .toString();
     }
   }
