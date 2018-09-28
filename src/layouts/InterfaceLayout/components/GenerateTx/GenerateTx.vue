@@ -6,7 +6,7 @@
         <div class="form-block amount-to-address">
           <div class="amount">
             <div class="title">
-              <h4>Amount</h4>
+              <h4>Type</h4>
             </div>
             <currency-picker
               :currency="coinType"
@@ -209,5 +209,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'GenerateTx.scss';
+@import 'GenerateTx-desktop.scss';
+@import 'GenerateTx-tablet.scss';
+@import 'GenerateTx-mobile.scss';
 </style>
