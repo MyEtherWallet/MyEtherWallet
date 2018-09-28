@@ -169,9 +169,7 @@ export default {
         resolverAddress = '0x';
       }
 
-      this.nameHash = nameHashPckg.hash(
-        this.domainName + '.eth'
-      );
+      this.nameHash = nameHashPckg.hash(this.domainName + '.eth');
 
       this.deedOwner = deedOwner;
       this.owner = owner;

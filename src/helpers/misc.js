@@ -18,7 +18,6 @@ function padLeftEven(hex) {
   return hex;
 }
 
-
 function formatDate(date) {
   const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const day = days[new Date(date).getDay()];
