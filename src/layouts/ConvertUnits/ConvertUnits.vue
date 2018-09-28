@@ -7,7 +7,7 @@
           <h2>Convert Units</h2>
           <p>
             MyEtherWallet is comprised of talented, inspiring, and hardworking
-            indivisuals from around the world. We share the passion to code.
+            individuals from around the world. We share the passion to code.
           </p>
         </div>
 
