@@ -14,7 +14,7 @@
         <div>
           <input
             v-model="valueLeft"
-            type="number"
+            type="text"
             placeholder="Amount">
         </div>
       </div>
@@ -38,7 +38,7 @@
         <div>
           <input
             v-model="valueRight"
-            type="number"
+            type="text"
             placeholder="Amount">
         </div>
       </div>
@@ -47,6 +47,9 @@
 </template>
 
 <script>
+import { BigNumber } from 'bignumber.js';
+// BigNumber.config({ DECIMAL_PLACES: 30 });
+
 export default {
   props: {
     options: {
@@ -97,17 +100,15 @@ export default {
   methods: {
     getValueOfUnit(unit) {
       const utils = this.$store.state.web3.utils;
-      const toBN = utils.toBN;
       unit = unit ? unit.toLowerCase() : 'ether';
       const unitValue = utils.unitMap[unit];
-      return toBN(unitValue, 10);
+      return new BigNumber(unitValue, 10);
     },
     convertFromTo(amt, from, to) {
-      const toBN = this.$store.state.web3.utils.toBN;
-      return toBN(String(amt))
-        .mul(this.getValueOfUnit(from))
+      return new BigNumber(String(amt))
+        .times(this.getValueOfUnit(from))
         .div(this.getValueOfUnit(to))
-        .toString();
+        .toString(10);
     }
   }
 };
