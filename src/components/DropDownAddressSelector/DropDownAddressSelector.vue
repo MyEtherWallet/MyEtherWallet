@@ -33,7 +33,7 @@
       </div>
     </div>
     <div
-      v-if="dropdownOpen"
+      :class="dropdownOpen ? 'show-dropdown' : ''"
       class="dropdown-list-box">
       <ul>
         <li

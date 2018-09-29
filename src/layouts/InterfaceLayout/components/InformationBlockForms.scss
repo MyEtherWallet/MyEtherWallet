@@ -1,0 +1,167 @@
+@import '~@/scss/GlobalVariables';
+
+
+$form-text: #212529;
+$form-background: #f9f9f9;
+$button-color: #05c0a5;
+$button-hover-color: #00947f;
+$button-text-color: #fff;
+
+p {
+  color: $form-text;
+}
+
+
+
+
+
+//-----------------------------
+// Page wrap
+//-----------------------------
+
+.page-wrap {
+  padding: 60px 60px;
+}
+
+
+
+
+//-----------------------------
+// Common form container style
+//-----------------------------
+
+.form-container {
+
+  margin-bottom: 40px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+}
+
+
+
+
+//-----------------------------
+// Single container
+//-----------------------------
+
+.form-container.single--1 {
+  display: block;
+
+}
+
+
+
+
+//-----------------------------
+// Grid container
+//-----------------------------
+
+.form-container.grid--1 {
+  display: grid;
+  grid-column-gap: 7px;
+  grid-template-columns: 2fr 3fr;
+}
+
+
+
+
+
+//-----------------------------
+// Form title block
+//-----------------------------
+
+.form-title-block {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+
+  .title {
+    display: flex;
+    align-items: center;
+
+    p {
+      font-weight: 600;
+      font-size: 16px;
+      margin-right: 8px;
+    }
+  }
+
+  .title-button {
+    margin-left: auto;
+    cursor: pointer;
+    color: $button-color;
+
+    &:hover {
+      color: $form-text;
+    }
+  }
+
+  .title-text {
+    margin-left: auto;
+  }
+}
+
+
+
+
+//-----------------------------
+// The form block
+//-----------------------------
+
+.the-form-block {
+  position: relative;
+
+  input {
+    font-size: 14px;
+    padding: 15px 20px;
+    border: 0;
+    background-color: $form-background;
+    width: 100%;
+    position: relative;
+    display: block;
+
+    &.padding-right {
+      padding-right: 90px;
+    }
+  }
+
+  .right-end-text {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: $button-color;
+  }
+}
+
+
+
+
+
+//-----------------------------
+// Button container
+//-----------------------------
+
+.page--bottom-button-container {
+  margin-top: 50px;
+  text-align: center;
+
+  .the-button {
+    cursor: pointer;
+    display: inline-block;
+    padding: 20px;    
+    background-color: $button-color;
+    color: $button-text-color;
+    border-radius: 5px;
+    min-width: 250px;
+
+    &:hover {
+      background-color: $button-hover-color;
+    }
+  }
+}
+
+
