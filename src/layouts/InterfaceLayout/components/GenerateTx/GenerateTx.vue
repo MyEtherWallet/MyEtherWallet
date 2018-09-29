@@ -11,10 +11,7 @@
             </div>
           </div>
           <div class="the-form-block">
-            <currency-picker
-              :currency="coinType"
-              :token="true"
-              page="sendOfflineGenTx"/>
+            <dropdown-coin-selector />
           </div>
         </div>
         <div>
@@ -247,6 +244,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../../components/TxSpeedInput';
 import CurrencyPicker from '../CurrencyPicker';
 import SignedTxModal from '../../components/SignedTxModal';
+import DropDownCoinSelector from '@/components/DropDownCoinSelector';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 // eslint-disable-next-line
@@ -260,7 +258,8 @@ export default {
     'tx-speed-input': TxSpeedInput,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
-    'dropdown-address-selector': DropDownAddressSelector
+    'dropdown-address-selector': DropDownAddressSelector,
+    'dropdown-coin-selector': DropDownCoinSelector
   },
   props: {
     gasLimit: {

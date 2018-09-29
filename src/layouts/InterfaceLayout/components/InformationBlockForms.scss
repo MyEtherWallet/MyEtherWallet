@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 $form-text: #212529;
 $form-background: #f9f9f9;
 $button-color: #05c0a5;
@@ -11,10 +10,6 @@ p {
   color: $form-text;
 }
 
-
-
-
-
 //-----------------------------
 // Page wrap
 //-----------------------------
@@ -23,25 +18,17 @@ p {
   padding: 60px 60px;
 }
 
-
-
-
 //-----------------------------
 // Common form container style
 //-----------------------------
 
 .form-container {
-
   margin-bottom: 40px;
 
   &:last-child {
     margin-bottom: 0;
   }
-
 }
-
-
-
 
 //-----------------------------
 // Single container
@@ -49,11 +36,7 @@ p {
 
 .form-container.single--1 {
   display: block;
-
 }
-
-
-
 
 //-----------------------------
 // Grid container
@@ -64,10 +47,6 @@ p {
   grid-column-gap: 7px;
   grid-template-columns: 2fr 3fr;
 }
-
-
-
-
 
 //-----------------------------
 // Form title block
@@ -105,9 +84,6 @@ p {
   }
 }
 
-
-
-
 //-----------------------------
 // The form block
 //-----------------------------
@@ -117,7 +93,7 @@ p {
 
   input {
     font-size: 14px;
-    padding: 15px 20px;
+    padding: 18px 20px;
     border: 0;
     background-color: $form-background;
     width: 100%;
@@ -137,10 +113,6 @@ p {
   }
 }
 
-
-
-
-
 //-----------------------------
 // Button container
 //-----------------------------
@@ -152,7 +124,7 @@ p {
   .the-button {
     cursor: pointer;
     display: inline-block;
-    padding: 20px;    
+    padding: 20px;
     background-color: $button-color;
     color: $button-text-color;
     border-radius: 5px;
@@ -163,5 +135,3 @@ p {
     }
   }
 }
-
-

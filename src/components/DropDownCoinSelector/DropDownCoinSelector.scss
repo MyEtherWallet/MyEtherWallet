@@ -9,6 +9,9 @@
   border: 1px solid $background-color-1;
   border-radius: 4px;
   transition: all 0.2s ease;
+  height: 57px;
+  background-color: $background-color-1;
+  cursor: pointer;
 
   &.dropdown-open {
     border: 1px solid $grey-1;
@@ -16,34 +19,24 @@
     border-radius: 4px 4px 0 0;
   }
 
-  input {
-    background-color: $background-color-1;
-    padding: 18px;
-    border: 0;
-    width: 100%;
-    padding-left: 55px;
+  .selected-coin {
+    padding: 15px;
     padding-right: 70px;
+
+    img {
+      margin-right: 10px;
+    }
+
+    span {
+      font-size: 12px;
+      color: $mew-green;
+      margin-left: 5px;
+    }
   }
 
-  .blockie-place-holder-image {
-    height: 30px;
-    width: 30px;
-    border-radius: 100px;
-    background-color: $light-grey-3;
-    position: absolute;
-    top: 12px;
-    left: 15px;
-  }
-
-  .selected-address-blockie {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-  }
 
   .dropdown-open-button {
     user-select: none;
-    cursor: pointer;
     height: 100%;
     position: absolute;
     top: 0;
@@ -51,7 +44,6 @@
 
     i {
       font-size: 9px;
-      border-left: 1px solid #e0e0e0;
       padding: 10px 22px;
       color: #3766aa;
       margin-top: 14px;
@@ -94,6 +86,16 @@
 
       &:hover {
         background-color: $light-grey-3;
+      }
+
+      img {
+        margin-right: 10px;
+      }
+
+      span {
+        font-size: 12px;
+        color: $mew-green;
+        margin-left: 5px;
       }
 
       .list-blockie {
