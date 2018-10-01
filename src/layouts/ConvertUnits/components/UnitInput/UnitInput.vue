@@ -48,7 +48,6 @@
 
 <script>
 import { BigNumber } from 'bignumber.js';
-// BigNumber.config({ DECIMAL_PLACES: 30 });
 
 export default {
   props: {
