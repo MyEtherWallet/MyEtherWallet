@@ -22,10 +22,6 @@
       <p class="content"> {{ resolverAddress }} </p>
     </div>
 
-    <div class="back-button">
-      <button @click="cancel">{{ $t('common.back') }}</button>
-    </div>
-
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
@@ -63,10 +59,6 @@ export default {
     domainName: {
       type: String,
       default: ''
-    },
-    cancel: {
-      type: Function,
-      default: function() {}
     }
   },
   data() {
@@ -99,5 +91,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AlreadyOwnedContainer.scss';
+@import 'AlreadyOwnedENSContainer.scss';
 </style>

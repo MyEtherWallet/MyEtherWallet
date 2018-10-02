@@ -50,7 +50,9 @@
     "ethjs-unit": "^0.1.6",
     "hdkey": "^1.1.0",
     "imagemin-webpack-plugin": "^2.2.0",
+    "jspdf": "^1.4.1",
     "keccak": "^1.4.0",
+    "keythereum": "^1.0.4",
     "node-fetch": "^2.2.0",
     "node-sass": "^4.9.0",
     "postcss-import": "^12.0.0",
@@ -67,7 +69,6 @@
     "vue-template-compiler": "^2.5.17",
     "vue-worker": "^1.2.1",
     "web3": "^1.0.0-beta.35",
-    "worker-loader": "^2.0.0",
     "zxcvbn": "^4.4.2"
   },
   "engines": {

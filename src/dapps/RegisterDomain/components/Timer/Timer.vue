@@ -3,7 +3,7 @@
     <span class="deadline">{{ dateToText() }}</span>
     <span class="actual-timer">
       <img
-        src=""
+        src="@/assets/images/icons/hourglass.svg"
         alt="">
       <b>{{ time }}</b>
     </span>
@@ -11,7 +11,6 @@
 </template>
 <script>
 import { Misc } from '@/helpers';
-import { clearInterval } from 'timers';
 export default {
   props: {
     dateType: {

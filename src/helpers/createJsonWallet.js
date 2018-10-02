@@ -1,11 +1,20 @@
-import { Wallet, Configs } from '@/helpers';
+import { Wallet, WalletConfigs } from '@/helpers';
 export default password => {
-  const createdWallet = {};
-  const wallet = new Wallet.generate();
-  createdWallet.walletJson = wallet.toV3(password, {
-    kdf: Configs.wallet.kdf,
-    n: Configs.wallet.n
+  return new Promise(resolve => {
+    Wallet.create(WalletConfigs.params, dk => {
+      Wallet.dump(
+        password,
+        dk.privateKey,
+        dk.salt,
+        dk.iv,
+        WalletConfigs.options,
+        walletJSON => {
+          resolve({
+            json: walletJSON,
+            name: Wallet.generateKeystoreFilename(walletJSON.address)
+          });
+        }
+      );
+    });
   });
-  createdWallet.name = wallet.getV3Filename();
-  return createdWallet;
 };

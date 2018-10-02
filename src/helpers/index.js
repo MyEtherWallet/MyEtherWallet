@@ -1,17 +1,17 @@
-import Wallet from 'ethereumjs-wallet';
 import parseTokensHex from './parseTokensHex';
-import Configs from './configs';
+import WalletConfigs from './WalletConfigs';
 import Blockies from './blockies';
 import MessageUtil from './messageUtil';
 import Misc from './misc';
 import CreateJsonWallet from './createJsonWallet';
+import UnlockJsonWallet from './unlockJsonWallet';
 
 export {
-  Wallet,
-  Configs,
+  WalletConfigs,
   parseTokensHex,
   Blockies,
   MessageUtil,
   Misc,
-  CreateJsonWallet
+  CreateJsonWallet,
+  UnlockJsonWallet
 };

@@ -38,7 +38,7 @@
                       :href="walletJson"
                       :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
                       :download="name"
-                      @click="popModal">
+                      @click="downloadDone()">
                       <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
                       <div v-if="!downloadable">
                         <i class="fa fa-spinner fa-lg fa-spin"/>
@@ -108,9 +108,7 @@ export default {
     };
   },
   mounted() {
-    const worker = new Worker();
-    worker.postMessage({ type: 'createWallet', data: [this.password] });
-    worker.onmessage = e => {
+    CreateJsonWallet(this.password).then(data => {
       const createBlob = (mime, str) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
@@ -129,7 +127,7 @@ export default {
     };
   },
   methods: {
-    popModal() {
+    downloadDone() {
       this.$children[0].$refs.success.show();
     }
   }

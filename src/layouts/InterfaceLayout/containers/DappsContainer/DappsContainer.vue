@@ -4,13 +4,13 @@
       <interface-container-title :title="$t('common.dapps')"/>
       <div class="buttons-container">
         <dapp-buttons
-          v-for="dapp in dapps"
-          :key="dapp.title"
-          :title="dapp.title"
-          :icon="dapp.icon"
-          :desc="dapp.desc"
-          :active="dapp.active"
-          :param="dapp.param"/>
+          v-for="dapp in Object.keys(localDapps)"
+          :key="localDapps[dapp].title"
+          :title="$t(localDapps[dapp].title)"
+          :icon="localDapps[dapp].icon"
+          :desc="$t(localDapps[dapp].desc)"
+          :active="localDapps[dapp].active"
+          :param="localDapps[dapp].route"/>
       </div>
     </div>
   </div>
@@ -19,37 +19,16 @@
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
-import DomainSaleContainer from '@/dapps/DomainSaleContainer';
-import RegisterDomain from '@/dapps/RegisterDomain';
+import dapps from '@/dapps';
 
-import domainSale from '@/assets/images/icons/domain-sale.svg';
-import registerDomain from '@/assets/images/icons/domain.svg';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'dapp-buttons': DappButtons,
-    'domain-sale-container': DomainSaleContainer,
-    'register-domain': RegisterDomain
+    'dapp-buttons': DappButtons
   },
   data() {
     return {
-      selectedDapp: '',
-      dapps: [
-        {
-          param: '/interface/dapps',
-          icon: registerDomain,
-          title: this.$t('interface.registerDom'),
-          desc: this.$t('interface.registerDomDesc'),
-          active: this.$store.state.network.type.chainID === 1
-        },
-        {
-          param: '/interface/dapps',
-          icon: domainSale,
-          title: this.$t('interface.domSale'),
-          desc: this.$t('interface.domSaleDesc'),
-          active: true
-        }
-      ]
+      localDapps: dapps
     };
   }
 };

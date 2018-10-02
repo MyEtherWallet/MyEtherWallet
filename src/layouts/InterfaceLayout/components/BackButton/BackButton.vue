@@ -17,7 +17,7 @@
 export default {
   methods: {
     back() {
-      this.$router.push({ path: '/interface/dapps' });
+      this.$router.go(-1);
     }
   }
 };
