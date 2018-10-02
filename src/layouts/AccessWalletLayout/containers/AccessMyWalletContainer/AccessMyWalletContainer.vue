@@ -52,7 +52,7 @@
           <h5>
             {{ $t('common.noWallet') }}
             <router-link
-              :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
+              :to="'/create-wallet'"
               class="nounderline">
               {{ $t('common.getAFreeWallet') }}
             </router-link>

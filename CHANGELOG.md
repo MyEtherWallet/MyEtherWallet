@@ -1,6 +1,7 @@
 ### Release v5.0.4
 ### Devop
-- Add more nodes [#90](https://github.com/MyEtherWallet/MyEtherWallet/pull/90)
+- Fix access wallet link, pop success when user clicks download [#115](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/115)
+- Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
 
 ### Feature
 - Metamask Integration [#96](https://github.com/MyEtherWallet/MyEtherWallet/pull/96)
