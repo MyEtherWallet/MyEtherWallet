@@ -45,37 +45,26 @@
         }
 
         p {
-          @media all and (min-width: $tablet-width + 1) {
-            display: none;
-          }
+          color: $white;
+          cursor: pointer;
+          display: block;
+          font-size: 20px;
+          font-weight: 400;
+          margin-left: auto;
+          text-align: center;
+        }
 
-          @media all and (max-width: $tablet-width) {
-            cursor: pointer;
-            display: block;
-            font-size: 20px;
-            font-weight: 400;
-            margin-left: auto;
-            text-align: center;
-
-            .close {
-              display: none;
-            }
-          }
+        .close {
+          opacity: 1;
+          color: $white;
+          display: none;
         }
       }
 
       .content-links {
-        margin-top: 20px;
-        max-height: 600px;
         overflow: hidden;
         transition: all 0.3s ease;
-
-        @media all and (max-width: $tablet-width) {
-          .mobile-hide {
-            margin-top: 0;
-            max-height: 0;
-          }
-        }
+        max-height: 0;
 
         .sub-title {
           color: $text-color-1;
@@ -90,13 +79,38 @@
           margin-bottom: 3px;
         }
       }
+
+      &.content-open {
+        .content-links {
+          max-height: 500px;
+          margin-top: 20px;
+        }
+
+        .open {
+          display: none;
+        }
+
+        .close {
+          display: block;
+        }
+      }
     }
 
     .donate-us {
+      .content-title {
+        margin-bottom: 20px;
+      }
+
       .crypto-link {
+        margin-bottom: 15px;
         color: $link-text-color-2;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      p {
+        color: $text--footer-link-color;
+        margin-bottom: 15px;
       }
 
       i {
@@ -185,7 +199,7 @@
       i {
         color: $text--footer-link-color;
         font-size: 19px;
-        margin-left: 15px;
+        margin-left: 20px;
 
         @media all and (max-width: $tablet-width) {
           font-size: 24px;

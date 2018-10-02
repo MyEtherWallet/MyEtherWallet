@@ -2,6 +2,7 @@
 
 .drop-down-address-selector {
   position: relative;
+  user-select: none;
 }
 
 .dropdown-input-box {
@@ -34,7 +35,6 @@
     }
   }
 
-
   .dropdown-open-button {
     user-select: none;
     height: 100%;
@@ -59,7 +59,7 @@
   background-color: $background-color-1;
   border: 1px solid $grey-1;
   border-radius: 0 0 4px 4px;
-  z-index: 1;
+  z-index: 2;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 230px;
@@ -72,6 +72,24 @@
     pointer-events: initial;
   }
 
+  .search-block {
+    padding: 10px;
+    position: relative;
+
+    input {
+      border: 0;
+      padding: 10px;
+      width: 100%;
+      padding-left: 40px;
+    }
+
+    img {
+      position: absolute;
+      top: 21px;
+      left: 20px;
+    }
+  }
+
   ul {
     li {
       cursor: pointer;
@@ -81,7 +99,7 @@
       align-items: center;
 
       &:nth-child(odd) {
-        background-color: $white;
+        //background-color: $white;
       }
 
       &:hover {

@@ -2,17 +2,22 @@
 @import '../InterfaceContainer';
 
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  p,
+  h4 {
+    user-select: none;
+  }
+
   .send-currency-container {
     border-radius: 5px;
     grid-area: main;
-    overflow: hidden;
     background: $background-color-white;
+    margin-bottom: 10px;
 
     .send-form {
-      .amount-to-address {
-        display: grid;
-        grid-column-gap: 5px;
-        grid-template-columns: 2fr 3fr;
+      margin-top: 15px;
+
+      > .form-block > div:first-child {
+        margin-bottom: 35px;
       }
 
       .gas-amount,
@@ -47,21 +52,6 @@
         }
       }
     } // .send-form
-
-    .submit-button-container {
-      padding: 60px 0;
-      text-align: center;
-
-      .bottom-text {
-        margin-top: 20px;
-      }
-
-      .submit-button {
-        margin: 0 auto;
-        text-align: center;
-        width: 300px;
-      }
-    }
 
     .tokens {
       border-radius: 5px;

@@ -132,30 +132,6 @@
   // Custom Scrollbar
   // *********************************************************************
 
-  // width
-  ::-webkit-scrollbar {
-    border-radius: 10px;
-    width: 5px;
-  }
-
-  // Track
-  ::-webkit-scrollbar-track {
-    background: $light-grey-9;
-    border-radius: 10px;
-  }
-
-  // Handle
-  ::-webkit-scrollbar-thumb {
-    background: $dark-grey-8;
-    border-radius: 10px;
-  }
-
-  // Handle on hover
-  ::-webkit-scrollbar-thumb:hover {
-    background: $dark-grey-9;
-    border-radius: 10px;
-  }
-
   .no-border {
     .dropdown .dropdown-toggle {
       border: 0 !important;
@@ -215,7 +191,7 @@
   }
 
   .page-container {
-    padding: 0 25px;
+    padding: 0 15px;
   }
 
   // *********************************************************************
@@ -569,6 +545,15 @@
   .language-menu-container {
     position: relative;
 
+    .dropdown-menu {
+      transform: initial !important;
+      position: fixed !important;
+      top: 150px !important;
+      left: 5px !important;
+      width: calc(100% - 10px);
+      z-index: 9999;
+    }
+
     .arrows {
       color: $text-color-4;
       font-size: 18px;
@@ -578,6 +563,10 @@
     }
 
     .language-menu {
+      .nav-link {
+        padding: 0;
+      }
+
       .dropdown-menu.show {
         max-height: 226px;
         overflow-y: scroll;
@@ -723,6 +712,7 @@
     border: 0;
     border-radius: 5px;
     overflow: hidden;
+    margin: 0 0;
   }
 
   .modal-body {
@@ -773,8 +763,23 @@
     overflow-y: auto;
   }
 
+  .bootstrap-modal.padding-25-20 .modal-body {
+    padding: 25px 20px;
+  }
+
+  .bootstrap-modal.padding-20 .modal-body {
+    padding: 20px;
+  }
+
   .bootstrap-modal.padding-40-20 .modal-body {
     padding: 40px 20px;
+  }
+
+  .bootstrap-modal.background-image-1 .modal-body {
+    background-image: url('~@/assets/images/modal/garlands.png');
+    background-position: center 10px;
+    background-repeat: no-repeat;
+    background-size: 95%;
   }
 
   // Custom modal style for each pages -------------------------------
@@ -808,8 +813,13 @@
       background-color: $nav-tab--button-background-color;
       border: 0;
       border-radius: 0;
-      font-size: 14px;
-      padding: 20px 0;
+      padding: 13px 0;
+      height: 100%;
+      font-size: 13px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &.active {
         background-color: $nav-tab--button--active--background-color;
@@ -824,6 +834,11 @@
       .nav-item {
         flex: 1;
         text-align: center;
+      }
+
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
       }
     }
   }
@@ -1206,6 +1221,13 @@
     border: 0;
     border-radius: 4px;
     padding: 13px 15px;
+  }
+
+  .custom-input-text-2 {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 17px 15px;
   }
 
   .custom-select-1 {

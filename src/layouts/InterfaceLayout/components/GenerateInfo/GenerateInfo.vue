@@ -1,7 +1,74 @@
 <template>
   <div class="generate-info">
-    <div class="wrap">
+    <div class="page-wrap">
 
+      <div class="main-form-block">
+        
+        <div class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>From Address</p>
+              </div>
+              <div class="title-button">
+                Copy
+              </div>
+            </div>
+            <div class="the-form-block">
+              <dropdown-address-selector />
+            </div>
+          </div>        
+        </div>
+
+        <div 
+          v-if="moreInfoGenerated" 
+          class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Nonce</p>
+                <popover :popcontent="$t('popover.whatIsDataContent')"/>
+              </div>
+            </div>
+            <div class="the-form-block">
+              <input 
+                type="text" 
+                name="">
+            </div>
+          </div>        
+        </div>
+
+      </div><!-- .main-form-block -->
+
+
+
+      <div 
+        v-if="!moreInfoGenerated"
+        class="page--bottom-button-container" 
+        @click="moreInfoGenerated = true">
+        <div class="the-button">Generate</div>
+      </div>
+
+      <div 
+        v-if="moreInfoGenerated"
+        class="page--bottom-button-container right-arrow" 
+        @click="moreInfoGenerated = true">
+        <div class="the-button">Continue<img src="@/assets/images/icons/right-arrow.png"></div>
+      </div>
+
+
+      <interface-bottom-text
+        link="/"
+        question="Have issues?"
+        link-text="Learn More"/>
+
+
+
+
+
+
+
+        <!--
       <div class="send-form">
         <div class="title-container">
           <div class="title-and-copy">
@@ -73,8 +140,12 @@
         link="/"
         question="Have issues?"
         link-text="Learn More"/>
-    </div>
-  </div>
+      -->
+
+
+
+    </div><!-- .page-wrap -->
+  </div><!-- .generate-info -->
 </template>
 
 <script>
@@ -156,6 +227,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../InformationBlockForms-desktop';
+@import '../InformationBlockForms-tablet';
+@import '../InformationBlockForms-mobile';
 @import 'GenerateInfo-desktop.scss';
 @import 'GenerateInfo-tablet.scss';
 @import 'GenerateInfo-mobile.scss';

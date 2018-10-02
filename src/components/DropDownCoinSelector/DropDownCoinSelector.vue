@@ -3,7 +3,7 @@
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
       class="dropdown-input-box" 
-      @click="dropdownOpen = !dropdownOpen">
+      @click="openDropdownFocustToSearchInput">
       
       <div class="selected-coin">
         <img src="~@/assets/images/currency/eth.svg">ETH - <span>Ethereum</span>
@@ -19,10 +19,20 @@
           class="fa fa-chevron-up"
           aria-hidden="true"/>
       </div>
+
     </div>
     <div
       :class="dropdownOpen ? 'show-dropdown' : ''"
       class="dropdown-list-box">
+      <div 
+        class="search-block">
+        <input 
+          class="coin-selector-search-input"
+          type="text" 
+          name=""
+          placeholder="Search">
+        <img src="@/assets/images/icons/magnifier.svg">
+      </div>
       <ul>
         <li><img src="~@/assets/images/currency/eth.svg">ETH - <span>Ethereum</span></li>
         <li><img src="~@/assets/images/currency/btc.svg">BTC - <span>Bitcoin</span></li>
@@ -46,6 +56,12 @@ export default {
     document.removeEventListener('click', this.clickEvent, false);
   },
   methods: {
+    openDropdownFocustToSearchInput: function() {
+      // Focus user input to the seach input.
+      //console.log('Worked!!!!!!!!!!!!!!');
+      this.dropdownOpen = !this.dropdownOpen;
+      document.querySelector('.coin-selector-search-input').focus();
+    },
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
         if (event.path[count].className === 'drop-down-address-selector') {

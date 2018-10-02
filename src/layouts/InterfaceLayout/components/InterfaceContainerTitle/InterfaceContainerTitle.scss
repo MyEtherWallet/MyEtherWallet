@@ -19,14 +19,46 @@ h2 {
   margin: 0;
   padding: 0;
   padding-left: 27px;
+}
 
-  @media all and (max-width: $mobile-width) {
-    padding-left: 17px;
-    font-size: 20px;
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .side-menu-button {
+    display: none;
   }
 }
 
 @media all and (max-width: $mobile-width) {
+  h2 {
+    padding-left: 17px;
+    font-size: 20px;
+  }
+
+  .content-title {
+    padding: 15px 0;
+  }
+
+  .side-menu-button {
+    margin-left: auto;
+    color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 20px;
+    padding: 6px 13px;
+    margin-right: 10px;
+    user-select: none;
+
+    &:active {
+      color: $white;
+      background-color: $mew-green;
+    }
+  }
+}
+
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  h2 {
+    padding-left: 17px;
+    font-size: 20px;
+  }
+
   .content-title {
     padding: 15px 0;
   }

@@ -1,0 +1,164 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  $form-text: #212529;
+  $form-background: #f9f9f9;
+  $button-color: #05c0a5;
+  $button-hover-color: #00947f;
+  $button-text-color: #fff;
+  $white-background-color: #fff;
+
+  p {
+    color: $form-text;
+  }
+
+  //-----------------------------
+  // Page wrap
+  //-----------------------------
+
+  .page-wrap {
+    padding: 30px 10px;
+    background-color: $white-background-color;
+  }
+
+  //-----------------------------
+  // Common form container style
+  //-----------------------------
+
+  .form-container {
+    margin-bottom: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  //-----------------------------
+  // Single container
+  //-----------------------------
+
+  .form-container.single--1 {
+    display: block;
+  }
+
+  //-----------------------------
+  // Grid container
+  //-----------------------------
+
+  .form-container.grid--1 {
+    /*
+  display: grid;
+  grid-column-gap: 7px;
+  grid-template-columns: 2fr 3fr;
+  */
+
+    > div {
+      margin-bottom: 40px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  //-----------------------------
+  // Form title block
+  //-----------------------------
+
+  .form-title-block {
+    padding: 0 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+
+    .title {
+      display: flex;
+      align-items: center;
+
+      p {
+        font-weight: 600;
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
+
+    .title-button {
+      margin-left: auto;
+      cursor: pointer;
+      color: $button-color;
+
+      &:hover {
+        color: $form-text;
+      }
+    }
+
+    .title-text {
+      margin-left: auto;
+    }
+  }
+
+  //-----------------------------
+  // The form block
+  //-----------------------------
+
+  .the-form-block {
+    position: relative;
+
+    input {
+      font-size: 14px;
+      padding: 18px 20px;
+      border: 0;
+      background-color: $form-background;
+      width: 100%;
+      position: relative;
+      display: block;
+
+      &.padding-right {
+        padding-right: 90px;
+      }
+    }
+
+    .right-end-text {
+      position: absolute;
+      top: 17px;
+      right: 25px;
+      color: $button-color;
+    }
+  }
+
+  //-----------------------------
+  // Button container
+  //-----------------------------
+
+  .page--bottom-button-container {
+    //margin-top: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    z-index: 9;
+
+    &.right-arrow {
+      img {
+        position: absolute;
+        top: 23px;
+        right: 20px;
+        height: 15px;
+      }
+    }
+
+    .the-button {
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+      padding: 20px;
+      background-color: $button-color;
+      color: $button-text-color;
+      width: 100vw;
+      font-weight: 500;
+
+      &:hover {
+        background-color: $button-hover-color;
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

@@ -2,7 +2,7 @@
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
     .send-form {
-      padding: 40px 60px 0;
+      padding: 30px 10px;
 
       .title-container {
         align-items: flex-end;
@@ -197,13 +197,43 @@
     } // .advanced
 
     .submit-button-container {
-      padding: 60px 0;
-      text-align: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 9;
+      width: 100vw;
+      transition: all 0.3s ease;
+      margin: 0 auto;
+
+      &.hide-mobile-button {
+        opacity: 0;
+        pointer-events: none;
+      }
 
       .submit-button {
         margin: 0 auto;
         text-align: center;
-        width: 300px;
+        border-radius: 0;
+        border: 0;
+        display: flex;
+
+        .button-content {
+          display: flex;
+          align-items: center;
+          margin: 0 auto;
+
+          p {
+            margin: 0;
+            margin-right: 10px;
+            color: $white;
+          }
+
+          img {
+            position: absolute;
+            right: 30px;
+            top: 24px;
+          }
+        } // .button-content
       }
 
       p {

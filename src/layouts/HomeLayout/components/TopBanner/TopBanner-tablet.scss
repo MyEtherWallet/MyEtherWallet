@@ -1,23 +1,22 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .banner {
-    padding: 30px;
-    padding-right: 0;
+  .wrap {
+    margin-bottom: 50px;
+  }
 
-    @media all and (max-width: 1100px) {
-      padding: 40px 0 50px;
-    }
+  .banner {
+    padding: 40px 0 90px;
 
     .banner-text {
       flex: 1;
 
       h1 {
         color: $text-color-6;
-        font-size: 45px;
+        font-size: 33px;
         font-weight: 700;
-        line-height: 47px;
-        margin-bottom: 8px;
+        line-height: 42px;
         letter-spacing: -1px;
+        margin: 0;
       }
 
       p {
@@ -29,37 +28,25 @@
 
     .banner-image {
       flex: 1;
-
-      @media all and (max-width: 700px) {
-        display: none;
-      }
+      display: none;
 
       img {
         display: block;
         height: 452px;
         margin: 0 0 0 auto;
-
-        @media all and (max-width: 1100px) {
-          height: initial;
-          margin-left: 20px;
-          width: 300px;
-        }
       }
     }
   } // .banner
 
   .promo-cards {
     grid-column-gap: 30px;
-
-    @media all and (max-width: $tablet-width) {
-      display: block;
-    }
+    display: block;
 
     .card-block {
       border-radius: 4px;
       color: $text-color-1;
-      margin-bottom: 0;
-      padding: 30px 40px;
+      margin-bottom: 15px;
+      padding: 11px;
       position: relative;
 
       &.create-wallet {
@@ -70,26 +57,9 @@
         background-color: $unlock-wallet-background-color;
       }
 
-      @media all and (min-width: $tablet-width + 1) {
-        top: 0;
-        transition: all 0.3s ease;
-
-        &:hover {
-          box-shadow: 0 5px 24px $topbanner-block-box-shadow-color;
-          top: -10px;
-        }
-      }
-
-      @media all and (max-width: $mobile-width) {
-        padding: 30px;
-      }
-
       .card-image {
         padding-right: 40px;
-
-        @media all and (max-width: $mobile-width) {
-          display: none;
-        }
+        display: none;
 
         img {
           width: 87px;
@@ -97,20 +67,27 @@
       }
 
       .card-content {
+        display: inline;
+        text-align: center;
+        width: 100%;
+
         h2 {
-          font-size: 24px;
+          font-size: 14px;
           font-weight: 500;
-          margin-bottom: 5px;
+          margin-bottom: 0;
+          text-align: center;
+          display: block;
         }
 
         p {
           line-height: 19px;
           margin-bottom: 20px;
+          display: none;
         }
 
         .button {
           color: $text-color-1;
-          display: inline-block;
+          display: none;
           font-size: 15px;
           font-weight: 500;
 
@@ -120,7 +97,7 @@
             width: 20px;
           }
         }
-      }
-    }
-  }
+      } // .card-content
+    } // .card-block
+  } // .promo-cards
 } //@media all and ( min-width: calc(#{$mobile-width} + 1px) ) and ( max-width: $tablet-width )

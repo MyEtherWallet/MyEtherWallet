@@ -1,47 +1,53 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
+
   .send-offline-container {
     border-radius: 5px;
     grid-area: main;
-    overflow: hidden;
+    margin-bottom: 10px;
+    background: $background-color-white;
+  }
+
+  .progress-status-container {
+    overflow-x: auto;
+  }
+
+  .progress-status {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid $opaque-black-9;
+    box-shadow: 0 2px 0 $black;
+    display: grid;
+    width: 700px;
+    grid-template-columns: 27% 27% 27%;
+    justify-content: space-evenly;
+    text-align: center;
 
     > div {
-      background: $background-color-white;
+      cursor: pointer;
+      padding-bottom: 18px;
+      padding-top: 24px;
+
+      p {
+        color: $text-color-9;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .title {
+        font-weight: 600;
+        font-size: 18px;
+      }
     }
 
-    .progress-status {
-      background-color: $background-color-5;
-      border-bottom: 1px solid $opaque-black-9;
-      box-shadow: 0 2px 0 $black;
-      display: grid;
-      grid-column-gap: 20px;
-      grid-template-columns: 27% 27% 27%;
-      justify-content: space-evenly;
-      text-align: center;
+    .active {
+      border-bottom: 4px solid $black;
 
-      > div {
-        cursor: pointer;
-        padding-bottom: 18px;
-        padding-top: 24px;
-
-        p {
-          color: $text-color-9;
-          display: block;
-          margin: 0 auto;
-        }
-
-        .title {
-          font-weight: 600;
-        }
+      p {
+        color: $text-black;
       }
-
-      .active {
-        border-bottom: 4px solid $black;
-
-        p {
-          color: $text-black;
-        }
-      }
-    } // .progress-status
-  }
+    }
+  } // .progress-status
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

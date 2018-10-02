@@ -8,10 +8,6 @@
     padding: 0 10px;
   }
 
-  .modal-body {
-    padding: 30px 35px;
-  }
-
   .signed-tx-container,
   .raw-tx-container {
     background: $light-grey-1;
@@ -39,5 +35,26 @@
       color: $black;
       font-weight: 200;
     }
+  }
+}
+
+// Desktop
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-body {
+    padding: 30px 35px;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .modal-body {
+    padding: 30px 15px;
+  }
+}
+
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .modal-body {
+    padding: 30px 15px;
   }
 }

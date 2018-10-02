@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
-    padding-top: 71px;
+    padding-top: 70px;
   }
 
   .scrollup-container {
@@ -25,27 +25,23 @@
 
     &.tiny-header {
       box-shadow: 0 2px 13px $tiny-header-shadow-color;
-
-      .header-container {
-        padding: 5px 0;
-      }
     }
 
     .header-container {
       align-items: center;
       display: flex;
-      padding: 12px 0;
+      padding: 17px 8px;
       transition: all 0.3s ease;
 
-      @media all and (max-width: $tablet-width) {
-        padding: 15px 0;
+      &.tiny-header-container {
+        padding: 10px 8px;
       }
 
       .top-logo {
         line-height: 10px;
 
         img {
-          height: 33px;
+          height: 36px;
           transition: all 0.3s ease;
         }
 
@@ -57,6 +53,7 @@
       .top-menu {
         margin-left: auto;
         position: relative;
+        display: none;
 
         a:link,
         a:visited,
@@ -67,10 +64,6 @@
 
         span {
           color: $text-base-color;
-        }
-
-        @media all and (max-width: $tablet-width) {
-          display: none;
         }
 
         .nav {
@@ -138,31 +131,63 @@
         }
       } // .top-menu
 
-      .mobile-menu {
-        display: none;
+      .mobile-menu-buttons {
         margin-left: auto;
+        display: block;
+        position: relative;
 
-        @media all and (max-width: $tablet-width) {
-          display: block;
+        > div {
+          position: relative;
+          height: 35px;
+          width: 35px;
+          padding: 0;
         }
 
-        .mobile-menu-button {
-          padding: 10px 5px;
-
+        .menu-open {
           div {
+            width: 26px;
+            height: 3px;
             background-color: $background-color-black;
             border-radius: 2px;
-            height: 4px;
-            margin-bottom: 5px;
-            width: 26px;
+            position: absolute;
+            left: 4px;
+          }
+
+          $top-position: 8px;
+          $increment-value: 8px;
+
+          .bar-1 {
+            top: $top-position;
+          }
+
+          .bar-2 {
+            top: $top-position + $increment-value;
           }
 
           .bar-3 {
-            margin: 0;
-            width: 15px;
+            top: $top-position + ($increment-value * 2);
+            width: 18px;
+          }
+        } // .menu-open
+
+        .menu-close {
+          div {
+            width: 30px;
+            height: 3px;
+            background-color: $background-color-black;
+            border-radius: 2px;
+            position: absolute;
+            top: 16px;
+            left: 2px;
+          }
+          div:nth-child(1) {
+            transform: rotate(45deg);
+          }
+          div:nth-child(2) {
+            transform: rotate(-45deg);
           }
         }
-      } // .mobile-menu
+      } // .mobile-menu-buttons
     } // .header-container
   } // .fixed-header
 
@@ -244,4 +269,79 @@
       }
     }
   } // .get-free-wallet
+
+  .mobile-menu {
+    padding: 15px 0 25px;
+    border-top: 1px solid $border-color-5;
+    border-bottom: 1px solid $border-color-5;
+    transition: max-height 0.2s linear, padding 0.1s linear;
+    overflow: hidden;
+
+    .nav {
+      display: block;
+
+      .nav-item {
+        display: block;
+
+        a {
+          font-size: 20px;
+          color: $text-base-color;
+          padding: 25px 40px;
+        }
+      }
+    }
+
+    .language-menu-container {
+      .arrows {
+        right: 37px;
+        top: 22px;
+      }
+
+      .current-language-flag {
+        display: flex;
+        align-items: center;
+        padding: 25px 40px;
+
+        img {
+          //width: 50px;
+          height: 20px;
+        }
+
+        p {
+          font-size: 20px;
+          color: $text-base-color;
+          padding-right: 20px;
+        }
+      }
+    }
+  }
+
+  .mobile-menu-opened {
+    max-height: 1000px;
+  }
+
+  .mobile-menu-closed {
+    padding: 0;
+    max-height: 0;
+    border: 0;
+  }
+
+  .mobile-menu-background-fill {
+    position: fixed;
+    top: 0;
+    left: 0;
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    opacity: 0;
+    background-color: $black;
+    transition: opacity 0.2s linear;
+    pointer-events: none;
+
+    &.background-fill-active {
+      pointer-events: auto;
+      opacity: 0.6;
+    }
+  }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

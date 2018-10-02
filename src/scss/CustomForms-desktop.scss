@@ -131,7 +131,7 @@
   }
 
   //=======================================================================
-  // Custom Radio Button
+  // Radio Button
   //=======================================================================
   .mew-custom-form__radio-button {
     input[type='radio'] {
@@ -165,12 +165,5 @@
         left: $radio-button-dot-position;
       }
     }
-  }
-
-  //=======================================================================
-  // currency-picker Dropdown
-  //=======================================================================
-  .dropdown-text-container {
-    padding: 15px !important;
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px)) {

@@ -2,6 +2,7 @@
   <b-modal
     ref="signedTx"
     hide-footer
+    centered
     class="bootstrap-modal signed-tx-modal"
     title="Signed Transaction">
     <div class="d-block">
@@ -41,19 +42,34 @@
         </div>
       </div>
     </div>
-    <div class="button-container">
+
+    <standard-button 
+      buttontext="Copy and Continue" 
+      rightarrow="true"
+      fullwidth="true"
+      buttonstyle="green"
+      @click="copyAndContinue" />
+
+    <div 
+      v-if="false" 
+      class="button-container">
       <b-btn
         class="mid-round-button-green-filled close-button"
         @click="copyAndContinue">
-        Copy It and Continue
+        Copy and Continue
       </b-btn>
     </div>
   </b-modal>
 </template>
 
 <script type="text/javascript">
+import StandardButton from '@/components/Buttons/StandardButton';
+
 export default {
   name: 'SignedTxModal',
+  components: {
+    'standard-button': StandardButton
+  },
   props: {
     signedTx: {
       type: String,
@@ -74,6 +90,9 @@ export default {
     return {
       showRaw: false
     };
+  },
+  mounted() {
+    this.$refs.signedTx.show();
   },
   methods: {
     copyAndContinue() {

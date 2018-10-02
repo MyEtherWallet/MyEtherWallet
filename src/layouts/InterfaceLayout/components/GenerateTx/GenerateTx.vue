@@ -1,111 +1,111 @@
 <template>
-  <div class="generate-info">
+  <div class="generate-tx">
+
     <div class="page-wrap">
-
-
-      <div class="form-container grid--1">
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>Type</p>
+      <div class="main-form-block">
+        <div class="form-container grid--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Type</p>
+              </div>
+            </div>
+            <div class="the-form-block">
+              <dropdown-coin-selector />
             </div>
           </div>
-          <div class="the-form-block">
-            <dropdown-coin-selector />
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Amount</p>
+              </div>
+              <div class="title-button">
+                Copy
+              </div>
+            </div>
+            <div class="the-form-block">
+              <input 
+                type="text" 
+                name="">
+            </div>
           </div>
         </div>
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>Amount</p>
+
+
+        <div class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>To Address</p>
+              </div>
+              <div class="title-button">
+                Copy
+              </div>
             </div>
-            <div class="title-button">
-              Copy
+            <div class="the-form-block">
+              <dropdown-address-selector />
             </div>
-          </div>
-          <div class="the-form-block">
-            <input 
-              type="text" 
-              name="">
-          </div>
+          </div>        
         </div>
-      </div>
 
 
-      <div class="form-container single--1">
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>To Address</p>
+        <div class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Data</p>
+                <popover :popcontent="$t('popover.whatIsDataContent')"/>
+              </div>
             </div>
-            <div class="title-button">
-              Copy
+            <div class="the-form-block">
+              <input 
+                type="text" 
+                name="">
             </div>
-          </div>
-          <div class="the-form-block">
-            <dropdown-address-selector />
-          </div>
-        </div>        
-      </div>
+          </div>        
+        </div>
 
 
-      <div class="form-container single--1">
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>Data</p>
-              <popover :popcontent="$t('popover.whatIsDataContent')"/>
+        <div class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Nonce</p>
+                <popover :popcontent="$t('popover.whatIsDataContent')"/>
+              </div>
             </div>
-          </div>
-          <div class="the-form-block">
-            <input 
-              type="text" 
-              name="">
-          </div>
-        </div>        
-      </div>
-
-
-      <div class="form-container single--1">
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>Nonce</p>
-              <popover :popcontent="$t('popover.whatIsDataContent')"/>
+            <div class="the-form-block">
+              <input 
+                type="text" 
+                name="">
             </div>
-          </div>
-          <div class="the-form-block">
-            <input 
-              type="text" 
-              name="">
-          </div>
-        </div>        
-      </div>
+          </div>        
+        </div>
 
 
-      <div class="form-container single--1">
-        <div>
-          <div class="form-title-block">
-            <div class="title">
-              <p>Gas Limit</p>
-              <popover :popcontent="$t('popover.whatIsDataContent')"/>
+        <div class="form-container single--1">
+          <div>
+            <div class="form-title-block">
+              <div class="title">
+                <p>Gas Limit</p>
+                <popover :popcontent="$t('popover.whatIsDataContent')"/>
+              </div>
+              <div class="title-text">
+                0.00013 ETH ($0.534)
+              </div>
             </div>
-            <div class="title-text">
-              0.00013 ETH ($0.534)
+            <div class="the-form-block">
+              <input 
+                class="padding-right" 
+                type="text" 
+                name="">
+              <div class="right-end-text">
+                Gwei
+              </div>
             </div>
-          </div>
-          <div class="the-form-block">
-            <input 
-              class="padding-right" 
-              type="text" 
-              name="">
-            <div class="right-end-text">
-              Gwei
-            </div>
-          </div>
-        </div>        
-      </div>
-
+          </div>        
+        </div>
+      </div><!-- .main-form-block -->
 
       <div class="page--bottom-button-container">
         <div class="the-button">Generate</div>
@@ -346,6 +346,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../InformationBlockForms-desktop';
+@import '../InformationBlockForms-tablet';
+@import '../InformationBlockForms-mobile';
 @import 'GenerateTx-desktop.scss';
 @import 'GenerateTx-tablet.scss';
 @import 'GenerateTx-mobile.scss';

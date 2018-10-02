@@ -12,3 +12,11 @@
     text-align: center;
   }
 }
+
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .bottom-text {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: center;
+  }
+}

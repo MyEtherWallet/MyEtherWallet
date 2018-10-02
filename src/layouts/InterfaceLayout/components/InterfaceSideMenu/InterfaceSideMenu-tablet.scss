@@ -1,9 +1,97 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .side-menu-header {
+    padding: 17px 23px;
+    border-bottom: 1px solid $light-grey-3;
+    display: flex;
+    align-items: center;
+
+    .top-logo {
+      img {
+        height: 36px;
+      }
+    }
+
+    .mobile-menu-buttons {
+      margin-left: auto;
+      display: block;
+      position: relative;
+
+      > div {
+        position: relative;
+        height: 35px;
+        width: 35px;
+        padding: 0;
+      }
+
+      .menu-open {
+        div {
+          width: 26px;
+          height: 3px;
+          background-color: $background-color-black;
+          border-radius: 2px;
+          position: absolute;
+          left: 4px;
+        }
+
+        $top-position: 8px;
+        $increment-value: 8px;
+
+        .bar-1 {
+          top: $top-position;
+        }
+
+        .bar-2 {
+          top: $top-position + $increment-value;
+        }
+
+        .bar-3 {
+          top: $top-position + ($increment-value * 2);
+          width: 18px;
+        }
+      } // .menu-open
+
+      .menu-close {
+        div {
+          width: 30px;
+          height: 3px;
+          background-color: $background-color-black;
+          border-radius: 2px;
+          position: absolute;
+          top: 16px;
+          left: 2px;
+        }
+        div:nth-child(1) {
+          transform: rotate(45deg);
+        }
+        div:nth-child(2) {
+          transform: rotate(-45deg);
+        }
+      }
+    } // .mobile-menu-buttons
+  }
+
   .side-menu {
-    padding: 40px 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: -800px;
+    height: 100vh;
+    width: 100vw;
+    z-index: 200;
+    background-color: $white;
+    transition: all 0.5s ease;
+
+    &.side-menu-open {
+      left: 0;
+    }
+
+    .menu {
+      padding: 30px 23px;
+    }
 
     ul {
+      display: block !important;
       li {
         cursor: pointer;
         margin-bottom: 40px;
@@ -18,24 +106,25 @@
 
           p {
             color: $text-side-menu-inactive-color;
-            font-size: 16px;
+            font-size: 25px;
             font-weight: 500;
             position: relative;
           }
 
           i {
             color: $text-side-menu-inactive-color;
-            font-size: 16px;
+            font-size: 20px;
             margin-left: auto;
+            display: none;
           }
         }
 
         ul {
           li {
             color: $text-side-menu-inactive-color;
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 400;
-            margin: 10px 0 0 40px;
+            margin: 15px 0 0 40px;
           }
         }
       }
