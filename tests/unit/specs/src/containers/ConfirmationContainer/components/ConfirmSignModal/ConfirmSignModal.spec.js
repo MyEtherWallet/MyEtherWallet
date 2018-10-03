@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import { shallowMount ,createLocalVue} from '@vue/test-utils'
 import ConfirmSignModal from '@/containers/ConfirmationContainer/components/ConfirmSignModal/ConfirmSignModal.vue';
+import BootstrapVue from "bootstrap-vue";
+
 const localVue = createLocalVue()
+localVue.use(BootstrapVue);
 
 describe('ConfirmSignModal.vue', () => {
   it('should render correct contents', () => {
@@ -11,6 +14,9 @@ describe('ConfirmSignModal.vue', () => {
       const isHardwareWallet = false
 
       const wrapper = shallowMount(ConfirmSignModal, {
+        localVue,
+        sync:false,
+        attachToDocument:true, 
         propsData: { signedMessage, messageToSign, from , isHardwareWallet}
       });
 
@@ -34,6 +40,8 @@ describe('ConfirmSignModal.vue', () => {
     const confirmSignMessage = jest.fn(()=> console.log('return true'))
     const wrapper = shallowMount(ConfirmSignModal, {
       localVue,
+      sync:false,
+      attachToDocument:true, 
       propsData: {
         signedMessage:'signedMessage',
         confirmSignMessage: confirmSignMessage

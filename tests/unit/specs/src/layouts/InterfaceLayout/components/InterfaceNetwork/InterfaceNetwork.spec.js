@@ -1,17 +1,31 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import InterfaceNetwork from '@/layouts/InterfaceLayout/components/InterfaceNetwork/InterfaceNetwork.vue';
 
-xdescribe('InterfaceNetwork.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+import {
+  Tooling
+} from '@@/helpers';
+
+describe('InterfaceNetwork.vue', () => {
+    let localVue, i18n, wrapper, store;
+
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        // wrapper = shallowMount(InterfaceNetwork, {
+        //   localVue,
+        //   i18n
+        // });
+    });
+
+    it('should render correct content', () => {
+    });
+
+  describe('InterfaceNetwork.vue Methods', () => {
   });
-
-  describe('InterfaceNetwork.vue Methods', () => {});
 });

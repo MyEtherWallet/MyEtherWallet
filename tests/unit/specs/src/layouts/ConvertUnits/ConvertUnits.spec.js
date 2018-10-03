@@ -1,17 +1,38 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import ConvertUnits from '@/layouts/ConvertUnits/ConvertUnits.vue';
 
-xdescribe('ConvertUnits.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
-  });
+import {
+  Tooling
+} from '@@/helpers';
 
-  describe('ConvertUnits.vue Methods', () => {});
+describe('ConvertUnits.vue', () => {
+    let localVue, i18n, wrapper, store;
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(ConvertUnits, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true
+        });
+    });
+
+    it('should render correct etherUnitRef', () => {
+        const trElements = wrapper.vm.$el.getElementsByTagName('tr')
+        for(var i=0; i<trElements.length; i++) {
+          const trElement = trElements[i];
+          const tdElements = trElement.getElementsByTagName('td')
+          expect(tdElements[0].textContent.trim()).toEqual(wrapper.vm.$data.etherUnitRef[i].name)
+          expect(tdElements[1].textContent.trim()).toEqual(wrapper.vm.$data.etherUnitRef[i].unit1)
+          expect(tdElements[2].textContent.trim()).toEqual(wrapper.vm.$data.etherUnitRef[i].unit2 + wrapper.vm.$data.etherUnitRef[i].unit2e)
+          expect(tdElements[3].textContent.trim()).toEqual(wrapper.vm.$data.etherUnitRef[i].desc)
+        }
+    });
 });

@@ -2,6 +2,13 @@ import Vue from 'vue';
 import { shallowMount, RouterLink } from '@vue/test-utils'
 import NewsArticle from '@/containers/NewsContainer/components/NewsArticle/NewsArticle.vue';
 
+const RouterLinkStub = {
+  name:'router-link',
+  template:'<div class="routerlink"><slot> </slot></div>',
+  props:['to']  
+}
+
+
 describe('NewsArticle.vue', () => {
   it('should render correct contents', () => {
     const title = 'NewsArticle title';
@@ -13,7 +20,8 @@ describe('NewsArticle.vue', () => {
 
 
     const wrapper = shallowMount(NewsArticle, {
-      propsData: { title, desc, fb, twitter, readMore, link }
+      propsData: { title, desc, fb, twitter, readMore, link },
+      stubs: {'router-link':RouterLinkStub }
     });
 
     console.log('NewsArticle component title:%O', wrapper.vm.$el.querySelector('.news-text h4').textContent.trim());

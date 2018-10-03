@@ -77,6 +77,7 @@ export default {
   },
   methods: {
     copyAndContinue() {
+      console.log('copyAndContinue')
       this.$refs.signedTxInput.select();
       document.execCommand('copy');
       this.pathUpdate();

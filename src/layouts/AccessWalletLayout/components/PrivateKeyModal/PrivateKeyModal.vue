@@ -34,6 +34,8 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.privateKey = '';
+      try {
       this.$store.dispatch(
         'decryptWallet',
         BasicWallet.unlock({
@@ -41,8 +43,11 @@ export default {
           manualPrivateKey: this.privateKey
         })
       );
-      this.privateKey = '';
+
       this.$router.push({ path: 'interface' });
+      }catch(error) {
+
+      }
     }
   }
 };

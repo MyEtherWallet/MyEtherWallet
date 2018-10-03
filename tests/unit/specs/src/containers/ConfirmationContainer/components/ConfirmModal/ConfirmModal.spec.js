@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
-
+import BootstrapVue from "bootstrap-vue";
 const localVue = createLocalVue()
-
+localVue.use(BootstrapVue);
 
 describe('ConfirmModal.vue', () => {
   it('should render correct contents', () => {
@@ -18,9 +18,10 @@ describe('ConfirmModal.vue', () => {
       const value = 0
       const isHardwareWallet = false
 
-      
-
       const wrapper = shallowMount(ConfirmModal, {
+        sync:false,
+        attachToDocument:true, 
+        localVue,
         propsData: { signedTx, data, from , to, fee, gas, gasPrice, nonce, value, isHardwareWallet}
       });
 
@@ -36,7 +37,6 @@ describe('ConfirmModal.vue', () => {
 
       expect(wrapper.vm.modalDetailInformation).toBe(false);
       expect(wrapper.vm.transactionSigned).toBe(false);
-
       expect(wrapper.vm.signedTransaction).toEqual("");
   });
 
@@ -44,6 +44,8 @@ describe('ConfirmModal.vue', () => {
   it('should confirm sendtx when click submit button', () => {
     const confirmSendTx = jest.fn(()=> console.log('return true'))
     const wrapper = shallowMount(ConfirmModal, {
+      sync:false,
+      attachToDocument:true, 
       localVue,
       propsData: {
         signedTx:'0x111',
@@ -72,6 +74,9 @@ describe('ConfirmModal.vue', () => {
       
 
       const wrapper = shallowMount(ConfirmModal, {
+        sync:false,
+        attachToDocument:true, 
+        localVue,
         propsData: { signedTx, data, from , to, fee, gas, gasPrice, nonce, value, isHardwareWallet}
       });
 

@@ -1,7 +1,10 @@
 import Vue from 'vue';
 
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount ,createLocalVue} from '@vue/test-utils'
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import BootstrapVue from "bootstrap-vue"
+const localVue = createLocalVue()
+localVue.use(BootstrapVue);
 
 describe('SuccessModal.vue', () => {
   it('should render correct contents', () => {
@@ -9,12 +12,10 @@ describe('SuccessModal.vue', () => {
       const linkMessage = 'linkMessage'
       const linkTo = 'linkTo';
       const wrapper = shallowMount(SuccessModal, {
+        localVue,
+        attachToDocument:true, 
         propsData: { message, linkTo, linkMessage}
       });
-
-      console.log('SuccessModal message:%O', wrapper.vm.$el.querySelector('.d-block p').textContent.trim());
-      
-      console.log('SuccessModal linkMessage:%O', wrapper.vm.$el.querySelector('.button-container').textContent.trim());
 
       expect(wrapper.vm.$el.querySelector('.d-block p').textContent.trim()).toEqual(message);
       expect(wrapper.vm.$el.querySelector('.button-container').textContent.trim()).toEqual(linkMessage);
