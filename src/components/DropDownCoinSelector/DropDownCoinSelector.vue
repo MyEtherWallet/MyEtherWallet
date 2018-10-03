@@ -1,5 +1,9 @@
 <template>
   <div class="drop-down-address-selector">
+    <div class="form-title-container">
+      <div class="title">{{ options.title }}</div>
+    </div>
+
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
       class="dropdown-input-box" 
@@ -43,6 +47,14 @@
 
 <script>
 export default {
+  props: {
+    options: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {
       dropdownOpen: false

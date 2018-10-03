@@ -22,7 +22,7 @@
       <div class="raw">
         <div class="title-block">
           <h4 class="block-title">
-            Raw
+            Raw Transaction
           </h4>
           <div class="sliding-switch-white">
             <label class="switch">
@@ -46,7 +46,7 @@
     <standard-button 
       buttontext="Copy and Continue" 
       rightarrow="true"
-      fullwidth="true"
+      fullwidth=""
       buttonstyle="green"
       @click="copyAndContinue" />
 
@@ -63,13 +63,9 @@
 </template>
 
 <script type="text/javascript">
-import StandardButton from '@/components/Buttons/StandardButton';
-
 export default {
   name: 'SignedTxModal',
-  components: {
-    'standard-button': StandardButton
-  },
+  components: {},
   props: {
     signedTx: {
       type: String,

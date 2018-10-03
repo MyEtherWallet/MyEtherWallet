@@ -5,26 +5,20 @@
     hide-footer
     hide-header
     class="bootstrap-modal">
-    <div class="d-block text-center">
-      <i
-        class="check-icon fa fa-check"
-        aria-hidden="true"/>
-      <h2 class="title">Success</h2>
-      <p>{{ message }}</p>
+
+    <div class="success-modal">
+      <img src="~@/assets/images/etc/checked.svg">
+      <p>Success</p>
+      <p>Your transaction has been sent successfully.</p>
+      <standard-button 
+        :options="buttonSuccess"
+        @click.native="hideModal"
+      />
     </div>
-    <div class="button-container">
-      <b-btn
-        class="mid-round-button-green-filled close-button"
-        @click="hideModal">
-        {{ linkMessage }}
-      </b-btn>
-    </div>
+
   </b-modal>
 </template>
 
-<style lang="scss" scoped>
-@import 'SuccessModal';
-</style>
 <script>
 export default {
   props: {
@@ -41,6 +35,16 @@ export default {
       default: '/'
     }
   },
+  data() {
+    return {
+      buttonSuccess: {
+        title: 'Okay',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false
+      }
+    };
+  },
   methods: {
     hideModal() {
       if (this.linkTo !== '/') {
@@ -51,3 +55,8 @@ export default {
   }
 };
 </script>
+
+
+<style lang="scss" scoped>
+@import 'SuccessModal';
+</style>

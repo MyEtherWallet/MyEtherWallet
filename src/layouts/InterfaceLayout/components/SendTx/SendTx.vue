@@ -1,43 +1,32 @@
 <template>
-  <div class="generate-info">
+  <div class="send-publish-tx">
     <success-modal
       :link-message="'Ok'"
       message="Success"/>
-    <div class="wrap">
-      <div class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <div><h4>Signed Transaction</h4></div>
-            <div class="form-controller">
-              <p
-                class="linker-1 prevent-user-select"
-                @click="deleteTxHex">Clear</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="copyTxHex">Copy</p>
-            </div>
-          </div>
-        </div>
+    <div class="page-wrap">
 
-        <div class="the-form gas-amount">
-          <textarea
-            ref="txHex"
-            v-model="signedTx"
-            name=""
-            placeholder="Enter TX Hex"/>
+      <div class="main-form-block">
+        <div class="form-container single--1">
+          <standard-input :options="inputSignedTX" />
         </div>
       </div>
-      <div class="submit-button-container">
-        <div
-          class="submit-button large-round-button-green-filled clickable"
-          @click="sendTx">
-          Send Transaction
-        </div>
-        <interface-bottom-text
-          :link="'/'"
-          :link-text="'Learn more'"
-          :question="'Have any issues?'"/>
+
+
+      <div class="page--bottom-button-container">
+        <standard-button 
+          :options="buttonSendTX"
+          @click.native="sendTx"
+        />
       </div>
+
+      <interface-bottom-text
+        link="/"
+        question="Have issues?"
+        link-text="Learn More"/>
+
+
+
+
     </div>
   </div>
 </template>
@@ -61,6 +50,25 @@ export default {
   },
   data() {
     return {
+      buttonSendTX: {
+        title: 'Send Transaction',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false
+      },
+      inputSignedTX: {
+        title: 'Signed Transaction',
+        value: 'oegn0345gn30p4r3n94gm-4emgf-4m3-4tg',
+        type: '',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Enter TX Hex',
+        rightInputText: '',
+        isTextarea: true
+      },
       signedTx: this.rawTx
     };
   },
@@ -68,6 +76,9 @@ export default {
     rawTx(newVal) {
       this.signedTx = newVal;
     }
+  },
+  mounted() {
+    this.$children[0].$refs.success.show();
   },
   methods: {
     deleteTxHex() {
@@ -94,5 +105,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SendTx.scss';
+@import '../InformationBlockForms-desktop';
+@import '../InformationBlockForms-tablet';
+@import '../InformationBlockForms-mobile';
 </style>

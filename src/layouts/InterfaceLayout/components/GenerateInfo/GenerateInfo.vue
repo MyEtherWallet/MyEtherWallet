@@ -3,57 +3,35 @@
     <div class="page-wrap">
 
       <div class="main-form-block">
-        
         <div class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>From Address</p>
-              </div>
-              <div class="title-button">
-                Copy
-              </div>
-            </div>
-            <div class="the-form-block">
-              <dropdown-address-selector />
-            </div>
-          </div>        
+          <dropdown-address-selector :options="addressSelector" />
         </div>
-
         <div 
           v-if="moreInfoGenerated" 
           class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Nonce</p>
-                <popover :popcontent="$t('popover.whatIsDataContent')"/>
-              </div>
-            </div>
-            <div class="the-form-block">
-              <input 
-                type="text" 
-                name="">
-            </div>
-          </div>        
+          <standard-input :options="inputNonce" />
         </div>
-
       </div><!-- .main-form-block -->
 
 
 
       <div 
-        v-if="!moreInfoGenerated"
-        class="page--bottom-button-container" 
-        @click="moreInfoGenerated = true">
-        <div class="the-button">Generate</div>
+        v-if="!moreInfoGenerated" 
+        class="page--bottom-button-container">
+        <standard-button 
+          :options="buttonGenerate"
+          @click.native="moreInfoGenerated = true"
+        />
       </div>
 
+
       <div 
-        v-if="moreInfoGenerated"
-        class="page--bottom-button-container right-arrow" 
-        @click="moreInfoGenerated = true">
-        <div class="the-button">Continue<img src="@/assets/images/icons/right-arrow.png"></div>
+        v-if="moreInfoGenerated" 
+        class="page--bottom-button-container">
+        <standard-button 
+          :options="buttonContinue"
+          @click.native="moreInfoGenerated = false"
+        />
       </div>
 
 
@@ -61,11 +39,6 @@
         link="/"
         question="Have issues?"
         link-text="Learn More"/>
-
-
-
-
-
 
 
         <!--
@@ -143,7 +116,6 @@
       -->
 
 
-
     </div><!-- .page-wrap -->
   </div><!-- .generate-info -->
 </template>
@@ -172,6 +144,36 @@ export default {
   },
   data() {
     return {
+      buttonGenerate: {
+        title: 'Generate',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false
+      },
+      buttonContinue: {
+        title: 'Continue',
+        buttonStyle: 'green',
+        rightArrow: true,
+        fullWidth: false
+      },
+      addressSelector: {
+        title: 'From Address',
+        buttonCopy: true,
+        buttonClear: true,
+        popover: 'What is address'
+      },
+      inputNonce: {
+        title: 'Nonce',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: this.$t('popover.whatIsDataContent'),
+        placeHolder: '',
+        rightInputText: ''
+      },
       moreInfoGenerated: false,
       isValid: false,
       onBottomOfPage: false,
@@ -230,7 +232,4 @@ export default {
 @import '../InformationBlockForms-desktop';
 @import '../InformationBlockForms-tablet';
 @import '../InformationBlockForms-mobile';
-@import 'GenerateInfo-desktop.scss';
-@import 'GenerateInfo-tablet.scss';
-@import 'GenerateInfo-mobile.scss';
 </style>

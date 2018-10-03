@@ -1,12 +1,13 @@
 <template>
-  <div class="green-button">
+  <div 
+    :class="options.fullWidth ? 'full-width' : ''" 
+    class="standard-button">
      
     <div :class="buttonClass">
-      <div 
-        :class="fullwidth == 'true' ? 'full-width' : ''" 
-        class="the-button">{{ buttontext }}
+      <div         
+        class="the-button">{{ options.title }}
         <img 
-          v-if="rightarrow == 'true'" 
+          v-if="options.rightArrow" 
           src="@/assets/images/icons/right-arrow.png">
       </div>
     </div>
@@ -17,21 +18,11 @@
 <script>
 export default {
   props: {
-    buttontext: {
-      type: String,
-      default: ''
-    },
-    rightarrow: {
-      type: String,
-      default: ''
-    },
-    fullwidth: {
-      type: String,
-      default: ''
-    },
-    buttonstyle: {
-      type: String,
-      default: ''
+    options: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -39,7 +30,7 @@ export default {
   },
   computed: {
     buttonClass() {
-      switch (this.buttonstyle) {
+      switch (this.options.buttonStyle) {
         case 'green':
           return 'standard-button__green';
         case 'green-border':

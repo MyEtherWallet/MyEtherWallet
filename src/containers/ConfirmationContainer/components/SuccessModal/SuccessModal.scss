@@ -1,12 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
-.bootstrap-modal {
-  .check-icon {
-    border: 3px solid $border-green;
-    border-radius: 200px;
-    color: $text-color-green;
-    font-size: 90px;
-    margin-bottom: 15px;
-    padding: 25px;
-  }
+.success-modal {
+  text-align: center;
+  padding: 50px 40px;
 }

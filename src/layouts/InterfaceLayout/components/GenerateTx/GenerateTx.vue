@@ -4,119 +4,38 @@
     <div class="page-wrap">
       <div class="main-form-block">
         <div class="form-container grid--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Type</p>
-              </div>
-            </div>
-            <div class="the-form-block">
-              <dropdown-coin-selector />
-            </div>
-          </div>
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Amount</p>
-              </div>
-              <div class="title-button">
-                Copy
-              </div>
-            </div>
-            <div class="the-form-block">
-              <input 
-                type="text" 
-                name="">
-            </div>
-          </div>
+          <dropdown-coin-selector :options="coinSelector" />
+          <standard-input :options="inputAmount" />
         </div>
 
-
         <div class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>To Address</p>
-              </div>
-              <div class="title-button">
-                Copy
-              </div>
-            </div>
-            <div class="the-form-block">
-              <dropdown-address-selector />
-            </div>
-          </div>        
+          <dropdown-address-selector :options="addressSelector" />
         </div>
 
-
         <div class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Data</p>
-                <popover :popcontent="$t('popover.whatIsDataContent')"/>
-              </div>
-            </div>
-            <div class="the-form-block">
-              <input 
-                type="text" 
-                name="">
-            </div>
-          </div>        
+          <standard-input :options="inputData" />
         </div>
 
-
         <div class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Nonce</p>
-                <popover :popcontent="$t('popover.whatIsDataContent')"/>
-              </div>
-            </div>
-            <div class="the-form-block">
-              <input 
-                type="text" 
-                name="">
-            </div>
-          </div>        
+          <standard-input :options="inputNonce" />
         </div>
 
-
         <div class="form-container single--1">
-          <div>
-            <div class="form-title-block">
-              <div class="title">
-                <p>Gas Limit</p>
-                <popover :popcontent="$t('popover.whatIsDataContent')"/>
-              </div>
-              <div class="title-text">
-                0.00013 ETH ($0.534)
-              </div>
-            </div>
-            <div class="the-form-block">
-              <input 
-                class="padding-right" 
-                type="text" 
-                name="">
-              <div class="right-end-text">
-                Gwei
-              </div>
-            </div>
-          </div>        
+          <standard-input :options="inputGasLimit" />
         </div>
       </div><!-- .main-form-block -->
 
       <div class="page--bottom-button-container">
-        <div class="the-button">Generate</div>
+        <standard-button 
+          :options="buttonGenerate"
+          @click.native="openSignedTXModal"
+        />
       </div>
-
 
       <interface-bottom-text
         link="/"
         question="Have issues?"
         link-text="Learn More"/>
-
 
 
 
@@ -273,6 +192,69 @@ export default {
   },
   data() {
     return {
+      buttonGenerate: {
+        title: 'Generate',
+        buttonStyle: 'green',
+        rightArrow: true,
+        fullWidth: false
+      },
+      addressSelector: {
+        title: 'To Address',
+        buttonCopy: true,
+        buttonClear: true,
+        popover: 'What is address'
+      },
+      coinSelector: {
+        title: 'Type'
+      },
+      inputAmount: {
+        title: 'Amount',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: 'Entire Balance',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: ''
+      },
+      inputData: {
+        title: 'Data',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'What is data?',
+        placeHolder: 'e.g. 0xDECAF9CD23694035AFEDC90943589023590374',
+        rightInputText: ''
+      },
+      inputNonce: {
+        title: 'Nonce',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'What is Nonce?',
+        placeHolder: '',
+        rightInputText: ''
+      },
+      inputGasLimit: {
+        title: 'Gas Limit',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '0.00013 ETH ($0.534)',
+        popover: 'What is Gas Limit?',
+        placeHolder: '',
+        rightInputText: 'Gwei'
+      },
       toAmt: 0,
       address: '',
       toData: '0x',
@@ -302,6 +284,9 @@ export default {
     );
   },
   methods: {
+    openSignedTXModal() {
+      console.log('Modal open');
+    },
     copyToAddress() {
       this.$refs('toaddress').select();
       document.execCommand('copy');
@@ -349,7 +334,4 @@ export default {
 @import '../InformationBlockForms-desktop';
 @import '../InformationBlockForms-tablet';
 @import '../InformationBlockForms-mobile';
-@import 'GenerateTx-desktop.scss';
-@import 'GenerateTx-tablet.scss';
-@import 'GenerateTx-mobile.scss';
 </style>

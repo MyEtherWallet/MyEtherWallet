@@ -43,20 +43,25 @@ $blue-border-button-background--click: #f2f4fd;
   font-size: 14px;
   border-radius: 4px;
   position: relative;
+  min-width: 250px;
 }
 
 .the-button {
-  display: inline-block;
-
-  &.full-width {
-    display: block;
-  }
+  display: block;
 
   img {
     position: absolute;
     top: 21px;
     right: 20px;
     height: 15px;
+  }
+}
+
+.standard-button {
+  display: inline-block;
+
+  &.full-width {
+    display: block;
   }
 }
 

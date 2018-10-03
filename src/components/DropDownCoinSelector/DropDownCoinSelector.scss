@@ -5,6 +5,19 @@
   user-select: none;
 }
 
+.form-title-container {
+  margin-bottom: 10px;
+  padding: 0 10px;
+
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: initial;
+    margin-right: 8px;
+    color: #212529;
+  }
+}
+
 .dropdown-input-box {
   position: relative;
   border: 1px solid $background-color-1;

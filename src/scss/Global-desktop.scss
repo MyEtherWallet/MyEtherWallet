@@ -734,6 +734,7 @@
   .modal-body {
     background-color: $background-color-white;
     padding: 60px 70px 50px;
+    padding: 0 !important;
 
     .title {
       color: $text-color-6;
@@ -1255,4 +1256,5 @@
     background-color: $light-grey-12;
     pointer-events: none;
   }
+
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )

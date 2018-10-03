@@ -1,5 +1,25 @@
 <template>
   <div class="drop-down-address-selector">
+    
+    <div class="input-title-container">
+      <div class="input-title-and-helper">
+        <p class="input-title">{{ options.title }}</p>
+        <popover 
+          v-if="options.popover" 
+          :popcontent="options.popover"/>
+      </div>
+
+      <div class="button-container">
+        <div 
+          v-if="options.buttonClear == true" 
+          class="the-button clean">Clear</div>
+        <div 
+          v-if="options.buttonCopy == true" 
+          class="the-button copy">Copy</div>
+      </div>
+    </div>
+
+
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
       class="dropdown-input-box">
@@ -65,6 +85,14 @@ import web3 from 'web3';
 export default {
   components: {
     blockie: Blockie
+  },
+  props: {
+    options: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
   },
   data() {
     return {

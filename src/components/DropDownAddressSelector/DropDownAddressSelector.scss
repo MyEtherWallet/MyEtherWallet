@@ -1,7 +1,58 @@
 @import '~@/scss/GlobalVariables';
 
+$input-title-color: #212529;
+$button-color: #05c0a5;
+$button-hover-color: #00947f;
+$text-info-color: #212529;
+
 .drop-down-address-selector {
   position: relative;
+}
+
+.input-title-container {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.input-title-and-helper {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.input-title {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: initial;
+  margin-right: 8px;
+  color: $input-title-color;
+}
+
+.button-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  > div {
+    margin-left: 20px;
+    font-size: 13px;
+  }
+
+  .the-button {
+    user-select: none;
+    color: $button-color;
+    cursor: pointer;
+
+    &:hover {
+      color: $button-hover-color;
+    }
+  }
+
+  .the-text {
+    color: $text-info-color;
+  }
 }
 
 .dropdown-input-box {
@@ -18,7 +69,7 @@
 
   input {
     background-color: $background-color-1;
-    padding: 18px;
+    padding: 17px;
     border: 0;
     width: 100%;
     padding-left: 55px;
