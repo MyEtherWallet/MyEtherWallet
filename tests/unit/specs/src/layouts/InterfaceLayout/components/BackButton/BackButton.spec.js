@@ -1,17 +1,40 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 
-xdescribe('BackButton.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
+import {
+  Tooling
+} from '@@/helpers';
+
+
+describe('BackButton.vue', () => {
+    let localVue, i18n, wrapper, store;
+    const resetView = jest.fn(()=> console.log('resetView function called'))
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(BackButton, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
           propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            resetView:resetView
           }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
-  });
+        });
+    });
 
-  describe('BackButton.vue Methods', () => {});
+    it('should render correct content', () => {
+        wrapper.find('.back-container').trigger('click')
+        expect( resetView ).toHaveBeenCalled()
+    });
+
+  describe('BackButton.vue Methods', () => {
+
+  });
 });

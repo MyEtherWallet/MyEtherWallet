@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueX from 'vuex'
 import { shallowMount , createLocalVue} from '@vue/test-utils'
 import Notification from '@/components/Notification/Notification.vue'
+import BootstrapVue from "bootstrap-vue"
 
 const localVue = createLocalVue()
 localVue.use(VueX)
-  
-
+localVue.use(BootstrapVue);
 
 describe('Notification.vue', () => {
   

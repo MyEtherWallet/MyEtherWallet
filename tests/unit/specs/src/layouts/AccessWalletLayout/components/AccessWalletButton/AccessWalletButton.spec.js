@@ -1,7 +1,10 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
 
+import BootstrapVue from "bootstrap-vue"
+const localVue = createLocalVue()
+localVue.use(BootstrapVue);
 
 describe('AccessWalletButton.vue', () => {
   it('should render correct contents', () => {
@@ -14,7 +17,8 @@ describe('AccessWalletButton.vue', () => {
 
   
     const wrapper = shallowMount(AccessWalletButton, {
-      propsData: { img, title, desc, recommend, tooltip, disabled }
+        localVue,
+        propsData: { img, title, desc, recommend, tooltip, disabled }
     });
 
     console.log('AccessWalletButton image:%O', wrapper.vm.$el.querySelector('.icon').src);

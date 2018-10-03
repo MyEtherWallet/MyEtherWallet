@@ -1,17 +1,34 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 
-xdescribe('CurrencyPicker.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+import {
+  Tooling
+} from '@@/helpers';
+
+describe('CurrencyPicker.vue', () => {
+    let localVue, i18n, wrapper, store;
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(CurrencyPicker, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+        });
+    });
+
+    it('should render correct content', () => {
+
+    });
+
+  describe('CurrencyPicker.vue Methods', () => {
+
   });
-
-  describe('CurrencyPicker.vue Methods', () => {});
 });

@@ -1,13 +1,19 @@
 import Vue from 'vue';
 import Blockie from '@/components/Blockie';
-import { shallowMount , mount} from '@vue/test-utils'
+import { shallowMount , mount, createLocalVue} from '@vue/test-utils';
+import BootstrapVue from "bootstrap-vue"
+const localVue = createLocalVue()
+localVue.use(BootstrapVue);
+
 describe('Blockie.vue', () => {
   it('should render correct contents', () => {
-
-
-    // const wrapper = shallowMount(Blockie, {
-    //   address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-    // });
+    const wrapper = shallowMount(Blockie, {
+    	localVue,
+    	attachToDocument:true, 
+    	propsData: {
+    		 address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+    	}    
+    });
 
     // console.log('Link Block title: %O', wrapper.vm.$el.querySelector('.address-identicon'));
     // expect(wrapper.vm.$el.style['background-image']).toEqual(

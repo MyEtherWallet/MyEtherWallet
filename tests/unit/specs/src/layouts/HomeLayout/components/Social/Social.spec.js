@@ -15,13 +15,18 @@ describe('Social.vue', () => {
       	console.log(imgElements[i].parentElement.className)
       }
       
-      // for(var i =0 ; i < wrapper.vm.$data.links.length; i++) {
-      // 	var data = wrapper.vm.$data.links[i];
+      for(var i =0 ; i < wrapper.vm.$data.links.length; i++) {
+      	var data = wrapper.vm.$data.links[i];
 
-      // 	var link = data.to + "/"
-      // 	expect( link ).toEqual(linkElements[i].href)
-      // 	expect(data.name).toEqual(imgElements[i].parentElement.className)
-      // }
+      	var link = data.to 
+        var linkElement = linkElements[i].href
+        if(linkElements[i].href.lastIndexOf("/") === linkElements[i].href.length - 1) {
+          linkElement = linkElements[i].href.substring(0, linkElements[i].href.length - 1)
+        }
+        console.log('link:%O', linkElement)
+        expect( link ).toEqual(linkElement)
+      	expect(data.name).toEqual(imgElements[i].parentElement.className)
+      }
   });
 
   describe('Social.vue Methods', () => {});

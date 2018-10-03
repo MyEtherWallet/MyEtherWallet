@@ -1,17 +1,35 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
 
-xdescribe('TxSpeedInput.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+import {
+  Tooling
+} from '@@/helpers';
+
+describe('TxSpeedInput.vue', () => {
+    let localVue, i18n, wrapper, store;
+
+ 
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(TxSpeedInput, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true
+        });
+    });
+
+    it('should render correct content', () => {
+    
+    });
+
+  describe('TxSpeedInput.vue Methods', () => {
   });
-
-  describe('TxSpeedInput.vue Methods', () => {});
 });

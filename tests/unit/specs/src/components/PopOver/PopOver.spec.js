@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount,createLocalVue } from '@vue/test-utils'
+import BootstrapVue from "bootstrap-vue"
+const localVue = createLocalVue()
+localVue.use(BootstrapVue);
+
 
 describe('PopOver.vue', () => {
   it('validate address when dropdown is selected', () => {
@@ -10,6 +14,8 @@ describe('PopOver.vue', () => {
     const popovertype = 'popovertype';
 
     const wrapper = shallowMount(PopOver, {
+      localVue,
+      attachToDocument:true, 
       propsData: { poptitle , popcontent, popovertype}
     });
 
