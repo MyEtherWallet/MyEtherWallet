@@ -3,6 +3,53 @@
 .interact-with-contract-container {
   @extend %interface-container;
 
+  .form-container {
+    margin-bottom: 40px;
+
+    .input-title {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: initial;
+      margin-right: 8px;
+      color: #212529;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .contract-form {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    align-items: end;
+
+    .the-input {
+      position: relative;
+
+      input {
+        color: $text-base-color;
+        border: 0;
+        padding: 7px;
+        border-bottom: 2px solid #d7d7d7;
+        border-radius: 0;
+        width: 100%;
+        padding-left: 90px;
+      }
+      p {
+        position: absolute;
+        top: 9px;
+        left: 12px;
+      }
+    }
+
+    .selector {
+      padding-left: 5px;
+
+    }
+  }
+
+
+
+
   .submit-button {
     margin: 0 auto;
     text-align: center;
@@ -11,6 +58,7 @@
 
   .send-form {
     @extend %send-form-base;
+
     padding: 0;
     margin-bottom: 40px;
     position: relative;
@@ -18,7 +66,7 @@
     .contract-selector {
       position: absolute;
       right: 10px;
-      top: 0px;
+      top: 0;
       z-index: 999;
     }
 
@@ -192,6 +240,8 @@
 
 .button-container {
   text-align: center;
+
+  >* {
+    margin: 0px 5px;
+  }
 }
-
-

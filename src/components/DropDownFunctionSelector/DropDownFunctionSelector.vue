@@ -1,19 +1,20 @@
 <template>
   <div class="dropdown-contract-selector">
     <div 
-      class="user-interface-block" 
+      :class="dropdownOpen ? 'dropdown-open' : ''" 
+      class="user-interface-block"
       @click="dropdownOpen = !dropdownOpen">
       <p class="choose-contract-message">
-        Choose Existing Contract
-        <i
-          v-if="!dropdownOpen" 
-          class="fa fa-angle-down" 
-          aria-hidden="true"/>
-        <i
-          v-if="dropdownOpen" 
-          class="fa fa-angle-up" 
-          aria-hidden="true"/>
+        Function
       </p>      
+      <i
+        v-if="!dropdownOpen" 
+        class="fa fa-angle-down" 
+        aria-hidden="true"/>
+      <i
+        v-if="dropdownOpen" 
+        class="fa fa-angle-up" 
+        aria-hidden="true"/>
     </div>
     <div 
       :class="dropdownOpen ? 'show-dropdown' : ''" 
@@ -30,24 +31,12 @@
 
       <div class="list-block">
         <ul>
-          <li>
-            <p>My Contracts</p>
-            <ul>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-            </ul>
-          </li>
-          <li>
-            <p>Other Contracts</p>
-            <ul>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-              <li><p>Battle Of Thermopyleaderader</p></li>
-            </ul>
-          </li>
+          <li><p>name</p></li>
+          <li><p>approve</p></li>
+          <li><p>totalSupply</p></li>
+          <li><p>transferFrom</p></li>
+          <li><p>decimals</p></li>
+          <li><p>_totalSupply</p></li>
         </ul>
       </div>
 
@@ -97,5 +86,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DropDownContractSelector.scss';
+@import 'DropDownFunctionSelector.scss';
 </style>

@@ -2,38 +2,47 @@
 
 .dropdown-contract-selector {
   user-select: none;
-  min-width: 250px;
+
   position: relative;
 }
 
 .user-interface-block {
+  padding: 15px 10px;
   cursor: pointer;
-  text-align: right;
+  text-align: left;
+  border: 1px solid $grey-1;
+  border-radius: 4px;
+  align-items: center;
+  display: flex;
+
+  &.dropdown-open {
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid $white;
+  }
 
   p {
     font-size: 13px;
     color: #212529;
   }
-
-  .choose-contract-message {
-    i {
-      margin-left: 10px;
-    }
+  i {
+    margin-left: auto;
   }
 }
 
 .dropdown-container {
   border: 1px solid $grey-1;
-  border-radius: 4px;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
   overflow: hidden;
   position: absolute;
-  top: 25px;
+  top: 46px;
   left: 0;
   z-index: 999;
   width: 100%;
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s ease;
+  background-color: $white;
 
   &.show-dropdown {
     opacity: 1;
@@ -44,18 +53,19 @@
 .search-block {
   border-bottom: 1px solid $grey-1;
   position: relative;
+  padding: 6px;
 
   input {
     border: 0;
-    background-color: $white;
-    padding: 10px;
-    padding-left: 40px;
+    padding: 8px;
+    padding-left: 30px;
     width: 100%;
+    background-color: #f9f9f9;
   }
 
   img {
     position: absolute;
-    top: 13px;
+    top: 17px;
     left: 13px;
     width: 15px;
   }
@@ -67,30 +77,20 @@
   overflow-y: auto;
   overflow-x: hidden;
 
-  > ul {
-    > li {
-      > p {
-        font-weight: 500;
-        color: $dark-blue-6;
-        font-size: 12px;
-        background-color: $light-grey-1;
-        padding: 2px 10px;
+  ul {
+    li {
+      cursor: pointer;
+      &:hover {
+        background-color: $light-grey-2;
       }
 
-      > ul {
-        > li {
-          cursor: pointer;
-          &:hover {
-            background-color: $light-grey-2;
-          }
-          > p {
-            font-weight: 300;
-            color: $dark-blue-6;
-            font-size: 13px;
-            padding: 4px 10px;
-          }
-        }
+      p {
+        font-weight: 300;
+        color: $dark-blue-6;
+        font-size: 13px;
+        padding: 4px 10px;
       }
     }
   }
+    
 }

@@ -83,6 +83,48 @@
     <div
       v-else
       class="interact-div">
+
+      <div class="form-container">
+        <p class="input-title">Read / Write Contract</p>
+        <div class="contract-form">
+          <div class="the-input">
+            <input 
+              type="text" 
+              name=""
+              placeholder="Type in Contract"
+            >
+
+            <p>Address:</p>
+          </div>
+          <div class="selector">
+            <dropdown-function-selector />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <standard-input :options="inputString" />
+      </div>
+
+      <div class="form-container">
+        <div class="button-container">
+          <standard-button 
+            :options="buttonBack"
+            @click.native="interact = true"
+          />        
+          <standard-button 
+            :options="buttonRead"
+            @click.native="interact = true"
+          />        
+        </div>
+
+        <interface-bottom-text
+          :link-text="$t('interface.learnMore')"
+          :question="$t('interface.haveIssues')"
+          link="/"/>
+      </div>
+
+      <!--
       <div class="send-form">
         <div class="title-container">
           <div class="title">
@@ -192,7 +234,7 @@
                 name=""
                 placeholder="0x00000000000000"
                 disabled >
-              <div v-if="resType === 'object'"> <!-- Have to separate them since v-for still loops when v-if is in the same line getting max stack -->
+              <div v-if="resType === 'object'"> 
                 <div
                   v-for="(res, idx) in Object.keys(result)"
                   :key="selectedMethod.outputs[idx].name !== ''? selectedMethod.outputs[idx].name + idx : selectedMethod.outputs[idx].type + idx">
@@ -211,6 +253,7 @@
       </div>
 
 
+      
       <div class="submit-button-container">
         <div class="buttons interact-buttons">
           <div
@@ -241,11 +284,10 @@
               class="fa fa-spinner fa-spin fa-lg"/>
           </div>
         </div>
-        <interface-bottom-text
-          :link-text="$t('interface.learnMore')"
-          :question="$t('interface.haveIssues')"
-          link="/"/>
       </div>
+      -->
+
+
     </div>
   </div>
 </template>
@@ -257,6 +299,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
 import DropDownContractSelector from '@/components/DropDownContractSelector';
+import DropDownFunctionSelector from '@/components/DropDownFunctionSelector';
 
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
@@ -266,14 +309,30 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker,
-    'dropdown-contract-selector': DropDownContractSelector
+    'dropdown-contract-selector': DropDownContractSelector,
+    'dropdown-function-selector': DropDownFunctionSelector
   },
   data() {
     return {
+      buttonRead: {
+        title: 'Read',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      buttonBack: {
+        title: 'Back',
+        buttonStyle: 'green-border',
+        rightArrow: false,
+        leftArrow: true,
+        fullWidth: false
+      },
       buttonContinue: {
         title: 'Continue',
         buttonStyle: 'green',
         rightArrow: true,
+        leftArrow: false,
         fullWidth: false
       },
       inputContractAddress: {
@@ -300,6 +359,18 @@ export default {
         placeHolder: 'Enter Domain Name or Address',
         rightInputText: '',
         isTextarea: true
+      },
+      inputString: {
+        title: 'String',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Enter String',
+        rightInputText: '256(UNIT)'
       },
       abi: '',
       address: '',

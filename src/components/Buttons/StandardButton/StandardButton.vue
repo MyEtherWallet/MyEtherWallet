@@ -7,8 +7,24 @@
       <div         
         class="the-button">{{ options.title }}
         <img 
-          v-if="options.rightArrow" 
-          src="@/assets/images/icons/right-arrow.png">
+          v-if="options.rightArrow && options.buttonStyle == 'green'"
+          class="arrow-right" 
+          src="@/assets/images/icons/arrow-right.svg">
+
+        <img 
+          v-if="options.rightArrow && options.buttonStyle == 'green-border'"
+          class="arrow-right" 
+          src="@/assets/images/icons/arrow-right.svg">
+
+        <img 
+          v-if="options.leftArrow && options.buttonStyle == 'green'" 
+          class="arrow-left" 
+          src="@/assets/images/icons/arrow-left.svg">
+
+        <img 
+          v-if="options.leftArrow && options.buttonStyle == 'green-border'" 
+          class="arrow-left" 
+          src="@/assets/images/icons/arrow-green-left.svg">
       </div>
     </div>
 

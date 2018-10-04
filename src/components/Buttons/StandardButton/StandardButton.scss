@@ -49,11 +49,18 @@ $blue-border-button-background--click: #f2f4fd;
 .the-button {
   display: block;
 
-  img {
+  .arrow-right {
     position: absolute;
-    top: 21px;
+    top: 23px;
     right: 20px;
-    height: 15px;
+    height: 11px;
+  }
+
+  .arrow-left {
+    position: absolute;
+    top: 23px;
+    left: 20px;
+    height: 11px;
   }
 }
 

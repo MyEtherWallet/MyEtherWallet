@@ -421,7 +421,6 @@
     }
   }
 
-
   // *********************************************************************
   // [Bootstrap] Nav tab style
   // @ Create Wallet pages
@@ -831,12 +830,10 @@
     }
   }
 
-
-
   .modal-body {
     padding: 0 !important;
   }
-  
+
   // Modal header
   .modal-header {
     background-color: $bootstrap-modal-header-background-color;
@@ -860,6 +857,4 @@
       text-shadow: none;
     }
   }
-
-
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
