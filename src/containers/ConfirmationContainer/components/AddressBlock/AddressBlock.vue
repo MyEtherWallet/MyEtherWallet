@@ -1,11 +1,14 @@
 <template lang="html">
   <div class="address-container">
+    <div class="currency-container">
+      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <p>
+        <span class="currency-amt">{{ converter(value) }} </span>
+        <span class="currency-type">{{ currency.toUpperCase() }} </span>
+      </p>
+    </div>
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
-      <blockie 
-        :address="address" 
-        width="36px" 
-        height="36px"/>
     </div>
     <div class="address">
       {{ address }}
@@ -14,11 +17,8 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
+import web3 from 'web3';
 export default {
-  components: {
-    blockie: Blockie
-  },
   props: {
     address: {
       type: String,
@@ -27,6 +27,19 @@ export default {
     direction: {
       type: String,
       default: ''
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+    currency: {
+      type: String,
+      default: 'eth'
+    }
+  },
+  methods: {
+    converter(num) {
+      return web3.utils.fromWei(num.toString(), 'ether');
     }
   }
 };

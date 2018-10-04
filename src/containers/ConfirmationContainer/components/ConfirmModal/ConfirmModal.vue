@@ -8,17 +8,18 @@
       title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
-          <address-block 
-            :address="from" 
+          <address-block
+            :address="from"
+            :value="value"
             direction="from"/>
           <div
             v-show="to !== '' && to !== undefined"
             class="direction">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <address-block 
-            v-show="to !== '' && to !== undefined" 
-            :address="to" 
+          <address-block
+            v-show="to !== '' && to !== undefined"
+            :address="to"
             direction="to"/>
         </div>
         <div class="detail-info">
@@ -39,9 +40,9 @@
             <div class="grid-block">
               <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
             </div>
-            <div class="grid-block">
+            <!-- <div class="grid-block">
               <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
-            </div>
+            </div> -->
             <div class="grid-block">
               <p>Gas Limit</p><p>{{ gas }} wei</p>
             </div>
