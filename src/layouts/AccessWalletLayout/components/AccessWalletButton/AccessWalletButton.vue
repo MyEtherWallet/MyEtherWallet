@@ -8,7 +8,7 @@
         class="icon">
     </div>
     <h3>{{ title }}</h3>
-    <p>{{ desc }}</p>
+    <p class="desc">{{ desc }}</p>
     <p
       :v-if="recommend !== ''"
       class="small-note">{{ recommend }}</p>

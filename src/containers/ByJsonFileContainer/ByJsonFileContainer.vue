@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import SuccessModal from '@/components/SuccessModal';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import ByJsonBlock from './components/ByJsonBlock';
 
 import noLose from '@/assets/images/icons/no-lose.svg';
@@ -116,7 +116,7 @@ export default {
     }
   },
   mounted() {
-    const worker = new Worker();
+    const worker = new Worker()
     const self = this;
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = function(e) {
