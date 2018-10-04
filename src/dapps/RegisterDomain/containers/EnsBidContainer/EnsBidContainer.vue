@@ -1,14 +1,6 @@
 <template lang="html">
   <div>
     <json-string-modal/>
-    <timer
-      v-if="$route.fullPath.includes('bid')"
-      :date-number="auctionDateEnd"
-      date-type="reveal" />
-    <timer
-      v-if="$route.fullPath.includes('bid') || $route.fullPath.includes('reveal')"
-      :date-number="auctionDateEnd"
-      date-type="auction" />
     <div class="name-available-container">
       <div
         v-if="$route.fullPath.includes('auction')"
@@ -32,6 +24,16 @@
           Reveal your bid for {{ domainName }}.eth now. <br>
           {{ highestBidder }} ETH (Current highest bid)
         </h3>
+      </div>
+      <div class="timer-container">
+        <timer
+          v-if="$route.fullPath.includes('bid')"
+          :date-number="auctionDateEnd"
+          date-type="reveal" />
+        <timer
+          v-if="$route.fullPath.includes('bid') || $route.fullPath.includes('reveal')"
+          :date-number="auctionDateEnd"
+          date-type="auction" />
       </div>
       <div role="tablist">
         <b-card-header

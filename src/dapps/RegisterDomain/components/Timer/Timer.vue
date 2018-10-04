@@ -1,12 +1,17 @@
 <template>
   <div class="timer-container">
-    <span class="deadline">{{ dateToText() }}</span>
-    <span class="actual-timer">
-      <img
-        src="@/assets/images/icons/hourglass.svg"
-        alt="">
+    <div class="actual-timer">
+      <div>
+        <img
+          src="@/assets/images/icons/hourglass.svg"
+          alt="">
+        <span v-show="dateType=== 'reveal'"> Reveals bids</span>
+        <span v-show="dateType=== 'auction'">Auction closes</span>
+      </div>
       <b>{{ time }}</b>
-    </span>
+    </div>
+
+    <span class="deadline">{{ dateToText() }}</span>
   </div>
 </template>
 <script>
@@ -43,8 +48,8 @@ export default {
       const auctionCloses = new Date(this.dateNumber);
       const revealDate = auctionCloses.setDate(auctionCloses.getDate() - 2);
       return this.dateType === 'reveal'
-        ? `Reveal bids on: ${Misc.formatDate(revealDate)}`
-        : `Auction closes on: ${Misc.formatDate(this.dateNumber)}`;
+        ? Misc.formatDate(revealDate)
+        : Misc.formatDate(this.dateNumber);
     },
     startClock() {
       const auctionCloses = new Date(this.dateNumber);

@@ -79,7 +79,6 @@
       width: 100%;
     }
   }
-
 }
 
 .buttons-container {
@@ -119,6 +118,7 @@
 
 .accordion-header-details {
   @extend %accordion-template;
+
   margin-top: 6px;
 
   span {
@@ -162,7 +162,6 @@
       font-size: 14px;
     }
   }
-
 }
 
 .json-container {
@@ -183,7 +182,6 @@
       cursor: pointer;
       font-size: 14px;
     }
-
   }
 
   .json-content {
@@ -196,4 +194,11 @@
     width: 100%;
     word-wrap: break-word;
   }
+}
+
+.timer-container {
+  display: flex;
+  justify-content: space-between;
+  flex: 30;
+  width: 100%;
 }
