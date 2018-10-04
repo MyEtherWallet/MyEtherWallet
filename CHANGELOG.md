@@ -7,6 +7,7 @@
 ### Feature
 - Metamask Integration [#96](https://github.com/MyEtherWallet/MyEtherWallet/pull/96)
 - Finish unit conversion [#114](https://github.com/MyEtherWallet/MyEtherWallet/pull/114)
+- Finish ENS registrar dapp [#81](https://github.com/MyEtherWallet/MyEtherWallet/pull/81)
 
 ### Release v5.0.3
 ### Feature
