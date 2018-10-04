@@ -168,8 +168,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
+import * as unit from 'ethjs-unit';
 
 export default {
   components: {

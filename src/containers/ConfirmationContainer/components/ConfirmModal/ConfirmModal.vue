@@ -8,25 +8,18 @@
       title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
-          <div class="tx-data tx-from">
-            <div class="address-info">
-              <p class="address-title">From Address</p>
-              <p>{{ from }}</p>
-            </div>
-          </div>
+          <address-block 
+            :address="from" 
+            direction="from"/>
           <div
             v-show="to !== '' && to !== undefined"
             class="direction">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div
-            v-show="to !== '' && to !== undefined"
-            class="tx-data tx-to">
-            <div class="address-info">
-              <p class="address-title">To Address</p>
-              <p>{{ to }}</p>
-            </div>
-          </div>
+          <address-block 
+            v-show="to !== '' && to !== undefined" 
+            :address="to" 
+            direction="to"/>
         </div>
         <div class="detail-info">
           <div class="info">
@@ -107,10 +100,13 @@
 </template>
 
 <script>
-// eslint-disable-next-line
+import AddressBlock from '../AddressBlock';
 import * as unit from 'ethjs-unit';
 
 export default {
+  components: {
+    'address-block': AddressBlock
+  },
   props: {
     confirmSendTx: {
       type: Function,

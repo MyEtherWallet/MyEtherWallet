@@ -151,8 +151,7 @@ import { Misc } from '@/helpers';
 
 import store from 'store';
 
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
+import * as unit from 'ethjs-unit';
 export default {
   name: 'DeployContract',
   components: {
