@@ -1,4 +1,10 @@
-export default function web3OverrideMew(web3, wallet, eventHub, dispatch) {
+import * as unit from 'ethjs-unit';
+export default function web3OverrideMew(
+  web3,
+  wallet,
+  eventHub,
+  { state, dispatch }
+) {
   if (!wallet) return web3;
 
   const methodOverrides = {
@@ -58,13 +64,15 @@ export default function web3OverrideMew(web3, wallet, eventHub, dispatch) {
       delete localTx['gas'];
       delete localTx['nonce'];
 
-      tx.nonce = !tx.hasOwnProperty('nonce')
+      tx.nonce = !tx.nonce
         ? await web3.eth.getTransactionCount(wallet.getAddressString())
         : tx.nonce;
-      tx.gas = !tx.hasOwnProperty('gas')
-        ? await web3.eth.estimateGas(localTx)
-        : tx.gas;
-
+      tx.gas = !tx.gas ? await web3.eth.estimateGas(localTx) : tx.gas;
+      tx.chainId = !tx.chainId ? state.network.type.chainID : tx.chainId;
+      tx.gasPrice = !tx.gasPrice
+        ? unit.toWei(state.gasPrice, 'gwei').toString()
+        : tx.gasPrice;
+      if (state.wallet.identifier === 'Web3') tx.web3WalletOnly = true;
       return new Promise(function(resolve, reject) {
         web3.eth
           .sendTransaction_(tx, function(err, res) {

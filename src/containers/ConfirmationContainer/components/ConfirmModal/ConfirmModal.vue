@@ -47,6 +47,9 @@
               <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
             </div>
             <div class="grid-block">
+              <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
+            </div>
+            <div class="grid-block">
               <p>Gas Limit</p><p>{{ gas }} wei</p>
             </div>
             <div class="grid-block">
@@ -105,7 +108,7 @@
 
 <script>
 // eslint-disable-next-line
-const unit = require('ethjs-unit');
+import * as unit from 'ethjs-unit';
 
 export default {
   props: {
@@ -157,7 +160,8 @@ export default {
   data() {
     return {
       modalDetailInformation: false,
-      transactionSigned: false
+      transactionSigned: false,
+      unit
     };
   },
   computed: {

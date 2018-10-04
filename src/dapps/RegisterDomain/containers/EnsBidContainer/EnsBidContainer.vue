@@ -203,7 +203,7 @@ export default {
     },
     bidMask: {
       type: Number,
-      default: 0.02
+      default: 0.01
     },
     loading: {
       type: Boolean,

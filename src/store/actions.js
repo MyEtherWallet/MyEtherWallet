@@ -44,7 +44,7 @@ const createAndSignTx = function({ commit }, val) {
 const decryptWallet = function({ commit, state, dispatch }, wallet) {
   const wrappedWallet = new WalletWrapper(wallet);
   const _web3 = state.web3;
-  override(_web3, wrappedWallet, this._vm.$eventHub, dispatch);
+  override(_web3, wrappedWallet, this._vm.$eventHub, { state, dispatch });
   commit('DECRYPT_WALLET', wrappedWallet);
   commit('SET_WEB3_INSTANCE', _web3);
 };
@@ -66,7 +66,6 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  console.log(dispatch);
   if (provider && provider.currentProvider) {
     commit(
       'SET_WEB3_INSTANCE',
@@ -74,7 +73,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         new web3(provider.currentProvider),
         state.wallet,
         this._vm.$eventHub,
-        dispatch
+        { state, dispatch }
       )
     );
   } else {
@@ -87,7 +86,10 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
 
     commit(
       'SET_WEB3_INSTANCE',
-      override(web3Instance, state.wallet, this._vm.$eventHub, dispatch)
+      override(web3Instance, state.wallet, this._vm.$eventHub, {
+        state,
+        dispatch
+      })
     );
   }
 };

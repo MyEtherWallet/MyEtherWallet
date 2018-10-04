@@ -1,5 +1,5 @@
 const Dotenv = require('dotenv-webpack');
-const ImageminPlugin = require('imagemin-webpack-plugin').default
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 
 module.exports = {
@@ -7,9 +7,6 @@ module.exports = {
   configureWebpack: {
     node: {
       process: true
-    },
-    output: {
-      globalObject: 'this'
     },
     devServer: {
       https: true,

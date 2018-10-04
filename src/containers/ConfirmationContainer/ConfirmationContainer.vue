@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import * as unit from 'ethjs-unit';
+import BN from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
@@ -233,6 +235,9 @@ export default {
       this.gasLimit = +tx.gas;
       this.toAddress = tx.to;
       this.amount = +tx.value;
+      this.transactionFee = Number(
+        unit.fromWei(new BN(tx.gasPrice).times(tx.gas).toString(), 'ether')
+      );
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);

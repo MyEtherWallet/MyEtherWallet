@@ -35,10 +35,11 @@
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import RegistrarAbi from '@/helpers/registrarAbi';
 import bip39 from 'bip39';
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
-// eslint-disable-next-line
-const nameHashPckg = require('eth-ens-namehash');
+import * as unit from 'ethjs-unit';
+import * as nameHashPckg from 'eth-ens-namehash';
+
+const ETH_TLD = '.eth';
+
 export default {
   components: {
     'back-button': BackButton
@@ -72,7 +73,7 @@ export default {
       this.domainName = '';
       this.loading = false;
       this.bidAmount = 0.01;
-      this.bidMask = 0.02;
+      this.bidMask = 0.011;
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';
@@ -95,7 +96,9 @@ export default {
       this.contractInitiated = true;
     },
     async getRegistrarAddress() {
-      const registrarAddress = await this.$store.state.ens.owner('eth');
+      const registrarAddress = await this.$store.state.ens.owner(
+        ETH_TLD.replace('.', '')
+      );
       return registrarAddress;
     },
     async checkDomain() {
@@ -117,9 +120,7 @@ export default {
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
-      this.highestBidder = this.$store.state.web3.utils
-        .fromWei(res[4], 'ether')
-        .toString();
+      this.highestBidder = unit.fromWei(res[4], 'ether').toString();
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
@@ -155,20 +156,20 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.$store.state.ens.owner(this.domainName + '.eth');
+        owner = await this.$store.state.ens.owner(this.domainName + ETH_TLD);
       } catch (e) {
         owner = '0x';
       }
 
       try {
         resolverAddress = await this.$store.state.ens
-          .resolver(this.domainName + '.eth')
+          .resolver(this.domainName + ETH_TLD)
           .resolverAddress();
       } catch (e) {
         resolverAddress = '0x';
       }
 
-      this.nameHash = nameHashPckg.hash(this.domainName + '.eth');
+      this.nameHash = nameHashPckg.hash(this.domainName + ETH_TLD);
 
       this.deedOwner = deedOwner;
       this.owner = owner;
@@ -209,28 +210,14 @@ export default {
         );
       }
 
-      const nonce = await this.$store.state.web3.eth.getTransactionCount(
-        this.$store.state.wallet.getAddressString()
-      );
-
-      const gas = await contractReference.estimateGas({
-        from: address,
-        to: this.registrarAddress,
-        value: utils.toWei(this.bidMask.toString(), 'ether')
-      });
-
       const date = new Date();
       const auctionDateEnd = date.setDate(date.getDate() + 5);
       const revealDate = date.setDate(date.getDate() - 2);
       const raw = {
         from: address,
-        gas: gas,
-        nonce: nonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-        value: Number(unit.toWei(this.bidMask, 'ether')),
+        value: unit.toWei(this.bidMask, 'ether').toString(),
         to: this.registrarAddress,
         data: contractReference.encodeABI(),
-        chainId: this.$store.state.network.type.chainID,
         name: this.domainName,
         nameSHA3: utils.sha3(this.domainName),
         bidAmount: this.bidAmount,
@@ -240,11 +227,6 @@ export default {
         auctionDateEnd: new Date(auctionDateEnd),
         revealDate: new Date(revealDate)
       };
-
-      if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
-        raw['web3WalletOnly'] = true;
-      }
-
       this.raw = raw;
       this.loading = false;
       this.step = 2;

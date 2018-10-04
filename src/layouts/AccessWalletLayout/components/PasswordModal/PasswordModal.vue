@@ -37,7 +37,7 @@
 
 <script>
 import { BasicWallet } from '@/wallets';
-import { UnlockJsonWallet } from '@/helpers';
+import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 export default {
   props: {
     file: {
@@ -61,20 +61,26 @@ export default {
   },
   methods: {
     unlockWallet() {
-      UnlockJsonWallet(this.password, this.file)
-        .then(privKey => {
-          this.$store.dispatch(
-            'decryptWallet',
-            BasicWallet.unlock({
-              type: 'manualPrivateKey',
-              manualPrivateKey: '0x' + privKey.toString('hex')
-            })
-          );
-          this.$router.push({ path: 'interface' });
-        })
-        .catch(error => {
-          this.error = error.message;
-        });
+      const worker = new Worker();
+      const self = this;
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
+      });
+      worker.onmessage = function(e) {
+        // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
+        self.$store.dispatch(
+          'decryptWallet',
+          BasicWallet.unlock({
+            type: 'manualPrivateKey',
+            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
+          })
+        );
+        self.$router.push({ path: 'interface' });
+      };
+      worker.onerror = function(e) {
+        self.error = e.message;
+      };
     },
     switchViewPassword() {
       this.show = !this.show;
