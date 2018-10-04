@@ -7,13 +7,15 @@
     centered>
     <form class="json-string-form">
       <div class="input-container">
-        <textarea placeholder='{
-  "address": "0xf6827a968275bd62c8ca5fc08cf498b8711491c1",
-  "msg": "hellow",
-  "sig": "0x32e4c6b54fb88487b1ea6b0bd41509aec82eb98969eec7127ecc8a1f1a8275724f3e97283ca3beb4692dd093150216cf602cd7a915605bfc3fb56f74f6e065d31c",
-  "version": "3",
-  "signer": "MEW"
-}' v-model="jsonText"/>
+        <textarea 
+          v-model="jsonText" 
+          placeholder="{
+  &quot;address&quot;: &quot;0xf6827a968275bd62c8ca5fc08cf498b8711491c1&quot;,
+  &quot;msg&quot;: &quot;hellow&quot;,
+  &quot;sig&quot;: &quot;0x32e4c6b54fb88487b1ea6b0bd41509aec82eb98969eec7127ecc8a1f1a8275724f3e97283ca3beb4692dd093150216cf602cd7a915605bfc3fb56f74f6e065d31c&quot;,
+  &quot;version&quot;: &quot;3&quot;,
+  &quot;signer&quot;: &quot;MEW&quot;
+}"/>
       </div>
       <button
         class="submit-button large-round-button-green-filled"
@@ -21,7 +23,10 @@
         @click.prevent="submitJson">
         Confirm
       </button>
-      <interface-bottom-text link="/" linkText="Help Center" question="Having issues?"/>
+      <interface-bottom-text 
+        link="/" 
+        link-text="Help Center" 
+        question="Having issues?"/>
     </form>
   </b-modal>
 </template>
@@ -48,8 +53,8 @@ export default {
   methods: {
     submitJson() {
       this.updateJsonString(this.jsonText);
-      this.jsonText = ''
-      this.$refs.jsonString.hide()
+      this.jsonText = '';
+      this.$refs.jsonString.hide();
     }
   }
 };

@@ -3,7 +3,7 @@ import url from 'url';
 import web3 from 'web3';
 
 const addNotification = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0])
+  const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];

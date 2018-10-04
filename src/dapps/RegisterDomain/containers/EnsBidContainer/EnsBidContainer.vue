@@ -1,6 +1,8 @@
 <template lang="html">
   <div>
-    <json-string-modal :update-json-string="updateJson" ref="jsonStringModal"/>
+    <json-string-modal 
+      ref="jsonStringModal" 
+      :update-json-string="updateJson"/>
     <div class="name-available-container">
       <div
         v-if="$route.fullPath.includes('auction')"
@@ -285,7 +287,7 @@ export default {
   },
   methods: {
     openJsonModal() {
-      this.$refs.jsonStringModal.$refs.jsonString.show()
+      this.$refs.jsonStringModal.$refs.jsonString.show();
     },
     updateJson(val) {
       const json = JSON.parse(val);
