@@ -5,6 +5,7 @@ import { shallowMount } from '@vue/test-utils'
 
 
 describe('ScrollUpButton.vue', () => {
+  window.scrollTo = ( x, y)=>{ window.pageXOffset = x; window.pageYOffset= y;};
   it('should render correct contents', () => {
     const wrapper = shallowMount(ScrollUpButton, {});
     const buttonBlock = wrapper.find('.button-block');
