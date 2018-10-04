@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <json-string-modal/>
+    <json-string-modal :update-json-string="updateJson" ref="jsonStringModal"/>
     <div class="name-available-container">
       <div
         v-if="$route.fullPath.includes('auction')"
@@ -33,6 +33,7 @@
         <timer
           v-if="$route.fullPath.includes('bid') || $route.fullPath.includes('reveal')"
           :date-number="auctionDateEnd"
+          :style="{width: $route.fullPath.includes('reveal') ? '100%': ''}"
           date-type="auction" />
       </div>
       <div role="tablist">
@@ -42,9 +43,6 @@
         >
           <div>
             <span> 1 </span>
-            <!-- <i
-              v-show="showDetail"
-              class="fa fa-check"/> -->
             &nbsp; Bid Information
           </div>
           <div
@@ -155,7 +153,7 @@
           <button
             v-if="$route.fullPath.includes('reveal')"
             class="json-string"
-            @click.prevent="">
+            @click.prevent="openJsonModal">
             JSON string
           </button>
           <button
@@ -203,7 +201,7 @@ export default {
     },
     bidMask: {
       type: Number,
-      default: 0.01
+      default: 0.02
     },
     loading: {
       type: Boolean,
@@ -286,6 +284,9 @@ export default {
     }
   },
   methods: {
+    openJsonModal() {
+      this.$refs.jsonStringModal.$refs.jsonString.show()
+    },
     updateJson(val) {
       const json = JSON.parse(val);
       this.localSecretPhrase = json['secretPhrase'];

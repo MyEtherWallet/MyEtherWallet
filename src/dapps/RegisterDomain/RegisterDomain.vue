@@ -73,7 +73,7 @@ export default {
       this.domainName = '';
       this.loading = false;
       this.bidAmount = 0.01;
-      this.bidMask = 0.011;
+      this.bidMask = 0.02;
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';

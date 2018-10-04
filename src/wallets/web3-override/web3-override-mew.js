@@ -73,24 +73,17 @@ export default function web3OverrideMew(
         ? unit.toWei(state.gasPrice, 'gwei').toString()
         : tx.gasPrice;
       if (state.wallet.identifier === 'Web3') tx.web3WalletOnly = true;
-      return new Promise(function(resolve, reject) {
-        web3.eth
-          .sendTransaction_(tx, function(err, res) {
-            if (err) {
-              reject(err);
-            }
-            resolve(res);
-          })
-          .once('transactionHash', hash => {
-            dispatch('addNotification', [tx.from, hash, 'Transaction Hash']);
-          })
-          .on('receipt', res => {
-            dispatch('addNotification', [tx.from, res, 'Transaction Receipt']);
-          })
-          .on('error', err => {
-            dispatch('addNotification', [tx.from, err, 'Transaction Error']);
-          });
-      });
+      web3.eth
+        .sendTransaction_(tx)
+        .once('transactionHash', hash => {
+          dispatch('addNotification', [tx.from, hash, 'Transaction Hash']);
+        })
+        .on('receipt', res => {
+          dispatch('addNotification', [tx.from, res, 'Transaction Receipt']);
+        })
+        .on('error', err => {
+          dispatch('addNotification', [tx.from, err, 'Transaction Error']);
+        });
     }
   };
   web3.defaultAccount = wallet.getAddressString().toLowerCase();

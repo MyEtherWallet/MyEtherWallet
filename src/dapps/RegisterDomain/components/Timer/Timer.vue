@@ -1,5 +1,5 @@
 <template>
-  <div class="timer-container">
+  <div class="timer">
     <div class="actual-timer">
       <div>
         <img

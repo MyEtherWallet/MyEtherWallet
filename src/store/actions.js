@@ -3,20 +3,22 @@ import url from 'url';
 import web3 from 'web3';
 
 const addNotification = function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[0])
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
 
-  if (!Array.isArray(newNotif[val[0]])) newNotif[val[0]] = [];
+  if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[val[0]].push({
+  newNotif[address].push({
     title: val[2],
     read: false,
     timestamp: new Date(),
     body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
     expanded: false
   });
+
   commit('ADD_NOTIFICATION', newNotif);
 };
 
@@ -104,12 +106,13 @@ const setENS = function({ commit }, ens) {
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
+  const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
 
-  newNotif[val[0]][val[1]] = val[2];
+  newNotif[address][val[1]] = val[2];
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 

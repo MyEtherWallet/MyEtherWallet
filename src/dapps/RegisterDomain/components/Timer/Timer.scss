@@ -1,14 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
-.timer-container {
+.timer {
   background-color: $light-green-1;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   height: 81px;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-bottom: 20px;
   padding: 16px;
-  width: 100%;
 
   .deadline {
     color: $dark-blue-12;
