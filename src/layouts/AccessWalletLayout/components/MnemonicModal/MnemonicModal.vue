@@ -32,6 +32,7 @@
             v-for="index in mnemonicSize"
             :key="index">
             <span>{{ index }}.</span><input
+              :id="'word' + (index - 1)"
               v-model="mnemonicPhrase[index - 1]"
               type="text"
               name="">

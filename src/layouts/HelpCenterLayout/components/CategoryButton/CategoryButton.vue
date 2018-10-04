@@ -15,8 +15,8 @@
 export default {
   props: {
     content: {
-      type: String,
-      default: ''
+      type: Object,
+      default: {}
     }
   },
   data() {
