@@ -53,7 +53,6 @@ describe('PrivateKeyModal.vue', () => {
         store,
         attachToDocument: true
       });
-
     });
 
     it('should reset the privateKey directly', () => {
