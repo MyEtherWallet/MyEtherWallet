@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import PrivateKeyModal
@@ -26,8 +26,8 @@ describe('PrivateKeyModal.vue', () => {
     beforeAll(() => {
       const baseSetup = Tooling.createLocalVueInstance();
       localVue = baseSetup.localVue;
-      localVue.use(VueRouter)
-      router = new VueRouter()
+      localVue.use(VueRouter);
+      router = new VueRouter();
       i18n = baseSetup.i18n;
       // store = baseSetup.store;
     });
@@ -53,22 +53,21 @@ describe('PrivateKeyModal.vue', () => {
         store,
         attachToDocument: true
       });
+
     });
 
     it('should reset the privateKey directly', () => {
       const button = wrapper.find('button');
-      const input = wrapper.find('input');
 
       wrapper.setData({privateKey: PrivateKey.key});
 
-      input.value = PrivateKey.key;
       // wrapper.vm.$nextTick(() => {
       //   // wrapper.vm.unlockWallet();
       //   expect(wrapper.vm.$data.privateKey).toBe('')
       // });
-
-      button.trigger('click');
       expect(wrapper.vm.$data.privateKey).toBe(PrivateKey.key);
+      button.trigger('click');
+      expect(wrapper.vm.$data.privateKey).toBe('');
     });
 
   });
