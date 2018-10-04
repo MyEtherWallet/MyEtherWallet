@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import QrcodeIcon from '@/assets/images/icons/qr-code.svg';
+
 export default {
   props: {
     qrcode: {
@@ -28,7 +30,7 @@ export default {
   },
   data() {
     return {
-      qrcodeIconImage: ''
+      qrcodeIconImage: QrcodeIcon
     };
   },
   methods: {}

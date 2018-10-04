@@ -42,6 +42,7 @@ export default {
           manualPrivateKey: this.privateKey
         })
       );
+      this.privateKey = '';
       this.$router.push({ path: 'interface' });
     }
   }
