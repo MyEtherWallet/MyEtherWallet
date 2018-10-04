@@ -6,7 +6,7 @@ import {
 } from './hardware';
 import { BasicWallet, MnemonicWallet } from './software';
 import { MewConnectWallet } from './hybrid';
-import { overide, WalletWrapper } from './web3-overide';
+import { override, WalletWrapper } from './web3-override';
 
 export {
   LedgerWallet,
@@ -16,6 +16,6 @@ export {
   MewConnectWallet,
   BasicWallet,
   MnemonicWallet,
-  overide,
+  override,
   WalletWrapper
 };
