@@ -1,7 +1,9 @@
 <template>
   <div class="standard-input">
     
-    <div class="input-title-container">
+    <div 
+      v-if="options.title" 
+      class="input-title-container">
       <div class="input-title-and-helper">
         <p class="input-title">{{ options.title }}</p>
         <popover 
@@ -78,9 +80,6 @@ export default {
         default:
       }
     }
-  },
-  mounted() {
-    console.log(this.options);
   }
 };
 </script>

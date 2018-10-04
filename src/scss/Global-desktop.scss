@@ -134,26 +134,26 @@
 
   // width
   ::-webkit-scrollbar {
-    border-radius: 10px;
+    border-radius: 10px !important;
     width: 5px;
   }
 
   // Track
   ::-webkit-scrollbar-track {
     background: $light-grey-9;
-    border-radius: 10px;
+    border-radius: 10px !important;
   }
 
   // Handle
   ::-webkit-scrollbar-thumb {
     background: $dark-grey-8;
-    border-radius: 10px;
+    border-radius: 10px !important;
   }
 
   // Handle on hover
   ::-webkit-scrollbar-thumb:hover {
     background: $dark-grey-9;
-    border-radius: 10px;
+    border-radius: 10px !important;
   }
 
   .no-border {
@@ -358,270 +358,6 @@
   }
 
   // *********************************************************************
-  // Standard buttons
-  // *********************************************************************
-
-  .large-round-button-green-filled {
-    background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
-    border-radius: 6px;
-    color: $button--text-color-1;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 21px 55px;
-    user-select: none;
-    display: inline-block;
-    text-align: center;
-  }
-
-  .large-round-button-green-border {
-    background-color: $background-color-white;
-    border: 1px solid $button--border-color-2;
-    border-radius: 6px;
-    color: $text-color-2;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 21px 55px;
-    user-select: none;
-  }
-
-  .large-round-button-white-filled {
-    background-color: $button--background-color-2;
-    border: 1px solid $button--border-color-1;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 21px 55px;
-    user-select: none;
-  }
-
-  .large-round-button-white-filled__body-text-color {
-    color: $text-base-color;
-    background-color: $button--background-color-2;
-    border: 1px solid $button--border-color-1;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 21px 55px;
-    user-select: none;
-  }
-
-  .large-round-button-white-border {
-    border: 1px solid $button--border-color-1;
-    border-radius: 5px;
-    color: $button--text-color-1;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 21px 55px;
-    user-select: none;
-  }
-
-  .mid-round-button-green-filled {
-    background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
-    border-radius: 6px;
-    color: $button--text-color-1;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 15px 40px;
-    user-select: none;
-  }
-
-  .mid-round-button-lightgrey-filled {
-    background-color: $light-grey-5;
-    border: 1px solid $button--border-color-1;
-    border-radius: 6px;
-    color: $button--text-color-1;
-    cursor: initial;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 15px 40px;
-    user-select: none;
-
-    &:hover {
-      background-color: $light-grey-5;
-      border: 1px solid $button--border-color-1;
-      cursor: initial;
-    }
-  }
-
-  .mid-round-button-green-border {
-    background-color: $background-color-white;
-    border: 1px solid $button--border-color-2;
-    border-radius: 6px;
-    color: $text-color-2;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 15px 40px;
-    user-select: none;
-  }
-
-  .mid-round-button-green-filled-green-border {
-    background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-2;
-    border-radius: 6px;
-    color: $text-white;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 15px 40px;
-    user-select: none;
-    display: inline-block;
-  }
-
-  .mid__round-button__blue-filled__blue-border {
-    background-color: $button--background-color-4;
-    border: 1px solid $button--background-color-4;
-    border-radius: 6px;
-    color: $text-white;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 15px 40px;
-    user-select: none;
-    display: inline-block;
-  }
-
-  .small-circle-button-green-border {
-    background-color: $background-color-white;
-    border: 1px solid $button--border-color-2;
-    border-radius: 100px;
-    color: $text-color-2;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
-    min-width: 70px;
-    padding: 6px 0;
-    text-align: center;
-    user-select: none;
-
-    &.active {
-      background-color: $button--background-color-1;
-      border: 1px solid $button--border-color-1;
-      color: $text-white;
-    }
-  }
-
-  .very-small-circle-button-green-border {
-    background-color: $background-color-white;
-    border: 1px solid $button--border-color-2;
-    border-radius: 100px;
-    color: $text-color-2;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
-    min-width: 56px;
-    padding: 4px 0;
-    text-align: center;
-    user-select: none;
-
-    &.active {
-      background-color: $button--background-color-1;
-      border: 1px solid $button--border-color-1;
-      color: $text-white;
-    }
-  }
-
-  .small-circle-button-green-filled {
-    background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
-    border-radius: 100px;
-    color: $text-white;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
-    min-width: 80px;
-    padding: 7px 0;
-    text-align: center;
-    user-select: none;
-  }
-
-  .very-small-circle-button-green-filled {
-    background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
-    border-radius: 100px;
-    color: $text-white;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
-    min-width: 56px;
-    padding: 4px 0;
-    text-align: center;
-    user-select: none;
-  }
-
-  // *********************************************************************
-  // [Bootstrap] Dropdown language menu style
-  // *********************************************************************
-  .modal {
-    z-index: $z-bootstrap-modal;
-  }
-
-  .modal-backdrop {
-    z-index: $z-bootstrap-modal-backdrop;
-  }
-
-  .language-menu-container {
-    position: relative;
-
-    .arrows {
-      color: $text-color-4;
-      font-size: 18px;
-      position: absolute;
-      right: -2px;
-      top: 5px;
-    }
-
-    .language-menu {
-      .dropdown-menu.show {
-        max-height: 226px;
-        overflow-y: scroll;
-        position: relative;
-      }
-
-      .dropdown-toggle::after {
-        display: none;
-      }
-    }
-  }
-
-  .dropdown-toggle::after {
-    position: absolute !important;
-    right: 13px !important;
-    top: 16px !important;
-  }
-
-  // *********************************************************************
-  // [Bootstrap] Dropdown language menu style
-  // *********************************************************************
-  .dropdown-menu {
-    border: 1px solid $button--border-color-2;
-    // box-shadow: 0 2px 12px $language-menu-box-shadow;
-  }
-
-  .dropdown-item.active,
-  .dropdown-item:active {
-    background-color: $background-color-white;
-    color: $text-color-6;
-    font-weight: 600 !important;
-  }
-
-  .nav-link-custom span {
-    color: $text-base-color;
-  }
-
-  // *********************************************************************
   // Tooltip
   // *********************************************************************
 
@@ -685,116 +421,6 @@
     }
   }
 
-  // *********************************************************************
-  // [Bootstrap] Modal style
-  // *********************************************************************
-  // Modal header
-  .modal-header {
-    background-color: $bootstrap-modal-header-background-color;
-    border-radius: 0;
-    border: 0;
-
-    h5 {
-      color: $text-white;
-      font-size: 20px;
-      padding: 0 15px;
-    }
-
-    .close {
-      color: $text-white;
-      float: right;
-      font-size: 52px;
-      font-weight: 100;
-      line-height: 30px;
-      opacity: 1;
-      outline: none;
-      text-shadow: none;
-    }
-  }
-
-  .bootstrap-modal {
-    .modal-dialog {
-      max-width: 530px;
-    }
-  }
-
-  .bootstrap-modal-wide {
-    .modal-dialog {
-      max-width: 650px;
-    }
-  }
-
-  .modal-content {
-    background-color: transparent;
-    border: 0;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-
-  .modal-body {
-    background-color: $background-color-white;
-    padding: 60px 70px 50px;
-    padding: 0 !important;
-
-    .title {
-      color: $text-color-6;
-      font-size: 30px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .content {
-      color: $link-text-color-1;
-      font-size: 14px;
-      line-height: 21px;
-      margin-bottom: 40px;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-
-      &.fixed-width-1 {
-        margin: 0 auto;
-        width: 250px;
-      }
-
-      button {
-        margin: 0 7px;
-      }
-    }
-  }
-
-  .nopadding .modal-body {
-    padding: 0;
-  }
-
-  .bootstrap-modal.no-padding .modal-body,
-  .bootstrap-modal.nopadding .modal-body {
-    padding: 0;
-  }
-
-  .max-height-1 .modal-body {
-    max-height: 405px;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  .bootstrap-modal.padding-40-20 .modal-body {
-    padding: 40px 20px;
-  }
-
-  // Custom modal style for each pages -------------------------------
-  .access-my-wallet-options {
-    .modal-title {
-      font-size: 20px;
-      padding: 0 15px;
-    }
-
-    .modal-body {
-      padding: 40px;
-    }
-  }
 
   // *********************************************************************
   // [Bootstrap] Nav tab style
@@ -1205,56 +831,35 @@
     }
   }
 
-  // *********************************************************************
-  // Custom Input
-  // *********************************************************************
-  .custom-input-text-1 {
-    background-color: $background-color-1;
+
+
+  .modal-body {
+    padding: 0 !important;
+  }
+  
+  // Modal header
+  .modal-header {
+    background-color: $bootstrap-modal-header-background-color;
+    border-radius: 0;
     border: 0;
-    border-radius: 4px;
-    padding: 13px 15px;
+
+    h5 {
+      color: $text-white;
+      font-size: 20px;
+      padding: 0 15px;
+    }
+
+    .close {
+      color: $text-white;
+      float: right;
+      font-size: 52px;
+      font-weight: 100;
+      line-height: 30px;
+      opacity: 1;
+      outline: none;
+      text-shadow: none;
+    }
   }
 
-  .custom-input-text-2 {
-    background-color: $background-color-1;
-    border: 0;
-    border-radius: 4px;
-    padding: 17px 15px;
-  }
-
-  .custom-select-1 {
-    background-color: $background-color-white;
-    border-radius: 4px;
-    color: $text-black;
-    padding: 0 10px;
-  }
-
-  .custom-textarea-1 {
-    background-color: $background-color-1;
-    border: 0;
-    border-radius: 4px;
-    height: 200px;
-    padding: 13px 15px;
-    resize: none;
-    width: 100%;
-  }
-
-  // *********************************************************************
-  // Custom Links
-  // *********************************************************************
-
-  .linker-1 {
-    color: $link-text-color-3;
-    cursor: pointer;
-  }
-
-  .linker-1:hover {
-    color: $link-text-color-1;
-  }
-
-  .disabled {
-    background-color: $light-grey-12;
-    pointer-events: none;
-  }
 
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )

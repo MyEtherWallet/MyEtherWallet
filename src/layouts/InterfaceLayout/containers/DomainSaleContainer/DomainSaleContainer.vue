@@ -9,19 +9,17 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input
-          type="number"
-          name=""
-          value=""
-          placeholder="Please Enter at Least 7 Characters" >
+        <standard-input :options="inputDomain" />
         <span>.eth</span>
       </div>
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
-        {{ $t('interface.checkDomain') }}
-      </div>
+
+      <standard-button 
+        :options="buttonCheckDomain"        
+      />
+
 
       <div class="flex-container">
         <div class="title-container">
@@ -78,7 +76,26 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      buttonCheckDomain: {
+        title: 'Check Domain',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false
+      },
+      inputDomain: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Please Enter at Least 7 Characters',
+        rightInputText: ''
+      }
+    };
   },
   methods: {
     expendDomainCheckForm() {

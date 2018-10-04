@@ -1,0 +1,104 @@
+@import '~@/scss/GlobalVariables';
+
+.dropdown-contract-selector {
+  position: relative;
+  user-select: none;
+  min-width: 250px;
+  position: relative;
+}
+
+.user-interface-block {
+  cursor: pointer;
+  font-size: 13px;
+  color: $light-grey-14;
+  text-align: right;
+
+  .choose-contract-message {
+    i {
+      margin-left: 10px;
+    }
+  }
+}
+
+
+.dropdown-container {
+  border: 1px solid $grey-1;
+  border-radius: 4px;
+  overflow: hidden;
+  position: absolute;
+  top: 25px;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+
+  &.show-dropdown {
+    opacity: 1;
+    pointer-events: initial;
+  }
+}
+
+
+.search-block {
+  border-bottom: 1px solid $grey-1;
+  position: relative;
+
+  input {
+    border: 0;
+    background-color: $white;
+    padding: 10px;
+    padding-left: 40px;
+    width: 100%;
+  }
+
+  img {
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    width: 15px;
+  }
+}
+
+
+.list-block {
+  background-color: $white;
+  max-height: 170px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  >ul {
+    >li {
+      >p {
+        font-weight: 500;
+        color: $dark-blue-6;
+        font-size: 12px;
+        background-color: $light-grey-1;
+        padding: 2px 10px;
+      }
+
+      >ul {
+        >li {
+          cursor: pointer;
+          &:hover {
+            background-color: $light-grey-2;
+          }
+          >p {
+            font-weight: 300;
+            color: $dark-blue-6;
+            font-size: 13px;
+            padding: 4px 10px;
+          }
+        }
+      }
+
+    }
+  }
+
+}
+
+
+
+
+

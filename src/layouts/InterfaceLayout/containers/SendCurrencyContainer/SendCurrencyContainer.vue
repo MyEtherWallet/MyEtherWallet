@@ -5,62 +5,19 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title-with-button">
-            <h4>Type</h4>
-          </div>
-          <currency-picker
-            :currency="tokensWithBalance"
-            :page="'sendEthAndTokens'"
-            :token="true"
-            @selectedCurrency="setSelectedCurrency"/>
-
-          <div
-            v-if="selectedCurrency.name === 'Ether' ? amount > parsedBalance : selectedCurrency.balance < amount"
-            class="error-message-container">
-            <p>{{ $t('common.dontHaveEnough') }}</p>
-          </div>
+          <dropdown-coin-selector :options="coinSelector" />
         </div>
 
         <div class="to-address">
-          <div class="title-with-button">
-            <h4>{{ $t("interface.sendTxAmount") }}</h4>
-            <p
-              class="the-button prevent-user-select"
-              @click="setBalanceToAmt">Entire Balance</p>
-          </div>
-          <div class="the-form amount-number">
-            <input
-              v-model="amount"
-              class="custom-input-text-2"
-              type="number"
-              name=""
-              placeholder="Amount" >
-          </div>
-
+          <standard-input :options="inputAmount" />
         </div>
       </div>
     </div>
 
     <div class="send-form">
 
-      <div class="title-with-button">
-        <h4>{{ $t("interface.sendTxToAddr") }}
-          <blockie
-            v-show="validAddress && address.length !== 0"
-            :address="address"
-            width="32px"
-            height="32px"
-            class="blockie-image"/>
-        </h4>
-
-        <p
-          class="the-button copy-button prevent-user-select"
-          @click="copyToClipboard('address')">{{
-            $t('common.copy')
-          }}</p>
-      </div>
       <div class="the-form address-block">
-        <dropdown-address-selector />
+        <dropdown-address-selector :options="addressSelector" />
       </div>
 
       <!--
@@ -130,19 +87,12 @@
           :class="advancedExpend ? 'expended' : 'unexpended'"
           class="input-container">
           <div class="the-form user-input">
-            <input
-              v-model="data"
-              type="text"
-              name=""
-              placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-              autocomplete="off" >
+
+            <standard-input :options="inputData" />
           </div>
           <div class="the-form user-input">
-            <input
-              v-model="gasLimit"
-              type="number"
-              name=""
-              placeholder="Gas Limit" >
+
+            <standard-input :options="inputGasLimit" />
           </div>
         </div>
       </div>
@@ -171,6 +121,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import DropDownCoinSelector from '@/components/DropDownCoinSelector';
 
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
@@ -183,7 +134,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'dropdown-coin-selector': DropDownCoinSelector
   },
   props: {
     tokensWithBalance: {
@@ -195,6 +147,51 @@ export default {
   },
   data() {
     return {
+      addressSelector: {
+        title: 'To Address',
+        buttonCopy: true,
+        buttonClear: true,
+        popover: 'What is address'
+      },
+      coinSelector: {
+        title: 'Type'
+      },
+      inputAmount: {
+        title: 'Amount',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: 'Entire Balance',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: ''
+      },
+      inputData: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Add Data (e.g. 0x98049238502957203957)',
+        rightInputText: ''
+      },
+      inputGasLimit: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Gas Limit',
+        rightInputText: ''
+      },
       advancedExpend: false,
       validAddress: true,
       amount: 0,

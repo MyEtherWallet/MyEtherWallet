@@ -5,33 +5,27 @@
       v-if="!interact"
       class="interact-div">
       <div class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>{{ $t('interface.contractAddr') }}</h4>
-            <div class="select-contract no-border">
-              <currency-picker
-                :currency="network.type.contracts"
-                :token="false"
-                page="interactWContract"
-                @selectedCurrency="selectedCurrency"/>
-            </div>
-          </div>
+        
+        <!--
+        <currency-picker
+          :currency="network.type.contracts"
+          :token="false"
+          page="interactWContract"
+          @selectedCurrency="selectedCurrency"/>
+        -->
+        
+        <div class="contract-selector">
+          <dropdown-contract-selector />
         </div>
-        <div class="the-form domain-name">
-          <input
-            v-ens-resolver="address"
-            v-model="address"
-            type="text"
-            placeholder="Enter Domain Name or Address" >
 
-          <i
-            :class="[validAddress && address !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
-            aria-hidden="true"
-            class="address-validation-check"/>
+        <div class="the-form domain-name">
+          <standard-input :options="inputContractAddress" />
+          
         </div>
       </div>
 
       <div class="send-form">
+        <!--
         <div class="title-container">
           <div class="title">
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
@@ -41,7 +35,10 @@
             </div>
           </div>
         </div>
+        -->
         <div class="the-form domain-name">
+          <standard-input :options="inputAbiJsonInterface" />
+          <!--
           <textarea
             ref="abi"
             v-model="abi"
@@ -50,8 +47,25 @@
           <i
             :class="[validAbi && abi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
             aria-hidden="true"/>
+          -->
         </div>
       </div>
+
+
+
+      <div class="button-container">
+        <standard-button 
+          :options="buttonContinue"
+          @click.native="interact = true"
+        />
+        <interface-bottom-text
+          :link-text="$t('interface.learnMore')"
+          :question="$t('interface.haveIssues')"
+          link="/"/>
+      </div>
+
+
+      <!--
       <div class="submit-button-container">
         <div
           :class="[(validAbi && validAddress) && (address !== '' && abi !== '')? '': 'disabled' ,'submit-button large-round-button-green-filled clickable']"
@@ -64,6 +78,7 @@
           :question="$t('interface.haveIssues')"
           link="/"/>
       </div>
+      -->
     </div>
     <div
       v-else
@@ -194,6 +209,8 @@
           </div>
         </div>
       </div>
+
+
       <div class="submit-button-container">
         <div class="buttons interact-buttons">
           <div
@@ -239,6 +256,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
+import DropDownContractSelector from '@/components/DropDownContractSelector';
 
 // eslint-disable-next-line
 const unit = require('ethjs-unit')
@@ -247,10 +265,42 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'dropdown-contract-selector': DropDownContractSelector
   },
   data() {
     return {
+      buttonContinue: {
+        title: 'Continue',
+        buttonStyle: 'green',
+        rightArrow: true,
+        fullWidth: false
+      },
+      inputContractAddress: {
+        title: 'Contract Address',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Enter Domain Name or Address',
+        rightInputText: ''
+      },
+      inputAbiJsonInterface: {
+        title: 'ABI/JSON Interface',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Enter Domain Name or Address',
+        rightInputText: '',
+        isTextarea: true
+      },
       abi: '',
       address: '',
       interact: false,

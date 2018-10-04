@@ -1,8 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  ::-webkit-scrollbar {
-    width: 0 !important;
-  }
 
   .send-offline-container {
     border-radius: 5px;

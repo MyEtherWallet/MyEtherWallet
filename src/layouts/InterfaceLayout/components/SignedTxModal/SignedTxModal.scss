@@ -1,6 +1,12 @@
 @import '~@/scss/GlobalVariables';
 
+.modal-container {
+  padding: 30px;
+  text-align: center;
+}
+
 .signed-tx-modal {
+
   .title-block {
     display: flex;
     align-items: center;

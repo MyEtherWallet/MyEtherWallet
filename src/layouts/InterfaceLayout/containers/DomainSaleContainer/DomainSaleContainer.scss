@@ -162,6 +162,7 @@
       span {
         font-size: 20px;
         font-weight: 600;
+        margin-left: 10px;
       }
     }
 
@@ -198,6 +199,7 @@
 
   .submit-button-container {
     padding: 40px 60px;
+    text-align: center;
 
     .flex-container {
       border-bottom: 2px solid $background-color-1;
@@ -208,6 +210,7 @@
 
       .title-container {
         display: flex;
+        align-items: center;
 
         .margin-left-auto {
           margin-left: auto;
@@ -225,7 +228,7 @@
             border: 0;
             border-radius: 5px 0 0 5px;
             // margin-right: 20px;
-            padding: 13px 15px;
+            padding: 18px 15px;
             width: 100%;
           }
 
@@ -235,7 +238,7 @@
             color: $text-white;
             cursor: pointer;
             font-weight: 500;
-            padding: 13px 40px;
+            padding: 18px 40px;
           }
         }
       }

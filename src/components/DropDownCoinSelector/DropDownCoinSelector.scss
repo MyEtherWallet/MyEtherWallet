@@ -28,6 +28,7 @@
   cursor: pointer;
 
   &.dropdown-open {
+    background-color: $white;
     border: 1px solid $grey-1;
     border-bottom: 1px solid $background-color-1;
     border-radius: 4px 4px 0 0;
@@ -81,6 +82,7 @@
   pointer-events: none;
 
   &.show-dropdown {
+    background-color: $white;
     opacity: 1;
     pointer-events: initial;
   }
@@ -90,6 +92,8 @@
     position: relative;
 
     input {
+      background-color: $background-color-1;
+      border-radius: 5px;
       border: 0;
       padding: 10px;
       width: 100%;

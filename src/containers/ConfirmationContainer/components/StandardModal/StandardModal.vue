@@ -1,13 +1,12 @@
 <template>
   <b-modal
-    ref="success"
+    ref="standardmodal"
     centered
     hide-footer
     hide-header
     class="bootstrap-modal">
 
-    <div class="success-modal">
-      <img src="~@/assets/images/etc/checked.svg">
+    <div class="standard-modal-container">
       <p class="title">Success</p>
       <p class="text">Your transaction has been sent successfully.</p>
       <standard-button 
@@ -22,17 +21,11 @@
 <script>
 export default {
   props: {
-    message: {
-      type: String,
-      default: ''
-    },
-    linkMessage: {
-      type: String,
-      default: ''
-    },
-    linkTo: {
-      type: String,
-      default: '/'
+    options: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -45,12 +38,15 @@ export default {
       }
     };
   },
+  mounted() {
+    this.$refs.standardmodal.show();
+  },
   methods: {
     hideModal() {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });
       }
-      this.$refs.success.hide();
+      this.$refs.standardmodal.hide();
     }
   }
 };
@@ -58,5 +54,5 @@ export default {
 
 
 <style lang="scss" scoped>
-@import 'SuccessModal';
+@import 'StandardModal';
 </style>

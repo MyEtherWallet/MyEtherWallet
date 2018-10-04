@@ -1,19 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
-.success-modal {
+.standard-modal-container {
   text-align: center;
   padding: 50px 40px;
-  background-image: url('~@/assets/images/modal/garlands.png');
-  background-size: 95%;
-  background-repeat: no-repeat;
-  background-position: center 10px;
 }
 
 
 .title {
   font-weight: 700;
   font-size: 30px;
-  margin-top: 20px;
   margin-bottom: 15px;
   color: $text-color-6;
 }

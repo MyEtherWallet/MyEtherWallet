@@ -62,9 +62,14 @@ $text-info-color: #212529;
   transition: all 0.2s ease;
 
   &.dropdown-open {
+
     border: 1px solid $grey-1;
     border-bottom: 1px solid $background-color-1;
     border-radius: 4px 4px 0 0;
+
+    input {
+      background-color: $white;
+    }
   }
 
   input {
@@ -105,7 +110,7 @@ $text-info-color: #212529;
       border-left: 1px solid #e0e0e0;
       padding: 10px 22px;
       color: #3766aa;
-      margin-top: 14px;
+      margin-top: 12px;
     }
   }
 } // .dropdown-input-box
@@ -115,7 +120,7 @@ $text-info-color: #212529;
   width: 100%;
   position: absolute;
   user-select: none;
-  background-color: $background-color-1;
+  background-color: $white;
   border: 1px solid $grey-1;
   border-radius: 0 0 4px 4px;
   z-index: 1;

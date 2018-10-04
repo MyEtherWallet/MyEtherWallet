@@ -13,53 +13,25 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.from') }}</h4>
-          </div>
-          <currency-picker
-            :currency="fromArray"
-            :token="true"
-            page="SwapContainerFrom"/>
+          <dropdown-coin-selector :options="coinSelectorFrom" />
           <div class="the-form amount-number">
-            <input
-              type="number"
-              name=""
-              value=""
-              placeholder="Deposit Amount" >
+            <standard-input :options="inputDepositAmount" />
           </div>
         </div>
         <div class="exchange-icon">
           <img :src="images.swap">
         </div>
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.to') }}</h4>
-          </div>
-          <currency-picker
-            :currency="toArray"
-            :token="true"
-            page="SwapContainerTo"/>
+          <dropdown-coin-selector :options="coinSelectorTo" />
           <div class="the-form amount-number">
-            <input
-              type="number"
-              name=""
-              value=""
-              placeholder="Received Amount" >
+            <standard-input :options="inputReceivedAmount" />
           </div>
         </div>
       </div>
     </div>
 
     <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>{{ $t('common.toAddress') }}</h4>
-          <p class="copy-button prevent-user-select">Copy</p>
-        </div>
-      </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector/>
-      </div>
+      <dropdown-address-selector :options="addressSelector" />
     </div>
 
     <div class="send-form">
@@ -111,16 +83,17 @@
     </div>
 
     <div class="submit-button-container">
-      <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div
-        class="submit-button large-round-button-green-filled clickable"
-        @click="swapConfirmationModalOpen">
-        {{ $t('common.continue') }}
-        <i
-          class="fa fa-long-arrow-right"
-          aria-hidden="true"/>
-      </div>
+      
+      <standard-button 
+        :options="buttonContinue"
+        @click.native="openSignedTXModal"
+      />
+
     </div>
+
+
+
+
 
   </div>
 </template>
@@ -135,18 +108,62 @@ import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+import DropDownCoinSelector from '@/components/DropDownCoinSelector';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'currency-picker': CurrencyPicker,
-    'drop-down-address-selector': DropDownAddressSelector,
+    'dropdown-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
-    'swap-confirmation-modal': SwapConfirmationModal
+    'swap-confirmation-modal': SwapConfirmationModal,
+    'dropdown-coin-selector': DropDownCoinSelector
   },
   data() {
     return {
+      buttonContinue: {
+        title: 'Continue',
+        buttonStyle: 'green',
+        rightArrow: true,
+        fullWidth: false
+      },
+      addressSelector: {
+        title: 'To Address',
+        buttonCopy: true,
+        buttonClear: true,
+        popover: 'What is address'
+      },
+      inputDepositAmount: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Deposit Amount',
+        rightInputText: ''
+      },
+      inputReceivedAmount: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Received Amount',
+        rightInputText: ''
+      },
+      coinSelectorFrom: {
+        title: 'From'
+      },
+      coinSelectorTo: {
+        title: 'To'
+      },
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,

@@ -11,6 +11,16 @@
 
   .send-form {
     @extend %send-form-base;
+    padding: 0;
+    margin-bottom: 40px;
+    position: relative;
+
+    .contract-selector {
+      position: absolute;
+      right: 10px;
+      top: 0px;
+      z-index: 999;
+    }
 
     .title-container {
       .title {
@@ -146,6 +156,7 @@
 }
 
 .interact-div {
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -178,3 +189,9 @@
     bottom: 33px !important;
   }
 }
+
+.button-container {
+  text-align: center;
+}
+
+

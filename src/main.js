@@ -17,7 +17,7 @@ import VueQrcode from '@xkeshi/vue-qrcode';
 import PopOver from '@/components/PopOver';
 
 import StandardButton from '@/components/Buttons/StandardButton';
-import StandardInput from '@/components/Buttons/StandardInput';
+import StandardInput from '@/components/StandardInput';
 
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';

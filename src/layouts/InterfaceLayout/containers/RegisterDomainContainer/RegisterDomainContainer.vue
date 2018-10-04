@@ -10,19 +10,18 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <input
-          type="text"
-          name=""
-          value=""
-          placeholder="Please Enter at Least 7 Characters" >
+        
+        <standard-input :options="inputDomain" />
         <span>.eth</span>
       </div>
     </div>
 
     <div class="submit-button-container">
-      <div class="submit-button large-round-button-green-filled clickable">
-        {{ $t('interface.checkDomain') }}
-      </div>
+
+      <standard-button 
+        :options="buttonCheckDomain"
+        @click.native="modalStatusDomainTaken = 'show'"
+      />
 
       <div class="flex-container">
         <div class="title-container">
@@ -139,11 +138,17 @@
           </ul>
         </div>
       </div>
+
+
+
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
+
+    <standard-modal 
+      :options="domainTakenModal" />
 
   </div>
 </template>
@@ -151,11 +156,13 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BackButton from '../../components/BackButton';
+import StandardModal from '@/containers/ConfirmationContainer/components/StandardModal';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'standard-modal': StandardModal
   },
   props: {
     resetView: {
@@ -164,7 +171,31 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      domainTakenModal: {
+        title: 'Oops!',
+        text: 'This domain has been taken already, please try another one.',
+        buttonTitle: 'Okay'
+      },
+      buttonCheckDomain: {
+        title: 'Check Domain',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false
+      },
+      inputDomain: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Please Enter at Least 7 Characters',
+        rightInputText: ''
+      }
+    };
   },
   methods: {
     expendDomainCheckForm() {
