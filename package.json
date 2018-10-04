@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "start": "npm run update:lists && npm run dev",
+    "test:dev": "vue-cli-service test:unit --watch",
     "test:unit": "vue-cli-service test:unit",
     "test": "npm run test:unit",
     "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
@@ -19,6 +20,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "replace-in-file": "^3.4.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
