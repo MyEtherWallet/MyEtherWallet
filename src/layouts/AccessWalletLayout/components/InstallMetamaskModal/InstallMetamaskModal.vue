@@ -44,7 +44,7 @@ export default {
     metamaskmodal: {
       type: Function,
       default: function() {
-        console.log('metamaskmodal')
+        console.log('metamaskmodal');
       }
     }
   },

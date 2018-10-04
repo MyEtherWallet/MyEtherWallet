@@ -11,7 +11,7 @@
           v-model="privateKey"
           type="text"
           name="PrivateKey"
-          autocomplete="off" >
+          autocomplete="off">
       </div>
       <button
         :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
@@ -26,6 +26,7 @@
 
 <script>
 import { BasicWallet } from '@/wallets';
+
 export default {
   data() {
     return {
@@ -34,8 +35,6 @@ export default {
   },
   methods: {
     unlockWallet() {
-      this.privateKey = '';
-      try {
       this.$store.dispatch(
         'decryptWallet',
         BasicWallet.unlock({
@@ -43,11 +42,7 @@ export default {
           manualPrivateKey: this.privateKey
         })
       );
-
       this.$router.push({ path: 'interface' });
-      }catch(error) {
-
-      }
     }
   }
 };
