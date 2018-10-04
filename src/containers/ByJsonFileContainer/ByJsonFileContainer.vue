@@ -116,7 +116,7 @@ export default {
     }
   },
   mounted() {
-    const worker = new Worker()
+    const worker = new Worker();
     const self = this;
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = function(e) {
