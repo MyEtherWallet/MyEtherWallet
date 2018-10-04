@@ -43,7 +43,9 @@ export default {
   props: {
     metamaskmodal: {
       type: Function,
-      default: function() {}
+      default: function() {
+        console.log('metamaskmodal');
+      }
     }
   },
   data() {

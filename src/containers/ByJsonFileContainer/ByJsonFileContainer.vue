@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import SuccessModal from '@/components/SuccessModal';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import ByJsonBlock from './components/ByJsonBlock';
 
 import noLose from '@/assets/images/icons/no-lose.svg';
