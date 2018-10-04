@@ -115,7 +115,6 @@ export default {
       }
     },
     showNotifications() {
-      console.log(this.$refs.notification);
       this.$refs.notification.show();
     },
     expand(idx, notif) {
