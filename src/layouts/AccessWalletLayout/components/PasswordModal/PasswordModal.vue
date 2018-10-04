@@ -29,7 +29,7 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlockWallet") }}
+        {{ $t("accessWallet.unlock") }}
       </button>
     </form>
   </b-modal>

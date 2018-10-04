@@ -1,9 +1,14 @@
+@import '~@/scss/GlobalVariables';
 @import '~@/scss/CustomModal';
 
 .button-container {
   button {
     display: inline-block;
     width: 100%;
+  }
+
+  a {
+    color: $white;
   }
 }
 

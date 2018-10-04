@@ -16,13 +16,14 @@
   "accessDeviceAddresses": "Please Connect With Your Device",
   "password": "Password",
   "mewConnectDesc": "Use MEW Connect to access my wallet",
-  "metaMaskDesc": "Use extention to access my wallet",
-  "installMetaMaskModalDesc": "Oops! First of all, you need to install MetaMask extention in order to access your wallet.",
+  "metaMaskDesc": "Use extension to access my wallet",
+  "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
+  "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
   "software": "Software",
   "softwareDesc": "JSON file, Private key, Mnemonic phrase",
   "notRecommended": "Not recommended",
-  "unlock": "Unlock",
-  "unlockWallet": "Unlock Wallet",
-  "installMetamask": "Install MetaMask"
+  "unlock": "Unlock wallet",
+  "installMetamask": "Install MetaMask",
+  "tryAgain": "Try Again"
 }

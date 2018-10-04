@@ -21,11 +21,7 @@
       ref="networkandaddressModal"
       :hardware-wallet="hardwareWallet"/>
 
-    <install-metamask-modal
-      ref="installMetamaskModal"
-      :metamaskmodal="installMetamaskModalOpen"/>
-
-    <metamask-modal ref="metamastModal"/>
+    <metamask-modal ref="metamaskModal"/>
 
     <software-modal
       ref="softwareModal"
@@ -56,7 +52,7 @@
           <h5>
             {{ $t('common.noWallet') }}
             <router-link
-              :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
+              :to="'/create-wallet'"
               class="nounderline">
               {{ $t('common.getAFreeWallet') }}
             </router-link>
@@ -86,7 +82,6 @@ import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
 import MetamaskModal from '../../components/MetamaskModal';
-import InstallMetamaskModal from '../../components/InstallMetamaskModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
@@ -111,7 +106,6 @@ export default {
     'hardware-modal': HardwareModal,
     'hardware-password-modal': HardwarePasswordModal,
     'metamask-modal': MetamaskModal,
-    'install-metamask-modal': InstallMetamaskModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
@@ -147,7 +141,7 @@ export default {
           disabled: this.$store.state.online
         },
         {
-          func: this.installMetamaskModalOpen,
+          func: this.metamaskModalOpen,
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
@@ -178,7 +172,7 @@ export default {
       this.$refs.hardwareModal.$refs.hardware.show();
     },
     metamaskModalOpen() {
-      this.$refs.metamastModal.$refs.metamask.show();
+      this.$refs.metamaskModal.$refs.metamask.show();
     },
     softwareModalOpen() {
       this.$refs.softwareModal.$refs.software.show();

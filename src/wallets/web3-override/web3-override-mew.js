@@ -1,7 +1,7 @@
-export default function web3OverideMew(web3, wallet, eventHub) {
+export default function web3OverrideMew(web3, wallet, eventHub) {
   if (!wallet) return web3;
 
-  const methodOverides = {
+  const methodOverrides = {
     signTransaction(tx) {
       return new Promise(resolve => {
         if (tx.generateOnly) {
@@ -10,6 +10,18 @@ export default function web3OverideMew(web3, wallet, eventHub) {
             'showTxConfirmModal',
             tx,
             wallet.isHardware,
+            wallet.signTransaction.bind(this),
+            res => {
+              resolve(res);
+            }
+          );
+        } else if (tx.web3WalletOnly) {
+          delete tx['web3WalletOnly'];
+          eventHub.$emit(
+            'showWeb3Wallet',
+            tx,
+            wallet.isHardware,
+            // This just sends the tx. Metamask doesn't support signing https://github.com/MetaMask/metamask-extension/issues/3475
             wallet.signTransaction.bind(this),
             res => {
               resolve(res);
@@ -51,10 +63,10 @@ export default function web3OverideMew(web3, wallet, eventHub) {
         privateKey: true
       }
     },
-    ...methodOverides
+    ...methodOverrides
   };
 
-  web3.eth.signTransaction = methodOverides.signTransaction;
-  web3.eth.sign = methodOverides.signMessage;
+  web3.eth.signTransaction = methodOverrides.signTransaction;
+  web3.eth.sign = methodOverrides.signMessage;
   return web3; // needs to return web3 for use in vuex
 }
