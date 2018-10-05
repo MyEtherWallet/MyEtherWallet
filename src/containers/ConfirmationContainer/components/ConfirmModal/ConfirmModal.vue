@@ -132,7 +132,7 @@ export default {
     },
     data: {
       type: String,
-      default: ''
+      default: '0x'
     },
     from: {
       type: String,
@@ -189,7 +189,7 @@ export default {
     }
   },
   mounted() {
-    if (this.data !== '') {
+    if (this.data !== '0x') {
       this.parseData(this.data);
     }
   },
@@ -201,7 +201,7 @@ export default {
     },
     async parseData(data) {
       const web3 = this.$store.state.web3;
-      const networkToken = this.$store.state.network.types.tokens;
+      const networkToken = this.$store.state.network.type.tokens;
       const tokenIndex = networkToken.findIndex(el => {
         return el.address.toLowerCase() === this.to.toLowerCase();
       });
