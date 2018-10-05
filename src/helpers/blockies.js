@@ -68,25 +68,21 @@ function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
   const width = Math.sqrt(imageData.length);
   c.width = c.height = width * scale;
 
-  try {
-    const cc = c.getContext('2d');
-    cc.fillStyle = bgcolor;
-    cc.fillRect(0, 0, c.width, c.height);
-    cc.fillStyle = color;
+  const cc = c.getContext('2d');
+  cc.fillStyle = bgcolor;
+  cc.fillRect(0, 0, c.width, c.height);
+  cc.fillStyle = color;
 
-    for (let i = 0; i < imageData.length; i++) {
-      const row = Math.floor(i / width);
-      const col = i % width;
-      // if data is 2, choose spot color, if 1 choose foreground
-      cc.fillStyle = imageData[i] === 1 ? color : spotcolor;
+  for (let i = 0; i < imageData.length; i++) {
+    const row = Math.floor(i / width);
+    const col = i % width;
+    // if data is 2, choose spot color, if 1 choose foreground
+    cc.fillStyle = imageData[i] === 1 ? color : spotcolor;
 
-      // if data is 0, leave the background
-      if (imageData[i]) {
-        cc.fillRect(col * scale, row * scale, scale, scale);
-      }
+    // if data is 0, leave the background
+    if (imageData[i]) {
+      cc.fillRect(col * scale, row * scale, scale, scale);
     }
-  } catch (error) {
-    console.log(error);
   }
   return c;
 }
