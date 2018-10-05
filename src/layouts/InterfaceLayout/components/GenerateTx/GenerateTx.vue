@@ -113,8 +113,7 @@ import SignedTxModal from '../../components/SignedTxModal';
 import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx')
-// eslint-disable-next-line
-const unit = require('ethjs-unit')
+import * as unit from 'ethjs-unit';
 
 export default {
   components: {
