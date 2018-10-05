@@ -48,5 +48,7 @@
   "signMessage": "签署消息",
   "verifyMessage": "验证消息",
   "signature": "签字",
-  "toAddress": "目的地址"
+  "toAddress": "目的地址",
+  "confirmAndSave": "Confirm & Save",
+  "cancel": "Cancel"
 }
