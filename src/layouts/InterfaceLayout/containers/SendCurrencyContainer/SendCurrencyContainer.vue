@@ -239,8 +239,8 @@ export default {
       }
     },
     selectedCurrency(newVal) {
-      this.estimateGas();
       this.selectedCurrency = newVal;
+      this.estimateGas();
     }
   },
   mounted() {

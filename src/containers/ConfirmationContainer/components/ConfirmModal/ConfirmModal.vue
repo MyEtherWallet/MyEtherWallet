@@ -26,6 +26,7 @@
             :token-transfer-to="tokenTransferTo"
             :token-transfer-val="tokenTransferVal"
             :token-symbol="tokenSymbol"
+            :value="value"
             direction="to"
           />
         </div>
@@ -200,30 +201,11 @@ export default {
     },
     async parseData(data) {
       const web3 = this.$store.state.web3;
-      const erc20DecimalAndSymbl = [
-        {
-          constant: true,
-          inputs: [],
-          name: 'decimals',
-          outputs: [{ name: '', type: 'uint8' }],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        },
-        {
-          constant: true,
-          inputs: [],
-          name: 'symbol',
-          outputs: [{ name: '', type: 'string' }],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        }
-      ];
-      const tokenNameContract = new web3.eth.Contract(
-        erc20DecimalAndSymbl,
-        this.to
-      );
+      const networkToken = this.$store.state.network.types.tokens;
+      const tokenIndex = networkToken.findIndex(el => {
+        return el.address.toLowerCase() === this.to.toLowerCase();
+      });
+
       const jsonInterface = {
         constant: false,
         inputs: [
@@ -236,7 +218,6 @@ export default {
         stateMutability: 'nonpayable',
         type: 'function'
       };
-      const decimals = await tokenNameContract.methods.decimals().call();
       const transferFuncSig = web3.eth.abi.encodeFunctionSignature(
         jsonInterface
       );
@@ -247,10 +228,14 @@ export default {
         );
         const value = new BigNumber(params[1]);
         this.tokenTransferTo = params[0];
-        this.tokenTransferVal = value
-          .div(new BigNumber(10).pow(decimals))
-          .toFixed();
-        this.tokenSymbol = await tokenNameContract.methods.symbol().call();
+        this.tokenTransferVal =
+          tokenIndex !== -1
+            ? value
+                .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
+                .toFixed()
+            : value;
+        this.tokenSymbol =
+          tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';
       }
     }
   }
