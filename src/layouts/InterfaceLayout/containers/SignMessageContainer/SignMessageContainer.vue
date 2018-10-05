@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
@@ -81,23 +82,23 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
+  },
   methods: {
     signMessage() {
       this.$store.state.web3.eth
-        .sign(
-          this.$refs.message.value,
-          this.$store.state.wallet.getAddressString()
-        )
+        .sign(this.$refs.message.value)
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
-              address: this.$store.state.wallet.getAddressString(),
+              address: this.wallet.getAddressString(),
               msg: this.$refs.message.value,
               sig: _signedMessage,
               version: '3',
-              signer: this.$store.state.wallet.brand
-                ? this.$store.state.wallet.brand
-                : 'MEW'
+              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
             },
             null,
             2
