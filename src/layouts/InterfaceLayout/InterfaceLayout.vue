@@ -147,14 +147,34 @@ export default {
         {
           constant: true,
           inputs: [
-            { name: '_owner', type: 'address' },
-            { name: 'name', type: 'bool' },
-            { name: 'website', type: 'bool' },
-            { name: 'email', type: 'bool' },
-            { name: 'count', type: 'uint256' }
+            {
+              name: '_owner',
+              type: 'address'
+            },
+            {
+              name: 'name',
+              type: 'bool'
+            },
+            {
+              name: 'website',
+              type: 'bool'
+            },
+            {
+              name: 'email',
+              type: 'bool'
+            },
+            {
+              name: '_count',
+              type: 'uint256'
+            }
           ],
           name: 'getAllBalance',
-          outputs: [{ name: '', type: 'bytes' }],
+          outputs: [
+            {
+              name: '',
+              type: 'bytes'
+            }
+          ],
           payable: false,
           stateMutability: 'view',
           type: 'function'
@@ -166,7 +186,7 @@ export default {
         .encodeABI();
       const response = this.$store.state.web3.eth
         .call({
-          to: '0xBE1ecF8e340F13071761e0EeF054d9A511e1Cb56',
+          to: '0xdAFf2b3BdC710EB33A847CCb30A24789c0Ef9c5b',
           data: data
         })
         .then(response => {
@@ -223,17 +243,33 @@ export default {
       return balance;
     },
     async setTokens() {
+      const utils = this.$store.state.web3.utils;
       if (this.network.type.chainID === 1) {
         this.receivedTokens = false;
         const hex = await this.fetchTokens();
-        this.tokens = parseTokensHex(hex).sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          }
-          return 0;
-        });
+        const parsedTokens = parseTokensHex(hex)
+          .sort((a, b) => {
+            if (a.name.toUpperCase() < b.name.toUpperCase()) {
+              return -1;
+            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+              return 1;
+            }
+            return 0;
+          })
+          .map(token => {
+            const convertedToken = {
+              addr: token.addr,
+              balance: token.balance,
+              decimals: token.decimals,
+              email: utils.hexToAscii(token.email),
+              name: utils.hexToAscii(token.name),
+              symbol: utils.hexToAscii(token.symbol),
+              website: utils.hexToAscii(token.website)
+            };
+
+            return convertedToken;
+          });
+        this.tokens = parsedTokens;
       } else {
         const tokenWithBalance = [];
         this.network.type.tokens.map(async token => {
