@@ -11,10 +11,10 @@
           <address-block
             :address="from"
             :value="value"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
             direction="from"
-            :tokenTransferVal="tokenTransferVal"
-            :tokenSymbol="tokenSymbol"
-            />
+          />
           <div
             v-show="to !== '' && to !== undefined"
             class="direction">
@@ -23,11 +23,11 @@
           <address-block
             v-show="to !== '' && to !== undefined"
             :address="to"
+            :token-transfer-to="tokenTransferTo"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
             direction="to"
-            :tokenTransferTo="tokenTransferTo"
-            :tokenTransferVal="tokenTransferVal"
-            :tokenSymbol="tokenSymbol"
-            />
+          />
         </div>
         <div class="detail-info">
           <div class="info">
