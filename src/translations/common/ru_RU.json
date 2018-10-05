@@ -48,5 +48,7 @@
   "signMessage": "Подписать сообщение",
   "verifyMessage": "Верифицировать сообщение",
   "signature": "Подпись",
-  "toAddress": "На адрес"
+  "toAddress": "На адрес",
+  "confirmAndSave": "Confirm & Save",
+  "cancel": "Cancel"
 }
