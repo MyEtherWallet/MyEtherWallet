@@ -1,6 +1,8 @@
 <template>
   <div class="drop-down-coin-selector">
-    <div class="form-title-container">
+    <div 
+      v-if="options.title" 
+      class="form-title-container">
       <div class="title">{{ options.title }}</div>
     </div>
 
@@ -9,9 +11,8 @@
         :class="dropdownOpen ? 'dropdown-open' : ''"
         class="dropdown-input-box" 
         @click="openDropdownFocustToSearchInput">
-        
-        <div class="selected-coin">
-          <img src="~@/assets/images/currency/eth.svg">ETH - <span>Ethereum</span>
+        <div class="selected-network">
+          Network
         </div>
         <div
           class="dropdown-open-button">
@@ -28,18 +29,15 @@
       <div
         :class="dropdownOpen ? 'show-dropdown' : ''"
         class="dropdown-list-box">
-        <div 
-          class="search-block">
-          <input 
-            class="coin-selector-search-input"
-            type="text" 
-            name=""
-            placeholder="Search">
-          <img src="@/assets/images/icons/magnifier.svg">
-        </div>
         <ul>
-          <li><img src="~@/assets/images/currency/eth.svg">ETH - <span>Ethereum</span></li>
-          <li><img src="~@/assets/images/currency/btc.svg">BTC - <span>Bitcoin</span></li>
+          <li>AKA - <span>Akaorma</span></li>
+          <li>BTC - <span>Bitcoin</span></li>
+          <li>AKA - <span>Akaorma</span></li>
+          <li>BTC - <span>Bitcoin</span></li>
+          <li>AKA - <span>Akaorma</span></li>
+          <li>BTC - <span>Bitcoin</span></li>
+          <li>AKA - <span>Akaorma</span></li>
+          <li>BTC - <span>Bitcoin</span></li>
         </ul>
       </div>
     </div>
@@ -87,5 +85,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DropDownCoinSelector.scss';
+@import 'DropDownNetworkSelector.scss';
 </style>

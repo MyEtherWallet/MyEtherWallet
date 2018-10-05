@@ -3,6 +3,24 @@
     <interface-container-title :title="$t('common.verifyMessage')"/>
 
     <div class="send-form">
+      <standard-input :options="inputSignature" />
+      <standard-input :options="inputBottom" />      
+    </div>
+
+    <div class="button-form">
+      <standard-button 
+        :options="buttonVerify"
+        @click.native="successModalOpen"
+      />
+     
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
+    </div> 
+
+    <!--
+    <div class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>Signature: </h4>
@@ -38,6 +56,7 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
+  -->
 
   </div>
 </template>
@@ -56,6 +75,41 @@ export default {
   },
   data() {
     return {
+      buttonVerify: {
+        title: 'Verify',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      inputSignature: {
+        title: 'Signature',
+        value: 'hahahahaha Great!',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'Hi',
+        placeHolder: '',
+        rightInputText: '',
+        isTextarea: true,
+        inputDisabled: false
+      },
+      inputBottom: {
+        title: '',
+        value: 'hahahahaha Great!',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: '',
+        isTextarea: false,
+        inputDisabled: false
+      },
       message: '',
       error: {
         show: false,

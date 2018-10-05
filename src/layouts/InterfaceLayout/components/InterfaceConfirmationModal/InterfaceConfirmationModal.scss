@@ -2,9 +2,17 @@
 
 .modal-content-block {
   padding: 30px;
-
 }
 
 .form-block {
   margin-bottom: 40px;
+}
+
+.button-block {
+  text-align: center;
+
+  .qrcode-button {
+    display: inline-flex;
+    align-items: center;
+  }
 }

@@ -1,5 +1,23 @@
 @import '~@/scss/GlobalVariables';
 
+
+.network-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.network-icon {
+  width: 33px;
+}
+
+.custom-select-1 {
+  background-color: $white;
+  padding: 3px;
+  border-radius: 4px;
+  border: 1px solid $mew-green;
+}
+
+
 .modal-container {
   .network {
     .content-block {
@@ -34,6 +52,7 @@
 
       .flex-container {
         display: flex;
+        align-items: center;
 
         .margin-left-auto {
           margin-left: auto;
@@ -41,12 +60,13 @@
       }
 
       .grid-3 {
-        padding: 0 20px;
         display: grid;
         grid-template-columns: auto auto auto;
+        grid-gap: 5px;
+        padding-left: 33px;
 
         p {
-          margin-top: 5px;
+          //margin-top: 5px;
         }
       } // .grid-3
     } // .content-block
@@ -96,7 +116,6 @@
   border-radius: 6px;
   cursor: pointer;
   display: inline-block;
-  padding: 0 10px;
   width: fit-content;
 }
 
@@ -120,6 +139,6 @@
   align-items: center;
   img {
     height: 25px;
-    margin-right: 13px;
+    margin-right: 0px;
   }
 }

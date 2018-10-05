@@ -31,12 +31,14 @@
           :key="key + index"
           class="content-block">
           <div class="network-title">
-            <img 
-              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
-              src="~@/assets/images/icons/network.svg">
-            <img 
-              v-else 
-              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+            <div class="network-icon">
+              <img 
+                v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
+                src="~@/assets/images/icons/network.svg">
+              <img 
+                v-else 
+                :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+            </div>
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
@@ -72,6 +74,28 @@
         class="network-add hidden">
         <div class="content-block">
           <div class="input-block-container">
+
+            <standard-input :options="inputEthNodeName" />
+            
+            <dropdown-network-selector :options="networkSelector" />
+            <!--
+            <select
+              v-model="selectedNetwork"
+              class="custom-select-1">
+              <option
+                v-for="type in Object.keys(types)"
+                :value="types[type]"
+                :key="types[type].name + types[type].name_long">
+                {{ types[type].name | capitalize }} - {{ types[type].name_long |
+                capitalize }}
+              </option>
+            </select>
+          -->
+
+            <standard-input :options="inputURL" />
+            <standard-input :options="inputPort" />
+
+            <!--
             <input
               v-model="name"
               class="custom-input-text-1"
@@ -128,6 +152,7 @@
               name=""
               placeholder="https://etherscan.io/address/"
               autocomplete="off">
+            -->
           </div>
         </div>
 
@@ -187,16 +212,72 @@
 <script>
 import store from 'store';
 import web3 from 'web3';
-
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
+import DropDownNetworkSelector from '@/components/DropDownNetworkSelector';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'dropdown-network-selector': DropDownNetworkSelector
   },
   data() {
     return {
+      networkSelector: {
+        title: '',
+        buttonCopy: false,
+        buttonClear: false,
+        popover: ''
+      },
+      buttonSave: {
+        title: 'Save',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      inputEthNodeName: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'ETH Node Name',
+        rightInputText: '',
+        isTextarea: false,
+        inputDisabled: false
+      },
+      inputURL: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'URL',
+        rightInputText: '',
+        isTextarea: false,
+        inputDisabled: false
+      },
+      inputPort: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Port',
+        rightInputText: '',
+        isTextarea: false,
+        inputDisabled: false
+      },
       types: networkTypes,
       selectedNetwork: networkTypes.ETH,
       chainID: '',

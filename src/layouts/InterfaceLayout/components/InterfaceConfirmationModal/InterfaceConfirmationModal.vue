@@ -14,6 +14,20 @@
         <div class="form-block">
           <standard-input :options="inputMessage" />
         </div>
+        <div class="button-block">
+          <div class="qrcode-button">
+            <standard-button 
+              :options="buttonConfirm"
+              @click.native="successModalOpen"
+            />
+            <qrcode-button :options="QRCodeButton" />
+          </div>
+          
+          <interface-bottom-text
+            :link-text="$t('interface.learnMore')"
+            :question="$t('interface.haveIssues')"
+            link="/"/>
+        </div>        
       </div>      
     </b-modal>
   </div>
@@ -22,14 +36,24 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 
 export default {
   components: {
     'dropdown-address-selector': DropDownAddressSelector,
-    'interface-bottom-text': InterfaceBottomText
+    'interface-bottom-text': InterfaceBottomText,
+    'qrcode-button': ButtonWithQrCode
   },
   data() {
     return {
+      QRCodeButton: {},
+      buttonConfirm: {
+        title: 'Confirm Signing',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
       addressSelector: {
         title: 'To Address',
         buttonCopy: false,
