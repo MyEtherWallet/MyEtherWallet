@@ -11,7 +11,10 @@
           <address-block
             :address="from"
             :value="value"
-            direction="from"/>
+            direction="from"
+            :tokenTransferVal="tokenTransferVal"
+            :tokenSymbol="tokenSymbol"
+            />
           <div
             v-show="to !== '' && to !== undefined"
             class="direction">
@@ -20,7 +23,11 @@
           <address-block
             v-show="to !== '' && to !== undefined"
             :address="to"
-            direction="to"/>
+            direction="to"
+            :tokenTransferTo="tokenTransferTo"
+            :tokenTransferVal="tokenTransferVal"
+            :tokenSymbol="tokenSymbol"
+            />
         </div>
         <div class="detail-info">
           <div class="info">
@@ -103,6 +110,7 @@
 <script>
 import AddressBlock from '../AddressBlock';
 import * as unit from 'ethjs-unit';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -158,7 +166,10 @@ export default {
     return {
       modalDetailInformation: false,
       transactionSigned: false,
-      unit
+      unit,
+      tokenTransferTo: '',
+      tokenTransferVal: '',
+      tokenSymbol: ''
     };
   },
   computed: {
@@ -171,10 +182,75 @@ export default {
       return '';
     }
   },
+  watch: {
+    data(newVal) {
+      this.parseData(newVal);
+    }
+  },
+  mounted() {
+    if (this.data !== '') {
+      this.parseData(this.data);
+    }
+  },
   methods: {
     sendTx() {
       if (this.signedTx !== '') {
         this.confirmSendTx();
+      }
+    },
+    async parseData(data) {
+      const web3 = this.$store.state.web3;
+      const erc20DecimalAndSymbl = [
+        {
+          constant: true,
+          inputs: [],
+          name: 'decimals',
+          outputs: [{ name: '', type: 'uint8' }],
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          constant: true,
+          inputs: [],
+          name: 'symbol',
+          outputs: [{ name: '', type: 'string' }],
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ];
+      const tokenNameContract = new web3.eth.Contract(
+        erc20DecimalAndSymbl,
+        this.to
+      );
+      const jsonInterface = {
+        constant: false,
+        inputs: [
+          { name: '_to', type: 'address' },
+          { name: '_amount', type: 'uint256' }
+        ],
+        name: 'transfer',
+        outputs: [{ name: '', type: 'bool' }],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      };
+      const decimals = await tokenNameContract.methods.decimals().call();
+      const transferFuncSig = web3.eth.abi.encodeFunctionSignature(
+        jsonInterface
+      );
+      if (data.substr(0, 10) === transferFuncSig) {
+        const params = web3.eth.abi.decodeParameters(
+          ['address', 'uint256'],
+          `${data.substr(10)}`
+        );
+        const value = new BigNumber(params[1]);
+        this.tokenTransferTo = params[0];
+        this.tokenTransferVal = value
+          .div(new BigNumber(10).pow(decimals))
+          .toFixed();
+        this.tokenSymbol = await tokenNameContract.methods.symbol().call();
       }
     }
   }

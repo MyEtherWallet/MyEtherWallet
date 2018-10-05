@@ -51,7 +51,7 @@ import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
-
+import { BigNumber } from 'bignumber.js';
 import store from 'store';
 
 export default {
@@ -217,16 +217,18 @@ export default {
             return 0;
           })
           .map(token => {
+            const balance = new BigNumber(token.balance);
             const convertedToken = {
               addr: token.addr,
-              balance: token.balance,
+              balance: balance
+                .div(new BigNumber(10).pow(token.decimals))
+                .toString(),
               decimals: token.decimals,
               email: utils.hexToAscii(token.email),
               name: utils.hexToAscii(token.name),
               symbol: utils.hexToAscii(token.symbol),
               website: utils.hexToAscii(token.website)
             };
-
             return convertedToken;
           });
         this.tokens = parsedTokens;
@@ -246,9 +248,10 @@ export default {
         store.get('customTokens')[this.network.type.name] !== undefined &&
         store.get('customTokens')[this.network.type.name].length > 0
       ) {
-        // eslint-disable-next-line
-        customTokens = store.get('customTokens')[this.network.type.name]
-        .filter(token => token.balance > 0);
+        customTokens = store.get('customTokens')[
+          // eslint-disable-next-line
+          this.network.type.name
+        ].filter(token => token.balance > 0);
       }
       const allTokens = this.tokens
         .filter(token => token.balance > 0)

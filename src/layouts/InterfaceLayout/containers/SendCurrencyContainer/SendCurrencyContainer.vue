@@ -162,12 +162,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-
+import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 
 export default {
@@ -246,10 +245,7 @@ export default {
   },
   mounted() {
     if (this.account.balance) {
-      this.parsedBalance = unit.fromWei(
-        parseInt(this.account.balance),
-        'ether'
-      );
+      this.parsedBalance = this.account.balance;
     }
   },
   methods: {
@@ -258,29 +254,10 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      const jsonInterface = [
-        {
-          constant: false,
-          inputs: [
-            { name: '_to', type: 'address' },
-            { name: '_amount', type: 'uint256' }
-          ],
-          name: 'transfer',
-          outputs: [{ name: 'success', type: 'bool' }],
-          payable: false,
-          type: 'function'
-        }
-      ];
-      const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
       const isEth = this.selectedCurrency.name === 'Ethereum';
       this.nonce = await this.$store.state.web3.eth.getTransactionCount(
         this.$store.state.wallet.getAddressString()
       );
-      this.data = isEth
-        ? this.data
-        : contract.methods
-            .transfer(this.address, unit.toWei(this.amount, 'ether'))
-            .encodeABI();
 
       this.raw = {
         from: this.$store.state.wallet.getAddressString(),
@@ -324,11 +301,13 @@ export default {
       }
     },
     createDataHex() {
+      let amount;
       if (this.selectedCurrency.name !== 'Ethereum' && this.address !== '') {
-        const amount = this.$store.state.web3.utils.toWei(
-          this.amount.toString(),
-          'eth'
-        );
+        if (this.amount !== 0) {
+          amount = this.amount;
+        } else {
+          amount = 0;
+        }
         const jsonInterface = [
           {
             constant: false,
@@ -347,8 +326,14 @@ export default {
           jsonInterface,
           this.selectedCurrency.addr
         );
-
-        this.data = contract.methods.transfer(this.address, amount).encodeABI();
+        this.data = contract.methods
+          .transfer(
+            this.address,
+            new BigNumber(amount)
+              .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+              .toFixed()
+          )
+          .encodeABI();
       } else {
         this.data = '0x';
       }

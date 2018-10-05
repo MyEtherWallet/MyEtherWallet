@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import web3 from 'web3';
+// import web3 from 'web3';
 
 function sizeHex(bytes) {
   return bytes * 2;
@@ -40,10 +40,9 @@ function parseTokensHex(hex) {
       '0x' + hex.substr(offset, sizeHex(1))
     ).toNumber();
     offset -= sizeHex(32);
-    token.balance = web3.utils.fromWei(
-      new BigNumber('0x' + hex.substr(offset, sizeHex(32))).toFixed(),
-      'ether'
-    );
+    token.balance = new BigNumber(
+      '0x' + hex.substr(offset, sizeHex(32))
+    ).toFixed();
     if (isName) {
       offset -= sizeHex(16);
       token.name = getAscii(hex.substr(offset, sizeHex(16)));

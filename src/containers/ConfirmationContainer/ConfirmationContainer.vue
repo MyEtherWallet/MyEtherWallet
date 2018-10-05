@@ -12,7 +12,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -25,7 +25,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-sign-modal
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"

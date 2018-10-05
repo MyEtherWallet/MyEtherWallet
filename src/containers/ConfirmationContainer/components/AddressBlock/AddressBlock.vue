@@ -3,15 +3,17 @@
     <div class="currency-container">
       <img :src="require(`@/assets/images/currency/${currency}.svg`)" >
       <p>
-        <span class="currency-amt">{{ converter(value) }} </span>
-        <span class="currency-type">{{ currency.toUpperCase() }} </span>
+        <span class="currency-amt">
+          {{ direction === 'from'? '-': '+' }} {{ tokenTransferVal !== '' ? tokenTransferVal:converter(value) }}
+        </span>
+        <span class="currency-type">{{ tokenSymbol !== '' ? tokenSymbol:currency.toUpperCase() }} </span>
       </p>
     </div>
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
     <div class="address">
-      {{ address }}
+      {{ tokenTransferTo !== '' ? tokenTransferTo:address }}
     </div>
   </div>
 </template>
@@ -35,6 +37,18 @@ export default {
     currency: {
       type: String,
       default: 'eth'
+    },
+    tokenTransferTo: {
+      type: String,
+      default: ''
+    },
+    tokenTransferVal: {
+      type: String,
+      default: ''
+    },
+    tokenSymbol: {
+      type: String,
+      default: ''
     }
   },
   methods: {
