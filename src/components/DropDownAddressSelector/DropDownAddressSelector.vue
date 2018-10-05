@@ -9,7 +9,7 @@
           :popcontent="options.popover"/>
       </div>
 
-      <div class="button-container">
+      <div class="the-button-container">
         <div 
           v-if="options.buttonClear == true" 
           class="the-button clean">Clear</div>
@@ -24,9 +24,11 @@
       :class="dropdownOpen ? 'dropdown-open' : ''"
       class="dropdown-input-box">
       <input
+        :class="options.inputDisabled ? 'input-disabled' : ''"
+        :placeholder="options.placeholder"
+        :disabled="options.inputDisabled"
         v-model="selectedAddress"
         type="text"
-        placeholder="Please enter the address"
         @focus="dropdownOpen = false">
       <div
         v-if="!validAddress"
@@ -40,6 +42,7 @@
           height="30px"/>
       </div>
       <div
+        v-if="!options.inputDisabled"
         class="dropdown-open-button"
         @click="dropdownOpen = !dropdownOpen">
         <i
@@ -96,7 +99,7 @@ export default {
   },
   data() {
     return {
-      selectedAddress: '',
+      selectedAddress: this.options.value,
       validAddress: false,
       dropdownOpen: false,
       addresses: [
@@ -115,6 +118,13 @@ export default {
       } else {
         this.validAddress = false;
       }
+    }
+  },
+  mounted() {
+    if (web3.utils.isAddress(this.selectedAddress)) {
+      this.validAddress = true;
+    } else {
+      this.validAddress = false;
     }
   },
   beforeMount() {

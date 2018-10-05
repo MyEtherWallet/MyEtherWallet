@@ -43,12 +43,8 @@
 
     .selector {
       padding-left: 5px;
-
     }
   }
-
-
-
 
   .submit-button {
     margin: 0 auto;
@@ -241,7 +237,7 @@
 .button-container {
   text-align: center;
 
-  >* {
-    margin: 0px 5px;
+  > * {
+    margin: 0 5px;
   }
 }

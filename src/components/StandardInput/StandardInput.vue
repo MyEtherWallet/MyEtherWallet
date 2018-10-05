@@ -11,7 +11,7 @@
           :popcontent="options.popover"/>
       </div>
 
-      <div class="button-container">
+      <div class="the-button-container">
         <div 
           v-if="options.buttonClear == true" 
           class="the-button clean">Clear</div>
@@ -37,11 +37,15 @@
         :class="options.rightInputText ? 'right-padding' : ''"
         :placeholder="options.placeHolder" 
         :type="options.type"
+        :disabled="options.inputDisabled"
         name="">
 
       <textarea 
         v-if="options.isTextarea" 
-        v-model="inputValue" />
+        v-model="inputValue"
+        :placeholder="options.placeHolder" 
+        :disabled="options.inputDisabled"
+      />
 
       <p 
         v-if="options.rightInputText" 

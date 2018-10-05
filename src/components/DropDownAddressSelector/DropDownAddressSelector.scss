@@ -30,7 +30,7 @@ $text-info-color: #212529;
   color: $input-title-color;
 }
 
-.button-container {
+.the-button-container {
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -78,6 +78,10 @@ $text-info-color: #212529;
     width: 100%;
     padding-left: 55px;
     padding-right: 70px;
+
+    &.input-disabled {
+      padding-right: 10px;
+    }
   }
 
   .blockie-place-holder-image {

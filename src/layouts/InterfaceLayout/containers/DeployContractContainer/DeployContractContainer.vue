@@ -4,6 +4,28 @@
     <interface-container-title :title="$t('common.depContract')"/>
 
     <div class="send-form">
+      <standard-input :options="inputByteCode" />
+    </div>
+
+    <div class="send-form">
+      <standard-input :options="inputAbiJsonInterface" />
+    </div>
+
+    <div class="button-container">
+      <standard-button 
+        :options="buttonSignTX"
+        @click.native="interact = true"
+      />
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
+    </div>
+
+
+
+    <!--
+    <div class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>Byte Code</h4>
@@ -140,6 +162,9 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
+
+    -->
+
     <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>-->
     <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
@@ -164,6 +189,39 @@ export default {
   },
   data() {
     return {
+      buttonSignTX: {
+        title: 'Sign Transaction',
+        buttonStyle: 'green',
+        rightArrow: true,
+        leftArrow: false,
+        fullWidth: false
+      },
+      inputByteCode: {
+        title: 'Contract Address',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'Enter Byte Code',
+        rightInputText: '',
+        isTextarea: false
+      },
+      inputAbiJsonInterface: {
+        title: 'ABI/JSON Interface',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: 'ABI/JSON Interface Data',
+        rightInputText: '',
+        isTextarea: true
+      },
       bytecode: '',
       abi: '',
       constructors: [],

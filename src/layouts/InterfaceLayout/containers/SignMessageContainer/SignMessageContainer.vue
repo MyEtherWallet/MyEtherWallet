@@ -3,7 +3,11 @@
     <success-modal
       message=""
       link-message="Ok"/>
+    <confirmation-modal />
+
     <interface-container-title :title="$t('common.signMessage')"/>
+
+
     <div class="send-form">
       <p>
         Include your nickname and where
@@ -14,6 +18,7 @@
         reused for a different purpose.
       </p>
 
+      <!--
       <div class="title-container">
         <div class="title">
           <h4>Message</h4>
@@ -26,8 +31,31 @@
           ref="message"
           class="custom-textarea-1"/>
       </div>
+      -->
     </div>
 
+
+
+
+    <div class="send-form">
+      <standard-input :options="inputMessage" />
+    </div>
+
+
+    <div class="button-container">
+      <standard-button 
+        :options="buttonSign"
+        @click.native="successModalOpen"
+      />
+      <interface-bottom-text
+        :link-text="$t('interface.learnMore')"
+        :question="$t('interface.haveIssues')"
+        link="/"/>
+    </div>
+
+
+
+    <!--
     <div class="send-form">
       <div class="title-container">
         <div class="title">
@@ -62,6 +90,7 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
+    -->
 
   </div>
 </template>
@@ -70,16 +99,39 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import ConfirmationModal from '../../components/InterfaceConfirmationModal';
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'success-modal': SuccessModal,
+    'confirmation-modal': ConfirmationModal
   },
   data() {
-    return {};
+    return {
+      buttonSign: {
+        title: 'Sign',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      inputMessage: {
+        title: 'Message',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: true,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'What is message?',
+        placeHolder: 'Type in message',
+        rightInputText: '',
+        isTextarea: true
+      }
+    };
   },
   methods: {
     signMessage() {
@@ -116,7 +168,8 @@ export default {
     },
     deleteInputText(ref) {
       this.$refs[ref].value = '';
-    }
+    },
+    mounted() {}
   }
 };
 </script>
