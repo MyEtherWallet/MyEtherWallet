@@ -31,8 +31,7 @@ const EnsResolver = {
           vnode.elm.parentNode.insertBefore(errorPar, el.nextSibling);
         } else {
           ens
-            .resolver(el.value)
-            .addr()
+            .owner(el.value)
             .then(address => {
               removeElements();
               _this.resolvedAddress = address;

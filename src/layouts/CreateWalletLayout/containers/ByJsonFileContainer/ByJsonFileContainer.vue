@@ -38,7 +38,7 @@
                       :href="walletJson"
                       :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
                       :download="name"
-                      @click="popModal">
+                      @click="downloadDone()">
                       <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
                       <div v-if="!downloadable">
                         <i class="fa fa-spinner fa-lg fa-spin"/>
@@ -129,7 +129,7 @@ export default {
     };
   },
   methods: {
-    popModal() {
+    downloadDone() {
       this.$children[0].$refs.success.show();
     }
   }

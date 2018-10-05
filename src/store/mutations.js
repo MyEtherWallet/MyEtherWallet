@@ -10,11 +10,6 @@ const ADD_CUSTOM_PATH = function(state, paths) {
   store.set('customPaths', paths);
 };
 
-const CHANGE_PAGE_STATE = function(state, arr) {
-  state.pageStates[arr[0]][arr[1]] = arr[2];
-  store.set(arr[1], arr[2]);
-};
-
 const CHECK_IF_ONLINE = function(state) {
   state.online =
     window.location.protocol === 'http:' ||
@@ -38,6 +33,10 @@ const INIT_STATES = function(state, stateObj) {
 
 const SET_ACCOUNT_BALANCE = function(state, balance) {
   state.account.balance = balance;
+};
+
+const SET_ENS = function(state, ens) {
+  state.ens = ens;
 };
 
 const SET_GAS_PRICE = function(state, val) {
@@ -65,13 +64,13 @@ const UPDATE_NOTIFICATION = function(state, newNotif) {
 export default {
   ADD_NOTIFICATION,
   ADD_CUSTOM_PATH,
-  CHANGE_PAGE_STATE,
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
   DECRYPT_WALLET,
   INIT_STATES,
   SET_ACCOUNT_BALANCE,
   SET_GAS_PRICE,
+  SET_ENS,
   SET_WEB3_PROVIDER_WALLET,
   SET_WEB3_INSTANCE,
   SWITCH_NETWORK,
