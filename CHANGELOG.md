@@ -1,5 +1,6 @@
 ### Release v5.0.4
 ### Devop
+- Use new contract getter [#119](https://github.com/MyEtherWallet/MyEtherWallet/pull/119)
 - Fix access wallet link, pop success when user clicks download [#115](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/115)
 - Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
 
