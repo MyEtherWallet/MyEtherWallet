@@ -1,4 +1,6 @@
-import { overide, WalletWrapper } from '@/wallets';
+import { override, WalletWrapper } from '@/wallets';
+import url from 'url';
+import web3 from 'web3';
 
 const addNotification = function({ commit, state }, val) {
   const newNotif = {};
@@ -12,7 +14,7 @@ const addNotification = function({ commit, state }, val) {
     title: val[2],
     read: false,
     timestamp: new Date(),
-    body: val[1].message ? val[1].message : val[1],
+    body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
     expanded: false
   });
   commit('ADD_NOTIFICATION', newNotif);
@@ -42,7 +44,7 @@ const createAndSignTx = function({ commit }, val) {
 const decryptWallet = function({ commit, state }, wallet) {
   const wrappedWallet = new WalletWrapper(wallet);
   const _web3 = state.web3;
-  overide(_web3, wrappedWallet, this._vm.$eventHub);
+  override(_web3, wrappedWallet, this._vm.$eventHub);
   commit('DECRYPT_WALLET', wrappedWallet);
   commit('SET_WEB3_INSTANCE', _web3);
 };
@@ -55,22 +57,34 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setWeb3Wallet = function({ commit }, wallet) {
+  commit('SET_WEB3_PROVIDER_WALLET', wallet);
+};
+
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
-const setWeb3Instance = function({ commit, state }, web3) {
-  if (web3.eth === undefined) {
-    // eslint-disable-next-line
-    const web3Instance = new web3(new web3.providers.HttpProvider(state.network.url));
+const setWeb3Instance = function({ commit, state }, provider) {
+  if (provider && provider.currentProvider) {
     commit(
       'SET_WEB3_INSTANCE',
-      overide(web3Instance, state.wallet, this._vm.$eventHub)
+      override(
+        new web3(provider.currentProvider),
+        state.wallet,
+        this._vm.$eventHub
+      )
     );
   } else {
+    const hostUrl = url.parse(state.network.url);
+    const web3Instance = new web3(
+      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
+        hostUrl.pathname
+      }`
+    );
     commit(
       'SET_WEB3_INSTANCE',
-      overide(web3, state.wallet, this._vm.$eventHub)
+      override(web3Instance, state.wallet, this._vm.$eventHub)
     );
   }
 };
@@ -104,6 +118,7 @@ export default {
   decryptWallet,
   setAccountBalance,
   setGasPrice,
+  setWeb3Wallet,
   setState,
   setWeb3Instance,
   switchNetwork,

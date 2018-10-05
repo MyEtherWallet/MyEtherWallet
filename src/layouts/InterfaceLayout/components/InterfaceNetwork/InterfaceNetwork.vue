@@ -5,12 +5,7 @@
       <div class="info-block network">
         <div class="block-image">
           <img
-            v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
-            class="icon"
-            src="~@/assets/images/icons/network.svg">
-          <img
-            v-else
-            :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)"
+            :src="$store.state.network.type.icon"
             class="icon">
         </div>
         <div class="block-content">

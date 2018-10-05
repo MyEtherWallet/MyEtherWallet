@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-etho.json';
 import contracts from '@/contracts/contract-abi-etho.json';
+import etho from '@/assets/images/networks/etho.svg';
 
 export default {
   name: 'ETHO',
@@ -10,5 +11,6 @@ export default {
   chainID: 1313114,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  icon: etho
 };

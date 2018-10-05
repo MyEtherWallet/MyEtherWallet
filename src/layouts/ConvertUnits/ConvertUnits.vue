@@ -7,12 +7,12 @@
           <h2>Convert Units</h2>
           <p>
             MyEtherWallet is comprised of talented, inspiring, and hardworking
-            indivisuals from around the world. We share the passion to code.
+            individuals from around the world. We share the passion to code.
           </p>
         </div>
 
         <div>
-          <unit-input />
+          <unit-input :options="options" />
         </div>
 
         <div class="ether-unit-reference-guide">
@@ -23,8 +23,8 @@
           <div class="unit-table">
             <table>
               <tbody>
-                <tr 
-                  v-for="eu in etherUnitRef" 
+                <tr
+                  v-for="eu in etherUnitRef"
                   :key="eu.key">
                   <td>{{ eu.name }}</td>
                   <td>{{ eu.unit1 }}</td>
@@ -129,6 +129,19 @@ export default {
           unit2e: '30',
           desc: ''
         }
+      ],
+      options: [
+        'wei',
+        'kwei',
+        'mwei',
+        'gwei',
+        'szabo',
+        'finney',
+        'ether',
+        'kether',
+        'mether',
+        'gether',
+        'tether'
       ]
     };
   }

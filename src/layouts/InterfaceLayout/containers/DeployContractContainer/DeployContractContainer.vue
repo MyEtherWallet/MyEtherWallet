@@ -140,8 +140,6 @@
         :question="$t('interface.haveIssues')"
         link="/"/>
     </div>
-    <!--<confirm-modal :showSuccess="showSuccessModal" :signedTx="signedTx" :fee="transactionFee" :gasPrice="$store.state.gasPrice" :from="$store.state.wallet.getAddressString()" :gas="gasLimit" :data="data" :nonce="nonce" :contractName="contractName" :abi="abi"></confirm-modal>-->
-    <!--<success-modal message="Sending Transaction" linkMessage="Close"></success-modal>-->
   </div>
 </template>
 
@@ -171,7 +169,6 @@ export default {
       contractName: '',
       contractNamePlaceholder: '',
       raw: {},
-      signedTx: '',
       transactionFee: 0,
       gasAmount: this.$store.state.gasPrice,
       gasLimit: 21000,
@@ -224,7 +221,6 @@ export default {
         const contract = new web3.eth.Contract(JSON.parse(this.abi));
         const deployArgs = Object.keys(this.inputs).map(key => {
           return this.inputs[key];
-          // return web3.utils.toHex(this.inputs[key]);
         });
         this.data = contract
           .deploy({ data: this.bytecode, arguments: deployArgs })
@@ -235,7 +231,6 @@ export default {
 
         this.raw = {
           from: this.$store.state.wallet.getAddressString(),
-          // gas: this.gasLimit,
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
           data: this.data.replace(/\s/g, '')
@@ -271,8 +266,6 @@ export default {
             ]);
           })
           .on('error', err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
             this.$store.dispatch('addNotification', [
               fromAddress,
               err,

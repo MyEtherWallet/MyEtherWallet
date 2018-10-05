@@ -1,8 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
 .scroll-up-button {
-  position: fixed;
   bottom: 5vh;
+  cursor: pointer;
+  position: fixed;
   right: 4vw;
   z-index: 999;
 

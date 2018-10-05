@@ -2,7 +2,7 @@
   <div class="create-wallet-by-json-file">
     <success-modal
       message="You have created a wallet successfully"
-      link-to="/interface"
+      link-to="/access-my-wallet"
       link-message="Access My Wallet"/>
     <div class="wrap">
       <div class="nav-tab-user-input-box">
@@ -29,14 +29,14 @@
                 :desc="content.desc"
                 :key="content.title"/>
             </div>
-
             <div class="user-input-container">
               <div class="user-input">
                 <div class="user-button">
                   <a
                     :href="walletJson"
                     :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
-                    :download="name">
+                    :download="name"
+                    @click="popModal">
                     <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
                     <div v-if="!downloadable">
                       <i class="fa fa-spinner fa-lg fa-spin"/>
@@ -69,7 +69,6 @@ import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import Worker from 'worker-loader!@/workers/wallet.worker.js';
-// import Wallet from 'ethereumjs-wallet';
 
 export default {
   components: {
@@ -106,13 +105,6 @@ export default {
       name: ''
     };
   },
-  watch: {
-    downloadable() {
-      setTimeout(() => {
-        this.$children[0].$refs.success.show();
-      }, 15000);
-    }
-  },
   mounted() {
     const worker = new Worker();
     worker.postMessage({ type: 'createWallet', data: [this.password] });
@@ -133,6 +125,11 @@ export default {
       // eslint-disable-next-line no-console
       console.error('onerror received from worker'); // replace with debugger
     };
+  },
+  methods: {
+    popModal() {
+      this.$children[0].$refs.success.show();
+    }
   }
 };
 </script>

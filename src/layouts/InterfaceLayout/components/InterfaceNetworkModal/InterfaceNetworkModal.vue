@@ -31,12 +31,8 @@
           :key="key + index"
           class="content-block">
           <div class="network-title">
-            <img 
-              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
-              src="~@/assets/images/icons/network.svg">
-            <img 
-              v-else 
-              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+            <img
+              :src="$store.state.Networks[key][0].type.icon">
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
@@ -186,7 +182,6 @@
 
 <script>
 import store from 'store';
-import web3 from 'web3';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
@@ -300,7 +295,7 @@ export default {
     switchNetwork(network) {
       this.selectedNetwork = network;
       this.$store.dispatch('switchNetwork', network);
-      this.$store.dispatch('setWeb3Instance', web3);
+      this.$store.dispatch('setWeb3Instance');
     }
   }
 };
