@@ -319,10 +319,13 @@ export default {
     setBalanceToAmt() {
       if (this.selectedCurrency.name === 'Ethereum') {
         this.amount = this.parsedBalance - this.transactionFee;
+      } else {
+        this.amount = this.selectedCurrency.balance;
       }
     },
     createDataHex() {
-      if (this.selectedCurrency.name !== 'Ethereum') {
+      if (this.selectedCurrency.name !== 'Ethereum' && this.address !== '') {
+        const amount = this.$store.state.web3.utils.toWei(this.amount.toString(), 'eth');
         const jsonInterface = [
           {
             constant: false,
@@ -331,14 +334,19 @@ export default {
               { name: '_amount', type: 'uint256' }
             ],
             name: 'transfer',
-            outputs: [{ name: 'success', type: 'bool' }],
+            outputs: [{ name: '', type: 'bool' }],
             payable: false,
+            stateMutability: 'nonpayable',
             type: 'function'
           }
         ];
-        const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+        const contract = new this.$store.state.web3.eth.Contract(
+          jsonInterface,
+          this.selectedCurrency.addr
+        );
+
         this.data = contract.methods
-          .transfer(this.address, this.amount)
+          .transfer(this.address, amount)
           .encodeABI();
       } else {
         this.data = '0x';
@@ -346,7 +354,6 @@ export default {
     },
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
-      this.createDataHex();
     },
     estimateGas() {
       const newRaw = this.raw;
