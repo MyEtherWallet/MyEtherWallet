@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <img :src="require(`@/assets/images/currency/${currency}.svg`)" >
       <p>
         <span class="currency-amt">{{ converter(value) }} </span>
         <span class="currency-type">{{ currency.toUpperCase() }} </span>

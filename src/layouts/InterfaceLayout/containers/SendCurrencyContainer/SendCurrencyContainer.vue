@@ -325,7 +325,10 @@ export default {
     },
     createDataHex() {
       if (this.selectedCurrency.name !== 'Ethereum' && this.address !== '') {
-        const amount = this.$store.state.web3.utils.toWei(this.amount.toString(), 'eth');
+        const amount = this.$store.state.web3.utils.toWei(
+          this.amount.toString(),
+          'eth'
+        );
         const jsonInterface = [
           {
             constant: false,
@@ -345,9 +348,7 @@ export default {
           this.selectedCurrency.addr
         );
 
-        this.data = contract.methods
-          .transfer(this.address, amount)
-          .encodeABI();
+        this.data = contract.methods.transfer(this.address, amount).encodeABI();
       } else {
         this.data = '0x';
       }
