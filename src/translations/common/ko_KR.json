@@ -48,5 +48,7 @@
   "signMessage": "Sign Message",
   "verifyMessage": "Verify Message",
   "signature": "Signature",
-  "toAddress": "To Address"
+  "toAddress": "To Address",
+  "confirmAndSave": "Confirm & Save",
+  "cancel": "Cancel"
 }
