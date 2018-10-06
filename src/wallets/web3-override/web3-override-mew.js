@@ -3,6 +3,7 @@ export default function web3OverrideMew(
   web3,
   wallet,
   eventHub,
+  // eslint-disable-next-line
   { state, dispatch }
 ) {
   if (!wallet) return web3;
@@ -60,18 +61,22 @@ export default function web3OverrideMew(
       });
     },
     async sendTransaction(tx) {
-      const localTx = Object.assign({}, tx);
-      delete localTx['gas'];
-      delete localTx['nonce'];
-
-      tx.nonce = !tx.nonce
-        ? await web3.eth.getTransactionCount(wallet.getAddressString())
-        : tx.nonce;
-      tx.gas = !tx.gas ? await web3.eth.estimateGas(localTx) : tx.gas;
+      const localTx = {
+        to: tx.to,
+        data: tx.data,
+        from: tx.from
+      };
+      tx['nonce'] = await (tx['nonce'] === undefined
+        ? web3.eth.getTransactionCount(wallet.getAddressString())
+        : tx.nonce);
+      tx['gas'] = await (tx['gas'] === undefined
+        ? web3.eth.estimateGas(localTx)
+        : tx.gas);
       tx.chainId = !tx.chainId ? state.network.type.chainID : tx.chainId;
-      tx.gasPrice = !tx.gasPrice
-        ? unit.toWei(state.gasPrice, 'gwei').toString()
-        : tx.gasPrice;
+      tx['gasPrice'] =
+        tx['gasPrice'] === undefined
+          ? unit.toWei(state.gasPrice, 'gwei').toString()
+          : tx.gasPrice;
       if (state.wallet.identifier === 'Web3') tx.web3WalletOnly = true;
       web3.eth
         .sendTransaction_(tx)

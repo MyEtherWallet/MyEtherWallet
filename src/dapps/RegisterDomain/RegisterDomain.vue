@@ -120,7 +120,6 @@ export default {
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
-      this.highestBidder = unit.fromWei(res[4], 'ether').toString();
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
@@ -145,6 +144,7 @@ export default {
           break;
         case '4':
           this.loading = false;
+          this.highestBidder = unit.fromWei(res[4], 'ether').toString();
           this.$router.push({ path: 'register-domain/reveal' });
           break;
       }
@@ -204,7 +204,6 @@ export default {
       } else if (type === 'reveal') {
         contractReference = this.auctionRegistrarContract.methods.unsealBid(
           domainName,
-          address,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
         );
