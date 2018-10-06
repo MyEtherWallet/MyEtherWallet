@@ -1,6 +1,6 @@
 ### Hotfix
 
-- Some fixes for the ENS Registrar []()
+- Some fixes for the ENS Registrar [](<>)
 
 ### Release v5.0.4
 
