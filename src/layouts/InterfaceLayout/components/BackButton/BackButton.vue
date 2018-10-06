@@ -1,7 +1,7 @@
 <template>
   <div
     class="back-container"
-    @click.prevent="resetView('')">
+    @click.prevent="back">
     <div class="content-title">
       <div class="back-icon-container">
         <i
@@ -15,14 +15,10 @@
 
 <script type="text/javascript">
 export default {
-  props: {
-    resetView: {
-      type: Function,
-      default: function() {}
+  methods: {
+    back() {
+      this.$router.go(-1);
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

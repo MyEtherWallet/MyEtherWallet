@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+
+.json-string-modal {
+  .modal-content {
+    width: 500px;
+  }
+
+  .modal-body {
+    padding: 18px 25px !important;
+    text-align: center;
+  }
+
+  textarea {
+    background-color: $light-grey-1;
+    border: 0;
+    height: 150px;
+    padding: 10px 18px;
+    width: 450px;
+  }
+
+  .submit-button {
+    margin: 50px 0 20px;
+  }
+}

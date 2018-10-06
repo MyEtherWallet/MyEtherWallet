@@ -31,7 +31,6 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-// const unit = require('ethjs-unit');
 
 export default {
   components: {

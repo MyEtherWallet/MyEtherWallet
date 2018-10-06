@@ -280,7 +280,7 @@ export default {
           tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type
             .tokens
         },
-        url: this.port === '' ? this.url : `${this.url}:${this.port}`,
+        url: this.url,
         username: this.username
       };
 

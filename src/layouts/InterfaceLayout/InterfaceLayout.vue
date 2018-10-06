@@ -4,9 +4,7 @@
     class="send-eth-and-tokens">
     <div class="wrap">
       <div class="side-nav">
-        <interface-side-menu
-          :current-tab="currentTab"
-          :switch-tabs="switchTabs"/>
+        <interface-side-menu/>
       </div>
       <div class="contents">
         <div class="tx-contents">
@@ -19,17 +17,9 @@
           <div>
             <interface-network :block-number="blockNumber" />
           </div>
-          <send-currency-container
-            v-show="currentTab === 'send' || currentTab === ''"
+          <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"/>
-          <send-offline-container v-show="currentTab === 'offline'"/>
-          <swap-container v-show="currentTab === 'swap'"/>
-          <dapps-container v-show="currentTab === 'dapps'"/>
-          <interact-with-contract-container v-show="currentTab === 'interactC'"/>
-          <sign-message-container v-show="currentTab === 'signMessage'"/>
-          <verify-message-container v-show="currentTab === 'verifyMessage'"/>
-          <deploy-contract-container v-show="currentTab === 'deployC'"/>
           <div
             v-if="$store.state.online"
             class="tokens">
@@ -50,15 +40,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import { parseTokensHex } from '@/helpers';
+import ENS from 'ethereum-ens';
 
-import DappsContainer from './containers/DappsContainer';
-import DeployContractContainer from './containers/DeployContractContainer';
-import InteractWithContractContainer from './containers/InteractWithContractContainer';
-import SendCurrencyContainer from './containers/SendCurrencyContainer';
-import SendOfflineContainer from './containers/SendOfflineContainer';
-import SwapContainer from './containers/SwapContainer';
-import SignMessageContainer from './containers/SignMessageContainer';
-import VerifyMessageContainer from './containers/VerifyMessageContainer';
 import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
 
 import InterfaceAddress from './components/InterfaceAddress';
@@ -68,19 +51,11 @@ import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
-
+import { BigNumber } from 'bignumber.js';
 import store from 'store';
 
 export default {
   components: {
-    'send-currency-container': SendCurrencyContainer,
-    'send-offline-container': SendOfflineContainer,
-    'swap-container': SwapContainer,
-    'dapps-container': DappsContainer,
-    'interact-with-contract-container': InteractWithContractContainer,
-    'deploy-contract-container': DeployContractContainer,
-    'sign-message-container': SignMessageContainer,
-    'verify-message-container': VerifyMessageContainer,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
@@ -90,7 +65,6 @@ export default {
   },
   data() {
     return {
-      currentTab: this.$store.state.pageStates.interface.sideMenu,
       balance: '0',
       blockNumber: 0,
       tokens: [],
@@ -121,26 +95,12 @@ export default {
     }
   },
   mounted() {
-    if (store.get('sideMenu') !== undefined) {
-      this.currentTab = store.get('sideMenu');
-      this.$store.dispatch('updatePageState', [
-        'interface',
-        'sideMenu',
-        store.get('sideMenu')
-      ]);
-    }
-
     this.setupOnlineEnvironment();
   },
   destroyed() {
     this.clearIntervals();
   },
   methods: {
-    switchTabs(param) {
-      this.currentTab = param;
-      this.$store.dispatch('updatePageState', ['interface', 'sideMenu', param]);
-      store.set('sideMenu', param);
-    },
     async fetchTokens() {
       this.receivedTokens = true;
       const abi = [
@@ -257,16 +217,18 @@ export default {
             return 0;
           })
           .map(token => {
+            const balance = new BigNumber(token.balance);
             const convertedToken = {
               addr: token.addr,
-              balance: token.balance,
+              balance: balance
+                .div(new BigNumber(10).pow(token.decimals))
+                .toString(),
               decimals: token.decimals,
               email: utils.hexToAscii(token.email),
               name: utils.hexToAscii(token.name),
               symbol: utils.hexToAscii(token.symbol),
               website: utils.hexToAscii(token.website)
             };
-
             return convertedToken;
           });
         this.tokens = parsedTokens;
@@ -286,9 +248,10 @@ export default {
         store.get('customTokens')[this.network.type.name] !== undefined &&
         store.get('customTokens')[this.network.type.name].length > 0
       ) {
-        // eslint-disable-next-line
-        customTokens = store.get('customTokens')[this.network.type.name]
-        .filter(token => token.balance > 0);
+        customTokens = store.get('customTokens')[
+          // eslint-disable-next-line
+          this.network.type.name
+        ].filter(token => token.balance > 0);
       }
       const allTokens = this.tokens
         .filter(token => token.balance > 0)
@@ -380,7 +343,18 @@ export default {
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 10000);
           this.setTokens();
+          this.setENS();
         }
+      }
+    },
+    setENS() {
+      if (this.wallet.identifier === 'Web3') {
+        this.$store.dispatch('setENS', new ENS(window.web3.currentProvider));
+      } else {
+        this.$store.dispatch(
+          'setENS',
+          new ENS(this.$store.state.web3.currentProvider)
+        );
       }
     }
   }

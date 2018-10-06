@@ -26,6 +26,7 @@ $light-grey-10: #b1b1b1;
 $light-grey-11: #c5c5c5;
 $light-grey-12: #ccc;
 $light-grey-13: #eee;
+$light-grey-14: #cecece;
 
 $light-blue-1: #5a78f0;
 $light-blue-2: #96a8b6;
@@ -39,12 +40,14 @@ $light-purple-1: #7070e3;
 $light-violet-1: #5c74eb;
 
 $light-orange: #f37240;
+$light-orange-1: #f5a623;
 
 $light-green-1: #f2fafa;
 $light-green-2: #6f0;
 $light-green-3: #37ce76;
 $light-green-4: #f1fafa;
 $light-green-5: #00bfa4;
+$light-green-6: #c9f2ed;
 
 $mew-green: #05c0a5;
 
@@ -57,11 +60,12 @@ $red-1: #f00;
 $red-2: #ff2f49;
 $red-3: #b92b3f;
 $red-4: #ff3c3c;
+$red-5: #ff122f;
+$red-6: #a70015;
 
 $light-red-1: #fbe0e3;
 
 $grey-1: #adadad;
-$grey-2: #999;
 $grey-3: #3766aa;
 
 $dark-grey-1: #434f61;
@@ -74,10 +78,10 @@ $dark-grey-7: #989898;
 $dark-grey-8: #888;
 $dark-grey-9: #555;
 $dark-grey-10: #8a8a8a;
+$dark-grey-11: #999;
 
 $dark-blue-1: #506175;
 $dark-blue-2: #0b2840;
-$dark-blue-3: #0b2840;
 $dark-blue-4: #677890;
 $dark-blue-5: #434f60;
 $dark-blue-6: #003945;
@@ -86,6 +90,7 @@ $dark-blue-8: #485f7e;
 $dark-blue-9: #354858;
 $dark-blue-10: #1d89ff;
 $dark-blue-11: #003b46;
+$dark-blue-12: #334758;
 
 $dark-green-1: #008000;
 $dark-green-2: #00927d;
@@ -151,7 +156,7 @@ $nav-tab--progress-bar-background-color: $background-color-2;
 $about-mew-spaceman-background-color: $dark-blue-2;
 $create-wallet-background-color: $light-blue-1;
 $unlock-wallet-background-color: $background-color-2;
-$footer-background-color: $dark-blue-3;
+$footer-background-color: $dark-blue-2;
 $price-bar-background-color: $light-blue-3;
 $bootstrap-modal-header-background-color: $dark-grey-1;
 
@@ -201,7 +206,7 @@ $text-white: $white;
 $text-black: $black;
 $text-color-1: $white; // White text color
 $text-color-2: $mew-green; // Green text color
-$text-color-3: $grey-2;
+$text-color-3: $dark-grey-11;
 $text-color-4: $dark-grey-2;
 $text-color-5: $red-2; // create-wallet footer text color
 $text-color-6: $dark-blue-6;

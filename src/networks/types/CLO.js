@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-clo.json';
 import contracts from '@/contracts/contract-abi-clo.json';
 import clo from '@/assets/images/networks/clo.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'CLO',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: clo
 };
