@@ -15,6 +15,7 @@
 ### Release v5.0.3
 
 ### Feature
+
 - Landing page mobile design [#97](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/97)
 - Adds some more inputs for custom network [#86](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/86)
 - Add light border to flags [#85](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/85)
