@@ -74,8 +74,6 @@ export default {
           // eslint-disable-next-line no-console
           console.error(_error); // todo replace with proper error
         });
-
-      // this.$router.push({ path: 'interface' })
     },
     switchViewPassword() {
       this.show = !this.show;

@@ -5,6 +5,7 @@ export default class Web3Wallet {
   constructor(address) {
     this.address = address;
     this.identifier = 'Web3';
+    this.brand = this.identifier;
     this.getAddress = this.getAddress.bind(this);
     this.getAddressString = this.getAddressString.bind(this);
     this.signMessage = this._signMessage.bind(this);

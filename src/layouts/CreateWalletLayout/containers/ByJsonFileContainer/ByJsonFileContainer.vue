@@ -20,7 +20,6 @@
                 <popover :popcontent="$t('popover.whatIsMessageContent')"/>
               </div>
             </div>
-
             <div class="contents">
               <by-json-block
                 v-for="content in contents"
@@ -29,26 +28,26 @@
                 :desc="content.desc"
                 :key="content.title"/>
             </div>
-            <div class="user-input-container">
-              <div class="user-input">
-                <div class="user-button">
-                  <a
-                    :href="walletJson"
-                    :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
-                    :download="name"
-                    @click="popModal">
-                    <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
-                    <div v-if="!downloadable">
-                      <i class="fa fa-spinner fa-lg fa-spin"/>
-                    </div>
-                  </a>
-                </div>
-                <div class="printer-icon">
-                  <router-link to="/">
-                    <img
-                      class="icon"
-                      src="~@/assets/images/icons/printer.svg">
-                  </router-link>
+              <div class="user-input-container">
+                <div class="user-input">
+                  <div class="user-button">
+                    <a
+                      :href="walletJson"
+                      :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
+                      :download="name"
+                      @click="downloadDone()">
+                      <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
+                      <div v-if="!downloadable">
+                        <i class="fa fa-spinner fa-lg fa-spin"/>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="printer-icon">
+                    <router-link to="/">
+                      <img
+                        class="icon"
+                        src="~@/assets/images/icons/printer.svg">
+                    </router-link>
                 </div>
               </div>
             </div>
@@ -127,7 +126,7 @@ export default {
     };
   },
   methods: {
-    popModal() {
+    downloadDone() {
       this.$children[0].$refs.success.show();
     }
   }
