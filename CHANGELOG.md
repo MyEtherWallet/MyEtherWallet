@@ -1,6 +1,6 @@
 ### Hotfix
 
-- Some fixes for the ENS Registrar [](<>)
+- Some fixes for the ENS Registrar [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
 
 ### Release v5.0.4
 
