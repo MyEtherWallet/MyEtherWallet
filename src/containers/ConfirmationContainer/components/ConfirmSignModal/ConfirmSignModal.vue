@@ -9,8 +9,6 @@
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
-            <!-- <img src="~@/assets/images/icons/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
               <p class="address-title">Signing Address</p>
               <p>{{ from }}</p>
@@ -20,8 +18,6 @@
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
           <div class="tx-data tx-to">
-            <!-- <img src="~@/assets/images/icons/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
               <p class="address-title">Message</p>
               <p>{{ messageToSign }}</p>

@@ -1,24 +1,22 @@
 import { BigNumber } from 'bignumber.js';
-const unit = require('ethjs-unit');
+// import web3 from 'web3';
 
 function sizeHex(bytes) {
   return bytes * 2;
 }
 
+function trim(str) {
+  return str.replace(/\0[\s\S]*$/g, '');
+}
+
 function getAscii(hex) {
   hex = hex.substring(0, 2) === '0x' ? hex : '0x' + hex;
-
-  const newHex = hex.toString();
-  let asc = '';
-  for (let i = 0; i < newHex.length && newHex.substr(i, 2) !== '00'; i += 2) {
-    asc += String.fromCharCode(parseInt(newHex.substr(i, 2), 16));
-  }
-  return asc;
+  return trim(hex);
 }
 
 function parseTokensHex(hex) {
   const tokens = [];
-  hex = hex.substring(0, 2) === '0x' ? hex.substring(2) : hex;
+  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
   hex = hex.substring(0, hex.lastIndexOf('1') - 1);
   let offset = hex.length;
   offset -= sizeHex(32);
@@ -37,15 +35,14 @@ function parseTokensHex(hex) {
     token.symbol = getAscii(hex.substr(offset, sizeHex(16)));
     offset -= sizeHex(20);
     token.addr = '0x' + hex.substr(offset, sizeHex(20));
-    offset -= sizeHex(8);
+    offset -= sizeHex(1);
     token.decimals = new BigNumber(
-      '0x' + hex.substr(offset, sizeHex(8))
+      '0x' + hex.substr(offset, sizeHex(1))
     ).toNumber();
     offset -= sizeHex(32);
-    token.balance = unit.fromWei(
-      new BigNumber('0x' + hex.substr(offset, sizeHex(32))).toFixed(),
-      'ether'
-    );
+    token.balance = new BigNumber(
+      '0x' + hex.substr(offset, sizeHex(32))
+    ).toFixed();
     if (isName) {
       offset -= sizeHex(16);
       token.name = getAscii(hex.substr(offset, sizeHex(16)));

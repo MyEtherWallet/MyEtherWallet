@@ -31,12 +31,8 @@
           :key="key + index"
           class="content-block">
           <div class="network-title">
-            <img 
-              v-if="key === 'ROP' || key === 'RIN' || key === 'KOV'" 
-              src="~@/assets/images/icons/network.svg">
-            <img 
-              v-else 
-              :src="require(`@/assets/images/networks/${key.toLowerCase()}.svg`)">
+            <img
+              :src="$store.state.Networks[key][0].type.icon">
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
@@ -105,12 +101,28 @@
               placeholder="Port"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'Custom'"
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerTX"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/tx/"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
               name=""
               placeholder="Chain ID"
+              autocomplete="off">
+            <input
+              v-show="selectedNetwork.name === 'CUS'"
+              v-model="blockExplorerAddr"
+              class="custom-input-text-1"
+              type="number"
+              name=""
+              placeholder="https://etherscan.io/address/"
               autocomplete="off">
           </div>
         </div>
@@ -170,7 +182,6 @@
 
 <script>
 import store from 'store';
-import web3 from 'web3';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
@@ -189,7 +200,9 @@ export default {
       url: '',
       username: '',
       password: '',
-      customNetworks: []
+      customNetworks: [],
+      blockExplorerAddr: '',
+      blockExplorerTX: ''
     };
   },
   watch: {
@@ -201,6 +214,18 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
+
+    this.types['custom'] = {
+      name: 'CUS',
+      name_long: 'CUSTOM',
+      homePage: '',
+      blockExplorerTX: '',
+      blockExplorerAddr: '',
+      chainID: '',
+      tokens: [],
+      contracts: [],
+      ensResolver: ''
+    };
   },
   methods: {
     networkModalOpen() {
@@ -230,6 +255,8 @@ export default {
       this.url = '';
       this.username = '';
       this.password = '';
+      this.blockExplorerAddr = '';
+      this.blockExplorerTX = '';
     },
     saveCustomNetwork() {
       const customNetwork = {
@@ -238,8 +265,12 @@ export default {
         port: this.port,
         service: this.name,
         type: {
-          blockExplorerAddr: this.selectedNetwork.blockExplorerAddr || '',
-          blockExplorerTX: this.selectedNetwork.blockExplorerTX || '',
+          blockExplorerAddr:
+            this.selectedNetwork.blockExplorerAddr ||
+            this.blockExplorerAddr ||
+            '',
+          blockExplorerTX:
+            this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
           chainID: this.chainID,
           contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
             .type.contracts,
@@ -249,7 +280,7 @@ export default {
           tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type
             .tokens
         },
-        url: this.port === '' ? this.url : `${this.url}:${this.port}`,
+        url: this.url,
         username: this.username
       };
 
@@ -264,7 +295,7 @@ export default {
     switchNetwork(network) {
       this.selectedNetwork = network;
       this.$store.dispatch('switchNetwork', network);
-      this.$store.dispatch('setWeb3Instance', web3);
+      this.$store.dispatch('setWeb3Instance');
     }
   }
 };

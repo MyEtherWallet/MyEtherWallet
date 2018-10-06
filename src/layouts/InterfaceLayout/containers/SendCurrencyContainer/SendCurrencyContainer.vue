@@ -162,16 +162,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-
-// eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
+import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
 
 export default {
   components: {
@@ -186,6 +182,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    getBalance: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -239,16 +239,13 @@ export default {
       }
     },
     selectedCurrency(newVal) {
-      this.estimateGas();
       this.selectedCurrency = newVal;
+      this.estimateGas();
     }
   },
   mounted() {
     if (this.account.balance) {
-      this.parsedBalance = unit.fromWei(
-        parseInt(this.account.balance),
-        'ether'
-      );
+      this.parsedBalance = this.account.balance;
     }
   },
   methods: {
@@ -257,29 +254,10 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      const jsonInterface = [
-        {
-          constant: false,
-          inputs: [
-            { name: '_to', type: 'address' },
-            { name: '_amount', type: 'uint256' }
-          ],
-          name: 'transfer',
-          outputs: [{ name: 'success', type: 'bool' }],
-          payable: false,
-          type: 'function'
-        }
-      ];
-      const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
       const isEth = this.selectedCurrency.name === 'Ethereum';
       this.nonce = await this.$store.state.web3.eth.getTransactionCount(
         this.$store.state.wallet.getAddressString()
       );
-      this.data = isEth
-        ? this.data
-        : contract.methods
-            .transfer(this.address, unit.toWei(this.amount, 'ether'))
-            .encodeABI();
 
       this.raw = {
         from: this.$store.state.wallet.getAddressString(),
@@ -300,30 +278,11 @@ export default {
         delete this.raw['to'];
       }
 
-      const fromAddress = this.raw.from;
-      this.$store.state.web3.eth
-        .sendTransaction(this.raw)
-        .once('transactionHash', hash => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            hash,
-            'Transaction Hash'
-          ]);
-        })
-        .on('receipt', res => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            res,
-            'Transaction Receipt'
-          ]);
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            fromAddress,
-            err,
-            'Transaction Error'
-          ]);
-        });
+      if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
+        this.raw['web3WalletOnly'] = true;
+      }
+
+      this.$store.state.web3.eth.sendTransaction(this.raw);
     },
     confirmationModalOpen() {
       this.createTx();
@@ -337,10 +296,18 @@ export default {
     setBalanceToAmt() {
       if (this.selectedCurrency.name === 'Ethereum') {
         this.amount = this.parsedBalance - this.transactionFee;
+      } else {
+        this.amount = this.selectedCurrency.balance;
       }
     },
     createDataHex() {
-      if (this.selectedCurrency.name !== 'Ethereum') {
+      let amount;
+      if (this.selectedCurrency.name !== 'Ethereum' && this.address !== '') {
+        if (this.amount !== 0) {
+          amount = this.amount;
+        } else {
+          amount = 0;
+        }
         const jsonInterface = [
           {
             constant: false,
@@ -349,14 +316,23 @@ export default {
               { name: '_amount', type: 'uint256' }
             ],
             name: 'transfer',
-            outputs: [{ name: 'success', type: 'bool' }],
+            outputs: [{ name: '', type: 'bool' }],
             payable: false,
+            stateMutability: 'nonpayable',
             type: 'function'
           }
         ];
-        const contract = new this.$store.state.web3.eth.Contract(jsonInterface);
+        const contract = new this.$store.state.web3.eth.Contract(
+          jsonInterface,
+          this.selectedCurrency.addr
+        );
         this.data = contract.methods
-          .transfer(this.address, this.amount)
+          .transfer(
+            this.address,
+            new BigNumber(amount)
+              .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+              .toFixed()
+          )
           .encodeABI();
       } else {
         this.data = '0x';
@@ -364,7 +340,6 @@ export default {
     },
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
-      this.createDataHex();
     },
     estimateGas() {
       const newRaw = this.raw;

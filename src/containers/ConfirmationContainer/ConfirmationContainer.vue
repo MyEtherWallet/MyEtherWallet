@@ -12,7 +12,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -25,7 +25,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-sign-modal
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
@@ -37,12 +37,14 @@
     />
     <success-modal
       ref="successModal"
-      message=""
-      link-message="Close"/>
+      :message="successMessage"
+      :link-message="linkMessage"/>
   </div>
 </template>
 
 <script>
+import * as unit from 'ethjs-unit';
+import BN from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
@@ -82,14 +84,17 @@ export default {
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
+      ens: {},
       signer: {},
       signedTxObject: {},
       signedTx: '',
       messageToSign: '',
       signedMessage: '',
-      successMessage: '',
+      successMessage: 'Success',
       linkMessage: 'OK',
-      dismissed: true
+      dismissed: true,
+      web3WalletHash: '',
+      web3WalletRes: ''
     };
   },
   computed: {
@@ -97,6 +102,31 @@ export default {
       if (this.$store.state.wallet) {
         return this.$store.state.wallet.getAddressString();
       }
+    }
+  },
+  watch: {
+    web3WalletHash(newVal) {
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        newVal,
+        'Transaction Hash'
+      ]);
+      const pollReceipt = setInterval(() => {
+        this.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
+          if (res !== null) {
+            this.web3WalletRes = res;
+            this.showSuccessModal('Transaction sent!', 'Okay');
+            clearInterval(pollReceipt);
+          }
+        });
+      }, 500);
+    },
+    web3WalletRes(newVal) {
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        newVal,
+        'Transaction Receipt'
+      ]);
     }
   },
   created() {
@@ -112,7 +142,6 @@ export default {
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
-        // this.signer = signer(tx)
         signer(tx).then(_response => {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
@@ -125,10 +154,12 @@ export default {
       'showTxConfirmModal',
       (tx, isHardware, signer, resolve) => {
         this.parseRawTx(tx);
+        if (tx.hasOwnProperty('ensObj')) {
+          delete tx['ensObj'];
+        }
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
-        // this.signer = signer(tx)
         signer(tx).then(_response => {
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
@@ -136,6 +167,23 @@ export default {
         this.confirmationModalOpen();
       }
     );
+
+    this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
+      this.parseRawTx(tx);
+      if (tx.hasOwnProperty('ensObj')) {
+        delete tx['ensObj'];
+      }
+      this.isHardwareWallet = isHardware;
+      this.responseFunction = resolve;
+      this.successMessage = 'Sending Transaction';
+      signer(tx).then(_response => {
+        this.web3WalletHash = _response;
+      });
+      this.showSuccessModal(
+        'Continue transaction with Web3 Wallet Provider.',
+        'Close'
+      );
+    });
 
     this.$eventHub.$on(
       'showMessageConfirmModal',
@@ -145,7 +193,6 @@ export default {
         signer(data).then(_response => {
           this.signedMessage = _response;
         });
-        // this.signer = signer(data)
         this.signConfirmationModalOpen();
       }
     );
@@ -188,6 +235,13 @@ export default {
       this.gasLimit = +tx.gas;
       this.toAddress = tx.to;
       this.amount = +tx.value;
+      this.transactionFee = Number(
+        unit.fromWei(new BN(tx.gasPrice).times(tx.gas).toString(), 'ether')
+      );
+      this.ens = {};
+      if (tx.hasOwnProperty('ensObj')) {
+        this.ens = Object.assign({}, tx.ensObj);
+      }
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn() {
