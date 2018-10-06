@@ -1250,6 +1250,7 @@ h6 {
 }
 
 .disabled {
-  background-color: $light-grey-12;
-  pointer-events: none;
+  background-color: $light-grey-12 !important;
+  color: $light-grey-1 !important;
+  pointer-events: none !important;
 }

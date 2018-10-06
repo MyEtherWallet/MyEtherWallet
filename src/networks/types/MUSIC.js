@@ -1,5 +1,7 @@
 import tokens from '@/tokens/tokens-music.json';
 import contracts from '@/contracts/contract-abi-music.json';
+import music from '@/assets/images/networks/music.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'MUSIC',
@@ -10,5 +12,7 @@ export default {
   chainID: 7762959,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  ensAbi: '',
+  icon: music
 };

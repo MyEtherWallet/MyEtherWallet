@@ -8,29 +8,27 @@
       title="Confirmation">
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
-          <div class="tx-data tx-from">
-            <!-- <img src="~@/assets/images/icons/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3> -->
-            <div class="address-info">
-              <p class="address-title">From Address</p>
-              <p>{{ from }}</p>
-            </div>
-          </div>
+          <address-block
+            :address="from"
+            :value="value"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
+            direction="from"
+          />
           <div
             v-show="to !== '' && to !== undefined"
             class="direction">
             <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
-          <div
+          <address-block
             v-show="to !== '' && to !== undefined"
-            class="tx-data tx-to">
-            <!-- <img src="~@/assets/images/icons/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3> -->
-            <div class="address-info">
-              <p class="address-title">To Address</p>
-              <p>{{ to }}</p>
-            </div>
-          </div>
+            :address="to"
+            :token-transfer-to="tokenTransferTo"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
+            :value="value"
+            direction="to"
+          />
         </div>
         <div class="detail-info">
           <div class="info">
@@ -50,6 +48,9 @@
             <div class="grid-block">
               <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
             </div>
+            <!-- <div class="grid-block">
+              <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
+            </div> -->
             <div class="grid-block">
               <p>Gas Limit</p><p>{{ gas }} wei</p>
             </div>
@@ -108,10 +109,14 @@
 </template>
 
 <script>
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
+import AddressBlock from '../AddressBlock';
+import * as unit from 'ethjs-unit';
+import BigNumber from 'bignumber.js';
 
 export default {
+  components: {
+    'address-block': AddressBlock
+  },
   props: {
     confirmSendTx: {
       type: Function,
@@ -127,7 +132,7 @@ export default {
     },
     data: {
       type: String,
-      default: ''
+      default: '0x'
     },
     from: {
       type: String,
@@ -161,7 +166,11 @@ export default {
   data() {
     return {
       modalDetailInformation: false,
-      transactionSigned: false
+      transactionSigned: false,
+      unit,
+      tokenTransferTo: '',
+      tokenTransferVal: '',
+      tokenSymbol: ''
     };
   },
   computed: {
@@ -174,10 +183,59 @@ export default {
       return '';
     }
   },
+  watch: {
+    data(newVal) {
+      this.parseData(newVal);
+    }
+  },
+  mounted() {
+    if (this.data !== '0x') {
+      this.parseData(this.data);
+    }
+  },
   methods: {
     sendTx() {
       if (this.signedTx !== '') {
         this.confirmSendTx();
+      }
+    },
+    async parseData(data) {
+      const web3 = this.$store.state.web3;
+      const networkToken = this.$store.state.network.type.tokens;
+      const tokenIndex = networkToken.findIndex(el => {
+        return el.address.toLowerCase() === this.to.toLowerCase();
+      });
+
+      const jsonInterface = {
+        constant: false,
+        inputs: [
+          { name: '_to', type: 'address' },
+          { name: '_amount', type: 'uint256' }
+        ],
+        name: 'transfer',
+        outputs: [{ name: '', type: 'bool' }],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      };
+      const transferFuncSig = web3.eth.abi.encodeFunctionSignature(
+        jsonInterface
+      );
+      if (data.substr(0, 10) === transferFuncSig) {
+        const params = web3.eth.abi.decodeParameters(
+          ['address', 'uint256'],
+          `${data.substr(10)}`
+        );
+        const value = new BigNumber(params[1]);
+        this.tokenTransferTo = params[0];
+        this.tokenTransferVal =
+          tokenIndex !== -1
+            ? value
+                .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
+                .toFixed()
+            : value;
+        this.tokenSymbol =
+          tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';
       }
     }
   }

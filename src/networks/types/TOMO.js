@@ -1,5 +1,7 @@
 import tokens from '@/tokens/tokens-tomo.json';
 import contracts from '@/contracts/contract-abi-tomo.json';
+import tomo from '@/assets/images/networks/tomo.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'TOMO',
@@ -10,5 +12,7 @@ export default {
   chainID: 40686,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  ensAbi: '',
+  icon: tomo
 };

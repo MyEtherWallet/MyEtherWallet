@@ -1,18 +1,19 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  align-items: center;
   display: grid;
   grid-template-columns: 4fr 1fr 4fr;
-  align-items: center;
 }
 
 select,
 input {
-  width: 100%;
-  border: 0;
   background-color: white;
-  padding: 13px 13px;
+  border: 0;
   border-radius: 4px;
+  height: 46px;
+  padding: 13px 13px;
+  width: 100%;
 }
 
 select {
@@ -23,17 +24,6 @@ select {
 
 .select-block {
   position: relative;
-
-  .select-down-arrow {
-    position: absolute;
-    top: 8px;
-    right: 0;
-    font-size: 22px;
-    background-color: white;
-    width: 34px;
-    pointer-events: none;
-    font-weight: 400;
-  }
 }
 
 .block-center {

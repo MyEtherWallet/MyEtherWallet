@@ -1,5 +1,7 @@
 import tokens from '@/tokens/tokens-go.json';
 import contracts from '@/contracts/contract-abi-go.json';
+import go from '@/assets/images/networks/go.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'GO',
@@ -10,5 +12,7 @@ export default {
   chainID: 60,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  ensAbi: '',
+  icon: go
 };

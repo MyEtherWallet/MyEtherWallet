@@ -1,5 +1,7 @@
 import tokens from '@/tokens/tokens-ubq.json';
 import contracts from '@/contracts/contract-abi-ubq.json';
+import ubq from '@/assets/images/networks/ubq.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'UBQ',
@@ -10,5 +12,7 @@ export default {
   chainID: 8,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: ''
+  ensResolver: '',
+  ensAbi: '',
+  icon: ubq
 };
