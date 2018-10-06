@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
-    <json-string-modal 
-      ref="jsonStringModal" 
+    <json-string-modal
+      ref="jsonStringModal"
       :update-json-string="updateJson"/>
     <div class="name-available-container">
       <div
@@ -109,7 +109,7 @@
           accordion="bidAccordionCollection"
           role="tabpanel">
           <div class="inputs-container">
-            <div class="confirmation-warning">
+            <div class="confirmation-warning" v-if="!$route.fullPath.includes('reveal')">
               You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.
             </div>
             <div
@@ -322,17 +322,19 @@ export default {
         data: this.raw['data'],
         from: this.raw['from'],
         to: this.raw['to'],
-        value: this.raw['value'],
+        value: !this.$route.fullPath.includes('reveal') ? this.raw['value'] : 0,
         gasPrice: this.raw['gasPrice'],
         gas: this.raw['gas'],
         nonce: this.raw['nonce']
       };
-      const doc = new jsPDF();
-      doc.fromHTML(this.$refs.printableData, 15, 15, {
-        width: 300
-      });
+      if (!this.$route.fullPath.includes('reveal')) {
+        const doc = new jsPDF();
+        doc.fromHTML(this.$refs.printableData, 15, 15, {
+          width: 300
+        });
 
-      doc.save(`${this.raw.name}.eth-bid.pdf`);
+        doc.save(`${this.raw.name}.eth-bid.pdf`);
+      }
       this.$store.state.web3.eth.sendTransaction(raw);
     }
   }
