@@ -18,5 +18,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/CustomModal';
 </style>

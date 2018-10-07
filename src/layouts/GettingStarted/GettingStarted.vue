@@ -1,6 +1,13 @@
 <template>
   <div class="create-wallet-warnings">
 
+    <div
+      v-if="cwwCurrent != '0'" 
+      class="back-button" 
+      @click="mouseScrollUp">
+      &lt; Back
+    </div>
+
     <div class="wrap">
 
       <div class="nav-dots">
@@ -57,6 +64,13 @@
         </div>
       </div>
 
+    </div>
+
+    <div 
+      v-if="cwwCurrent != '4'"
+      class="next-button" 
+      @click="mouseScrollDown">
+      Next
     </div>
 
   </div>
@@ -127,5 +141,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'GettingStarted.scss';
+@import 'GettingStarted-desktop.scss';
+@import 'GettingStarted-tablet.scss';
+@import 'GettingStarted-mobile.scss';
 </style>

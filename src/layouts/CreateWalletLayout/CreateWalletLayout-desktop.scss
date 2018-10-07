@@ -1,0 +1,91 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 0;
+  }
+
+  .title-block {
+    margin-bottom: 40px;
+    display: block;
+
+    p {
+      text-align: center;
+    }
+
+    .title-popover {
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      margin-bottom: 10px;
+
+      h3 {
+        max-width: 320px;
+        line-height: 28px;
+      }
+    }
+  }
+
+  .mew-connect-block {
+    padding-bottom: 0 !important;
+
+    .appstores {
+      .icons {
+        text-align: center;
+        margin-bottom: 25px;
+        img {
+          height: 40px;
+          margin: 0 3px;
+        }
+      }
+
+      .download {
+        text-align: center;
+        p {
+          color: $mew-green;
+          cursor: pointer;
+          display: inline-block;
+        }
+      }
+    }
+
+    .bottom-image {
+      margin-top: 50px;
+      text-align: center;
+      img {
+        width: 60%;
+      }
+    }
+  }
+
+  .nav-tab-user-input-box {
+    background-color: $background-color-white;
+    margin: 0 auto;
+    max-width: 550px;
+
+    .progress-bar {
+      animation-name: progreesbar-grow;
+      width: 23.33%;
+    }
+
+    @keyframes progreesbar-grow {
+      from {
+        width: 0%;
+      }
+      to {
+        width: 23.33%;
+      }
+    }
+
+    .tab-pane {
+      min-height: 500px;
+      padding: 50px;
+    }
+  }
+
+  .nav-item {
+    border: 2px solid black !important;
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

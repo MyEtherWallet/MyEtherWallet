@@ -82,5 +82,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'MnemonicPasswordModal.scss';
+@import 'MnemonicPasswordModal-desktop.scss';
+@import 'MnemonicPasswordModal-tablet.scss';
+@import 'MnemonicPasswordModal-mobile.scss';
 </style>
