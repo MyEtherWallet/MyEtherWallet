@@ -20,5 +20,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'PageTitle.scss';
+@import 'PageTitle-desktop.scss';
+@import 'PageTitle-tablet.scss';
+@import 'PageTitle-mobile.scss';
 </style>

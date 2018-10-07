@@ -48,5 +48,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'PrivateKeyModal.scss';
+@import 'PrivateKeyModal-desktop.scss';
+@import 'PrivateKeyModal-tablet.scss';
+@import 'PrivateKeyModal-mobile.scss';
 </style>
