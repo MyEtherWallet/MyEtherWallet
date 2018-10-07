@@ -1,6 +1,6 @@
 {
-  "title1": "以太坊的",
-  "title2": "原生钱包",
+  "title1": "My Security",
+  "title2": "Etherium Wallet.",
   "subheading": "MEW 帮助你生成以太坊钱包并轻松且安全地与以太坊区块链互动。MEW是一个免费且开源的客户端界面。",
   "obtainAddress": "获取 ETH 地址并生成你的私人密钥，你将负责保存和保管你的私人秘钥。",
   "getStarted": "开始创建",
@@ -22,7 +22,7 @@
   "faqsSecurityAndPhishing": "安全与网络诈骗",
   "faqsTransactions": "交易",
   "faqsPrivKeyandPass": "私人密钥和密码",
-  "socialTitle": "加入 MEW 的讨论组",
-  "socialSubheading": "马上进来并查看你的余额增长（希望如此）！",
+  "socialTitle": "Get Involved",
+  "socialSubheading": "Your Cryptocurrency Masters Are Getting Hilariously Rich.",
   "promoTitle": "以太坊的原生钱包"
 }
