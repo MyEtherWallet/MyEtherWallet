@@ -20,7 +20,16 @@ import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 // etc
 import languages from './translations';
+import VueMq from 'vue-mq';
 
+Vue.use(VueMq, {
+  breakpoints: {
+    // default breakpoints - customize this
+    sm: 414,
+    md: 1024,
+    lg: Infinity
+  }
+});
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components

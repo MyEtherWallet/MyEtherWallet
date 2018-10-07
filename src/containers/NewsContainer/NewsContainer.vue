@@ -67,5 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'NewsContainer.scss';
+@import 'NewsContainer-desktop.scss';
+@import 'NewsContainer-tablet.scss';
+@import 'NewsContainer-mobile.scss';
 </style>

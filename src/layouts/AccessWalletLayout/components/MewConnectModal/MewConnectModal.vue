@@ -81,5 +81,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'MewConnectModal.scss';
+@import 'MewConnectModal-desktop.scss';
+@import 'MewConnectModal-tablet.scss';
+@import 'MewConnectModal-mobile.scss';
 </style>

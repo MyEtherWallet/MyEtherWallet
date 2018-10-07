@@ -1,0 +1,1251 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  // *********************************************************************
+  // CSS reset
+  // *********************************************************************
+  html,
+  body,
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  canvas,
+  details,
+  embed,
+  figure,
+  figcaption,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  output,
+  ruby,
+  section,
+  summary,
+  time,
+  mark,
+  audio,
+  video {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    box-sizing: border-box;
+  }
+
+  ::placeholder {
+    color: $text-black;
+    opacity: 0.2;
+  }
+
+  *:focus {
+    outline: 0 !important;
+  }
+
+  .prevent-pointer-events {
+    pointer-events: none;
+  }
+
+  .prevent-user-select {
+    user-select: none;
+  }
+
+  input,
+  textarea {
+    border-radius: 4px;
+  }
+
+  button {
+    box-shadow: none !important;
+  }
+
+  // *********************************************************************
+  // Disable WebKit Spinners
+  // *********************************************************************
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  // *********************************************************************
+  // Custom Scrollbar
+  // *********************************************************************
+
+  // width
+  ::-webkit-scrollbar {
+    border-radius: 10px;
+    width: 5px;
+  }
+
+  // Track
+  ::-webkit-scrollbar-track {
+    background: $light-grey-9;
+    border-radius: 10px;
+  }
+
+  // Handle
+  ::-webkit-scrollbar-thumb {
+    background: $dark-grey-8;
+    border-radius: 10px;
+  }
+
+  // Handle on hover
+  ::-webkit-scrollbar-thumb:hover {
+    background: $dark-grey-9;
+    border-radius: 10px;
+  }
+
+  .no-border {
+    .dropdown .dropdown-toggle {
+      border: 0 !important;
+    }
+
+    .dropdown.open .dropdown-toggle {
+      border: 1px solid $opaque-grey !important;
+    }
+  }
+
+  // *********************************************************************
+  // Standard list styles
+  // *********************************************************************
+  ul li {
+    list-style-type: none;
+  }
+
+  // *********************************************************************
+  // Standard link styles
+  // *********************************************************************
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $link-text-color-2;
+    // text-decoration: none;
+
+    p {
+      text-decoration: none;
+    }
+
+    &.nounderline,
+    &.nounderline * {
+      text-decoration: none;
+    }
+  }
+
+  a {
+    &.underline {
+      text-decoration: underline;
+    }
+
+    &.underline:hover * {
+      text-decoration: underline;
+    }
+  }
+
+  .underline a {
+    text-decoration: underline;
+  }
+
+  // *********************************************************************
+  // Standard elements
+  // *********************************************************************
+  .hidden {
+    display: none;
+  }
+
+  .page-container {
+    margin: 0 auto;
+    max-width: 1024px;
+    padding: 0;
+  }
+
+  .page-container2 {
+    max-width: 1280px;
+  }
+
+  // *********************************************************************
+  // Standard text styles
+  // *********************************************************************
+
+  p {
+    color: $text-base-color;
+    line-height: 21px;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    // line-height: 42px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 42px;
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 23px;
+  }
+
+  h5 {
+    color: $text-base-color;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  h6 {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .color-green {
+    color: $text-color-green;
+  }
+
+  .color-white {
+    color: $text-white;
+  }
+
+  .noselect {
+    user-select: none;
+  }
+
+  .text-bold {
+    font-weight: 600;
+  }
+
+  // *********************************************************************
+  // Standard flex-box styles
+  // *********************************************************************
+  .flex {
+    &.row {
+      flex-direction: row;
+    }
+
+    &.column {
+      flex-direction: column;
+    }
+
+    &.align-items-start {
+      align-items: flex-start;
+    }
+
+    &.align-items-center {
+      align-items: center;
+    }
+
+    &.align-items-end {
+      align-items: flex-end;
+    }
+  }
+
+  .flex-col-1-1-vertical-center {
+    align-items: center;
+    display: flex;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  .flex-col-vertical-top {
+    align-items: flex-start;
+    display: flex;
+  }
+
+  .flex-col-vertical-center {
+    align-items: center;
+    display: flex;
+  }
+
+  .flex-col-vertical-bottom {
+    align-items: flex-end;
+    display: flex;
+  }
+
+  .flex-space-between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  // *********************************************************************
+  // Standard grid styles
+  // *********************************************************************
+  .grid-col-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-col-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .grid-col-1-1-1-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  }
+
+  // *********************************************************************
+  // Standard buttons
+  // *********************************************************************
+
+  .large-round-button-green-filled {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    border-radius: 6px;
+    color: $button--text-color-1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 21px 55px;
+    user-select: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .large-round-button-green-border {
+    background-color: $background-color-white;
+    border: 1px solid $button--border-color-2;
+    border-radius: 6px;
+    color: $text-color-2;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 21px 55px;
+    user-select: none;
+  }
+
+  .large-round-button-white-filled {
+    background-color: $button--background-color-2;
+    border: 1px solid $button--border-color-1;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 21px 55px;
+    user-select: none;
+  }
+
+  .large-round-button-white-filled__body-text-color {
+    color: $text-base-color;
+    background-color: $button--background-color-2;
+    border: 1px solid $button--border-color-1;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 21px 55px;
+    user-select: none;
+  }
+
+  .large-round-button-white-border {
+    border: 1px solid $button--border-color-1;
+    border-radius: 5px;
+    color: $button--text-color-1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 21px 55px;
+    user-select: none;
+  }
+
+  .mid-round-button-green-filled {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    border-radius: 6px;
+    color: $button--text-color-1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+  }
+
+  .mid-round-button-lightgrey-filled {
+    background-color: $light-grey-5;
+    border: 1px solid $button--border-color-1;
+    border-radius: 6px;
+    color: $button--text-color-1;
+    cursor: initial;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+
+    &:hover {
+      background-color: $light-grey-5;
+      border: 1px solid $button--border-color-1;
+      cursor: initial;
+    }
+  }
+
+  .mid-round-button-green-border {
+    background-color: $background-color-white;
+    border: 1px solid $button--border-color-2;
+    border-radius: 6px;
+    color: $text-color-2;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+  }
+
+  .mid-round-button-green-filled-green-border {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-2;
+    border-radius: 6px;
+    color: $text-white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+    display: inline-block;
+  }
+
+  .mid__round-button__blue-filled__blue-border {
+    background-color: $button--background-color-4;
+    border: 1px solid $button--background-color-4;
+    border-radius: 6px;
+    color: $text-white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px 40px;
+    user-select: none;
+    display: inline-block;
+  }
+
+  .small-circle-button-green-border {
+    background-color: $background-color-white;
+    border: 1px solid $button--border-color-2;
+    border-radius: 100px;
+    color: $text-color-2;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 70px;
+    padding: 6px 0;
+    text-align: center;
+    user-select: none;
+
+    &.active {
+      background-color: $button--background-color-1;
+      border: 1px solid $button--border-color-1;
+      color: $text-white;
+    }
+  }
+
+  .very-small-circle-button-green-border {
+    background-color: $background-color-white;
+    border: 1px solid $button--border-color-2;
+    border-radius: 100px;
+    color: $text-color-2;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 56px;
+    padding: 4px 0;
+    text-align: center;
+    user-select: none;
+
+    &.active {
+      background-color: $button--background-color-1;
+      border: 1px solid $button--border-color-1;
+      color: $text-white;
+    }
+  }
+
+  .small-circle-button-green-filled {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    border-radius: 100px;
+    color: $text-white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 80px;
+    padding: 7px 0;
+    text-align: center;
+    user-select: none;
+  }
+
+  .very-small-circle-button-green-filled {
+    background-color: $button--background-color-1;
+    border: 1px solid $button--border-color-1;
+    border-radius: 100px;
+    color: $text-white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 56px;
+    padding: 4px 0;
+    text-align: center;
+    user-select: none;
+  }
+
+  // *********************************************************************
+  // [Bootstrap] Dropdown language menu style
+  // *********************************************************************
+  .modal {
+    z-index: $z-bootstrap-modal;
+  }
+
+  .modal-backdrop {
+    z-index: $z-bootstrap-modal-backdrop;
+  }
+
+  .language-menu-container {
+    position: relative;
+
+    .arrows {
+      color: $text-color-4;
+      font-size: 18px;
+      position: absolute;
+      right: -2px;
+      top: 5px;
+    }
+
+    .language-menu {
+      .dropdown-menu.show {
+        max-height: 226px;
+        overflow-y: scroll;
+        position: relative;
+      }
+
+      .dropdown-toggle::after {
+        display: none;
+      }
+    }
+  }
+
+  .dropdown-toggle::after {
+    position: absolute !important;
+    right: 13px !important;
+    top: 16px !important;
+  }
+
+  // *********************************************************************
+  // [Bootstrap] Dropdown language menu style
+  // *********************************************************************
+  .dropdown-menu {
+    border: 1px solid $button--border-color-2;
+    // box-shadow: 0 2px 12px $language-menu-box-shadow;
+  }
+
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: $background-color-white;
+    color: $text-color-6;
+    font-weight: 600 !important;
+  }
+
+  .nav-link-custom span {
+    color: $text-base-color;
+  }
+
+  // *********************************************************************
+  // Tooltip
+  // *********************************************************************
+
+  .popover {
+    pointer-events: none;
+  }
+
+  .tooltip {
+    pointer-events: none;
+
+    &.show {
+      opacity: 1;
+    }
+
+    .arrow::before {
+      border-top-color: $background-color-white;
+    }
+
+    .tooltip-inner {
+      background-color: $background-color-white;
+      color: $text-black;
+      box-shadow: 0 3px 5px $small-tooltip-shadow;
+      font-size: 12px;
+    }
+  }
+
+  .qrcode-modal {
+    .popover {
+      max-width: 180px;
+    }
+  }
+
+  .tooltip-box-1 {
+    button {
+      background-color: $button--background-color-1;
+      border: 0;
+      border-radius: 100px;
+      height: 15px;
+      line-height: 15px;
+      padding: 0;
+      width: 15px;
+
+      &::after {
+        content: '!';
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0;
+      }
+    }
+  }
+
+  .tooltip-box-2 {
+    button {
+      background-color: $text-white;
+      border: 0;
+      padding: 0;
+
+      &:hover {
+        background-color: $text-white;
+      }
+    }
+  }
+
+  // *********************************************************************
+  // [Bootstrap] Modal style
+  // *********************************************************************
+  // Modal header
+  .modal-header {
+    background-color: $bootstrap-modal-header-background-color;
+    border-radius: 0;
+    border: 0;
+
+    h5 {
+      color: $text-white;
+      font-size: 20px;
+      padding: 0 15px;
+    }
+
+    .close {
+      color: $text-white;
+      float: right;
+      font-size: 52px;
+      font-weight: 100;
+      line-height: 30px;
+      opacity: 1;
+      outline: none;
+      text-shadow: none;
+    }
+  }
+
+  .bootstrap-modal {
+    .modal-dialog {
+      max-width: 530px;
+    }
+  }
+
+  .bootstrap-modal-wide {
+    .modal-dialog {
+      max-width: 650px;
+    }
+  }
+
+  .modal-content {
+    background-color: transparent;
+    border: 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .modal-body {
+    background-color: $background-color-white;
+    padding: 60px 70px 50px;
+
+    .title {
+      color: $text-color-6;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .content {
+      color: $link-text-color-1;
+      font-size: 14px;
+      line-height: 21px;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+
+      &.fixed-width-1 {
+        margin: 0 auto;
+        width: 250px;
+      }
+
+      button {
+        margin: 0 7px;
+      }
+    }
+  }
+
+  .nopadding .modal-body {
+    padding: 0;
+  }
+
+  .bootstrap-modal.no-padding .modal-body,
+  .bootstrap-modal.nopadding .modal-body {
+    padding: 0;
+  }
+
+  .max-height-1 .modal-body {
+    max-height: 405px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .bootstrap-modal.padding-40-20 .modal-body {
+    padding: 40px 20px;
+  }
+
+  // Custom modal style for each pages -------------------------------
+  .access-my-wallet-options {
+    .modal-title {
+      font-size: 20px;
+      padding: 0 15px;
+    }
+
+    .modal-body {
+      padding: 40px;
+    }
+  }
+
+  // *********************************************************************
+  // [Bootstrap] Nav tab style
+  // @ Create Wallet pages
+  // *********************************************************************
+  .nav-tab-user-input-box {
+    background-color: $nav-tab-background-color;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .progress-bar {
+      animation-duration: 0.5s;
+      background-color: $nav-tab--progress-bar-background-color;
+      height: 6px;
+    }
+
+    .nav-link {
+      background-color: $nav-tab--button-background-color;
+      border: 0;
+      border-radius: 0;
+      font-size: 14px;
+      padding: 20px 0;
+
+      &.active {
+        background-color: $nav-tab--button--active--background-color;
+        color: $nav-tab--button--active--font-color;
+      }
+    }
+
+    .nav-tabs {
+      border: 0;
+      display: flex;
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  }
+
+  // *********************************************************************
+  // CSS Toggle Button(Switch) style
+  // *********************************************************************
+  // The switch - the box around the slider
+  .sliding-switch {
+    height: 27px;
+    position: relative;
+
+    .switch {
+      display: inline-block;
+      height: 28px;
+      position: relative;
+      width: 60px;
+
+      // Hide default HTML checkbox
+      input {
+        display: none;
+      }
+    }
+
+    .labels {
+      span {
+        color: $text-color-3;
+        font-size: 11px;
+        pointer-events: none;
+        position: absolute;
+        top: 6px;
+        transition: all 0.5s ease;
+
+        &.white {
+          color: $text-color-1;
+        }
+      }
+
+      .label-left {
+        left: 11px;
+      }
+
+      .label-right {
+        left: 37px;
+      }
+    }
+
+    // The slider
+    .slider {
+      background-color: $css-toggle-button--slider-background-color;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+
+      &::before {
+        background-color: $css-toggle-button--button-background-color;
+        bottom: 3px;
+        content: '';
+        height: 22px;
+        left: 4px;
+        padding: 1px 7px;
+        position: absolute;
+        transition: 0.4s;
+        width: 25px;
+      }
+
+      // Rounded sliders
+      &.round {
+        border-radius: 34px;
+      }
+
+      &.round::before {
+        border-radius: 100%;
+      }
+    }
+
+    input:checked + .slider {
+      // background-color: $css-toggle-button--slider--active--background-color;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+  }
+
+  .sliding-switch-white {
+    height: 27px;
+    position: relative;
+
+    .switch {
+      display: inline-block;
+      height: 28px;
+      position: relative;
+      width: 52px;
+
+      // Hide default HTML checkbox
+      input {
+        display: none;
+      }
+    }
+
+    // The slider
+    .slider {
+      background-color: $css-toggle-button--slider-background-color;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+
+      &::before {
+        background-color: $text-white;
+        bottom: 3px;
+        content: '';
+        height: 22px;
+        left: 3px;
+        padding: 1px 7px;
+        position: absolute;
+        transition: 0.4s;
+        width: 23px;
+      }
+
+      // Rounded sliders
+      &.round {
+        border-radius: 34px;
+      }
+
+      &.round::before {
+        border-radius: 100%;
+      }
+    }
+
+    input:checked + .slider {
+      background-color: $css-toggle-button--slider--active--background-color;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(23px);
+    }
+  }
+
+  // *********************************************************************
+  // Custom Checkbox
+  // *********************************************************************
+  // Customize the label (the container)
+  .checkbox-container {
+    cursor: pointer;
+    display: inline;
+    font-size: 14px;
+    margin-bottom: 12px;
+    padding-left: 33px;
+    padding-right: 0;
+    position: relative;
+    user-select: none;
+
+    &.checkbox-container-small {
+      padding-left: 0;
+    }
+
+    // Hide the browser's default checkbox
+    input {
+      cursor: pointer;
+      opacity: 0;
+      position: absolute;
+    }
+
+    // On mouse-over, add a grey background color
+    &:hover input ~ .checkmark {
+      $check-box-hover-color: $light-grey-12;
+
+      background-color: $check-box-hover-color;
+    }
+
+    // When the checkbox is checked, add a blue background
+    input:checked ~ .checkmark {
+      background-color: $background-color-2;
+    }
+
+    // Show the checkmark when checked
+    input:checked ~ .checkmark::after {
+      display: block;
+    }
+
+    // Create a custom checkbox
+    .checkmark {
+      $unchecked-box-color: $light-grey-13;
+
+      background-color: $unchecked-box-color;
+      border-radius: 100px;
+      height: 22px;
+      left: 0;
+      position: absolute;
+      top: -1px;
+      width: 22px;
+
+      // Create the checkmark/indicator (hidden when not checked)
+      // Style the checkmark/indicator
+      &::after {
+        border: solid $border-color-2;
+        border-width: 0 3px 3px 0;
+        content: '';
+        // display: none;
+        height: 10px;
+        left: 9px;
+        position: absolute;
+        top: 5px;
+        transform: rotate(45deg);
+        width: 5px;
+      }
+    }
+
+    .checkmark-small {
+      $unchecked-box-color: $light-grey-13;
+
+      background-color: $unchecked-box-color;
+      border-radius: 100px;
+      height: 19px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 19px;
+
+      // Create the checkmark/indicator (hidden when not checked)
+      // Style the checkmark/indicator
+      &::after {
+        border: solid $border-color-2;
+        border-width: 0 3px 3px 0;
+        content: '';
+        // display: none;
+        height: 9px;
+        left: 7px;
+        position: absolute;
+        top: 4px;
+        transform: rotate(45deg);
+        width: 5px;
+      }
+    }
+  }
+
+  // *********************************************************************
+  // Dropdown Buttons
+  // *********************************************************************
+  .dropdown-button-1 {
+    > button {
+      background-color: $background-color-white;
+      border: solid 1px $button--border-color-2;
+      color: $text-color-6;
+      font-family: Arial, sans-serif;
+      min-width: 180px;
+      padding: 8px 15px;
+      text-align: left;
+    }
+
+    .active {
+      color: $text-black;
+    }
+
+    a {
+      outline: none;
+    }
+
+    a:nth-child(odd) {
+      background-color: #f0f0f0;
+    }
+  }
+
+  .dropdown-button-2 {
+    .dropdown-menu {
+      padding: 0;
+    }
+
+    > button {
+      background-color: $background-color-white;
+      border: solid 1px $button--border-color-2;
+      color: $text-color-6;
+      font-family: Arial, sans-serif;
+      min-width: 180px;
+      padding: 8px 15px;
+      text-align: left;
+    }
+
+    .active {
+      color: $text-black;
+    }
+
+    a {
+      outline: none;
+    }
+
+    a:nth-child(odd) {
+      background-color: #f0f0f0;
+    }
+  }
+
+  .dropdown-select-search-1 {
+    border-radius: 4px;
+
+    .dropdown .dropdown-toggle {
+      border: 0;
+      padding: 6px 5px;
+      padding-left: 30px;
+    }
+
+    .dropdown.open .dropdown-toggle {
+      $border-color: $dark-grey-10;
+
+      border: 1px solid $border-color;
+    }
+
+    .clear {
+      display: none;
+    }
+  }
+
+  .dropdown-select-search-2 {
+    border-radius: 5px;
+
+    .dropdown .dropdown-toggle {
+      padding: 6px 5px;
+    }
+
+    .dropdown.open .dropdown-toggle {
+      $border-color: $dark-grey-10;
+
+      border: 1px solid $border-color;
+    }
+
+    .clear {
+      display: none;
+    }
+  }
+
+  .alert-button {
+    position: relative;
+
+    &::before {
+      background-color: $text-color-3;
+      border-radius: 100px;
+      color: $text-white;
+      content: '!';
+      display: inline-block;
+      font-size: 12px;
+      line-height: 17px;
+      margin-left: 10px;
+      position: relative;
+      text-align: center;
+      width: 17px;
+    }
+  }
+
+  .good-button {
+    color: $button--background-color-1;
+    display: inline-block;
+    font-size: 20px;
+
+    &.not-good {
+      color: $text-good-button-not-good;
+    }
+  }
+
+  // *********************************************************************
+  // Custom Input
+  // *********************************************************************
+  .custom-input-text-1 {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+  }
+
+  .custom-select-1 {
+    background-color: $background-color-white;
+    border-radius: 4px;
+    color: $text-black;
+    padding: 0 10px;
+  }
+
+  .custom-textarea-1 {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 4px;
+    height: 200px;
+    padding: 13px 15px;
+    resize: none;
+    width: 100%;
+  }
+
+  // *********************************************************************
+  // Custom Links
+  // *********************************************************************
+
+  .linker-1 {
+    color: $link-text-color-3;
+    cursor: pointer;
+  }
+
+  .linker-1:hover {
+    color: $link-text-color-1;
+  }
+
+  .disabled {
+    background-color: $light-grey-12;
+    pointer-events: none;
+  }
+} //@media all and ( min-width: calc(#{$tablet-width} + 1px) )

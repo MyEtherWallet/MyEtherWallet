@@ -1,0 +1,8 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 40px 0 100px;
+    text-align: center;
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

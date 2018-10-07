@@ -170,5 +170,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'HardwareModal.scss';
+@import 'HardwareModal-desktop.scss';
+@import 'HardwareModal-tablet.scss';
+@import 'HardwareModal-mobile.scss';
 </style>

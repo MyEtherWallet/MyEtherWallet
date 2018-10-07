@@ -29,11 +29,17 @@
 import github from '@/assets/images/icons/github.png';
 import reddit from '@/assets/images/icons/reddit.svg';
 import slack from '@/assets/images/icons/slack.png';
+import telegram from '@/assets/images/icons/telegram.png';
 
 export default {
   data() {
     return {
       links: [
+        {
+          img: telegram,
+          to: 'https://www.google.com',
+          name: 'telegram'
+        },
         {
           img: slack,
           to: 'https://www.google.com',
