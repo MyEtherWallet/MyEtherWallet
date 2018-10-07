@@ -1,6 +1,6 @@
 {
-  "title1": "Оригинальный кошелек",
-  "title2": "Ethereum",
+  "title1": "My Security",
+  "title2": "Etherium Wallet.",
   "subheading": "MEW помогает вам создавать Ethereum-кошельки, а также просто и безопасно взаимодействовать с блокчейном Ethereum. MEW – это бесплатный клиентский интерфейс с открытым кодом.",
   "obtainAddress": "Чтобы получить ETH-адрес и сгенерировать свой закрытый ключ. Вы должны будете сохранить ключ и хранить его в безопасности.",
   "getStarted": "Начало работы",
@@ -22,7 +22,7 @@
   "faqsSecurityAndPhishing": "Безопасность и фишинг",
   "faqsTransactions": "Транзакции",
   "faqsPrivKeyandPass": "Закрытые ключи и пароли",
-  "socialTitle": "Поучаствуйте в беседе MEW",
-  "socialSubheading": "Заходите и смотрите, как ваш баланс растет (мы надеемся)!",
+  "socialTitle": "Get Involved",
+  "socialSubheading": "Your Cryptocurrency Masters Are Getting Hilariously Rich.",
   "promoTitle": "Оригинальный кошелек Ethereum"
 }
