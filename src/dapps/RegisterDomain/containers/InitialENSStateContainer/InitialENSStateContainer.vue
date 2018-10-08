@@ -19,6 +19,9 @@
       <p
         v-show="localDomainName.length < 7 && localDomainName !== ''"
         class="erroredMsg"> Domain name is less than 7 characters. </p>
+      <p
+        v-show="domainNameErr"
+        class="erroredMsg"> Invalid symbols on domain </p>
       <div class="submit-button-container">
         <button
           :class="[localDomainName.length < 7 ? 'disabled' : '', 'submit-button large-round-button-green-filled clickable']"
@@ -179,6 +182,10 @@ export default {
     domainName: {
       type: String,
       default: ''
+    },
+    domainNameErr: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
