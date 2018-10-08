@@ -1,4 +1,3 @@
-import VueRouter from 'vue-router';
 import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import PrivateKeyModal
@@ -26,8 +25,7 @@ describe('PrivateKeyModal.vue', () => {
     beforeAll(() => {
       const baseSetup = Tooling.createLocalVueInstance();
       localVue = baseSetup.localVue;
-      localVue.use(VueRouter);
-      router = new VueRouter();
+      router = baseSetup.router
       i18n = baseSetup.i18n;
       // store = baseSetup.store;
     });
@@ -56,6 +54,7 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     it('should reset the privateKey directly', () => {
+      console.log(wrapper); // todo remove dev item
       const button = wrapper.find('button');
 
       wrapper.setData({privateKey: PrivateKey.key});
