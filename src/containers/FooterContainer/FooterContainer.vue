@@ -5,11 +5,11 @@
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
-            :ref="item.class" 
+            :ref="item.class"
             :class="item.class"
             :key="item.title + index">
-            <div 
-              class="content-title" 
+            <div
+              class="content-title"
               @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
               <p
@@ -53,11 +53,11 @@
               <p>{{ $t("footer.welcomeDes") }}</p>
 
               <a
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+                :href="'https://etherscan.io/address/'+$store.state.ethDonationAddress"
                 target="_blank">
                 <p
-                  class="crypto-link"
-                  data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  :data-eth="$store.state.ethDonationAddress"
+                  class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>

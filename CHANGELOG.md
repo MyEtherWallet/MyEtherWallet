@@ -1,6 +1,10 @@
+### Feature
+
+- Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+
 ### Hotfix
 
-- Some fixes for the ENS Registrar [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
+- Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
 
 ### Release v5.0.4
 

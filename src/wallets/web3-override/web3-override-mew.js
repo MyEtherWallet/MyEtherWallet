@@ -64,19 +64,20 @@ export default function web3OverrideMew(
       const localTx = {
         to: tx.to,
         data: tx.data,
-        from: tx.from
+        from: tx.from,
+        value: tx.value
       };
       tx['nonce'] = await (tx['nonce'] === undefined
         ? web3.eth.getTransactionCount(wallet.getAddressString())
         : tx.nonce);
-      tx['gas'] = await (tx['gas'] === undefined
-        ? web3.eth.estimateGas(localTx)
-        : tx.gas);
       tx.chainId = !tx.chainId ? state.network.type.chainID : tx.chainId;
       tx['gasPrice'] =
         tx['gasPrice'] === undefined
           ? unit.toWei(state.gasPrice, 'gwei').toString()
           : tx.gasPrice;
+      tx['gas'] = await (tx['gas'] === undefined
+        ? web3.eth.estimateGas(localTx)
+        : tx.gas);
       if (state.wallet.identifier === 'Web3') tx.web3WalletOnly = true;
       web3.eth
         .sendTransaction_(tx)

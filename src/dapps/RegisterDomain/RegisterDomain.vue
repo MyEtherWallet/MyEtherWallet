@@ -21,6 +21,7 @@
       :step="step"
       :send-bid="sendBid"
       :reveal-bid="revealBid"
+      :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
@@ -37,6 +38,7 @@ import RegistrarAbi from '@/helpers/registrarAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
+import normalise from '@/helpers/normalise';
 
 const ETH_TLD = '.eth';
 
@@ -62,7 +64,8 @@ export default {
       raw: {},
       highestBidder: '',
       contractInitiated: false,
-      step: 1
+      step: 1,
+      domainNameErr: false
     };
   },
   mounted() {
@@ -94,6 +97,7 @@ export default {
         this.registrarAddress
       );
       this.contractInitiated = true;
+      this.domainNameErr = false;
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.$store.state.ens.owner(
@@ -150,7 +154,22 @@ export default {
       }
     },
     updateDomainName(value) {
-      this.domainName = value;
+      if (
+        value.substr(0, 2) === '0x' ||
+        value.length < 7 ||
+        value.indexOf('.') !== -1
+      ) {
+        this.domainNameErr = true;
+      } else {
+        this.domainNameErr = false;
+      }
+      try {
+        normalise(value);
+      } catch (e) {
+        this.domainNameErr = true;
+        return;
+      }
+      this.domainName = normalise(value);
     },
     async getMoreInfo(deedOwner) {
       let owner;
