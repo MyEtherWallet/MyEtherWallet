@@ -58,7 +58,8 @@ export default {
       notifications: notifications,
       gasPrice: gasPrice,
       ens:
-        network.type.ensResolver !== '' ? new ENS(newWeb3.currentProvider) : {}
+        network.type.ensResolver !== '' ? new ENS(newWeb3.currentProvider) : {},
+      ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     };
     if (store.get('notifications') === undefined)
       store.set('notifications', {});
