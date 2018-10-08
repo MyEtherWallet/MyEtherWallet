@@ -188,9 +188,13 @@ export default {
       this.currentFlag = this.currentFlag.split(/[-_]/)[0];
     }
 
-    this.currentName = this.supportedLanguages.filter(
+    /*    this.currentName = this.supportedLanguages.filter(
       item => item.flag === this.currentFlag
-    )[0].name;
+    )[0].name;*/
+
+    this.currentName = this.supportedLanguages.find(
+      item => item.flag === this.currentFlag
+    ).name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
     this.onPageScroll();
