@@ -1,0 +1,76 @@
+@import '~@/scss/GlobalVariables';
+.buy-subdomain-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+}
+
+.buy-subdomain-content {
+  padding: 35px 62px;
+}
+
+.buy-subdomain-form-container {
+  p {
+    color: $dark-blue-7;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 31px 0 24px;
+  }
+
+  .subdomain-input {
+    display: flex;
+
+    input {
+      background-color: $light-grey-1;
+      border: 0;
+      border-radius: 4px;
+      height: 52px;
+      padding-left: 24px;
+      min-width: 485px;
+      width: 100%;
+    }
+
+    button {
+      background-color: $light-blue-7;
+      border: 0;
+      color: $white;
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 15px 35px;
+    }
+  }
+
+  .results-container {
+    border-bottom: 1px solid $dark-grey-11;
+    display: flex;
+    flex-direction: column;
+
+    .result-item {
+      border-top: 2px dashed $opaque-grey;
+      color: $dark-blue-1;
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    button {
+      border-radius: 12px;
+      border: 1px solid $dark-grey-11;
+      color: $dark-grey-11;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $mew-green;
+        border: 1px solid $mew-green;
+        color: $white;
+      }
+    }
+  }
+}
