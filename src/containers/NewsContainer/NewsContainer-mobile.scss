@@ -1,0 +1,25 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 70px 0;
+
+    @media all and (max-width: $tablet-width) {
+      padding: 40px 0;
+    }
+
+    .top-title {
+      margin-bottom: 30px;
+    }
+
+    .news-container {
+      grid-column-gap: 30px;
+      grid-row-gap: 30px;
+
+      @media all and (max-width: $tablet-width) {
+        grid-template-columns: 250px 250px 250px;
+        overflow-x: scroll;
+      }
+    }
+  }
+} // @media all and (max-width: $mobile-width)

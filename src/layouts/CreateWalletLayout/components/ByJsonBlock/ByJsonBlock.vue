@@ -35,5 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ByJsonBlock.scss';
+@import 'ByJsonBlock-desktop.scss';
+@import 'ByJsonBlock-tablet.scss';
+@import 'ByJsonBlock-mobile.scss';
 </style>

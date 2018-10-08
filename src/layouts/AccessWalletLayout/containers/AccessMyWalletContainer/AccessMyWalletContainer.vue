@@ -1,6 +1,5 @@
 <template>
   <div class="access-my-wallet-options">
-
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
@@ -225,5 +224,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccessMyWalletContainer.scss';
+@import 'AccessMyWalletContainer-desktop.scss';
+@import 'AccessMyWalletContainer-tablet.scss';
+@import 'AccessMyWalletContainer-mobile.scss';
 </style>

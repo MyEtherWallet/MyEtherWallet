@@ -72,5 +72,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TopBanner.scss';
+@import 'TopBanner-desktop.scss';
+@import 'TopBanner-tablet.scss';
+@import 'TopBanner-mobile.scss';
 </style>

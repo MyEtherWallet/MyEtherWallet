@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-egem.json';
 import contracts from '@/contracts/contract-abi-egem.json';
 import egem from '@/assets/images/networks/egem.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'EGEM',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: egem
 };

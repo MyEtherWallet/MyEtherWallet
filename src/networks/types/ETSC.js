@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-etsc.json';
 import contracts from '@/contracts/contract-abi-etsc.json';
 import etsc from '@/assets/images/networks/etsc.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'ETSC',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: etsc
 };

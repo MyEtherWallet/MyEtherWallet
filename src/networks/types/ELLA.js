@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-ella.json';
 import contracts from '@/contracts/contract-abi-ella.json';
 import ella from '@/assets/images/networks/ella.svg';
+// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'ELLA',
@@ -12,5 +13,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
+  ensAbi: '',
   icon: ella
 };
