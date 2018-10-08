@@ -6,8 +6,12 @@
         <p>Sub Domain</p>
         <form>
           <div class="subdomain-input">
-            <input type="text" placeholder="Please Enter Sub Domain Name">
-            <button type="button" @click.prevent="() => {}">Check</button>
+            <input 
+              type="text" 
+              placeholder="Please Enter Sub Domain Name">
+            <button 
+              type="button" 
+              @click.prevent="() => {}">Check</button>
           </div>
         </form>
         <p>All Sub domains</p>
