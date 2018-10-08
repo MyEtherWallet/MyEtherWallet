@@ -74,8 +74,6 @@ export default {
           // eslint-disable-next-line no-console
           console.error(_error); // todo replace with proper error
         });
-
-      // this.$router.push({ path: 'interface' })
     },
     switchViewPassword() {
       this.show = !this.show;
@@ -84,5 +82,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'MnemonicPasswordModal.scss';
+@import 'MnemonicPasswordModal-desktop.scss';
+@import 'MnemonicPasswordModal-tablet.scss';
+@import 'MnemonicPasswordModal-mobile.scss';
 </style>

@@ -36,8 +36,6 @@ export default {
         hostUrl.pathname
       }`
     );
-    const sideMenu =
-      store.get('sideMenu') !== undefined ? store.get('sideMenu') : 'send';
     const notifications =
       store.get('notifications') !== undefined
         ? store.get('notifications')
@@ -57,17 +55,10 @@ export default {
       Networks: nodeList,
       Errors: {},
       online: true,
-      pageStates: {
-        interface: {
-          sideMenu: sideMenu
-        }
-      },
       notifications: notifications,
       gasPrice: gasPrice,
       ens:
-        network.type.ensResolver !== ''
-          ? new ENS(newWeb3.currentProvider, network.type.ensResolver)
-          : {}
+        network.type.ensResolver !== '' ? new ENS(newWeb3.currentProvider) : {}
     };
     if (store.get('notifications') === undefined)
       store.set('notifications', {});
@@ -80,4 +71,16 @@ export default {
 
 <style lang="scss">
 @import 'App.scss';
+
+@import '~@/scss/Global-desktop';
+@import '~@/scss/Global-tablet';
+@import '~@/scss/Global-mobile';
+
+@import '~@/scss/CustomForms-desktop';
+@import '~@/scss/CustomForms-tablet';
+@import '~@/scss/CustomForms-mobile';
+
+@import '~@/scss/CustomModal-desktop';
+@import '~@/scss/CustomModal-tablet';
+@import '~@/scss/CustomModal-mobile';
 </style>

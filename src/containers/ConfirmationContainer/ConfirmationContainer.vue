@@ -12,7 +12,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -25,7 +25,7 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce + 1"/>
+      :nonce="nonce"/>
     <confirm-sign-modal
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import * as unit from 'ethjs-unit';
+import BN from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
@@ -82,12 +84,13 @@ export default {
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
+      ens: {},
       signer: {},
       signedTxObject: {},
       signedTx: '',
       messageToSign: '',
       signedMessage: '',
-      successMessage: '',
+      successMessage: 'Success',
       linkMessage: 'OK',
       dismissed: true,
       web3WalletHash: '',
@@ -151,6 +154,9 @@ export default {
       'showTxConfirmModal',
       (tx, isHardware, signer, resolve) => {
         this.parseRawTx(tx);
+        if (tx.hasOwnProperty('ensObj')) {
+          delete tx['ensObj'];
+        }
         this.isHardwareWallet = isHardware;
         this.responseFunction = resolve;
         this.successMessage = 'Sending Transaction';
@@ -164,6 +170,9 @@ export default {
 
     this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx);
+      if (tx.hasOwnProperty('ensObj')) {
+        delete tx['ensObj'];
+      }
       this.isHardwareWallet = isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
@@ -226,6 +235,13 @@ export default {
       this.gasLimit = +tx.gas;
       this.toAddress = tx.to;
       this.amount = +tx.value;
+      this.transactionFee = Number(
+        unit.fromWei(new BN(tx.gasPrice).times(tx.gas).toString(), 'ether')
+      );
+      this.ens = {};
+      if (tx.hasOwnProperty('ensObj')) {
+        this.ens = Object.assign({}, tx.ensObj);
+      }
       // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn() {

@@ -5,9 +5,12 @@
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
+            :ref="item.class" 
             :class="item.class"
             :key="item.title + index">
-            <div class="content-title">
+            <div 
+              class="content-title" 
+              @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
               <p
                 class="open"
@@ -24,7 +27,7 @@
                   aria-hidden="true"/>
               </p>
             </div>
-            <div class="content-links mobile-hide">
+            <div class="content-links">
               <div
                 v-for="(content, index) in item.contents"
                 :key="content.text+index">
@@ -46,7 +49,7 @@
                 {{ $t("footer.donate") }}
               </h3>
             </div>
-            <div class="content-links">
+            <div class="">
               <p>{{ $t("footer.welcomeDes") }}</p>
 
               <a
@@ -249,11 +252,19 @@ export default {
       openButton.style.display = 'block';
       closeButton.style.display = 'none';
       content.classList.add('mobile-hide');
+    },
+    toggler(ref) {
+      // console.log(this.$refs);
+      // console.log(this.$refs[ref][0]);
+      const el = this.$refs[ref][0];
+      el.classList.toggle('content-open');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'FooterContainer.scss';
+@import 'FooterContainer-desktop.scss';
+@import 'FooterContainer-tablet.scss';
+@import 'FooterContainer-mobile.scss';
 </style>

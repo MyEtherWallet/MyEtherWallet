@@ -3,7 +3,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import BootstrapVue from 'bootstrap-vue';
 import InfiniteSlider from 'vue-infinite-slide-bar';
-import VueWorker from 'vue-worker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -21,7 +20,16 @@ import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 // etc
 import languages from './translations';
+import VueMq from 'vue-mq';
 
+Vue.use(VueMq, {
+  breakpoints: {
+    // default breakpoints - customize this
+    sm: 414,
+    md: 1024,
+    lg: Infinity
+  }
+});
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
@@ -42,7 +50,6 @@ Vue.use(BootstrapVue);
 
 // Define vue-i18n
 Vue.use(VueI18n);
-Vue.use(VueWorker);
 const i18n = new VueI18n({
   locale: 'en_US',
   fallbackLocale: 'en_US',

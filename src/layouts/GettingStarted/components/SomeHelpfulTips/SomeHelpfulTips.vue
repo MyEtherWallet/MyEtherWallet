@@ -15,7 +15,7 @@
           <div class="tips">
             <div>
               <h5>Never give your Private Key to anyone</h5>
-              <p>That includes your seystore file and mnemonic phrase.</p>
+              <p>That includes your keystore file and mnemonic phrase.</p>
             </div>
             <div>
               <h5>Don't trust any free ETH</h5>
@@ -76,5 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../BlockWithProgressBar.scss';
+@import '../BlockWithProgressBar-desktop.scss';
+@import '../BlockWithProgressBar-tablet.scss';
+@import '../BlockWithProgressBar-mobile.scss';
 </style>

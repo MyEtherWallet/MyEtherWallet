@@ -73,5 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './PopOver.scss';
+@import './PopOver-desktop.scss';
+@import './PopOver-tablet.scss';
+@import './PopOver-mobile.scss';
 </style>

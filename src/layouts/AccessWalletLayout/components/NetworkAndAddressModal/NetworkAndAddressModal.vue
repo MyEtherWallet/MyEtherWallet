@@ -3,12 +3,13 @@
     ref="networkAndAddress"
     :title="$t('accessWallet.networkAndAddress')"
     hide-footer
-    class="bootstrap-modal modal-network-and-address"
+    class="bootstrap-modal padding-25-20 modal-network-and-address"
     centered>
     <!-- Derivation Path Drop down-->
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+        <p>Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
         <div class="dropdown-button-container">
           <b-dropdown
             id="hd-derivation-path"
@@ -140,7 +141,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-const unit = require('ethjs-unit');
+import * as unit from 'ethjs-unit';
 
 export default {
   components: {
@@ -355,7 +356,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'NetworkAndAddressModal.scss';
+@import 'NetworkAndAddressModal-desktop.scss';
+@import 'NetworkAndAddressModal-tablet.scss';
+@import 'NetworkAndAddressModal-mobile.scss';
 
 .activeConn {
   color: gray;

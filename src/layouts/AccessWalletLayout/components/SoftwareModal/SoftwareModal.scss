@@ -1,10 +1,13 @@
-@import '~@/scss/CustomModal';
-
+@import '~@/scss/GlobalVariables';
 .modal-software {
+  .modal-body {
+    padding: 20px;
+  }
+
   .button-options {
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     margin-bottom: 40px;
 
     li {
@@ -13,7 +16,7 @@
       color: $light-grey-11;
       cursor: pointer;
       display: flex;
-      padding: 30px 10px 30px 30px;
+      padding: 10px;
       text-align: left;
 
       .hover-icon {
@@ -39,7 +42,7 @@
       }
 
       span {
-        color: #05c0a5;
+        color: $mew-green;
         font-weight: 500;
         line-height: 16px;
       }

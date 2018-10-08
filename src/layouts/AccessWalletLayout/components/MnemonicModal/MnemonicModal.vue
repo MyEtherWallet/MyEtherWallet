@@ -3,7 +3,7 @@
     ref="mnemonicPhrase"
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
-    class="bootstrap-modal modal-metamask"
+    class="bootstrap-modal padding-20 modal-metamask"
     centered>
 
     <div class="contents">
@@ -96,5 +96,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'MnemonicModal.scss';
+@import 'MnemonicModal-desktop.scss';
+@import 'MnemonicModal-tablet.scss';
+@import 'MnemonicModal-mobile.scss';
 </style>

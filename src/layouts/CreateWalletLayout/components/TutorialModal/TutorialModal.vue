@@ -4,18 +4,18 @@
     hide-footer
     centered
     hide-header
-    class="bootstrap-modal">
+    class="bootstrap-modal padding-40-20 background-image-1">
     <div class="d-block text-center">
-      <h2 class="title">Welcome to MEW</h2>
+      <h3 class="title">Welcome to MEW</h3>
       <p class="content">
         Please take a moment to read through this short introduction. It's
         extreamely important to pay attention to what we have to say,
         for your own security. Ignoring this step will highly increase your
-        chances of getting phished.<br>
+        chances of getting phished.
         <span @click="skip">Skip</span> at your own risk.
       </p>
     </div>
-    <div class="button-container fixed-width-1">
+    <div class="button-container">
       <router-link
         to="/getting-started"
         class="mid-round-button-green-filled close-button">
@@ -40,5 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TutorialModal.scss';
+@import 'TutorialModal-desktop.scss';
+@import 'TutorialModal-tablet.scss';
+@import 'TutorialModal-mobile.scss';
 </style>

@@ -58,8 +58,6 @@
       </ul>
     </div>
     <div class="button-container">
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
       <div
         :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
         @click="continueAccess">
@@ -172,5 +170,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'HardwareModal.scss';
+@import 'HardwareModal-desktop.scss';
+@import 'HardwareModal-tablet.scss';
+@import 'HardwareModal-mobile.scss';
 </style>

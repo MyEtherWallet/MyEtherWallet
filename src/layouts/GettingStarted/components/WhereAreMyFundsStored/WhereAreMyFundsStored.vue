@@ -76,5 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../BlockWithProgressBar.scss';
+@import '../BlockWithProgressBar-desktop.scss';
+@import '../BlockWithProgressBar-tablet.scss';
+@import '../BlockWithProgressBar-mobile.scss';
 </style>
