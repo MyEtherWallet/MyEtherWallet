@@ -66,7 +66,7 @@ export default {
         mnemonicPassword: this.password
       })
         .then(wallet => {
-          this.$refs.password.hide();
+          // this.$refs.password.hide();  // TODO: confirm moving this to parent still functions as expected
           this.password = '';
           this.hardwareWalletOpen(wallet);
         })
