@@ -21,6 +21,7 @@
       :step="step"
       :send-bid="sendBid"
       :reveal-bid="revealBid"
+      :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
@@ -37,6 +38,7 @@ import RegistrarAbi from '@/helpers/registrarAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
+import * as uts46 from 'idna-uts46';
 
 const ETH_TLD = '.eth';
 
@@ -62,7 +64,8 @@ export default {
       raw: {},
       highestBidder: '',
       contractInitiated: false,
-      step: 1
+      step: 1,
+      domainNameErr: false
     };
   },
   mounted() {
@@ -94,6 +97,7 @@ export default {
         this.registrarAddress
       );
       this.contractInitiated = true;
+      this.domainNameErr = false;
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.$store.state.ens.owner(
@@ -101,7 +105,33 @@ export default {
       );
       return registrarAddress;
     },
-    async checkDomain() {
+    normalise(str) {
+      return uts46.toUnicode(str, {
+        useStd3ASCII: true,
+        transitional: false
+      });
+    },
+    checkDomain() {
+      try {
+        this.domainName = this.normalise(this.domainName);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      }
+
+      try {
+        this.domainNameErr =
+          this.domainName.length < 6 &&
+          this.normalise(this.domainName) === '' &&
+          this.domainName.substring(0, 2) === '0x';
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      }
+      if (this.domainNameErr === true) return;
+      this.processDomainName();
+    },
+    async processDomainName() {
       const web3 = this.$store.state.web3;
       this.loading = true;
       this.labelHash = web3.utils.sha3(this.domainName);
