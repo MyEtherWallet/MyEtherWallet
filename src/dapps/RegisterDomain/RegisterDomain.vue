@@ -169,6 +169,12 @@ export default {
       } else {
         this.domainNameErr = false;
       }
+      try {
+        this.normalise(value);
+      } catch (e) {
+        this.domainNameErr = true;
+        return;
+      }
       this.domainName = this.normalise(value);
     },
     async getMoreInfo(deedOwner) {
