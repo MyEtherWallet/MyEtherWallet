@@ -22,9 +22,28 @@
             src="@/assets/images/icons/hide-password.svg"
             @click.prevent="switchViewPassword">
         </div>
+
+        <div class="terms-container">
+          <accept-terms-checker/>
+        </div>
+
         <p
           v-show="error !== ''"
           class="error"> {{ error }} </p>
+
+        <div class="password-modal-button-container">
+          <standard-button 
+            :options="buttonAccessMyWallet"
+            @click.native="unlockWallet"
+          />
+        </div>
+
+
+        <customer-support/>
+
+
+
+        <!--
         <button
           :disabled=" password === '' && password.length === 0 && password.length < 9"
           class="submit-button large-round-button-green-filled"
@@ -32,6 +51,7 @@
           @click.prevent="unlockWallet">
           {{ $t("accessWallet.unlockWallet") }}
         </button>
+      -->
       </form>
     </div>
   </b-modal>
@@ -40,7 +60,14 @@
 <script>
 import { BasicWallet } from '@/wallets';
 import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
+import AcceptTermsChecker from '@/components/AcceptTermsChecker';
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'accept-terms-checker': AcceptTermsChecker,
+    'customer-support': CustomerSupport
+  },
   props: {
     file: {
       type: Object,
@@ -51,6 +78,13 @@ export default {
   },
   data() {
     return {
+      buttonAccessMyWallet: {
+        title: 'Access My Wallet',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       show: false,
       password: '',
       error: ''
