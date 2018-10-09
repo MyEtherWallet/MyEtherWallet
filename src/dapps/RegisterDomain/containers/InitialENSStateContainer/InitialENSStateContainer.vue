@@ -10,21 +10,23 @@
       <div class="the-form domain-name">
         <input
           v-model="localDomainName"
-          :class="[localDomainName.length < 7 && localDomainName !== '' ? 'errored' : '']"
+          :class="[domainNameErr ? 'errored' : '']"
           type="text"
           name=""
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
-      <p
-        v-show="localDomainName.length < 7 && localDomainName !== ''"
-        class="erroredMsg"> Domain name is less than 7 characters. </p>
-      <p
-        v-show="domainNameErr"
-        class="erroredMsg"> Invalid symbols on domain </p>
+      <p v-show="domainNameErr" class="erroredMsg">
+        <span v-if="localDomainName.length < 7 && localDomainName !== ''">
+          Domain name is less than 7 characters.
+        </span>
+        <span v-else>
+          Invalid symbols on domain
+        </span>
+      </p>
       <div class="submit-button-container">
         <button
-          :class="[localDomainName.length < 7 ? 'disabled' : '', 'submit-button large-round-button-green-filled clickable']"
+          :class="[domainNameErr || localDomainName === '' ? 'disabled' : '', 'submit-button large-round-button-green-filled clickable']"
           @click.prevent="checkDomain">
           <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
           <i
