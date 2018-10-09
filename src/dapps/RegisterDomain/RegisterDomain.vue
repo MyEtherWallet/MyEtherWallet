@@ -111,27 +111,7 @@ export default {
         transitional: false
       });
     },
-    checkDomain() {
-      try {
-        this.domainName = this.normalise(this.domainName);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-      }
-
-      try {
-        this.domainNameErr =
-          this.domainName.length < 6 &&
-          this.normalise(this.domainName) === '' &&
-          this.domainName.substring(0, 2) === '0x';
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-      }
-      if (this.domainNameErr === true) return;
-      this.processDomainName();
-    },
-    async processDomainName() {
+    async checkDomain() {
       const web3 = this.$store.state.web3;
       this.loading = true;
       this.labelHash = web3.utils.sha3(this.domainName);
@@ -180,7 +160,16 @@ export default {
       }
     },
     updateDomainName(value) {
-      this.domainName = value;
+      if (
+        value.substr(0, 2) === '0x' ||
+        value.length < 7 ||
+        value.indexOf('.') !== -1
+      ) {
+        this.domainNameErr = true;
+      } else {
+        this.domainNameErr = false;
+      }
+      this.domainName = this.normalise(value);
     },
     async getMoreInfo(deedOwner) {
       let owner;
