@@ -1,5 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
+.network-modal-container {
+  user-select: none;
+}
 
 .network-list {
   max-height: 500px;
@@ -16,7 +19,6 @@
   border-radius: 4px;
   border: 1px solid $mew-green;
 }
-
 
 .modal-container {
   .network {
@@ -139,6 +141,6 @@
   align-items: center;
   img {
     height: 25px;
-    margin-right: 0px;
+    margin-right: 0;
   }
 }

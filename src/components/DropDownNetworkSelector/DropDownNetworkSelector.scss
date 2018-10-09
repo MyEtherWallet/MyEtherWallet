@@ -24,11 +24,9 @@
 
 .dropdown-input-box {
   position: relative;
-  border: 1px solid $background-color-1;
   border-radius: 4px;
   transition: all 0.2s ease;
   height: 57px;
-  background-color: $background-color-1;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -91,7 +89,7 @@
   opacity: 0;
   pointer-events: none;
   top: 56px;
-  right: 0px;
+  right: 0;
 
   &.show-dropdown {
     background-color: $white;

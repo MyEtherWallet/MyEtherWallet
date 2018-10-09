@@ -1,10 +1,19 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .hardware-modal-content-container {
+    padding: 40px;
+  }
+
+  .modal-button-container {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   .modal-hardware {
     .button-options {
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       margin-bottom: 40px;
 
       &.hardware-button-options {

@@ -111,11 +111,11 @@
           <standard-button 
             :options="buttonBack"
             @click.native="interact = true"
-          />        
+          />
           <standard-button 
             :options="buttonRead"
             @click.native="interact = true"
-          />        
+          />
         </div>
 
         <interface-bottom-text

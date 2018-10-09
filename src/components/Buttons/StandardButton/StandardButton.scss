@@ -5,6 +5,17 @@ $color-white: #fff;
 $disabled-button-background: #9a9a9a;
 $disabled-button-border: #ababab;
 
+// Grey Filled Button Colors
+$grey-filled-button-background: #9a9a9a;
+$grey-filled-button-background--hover: #9a9a9a;
+$grey-filled-button-background--click: #9a9a9a;
+
+// Grey Bordered Button Colors
+$grey-border-button-border: #9a9a9a;
+$grey-border-button-border--hover: #9a9a9a;
+$grey-border-button-border--click: #9a9a9a;
+$grey-border-button-background--click: #fff;
+
 // Green Filled Button Colors
 $green-filled-button-background: #3bc1aa;
 $green-filled-button-background--hover: #3ed7bc;
@@ -49,6 +60,13 @@ $blue-border-button-background--click: #f2f4fd;
 .the-button {
   display: block;
 
+  .loading-left {
+    position: absolute;
+    top: 16px;
+    left: calc(50% - 85px);
+    height: 25px;
+  }
+
   .arrow-right {
     position: absolute;
     top: 23px;
@@ -73,8 +91,76 @@ $blue-border-button-background--click: #f2f4fd;
 }
 
 //=======================================================================
+// Animation
+//=======================================================================
+
+@keyframes loading-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-left {
+  animation-name: loading-icon;
+  animation-duration: 0.7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+//=======================================================================
 // Buttons
 //=======================================================================
+
+.standard-button__grey {
+  @include btn-mixin-1();
+
+  .the-button {
+    @include btn-mixin-2();
+
+    cursor: initial;
+    background-color: $grey-filled-button-background;
+    border: 1px solid $grey-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $grey-filled-button-background--hover;
+      border: 1px solid $grey-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $grey-filled-button-background--click;
+      border: 1px solid $grey-filled-button-background--click;
+    }
+  }
+} // .standard-button__grey
+
+.standard-button__grey-border {
+  @include btn-mixin-1();
+
+  .the-button {
+    @include btn-mixin-2();
+
+    cursor: initial;
+    background-color: $color-white;
+    border: 1px solid $grey-border-button-border;
+    color: $grey-border-button-border;
+
+    &:hover {
+      background-color: $color-white;
+      border: 1px solid $grey-border-button-border--hover;
+      color: $grey-border-button-border--hover;
+    }
+
+    &:active {
+      background-color: $grey-border-button-background--click;
+      border: 1px solid $grey-border-button-border--click;
+      color: $grey-border-button-border--click;
+    }
+  }
+} // .standard-button__grey-border
 
 .standard-button__green {
   @include btn-mixin-1();
@@ -121,6 +207,19 @@ $blue-border-button-background--click: #f2f4fd;
     }
   }
 } // .standard-button__green-border
+
+.standard-button__green-noclick {
+  @include btn-mixin-1();
+
+  .the-button {
+    @include btn-mixin-2();
+
+    cursor: initial;
+    background-color: $green-filled-button-background;
+    border: 1px solid $green-filled-button-background;
+    color: $color-white;
+  }
+} // .standard-button__green
 
 .standard-button__blue {
   @include btn-mixin-1();

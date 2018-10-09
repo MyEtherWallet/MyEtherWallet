@@ -8,10 +8,16 @@
           <div class="buttons">
 
             <router-link to="/create-wallet">
-              <div class="get-a-free-wallet mid__round-button__blue-filled__blue-border">Get a Free Wallet</div>
+              <standard-button 
+                :options="buttonGetWallet"
+                @click.native="interact = true"
+              />
             </router-link>
             <router-link to="/access-my-wallet">
-              <div class="access-my-wallet mid-round-button-green-filled-green-border">Access My Wallet</div>
+              <standard-button 
+                :options="buttonAccessWallet"
+                @click.native="interact = true"
+              />
             </router-link>
 
           </div>
@@ -28,7 +34,22 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      buttonGetWallet: {
+        title: 'Get a Free Wallet',
+        buttonStyle: 'green-border',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      buttonAccessWallet: {
+        title: 'Access My Wallet',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      }
+    };
   }
 };
 </script>

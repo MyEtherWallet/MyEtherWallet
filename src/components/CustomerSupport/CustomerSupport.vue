@@ -18,4 +18,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.support {
+  text-align: center;
+}
+
+.support-content {
+  align-items: center;
+  display: inline-flex;
+  text-align: center;
+}
+
+.support-icon {
+  margin-right: 10px;
+}
 </style>

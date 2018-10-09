@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-container">
+  <div class="network-modal-container">
     <b-modal
       ref="network"
       :title="$t('interface.network')"

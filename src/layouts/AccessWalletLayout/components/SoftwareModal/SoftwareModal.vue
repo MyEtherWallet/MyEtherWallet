@@ -5,57 +5,71 @@
     hide-footer
     class="bootstrap-modal padding-25-20 modal-software"
     centered>
-    <div class="d-block content-container text-center">
-      <ul class="button-options">
-        <li
-          :class="selected === 'byJson'? 'selected': ''"
-          @click="select('byJson')">
-          <img
-            :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-json-hover.svg">
-          <span>{{ $t("common.jsonF") }}</span>
-        </li>
-        <li
-          :class="selected === 'byMnem'? 'selected': ''"
-          @click="select('byMnem')">
-          <img
-            :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-mnemonic-hover.svg">
-          <span>{{ $t("common.mnemonicP") }}</span>
-        </li>
-        <li
-          :class="selected === 'byPriv'? 'selected': ''"
-          @click="select('byPriv')">
-          <img
-            :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-key-hover.svg">
-          <span>{{ $t("common.privKey") }}</span>
-        </li>
-      </ul>
-      <input
-        ref="jsonInput"
-        type="file"
-        name="file"
-        style="display: none"
-        @change="uploadFile">
-    </div>
-    <div class="button-container">
-      <b-btn
-        :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
-        @click="continueAccess">
-        {{ $t("common.continue") }}
-      </b-btn>
-    </div>
-    <customer-support/>
+    <div class="software-modal-content-container">
+      <div class="d-block content-container text-center">
+        <ul class="button-options">
+          <li
+            :class="selected === 'byJson'? 'selected': ''"
+            @click="select('byJson')">
+            <img
+              :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
+              class="icon">
+            <img
+              class="hover-icon"
+              src="@/assets/images/icons/button-json-hover.svg">
+            <span>{{ $t("common.jsonF") }}</span>
+          </li>
+          <li
+            :class="selected === 'byMnem'? 'selected': ''"
+            @click="select('byMnem')">
+            <img
+              :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
+              class="icon">
+            <img
+              class="hover-icon"
+              src="@/assets/images/icons/button-mnemonic-hover.svg">
+            <span>{{ $t("common.mnemonicP") }}</span>
+          </li>
+          <li
+            :class="selected === 'byPriv'? 'selected': ''"
+            @click="select('byPriv')">
+            <img
+              :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
+              class="icon">
+            <img
+              class="hover-icon"
+              src="@/assets/images/icons/button-key-hover.svg">
+            <span>{{ $t("common.privKey") }}</span>
+          </li>
+        </ul>
+        <input
+          ref="jsonInput"
+          type="file"
+          name="file"
+          style="display: none"
+          @change="uploadFile">
+      </div>
+      <div class="button-container">
+        <standard-button 
+          v-if="selected === ''"
+          :options="buttonDisabled"
+        />
+        <standard-button 
+          v-if="selected !== ''"
+          :options="buttonContinue"
+          @click.native="continueAccess"
+        />
+
+        <!--
+        <b-btn
+          :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
+          @click="continueAccess">
+          {{ $t("common.continue") }}
+        </b-btn>
+      -->
+      </div>
+      <customer-support/>
+    </div><!-- .software-modal-content-container -->
   </b-modal>
 </template>
 
@@ -86,6 +100,20 @@ export default {
   },
   data() {
     return {
+      buttonDisabled: {
+        title: 'Continue',
+        buttonStyle: 'grey',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
+      buttonContinue: {
+        title: 'Continue',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       file: '',
       selected: ''
     };

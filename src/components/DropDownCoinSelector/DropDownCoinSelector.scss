@@ -1,6 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
-.drop-down-address-selector {
+.drop-down-coin-selector {
   position: relative;
   user-select: none;
 }
@@ -85,7 +85,7 @@
   opacity: 0;
   pointer-events: none;
   top: 56px;
-  left: 0px;
+  left: 0;
 
   &.show-dropdown {
     background-color: $white;

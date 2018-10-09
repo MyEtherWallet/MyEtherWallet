@@ -7,6 +7,7 @@ $text-info-color: #212529;
 
 .drop-down-address-selector {
   position: relative;
+  user-select: none;
 }
 
 .input-title-container {
@@ -19,7 +20,6 @@ $text-info-color: #212529;
 .input-title-and-helper {
   display: flex;
   align-items: center;
-  user-select: none;
 }
 
 .input-title {

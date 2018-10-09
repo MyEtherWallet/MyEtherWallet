@@ -4,8 +4,13 @@
     class="standard-button">
      
     <div :class="buttonClass">
-      <div         
+      <div
         class="the-button">{{ options.title }}
+        <img 
+          v-if="options.loadingIcon"
+          class="loading-left" 
+          src="@/assets/images/icons/loading.png">
+
         <img 
           v-if="options.rightArrow && options.buttonStyle == 'green'"
           class="arrow-right" 
@@ -47,10 +52,16 @@ export default {
   computed: {
     buttonClass() {
       switch (this.options.buttonStyle) {
+        case 'grey':
+          return 'standard-button__grey';
+        case 'grey-border':
+          return 'standard-button__grey-border';
         case 'green':
           return 'standard-button__green';
         case 'green-border':
           return 'standard-button__green-border';
+        case 'green-noclick':
+          return 'standard-button__green-noclick';
         case 'blue':
           return 'standard-button__blue';
         case 'blue-border':

@@ -5,33 +5,35 @@
     hide-footer
     class="bootstrap-modal modal-software"
     centered>
-    <form class="password-form">
-      <div class="input-container">
-        <input
-          :type="show ? 'text': 'password'"
-          v-model="password"
-          name="Password"
-          autocomplete="off" >
-        <img
-          v-if="show"
-          src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
-        <img
-          v-if="!show"
-          src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
-      </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
-      <button
-        :disabled=" password === '' && password.length === 0 && password.length < 9"
-        class="submit-button large-round-button-green-filled"
-        type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlockWallet") }}
-      </button>
-    </form>
+    <div class="password-modal-content">
+      <form class="password-form">
+        <div class="input-container">
+          <input
+            :type="show ? 'text': 'password'"
+            v-model="password"
+            name="Password"
+            autocomplete="off" >
+          <img
+            v-if="show"
+            src="@/assets/images/icons/show-password.svg"
+            @click.prevent="switchViewPassword">
+          <img
+            v-if="!show"
+            src="@/assets/images/icons/hide-password.svg"
+            @click.prevent="switchViewPassword">
+        </div>
+        <p
+          v-show="error !== ''"
+          class="error"> {{ error }} </p>
+        <button
+          :disabled=" password === '' && password.length === 0 && password.length < 9"
+          class="submit-button large-round-button-green-filled"
+          type="submit"
+          @click.prevent="unlockWallet">
+          {{ $t("accessWallet.unlockWallet") }}
+        </button>
+      </form>
+    </div>
   </b-modal>
 </template>
 
@@ -58,6 +60,9 @@ export default {
     password() {
       this.error = '';
     }
+  },
+  mounted() {
+    this.$refs.password.show();
   },
   methods: {
     unlockWallet() {

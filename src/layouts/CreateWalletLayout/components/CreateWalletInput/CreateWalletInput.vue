@@ -35,6 +35,15 @@
     </div>
     <!--=== MEW custom form ========================================-->
 
+    <div class="button-container">
+      <standard-button 
+        :options="buttonNext"
+        :disabled="value.length === 0 && value.length < 9 && strength === ''"
+        @click.prevent="switcher(param)"
+      />
+    </div>
+
+
     <button
       :disabled="value.length === 0 && value.length < 9 && strength === ''"
       class="next-button large-round-button-green-filled"
@@ -68,6 +77,13 @@ export default {
       strengthClass: '',
       password: {
         showPassword: false
+      },
+      buttonNext: {
+        title: 'Next',
+        buttonStyle: 'green',
+        rightArrow: true,
+        leftArrow: false,
+        fullWidth: false
       }
     };
   },

@@ -5,68 +5,84 @@
     hide-footer
     class="bootstrap-modal modal-hardware"
     centered>
-    <div class="d-block text-center">
-      <span v-show="mayNotBeAttached">(TEMP implementation) Please check if your device is connected</span>
-      <ul
-        ref="hardwareList"
-        class="button-options hardware-button-options">
-        <li
-          :class="selected === 'ledger'? 'active': ''"
-          @click="select('ledger')">
-          <!--<img class="icon" :src="selected === 'ledger'? require('@/assets/images/icons/button-ledger.png') : require('@/assets/images/icons/button-ledger-hover.png')">-->
-          <img
-            class="icon"
-            src="~@/assets/images/icons/button-ledger.png">
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-ledger-hover.png">
-          <span>Ledger Wallet</span>
-        </li>
-        <li
-          :class="selected === 'trezor'? 'active': ''"
-          @click="select('trezor')">
-          <img
-            class="icon"
-            src="~@/assets/images/icons/button-trezor.png">
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-trezor-hover.png">
-          <span>Trezor</span>
-        </li>
-        <li
-          :class="selected === 'bitbox'? 'active': ''"
-          @click="select('bitbox')">
-          <img
-            class="icon"
-            src="~@/assets/images/icons/button-bitbox.png">
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-bitbox-hover.png">
-          <span>Digital Bitbox</span>
-        </li>
-        <li
-          :class="selected === 'secalot'? 'active': ''"
-          @click="select('secalot')">
-          <img
-            class="icon"
-            src="~@/assets/images/icons/button-secalot.png">
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-secalot-hover.png">
-          <span>Secalot</span>
-        </li>
-      </ul>
-    </div>
-    <div class="button-container">
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
-      <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
-      <div
-        :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
-        @click="continueAccess">
-        {{ $t("accessWallet.accessDeviceAddresses") }}
+    <div class="hardware-modal-content-container">
+      <div class="d-block text-center">
+        <span v-show="mayNotBeAttached">(TEMP implementation) Please check if your device is connected</span>
+        <ul
+          ref="hardwareList"
+          class="button-options hardware-button-options">
+          <li
+            :class="selected === 'ledger'? 'active': ''"
+            @click="select('ledger')">
+            <!--<img class="icon" :src="selected === 'ledger'? require('@/assets/images/icons/button-ledger.png') : require('@/assets/images/icons/button-ledger-hover.png')">-->
+            <img
+              class="icon"
+              src="~@/assets/images/icons/button-ledger.png">
+            <img
+              class="icon-hover"
+              src="~@/assets/images/icons/button-ledger-hover.png">
+            <span>Ledger Wallet</span>
+          </li>
+          <li
+            :class="selected === 'trezor'? 'active': ''"
+            @click="select('trezor')">
+            <img
+              class="icon"
+              src="~@/assets/images/icons/button-trezor.png">
+            <img
+              class="icon-hover"
+              src="~@/assets/images/icons/button-trezor-hover.png">
+            <span>Trezor</span>
+          </li>
+          <li
+            :class="selected === 'bitbox'? 'active': ''"
+            @click="select('bitbox')">
+            <img
+              class="icon"
+              src="~@/assets/images/icons/button-bitbox.png">
+            <img
+              class="icon-hover"
+              src="~@/assets/images/icons/button-bitbox-hover.png">
+            <span>Digital Bitbox</span>
+          </li>
+          <li
+            :class="selected === 'secalot'? 'active': ''"
+            @click="select('secalot')">
+            <img
+              class="icon"
+              src="~@/assets/images/icons/button-secalot.png">
+            <img
+              class="icon-hover"
+              src="~@/assets/images/icons/button-secalot-hover.png">
+            <span>Secalot</span>
+          </li>
+        </ul>
       </div>
-    </div>
-    <customer-support/>
+
+      <div class="modal-button-container">
+        <standard-button 
+          :options="buttonConnecting"
+        />
+        <standard-button 
+          :options="buttonConnectYourDevice"
+        />
+      </div>
+
+
+      <div 
+        v-if="false" 
+        class="button-container">
+        <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
+        <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
+        <div
+          :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
+          @click="continueAccess">
+          {{ $t("accessWallet.accessDeviceAddresses") }}
+        </div>
+      </div>
+
+      <customer-support/>
+    </div><!-- .hardware-modal-content-container -->
   </b-modal>
 </template>
 
@@ -95,13 +111,29 @@ export default {
   },
   data() {
     return {
+      buttonConnecting: {
+        title: 'Connecting...',
+        buttonStyle: 'green-noclick',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true,
+        loadingIcon: true
+      },
+      buttonConnectYourDevice: {
+        title: 'Please connect your device',
+        buttonStyle: 'grey',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true,
+        loadingIcon: false
+      },
       selected: '',
       mayNotBeAttached: false
     };
   },
   mounted() {
     this.$refs.hardware.$on('hidden', () => {
-      this.selected = '';
+      //this.selected = '';
     });
   },
   methods: {
@@ -156,7 +188,7 @@ export default {
       if (this.selected !== ref) {
         this.selected = ref;
       } else {
-        this.selected = '';
+        //this.selected = '';
       }
     },
     hardwareButtonActivate(e) {

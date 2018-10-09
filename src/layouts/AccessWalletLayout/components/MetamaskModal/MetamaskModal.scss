@@ -1,5 +1,14 @@
 @import '~@/scss/GlobalVariables';
+a {
+  text-decoration: none;
+}
+
+.metamask-modal-content {
+  padding: 40px;
+}
+
 .button-container {
+  margin-bottom: 20px;
   button {
     display: inline-block;
     width: 100%;
@@ -26,10 +35,20 @@
     margin-bottom: 30px;
 
     h4 {
-      font-weight: 400;
-      line-height: 22px;
+      font-weight: 500;
+      line-height: 28px;
+      font-size: 20px;
       margin: 0 auto;
       max-width: 400px;
     }
+  }
+}
+
+.accept-terms {
+  text-align: center;
+  margin-bottom: 30px;
+
+  a {
+    text-decoration: underline;
   }
 }
