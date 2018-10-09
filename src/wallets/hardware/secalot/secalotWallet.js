@@ -2,7 +2,7 @@ import EthereumjsTx from 'ethereumjs-tx';
 import * as ethUtil from 'ethereumjs-util';
 import * as HDKey from 'hdkey';
 import HardwareWalletInterface from '../hardwareWallet-interface';
-import { getDerivationPath, paths } from './deterministicWalletPath';
+import { getDerivationPath, paths } from './deterministicWalletPaths';
 import { Misc } from '@/helpers';
 import SecalotEth from './secalotEth';
 import SecalotUsb from './secalotUsb';
