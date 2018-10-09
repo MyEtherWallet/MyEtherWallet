@@ -16,7 +16,9 @@
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
-      <p v-show="domainNameErr" class="erroredMsg">
+      <p 
+        v-show="domainNameErr" 
+        class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
           Domain name is less than 7 characters.
         </span>
