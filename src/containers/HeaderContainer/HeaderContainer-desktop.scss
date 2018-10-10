@@ -85,7 +85,14 @@
         }
 
         .language-menu-container {
+          padding-right: 8px;
           margin-left: 20px;
+          position: relative;
+          .arrows {
+            position: absolute;
+            right: 0;
+            top: 8px;
+          }
         }
 
         .language-menu {

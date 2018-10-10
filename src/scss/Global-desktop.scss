@@ -857,4 +857,21 @@
       text-shadow: none;
     }
   }
+
+  /****************************************************************************
+    Language selector global style
+    This style needs to be global since when the dropdown menu
+    component imported some of the styles get resetted.
+  ****************************************************************************/
+
+  // Hide down arrow icon for language selector button on top menu
+  .language-menu-container .dropdown-toggle::after {
+    display: none;
+  }
+
+  // Set the dropdown block size limit
+  .language-menu-container .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+  }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
