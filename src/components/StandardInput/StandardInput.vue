@@ -55,15 +55,18 @@
     </div>
 
     <div class="password-strength-indicator">
-      <p 
-        v-if="options.passwordStrength === '1'" 
-        class="weak">Weak strength password</p>
-      <p 
-        v-if="options.passwordStrength === '2'" 
-        class="medium">Medium strength password</p>
-      <p 
-        v-if="options.passwordStrength === '3'" 
-        class="strong">Strong strength password</p>
+      <div v-if="options.passwordStrength === '1'" >
+        <p class="strength weak">Weak strength password</p>
+        <p class="note">Your password needs to be minimum 10 charactors long.</p>
+      </div>
+      <div v-if="options.passwordStrength === '2'">
+        <p class="strength medium">Medium strength password</p>
+        <p class="note">Add numbers to make your password stronger.</p>
+      </div>
+      <div v-if="options.passwordStrength === '3'">
+        <p class="strength strong">Strong strength password</p>
+        <p class="note">Good! Your password is very strong.</p>
+      </div>
     </div>
 
   </div>

@@ -145,16 +145,16 @@
 
         .menu-open {
           div {
-            width: 26px;
-            height: 3px;
+            width: 30px;
+            height: 4px;
             background-color: $background-color-black;
             border-radius: 2px;
             position: absolute;
-            left: 4px;
+            left: 0px;
           }
 
-          $top-position: 8px;
-          $increment-value: 8px;
+          $top-position: 5px;
+          $increment-value: 9px;
 
           .bar-1 {
             top: $top-position;
@@ -173,11 +173,11 @@
         .menu-close {
           div {
             width: 30px;
-            height: 3px;
+            height: 4px;
             background-color: $background-color-black;
             border-radius: 2px;
             position: absolute;
-            top: 16px;
+            top: 14px;
             left: 2px;
           }
           div:nth-child(1) {

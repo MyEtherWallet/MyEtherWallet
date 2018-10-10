@@ -103,7 +103,6 @@ $text-info-color: #212529;
   }
 }
 
-
 .input-container.border-red input {
   border: 1px solid $color-red;
 }
@@ -116,10 +115,17 @@ $text-info-color: #212529;
   border: 1px solid $color-green;
 }
 
-
 .password-strength-indicator {
-  >* {
+  .strength {
     font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .note {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
   }
 
   .weak {
@@ -132,7 +138,6 @@ $text-info-color: #212529;
     color: $color-green;
   }
 }
-
 
 @mixin btn-mixin-1() {
   text-align: center;
