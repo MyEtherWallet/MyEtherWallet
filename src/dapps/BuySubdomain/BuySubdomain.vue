@@ -7,10 +7,10 @@
         <form>
           <div class="subdomain-input">
             <input
+              v-model="domainName"
               type="text"
               placeholder="Please Enter Sub Domain Name"
-              v-model="domainName"
-              >
+            >
             <button
               type="submit"
               @click.prevent="query">Check</button>
@@ -19,10 +19,13 @@
         <div v-show="results.length > 0">
           <p>All Sub domains</p>
           <div class="results-container">
-            <div class="result-item" v-for="item in results" :key="domainName+item.domain">
-              <span>{{domainName}}.{{item.domain}}.eth</span>
+            <div 
+              v-for="item in results" 
+              :key="domainName+item.domain" 
+              class="result-item">
+              <span>{{ domainName }}.{{ item.domain }}.eth</span>
               <span>
-                <span class="amt">{{$store.state.web3.utils.fromWei(item.price, 'ether')}} </span>
+                <span class="amt">{{ $store.state.web3.utils.fromWei(item.price, 'ether') }} </span>
                 <span class="currency">ETH </span>
                 <button> Buy</button>
               </span>
@@ -64,7 +67,7 @@ export default {
     const web3C = this.$store.state.web3.eth.Contract;
     domains.forEach(domain => {
       // console.log(domain);
-      let updatedDomain = Object.assign({}, domain);
+      const updatedDomain = Object.assign({}, domain);
       updatedDomain.contract = new web3C(SubdomainAbi, domain.registrar);
       this.knownRegistrarInstances[domain.name] = updatedDomain;
     });
