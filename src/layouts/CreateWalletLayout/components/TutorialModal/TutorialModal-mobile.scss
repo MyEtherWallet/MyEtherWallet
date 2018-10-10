@@ -1,54 +1,34 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-  .bootstrap-modal {
-    button {
-      flex: 1;
-      padding: 15px 0;
-    }
-  }
-
-  a {
-    color: $white;
-    text-decoration: none;
-    padding: 15px 20px;
-  }
-
-  .button-container {
-    a {
-      width: 100%;
-      text-align: center;
-    }
-  }
-
-  .modal-content .modal-body {
+  .tutorial-modal-content {
     background-image: url('~@/assets/images/modal/garlands.png');
-    background-position: center 20px;
+    background-position: center 10px;
     background-repeat: no-repeat;
-    background-size: 91%;
-    padding: 20px;
-
-    .title {
-      color: $text-color-6;
-      font-size: 25px;
-      font-weight: 500;
-      margin-bottom: 30px;
-    }
-
-    .content {
-      color: $link-text-color-1;
-      font-size: 14px;
-      line-height: 21px;
-      margin-bottom: 40px;
-
-      span {
-        color: $text-color-2;
-        cursor: pointer;
-      }
-    }
+    background-size: 95%;
+    padding: 40px 15px;
   }
 
-  .wrap {
-    background-color: $background-color-1;
-    padding: 0;
+  .modal-button-container {
+    text-align: center;
+  }
+
+  .title {
+    color: $text-color-6;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .content {
+    color: $link-text-color-1;
+    font-size: 14px;
+    line-height: 21px;
+    margin-bottom: 40px;
+
+    span {
+      color: $text-color-2;
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 } // @media all and (max-width: $mobile-width)

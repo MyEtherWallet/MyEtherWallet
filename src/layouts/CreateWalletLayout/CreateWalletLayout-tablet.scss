@@ -7,11 +7,12 @@
 
   .title-block {
     margin-bottom: 40px;
-    display: flex;
+    display: block;
+    text-align: center;
 
     .title-popover {
       margin: 0 auto;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       text-align: center;
       h3 {
@@ -73,7 +74,7 @@
     }
 
     .tab-pane {
-      min-height: 500px;
+      //min-height: 500px;
       padding: 50px;
     }
   }

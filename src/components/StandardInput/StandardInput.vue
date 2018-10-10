@@ -30,7 +30,9 @@
       </div>
     </div>
 
-    <div class="input-container">
+    <div 
+      :class="borderClass" 
+      class="input-container">
       <input 
         v-if="!options.isTextarea"
         :value="options.value"
@@ -52,6 +54,18 @@
         class="right-input-text">{{ options.rightInputText }}</p>
     </div>
 
+    <div class="password-strength-indicator">
+      <p 
+        v-if="options.passwordStrength === '1'" 
+        class="weak">Weak strength password</p>
+      <p 
+        v-if="options.passwordStrength === '2'" 
+        class="medium">Medium strength password</p>
+      <p 
+        v-if="options.passwordStrength === '3'" 
+        class="strong">Strong strength password</p>
+    </div>
+
   </div>
 </template>
 
@@ -71,16 +85,14 @@ export default {
     };
   },
   computed: {
-    buttonClass() {
-      switch (this.buttonstyle) {
-        case 'green':
-          return 'standard-button__green';
-        case 'green-border':
-          return 'standard-button__green-border';
-        case 'blue':
-          return 'standard-button__blue';
-        case 'blue-border':
-          return 'standard-button__blue-border';
+    borderClass() {
+      switch (this.options.passwordStrength) {
+        case '1':
+          return 'border-red';
+        case '2':
+          return 'border-blue';
+        case '3':
+          return 'border-green';
         default:
       }
     }

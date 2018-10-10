@@ -1,10 +1,14 @@
+@import '~@/scss/GlobalVariables';
+
 // Colors
-$color-white: #fff;
-$color-green: #05c0a5;
-$form-background: #f9f9f9;
+$color-white: $white;
+$color-red: $red-5;
+$color-blue: $light-blue-1;
+$color-green: $mew-green;
+$form-background: $light-grey-1;
 $input-title-color: #212529;
 
-$button-color: #05c0a5;
+$button-color: $mew-green;
 $button-hover-color: #00947f;
 $text-info-color: #212529;
 
@@ -67,8 +71,8 @@ $text-info-color: #212529;
 
   input {
     font-size: 14px;
-    padding: 18px 20px;
-    border: 0;
+    padding: 17px 20px;
+    border: 1px solid $form-background;
     background-color: $form-background;
     width: 100%;
     position: relative;
@@ -98,6 +102,37 @@ $text-info-color: #212529;
     resize: none;
   }
 }
+
+
+.input-container.border-red input {
+  border: 1px solid $color-red;
+}
+
+.input-container.border-blue input {
+  border: 1px solid $color-blue;
+}
+
+.input-container.border-green input {
+  border: 1px solid $color-green;
+}
+
+
+.password-strength-indicator {
+  >* {
+    font-weight: 600;
+  }
+
+  .weak {
+    color: $color-red;
+  }
+  .medium {
+    color: $color-blue;
+  }
+  .strong {
+    color: $color-green;
+  }
+}
+
 
 @mixin btn-mixin-1() {
   text-align: center;

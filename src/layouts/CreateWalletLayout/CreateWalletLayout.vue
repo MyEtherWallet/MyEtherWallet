@@ -23,7 +23,7 @@
                   <h3>{{ $t("createWallet.titleMEWConnect") }}</h3>
                   <popover :popcontent="'Hi yoyoyoyo'"/>
                 </div>
-                <p>Saft and easy ways to access wallets.</p>
+                <p>Safe and easy ways to access wallets.</p>
               </div>
 
               <div class="appstores">

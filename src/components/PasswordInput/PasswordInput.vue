@@ -42,7 +42,8 @@ export default {
         topTextInfo: '',
         popover: '',
         placeHolder: this.texts,
-        rightInputText: ''
+        rightInputText: '',
+        passwordStrength: '2'
       }
     };
   },

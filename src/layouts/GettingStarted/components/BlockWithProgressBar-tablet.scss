@@ -7,12 +7,12 @@
   .block-progressbar {
     width: 100vw;
     display: flex;
-
+    padding: 0 10px;
     .block-progressbar__container {
-      width: 650px;
+      max-width: 650px;
       border-radius: 4px;
       padding: 0;
-      margin: 10px 10px;
+      margin: 10px auto;
       overflow-y: auto;
       max-height: calc(100vh - 180px);
     }
@@ -106,7 +106,7 @@
 
     .block-progressbar__content {
       background-color: $white;
-      padding: 40px 20px;
+      padding: 40px 60px;
 
       &.text-cented {
         text-align: center;
