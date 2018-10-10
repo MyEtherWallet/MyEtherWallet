@@ -49,6 +49,9 @@ export default {
         fullWidth: false
       }
     };
+  },
+  mounted() {
+    //this.$refs.tutorial.show();
   }
 };
 </script>

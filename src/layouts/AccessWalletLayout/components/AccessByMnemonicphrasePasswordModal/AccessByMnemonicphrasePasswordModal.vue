@@ -79,7 +79,10 @@ export default {
     switchViewPassword() {
       this.show = !this.show;
     }
-  }
+  },
+  mounted() {
+    //this.$refs.accessbymnemonicphrasepassword.show();
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -132,6 +132,7 @@ export default {
     };
   },
   mounted() {
+    //this.$refs.hardware.show();
     this.$refs.hardware.$on('hidden', () => {
       //this.selected = '';
     });

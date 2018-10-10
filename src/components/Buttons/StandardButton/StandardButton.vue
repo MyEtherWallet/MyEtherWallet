@@ -52,6 +52,10 @@ export default {
   computed: {
     buttonClass() {
       switch (this.options.buttonStyle) {
+        case 'white':
+          return 'standard-button__white';
+        case 'white-border':
+          return 'standard-button__white-border';
         case 'grey':
           return 'standard-button__grey';
         case 'grey-border':

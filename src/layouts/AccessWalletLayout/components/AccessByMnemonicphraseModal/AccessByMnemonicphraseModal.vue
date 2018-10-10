@@ -88,6 +88,9 @@ export default {
         right.classList.remove('white');
       }
     }
+  },
+  mounted(){
+    //this.$refs.accessbymnemonicphrase.show();
   }
 };
 </script>

@@ -22,7 +22,7 @@
 
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
-      class="dropdown-input-box">
+      class="address-dropdown-input-box">
       <input
         :class="options.inputDisabled ? 'input-disabled' : ''"
         :placeholder="options.placeholder"
@@ -137,7 +137,7 @@ export default {
   methods: {
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
-        if (event.path[count].className === 'drop-down-address-selector') {
+        if (event.path[count].className === 'address-dropdown-input-box') {
           return;
         }
       }

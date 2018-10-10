@@ -1,7 +1,13 @@
 <template>
   <form class="user-input">
 
+    <div>
+      <password-input/>
+    </div>
+
+
     <!--=== MEW custom form ========================================-->
+    <!--
     <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
@@ -33,6 +39,7 @@
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
+    -->
     <!--=== MEW custom form ========================================-->
 
     <div class="button-container">
@@ -43,7 +50,7 @@
       />
     </div>
 
-
+    <!--
     <button
       :disabled="value.length === 0 && value.length < 9 && strength === ''"
       class="next-button large-round-button-green-filled"
@@ -51,12 +58,18 @@
       @click.prevent="switcher(param)">
       {{ $t("common.next") }}<img src="~@/assets/images/icons/right-arrow.png">
     </button>
+    -->
   </form>
 </template>
 
 <script>
 import zxcvbn from 'zxcvbn';
+import PasswordInput from '@/components/PasswordInput';
+
 export default {
+  components: {
+    'password-input': PasswordInput
+  },
   props: {
     value: {
       type: String,

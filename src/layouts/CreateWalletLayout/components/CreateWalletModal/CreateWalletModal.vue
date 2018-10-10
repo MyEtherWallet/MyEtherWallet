@@ -27,7 +27,7 @@ export default {
     return {};
   },
   mounted() {
-    this.$refs.myModalRef.show();
+    //this.$refs.myModalRef.show();
   }
 };
 </script>

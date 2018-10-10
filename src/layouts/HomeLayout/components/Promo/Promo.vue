@@ -7,6 +7,27 @@
             <h2>{{ $t("home.promoTitle") }}</h2>
           </div>
           <div class="buttons">
+
+            <div class="button-block">
+              <router-link
+                to="/create-wallet"
+                class="nounderline">
+                <standard-button 
+                  :options="buttonGetFreeWallet"
+                />
+              </router-link>
+            </div>
+
+            <div class="button-block">
+              <router-link
+                :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
+                class="nounderline">
+                <standard-button 
+                  :options="buttonAccessMyWallet"
+                />
+              </router-link>
+            </div>
+            <!--
             <div class="button-block">
               <router-link
                 to="/create-wallet"
@@ -25,6 +46,7 @@
                 </span>
               </router-link>
             </div>
+          -->
           </div>
         </div>
       </div>
@@ -35,7 +57,22 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      buttonGetFreeWallet: {
+        title: this.$t('common.getAFreeWallet'),
+        buttonStyle: 'white-border',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      buttonAccessMyWallet: {
+        title: this.$t('common.accessMyWallet'),
+        buttonStyle: 'white',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      }
+    };
   }
 };
 </script>

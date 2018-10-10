@@ -6,145 +6,163 @@
     class="bootstrap-modal padding-25-20 modal-network-and-address"
     centered>
     <!-- Derivation Path Drop down-->
-    <div class="content-container-1">
-      <div class="hd-derivation">
-        <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+    <div class="network-address-modal-content">
+      <div class="content-container-1">
+        <div class="hd-derivation">
+          <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+          <div class="dropdown-button-container">
+            <derivation-selector :options="derivationOptions" />
+            <!--
+            <b-dropdown
+              id="hd-derivation-path"
+              :text="selecteDPath.dpath"
+              class="dropdown-button-2">
+              <b-dropdown-item
+                v-for="(val, key) in availablePaths"
+                :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+                :key="'base' + key"
+                @click="selectDPath(key)">
+                {{ val.dpath }}
+              </b-dropdown-item>
+              <b-dropdown-divider/>
+              <b-dropdown-item>
+                {{ $t('accessWallet.customPaths') }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-for="(val, key) in customPaths"
+                :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+                :key="key"
+                @click="selectDPath(key)">
+                {{ val.dpath }}
+              </b-dropdown-item>
+              <b-dropdown-item @click="showCustomPathInput">
+                {{ $t('accessWallet.addCustomPath') }}
+              </b-dropdown-item>
+            </b-dropdown>
+          -->
+          </div>
+        </div>
         <p>Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
-        <div class="dropdown-button-container">
-          <b-dropdown
-            id="hd-derivation-path"
-            :text="selecteDPath.dpath"
-            class="dropdown-button-2">
-            <b-dropdown-item
-              v-for="(val, key) in availablePaths"
-              :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
-              :key="'base' + key"
-              @click="selectDPath(key)">
-              {{ val.dpath }}
-            </b-dropdown-item>
-            <b-dropdown-divider/>
-            <b-dropdown-item>
-              {{ $t('accessWallet.customPaths') }}
-            </b-dropdown-item>
-            <b-dropdown-item
-              v-for="(val, key) in customPaths"
-              :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
-              :key="key"
-              @click="selectDPath(key)">
-              {{ val.dpath }}
-            </b-dropdown-item>
-            <b-dropdown-item @click="showCustomPathInput">
-              {{ $t('accessWallet.addCustomPath') }}
-            </b-dropdown-item>
-          </b-dropdown>
+        <p
+          v-show="invalidPath !== ''"
+          class="error-message-container">
+          The path {{ invalidPath }} is not valid for this device
+        </p>
+        <p
+          v-show="!customPathInput"
+          class="derivation-brands">{{ selecteDPath.label }}</p>
+        <div v-show="customPathInput">
+          <!-- TODO: how to structure the path input? -->
+          <input
+            id="customPathLabel"
+            v-model="customPath.label"
+            placeholder="my custom path">
+          <br>
+          <input
+            id="customPathInput"
+            v-model="customPath.dpath"
+            placeholder="m/44'/1'/0'/0">
+          <br>
+          <button @click="addCustomPath">addCustomPath</button>
+          <button @click="showCustomPathInput">cancel</button>
         </div>
       </div>
-      <p
-        v-show="invalidPath !== ''"
-        class="error-message-container">
-        The path {{ invalidPath }} is not valid for this device
-      </p>
-      <p
-        v-show="!customPathInput"
-        class="derivation-brands">{{ selecteDPath.label }}</p>
-      <div v-show="customPathInput">
-        <!-- TODO: how to structure the path input? -->
-        <input
-          id="customPathLabel"
-          v-model="customPath.label"
-          placeholder="my custom path">
-        <br>
-        <input
-          id="customPathInput"
-          v-model="customPath.dpath"
-          placeholder="m/44'/1'/0'/0">
-        <br>
-        <button @click="addCustomPath">addCustomPath</button>
-        <button @click="showCustomPathInput">cancel</button>
-      </div>
-    </div>
-    <!-- Address List -->
-    <div class="content-container-2">
-      <div class="address-block-container">
-        <div class="block-title">
-          <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+      <!-- Address List -->
+      <div class="content-container-2">
+        <div class="address-block-container">
+          <div class="block-title">
+            <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+          </div>
+
+          <ul class="address-block table-header">
+            <li>{{ $t('accessWallet.id') }}</li>
+            <li>{{ $t('common.address') }}</li>
+            <li>{{ $t('common.balance') }}</li>
+            <li/>
+          </ul>
+
+          <ul
+            v-for="(details, index) in orderedAddresses"
+            :data-address="'address' + index"
+            :key="index"
+            :class="selectedId === 'address' + index ? 'selected' : ''"
+            class="address-block address-data"
+            @click="setAddress(details, 'address' + index)">
+            <li>{{ details.index + 1 }}.</li>
+            <li>{{ details.address }}</li>
+            <li>{{ details.balance }} ETH</li>
+            <li class="user-input-checkbox">
+              <label class="checkbox-container checkbox-container-small">
+                <input
+                  :id="'address' + index"
+                  type="checkbox"
+                  @click="unselectAllAddresses">
+                <span class="checkmark checkmark-small"/>
+              </label>
+            </li>
+          </ul>
+
+        </div> <!-- .address-block-container -->
+
+        <div class="address-nav">
+          <span
+            v-show="!connectionActive"
+            @click="priorAddressSet()">&lt; {{ $t('common.previous') }}</span>
+          <span
+            v-show="!connectionActive"
+            @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
+          <!-- Probably will need to restructure a bit to allow back browsing while new addresses are retrieved-->
+          <span
+            v-show="connectionActive"
+            class="activeConn">&lt; {{ $t('common.previous') }}</span>
+          <span
+            v-show="connectionActive"
+            class="activeConn">{{ $t('common.next') }} &gt;</span>
         </div>
+      </div> <!-- .content-container-2 -->
 
-        <ul class="address-block table-header">
-          <li>{{ $t('accessWallet.id') }}</li>
-          <li>{{ $t('common.address') }}</li>
-          <li>{{ $t('common.balance') }}</li>
-          <li/>
-        </ul>
-
-        <ul
-          v-for="(details, index) in orderedAddresses"
-          :data-address="'address' + index"
-          :key="index"
-          :class="selectedId === 'address' + index ? 'selected' : ''"
-          class="address-block address-data"
-          @click="setAddress(details, 'address' + index)">
-          <li>{{ details.index + 1 }}.</li>
-          <li>{{ details.address }}</li>
-          <li>{{ details.balance }} ETH</li>
-          <li class="user-input-checkbox">
-            <label class="checkbox-container checkbox-container-small">
-              <input
-                :id="'address' + index"
-                type="checkbox"
-                @click="unselectAllAddresses">
-              <span class="checkmark checkmark-small"/>
-            </label>
-          </li>
-        </ul>
-
-      </div> <!-- .address-block-container -->
-
-      <div class="address-nav">
-        <span
-          v-show="!connectionActive"
-          @click="priorAddressSet()">&lt; {{ $t('common.previous') }}</span>
-        <span
-          v-show="!connectionActive"
-          @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
-        <!-- Probably will need to restructure a bit to allow back browsing while new addresses are retrieved-->
-        <span
-          v-show="connectionActive"
-          class="activeConn">&lt; {{ $t('common.previous') }}</span>
-        <span
-          v-show="connectionActive"
-          class="activeConn">{{ $t('common.next') }} &gt;</span>
+      <div class="accept-terms">
+        <accept-terms-checker/>
+        <!--
+        <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }}
+          <a href="/">{{ $t('common.terms') }}</a>.
+          <input
+            ref="accessMyWalletBtn"
+            type="checkbox"
+            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled">
+          <span class="checkmark"/>
+        </label>
+      -->
       </div>
-    </div> <!-- .content-container-2 -->
+      <div class="the-button-container">
+        <standard-button 
+          :options="buttonUnlock"
+        />
 
-    <div class="accept-terms">
-      <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }}
-        <a href="/">{{ $t('common.terms') }}</a>.
-        <input
-          ref="accessMyWalletBtn"
-          type="checkbox"
-          @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled">
-        <span class="checkmark"/>
-      </label>
+        <!--
+        <b-btn
+          :disabled="accessMyWalletBtnDisabled"
+          class="mid-round-button-green-filled close-button"
+          @click.prevent="unlockWallet">
+          {{ $t("common.accessMyWallet") }}
+        </b-btn>
+      -->
+      </div>
+      <customer-support/>
     </div>
-    <div class="button-container">
-      <b-btn
-        :disabled="accessMyWalletBtnDisabled"
-        class="mid-round-button-green-filled close-button"
-        @click.prevent="unlockWallet">
-        {{ $t("common.accessMyWallet") }}
-      </b-btn>
-    </div>
-    <customer-support/>
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import DropDownDerivationPathSelector from '@/components/DropDownDerivationPathSelector';
+import AcceptTermsChecker from '@/components/AcceptTermsChecker';
 const unit = require('ethjs-unit');
 
 export default {
   components: {
+    'derivation-selector': DropDownDerivationPathSelector,
+    'accept-terms-checker': AcceptTermsChecker,
     'customer-support': CustomerSupport
   },
   props: {
@@ -157,6 +175,16 @@ export default {
   },
   data() {
     return {
+      derivationOptions: {
+        title: ''
+      },
+      buttonUnlock: {
+        title: 'Unlock',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       walletUnlocked: false,
@@ -191,6 +219,7 @@ export default {
     }
   },
   mounted() {
+    //this.$refs.networkAndAddress.show();
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;

@@ -36,6 +36,10 @@
             :options="buttonAccessMyWallet"
             @click.native="unlockWallet"
           />
+          <standard-button 
+            :options="buttonDisabled"
+            @click.native="unlockWallet"
+          />
         </div>
 
 
@@ -85,6 +89,13 @@ export default {
         leftArrow: false,
         fullWidth: true
       },
+      buttonDisabled: {
+        title: 'Access My Wallet',
+        buttonStyle: 'grey',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       show: false,
       password: '',
       error: ''
@@ -96,7 +107,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.password.show();
+    //this.$refs.password.show();
   },
   methods: {
     unlockWallet() {

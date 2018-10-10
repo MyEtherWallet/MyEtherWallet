@@ -78,7 +78,7 @@ export default {
     }
   },
   mounted() {
-    this.$children[0].$refs.success.show();
+    //this.$children[0].$refs.success.show();
   },
   methods: {
     deleteTxHex() {

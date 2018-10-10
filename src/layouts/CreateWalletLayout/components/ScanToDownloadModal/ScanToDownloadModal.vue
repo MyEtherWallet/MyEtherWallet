@@ -40,6 +40,9 @@
 export default {
   data() {
     return {};
+  },
+  mounted() {
+    //this.$refs.scantodownload.show();
   }
 };
 </script>

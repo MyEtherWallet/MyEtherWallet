@@ -5,22 +5,33 @@
     hide-footer
     class="bootstrap-modal modal-software"
     centered>
-    <form class="private-key-form">
-      <div class="input-container">
-        <input
-          v-model="privateKey"
-          type="text"
-          name="PrivateKey"
-          autocomplete="off" >
-      </div>
-      <button
-        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
-        class="submit-button large-round-button-green-filled"
-        type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlockWallet") }}
-      </button>
-    </form>
+    <div class="the-content">
+      <form class="private-key-form">
+        <div class="input-container">
+          <input
+            v-model="privateKey"
+            type="text"
+            name="PrivateKey"
+            autocomplete="off" >
+        </div>
+        <standard-button 
+          :options="buttonContinue"
+        />
+        <standard-button 
+          :options="buttonDisabled"
+        />
+
+        
+        <button
+          :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
+          class="submit-button large-round-button-green-filled"
+          type="submit"
+          @click.prevent="unlockWallet">
+          {{ $t("accessWallet.unlockWallet") }}
+        </button>
+
+      </form>
+    </div>
   </b-modal>
 </template>
 
@@ -29,6 +40,20 @@ import { BasicWallet } from '@/wallets';
 export default {
   data() {
     return {
+      buttonContinue: {
+        title: 'Unlock Wallet',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
+      buttonDisabled: {
+        title: 'Unlock Wallet',
+        buttonStyle: 'grey',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       privateKey:
         '563070852154f171267e8a79111f299e42baeda3acd5f0cf82d92e5feba31dea'
     };

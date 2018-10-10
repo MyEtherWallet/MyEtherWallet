@@ -24,6 +24,9 @@
 export default {
   data() {
     return {};
+  },
+  mounted() {
+    this.$refs.done.show();
   }
 };
 </script>

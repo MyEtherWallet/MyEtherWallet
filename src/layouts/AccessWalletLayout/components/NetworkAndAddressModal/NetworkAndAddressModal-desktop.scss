@@ -1,7 +1,16 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  .modal-body .button-container button {
-    width: 100%;
+  .network-address-modal-content {
+    padding: 40px;
+  }
+
+  .accept-terms {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .the-button-container {
+    margin-bottom: 20px;
   }
 
   .error-message-container {
@@ -17,6 +26,7 @@
       .hd-derivation {
         align-items: center;
         display: flex;
+        margin-bottom: 10px;
 
         .dropdown-button-container {
           margin-left: auto;

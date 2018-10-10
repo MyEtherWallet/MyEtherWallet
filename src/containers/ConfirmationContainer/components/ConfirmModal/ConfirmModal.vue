@@ -71,12 +71,21 @@
         <div class="submit-button-container">
           <div class="flex-center-align">
             <div class="button-with-helper">
+
+              <standard-button 
+                v-if="selected !== ''"
+                :options="buttonContinue"
+                @click.native="continueAccess"
+              />
+
+              <!--
               <div
                 ref="ConfirmAndSendButton"
                 :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
                 @click="sendTx">
                 Confirm and Send
               </div>
+            -->
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
                   <img
@@ -160,6 +169,13 @@ export default {
   },
   data() {
     return {
+      buttonContinue: {
+        title: 'Confirm and Send',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true
+      },
       modalDetailInformation: false,
       transactionSigned: false
     };
