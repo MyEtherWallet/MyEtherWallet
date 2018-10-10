@@ -73,7 +73,6 @@
             <div class="button-with-helper">
 
               <standard-button 
-                v-if="selected !== ''"
                 :options="buttonContinue"
                 @click.native="continueAccess"
               />

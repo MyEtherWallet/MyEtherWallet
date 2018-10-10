@@ -74,15 +74,15 @@ export default {
       this.error = '';
     }
   },
+  mounted() {
+    //this.$refs.accessbymnemonicphrasepassword.show();
+  },
   methods: {
     unlockWallet() {},
     switchViewPassword() {
       this.show = !this.show;
     }
-  },
-  mounted() {
-    //this.$refs.accessbymnemonicphrasepassword.show();
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>

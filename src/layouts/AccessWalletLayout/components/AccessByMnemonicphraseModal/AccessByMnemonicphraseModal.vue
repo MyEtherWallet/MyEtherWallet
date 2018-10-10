@@ -71,6 +71,9 @@ export default {
       mnemonicSize: 12
     };
   },
+  mounted() {
+    //this.$refs.accessbymnemonicphrase.show();
+  },
   methods: {
     mnemonicValueBitSizeChange() {
       const left = document.querySelector('.label-left');
@@ -88,9 +91,6 @@ export default {
         right.classList.remove('white');
       }
     }
-  },
-  mounted(){
-    //this.$refs.accessbymnemonicphrase.show();
   }
 };
 </script>
