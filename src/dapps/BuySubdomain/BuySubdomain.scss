@@ -15,10 +15,9 @@
     color: $dark-blue-7;
     font-size: 16px;
     font-weight: bold;
-    margin-bottom: 14px;
   }
 
-  form {
+  .form {
     display: flex;
     flex-direction: column;
     padding: 31px 0 24px;
@@ -58,6 +57,10 @@
       display: flex;
       justify-content: space-between;
       padding: 14px 0;
+    }
+
+    .result-item.disabled {
+      color: $light-grey-1;
     }
 
     button {

@@ -4,7 +4,7 @@
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
         <p>Sub Domain</p>
-        <form>
+        <div class="form">
           <div class="subdomain-input">
             <input
               v-model="domainName"
@@ -12,22 +12,29 @@
               placeholder="Please Enter Sub Domain Name"
             >
             <button
-              type="submit"
-              @click.prevent="query">Check</button>
+              type="button"
+              @click="query">Check</button>
           </div>
-        </form>
-        <div v-show="results.length > 0">
+        </div>
+        <div v-show="results.length > 0" class="result-section">
           <p>All Sub domains</p>
           <div class="results-container">
-            <div 
-              v-for="item in results" 
-              :key="domainName+item.domain" 
-              class="result-item">
+            <div
+              v-for="item in sortedResults"
+              :key="domainName+item.domain"
+              :class="[ item.active? '':'disabled','result-item']">
               <span>{{ domainName }}.{{ item.domain }}.eth</span>
               <span>
                 <span class="amt">{{ $store.state.web3.utils.fromWei(item.price, 'ether') }} </span>
                 <span class="currency">ETH </span>
-                <button> Buy</button>
+                <button @click="buyDomain(item)" >
+                  <span v-if="item.active">
+                    Buy
+                  </span>
+                  <span v-else>
+                    <i class="fa fa-times" />
+                  </span>
+                </button>
               </span>
             </div>
           </div>
@@ -48,6 +55,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import domains from './domains.json';
+import normalise from '@/helpers/normalise';
 
 export default {
   components: {
@@ -60,62 +68,108 @@ export default {
       ensContract: function() {},
       results: [],
       domainName: '',
-      knownRegistrarInstances: {}
+      knownRegistrarInstances: {},
+      referrerAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     };
   },
   mounted() {
     const web3C = this.$store.state.web3.eth.Contract;
     domains.forEach(domain => {
-      // console.log(domain);
       const updatedDomain = Object.assign({}, domain);
       updatedDomain.contract = new web3C(SubdomainAbi, domain.registrar);
       this.knownRegistrarInstances[domain.name] = updatedDomain;
     });
   },
+  computed: {
+    sortedResults() {
+      const newArr = this.results;
+      newArr
+        .sort((a, b) => {
+          return +a.price[0] > +b.price[0];
+        })
+        .sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        })
+        .sort((a, b) => {
+          return b.active - a.active;
+        });
+
+      return newArr;
+    }
+  },
+  watch: {
+    domainName(val) {
+      this.domainName = normalise(val);
+      this.$store.state.web3.utils._.debounce(this.query(), 2500);
+    }
+  },
   methods: {
     async query() {
       this.results = [];
+      const newArr = [];
       const sha3 = this.$store.state.web3.utils.sha3;
       const registrarNames = Object.keys(this.knownRegistrarInstances);
-      await registrarNames.forEach(async key => {
-        const getSubdomain = await this.knownRegistrarInstances[
-          key
-        ].contract.methods
-          .query(sha3(key), this.domainName)
-          .call();
-        this.results.push(getSubdomain);
-      });
+      if (this.domainName.length > 1) {
+        await registrarNames.forEach(async key => {
+          const getSubdomain = await this.knownRegistrarInstances[
+            key
+          ].contract.methods
+            .query(sha3(key), this.domainName)
+            .call();
+          getSubdomain.version = this.knownRegistrarInstances[key].version;
+          if (getSubdomain[0] !== '') {
+            getSubdomain.active = true;
+            newArr.push(getSubdomain);
+          } else {
+            getSubdomain.active = false;
+            getSubdomain.domain = key;
+            newArr.push(getSubdomain);
+          }
+        });
+      }
+
+      this.results = newArr;
+    },
+    async buyDomain(item) {
+      const domain = this.$store.state.web3.utils.sha3(item.domain);
+      const subdomain = this.domainName;
+      const ownerAddress = this.$store.state.wallet.getAddressString();
+      const referrerAddress = this.referrerAddress;
+      const resolverAddress = await this.$store.state.ens
+        .resolver('resolver.eth')
+        .addr();
+      const itemContract = this.knownRegistrarInstances[item.domain];
+      const data = await (item.version === '1.0'
+        ? itemContract.contract.methods
+            .register(
+              domain,
+              subdomain,
+              ownerAddress,
+              referrerAddress,
+              resolverAddress
+            )
+            .encodeABI()
+        : itemContract.contract.methods
+            .register(
+              domain,
+              subdomain,
+              ownerAddress,
+              resolverAddress,
+              referrerAddress
+            )
+            .encodeABI());
+
+      const raw = {
+        from: ownerAddress,
+        data: data,
+        to: itemContract.registrar,
+        value: item.price
+      };
+
+      this.$store.state.web3.eth.sendTransaction(raw);
     }
-    // async register(
-    //   domain,
-    //   subdomain,
-    //   ownerAddress,
-    //   referrerAddress,
-    //   resolverAddress,
-    //   value
-    // ) {
-    //   return domain.contract.register(
-    //     '0x' + sha3(domain.name),
-    //     subdomain,
-    //     ownerAddress,
-    //     referrerAddress,
-    //     resolverAddress,
-    //     {
-    //       from: ownerAddress,
-    //       value: value
-    //     }
-    //   );
-    // },
-    // async checkDomain(domains, subdomain) {
-    //   const results = [];
-    //   domains.forEach(async domain => {
-    //     const searchDom = await this.subdomainContract.methods.query(
-    //       domain,
-    //       subdomain
-    //     );
-    //     console.log(searchDom);
-    //   });
-    // }
   }
 };
 </script>
