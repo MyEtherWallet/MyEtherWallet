@@ -1,5 +1,4 @@
 @import '~@/scss/GlobalVariables';
-
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .banner {
     padding: 30px;
@@ -58,6 +57,7 @@
       margin-bottom: 0;
       padding: 30px 40px;
       position: relative;
+      height: 100%;
 
       &.create-wallet {
         background-color: $create-wallet-background-color;

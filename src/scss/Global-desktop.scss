@@ -217,7 +217,7 @@
   .page-container {
     margin: 0 auto;
     max-width: 1024px;
-    padding: 0;
+    padding: 0 10px;
   }
 
   .page-container2 {
@@ -456,6 +456,11 @@
       .nav-item {
         flex: 1;
         text-align: center;
+      }
+
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
       }
     }
   }
@@ -874,4 +879,11 @@
     max-height: 400px;
     overflow-y: auto;
   }
+
+  // Hover menu item background
+  .language-menu-container .dropdown-item.active {
+    background-color: #e0e0e0;
+  }
+
+
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )

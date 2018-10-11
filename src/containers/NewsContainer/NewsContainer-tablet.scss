@@ -2,11 +2,7 @@
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
     background-color: $background-color-1;
-    padding: 70px 0;
-
-    @media all and (max-width: $tablet-width) {
-      padding: 40px 0;
-    }
+    padding: 50px 0;
 
     .top-title {
       margin-bottom: 30px;
@@ -15,9 +11,10 @@
     .news-container {
       grid-column-gap: 30px;
       grid-row-gap: 30px;
+      grid-template-columns: 1fr 1fr 1fr;
 
-      @media all and (max-width: $tablet-width) {
-        grid-template-columns: 250px 250px 250px;
+      @media all and (max-width: 900px) {
+        grid-template-columns: 300px 300px 300px;
         overflow-x: scroll;
       }
     }

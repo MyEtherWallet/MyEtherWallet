@@ -12,9 +12,9 @@
 
     .star-background {
       background-image: url('~@/assets/images/home/stars.svg');
-      background-position: right top;
       background-repeat: no-repeat;
-      background-size: 55%;
+      background-position: center;
+      background-size: 180%;
     }
 
     .content {
@@ -107,9 +107,7 @@
       padding: 50px 0;
 
       .mew-features {
-        grid-column-gap: 130px;
-        grid-row-gap: 90px;
-        grid-row-gap: 70px;
+        grid-row-gap: 50px;
         grid-template-columns: 1fr;
 
         .content {

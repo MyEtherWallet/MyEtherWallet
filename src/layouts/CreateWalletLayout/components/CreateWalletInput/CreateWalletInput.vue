@@ -92,7 +92,7 @@ export default {
         showPassword: false
       },
       buttonNext: {
-        title: 'Next',
+        title: 'Continue',
         buttonStyle: 'green',
         rightArrow: true,
         leftArrow: false,

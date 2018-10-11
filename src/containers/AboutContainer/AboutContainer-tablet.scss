@@ -1,5 +1,10 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+
+  .page-container {
+    padding: 0 50px;
+  }
+
   .top-section {
     background-color: $about-mew-spaceman-background-color;
     color: $text-color-1;
@@ -12,14 +17,9 @@
 
     .star-background {
       background-image: url('~@/assets/images/home/stars.svg');
-      background-position: right top;
       background-repeat: no-repeat;
-      background-size: 55%;
-
-      @media all and (max-width: $tablet-width) {
-        background-position: center 300px;
-        background-size: 140%;
-      }
+      background-position: center;
+      background-size: cover;
     }
 
     .content {
@@ -30,7 +30,7 @@
           left: 0;
           position: absolute;
           top: 50px;
-          width: 80%;
+          width: 53%;
           z-index: 9;
         }
 
@@ -71,81 +71,42 @@
         height: 515px;
         position: relative;
 
-        @media all and (max-width: $mobile-width) {
-          height: 715px;
-        }
-
         .spaceman {
-          @media all and (max-width: $tablet-width) {
-            height: 200px;
-          }
-
+          height: 200px;
           animation-duration: 22s;
           animation-iteration-count: infinite;
           animation-name: spaceman-fly;
-          height: 220px;
           position: absolute;
           z-index: 1;
 
           @keyframes spaceman-fly {
             0% {
-              bottom: 89px;
-              right: 75%;
+              bottom: 109px;
+              right: 43%;
             }
-
             25% {
-              bottom: 60px;
-              right: 70%;
-            }
-
-            50% {
               bottom: 80px;
+              right: 40%;
             }
-
+            50% {
+              bottom: 100px;
+            }
             75% {
-              bottom: 40px;
+              bottom: 60px;
             }
-
             100% {
-              bottom: 89px;
-              right: 75%;
+              bottom: 109px;
+              right: 43%;
             }
           }
 
-          @media all and (max-width: $tablet-width) {
-            @keyframes spaceman-fly {
-              0% {
-                bottom: 109px;
-                right: 43%;
-              }
-              25% {
-                bottom: 80px;
-                right: 40%;
-              }
-              50% {
-                bottom: 100px;
-              }
-              75% {
-                bottom: 60px;
-              }
-              100% {
-                bottom: 109px;
-                right: 43%;
-              }
-            }
-          }
         } // .spaceman
 
         .mew-icon {
-          @media all and (max-width: $tablet-width) {
-            height: 200px;
-            top: 170px;
-          }
-
-          height: 300px;
+          height: 241px;
+          top: 47px;
           position: absolute;
           right: 0;
-          top: 0;
           z-index: 1;
         }
       } // .image-content
@@ -158,12 +119,15 @@
       padding: 85px 0;
 
       .mew-features {
-        grid-column-gap: 130px;
-        grid-row-gap: 90px;
+        grid-row-gap: 50px;
+        grid-column-gap: 20px;
+        grid-template-columns: 1fr 1fr;
 
-        @media all and (max-width: $tablet-width) {
+        @media all and (max-width: 900px) {
+
           grid-row-gap: 70px;
           grid-template-columns: 1fr;
+          
         }
 
         .content {
@@ -172,30 +136,8 @@
           margin: 0;
           padding: 0;
 
-          @media all and (max-width: $mobile-width) {
-            flex-direction: column;
-
-            .image {
-              margin: 0 auto;
-              margin-bottom: 20px;
-
-              img {
-                height: 80px;
-                width: auto;
-              }
-            }
-
-            .text {
-              text-align: center;
-            }
-          }
-
           .image {
             padding-right: 30px;
-
-            @media all and (max-width: $mobile-width) {
-              padding-right: 0;
-            }
 
             img {
               height: auto;
