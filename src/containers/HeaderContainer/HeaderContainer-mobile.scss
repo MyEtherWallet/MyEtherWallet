@@ -287,6 +287,10 @@
           font-size: 20px;
           color: $text-base-color;
           padding: 25px 40px;
+
+          @media all and (max-width: 370px) {
+            padding: 15px 30px;
+          }
         }
       }
     }
@@ -295,12 +299,19 @@
       .arrows {
         right: 37px;
         top: 22px;
+        @media all and (max-width: 370px) {
+          top: 16px;
+        }
       }
 
       .current-language-flag {
         display: flex;
         align-items: center;
-        padding: 25px 40px;
+        padding: 29px 40px;
+
+        @media all and (max-width: 370px) {
+          padding: 19px 30px;
+        }
 
         img {
           //width: 50px;
@@ -316,9 +327,6 @@
     }
   }
 
-  .mobile-menu-opened {
-    max-height: 1000px;
-  }
 
   .mobile-menu-closed {
     padding: 0;

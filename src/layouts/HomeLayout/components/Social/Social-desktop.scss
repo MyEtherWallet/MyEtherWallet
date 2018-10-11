@@ -1,0 +1,48 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .wrap {
+    padding: 80px 0;
+
+    .content {
+      .title {
+        h5 {
+          line-height: 21px;
+        }
+      }
+
+      .icons {
+        display: flex;
+        margin-left: auto;
+
+        a:first-child > div {
+          margin-left: 0;
+        }
+
+        a > div {
+          flex-direction: column;
+          margin-left: 40px;
+
+          img {
+            margin: 0 auto 9px;
+          }
+
+          p {
+            color: $text-color-3;
+            text-align: center;
+          }
+        }
+
+        $mobile-subtract-value: 10;
+
+        div {
+          img {
+            $icon-size: 64px;
+
+            height: $icon-size;
+            width: $icon-size;
+          }
+        }
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

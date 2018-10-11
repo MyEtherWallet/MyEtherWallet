@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-
   .page-container {
     padding: 0 50px;
   }
@@ -99,7 +98,6 @@
               right: 43%;
             }
           }
-
         } // .spaceman
 
         .mew-icon {
@@ -124,10 +122,8 @@
         grid-template-columns: 1fr 1fr;
 
         @media all and (max-width: 900px) {
-
           grid-row-gap: 70px;
           grid-template-columns: 1fr;
-          
         }
 
         .content {

@@ -62,5 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'Social.scss';
+@import 'Social-desktop.scss';
+@import 'Social-tablet.scss';
+@import 'Social-mobile.scss';
 </style>

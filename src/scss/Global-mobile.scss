@@ -548,7 +548,11 @@
     .dropdown-menu {
       transform: initial !important;
       position: fixed !important;
-      top: 150px !important;
+      top: 170px !important;
+      @media all and (max-width: 370px) {
+        top: 90px !important;
+      }
+
       left: 5px !important;
       width: calc(100% - 10px);
       z-index: 9999;

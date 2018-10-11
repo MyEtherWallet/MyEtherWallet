@@ -1,0 +1,55 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    padding: 40px 0 60px;
+
+    .content {
+      display: block;
+
+      .title {
+        h5 {
+          line-height: 21px;
+        }
+      }
+
+      .icons {
+        display: flex;
+        margin-left: auto;
+        margin-top: 30px;
+        justify-content: space-around;
+
+        a:first-child > div {
+          margin-left: 0;
+        }
+
+        a > div {
+          flex-direction: column;
+          margin-left: 0;
+          margin-right: 0;
+
+          img {
+            margin: 0 auto 9px;
+          }
+
+          p {
+            color: $text-color-3;
+            text-align: center;
+          }
+        }
+
+        $mobile-subtract-value: 10;
+
+        div {
+          img {
+            $icon-size: 64px;
+
+            $mobile-icon-size: $icon-size - $mobile-subtract-value;
+
+            height: $mobile-icon-size;
+            width: $mobile-icon-size;
+          }
+        }
+      }
+    }
+  }
+} // @media all and (max-width: $mobile-width)
