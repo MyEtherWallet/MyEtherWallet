@@ -7,7 +7,7 @@
         <div class="form">
           <div class="subdomain-input">
             <input
-              v-model="domainName"
+              @input="debounceInput"
               type="text"
               placeholder="Please Enter Sub Domain Name"
             >
@@ -16,7 +16,9 @@
               @click="query">Check</button>
           </div>
         </div>
-        <div v-show="results.length > 0" class="result-section">
+        <div
+          v-show="results.length > 0"
+          class="result-section">
           <p>All Sub domains</p>
           <div class="results-container">
             <div
@@ -56,6 +58,8 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import domains from './domains.json';
 import normalise from '@/helpers/normalise';
+import BN from 'bignumber.js';
+import web3 from 'web3';
 
 export default {
   components: {
@@ -72,6 +76,32 @@ export default {
       referrerAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     };
   },
+  computed: {
+    sortedResults() {
+      let newArr = this.results;
+      newArr.sort((a, b) => {
+        let ab = new BN(a.price).gt(b.price)
+          ? -1
+          : new BN(a.price).eq(b.price)
+            ? 0
+            : 1;
+        return ab;
+      });
+      const taken = newArr.filter(item => {
+        return item.active === false;
+      });
+
+      const available = newArr.filter(item => {
+        return item.active === true;
+      });
+      return available.concat(taken);
+    }
+  },
+  watch: {
+    domainName() {
+      this.query();
+    }
+  },
   mounted() {
     const web3C = this.$store.state.web3.eth.Contract;
     domains.forEach(domain => {
@@ -80,39 +110,15 @@ export default {
       this.knownRegistrarInstances[domain.name] = updatedDomain;
     });
   },
-  computed: {
-    sortedResults() {
-      const newArr = this.results;
-      newArr
-        .sort((a, b) => {
-          return +a.price[0] > +b.price[0];
-        })
-        .sort((a, b) => {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
-          return 0;
-        })
-        .sort((a, b) => {
-          return b.active - a.active;
-        });
-
-      return newArr;
-    }
-  },
-  watch: {
-    domainName(val) {
-      this.domainName = normalise(val);
-      this.$store.state.web3.utils._.debounce(this.query(), 2500);
-    }
-  },
   methods: {
+    debounceInput: web3.utils._.debounce(function(e) {
+      this.domainName = normalise(e.target.value);
+    }, 1500),
     async query() {
       this.results = [];
-      const newArr = [];
       const sha3 = this.$store.state.web3.utils.sha3;
-      const registrarNames = Object.keys(this.knownRegistrarInstances);
       if (this.domainName.length > 1) {
-        await registrarNames.forEach(async key => {
+        for (let key in this.knownRegistrarInstances) {
           const getSubdomain = await this.knownRegistrarInstances[
             key
           ].contract.methods
@@ -121,16 +127,13 @@ export default {
           getSubdomain.version = this.knownRegistrarInstances[key].version;
           if (getSubdomain[0] !== '') {
             getSubdomain.active = true;
-            newArr.push(getSubdomain);
           } else {
             getSubdomain.active = false;
             getSubdomain.domain = key;
-            newArr.push(getSubdomain);
           }
-        });
+          this.results.push(getSubdomain);
+        }
       }
-
-      this.results = newArr;
     },
     async buyDomain(item) {
       const domain = this.$store.state.web3.utils.sha3(item.domain);
