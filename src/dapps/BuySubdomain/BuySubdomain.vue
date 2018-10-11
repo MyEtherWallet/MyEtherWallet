@@ -7,9 +7,9 @@
         <div class="form">
           <div class="subdomain-input">
             <input
-              @input="debounceInput"
               type="text"
               placeholder="Please Enter Sub Domain Name"
+              @input="debounceInput"
             >
             <button
               type="button"
@@ -78,9 +78,9 @@ export default {
   },
   computed: {
     sortedResults() {
-      let newArr = this.results;
+      const newArr = this.results;
       newArr.sort((a, b) => {
-        let ab = new BN(a.price).gt(b.price)
+        const ab = new BN(a.price).gt(b.price)
           ? -1
           : new BN(a.price).eq(b.price)
             ? 0
@@ -118,7 +118,7 @@ export default {
       this.results = [];
       const sha3 = this.$store.state.web3.utils.sha3;
       if (this.domainName.length > 1) {
-        for (let key in this.knownRegistrarInstances) {
+        for (const key in this.knownRegistrarInstances) {
           const getSubdomain = await this.knownRegistrarInstances[
             key
           ].contract.methods
