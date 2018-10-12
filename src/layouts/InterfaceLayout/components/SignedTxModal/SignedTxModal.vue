@@ -96,7 +96,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.signedTx.show();
+    //this.$refs.signedTx.show();
   },
   methods: {
     copyAndContinue() {

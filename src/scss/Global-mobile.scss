@@ -699,12 +699,6 @@
     }
   }
 
-  .bootstrap-modal {
-    .modal-dialog {
-      max-width: 530px;
-    }
-  }
-
   .bootstrap-modal-wide {
     .modal-dialog {
       max-width: 650px;
@@ -736,20 +730,6 @@
       line-height: 21px;
       margin-bottom: 40px;
     }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-
-      &.fixed-width-1 {
-        margin: 0 auto;
-        width: 250px;
-      }
-
-      button {
-        margin: 0 7px;
-      }
-    }
   }
 
   .nopadding .modal-body {
@@ -766,7 +746,6 @@
     overflow-x: hidden;
     overflow-y: auto;
   }
-
 
   .bootstrap-modal.background-image-1 .modal-body {
     background-image: url('~@/assets/images/modal/garlands.png');
@@ -892,11 +871,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 
@@ -954,11 +933,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 

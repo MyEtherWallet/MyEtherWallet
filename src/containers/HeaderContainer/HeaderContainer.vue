@@ -17,7 +17,7 @@
         ref="fixedHeader"
         :class="isPageOnTop == false || mobileMenuOpen ? 'tiny-header' : ''"
         class="fixed-header">
-        <div class="page-container">
+        <div class="page-container top-menu-bar">
           <div 
             :class="isPageOnTop == false ? 'tiny-header-container' : ''" 
             class="header-container">
@@ -89,6 +89,7 @@
                   <template slot="button-content">
                     <blockie
                       :address="wallet.getAddressString()"
+                      class="blockie-image"
                       width="35px"
                       height="35px"/>
                   </template>

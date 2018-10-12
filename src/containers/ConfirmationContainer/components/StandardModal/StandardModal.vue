@@ -39,7 +39,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.standardmodal.show();
+    //this.$refs.standardmodal.show();
   },
   methods: {
     hideModal() {

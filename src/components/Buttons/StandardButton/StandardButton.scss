@@ -1,3 +1,5 @@
+@import '~@/scss/GlobalVariables';
+
 // Colors
 $color-white: #fff;
 
@@ -66,6 +68,10 @@ $blue-border-button-background--click: #f2f4fd;
   border-radius: 4px;
   position: relative;
   min-width: 250px;
+
+  @media all and (max-width: $mobile-width) {
+    min-width: initial;
+  }
 }
 
 .the-button {

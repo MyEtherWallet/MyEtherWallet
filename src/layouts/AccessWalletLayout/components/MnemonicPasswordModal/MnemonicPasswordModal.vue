@@ -5,32 +5,40 @@
     hide-footer
     class="bootstrap-modal modal-software"
     centered>
-    <form class="password-form">
-      <div class="input-container">
-        <input
-          :type="show ? 'text': 'password'"
-          v-model="password"
-          name="Password"
-          autocomplete="off" >
-        <img
-          v-if="show"
-          src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
-        <img
-          v-if="!show"
-          src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
-      </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
-      <button
-        class="submit-button large-round-button-green-filled"
-        type="submit"
-        @click.prevent="unlockWallet" >
-        {{ $t("common.continue") }}
-      </button>
-    </form>
+    <div class="password-modal-container">
+      <form class="password-form">
+        <div class="input-container">
+          <input
+            :type="show ? 'text': 'password'"
+            v-model="password"
+            name="Password"
+            autocomplete="off" >
+          <img
+            v-if="show"
+            src="@/assets/images/icons/show-password.svg"
+            @click.prevent="switchViewPassword">
+          <img
+            v-if="!show"
+            src="@/assets/images/icons/hide-password.svg"
+            @click.prevent="switchViewPassword">
+        </div>
+        <p
+          v-show="error !== ''"
+          class="error"> {{ error }} </p>
+
+        <standard-button 
+          :options="buttonContinue"
+        />
+
+        <button
+          v-if="false"
+          class="submit-button large-round-button-green-filled"
+          type="submit"
+          @click.prevent="unlockWallet" >
+          {{ $t("common.continue") }}
+        </button>
+      </form>
+    </div>
   </b-modal>
 </template>
 
@@ -49,6 +57,13 @@ export default {
   },
   data() {
     return {
+      buttonContinue: {
+        title: 'Continue',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
       show: false,
       password: '',
       error: ''
@@ -58,6 +73,9 @@ export default {
     password() {
       this.error = '';
     }
+  },
+  mounted() {
+    //this.$refs.password.show();
   },
   methods: {
     unlockWallet() {

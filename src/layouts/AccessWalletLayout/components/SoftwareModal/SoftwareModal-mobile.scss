@@ -1,91 +1,89 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-
-.software-modal-content-container {
-  padding: 10px;
-}
-
-.modal-button-container {
-  margin-top: 40px;
-}
-
-.support-container {
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
-.modal-software {
-  .modal-body {
-    padding: 20px;
+  .software-modal-content-container {
+    padding: 10px;
   }
 
-  .button-options {
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 1fr;
-    
+  .modal-button-container {
+    margin-top: 40px;
+  }
 
-    li {
-      user-select: none;
-      align-items: center;
-      color: $light-grey-11;
-      cursor: pointer;
-      display: flex;
-      padding: 10px;
-      text-align: left;
+  .support-container {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
 
-      .hover-icon {
-        display: none;
-        height: 50px;
-        width: 50px;
-        margin-right: 8px;
-      }
+  .modal-software {
+    .modal-body {
+      padding: 20px;
+    }
 
-      &:hover,
-      &.selected {
-        .icon {
-          display: none;
-        }
+    .button-options {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr;
+
+      li {
+        user-select: none;
+        align-items: center;
+        color: $light-grey-11;
+        cursor: pointer;
+        display: flex;
+        padding: 10px;
+        text-align: left;
+
         .hover-icon {
-          display: block;
+          display: none;
+          height: 50px;
+          width: 50px;
+          margin-right: 8px;
+        }
+
+        &:hover,
+        &.selected {
+          .icon {
+            display: none;
+          }
+          .hover-icon {
+            display: block;
+          }
+
+          span {
+            font-weight: 500;
+            color: black;
+          }
         }
 
         span {
+          color: #05c0a5;
           font-weight: 500;
-          color: black;
+          line-height: 16px;
         }
-      }
 
-      span {
-        color: #05c0a5;
-        font-weight: 500;
-        line-height: 16px;
-      }
+        &.selected {
+          box-shadow: 0 3px 15px $box-shadow-color-1;
+          color: $text-black;
+          font-weight: 500;
+        }
 
-      &.selected {
-        box-shadow: 0 3px 15px $box-shadow-color-1;
-        color: $text-black;
-        font-weight: 500;
-      }
+        .icon {
+          margin-right: 8px;
+          width: 50px;
+        }
 
-      .icon {
-        margin-right: 8px;
-        width: 50px;
+        // .icon-hover {
+        //   display: none;
+        // }
       }
-
-      // .icon-hover {
-      //   display: none;
-      // }
     }
   }
-}
 
-.button-container {
-  width: 100%;
-  margin-bottom: 30px;
+  .button-container {
+    width: 100%;
+    margin-bottom: 30px;
 
-  button {
-    width: inherit;
+    button {
+      width: inherit;
+    }
   }
-}
 } // @media all and (max-width: $mobile-width)

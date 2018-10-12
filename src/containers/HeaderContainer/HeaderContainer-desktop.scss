@@ -1,7 +1,13 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .wrap {
-    padding-top: 71px;
+    padding-top: 85px;
+  }
+
+  .blockie-image {
+    position: absolute;
+    top: 2px;
+    right: 0;
   }
 
   .mobile-menu {

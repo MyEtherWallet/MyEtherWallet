@@ -65,6 +65,9 @@ export default {
         fullWidth: true
       }
     };
+  },
+  mounted() {
+    //this.$refs.installmetamask.show();
   }
 };
 </script>

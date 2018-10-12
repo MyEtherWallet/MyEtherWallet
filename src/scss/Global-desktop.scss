@@ -533,11 +533,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 
@@ -595,11 +595,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 

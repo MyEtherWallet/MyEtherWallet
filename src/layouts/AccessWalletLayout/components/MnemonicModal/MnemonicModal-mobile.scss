@@ -1,6 +1,11 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .mnemonic-modal-content {
+    padding: 20px;
+  }
+
   .button-container {
+    margin-bottom: 20px;
     a {
       width: 100%;
     }
@@ -49,7 +54,7 @@
         display: grid;
         grid-column-gap: 20px;
         grid-row-gap: 20px;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
         margin-bottom: 20px;
 
         li {
@@ -63,7 +68,7 @@
             color: $text--mnemonic-phrase-key-color;
             margin-left: 10px;
             border: 0;
-            width: calc(100% - 26px);
+            width: calc(100% - 35px);
           }
         } // li
       } // ul

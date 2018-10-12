@@ -695,12 +695,6 @@
     }
   }
 
-  .bootstrap-modal {
-    .modal-dialog {
-      max-width: 530px;
-    }
-  }
-
   .bootstrap-modal-wide {
     .modal-dialog {
       max-width: 650px;
@@ -732,8 +726,6 @@
       line-height: 21px;
       margin-bottom: 40px;
     }
-
-    
   }
 
   .nopadding .modal-body {
@@ -751,14 +743,12 @@
     overflow-y: auto;
   }
 
-
   .bootstrap-modal.background-image-1 .modal-body {
     background-image: url('~@/assets/images/modal/garlands.png');
     background-position: center 10px;
     background-repeat: no-repeat;
     background-size: 95%;
   }
-
 
   // *********************************************************************
   // [Bootstrap] Nav tab style
@@ -877,11 +867,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 
@@ -939,11 +929,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 34px;
+        border-radius: 8px;
       }
 
       &.round::before {
-        border-radius: 100%;
+        border-radius: 6px;
       }
     }
 

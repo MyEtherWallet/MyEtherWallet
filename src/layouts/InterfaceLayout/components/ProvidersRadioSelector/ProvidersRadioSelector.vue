@@ -1,6 +1,6 @@
 <template>
   <div class="providers-radio-selector">
-    <div class="radio-button-container">
+    <div class="radio-button-container desktop-block">
       <ul>
         <li
           v-for="provider in providers"
@@ -21,6 +21,37 @@
           <div>
             {{ provider.swapValue2 }}
           </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="radio-button-container mobile-block">
+      <ul>
+        <li
+          v-for="provider in providers"
+          :key="provider.key">
+
+          <div class="mew-custom-form__radio-button">
+            <input
+              :id="provider.name"
+              type="radio"
+              name="provider">
+            <label :for="provider.name"/>
+          </div>
+          
+          <div class="provider-image">
+            <img :src="provider.image">
+          </div>
+          
+          <div>
+            <div>
+              {{ provider.swapValue1 }}
+            </div>
+            <div>
+              {{ provider.swapValue2 }}
+            </div>
+          </div>
+
         </li>
       </ul>
     </div>
@@ -57,5 +88,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ProvidersRadioSelector.scss';
+@import 'ProvidersRadioSelector-desktop.scss';
+@import 'ProvidersRadioSelector-tablet.scss';
+@import 'ProvidersRadioSelector-mobile.scss';
 </style>

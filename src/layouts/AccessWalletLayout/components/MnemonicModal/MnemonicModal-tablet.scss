@@ -57,6 +57,10 @@
         grid-template-columns: 1fr 1fr 1fr 1fr;
         margin-bottom: 20px;
 
+        @media all and (max-width: 570px) {
+          grid-template-columns: 1fr 1fr;
+        }
+
         li {
           border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
           color: $text--mnemonic-phrase-index-color;
@@ -68,7 +72,7 @@
             color: $text--mnemonic-phrase-key-color;
             margin-left: 10px;
             border: 0;
-            width: 70px;
+            width: calc(100% - 35px);
           }
         } // li
       } // ul

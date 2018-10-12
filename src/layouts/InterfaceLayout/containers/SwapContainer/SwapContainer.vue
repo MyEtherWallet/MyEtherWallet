@@ -4,10 +4,6 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div class="buy-eth">
-        <span>Buy ETH with</span>
-        <img :src="images.visaMaster">
-      </div>
     </div>
 
     <div class="send-form">
@@ -84,14 +80,22 @@
 
     <div class="submit-button-container">
       
-      <standard-button 
-        :options="buttonContinue"
-        @click.native="openSignedTXModal"
-      />
+      <div class="bottom-button-container">
+        <standard-button 
+          :options="buttonContinue"
+          @click.native="openSignedTXModal"
+        />
+      </div>
+
+      <div class="buy-eth">
+        <span>Buy ETH with</span>
+        <img :src="images.visaMaster">
+      </div>
+
 
     </div>
 
-
+ 
 
 
 
@@ -191,5 +195,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SwapContainer.scss';
+@import 'SwapContainer-desktop.scss';
+@import 'SwapContainer-tablet.scss';
+@import 'SwapContainer-mobile.scss';
 </style>
