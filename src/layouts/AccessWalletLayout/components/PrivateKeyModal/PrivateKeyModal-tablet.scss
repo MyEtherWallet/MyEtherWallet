@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .the-content {
+    padding: 40px;
+  }
+
   .private-key-form {
     display: flex;
     flex-direction: column;

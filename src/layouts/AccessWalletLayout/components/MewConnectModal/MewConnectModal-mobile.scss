@@ -1,10 +1,20 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .modal-content-container {
+    padding: 40px;
+  }
+
   .modal-icon {
-    canvas {
-      width: 130px;
-      height: 130px;
+    margin-bottom: 30px;
+    > * {
+      display: flex;
+      margin: 0 auto;
     }
+  }
+
+  .content-container {
+    margin-bottom: 30px;
+    text-align: center;
   }
 
   .modal-large-text {
@@ -14,22 +24,17 @@
   }
 
   .appstore-button-container {
-    margin-bottom: 20px;
+    margin-bottom: 35px;
+    text-align: center;
 
-    img {
-      margin: 0 5px 20px;
-      width: 130px;
+    .appstore-buttons {
+      margin-bottom: 20px;
+      img {
+        margin: 0 5px;
+        height: 40px;
+        margin-bottom: 5px;
+      }
     }
-  }
-
-  .bootstrap-modal {
-    .modal-icon {
-      justify-content: center;
-    }
-  }
-
-  .bootstrap-modal .content-container {
-    margin-bottom: 0;
   }
 
   .modal-mew-connect {

@@ -49,7 +49,10 @@
           style="display: none"
           @change="uploadFile">
       </div>
-      <div class="button-container">
+
+
+
+      <div class="modal-button-container">
         <standard-button 
           v-if="selected === ''"
           :options="buttonDisabled"
@@ -68,7 +71,10 @@
         </b-btn>
       -->
       </div>
-      <customer-support/>
+      
+      <div class="support-container">
+        <customer-support/>
+      </div>
     </div><!-- .software-modal-content-container -->
   </b-modal>
 </template>
@@ -150,5 +156,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SoftwareModal.scss';
+@import 'SoftwareModal-desktop.scss';
+@import 'SoftwareModal-tablet.scss';
+@import 'SoftwareModal-mobile.scss';
 </style>

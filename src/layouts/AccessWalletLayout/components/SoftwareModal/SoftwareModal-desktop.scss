@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .software-modal-content-container {
   padding: 40px;
@@ -78,3 +79,4 @@
     width: inherit;
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

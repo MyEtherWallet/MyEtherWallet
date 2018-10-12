@@ -1,22 +1,31 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .hardware-modal-content-container {
+    padding: 10px;
+  }
+
+  .modal-button-container {
+    margin-top: 40px;
+  }
+
+  .support-container {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
   .modal-hardware {
     .button-options {
       display: grid;
       grid-gap: 10px;
       grid-template-columns: 1fr;
-      margin-bottom: 40px;
 
-      &.hardware-button-options {
-        margin-bottom: 30px;
-      }
 
       li {
         align-items: center;
         color: $text--link-color;
         cursor: pointer;
         display: flex;
-        padding: 20px 0 20px 20px;
+        padding: 10px;
         text-align: left;
         user-select: none;
 
@@ -69,6 +78,7 @@
   }
 
   .button-container {
+    margin-bottom: 10px;
     div {
       padding: 20px 0;
       width: 100%;

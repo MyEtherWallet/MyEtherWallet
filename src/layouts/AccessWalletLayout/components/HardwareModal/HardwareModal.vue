@@ -81,7 +81,9 @@
         </div>
       </div>
 
-      <customer-support/>
+      <div class="support-container">
+        <customer-support/>
+      </div>
     </div><!-- .hardware-modal-content-container -->
   </b-modal>
 </template>
