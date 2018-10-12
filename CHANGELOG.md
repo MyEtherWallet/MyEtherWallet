@@ -1,6 +1,9 @@
+### Devop
+
+- Normalise ens-resolver, use resolved address in send container [](<>)
+
 ### Hotfix
 
-- Normalise ens-resolver, use resolved address in send container []()
 - Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
 
 ### Release v5.0.4
