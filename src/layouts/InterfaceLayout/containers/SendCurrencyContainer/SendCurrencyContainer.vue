@@ -20,7 +20,6 @@
             <input
               v-model="amount"
               type="number"
-              name=""
               placeholder="Amount" >
             <i
               :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
@@ -269,7 +268,11 @@ export default {
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.address : this.selectedCurrency.addr,
+        to: isEth
+          ? this.resolvedAddress !== ''
+            ? this.resolvedAddress
+            : this.address
+          : this.selectedCurrency.addr,
         data: this.data,
         chainId: this.$store.state.network.type.chainID || 1
       };
