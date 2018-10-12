@@ -1,6 +1,6 @@
 ### Devop
 
-- Normalise ens-resolver, use resolved address in send container [](<>)
+- Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
 
 ### Hotfix
 
