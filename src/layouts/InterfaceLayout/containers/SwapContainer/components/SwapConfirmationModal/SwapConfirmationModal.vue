@@ -60,6 +60,14 @@ export default {
     'button-with-qrcode': ButtonWithQrCode,
     'help-center-button': HelpCenterButton
   },
+  props: {
+    swapDetails: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {
       qrcode: '',
@@ -103,6 +111,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    sendTransaction() {
+      this.$emit('swapStarted');
+    }
   }
 };
 </script>

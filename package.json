@@ -44,6 +44,7 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "canvas": "^1.6.12",
     "codecov": "^3.1.0",
+    "debug": "^4.0.1",
     "dotenv-webpack": "^1.5.7",
     "eth-ens-namehash": "^2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
@@ -73,6 +74,7 @@
     "vue-infinite-slide-bar": "^1.0.8",
     "vue-template-compiler": "^2.5.17",
     "vue-worker": "^1.2.1",
+    "wallet-address-validator": "^0.2.1",
     "web3": "^1.0.0-beta.36",
     "worker-loader": "^2.0.0",
     "zxcvbn": "^4.4.2"
