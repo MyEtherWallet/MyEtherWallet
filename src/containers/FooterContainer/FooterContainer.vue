@@ -56,8 +56,8 @@
                 :href="'https://etherscan.io/address/'+$store.state.ethDonationAddress"
                 target="_blank">
                 <p
-                  class="crypto-link"
-                  :data-eth="$store.state.ethDonationAddress">
+                  :data-eth="$store.state.ethDonationAddress"
+                  class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>
