@@ -54,7 +54,8 @@ export default {
         title: 'Send Transaction',
         buttonStyle: 'green',
         rightArrow: false,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
       },
       inputSignedTX: {
         title: 'Signed Transaction',

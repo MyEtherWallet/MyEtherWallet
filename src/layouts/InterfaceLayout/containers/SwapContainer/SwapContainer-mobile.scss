@@ -236,9 +236,28 @@
       }
     } // .advanced
 
+    .mobile-button{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 0;
+      width: 100vw;
+      display: none;
+      z-index: 9;
+
+      @media all and (max-width: $mobile-width) {
+        display: block;
+      }
+    }
+
     .submit-button-container {
       padding: 40px 0;
       text-align: center;
+
+      @media all and (max-width: $mobile-width) {
+
+        display: none;
+      }
 
       h4 {
         margin-bottom: 20px;
@@ -269,16 +288,17 @@
     margin-top: 20px;
     color: $mew-green;
 
+    @media all and (max-width: $mobile-width) {
+      display: none;
+    }
+
     img {
       height: 20px;
     }
   }
 
   .bottom-button-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+
 
     > * {
       display: block !important;

@@ -1,9 +1,13 @@
 <template>
   <div @click.prevent="switcher">
     <div class="dapps-button">
-      <img :src="icon">
-      <h4>{{ title }}</h4>
-      <p>{{ desc }}</p>
+      <img 
+        :src="icon" 
+        class="icon-block">
+      <div class="text-contents">
+        <h4>{{ title }}</h4>
+        <p>{{ desc }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -33,5 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DappButtons.scss';
+@import 'DappButtons-desktop.scss';
+@import 'DappButtons-tablet.scss';
+@import 'DappButtons-mobile.scss';
 </style>

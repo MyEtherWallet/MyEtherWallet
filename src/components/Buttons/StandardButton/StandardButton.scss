@@ -76,6 +76,13 @@ $blue-border-button-background--click: #f2f4fd;
 
 .the-button {
   display: block;
+  @include btn-mixin-2();
+
+  &.mobile-bottom-button {
+    @media all and (max-width: $mobile-width) {
+      border-radius: 0px;
+    }
+  }
 
   .loading-left {
     position: absolute;
@@ -101,9 +108,22 @@ $blue-border-button-background--click: #f2f4fd;
 
 .standard-button {
   display: inline-block;
+  transition: opacity 0.3s ease;
 
   &.full-width {
     display: block;
+  }
+}
+
+
+
+//=======================================================================
+// Hide Mobile Button when user scroll down to bottom of the page
+//=======================================================================
+@media all and (max-width: $mobile-width) {
+  .hide-mobile-button {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -135,8 +155,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     cursor: initial;
     background-color: $grey-filled-button-background;
     border: 1px solid $grey-filled-button-background;
@@ -158,8 +176,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     cursor: initial;
     background-color: $color-white;
     border: 1px solid $grey-border-button-border;
@@ -183,8 +199,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: $white-filled-button-background;
     border: 1px solid $white-filled-button-background;
     color: #003945;
@@ -205,8 +219,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: transparent;
     border: 1px solid $white-border-button-border;
     color: $white-border-button-border;
@@ -217,8 +229,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: $green-filled-button-background;
     border: 1px solid $green-filled-button-background;
     color: $color-white;
@@ -239,8 +249,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: $color-white;
     border: 1px solid $green-border-button-border;
     color: $green-border-button-border;
@@ -263,8 +271,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     cursor: initial;
     background-color: $green-filled-button-background;
     border: 1px solid $green-filled-button-background;
@@ -276,8 +282,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: $blue-filled-button-background;
     border: 1px solid $blue-filled-button-background;
     color: $color-white;
@@ -298,8 +302,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button {
-    @include btn-mixin-2();
-
     background-color: $color-white;
     border: 1px solid $blue-border-button-border;
     color: $blue-border-button-border;

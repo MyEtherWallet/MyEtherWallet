@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .dapps-button {
   border-radius: 5px;
@@ -12,15 +13,19 @@
     background-color: #c9f2ed;
   }
 
-  img {
-    margin-bottom: 15px;
-  }
-
-  h4 {
-    margin-bottom: 5px;
-  }
-
-  p {
-    padding: 0 10px;
-  }
 }
+
+img {
+  margin-bottom: 15px;
+}
+
+h4 {
+  margin-bottom: 5px;
+}
+
+p {
+  padding: 0 10px;
+}
+
+
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

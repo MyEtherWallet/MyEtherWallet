@@ -130,35 +130,10 @@
   //-----------------------------
 
   .page--bottom-button-container {
-    //margin-top: 50px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    margin-top: 50px;
     text-align: center;
-    z-index: 9;
+    position: relative;
+    width: 100%;
 
-    &.right-arrow {
-      img {
-        position: absolute;
-        top: 23px;
-        right: 20px;
-        height: 15px;
-      }
-    }
-
-    .the-button {
-      position: relative;
-      cursor: pointer;
-      display: inline-block;
-      padding: 20px;
-      background-color: $button-color;
-      color: $button-text-color;
-      width: 100vw;
-      font-weight: 500;
-
-      &:hover {
-        background-color: $button-hover-color;
-      }
-    }
   }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

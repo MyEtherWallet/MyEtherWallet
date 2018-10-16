@@ -1,10 +1,11 @@
 <template>
   <div 
-    :class="options.fullWidth ? 'full-width' : ''" 
+    :class="{'full-width': options.fullWidth, 'hide-mobile-button': onBottomOfPage && options.isThisMobileBottomButton}" 
     class="standard-button">
      
     <div :class="buttonClass">
       <div
+        :class="options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''" 
         class="the-button">{{ options.title }}
         <img 
           v-if="options.loadingIcon"
@@ -47,7 +48,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      onBottomOfPage: false
+    };
   },
   computed: {
     buttonClass() {
@@ -71,6 +74,24 @@ export default {
         case 'blue-border':
           return 'standard-button__blue-border';
         default:
+      }
+    }
+  },
+  beforeMount() {
+    window.addEventListener('scroll', this.onPageScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onPageScroll);
+  },
+  methods: {
+    onPageScroll() {
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight
+      ) {
+        this.onBottomOfPage = true;
+      } else {
+        this.onBottomOfPage = false;
       }
     }
   }

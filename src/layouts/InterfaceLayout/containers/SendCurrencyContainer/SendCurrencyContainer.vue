@@ -2,115 +2,127 @@
   <div class="send-currency-container">
     <interface-container-title :title="$t('common.sendTx')"/>
 
-    <div class="send-form">
-      <div class="form-block amount-to-address">
-        <div class="amount">
-          <dropdown-coin-selector :options="coinSelector" />
-        </div>
-
-        <div class="to-address">
-          <standard-input :options="inputAmount" />
-        </div>
-      </div>
-    </div>
-
-    <div class="send-form">
-
-      <div class="the-form address-block">
-        <dropdown-address-selector :options="addressSelector" />
-      </div>
-
-      <!--
-      <div class="title-container">
-        <div class="title">
-          <div class="title-helper">
-            <h4>{{ $t("common.speedTx") }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+    <div class="page-contents-container">
+      <div class="send-currency__form">
+        <div class="form-block amount-to-address">
+          <div class="amount">
+            <dropdown-coin-selector :options="coinSelector" />
           </div>
-          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
-        </div>
-        <div class="buttons">
-          <div
-            :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(5)">
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(45)">
-            {{ $t('common.regular') }}
-          </div>
-          <div
-            :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(75)">
-            {{ $t('common.fast') }}
+
+          <div class="to-address">
+            <standard-input :options="inputAmount" />
           </div>
         </div>
       </div>
 
+      <div class="send-currency__form">
 
-      <div class="the-form gas-amount">
-        <input
-          v-model="gasAmount"
-          type="number"
-          name=""
-          placeholder="Gas Amount" >
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+        <div class="the-form address-block">
+          <dropdown-address-selector :options="addressSelector" />
         </div>
-      </div>
-      -->
 
-    </div>
-    <div class="send-form expending-block">
-      <div class="expending-block-content">
-
-        <div class="toggle-button-container">
-          <h4>{{ $t('common.advanced') }}</h4>
-          <div class="toggle-button">
-            <span>{{ $t('interface.dataGas') }}</span>
-            <!-- Rounded switch -->
-            <div class="sliding-switch-white">
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  @click="advancedExpend = !advancedExpend" >
-                <span class="slider round"/>
-              </label>
+        <!--
+        <div class="title-container">
+          <div class="title">
+            <div class="title-helper">
+              <h4>{{ $t("common.speedTx") }}</h4>
+              <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+            </div>
+            <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
+          </div>
+          <div class="buttons">
+            <div
+              :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
+              @click="changeGas(5)">
+              {{ $t('common.slow') }}
+            </div>
+            <div
+              :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
+              @click="changeGas(45)">
+              {{ $t('common.regular') }}
+            </div>
+            <div
+              :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
+              @click="changeGas(75)">
+              {{ $t('common.fast') }}
             </div>
           </div>
         </div>
-        <div
-          :class="advancedExpend ? 'expended' : 'unexpended'"
-          class="input-container">
-          <div class="the-form user-input">
 
-            <standard-input :options="inputData" />
+
+        <div class="the-form gas-amount">
+          <input
+            v-model="gasAmount"
+            type="number"
+            name=""
+            placeholder="Gas Amount" >
+          <div class="good-button-container">
+            <p>Gwei</p>
+            <i
+              class="fa fa-check-circle good-button not-good"
+              aria-hidden="true"/>
           </div>
-          <div class="the-form user-input">
+        </div>
+        -->
 
-            <standard-input :options="inputGasLimit" />
+      </div>
+      <div class="send-currency__form expending-block">
+        <div class="expending-block-content">
+
+          <div class="toggle-button-container">
+            <h4>{{ $t('common.advanced') }}</h4>
+            <div class="toggle-button">
+              <span>{{ $t('interface.dataGas') }}</span>
+              <!-- Rounded switch -->
+              <div class="sliding-switch-white">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    @click="advancedExpend = !advancedExpend" >
+                  <span class="slider round"/>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            :class="advancedExpend ? 'expended' : 'unexpended'"
+            class="input-container">
+            <div class="the-form user-input">
+
+              <standard-input :options="inputData" />
+            </div>
+            <div class="the-form user-input">
+
+              <standard-input :options="inputGasLimit" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div 
-      :class="onBottomOfPage ? 'hide-mobile-button' : ''" 
-      class="submit-button-container">
-      <div
-        :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
-        @click="confirmationModalOpen">
-        {{ $t('interface.sendTx') }}
+
+      <div 
+        :class="onBottomOfPage ? 'hide-mobile-button' : ''" 
+        class="submit-button-container">
+
+        <standard-button 
+          :options="buttonSendTX"
+          class="standard-submit-button"
+        />
+
+        <!--
+        <div
+          :class="[validAddress && address.length !== 0? '': 'disabled','submit-button large-round-button-green-filled']"
+          @click="confirmationModalOpen">
+          {{ $t('interface.sendTx') }}
+        </div>
+        -->
+        <interface-bottom-text
+          :link-text="$t('interface.learnMore')"
+          :question="$t('interface.haveIssues')"
+          link="/"/>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
-        :question="$t('interface.haveIssues')"
-        link="/"/>
-    </div>
+
+    </div><!-- .page-contents-container -->
   </div>
 </template>
 
@@ -147,6 +159,13 @@ export default {
   },
   data() {
     return {
+      buttonSendTX: {
+        title: this.$t('interface.sendTx'),
+        buttonStyle: 'green',
+        rightArrow: true,
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
+      },
       addressSelector: {
         title: 'To Address',
         buttonCopy: true,
@@ -206,8 +225,7 @@ export default {
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       signedTx: '',
-      resolvedAddress: '',
-      onBottomOfPage: false
+      resolvedAddress: ''
     };
   },
   computed: {
@@ -254,23 +272,7 @@ export default {
       );
     }
   },
-  beforeMount() {
-    window.addEventListener('scroll', this.onPageScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.onPageScroll);
-  },
   methods: {
-    onPageScroll() {
-      if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
-      ) {
-        this.onBottomOfPage = true;
-      } else {
-        this.onBottomOfPage = false;
-      }
-    },
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');

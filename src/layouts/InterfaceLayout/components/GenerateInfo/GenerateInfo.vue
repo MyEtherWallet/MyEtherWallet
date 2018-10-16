@@ -148,13 +148,15 @@ export default {
         title: 'Generate',
         buttonStyle: 'green',
         rightArrow: false,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
       },
       buttonContinue: {
         title: 'Continue',
         buttonStyle: 'green',
         rightArrow: true,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
       },
       addressSelector: {
         title: 'From Address',

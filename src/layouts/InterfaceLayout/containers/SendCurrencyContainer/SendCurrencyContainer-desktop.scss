@@ -2,6 +2,26 @@
 @import '../InterfaceContainer';
 
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  
+  .send-currency__form {
+    margin-bottom: 30px;
+
+    .amount {
+      margin-bottom: 30px;
+    }
+  }
+
+  .expending-block {
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .page-contents-container {
+    padding: 40px 60px;
+  }
+
+
   .send-currency-container {
     border-radius: 5px;
     grid-area: main;
@@ -52,19 +72,14 @@
       padding: 60px 0;
       text-align: center;
 
-      .bottom-text {
-        margin-top: 20px;
-      }
-
-      .submit-button {
-        margin: 0 auto;
-        text-align: center;
-        width: 300px;
-      }
     }
 
     .tokens {
       border-radius: 5px;
     }
+  }
+
+  .standard-submit-button {
+    text-align: center;
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))

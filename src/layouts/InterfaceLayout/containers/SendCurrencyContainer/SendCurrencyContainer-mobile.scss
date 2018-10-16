@@ -7,7 +7,25 @@
     user-select: none;
   }
 
-  .send-currency-container {
+  .send-currency__form {
+    margin-bottom: 30px;
+
+    .amount {
+      margin-bottom: 30px;
+    }
+  }
+
+  .expending-block {
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .page-contents-container {
+    padding: 20px 10px;
+  }
+
+  .send-currency-container {    
     border-radius: 5px;
     grid-area: main;
     background: $background-color-white;
@@ -56,5 +74,13 @@
     .tokens {
       border-radius: 5px;
     }
+  }
+
+  .submit-button-container {
+    width: 100vw;
+    .standard-submit-button {
+      display: block;
+    }
+
   }
 } // @media all and (max-width: $mobile-width)

@@ -136,6 +136,11 @@
     left: 0;
     text-align: center;
     z-index: 9;
+    width: 100vw;
+
+    .standard-button {
+      display: block;
+    }
 
     &.right-arrow {
       img {

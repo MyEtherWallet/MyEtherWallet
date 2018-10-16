@@ -4,11 +4,12 @@
       <interface-container-title :title="$t('common.dapps')"/>
       <div class="buttons-container">
         <dapp-buttons 
-          v-for="dapp in dapps" 
+          v-for="dapp in dapps"
           :key="dapp.title" 
           :title="dapp.title" 
           :icon="dapp.icon" 
           :desc="dapp.desc" 
+          class="dapp-button" 
           @click="switchView(dapp.param)"/>
       </div>
     </div>
@@ -64,5 +65,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DappsContainer.scss';
+@import 'DappsContainer-desktop.scss';
+@import 'DappsContainer-tablet.scss';
+@import 'DappsContainer-mobile.scss';
 </style>

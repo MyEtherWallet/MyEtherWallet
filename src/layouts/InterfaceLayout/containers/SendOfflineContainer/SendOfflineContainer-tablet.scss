@@ -20,10 +20,14 @@
     border-bottom: 1px solid $opaque-black-9;
     box-shadow: 0 2px 0 $black;
     display: grid;
-    width: 700px;
+    width: 100%;
     grid-template-columns: 27% 27% 27%;
     justify-content: space-evenly;
     text-align: center;
+
+    @media all and (max-width: 730px) {
+      width: 700px;
+    }
 
     > div {
       cursor: pointer;

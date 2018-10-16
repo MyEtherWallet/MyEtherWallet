@@ -78,24 +78,26 @@
       </div>
     </div>
 
-    <div class="submit-button-container">
-      
+    <div class="submit-button-container">      
       <div class="bottom-button-container">
         <standard-button 
           :options="buttonContinue"
           @click.native="openSignedTXModal"
         />
       </div>
-
       <div class="buy-eth">
         <span>Buy ETH with</span>
         <img :src="images.visaMaster">
       </div>
-
-
     </div>
 
- 
+    
+    <standard-button 
+      :options="buttonContinue"
+      class="mobile-button"
+      @click.native="openSignedTXModal"
+    />
+  
 
 
 
@@ -130,7 +132,8 @@ export default {
         title: 'Continue',
         buttonStyle: 'green',
         rightArrow: true,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
       },
       addressSelector: {
         title: 'To Address',

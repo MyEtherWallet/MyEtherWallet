@@ -1,15 +1,18 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-  .wrap {
-    .contents {
-      background-color: $light-grey-2;
-      padding: 10px;
+  
+  .contents {
+    background-color: $light-grey-2;
+    padding: 10px;
 
-      .tx-contents {
-        .tokens {
-          border-radius: 5px;
-        }
+    .tx-contents {
+      .tokens {
+        border-radius: 5px;
       }
     }
+  }
+
+  .interface-info-block {
+    display: none;
   }
 } // @media all and (max-width: $mobile-width)

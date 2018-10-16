@@ -12,6 +12,7 @@
     .block-title {
       display: flex;
       margin-bottom: 10px;
+      user-select: none;
 
       h4 {
         font-size: 14px;

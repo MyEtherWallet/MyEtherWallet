@@ -12,13 +12,13 @@
       </div>
       <div class="contents">
         <div class="tx-contents">
-          <div v-if="infoInterfaceOpen || $mq === 'lg'">
+          <div class="interface-info-block">
             <interface-address :address="address" />
           </div>
-          <div v-if="infoInterfaceOpen || $mq === 'lg'">
+          <div class="interface-info-block">
             <interface-balance :balance="balance"/>
           </div>
-          <div v-if="infoInterfaceOpen || $mq === 'lg'">
+          <div class="interface-info-block">
             <interface-network :block-number="blockNumber" />
           </div>
           <send-currency-container

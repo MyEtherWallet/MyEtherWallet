@@ -196,7 +196,8 @@ export default {
         title: 'Generate',
         buttonStyle: 'green',
         rightArrow: true,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true // Hide bottom button automatically
       },
       addressSelector: {
         title: 'To Address',

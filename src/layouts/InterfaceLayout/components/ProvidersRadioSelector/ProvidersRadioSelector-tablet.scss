@@ -1,7 +1,23 @@
+$collapse-point: 600px;
+
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .providers-radio-selector {
     position: relative;
+  }
+
+  .mobile-block {
+    display: none;
+    @media all and (max-width: $collapse-point) {
+      display: block;
+    }
+  }
+
+  .desktop-block {
+    display: block;
+    @media all and (max-width: $collapse-point) {
+      display: none;
+    }
   }
 
   .radio-button-container {
@@ -17,6 +33,10 @@
         display: grid;
         grid-template-columns: 50px 2fr 3fr 3fr;
         align-items: center;
+
+        @media all and (max-width: $collapse-point) {
+          grid-template-columns: 50px 2fr 3fr;
+        }
 
         &:last-child {
           border-bottom: 0;

@@ -1,3 +1,4 @@
+$collapse-point: 650px;
 @import '../InterfaceContainer';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .the-form {
@@ -47,14 +48,14 @@
     }
 
     .send-form {
-      padding: 40px 60px 0;
-
+      padding: 10px 10px;
+      padding-bottom: 50px;
 
       .title-container {
         align-items: flex-end;
         display: flex;
         margin-bottom: 5px;
-        
+
         .title {
           padding: 0 8px;
 
@@ -88,6 +89,10 @@
         grid-column-gap: 5px;
         grid-template-columns: 1fr 70px 1fr;
 
+        @media all and (max-width: $collapse-point){
+          display: block;
+        }
+
         .title {
           margin-bottom: 13px;
           padding: 0 8px;
@@ -98,6 +103,16 @@
           font-size: 30px;
           padding-top: 62px;
           text-align: center;
+
+          @media all and (max-width: $collapse-point){
+            padding: 0;
+            margin-top: 15px;
+            margin-bottom: -10px;
+            img {
+              transform: rotate(90deg);
+            }            
+          }
+
         }
 
         .amount {
@@ -230,8 +245,12 @@
       }
     } // .advanced
 
+    .mobile-button{
+      display: none;
+    }
+
     .submit-button-container {
-      padding: 40px 0;
+      padding: 0 0 40px 0;
       text-align: center;
 
       h4 {
