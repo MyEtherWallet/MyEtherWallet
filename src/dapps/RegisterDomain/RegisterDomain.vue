@@ -16,7 +16,7 @@
       :owner="owner"
       :resolver-address="resolverAddress"
       :deed-owner="deedOwner"
-      :highest-bidder="highestBidder"
+      :highest-bidder="highestBid"
       :raw="raw"
       :step="step"
       :send-bid="sendBid"
@@ -64,7 +64,7 @@ export default {
       auctionDateEnd: 0,
       auctionRegistrarContract: function() {},
       raw: {},
-      highestBidder: '',
+      highestBid: '',
       contractInitiated: false,
       step: 1,
       domainNameErr: false
@@ -89,7 +89,7 @@ export default {
       this.auctionDateEnd = 0;
       this.auctionRegistrarContract = function() {};
       this.raw = {};
-      this.highestBidder = '';
+      this.highestBid = '';
       this.contractInitiated = false;
       this.step = 1;
       this.contractInitiated = false;
@@ -173,7 +173,7 @@ export default {
           break;
         case '4':
           this.loading = false;
-          this.highestBidder = unit.fromWei(res[4], 'ether').toString();
+          this.highestBid = unit.fromWei(res[4], 'ether').toString();
           this.$router.push({ path: 'register-domain/reveal' });
           break;
       }
