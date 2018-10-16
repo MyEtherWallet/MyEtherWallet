@@ -23,6 +23,7 @@
       :reveal-bid="revealBid"
       :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
+      :finalize="finalize"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -35,6 +36,7 @@
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import RegistrarAbi from '@/helpers/registrarAbi';
+import DeedContractAbi from '@/helpers/deedContractAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
@@ -98,6 +100,23 @@ export default {
       );
       this.contractInitiated = true;
       this.domainNameErr = false;
+    },
+    async finalize() {
+      const address = this.$store.state.wallet.getAddressString();
+      const web3 = this.$store.state.web3;
+      const name = web3.utils.sha3(this.domainName);
+      const data = await this.auctionRegistrarContract.methods
+        .finalizeAuction(name)
+        .encodeABI();
+
+      const raw = {
+        from: address,
+        value: 0,
+        to: this.registrarAddress,
+        data: data
+      };
+
+      web3.eth.sendTransaction(raw);
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.$store.state.ens.owner(
@@ -178,6 +197,11 @@ export default {
       this.domainName = this.normalise(value);
     },
     async getMoreInfo(deedOwner) {
+      const deedContract = new this.$store.state.web3.eth.Contract(
+        DeedContractAbi,
+        deedOwner
+      );
+      const highestBidder = await deedContract.methods.owner().call();
       let owner;
       let resolverAddress;
       try {
@@ -196,10 +220,18 @@ export default {
 
       this.nameHash = nameHashPckg.hash(this.domainName + ETH_TLD);
 
-      this.deedOwner = deedOwner;
+      this.deedOwner = highestBidder;
       this.owner = owner;
       this.resolverAddress = resolverAddress;
-      this.$router.push({ path: 'register-domain/owned' });
+      if (
+        this.owner === '0x0000000000000000000000000000000000000000' &&
+        highestBidder === this.$store.state.wallet.getAddressString()
+      ) {
+        this.$router.push({ path: 'register-domain/finalize' });
+      } else {
+        this.$router.push({ path: 'register-domain/owned' });
+      }
+
       this.loading = false;
     },
     async createTransaction(type) {
