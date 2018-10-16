@@ -72,8 +72,7 @@ export default {
       ensContract: function() {},
       results: [],
       domainName: '',
-      knownRegistrarInstances: {},
-      referrerAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+      knownRegistrarInstances: {}
     };
   },
   computed: {
@@ -139,7 +138,7 @@ export default {
       const domain = this.$store.state.web3.utils.sha3(item.domain);
       const subdomain = this.domainName;
       const ownerAddress = this.$store.state.wallet.getAddressString();
-      const referrerAddress = this.referrerAddress;
+      const referrerAddress = this.$store.state.ethDonationAddress;
       const resolverAddress = await this.$store.state.ens
         .resolver('resolver.eth')
         .addr();
