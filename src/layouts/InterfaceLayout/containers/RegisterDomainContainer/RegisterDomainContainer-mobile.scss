@@ -1,4 +1,15 @@
 @import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+
+.content-container {
+  padding: 10px;
+}
+
+
+.desktop-button {
+  display: none;
+}
+
 
 .register-domain-container {
   border-radius: 5px;
@@ -16,12 +27,11 @@
   }
 
   .send-form {
-    padding: 40px 60px 0;
 
     .title-container {
       align-items: flex-end;
       display: flex;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
 
       .title {
         padding: 0 8px;
@@ -194,17 +204,22 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 40px 60px;
+    padding: 20px 0px;
     text-align: center;
+
+    .check-domain-button {
+      display: block;
+    }
 
     .flex-container {
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
       margin-bottom: 0;
-      margin-top: 40px;
+      margin-top: 20px;
       padding: 20px 0;
 
       .title-container {
+        padding: 0 10px;
         display: flex;
 
         .margin-left-auto {
@@ -216,50 +231,75 @@
         margin-top: 30px;
 
         .domain-checker {
-          display: flex;
+          display: block;
 
           input {
             background-color: $background-color-1;
             border: 0;
-            border-radius: 5px 0 0 5px;
-            // margin-right: 20px;
+            border-radius: 4px;
             padding: 18px 15px;
             width: 100%;
+            margin-bottom: 10px;
           }
 
-          .check-button {
-            background-color: $button-background-color-1;
-            border-radius: 0 5px 5px 0;
-            color: $text-white;
-            cursor: pointer;
-            font-weight: 500;
-            padding: 18px 40px;
-          }
         }
       }
 
+
+      .check-button {
+        background-color: $button-background-color-1;
+        border-radius: 4px;
+        color: $text-white;
+        cursor: pointer;
+        font-weight: 500;
+        padding: 18px 40px;
+      }
+
       .sub-domain-list {
-        margin-top: 30px;
+        margin-top: 10px;
 
         .title {
           margin-bottom: 10px;
+          text-align: left;
+          padding: 0 10px;
         }
 
+       
+        .sub-domain-name {
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          text-align: left;
+          max-width: 100%;
+        }
+
+
         ul {
+          margin-bottom: 20px;
+
           li {
-            align-items: center;
+            align-items: left;
             border-top: 5px dotted $background-color-1;
             display: flex;
-            padding: 10px 0;
+            padding: 10px;
+
+            .sub-domain-container {
+              align-items: center;
+              //display: flex;
+              width: calc(100% - 70px);
+            }
+
+            .sub-domain-price {
+              //margin-left: auto;
+              text-align: left;
+              font-size: 15px;
+              font-weight: 500;
+            }
 
             .buy-button-container {
+              user-select: none;
               align-items: center;
               display: flex;
               margin-left: auto;
-
-              p {
-                margin-right: 10px;
-              }
             }
           }
         }
@@ -267,3 +307,4 @@
     } // .flex-container
   } // .submit-button-container
 }
+} // @media all and (max-width: $mobile-width)

@@ -89,7 +89,7 @@ $collapse-point: 650px;
         grid-column-gap: 5px;
         grid-template-columns: 1fr 70px 1fr;
 
-        @media all and (max-width: $collapse-point){
+        @media all and (max-width: $collapse-point) {
           display: block;
         }
 
@@ -104,15 +104,14 @@ $collapse-point: 650px;
           padding-top: 62px;
           text-align: center;
 
-          @media all and (max-width: $collapse-point){
+          @media all and (max-width: $collapse-point) {
             padding: 0;
             margin-top: 15px;
             margin-bottom: -10px;
             img {
               transform: rotate(90deg);
-            }            
+            }
           }
-
         }
 
         .amount {
@@ -245,7 +244,7 @@ $collapse-point: 650px;
       }
     } // .advanced
 
-    .mobile-button{
+    .mobile-button {
       display: none;
     }
 

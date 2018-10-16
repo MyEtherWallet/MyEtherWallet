@@ -80,7 +80,7 @@ $blue-border-button-background--click: #f2f4fd;
 
   &.mobile-bottom-button {
     @media all and (max-width: $mobile-width) {
-      border-radius: 0px;
+      border-radius: 0;
     }
   }
 
@@ -114,8 +114,6 @@ $blue-border-button-background--click: #f2f4fd;
     display: block;
   }
 }
-
-
 
 //=======================================================================
 // Hide Mobile Button when user scroll down to bottom of the page

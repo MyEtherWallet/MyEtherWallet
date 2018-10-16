@@ -3,8 +3,7 @@
   .wrap {
     display: grid;
     grid-column-gap: 0;
-    grid-template-columns: 0px 1fr;
-
+    grid-template-columns: 0 1fr;
   }
 
   .contents {
@@ -29,11 +28,6 @@
   }
 
   .tokens {
-    display: none; 
+    display: none;
   }
-
-  .mobile-block {
-    
-  }
-
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

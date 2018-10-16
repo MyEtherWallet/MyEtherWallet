@@ -20,12 +20,11 @@
     padding: 0;
   }
 
-
   .page-contents-container {
     padding: 20px 10px;
   }
 
-  .send-currency-container {    
+  .send-currency-container {
     border-radius: 5px;
     grid-area: main;
     background: $background-color-white;
@@ -81,6 +80,5 @@
     .standard-submit-button {
       display: block;
     }
-
   }
 } // @media all and (max-width: $mobile-width)

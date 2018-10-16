@@ -101,7 +101,6 @@
 
 
       <div 
-        :class="onBottomOfPage ? 'hide-mobile-button' : ''" 
         class="submit-button-container">
 
         <standard-button 

@@ -2,7 +2,6 @@
 @import '../InterfaceContainer';
 
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  
   .send-currency__form {
     margin-bottom: 30px;
 
@@ -16,11 +15,9 @@
     padding: 0;
   }
 
-
   .page-contents-container {
     padding: 40px 60px;
   }
-
 
   .send-currency-container {
     border-radius: 5px;
@@ -71,7 +68,6 @@
     .submit-button-container {
       padding: 60px 0;
       text-align: center;
-
     }
 
     .tokens {

@@ -1,4 +1,9 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+
+.contant-container {
+  padding: 10px;
+}
 
 .domain-sale-container {
   border-radius: 5px;
@@ -20,7 +25,6 @@
   }
 
   .send-form {
-    padding: 40px 60px 0;
 
     .title-container {
       align-items: flex-end;
@@ -201,6 +205,10 @@
     padding: 40px 60px;
     text-align: center;
 
+    .check-domain-button {
+      display: block;
+    }
+
     .flex-container {
       border-bottom: 2px solid $background-color-1;
       border-top: 2px solid $background-color-1;
@@ -245,3 +253,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {

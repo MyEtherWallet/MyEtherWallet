@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-  
   .contents {
     background-color: $light-grey-2;
     padding: 10px;
@@ -8,6 +7,7 @@
     .tx-contents {
       .tokens {
         border-radius: 5px;
+        margin-top: 10px;
       }
     }
   }

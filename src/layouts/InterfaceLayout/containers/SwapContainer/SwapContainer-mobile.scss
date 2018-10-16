@@ -236,7 +236,7 @@
       }
     } // .advanced
 
-    .mobile-button{
+    .mobile-button {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -255,7 +255,6 @@
       text-align: center;
 
       @media all and (max-width: $mobile-width) {
-
         display: none;
       }
 
@@ -298,8 +297,6 @@
   }
 
   .bottom-button-container {
-
-
     > * {
       display: block !important;
     }

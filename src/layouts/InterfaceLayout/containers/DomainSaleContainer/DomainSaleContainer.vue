@@ -1,61 +1,65 @@
 <template>
   <div class="domain-sale-container">
     <back-button :reset-view="resetView"/>
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('interface.domSale') }}</h4>
-          <p>{{ $t('interface.domSaleDesc') }}</p>
-        </div>
-      </div>
-      <div class="the-form domain-name">
-        <standard-input :options="inputDomain" />
-        <span>.eth</span>
-      </div>
-    </div>
 
-    <div class="submit-button-container">
-
-      <standard-button 
-        :options="buttonCheckDomain"        
-      />
-
-
-      <div class="flex-container">
+    <div class="contant-container">
+      <div class="send-form">
         <div class="title-container">
-          <h4 class="modal-title">{{ $t('interface.domSaleBal') }}</h4>
-          <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
-          <div class="margin-left-auto add-custom-network">
-            <div class="sliding-switch-white">
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  @click="expendDomainCheckForm" >
-                <span class="slider round"/>
-              </label>
-            </div>
+          <div class="title">
+            <h4>{{ $t('interface.domSale') }}</h4>
+            <p>{{ $t('interface.domSaleDesc') }}</p>
           </div>
         </div>
-        <div
-          ref="domainCheckForm"
-          class="domain-check-form hidden">
-          <div class="domain-checker">
-            <input
-              type="number"
-              name=""
-              value=""
-              placeholder="Please Enter Sub Domain Name" >
-            <div class="check-button">
-              {{ $t('common.check') }}
-            </div>
-          </div>
+        <div class="the-form domain-name">
+          <standard-input :options="inputDomain" />
+          <span>.eth</span>
         </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
-        :question="$t('interface.haveIssues')"
-        link="/"/>
-    </div>
+
+      <div class="submit-button-container">
+
+        <standard-button
+          :options="buttonCheckDomain"
+          class="check-domain-button"        
+        />
+
+
+        <div class="flex-container">
+          <div class="title-container">
+            <h4 class="modal-title">{{ $t('interface.domSaleBal') }}</h4>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
+            <div class="margin-left-auto add-custom-network">
+              <div class="sliding-switch-white">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    @click="expendDomainCheckForm" >
+                  <span class="slider round"/>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            ref="domainCheckForm"
+            class="domain-check-form hidden">
+            <div class="domain-checker">
+              <input
+                type="text"
+                name=""
+                value=""
+                placeholder="Please Enter Sub Domain Name" >
+              <div class="check-button">
+                {{ $t('common.check') }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.learnMore')"
+          :question="$t('interface.haveIssues')"
+          link="/"/>
+      </div>
+    </div><!-- .contant-container -->
 
   </div>
 </template>
@@ -106,5 +110,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DomainSaleContainer.scss';
+@import 'DomainSaleContainer-desktop.scss';
+@import 'DomainSaleContainer-tablet.scss';
+@import 'DomainSaleContainer-mobile.scss';
 </style>
