@@ -1,5 +1,6 @@
 import { getBufferFromHex } from './utils';
 import ethUtil from 'ethereumjs-util';
+import ethTx from 'ethereumjs-tx';
 class WalletInterface {
   constructor(key, isPub = false) {
     if (!isPub) {
@@ -13,7 +14,7 @@ class WalletInterface {
       this.isPubOnly = false;
     } else {
       const _pubKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
-      if (!ethUtil.isValidPublic(_pubKey))
+      if (!ethUtil.isValidPublic(_pubKey, true))
         throw new Error('Invalid public key');
       this.publicKey = _pubKey;
       this.isPubOnly = true;
@@ -38,7 +39,7 @@ class WalletInterface {
   }
 
   getAddress() {
-    return ethUtil.publicToAddress(this.publicKey);
+    return ethUtil.publicToAddress(this.publicKey, true);
   }
 
   getAddressString() {
@@ -48,12 +49,14 @@ class WalletInterface {
   getChecksumAddressString() {
     return ethUtil.toChecksumAddress(this.getAddressString());
   }
-  signTransaction(tx, signer) {
+  signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
     return new Promise((resolve, reject) => {
+      const tx = new ethTx(txParams);
       if (!this.isPubOnly) {
-        resolve(tx.sign(this.privateKey));
+        tx.sign(this.privateKey);
+        resolve(tx);
       } else {
         signer(tx)
           .then(resolve)
