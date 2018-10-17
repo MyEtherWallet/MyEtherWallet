@@ -1,7 +1,11 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .contant-container {
-    padding: 10px;
+  .content-container {
+    padding: 40px;
+  }
+
+  .mobile-button {
+    display: none;
   }
 
   .domain-sale-container {
@@ -11,10 +15,6 @@
 
     > div {
       background-color: $background-color-white;
-    }
-
-    .bottom-text {
-      text-align: center;
     }
 
     .submit-button {
@@ -28,6 +28,7 @@
         align-items: flex-end;
         display: flex;
         margin-bottom: 10px;
+        user-select: none;
 
         .title {
           padding: 0 8px;
@@ -162,9 +163,9 @@
         }
 
         span {
+          margin-left: 20px;
           font-size: 20px;
           font-weight: 600;
-          margin-left: 10px;
         }
       }
 
@@ -200,28 +201,35 @@
     } // .advanced
 
     .submit-button-container {
-      padding: 40px 60px;
+      padding: 40px 0 0 0;
       text-align: center;
-
-      .check-domain-button {
-        display: block;
-      }
 
       .flex-container {
         border-bottom: 2px solid $background-color-1;
         border-top: 2px solid $background-color-1;
-        margin-bottom: 40px;
+        margin-bottom: 0;
         margin-top: 40px;
         padding: 20px 0;
 
         .title-container {
           display: flex;
-          align-items: center;
+          user-select: none;
 
           .margin-left-auto {
             margin-left: auto;
           }
         }
+
+        .sub-domain-content {
+          max-height: 0;
+          transition: all 0.4s ease;
+          overflow: hidden;
+
+          &.sub-domain-content-open {
+            max-height: 1000px;
+          }
+        }
+
 
         .domain-check-form {
           margin-top: 30px;
@@ -245,10 +253,86 @@
               cursor: pointer;
               font-weight: 500;
               padding: 18px 40px;
+              user-select: none;
             }
           }
         }
-      }
-    }
+
+        .sub-domain-list {
+          margin-top: 30px;
+          text-align: left;
+          overflow-y: auto;
+          max-height: 0;
+          transition: all 0.4s ease;
+
+
+          &.sub-domain-list-open {
+            max-height: 800px;
+          }
+
+          .title {
+            margin-bottom: 10px;
+            padding: 0 10px;
+          }
+
+          .sub-domain-name {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            text-align: left;
+            max-width: calc(100% - 112px);
+          }
+
+          ul {
+            margin-bottom: -16px;
+            li {
+              align-items: center;
+              border-top: 5px dotted $background-color-1;
+              display: flex;
+              padding: 10px 10px;
+
+              .sub-domain-container {
+                width: calc(100% - 65px);
+                display: flex;
+                align-items: center;
+              }
+
+              .sub-domain-price {
+                margin-left: auto;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                width: 110px;
+                text-align: right;
+              }
+
+              .buy-button-container {
+                align-items: center;
+                display: flex;
+                margin-left: auto;
+                user-select: none;
+
+                .buy-button {
+                  background-color: $white;
+                  cursor: pointer;
+                  border: 1px solid $mew-green;
+                  border-radius: 20px;
+                  font-size: 11px;
+                  padding: 4px 13px;
+                  color: $mew-green;
+
+                  &:hover {
+                    background-color: $mew-green;
+                    color: $white;
+                  }
+                }
+
+                p {
+                  margin-right: 20px;
+                }
+              }
+            }
+          }
+        }
+      } // .flex-container
+    } // .submit-button-container
   }
-} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

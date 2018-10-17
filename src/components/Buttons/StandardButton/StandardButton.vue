@@ -6,7 +6,7 @@
     <div :class="buttonClass">
       <div
         :class="options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''" 
-        class="the-button">{{ options.title }}
+        class="the-button-box">{{ options.title }}
         <img 
           v-if="options.loadingIcon"
           class="loading-left" 
@@ -69,6 +69,8 @@ export default {
           return 'standard-button__green-border';
         case 'green-noclick':
           return 'standard-button__green-noclick';
+        case 'green-transparent':
+          return 'standard-button__green-transparent';
         case 'blue':
           return 'standard-button__blue';
         case 'blue-border':

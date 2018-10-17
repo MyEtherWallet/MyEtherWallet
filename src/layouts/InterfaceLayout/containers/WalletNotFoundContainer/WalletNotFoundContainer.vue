@@ -4,18 +4,20 @@
       <div class="page-container">
 
         <div class="content-block">
-          <div class="block-title">Oops! Wallet not found :(</div>
+          <div class="block-title">Oops! Wallet Not Found :(</div>
           <div class="buttons">
 
             <router-link to="/create-wallet">
               <standard-button 
                 :options="buttonGetWallet"
+                class="the-button"
                 @click.native="interact = true"
               />
             </router-link>
             <router-link to="/access-my-wallet">
               <standard-button 
                 :options="buttonAccessWallet"
+                class="the-button"
                 @click.native="interact = true"
               />
             </router-link>
@@ -37,7 +39,7 @@ export default {
     return {
       buttonGetWallet: {
         title: 'Get a Free Wallet',
-        buttonStyle: 'green-border',
+        buttonStyle: 'green-transparent',
         rightArrow: false,
         leftArrow: false,
         fullWidth: false
@@ -55,5 +57,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'WalletNotFoundContainer.scss';
+@import 'WalletNotFoundContainer-desktop.scss';
+@import 'WalletNotFoundContainer-tablet.scss';
+@import 'WalletNotFoundContainer-mobile.scss';
 </style>

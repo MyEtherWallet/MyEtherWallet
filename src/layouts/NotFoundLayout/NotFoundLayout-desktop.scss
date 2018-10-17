@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
 
 .not-found {
   background-color: $about-mew-spaceman-background-color;
@@ -40,3 +41,4 @@
     }
   }
 }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

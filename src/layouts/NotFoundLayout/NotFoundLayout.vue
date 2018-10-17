@@ -25,5 +25,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'NotFoundLayout.scss';
+@import 'NotFoundLayout-desktop.scss';
+@import 'NotFoundLayout-tablet.scss';
+@import 'NotFoundLayout-mobile.scss';
 </style>

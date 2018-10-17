@@ -4,6 +4,7 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
+      <img src="@/assets/images/etc/bity.png">
     </div>
 
     <div class="send-form">

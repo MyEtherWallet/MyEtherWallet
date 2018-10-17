@@ -74,7 +74,7 @@ $blue-border-button-background--click: #f2f4fd;
   }
 }
 
-.the-button {
+.the-button-box {
   display: block;
   @include btn-mixin-2();
 
@@ -152,7 +152,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__grey {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     cursor: initial;
     background-color: $grey-filled-button-background;
     border: 1px solid $grey-filled-button-background;
@@ -173,7 +173,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__grey-border {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     cursor: initial;
     background-color: $color-white;
     border: 1px solid $grey-border-button-border;
@@ -196,7 +196,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__white {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: $white-filled-button-background;
     border: 1px solid $white-filled-button-background;
     color: #003945;
@@ -216,7 +216,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__white-border {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: transparent;
     border: 1px solid $white-border-button-border;
     color: $white-border-button-border;
@@ -226,7 +226,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__green {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: $green-filled-button-background;
     border: 1px solid $green-filled-button-background;
     color: $color-white;
@@ -246,7 +246,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__green-border {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: $color-white;
     border: 1px solid $green-border-button-border;
     color: $green-border-button-border;
@@ -268,7 +268,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__green-noclick {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     cursor: initial;
     background-color: $green-filled-button-background;
     border: 1px solid $green-filled-button-background;
@@ -276,10 +276,21 @@ $blue-border-button-background--click: #f2f4fd;
   }
 } // .standard-button__green
 
+.standard-button__green-transparent {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    cursor: initial;
+    background-color: transparent;
+    border: 1px solid $green-filled-button-background;
+    color: $green-filled-button-background;
+  }
+} // .standard-button__green-transparent
+
 .standard-button__blue {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: $blue-filled-button-background;
     border: 1px solid $blue-filled-button-background;
     color: $color-white;
@@ -299,7 +310,7 @@ $blue-border-button-background--click: #f2f4fd;
 .standard-button__blue-border {
   @include btn-mixin-1();
 
-  .the-button {
+  .the-button-box {
     background-color: $color-white;
     border: 1px solid $blue-border-button-border;
     color: $blue-border-button-border;

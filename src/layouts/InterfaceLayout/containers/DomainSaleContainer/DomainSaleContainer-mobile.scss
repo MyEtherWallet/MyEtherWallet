@@ -1,7 +1,11 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
-  .contant-container {
+  .content-container {
     padding: 10px;
+  }
+
+  .desktop-button {
+    display: none;
   }
 
   .domain-sale-container {
@@ -11,10 +15,6 @@
 
     > div {
       background-color: $background-color-white;
-    }
-
-    .bottom-text {
-      text-align: center;
     }
 
     .submit-button {
@@ -162,9 +162,9 @@
         }
 
         span {
+          margin-left: 10px;
           font-size: 20px;
           font-weight: 600;
-          margin-left: 10px;
         }
       }
 
@@ -210,16 +210,26 @@
       .flex-container {
         border-bottom: 2px solid $background-color-1;
         border-top: 2px solid $background-color-1;
+        margin-bottom: 0;
         margin-top: 20px;
         padding: 20px 0;
 
         .title-container {
-          display: flex;
-          align-items: center;
           padding: 0 10px;
+          display: flex;
 
           .margin-left-auto {
             margin-left: auto;
+          }
+        }
+
+        .sub-domain-content {
+          max-height: 0;
+          transition: all 0.4s ease;
+          overflow: hidden;
+
+          &.sub-domain-content-open {
+            max-height: 1000px;
           }
         }
 
@@ -237,18 +247,89 @@
               width: 100%;
               margin-bottom: 10px;
             }
+          }
+        }
 
-            .check-button {
-              background-color: $button-background-color-1;
-              border-radius: 4px;
-              color: $text-white;
-              cursor: pointer;
-              font-weight: 500;
-              padding: 18px 40px;
+        .check-button {
+          background-color: $button-background-color-1;
+          border-radius: 4px;
+          color: $text-white;
+          cursor: pointer;
+          font-weight: 500;
+          padding: 18px 40px;
+        }
+
+        .sub-domain-list {
+          margin-top: 10px;
+          overflow-y: auto;
+          max-height: 0;
+          transition: all 0.4s ease;
+
+          &.sub-domain-list-open {
+            max-height: 800px;
+          }
+
+          .title {
+            margin-bottom: 10px;
+            text-align: left;
+            padding: 0 10px;
+          }
+
+          .sub-domain-name {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            text-align: left;
+            max-width: 100%;
+          }
+
+          ul {
+            margin-bottom: 20px;
+
+            li {
+              align-items: left;
+              border-top: 5px dotted $background-color-1;
+              display: flex;
+              padding: 10px;
+
+              .sub-domain-container {
+                align-items: center;
+                //display: flex;
+                width: calc(100% - 70px);
+              }
+
+              .sub-domain-price {
+                //margin-left: auto;
+                text-align: left;
+                font-size: 15px;
+                font-weight: 500;
+              }
+
+              .buy-button-container {
+                user-select: none;
+                align-items: center;
+                display: flex;
+                margin-left: auto;
+
+                .buy-button {
+                  background-color: $white;
+                  cursor: pointer;
+                  border: 1px solid $mew-green;
+                  border-radius: 20px;
+                  font-size: 11px;
+                  padding: 6px 13px;
+                  color: $mew-green;
+
+                  &:active,
+                  &:hover {
+                    background-color: $mew-green;
+                    color: $white;
+                  }
+                }
+              }
             }
           }
         }
-      }
-    }
+      } // .flex-container
+    } // .submit-button-container
   }
 } // @media all and (max-width: $mobile-width)

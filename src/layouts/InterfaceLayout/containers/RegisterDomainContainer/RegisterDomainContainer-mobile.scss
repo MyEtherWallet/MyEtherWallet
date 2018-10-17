@@ -224,7 +224,7 @@
         }
 
         .sub-domain-content {
-          max-height: 0px;
+          max-height: 0;
           transition: all 0.4s ease;
           overflow: hidden;
 
@@ -262,7 +262,7 @@
         .sub-domain-list {
           margin-top: 10px;
           overflow-y: auto;
-          max-height: 0px;
+          max-height: 0;
           transition: all 0.4s ease;
 
           &.sub-domain-list-open {
@@ -310,7 +310,6 @@
                 display: flex;
                 margin-left: auto;
 
-                
                 .buy-button {
                   background-color: $white;
                   cursor: pointer;
@@ -326,7 +325,6 @@
                     color: $white;
                   }
                 }
-
               }
             }
           }
