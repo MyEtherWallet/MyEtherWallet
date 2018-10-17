@@ -1,4 +1,4 @@
-import HDWalletInterface from '../../../src/wallets/HDWalletInterface';
+import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import bip39 from 'bip39';
 import ethUtil from 'ethereumjs-util';
@@ -82,7 +82,7 @@ for (let i = 0; i < 3; i++)
   );
 describe('HDWalletInterface Mnemonic', () => {
   it('should derive correct keys', async () => {
-    for (let i in testWallets) {
+    for (const i in testWallets) {
       expect(testWallets[i].getPublicKeyString()).toEqual(
         accountList[i].pubkey
       );

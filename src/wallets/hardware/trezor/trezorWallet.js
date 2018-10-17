@@ -135,6 +135,7 @@ export default class TrezorWallet extends HardwareWalletInterface {
 
   // (Start) Internal setup methods
   trezorCallback(response) {
+    console.log(response);
     return new Promise((resolve, reject) => {
       if (response.success) {
         this.HWWalletCreate(

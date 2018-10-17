@@ -71,11 +71,13 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import {
-  LedgerWallet,
+  // LedgerWallet,
   TrezorWallet,
   DigitalBitboxWallet,
   SecalotWallet
 } from '@/wallets';
+
+import ledgerNew from '@/wallets/hardware1/ledger/ledgerWallet';
 
 export default {
   components: {
@@ -109,17 +111,23 @@ export default {
       const showPluggedInReminder = setTimeout(() => {
         this.mayNotBeAttached = true;
       }, 1000);
+      let newWallet;
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet.unlock()
-            .then(wallet => {
-              clearTimeout(showPluggedInReminder);
-              this.$emit('hardwareWalletOpen', wallet);
-            })
-            .catch(_error => {
-              // eslint-disable-next-line
-              console.error(_error); // todo replace with proper error
-            });
+          newWallet = new ledgerNew();
+          newWallet.init().then(() => {
+            clearTimeout(showPluggedInReminder);
+            this.$emit('hardwareWalletOpen', newWallet);
+          });
+          // LedgerWallet.unlock()
+          //   .then(wallet => {
+          //     clearTimeout(showPluggedInReminder);
+          //     this.$emit('hardwareWalletOpen', wallet);
+          //   })
+          //   .catch(_error => {
+          //     // eslint-disable-next-line
+          //     console.error(_error); // todo replace with proper error
+          //   });
           break;
         case 'trezor':
           TrezorWallet.unlock()
