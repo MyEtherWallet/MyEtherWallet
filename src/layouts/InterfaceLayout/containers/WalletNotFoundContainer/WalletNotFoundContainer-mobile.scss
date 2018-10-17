@@ -1,56 +1,55 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .wallet-not-found {
+    background-color: $about-mew-spaceman-background-color;
+    position: relative;
+  }
 
-.wallet-not-found {
-  background-color: $about-mew-spaceman-background-color;
-  position: relative;
-}
-
-.wallet-not-found .wrap {
-  height: calc(500px);
-  background-image: url('~@/assets/images/background/404bg.jpg');
-  background-size: 125%;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  .content-block {
+  .wallet-not-found .wrap {
+    height: calc(500px);
+    background-image: url('~@/assets/images/background/404bg.jpg');
+    background-size: 125%;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
     position: relative;
 
-    .block-title {
-      color: $text-white;
-      font-weight: 700;
-      font-size: 32px;
-      text-align: center;
-    }
+    .content-block {
+      position: relative;
 
-    .buttons {
-      text-align: center;
-      margin-top: 60px;
-
-      > a {
-        margin: 0 0 10px 0;
-        display: block;
+      .block-title {
+        color: $text-white;
+        font-weight: 700;
+        font-size: 32px;
+        text-align: center;
       }
 
-      .the-button {
-        display: block;
-        padding: 0;
+      .buttons {
+        text-align: center;
+        margin-top: 60px;
+
+        > a {
+          margin: 0 0 10px 0;
+          display: block;
+        }
+
+        .the-button {
+          display: block;
+          padding: 0;
+        }
       }
-    }
 
-    .spaceman {
-      position: absolute;
-      bottom: -130px;
-      left: 0px;
+      .spaceman {
+        position: absolute;
+        bottom: -130px;
+        left: 0;
 
-      img {
-        height: 110px;
-        transform: rotate(-45deg);
+        img {
+          height: 110px;
+          transform: rotate(-45deg);
+        }
       }
     }
   }
-}
 } // @media all and (max-width: $mobile-width)

@@ -1,44 +1,53 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  
+  .page-container {
+    width: 100%;
+  }
 
-.not-found {
-  background-color: $about-mew-spaceman-background-color;
-  position: relative;
-}
-
-.not-found .wrap {
-  height: 700px;
-  background-image: url('~@/assets/images/background/404bg.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  .content-block {
+  .not-found {
+    background-color: $about-mew-spaceman-background-color;
     position: relative;
+  }
 
-    .block-title {
-      color: $text-white;
-      font-weight: 700;
-      font-size: 220px;
-      text-align: center;
-      line-height: 216px;
-    }
+  .not-found .wrap {
+    height: 600px;
+    background-image: url('~@/assets/images/background/404bg.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    //display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 191px;
 
-    .block-text {
-      color: $text-white;
-      text-align: center;
-      font-weight: 600;
-      font-size: 30px;
-    }
+    .content-block {
+      position: relative;
 
-    .ailien-spaceship {
-      position: absolute;
-      bottom: -124px;
-      left: -143px;
+      .block-title {
+        color: $text-white;
+        font-weight: 700;
+        font-size: 150px;
+        text-align: center;
+        line-height: 150px;
+      }
+
+      .block-text {
+        color: $text-white;
+        text-align: center;
+        font-weight: 500;
+        font-size: 16px;
+      }
+
+      .ailien-spaceship {
+        position: absolute;
+        bottom: -140px;
+        left: calc(50% - 40px);
+
+        img {
+          height: 100px;
+        }
+      }
     }
   }
-}
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
