@@ -9,7 +9,7 @@ export default {
   homePage: 'https://eos-classic.io/',
   blockExplorerTX: 'https://explorer.eos-classic.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.eos-classic.io/addr/[[address]]',
-  chainID: 20,
+  chainID: 2018,
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
