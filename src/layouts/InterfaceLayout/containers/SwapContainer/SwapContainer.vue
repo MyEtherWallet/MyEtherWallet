@@ -1,9 +1,9 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal 
-      ref="swapConfirm" 
-      :selected-provider="selectedProvider" 
-      :swap-details="swapDetails" 
+    <swap-confirmation-modal
+      ref="swapConfirm"
+      :selected-provider="selectedProvider"
+      :swap-details="swapDetails"
       @swapStarted="resetSwapState"/>
 
     <div class="title-block">
@@ -75,9 +75,9 @@
         </div>
       </div>
       <div class="the-form gas-amount">
-        <drop-down-address-selector 
-          :currency="toCurrency" 
-          :current-address="currentAddress" 
+        <drop-down-address-selector
+          :currency="toCurrency"
+          :current-address="currentAddress"
           @toAddress="setToAddress"/>
       </div>
     </div>
@@ -88,8 +88,8 @@
           <h4>Providers</h4>
         </div>
       </div>
-      <providers-radio-selector 
-        :provider-data="providerList" 
+      <providers-radio-selector
+        :provider-data="providerList"
         @selectedProvider="setSelectedProvider"/>
     </div>
 
@@ -135,7 +135,7 @@
     <div class="submit-button-container">
       <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
       <div
-        class="submit-button large-round-button-green-filled clickable"
+        :class="[validSwap ? '': 'disabled','submit-button large-round-button-green-filled clickable']"
         @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
         <i
