@@ -281,10 +281,9 @@
   } // .get-free-wallet
 
   .mobile-menu {
-    padding: 75px 0 25px;
     border-top: 1px solid $border-color-5;
     border-bottom: 1px solid $border-color-5;
-    transition: top 0.3s linear, padding 0.1s linear;
+    transition: all 0.3s ease;
     overflow-y: auto;
     height: 100vh;
     position: absolute;
@@ -295,6 +294,7 @@
     z-index: 9;
 
     .nav {
+      padding: 75px 0 25px;
       display: block;
 
       .nav-item {
@@ -345,7 +345,7 @@
   }
 
   .mobile-menu-closed {
-    top: -1000px;
+    height: 0px;
   }
 
   .mobile-menu-background-fill {

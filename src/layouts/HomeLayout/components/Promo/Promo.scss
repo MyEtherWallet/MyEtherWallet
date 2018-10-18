@@ -31,9 +31,28 @@
       display: flex;
       margin-left: auto;
 
+      @media all and (max-width: 600px) {
+        display: block;
+      }
+
       .button-block {
         margin-left: 13px;
         transition: all 0.2s ease;
+
+        @media all and (max-width: $tablet-width) {
+          margin-left: 0px;
+          margin-right: 13px;
+        }
+
+        @media all and (max-width: 600px) {
+          margin-left: 0px;
+          margin-right: 0px;
+          margin-bottom: 10px;
+
+          .the-button {
+            display: block;
+          }
+        }
 
         span {
           transition: all 0.2s ease;

@@ -8,7 +8,8 @@
           class="fa fa-arrow-left"
           aria-hidden="true"/>
       </div>
-      <p>{{ $t('common.back') }}</p>
+      <p v-if="!options.titleText">{{ $t('common.back') }}</p>
+      <p v-if="options.titleText">{{ options.titleText }}</p>
     </div>
   </div>
 </template>
@@ -19,6 +20,12 @@ export default {
     resetView: {
       type: Function,
       default: function() {}
+    },
+    options: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {

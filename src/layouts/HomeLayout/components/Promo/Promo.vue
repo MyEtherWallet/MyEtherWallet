@@ -14,6 +14,7 @@
                 class="nounderline">
                 <standard-button 
                   :options="buttonGetFreeWallet"
+                  class="the-button"
                 />
               </router-link>
             </div>
@@ -24,6 +25,7 @@
                 class="nounderline">
                 <standard-button 
                   :options="buttonAccessMyWallet"
+                  class="the-button"
                 />
               </router-link>
             </div>

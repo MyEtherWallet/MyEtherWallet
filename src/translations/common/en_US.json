@@ -48,5 +48,6 @@
   "signMessage": "Sign Message",
   "verifyMessage": "Verify Message",
   "signature": "Signature",
-  "toAddress": "To Address"
+  "toAddress": "To Address",
+  "checkDomain": "Check Domain"
 }

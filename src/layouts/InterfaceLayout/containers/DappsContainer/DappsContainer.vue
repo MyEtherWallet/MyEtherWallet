@@ -19,6 +19,9 @@
     <domain-sale-container 
       v-show="selectedDapp === 'domain-sale'" 
       :reset-view="switchView"/>
+
+    <p>---------------------------------------</p>
+    <check-domain-container />
   </div>
 </template>
 
@@ -27,6 +30,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
 import DomainSaleContainer from '../DomainSaleContainer';
 import RegisterDomainContainer from '../RegisterDomainContainer';
+import CheckDomainContainer from '../CheckDomainContainer';
 
 import domainSale from '@/assets/images/icons/domain-sale.svg';
 import registerDomain from '@/assets/images/icons/domain.svg';
@@ -35,7 +39,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'dapp-buttons': DappButtons,
     'domain-sale-container': DomainSaleContainer,
-    'register-domain-container': RegisterDomainContainer
+    'register-domain-container': RegisterDomainContainer,
+    'check-domain-container': CheckDomainContainer
   },
   data() {
     return {

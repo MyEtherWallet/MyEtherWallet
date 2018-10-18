@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  
   .page-container {
     width: 100%;
   }

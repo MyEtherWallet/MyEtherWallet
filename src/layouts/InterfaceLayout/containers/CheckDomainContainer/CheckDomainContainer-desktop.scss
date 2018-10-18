@@ -1,0 +1,25 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+
+.container__content {
+  padding: 40px;
+}
+
+.block__content {
+  .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $mew-green;
+  }
+
+
+}
+
+
+.block__submit-button {
+  margin-top: 30px;
+  text-align: center;
+}
+
+
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
