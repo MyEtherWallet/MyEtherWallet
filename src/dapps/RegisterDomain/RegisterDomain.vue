@@ -24,6 +24,7 @@
       :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
       :finalize="finalize"
+      :update-resolver="updateResolver"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
