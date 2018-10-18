@@ -20,7 +20,6 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "babel-preset-node6": "^11.0.0",
     "vue": "^2.5.17",
     "vue-mq": "^0.2.1",
     "vue-router": "^3.0.1",
