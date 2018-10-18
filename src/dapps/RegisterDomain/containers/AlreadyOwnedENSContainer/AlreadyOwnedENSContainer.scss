@@ -29,3 +29,24 @@
     }
   }
 }
+.owner-options {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    background-color: $mew-green;
+    border-radius: 4px;
+    color: $white;
+    cursor: pointer;
+    margin-top: 43px;
+    height: 62px;
+    width: 260px;
+  }
+
+  span {
+    cursor: pointer;
+    margin-bottom: 25px;
+    text-decoration: underline;
+  }
+}

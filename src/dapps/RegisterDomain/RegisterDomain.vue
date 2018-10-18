@@ -101,6 +101,60 @@ export default {
       this.contractInitiated = true;
       this.domainNameErr = false;
     },
+    async updateResolver(newResolverAddr) {
+      const state = this.$store.state;
+      const web3 = state.web3;
+      const from = state.wallet.getAddressString();
+
+      // Ens Registry address
+      const ensRegistry = state.network.type.contracts.find(contract => {
+        return (
+          web3.utils.toChecksumAddress(contract.address) ===
+          web3.utils.toChecksumAddress(
+            '0x314159265dD8dbb310642f98f50C066173C1259b'
+          )
+        );
+      });
+      const ensRegistryContract = new web3.eth.Contract(
+        ensRegistry.abi,
+        ensRegistry.address
+      );
+
+      // Public resolver address
+      const resolver = await state.ens.resolver('resolver.eth');
+      const publicResolverAddress = await resolver.addr();
+      const publicResolver = state.network.type.contracts.find(contract => {
+        return (
+          web3.utils.toChecksumAddress(contract.address) ===
+          web3.utils.toChecksumAddress(publicResolverAddress)
+        );
+      });
+      const publicResolverContract = new web3.eth.Contract(
+        publicResolver.abi,
+        publicResolverAddress
+      );
+
+      const rawTx1 = {
+        to: ensRegistry.address,
+        from: from,
+        data: ensRegistryContract.methods
+          .setResolver(this.nameHash, publicResolverAddress)
+          .encodeABI(),
+        value: 0
+      };
+
+      const rawTx2 = {
+        to: publicResolverAddress,
+        from: from,
+        data: publicResolverContract.methods.setAddr(
+          this.nameHash,
+          newResolverAddr
+        ),
+        value: 0
+      };
+
+      console.log(rawTx1, rawTx2, this.auctionRegistrarContract);
+    },
     async finalize() {
       const address = this.$store.state.wallet.getAddressString();
       const web3 = this.$store.state.web3;
