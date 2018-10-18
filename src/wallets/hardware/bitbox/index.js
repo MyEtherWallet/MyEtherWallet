@@ -1,7 +1,8 @@
 import ethTx from 'ethereumjs-tx';
-import SecalotEth from './secalotEth';
-import SecalotUsb from './secalotUsb';
-import { SECALOT as secalotType } from '../../bip44/walletTypes';
+import ethUtil from 'ethereumjs-util';
+import DigitalBitboxUsb from './digitalBitboxUsb';
+import DigitalBitboxEth from './digitalBitboxEth';
+import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
@@ -13,19 +14,19 @@ import {
 
 const NEED_PASSWORD = true;
 
-class SecalotWallet {
+class BitBoxWallet {
   constructor(password) {
-    this.identifier = secalotType;
+    this.identifier = bitboxType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.supportedPaths = bip44Paths[secalotType];
+    this.supportedPaths = bip44Paths[bitboxType];
     this.password = password;
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
-    const transport = new SecalotUsb();
-    this.secalot = new SecalotEth(transport, this.password);
-    const rootPub = await getRootPubKey(this.secalot, this.basePath);
+    const transport = new DigitalBitboxUsb();
+    this.bitbox = new DigitalBitboxEth(transport, this.password);
+    const rootPub = await getRootPubKey(this.bitbox, this.basePath);
     this.hdKey = new HDKey();
     this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
     this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
@@ -43,7 +44,7 @@ class SecalotWallet {
         gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
         gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
       });
-      const result = await this.secalot.signTransactionAsync(
+      const result = await this.bitbox.signTransaction(
         this.basePath + '/' + idx,
         _tx
       );
@@ -64,11 +65,16 @@ class SecalotWallet {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      const result = await this.secalot.signMessageAsync(
+      const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
+      const result = await this.bitbox.signMessage(
         this.basePath + '/' + idx,
-        msg
+        msgHash
       );
-      return getBufferFromHex(result);
+      return Buffer.concat([
+        getBufferFromHex(sanitizeHex(result.r)),
+        getBufferFromHex(sanitizeHex(result.s)),
+        getBufferFromHex(sanitizeHex(result.v))
+      ]);
     };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
@@ -87,13 +93,13 @@ class SecalotWallet {
   }
 }
 const createWallet = async (basePath, password) => {
-  const _secalotWallet = new SecalotWallet(password);
-  await _secalotWallet.init(basePath);
-  return _secalotWallet;
+  const _bitboxWallet = new BitBoxWallet(password);
+  await _bitboxWallet.init(basePath);
+  return _bitboxWallet;
 };
-const getRootPubKey = (_secalot, _path) => {
+const getRootPubKey = (_bitbox, _path) => {
   return new Promise((resolve, reject) => {
-    _secalot.getAddress(_path, (result, error) => {
+    _bitbox.getAddress(_path, (result, error) => {
       if (error) return reject(error);
       resolve({
         publicKey: result.publicKey,

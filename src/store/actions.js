@@ -1,4 +1,4 @@
-import { override, WalletWrapper } from '@/wallets';
+import { override } from '@/wallets';
 import url from 'url';
 import web3 from 'web3';
 
@@ -44,10 +44,9 @@ const createAndSignTx = function({ commit }, val) {
 };
 
 const decryptWallet = function({ commit, state, dispatch }, wallet) {
-  const wrappedWallet = new WalletWrapper(wallet);
   const _web3 = state.web3;
-  override(_web3, wrappedWallet, this._vm.$eventHub, { state, dispatch });
-  commit('DECRYPT_WALLET', wrappedWallet);
+  override(_web3, wallet, this._vm.$eventHub, { state, dispatch });
+  commit('DECRYPT_WALLET', wallet);
   commit('SET_WEB3_INSTANCE', _web3);
 };
 

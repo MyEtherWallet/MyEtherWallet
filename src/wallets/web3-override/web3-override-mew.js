@@ -10,18 +10,7 @@ export default function web3OverrideMew(
   const methodOverrides = {
     signTransaction(tx) {
       return new Promise(resolve => {
-        if (tx.generateOnly) {
-          delete tx['generateOnly'];
-          eventHub.$emit(
-            'showTxConfirmModal',
-            tx,
-            wallet.isHardware,
-            wallet.signTransaction.bind(this),
-            res => {
-              resolve(res);
-            }
-          );
-        } else if (tx.web3WalletOnly) {
+        if (tx.web3WalletOnly) {
           delete tx['web3WalletOnly'];
           eventHub.$emit(
             'showWeb3Wallet',
@@ -34,29 +23,17 @@ export default function web3OverrideMew(
             }
           );
         } else {
-          eventHub.$emit(
-            'showTxConfirmModal',
-            tx,
-            wallet.isHardware,
-            wallet.signTransaction.bind(this),
-            res => {
-              resolve(res);
-            }
-          );
+          eventHub.$emit('showTxConfirmModal', tx, wallet, res => {
+            resolve(res);
+          });
         }
       });
     },
     signMessage(message) {
       return new Promise(resolve => {
-        eventHub.$emit(
-          'showMessageConfirmModal',
-          message,
-          wallet.isHardware,
-          wallet.signMessage,
-          res => {
-            resolve(res);
-          }
-        );
+        eventHub.$emit('showMessageConfirmModal', message, wallet, res => {
+          resolve(res);
+        });
       });
     },
     async sendTransaction(tx) {

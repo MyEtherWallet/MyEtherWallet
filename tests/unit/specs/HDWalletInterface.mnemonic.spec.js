@@ -56,6 +56,8 @@ for (let i = 0; i < 3; i++)
     new HDWalletInterface(
       ETH_PATH + '/' + i,
       hdk.derive(ETH_PATH + '/' + i).publicKey,
+      false,
+      'mnemonic',
       tx => {
         return new Promise(resolve => {
           tx.sign(hdk.derive(ETH_PATH + '/' + i).privateKey);

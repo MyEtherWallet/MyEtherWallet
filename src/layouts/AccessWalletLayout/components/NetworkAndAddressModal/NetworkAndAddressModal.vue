@@ -84,7 +84,7 @@
           :key="account.index"
           :class="selectedId === 'address' + account.index ? 'selected' : ''"
           class="address-block address-data"
-          @click="setAddress(details, 'address' + account.index)">
+          @click="setAccount(account)">
           <li>{{ account.index }}.</li>
           <li>{{ account.account.getChecksumAddressString() }}</li>
           <li>{{ account.balance }} ETH</li>
@@ -151,7 +151,6 @@ export default {
     return {
       selectedId: '',
       accessMyWalletBtnDisabled: true,
-      walletUnlocked: false,
       currentIndex: 0,
       HDAccounts: [],
       availablePaths: {},
@@ -159,6 +158,7 @@ export default {
       selectedPath: '',
       invalidPath: '',
       customPathInput: false,
+      currentWallet: null,
       customPath: { label: '', dpath: '' }
     };
   },
@@ -174,11 +174,11 @@ export default {
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
       this.accessMyWalletBtnDisabled = true;
-      this.walletUnlocked = false;
       this.availablePaths = {};
       this.selectedPath = '';
       this.invalidPath = '';
       this.customPathInput = false;
+      this.currentWallet = null;
       this.customPath = { label: '', path: '' };
       this.resetPaginationValues();
     });
@@ -190,6 +190,11 @@ export default {
         .forEach(function(el) {
           el.checked = el.id === selected;
         });
+    },
+    setAccount(account) {
+      this.selectedId = 'address' + account.index;
+      this.unselectAllAddresses('address' + account.index);
+      this.currentWallet = account.account;
     },
     resetPaginationValues() {
       this.currentIndex = 0;
@@ -220,7 +225,7 @@ export default {
       });
     },
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', this.hardwareWallet);
+      this.$store.dispatch('decryptWallet', this.currentWallet);
       this.$router.push({ path: 'interface' });
     },
     setHDAccounts() {
@@ -244,7 +249,7 @@ export default {
     getAddressBalance(address) {
       const web3 = this.$store.state.web3;
       web3.eth.getBalance(address).then(balance => {
-        for (let i in this.HDAccounts)
+        for (const i in this.HDAccounts)
           if (this.HDAccounts[i].account.getAddressString() == address)
             this.HDAccounts[i].balance = ethUnits.fromWei(balance, 'ether');
       });
@@ -260,14 +265,14 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (let _p in this.availablePaths)
+      for (const _p in this.availablePaths)
         if (this.availablePaths[_p].path === path)
           return this.availablePaths[_p].label;
       return 'Unknown';
     },
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
-      this.availablePaths = this.hardwareWallet.getNetworkPaths();
+      this.availablePaths = this.hardwareWallet.getSupportedPaths();
       this.customPaths = this.$store.state.customPaths;
     }
   }

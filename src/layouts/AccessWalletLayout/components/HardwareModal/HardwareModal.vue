@@ -71,14 +71,11 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import {
-  // LedgerWallet,
+  LedgerWallet,
   TrezorWallet,
-  DigitalBitboxWallet,
+  BitBoxWallet,
   SecalotWallet
 } from '@/wallets';
-
-import ledgerNew from '@/wallets/hardware1/ledger/ledgerWallet';
-
 export default {
   components: {
     'customer-support': CustomerSupport
@@ -106,43 +103,25 @@ export default {
   },
   methods: {
     continueAccess() {
-      // todo The actual initiation of a hardware wallet should be moved to a specific file to reduce clutter here as the number of offerings increases
-      // todo: and to allow for any specialized set-up steps a particular constructor/wallet may require
       const showPluggedInReminder = setTimeout(() => {
         this.mayNotBeAttached = true;
       }, 1000);
-      let newWallet;
       switch (this.selected) {
         case 'ledger':
-          newWallet = new ledgerNew();
-          newWallet.init().then(() => {
+          LedgerWallet().then(_newWallet => {
             clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', newWallet);
+            this.$emit('hardwareWalletOpen', _newWallet);
           });
-          // LedgerWallet.unlock()
-          //   .then(wallet => {
-          //     clearTimeout(showPluggedInReminder);
-          //     this.$emit('hardwareWalletOpen', wallet);
-          //   })
-          //   .catch(_error => {
-          //     // eslint-disable-next-line
-          //     console.error(_error); // todo replace with proper error
-          //   });
           break;
         case 'trezor':
-          TrezorWallet.unlock()
-            .then(wallet => {
-              clearTimeout(showPluggedInReminder);
-              this.$emit('hardwareWalletOpen', wallet);
-            })
-            .catch(_error => {
-              // eslint-disable-next-line
-              console.error(_error); // todo replace with proper error
-            });
+          TrezorWallet().then(_newWallet => {
+            clearTimeout(showPluggedInReminder);
+            this.$emit('hardwareWalletOpen', _newWallet);
+          });
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
-            walletConstructor: DigitalBitboxWallet,
+            walletConstructor: BitBoxWallet,
             hardwareBrand: 'DigitalBitbox'
           });
           break;
