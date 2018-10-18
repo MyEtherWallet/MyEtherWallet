@@ -94,11 +94,11 @@ export default {
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
-              address: this.wallet.getAddressString(),
+              address: this.wallet.getChecksumAddressString(),
               msg: this.$refs.message.value,
               sig: _signedMessage,
               version: '3',
-              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
+              signer: this.wallet.identifier ? this.wallet.identifier : 'MEW'
             },
             null,
             2

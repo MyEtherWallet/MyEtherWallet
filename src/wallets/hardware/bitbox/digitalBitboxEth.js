@@ -179,16 +179,30 @@ DigitalBitboxEth.signGeneric = function(
   self.comm.exchange(cmd, localCallback);
 };
 
-DigitalBitboxEth.prototype.signTransaction = function(path, eTx, callback) {
-  const self = this;
-  const hashToSign = eTx.hash(false).toString('hex');
-  DigitalBitboxEth.signGeneric(self, path, eTx._chainId, hashToSign, callback);
+DigitalBitboxEth.prototype.signTransaction = function(path, eTx) {
+  return new Promise((resolve, reject) => {
+    const hashToSign = eTx.hash(false).toString('hex');
+    DigitalBitboxEth.signGeneric(
+      this,
+      path,
+      eTx._chainId,
+      hashToSign,
+      (result, error) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+  });
 };
 
-DigitalBitboxEth.prototype.signMessage = function(path, messageHex, callback) {
-  const self = this;
-  const hashToSign = messageHex.toString('hex');
-  DigitalBitboxEth.signGeneric(self, path, 0, hashToSign, callback);
+DigitalBitboxEth.prototype.signMessage = function(path, messageHex) {
+  return new Promise((resolve, reject) => {
+    const hashToSign = messageHex.toString('hex');
+    DigitalBitboxEth.signGeneric(this, path, 0, hashToSign, (result, error) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
 };
 
-export { DigitalBitboxEth };
+export default DigitalBitboxEth;

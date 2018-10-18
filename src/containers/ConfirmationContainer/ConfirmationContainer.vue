@@ -135,38 +135,20 @@ export default {
       this.showSuccessModal(message, linkMessage);
     });
 
-    this.$eventHub.$on(
-      'showConfirmModal',
-      (tx, isHardware, signer, resolve) => {
-        this.parseRawTx(tx);
-        this.isHardwareWallet = isHardware;
-        this.responseFunction = resolve;
-        this.successMessage = 'Sending Transaction';
-        signer(tx).then(_response => {
-          this.signedTxObject = _response;
-          this.signedTx = this.signedTxObject.rawTransaction;
-        });
-        this.confirmationModalOpen();
+    this.$eventHub.$on('showTxConfirmModal', (tx, wallet, resolve) => {
+      this.parseRawTx(tx);
+      if (tx.hasOwnProperty('ensObj')) {
+        delete tx['ensObj'];
       }
-    );
-
-    this.$eventHub.$on(
-      'showTxConfirmModal',
-      (tx, isHardware, signer, resolve) => {
-        this.parseRawTx(tx);
-        if (tx.hasOwnProperty('ensObj')) {
-          delete tx['ensObj'];
-        }
-        this.isHardwareWallet = isHardware;
-        this.responseFunction = resolve;
-        this.successMessage = 'Sending Transaction';
-        signer(tx).then(_response => {
-          this.signedTxObject = _response;
-          this.signedTx = this.signedTxObject.rawTransaction;
-        });
-        this.confirmationModalOpen();
-      }
-    );
+      this.isHardwareWallet = wallet.isHardware;
+      this.responseFunction = resolve;
+      this.successMessage = 'Sending Transaction';
+      wallet.signTransaction(tx).then(_response => {
+        this.signedTxObject = _response;
+        this.signedTx = this.signedTxObject.raw;
+      });
+      this.confirmationModalOpen();
+    });
 
     this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
       this.parseRawTx(tx);
@@ -185,17 +167,14 @@ export default {
       );
     });
 
-    this.$eventHub.$on(
-      'showMessageConfirmModal',
-      (data, isHardware, signer, resolve) => {
-        this.responseFunction = resolve;
-        this.messageToSign = data;
-        signer(data).then(_response => {
-          this.signedMessage = _response;
-        });
-        this.signConfirmationModalOpen();
-      }
-    );
+    this.$eventHub.$on('showMessageConfirmModal', (data, wallet, resolve) => {
+      this.responseFunction = resolve;
+      this.messageToSign = data;
+      wallet.signMessage(data).then(_response => {
+        this.signedMessage = '0x' + _response.toString('hex');
+      });
+      this.signConfirmationModalOpen();
+    });
   },
   mounted() {
     this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
@@ -242,7 +221,6 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
       }
-      // this.signedTx = this.signedTxObject.rawTransaction
     },
     messageReturn() {
       this.dismissed = false;

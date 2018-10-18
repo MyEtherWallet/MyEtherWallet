@@ -60,15 +60,9 @@ export default {
   },
   methods: {
     unlockWallet() {
-      this.walletConstructor
-        .unlock({ password: this.password })
-        .then(wallet => {
-          this.$emit('hardwareWalletOpen', wallet);
-        })
-        .catch(_error => {
-          // eslint-disable-next-line
-          console.error(_error); // todo replace with proper error
-        });
+      this.walletConstructor('', this.password).then(_newWallet => {
+        this.$emit('hardwareWalletOpen', _newWallet);
+      });
     },
     switchViewPassword() {
       this.show = !this.show;
