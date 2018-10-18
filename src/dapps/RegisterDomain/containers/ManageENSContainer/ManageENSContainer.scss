@@ -1,0 +1,46 @@
+@import '../../RegisterDomain.scss';
+
+.manage-ens-container {
+  @extend %template-container;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  h3 {
+    color: $dark-blue-6;
+  }
+}
+
+.manage-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+  }
+
+  .submit-container {
+    text-align: center;
+    button {
+      background-color: $mew-green;
+      border: 0;
+      border-radius: 4px;
+      color: $white;
+      cursor: pointer;
+      height: 62px;
+      margin-top: 20px;
+      padding: 10px;
+      width: 260px;
+    }
+
+    .disabled {
+      background-color: $light-grey-12 !important;
+      pointer-events: none;
+    }
+  }
+}

@@ -1,5 +1,9 @@
 <template lang="html">
   <div class="already-owned-container">
+    <finalize-modal
+      ref="finalizeModal"
+      :domain-name="domainName"
+      :finalize="finalize"/>
     <h3>{{ domainName }}.eth is already owned.</h3>
     <div class="content-container">
       <p class="label"> Labelhash({{ domainName }}.eth): </p>
@@ -21,7 +25,16 @@
       <p class="label"> Resolver Address: </p>
       <p class="content"> {{ resolverAddress }} </p>
     </div>
-
+    <div class="owner-options">
+      <button
+        v-if="deedOwner === $store.state.wallet.getAddressString() && owner === '0x0000000000000000000000000000000000000000'"
+        @click="openFinalizeModal">
+        Finalize
+      </button>
+      <span
+        v-if="owner === $store.state.wallet.getAddressString()"
+        @click="updateResolver">Manage</span>
+    </div>
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
