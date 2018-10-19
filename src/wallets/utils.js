@@ -14,14 +14,24 @@ const sanitizeHex = hex => {
 const bufferToHex = buffer => {
   return '0x' + buffer.toString('hex');
 };
+const getHexTxObject = tx => {
+  return {
+    to: sanitizeHex(tx.to.toString('hex')),
+    value: sanitizeHex(tx.value.toString('hex')),
+    data: sanitizeHex(tx.data.toString('hex')),
+    chainId: tx._chainId,
+    nonce: sanitizeHex(tx.nonce.toString('hex')),
+    gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
+    gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
+  };
+};
 const getSignTransactionObject = tx => {
   return {
-    raw: bufferToHex(tx.serialize()),
     rawTransaction: bufferToHex(tx.serialize()),
     tx: {
       nonce: bufferToHex(tx.nonce),
       gasPrice: bufferToHex(tx.gasPrice),
-      gas: bufferToHex(tx.gasLimit),
+      gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
       to: bufferToHex(tx.to),
       value: bufferToHex(tx.value),
       input: bufferToHex(tx.data),
@@ -37,5 +47,6 @@ export {
   bufferToHex,
   getSignTransactionObject,
   sanitizeHex,
-  padLeftEven
+  padLeftEven,
+  getHexTxObject
 };

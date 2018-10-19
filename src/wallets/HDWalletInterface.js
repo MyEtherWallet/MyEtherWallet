@@ -1,12 +1,11 @@
 import WalletInterface from './WalletInterface';
 class HDWalletInterface extends WalletInterface {
   constructor(path, pubkey, isHardware, identifier, txSigner, msgSigner) {
-    super(pubkey, true);
+    super(pubkey, true, identifier);
     this.path = path;
     this.txSigner = txSigner;
     this.msgSigner = msgSigner;
     this.isHardware = isHardware;
-    this.identifier = identifier;
   }
   signTransaction(txParams) {
     return super.signTransaction(txParams, this.txSigner);

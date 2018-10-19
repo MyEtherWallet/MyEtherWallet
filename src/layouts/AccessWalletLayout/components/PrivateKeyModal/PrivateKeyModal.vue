@@ -18,14 +18,15 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlockWallet") }}
+        {{ $t("accessWallet.unlock") }}
       </button>
     </form>
   </b-modal>
 </template>
 
 <script>
-import { BasicWallet } from '@/wallets';
+import { WalletInterface } from '@/wallets';
+import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
 export default {
   data() {
     return {
@@ -36,10 +37,7 @@ export default {
     unlockWallet() {
       this.$store.dispatch(
         'decryptWallet',
-        BasicWallet.unlock({
-          type: 'manualPrivateKey',
-          manualPrivateKey: this.privateKey
-        })
+        new WalletInterface(this.privateKey, false, privKeyType)
       );
       this.privateKey = '';
       this.$router.push({ path: 'interface' });
