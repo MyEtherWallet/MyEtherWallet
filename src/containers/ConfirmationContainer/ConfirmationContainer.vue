@@ -15,7 +15,7 @@
       :nonce="nonce"/>
     <confirm-collection-modal
       ref="confirmCollectionModal"
-      :confirm-send-tx="sendBatchTx"
+      :send-batch-transactions="sendBatchTransactions"
       :signed-array="signedArray"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
@@ -255,37 +255,21 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
-    async sendBatchTx() {
+    async sendBatchTransactions() {
       const web3 = this.$store.state.web3;
-      const dispatch = this.$store.dispatch;
-      const batch = web3.BatchRequest();
+      // const dispatch = this.$store.dispatch;
+      const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {
         batch.add(
-          web3.eth
-            .sendSignedTransaction(this.signedArray[i].rawTransaction)
-            .once('transactionHash', hash => {
-              dispatch('addNotification', [
-                this.signedArray[i].tx.from,
-                hash,
-                'Transaction Hash'
-              ]);
-            })
-            .on('receipt', res => {
-              dispatch('addNotification', [
-                this.signedArray[i].tx.from,
-                res,
-                'Transaction Receipt'
-              ]);
-            })
-            .on('error', err => {
-              dispatch('addNotification', [
-                this.signedArray[i].tx.from,
-                err,
-                'Transaction Error'
-              ]);
-            })
+          web3.eth.sendSignedTransaction.request(
+            this.signedArray[i].rawTransaction,
+            'receipt',
+            console.log
+          )
         );
       }
+      console.log(this.signedArray);
+      batch.execute();
     },
     sendTx() {
       this.dismissed = false;
