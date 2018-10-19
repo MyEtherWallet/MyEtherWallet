@@ -88,7 +88,6 @@ export default class Simplex {
   }
 
   createSwap(swapDetails) {
-    // return this.currentOrder;
     return getOrder({
       'g-recaptcha-response': '',
       account_details: {
@@ -111,14 +110,5 @@ export default class Simplex {
         }
       }
     });
-    /*      .then(resp => {
-        resp = resp.data;
-        if (!resp.error) {
-          this.formData = resp.result;
-        } else console.log(resp);
-      })
-      .catch(error => {
-        console.error(error);
-      });*/
   }
 }
