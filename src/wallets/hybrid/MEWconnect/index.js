@@ -1,12 +1,8 @@
-/* eslint-disable */
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import ethTx from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
-import {
-  getSignTransactionObject,
-  sanitizeHex
-} from '../../utils';
+import { getSignTransactionObject, sanitizeHex } from '../../utils';
 import * as ethUtil from 'ethereumjs-util';
 
 class MEWconnectWalletInterface extends WalletInterface {
@@ -15,10 +11,10 @@ class MEWconnectWalletInterface extends WalletInterface {
     this.txSigner = txSigner;
     this.msgSigner = msgSigner;
     this.isHardware = isHardware;
-    this.mewConnect = mewConnect
+    this.mewConnect = mewConnect;
   }
-  on(event, listener){
-    this.mewConnect.on(event, listener)
+  on(event, listener) {
+    this.mewConnect.on(event, listener);
   }
   signTransaction(txParams) {
     return super.signTransaction(txParams, this.txSigner);
@@ -66,8 +62,8 @@ class MEWconnectWallet {
       this
     );
   }
-  on(event, listener){
-    this.mewConnect.on(event, listener)
+  on(event, listener) {
+    this.mewConnect.on(event, listener);
   }
 }
 const createWallet = () => {
@@ -76,12 +72,12 @@ const createWallet = () => {
 const signalerConnect = async (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);
-    mewConnect.on('RtcConnectedEvent', () =>{
+    mewConnect.on('RtcConnectedEvent', () => {
       mewConnect.sendRtcMessage('address', '');
       mewConnect.once('address', data => {
         resolve(data.address);
       });
-    })
+    });
   });
 };
 
