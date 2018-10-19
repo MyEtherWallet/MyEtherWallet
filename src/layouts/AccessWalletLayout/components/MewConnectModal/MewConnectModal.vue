@@ -42,11 +42,11 @@ export default {
   },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
-      const wallet = new MewConnectWallet();
-      this.setup(wallet);
-      wallet
-        .signalerConnect()
-        .then(() => {
+      const mewConnectWallet = MewConnectWallet();
+      this.setup(mewConnectWallet);
+      mewConnectWallet
+        .init()
+        .then(wallet => {
           this.$store.dispatch('decryptWallet', wallet);
           this.$router.push({ path: 'interface' });
         })
@@ -61,9 +61,9 @@ export default {
   },
   methods: {
     setup(wallet) {
-      wallet.registerListener('codeDisplay', this.codeDisplay);
-      wallet.registerListener('RtcConnectedEvent', this.rtcConnected);
-      wallet.registerListener('RtcClosedEvent', this.rtcClosed);
+      wallet.on('codeDisplay', this.codeDisplay);
+      wallet.on('RtcConnectedEvent', this.rtcConnected);
+      wallet.on('RtcClosedEvent', this.rtcClosed);
     },
     codeDisplay(qrCode) {
       this.QrCode = qrCode;

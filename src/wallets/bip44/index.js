@@ -4,6 +4,7 @@ import trezorPaths from './trezorPaths';
 import bitboxPaths from './bitboxPaths';
 import secalotPaths from './secalotPaths';
 import mnemonicPaths from './mnemonicPaths';
+
 export default {
   [LEDGER]: ledgerPaths,
   [TREZOR]: trezorPaths,

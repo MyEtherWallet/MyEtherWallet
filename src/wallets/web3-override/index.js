@@ -7,11 +7,11 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
     signTransaction(tx) {
       return new Promise(resolve => {
         if (wallet.identifier === WEB3_WALLET) {
-          eventHub.$emit('showWeb3Wallet', tx, wallet, res => {
+          eventHub.$emit('showWeb3Wallet', tx, res => {
             resolve(res);
           });
         } else {
-          eventHub.$emit('showTxConfirmModal', tx, wallet, res => {
+          eventHub.$emit('showTxConfirmModal', tx, res => {
             resolve(res);
           });
         }
@@ -19,7 +19,7 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
     },
     signMessage(message) {
       return new Promise(resolve => {
-        eventHub.$emit('showMessageConfirmModal', message, wallet, res => {
+        eventHub.$emit('showMessageConfirmModal', message, res => {
           resolve(res);
         });
       });
