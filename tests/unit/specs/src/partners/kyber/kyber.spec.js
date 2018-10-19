@@ -2,7 +2,6 @@ import Kyber from '@/partners/kyber/kyber.js';
 import Web3 from 'web3';
 import ENS from 'ethereum-ens';
 
-// const nodeUrl = 'https://api.myetherwallet.com/eth'
 const nodeUrl = 'https://api.myetherwallet.com/eth';
 const network = 'ETH';
 const withNetwork = false;
