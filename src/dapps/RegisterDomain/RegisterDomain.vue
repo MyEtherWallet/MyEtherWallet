@@ -147,14 +147,13 @@ export default {
       const rawTx2 = {
         to: publicResolverAddress,
         from: from,
-        data: publicResolverContract.methods.setAddr(
-          this.nameHash,
-          newResolverAddr
-        ),
+        data: publicResolverContract.methods
+          .setAddr(this.nameHash, newResolverAddr)
+          .encodeABI(),
         value: 0
       };
 
-      console.log(rawTx1, rawTx2, this.auctionRegistrarContract);
+      web3.eth.sendBatchTransactions([rawTx1, rawTx2]);
     },
     async finalize() {
       const address = this.$store.state.wallet.getAddressString();

@@ -24,12 +24,37 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
         });
       });
     },
+    signBatchTransaction(arrTxs) {
+      eventHub.$emit(
+        'showTxCollectionConfirmModal',
+        arrTxs,
+        wallet.isHardware,
+        wallet.signTransaction.bind(this)
+      );
+    },
+    async sendBatchTransactions(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        const localTx = { to: arr[i].to, data: arr[i].data, from: arr[i].from };
+        arr[i].nonce = await (arr[i].nonce === undefined
+          ? web3.eth.getTransactionCount(wallet.getAddressString())
+          : arr[i].nonce);
+        arr[i].nonce += i;
+        arr[i].gas = await (arr[i].gas === undefined
+          ? web3.eth.estimateGas(localTx)
+          : arr.gas);
+        arr[i].chainId = !arr[i].chainId
+          ? state.network.type.chainID
+          : arr[i].chainId;
+        arr[i].gasPrice =
+          arr[i].gasPrice === undefined
+            ? unit.toWei(state.gasPrice, 'gwei').toString()
+            : arr[i].gasPrice;
+        if (state.wallet.identifier === 'Web3') arr[i].web3WalletOnly = true;
+      }
+      methodOverrides.signBatchTransaction(arr);
+    },
     async sendTransaction(tx) {
-      const localTx = {
-        to: tx.to,
-        data: tx.data,
-        from: tx.from
-      };
+      const localTx = { to: tx.to, data: tx.data, from: tx.from };
       tx['nonce'] = await (tx['nonce'] === undefined
         ? web3.eth.getTransactionCount(wallet.getAddressString())
         : tx.nonce);
@@ -70,5 +95,6 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
   web3.eth.signTransaction = methodOverrides.signTransaction;
   web3.eth.sign = methodOverrides.signMessage;
   web3.eth.sendTransaction = methodOverrides.sendTransaction;
+  web3.eth.sendBatchTransactions = methodOverrides.sendBatchTransactions;
   return web3; // needs to return web3 for use in vuex
 };
