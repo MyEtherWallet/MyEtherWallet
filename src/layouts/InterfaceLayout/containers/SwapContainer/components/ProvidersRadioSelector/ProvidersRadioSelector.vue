@@ -27,6 +27,7 @@
             {{ minMaxNote(provider) }}
           </div>
         </li>
+
       </ul>
     </div>
   </div>
@@ -44,22 +45,7 @@ export default {
     providerData: {
       type: Array,
       default: function() {
-        return [
-          {
-            provider: 'kybernetwork',
-            fromCurrency: 'BTC',
-            fromValue: 1,
-            toCurrency: 'ETH',
-            rate: 21.43572
-          },
-          {
-            provider: 'bity',
-            fromCurrency: 'BTC',
-            fromValue: 1,
-            toCurrency: 'ETH',
-            rate: 21.43572
-          }
-        ];
+        return [];
       }
     }
   },

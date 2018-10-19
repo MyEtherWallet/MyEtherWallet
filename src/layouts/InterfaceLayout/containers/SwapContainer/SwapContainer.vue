@@ -524,9 +524,7 @@ export default {
         ) {
           this.$refs.swapSendTo.$refs.swapconfirmation.show();
         } else {
-          console.log(
-            'Something went wrong when requesting finalized details from provider'
-          ); // todo remove dev item
+          throw Error('Error while requesting finalized details from provider')
         }
       }
     },
@@ -572,7 +570,6 @@ export default {
           return details;
         case this.simplexSwap.name:
           details = await this.simplexSwap.createSwap(swapDetails);
-          console.log('simplexSwap createSwap', details); // todo remove dev item
           return details;
       }
     },

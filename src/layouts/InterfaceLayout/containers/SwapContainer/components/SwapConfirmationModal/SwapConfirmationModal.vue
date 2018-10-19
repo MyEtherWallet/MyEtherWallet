@@ -34,7 +34,7 @@
 
       <detail-information :details="detailInfo"/>
 
-      <div 
+      <div
         class="confirm-send-button"
         @click="sendTransaction">
         <button-with-qrcode
@@ -216,9 +216,6 @@ export default {
           value.fromValue,
           tokenInfo
         );
-        console.log(tokenInfo); // todo remove dev item
-        console.log(txData); // todo remove dev item
-        // this.$store.state.network.tokens
       }
     },
     useKyber(value) {

@@ -45,10 +45,6 @@
 </template>
 
 <script>
-/* eslint-disable*/
-import web3 from 'web3';
-import BigNumber from 'bignumber.js';
-
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
@@ -107,11 +103,6 @@ export default {
     }
   },
   methods: {
-    prepare(){
-      if (value.dataForInitialization) {
-
-      }
-    },
     sendTransaction() {
       this.swapStarted(this.swapDetails);
       this.$refs.swapconfirmation.hide();
@@ -135,6 +126,7 @@ export default {
     },
     changellySwap(value){
       this.qrcode = value.dataForInitialization.payinAddress;
+      // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
   }
 };
