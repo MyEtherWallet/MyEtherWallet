@@ -1,4 +1,5 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+import ethTx from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
@@ -32,6 +33,7 @@ class ledgerWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
+      tx = new ethTx(tx);
       const networkId = tx._chainId;
       tx.raw[6] = Buffer.from([networkId]);
       tx.raw[7] = Buffer.from([]);
@@ -60,7 +62,7 @@ class ledgerWallet {
         Buffer.from(msg).toString('hex')
       );
       const v = parseInt(result.v, 10) - 27;
-      let vHex = sanitizeHex(v.toString(16));
+      const vHex = sanitizeHex(v.toString(16));
       return Buffer.concat([
         getBufferFromHex(result.r),
         getBufferFromHex(result.s),

@@ -145,20 +145,16 @@ export default {
       this.successMessage = 'Sending Transaction';
       wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
-        this.signedTx = this.signedTxObject.raw;
+        this.signedTx = this.signedTxObject.rawTransaction;
       });
       this.confirmationModalOpen();
     });
 
-    this.$eventHub.$on('showWeb3Wallet', (tx, isHardware, signer, resolve) => {
+    this.$eventHub.$on('showWeb3Wallet', (tx, wallet, resolve) => {
       this.parseRawTx(tx);
-      if (tx.hasOwnProperty('ensObj')) {
-        delete tx['ensObj'];
-      }
-      this.isHardwareWallet = isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      signer(tx).then(_response => {
+      wallet.signTransaction(tx).then(_response => {
         this.web3WalletHash = _response;
       });
       this.showSuccessModal(

@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import { BasicWallet } from '@/wallets';
+import { WalletInterface } from '@/wallets';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 export default {
   props: {
@@ -71,10 +72,7 @@ export default {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch(
           'decryptWallet',
-          BasicWallet.unlock({
-            type: 'manualPrivateKey',
-            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
-          })
+          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         );
         self.$router.push({ path: 'interface' });
       };

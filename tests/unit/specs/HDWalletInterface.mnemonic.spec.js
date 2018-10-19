@@ -59,6 +59,7 @@ for (let i = 0; i < 3; i++)
       false,
       'mnemonic',
       tx => {
+        tx = new ethTx(tx);
         return new Promise(resolve => {
           tx.sign(hdk.derive(ETH_PATH + '/' + i).privateKey);
           resolve(tx);

@@ -98,7 +98,7 @@ export default {
               msg: this.$refs.message.value,
               sig: _signedMessage,
               version: '3',
-              signer: this.wallet.identifier ? this.wallet.identifier : 'MEW'
+              signer: this.wallet.isHardware ? this.wallet.identifier : 'MEW'
             },
             null,
             2

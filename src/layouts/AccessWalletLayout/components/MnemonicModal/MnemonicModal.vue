@@ -89,7 +89,9 @@ export default {
       }
     },
     openPasswordModal() {
-      this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
+      this.mnemonicPhrasePasswordModalOpen(
+        'build catalog adjust link wage honey staff betray truth chef media special'
+      );
     }
   }
 };

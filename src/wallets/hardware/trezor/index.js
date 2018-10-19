@@ -3,9 +3,10 @@ import { TREZOR as trezorType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
+import ethTx from 'ethereumjs-tx';
 import {
   getSignTransactionObject,
-  sanitizeHex,
+  getHexTxObject,
   getBufferFromHex
 } from '../../utils';
 
@@ -28,18 +29,11 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
+      tx = new ethTx(tx);
       const networkId = tx._chainId;
       const options = {
         path: this.basePath + '/' + idx,
-        transaction: {
-          to: sanitizeHex(tx.to.toString('hex')),
-          value: sanitizeHex(tx.value.toString('hex')),
-          data: sanitizeHex(tx.data.toString('hex')),
-          chainId: networkId,
-          nonce: sanitizeHex(tx.nonce.toString('hex')),
-          gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
-          gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
-        }
+        transaction: getHexTxObject(tx)
       };
       const result = await Trezor.ethereumSignTransaction(options);
       if (!result.success) throw new Error(result.payload.error);

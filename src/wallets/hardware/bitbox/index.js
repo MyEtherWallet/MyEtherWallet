@@ -34,19 +34,11 @@ class BitBoxWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
+      tx = new ethTx(tx);
       const networkId = tx._chainId;
-      const _tx = new ethTx({
-        to: sanitizeHex(tx.to.toString('hex')),
-        value: sanitizeHex(tx.value.toString('hex')),
-        data: sanitizeHex(tx.data.toString('hex')),
-        chainId: networkId,
-        nonce: sanitizeHex(tx.nonce.toString('hex')),
-        gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
-        gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
-      });
       const result = await this.bitbox.signTransaction(
         this.basePath + '/' + idx,
-        _tx
+        tx
       );
       tx.v = getBufferFromHex(sanitizeHex(result.v));
       tx.r = getBufferFromHex(sanitizeHex(result.r));

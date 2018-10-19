@@ -1,4 +1,5 @@
 import * as unit from 'ethjs-unit';
+import { WEB3_WALLET } from '../bip44/walletTypes';
 export default function web3OverrideMew(
   web3,
   wallet,
@@ -10,18 +11,10 @@ export default function web3OverrideMew(
   const methodOverrides = {
     signTransaction(tx) {
       return new Promise(resolve => {
-        if (tx.web3WalletOnly) {
-          delete tx['web3WalletOnly'];
-          eventHub.$emit(
-            'showWeb3Wallet',
-            tx,
-            wallet.isHardware,
-            // This just sends the tx. Metamask doesn't support signing https://github.com/MetaMask/metamask-extension/issues/3475
-            wallet.signTransaction.bind(this),
-            res => {
-              resolve(res);
-            }
-          );
+        if (wallet.identifier === WEB3_WALLET) {
+          eventHub.$emit('showWeb3Wallet', tx, wallet, res => {
+            resolve(res);
+          });
         } else {
           eventHub.$emit('showTxConfirmModal', tx, wallet, res => {
             resolve(res);
@@ -49,7 +42,6 @@ export default function web3OverrideMew(
       tx.gasPrice = !tx.gasPrice
         ? unit.toWei(state.gasPrice, 'gwei').toString()
         : tx.gasPrice;
-      if (state.wallet.identifier === 'Web3') tx.web3WalletOnly = true;
       web3.eth
         .sendTransaction_(tx)
         .once('transactionHash', hash => {
@@ -65,19 +57,20 @@ export default function web3OverrideMew(
   };
   web3.defaultAccount = wallet.getAddressString().toLowerCase();
   web3.eth.defaultAccount = wallet.getAddressString().toLowerCase();
-  web3.eth.sendTransaction.method.accounts = {
+  const sTxMethod = web3.eth.sendTransaction_
+    ? 'sendTransaction_'
+    : 'sendTransaction';
+  web3.eth[sTxMethod].method.accounts = {
     wallet: {
       length: 1,
-      [wallet.getAddressString().toLowerCase()]: {
-        privateKey: true
-      }
+      [wallet.getAddressString().toLowerCase()]: { privateKey: true }
     },
     ...methodOverrides
   };
-
+  if (!web3.eth.sendTransaction_)
+    web3.eth.sendTransaction_ = web3.eth.sendTransaction;
   web3.eth.signTransaction = methodOverrides.signTransaction;
   web3.eth.sign = methodOverrides.signMessage;
-  web3.eth.sendTransaction_ = web3.eth.sendTransaction;
   web3.eth.sendTransaction = methodOverrides.sendTransaction;
   return web3; // needs to return web3 for use in vuex
 }

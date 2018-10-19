@@ -1,10 +1,17 @@
-import { getBufferFromHex } from './utils';
+import {
+  getBufferFromHex,
+  getSignTransactionObject,
+  sanitizeHex
+} from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
 class WalletInterface {
-  constructor(key, isPub = false) {
+  constructor(key, isPub = false, identifier) {
+    this.identifier = identifier;
     if (!isPub) {
-      const _privKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
+      const _privKey = Buffer.isBuffer(key)
+        ? key
+        : getBufferFromHex(sanitizeHex(key));
       if (!ethUtil.isValidPrivate(_privKey))
         throw new Error(
           'Private key does not satisfy the curve requirements (ie. it is invalid)'
@@ -14,8 +21,9 @@ class WalletInterface {
       this.isPubOnly = false;
     } else {
       const _pubKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
-      if (!ethUtil.isValidPublic(_pubKey, true))
+      if (_pubKey.length !== 20 && !ethUtil.isValidPublic(_pubKey, true))
         throw new Error('Invalid public key');
+      if (_pubKey.length === 20) this.isAddress = true;
       this.publicKey = _pubKey;
       this.isPubOnly = true;
     }
@@ -31,6 +39,7 @@ class WalletInterface {
   }
 
   getPublicKey() {
+    if (this.isAddress) throw new Error('Address only wallet');
     return this.publicKey;
   }
 
@@ -39,6 +48,7 @@ class WalletInterface {
   }
 
   getAddress() {
+    if (this.isAddress) return this.publicKey;
     return ethUtil.publicToAddress(this.publicKey, true);
   }
 
@@ -53,12 +63,12 @@ class WalletInterface {
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
     return new Promise((resolve, reject) => {
-      const tx = new ethTx(txParams);
       if (!this.isPubOnly) {
+        const tx = new ethTx(txParams);
         tx.sign(this.privateKey);
-        resolve(tx);
+        resolve(getSignTransactionObject(tx));
       } else {
-        signer(tx)
+        signer(txParams)
           .then(resolve)
           .catch(reject);
       }

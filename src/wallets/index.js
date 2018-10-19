@@ -4,7 +4,8 @@ import {
   BitBoxWallet,
   SecalotWallet
 } from './hardware';
-import { BasicWallet, MnemonicWallet } from './software';
+import WalletInterface from './WalletInterface';
+import { MnemonicWallet } from './software';
 import { MewConnectWallet } from './hybrid';
 import { override } from './web3-override';
 
@@ -14,7 +15,7 @@ export {
   BitBoxWallet,
   SecalotWallet,
   MewConnectWallet,
-  BasicWallet,
+  WalletInterface,
   MnemonicWallet,
   override
 };
