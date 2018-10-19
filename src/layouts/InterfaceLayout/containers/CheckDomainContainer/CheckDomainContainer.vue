@@ -118,7 +118,8 @@ export default {
         title: 'Save & Next',
         buttonStyle: 'green',
         rightArrow: false,
-        fullWidth: false
+        fullWidth: false,
+        isThisMobileBottomButton: true
       },
       inputJSONString: {
         title: 'JSON String',

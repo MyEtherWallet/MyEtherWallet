@@ -4,12 +4,13 @@
     background-color: $background-color-3;
     background-image: url('~@/assets/images/background/right.png'),
       url('~@/assets/images/background/left.png');
-    background-position: right top, left 80px;
+    background-position: right -60px, -130px 80px;
     background-repeat: no-repeat, no-repeat;
+    background-size: 100px, 200px;
     padding: 60px 0;
 
     .page-container {
-      padding: 60px 20px;
+      padding: 0px 20px;
 
       .content-width-limit {
         margin: 0 auto;

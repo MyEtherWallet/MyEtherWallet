@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
 
 .wrap {
   background-color: $background-color-3;
@@ -28,6 +29,11 @@
   grid-row-gap: 80px;
   grid-template-columns: 1fr 1fr 1fr;
 
+  @media all and (max-width: 810px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+
   .member {
     img {
       width: 100%;
@@ -55,3 +61,4 @@
   grid-template-columns: 1fr 1fr;
   margin-top: 70px;
 }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

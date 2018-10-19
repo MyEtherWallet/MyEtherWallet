@@ -14,7 +14,6 @@ p {
   align-items: center;
 }
 
-
 .title-block {
   display: flex;
   align-items: center;
@@ -39,7 +38,6 @@ p {
   }
 }
 
-
 .user-inputs {
   max-height: 0;
   overflow: hidden;
@@ -49,17 +47,13 @@ p {
     max-height: 700px;
   }
 
-  >div {
+  > div {
     padding: 20px 20px;
   }
 }
-
 
 .functions {
   margin-left: auto;
   font-weight: 600;
   cursor: pointer;
 }
-
-
-

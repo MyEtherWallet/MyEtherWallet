@@ -22,6 +22,7 @@
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
+              <h6 v-if="member.hashtag">{{ member.hashtag }}</h6>
             </div>
           </div>
         </div>
@@ -49,58 +50,61 @@ export default {
     return {
       members: [
         {
-          name: 'Kosala',
+          name: 'Kosala Hemachandra',
           position: 'Founder/CEO',
           img: kosala
         },
         {
-          name: 'Brian',
+          name: 'Brian Norton',
           position: 'COO',
           img: brian
         },
         {
-          name: 'Olchik',
+          name: 'Olga Kupchevskaya',
           position: 'VP',
           img: olchik
         },
         {
-          name: 'Stephen',
-          position: 'Educational Project Lead',
+          name: 'Stephen Wooldridge II',
+          position: 'Customer Support',
+          hashtag: '#MEWForce',
           img: stephen
         },
         {
           name: 'Duke & Richie Wolf',
-          position: 'Blockchain Specialist',
+          position: 'Customer Support',
+          hashtag: '#MEWForce',
           img: richie
         },
         {
-          name: 'Brittany',
-          position: 'Blockchain Specialist',
+          name: 'Brittany Evans',
+          position: 'Customer Support',
+          hashtag: '#MEWForce',
           img: brittany
         },
         {
-          name: 'Yel',
+          name: 'Yel Padill',
           position: 'Full-Stack Developer',
           img: yel
         },
         {
-          name: 'Steve',
+          name: 'Steve Mieskoski',
           position: 'Full-Stack Developer',
           img: steve
         },
         {
-          name: 'Jack',
+          name: 'Jack Huang',
           position: 'UI/UX Designer',
           img: jack
         },
         {
-          name: 'David',
+          name: 'David Hong',
           position: 'Front-End Developer',
           img: david
         },
         {
           name: 'Samantha',
-          position: 'Customer Relation',
+          position: 'Media & Communications Officer',
           img: samantha
         }
       ]
@@ -110,5 +114,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TeamLayout.scss';
+@import 'TeamLayout-desktop.scss';
+@import 'TeamLayout-tablet.scss';
+@import 'TeamLayout-mobile.scss';
 </style>
