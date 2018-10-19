@@ -48,7 +48,7 @@
     "eth-ens-namehash": "^2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
     "ethereumjs-tx": "^1.3.7",
-    "ethereumjs-util": "^5.2.0",
+    "ethereumjs-util": "^6.0.0",
     "ethereumjs-wallet": "^0.6.2",
     "ethjs-unit": "^0.1.6",
     "hdkey": "^1.1.0",
