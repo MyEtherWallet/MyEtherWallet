@@ -29,12 +29,6 @@ export default {
   components: {
     'customer-support': CustomerSupport
   },
-  props: {
-    networkAndAddressOpen: {
-      type: Function,
-      default: function() {}
-    }
-  },
   data() {
     return {
       QrCode: ''
@@ -42,10 +36,7 @@ export default {
   },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
-      const mewConnectWallet = MewConnectWallet();
-      this.setup(mewConnectWallet);
-      mewConnectWallet
-        .init()
+      new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
           this.$store.dispatch('decryptWallet', wallet);
           this.$router.push({ path: 'interface' });
@@ -60,21 +51,8 @@ export default {
     });
   },
   methods: {
-    setup(wallet) {
-      wallet.on('codeDisplay', this.codeDisplay);
-      wallet.on('RtcConnectedEvent', this.rtcConnected);
-      wallet.on('RtcClosedEvent', this.rtcClosed);
-    },
     codeDisplay(qrCode) {
       this.QrCode = qrCode;
-    },
-    rtcConnected() {
-      // eslint-disable-next-line
-      console.log('RTC Connected: replace with notification for user');
-    },
-    rtcClosed() {
-      // eslint-disable-next-line
-      console.log('RTC Closed: replace with notification for user');
     }
   }
 };
