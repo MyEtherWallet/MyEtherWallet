@@ -1,0 +1,120 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+
+.info-button {
+  user-select: none;
+  padding: 10px 15px;
+  background-color: $dark-blue-6;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.title-block {
+
+  display: flex;
+  align-items: center;
+  $button-number-size: 20px;
+
+
+  p, span {
+    color: $white;
+  }
+
+
+  .button-number {
+    text-align: center;
+    display: inline-block;
+    border: 1px solid $white;
+    border-radius: 100%;
+    height: $button-number-size;
+    width: $button-number-size;
+    margin-right: 8px;
+    font-weight: 700;
+    line-height: 18px;
+    font-size: 12px;
+  }
+
+  .button-title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+.user-inputs {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.user-input-open {
+    max-height: 700px;
+  }
+
+  > div {
+    margin: 20px 0;
+  }
+}
+
+.functions {
+
+  p, span {
+    color: $white;
+  }
+
+  margin-left: auto;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+
+
+
+.detail-info {
+
+  .padding-block {
+    padding: 20px 0;
+  }
+
+  .user-messages {
+    padding: 20px 30px;
+    border-radius: 4px;
+    background-color: $light-grey-1;
+    margin-top: 0px;
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .domain-detail-info {
+    padding: 0px;
+    ul {
+      li {
+        display: block;
+        align-items: center;
+        padding: 10px;
+
+        .info-title {
+          display: flex;
+          align-items: center;
+          p {
+            margin-right: 10px;
+            color: $mew-green;
+          }
+        }
+
+        .info-data {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
+  .json-string-input {
+    margin-top: 30px;
+  }
+}
+
+
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {

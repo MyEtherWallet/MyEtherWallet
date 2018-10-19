@@ -56,6 +56,11 @@ $text-info-color: #212529;
     color: $button-color;
     cursor: pointer;
 
+    i {
+      margin-right: 8px;
+      transform: rotate(90deg);
+    }
+
     &:hover {
       color: $button-hover-color;
     }

@@ -13,6 +13,10 @@
 
       <div class="the-button-container">
         <div 
+          v-if="options.buttonRandom == true" 
+          class="the-button random"><i class="fa fa-refresh" aria-hidden="true"></i>Random</div>
+
+        <div 
           v-if="options.buttonClear == true" 
           class="the-button clean">Clear</div>
 

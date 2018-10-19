@@ -1,0 +1,98 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .container__content {
+    padding: 40px;
+  }
+
+  .block__content .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $light-blue-1;
+    margin-bottom: 15px;
+
+    p {
+      font-weight: 600;
+      color: $black;
+      span {
+        font-weight: 400;
+        color: $grey-4;
+      }
+    }
+  }
+
+  .block__content .auction-time {
+    padding: 15px 30px;
+    background-color: $light-grey-1;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-radius: 4px;
+
+    .time-left {
+      font-weight: 600;
+
+      img {
+        margin-right: 2px;
+      }
+
+      span {
+        color: $red-1;
+        font-weight: 500;
+        margin-left: 10px;
+      }
+    }
+
+    .closing-date-time {
+      margin-left: auto;
+    }
+  }
+
+  .block__content .user-messages {
+    padding: 20px 30px;
+    border-radius: 4px;
+    background-color: $light-grey-1;
+    margin-top: 20px;
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .block__content .domain-detail-info {
+    padding: 20px;
+    ul {
+      li {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+
+        .info-title {
+          display: flex;
+          align-items: center;
+          p {
+            margin-right: 10px;
+            color: $mew-green;
+          }
+        }
+
+        .info-data {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
+  .block__content .json-string-input {
+    margin-top: 30px;
+  }
+
+  .block__submit-button {
+    margin-top: 30px;
+    text-align: center;
+
+    .button-block {
+      >* {
+        margin: 5px;
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))

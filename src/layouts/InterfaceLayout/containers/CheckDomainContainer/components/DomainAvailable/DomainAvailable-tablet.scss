@@ -1,0 +1,56 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .container__content {
+    padding: 10px;
+  }
+
+  .block__content .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $mew-green;
+    margin-bottom: 15px;
+  }
+
+  .block__content .user-messages {
+    padding: 20px 30px;
+    border-radius: 4px;
+    background-color: $light-grey-1;
+    margin-top: 20px;
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .block__content .domain-detail-info {
+    padding: 0;
+    ul {
+      li {
+        display: block;
+        align-items: center;
+        padding: 10px;
+
+        .info-title {
+          display: flex;
+          align-items: center;
+          p {
+            margin-right: 10px;
+            color: $mew-green;
+          }
+        }
+
+        .info-data {
+          //margin-left: auto;
+        }
+      }
+    }
+  }
+
+  .block__content .json-string-input {
+    margin-top: 30px;
+  }
+
+  .block__submit-button {
+    margin-top: 30px;
+    text-align: center;
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

@@ -1,0 +1,68 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .container__content {
+    padding: 10px;
+  }
+
+  .block__content .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $mew-green;
+    margin-bottom: 15px;
+  }
+
+  .block__content .user-messages {
+    padding: 20px 30px;
+    border-radius: 4px;
+    background-color: $light-grey-1;
+    margin-top: 20px;
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .block__content .domain-detail-info {
+    padding: 10px;
+    ul {
+      li {
+        display: block;
+        align-items: center;
+        padding: 10px;
+
+        .info-title {
+          display: flex;
+          align-items: center;
+          p {
+            margin-right: 10px;
+            color: $mew-green;
+          }
+        }
+
+        .info-data {
+          //margin-left: auto;
+        }
+      }
+    }
+  }
+
+  .block__content .json-string-input {
+    margin-top: 30px;
+  }
+
+  .block__submit-button {
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+
+    .the-submit-button {
+      width: 100%;
+      /*
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      z-index: 99;
+      */
+    }
+  }
+} // @media all and (max-width: $mobile-width)

@@ -1,0 +1,39 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .container__content {
+    padding: 40px;
+  }
+
+  .block__content .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $red-1;
+    margin-bottom: 15px;
+  }
+
+
+  .block__content .domain-info-blocks {
+    .domain-info {
+      padding: 18px 25px;
+      background-color: $light-grey-1;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-weight: 600;
+      line-height: 26px;
+      color: $black;
+    }
+
+    .data {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+  }
+
+
+  .block__submit-button {
+    margin-top: 30px;
+    text-align: center;
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
