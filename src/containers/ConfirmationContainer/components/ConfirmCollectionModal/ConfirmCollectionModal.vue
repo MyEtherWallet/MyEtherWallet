@@ -2,26 +2,30 @@
   <div>
     <b-modal
       ref="confirmCollection"
+      :title="`Confirmation (Total of ${signedArray.length} transactions)`"
       hide-footer
       centered
-      class="bootstrap-modal-wide confirmation-modal nopadding"
-      :title="`Confirmation (Total of ${signedArray.length} transactions)`">
+      class="bootstrap-modal-wide confirmation-modal nopadding">
       <div class="modal-content">
         <div class="network-info-container">
           <p>
             <span>Network</span> {{ $store.state.network.type.name }} by {{ $store.state.network.service }}
           </p>
           <div>
-            <div class="line">
-            </div>
+            <div class="line"/>
           </div>
           <p>
             <span>Gas Price</span> {{ gasAvg }} Gwei
           </p>
         </div>
         <div class="modal-content-body">
-          <div class="item" v-for="(item, idx) in signedArray" :key="item.tx.to+idx+item.tx.value">
-            <div class="header" v-b-toggle.prevent="`accordion${idx}`">
+          <div 
+            v-for="(item, idx) in signedArray" 
+            :key="item.tx.to+idx+item.tx.value" 
+            class="item">
+            <div 
+              v-b-toggle.prevent="`accordion${idx}`" 
+              class="header">
               <div class="header-item">
                 <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
                 <div>
@@ -50,18 +54,20 @@
                 <i class="fa fa-lg fa-angle-down" />
               </div>
             </div>
-            <b-collapse class="body" :id="`accordion${idx}`">
+            <b-collapse 
+              :id="`accordion${idx}`" 
+              class="body">
               <div class="body-item">
                 <span class="item-title">Gas Limit</span>
-                <span>{{item.tx.gasPrice}} Gwei</span>
+                <span>{{ item.tx.gasPrice }} Gwei</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce </span>
-                <span>{{item.tx.nonce}}</span>
+                <span>{{ item.tx.nonce }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Data </span>
-                <span class="data-string">{{item.tx.data}}</span>
+                <span class="data-string">{{ item.tx.data }}</span>
               </div>
             </b-collapse>
           </div>
@@ -133,7 +139,7 @@ export default {
       this.signedArray.forEach(item => {
         totalGas += item.tx.gasPrice;
       });
-      let avg = totalGas / this.signedArray.length;
+      const avg = totalGas / this.signedArray.length;
       return this.$store.state.web3.utils
         .fromWei(avg.toString(), 'gwei')
         .toString();
