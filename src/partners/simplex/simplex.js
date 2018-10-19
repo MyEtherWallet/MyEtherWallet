@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { networkSymbols } from '../config';
 import { SimplexMinFiat, SimplexMaxFiat, SimplexCurrencies } from './config.js';
-import { getQuote } from './simplex-api';
+import { getQuote, getOrder } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
@@ -14,6 +15,8 @@ export default class Simplex {
       invalidDigitalAmount: true,
       invalidAddress: true
     };
+
+    this.currentOrder = {};
   }
 
   get currencies() {
@@ -28,6 +31,10 @@ export default class Simplex {
       this.currencies.fiat[fromCurrency] &&
       (toCurrency === 'ETH' || toCurrency === 'BTC')
     );
+  }
+
+  isFiat(currency) {
+    return !!this.currencies.fiat[currency];
   }
 
   canQuote(fiatAmount, digitalAmount) {
@@ -52,6 +59,7 @@ export default class Simplex {
         toValue: -1
       };
     }
+    this.currentOrder = rate.result;
     return {
       fromValue: rate.result.fiat_money.base_amount,
       toValue: rate.result.digital_money.amount
@@ -72,9 +80,45 @@ export default class Simplex {
         toValue: digitalAmount
       };
     }
+    this.currentOrder = rate.result;
     return {
       fromValue: rate.result.fiat_money.base_amount,
       toValue: rate.result.digital_money.amount
     };
+  }
+
+  createSwap(swapDetails) {
+    // return this.currentOrder;
+    return getOrder({
+      'g-recaptcha-response': '',
+      account_details: {
+        app_end_user_id: this.currentOrder.user_id
+      },
+      transaction_details: {
+        payment_details: {
+          fiat_total_amount: {
+            currency: this.currentOrder.fiat_money.currency,
+            amount: this.currentOrder.fiat_money.total_amount
+          },
+          requested_digital_amount: {
+            currency: this.currentOrder.digital_money.currency,
+            amount: this.currentOrder.digital_money.amount
+          },
+          destination_wallet: {
+            currency: this.currentOrder.digital_money.currency,
+            address: swapDetails.toAddress
+          }
+        }
+      }
+    });
+    /*      .then(resp => {
+        resp = resp.data;
+        if (!resp.error) {
+          this.formData = resp.result;
+        } else console.log(resp);
+      })
+      .catch(error => {
+        console.error(error);
+      });*/
   }
 }

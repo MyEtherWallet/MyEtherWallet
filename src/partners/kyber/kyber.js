@@ -58,6 +58,17 @@ export default class Kyber {
     return this.currencies[fromCurrency] && this.currencies[toCurrency];
   }
 
+  async createSwap(swapDetails) {
+    return await this.generateDataForTransactions(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.fromValue,
+      swapDetails.toValue,
+      this.convertToTokenWei('ETH', swapDetails.rate),
+      swapDetails.fromAddress
+    );
+  }
+
   setDefaultCurrencyList(fromConstructor) {
     if (fromConstructor) {
       this.tokenDetails = fromConstructor;

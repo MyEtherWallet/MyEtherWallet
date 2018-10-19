@@ -4,6 +4,14 @@
       ref="swapConfirm"
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
+      :current-address="currentAddress"
+      @swapStarted="resetSwapState"/>
+
+    <swap-send-to-modal
+      ref="swapSendTo"
+      :selected-provider="selectedProvider"
+      :swap-details="swapDetails"
+      :current-address="currentAddress"
       @swapStarted="resetSwapState"/>
 
     <div class="title-block">
@@ -36,9 +44,9 @@
           </div>
           <div
             class="error-message-container">
-            <p v-if="selectedProvider.minValue > +fromValue ">{{ $t('interface.min') }}</p>
+            <p v-if="selectedProvider.minValue > +fromValue ">{{ $t('interface.belowMinSwap') }}</p>
             <p v-else>&nbsp;</p>
-            <p v-if="+fromValue > selectedProvider.maxValue && selectedProvider.maxValue > 0">{{ $t('interface.max')
+            <p v-if="+fromValue > selectedProvider.maxValue && selectedProvider.maxValue > 0">{{ $t('interface.aboveMaxSwap')
             }}</p>
           </div>
         </div>
@@ -89,6 +97,7 @@
         </div>
       </div>
       <providers-radio-selector
+        v-if="haveProviderRates"
         :provider-data="providerList"
         @selectedProvider="setSelectedProvider"/>
     </div>
@@ -147,6 +156,7 @@
   </div>
 </template>
 <script>
+import web3 from 'web3';
 import BigNumber from 'bignumber.js';
 
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
@@ -160,8 +170,10 @@ import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 
 import SwapCurrencyPicker from './components/SwapCurrencyPicker';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+import SwapSendToModal from './components/SwapSendToModal';
 
 import {
+  supportedProviders,
   BitySwap,
   KyberSwap,
   Simplex,
@@ -180,7 +192,8 @@ export default {
     'swap-currency-picker': SwapCurrencyPicker,
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
-    'swap-confirmation-modal': SwapConfirmationModal
+    'swap-confirmation-modal': SwapConfirmationModal,
+    'swap-send-to-modal': SwapSendToModal
   },
   data() {
     return {
@@ -214,38 +227,24 @@ export default {
       },
       toArray: [],
       fromArray: [],
-      providerData: [
-        // TODO: calculate initially presented values
-        // {
-        //   provider: 'kybernetwork',
-        //   fromCurrency: 'BTC',
-        //   fromValue: 1,
-        //   toCurrency: 'ETH',
-        //   rate: 21.43572,
-        //   minValue: 0,
-        //   maxValue: 0
-        // },
-        // {
-        //   provider: 'bity',
-        //   fromCurrency: 'BTC',
-        //   fromValue: 1,
-        //   toCurrency: 'ETH',
-        //   rate: 21.43572,
-        //   minValue: 0,
-        //   maxValue: 0
-        // }
-      ]
+      providerData: [],
+      bityHasRates: false,
+      providerRatesRecieved: []
     };
   },
   computed: {
     bestRate() {
-      if (this.providerData.length > 0) {
-        if (this.selectedProvider.provider) {
-          return this.providerList.find(entry => {
-            return entry.provider === this.selectedProvider.provider;
-          }).rate;
+      try {
+        if (this.providerData.length > 0) {
+          if (this.selectedProvider.provider) {
+            return this.providerList.find(entry => {
+              return entry.provider === this.selectedProvider.provider;
+            }).rate;
+          }
+          return bestRateForQuantity([...this.providerList], this.fromValue);
         }
-        return bestRateForQuantity([...this.providerList], this.fromValue);
+      } catch (e) {
+        console.error(e);
       }
     },
     providerList() {
@@ -261,27 +260,47 @@ export default {
         (+this.fromValue < this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
       );
+    },
+    haveProviderRates() {
+      //TODO centralize location of name strings for providers
+      return supportedProviders.every(entry =>
+        this.providerRatesRecieved.includes(entry)
+      );
     }
   },
   watch: {
     ['kyberSwap.hasTokens']() {
+      if (!this.providerRatesRecieved.includes(this.kyberSwap.name)) {
+        this.providerRatesRecieved.push(this.kyberSwap.name);
+      }
       this.updateSupportedCurrencyArrays(
         this.kyberSwap.name,
         this.kyberSwap.getSupportedTokens()
       );
     },
     ['changellySwap.hasTokens']() {
+      if (!this.providerRatesRecieved.includes(this.changellySwap.name)) {
+        this.providerRatesRecieved.push(this.changellySwap.name);
+      }
       this.updateSupportedCurrencyArrays(
         this.changellySwap.name,
         this.changellySwap.getSupportedTokens()
       );
     },
     ['bitySwap.hasRates']() {
-      if (this.bitySwap.hasRates) {
+      if (this.bitySwap.hasRates && !this.bityHasRates) {
+        if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
+          this.providerRatesRecieved.push(this.bitySwap.name);
+        }
+        this.bityHasRates = true;
         this.updateSupportedCurrencyArrays(
           this.bitySwap.name,
           this.bitySwap.currencies
         );
+      }
+    },
+    haveProviderRates(newValue) {
+      if (newValue) {
         this.updateRateEstimate(
           this.fromCurrency,
           this.toCurrency,
@@ -313,6 +332,7 @@ export default {
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.$store.state.wallet.address;
+    this.providerRatesRecieved = [this.simplexSwap.name]; //TODO centralize location of name strings for providers
   },
   methods: {
     // TODO: CACHE PREVIOUSLY QUERIED RATES, TO USE FOR INITIAL DIAPLAY WHILE NEW RATES ARE RETRIEVED
@@ -345,23 +365,21 @@ export default {
     },
     setFromCurrency(value) {
       this.fromCurrency = value.symbol;
-      const fromValue = this.fromValue;
       this.toArray = this.currencyOptions.setToCurrencyBuilder(value);
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
-        fromValue,
+        this.fromValue,
         'from'
       );
     },
     setToCurrency(value) {
       this.toCurrency = value.symbol;
-      const fromValue = this.fromValue;
       this.fromArray = this.currencyOptions.setFromCurrencyBuilder(value);
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
-        fromValue,
+        this.fromValue,
         'to'
       );
     },
@@ -401,12 +419,24 @@ export default {
           break;
         case 'simplexto':
           if (this.simplexSwap.canQuote(this.fromValue, this.toValue)) {
-            await this.getSimplexRate(false, this.fromValue, this.toValue);
+            await this.getSimplexRate(
+              this.fromCurrency,
+              this.toCurrency,
+              this.fromValue,
+              this.toValue,
+              false
+            );
           }
           break;
         case 'simplexfrom':
           if (this.simplexSwap.canQuote(this.fromValue, this.toValue)) {
-            await this.getSimplexRate(true, this.fromValue, this.toValue);
+            await this.getSimplexRate(
+              this.fromCurrency,
+              this.toCurrency,
+              this.fromValue,
+              this.toValue,
+              true
+            );
           }
           break;
         default:
@@ -424,55 +454,80 @@ export default {
       }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
-      this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
-      this.toValue = '';
-      const callsToMake = [];
-      this.providerData = [];
-      if (
-        +fromValue > 0 &&
-        fromCurrency !== toCurrency &&
-        !Number.isNaN(+fromValue)
-      ) {
-        if (this.kyberSwap.validSwap(fromCurrency, toCurrency)) {
-          callsToMake.push(this.getKyberRate);
+      if (this.haveProviderRates) {
+        this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
+        this.toValue = '';
+        const callsToMake = [];
+        this.providerData = [];
+        if (
+          +fromValue > 0 &&
+          fromCurrency !== toCurrency &&
+          !Number.isNaN(+fromValue)
+        ) {
+          if (this.kyberSwap.validSwap(fromCurrency, toCurrency)) {
+            callsToMake.push(this.getKyberRate);
+          }
+          if (this.simplexSwap.validSwap(fromCurrency, toCurrency)) {
+            callsToMake.push(this.getSimplexRate);
+          }
+          if (this.bitySwap.validSwap(fromCurrency, toCurrency)) {
+            callsToMake.push(this.getBityRate);
+          }
+          if (this.changellySwap.validSwap(fromCurrency, toCurrency)) {
+            callsToMake.push(this.getChangellyRate);
+          }
+          const results = await Promise.all(
+            callsToMake.map(func =>
+              func(fromCurrency, toCurrency, fromValue, this.toValue)
+            )
+          );
+          if (
+            results.every(
+              entry =>
+                entry.fromCurrency === this.fromCurrency &&
+                entry.toCurrency === this.toCurrency
+            )
+          ) {
+            this.providerData = bestProviderForQuantity(
+              results.map(entry => {
+                if (+entry.rate > 0) {
+                  return {
+                    provider: entry.provider,
+                    fromCurrency,
+                    fromValue: 1,
+                    toCurrency,
+                    rate: +entry.rate,
+                    minValue: entry.minValue || 0,
+                    maxValue: entry.maxValue || 0
+                  };
+                }
+              }),
+              this.fromValue
+            );
+            this.updateEstimate(to);
+          }
         }
-        if (this.simplexSwap.validSwap(fromCurrency, toCurrency)) {
-          callsToMake.push(this.getSimplexRate);
-        }
-        if (this.bitySwap.validSwap(fromCurrency, toCurrency)) {
-          callsToMake.push(this.getBityRate);
-        }
-        if (this.changellySwap.validSwap(fromCurrency, toCurrency)) {
-          callsToMake.push(this.getChangellyRate);
-        }
-        const results = await Promise.all(
-          callsToMake.map(func => func(fromCurrency, toCurrency, fromValue, to))
-        );
-
-        this.providerData = bestProviderForQuantity(
-          results.map(entry => {
-            if (+entry.rate > 0) {
-              return {
-                provider: entry.provider,
-                fromCurrency,
-                fromValue: 1,
-                toCurrency,
-                rate: +entry.rate,
-                minValue: entry.minValue || 0,
-                maxValue: entry.maxValue || 0
-              };
-            }
-          }),
-          this.fromValue
-        );
-        this.updateEstimate(to);
       }
     },
     // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       if (this.validSwap) {
         this.swapDetails = await this.collectSwapDetails();
-        this.$refs.swapConfirm.$refs.swapconfirmation.show();
+        if (
+          this.swapDetails.dataForInitialization &&
+          this.swapDetails.maybeToken
+        ) {
+          this.$refs.swapConfirm.$refs.swapconfirmation.show();
+        } else if (
+          this.swapDetails.dataForInitialization &&
+          !this.swapDetails.maybeToken
+        ) {
+          this.$refs.swapSendTo.$refs.swapconfirmation.show();
+        } else {
+          console.log(
+            'Something went wrong when requesting finalized details from provider'
+          ); // todo remove dev item
+        }
       }
     },
     async collectSwapDetails() {
@@ -488,44 +543,45 @@ export default {
         rate: tempDetails.rate,
         minValue: tempDetails.minValue,
         maxValue: tempDetails.maxValue,
-        address: this.toAddress,
-        timestamp: Date.now()
+        toAddress: this.toAddress,
+        fromAddress: this.currentAddress,
+        timestamp: Date.now(),
+        maybeToken: false
       };
 
       swapDetails.dataForInitialization = await this.startSwap(swapDetails);
       return swapDetails;
     },
     async startSwap(swapDetails) {
+      let details;
       switch (swapDetails.provider) {
         case this.kyberSwap.name:
-          return this.kyberSwap.generateDataForTransactions(
-            swapDetails.fromCurrency,
-            swapDetails.toCurrency,
-            this.kyberSwap.convertToTokenWei(
-              swapDetails.fromCurrency,
-              swapDetails.fromValue
-            ),
-            this.kyberSwap.convertToTokenWei(
-              swapDetails.toCurrency,
-              swapDetails.toValue
-            ),
-            this.kyberSwap.convertToTokenWei('ETH', swapDetails.rate),
-            swapDetails.address
-          );
+          swapDetails.maybeToken = true;
+          return await this.kyberSwap.createSwap(swapDetails);
         case this.changellySwap.name:
-          return this.changellySwap.createTransaction(
-            swapDetails.fromCurrency,
-            swapDetails.toCurrency,
-            swapDetails.address,
-            swapDetails.fromValue
-          );
+          details = await this.changellySwap.createSwap(swapDetails);
+          if (web3.utils.isAddress(details.payment_address)) {
+            swapDetails.maybeToken = true;
+          }
+          return details;
+        case this.bitySwap.name:
+          details = await this.bitySwap.createSwap(swapDetails);
+          if (web3.utils.isAddress(details.payinAddress)) {
+            swapDetails.maybeToken = true;
+          }
+          return details;
+        case this.simplexSwap.name:
+          details = await this.simplexSwap.createSwap(swapDetails);
+          console.log('simplexSwap createSwap', details); // todo remove dev item
+          return details;
       }
     },
     // ================================ Provider Specific ============================================
-    async getSimplexRate(isFiat, fromValue, toValue) {
-      if (this.simplexSwap.canQuote(fromValue, toValue)) {
+    async getSimplexRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+      if (this.simplexSwap.canQuote(fromValue, this.toValue)) {
         let simplexRateDetails;
-        if (isFiat) {
+        if (this.simplexSwap.isFiat(fromCurrency) && isFiat) {
+          // TODO restructure to remove redundancy
           simplexRateDetails = await this.simplexSwap.updateFiat(
             this.fromCurrency,
             this.toCurrency,
@@ -548,6 +604,8 @@ export default {
           .div(simplexRateDetails.toValue)
           .toString(10);
         return {
+          fromCurrency,
+          toCurrency,
           provider: this.simplexSwap.name,
           rate: rate,
           minValue: this.simplexSwap.minFiat,
@@ -556,12 +614,17 @@ export default {
       }
       this.invalidFrom = 'simplexMin';
       console.log('indicate invalid simplex'); // TODO: provide ui indication(s)
-      const rate = await this.simplexSwap.updateFiat(
+      const simplexRateDetails = await this.simplexSwap.updateFiat(
         this.fromCurrency,
         this.toCurrency,
         51
       );
+      const rate = new BigNumber(simplexRateDetails.toValue)
+        .div(simplexRateDetails.fromValue)
+        .toString(10);
       return {
+        fromCurrency,
+        toCurrency,
         provider: this.simplexSwap.name,
         rate: rate,
         minValue: this.simplexSwap.minFiat,
@@ -575,6 +638,8 @@ export default {
         fromValue
       );
       return {
+        fromCurrency,
+        toCurrency,
         provider: this.kyberSwap.name,
         rate: rate
       };
@@ -582,6 +647,8 @@ export default {
     async getBityRate(fromCurrency, toCurrency) {
       const rate = await this.bitySwap.getRate(fromCurrency, toCurrency);
       return {
+        fromCurrency,
+        toCurrency,
         provider: this.bitySwap.name,
         rate: rate,
         minValue: this.bitySwap.minValue
@@ -594,6 +661,8 @@ export default {
         this.changellySwap.getRate(fromCurrency, toCurrency, fromValue)
       ]);
       return {
+        fromCurrency,
+        toCurrency,
         provider: this.changellySwap.name,
         minValue: changellyDetails[0],
         rate: changellyDetails[1]

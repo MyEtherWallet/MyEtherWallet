@@ -15,6 +15,8 @@ export default class Changelly {
     this.network = props.network || networkSymbols.ETH;
     this.hasTokens = false;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
+    this.currencyIconList = [];
+    this.erc20List = [];
     this.tokenDetails = {};
     this.requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
     this.getSupportedCurrencies(this.network);
@@ -38,6 +40,25 @@ export default class Changelly {
     return this.currencies[fromCurrency] && this.currencies[toCurrency];
   }
 
+  async createSwap(swapDetails) {
+    return await this.createTransaction(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.toAddress,
+      swapDetails.fromAddress,
+      swapDetails.fromValue
+    );
+  }
+  getCurrencyIcon(currency) {
+    if (this.currencyIconList[currency]) {
+      return this.currencyIconList[currency];
+    }
+  }
+
+  getCurrencyIconList() {
+    return this.currencyIconList;
+  }
+
   async getSupportedCurrencies() {
     try {
       const currencyList = await getCurrencies(this.network);
@@ -50,6 +71,7 @@ export default class Changelly {
           };
           this.currencyDetails[details.symbol] = details;
           this.tokenDetails[details.symbol] = details;
+          this.currencyIconList[details.symbol] = details.image;
         }
       }
       this.hasTokens = Object.keys(this.tokenDetails).length > 0;
@@ -90,16 +112,23 @@ export default class Changelly {
     );
   }
 
-  async createTransaction(fromCurrency, toCurrency, address, fromValue) {
+  async createTransaction(
+    fromCurrency,
+    toCurrency,
+    toAddress,
+    fromAddress,
+    fromValue
+  ) {
     const swapParams = {
       from: fromCurrency.toLowerCase(),
       to: toCurrency.toLowerCase(),
-      address: address,
+      address: toAddress,
       extraId: null,
       amount: fromValue,
-      refundAddress: address,
+      refundAddress: fromAddress !== '' ? fromAddress : toAddress,
       refundExtraId: null
     };
+    console.log(swapParams); // todo remove dev item
     return await createTransaction(swapParams, this.network);
   }
 }

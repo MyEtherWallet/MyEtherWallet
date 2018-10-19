@@ -39,15 +39,22 @@
         <li
           v-for="addr in addresses"
           :key="addr.key"
-          @click="listedAddressClick(addr)"
-        v-if="currency === addr.currency || addr.currency === 'ETH'">
+          @click="listedAddressClick(addr.address)">
           <div class="list-blockie">
             <blockie
-              :address="addr"
+              :address="addr.address"
               width="30px"
               height="30px"/>
           </div>
-          <p class="listed-address">{{ addr }} <span v-if="addr === currentAddress">Your Address</span></p>
+          <p class="listed-address">
+            {{ addr.address }}
+            <span 
+              v-if="addr.address === currentAddress" 
+              class="address-note">Your Address</span>
+            <span 
+              v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
+              class="address-note">{{ addr.currency }} Address</span>
+          </p>
         </li>
       </ul>
     </div>
@@ -109,8 +116,14 @@ export default {
   },
   watch: {
     currentAddress(address) {
-      if (!this.addresses.includes(address)) {
-        this.addresses = [address, ...this.addresses];
+      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
+        this.addresses = [
+          {
+            address: address,
+            currency: 'ETH'
+          },
+          ...this.addresses
+        ];
       }
     },
     selectedAddress(address) {
@@ -125,19 +138,20 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
     },
-    validateAddress(address) {
+    validateAddress(addr) {
       if (this.selectedAddress !== '') {
+        const checkAddress = addr.address ? addr.address : addr;
         try {
-          this.validAddress = WAValidator.validate(address, this.currency);
+          this.validAddress = WAValidator.validate(checkAddress, this.currency);
         } catch (e) {
           logger(
             'validateAddress initial validation faild. could be a token. tying to validate as eth address'
           );
           errorLogger(e);
-          this.validAddress = web3.utils.isAddress(address);
+          this.validAddress = web3.utils.isAddress(checkAddress);
         }
         if (this.validAddress) {
-          this.$emit('toAddress', address);
+          this.$emit('toAddress', checkAddress);
         } else {
           this.$emit('toAddress', '');
         }
