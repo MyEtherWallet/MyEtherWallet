@@ -7,7 +7,7 @@ import {
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet } from './software';
 import { MewConnectWallet } from './hybrid';
-import { override } from './web3-override';
+import override from './web3-override';
 
 export {
   LedgerWallet,
