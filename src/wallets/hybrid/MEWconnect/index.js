@@ -2,9 +2,17 @@ import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import ethTx from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
-import { getSignTransactionObject, sanitizeHex } from '../../utils';
+import {
+  getSignTransactionObject,
+  sanitizeHex,
+  getBufferFromHex
+} from '../../utils';
 import * as ethUtil from 'ethereumjs-util';
 
+const SIGNALER_URL = 'https://connect.mewapi.io';
+const IS_HARDWARE = true;
+
+// TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
 class MEWconnectWalletInterface extends WalletInterface {
   constructor(pubkey, isHardware, identifier, txSigner, msgSigner, mewConnect) {
     super(pubkey, true, identifier);
@@ -13,8 +21,8 @@ class MEWconnectWalletInterface extends WalletInterface {
     this.isHardware = isHardware;
     this.mewConnect = mewConnect;
   }
-  on(event, listener) {
-    this.mewConnect.on(event, listener);
+  getConnection() {
+    return this.mewConnect;
   }
   signTransaction(txParams) {
     return super.signTransaction(txParams, this.txSigner);
@@ -27,14 +35,15 @@ class MEWconnectWalletInterface extends WalletInterface {
 class MEWconnectWallet {
   constructor() {
     this.identifier = mewConnectType;
-    this.isHardware = true;
+    this.isHardware = IS_HARDWARE;
     this.mewConnect = new MEWconnect.Initiator();
   }
-  async init(url = 'https://connect.mewapi.io') {
+  async init(qrcode) {
+    this.mewConnect.on('codeDisplay', qrcode);
     const txSigner = async tx => {
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
-        this.mewConnect.on('signTx', result => {
+        this.mewConnect.once('signTx', result => {
           tx = new ethTx(sanitizeHex(result));
           resolve(getSignTransactionObject(tx));
         });
@@ -47,29 +56,29 @@ class MEWconnectWallet {
           hash: msgHash.toString('hex'),
           text: msg
         });
-        this.mewConnect.on('signMessage', data => {
-          resolve(data.sig);
+        this.mewConnect.once('signMessage', data => {
+          resolve(getBufferFromHex(sanitizeHex(data.sig)));
         });
       });
     };
-    const address = await signalerConnect(url, this.mewConnect);
+    const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
+
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
       this.isHardware,
       this.identifier,
-      txSigner.bind(this),
-      msgSigner.bind(this),
-      this
+      txSigner,
+      msgSigner,
+      this.mewConnect
     );
   }
-  on(event, listener) {
-    this.mewConnect.on(event, listener);
-  }
 }
-const createWallet = () => {
-  return new MEWconnectWallet();
+const createWallet = async qrcode => {
+  const _MEWconnectWallet = new MEWconnectWallet();
+  const _tWallet = await _MEWconnectWallet.init(qrcode);
+  return _tWallet;
 };
-const signalerConnect = async (url, mewConnect) => {
+const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);
     mewConnect.on('RtcConnectedEvent', () => {
