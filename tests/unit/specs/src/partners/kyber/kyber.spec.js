@@ -5,7 +5,7 @@ import ENS from 'ethereum-ens';
 // const nodeUrl = 'https://api.myetherwallet.com/eth'
 const nodeUrl = 'https://api.myetherwallet.com/eth';
 const network = 'ETH';
-const withNetwork = true;
+const withNetwork = false;
 
 describe('kyber.js', () => {
   beforeEach(done => {

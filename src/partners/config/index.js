@@ -4,4 +4,6 @@ const networkSymbols = {
   ETH: 'ETH',
   ROP: 'ROP'
 };
-export { networkSymbols, chainCurrencies, fiat };
+
+const supportedProviders = ['simplex', 'kybernetwork', 'changelly', 'bity'];
+export { networkSymbols, chainCurrencies, fiat, supportedProviders };

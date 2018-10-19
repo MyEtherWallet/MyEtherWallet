@@ -45,8 +45,12 @@ function dynamicSortMultiple() {
     return result;
   };
 }
+function cleanUndefined(providerData) {
+  return providerData.filter(entry => typeof entry !== 'undefined');
+}
 
 function bestProviderForQuantity(providerData, value) {
+  providerData = cleanUndefined(providerData);
   if (providerData.every(entry => value >= +entry.minValue)) {
     providerData.sort(dynamicSortMultiple('-rate'));
   } else if (providerData.some(entry => value >= +entry.minValue)) {

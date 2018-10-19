@@ -1,7 +1,7 @@
-import { BityCurrencies } from './bity';
-import { KyberCurrencies } from './kyber';
-import { ChangellyCurrencies } from './changelly';
-import { SimplexCurrencies } from './simplex';
+import { BityCurrencies } from '../bity/index';
+import { KyberCurrencies } from '../kyber/index';
+import { ChangellyCurrencies } from '../changelly/index';
+import { SimplexCurrencies } from '../simplex/index';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
   console.log(symbol, side); // todo remove dev item
@@ -39,26 +39,47 @@ export default class CurrencyOptionBuilder {
     return {};
   }
 
-  doesProviderSupportPair(provider, fromCurrency, toCurrency) {
-    console.log(provider, fromCurrency, toCurrency); // todo remove dev item
-    const providerSupported = this.getProviderSupported(provider);
-    if (!providerSupported.fiat) {
-      return (
-        typeof providerSupported[fromCurrency] !== 'undefined' &&
-        typeof providerSupported[toCurrency] !== 'undefined'
-      );
-    }
-    return (
-      typeof providerSupported.fiat[fromCurrency] !== 'undefined' &&
-      (toCurrency === 'ETH' || toCurrency === 'BTC')
-    );
-  }
+  // doesProviderSupportPair(provider, fromCurrency, toCurrency) {
+  //   console.log(provider, fromCurrency, toCurrency); // todo remove dev item
+  //   const providerSupported = this.getProviderSupported(provider);
+  //   if (!providerSupported.fiat) {
+  //     return (
+  //       typeof providerSupported[fromCurrency] !== 'undefined' &&
+  //       typeof providerSupported[toCurrency] !== 'undefined'
+  //     );
+  //   }
+  //   return (
+  //     typeof providerSupported.fiat[fromCurrency] !== 'undefined' &&
+  //     (toCurrency === 'ETH' || toCurrency === 'BTC')
+  //   );
+  // }
 
   updateCurrencyList(provider, updatedList) {
     if (this[`${provider}Currencies`]) {
       this[`${provider}Currencies`] = updatedList;
     }
   }
+
+  moveToTop(array, currencyObject) {
+    const idx = array.findIndex(item => item.symbol === currencyObject.symbol);
+    array.splice(idx, 1);
+    return [currencyObject, ...array];
+  }
+
+  addBtcAndEthToTop(array, currentSelected) {
+    if (currentSelected.symbol !== 'BTC') {
+      array = this.moveToTop(array, {
+        symbol: 'BTC',
+        name: 'Bitcoin'
+      });
+    }
+    if (currentSelected.symbol !== 'ETH') {
+      array = this.moveToTop(array, { symbol: 'ETH', name: 'Ether' });
+    }
+    return array;
+  }
+
+  addETHtoTop() {}
 
   buildInitialCurrencyArrays() {
     const collectMapTo = new Map();
@@ -115,6 +136,15 @@ export default class CurrencyOptionBuilder {
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
+    // const toArray = this.addBtcAndEthToTop(
+    //   Array.from(collectMapTo.values()).sort(comparator),
+    //   { symbol: 'BTC', name: 'Bitcoin' }
+    // );
+    //
+    // const fromArray = this.addBtcAndEthToTop(
+    //   Array.from(collectMapFrom.values()).sort(comparator),
+    //   { symbol: 'ETH', name: 'Ether' }
+    // );
     return { toArray, fromArray };
   }
 

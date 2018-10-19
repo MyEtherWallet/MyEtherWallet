@@ -43,6 +43,18 @@ export default class BitySwap {
     return this.rates.has(`${fromCurrency}/${toCurrency}`);
   }
 
+  async createSwap(swapDetails) {
+    return await this.buildOrder(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.fromValue,
+      swapDetails.toValue,
+      swapDetails.rate,
+      swapDetails.toAddress,
+      swapDetails.fromCurrency === 'ETH'
+    );
+  }
+
   minCheck(fromCurrency, fromValue, toCurrency, toValue) {
     return toValue > this.minValue || fromValue > this.minValue;
   }
@@ -54,17 +66,20 @@ export default class BitySwap {
     const overMaxETH =
       (toCurrency === 'ETH' && toValue > this.maxValue) ||
       (fromCurrency === 'ETH' &&
-        fromValue * this.getRate(fromCurrency, toCurrency) > this.maxValue);
+        fromValue * this.getRate(toCurrency, fromCurrency) > this.maxValue);
     const overMaxREP =
       (toCurrency === 'REP' && toValue > this.maxValue) ||
       (fromCurrency === 'REP' &&
         fromValue * this.getRate(fromCurrency, toCurrency) > this.maxValue);
     if (overMax) {
-      return false;
-    } else if (overMaxETH) {
-      return false;
-    } else if (overMaxREP) {
-      return false;
+      return true;
+      // return false;
+    } else if (toCurrency === 'ETH' && overMaxETH) {
+      // return false;
+      return true;
+    } else if (toCurrency === 'REP' && overMaxREP) {
+      // return false;
+      return true;
     }
     return true;
   }
@@ -114,11 +129,7 @@ export default class BitySwap {
     this.rates.set(`${from}/${to}`, rate);
   }
 
-  buildOrder() {
-    // finalize order, update estimate, etc.
-  }
-
-  submitOrder(
+  async buildOrder(
     fromToken,
     toToken,
     fromValue,
@@ -138,20 +149,47 @@ export default class BitySwap {
         destAddress: userAddress
       };
 
-      return this.openOrder(order).then(data => {
-        this.currentOrder = data;
-        this.currentOrder.swapOrder = {
-          fromCoin: fromToken,
-          toCoin: toToken,
-          isFrom: isFrom,
-          fromVal: fromValue,
-          toVal: toValue,
-          toAddress: userAddress,
-          swapRate: rate,
-          swapPair: fromToken + toToken
-        };
-        return this.currentOrder;
-      });
+      const bityOrder = await this.openOrder(order);
+      /*
+        amount: 1
+        amount_mode: 0
+        id: "6d46713d03446f7b8b4262bf98961960514927bf0fa6ec6a71fb5c8a5fac8bdadbe4c0c36d3ae9a0d767715e55b45898tuHefEaeNklK1GVmeEw/FQ=="
+        input: {
+          amount: "1.00000000"
+          currency: "ETH"
+          reference: "bity.com 4BV8-ACNT"
+          status: "OPEN"
+        },
+        output: {
+          amount: "0.03100900"
+          currency: "BTC"
+          reference: ""
+          status: "OPEN"
+        },
+        pair: "ETHBTC"
+        payment_address: "0x243e980b527d9d1c60d0d162dc53730c88ee587b"
+        payment_amount: "1"
+        reference: "bity.com 4BV8-ACNT"
+        status: "OPEN"
+        timestamp_created: "2018-10-17T20:36:49.934971Z"
+        validFor: 600
+      * */
+      if (!bityOrder.error) {
+        return bityOrder.data;
+        // this.currentOrder.swapOrder = {
+        //   fromCoin: fromToken,
+        //   toCoin: toToken,
+        //   isFrom: isFrom,
+        //   fromVal: fromValue,
+        //   toVal: toValue,
+        //   toAddress: userAddress,
+        //   swapRate: rate,
+        //   swapPair: fromToken + toToken
+        // };
+        // return this.currentOrder;
+      }
+      throw Error('error creating bity order');
+      // });
     }
   }
 

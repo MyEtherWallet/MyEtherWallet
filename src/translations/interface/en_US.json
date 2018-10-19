@@ -39,5 +39,7 @@
   "txNetworkTitle": "Network",
   "txSideMenuTitle": "Send",
   "txSideMenuContract": "Contract",
-  "txSideMenuMessage": "Message"
+  "txSideMenuMessage": "Message",
+  "belowMinSwap": "Below Minimum",
+  "aboveMaxSwap": "Above Maximum"
 }
