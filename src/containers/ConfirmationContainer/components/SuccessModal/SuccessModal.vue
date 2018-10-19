@@ -45,6 +45,9 @@ export default {
       }
     };
   },
+  mounted() {
+    //this.$refs.success.show();
+  },
   methods: {
     hideModal() {
       if (this.linkTo !== '/') {

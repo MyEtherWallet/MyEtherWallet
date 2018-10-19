@@ -698,6 +698,7 @@
   .bootstrap-modal-wide {
     .modal-dialog {
       max-width: 650px;
+      padding: 5px;
     }
   }
 
@@ -929,11 +930,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 8px;
+        border-radius: 50px;
       }
 
       &.round::before {
-        border-radius: 6px;
+        border-radius: 50px;
       }
     }
 

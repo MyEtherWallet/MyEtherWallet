@@ -1,0 +1,65 @@
+@import '~@/scss/GlobalVariables';
+
+p {
+  color: $white;
+}
+
+.info-button {
+  user-select: none;
+  padding: 10px 15px;
+  background-color: $dark-blue-6;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+
+.title-block {
+  display: flex;
+  align-items: center;
+  $button-number-size: 20px;
+
+  .button-number {
+    text-align: center;
+    display: inline-block;
+    border: 1px solid $white;
+    border-radius: 100%;
+    height: $button-number-size;
+    width: $button-number-size;
+    margin-right: 8px;
+    font-weight: 700;
+    line-height: 18px;
+    font-size: 12px;
+  }
+
+  .button-title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+
+.user-inputs {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.user-input-open {
+    max-height: 700px;
+  }
+
+  >div {
+    padding: 20px 20px;
+  }
+}
+
+
+.functions {
+  margin-left: auto;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+

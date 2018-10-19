@@ -281,7 +281,6 @@
   } // .get-free-wallet
 
   .mobile-menu {
-    
     border-top: 1px solid $border-color-5;
     border-bottom: 1px solid $border-color-5;
     transition: all 0.3s ease;
@@ -347,7 +346,7 @@
 
   .mobile-menu-closed {
     //top: -2000px;
-    height: 0px;
+    height: 0;
   }
 
   .mobile-menu-background-fill {

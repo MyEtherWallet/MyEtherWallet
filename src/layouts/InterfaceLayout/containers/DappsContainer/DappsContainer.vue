@@ -19,9 +19,10 @@
     <domain-sale-container 
       v-show="selectedDapp === 'domain-sale'" 
       :reset-view="switchView"/>
-
-    <p>---------------------------------------</p>
-    <check-domain-container />
+    
+    <p>Check domain added------------</p>
+    <check-domain-container
+      :reset-view="switchView"/>
   </div>
 </template>
 

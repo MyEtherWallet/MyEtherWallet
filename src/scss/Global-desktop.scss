@@ -595,11 +595,11 @@
 
       // Rounded sliders
       &.round {
-        border-radius: 8px;
+        border-radius: 50px;
       }
 
       &.round::before {
-        border-radius: 6px;
+        border-radius: 50px;
       }
     }
 
@@ -833,6 +833,15 @@
     &.not-good {
       color: $text-good-button-not-good;
     }
+  }
+
+
+
+  // *********************************************************************
+  // Bootstrap Modal
+  // *********************************************************************
+  .bootstrap-modal-wide .modal-dialog{
+    max-width: 700px;
   }
 
   .modal-body {
