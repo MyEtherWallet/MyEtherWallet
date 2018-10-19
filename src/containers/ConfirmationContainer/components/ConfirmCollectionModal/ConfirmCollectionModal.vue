@@ -19,17 +19,17 @@
           </p>
         </div>
         <div class="modal-content-body">
-          <div 
-            v-for="(item, idx) in signedArray" 
-            :key="item.tx.to+idx+item.tx.value" 
+          <div
+            v-for="(item, idx) in signedArray"
+            :key="item.tx.to+idx+item.tx.value"
             class="item">
-            <div 
-              v-b-toggle.prevent="`accordion${idx}`" 
+            <div
+              v-b-toggle.prevent="`accordion${idx}`"
               class="header">
               <div class="header-item">
                 <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
                 <div>
-                  <p>- {{ item.tx.value }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>- {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
                   <div>
                     <span>From</span> {{ item.tx.from | concatAddr }}
                   </div>
@@ -43,7 +43,7 @@
               <div class="header-item">
                 <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
                 <div>
-                  <p>+ {{ item.tx.value }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>+ {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
                   <div>
                     <span>To</span> {{ item.tx.to | concatAddr }}
                   </div>
@@ -54,8 +54,8 @@
                 <i class="fa fa-lg fa-angle-down" />
               </div>
             </div>
-            <b-collapse 
-              :id="`accordion${idx}`" 
+            <b-collapse
+              :id="`accordion${idx}`"
               class="body">
               <div class="body-item">
                 <span class="item-title">Gas Limit</span>
@@ -80,7 +80,7 @@
             <div
               ref="ConfirmAndSendButton"
               :class="[allSigned? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-              @click="() => {}">
+              @click="sendBatchTransactions">
               Confirm and Send
             </div>
             <div class="tooltip-box-2">
@@ -121,6 +121,10 @@ export default {
     signedArray: {
       type: Array,
       default: () => []
+    },
+    sendBatchTransactions: {
+      type: Function,
+      default: () => {}
     }
   },
   computed: {
@@ -135,14 +139,17 @@ export default {
       return true;
     },
     gasAvg() {
-      let totalGas = 0;
-      this.signedArray.forEach(item => {
-        totalGas += item.tx.gasPrice;
-      });
-      const avg = totalGas / this.signedArray.length;
-      return this.$store.state.web3.utils
-        .fromWei(avg.toString(), 'gwei')
-        .toString();
+      if (this.signedArray.length > 0) {
+        let totalGas = 0;
+        this.signedArray.forEach(item => {
+          totalGas += item.tx.gasPrice;
+        });
+        const avg = totalGas / this.signedArray.length;
+        return this.$store.state.web3.utils
+          .fromWei(avg.toString(), 'gwei')
+          .toString();
+      }
+      return 0;
     }
   }
 };
