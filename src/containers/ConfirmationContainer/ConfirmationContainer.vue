@@ -135,26 +135,26 @@ export default {
       this.showSuccessModal(message, linkMessage);
     });
 
-    this.$eventHub.$on('showTxConfirmModal', (tx, wallet, resolve) => {
+    this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
       this.parseRawTx(tx);
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
-      this.isHardwareWallet = wallet.isHardware;
+      this.isHardwareWallet = this.$store.state.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      wallet.signTransaction(tx).then(_response => {
+      this.$store.state.wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
       this.confirmationModalOpen();
     });
 
-    this.$eventHub.$on('showWeb3Wallet', (tx, wallet, resolve) => {
+    this.$eventHub.$on('showWeb3Wallet', (tx, resolve) => {
       this.parseRawTx(tx);
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      wallet.signTransaction(tx).then(_response => {
+      this.$store.state.wallet.signTransaction(tx).then(_response => {
         this.web3WalletHash = _response;
       });
       this.showSuccessModal(
@@ -163,10 +163,10 @@ export default {
       );
     });
 
-    this.$eventHub.$on('showMessageConfirmModal', (data, wallet, resolve) => {
+    this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
-      wallet.signMessage(data).then(_response => {
+      this.$store.state.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
       this.signConfirmationModalOpen();
