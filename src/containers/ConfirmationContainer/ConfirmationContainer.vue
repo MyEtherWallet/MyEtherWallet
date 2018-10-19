@@ -5,7 +5,7 @@
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
-      :is-hardware-wallet="isHardwareWallet"
+      :is-hardware-walalet="isHardwareWallet"
       :gas-price="$store.state.gasPrice"
       :from="fromAddress"
       :to="toAddress"
@@ -13,6 +13,10 @@
       :gas="gasLimit"
       :data="data"
       :nonce="nonce"/>
+    <confirm-collection-modal
+      ref="confirmCollectionModal"
+      :confirm-send-tx="sendBatchTx"
+      :signed-array="signedArray"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -46,12 +50,14 @@
 import * as unit from 'ethjs-unit';
 import BN from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
+import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 
 export default {
   components: {
     'confirm-modal': ConfirmModal,
+    'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
     'confirm-sign-modal': ConfirmSignModal
   },
@@ -94,7 +100,8 @@ export default {
       linkMessage: 'OK',
       dismissed: true,
       web3WalletHash: '',
-      web3WalletRes: ''
+      web3WalletRes: '',
+      signedArray: []
     };
   },
   computed: {
@@ -163,6 +170,21 @@ export default {
       );
     });
 
+    this.$eventHub.$on(
+      'showTxCollectionConfirmModal',
+      (tx, isHardware, signer) => {
+        const newArr = [];
+        this.isHardwareWallet = isHardware;
+        for (let i = 0; i < tx.length; i++) {
+          signer(tx[i]).then(_response => {
+            newArr.push(_response);
+          });
+        }
+        this.signedArray = newArr;
+        this.confirmationCollectionModalOpen();
+      }
+    );
+
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
@@ -188,6 +210,10 @@ export default {
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
+    },
+    confirmationCollectionModalOpen() {
+      window.scrollTo(0, 0);
+      this.$refs.confirmCollectionModal.$refs.confirmCollection.show();
     },
     confirmationOfflineGenerateModalOpen() {
       window.scrollTo(0, 0);
@@ -229,6 +255,38 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
+    async sendBatchTx() {
+      const web3 = this.$store.state.web3;
+      const dispatch = this.$store.dispatch;
+      const batch = web3.BatchRequest();
+      for (let i = 0; i < this.signedArray.length; i++) {
+        batch.add(
+          web3.eth
+            .sendSignedTransaction(this.signedArray[i].rawTransaction)
+            .once('transactionHash', hash => {
+              dispatch('addNotification', [
+                this.signedArray[i].tx.from,
+                hash,
+                'Transaction Hash'
+              ]);
+            })
+            .on('receipt', res => {
+              dispatch('addNotification', [
+                this.signedArray[i].tx.from,
+                res,
+                'Transaction Receipt'
+              ]);
+            })
+            .on('error', err => {
+              dispatch('addNotification', [
+                this.signedArray[i].tx.from,
+                err,
+                'Transaction Error'
+              ]);
+            })
+        );
+      }
+    },
     sendTx() {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
@@ -254,6 +312,9 @@ export default {
       this.messageToSign = '';
       this.signedMessage = '';
       this.messageToSign = '';
+      this.signedArray = [];
+      this.web3WalletHash = '';
+      this.web3WalletRes = '';
     }
   }
 };
