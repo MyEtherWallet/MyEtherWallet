@@ -1,8 +1,6 @@
 <template>
-  <div
-    v-show="providerData.length > 0"
-    class="providers-radio-selector">
-    <div class="radio-button-container">
+  <div class="providers-radio-selector">
+    <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
         <li
           v-for="(provider, idx) in providerData"
@@ -27,7 +25,41 @@
             {{ minMaxNote(provider) }}
           </div>
         </li>
+      </ul>
+    </div>
+      <div v-show="loadingData" class="radio-button-container animated-background">
+        <ul>
+          <li
+            v-for="provider in providersFound"
+            :key="provider">
+            <div class="mew-custom-form__radio-button">
+              <input
+                type="radio"
+                name="provider">
+              <label :for="provider"/>
+            </div>
+            <div class="provider-image">
+              <img :src="providerLogo(provider)">
+            </div>
+              <div class="background-masker">
+              </div>
+          </li>
+        </ul>
+      </div>
 
+    <div v-show="noAvaliableProviders" class="radio-button-container">
+      <ul>
+        <li>
+          <div class="mew-custom-form__radio-button">
+          </div>
+          <div class="provider-image">
+          </div>
+          <div>
+            No provider found for {{noProvidersPair.fromCurrency}} to {{noProvidersPair.toCurrency}}
+          </div>
+          <div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
@@ -47,6 +79,22 @@ export default {
       default: function() {
         return [];
       }
+    },
+    noProvidersPair: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+    loadingData: {
+      type: Boolean,
+      default: true
+    },
+    providersFound: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
@@ -58,6 +106,13 @@ export default {
         changelly: Changelly // TODO: get logo from changelly
       }
     };
+  },
+  computed: {
+    noAvaliableProviders() {
+      return (
+        (this.providersFound.length === 0 || this.providerData.length === 0) && !this.loadingData
+      );
+    }
   },
   methods: {
     setSelectedProvider(provider) {

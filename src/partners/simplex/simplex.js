@@ -37,7 +37,11 @@ export default class Simplex {
     return !!this.currencies.fiat[currency];
   }
 
-  canQuote(fiatAmount, digitalAmount) {
+  canQuote(fiatAmount) {
+    return fiatAmount >= this.minFiat && fiatAmount <= this.maxFiat;
+  }
+
+  canOrder(fiatAmount, digitalAmount) {
     return (
       fiatAmount >= this.minFiat &&
       fiatAmount <= this.maxFiat &&
@@ -88,27 +92,30 @@ export default class Simplex {
   }
 
   createSwap(swapDetails) {
-    return getOrder({
-      'g-recaptcha-response': '',
-      account_details: {
-        app_end_user_id: this.currentOrder.user_id
-      },
-      transaction_details: {
-        payment_details: {
-          fiat_total_amount: {
-            currency: this.currentOrder.fiat_money.currency,
-            amount: this.currentOrder.fiat_money.total_amount
-          },
-          requested_digital_amount: {
-            currency: this.currentOrder.digital_money.currency,
-            amount: this.currentOrder.digital_money.amount
-          },
-          destination_wallet: {
-            currency: this.currentOrder.digital_money.currency,
-            address: swapDetails.toAddress
+    if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
+      console.log('get simplex order details'); // todo remove dev item
+      return getOrder({
+        'g-recaptcha-response': '',
+        account_details: {
+          app_end_user_id: this.currentOrder.user_id
+        },
+        transaction_details: {
+          payment_details: {
+            fiat_total_amount: {
+              currency: this.currentOrder.fiat_money.currency,
+              amount: this.currentOrder.fiat_money.total_amount
+            },
+            requested_digital_amount: {
+              currency: this.currentOrder.digital_money.currency,
+              amount: this.currentOrder.digital_money.amount
+            },
+            destination_wallet: {
+              currency: this.currentOrder.digital_money.currency,
+              address: swapDetails.toAddress
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
 }

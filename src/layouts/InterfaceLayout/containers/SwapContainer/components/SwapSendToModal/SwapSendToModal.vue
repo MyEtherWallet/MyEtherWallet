@@ -83,7 +83,7 @@ export default {
         value: '0.0034523',
         name: 'BTC',
         address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
+      }
     };
   },
   watch: {
@@ -124,7 +124,7 @@ export default {
       this.qrcode = value.dataForInitialization.payment_address;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     },
-    changellySwap(value){
+    changellySwap(value) {
       this.qrcode = value.dataForInitialization.payinAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
