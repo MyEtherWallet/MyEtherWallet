@@ -99,6 +99,9 @@
       <providers-radio-selector
         v-if="haveProviderRates"
         :provider-data="providerList"
+        :noProvidersPair="noProvidersPair"
+        :loadingData="loadingData"
+        :providersFound="providersFound"
         @selectedProvider="setSelectedProvider"/>
     </div>
 
@@ -229,7 +232,10 @@ export default {
       fromArray: [],
       providerData: [],
       bityHasRates: false,
-      providerRatesRecieved: []
+      providerRatesRecieved: [],
+      noProvidersPair: {},
+      loadingData: true,
+      providersFound: []
     };
   },
   computed: {
@@ -403,6 +409,7 @@ export default {
       }
     },
     async updateEstimate(input) {
+      console.log('updateEstimate:', input); // todo remove dev item
       let fromValue, toValue;
       switch (input) {
         case 'to':
@@ -455,6 +462,11 @@ export default {
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
+        // provide user with feedback prior to rate call return
+        this.loadingData = true;
+        this.noProvidersPair = { fromCurrency, toCurrency };
+        const providersFound = [];
+        // clear the provider information before gathering providers for new pair
         this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
         this.toValue = '';
         const callsToMake = [];
@@ -466,21 +478,30 @@ export default {
         ) {
           if (this.kyberSwap.validSwap(fromCurrency, toCurrency)) {
             callsToMake.push(this.getKyberRate);
+            providersFound.push(this.kyberSwap.name);
           }
           if (this.simplexSwap.validSwap(fromCurrency, toCurrency)) {
             callsToMake.push(this.getSimplexRate);
+            providersFound.push(this.simplexSwap.name);
           }
           if (this.bitySwap.validSwap(fromCurrency, toCurrency)) {
             callsToMake.push(this.getBityRate);
+            providersFound.push(this.bitySwap.name);
           }
           if (this.changellySwap.validSwap(fromCurrency, toCurrency)) {
             callsToMake.push(this.getChangellyRate);
+            providersFound.push(this.changellySwap.name);
           }
+
+          this.providersFound = providersFound;
+
           const results = await Promise.all(
             callsToMake.map(func =>
               func(fromCurrency, toCurrency, fromValue, this.toValue)
             )
           );
+          this.loadingData = false;
+
           if (
             results.every(
               entry =>
@@ -524,7 +545,7 @@ export default {
         ) {
           this.$refs.swapSendTo.$refs.swapconfirmation.show();
         } else {
-          throw Error('Error while requesting finalized details from provider')
+          throw Error('Error while requesting finalized details from provider');
         }
       }
     },
@@ -585,7 +606,6 @@ export default {
             fromValue
           );
           this.fromValue = simplexRateDetails.fromValue;
-
           this.toValue = simplexRateDetails.toValue;
         } else {
           simplexRateDetails = await this.simplexSwap.updateDigital(
