@@ -16,12 +16,15 @@
       :owner="owner"
       :resolver-address="resolverAddress"
       :deed-owner="deedOwner"
-      :highest-bidder="highestBidder"
+      :highest-bidder="highestBid"
       :raw="raw"
       :step="step"
       :send-bid="sendBid"
       :reveal-bid="revealBid"
+      :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
+      :finalize="finalize"
+      :update-resolver="updateResolver"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -34,9 +37,11 @@
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import RegistrarAbi from '@/helpers/registrarAbi';
+import DeedContractAbi from '@/helpers/deedContractAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
+import * as uts46 from 'idna-uts46';
 
 const ETH_TLD = '.eth';
 
@@ -60,9 +65,10 @@ export default {
       auctionDateEnd: 0,
       auctionRegistrarContract: function() {},
       raw: {},
-      highestBidder: '',
+      highestBid: '',
       contractInitiated: false,
-      step: 1
+      step: 1,
+      domainNameErr: false
     };
   },
   mounted() {
@@ -84,7 +90,7 @@ export default {
       this.auctionDateEnd = 0;
       this.auctionRegistrarContract = function() {};
       this.raw = {};
-      this.highestBidder = '';
+      this.highestBid = '';
       this.contractInitiated = false;
       this.step = 1;
       this.contractInitiated = false;
@@ -94,12 +100,89 @@ export default {
         this.registrarAddress
       );
       this.contractInitiated = true;
+      this.domainNameErr = false;
+    },
+    async updateResolver(newResolverAddr) {
+      const state = this.$store.state;
+      const web3 = state.web3;
+      const from = state.wallet.getAddressString();
+
+      // Ens Registry address
+      const ensRegistry = state.network.type.contracts.find(contract => {
+        return (
+          web3.utils.toChecksumAddress(contract.address) ===
+          web3.utils.toChecksumAddress(
+            '0x314159265dD8dbb310642f98f50C066173C1259b'
+          )
+        );
+      });
+      const ensRegistryContract = new web3.eth.Contract(
+        ensRegistry.abi,
+        ensRegistry.address
+      );
+
+      // Public resolver address
+      const resolver = await state.ens.resolver('resolver.eth');
+      const publicResolverAddress = await resolver.addr();
+      const publicResolver = state.network.type.contracts.find(contract => {
+        return (
+          web3.utils.toChecksumAddress(contract.address) ===
+          web3.utils.toChecksumAddress(publicResolverAddress)
+        );
+      });
+      const publicResolverContract = new web3.eth.Contract(
+        publicResolver.abi,
+        publicResolverAddress
+      );
+
+      const rawTx1 = {
+        to: ensRegistry.address,
+        from: from,
+        data: ensRegistryContract.methods
+          .setResolver(this.nameHash, publicResolverAddress)
+          .encodeABI(),
+        value: 0
+      };
+
+      const rawTx2 = {
+        to: publicResolverAddress,
+        from: from,
+        data: publicResolverContract.methods
+          .setAddr(this.nameHash, newResolverAddr)
+          .encodeABI(),
+        value: 0
+      };
+
+      web3.eth.sendBatchTransactions([rawTx1, rawTx2]);
+    },
+    async finalize() {
+      const address = this.$store.state.wallet.getAddressString();
+      const web3 = this.$store.state.web3;
+      const name = web3.utils.sha3(this.domainName);
+      const data = await this.auctionRegistrarContract.methods
+        .finalizeAuction(name)
+        .encodeABI();
+
+      const raw = {
+        from: address,
+        value: 0,
+        to: this.registrarAddress,
+        data: data
+      };
+
+      web3.eth.sendTransaction(raw);
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.$store.state.ens.owner(
         ETH_TLD.replace('.', '')
       );
       return registrarAddress;
+    },
+    normalise(str) {
+      return uts46.toUnicode(str, {
+        useStd3ASCII: true,
+        transitional: false
+      });
     },
     async checkDomain() {
       const web3 = this.$store.state.web3;
@@ -120,7 +203,6 @@ export default {
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
-      this.highestBidder = unit.fromWei(res[4], 'ether').toString();
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
@@ -145,14 +227,35 @@ export default {
           break;
         case '4':
           this.loading = false;
+          this.highestBid = unit.fromWei(res[4], 'ether').toString();
           this.$router.push({ path: 'register-domain/reveal' });
           break;
       }
     },
     updateDomainName(value) {
-      this.domainName = value;
+      if (
+        value.substr(0, 2) === '0x' ||
+        value.length < 7 ||
+        value.indexOf('.') !== -1
+      ) {
+        this.domainNameErr = true;
+      } else {
+        this.domainNameErr = false;
+      }
+      try {
+        this.normalise(value);
+      } catch (e) {
+        this.domainNameErr = true;
+        return;
+      }
+      this.domainName = this.normalise(value);
     },
     async getMoreInfo(deedOwner) {
+      const deedContract = new this.$store.state.web3.eth.Contract(
+        DeedContractAbi,
+        deedOwner
+      );
+      const highestBidder = await deedContract.methods.owner().call();
       let owner;
       let resolverAddress;
       try {
@@ -171,10 +274,18 @@ export default {
 
       this.nameHash = nameHashPckg.hash(this.domainName + ETH_TLD);
 
-      this.deedOwner = deedOwner;
+      this.deedOwner = highestBidder;
       this.owner = owner;
       this.resolverAddress = resolverAddress;
-      this.$router.push({ path: 'register-domain/owned' });
+      if (
+        this.owner === '0x0000000000000000000000000000000000000000' &&
+        highestBidder === this.$store.state.wallet.getAddressString()
+      ) {
+        this.$router.push({ path: 'register-domain/finalize' });
+      } else {
+        this.$router.push({ path: 'register-domain/owned' });
+      }
+
       this.loading = false;
     },
     async createTransaction(type) {
@@ -204,7 +315,6 @@ export default {
       } else if (type === 'reveal') {
         contractReference = this.auctionRegistrarContract.methods.unsealBid(
           domainName,
-          address,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
         );

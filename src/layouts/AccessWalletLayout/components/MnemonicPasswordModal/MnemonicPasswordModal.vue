@@ -61,10 +61,7 @@ export default {
   },
   methods: {
     unlockWallet() {
-      MnemonicWallet.unlock({
-        mnemonicPhrase: this.phrase,
-        mnemonicPassword: this.password
-      })
+      MnemonicWallet(this.phrase, this.password)
         .then(wallet => {
           this.$refs.password.hide();
           this.password = '';

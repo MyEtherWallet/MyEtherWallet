@@ -92,6 +92,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
+import Web3 from 'web3';
 
 export default {
   components: {
@@ -133,22 +134,19 @@ export default {
       // }
 
       if (this.checkWeb3() !== true) return;
-
-      window.web3.eth.getAccounts((err, accounts) => {
-        if (err) {
-          this.web3WalletExists = false;
-          return;
-        }
-        if (!accounts.length) {
-          this.unlockWeb3Wallet = true;
-          return;
-        }
-        const address = accounts[0];
-        const wallet = new Web3Wallet(address);
-        this.$store.dispatch('setWeb3Wallet', wallet);
-        this.$store.dispatch('setWeb3Instance', window.web3.currentProvider);
-        this.$router.push({ path: 'interface' });
-      });
+      new Web3(window.web3.currentProvider).eth
+        .getAccounts()
+        .then(accounts => {
+          if (!accounts.length) return (this.unlockWeb3Wallet = true);
+          const address = accounts[0];
+          const wallet = new Web3Wallet(address);
+          this.$store.dispatch('setWeb3Wallet', wallet);
+          this.$store.dispatch('setWeb3Instance', window.web3.currentProvider);
+          this.$router.push({ path: 'interface' });
+        })
+        .catch(() => {
+          return (this.web3WalletExists = false);
+        });
     },
     checkWeb3() {
       if (window.web3 !== undefined) return true;
