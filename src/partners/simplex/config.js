@@ -1,3 +1,5 @@
+import { swapServer } from '../config';
+
 const SimplexCurrencies = {
   fiat: {
     USD: {
@@ -33,7 +35,7 @@ const SimplexMinFiat = 50;
 const SimplexMaxFiat = 20000;
 
 const host = {
-  url: process.env.API_HOST || 'https://apiccswap.myetherwallet.com'
+  url: process.env.API_HOST || swapServer //'https://apiccswap.myetherwallet.com'
 };
 
 export { SimplexCurrencies, host, SimplexMinFiat, SimplexMaxFiat };
