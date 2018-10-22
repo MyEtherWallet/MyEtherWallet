@@ -1,5 +1,7 @@
 import * as unit from 'ethjs-unit';
 import { WEB3_WALLET } from '../bip44/walletTypes';
+import { formatters } from 'web3-core-helpers';
+
 export default (web3, wallet, eventHub, { state, dispatch }) => {
   if (!wallet) return web3;
 
@@ -25,16 +27,16 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
       });
     },
     signBatchTransaction(arrTxs) {
-      eventHub.$emit(
-        'showTxCollectionConfirmModal',
-        arrTxs,
-        wallet.isHardware,
-        wallet.signTransaction.bind(this)
-      );
+      eventHub.$emit('showTxCollectionConfirmModal', arrTxs, wallet.isHardware);
     },
     async sendBatchTransactions(arr) {
       for (let i = 0; i < arr.length; i++) {
-        const localTx = { to: arr[i].to, data: arr[i].data, from: arr[i].from };
+        const localTx = {
+          to: arr[i].to,
+          data: arr[i].data,
+          from: arr[i].from,
+          value: arr[i].value
+        };
         arr[i].nonce = await (arr[i].nonce === undefined
           ? web3.eth.getTransactionCount(wallet.getAddressString())
           : arr[i].nonce);
@@ -47,14 +49,19 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined
-            ? unit.toWei(state.gasPrice, 'gwei').toString()
+            ? unit.toWei(state.gasPrice, 'gwei')
             : arr[i].gasPrice;
-        if (state.wallet.identifier === 'Web3') arr[i].web3WalletOnly = true;
+        arr[i] = formatters.inputCallFormatter(arr[i]);
       }
       methodOverrides.signBatchTransaction(arr);
     },
     async sendTransaction(tx) {
-      const localTx = { to: tx.to, data: tx.data, from: tx.from };
+      const localTx = {
+        to: tx.to,
+        data: tx.data,
+        from: tx.from,
+        value: tx.value
+      };
       tx['nonce'] = await (tx['nonce'] === undefined
         ? web3.eth.getTransactionCount(wallet.getAddressString())
         : tx.nonce);
@@ -65,6 +72,7 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
       tx.gasPrice = !tx.gasPrice
         ? unit.toWei(state.gasPrice, 'gwei').toString()
         : tx.gasPrice;
+      tx = formatters.inputCallFormatter(tx);
       web3.eth
         .sendTransaction_(tx)
         .once('transactionHash', hash => {

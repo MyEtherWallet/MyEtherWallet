@@ -5,7 +5,7 @@
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
-      :is-hardware-walalet="isHardwareWallet"
+      :is-hardware-wallet="isHardwareWallet"
       :gas-price="$store.state.gasPrice"
       :from="fromAddress"
       :to="toAddress"
@@ -170,20 +170,17 @@ export default {
       );
     });
 
-    this.$eventHub.$on(
-      'showTxCollectionConfirmModal',
-      (tx, isHardware, signer) => {
-        const newArr = [];
-        this.isHardwareWallet = isHardware;
-        for (let i = 0; i < tx.length; i++) {
-          signer(tx[i]).then(_response => {
-            newArr.push(_response);
-          });
-        }
-        this.signedArray = newArr;
-        this.confirmationCollectionModalOpen();
+    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
+      const newArr = [];
+      this.isHardwareWallet = isHardware;
+      for (let i = 0; i < tx.length; i++) {
+        this.$store.state.wallet.signTransaction(tx[i]).then(_response => {
+          newArr.push(_response);
+        });
       }
-    );
+      this.signedArray = newArr;
+      this.confirmationCollectionModalOpen();
+    });
 
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
@@ -255,20 +252,20 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
+    sendBatchCallback(x) {
+      console.log(x);
+    },
     async sendBatchTransactions() {
       const web3 = this.$store.state.web3;
-      // const dispatch = this.$store.dispatch;
       const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {
         batch.add(
           web3.eth.sendSignedTransaction.request(
-            this.signedArray[i].rawTransaction,
-            'receipt',
-            console.log
-          )
+            this.signedArray[i].rawTransaction
+          ),
+          this.sendBatchCallback
         );
       }
-      console.log(this.signedArray);
       batch.execute();
     },
     sendTx() {
