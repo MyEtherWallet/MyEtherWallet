@@ -15,7 +15,7 @@
             <div class="line"/>
           </div>
           <p>
-            <span>Gas Price</span> {{ gasAvg }} Gwei
+            <span>Transaction Total:</span> {{ txTotal }} {{ $store.state.network.type.name }}
           </p>
         </div>
         <div class="modal-content-body">
@@ -31,7 +31,7 @@
                 <div>
                   <p>- {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
                   <div>
-                    <span>From</span> {{ item.tx.from | concatAddr }}
+                    <span>From</span> {{ $store.state.wallet.getChecksumAddressString() | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -59,21 +59,24 @@
               class="body">
               <div class="body-item">
                 <span class="item-title">Gas Limit</span>
-                <span>{{ item.tx.gasPrice }} Gwei</span>
+                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.gas) }}</span>
+              </div>
+              <div class="body-item">
+                <span class="item-title">Gas Price</span>
+                <span>{{ $store.state.web3.utils.hexToNumberString($store.state.web3.utils.fromWei(item.tx.gasPrice, 'gwei')) }} Gwei</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce </span>
-                <span>{{ item.tx.nonce }}</span>
+                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Data </span>
-                <span class="data-string">{{ item.tx.data }}</span>
+                <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
           </div>
         </div>
       </div>
-
       <div class="submit-button-container">
         <div class="flex-center-align">
           <div class="button-with-helper">
@@ -138,15 +141,19 @@ export default {
       }
       return true;
     },
-    gasAvg() {
+    txTotal() {
       if (this.signedArray.length > 0) {
-        let totalGas = 0;
+        const BN = this.$store.state.web3.utils.BN;
+        let totalGas = new BN();
         this.signedArray.forEach(item => {
-          totalGas += item.tx.gasPrice;
+          totalGas = totalGas.add(
+            new BN(item.tx.gasPrice.replace('0x', ''), 'hex').mul(
+              new BN(item.tx.gas.replace('0x', ''), 'hex')
+            )
+          );
         });
-        const avg = totalGas / this.signedArray.length;
         return this.$store.state.web3.utils
-          .fromWei(avg.toString(), 'gwei')
+          .fromWei(totalGas.toString(), 'ether')
           .toString();
       }
       return 0;

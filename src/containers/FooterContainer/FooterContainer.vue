@@ -5,11 +5,11 @@
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
-            :ref="item.class" 
+            :ref="item.class"
             :class="item.class"
             :key="item.title + index">
-            <div 
-              class="content-title" 
+            <div
+              class="content-title"
               @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
               <p
@@ -254,8 +254,6 @@ export default {
       content.classList.add('mobile-hide');
     },
     toggler(ref) {
-      // console.log(this.$refs);
-      // console.log(this.$refs[ref][0]);
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }
