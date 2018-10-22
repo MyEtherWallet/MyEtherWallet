@@ -5,23 +5,37 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
 
   h3 {
     color: $dark-blue-6;
   }
 }
 
-.manage-form {
+.inputs-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
+}
 
-  input {
-    background-color: $light-grey-1;
-    border: 0;
-    border-radius: 4px;
-    padding: 13px 15px;
+.manage-form {
+  display: flex;
+  padding-top: 20px;
+
+  .input-container {
+    flex: auto;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    input {
+      background-color: $light-grey-1;
+      border: 0;
+      border-radius: 4px;
+      padding: 13px 15px;
+      width: 100%;
+    }
   }
 
   .submit-container {
@@ -32,10 +46,9 @@
       border-radius: 4px;
       color: $white;
       cursor: pointer;
-      height: 62px;
-      margin-top: 20px;
-      padding: 10px;
-      width: 260px;
+      margin: 30px 0 0 10px;
+      padding: 13px 15px;
+      width: 150px;
     }
 
     .disabled {
