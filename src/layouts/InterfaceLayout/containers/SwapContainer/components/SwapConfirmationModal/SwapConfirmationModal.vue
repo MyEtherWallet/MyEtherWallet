@@ -52,6 +52,7 @@
 /* eslint-disable*/
 import web3 from 'web3';
 import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
 
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
@@ -99,32 +100,32 @@ export default {
         name: 'BTC',
         address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
       },
-      detailInfo: [
-        {
+      detailInfo: {
+        network: {
           name: 'Network',
           value: 'ETH by mytherapi.com'
         },
-        {
+        gas: {
           name: 'Gas Limit',
           value: '21000'
         },
-        {
+        gasPrice: {
           name: 'Gas Price',
           value: '210000 Gwei (0.00321 ETH=$1.234)'
         },
-        {
+        transactionFee: {
           name: 'Max Transaction Fee',
           value: '441000 Gwei (0.000441 ETH)'
         },
-        {
+        nonce: {
           name: 'Nonce',
           value: '0'
         },
-        {
+        data: {
           name: 'Data',
           value: 'None'
         }
-      ]
+      }
     };
   },
   watch: {
@@ -185,44 +186,158 @@ export default {
         return '0x';
       }
     },
-    swapStarted(value) {
-      if (value.dataForInitialization) {
-        switch (value.provider) {
+    swapStarted(swapDetails) {
+      if (swapDetails.dataForInitialization) {
+        switch (swapDetails.provider) {
           case 'changelly':
-            this.useChangelly(value);
+            this.useChangelly(swapDetails);
             break;
           case 'bity':
-            this.useBity(value);
+            this.useBity(swapDetails);
             break;
           case 'kybernetwork':
-            this.useKyber(value);
-            break;
-          case 'simplex':
-            this.useSimplex();
+            this.useKyber(swapDetails);
             break;
         }
       }
     },
-    useBity(value) {
-      this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
-    },
-    useChangelly(value) {
-      if (value.maybeToken && value.fromCurrency !== 'ETH') {
+    async useBity(swapDetails) {
+      let raw = {};
+
+      console.log(swapDetails); // todo remove dev item
+      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
         const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === value.fromCurrency;
+          return item.symbol === swapDetails.fromCurrency;
         });
         const txData = this.createTokenTransferData(
           this.currentAddress,
-          value.fromValue,
+          swapDetails.fromValue,
           tokenInfo
         );
+        raw = await this.createSwapTransaction(swapDetails, txData);
+      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH'){
+        raw = await this.createSwapTransaction(swapDetails);
+        console.log('changelly Raw Tx: ', raw); // todo remove dev item
+      }
+      // this.$store.dispatch('addSwapTransaction', [
+      //   this.currentAddress,
+      //   swapDetails
+      // ]);
+      if(Object.keys(raw).length > 0){
+        // this.$store.state.web3.eth.sendTransaction(raw);
       }
     },
-    useKyber(value) {
-      const dataForTransactions = value.dataForInitialization;
+    async useChangelly(swapDetails) {
+      let raw = {};
+      console.log(swapDetails); // todo remove dev item
+      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
+        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
+          return item.symbol === swapDetails.fromCurrency;
+        });
+        const txData = this.createTokenTransferData(
+          this.currentAddress,
+          swapDetails.fromValue,
+          tokenInfo
+        );
+        raw = await this.createSwapTransaction(swapDetails, txData);
+      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH'){
+        raw = await this.createSwapTransaction(swapDetails);
+        console.log('changelly Raw Tx: ', raw); // todo remove dev item
+      }
+      if(Object.keys(raw).length > 0){
+        // this.$store.state.web3.eth.sendTransaction(raw);
+      }
     },
-    useSimplex(value) {
+    async useKyber(swapDetails) {
+      const txDatas = swapDetails.dataForInitialization;
+      const bulkTx = [];
+      let txCount = 0;
+      try {
+        let nonce = await this.$store.state.web3.eth.getTransactionCount(
+          this.$store.state.wallet.getAddressString()
+        );
 
+        for (let [key, value] of txDatas) {
+          if (key === 'reset' || key === 'approve') {
+            const raw = {
+              from: this.$store.state.wallet.getAddressString(),
+              gas: 2100,
+              gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+              value: 0,
+              to: txData.get('tokenAddress'),
+              data: value,
+              chainId: this.$store.state.network.type.chainID || 1
+            };
+
+            raw.gas = await this.estimateGas(raw);
+            raw.nonce = nonce + txCount;
+
+            if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
+              raw['web3WalletOnly'] = true;
+            }
+            bulkTx.push(raw);
+            txCount++;
+          } else if (key === 'swap') {
+            const swapTx = await this.createSwapTransaction(
+              swapDetails,
+              value,
+              nonce + txCount
+            );
+            bulkTx.push(swapTx);
+            console.log('kyber Raw Txs: ', bulkTx); // todo remove dev item
+            this.$store.state.web3.eth.sendBatchTransactions(bulkTx); // because maps iterate in insertion order, and the swap tx always gets added last
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async createSwapTransaction(swapDetails, txData, increNonce) {
+      let nonce;
+      try {
+        if (!increNonce) {
+          nonce = await this.$store.state.web3.eth.getTransactionCount(
+            this.$store.state.wallet.getAddressString()
+          );
+        } else {
+          nonce = increNonce;
+        }
+        const isEth = swapDetails.fromCurrency === 'ETH';
+
+        const raw = {
+          from: this.$store.state.wallet.getAddressString(),
+          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          value: isEth ? unit.toWei(swapDetails.fromValue, 'ether') : 0,
+          to: swapDetails.providerAddress,
+          data: txData ? txData : '0x',
+          chainId: this.$store.state.network.type.chainID || 1
+        };
+
+        raw.gas = await this.estimateGas(raw);
+        raw.nonce = nonce;
+
+        if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
+          raw['web3WalletOnly'] = true;
+        }
+
+        return raw;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    createSwapTransactions(swapDetails, txDataArray) {},
+    async estimateGas(raw) {
+      try {
+        const newRaw = {...raw};
+        // delete newRaw['gas'];
+        // delete newRaw['nonce'];
+        console.log(newRaw); // todo remove dev item
+        console.log(newRaw.gas); // todo remove dev item
+
+        return await this.$store.state.web3.eth.estimateGas(newRaw);
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 };

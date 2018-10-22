@@ -32,15 +32,22 @@ export default class BitySwap {
     // }, 3000)
   }
 
+  get validNetwork() {
+    return this.network === networkSymbols.ETH;
+  }
+
   get currencies() {
-    if (this.network === networkSymbols.ETH) {
+    if (this.validNetworkH) {
       return BityCurrencies;
     }
     return {};
   }
 
   validSwap(fromCurrency, toCurrency) {
-    return this.rates.has(`${fromCurrency}/${toCurrency}`);
+    if (this.validNetwork) {
+      return this.rates.has(`${fromCurrency}/${toCurrency}`);
+    }
+    return false;
   }
 
   async createSwap(swapDetails) {

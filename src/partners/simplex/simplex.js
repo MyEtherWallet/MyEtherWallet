@@ -19,18 +19,25 @@ export default class Simplex {
     this.currentOrder = {};
   }
 
+  get validNetwork() {
+    return this.network === networkSymbols.ETH;
+  }
+
   get currencies() {
-    if (this.network === networkSymbols.ETH) {
+    if (this.validNetwork) {
       return this.currencyDetails;
     }
     return { fiat: {}, digital: {} };
   }
 
   validSwap(fromCurrency, toCurrency) {
-    return (
-      this.currencies.fiat[fromCurrency] &&
-      (toCurrency === 'ETH' || toCurrency === 'BTC')
-    );
+    if (this.validNetwork) {
+      return (
+        this.currencies.fiat[fromCurrency] &&
+        (toCurrency === 'ETH' || toCurrency === 'BTC')
+      );
+    }
+    return false;
   }
 
   isFiat(currency) {
@@ -115,6 +122,9 @@ export default class Simplex {
             }
           }
         }
+      }).then(_result => {
+        console.log('get simplex order result', _result); // todo remove dev item
+        return _result.result;
       });
     }
   }

@@ -13,7 +13,7 @@ export default class Changelly {
   constructor(props = {}) {
     this.name = 'changelly';
     this.network = props.network || networkSymbols.ETH;
-    this.hasTokens = false;
+    this.hasTokens = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.currencyIconList = [];
     this.erc20List = [];
@@ -22,8 +22,12 @@ export default class Changelly {
     this.getSupportedCurrencies(this.network);
   }
 
+  get validNetwork() {
+    return this.network === networkSymbols.ETH;
+  }
+
   get currencies() {
-    if (this.network === networkSymbols.ETH) {
+    if (this.validNetwork) {
       return this.currencyDetails;
     }
     return {};
@@ -37,7 +41,10 @@ export default class Changelly {
   }
 
   validSwap(fromCurrency, toCurrency) {
-    return this.currencies[fromCurrency] && this.currencies[toCurrency];
+    if (this.validNetwork) {
+      return this.currencies[fromCurrency] && this.currencies[toCurrency];
+    }
+    return false;
   }
 
   async createSwap(swapDetails) {
@@ -63,6 +70,8 @@ export default class Changelly {
     try {
       const currencyList = await getCurrencies(this.network);
       this.currencyDetails = {};
+      this.tokenDetails = {};
+      this.currencyIconList = {};
       for (let i = 0; i < currencyList.length; i++) {
         if (!this.requireExtraId.includes(currencyList[i].name.toUpperCase())) {
           const details = {
@@ -74,7 +83,8 @@ export default class Changelly {
           this.currencyIconList[details.symbol] = details.image;
         }
       }
-      this.hasTokens = Object.keys(this.tokenDetails).length > 0;
+      this.hasTokens =
+        Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
     } catch (e) {
       console.error(e);
     }
