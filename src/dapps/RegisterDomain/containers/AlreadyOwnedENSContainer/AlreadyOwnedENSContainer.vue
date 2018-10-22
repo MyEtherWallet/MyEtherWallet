@@ -27,14 +27,14 @@
     </div>
     <div class="owner-options">
       <button
-        class="finalize-button"
         v-if="deedOwner === $store.state.wallet.getChecksumAddressString() && owner === '0x0000000000000000000000000000000000000000'"
+        class="finalize-button"
         @click="openFinalizeModal">
         Finalize
       </button>
       <button
-        class="manage-button"
         v-if="owner === $store.state.wallet.getChecksumAddressString()"
+        class="manage-button"
         @click="manageEns">Manage</button>
     </div>
     <interface-bottom-text
