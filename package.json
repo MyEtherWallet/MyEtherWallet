@@ -60,7 +60,7 @@
     "postcss-import": "^12.0.0",
     "postcss-url": "^8.0.0",
     "prettier": "^1.14.3",
-    "remark-cli": "^5.0.0",
+    "remark-cli": "^6.0.0",
     "remark-preset-lint-recommended": "^3.0.2",
     "sass-loader": "^7.0.1",
     "secp256k1": "^3.5.2",
