@@ -1,7 +1,12 @@
+### Hotfix
+
+- Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
+
 ### Release v5.0.4
 
 ### Devop
 
+- Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
 - Use new contract getter [#119](https://github.com/MyEtherWallet/MyEtherWallet/pull/119)
 - Fix access wallet link, pop success when user clicks download [#115](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/115)
 - Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
