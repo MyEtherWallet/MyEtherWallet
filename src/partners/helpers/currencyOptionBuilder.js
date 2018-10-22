@@ -131,11 +131,15 @@ export default class CurrencyOptionBuilder {
           name: this.simplexCurrencies.digital[prop].name
         });
     }
-    collectMapTo.set('ETH', { symbol: 'ETH', name: 'Ether' });
-    collectMapFrom.set('ETH', { symbol: 'ETH', name: 'Ether' });
+    // collectMapTo.set('ETH', { symbol: 'ETH', name: 'Ether' });
+    // collectMapFrom.set('ETH', { symbol: 'ETH', name: 'Ether' });
+    if (collectMapTo.has('ETH')) collectMapTo.delete('ETH');
+    if (collectMapFrom.has('ETH')) collectMapFrom.delete('ETH');
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
+    toArray.splice(0, 0, { symbol: 'ETH', name: 'Ether' });
+    fromArray.splice(0, 0, { symbol: 'ETH', name: 'Ether' });
     // const toArray = this.addBtcAndEthToTop(
     //   Array.from(collectMapTo.values()).sort(comparator),
     //   { symbol: 'BTC', name: 'Bitcoin' }
@@ -197,8 +201,11 @@ export default class CurrencyOptionBuilder {
         }
       }
     }
-    collectMap.set('ETH', { symbol: 'ETH', name: 'Ether' });
-    return Array.from(collectMap.values()).sort(comparator);
+    // collectMap.set('ETH', { symbol: 'ETH', name: 'Ether' });
+    // return Array.from(collectMap.values()).sort(comparator);
+    if (collectMap.has('ETH')) collectMap.delete('ETH');
+    const toArray = Array.from(collectMap.values()).sort(comparator);
+    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray]
   }
 
   setToCurrencyBuilder(value) {
@@ -247,8 +254,15 @@ export default class CurrencyOptionBuilder {
         }
       }
     }
-    collectMap.set('ETH', { symbol: 'ETH', name: 'Ether' });
-    return Array.from(collectMap.values()).sort(comparator);
+    // collectMap.set('ETH', { symbol: 'ETH', name: 'Ether' });
+    // return Array.from(collectMap.values()).sort(comparator);
+    if (collectMap.has('ETH')) collectMap.delete('ETH');
+    const toArray = Array.from(collectMap.values()).sort(comparator);
+    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray]
+    // if (collectMap.has('ETH')) collectMap.delete('ETH');
+    // return Array.from(collectMap.values())
+    //   .sort(comparator)
+    //   .splice(0, 0, { symbol: 'ETH', name: 'Ether' });
   }
 }
 

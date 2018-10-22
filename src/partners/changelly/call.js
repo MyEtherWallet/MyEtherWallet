@@ -1,26 +1,39 @@
 import { post, get } from '@/helpers/httpRequests';
 import { changellyAddresses } from './config';
+import { swapServer } from '../config';
+
+function buildPath(route) {
+  return swapServer + route;
+}
 
 const getCurrencies = async network => {
   if (changellyAddresses[network]) {
-    const results = await get(changellyAddresses[network].currencies);
-    return results.result;
+    const results = await get(
+      buildPath(changellyAddresses[network].currencies)
+    );
+    return results.result.result;
   }
   return Promise.resolve({});
 };
 
 const getRate = async (rateDetails, network) => {
   if (changellyAddresses[network]) {
-    const results = await post(changellyAddresses[network].rate, rateDetails);
-    return results.result;
+    const results = await post(
+      buildPath(changellyAddresses[network].rate),
+      rateDetails
+    );
+    return results.result.result;
   }
   return Promise.resolve(-1);
 };
 
 const getMin = async (rateDetails, network) => {
   if (changellyAddresses[network]) {
-    const results = await post(changellyAddresses[network].min, rateDetails);
-    return results.result;
+    const results = await post(
+      buildPath(changellyAddresses[network].min),
+      rateDetails
+    );
+    return results.result.result;
   }
   return Promise.resolve(-1);
 };
@@ -28,10 +41,10 @@ const getMin = async (rateDetails, network) => {
 const validateAddress = async (addressDetails, network) => {
   if (changellyAddresses[network]) {
     const results = await post(
-      changellyAddresses[network].validate,
+      buildPath(changellyAddresses[network].validate),
       addressDetails
     );
-    return results.result;
+    return results.result.result;
   }
   return Promise.resolve(-1);
 };
@@ -39,10 +52,10 @@ const validateAddress = async (addressDetails, network) => {
 const createTransaction = async (transactionParams, network) => {
   if (changellyAddresses[network]) {
     const results = await post(
-      changellyAddresses[network].createTransaction,
+      buildPath(changellyAddresses[network].createTransaction),
       transactionParams
     );
-    return results.result;
+    return results.result.result;
   }
   return Promise.resolve(-1);
 };
