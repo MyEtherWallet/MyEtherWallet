@@ -145,8 +145,15 @@
     </div>
 
     <div class="submit-button-container">
-      <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
-      <div
+      <div v-show="finalizingSwap"
+           class="disabled submit-button large-round-button-green-filled clickable">
+        Finalizing Swap Details
+        <!--{{ $t('common.continue') }}-->
+        <i
+          class="fa fa-long-arrow-right"
+          aria-hidden="true"/>
+      </div>
+      <div v-show="!finalizingSwap"
         :class="[validSwap ? '': 'disabled','submit-button large-round-button-green-filled clickable']"
         @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
@@ -208,6 +215,7 @@ export default {
       invalidFrom: 'none',
       selectedProvider: {},
       swapDetails: {},
+      finalizingSwap: false,
       toAddress: '',
       currentAddress: '',
       bitySwap: new BitySwap({ network: this.$store.state.network.type.name }),
@@ -269,9 +277,13 @@ export default {
     },
     haveProviderRates() {
       //TODO centralize location of name strings for providers
-      return supportedProviders.every(entry =>
-        this.providerRatesRecieved.includes(entry)
-      );
+      if (this.$store.state.network.type.name === 'ETH') {
+        return supportedProviders.every(entry =>
+          this.providerRatesRecieved.includes(entry)
+        );
+      } else {
+        return true;
+      }
     }
   },
   watch: {
@@ -527,13 +539,18 @@ export default {
             );
             this.updateEstimate(to);
           }
+        } else {
+          this.providersFound = providersFound;
+          this.loadingData = false;
         }
       }
     },
     // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       if (this.validSwap) {
+        this.finalizingSwap = true;
         this.swapDetails = await this.collectSwapDetails();
+        this.finalizingSwap = false;
         if (
           this.swapDetails.dataForInitialization &&
           this.swapDetails.maybeToken
@@ -568,31 +585,35 @@ export default {
         maybeToken: false
       };
 
-      swapDetails.dataForInitialization = await this.startSwap(swapDetails);
-      return swapDetails;
+      return await this.startSwap(swapDetails);
     },
     async startSwap(swapDetails) {
       let details;
       switch (swapDetails.provider) {
         case this.kyberSwap.name:
           swapDetails.maybeToken = true;
-          return await this.kyberSwap.createSwap(swapDetails);
+          swapDetails.providerAddress = this.kyberSwap.getAddress();
+          details = await this.kyberSwap.createSwap(swapDetails);
+          break;
         case this.changellySwap.name:
           details = await this.changellySwap.createSwap(swapDetails);
-          if (web3.utils.isAddress(details.payment_address)) {
-            swapDetails.maybeToken = true;
-          }
-          return details;
+          swapDetails.maybeToken = web3.utils.isAddress(details.payinAddress);
+          swapDetails.providerAddress = details.payinAddress;
+          break;
         case this.bitySwap.name:
           details = await this.bitySwap.createSwap(swapDetails);
-          if (web3.utils.isAddress(details.payinAddress)) {
-            swapDetails.maybeToken = true;
-          }
-          return details;
+          swapDetails.maybeToken = web3.utils.isAddress(
+            details.payment_address
+          );
+          swapDetails.providerAddress = details.payment_address;
+          break;
         case this.simplexSwap.name:
           details = await this.simplexSwap.createSwap(swapDetails);
-          return details;
+          break;
       }
+
+      swapDetails.dataForInitialization = details;
+      return swapDetails;
     },
     // ================================ Provider Specific ============================================
     async getSimplexRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {

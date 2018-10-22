@@ -1,75 +1,81 @@
 <template>
-  <div class="submit-button-container">
-    <form 
-      v-if="formData" 
-      id="payment_form" 
-      ref="payment_form" 
-      :action="formData.payment_post_url" 
-      method="POST" 
+  <div>
+    <form
+      v-if="formData"
+      id="payment_form"
+      ref="payment_form"
+      :action="formData.payment_post_url"
+      method="POST"
       target="_self">
-      <input 
-        :value="formData.version" 
-        type="hidden" 
+      <input
+        :value="formData.version"
+        type="hidden"
         name="version">
-      <input 
-        :value="formData.partner" 
-        type="hidden" 
+      <input
+        :value="formData.partner"
+        type="hidden"
         name="partner">
-      <input 
-        type="hidden" 
-        name="payment_flow_type" 
+      <input
+        type="hidden"
+        name="payment_flow_type"
         value="wallet">
-      <input 
-        :value="formData.return_url" 
-        type="hidden" 
+      <input
+        :value="formData.return_url"
+        type="hidden"
         name="return_url">
-      <input 
-        :value="formData.quote_id" 
-        type="hidden" 
+      <input
+        :value="formData.quote_id"
+        type="hidden"
         name="quote_id">
-      <input 
-        :value="formData.payment_id" 
-        type="hidden" 
+      <input
+        :value="formData.payment_id"
+        type="hidden"
         name="payment_id">
-      <input 
-        :value="formData.user_id" 
-        type="hidden" 
+      <input
+        :value="formData.user_id"
+        type="hidden"
         name="user_id">
-      <input 
-        :value="formData.destination_wallet_address" 
-        type="hidden" 
+      <input
+        :value="formData.destination_wallet_address"
+        type="hidden"
         name="destination_wallet[address]">
-      <input 
-        :value="formData.destination_wallet_currency" 
-        type="hidden" 
+      <input
+        :value="formData.destination_wallet_currency"
+        type="hidden"
         name="destination_wallet[currency]">
-      <input 
-        :value="formData.fiat_total_amount_amount" 
-        type="hidden" 
+      <input
+        :value="formData.fiat_total_amount_amount"
+        type="hidden"
         name="fiat_total_amount[amount]">
-      <input 
-        :value="formData.fiat_total_amount_currency" 
-        type="hidden" 
+      <input
+        :value="formData.fiat_total_amount_currency"
+        type="hidden"
         name="fiat_total_amount[currency]">
-      <input 
-        :value="formData.digital_total_amount_amount" 
-        type="hidden" 
+      <input
+        :value="formData.digital_total_amount_amount"
+        type="hidden"
         name="digital_total_amount[amount]">
-      <input 
-        :value="formData.digital_total_amount_currency" 
-        type="hidden" 
+      <input
+        :value="formData.digital_total_amount_currency"
+        type="hidden"
         name="digital_total_amount[currency]">
     </form>
-    <a 
-      class="button-1" 
-      @click="continueAction(submit)">Continue<i 
-        class="fa fa-long-arrow-right" 
-        aria-hidden="true"/></a>
+    <div
+      class="confirm-send-button"
+      @click="submit()">
+      <button-with-qrcode
+        :qrcode="qrcode"
+        buttonname="Confirm and Send"/>
+    </div>
   </div>
 </template>
 <script>
+import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
+
 export default {
-  name: 'CheckoutForm',
+  components: {
+    'button-with-qrcode': ButtonWithQrCode
+  },
   props: {
     formData: {
       type: Object,
@@ -80,6 +86,15 @@ export default {
     continueAction: {
       type: Function,
       default: function() {}
+    },
+    qrcode: {
+      type: String,
+      default: ''
+    }
+  },
+  watch: {
+    formData(newVal) {
+      console.log('formData', newVal); // todo remove dev item
     }
   },
   data() {
@@ -87,6 +102,7 @@ export default {
   },
   methods: {
     submit() {
+      console.log('submit'); // todo remove dev item
       document.querySelector('#payment_form').submit();
     }
   }

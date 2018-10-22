@@ -55,6 +55,7 @@ const createTransaction = async (transactionParams, network) => {
       buildPath(changellyAddresses[network].createTransaction),
       transactionParams
     );
+    console.log(results); // todo remove dev item
     return results.result.result;
   }
   return Promise.resolve(-1);
