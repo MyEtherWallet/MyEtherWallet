@@ -1,174 +1,165 @@
 const KyberCurrenciesROP = {
-  OMG: {
-    name: 'OmiseGO',
-    decimals: 18,
-    contractAddress: '0xd26114cd6EE289AccF82350c8d8487fedB8A0C07'
+  ETH: {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    decimals: 18
   },
   KNC: {
-    name: 'KyberNetwork',
-    decimals: 18,
-    contractAddress: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
+    symbol: 'KNC',
+    name: 'Kyber Network',
+    contractAddress: '0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6',
+    decimals: 18
+  },
+  OMG: {
+    symbol: 'OMG',
+    name: 'OmiseGO',
+    contractAddress: '0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b',
+    decimals: 18
   },
   SNT: {
-    name: 'STATUS',
-    decimals: 18,
-    contractAddress: '0x744d70fdbe2ba4cf95131626614a1763df805b9e'
+    symbol: 'SNT',
+    name: 'Status Network',
+    contractAddress: '0xbF5d8683b9BE6C43fcA607eb2a6f2626A18837a6',
+    decimals: 18
   },
   ELF: {
+    symbol: 'ELF',
     name: 'AELF',
-    decimals: 18,
-    contractAddress: '0xbf2179859fc6d5bee9bf9158632dc51678a4100e'
+    contractAddress: '0x9Fcc27c7320703c43368cf1A4bf076402cd0D6B4',
+    decimals: 18
   },
   POWR: {
+    symbol: 'POWR',
     name: 'Power Ledger',
-    decimals: 6,
-    contractAddress: '0x595832f8fc6bf59c85c527fec3740a1b7a361269'
+    contractAddress: '0xa577731515303F0C0D00E236041855A5C4F114dC',
+    decimals: 6
   },
   MANA: {
-    name: 'MANA',
-    decimals: 18,
-    contractAddress: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942'
+    symbol: 'MANA',
+    name: 'Decentraland',
+    contractAddress: '0xf5E314c435B3B2EE7c14eA96fCB3307C3a3Ef608',
+    decimals: 18
   },
   BAT: {
+    symbol: 'BAT',
     name: 'Basic Attention Token',
-    decimals: 18,
-    contractAddress: '0x0d8775f648430679a709e98d2b0cb6250d2887ef'
+    contractAddress: '0xDb0040451F373949A4Be60dcd7b6B8D6E42658B6',
+    decimals: 18
   },
   REQ: {
+    symbol: 'REQ',
     name: 'Request',
-    decimals: 18,
-    contractAddress: '0x8f8221afbb33998d8584a2b05749ba73c37a938a'
+    contractAddress: '0xb43D10BbE7222519Da899B72bF2c7f094b6F79D7',
+    decimals: 18
   },
   GTO: {
-    name: 'Gifto',
-    decimals: 5,
-    contractAddress: '0xc5bbae50781be1669306b9e001eff57a2957b09d'
+    symbol: 'GTO',
+    name: 'GIFTO',
+    contractAddress: '0xe55c607d58c53b2B06A8E38f67F4c0FcAeEd2c31',
+    decimals: 5
   },
   RDN: {
+    symbol: 'RDN',
     name: 'Raiden',
-    decimals: 18,
-    contractAddress: '0x255aa6df07540cb5d3d297f0d0d4d84cb52bc8e6'
+    contractAddress: '0x5422Ef695ED0B1213e2B953CFA877029637D9D26',
+    decimals: 18
   },
   APPC: {
+    symbol: 'APPC',
     name: 'AppCoins',
-    decimals: 18,
-    contractAddress: '0x1a7a8bd9106f2b8d977e08582dc7d24c723ab0db'
+    contractAddress: '0x2799f05B55d56be756Ca01Af40Bf7350787F48d4',
+    decimals: 18
   },
   ENG: {
+    symbol: 'ENG',
     name: 'Enigma',
-    decimals: 8,
-    contractAddress: '0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4'
+    contractAddress: '0x95cc8d8f29D0f7fcC425E8708893E759d1599c97',
+    decimals: 8
   },
   SALT: {
+    symbol: 'SALT',
     name: 'Salt',
-    decimals: 8,
-    contractAddress: '0x4156d3342d5c385a87d264f90653733592000581'
+    contractAddress: '0xB47f1A9B121BA114d5e98722a8948e274d0F4042',
+    decimals: 8
   },
   BQX: {
+    symbol: 'BQX',
     name: 'Ethos',
-    decimals: 8,
-    contractAddress: '0x5Af2Be193a6ABCa9c8817001F45744777Db30756'
+    contractAddress: '0x9504A86A881F63Da06302FB3639d4582022097DB',
+    decimals: 8
   },
-
   ADX: {
+    symbol: 'ADX',
     name: 'AdEx',
-    decimals: 4,
-    contractAddress: '0x499990DB50b34687CDaFb2C8DaBaE4E99d6F38A7'
+    contractAddress: '0x499990DB50b34687CDaFb2C8DaBaE4E99d6F38A7',
+    decimals: 4
   },
-
   AST: {
+    symbol: 'AST',
     name: 'AirSwap',
-    decimals: 4,
-    contractAddress: '0x27054b13b1b798b345b591a4d22e6562d47ea75a'
+    contractAddress: '0xeF06F410C26a0fF87b3a43927459Cce99268a2eF',
+    decimals: 4
   },
-
   RCN: {
+    symbol: 'RCN',
     name: 'Ripio Credit Network',
-    decimals: 18,
-    contractAddress: '0xf970b8e36e23f7fc3fd752eea86f8be8d83375a6'
+    contractAddress: '0x99338aa9218C6C23AA9d8cc2f3EFaf29954ea26B',
+    decimals: 18
   },
-
   ZIL: {
+    symbol: 'ZIL',
     name: 'Zilliqa',
-    decimals: 12,
-    contractAddress: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27'
+    contractAddress: '0xaD78AFbbE48bA7B670fbC54c65708cbc17450167',
+    decimals: 12
   },
-
   DAI: {
+    symbol: 'DAI',
     name: 'DAI',
-    decimals: 18,
-    contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
+    contractAddress: '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
+    decimals: 18
   },
-
   LINK: {
+    symbol: 'LINK',
     name: 'Chain Link',
-    decimals: 18,
-    contractAddress: '0x514910771af9ca656af840dff83e8264ecf986ca'
+    contractAddress: '0xb4f7332ed719Eb4839f091EDDB2A3bA309739521',
+    decimals: 18
   },
   IOST: {
+    symbol: 'IOST',
     name: 'IOStoken',
-    decimals: 18,
-    contractAddress: '0xfa1a856cfa3409cfa145fa4e20eb270df3eb21ab'
+    contractAddress: '0x27db28a6C4ac3D82a08D490cfb746E6F02bC467C',
+    decimals: 18
   },
   STORM: {
+    symbol: 'STORM',
     name: 'Storm',
-    decimals: 18,
-    contractAddress: '0xd0a4b8946cb52f0661273bfbc6fd0e0c75fc6433'
-  },
-  MOT: {
-    name: 'Olympus Labs',
-    decimals: 18,
-    contractAddress: '0x263c618480dbe35c300d8d5ecda19bbb986acaed'
-  },
-  DGX: {
-    name: 'Digix Gold',
-    decimals: 9,
-    contractAddress: '0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf'
-  },
-  ABT: {
-    name: 'ArcBlock',
-    decimals: 18,
-    contractAddress: '0xb98d4c97425d9908e66e53a6fdf673acca0be986'
-  },
-  ENJ: {
-    name: 'EnjinCoin',
-    decimals: 18,
-    contractAddress: '0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c'
-  },
-  AION: {
-    name: 'Aion',
-    decimals: 8,
-    contractAddress: '0x4CEdA7906a5Ed2179785Cd3A40A69ee8bc99C466'
-  },
-  AE: {
-    name: 'Aeternity',
-    decimals: 18,
-    contractAddress: '0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d'
-  },
-  BLZ: {
-    name: 'Bluezelle',
-    decimals: 18,
-    contractAddress: '0x5732046a883704404f284ce41ffadd5b007fd668'
-  },
-  PAL: {
-    name: 'PolicyPal Network',
-    decimals: 18,
-    contractAddress: '0xfedae5642668f8636a11987ff386bfd215f942ee'
-  },
-  ELEC: {
-    name: 'ElectrifyAsia',
-    decimals: 18,
-    contractAddress: '0xd49ff13661451313ca1553fd6954bd1d9b6e02b9'
+    contractAddress: '0x8FFf7De21de8ad9c510704407337542073FDC44b',
+    decimals: 18
   },
   BBO: {
-    name: 'Bigbom',
-    decimals: 18,
-    contractAddress: '0x84f7c44b6fed1080f647e354d552595be2cc602f'
+    symbol: 'BBO',
+    name: 'BigBom',
+    contractAddress: '0xa94758d328af7ef1815e73053e95b5F86588C16D',
+    decimals: 18
   },
-  ETH: {
-    name: 'Ethereum',
-    decimals: 18,
-    contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  COFI: {
+    symbol: 'COFI',
+    name: 'ConFi',
+    contractAddress: '0xb91786188f8d4e35d6d67799e9f162587bf4da03',
+    decimals: 18
+  },
+  MOC: {
+    symbol: 'MOC',
+    name: 'Moss Coin',
+    contractAddress: '0x1742c81075031b8f173d2327e3479d1fc3feaa76',
+    decimals: 18
+  },
+  BITX: {
+    symbol: 'BITX',
+    name: 'BitScreenerToken',
+    contractAddress: '0x7a17267576318efb728bc4a0833e489a46ba138f',
+    decimals: 18
   }
 };
 

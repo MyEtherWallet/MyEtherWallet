@@ -30,7 +30,7 @@
           </div>
           <swap-currency-picker
             :currencies="fromArray"
-            :source="true"
+            :fromSource="true"
             page="SwapContainerFrom"
             @selectedCurrency="setFromCurrency"/>
           <div class="the-form amount-number">
@@ -59,7 +59,7 @@
           </div>
           <swap-currency-picker
             :currencies="toArray"
-            :source="false"
+            :fromSource="false"
             page="SwapContainerTo"
             @selectedCurrency="setToCurrency"/>
           <div class="the-form amount-number">
@@ -210,6 +210,8 @@ export default {
       currencyOptions: {},
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
+      // fromCurrency: 'OMG',
+      // toCurrency: 'ETH',
       fromValue: 1,
       toValue: 1,
       invalidFrom: 'none',
@@ -349,7 +351,7 @@ export default {
     } = this.currencyOptions.buildInitialCurrencyArrays();
     this.toArray = toArray;
     this.fromArray = fromArray;
-    this.currentAddress = this.$store.state.wallet.address;
+    this.currentAddress = this.$store.state.wallet.getAddressString();
     this.providerRatesRecieved = [this.simplexSwap.name]; //TODO centralize location of name strings for providers
   },
   methods: {
@@ -547,73 +549,87 @@ export default {
     },
     // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
-      if (this.validSwap) {
-        this.finalizingSwap = true;
-        this.swapDetails = await this.collectSwapDetails();
-        this.finalizingSwap = false;
-        if (
-          this.swapDetails.dataForInitialization &&
-          this.swapDetails.maybeToken
-        ) {
-          this.$refs.swapConfirm.$refs.swapconfirmation.show();
-        } else if (
-          this.swapDetails.dataForInitialization &&
-          !this.swapDetails.maybeToken
-        ) {
-          this.$refs.swapSendTo.$refs.swapconfirmation.show();
-        } else {
-          throw Error('Error while requesting finalized details from provider');
+      try {
+        if (this.validSwap) {
+          this.finalizingSwap = true;
+          this.swapDetails = await this.collectSwapDetails();
+          this.finalizingSwap = false;
+          if (
+            this.swapDetails.dataForInitialization &&
+            this.swapDetails.maybeToken
+          ) {
+            this.$refs.swapConfirm.$refs.swapconfirmation.show();
+          } else if (
+            this.swapDetails.dataForInitialization &&
+            !this.swapDetails.maybeToken
+          ) {
+            this.$refs.swapSendTo.$refs.swapconfirmation.show();
+          } else {
+            throw Error('Error while requesting finalized details from provider');
+          }
         }
+      } catch (e) {
+        this.$refs.swapConfirm.$refs.swapconfirmation.hide();
+        this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+        console.error(e);
       }
     },
     async collectSwapDetails() {
-      const tempDetails = this.providerList.find(entry => {
-        return entry.provider === this.selectedProvider.provider;
-      });
-      const swapDetails = {
-        provider: tempDetails.provider,
-        fromCurrency: tempDetails.fromCurrency,
-        fromValue: this.fromValue,
-        toValue: this.toValue,
-        toCurrency: tempDetails.toCurrency,
-        rate: tempDetails.rate,
-        minValue: tempDetails.minValue,
-        maxValue: tempDetails.maxValue,
-        toAddress: this.toAddress,
-        fromAddress: this.currentAddress,
-        timestamp: Date.now(),
-        maybeToken: false
-      };
+      try {
+        const tempDetails = this.providerList.find(entry => {
+          return entry.provider === this.selectedProvider.provider;
+        });
+        const swapDetails = {
+          provider: tempDetails.provider,
+          fromCurrency: tempDetails.fromCurrency,
+          fromValue: this.fromValue,
+          toValue: this.toValue,
+          toCurrency: tempDetails.toCurrency,
+          rate: tempDetails.rate,
+          minValue: tempDetails.minValue,
+          maxValue: tempDetails.maxValue,
+          toAddress: this.toAddress,
+          fromAddress: this.currentAddress,
+          timestamp: Date.now(),
+          maybeToken: false
+        };
 
-      return await this.startSwap(swapDetails);
+        return await this.startSwap(swapDetails);
+      } catch (e) {
+        throw e;
+      }
     },
     async startSwap(swapDetails) {
-      let details;
-      switch (swapDetails.provider) {
-        case this.kyberSwap.name:
-          swapDetails.maybeToken = true;
-          swapDetails.providerAddress = this.kyberSwap.getAddress();
-          details = await this.kyberSwap.createSwap(swapDetails);
-          break;
-        case this.changellySwap.name:
-          details = await this.changellySwap.createSwap(swapDetails);
-          swapDetails.maybeToken = web3.utils.isAddress(details.payinAddress);
-          swapDetails.providerAddress = details.payinAddress;
-          break;
-        case this.bitySwap.name:
-          details = await this.bitySwap.createSwap(swapDetails);
-          swapDetails.maybeToken = web3.utils.isAddress(
-            details.payment_address
-          );
-          swapDetails.providerAddress = details.payment_address;
-          break;
-        case this.simplexSwap.name:
-          details = await this.simplexSwap.createSwap(swapDetails);
-          break;
-      }
+      try {
+        let details;
+        switch (swapDetails.provider) {
+          case this.kyberSwap.name:
+            swapDetails.maybeToken = true;
+            swapDetails.providerAddress = this.kyberSwap.getAddress();
+            details = await this.kyberSwap.createSwap(swapDetails);
+            break;
+          case this.changellySwap.name:
+            details = await this.changellySwap.createSwap(swapDetails);
+            swapDetails.maybeToken = web3.utils.isAddress(details.payinAddress);
+            swapDetails.providerAddress = details.payinAddress;
+            break;
+          case this.bitySwap.name:
+            details = await this.bitySwap.createSwap(swapDetails);
+            swapDetails.maybeToken = web3.utils.isAddress(
+              details.payment_address
+            );
+            swapDetails.providerAddress = details.payment_address;
+            break;
+          case this.simplexSwap.name:
+            details = await this.simplexSwap.createSwap(swapDetails);
+            break;
+        }
 
-      swapDetails.dataForInitialization = details;
-      return swapDetails;
+        swapDetails.dataForInitialization = details;
+        return swapDetails;
+      } catch (e) {
+        throw e
+      }
     },
     // ================================ Provider Specific ============================================
     async getSimplexRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
