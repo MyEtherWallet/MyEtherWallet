@@ -48,9 +48,15 @@ export default {
       type: Boolean,
       default: true
     },
-    source: {
+    fromSource: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    defaultValue: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -93,10 +99,15 @@ export default {
     if (this.currencies) {
       this.currencies.forEach(curr => this.localCurrencies.push(curr));
     }
-    if (this.source) {
-      this.selectedCurrency = { name: 'Ether', symbol: 'ETH' };
-    } else {
-      this.selectedCurrency = { name: 'Bitcoin', symbol: 'BTC' };
+    if (this.defaultValue.symbol && this.defaultValue.name) {
+      console.log(typeof this.fromSource); // todo remove dev item
+      this.selectedCurrency = this.defaultValue;
+    } else if (typeof this.fromSource === 'boolean') {
+      if (this.fromSource) {
+        this.selectedCurrency = { name: 'Ether', symbol: 'ETH' };
+      } else {
+        this.selectedCurrency = { name: 'Bitcoin', symbol: 'BTC' };
+      }
     }
   },
   methods: {
