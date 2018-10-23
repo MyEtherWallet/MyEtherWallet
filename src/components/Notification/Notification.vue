@@ -18,12 +18,11 @@
       class="bootstrap-modal-wide nopadding"
       @show="countUnread">
       <template slot="modal-title">
-        <h5 class="modal-title"> {{ unreadCount > 1 ? 'Notifications':'Notification' }}
-          <div
-            v-show="unreadCount > 0"
-            class="notification-count"><span>{{ unreadCount }}</span>
-          </div>
-        </h5>
+        {{ unreadCount > 1 ? 'Notifications':'Notification' }}
+        <div
+          v-show="unreadCount > 0"
+          class="notification-count"><span>{{ unreadCount }}</span>
+        </div>
       </template>
       <div class="notification-item-container">
         <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0">
@@ -68,7 +67,6 @@ export default {
     }),
     sortedNotifications() {
       this.countUnread();
-
       if (
         !this.notifications[this.$store.state.wallet.getChecksumAddressString()]
       )
@@ -91,10 +89,13 @@ export default {
   },
   mounted() {
     if (
-      this.notifications[this.$store.state.wallet.getAddressString()] ===
-      undefined
+      this.notifications[
+        this.$store.state.wallet.getChecksumAddressString()
+      ] === undefined
     ) {
-      this.notifications[this.$store.state.wallet.getAddressString()] = [];
+      this.notifications[
+        this.$store.state.wallet.getChecksumAddressString()
+      ] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -104,18 +105,19 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[self.$store.state.wallet.getAddressString()] !==
-          undefined &&
-        self.notifications[self.$store.state.wallet.getAddressString()].length >
-          0
+        self.notifications[
+          self.$store.state.wallet.getChecksumAddressString()
+        ] !== undefined &&
+        self.notifications[self.$store.state.wallet.getChecksumAddressString()]
+          .length > 0
       ) {
-        self.notifications[self.$store.state.wallet.getAddressString()].map(
-          item => {
-            if (item.read === false) {
-              self.unreadCount++;
-            }
+        self.notifications[
+          self.$store.state.wallet.getChecksumAddressString()
+        ].map(item => {
+          if (item.read === false) {
+            self.unreadCount++;
           }
-        );
+        });
       }
     },
     showNotifications() {
@@ -130,7 +132,7 @@ export default {
         updatedNotif.expanded = false;
       }
       this.$store.dispatch('updateNotification', [
-        this.$store.state.wallet.getAddressString(),
+        this.$store.state.wallet.getChecksumAddressString(),
         idx,
         updatedNotif
       ]);
