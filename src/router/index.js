@@ -11,6 +11,7 @@ import InterfaceLayout from '@/layouts/InterfaceLayout';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout';
 import NotFoundLayout from '@/layouts/NotFoundLayout';
 import GettingStarted from '@/layouts/GettingStarted';
+import TxStatusLayout from '@/layouts/TxStatusLayout';
 import { router as routerConfig } from '@/configs/build';
 
 Vue.use(Router);
@@ -67,6 +68,11 @@ export default new Router({
       path: '/getting-started',
       name: 'GettingStarted',
       component: GettingStarted
+    },
+    {
+      path: '/tx-status',
+      name: 'TxStatusLayout',
+      component: TxStatusLayout
     },
     {
       path: '*',

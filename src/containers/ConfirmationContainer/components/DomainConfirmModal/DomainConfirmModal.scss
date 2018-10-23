@@ -17,8 +17,6 @@
 .qrcode-contents {
   text-align: center;
 
- 
-
   .qrcode-title {
     margin-bottom: 7px;
     margin-top: 7px;
@@ -154,10 +152,10 @@
           }
 
           .tooltip-box-2 {
-
             @media all and (max-width: $tablet-width) {
-              display: none;  
+              display: none;
             }
+
             margin-left: 15px;
             text-align: center;
           }

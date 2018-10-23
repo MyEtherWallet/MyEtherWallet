@@ -1,5 +1,5 @@
 @import '~@/scss/GlobalVariables';
-@media all and (max-width: $mobile-width) {
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
     background-color: $background-color-3;
     background-image: url('~@/assets/images/background/right.png'),
@@ -10,7 +10,7 @@
     padding: 60px 20px;
 
     .page-container {
-      padding: 0;
+      padding: 0 0;
 
       .content-width-limit {
         margin: 0 auto;
@@ -18,14 +18,9 @@
       }
 
       .page-header {
-        margin-bottom: 50px;
-        text-align: left;
+        margin-bottom: 70px;
+        text-align: center;
 
-        h1 {
-          font-size: 30px;
-          font-weight: 500;
-        }
-        
         p {
           margin: 0 auto;
           max-width: 700px;
@@ -46,4 +41,4 @@
       font-weight: 400;
     }
   }
-} // @media all and (max-width: $mobile-width)
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

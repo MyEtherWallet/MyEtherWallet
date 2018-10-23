@@ -43,8 +43,7 @@ export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
   },
-  props: {
-  },
+  props: {},
   data() {
     return {
       buttonCancel: {
@@ -65,13 +64,11 @@ export default {
       }
     };
   },
-  computed: {
-  },
-  methods: {
-  },
-  mounted(){
+  computed: {},
+  mounted() {
     //this.$refs.finalizeconfirmation.show();
-  }
+  },
+  methods: {}
 };
 </script>
 

@@ -32,7 +32,9 @@
           <p class="button-title">Detail Information</p>
         </div>
       </div>
-      <div :class="detailInfoOpen ? 'user-input-open' : ''" class="detail-info-data">
+      <div 
+        :class="detailInfoOpen ? 'user-input-open' : ''" 
+        class="detail-info-data">
         <div class="padding-block">
           <div class="user-messages">
             <p>

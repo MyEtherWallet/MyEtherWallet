@@ -10,15 +10,23 @@
           <ul>
             <li 
               v-for="info in alreadyTakenDomainInfo" 
-              @click="info.open = !info.open"
-              :key="info.key" 
-              class="domain-info">
+              :key="info.key"
+              class="domain-info" 
+              @click="info.open = !info.open">
               <p class="title">
                 {{ info.title }}
-                <i v-if="!info.open" class="fa fa-angle-down" aria-hidden="true"></i>
-                <i v-if="info.open" class="fa fa-angle-up" aria-hidden="true"></i>
+                <i 
+                  v-if="!info.open" 
+                  class="fa fa-angle-down" 
+                  aria-hidden="true"/>
+                <i 
+                  v-if="info.open" 
+                  class="fa fa-angle-up" 
+                  aria-hidden="true"/>
               </p>
-              <p v-if="info.open" class="data">{{ info.data }}</p>
+              <p 
+                v-if="info.open" 
+                class="data">{{ info.data }}</p>
             </li>
           </ul>
         </div>

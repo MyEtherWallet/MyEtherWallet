@@ -34,11 +34,10 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 
 export default {
-  props: {
-  },
   components: {
     'interface-bottom-text': InterfaceBottomText
   },
+  props: {},
   data() {
     return {
       buttonConfirm: {

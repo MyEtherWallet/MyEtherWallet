@@ -95,7 +95,7 @@
     .button-block {
       display: flex;
       justify-content: center;
-      @media all and (max-width: 370px){
+      @media all and (max-width: 370px) {
         display: block;
         .the-submit-button {
           width: 100%;
@@ -109,7 +109,6 @@
       .reveal-bid-button {
         width: 100%;
       }
-
     }
   }
 } // @media all and (max-width: $mobile-width)
