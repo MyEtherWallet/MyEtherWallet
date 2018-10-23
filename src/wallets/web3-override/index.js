@@ -86,19 +86,19 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
         });
     }
   };
-  web3.defaultAccount = wallet.getChecksumAddressString();
-  web3.eth.defaultAccount = wallet.getChecksumAddressString();
+  web3.defaultAccount = wallet.getAddressString().toLowerCase();
+  web3.eth.defaultAccount = wallet.getAddressString().toLowerCase();
   const sTxMethod = web3.eth.sendTransaction_
     ? 'sendTransaction_'
     : 'sendTransaction';
   web3.eth[sTxMethod].method.accounts = {
     wallet: {
       length: 1,
-      [wallet.getChecksumAddressString()]: { privateKey: true }
+      [wallet.getAddressString().toLowerCase()]: { privateKey: true }
     },
     ...methodOverrides
   };
-  web3.eth.getAccounts = wallet.getChecksumAddressString;
+
   if (!web3.eth.sendTransaction_)
     web3.eth.sendTransaction_ = web3.eth.sendTransaction;
   web3.eth.signTransaction = methodOverrides.signTransaction;
