@@ -107,7 +107,7 @@ export default {
   computed: {
     fromAddress() {
       if (this.$store.state.wallet) {
-        return this.$store.state.wallet.getAddressString();
+        return this.$store.state.wallet.getChecksumAddressString();
       }
     }
   },
@@ -252,8 +252,35 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
-    sendBatchCallback(x) {
-      console.log(x);
+    async sendBatchCallback(err, response) {
+      if (err !== null) {
+        this.$store.dispatch('addNotification', [
+          this.fromAddress,
+          err,
+          'Transaction Error'
+        ]);
+        return;
+      }
+
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        response,
+        'Transaction Hash'
+      ]);
+
+      const pollReceipt = setInterval(() => {
+        this.$store.state.web3.eth.getTransactionReceipt(response).then(res => {
+          if (res !== null) {
+            this.$store.dispatch('addNotification', [
+              this.fromAddress,
+              res,
+              'Transaction Receipt'
+            ]);
+            this.showSuccessModal('Transaction sent!', 'Okay');
+            clearInterval(pollReceipt);
+          }
+        });
+      }, 500);
     },
     async sendBatchTransactions() {
       const web3 = this.$store.state.web3;
@@ -261,9 +288,9 @@ export default {
       for (let i = 0; i < this.signedArray.length; i++) {
         batch.add(
           web3.eth.sendSignedTransaction.request(
-            this.signedArray[i].rawTransaction
-          ),
-          this.sendBatchCallback
+            this.signedArray[i].rawTransaction,
+            this.sendBatchCallback
+          )
         );
       }
       batch.execute();
