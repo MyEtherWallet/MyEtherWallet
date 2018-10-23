@@ -141,7 +141,6 @@ export default {
         data: data,
         value: 0
       };
-
       this.$store.state.web3.eth.sendTransaction(raw);
     },
     async updateResolver(newResolverAddr) {
