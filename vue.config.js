@@ -28,11 +28,13 @@ const webpackConfig = {
   ]
 };
 if (process.env.NODE_ENV === 'production') {
-  webpackConfig.plugins.push(new UnusedFilesWebpackPlugin({
+  webpackConfig.plugins.push(
+    new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
       failOnUnused: true,
       globOptions: {
         ignore: [
+          'src/assets/images/mew-screen.png',
           'src/assets/images/flags/countries.json',
           'src/assets/images/networks/esn.svg',
           'src/translations/README.md',
@@ -41,7 +43,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/wallets/hardware/deterministicWalletPaths.js'
         ]
       }
-    }));
+    })
+  );
 }
 module.exports = {
   baseUrl: './',
