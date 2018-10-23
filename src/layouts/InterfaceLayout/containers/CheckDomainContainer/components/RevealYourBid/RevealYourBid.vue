@@ -13,6 +13,13 @@
           </div>
           <div class="closing-date-time">09/08/2018 (15:34 GMT - 12:43 PDT)</div>
         </div>
+        <div class="auction-time">
+          <div class="time-left">
+            <img src="@/assets/images/icons/sand-timer.png">
+            Reveal bids <span>2 Days 02:22:43</span>
+          </div>
+          <div class="closing-date-time">09/08/2018 (15:34 GMT - 12:43 PDT)</div>
+        </div>
         <div class="dropdown-information">
           <dropdown-bid-info />
         </div>
@@ -31,6 +38,13 @@
             @click.native="modalStatusDomainTaken = 'show'"
           />
         </div>
+        <div class="button-block">
+          <standard-button 
+            :options="buttonRevealBid"
+            class="reveal-bid-button"
+            @click.native="modalStatusDomainTaken = 'show'"
+          />
+        </div>
         <interface-bottom-text
           :link-text="$t('interface.etherscanIO')"
           :question="$t('interface.ethNodeProvidedBy')"
@@ -40,6 +54,7 @@
 
     <domain-confirm-modal />
     <success-modal />
+    <json-string-modal />
   </div>
 </template>
 
@@ -48,17 +63,26 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import DropdownBidInfo from '../DropdownBidInfo';
 import DomainConfirmModal from '@/containers/ConfirmationContainer/components/DomainConfirmModal';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
+import JsonStringModal from '../../../../components/JsonStringModal';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'dropdown-bid-info': DropdownBidInfo,
     'domain-confirm-modal': DomainConfirmModal,
-    'success-modal': SuccessModal
+    'success-modal': SuccessModal,
+    'json-string-modal': JsonStringModal
   },
   props: {},
   data() {
     return {
+      buttonRevealBid: {
+        title: 'Reveal Bid',
+        buttonStyle: 'green',
+        rightArrow: false,
+        fullWidth: false,
+        isThisMobileBottomButton: false
+      },
       buttonJsonString: {
         title: 'JSON String',
         buttonStyle: 'green-border',

@@ -6,8 +6,12 @@
 
 
     <reveal-your-bid />
+    <p>--------------------------------------------------</p>
     <domain-unavailable />
+    <p>--------------------------------------------------</p>
     <domain-available />
+    <p>--------------------------------------------------</p>
+    <domain-not-available-yet />
 
   </div>
 </template>
@@ -17,13 +21,15 @@ import BackButton from '../../components/BackButton';
 import DomainAvailable from './components/DomainAvailable';
 import DomainUnavailable from './components/DomainUnavailable';
 import RevealYourBid from './components/RevealYourBid';
+import DomainNotAvailableYet from './components/DomainNotAvailableYet';
 
 export default {
   components: {
     'back-button': BackButton,
     'domain-available': DomainAvailable,
     'domain-unavailable': DomainUnavailable,
-    'reveal-your-bid': RevealYourBid
+    'reveal-your-bid': RevealYourBid,
+    'domain-not-available-yet': DomainNotAvailableYet
   },
   props: {},
   data() {

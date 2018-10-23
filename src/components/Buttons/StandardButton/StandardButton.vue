@@ -5,8 +5,8 @@
      
     <div :class="buttonClass">
       <div
-        :class="options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''" 
-        class="the-button-box">{{ options.title }}
+        :class="[(options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''), (options.noMinWidth ? 'no-min-width' : '')]" 
+        class="the-button-box ">{{ options.title }}
         <img 
           v-if="options.loadingIcon"
           class="loading-left" 

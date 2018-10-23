@@ -1,0 +1,18 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .container__content {
+    padding: 40px;
+  }
+
+  .block__content .domain-availability {
+    font-size: 25px;
+    font-weight: 500;
+    color: $yellow;
+    margin-bottom: 15px;
+  }
+
+  .bottom-text-block {
+    margin-bottom: 20px;
+  }
+
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

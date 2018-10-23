@@ -9,10 +9,12 @@
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
-            <img 
-              class="currency-icon" 
-              src="~@/assets/images/currency/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3>
+            <div class="amount-box">
+              <img 
+                class="currency-icon" 
+                src="~@/assets/images/currency/eth.svg">
+              <h3>1.00000 <span>ETH</span></h3>
+            </div>
             <div class="address-info">
               <p class="address-title">From Address</p>
               <p>0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D{{ from }}</p>
@@ -24,10 +26,12 @@
           </div>
           <div
             class="tx-data tx-to">
-            <img 
-              class="currency-icon" 
-              src="~@/assets/images/currency/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3>
+            <div class="amount-box">
+              <img 
+                class="currency-icon" 
+                src="~@/assets/images/currency/btc.svg">
+              <h3>0.006345 <span>BTC</span></h3>
+            </div>
             <div class="address-info">
               <p class="address-title">To Address</p>
               <p>1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9{{ to }}</p>

@@ -4,12 +4,20 @@
   max-width: 700px;
 }
 
+.amount-box {
+  display: flex;
+  align-items: center;
+}
+
 .currency-icon {
-  height: 40px;
+  height: 30px;
+  margin-right: 10px;
 }
 
 .qrcode-contents {
   text-align: center;
+
+ 
 
   .qrcode-title {
     margin-bottom: 7px;
@@ -44,12 +52,12 @@
         padding: 20px;
 
         h3 {
-          font-size: 20px;
-          margin-top: 10px;
+          font-size: 25px;
+          //margin-top: 10px;
 
           span {
             color: $text-color-4;
-            font-size: 20px;
+            font-size: 25px;
           }
         }
 
@@ -75,6 +83,10 @@
 
       .direction {
         transform: rotate(90deg);
+
+        img {
+          height: 20px;
+        }
       }
 
       .tx-from {
@@ -124,17 +136,28 @@
 
       .flex-center-align {
         display: flex;
+        @media all and (max-width: $mobile-width) {
+          display: block;
+        }
 
         .button-with-helper {
           align-items: center;
           display: flex;
           margin: 0 auto;
 
+          @media all and (max-width: $mobile-width) {
+            display: block;
+          }
+
           .submit-button {
             display: inline-block;
           }
 
           .tooltip-box-2 {
+
+            @media all and (max-width: $tablet-width) {
+              display: none;  
+            }
             margin-left: 15px;
             text-align: center;
           }

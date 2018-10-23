@@ -1,0 +1,34 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-content-container {
+  padding: 20px;
+}
+
+.user-message {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.button-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+
+  @media all and (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
+
+  >* {
+
+  }
+
+  .button-cancel {
+
+  }
+
+  .button-confirm {
+
+  }
+}
+
+

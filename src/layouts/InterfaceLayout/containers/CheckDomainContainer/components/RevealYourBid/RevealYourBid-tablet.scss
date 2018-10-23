@@ -90,7 +90,8 @@
     text-align: center;
 
     .button-block {
-      >* {
+      
+      > * {
         margin: 5px;
       }
     }

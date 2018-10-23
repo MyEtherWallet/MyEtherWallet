@@ -14,7 +14,9 @@
       <div class="the-button-container">
         <div 
           v-if="options.buttonRandom == true" 
-          class="the-button random"><i class="fa fa-refresh" aria-hidden="true"></i>Random</div>
+          class="the-button random"><i 
+            class="fa fa-refresh" 
+            aria-hidden="true"/>Random</div>
 
         <div 
           v-if="options.buttonClear == true" 

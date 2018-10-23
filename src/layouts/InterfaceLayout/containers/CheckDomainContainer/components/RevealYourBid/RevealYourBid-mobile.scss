@@ -8,7 +8,7 @@
     font-size: 25px;
     font-weight: 500;
     color: $light-blue-1;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 
     p {
       font-weight: 600;
@@ -25,7 +25,7 @@
     background-color: $light-grey-1;
     display: block;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-radius: 4px;
 
     .time-left {
@@ -39,7 +39,6 @@
       }
 
       span {
-
         color: $red-1;
         font-weight: 500;
         margin-left: auto;
@@ -90,13 +89,27 @@
   }
 
   .block__submit-button {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: center;
 
     .button-block {
-      >* {
+      display: flex;
+      justify-content: center;
+      @media all and (max-width: 370px){
+        display: block;
+        .the-submit-button {
+          width: 100%;
+        }
+      }
+
+      > * {
         margin: 5px;
       }
+
+      .reveal-bid-button {
+        width: 100%;
+      }
+
     }
   }
 } // @media all and (max-width: $mobile-width)

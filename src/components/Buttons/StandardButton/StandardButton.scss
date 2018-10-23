@@ -78,6 +78,10 @@ $blue-border-button-background--click: #f2f4fd;
   display: block;
   @include btn-mixin-2();
 
+  &.no-min-width {
+    min-width: initial;
+  }
+
   &.mobile-bottom-button {
     @media all and (max-width: $mobile-width) {
       border-radius: 0;

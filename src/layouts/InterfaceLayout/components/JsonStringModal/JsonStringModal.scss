@@ -1,0 +1,23 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-content-container {
+  padding: 20px;
+}
+
+
+@media all and (max-width: $mobile-width) {
+  .modal-content-container {
+    padding: 20px;
+  }
+}
+
+.button-block {
+  margin-top: 20px;
+}
+
+.confirm-button {
+  width: 100%;
+}
+
+
+

@@ -1,6 +1,5 @@
 <template>
   <div class="bid-info">
-
     <div>
       <div class="info-button">
         <div class="title-block">
@@ -8,7 +7,7 @@
           <p class="button-title">Bid Information</p>
         </div>
         <div class="functions">
-          <p @click="bidInfoOpen = !bidInfoOpen">Edit</p>
+          <p @click="bidInfoOpen = !bidInfoOpen; detailInfoOpen = !detailInfoOpen">Edit</p>
         </div>
       </div>
       <div 
@@ -33,7 +32,7 @@
           <p class="button-title">Detail Information</p>
         </div>
       </div>
-      <div class="user-input">
+      <div :class="detailInfoOpen ? 'user-input-open' : ''" class="detail-info-data">
         <div class="padding-block">
           <div class="user-messages">
             <p>
@@ -117,7 +116,8 @@ export default {
   },
   data() {
     return {
-      bidInfoOpen: false,
+      bidInfoOpen: true,
+      detailInfoOpen: false,
       inputActualBidAmount: {
         title: 'Actual Bid Amount',
         value: '',
