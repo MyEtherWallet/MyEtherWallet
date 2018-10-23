@@ -38,7 +38,7 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
           value: arr[i].value
         };
         arr[i].nonce = await (arr[i].nonce === undefined
-          ? web3.eth.getTransactionCount(wallet.getAddressString())
+          ? web3.eth.getTransactionCount(wallet.getChecksumAddressString())
           : arr[i].nonce);
         arr[i].nonce += i;
         arr[i].gas = await (arr[i].gas === undefined
@@ -63,7 +63,7 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
         value: tx.value
       };
       tx['nonce'] = await (tx['nonce'] === undefined
-        ? web3.eth.getTransactionCount(wallet.getAddressString())
+        ? web3.eth.getTransactionCount(wallet.getChecksumAddressString())
         : tx.nonce);
       tx['gas'] = await (tx['gas'] === undefined
         ? web3.eth.estimateGas(localTx)
@@ -86,18 +86,19 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
         });
     }
   };
-  web3.defaultAccount = wallet.getAddressString().toLowerCase();
-  web3.eth.defaultAccount = wallet.getAddressString().toLowerCase();
+  web3.defaultAccount = wallet.getChecksumAddressString();
+  web3.eth.defaultAccount = wallet.getChecksumAddressString();
   const sTxMethod = web3.eth.sendTransaction_
     ? 'sendTransaction_'
     : 'sendTransaction';
   web3.eth[sTxMethod].method.accounts = {
     wallet: {
       length: 1,
-      [wallet.getAddressString().toLowerCase()]: { privateKey: true }
+      [wallet.getChecksumAddressString()]: { privateKey: true }
     },
     ...methodOverrides
   };
+  web3.eth.getAccounts = wallet.getChecksumAddressString;
   if (!web3.eth.sendTransaction_)
     web3.eth.sendTransaction_ = web3.eth.sendTransaction;
   web3.eth.signTransaction = methodOverrides.signTransaction;

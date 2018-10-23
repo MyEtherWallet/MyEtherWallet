@@ -38,7 +38,7 @@
             <button
               :class="!$store.state.web3.utils.isAddress(transferTo) ? 'disabled': ''"
               type="submit"
-              @click.prevent="">Transfer</button>
+              @click.prevent="transferDomain(transferTo)">Transfer</button>
           </div>
         </form>
       </div>
@@ -64,7 +64,7 @@ export default {
       type: Function,
       default: function() {}
     },
-    transferEns: {
+    transferDomain: {
       type: Function,
       default: function() {}
     }
