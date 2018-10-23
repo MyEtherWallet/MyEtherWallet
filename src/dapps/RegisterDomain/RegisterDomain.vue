@@ -38,7 +38,7 @@ import RegistrarAbi from '@/helpers/registrarAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
-import * as uts46 from 'idna-uts46';
+import normalise from '@/helpers/normalise';
 
 const ETH_TLD = '.eth';
 
@@ -105,12 +105,6 @@ export default {
       );
       return registrarAddress;
     },
-    normalise(str) {
-      return uts46.toUnicode(str, {
-        useStd3ASCII: true,
-        transitional: false
-      });
-    },
     async checkDomain() {
       const web3 = this.$store.state.web3;
       this.loading = true;
@@ -170,12 +164,12 @@ export default {
         this.domainNameErr = false;
       }
       try {
-        this.normalise(value);
+        normalise(value);
       } catch (e) {
         this.domainNameErr = true;
         return;
       }
-      this.domainName = this.normalise(value);
+      this.domainName = normalise(value);
     },
     async getMoreInfo(deedOwner) {
       let owner;
