@@ -19,7 +19,7 @@ const errorLogger = debugLogger('v5:error');
  */
 export default class Kyber {
   constructor(props = {}) {
-    this.name = 'kybernetwork';
+    this.name = Kyber.getName();
     this.network = props.network || networkSymbols.ETH;
     this.hasTokens = 0;
     this.gasLimit = 300000;
@@ -37,6 +37,10 @@ export default class Kyber {
     this.getMainNetAddress(this.kyberNetworkAddress);
     this.setupKyberContractObject();
     this.rates = new Map();
+  }
+
+  static getName(){
+    return 'kybernetwork'
   }
 
   get currencies() {
@@ -128,7 +132,6 @@ export default class Kyber {
     });
     this.hasTokens =
       Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
-    console.log('keyber retrieve rates:', this.hasTokens); // todo remove dev item
   }
 
   getPreliminaryRate(fromToken, toToken) {
@@ -163,7 +166,6 @@ export default class Kyber {
   async getSupportedTokenList() {
     try {
       const tokenList = await getTokenList(this.network);
-      console.log(tokenList); // todo remove dev item
       this.tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
         if (
@@ -179,7 +181,6 @@ export default class Kyber {
       }
       this.hasTokens =
         Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
-      console.log('keyber getSupportedTokenList:', this.hasTokens); // todo remove dev item
     } catch (e) {
       errorLogger(e);
     }
@@ -194,7 +195,9 @@ export default class Kyber {
 
   getTokenAddress(token) {
     try {
-      return this.tokenDetails[token].contractAddress;
+      return this.web3.utils.toChecksumAddress(
+        this.tokenDetails[token].contractAddress
+      );
     } catch (e) {
       throw Error(
         `Token [${token}] not included in kyber network list of tokens`
@@ -236,6 +239,10 @@ export default class Kyber {
     return await this.kyberNetworkContract.methods
       .getBalance(this.getTokenAddress(fromToken), userAddress)
       .call();
+  }
+
+  async getKyberMaxGas() {
+    return await this.kyberNetworkContract.methods.maxGasPrice().call();
   }
 
   hasCachedRate(fromToken, toToken) {
@@ -298,7 +305,9 @@ export default class Kyber {
     return nineFivePct.gt(numberAsBN);
   }
 
-  kyberNetworkState() {}
+  async kyberNetworkState() {
+    return await this.kyberNetworkContract.methods.enabled().call();
+  }
 
   approveKyber(fromToken, fromValueWei) {
     // const weiValue = this.convertToTokenWei(fromToken, fromValue);
@@ -306,9 +315,15 @@ export default class Kyber {
       ERC20,
       this.getTokenAddress(fromToken)
     );
-    return contract.methods
+    const data = contract.methods
       .approve(this.getKyberNetworkAddress(), fromValueWei)
       .encodeABI();
+
+    return {
+      to: this.getTokenAddress(fromToken),
+      value: 0,
+      data
+    };
   }
 
   // not a transaction, just a read-only call
@@ -340,22 +355,20 @@ export default class Kyber {
         userAddress
       );
       if (approve && reset) {
-        return new Map([
-          ['tokenAddress', this.getTokenAddress(fromToken)],
-          ['reset', this.approveKyber(fromToken, 0, userAddress)],
-          ['approve', this.approveKyber(fromToken, fromValueWei, userAddress)]
+        return new Set([
+          this.approveKyber(fromToken, 0, userAddress),
+          this.approveKyber(fromToken, fromValueWei, userAddress)
         ]);
       } else if (approve) {
         return new Map([
-          ['tokenAddress', this.getTokenAddress(fromToken)],
-          ['approve', this.approveKyber(fromToken, fromValueWei, userAddress)]
+          this.approveKyber(fromToken, fromValueWei, userAddress)
         ]);
         // {
         //   tokenAddress: this.getTokenAddress(fromToken),
         //   approve: this.approveKyber(fromToken, fromValue, userAddress)
         // };
       }
-      return new Map();
+      return new Set();
     }
     const reason = !userCap ? 'user cap value' : 'current token balance';
     const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
@@ -390,7 +403,7 @@ export default class Kyber {
     const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
     console.log(this.getTokenAddress(toToken)); // todo remove dev item
     // console.log('fromValue: ' , this.convertToTokenWei(fromToken, fromValue)); // todo remove dev item
-    return this.kyberNetworkContract.methods
+    const data = this.kyberNetworkContract.methods
       .trade(
         await this.getTokenAddress(fromToken),
         fromValueWei,
@@ -401,6 +414,19 @@ export default class Kyber {
         walletId
       )
       .encodeABI();
+
+    if (Object.values(networkSymbols).includes(fromToken)) {
+      return {
+        to: this.getKyberNetworkAddress(),
+        value: fromValueWei,
+        data
+      };
+    }
+    return {
+      to: this.getKyberNetworkAddress(),
+      value: 0,
+      data
+    };
   }
 
   async generateDataForTransactions(
@@ -427,8 +453,7 @@ export default class Kyber {
         userAddress
       );
       // if (Array.isArray(prepareSwapTxData)) {
-      prepareSwapTxData.set(
-        'swap',
+      prepareSwapTxData.add(
         await this.getTradeData(
           fromToken,
           toToken,

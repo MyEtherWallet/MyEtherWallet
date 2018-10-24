@@ -65,8 +65,15 @@ const openOrder = orderInfo => {
   return Promise.resolve({ orderInfo });
 };
 
-const getStatus = orderInfo => {
-  return Promise.resolve({ orderInfo });
+const getStatus = async (orderId, network) => {
+  if (changellyAddresses[network]) {
+    const results = await post(buildPath(changellyAddresses[network].status), {
+      orderid: orderId
+    });
+    console.log(results); // todo remove dev item
+    return results.result.result;
+  }
+  return Promise.resolve(-1);
 };
 
 const login = () => {

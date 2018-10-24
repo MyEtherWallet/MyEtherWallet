@@ -4,14 +4,15 @@ import {
   validateAddress,
   createTransaction,
   getRate,
-  getMin
+  getMin,
+  getStatus
 } from './call';
 
 import { ChangellyCurrencies } from './config';
 
 export default class Changelly {
   constructor(props = {}) {
-    this.name = 'changelly';
+    this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
     this.hasTokens = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
@@ -20,6 +21,69 @@ export default class Changelly {
     this.tokenDetails = {};
     this.requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
     this.getSupportedCurrencies(this.network);
+  }
+
+  static getName() {
+    return 'changelly';
+  }
+
+  static parseOrder(order) {
+    console.log('parseOrder', order); // todo remove dev item
+    return {
+      orderId: order.id,
+      statusId: undefined,
+      sendToAddress: order.payinAddress,
+      recValue: order.amountExpectedTo,
+      sendValue: order.amountExpectedFrom,
+      status: order.status,
+      timestamp: order.createdAt,
+      validFor: 600 // Think it may be valid for longer, but I need to ask
+    };
+  }
+
+  static async getOrderStatus(swapDetails){
+    const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
+    return await getStatus(parsed.orderId);
+  }
+
+  statusUpdater(swapDetails) {
+    return () => {
+      let currentStatus;
+      const calculateTimeRemaining = (validFor, timestamp) => {
+        return (
+          validFor -
+          parseInt(
+            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+          )
+        );
+      };
+      const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
+      console.log('parsed', parsed); // todo remove dev item
+      let timeRemaining = calculateTimeRemaining(
+        parsed.validFor,
+        parsed.timestamp
+      );
+      console.log('timeRemaining', timeRemaining); // todo remove dev item
+      let checkStatus = setInterval(async () => {
+        currentStatus = await getStatus({
+          orderid: parsed.orderId
+        });
+        console.log('currentStatus', currentStatus); // todo remove dev item
+        clearInterval(checkStatus);
+      }, 1000);
+    };
+  }
+
+  static statuses(data){
+    const statuses = {
+      new: 1,
+      waiting: 2,
+      confirming: 3,
+      confirmed: 10,
+      finished: 0,
+      failed: -1
+    }
+    return statuses[data.status];
   }
 
   get validNetwork() {
@@ -73,7 +137,10 @@ export default class Changelly {
       this.tokenDetails = {};
       this.currencyIconList = {};
       for (let i = 0; i < currencyList.length; i++) {
-        if (!this.requireExtraId.includes(currencyList[i].name.toUpperCase())) {
+        if (
+          !this.requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
+          currencyList[i].enabled
+        ) {
           const details = {
             symbol: currencyList[i].name.toUpperCase(),
             name: currencyList[i].fullName

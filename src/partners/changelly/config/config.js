@@ -4,7 +4,8 @@ const changellyAddresses = {
     rate: '/getExchangeAmount',
     min: '/getMinAmount',
     validate: '/validateAddress',
-    createTransaction: '/createTransaction'
+    createTransaction: '/createTransaction',
+    status: '/statusChangelly'
   }
   // ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
 };
