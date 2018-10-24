@@ -21,6 +21,7 @@
       :step="step"
       :send-bid="sendBid"
       :reveal-bid="revealBid"
+      :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
@@ -37,6 +38,7 @@ import RegistrarAbi from '@/helpers/registrarAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
+import * as uts46 from 'idna-uts46';
 
 const ETH_TLD = '.eth';
 
@@ -62,7 +64,8 @@ export default {
       raw: {},
       highestBidder: '',
       contractInitiated: false,
-      step: 1
+      step: 1,
+      domainNameErr: false
     };
   },
   mounted() {
@@ -94,12 +97,19 @@ export default {
         this.registrarAddress
       );
       this.contractInitiated = true;
+      this.domainNameErr = false;
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.$store.state.ens.owner(
         ETH_TLD.replace('.', '')
       );
       return registrarAddress;
+    },
+    normalise(str) {
+      return uts46.toUnicode(str, {
+        useStd3ASCII: true,
+        transitional: false
+      });
     },
     async checkDomain() {
       const web3 = this.$store.state.web3;
@@ -120,7 +130,6 @@ export default {
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
-      this.highestBidder = unit.fromWei(res[4], 'ether').toString();
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
@@ -145,12 +154,28 @@ export default {
           break;
         case '4':
           this.loading = false;
+          this.highestBidder = unit.fromWei(res[4], 'ether').toString();
           this.$router.push({ path: 'register-domain/reveal' });
           break;
       }
     },
     updateDomainName(value) {
-      this.domainName = value;
+      if (
+        value.substr(0, 2) === '0x' ||
+        value.length < 7 ||
+        value.indexOf('.') !== -1
+      ) {
+        this.domainNameErr = true;
+      } else {
+        this.domainNameErr = false;
+      }
+      try {
+        this.normalise(value);
+      } catch (e) {
+        this.domainNameErr = true;
+        return;
+      }
+      this.domainName = this.normalise(value);
     },
     async getMoreInfo(deedOwner) {
       let owner;
@@ -204,7 +229,6 @@ export default {
       } else if (type === 'reveal') {
         contractReference = this.auctionRegistrarContract.methods.unsealBid(
           domainName,
-          address,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
         );
