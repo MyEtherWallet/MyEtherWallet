@@ -13,6 +13,10 @@
       :gas="gasLimit"
       :data="data"
       :nonce="nonce"/>
+    <confirm-collection-modal
+      ref="confirmCollectionModal"
+      :send-batch-transactions="sendBatchTransactions"
+      :signed-array="signedArray"/>
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -46,12 +50,14 @@
 import * as unit from 'ethjs-unit';
 import BN from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
+import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 
 export default {
   components: {
     'confirm-modal': ConfirmModal,
+    'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
     'confirm-sign-modal': ConfirmSignModal
   },
@@ -94,13 +100,14 @@ export default {
       linkMessage: 'OK',
       dismissed: true,
       web3WalletHash: '',
-      web3WalletRes: ''
+      web3WalletRes: '',
+      signedArray: []
     };
   },
   computed: {
     fromAddress() {
       if (this.$store.state.wallet) {
-        return this.$store.state.wallet.getAddressString();
+        return this.$store.state.wallet.getChecksumAddressString();
       }
     }
   },
@@ -163,6 +170,18 @@ export default {
       );
     });
 
+    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
+      const newArr = [];
+      this.isHardwareWallet = isHardware;
+      for (let i = 0; i < tx.length; i++) {
+        this.$store.state.wallet.signTransaction(tx[i]).then(_response => {
+          newArr.push(_response);
+        });
+      }
+      this.signedArray = newArr;
+      this.confirmationCollectionModalOpen();
+    });
+
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
@@ -188,6 +207,10 @@ export default {
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
+    },
+    confirmationCollectionModalOpen() {
+      window.scrollTo(0, 0);
+      this.$refs.confirmCollectionModal.$refs.confirmCollection.show();
     },
     confirmationOfflineGenerateModalOpen() {
       window.scrollTo(0, 0);
@@ -229,6 +252,49 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
+    async sendBatchCallback(err, response) {
+      if (err !== null) {
+        this.$store.dispatch('addNotification', [
+          this.fromAddress,
+          err,
+          'Transaction Error'
+        ]);
+        return;
+      }
+
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        response,
+        'Transaction Hash'
+      ]);
+
+      const pollReceipt = setInterval(() => {
+        this.$store.state.web3.eth.getTransactionReceipt(response).then(res => {
+          if (res !== null) {
+            this.$store.dispatch('addNotification', [
+              this.fromAddress,
+              res,
+              'Transaction Receipt'
+            ]);
+            this.showSuccessModal('Transaction sent!', 'Okay');
+            clearInterval(pollReceipt);
+          }
+        });
+      }, 500);
+    },
+    async sendBatchTransactions() {
+      const web3 = this.$store.state.web3;
+      const batch = new web3.eth.BatchRequest();
+      for (let i = 0; i < this.signedArray.length; i++) {
+        batch.add(
+          web3.eth.sendSignedTransaction.request(
+            this.signedArray[i].rawTransaction,
+            this.sendBatchCallback
+          )
+        );
+      }
+      batch.execute();
+    },
     sendTx() {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
@@ -254,6 +320,9 @@ export default {
       this.messageToSign = '';
       this.signedMessage = '';
       this.messageToSign = '';
+      this.signedArray = [];
+      this.web3WalletHash = '';
+      this.web3WalletRes = '';
     }
   }
 };
