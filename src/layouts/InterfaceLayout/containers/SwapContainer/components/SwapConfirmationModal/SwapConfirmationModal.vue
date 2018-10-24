@@ -35,8 +35,8 @@
       <detail-information :details="detailInfo"/>
 
       <div
-        class="confirm-send-button"
-        @click="sendTransaction">
+        :class="[swapReady ? '': 'disable', 'confirm-send-button']"
+        @click="signAndTransmitTransaction">
         <button-with-qrcode
           :qrcode="qrcode"
           buttonname="Confirm and Send"/>
@@ -60,7 +60,7 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-
+// TODO see: https://github.com/MyEtherWallet/MyEtherWallet/blob/89282539248349de09ba64b3171408a23d189460/src/dapps/RegisterDomain/RegisterDomain.vue
 export default {
   components: {
     'detail-information': DetailInformation,
@@ -82,6 +82,9 @@ export default {
   data() {
     return {
       isToken: false,
+      preparedSwap: {},
+      finalDetails: {},
+      swapReady: false,
       currencyIcons: {
         BTC: iconBtc,
         ETH: iconEth
@@ -130,6 +133,7 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
+      console.log('modal watcher:', newValue); // todo remove dev item
       this.fromAddress = {
         image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,
@@ -142,6 +146,7 @@ export default {
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
+      this.swapStarted(newValue)
     }
   },
   methods: {
@@ -150,8 +155,8 @@ export default {
       }
     },
     sendTransaction() {
-      this.swapStarted(this.swapDetails);
-      this.$refs.swapconfirmation.hide();
+      // this.swapStarted(this.swapDetails);
+      // this.$refs.swapconfirmation.hide();
       // this.$emit('swapStarted');
     },
     createTokenTransferData(fromAddress, amount, tokenDetails) {
@@ -186,158 +191,111 @@ export default {
         return '0x';
       }
     },
-    swapStarted(swapDetails) {
+    async swapStarted(swapDetails) {
+      this.swapReady = false;
+      this.preparedSwap = {};
+      console.log('swapDetails', swapDetails); // todo remove dev item
       if (swapDetails.dataForInitialization) {
         switch (swapDetails.provider) {
           case 'changelly':
-            this.useChangelly(swapDetails);
+            this.preparedSwap = await this.useChangelly(swapDetails);
+            this.swapReady = true;
             break;
           case 'bity':
-            this.useBity(swapDetails);
+            this.preparedSwap = await this.useBity(swapDetails);
+            this.swapReady = true;
             break;
           case 'kybernetwork':
-            this.useKyber(swapDetails);
+            this.preparedSwap = await this.useKyber(swapDetails);
+            this.swapReady = true;
             break;
         }
+
       }
     },
+    signAndTransmitTransaction() {
+      console.log(this.swapReady); // todo remove dev item
+      if(!this.swapReady) return;
+      console.log('data for tx(s): ', this.preparedSwap); // todo remove dev item
+      if (Array.isArray(this.preparedSwap)) {
+        this.$store.state.web3.eth.sendBatchTransactions(this.preparedSwap);
+        // this.$store.dispatch('addSwapTransaction', [
+        //   this.currentAddress,
+        //   swapDetails
+        // ]);
+      } else {
+        if (Object.keys(this.preparedSwap).length > 0) {
+          this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
+        }
+      }
+      this.$refs.swapconfirmation.hide();
+      this.$emit('swapStarted', this.swapDetails);
+    },
     async useBity(swapDetails) {
-      let raw = {};
-
-      console.log(swapDetails); // todo remove dev item
       if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
         const tokenInfo = this.$store.state.network.type.tokens.find(item => {
           return item.symbol === swapDetails.fromCurrency;
         });
-        const txData = this.createTokenTransferData(
-          this.currentAddress,
-          swapDetails.fromValue,
-          tokenInfo
-        );
-        raw = await this.createSwapTransaction(swapDetails, txData);
+        return {
+          from: this.$store.state.wallet.getChecksumAddressString(),
+          to: swapDetails.dataForInitialization.payment_address,
+          value: 0,
+          data: this.createTokenTransferData(
+            this.currentAddress,
+            swapDetails.fromValue,
+            tokenInfo
+          )
+        };
       } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        raw = await this.createSwapTransaction(swapDetails);
-        console.log('bity Raw Tx: ', raw); // todo remove dev item
-      }
-      // this.$store.dispatch('addSwapTransaction', [
-      //   this.currentAddress,
-      //   swapDetails
-      // ]);
-      if (Object.keys(raw).length > 0) {
-        // this.$store.state.web3.eth.sendTransaction(raw);
+        return {
+          from: this.$store.state.wallet.getChecksumAddressString(),
+          to: swapDetails.dataForInitialization.payment_address,
+          value: unit.toWei(
+            swapDetails.dataForInitialization.input.amount,
+            'ether'
+          )
+        };
       }
     },
     async useChangelly(swapDetails) {
-      let raw = {};
-      console.log(swapDetails); // todo remove dev item
+      // TODO: consolidate
       if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
         const tokenInfo = this.$store.state.network.type.tokens.find(item => {
           return item.symbol === swapDetails.fromCurrency;
         });
-        const txData = this.createTokenTransferData(
-          this.currentAddress,
-          swapDetails.fromValue,
-          tokenInfo
-        );
-        raw = await this.createSwapTransaction(swapDetails, txData);
+        return {
+          from: this.$store.state.wallet.getChecksumAddressString(),
+          to: swapDetails.dataForInitialization.payinAddress,
+          value: 0,
+          data: this.createTokenTransferData(
+            this.currentAddress,
+            swapDetails.fromValue,
+            tokenInfo
+          )
+        };
       } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        raw = await this.createSwapTransaction(swapDetails);
-        console.log('changelly Raw Tx: ', raw); // todo remove dev item
-      }
-      if (Object.keys(raw).length > 0) {
-        // this.$store.state.web3.eth.sendTransaction(raw);
+        return {
+          from: this.$store.state.wallet.getChecksumAddressString(),
+          to: swapDetails.dataForInitialization.payinAddress,
+          value: unit.toWei(
+            swapDetails.dataForInitialization.amountExpectedFrom,
+            'ether'
+          )
+        };
       }
     },
     async useKyber(swapDetails) {
-      const txDatas = swapDetails.dataForInitialization;
+      const txDatas = swapDetails.dataForInitialization.values();
       const bulkTx = [];
-      let txCount = 0;
       try {
-        for (let [key, value] of txDatas) {
-          if (key === 'reset' || key === 'approve') {
-            const raw = {
-              from: this.$store.state.wallet.getAddressString(),
-              gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-              value: 0,
-              to: txDatas.get('tokenAddress'),
-              data: value,
-              chainId: this.$store.state.network.type.chainID || 1
-            };
-
-            if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
-              raw['web3WalletOnly'] = true;
-            }
-            console.log('gas1 initial', raw.gas); // todo remove dev item
-            bulkTx.push(raw);
-            txCount++;
-          } else if (key === 'swap') {
-            const isEth = swapDetails.fromCurrency === 'ETH';
-
-            const raw = {
-              from: this.$store.state.wallet.getAddressString(),
-              gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-              value: isEth ? unit.toWei(swapDetails.fromValue, 'ether') : 0,
-              to: swapDetails.providerAddress,
-              data: value,
-              chainId: this.$store.state.network.type.chainID || 1
-            };
-            if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
-              raw['web3WalletOnly'] = true;
-            }
-            bulkTx.push(raw);
+        for (const value of txDatas) {
+          value.from = this.$store.state.wallet.getChecksumAddressString();
+          if(unit.toWei(this.$store.state.gasPrice, 'gwei') > swapDetails.kyberMaxGas){
+            value.gasPrice = swapDetails.kyberMaxGas
           }
+          bulkTx.push(value);
         }
-        console.log('kyber Raw Txs: ', bulkTx); // todo remove dev item
-        this.$store.state.web3.eth.sendBatchTransactions(bulkTx);
-        // if (bulkTx.length === 1) {
-        //   this.$store.state.web3.eth.sendTransaction(bulkTx[0]);
-        // } else {
-        //   this.$store.state.web3.eth.sendBatchTransactions(bulkTx); // because maps iterate in insertion order, and the swap tx always gets added last
-        // }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async createSwapTransaction(swapDetails, txData, increNonce) {
-      let nonce;
-      try {
-        if (!increNonce) {
-          nonce = await this.$store.state.web3.eth.getTransactionCount(
-            this.$store.state.wallet.getAddressString()
-          );
-        } else {
-          nonce = increNonce;
-        }
-        const isEth = swapDetails.fromCurrency === 'ETH';
-
-        const raw = {
-          from: this.$store.state.wallet.getAddressString(),
-          // gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
-          value: isEth ? unit.toWei(swapDetails.fromValue, 'ether') : 0,
-          to: swapDetails.providerAddress,
-          data: txData ? txData : '0x',
-          chainId: this.$store.state.network.type.chainID || 1
-        };
-
-        raw.gas = await this.estimateGas(raw);
-        raw.nonce = nonce;
-        console.log('gas2 initial', raw.gas); // todo remove dev item
-        if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
-          raw['web3WalletOnly'] = true;
-        }
-        console.log('gas2 second', raw.gas); // todo remove dev item
-        return raw;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    createSwapTransactions(swapDetails, txDataArray) {},
-    async estimateGas(raw) {
-      try {
-        const newRaw = { ...raw };
-        // delete newRaw['gas'];
-        // delete newRaw['nonce'];
-        return await this.$store.state.web3.eth.estimateGas(newRaw);
+        return bulkTx;
       } catch (e) {
         console.error(e);
       }

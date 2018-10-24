@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { networkSymbols } from '../config';
 import { SimplexMinFiat, SimplexMaxFiat, SimplexCurrencies } from './config.js';
-import { getQuote, getOrder } from './simplex-api';
+import { getQuote, getOrder, getStatus } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
@@ -54,6 +54,48 @@ export default class Simplex {
       fiatAmount <= this.maxFiat &&
       digitalAmount > 0
     );
+  }
+
+  parseOrder(order) {
+    console.log('parseOrder', order); // todo remove dev item
+    return {
+      orderId: order.id,
+      statusId: undefined,
+      sendToAddress: order.payinAddress,
+      recValue: order.amountExpectedTo,
+      sendValue: order.amountExpectedFrom,
+      status: order.status,
+      timestamp: order.createdAt,
+      validFor: 600 // Think it may be valid for longer, but I need to ask
+    };
+  }
+
+  statusUpdater(swapDetails) {
+    return () => {
+      let currentStatus;
+      const calculateTimeRemaining = (validFor, timestamp) => {
+        return (
+          validFor -
+          parseInt(
+            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+          )
+        );
+      };
+      const parsed = this.parseOrder(swapDetails.dataForInitialization);
+      console.log('parsed', parsed); // todo remove dev item
+      let timeRemaining = calculateTimeRemaining(
+        parsed.validFor,
+        parsed.timestamp
+      );
+      console.log('timeRemaining', timeRemaining); // todo remove dev item
+      let checkStatus = setInterval(async () => {
+        currentStatus = await getStatus({
+          orderid: parsed.orderId
+        });
+        console.log('currentStatus', currentStatus); // todo remove dev item
+        clearInterval(checkStatus);
+      }, 1000);
+    };
   }
 
   async updateFiat(fiatCurrency, digitalCurrency, fiatAmount) {

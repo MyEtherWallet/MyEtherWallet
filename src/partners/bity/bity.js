@@ -5,12 +5,12 @@ import { BityCurrencies } from './config';
 // ** NOTE this still needs work
 export default class BitySwap {
   constructor(props = {}) {
-    this.name = 'bity';
+    this.name = BitySwap.getName();
     this.network = props.network || networkSymbols.ETH;
     this.SERVERURL = 'https://bity.myetherapi.com';
     this.BITYRATEAPI = 'https://bity.com/api/v1/rate2/';
     this.decimals = 6;
-    this.hasRates = false;
+    this.hasRates = 0;
     this.ethExplorer = 'https://etherscan.io/tx/[[txHash]]';
     this.btcExplorer = 'https://blockchain.info/tx/[[txHash]]';
     this.validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
@@ -30,6 +30,86 @@ export default class BitySwap {
     // setInterval(()=>{
     //   this.retrieveRates();
     // }, 3000)
+  }
+
+  static getName() {
+    return 'bity';
+  }
+
+  static parseOrder(order) {
+    return {
+      orderId: order.id,
+      statusId: order.reference,
+      sendToAddress: order.payment_address,
+      recValue: order.output.amount,
+      sendValue: order.input.amount,
+      status: order.status,
+      timestamp: order.timestamp_created,
+      validFor: order.validFor
+    };
+  }
+
+  static async getOrderStatus(swapDetails){
+    return await getStatus(swapDetails.dataForInitialization);
+  }
+
+  statusUpdater(swapDetails) {
+    return () => {
+      let currentStatus;
+      const calculateTimeRemaining = (validFor, timestamp) => {
+        return (
+          validFor -
+          parseInt(
+            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+          )
+        );
+      };
+      const parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
+      console.log('parsed', parsed); // todo remove dev item
+      let timeRemaining = calculateTimeRemaining(
+        parsed.validFor,
+        parsed.timestamp
+      );
+      console.log('timeRemaining', timeRemaining); // todo remove dev item
+      let checkStatus = setInterval(async () => {
+        currentStatus = await getStatus({
+          orderid: parsed.orderId
+        });
+        console.log('currentStatus', currentStatus); // todo remove dev item
+        clearInterval(checkStatus);
+      }, 1000);
+    };
+  }
+
+  // TODO: just use the numbers instead of an intermediate conversion key
+  static statuses(data, priorStatus) {
+    const validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
+    const invalidStatus = ['CANC'];
+    const convertStatuses = {
+      [1]: 'OPEN',
+      [2]: 'RCVE',
+      [10]: 'CONF',
+      [0]: 'FILL',
+      [-1]: 'CANC'
+    };
+    if (validStatus.includes(data.status)) {
+      priorStatus = 'RCVE';
+    }
+    if (data.status === 'OPEN') {
+      return 1;
+    } else if (
+      convertStatuses[priorStatus] === 'OPEN' &&
+      validStatus.includes(data.input.status)
+    ) {
+      return 2;
+    } else if (
+      convertStatuses[priorStatus] === 'RCVE' &&
+      validStatus.includes(data.output.status)
+    ) {
+      return 0;
+    } else if (invalidStatus.includes(data.status)) {
+      return -1;
+    }
   }
 
   get validNetwork() {
@@ -122,7 +202,7 @@ export default class BitySwap {
         }
       }
     });
-    this.hasRates = true;
+    this.hasRates = Object.keys(this.rates).length > 0 ? this.hasRates + 1 : 0;
   }
 
   getRate(fromToken, toToken) {
@@ -183,25 +263,24 @@ export default class BitySwap {
       * */
       if (!bityOrder.error) {
         return bityOrder.data;
-        // this.currentOrder.swapOrder = {
-        //   fromCoin: fromToken,
-        //   toCoin: toToken,
-        //   isFrom: isFrom,
-        //   fromVal: fromValue,
-        //   toVal: toValue,
-        //   toAddress: userAddress,
-        //   swapRate: rate,
-        //   swapPair: fromToken + toToken
-        // };
-        // return this.currentOrder;
       }
       throw Error('error creating bity order');
-      // });
     }
   }
-
-  processOrder(id) {
-    this.getStatus({
+  /*
+*       $scope.bity.openOrder(order, function (data) {
+        if (!data.error) {
+          $scope.orderResult = data.data;
+          $scope.orderResult.swapOrder = $scope.swapOrder;
+          var orderResult = $scope.orderResult;
+          saveOrderToStorage(orderResult);
+          processOrder();
+        } else $scope.notifier.danger(data.msg);
+        if (!$scope.$$phase) $scope.$apply();
+      });
+      */
+  getStatus(id) {
+    getStatus({
       orderid: id
     }).then(this.updateStatus);
   }
@@ -235,9 +314,9 @@ export default class BitySwap {
     return openOrder(orderInfo);
   }
 
-  getStatus(orderInfo) {
-    return getStatus(orderInfo);
-  }
+  // getStatus(orderInfo) {
+  //   return getStatus(orderInfo);
+  // }
 
   requireLogin(callback) {
     if (this.token) callback();

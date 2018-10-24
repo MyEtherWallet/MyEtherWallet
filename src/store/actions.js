@@ -31,12 +31,7 @@ const addSwapTransaction = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push({
-    fromCurrency: '',
-    fromValue: '',
-    toCurrency: '',
-    toValue: ''
-  });
+  newNotif[address].push(val); // TODO: reduce the ammount of information stored
   commit('ADD_SWAP_TRANSACTION', newNotif);
 };
 

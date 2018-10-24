@@ -5,7 +5,7 @@
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="resetSwapState"/>
+      @swapStarted="tempCheckStatus"/>
 
     <swap-send-to-modal
       ref="swapSendTo"
@@ -50,8 +50,9 @@
             }}</p>
           </div>
         </div>
-        <div class="exchange-icon">
-          <img :src="images.swap">
+        <div class="exchange-icon"
+             @click="switchOrder(fromCurrency, toCurrency)">
+          <img :src="images.swap" >
         </div>
         <div class="amount">
           <div class="title">
@@ -195,6 +196,8 @@ import {
   checkInvalidOrMissingValue
 } from '@/partners';
 
+BigNumber.config({ DECIMAL_PLACES: 7 });
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -241,11 +244,12 @@ export default {
       toArray: [],
       fromArray: [],
       providerData: [],
-      bityHasRates: false,
+      ratesRetrived: false,
       providerRatesRecieved: [],
       noProvidersPair: {},
       loadingData: true,
-      providersFound: []
+      providersFound: [],
+      tempStatuses: []
     };
   },
   computed: {
@@ -280,6 +284,7 @@ export default {
     haveProviderRates() {
       //TODO centralize location of name strings for providers
       if (this.$store.state.network.type.name === 'ETH') {
+        if (this.ratesRetrived) return this.ratesRetrived;
         return supportedProviders.every(entry =>
           this.providerRatesRecieved.includes(entry)
         );
@@ -308,11 +313,10 @@ export default {
       );
     },
     ['bitySwap.hasRates']() {
-      if (this.bitySwap.hasRates && !this.bityHasRates) {
+      if (this.bitySwap.hasRates) {
         if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
           this.providerRatesRecieved.push(this.bitySwap.name);
         }
-        this.bityHasRates = true;
         this.updateSupportedCurrencyArrays(
           this.bitySwap.name,
           this.bitySwap.currencies
@@ -344,6 +348,9 @@ export default {
   // If swap instances are initiated on load or a loading indicator is provided
   // then the watchers, beforeMount, and mounted could be reduced to one call
   mounted() {
+    setTimeout(() => {
+      this.ratesRetrived = true;
+    }, 3000);
     // Replace default values with values from APIs
     const {
       toArray,
@@ -355,6 +362,32 @@ export default {
     this.providerRatesRecieved = [this.simplexSwap.name]; //TODO centralize location of name strings for providers
   },
   methods: {
+    tempCheckStatus(swapDetails) {
+      let checkStatus;
+      switch (swapDetails.provider) {
+        case this.kyberSwap.name:
+          break;
+        case this.changellySwap.name:
+          checkStatus = this.changellySwap.statusUpdater(swapDetails);
+          this.$store.dispatch('addSwapTransaction', [
+            this.currentAddress,
+            swapDetails
+          ]);
+          checkStatus();
+          break;
+        case this.bitySwap.name:
+          checkStatus = this.bitySwap.statusUpdater(swapDetails);
+          this.$store.dispatch('addSwapTransaction', [
+            this.currentAddress,
+            swapDetails
+          ]);
+          checkStatus();
+          break;
+        case this.simplexSwap.name:
+          break;
+      }
+      this.resetSwapState();
+    },
     // TODO: CACHE PREVIOUSLY QUERIED RATES, TO USE FOR INITIAL DIAPLAY WHILE NEW RATES ARE RETRIEVED
     // TODO: ASK - provide the normalized exchange, calculated exchange, or both.
     // TODO: i.e. 1 FromCurrency = Rate ToCurrency, or X FromCurrency = X * Rate ToCurrency,
@@ -364,6 +397,10 @@ export default {
       this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 1;
+    },
+    switchOrder(fromCurrency, toCurrency) {
+      // TODO: remove or make work
+      console.log(fromCurrency, toCurrency); // todo remove dev item
     },
     updateSupportedCurrencyArrays(provider, retrievedList) {
       this.currencyOptions.updateCurrencyList(provider, retrievedList);
@@ -565,12 +602,15 @@ export default {
           ) {
             this.$refs.swapSendTo.$refs.swapconfirmation.show();
           } else {
-            throw Error('Error while requesting finalized details from provider');
+            throw Error(
+              'Error while requesting finalized details from provider'
+            );
           }
         }
       } catch (e) {
         this.$refs.swapConfirm.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+        this.finalizingSwap = false;
         console.error(e);
       }
     },
@@ -601,20 +641,31 @@ export default {
     },
     async startSwap(swapDetails) {
       try {
-        let details;
+        let details, parsed;
         switch (swapDetails.provider) {
           case this.kyberSwap.name:
             swapDetails.maybeToken = true;
             swapDetails.providerAddress = this.kyberSwap.getAddress();
+            swapDetails.kyberMaxGas = await this.kyberSwap.getKyberMaxGas();
             details = await this.kyberSwap.createSwap(swapDetails);
             break;
           case this.changellySwap.name:
-            details = await this.changellySwap.createSwap(swapDetails);
-            swapDetails.maybeToken = web3.utils.isAddress(details.payinAddress);
-            swapDetails.providerAddress = details.payinAddress;
+            if (this.selectedProvider.minValue < swapDetails.fromValue) {
+              details = await this.changellySwap.createSwap(swapDetails);
+              parsed = ChangellySwap.parseOrder(details);
+              swapDetails.maybeToken = web3.utils.isAddress(
+                details.payinAddress
+              );
+              swapDetails.providerAddress = details.payinAddress;
+            } else {
+              throw Error(
+                'From amount below changelly minimun for currency pair'
+              );
+            }
             break;
           case this.bitySwap.name:
             details = await this.bitySwap.createSwap(swapDetails);
+            parsed = BitySwap.parseOrder(details);
             swapDetails.maybeToken = web3.utils.isAddress(
               details.payment_address
             );
@@ -626,9 +677,10 @@ export default {
         }
 
         swapDetails.dataForInitialization = details;
+        swapDetails.parsed = parsed;
         return swapDetails;
       } catch (e) {
-        throw e
+        throw e;
       }
     },
     // ================================ Provider Specific ============================================
