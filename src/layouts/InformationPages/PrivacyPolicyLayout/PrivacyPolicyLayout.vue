@@ -1,7 +1,9 @@
 <template>
   <div class="privacy-policy">
     <div class="wrap">
-      <title-text-contents :options="titleAndTextContents" />
+      <div class="page-container">
+        <title-text-contents :options="titleAndTextContents" />
+      </div>
     </div>
   </div>
 </template>

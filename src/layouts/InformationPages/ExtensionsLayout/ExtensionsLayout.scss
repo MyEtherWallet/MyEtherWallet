@@ -46,7 +46,7 @@
     margin-top: 30px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
+    grid-gap: 15px;
   }
 }
 
@@ -56,8 +56,8 @@
   .extensions-container {
     margin-top: 30px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
   }
 }
 
@@ -68,7 +68,7 @@
     margin-top: 30px;
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 10px;
+    grid-gap: 15px;
   }
 }
 
