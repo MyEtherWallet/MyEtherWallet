@@ -3,6 +3,11 @@
     <div class="wrap">
       <div class="page-container">
         <title-text-contents :options="titleAndTextContents" />
+
+        <ul class="git-info-block">
+          <li>Latest Release(V 5.0.5)</li>
+          <li>Legacy Site & CX</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -10,6 +15,7 @@
 
 <script>
 import TitleTextContentsLayout from '../Components/TitleTextContentsLayout';
+import github from '@/assets/images/icons/github-black.png';
 
 export default {
   components: {
@@ -26,13 +32,11 @@ export default {
   data() {
     return {
       titleAndTextContents: {
-        title: 'Terms and Conditions',
-        boldSubTitle: 'Last updated May 10, 2018',
+        titleIcon: github,
+        title: 'MEW Github',
+        boldSubTitle: '',
         textContent: [
            'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.',
-           'The US Cyber Command (USCYBERCOM) is engaging in a campaign to deter further disinformation operations by Russian operatives—individuals like those employed through Russian companies as part of the "Project Lakhta" program described in last week\'s Justice Department indictment of Elena Alekseevna Khusyaynova—by letting them know that they are being watched.',
-           'The Cyber Command operation, described by unnamed senior military officials, is limited in scope and does not involve directly threatening Russian operatives.',
-           'According to a report from the New York Times\' Julian E. Barnes, USCYBERCOM has directed operations to identify, track, and directly message individuals involved in disinformation campaigns associated with the upcoming midterm elections.'
         ]
       }
     };
