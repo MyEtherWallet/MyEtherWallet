@@ -1,3 +1,11 @@
+### Devop
+
+- Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
+
+### Hotfix
+
+- Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
+
 ### Release v5.0.4
 
 ### Devop
