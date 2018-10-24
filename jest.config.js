@@ -1,6 +1,5 @@
 module.exports = {
   collectCoverage: true,
-  coveragePathIgnorePatterns: ["/node_modules/", "/index.js$"],
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
@@ -27,10 +26,22 @@ module.exports = {
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
   testEnvironmentOptions: {
-    // With the code below uncommented it was not permitting me to commit
-    // beforeParse(window) {
-    //   window.scrollTo = ( x, y)=>{ window.pageXOffset = x; window.pageYOffset= y;};
-    // }
+    beforeParse(window) {
+      window.scrollTo = ( x, y)=>{ window.pageXOffset = x; window.pageYOffset= y;};
+
+      window.HTMLCanvasElement.prototype.getContext = () => {
+          return  {
+            fillStyle: function(){},
+            fillRect: function(){},
+            clearRect: function(){}
+          }
+      };
+
+      window.HTMLCanvasElement.prototype.toDataURL = () => {
+
+      };
+
+    }
   },
   testURL: 'http://localhost/',
 

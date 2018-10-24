@@ -1,42 +1,78 @@
 import Vue from 'vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
+import sinon from 'sinon'
+import {
+  Tooling
+} from '@@/helpers';
 
-import BootstrapVue from "bootstrap-vue"
-import debugLogger from 'debug';
-const testLog = debugLogger('test:AccessWalletButton.spec')
-
-const localVue = createLocalVue()
-localVue.use(BootstrapVue);
+const BBtnStub = {
+  name:'b-btn',
+  template:'<div class="b-btn">{{title}}</div>',
+  props:['title'],
+}
 
 describe('AccessWalletButton.vue', () => {
-  it('should render correct contents', () => {
+    let localVue, i18n, wrapper, store;
+
     const img = 'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';
     const title = 'AccessWalletButton title';
     const desc = 'AccessWalletButton desc';
     const recommend = 'AccessWalletButton recommend';
     const tooltip = 'AccessWalletButton tooltip';
     const disabled = false;
+    const clickHandler = sinon.stub()
 
-
-    const wrapper = shallowMount(AccessWalletButton, {
-        localVue,
-        propsData: { img, title, desc, recommend, tooltip, disabled }
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
-    // console.log('AccessWalletButton image:%O', wrapper.vm.$el.querySelector('.icon').src);
-    expect(wrapper.vm.$el.querySelector('.icon').src.trim()).toEqual(img);
+    beforeEach(() => {
+        wrapper = shallowMount(AccessWalletButton, {
+          localVue,
+          i18n,
+          store,
+          stubs: {
+            "b-btn":BBtnStub
+          },
+          attachToDocument: true,
+          propsData: { img, title, desc, recommend, tooltip, disabled, func:clickHandler}
+        });
+    });
 
-    testLog('AccessWalletButton title:%O', wrapper.vm.$el.querySelector('h3').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('h3').textContent.trim()).toEqual(title);
-
-    testLog('AccessWalletButton description:%O', wrapper.vm.$el.querySelector('.desc').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.desc').textContent.trim()).toEqual(desc);
-
-    testLog('AccessWalletButton recommend:%O', wrapper.vm.$el.querySelector('.small-note').textContent.trim());
+  it('should render correct recommend', () => {
     expect(wrapper.vm.$el.querySelector('.small-note').textContent.trim()).toEqual(recommend);
-
   });
 
-  describe('AccessWalletButton.vue Methods', () => {});
+  it('should render correct description', () => {
+    expect(wrapper.vm.$el.querySelector('p').textContent.trim()).toEqual(desc);
+  })
+
+  it('should render correct title', () => {
+    expect(wrapper.vm.$el.querySelector('h3').textContent.trim()).toEqual(title);
+  });
+
+  it('should render correct icon', () => {
+    expect(wrapper.vm.$el.querySelector('.icon').src.trim()).toEqual(img);
+  });
+
+  it('should render correct tooltip', () => {
+    expect(wrapper.vm.$el.querySelector('.b-btn').textContent).toEqual(tooltip);
+  });
+
+  it('should render correct disabled', () => {
+    const btnBlock = wrapper.find('.button-block');
+    expect(btnBlock.classes().indexOf('disabled')).toBeGreaterThan(-1);
+  });
+
+  describe('AccessWalletButton.vue Methods', () => {
+    it('should call propsData "func" when click button', () => {
+      const btnBlock = wrapper.find('.button-block');
+      btnBlock.trigger('click');
+      expect(clickHandler.called).toBe(true);
+    })
+  });
 });

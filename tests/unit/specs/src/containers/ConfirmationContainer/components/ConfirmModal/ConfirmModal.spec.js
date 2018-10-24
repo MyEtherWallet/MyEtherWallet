@@ -1,109 +1,129 @@
 import Vue from 'vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
+import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
-import BootstrapVue from "bootstrap-vue";
-const localVue = createLocalVue()
-localVue.use(BootstrapVue);
+import VueQrcode from '@xkeshi/vue-qrcode';
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
+import store from 'store';
+import {
+  Tooling
+} from '@@/helpers';
+
+const AddressBlockStub = {
+  name:'address-block',
+  template:'<p class="address-block"><slot></slot></p>'
+}
 
 describe('ConfirmModal.vue', () => {
-  it('should render correct contents', () => {
-      const signedTx = 'confirmSendTx'
-      const fee = 0
-      const data = 'data'
-      const from = 'from'
-      const to = 'to'
-      const gas = 0
-      const gasPrice = 0
-      const nonce = 0
-      const value = 0
-      const isHardwareWallet = false
-
-      const wrapper = shallowMount(ConfirmModal, {
-        sync:false,
-        attachToDocument:true,
-        localVue,
-        propsData: { signedTx, data, from , to, fee, gas, gasPrice, nonce, value, isHardwareWallet}
-      });
-
-      // TODO: Address related informattion was moved to AdressBlock [in ConfirmationContainer/components]
-      // console.log('ConfirmSignModal from:%O', wrapper.vm.$el.querySelector('.tx-info').getElementsByTagName('address-block'));
-      // expect(wrapper.vm.$el.querySelector('.tx-info').getElementsByTagName('address-block')[1].textContent.trim()).toEqual(from);
-
-      // console.log('ConfirmModal to:%O', wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim());
-      // expect(wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(to);
-
-      console.log('modalDetailInformation:%O', wrapper.vm.modalDetailInformation)
-      console.log('transactionSigned:%O', wrapper.vm.transactionSigned)
-      console.log('signedMessageSignature:%O', wrapper.vm.signedMessageSignature)
-
-      expect(wrapper.vm.modalDetailInformation).toBe(false);
-      expect(wrapper.vm.transactionSigned).toBe(false);
-      expect(wrapper.vm.signedTransaction).toEqual("");
-  });
-
-
-  it('should confirm sendtx when click submit button', () => {
-    const confirmSendTx = jest.fn(()=> console.log('return true'))
-    const wrapper = shallowMount(ConfirmModal, {
-      sync:false,
-      attachToDocument:true,
-      localVue,
-      propsData: {
-        signedTx:'0x111',
-        confirmSendTx: confirmSendTx
-      }
+    let localVue, i18n, wrapper, store;
+    const signedTx = '0x111';
+    const fee = 10;
+    const data = '0x111';
+    const from = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
+    const to = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068E';
+    const gas = 10;
+    const gasPrice = 1;
+    const nonce = 10;
+    const value = 10;
+    const isHardwareWallet = false;
+    const confirmSendTx = jest.fn();
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+        Vue.config.errorHandler = ()=>{};
     });
 
-    const submitButton = wrapper.find('div.submit-button');
-    submitButton.trigger('click');
+    beforeEach(() => {
+        wrapper = shallowMount(ConfirmModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs: {
+            'qrcode':VueQrcode,
+            'address-block':AddressBlockStub
+          },
+          propsData: { confirmSendTx, signedTx, data, from , to, fee, gas, gasPrice, nonce, value, isHardwareWallet}
+        });
 
-    expect( confirmSendTx ).toHaveBeenCalled()
-  })
+        const network = nodeList['ETH'][3];
+        const hostUrl = url.parse(network.url);
+        
+        const newWeb3 = new Web3(
+          `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+            hostUrl.pathname
+          }`
+        );
+      
+        store.replaceState({
+          web3: newWeb3,
+          network:network
+        })
+    });
 
-  it('should change modalDetailInformation data when checked', () => {
-      const signedTx = 'confirmSendTx'
-      const fee = 0
-      const data = 'data'
-      const from = 'from'
-      const to = 'to'
-      const gas = 0
-      const gasPrice = 0
-      const nonce = 0
-      const value = 0
-      const isHardwareWallet = false
-
-
-
-      const wrapper = shallowMount(ConfirmModal, {
-        sync:false,
-        attachToDocument:true,
-        localVue,
-        propsData: { signedTx, data, from , to, fee, gas, gasPrice, nonce, value, isHardwareWallet}
-      });
-
-      const checkboxElement = wrapper.find('.switch input')
-      checkboxElement.trigger('click')
-
-      console.log('modalDetailInformation:%O' ,wrapper.vm.modalDetailInformation);
-      expect(wrapper.vm.modalDetailInformation).toBe(true);
-
-      // const detailElement = wrapper.vm.$el.querySelector('.detail-info .expended-info');
-
-      // console.log(detailElement)
-
-      // const gasLimitElement = detailElement.getElementsByTagName('.grid-block')[1].getElementsByTagName('p')[1];
-      // const gasPriceElement = detailElement.getElementsByTagName('.grid-block')[2].getElementsByTagName('p')[1];
-      // const transactionFeeElement = detailElement.getElementsByTagName('.grid-block')[3].getElementsByTagName('p')[1];
-      // const nonceElement = detailElement.getElementsByTagName('.grid-block')[4].getElementsByTagName('p')[1];
-      // const dataElement = detailElement.getElementsByTagName('.grid-block')[5].getElementsByTagName('p')[1];
-
-
-      // console.log(gasLimitElement.textContent.trim())
-      // console.log(gasPriceElement.textContent.trim())
-      // console.log(transactionFeeElement.textContent.trim())
-      // console.log(nonceElement.textContent.trim())
-      // console.log(dataElement.textContent.trim())
+  it('should render correct gas props', () => {
+    wrapper.setData({modalDetailInformation:true});
+    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[1].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.props().gas + ' wei');
+  });
+  
+  it('should render correct gasPrice props', () => {
+    wrapper.setData({modalDetailInformation:true});
+    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[2].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.props().gasPrice + ' gwei');
   });
 
-  describe('ConfirmModal.vue Methods', () => {});
+  it('should render correct fee props', () => {
+    wrapper.setData({modalDetailInformation:true});
+    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[3].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.props().fee + ' ETH');
+  });
+  
+  it('should render correct nonce props', () => {
+    wrapper.setData({modalDetailInformation:true});
+    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[4].querySelectorAll('p')[1].textContent.trim()).toEqual(String(wrapper.props().nonce));
+  });
+
+  it('should render correct data props', () => {
+    wrapper.setData({modalDetailInformation:true});
+    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[5].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.props().data);
+  });
+
+  it('should render correct sendTx props', () => {
+    expect(wrapper.find('.submit-button').classes().indexOf('disabled')).toBe(-1);
+    wrapper.setProps({signedTx:''});
+    expect(wrapper.find('.submit-button').classes().indexOf('disabled')).toBeGreaterThan(-1);
+  });
+
+  it('should render correct from props', ()=> {
+    expect(wrapper.findAll('.address-block').at(0).attributes('address')).toEqual(from);
+  });
+
+  it('should render correct to props', ()=> {
+    expect(wrapper.findAll('.address-block').at(1).attributes('address')).toEqual(to);
+  });
+
+  it('should render correct value props', ()=> {
+    expect(wrapper.findAll('.address-block').at(0).attributes('value')).toEqual(String(value));
+  });
+
+  it('should render correct isHardwareWallet props', ()=>{
+    expect(wrapper.vm.signedTransaction).toEqual('');
+    wrapper.setProps({isHardwareWallet:true});
+    expect(wrapper.vm.signedTransaction).toEqual('Please Approve on Hardware Wallet');  });
+
+  describe('ConfirmModal.vue Methods', () => {
+    it('should confirm sendtx when click submit button', () => {
+      const submitButton = wrapper.find('div.submit-button');
+      submitButton.trigger('click');
+      expect( confirmSendTx ).toHaveBeenCalled();
+    });
+
+    it('should change modalDetailInformation data when checked', () => {
+      const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
+      checkboxElement.trigger('click')      
+      expect(wrapper.vm.modalDetailInformation).toBe(true);
+    });
+  });
 });

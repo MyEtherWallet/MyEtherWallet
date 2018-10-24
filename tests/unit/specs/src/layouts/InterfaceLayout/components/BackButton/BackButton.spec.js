@@ -1,48 +1,46 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-
 import { shallowMount } from '@vue/test-utils';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
-
+import sinon from 'sinon';
 import {
   Tooling
 } from '@@/helpers';
 
+
 describe('BackButton.vue', () => {
-  let localVue, i18n, wrapper, router, store;
-  const resetView = jest.fn(() => console.log('resetView function called'));
-  // const backMethodMock = jest.fn(() => console.log('back method called'));
-  beforeAll(() => {
-    const baseSetup = Tooling.createLocalVueInstance();
-    localVue = baseSetup.localVue;
-    i18n = baseSetup.i18n;
-    store = baseSetup.store;
-    router = baseSetup.router;
-  });
+    let localVue, i18n, wrapper, store;
+    let spy = sinon.stub()
+    const mockRoute = {
+      go: spy
+    };
 
-  beforeEach(() => {
-    wrapper = shallowMount(BackButton, {
-      localVue,
-      i18n,
-      store,
-      router,
-      attachToDocument: true,
-      propsData: {
-        resetView: resetView
-      }
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
-    // console.log(wrapper.vm); // todo remove dev item
 
-  });
+    beforeEach(() => {
+        wrapper = shallowMount(BackButton, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          mocks: {
+            $router: mockRoute,
+          }
+        });
+    });
 
-  it('should render correct content', () => {
-    const backMethodSpy = jest.spyOn(wrapper.vm, 'back')
-    wrapper.find('.back-container').trigger('click');
-    expect(backMethodSpy).toHaveBeenCalled()
-    expect(backMethodSpy).toHaveBeenCalledTimes(1)
-  });
+    it('should render correct content', () => {
+       
+    });
 
   describe('BackButton.vue Methods', () => {
-
+    it('should go back when button clicked', () => {
+        wrapper.find('.back-container').trigger('click')
+        expect(spy.called).toBe(true)
+    });
   });
 });

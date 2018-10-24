@@ -3,18 +3,35 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import WhatIsMyEtherWallet from '@/layouts/GettingStarted/components/WhatIsMyEtherWallet/WhatIsMyEtherWallet.vue';
 
+import {
+  Tooling
+} from '@@/helpers';
 
 describe('WhatIsMyEtherWallet.vue', () => {
-  it('should render correct contents', () => {
-    const progressBarValue = 'WhatIsMyEtherWallet progressBarValue';
-  
-    const wrapper = shallowMount(WhatIsMyEtherWallet, {
-      propsData: { progressBarValue }
-    });
 
-    console.log('WhatIsMyEtherWallet component:%O', wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className);
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
-  });
+	let localVue, i18n, wrapper, store;
+	const progressBarValue = 'Congratulations progressBarValue';
 
-  describe('WhatIsMyEtherWallet.vue Methods', () => {});
+	beforeAll(() => {
+	    const baseSetup = Tooling.createLocalVueInstance();
+	    localVue = baseSetup.localVue;
+	    i18n = baseSetup.i18n;
+	    store = baseSetup.store;
+	});
+
+	beforeEach(() => {
+	    wrapper = shallowMount(WhatIsMyEtherWallet, {
+	      localVue,
+	      i18n,
+	      store,
+	      attachToDocument: true,
+	      propsData: { progressBarValue }
+	    });
+	});
+
+	it('should render correct contents', () => {
+		expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+	});
+
+	describe('WhatIsMyEtherWallet.vue Methods', () => {});
 });

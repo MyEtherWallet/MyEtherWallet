@@ -1,22 +1,32 @@
 import Vue from 'vue';
-import { shallowMount , RouterLink, createLocalVue } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import FaqsContainer from '@/containers/FaqsContainer/FaqsContainer.vue';
-import VueRouter from 'vue-router'
-import VueI18N from 'vue-i18n'
-import Translations from '@/translations';
-const localVue = createLocalVue()
-localVue.use(VueI18N)
+
+import {
+  Tooling
+} from '@@/helpers';
+
 
 describe('FaqsContainer.vue', () => {
-  it('should render correct contents', () => {
-    const i18n = new VueI18N({
-      locale:'en_US',
-      Translations
-    })
+  let localVue, i18n, wrapper, store;
 
-    const wrapper = shallowMount(FaqsContainer, {attachToDocument:true, localVue,i18n});
-   
+  beforeAll(() => {
+      const baseSetup = Tooling.createLocalVueInstance();
+      localVue = baseSetup.localVue;
+      i18n = baseSetup.i18n;
+      store = baseSetup.store;
+  });
 
+  beforeEach(() => {
+      wrapper = shallowMount(FaqsContainer, {
+        localVue,
+        i18n,
+        store,
+        attachToDocument: true
+      });
+  });
+
+  it('should render correct FAQ contents', () => {
     const linkWrappers = wrapper.findAll('.qa__contents--title')
     var linkWrapper = linkWrappers.at(0);
     linkWrapper.trigger('click')

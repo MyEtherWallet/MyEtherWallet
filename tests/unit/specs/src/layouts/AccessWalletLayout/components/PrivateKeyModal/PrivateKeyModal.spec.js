@@ -1,72 +1,83 @@
-import VueX from 'vuex';
-import { shallowMount } from '@vue/test-utils';
-import PrivateKeyModal
-  from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
-import debugLogger from 'debug';
+import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
+import  sinon from 'sinon' 
 import {
-  Wallets,
-  PrivateKey,
+  Mnemonic,
   Tooling
 } from '@@/helpers';
 
-const testLog = debugLogger('test:PrivateKeyModal.spec');
-
-jest.mock('@/wallets');
-// localVue.use(VueX)
-
+const longMnemonic = Mnemonic.long;
+import { BasicWallet } from '@/wallets';
 describe('PrivateKeyModal.vue', () => {
-  it('should render correct contents', () => {
 
-  });
-
-  describe('PrivateKeyModal.vue Methods', () => {
-    let localVue, router, i18n, wrapper, store, state, actions;
+  describe('PrivateKeyModal.vue', () => {
+    let localVue, i18n, wrapper, store;
 
     beforeAll(() => {
-      const baseSetup = Tooling.createLocalVueInstance();
-      localVue = baseSetup.localVue;
-      router = baseSetup.router
-      i18n = baseSetup.i18n;
-      // store = baseSetup.store;
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
     beforeEach(() => {
-      state = {
-        wallet: {}
-      };
+        wrapper = shallowMount(PrivateKeyModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true
+        });
+    });
 
-      actions = {
-        decryptWallet: (value) => {state.wallet = value;}
-      };
+    it('should reset the privateKey via input element', () => {
+      const textInput = wrapper.find('.input-container input')
+      textInput.setValue(longMnemonic);
+      expect(wrapper.vm.$data.privateKey).toBe(longMnemonic)
+    });
+  });
 
-      store = new VueX.Store({
-        actions,
-        state
-      });
+  describe('PrivateKeyModal.vue Methods', () => {
+    let localVue, i18n, wrapper, store, spy;
+    spy = sinon.stub()
+    const mockRoute = {
+      push: spy
+    };
 
-      wrapper = shallowMount(PrivateKeyModal, {
-        localVue,
-        i18n,
-        router,
-        store,
-        attachToDocument: true
-      });
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(PrivateKeyModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          mocks: {
+            $router: mockRoute,
+          }
+        });
+        spy = jest.spyOn(wrapper.vm.$router,'push')
     });
 
     it('should reset the privateKey directly', () => {
-      console.log(wrapper); // todo remove dev item
-      const button = wrapper.find('button');
-
-      wrapper.setData({privateKey: PrivateKey.key});
-
-      // wrapper.vm.$nextTick(() => {
-      //   // wrapper.vm.unlockWallet();
-      //   expect(wrapper.vm.$data.privateKey).toBe('')
-      // });
-      expect(wrapper.vm.$data.privateKey).toBe(PrivateKey.key);
-      button.trigger('click');
-      expect(wrapper.vm.$data.privateKey).toBe('');
+      // const button = wrapper.find('button');
+      // wrapper.setData({privateKey:longMnemonic})
+      // button.trigger('click')
+      // expect(wrapper.vm.$data.privateKey).toBe('')
     });
 
-  });
+    it('should navigate to interface page', () => {
+      // wrapper.setData({privateKey:'0ADD'})
+      // const button = wrapper.find('button');
+      // wrapper.setData({privateKey:longMnemonic})
+      // button.trigger('click')
+      // expect(spy.called).toBe(true)
+
+    });
+});
 });

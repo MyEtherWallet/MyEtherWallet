@@ -9,19 +9,36 @@ const RouterLinkStub = {
   props:['to']  
 }
 
+import {
+  Tooling
+} from '@@/helpers';
+
 describe('Congratulations.vue', () => {
-  it('should render correct contents', () => {
+    let localVue, i18n, wrapper, store;
     const progressBarValue = 'Congratulations progressBarValue';
-  
-    const wrapper = shallowMount(Congratulations, {
-      propsData: { progressBarValue },
-      stubs: {'router-link':RouterLinkStub }
+
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
-    console.log('Congratulations component:%O', wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className);
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
-  });
+    beforeEach(() => {
+        wrapper = shallowMount(Congratulations, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          propsData: { progressBarValue },
+          stubs: {'router-link':RouterLinkStub }
+        });
+    });
 
-  describe('Congratulations.vue Methods', () => {});
+    it('should render correct contents', () => {
+      expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+    });
+
+    describe('Congratulations.vue Methods', () => {});
 });
 

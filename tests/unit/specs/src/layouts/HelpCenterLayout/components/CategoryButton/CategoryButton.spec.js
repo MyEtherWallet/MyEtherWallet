@@ -19,11 +19,10 @@ describe('CategoryButton.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+        Vue.config.warnHandler = ()=>{};
     });
 
     beforeEach(() => {
-        
-
         wrapper = shallowMount(CategoryButton, {
           localVue,
           i18n,
@@ -36,8 +35,6 @@ describe('CategoryButton.vue', () => {
     });
 
     it('should render correct contents', () => {
-      console.log('button icon:%O', wrapper.vm.$el.querySelector('.button-icon img').getAttribute('src'))
-      console.log('button title:%O', wrapper.vm.$el.querySelector('.button-title').textContent.trim() )
       expect(wrapper.vm.$el.querySelector('.button-icon img').getAttribute('src')).toEqual(content.icon)
       expect(wrapper.vm.$el.querySelector('.button-title').textContent.trim()).toEqual(content.title)
     });

@@ -31,16 +31,17 @@ describe('ByJsonBlock.vue', () => {
         });
     });
 
-  it('should render correct contents', () => {
-    console.log('ByJsonBlock container component title:%O', wrapper.vm.$el.querySelector('.text-block h6').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.text-block h6').textContent.trim()).toEqual(title);
 
-    console.log('ByJsonBlock container component desc:%O', wrapper.vm.$el.querySelector('.text-block p').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.text-block p').textContent.trim()).toEqual(desc);
-
-
-    console.log('ByJsonBlock container component img:%O', wrapper.vm.$el.querySelector('.icon-block img').src);
+  it('should render correct title', () => {
     expect(wrapper.vm.$el.querySelector('.icon-block img').src.trim()).toEqual(img);
+  });
+
+  it('should render correct description', () => {
+    expect(wrapper.vm.$el.querySelector('.text-block p').textContent.trim()).toEqual(desc);
+  });
+
+  it('should render correct image', () => {
+      expect(wrapper.vm.$el.querySelector('.icon-block img').src.trim()).toEqual(img);
   });
 
   describe('ByJsonBlock.vue Methods', () => { });

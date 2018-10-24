@@ -28,16 +28,10 @@ describe('TeamLayout.vue', () => {
     });
 
     it('should render correct team members', () => {
-       // console.log(wrapper.vm.$el.querySelectorAll('.team-info div'))
-
        const memberElements = wrapper.vm.$el.getElementsByClassName('member')
-
        for(var i=0; i<memberElements.length; i++) {
         const memberElement = memberElements[i];
-        console.log(memberElement.querySelector('img').getAttribute('src'))
-        console.log(memberElement.querySelector('h4').textContent.trim())
-        console.log(memberElement.querySelector('h6').textContent.trim())
-
+        
         const member = wrapper.vm.$data.members[i]
         expect(member.name).toEqual(memberElement.querySelector('h4').textContent.trim())
         expect(member.position).toEqual(memberElement.querySelector('h6').textContent.trim())
