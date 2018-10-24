@@ -22,6 +22,19 @@ const addNotification = function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
+const addSwapTransaction = function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[0]);
+  const newNotif = {};
+  Object.keys(state.Transactions).forEach(item => {
+    newNotif[item] = state.Transactions[item];
+  });
+
+  if (!Array.isArray(newNotif[address])) newNotif[address] = [];
+
+  newNotif[address].push(val); // TODO: reduce the ammount of information stored
+  commit('ADD_SWAP_TRANSACTION', newNotif);
+};
+
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
@@ -117,6 +130,7 @@ const updateNotification = function({ commit, state }, val) {
 
 export default {
   addNotification,
+  addSwapTransaction,
   addCustomPath,
   checkIfOnline,
   clearWallet,

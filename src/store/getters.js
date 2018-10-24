@@ -18,6 +18,10 @@ const online = state => {
   return state.online;
 };
 
+const Transactions = state => {
+  return state.Transactions;
+};
+
 const wallet = state => {
   return state.wallet;
 };
@@ -28,5 +32,6 @@ export default {
   network,
   notifications,
   online,
+  Transactions,
   wallet
 };

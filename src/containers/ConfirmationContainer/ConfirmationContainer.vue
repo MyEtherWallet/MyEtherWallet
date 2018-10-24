@@ -5,7 +5,7 @@
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
-      :is-hardware-wallet="isHardwareWallet"
+      :is-hardware-walalet="isHardwareWallet"
       :gas-price="$store.state.gasPrice"
       :from="fromAddress"
       :to="toAddress"
