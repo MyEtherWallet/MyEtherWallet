@@ -4,6 +4,8 @@
       <div class="block-image">
         <blockie
           :address="address"
+          :size="8"
+          :scale="16"
           width="64px"
           height="64px"/>
         <input

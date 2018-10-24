@@ -1,5 +1,7 @@
 import * as unit from 'ethjs-unit';
 import { WEB3_WALLET } from '../bip44/walletTypes';
+import { formatters } from 'web3-core-helpers';
+
 export default (web3, wallet, eventHub, { state, dispatch }) => {
   if (!wallet) return web3;
 
@@ -24,19 +26,53 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
         });
       });
     },
+    signBatchTransaction(arrTxs) {
+      eventHub.$emit('showTxCollectionConfirmModal', arrTxs, wallet.isHardware);
+    },
+    async sendBatchTransactions(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        const localTx = {
+          to: arr[i].to,
+          data: arr[i].data,
+          from: arr[i].from,
+          value: arr[i].value
+        };
+        arr[i].nonce = await (arr[i].nonce === undefined
+          ? web3.eth.getTransactionCount(wallet.getChecksumAddressString())
+          : arr[i].nonce);
+        arr[i].nonce += i;
+        arr[i].gas = await (arr[i].gas === undefined
+          ? web3.eth.estimateGas(localTx)
+          : arr.gas);
+        arr[i].chainId = !arr[i].chainId
+          ? state.network.type.chainID
+          : arr[i].chainId;
+        arr[i].gasPrice =
+          arr[i].gasPrice === undefined
+            ? unit.toWei(state.gasPrice, 'gwei')
+            : arr[i].gasPrice;
+        arr[i] = formatters.inputCallFormatter(arr[i]);
+      }
+      methodOverrides.signBatchTransaction(arr);
+    },
     async sendTransaction(tx) {
-      const localTx = Object.assign({}, tx);
-      delete localTx['gas'];
-      delete localTx['nonce'];
-
-      tx.nonce = !tx.nonce
-        ? await web3.eth.getTransactionCount(wallet.getAddressString())
-        : tx.nonce;
-      tx.gas = !tx.gas ? await web3.eth.estimateGas(localTx) : tx.gas;
+      const localTx = {
+        to: tx.to,
+        data: tx.data,
+        from: tx.from,
+        value: tx.value
+      };
+      tx['nonce'] = await (tx['nonce'] === undefined
+        ? web3.eth.getTransactionCount(wallet.getChecksumAddressString())
+        : tx.nonce);
+      tx['gas'] = await (tx['gas'] === undefined
+        ? web3.eth.estimateGas(localTx)
+        : tx.gas);
       tx.chainId = !tx.chainId ? state.network.type.chainID : tx.chainId;
       tx.gasPrice = !tx.gasPrice
         ? unit.toWei(state.gasPrice, 'gwei').toString()
         : tx.gasPrice;
+      tx = formatters.inputCallFormatter(tx);
       web3.eth
         .sendTransaction_(tx)
         .once('transactionHash', hash => {
@@ -62,10 +98,12 @@ export default (web3, wallet, eventHub, { state, dispatch }) => {
     },
     ...methodOverrides
   };
+
   if (!web3.eth.sendTransaction_)
     web3.eth.sendTransaction_ = web3.eth.sendTransaction;
   web3.eth.signTransaction = methodOverrides.signTransaction;
   web3.eth.sign = methodOverrides.signMessage;
   web3.eth.sendTransaction = methodOverrides.sendTransaction;
+  web3.eth.sendBatchTransactions = methodOverrides.sendBatchTransactions;
   return web3; // needs to return web3 for use in vuex
 };

@@ -3,6 +3,8 @@ import EnsBidContainer from './containers/EnsBidContainer';
 import InitialENSStateContainer from './containers/InitialENSStateContainer';
 import NameForbiddenENSContainer from './containers/NameForbiddenENSContainer';
 import AlreadyOwnedENSContainer from './containers/AlreadyOwnedENSContainer';
+import FinalizeContainer from './containers/FinalizeContainer';
+import ManageENSContainer from './containers/ManageENSContainer';
 export default {
   path: 'dapps/register-domain',
   component: RegisterDomain,
@@ -42,6 +44,18 @@ export default {
       path: 'forbidden',
       name: 'ENS forbidden',
       component: NameForbiddenENSContainer,
+      props: true
+    },
+    {
+      path: 'finalize',
+      name: 'ENS finalize',
+      component: FinalizeContainer,
+      props: true
+    },
+    {
+      path: 'manage',
+      name: 'Manage ENS',
+      component: ManageENSContainer,
       props: true
     }
   ]
