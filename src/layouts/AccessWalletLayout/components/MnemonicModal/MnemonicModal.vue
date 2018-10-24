@@ -83,7 +83,6 @@ export default {
   },
   watch: {
     mnemonicPhrase(newVal) {
-      console.log(newVal);
       if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
         if (
           newVal[0].split(' ').length === 12 ||
