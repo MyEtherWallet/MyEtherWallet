@@ -53,11 +53,11 @@
               <p>{{ $t("footer.welcomeDes") }}</p>
 
               <a
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+                :href="'https://etherscan.io/address/'+$store.state.ethDonationAddress"
                 target="_blank">
                 <p
-                  class="crypto-link"
-                  data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  :data-eth="$store.state.ethDonationAddress"
+                  class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>
