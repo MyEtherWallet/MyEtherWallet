@@ -4,8 +4,13 @@ import HomeLayout from '@/layouts/HomeLayout';
 import CreateWalletLayout from '@/layouts/CreateWalletLayout';
 import ConvertUnits from '@/layouts/ConvertUnits';
 import TeamLayout from '@/layouts/TeamLayout';
-import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
-import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
+
+import PrivacyPolicyLayout from '@/layouts/InformationPages/PrivacyPolicyLayout';
+import TermsAndConditionsLayout from '@/layouts/InformationPages/TermsAndConditionsLayout';
+import ExtensionsLayout from '@/layouts/InformationPages/ExtensionsLayout';
+import AdvancedToolsLayout from '@/layouts/InformationPages/AdvancedToolsLayout';
+import MewGithubLayout from '@/layouts/InformationPages/MewGithubLayout';
+
 import AccessWalletLayout from '@/layouts/AccessWalletLayout';
 import InterfaceLayout from '@/layouts/InterfaceLayout';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout';
@@ -51,6 +56,21 @@ const router = [
     path: '/terms-and-conditions',
     name: 'TermsAndConditionsLayout',
     component: TermsAndConditionsLayout
+  },
+  {
+    path: '/extensions',
+    name: 'ExtensionsLayout',
+    component: ExtensionsLayout
+  },
+  {
+    path: '/advanced-tools',
+    name: 'AdvancedToolsLayout',
+    component: AdvancedToolsLayout
+  },
+  {
+    path: '/mew-github',
+    name: 'MewGithubLayout',
+    component: MewGithubLayout
   },
   {
     path: '/access-my-wallet',
