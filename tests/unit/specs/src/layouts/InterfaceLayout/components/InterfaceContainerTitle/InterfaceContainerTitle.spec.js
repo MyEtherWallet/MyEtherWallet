@@ -2,15 +2,34 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 
+
+import {
+  Tooling
+} from '@@/helpers';
+
+const title = 'InterfaceContainerTitle title';
+
 describe('InterfaceContainerTitle.vue', () => {
-  it('should render correct contents', () => {
-    const title = 'InterfaceContainerTitle title';
-  
-    const wrapper = shallowMount(InterfaceContainerTitle, {
-      propsData: { title }
+	 let localVue, i18n, wrapper, store;
+
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
-    console.log('InterfaceContainerTitle component title:%O', wrapper.vm.$el.querySelector('.content-title h2').textContent.trim());
+    beforeEach(() => {
+        wrapper = shallowMount(InterfaceContainerTitle, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          propsData: { title }
+        });
+    });
+
+  it('should render correct contents', () => {
     expect(wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()).toEqual(title);
   });
 

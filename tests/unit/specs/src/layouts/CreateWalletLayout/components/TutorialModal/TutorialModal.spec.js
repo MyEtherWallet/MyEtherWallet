@@ -32,7 +32,7 @@ describe('TutorialModal.vue', () => {
     });
 
     it('should call skip function when trigger click skip', () => {
-        const skip = jest.fn(()=> console.log('skip function called'))
+        const skip = jest.fn()
         wrapper.setProps({skip:skip})
         const spanElement = wrapper.find('.content span');
         spanElement.trigger('click')

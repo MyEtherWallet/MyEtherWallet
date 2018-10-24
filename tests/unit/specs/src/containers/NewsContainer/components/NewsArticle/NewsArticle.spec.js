@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount, RouterLink } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import NewsArticle from '@/containers/NewsContainer/components/NewsArticle/NewsArticle.vue';
 
 const RouterLinkStub = {
@@ -8,9 +8,11 @@ const RouterLinkStub = {
   props:['to']  
 }
 
+import {
+  Tooling
+} from '@@/helpers';
 
 describe('NewsArticle.vue', () => {
-  it('should render correct contents', () => {
     const title = 'NewsArticle title';
     const desc = 'NewsArticle desc';
     const fb = 'fb';
@@ -18,26 +20,31 @@ describe('NewsArticle.vue', () => {
     const readMore = 'NewsArticle readMore';
     const link = 'NewsArticle link';
 
-
-    const wrapper = shallowMount(NewsArticle, {
-      propsData: { title, desc, fb, twitter, readMore, link },
-      stubs: {'router-link':RouterLinkStub }
+    let localVue, i18n, wrapper, store;
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
-    console.log('NewsArticle component title:%O', wrapper.vm.$el.querySelector('.news-text h4').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.news-text h4').textContent.trim()).toEqual(title);
+    beforeEach(() => {
+        wrapper = shallowMount(NewsArticle, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          propsData: { title, desc, fb, twitter, readMore, link },
+          stubs: {'router-link':RouterLinkStub }
+        });
+    });
 
-    console.log('NewsArticle component desc:%O', wrapper.vm.$el.querySelector('.news-text p').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.news-text p').textContent.trim()).toEqual(desc);
-
-    console.log('NewsArticle component link:%O', wrapper.vm.$el.querySelector('.links p').textContent.trim());
-    expect(wrapper.vm.$el.querySelector('.links p').textContent.trim()).toEqual(readMore);
-
-    console.log('NewsArticle component icon:%O', wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href);
-    expect(wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + fb);
-
-    console.log('NewsArticle component icon:%O', wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href);
-    expect(wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + twitter);
+  it('should render correct contents', () => {
+      expect(wrapper.vm.$el.querySelector('.news-text h4').textContent.trim()).toEqual(title);
+      expect(wrapper.vm.$el.querySelector('.news-text p').textContent.trim()).toEqual(desc);
+      expect(wrapper.vm.$el.querySelector('.links p').textContent.trim()).toEqual(readMore);
+      expect(wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + fb);
+      expect(wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + twitter);
   });
 
   describe('NewsArticle.vue Methods', () => { });

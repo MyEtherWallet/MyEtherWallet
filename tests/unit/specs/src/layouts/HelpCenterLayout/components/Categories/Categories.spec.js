@@ -15,6 +15,7 @@ describe('Categories.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+        Vue.config.warnHandler = ()=>{};
     });
 
     beforeEach(() => {
@@ -31,15 +32,8 @@ describe('Categories.vue', () => {
 
 
     it('should render correct contents', () => {
-      console.log(wrapper.html())
-
-      console.log(wrapper.vm.$el.querySelectorAll('.category-buttons li'))
-
       for(var i=0; i<wrapper.vm.$el.querySelectorAll('.category-buttons li').length; i++) {
           const categoryButtonElement = wrapper.vm.$el.querySelectorAll('.category-buttons li')[i]
-          // console.log('button icon:%O', categoryButtonElement.querySelector('.button-icon img').getAttribute('src'))
-          console.log('button title:%O', categoryButtonElement.querySelector('.button-title').textContent.trim() )
-
           // expect(categoryButtonElement.querySelector('.button-icon img').getAttribute('src')).toEqual(wrapper.vm.$data.categoryButtons[i].icon)
           expect(categoryButtonElement.querySelector('.button-title').textContent.trim()).toEqual(wrapper.vm.$data.categoryButtons[i].title)
       }

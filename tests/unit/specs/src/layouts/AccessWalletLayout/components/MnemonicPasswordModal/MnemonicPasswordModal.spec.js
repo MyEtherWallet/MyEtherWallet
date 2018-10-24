@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import { MnemonicWallet } from '@/wallets';
+import sinon from 'sinon';
 import {
   Mnemonic,
   Tooling
@@ -8,6 +9,17 @@ import {
 
 const longMnemonic = Mnemonic.long;
 const shortMnemonic = Mnemonic.short;
+
+const hideModal = sinon.stub();
+
+const BModalStub = {
+  name:'b-modal',
+  template:'<div><slot></slot></div>',
+  props:['to'],
+  methods: {
+    hide: hideModal
+  }  
+}
 
 describe('MnemonicPasswordModal.vue', () => {
   xit('should render correct contents', () => {
@@ -26,7 +38,10 @@ describe('MnemonicPasswordModal.vue', () => {
       wrapper = shallowMount(MnemonicPasswordModal, {
         localVue,
         i18n,
-        attachToDocument: true
+        attachToDocument: true,
+        stubs: {
+          'b-modal':BModalStub
+        }
       });
     });
 

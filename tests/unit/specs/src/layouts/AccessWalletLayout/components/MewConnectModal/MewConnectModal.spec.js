@@ -1,32 +1,36 @@
 import Vue from 'vue';
-import { shallowMount,createLocalVue } from '@vue/test-utils'
+import VueQrcode from '@xkeshi/vue-qrcode';
+import { shallowMount } from '@vue/test-utils'
 import MewConnectModal from '@/layouts/AccessWalletLayout/components/MewConnectModal/MewConnectModal.vue';
-import VueI18N from 'vue-i18n'
-import Translations from '@/translations';
-import BootstrapVue from "bootstrap-vue";
-
-const localVue = createLocalVue()
-localVue.use(VueI18N)
-localVue.use(BootstrapVue);
+import {
+  Tooling
+} from '@@/helpers';
 
 describe('MewConnectModal.vue', () => {
-  it('should render correct contents', () => {
-    const i18n = new VueI18N({
-      locale:'en_US',
-      Translations
-    })
+  let localVue, i18n, wrapper, store;
 
-    const wrapper = shallowMount(MewConnectModal, 
-    {
-        sync:false,
-        attachToDocument:true, 
-        localVue,
-        i18n
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
+    beforeEach(() => {
+        wrapper = shallowMount(MewConnectModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs:{
+            'qrcode':VueQrcode
+          }
+        });
+    });
+
+  it('should render correct contents', () => {
     const QrCode = 'QrCode'
     wrapper.setData({QrCode:QrCode})
-    console.log(wrapper.vm.$data.QrCode)
     expect(wrapper.vm.$data.QrCode).toEqual(QrCode)
   });
 

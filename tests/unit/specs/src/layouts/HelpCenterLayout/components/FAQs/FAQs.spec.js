@@ -27,7 +27,7 @@ describe('FAQs.vue', () => {
         });
 
         it('should render correct contents', () => {
-           const linkWrappers = wrapper.findAll('.qa__contents--title')
+            const linkWrappers = wrapper.findAll('.qa__contents--title')
             var linkWrapper = linkWrappers.at(0);
             linkWrapper.trigger('click')
             expect(wrapper.vm.$data.showFAQs.faq1).toBe(true)

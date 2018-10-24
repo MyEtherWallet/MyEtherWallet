@@ -8,7 +8,7 @@ import {
 
 
 describe('HelpCenterLayout.vue', () => {
-  let localVue, i18n, wrapper, store;
+    let localVue, i18n, wrapper, store;
 
     beforeAll(() => {
         const baseSetup = Tooling.createLocalVueInstance();

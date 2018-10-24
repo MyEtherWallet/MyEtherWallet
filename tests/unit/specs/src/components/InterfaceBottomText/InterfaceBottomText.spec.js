@@ -33,7 +33,7 @@ describe('InterfaceBottomText.vue', () => {
         });
     });
 
-  it('should render correct contents', () => {
+  it('should render correct link, linkText, question', () => {
     expect(wrapper.vm.$el.querySelector('div p').textContent.trim()).toEqual(
       question + " " + linkText 
     );

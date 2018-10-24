@@ -1,56 +1,56 @@
 import Vue from 'vue';
-import { shallowMount ,createLocalVue} from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import ConfirmSignModal from '@/containers/ConfirmationContainer/components/ConfirmSignModal/ConfirmSignModal.vue';
-import BootstrapVue from "bootstrap-vue";
+import VueQrcode from '@xkeshi/vue-qrcode';
 
-const localVue = createLocalVue()
-localVue.use(BootstrapVue);
+import {
+  Tooling
+} from '@@/helpers';
+    const confirmSignMessage = jest.fn()
+
+const signedMessage = 'signedMessage'
+const messageToSign = 'messageToSign'
+const from = 'from'
+const isHardwareWallet = false
 
 describe('ConfirmSignModal.vue', () => {
-  it('should render correct contents', () => {
-      const signedMessage = 'signedMessage'
-      const messageToSign = 'messageToSign'
-      const from = 'from'
-      const isHardwareWallet = false
+    let localVue, i18n, wrapper, store;
 
-      const wrapper = shallowMount(ConfirmSignModal, {
-        localVue,
-        sync:false,
-        attachToDocument:true, 
-        propsData: { signedMessage, messageToSign, from , isHardwareWallet}
-      });
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
 
-      console.log('ConfirmSignModal from:%O', wrapper.vm.$el.querySelector('.tx-from .address-info').getElementsByTagName('p')[1].textContent.trim());
-      expect(wrapper.vm.$el.querySelector('.tx-from .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(from);
-
-      console.log('ConfirmSignModal messageToSign:%O', wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim());
-      expect(wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(messageToSign);
-
-      console.log('modalDetailInformation:%O', wrapper.vm.modalDetailInformation)
-      console.log('transactionSigned:%O', wrapper.vm.transactionSigned)
-      console.log('signedMessageSignature:%O', wrapper.vm.signedMessageSignature)
-
-      expect(wrapper.vm.modalDetailInformation).toBe(false)
-      expect(wrapper.vm.transactionSigned).toBe(false)
-      expect(wrapper.vm.signedMessageSignature).toEqual(signedMessage)
-  });
+    beforeEach(() => {
+        wrapper = shallowMount(ConfirmSignModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs:{
+            'qrcode':VueQrcode
+          },
+           propsData: { signedMessage, messageToSign, from ,confirmSignMessage, isHardwareWallet}
+        });
+    });
 
 
-  it('should confirm SignMessage when click submit button', () => {
-    const confirmSignMessage = jest.fn(()=> console.log('return true'))
-    const wrapper = shallowMount(ConfirmSignModal, {
-      localVue,
-      sync:false,
-      attachToDocument:true, 
-      propsData: {
-        signedMessage:'signedMessage',
-        confirmSignMessage: confirmSignMessage
-      }
+    it('should render correct contents', () => {
+        expect(wrapper.vm.$el.querySelector('.tx-from .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(from);
+        expect(wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(messageToSign);
+        expect(wrapper.vm.modalDetailInformation).toBe(false)
+        expect(wrapper.vm.transactionSigned).toBe(false)
+        expect(wrapper.vm.signedMessageSignature).toEqual(signedMessage)
+    });
+
+
+    describe('ConfirmSignModal.vue Methods', () => {
+      it('should confirm SignMessage when click submit button', () => {
+      const submitButton = wrapper.find('div.submit-button')
+      submitButton.trigger('click')
+      expect( confirmSignMessage ).toHaveBeenCalled()
     })
-
-    const submitButton = wrapper.find('div.submit-button')
-    submitButton.trigger('click')
-    expect( confirmSignMessage ).toHaveBeenCalled()
-  })
-  describe('ConfirmSignModal.vue Methods', () => {});
+  });
 });

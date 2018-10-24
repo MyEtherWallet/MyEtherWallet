@@ -1,17 +1,42 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer/SignMessageContainer.vue';
+import PopOver from '@/components/PopOver/PopOver.vue';
+import {
+  Tooling
+} from '@@/helpers';
 
-xdescribe('SignMessageContainer.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+describe('SignMessageContainer.vue', () => {
+   let localVue, i18n, wrapper, store;
+
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(SignMessageContainer, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs:{
+            'popover':PopOver
           }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+        });
+    });
+
+  it('should render correct contents', () => {
+    
   });
 
-  describe('SignMessageContainer.vue Methods', () => {});
+  describe('SignMessageContainer.vue Methods', () => {
+    it('should render correct contents', () => {
+      const textArea = wrapper.find('.domain-name .custom-textarea-1');
+      wrapper.find('.copy-buttons span').trigger('click');
+      expect(wrapper.vm.$el.querySelector('.domain-name .custom-textarea-1').textContent.trim()).toEqual('')
+    });
+  });
 });

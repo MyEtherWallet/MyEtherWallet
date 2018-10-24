@@ -118,7 +118,7 @@ describe('MnemonicModal.vue', () => {
       // wrapper.setData({ mnemonicSize: 12, mnemonic24: false, mnemonicPhrase: [].fill(' ', 0, 11) });
       const phrase = shortMnemonic.split(' ');
       for (let i = 0; i < 12; i++) {
-        const textInput = wrapper.find('#word' + i);
+         const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(12);
@@ -129,7 +129,7 @@ describe('MnemonicModal.vue', () => {
       wrapper.vm.mnemonicValueBitSizeChange();
       const phrase = longMnemonic.split(' ');
       for (let i = 0; i < 24; i++) {
-        const textInput = wrapper.find('#word' + i);
+        const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(24);
@@ -151,7 +151,7 @@ describe('MnemonicModal.vue', () => {
       const doubleLengthPhrase = shortMnemonic + ' ' + shortMnemonic;
       const phrase = doubleLengthPhrase.split(' ');
       for (let i = 0; i < 24; i++) {
-        const textInput = wrapper.find('#word' + i);
+         const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(24);

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode/ButtonWithQrCode.vue';
 import { shallowMount } from '@vue/test-utils'
-
+import QrcodeIcon from '@/assets/images/icons/qr-code.svg';
 import {
   Tooling
 } from '@@/helpers';
@@ -15,6 +15,7 @@ describe('ButtonWithQrCode.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+
     });
 
     beforeEach(() => {
@@ -28,12 +29,10 @@ describe('ButtonWithQrCode.vue', () => {
     });
 
   it('should render correct contents', () => {
-    console.log('button text:%O', wrapper.vm.$el.querySelector('div div .the-button').textContent.trim());
     expect(wrapper.vm.$el.querySelector('div div .the-button').textContent.trim()).toEqual(buttonname);
   });
 
   describe('ButtonWithQrCode.vue Methods', () => {});
-
 });
 
 

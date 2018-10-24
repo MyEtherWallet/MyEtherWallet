@@ -26,11 +26,10 @@ describe('LinkBlock.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+        Vue.config.warnHandler = ()=>{};
     });
 
     beforeEach(() => {
-        
-
         wrapper = shallowMount(LinkBlock, {
           localVue,
           i18n,
@@ -48,10 +47,8 @@ describe('LinkBlock.vue', () => {
       expect(wrapper.vm.$el.querySelector('.block-title').textContent.trim()).toEqual(content.title)
       expect(wrapper.vm.$el.querySelector('.email a').href.replace('mailto:', '')).toEqual(content.email)
       const socialElements = wrapper.vm.$el.querySelectorAll('.social div')
-      console.log(socialElements.length)
       for(var i =0 ; i<socialElements.length; i++) {
         const socialElement = socialElements[i];
-        console.log(socialElement.querySelector('a').href)
         expect(socialElement.querySelector('a').href).toEqual(content.social[i].link+"/")
         expect(socialElement.querySelector('img').getAttribute('src')).toEqual(content.social[i].icon)
 

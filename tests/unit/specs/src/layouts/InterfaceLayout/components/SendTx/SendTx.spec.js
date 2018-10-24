@@ -1,17 +1,43 @@
 import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import SendTx from '@/layouts/InterfaceLayout/components/SendTx/SendTx.vue';
+import sinon from 'sinon'
+import {
+  Tooling
+} from '@@/helpers';
 
-xdescribe('SendTx.vue', () => {
-  it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
+describe('SendTx.vue', () => {
+    let localVue, i18n, wrapper, store;
+
+    const signedTx = 'signedTx'
+    const rawTx = {data:'rawTx'}
+    const spy = sinon.stub()    
+
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(SendTx, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
           propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            signedTx:signedTx,
+            rawTx:rawTx,
+            pathUpdate:spy()
           }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
-  });
+        });
+    });
 
-  describe('SendTx.vue Methods', () => {});
+    it('should render correct content', () => {
+       
+    });
+
+  describe('SendTx.vue Methods', () => {
+  });
 });

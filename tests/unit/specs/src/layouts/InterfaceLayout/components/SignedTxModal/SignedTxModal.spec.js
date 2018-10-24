@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
-
+import sinon from 'sinon'
 import {
   Tooling
 } from '@@/helpers';
@@ -10,9 +10,9 @@ describe('SignedTxModal.vue', () => {
     let localVue, i18n, wrapper, store;
 
     const signedTx = 'signedTx'
-        const rawTx = jest.fn(()=> console.log('rawTx function called'))
+    const rawTx = {data:'rawTx'}
+    const spy = sinon.stub()    
 
-    const pathUpdate = jest.fn(()=> console.log('pathUpdate function called'))
     beforeAll(() => {
         const baseSetup = Tooling.createLocalVueInstance();
         localVue = baseSetup.localVue;
@@ -29,22 +29,20 @@ describe('SignedTxModal.vue', () => {
           propsData: {
             signedTx:signedTx,
             rawTx:rawTx,
-            pathUpdate:pathUpdate
+            pathUpdate:spy()
           }
+        });
+
+        wrapper.setData({
+          showRaw: true
         });
     });
 
     it('should render correct content', () => {
-       expect(wrapper.vm.$el.querySelector('.signed-tx-container code').textContent.trim()).toEqual(signedTx)
-
-       wrapper.setData({
-        showRaw: true
-       });
-       console.log('trigger close button')
-       console.log(wrapper.vm.$el.querySelector('.close-button').textContent)
-       console.log(wrapper.find('.close-button').trigger('click'))
-       
-        // wrapper.find('.close-button').trigger('click')
+        expect(wrapper.vm.$el.querySelector('.signed-tx-container code').textContent.trim()).toEqual(signedTx)
+        const closeButton = wrapper.find('.close-button')
+        closeButton.trigger('click')
+        expect(spy.calledOnce).toBe(true)
     });
 
   describe('SignedTxModal.vue Methods', () => {

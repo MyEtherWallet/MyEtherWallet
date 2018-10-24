@@ -1,40 +1,39 @@
 import Vue from 'vue';
-import { shallowMount,createLocalVue } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal/HardwareModal.vue';
-import VueI18N from 'vue-i18n'
-import Translations from '@/translations';
-import BootstrapVue from "bootstrap-vue";
-const localVue = createLocalVue()
-localVue.use(VueI18N)
-localVue.use(BootstrapVue);
-
+import {
+  Tooling
+} from '@@/helpers';
 
 const RouterLinkStub = {
   name:'router-link',
   template:'<div class="routerlink"><slot> </slot></div>',
-  // render: ()=>{},
   props:['to']  
 }
 
 
 describe('HardwareModal.vue', () => {
-  it('should render correct contents', () => {
-    const i18n = new VueI18N({
-      locale:'en_US',
-      Translations
-    })
-
-    const wrapper = shallowMount(HardwareModal, 
-    {
-        sync:false,
-        attachToDocument:true, 
-        localVue,
-        i18n,
-        stubs: {'router-link':RouterLinkStub }
+    let localVue, i18n, wrapper, store;
+  
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
     });
 
+    beforeEach(() => {
+        wrapper = shallowMount(HardwareModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs: {'router-link':RouterLinkStub }
+        });
+    });
+
+  it('should render correct contents', () => {
     const liElements = wrapper.findAll('li')
-    console.log(liElements.length)
 
     var liElement = liElements.at(0)
     liElement.trigger('click')
@@ -55,7 +54,6 @@ describe('HardwareModal.vue', () => {
     wrapper.find('.mid-round-button-green-filled').trigger('click')
     wrapper.find('.mid-round-button-green-filled').trigger('click')
     expect(wrapper.vm.$data.mayNotBeAttached).toBe(false)
-    
   });
 
   describe('HardwareModal.vue Methods', () => {});
