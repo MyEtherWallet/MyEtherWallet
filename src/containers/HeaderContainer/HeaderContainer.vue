@@ -65,6 +65,7 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
+                <transactions v-if="wallet !== null"/>
                 <notification v-if="wallet !== null"/>
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
@@ -114,13 +115,15 @@ import store from 'store';
 import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
+import Transaction from '@/components/Transactions'
 import ScrollUpButton from '@/components/ScrollUpButton';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    scrollupbutton: ScrollUpButton,
+    transactions: Transaction
   },
   data() {
     return {
