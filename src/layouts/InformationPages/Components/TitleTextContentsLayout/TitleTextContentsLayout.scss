@@ -2,7 +2,17 @@
 
 
 .title {
-  font-size: 25px;
+  display: flex;
+  align-items: center;
+  span {
+    font-size: 25px;
+    font-weight: 500;
+  }
+
+  img {
+    height: 35px;
+    margin-right: 10px;
+  }
 }
 
 .bold-sub-title {

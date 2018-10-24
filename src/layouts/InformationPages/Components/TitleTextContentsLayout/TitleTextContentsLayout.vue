@@ -1,6 +1,9 @@
 <template>
   <div class="title-text-contents">
-    <div class="title" v-if="options.title">{{options.title}}</div>
+    <div class="title" v-if="options.title">
+      <img :src="options.titleIcon">
+      <span>{{options.title}}</span>
+    </div>
     <div class="bold-sub-title" v-if="options.boldSubTitle">{{options.boldSubTitle}}</div>
     <div class="text-content" v-if="options.textContent">
       <p v-for="text in options.textContent" :key="text.key">
