@@ -52,9 +52,9 @@
             <textarea
               v-ens-resolver="address"
               ref="address"
-              v-model="address"
               name="name"
-              autocomplete="off"/>
+              autocomplete="off"
+              @input="debounceInput"/>
             <i
               :class="[validAddress && address.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
               aria-hidden="true"/>
@@ -165,6 +165,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 
@@ -248,6 +249,9 @@ export default {
     }
   },
   methods: {
+    debounceInput: this.$store.state.web3.utils._.debounce(function(e) {
+      this.address = normalise(e.target.value);
+    }, 1500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
