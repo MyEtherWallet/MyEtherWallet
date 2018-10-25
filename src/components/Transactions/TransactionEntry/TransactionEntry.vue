@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="transaction-entry">
+  <div>
     <div class="top-row">
       <div class="from-address">
         <div class="icon">
@@ -35,20 +35,14 @@
       <div class="status-indicator-container">
         <div class="status-indicator">
           <div class="status-timer">
-            <p >{{ calculateTimeRemaining(details.parsed) }}</p>
+            <p v-if="swapWindowOpen && !completed">{{ parseTimeRemaining }}</p>
+            <p v-if="!swapWindowOpen && !completed">Order Expired</p>
+            <p v-if="completed">Order Complete</p>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="bottom-row">
-      <div class="line"/>
-      <div class="check-history-container">
-        <h4
-          class="check-history"
-          @click="checkHistory">Check history</h4>
-      </div>
-    </div>
+{{currentStatus}}
   </div>
 </template>
 
@@ -77,14 +71,38 @@ export default {
         BTC: iconBtc,
         ETH: iconEth
       },
-      arrowImage: Arrow
+      arrowImage: Arrow,
+      parsed: {},
+      timeRemaining: '',
+      currentStatus: ''
     };
   },
   computed: {
-    // sortedTransactions() {}
+    parseTimeRemaining() {
+      const seconds = Math.floor(this.timeRemaining % 60);
+      const minutes = Math.floor((this.timeRemaining / 60) % 60);
+      // const hours = Math.floor((this.timeRemaining / (60 * 60)) % 24);
+      // const days = Math.floor(this.timeRemaining / (60 * 60 * 24));
+      return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
+    },
+    swapWindowOpen() {
+      return this.timeRemaining > 0;
+    },
+    completed() {
+      if (this.currentStatus === 0) {
+        return true;
+      }
+      return false;
+    }
   },
-  watch: {},
+  watch: {
+    details(newVal) {
+      console.log(newVal); // todo remove dev item
+    }
+  },
   mounted() {
+    this.parsed = this.provider.parseOrder(this.details.dataForInitialization);
+    this.timeUpdater();
     this.statusUpdater();
   },
   methods: {
@@ -104,21 +122,40 @@ export default {
         updatedNotif
       ]);
     },
-    statusUpdater() {
-      // return () => {
-      // let currentStatus;
-      // const parsed = this.provider.parseOrder(this.details);
-      // const timeRemaining = this.calculateTimeRemaining(parsed);
-      const checkStatus = setInterval(async () => {
-        // currentStatus = await this.provider.getOrderStatus(this.details);
-        clearInterval(checkStatus);
+    timeUpdater() {
+      this.timeRemaining = this.calculateTimeRemaining(this.parsed);
+      const timerInterval = setInterval(() => {
+        this.timeRemaining = this.calculateTimeRemaining(this.parsed);
+        if (this.timeRemaining < 0) {
+          clearInterval(timerInterval);
+        }
       }, 1000);
-      // };
     },
-    calculateTimeRemaining({ validFor, timestamp }) {
+    statusUpdater() {
+      let updating = false;
+      const getStatus = async () => {
+        // let currentStatus;
+        // const parsed = this.provider.parseOrder(this.details);
+        if (!updating) {
+          updating = true;
+          this.currentStatus = await this.provider.getOrderStatus(this.details);
+          updating = false;
+        }
+      };
+
+      const statusInterval = setInterval(() => {
+        getStatus();
+        if (this.timeRemaining < 0) {
+          clearInterval(statusInterval);
+        }
+      }, 1000);
+    },
+    calculateTimeRemaining(parsed) {
       return (
-        validFor -
-        parseInt((new Date().getTime() - new Date(timestamp).getTime()) / 1000)
+        parsed.validFor -
+        parseInt(
+          (new Date().getTime() - new Date(parsed.timestamp).getTime()) / 1000
+        )
       );
     }
   }
