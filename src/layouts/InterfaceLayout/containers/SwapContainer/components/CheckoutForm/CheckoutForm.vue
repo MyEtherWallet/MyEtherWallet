@@ -92,17 +92,11 @@ export default {
       default: ''
     }
   },
-  watch: {
-    formData(newVal) {
-      console.log('formData', newVal); // todo remove dev item
-    }
-  },
   data() {
     return {};
   },
   methods: {
     submit() {
-      console.log('submit'); // todo remove dev item
       document.querySelector('#payment_form').submit();
     }
   }

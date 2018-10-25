@@ -6,7 +6,8 @@ const ADD_NOTIFICATION = function(state, newNotif) {
 };
 
 const ADD_SWAP_TRANSACTION = function(state, newTx) {
-  state.Transactions = newTx;
+  state.transactions = newTx;
+  store.set('transactions', newTx);
 };
 
 const ADD_CUSTOM_PATH = function(state, paths) {
@@ -65,6 +66,11 @@ const UPDATE_NOTIFICATION = function(state, newNotif) {
   store.set('notifications', newNotif);
 };
 
+const UPDATE_SWAP_TRANSACTION = function(state, newTx) {
+  state.transactions = newTx;
+  store.set('transactions', newTx);
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -79,5 +85,6 @@ export default {
   SET_WEB3_PROVIDER_WALLET,
   SET_WEB3_INSTANCE,
   SWITCH_NETWORK,
-  UPDATE_NOTIFICATION
+  UPDATE_NOTIFICATION,
+  UPDATE_SWAP_TRANSACTION
 };

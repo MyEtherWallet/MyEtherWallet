@@ -4,7 +4,6 @@ import { ChangellyCurrencies } from '../changelly/index';
 import { SimplexCurrencies } from '../simplex/index';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
-  console.log(symbol, side); // todo remove dev item
   if (currencyList[symbol]) {
     if (side === 'from') {
       if (currencyList[symbol].invalidFrom) {
@@ -205,7 +204,7 @@ export default class CurrencyOptionBuilder {
     // return Array.from(collectMap.values()).sort(comparator);
     if (collectMap.has('ETH')) collectMap.delete('ETH');
     const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray]
+    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray];
   }
 
   setToCurrencyBuilder(value) {
@@ -258,7 +257,7 @@ export default class CurrencyOptionBuilder {
     // return Array.from(collectMap.values()).sort(comparator);
     if (collectMap.has('ETH')) collectMap.delete('ETH');
     const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray]
+    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray];
     // if (collectMap.has('ETH')) collectMap.delete('ETH');
     // return Array.from(collectMap.values())
     //   .sort(comparator)

@@ -1,7 +1,6 @@
 import { host } from './config';
 import { post, get } from '@/helpers/httpRequests';
 
-
 const getQuote = reqObj => {
   const options = {
     mode: 'cors',

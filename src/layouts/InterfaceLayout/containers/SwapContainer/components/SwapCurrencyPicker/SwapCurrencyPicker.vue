@@ -100,7 +100,6 @@ export default {
       this.currencies.forEach(curr => this.localCurrencies.push(curr));
     }
     if (this.defaultValue.symbol && this.defaultValue.name) {
-      console.log(typeof this.fromSource); // todo remove dev item
       this.selectedCurrency = this.defaultValue;
     } else if (typeof this.fromSource === 'boolean') {
       if (this.fromSource) {

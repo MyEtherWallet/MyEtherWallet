@@ -36,6 +36,8 @@ export default {
         hostUrl.pathname
       }`
     );
+    const transactions =
+      store.get('transactions') !== undefined ? store.get('transactions') : {};
     const notifications =
       store.get('notifications') !== undefined
         ? store.get('notifications')
@@ -51,7 +53,7 @@ export default {
       account: {
         balance: 0
       },
-      Transactions: {},
+      transactions: transactions,
       Networks: nodeList,
       Errors: {},
       online: true,

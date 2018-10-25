@@ -1,6 +1,8 @@
 <template>
   <div class="providers-radio-selector">
-    <div v-show="providerData.length > 0" class="radio-button-container">
+    <div
+      v-show="providerData.length > 0"
+      class="radio-button-container">
       <ul>
         <li
           v-for="(provider, idx) in providerData"
@@ -18,47 +20,48 @@
           <div class="provider-image">
             <img :src="providerLogo(provider.provider)">
           </div>
-          <div>
+          <div :class="[(minCheck(provider) || maxCheck(provider)) ? 'invalid-min-max' : '']">
             {{ normalizedRateDisplay(provider) }}
           </div>
           <div>
-            {{ minMaxNote(provider) }}
+            <p :class="[minCheck(provider) ? 'error-message-container': '']">{{ minNote(provider) }}</p>
+            <p :class="[maxCheck(provider) ? 'error-message-container': '']">{{ maxNote(provider) }}</p>
           </div>
         </li>
       </ul>
     </div>
-      <div v-show="loadingData" class="radio-button-container animated-background">
-        <ul>
-          <li
-            v-for="provider in providersFound"
-            :key="provider">
-            <div class="mew-custom-form__radio-button">
-              <input
-                type="radio"
-                name="provider">
-              <label :for="provider"/>
-            </div>
-            <div class="provider-image">
-              <img :src="providerLogo(provider)">
-            </div>
-              <div class="background-masker">
-              </div>
-          </li>
-        </ul>
-      </div>
-
-    <div v-show="noAvaliableProviders" class="radio-button-container">
+    <div
+      v-show="loadingData"
+      class="radio-button-container animated-background">
       <ul>
-        <li>
+        <li
+          v-for="provider in providersFound"
+          :key="provider">
           <div class="mew-custom-form__radio-button">
+            <input
+              type="radio"
+              name="provider">
+            <label :for="provider"/>
           </div>
           <div class="provider-image">
+            <img :src="providerLogo(provider)">
           </div>
+          <div class="background-masker"/>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      v-show="noAvaliableProviders"
+      class="radio-button-container">
+      <ul>
+        <li>
+          <div class="mew-custom-form__radio-button"/>
+          <div class="provider-image"/>
           <div>
-            No provider found for {{noProvidersPair.fromCurrency}} to {{noProvidersPair.toCurrency}}
+            No provider found for {{ noProvidersPair.fromCurrency }} to {{ noProvidersPair.toCurrency }}
           </div>
-          <div>
-          </div>
+          <div/>
         </li>
       </ul>
     </div>
@@ -71,6 +74,7 @@ import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
+import { BitySwap } from '@/partners';
 
 export default {
   props: {
@@ -95,6 +99,14 @@ export default {
       default: function() {
         return [];
       }
+    },
+    fromValue: {
+      type: Number,
+      default: 0
+    },
+    toValue: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -110,26 +122,40 @@ export default {
   computed: {
     noAvaliableProviders() {
       return (
-        (this.providersFound.length === 0 || this.providerData.length === 0) && !this.loadingData
+        (this.providersFound.length === 0 || this.providerData.length === 0) &&
+        !this.loadingData
       );
     }
   },
   methods: {
+    minCheck(details) {
+      return details.minValue > +this.fromValue;
+    },
+    maxCheck(details) {
+      return +this.fromValue > details.maxValue && details.maxValue > 0;
+    },
     setSelectedProvider(provider) {
       this.$emit('selectedProvider', provider);
     },
     providerLogo(name) {
       return this.logos[name];
     },
-    minMaxNote(details) {
-      // TODO: ask how to relay this information to user per provider
-      if (details.minValue > 0 && details.maxValue > 0) {
-        return `Minimun: ${details.minValue} ${
-          details.fromCurrency
-        }, Maximum: ${details.maxValue} ${details.fromCurrency}`;
-      } else if (details.minValue > 0) {
-        return `Minimun: ${details.minValue} ${details.fromCurrency}`;
-      } else if (details.maxValue > 0) {
+    minNote(details) {
+      if (details.minValue > 0) {
+        if (details.provider === BitySwap.getName()) {
+          return `From Min.: ${details.minValue} ${
+            details.fromCurrency
+          } & To Min.: ${details.minValue} ${details.toCurrency}`;
+        }
+        return `Minimum: ${details.minValue} ${details.fromCurrency}`;
+      }
+      return '';
+    },
+    maxNote(details) {
+      if (details.maxValue > 0) {
+        if (details.provider === BitySwap.getName()) {
+          return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
+        }
         return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
       }
       return '';

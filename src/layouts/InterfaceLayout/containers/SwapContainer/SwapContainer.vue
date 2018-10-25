@@ -5,7 +5,7 @@
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="tempCheckStatus"/>
+      @swapStarted="swapStarted"/>
 
     <swap-send-to-modal
       ref="swapSendTo"
@@ -30,7 +30,7 @@
           </div>
           <swap-currency-picker
             :currencies="fromArray"
-            :fromSource="true"
+            :from-source="true"
             page="SwapContainerFrom"
             @selectedCurrency="setFromCurrency"/>
           <div class="the-form amount-number">
@@ -50,9 +50,8 @@
             }}</p>
           </div>
         </div>
-        <div class="exchange-icon"
-             @click="switchOrder(fromCurrency, toCurrency)">
-          <img :src="images.swap" >
+        <div class="exchange-icon">
+          <img :src="images.swap">
         </div>
         <div class="amount">
           <div class="title">
@@ -60,7 +59,7 @@
           </div>
           <swap-currency-picker
             :currencies="toArray"
-            :fromSource="false"
+            :from-source="false"
             page="SwapContainerTo"
             @selectedCurrency="setToCurrency"/>
           <div class="the-form amount-number">
@@ -71,6 +70,12 @@
               value=""
               placeholder="Received Amount"
               @input="amountChanged('to')">
+          </div>
+          <div
+            class="error-message-container">
+            <p v-if="!bitySwap.minCheck(fromCurrency, fromValue, toCurrency, toValue) && selectedProvider.provider === bitySwap.name">{{ $t('interface.belowMinSwap') }}</p>
+            <p v-if="!bitySwap.maxCheck(fromCurrency, fromValue, toCurrency, toValue) && selectedProvider.provider === bitySwap.name ">{{ $t('interface.aboveMaxSwap')
+            }}</p>
           </div>
         </div>
       </div>
@@ -100,9 +105,11 @@
       <providers-radio-selector
         v-if="haveProviderRates"
         :provider-data="providerList"
-        :noProvidersPair="noProvidersPair"
-        :loadingData="loadingData"
-        :providersFound="providersFound"
+        :from-value="+fromValue"
+        :to-value="+toValue"
+        :no-providers-pair="noProvidersPair"
+        :loading-data="loadingData"
+        :providers-found="providersFound"
         @selectedProvider="setSelectedProvider"/>
     </div>
 
@@ -146,15 +153,17 @@
     </div>
 
     <div class="submit-button-container">
-      <div v-show="finalizingSwap"
-           class="disabled submit-button large-round-button-green-filled clickable">
+      <div
+        v-show="finalizingSwap"
+        class="disabled submit-button large-round-button-green-filled clickable">
         Finalizing Swap Details
         <!--{{ $t('common.continue') }}-->
         <i
           class="fa fa-long-arrow-right"
           aria-hidden="true"/>
       </div>
-      <div v-show="!finalizingSwap"
+      <div
+        v-show="!finalizingSwap"
         :class="[validSwap ? '': 'disabled','submit-button large-round-button-green-filled clickable']"
         @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
@@ -169,6 +178,7 @@
 <script>
 import web3 from 'web3';
 import BigNumber from 'bignumber.js';
+import debug from 'debug';
 
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import DropDownAddressSelector from './components/SwapAddressSelector';
@@ -195,6 +205,8 @@ import {
   isValidEntry,
   checkInvalidOrMissingValue
 } from '@/partners';
+
+const errorLogger = debug('v5:swapContainer');
 
 BigNumber.config({ DECIMAL_PLACES: 7 });
 
@@ -245,6 +257,7 @@ export default {
       fromArray: [],
       providerData: [],
       ratesRetrived: false,
+      issueRecievingRates: false,
       providerRatesRecieved: [],
       noProvidersPair: {},
       loadingData: true,
@@ -264,7 +277,8 @@ export default {
           return bestRateForQuantity([...this.providerList], this.fromValue);
         }
       } catch (e) {
-        console.error(e);
+        // eslint-disable no-console
+        errorLogger(e);
       }
     },
     providerList() {
@@ -288,9 +302,8 @@ export default {
         return supportedProviders.every(entry =>
           this.providerRatesRecieved.includes(entry)
         );
-      } else {
-        return true;
       }
+      return true;
     }
   },
   watch: {
@@ -313,15 +326,13 @@ export default {
       );
     },
     ['bitySwap.hasRates']() {
-      if (this.bitySwap.hasRates) {
-        if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
-          this.providerRatesRecieved.push(this.bitySwap.name);
-        }
-        this.updateSupportedCurrencyArrays(
-          this.bitySwap.name,
-          this.bitySwap.currencies
-        );
+      if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
+        this.providerRatesRecieved.push(this.bitySwap.name);
       }
+      this.updateSupportedCurrencyArrays(
+        this.bitySwap.name,
+        this.bitySwap.currencies
+      );
     },
     haveProviderRates(newValue) {
       if (newValue) {
@@ -349,7 +360,10 @@ export default {
   // then the watchers, beforeMount, and mounted could be reduced to one call
   mounted() {
     setTimeout(() => {
-      this.ratesRetrived = true;
+      if (!this.haveProviderRates) {
+        this.issueRecievingRates = true;
+        this.ratesRetrived = true;
+      }
     }, 3000);
     // Replace default values with values from APIs
     const {
@@ -358,35 +372,32 @@ export default {
     } = this.currencyOptions.buildInitialCurrencyArrays();
     this.toArray = toArray;
     this.fromArray = fromArray;
-    this.currentAddress = this.$store.state.wallet.getAddressString();
+    this.currentAddress = this.$store.state.wallet.getChecksumAddressString();
     this.providerRatesRecieved = [this.simplexSwap.name]; //TODO centralize location of name strings for providers
   },
   methods: {
-    tempCheckStatus(swapDetails) {
-      let checkStatus;
-      switch (swapDetails.provider) {
-        case this.kyberSwap.name:
-          break;
-        case this.changellySwap.name:
-          checkStatus = this.changellySwap.statusUpdater(swapDetails);
-          this.$store.dispatch('addSwapTransaction', [
-            this.currentAddress,
-            swapDetails
-          ]);
-          checkStatus();
-          break;
-        case this.bitySwap.name:
-          checkStatus = this.bitySwap.statusUpdater(swapDetails);
-          this.$store.dispatch('addSwapTransaction', [
-            this.currentAddress,
-            swapDetails
-          ]);
-          checkStatus();
-          break;
-        case this.simplexSwap.name:
-          break;
-      }
-      this.resetSwapState();
+    swapStarted(swapDetails) {
+      // let checkStatus;
+      this.$store
+        .dispatch('addSwapTransaction', [this.currentAddress, swapDetails])
+        .then(() => {
+          this.resetSwapState();
+          // switch (swapDetails.provider) {
+          //   case this.kyberSwap.name:
+          //     break;
+          //   case this.changellySwap.name:
+          //     checkStatus = this.changellySwap.statusUpdater(swapDetails);
+          //     checkStatus();
+          //     break;
+          //   case this.bitySwap.name:
+          //     checkStatus = this.bitySwap.statusUpdater(swapDetails);
+          //     checkStatus();
+          //     break;
+          //   case this.simplexSwap.name:
+          //     break;
+          // }
+
+        });
     },
     // TODO: CACHE PREVIOUSLY QUERIED RATES, TO USE FOR INITIAL DIAPLAY WHILE NEW RATES ARE RETRIEVED
     // TODO: ASK - provide the normalized exchange, calculated exchange, or both.
@@ -397,10 +408,6 @@ export default {
       this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 1;
-    },
-    switchOrder(fromCurrency, toCurrency) {
-      // TODO: remove or make work
-      console.log(fromCurrency, toCurrency); // todo remove dev item
     },
     updateSupportedCurrencyArrays(provider, retrievedList) {
       this.currencyOptions.updateCurrencyList(provider, retrievedList);
@@ -460,7 +467,6 @@ export default {
       }
     },
     async updateEstimate(input) {
-      console.log('updateEstimate:', input); // todo remove dev item
       let fromValue, toValue;
       switch (input) {
         case 'to':
@@ -611,7 +617,7 @@ export default {
         this.$refs.swapConfirm.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
-        console.error(e);
+        errorLogger(e);
       }
     },
     async collectSwapDetails() {
@@ -631,6 +637,7 @@ export default {
           toAddress: this.toAddress,
           fromAddress: this.currentAddress,
           timestamp: Date.now(),
+          status: 1,
           maybeToken: false
         };
 
@@ -719,7 +726,8 @@ export default {
         };
       }
       this.invalidFrom = 'simplexMin';
-      console.log('indicate invalid simplex'); // TODO: provide ui indication(s)
+      // eslint-disable no-console
+      errorLogger('indicate invalid simplex'); // TODO: provide ui indication(s)
       const simplexRateDetails = await this.simplexSwap.updateFiat(
         this.fromCurrency,
         this.toCurrency,
@@ -757,8 +765,8 @@ export default {
         toCurrency,
         provider: this.bitySwap.name,
         rate: rate,
-        minValue: this.bitySwap.minValue
-        // maxValue: this.bitySwap.maxValue // TODO provide better identification and notice of min/max for user
+        minValue: this.bitySwap.minValue,
+        maxValue: this.bitySwap.maxValue // TODO provide better identification and notice of min/max for user
       };
     },
     async getChangellyRate(fromCurrency, toCurrency, fromValue) {

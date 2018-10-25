@@ -57,7 +57,6 @@ export default class Simplex {
   }
 
   parseOrder(order) {
-    console.log('parseOrder', order); // todo remove dev item
     return {
       orderId: order.id,
       statusId: undefined,
@@ -82,17 +81,14 @@ export default class Simplex {
         );
       };
       const parsed = this.parseOrder(swapDetails.dataForInitialization);
-      console.log('parsed', parsed); // todo remove dev item
-      let timeRemaining = calculateTimeRemaining(
+      const timeRemaining = calculateTimeRemaining(
         parsed.validFor,
         parsed.timestamp
       );
-      console.log('timeRemaining', timeRemaining); // todo remove dev item
-      let checkStatus = setInterval(async () => {
+      const checkStatus = setInterval(async () => {
         currentStatus = await getStatus({
           orderid: parsed.orderId
         });
-        console.log('currentStatus', currentStatus); // todo remove dev item
         clearInterval(checkStatus);
       }, 1000);
     };
@@ -142,7 +138,6 @@ export default class Simplex {
 
   createSwap(swapDetails) {
     if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
-      console.log('get simplex order details'); // todo remove dev item
       return getOrder({
         'g-recaptcha-response': '',
         account_details: {
@@ -165,7 +160,6 @@ export default class Simplex {
           }
         }
       }).then(_result => {
-        console.log('get simplex order result', _result); // todo remove dev item
         return _result.result;
       });
     }
