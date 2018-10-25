@@ -2,9 +2,11 @@
   <div class="title-text-contents">
     <div 
       v-if="options.title" 
-      class="title">
-      <img :src="options.titleIcon">
-      <span>{{ options.title }}</span>
+      class="title-block">
+      <div class="title">
+        <img v-if="options.titleIcon" :src="options.titleIcon">
+        <span>{{ options.title }}</span>
+      </div>
     </div>
     <div 
       v-if="options.boldSubTitle" 
