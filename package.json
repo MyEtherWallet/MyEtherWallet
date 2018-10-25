@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "start": "npm run update:lists && npm run dev",
-    "test:single" : "DEBUG=test:* vue-cli-service test:unit --runTestsByPath",
+    "test:single": "DEBUG=test:* vue-cli-service test:unit --runTestsByPath",
     "test:dev": "DEBUG=test:* vue-cli-service test:unit --watch",
     "test:unit": "vue-cli-service test:unit",
     "test": "npm run test:unit",
