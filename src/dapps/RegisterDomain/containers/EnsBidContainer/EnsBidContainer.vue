@@ -109,8 +109,8 @@
           accordion="bidAccordionCollection"
           role="tabpanel">
           <div class="inputs-container">
-            <div 
-              v-if="!$route.fullPath.includes('reveal')" 
+            <div
+              v-if="!$route.fullPath.includes('reveal')"
               class="confirmation-warning">
               You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.
             </div>
@@ -324,7 +324,7 @@ export default {
         data: this.raw['data'],
         from: this.raw['from'],
         to: this.raw['to'],
-        value: !this.$route.fullPath.includes('reveal') ? this.raw['value'] : 0,
+        value: this.raw['value'],
         gasPrice: this.raw['gasPrice'],
         gas: this.raw['gas'],
         nonce: this.raw['nonce']

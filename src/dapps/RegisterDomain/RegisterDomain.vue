@@ -352,7 +352,7 @@ export default {
       const revealDate = date.setDate(date.getDate() - 2);
       const raw = {
         from: address,
-        value: unit.toWei(this.bidMask, 'ether').toString(),
+        value: type === 'reveal' ? 0 : unit.toWei(this.bidMask, 'ether').toString(),
         to: this.registrarAddress,
         data: contractReference.encodeABI(),
         name: this.domainName,
