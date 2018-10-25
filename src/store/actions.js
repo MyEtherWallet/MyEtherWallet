@@ -25,13 +25,12 @@ const addNotification = function({ commit, state }, val) {
 const addSwapTransaction = function({ commit, state }, val) {
   const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
-  Object.keys(state.Transactions).forEach(item => {
-    newNotif[item] = state.Transactions[item];
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
   });
-
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push(val); // TODO: reduce the ammount of information stored
+  newNotif[address].push(val[1]); // TODO: reduce the ammount of information stored
   commit('ADD_SWAP_TRANSACTION', newNotif);
 };
 

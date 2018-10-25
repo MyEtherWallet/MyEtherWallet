@@ -6,7 +6,7 @@ const ADD_NOTIFICATION = function(state, newNotif) {
 };
 
 const ADD_SWAP_TRANSACTION = function(state, newTx) {
-  state.Transactions = newTx;
+  state.transactions = newTx;
 };
 
 const ADD_CUSTOM_PATH = function(state, paths) {

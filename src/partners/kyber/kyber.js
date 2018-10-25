@@ -465,7 +465,7 @@ export default class Kyber {
       // }
     } catch (e) {
       // eslint-disable no-console
-      console.error(e); // todo remove dev item
+      errorLogger(e); // todo remove dev item
       throw e;
     }
   }
