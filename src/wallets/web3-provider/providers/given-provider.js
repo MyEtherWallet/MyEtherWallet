@@ -1,6 +1,6 @@
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import { ethSendTransaction, ethSign } from '../methods';
+import { ethSendTransaction, ethSign, ethSignTransaction } from '../methods';
 class GivenProvider {
   constructor(host, options, store, eventHub) {
     this.givenProvider = Object.assign({}, host);
@@ -20,6 +20,7 @@ class GivenProvider {
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
+      middleware.use(ethSignTransaction);
       middleware.use(ethSign);
       middleware.run(req, callback).then(() => {
         this.givenProvider.send_(payload, callback);

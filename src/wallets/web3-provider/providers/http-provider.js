@@ -4,6 +4,7 @@ import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
+  ethSignTransaction,
   ethSign,
   ethAccounts,
   ethCoinbase
@@ -44,6 +45,7 @@ class HttpProvider {
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
+      middleware.use(ethSignTransaction);
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethCoinbase);
