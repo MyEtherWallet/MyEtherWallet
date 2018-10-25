@@ -71,6 +71,12 @@
               placeholder="Received Amount"
               @input="amountChanged('to')">
           </div>
+          <div
+            class="error-message-container">
+            <p v-if="!bitySwap.minCheck(fromCurrency, fromValue, toCurrency, toValue) && selectedProvider.provider === bitySwap.name">{{ $t('interface.belowMinSwap') }}</p>
+            <p v-if="!bitySwap.maxCheck(fromCurrency, fromValue, toCurrency, toValue) && selectedProvider.provider === bitySwap.name ">{{ $t('interface.aboveMaxSwap')
+            }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -268,6 +274,7 @@ export default {
           return bestRateForQuantity([...this.providerList], this.fromValue);
         }
       } catch (e) {
+        // eslint-disable no-console
         console.error(e);
       }
     },
@@ -402,10 +409,6 @@ export default {
       this.fromValue = 1;
       this.toValue = 1;
     },
-    switchOrder(fromCurrency, toCurrency) {
-      // TODO: remove or make work
-      console.log(fromCurrency, toCurrency); // todo remove dev item
-    },
     updateSupportedCurrencyArrays(provider, retrievedList) {
       this.currencyOptions.updateCurrencyList(provider, retrievedList);
       const {
@@ -464,7 +467,6 @@ export default {
       }
     },
     async updateEstimate(input) {
-      console.log('updateEstimate:', input); // todo remove dev item
       let fromValue, toValue;
       switch (input) {
         case 'to':
@@ -615,6 +617,7 @@ export default {
         this.$refs.swapConfirm.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
+        // eslint-disable no-console
         console.error(e);
       }
     },
@@ -723,7 +726,8 @@ export default {
         };
       }
       this.invalidFrom = 'simplexMin';
-      console.log('indicate invalid simplex'); // TODO: provide ui indication(s)
+      // eslint-disable no-console
+      console.error('indicate invalid simplex'); // TODO: provide ui indication(s)
       const simplexRateDetails = await this.simplexSwap.updateFiat(
         this.fromCurrency,
         this.toCurrency,

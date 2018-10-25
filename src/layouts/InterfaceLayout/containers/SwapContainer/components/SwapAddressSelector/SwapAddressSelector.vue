@@ -48,10 +48,10 @@
           </div>
           <p class="listed-address">
             {{ addr.address }}
-            <span 
-              v-if="addr.address === currentAddress" 
+            <span
+              v-if="addr.address === currentAddress"
               class="address-note">Your Address</span>
-            <span 
+            <span
               v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
               class="address-note">{{ addr.currency }} Address</span>
           </p>
@@ -90,7 +90,7 @@ export default {
       validAddress: false,
       dropdownOpen: false,
       addresses: [
-        { address: '1KQUwpRbhiVeHqwVPsS7j3DdkAeEMvXdtR', currency: 'BTC' },
+        { address: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9', currency: 'BTC' },
         {
           address: '0x7545566a4339daf3fad6979208b2042f06e8c881',
           currency: 'ETH'
