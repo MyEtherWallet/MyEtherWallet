@@ -106,30 +106,13 @@ export default {
         updatedNotif
       ]);
     },
-    // parseOrder(swapDetails) {
-    //   if (this.provider[swapDetails.provider]) {
-    //     return this.provider[swapDetails.provider].parseOrder(
-    //       swapDetails.dataForInitialization
-    //     );
-    //   }
-    // },
-    // getStatus(swapDetails) {
-    //   if (this.provider[swapDetails.provider]) {
-    //     return this.provider[swapDetails.provider].getOrderStatus(
-    //       swapDetails.dataForInitialization
-    //     );
-    //   }
-    // },
     statusUpdater() {
       // return () => {
-      let currentStatus;
-      const parsed = this.provider.parseOrder(this.details);
-      console.log('parsed', parsed); // todo remove dev item
-      const timeRemaining = this.calculateTimeRemaining(parsed);
-      console.log('timeRemaining', timeRemaining); // todo remove dev item
+      // let currentStatus;
+      // const parsed = this.provider.parseOrder(this.details);
+      // const timeRemaining = this.calculateTimeRemaining(parsed);
       const checkStatus = setInterval(async () => {
-        currentStatus = await this.provider.getOrderStatus(this.details);
-        console.log('currentStatus', currentStatus); // todo remove dev item
+        // currentStatus = await this.provider.getOrderStatus(this.details);
         clearInterval(checkStatus);
       }, 1000);
       // };

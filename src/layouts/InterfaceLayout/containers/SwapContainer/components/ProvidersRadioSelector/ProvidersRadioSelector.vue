@@ -1,7 +1,7 @@
 <template>
   <div class="providers-radio-selector">
-    <div 
-      v-show="providerData.length > 0" 
+    <div
+      v-show="providerData.length > 0"
       class="radio-button-container">
       <ul>
         <li
@@ -30,8 +30,8 @@
         </li>
       </ul>
     </div>
-    <div 
-      v-show="loadingData" 
+    <div
+      v-show="loadingData"
       class="radio-button-container animated-background">
       <ul>
         <li
@@ -51,8 +51,8 @@
       </ul>
     </div>
 
-    <div 
-      v-show="noAvaliableProviders" 
+    <div
+      v-show="noAvaliableProviders"
       class="radio-button-container">
       <ul>
         <li>
@@ -74,6 +74,7 @@ import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
+import { BitySwap } from '@/partners';
 
 export default {
   props: {
@@ -141,12 +142,20 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
+        if (details.provider === BitySwap.getName()) {
+          return `From Min.: ${details.minValue} ${
+            details.fromCurrency
+          } & To Min.: ${details.minValue} ${details.toCurrency}`;
+        }
         return `Minimum: ${details.minValue} ${details.fromCurrency}`;
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
+        if (details.provider === BitySwap.getName()) {
+          return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
+        }
         return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
       }
       return '';

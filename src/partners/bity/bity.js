@@ -155,7 +155,7 @@ export default class BitySwap {
       (toCurrency === 'REP' && toValue > this.maxValue) ||
       (fromCurrency === 'REP' &&
         fromValue * this.getRate(fromCurrency, toCurrency) > this.maxValue);
-    if (overMax) {
+    if (toCurrency === 'BTC' && overMax) {
       // return true;
       return false;
     } else if (toCurrency === 'ETH' && overMaxETH) {

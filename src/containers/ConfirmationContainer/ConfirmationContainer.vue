@@ -264,11 +264,11 @@ export default {
           web3.eth.sendSignedTransaction.request(
             this.signedArray[i].rawTransaction,
             'receipt',
+            // eslint-disable no-console
             console.log
           )
         );
       }
-      console.log(this.signedArray);
       batch.execute();
     },
     sendTx() {

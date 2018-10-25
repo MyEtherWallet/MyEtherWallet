@@ -203,18 +203,15 @@ export default {
         );
       }
     },
-    statusUpdater(swapDetails) {
+    statusUpdater(/*swapDetails*/) {
       return () => {
-        let currentStatus;
-        const parsed = this.parseOrder(swapDetails);
-        console.log('parsed', parsed); // todo remove dev item
-        const timeRemaining = this.calculateTimeRemaining(parsed);
-        console.log('timeRemaining', timeRemaining); // todo remove dev item
+        // let currentStatus;
+        // const parsed = this.parseOrder(swapDetails);
+        // const timeRemaining = this.calculateTimeRemaining(parsed);
         const checkStatus = setInterval(async () => {
-          currentStatus = await this.getStatus({
-            orderid: parsed.orderId
-          });
-          console.log('currentStatus', currentStatus); // todo remove dev item
+          // currentStatus = await this.getStatus({
+          //   orderid: parsed.orderId
+          // });
           clearInterval(checkStatus);
         }, 1000);
       };
