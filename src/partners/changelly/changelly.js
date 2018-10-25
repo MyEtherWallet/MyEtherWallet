@@ -28,7 +28,6 @@ export default class Changelly {
   }
 
   static parseOrder(order) {
-    console.log('parseOrder', order); // todo remove dev item
     return {
       orderId: order.id,
       statusId: undefined,
@@ -41,40 +40,37 @@ export default class Changelly {
     };
   }
 
-  static async getOrderStatus(swapDetails){
+  static async getOrderStatus(swapDetails) {
     const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
     return await getStatus(parsed.orderId);
   }
 
-  statusUpdater(swapDetails) {
+  statusUpdater(/*swapDetails*/) {
     return () => {
-      let currentStatus;
-      const calculateTimeRemaining = (validFor, timestamp) => {
-        return (
-          validFor -
-          parseInt(
-            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-          )
-        );
-      };
-      const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-      console.log('parsed', parsed); // todo remove dev item
-      let timeRemaining = calculateTimeRemaining(
-        parsed.validFor,
-        parsed.timestamp
-      );
-      console.log('timeRemaining', timeRemaining); // todo remove dev item
-      let checkStatus = setInterval(async () => {
-        currentStatus = await getStatus({
-          orderid: parsed.orderId
-        });
-        console.log('currentStatus', currentStatus); // todo remove dev item
-        clearInterval(checkStatus);
-      }, 1000);
+      // let currentStatus;
+      // const calculateTimeRemaining = (validFor, timestamp) => {
+      //   return (
+      //     validFor -
+      //     parseInt(
+      //       (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+      //     )
+      //   );
+      // };
+      // const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
+      // // let timeRemaining = calculateTimeRemaining(
+      // //   parsed.validFor,
+      // //   parsed.timestamp
+      // // );
+      // let checkStatus = setInterval(async () => {
+      //   currentStatus = await getStatus({
+      //     orderid: parsed.orderId
+      //   });
+      //   clearInterval(checkStatus);
+      // }, 1000);
     };
   }
 
-  static statuses(data){
+  static statuses(data) {
     const statuses = {
       new: 1,
       waiting: 2,
@@ -82,7 +78,7 @@ export default class Changelly {
       confirmed: 10,
       finished: 0,
       failed: -1
-    }
+    };
     return statuses[data.status];
   }
 
@@ -136,22 +132,29 @@ export default class Changelly {
       this.currencyDetails = {};
       this.tokenDetails = {};
       this.currencyIconList = {};
-      for (let i = 0; i < currencyList.length; i++) {
-        if (
-          !this.requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
-          currencyList[i].enabled
-        ) {
-          const details = {
-            symbol: currencyList[i].name.toUpperCase(),
-            name: currencyList[i].fullName
-          };
-          this.currencyDetails[details.symbol] = details;
-          this.tokenDetails[details.symbol] = details;
-          this.currencyIconList[details.symbol] = details.image;
+
+      if (currencyList) {
+        for (let i = 0; i < currencyList.length; i++) {
+          if (
+            !this.requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
+            currencyList[i].enabled
+          ) {
+            const details = {
+              symbol: currencyList[i].name.toUpperCase(),
+              name: currencyList[i].fullName
+            };
+            this.currencyDetails[details.symbol] = details;
+            this.tokenDetails[details.symbol] = details;
+            this.currencyIconList[details.symbol] = details.image;
+          }
         }
+        this.hasTokens =
+          Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
+      } else {
+        throw Error(
+          'Changelly get supported currencies failed to return a value'
+        );
       }
-      this.hasTokens =
-        Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
     } catch (e) {
       console.error(e);
     }
@@ -205,7 +208,6 @@ export default class Changelly {
       refundAddress: fromAddress !== '' ? fromAddress : toAddress,
       refundExtraId: null
     };
-    console.log(swapParams); // todo remove dev item
     return await createTransaction(swapParams, this.network);
   }
 }

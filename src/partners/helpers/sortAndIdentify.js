@@ -72,7 +72,6 @@ function bestRateForQuantity(providerData, value) {
   // const validEntries = providerData.filter(entry => typeof entry !== 'string');
   const data = bestProviderForQuantity(providerData, +value);
   for (let i = 0; i < data.length; i++) {
-    // console.log('+value >= +data[i].minValue', +value >= +data[i].minValue, +value, +data[i].minValue, data[i].provider); // todo remove dev item
     if (+value >= +data[i].minValue) {
       return +data[i].rate;
     } else if (+data[i].minValue === 0) {

@@ -39,8 +39,8 @@ export default class Kyber {
     this.rates = new Map();
   }
 
-  static getName(){
-    return 'kybernetwork'
+  static getName() {
+    return 'kybernetwork';
   }
 
   get currencies() {
@@ -284,7 +284,6 @@ export default class Kyber {
     const fromWei = this.convertToTokenWei(fromToken, fromValue);
     logger(fromWei);
     const inWei = await this.getExpectedRate(fromToken, toToken, fromWei);
-    console.log(inWei); // todo remove dev item
     if (+inWei > -1) {
       return this.convertToTokenBase('ETH', inWei);
     }
@@ -401,7 +400,6 @@ export default class Kyber {
     // Cannot use a larger value (which solidity supports due to error from web3/ethers,
     // see: https://github.com/ethereum/web3.js/issues/1920
     const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
-    console.log(this.getTokenAddress(toToken)); // todo remove dev item
     // console.log('fromValue: ' , this.convertToTokenWei(fromToken, fromValue)); // todo remove dev item
     const data = this.kyberNetworkContract.methods
       .trade(
@@ -466,6 +464,7 @@ export default class Kyber {
       return prepareSwapTxData;
       // }
     } catch (e) {
+      // eslint-disable no-console
       console.error(e); // todo remove dev item
       throw e;
     }
