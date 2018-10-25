@@ -1,5 +1,6 @@
 import HttpProvider from './providers/http-provider';
 import GivenProvider from './providers/given-provider';
+import WSProvider from './providers/ws-provider';
 import { WEB3_WALLET } from '../bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
@@ -8,9 +9,8 @@ class MEWProvider {
     } else if (host && typeof host === 'string') {
       if (/^http(s)?:\/\//i.test(host)) {
         return new HttpProvider(host, options, store, eventHub);
-        // WS
-        // } else if (/^ws(s)?:\/\//i.test(p)) {
-        //   p = new this.providers.WebsocketProvider(p);
+      } else if (/^ws(s)?:\/\//i.test(host)) {
+        return new WSProvider(host, options, store, eventHub);
       } else if (host) {
         throw new Error('Can\'t autodetect provider for "' + host + '"');
       }
