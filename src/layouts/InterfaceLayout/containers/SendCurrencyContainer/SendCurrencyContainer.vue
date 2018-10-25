@@ -20,7 +20,6 @@
             <input
               v-model="amount"
               type="number"
-              name=""
               placeholder="Amount" >
             <i
               :class="[selectedCurrency.name === 'Ether' ? parsedBalance < amount ? 'not-good': '' : selectedCurrency.balance < amount ? 'not-good': '','fa fa-check-circle good-button']"
@@ -53,9 +52,9 @@
             <textarea
               v-ens-resolver="address"
               ref="address"
-              v-model="address"
               name="name"
-              autocomplete="off"/>
+              autocomplete="off"
+              @input="debounceInput"/>
             <i
               :class="[validAddress && address.length !== 0 ? '':'not-good', 'fa fa-check-circle good-button']"
               aria-hidden="true"/>
@@ -166,7 +165,9 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
+import web3 from 'web3';
 import * as unit from 'ethjs-unit';
 
 export default {
@@ -249,6 +250,9 @@ export default {
     }
   },
   methods: {
+    debounceInput: web3.utils._.debounce(function(e) {
+      this.address = normalise(e.target.value);
+    }, 1500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
@@ -269,7 +273,11 @@ export default {
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.address : this.selectedCurrency.addr,
+        to: isEth
+          ? this.resolvedAddress !== ''
+            ? this.resolvedAddress
+            : this.address
+          : this.selectedCurrency.addr,
         data: this.data,
         chainId: this.$store.state.network.type.chainID || 1
       };

@@ -4,7 +4,7 @@
     :title="$t('accessWallet.accessByPrivateKey')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered 
+    centered
     @shown="focusInput">
     <form class="private-key-form">
       <div class="input-container">
@@ -12,7 +12,7 @@
           ref="privateKeyInput"
           v-model="privateKey"
           type="text"
-          name="PrivateKey" 
+          name="PrivateKey"
           autocomplete="off">
       </div>
       <button

@@ -1,10 +1,12 @@
 ### Feature
 
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
+- Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
 
 ### Devop
 
 - Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
+- Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
 
 ### Hotfix
 

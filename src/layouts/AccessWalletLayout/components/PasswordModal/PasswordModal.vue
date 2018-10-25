@@ -4,7 +4,7 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered 
+    centered
     @shown="focusInput">
     <form class="password-form">
       <div class="input-container">
@@ -12,7 +12,7 @@
           ref="passwordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
-          name="Password" 
+          name="Password"
           autocomplete="off">
         <img
           v-if="show"
