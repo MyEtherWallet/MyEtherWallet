@@ -4,7 +4,8 @@
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
     class="bootstrap-modal padding-20 modal-metamask"
-    centered>
+    centered
+    @shown="focusInput">
 
     <div class="contents">
       <p class="instruction">{{ $t("accessWallet.pleaseTypeInMnemonicPhrase") }}</p>
@@ -12,41 +13,49 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input type="checkbox">
+              <input 
+                v-model="mnemonic24" 
+                type="checkbox">
               <span
                 class="slider round"
                 @click="mnemonicValueBitSizeChange"/>
             </label>
             <div class="labels">
-              <span class="label-left white">12</span>
-              <span class="label-right">24</span>
+              <span :class="[!mnemonic24 ? 'white' : '', 'label-left']">12</span>
+              <span :class="[mnemonic24 ? 'white' : '', 'label-right']">24</span>
             </div>
           </div>
           <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
         </div>
 
       </div>
-      <div class="phrases">
-        <ul>
-          <li
-            v-for="index in mnemonicSize"
-            :key="index">
-            <span>{{ index }}.</span><input
-              v-model="mnemonicPhrase[index - 1]"
-              type="text"
-              name="">
-          </li>
-        </ul>
-      </div>
+      <form>
+        <div class="phrases">
+          <ul>
+            <li
+              v-for="index in mnemonicSize"
+              :key="index">
+              <span>{{ index }}.</span>
+              <input
+                v-model="mnemonicPhrase[index - 1]"
+                :ref="`mnemonicInput${index-1}`"
+                type="text"
+                name=""
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="button-container">
+          <b-btn
+            class="mid-round-button-green-filled close-button"
+            type="submit"
+            @click.prevent="openPasswordModal">
+            {{ $t("common.continue") }}
+          </b-btn>
+        </div>
+      </form>
     </div>
 
-    <div class="button-container">
-      <b-btn
-        class="mid-round-button-green-filled close-button"
-        @click="openPasswordModal">
-        {{ $t("common.continue") }}
-      </b-btn>
-    </div>
     <customer-support/>
   </b-modal>
 </template>
@@ -66,30 +75,36 @@ export default {
   },
   data() {
     return {
-      mnemonicPhrase: [].fill(' ', 0, 11),
+      mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,
       mnemonicSize: 12
     };
   },
+  watch: {
+    mnemonicPhrase(newVal) {
+      if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
+        if (
+          newVal[0].split(' ').length === 12 ||
+          newVal[0].split(' ').length === 24
+        ) {
+          this.mnemonic24 = newVal[0].split(' ').length === 24;
+          this.mnemonicSize = newVal[0].split(' ').length;
+          this.mnemonicPhrase = newVal[0].split(' ');
+        }
+      }
+    }
+  },
   methods: {
     mnemonicValueBitSizeChange() {
-      const left = document.querySelector('.label-left');
-      const right = document.querySelector('.label-right');
       this.mnemonic24 = !this.mnemonic24;
-      if (this.mnemonic24 === true) {
-        this.mnemonicSize = 24;
-        this.mnemonicPhrase.fill(' ', 12, this.mnemonicSize);
-        left.classList.remove('white');
-        right.classList.add('white');
-      } else {
-        this.mnemonicSize = 12;
-        this.mnemonicPhrase.splice(12, 12);
-        left.classList.add('white');
-        right.classList.remove('white');
-      }
+      this.mnemonic24 ? (this.mnemonicSize = 24) : (this.mnemonicSize = 12);
+      this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
     },
     openPasswordModal() {
       this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
+    },
+    focusInput() {
+      this.$refs.mnemonicInput0[0].focus();
     }
   }
 };

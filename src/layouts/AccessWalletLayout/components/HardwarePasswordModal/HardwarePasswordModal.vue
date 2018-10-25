@@ -4,10 +4,13 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered
+    @shown="focusInput"
+  >
     <form class="password-form">
       <div class="input-container">
         <input
+          ref="passwordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
@@ -59,6 +62,9 @@ export default {
     }
   },
   methods: {
+    focusInput() {
+      this.$refs.passwordInput.focus();
+    },
     unlockWallet() {
       this.walletConstructor('', this.password).then(_newWallet => {
         this.$emit('hardwareWalletOpen', _newWallet);
