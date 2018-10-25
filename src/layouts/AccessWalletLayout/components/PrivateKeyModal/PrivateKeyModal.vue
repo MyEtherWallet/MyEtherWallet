@@ -11,7 +11,7 @@
           v-model="privateKey"
           type="text"
           name="PrivateKey"
-          autocomplete="off" >
+          autocomplete="off">
       </div>
       <button
         :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
