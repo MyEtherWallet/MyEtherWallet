@@ -1,6 +1,6 @@
-import { override } from '@/wallets';
 import url from 'url';
 import web3 from 'web3';
+import MEWProvider from '@/wallets/web3-provider';
 
 const addNotification = function({ commit, state }, val) {
   const address = web3.utils.toChecksumAddress(val[0]);
@@ -43,11 +43,9 @@ const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, state, dispatch }, wallet) {
-  const _web3 = state.web3;
-  override(_web3, wallet, this._vm.$eventHub, { state, dispatch });
+const decryptWallet = function({ commit, dispatch }, wallet) {
   commit('DECRYPT_WALLET', wallet);
-  commit('SET_WEB3_INSTANCE', _web3);
+  dispatch('setWeb3Instance');
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -67,32 +65,23 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  if (provider && provider.currentProvider) {
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(
-        new web3(provider.currentProvider),
-        state.wallet,
-        this._vm.$eventHub,
-        { state, dispatch }
-      )
-    );
-  } else {
-    const hostUrl = url.parse(state.network.url);
-    const web3Instance = new web3(
-      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(web3Instance, state.wallet, this._vm.$eventHub, {
-        state,
+  const hostUrl = url.parse(state.network.url);
+  const web3Instance = new web3(
+    new MEWProvider(
+      provider
+        ? provider
+        : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
+            hostUrl.pathname
+          }`,
+      null,
+      {
+        state: state,
         dispatch
-      })
-    );
-  }
+      },
+      this._vm.$eventHub
+    )
+  );
+  commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
 const switchNetwork = function({ commit }, networkObj) {

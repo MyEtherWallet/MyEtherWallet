@@ -30,7 +30,8 @@ import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
 export default {
   data() {
     return {
-      privateKey: ''
+      privateKey:
+        '0x9b8231364934d1904a031ae64478b679c513ce727faa346d85b9a9aa4319850b'
     };
   },
   methods: {

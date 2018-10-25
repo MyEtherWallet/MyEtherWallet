@@ -254,8 +254,6 @@ export default {
       content.classList.add('mobile-hide');
     },
     toggler(ref) {
-      // console.log(this.$refs);
-      // console.log(this.$refs[ref][0]);
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }
