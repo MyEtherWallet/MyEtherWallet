@@ -1,3 +1,11 @@
+### Feature
+
+- Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
+
+### Devop
+
+- Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
+
 ### Hotfix
 
 - Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
@@ -6,14 +14,12 @@
 
 ### Devop
 
-- Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
 - Use new contract getter [#119](https://github.com/MyEtherWallet/MyEtherWallet/pull/119)
 - Fix access wallet link, pop success when user clicks download [#115](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/115)
 - Add more nodes [#90](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/90)
 
 ### Feature
 
-- Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Metamask Integration [#96](https://github.com/MyEtherWallet/MyEtherWallet/pull/96)
 - Finish unit conversion [#114](https://github.com/MyEtherWallet/MyEtherWallet/pull/114)
 - Finish ENS registrar dapp [#81](https://github.com/MyEtherWallet/MyEtherWallet/pull/81)
