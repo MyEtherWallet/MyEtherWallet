@@ -20,11 +20,8 @@ class WSProvider {
         return;
       }
       if (_this.connection.readyState !== _this.connection.OPEN) {
-        console.error('connection not open on send()');
         if (typeof _this.connection.onerror === 'function') {
           _this.connection.onerror(new Error('connection not open'));
-        } else {
-          console.error('no error callback');
         }
         callback(new Error('connection not open'));
         return;
