@@ -30,7 +30,7 @@
           </div>
           <swap-currency-picker
             :currencies="fromArray"
-            :fromSource="true"
+            :from-source="true"
             page="SwapContainerFrom"
             @selectedCurrency="setFromCurrency"/>
           <div class="the-form amount-number">
@@ -50,9 +50,8 @@
             }}</p>
           </div>
         </div>
-        <div class="exchange-icon"
-             @click="switchOrder(fromCurrency, toCurrency)">
-          <img :src="images.swap" >
+        <div class="exchange-icon">
+          <img :src="images.swap">
         </div>
         <div class="amount">
           <div class="title">
@@ -60,7 +59,7 @@
           </div>
           <swap-currency-picker
             :currencies="toArray"
-            :fromSource="false"
+            :from-source="false"
             page="SwapContainerTo"
             @selectedCurrency="setToCurrency"/>
           <div class="the-form amount-number">
@@ -100,9 +99,11 @@
       <providers-radio-selector
         v-if="haveProviderRates"
         :provider-data="providerList"
-        :noProvidersPair="noProvidersPair"
-        :loadingData="loadingData"
-        :providersFound="providersFound"
+        :from-value="+fromValue"
+        :to-value="+toValue"
+        :no-providers-pair="noProvidersPair"
+        :loading-data="loadingData"
+        :providers-found="providersFound"
         @selectedProvider="setSelectedProvider"/>
     </div>
 
@@ -146,15 +147,17 @@
     </div>
 
     <div class="submit-button-container">
-      <div v-show="finalizingSwap"
-           class="disabled submit-button large-round-button-green-filled clickable">
+      <div
+        v-show="finalizingSwap"
+        class="disabled submit-button large-round-button-green-filled clickable">
         Finalizing Swap Details
         <!--{{ $t('common.continue') }}-->
         <i
           class="fa fa-long-arrow-right"
           aria-hidden="true"/>
       </div>
-      <div v-show="!finalizingSwap"
+      <div
+        v-show="!finalizingSwap"
         :class="[validSwap ? '': 'disabled','submit-button large-round-button-green-filled clickable']"
         @click="swapConfirmationModalOpen">
         {{ $t('common.continue') }}
@@ -245,6 +248,7 @@ export default {
       fromArray: [],
       providerData: [],
       ratesRetrived: false,
+      issueRecievingRates: false,
       providerRatesRecieved: [],
       noProvidersPair: {},
       loadingData: true,
@@ -288,9 +292,8 @@ export default {
         return supportedProviders.every(entry =>
           this.providerRatesRecieved.includes(entry)
         );
-      } else {
-        return true;
       }
+      return true;
     }
   },
   watch: {
@@ -313,15 +316,13 @@ export default {
       );
     },
     ['bitySwap.hasRates']() {
-      if (this.bitySwap.hasRates) {
-        if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
-          this.providerRatesRecieved.push(this.bitySwap.name);
-        }
-        this.updateSupportedCurrencyArrays(
-          this.bitySwap.name,
-          this.bitySwap.currencies
-        );
+      if (!this.providerRatesRecieved.includes(this.bitySwap.name)) {
+        this.providerRatesRecieved.push(this.bitySwap.name);
       }
+      this.updateSupportedCurrencyArrays(
+        this.bitySwap.name,
+        this.bitySwap.currencies
+      );
     },
     haveProviderRates(newValue) {
       if (newValue) {
@@ -349,7 +350,10 @@ export default {
   // then the watchers, beforeMount, and mounted could be reduced to one call
   mounted() {
     setTimeout(() => {
-      this.ratesRetrived = true;
+      if (!this.haveProviderRates) {
+        this.issueRecievingRates = true;
+        this.ratesRetrived = true;
+      }
     }, 3000);
     // Replace default values with values from APIs
     const {
@@ -757,8 +761,8 @@ export default {
         toCurrency,
         provider: this.bitySwap.name,
         rate: rate,
-        minValue: this.bitySwap.minValue
-        // maxValue: this.bitySwap.maxValue // TODO provide better identification and notice of min/max for user
+        minValue: this.bitySwap.minValue,
+        maxValue: this.bitySwap.maxValue // TODO provide better identification and notice of min/max for user
       };
     },
     async getChangellyRate(fromCurrency, toCurrency, fromValue) {

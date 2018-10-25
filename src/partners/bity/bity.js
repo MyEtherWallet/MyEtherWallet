@@ -49,35 +49,32 @@ export default class BitySwap {
     };
   }
 
-  static async getOrderStatus(swapDetails){
+  static async getOrderStatus(swapDetails) {
     return await getStatus(swapDetails.dataForInitialization);
   }
 
-  statusUpdater(swapDetails) {
+  statusUpdater(/*swapDetails*/) {
     return () => {
-      let currentStatus;
-      const calculateTimeRemaining = (validFor, timestamp) => {
-        return (
-          validFor -
-          parseInt(
-            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-          )
-        );
-      };
-      const parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
-      console.log('parsed', parsed); // todo remove dev item
-      let timeRemaining = calculateTimeRemaining(
-        parsed.validFor,
-        parsed.timestamp
-      );
-      console.log('timeRemaining', timeRemaining); // todo remove dev item
-      let checkStatus = setInterval(async () => {
-        currentStatus = await getStatus({
-          orderid: parsed.orderId
-        });
-        console.log('currentStatus', currentStatus); // todo remove dev item
-        clearInterval(checkStatus);
-      }, 1000);
+      // let currentStatus;
+      // // const calculateTimeRemaining = (validFor, timestamp) => {
+      // //   return (
+      // //     validFor -
+      // //     parseInt(
+      // //       (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+      // //     )
+      // //   );
+      // // };
+      // const parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
+      // // let timeRemaining = calculateTimeRemaining(
+      // //   parsed.validFor,
+      // //   parsed.timestamp
+      // // );
+      // let checkStatus = setInterval(async () => {
+      //   currentStatus = await getStatus({
+      //     orderid: parsed.orderId
+      //   });
+      //   clearInterval(checkStatus);
+      // }, 1000);
     };
   }
 
@@ -202,7 +199,7 @@ export default class BitySwap {
         }
       }
     });
-    this.hasRates = Object.keys(this.rates).length > 0 ? this.hasRates + 1 : 0;
+    this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
   }
 
   getRate(fromToken, toToken) {

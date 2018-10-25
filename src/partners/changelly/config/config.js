@@ -10,7 +10,4 @@ const changellyAddresses = {
   // ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
 };
 
-
-
-
 export { changellyAddresses };

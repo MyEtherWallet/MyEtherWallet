@@ -11,7 +11,7 @@ const getCurrencies = async network => {
     const results = await get(
       buildPath(changellyAddresses[network].currencies)
     );
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve({});
 };
@@ -22,7 +22,7 @@ const getRate = async (rateDetails, network) => {
       buildPath(changellyAddresses[network].rate),
       rateDetails
     );
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve(-1);
 };
@@ -33,7 +33,7 @@ const getMin = async (rateDetails, network) => {
       buildPath(changellyAddresses[network].min),
       rateDetails
     );
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve(-1);
 };
@@ -44,7 +44,7 @@ const validateAddress = async (addressDetails, network) => {
       buildPath(changellyAddresses[network].validate),
       addressDetails
     );
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve(-1);
 };
@@ -55,8 +55,7 @@ const createTransaction = async (transactionParams, network) => {
       buildPath(changellyAddresses[network].createTransaction),
       transactionParams
     );
-    console.log(results); // todo remove dev item
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve(-1);
 };
@@ -70,8 +69,7 @@ const getStatus = async (orderId, network) => {
     const results = await post(buildPath(changellyAddresses[network].status), {
       orderid: orderId
     });
-    console.log(results); // todo remove dev item
-    return results.result.result;
+    return results.result;
   }
   return Promise.resolve(-1);
 };

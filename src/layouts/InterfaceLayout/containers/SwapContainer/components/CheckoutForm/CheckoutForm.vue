@@ -92,13 +92,13 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {};
+  },
   watch: {
     formData(newVal) {
       console.log('formData', newVal); // todo remove dev item
     }
-  },
-  data() {
-    return {};
   },
   methods: {
     submit() {

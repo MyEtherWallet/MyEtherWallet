@@ -16,8 +16,12 @@
             <img :src="fromAddress.image">
           </div>
           <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
-          <p v-show="fromAddress.address !== ''" class="block-title">From Address</p>
-          <p v-show="fromAddress.address !== ''" class="address">{{ fromAddress.address }}</p>
+          <p 
+            v-show="fromAddress.address !== ''" 
+            class="block-title">From Address</p>
+          <p 
+            v-show="fromAddress.address !== ''" 
+            class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
           <img :src="arrowImage">
@@ -27,23 +31,32 @@
             <img :src="toAddress.image">
           </div>
           <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
-          <p v-show="toAddress.address !== ''" class="block-title">To Address</p>
-          <p v-show="toAddress.address !== ''" class="address">{{ toAddress.address }}</p>
+          <p 
+            v-show="toAddress.address !== ''" 
+            class="block-title">To Address</p>
+          <p 
+            v-show="toAddress.address !== ''" 
+            class="address">{{ toAddress.address }}</p>
         </div>
-        <div v-show="!fromFiat" class="confirm-send-button" >
-          <h4>Send {{fromAddress.value}} {{fromAddress.name}} to <span class="address">{{qrcode}}</span></h4>
+        <div 
+          v-show="!fromFiat" 
+          class="confirm-send-button" >
+          <h4>Send {{ fromAddress.value }} {{ fromAddress.name }} to <span class="address">{{ qrcode }}</span></h4>
           <qrcode
             :value="qrcode"
             :options="{ size: 200 }"/>
         </div>
-        <simplex-checkout-form v-if="fromFiat && swapProvider === 'simplex'" :formData="swapDetails.dataForInitialization" :continueAction="redirectToPartner"></simplex-checkout-form>
+        <simplex-checkout-form 
+          v-if="fromFiat && swapProvider === 'simplex'" 
+          :form-data="swapDetails.dataForInitialization" 
+          :continue-action="redirectToPartner"/>
 
-        <!--<div-->
+          <!--<div-->
           <!--v-show="fromFiat">-->
           <!--<button-with-qrcode-->
-            <!--:qrcode="qrcode"-->
-            <!--buttonname="Confirm and Send"/>-->
-        <!--</div>-->
+          <!--:qrcode="qrcode"-->
+          <!--buttonname="Confirm and Send"/>-->
+          <!--</div>-->
 
       </div>
 
@@ -101,6 +114,11 @@ export default {
       }
     };
   },
+  computed: {
+    swapProvider() {
+      return this.swapDetails.provider;
+    }
+  },
   watch: {
     swapDetails(newValue) {
       if (this.fiatCurrencies.includes(newValue.fromCurrency)) {
@@ -146,11 +164,6 @@ export default {
       }
     }
   },
-  computed: {
-    swapProvider() {
-      return this.swapDetails.provider;
-    }
-  },
   methods: {
     redirectToPartner() {
       this.swapStarted(this.swapDetails);
@@ -167,15 +180,15 @@ export default {
             break;
         }
       } else {
-        throw Error('Invalid details from swap provider')
+        throw Error('Invalid details from swap provider');
       }
     },
     bitySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress
+      this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     },
     changellySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress
+      this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
   }
