@@ -10,6 +10,9 @@ import {
 
 import { ChangellyCurrencies } from './config';
 
+import debug from 'debug';
+const errorLogger = debug('v5:partners-changelly');
+
 export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
@@ -156,7 +159,7 @@ export default class Changelly {
         );
       }
     } catch (e) {
-      console.error(e);
+      errorLogger(e);
     }
   }
 

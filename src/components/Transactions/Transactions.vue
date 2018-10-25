@@ -22,6 +22,7 @@
           v-for="tx in sortedTransactions"
           v-show="sortedTransactions.length > 0"
           :key="tx.key">
+          {{ tx }}
           <transaction-entry
             :provider="getProvider(tx.provider)"
             :details="tx"/>
@@ -118,16 +119,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      transactions: 'Transactions'
+      transactions: 'transactions'
     }),
     sortedTransactions() {
       this.countUnread();
 
-      if (!this.transactions[this.$store.state.wallet.getAddressString()])
+      if (
+        !this.transactions[this.$store.state.wallet.getChecksumAddressString()]
+      )
         return [];
       // eslint-disable-next-line
       return this.transactions[
-        this.$store.state.wallet.getAddressString()
+        this.$store.state.wallet.getChecksumAddressString()
       ].sort((a, b) => {
         a = new Date(a.timestamp);
         b = new Date(b.timestamp);
@@ -143,10 +146,12 @@ export default {
   },
   mounted() {
     if (
-      this.transactions[this.$store.state.wallet.getAddressString()] ===
+      this.transactions[this.$store.state.wallet.getChecksumAddressString()] ===
       undefined
     ) {
-      this.transactions[this.$store.state.wallet.getAddressString()] = [];
+      this.transactions[
+        this.$store.state.wallet.getChecksumAddressString()
+      ] = [];
       store.set('transactions', this.transactions);
     }
     this.countUnread();
@@ -178,11 +183,11 @@ export default {
       } else {
         updatedNotif.expanded = false;
       }
-      this.$store.dispatch('updateTransactions', [
-        this.$store.state.wallet.getAddressString(),
-        idx,
-        updatedNotif
-      ]);
+      // this.$store.dispatch('updateTransactions', [
+      //   this.$store.state.wallet.getAddressString(),
+      //   idx,
+      //   updatedNotif
+      // ]);
     },
     getProvider(provider) {
       if (this.providers[provider]) {

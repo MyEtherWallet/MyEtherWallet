@@ -53,6 +53,8 @@ import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
+import debug from 'debug';
+const errorLogger = debug('v5:ConfirmationContainer');
 
 export default {
   components: {
@@ -264,8 +266,7 @@ export default {
           web3.eth.sendSignedTransaction.request(
             this.signedArray[i].rawTransaction,
             'receipt',
-            // eslint-disable no-console
-            console.log
+            errorLogger
           )
         );
       }

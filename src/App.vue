@@ -51,7 +51,7 @@ export default {
       account: {
         balance: 0
       },
-      Transactions: {},
+      transactions: {},
       Networks: nodeList,
       Errors: {},
       online: true,
