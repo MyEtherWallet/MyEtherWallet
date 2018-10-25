@@ -127,6 +127,18 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
+const updateTransaction = function({ commit, state }, val) {
+  // address, index, object
+  const address = web3.utils.toChecksumAddress(val[0]);
+  const newNotif = {};
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
+  });
+
+  newNotif[address][val[1]] = val[2];
+  commit('UPDATE_SWAP_TRANSACTION', newNotif);
+};
+
 export default {
   addNotification,
   addSwapTransaction,
@@ -142,5 +154,6 @@ export default {
   setENS,
   setWeb3Instance,
   switchNetwork,
-  updateNotification
+  updateNotification,
+  updateTransaction
 };

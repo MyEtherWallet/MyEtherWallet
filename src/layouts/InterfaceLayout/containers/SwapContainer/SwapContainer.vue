@@ -377,25 +377,26 @@ export default {
   },
   methods: {
     swapStarted(swapDetails) {
-      let checkStatus;
+      // let checkStatus;
       this.$store
         .dispatch('addSwapTransaction', [this.currentAddress, swapDetails])
         .then(() => {
-          switch (swapDetails.provider) {
-            case this.kyberSwap.name:
-              break;
-            case this.changellySwap.name:
-              checkStatus = this.changellySwap.statusUpdater(swapDetails);
-              checkStatus();
-              break;
-            case this.bitySwap.name:
-              checkStatus = this.bitySwap.statusUpdater(swapDetails);
-              checkStatus();
-              break;
-            case this.simplexSwap.name:
-              break;
-          }
           this.resetSwapState();
+          // switch (swapDetails.provider) {
+          //   case this.kyberSwap.name:
+          //     break;
+          //   case this.changellySwap.name:
+          //     checkStatus = this.changellySwap.statusUpdater(swapDetails);
+          //     checkStatus();
+          //     break;
+          //   case this.bitySwap.name:
+          //     checkStatus = this.bitySwap.statusUpdater(swapDetails);
+          //     checkStatus();
+          //     break;
+          //   case this.simplexSwap.name:
+          //     break;
+          // }
+
         });
     },
     // TODO: CACHE PREVIOUSLY QUERIED RATES, TO USE FOR INITIAL DIAPLAY WHILE NEW RATES ARE RETRIEVED
@@ -636,6 +637,7 @@ export default {
           toAddress: this.toAddress,
           fromAddress: this.currentAddress,
           timestamp: Date.now(),
+          status: 1,
           maybeToken: false
         };
 
