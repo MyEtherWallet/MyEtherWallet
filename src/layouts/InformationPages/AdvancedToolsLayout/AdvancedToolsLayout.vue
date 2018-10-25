@@ -8,12 +8,22 @@
           
           <li>
             <div class="input-title">
-              <div class="the-title" @click="ensDebuggerOpen = !ensDebuggerOpen">
+              <div 
+                class="the-title" 
+                @click="ensDebuggerOpen = !ensDebuggerOpen">
                 <p>ENS Debugger & Data Grabber</p>
-                <i v-if="!ensDebuggerOpen" class="fa fa-angle-down" aria-hidden="true"></i>
-                <i v-if="ensDebuggerOpen" class="fa fa-angle-up" aria-hidden="true"></i>
+                <i 
+                  v-if="!ensDebuggerOpen" 
+                  class="fa fa-angle-down" 
+                  aria-hidden="true"/>
+                <i 
+                  v-if="ensDebuggerOpen" 
+                  class="fa fa-angle-up" 
+                  aria-hidden="true"/>
               </div>
-              <div class="the-description" :class="ensDebuggerOpen ? 'the-description-open' : ''">
+              <div 
+                :class="ensDebuggerOpen ? 'the-description-open' : ''" 
+                class="the-description">
                 <p>
                   The measured steps are meant to avoid an escalation
                   of operations by Russia to more serious computer-based
@@ -21,7 +31,9 @@
                 </p>
               </div>
             </div>
-            <div class="input-block" :class="ensDebuggerOpen ? 'input-block-open' : ''">
+            <div 
+              :class="ensDebuggerOpen ? 'input-block-open' : ''" 
+              class="input-block">
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputAddress" />
@@ -47,12 +59,22 @@
 
           <li>
             <div class="input-title">
-              <div class="the-title" @click="convertDecHexOpen = !convertDecHexOpen">
+              <div 
+                class="the-title" 
+                @click="convertDecHexOpen = !convertDecHexOpen">
                 <p>Convert Decimal to Hexadecimal & Hex to Decimal</p>
-                <i v-if="!convertDecHexOpen" class="fa fa-angle-down" aria-hidden="true"></i>
-                <i v-if="convertDecHexOpen" class="fa fa-angle-up" aria-hidden="true"></i>
+                <i 
+                  v-if="!convertDecHexOpen" 
+                  class="fa fa-angle-down" 
+                  aria-hidden="true"/>
+                <i 
+                  v-if="convertDecHexOpen" 
+                  class="fa fa-angle-up" 
+                  aria-hidden="true"/>
               </div>              
-              <div class="the-description" :class="convertDecHexOpen ? 'the-description-open' : ''">
+              <div 
+                :class="convertDecHexOpen ? 'the-description-open' : ''" 
+                class="the-description">
                 <p>
                   The measured steps are meant to avoid an escalation
                   of operations by Russia to more serious computer-based
@@ -60,7 +82,9 @@
                 </p>
               </div>
             </div>
-            <div class="input-block" :class="convertDecHexOpen ? 'input-block-open' : ''">
+            <div 
+              :class="convertDecHexOpen ? 'input-block-open' : ''" 
+              class="input-block">
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputDecimal" />
@@ -77,12 +101,22 @@
 
           <li>
             <div class="input-title">
-              <div class="the-title" @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen">
+              <div 
+                class="the-title" 
+                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen">
                 <p>Mistyped Private Key</p>
-                <i v-if="!mistypedPrivateKeyOpen" class="fa fa-angle-down" aria-hidden="true"></i>
-                <i v-if="mistypedPrivateKeyOpen" class="fa fa-angle-up" aria-hidden="true"></i>
+                <i 
+                  v-if="!mistypedPrivateKeyOpen" 
+                  class="fa fa-angle-down" 
+                  aria-hidden="true"/>
+                <i 
+                  v-if="mistypedPrivateKeyOpen" 
+                  class="fa fa-angle-up" 
+                  aria-hidden="true"/>
               </div>              
-              <div class="the-description" :class="mistypedPrivateKeyOpen ? 'the-description-open' : ''">
+              <div 
+                :class="mistypedPrivateKeyOpen ? 'the-description-open' : ''" 
+                class="the-description">
                 <p>
                   The measured steps are meant to avoid an escalation
                   of operations by Russia to more serious computer-based
@@ -93,7 +127,9 @@
                 </div>
               </div>
             </div>
-            <div class="input-block" :class="mistypedPrivateKeyOpen ? 'input-block-open' : ''">
+            <div 
+              :class="mistypedPrivateKeyOpen ? 'input-block-open' : ''" 
+              class="input-block">
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputPrivateKey" />
@@ -112,12 +148,22 @@
 
           <li>
             <div class="input-title">
-              <div class="the-title" @click="SHA3Open = !SHA3Open">
-                <p>Mistyped Private Key</p>
-                <i v-if="!SHA3Open" class="fa fa-angle-down" aria-hidden="true"></i>
-                <i v-if="SHA3Open" class="fa fa-angle-up" aria-hidden="true"></i>
+              <div 
+                class="the-title" 
+                @click="SHA3Open = !SHA3Open">
+                <p>"SHA3" (Keccak-256) It!</p>
+                <i 
+                  v-if="!SHA3Open" 
+                  class="fa fa-angle-down" 
+                  aria-hidden="true"/>
+                <i 
+                  v-if="SHA3Open" 
+                  class="fa fa-angle-up" 
+                  aria-hidden="true"/>
               </div>              
-              <div class="the-description" :class="SHA3Open ? 'the-description-open' : ''">
+              <div 
+                :class="SHA3Open ? 'the-description-open' : ''" 
+                class="the-description">
                 <p>
                   The measured steps are meant to avoid an escalation
                   of operations by Russia to more serious computer-based
@@ -128,7 +174,9 @@
                 </div>
               </div>
             </div>
-            <div class="input-block" :class="SHA3Open ? 'input-block-open' : ''">
+            <div 
+              :class="SHA3Open ? 'input-block-open' : ''" 
+              class="input-block">
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputSHA3Input" />
@@ -178,7 +226,7 @@ export default {
         rightInputText: ''
       },
       inputEnsNameYouBid: {
-        title: 'ENS Name You Bid On (No \'.eth\' at The End!)',
+        title: "ENS Name You Bid On (No '.eth' at The End!)",
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -250,9 +298,6 @@ export default {
         rightInputText: ''
       },
 
-
-
-
       inputDecimal: {
         title: 'Decimal',
         value: '',
@@ -290,10 +335,8 @@ export default {
         rightInputText: ''
       },
 
-
-
       inputPrivateKey: {
-        title: 'Private Key (This isn\'t unlocking correct address)',
+        title: "Private Key (This isn't unlocking correct address)",
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -329,8 +372,6 @@ export default {
         rightInputText: ''
       },
 
-
-
       inputSHA3Input: {
         title: 'Input',
         value: '',
@@ -356,21 +397,16 @@ export default {
         rightInputText: ''
       },
 
-
-
       ensDebuggerOpen: false,
       convertDecHexOpen: false,
       mistypedPrivateKeyOpen: false,
       SHA3Open: false,
 
-
-
-
       titleAndTextContents: {
-        title: 'Advanced Tools',
+        title: 'Advanced',
         boldSubTitle: '',
         textContent: [
-          'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.',
+          'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.'
         ]
       }
     };
