@@ -1,20 +1,27 @@
 <template>
   <div class="title-text-contents">
-    <div class="title" v-if="options.title">
+    <div 
+      v-if="options.title" 
+      class="title">
       <img :src="options.titleIcon">
-      <span>{{options.title}}</span>
+      <span>{{ options.title }}</span>
     </div>
-    <div class="bold-sub-title" v-if="options.boldSubTitle">{{options.boldSubTitle}}</div>
-    <div class="text-content" v-if="options.textContent">
-      <p v-for="text in options.textContent" :key="text.key">
-        {{text}}
+    <div 
+      v-if="options.boldSubTitle" 
+      class="bold-sub-title">{{ options.boldSubTitle }}</div>
+    <div 
+      v-if="options.textContent" 
+      class="text-content">
+      <p 
+        v-for="text in options.textContent" 
+        :key="text.key">
+        {{ text }}
       </p>    
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   props: {
     options: {
@@ -25,9 +32,7 @@ export default {
     }
   },
   data() {
-    return {
-
-    };
+    return {};
   }
 };
 </script>

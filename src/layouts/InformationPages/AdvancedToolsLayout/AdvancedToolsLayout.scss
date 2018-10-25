@@ -1,2 +1,93 @@
 @import '../InformationPages';
+$block-opening-speed: 0.4s;
+$block-padding-size: 30px;
+
+.user-input-container {
+  margin-top: 30px;
+
+  li {
+    background-color: $white;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+
+}
+
+
+.input-title {
+  user-select: none;
+  padding: $block-padding-size;
+  
+  .the-title{    
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      color: $black;
+    }
+    i {
+      padding-left: 20px;
+      margin-left: auto;
+    }
+  }
+
+  .the-description {
+    max-height: 0px;
+    overflow: hidden;
+    transition: all $block-opening-speed ease;
+
+    &.the-description-open {
+      max-height: 200px;
+    }
+
+    p {
+      margin-top: 15px;
+    }
+
+    .link-block {
+      font-weight: 500;
+      margin-top: 15px;
+    }
+  }
+}
+
+
+.input-block {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all $block-opening-speed ease;
+
+  &.input-block-open {
+    max-height: 1000px;
+  }
+
+  .inputs {
+    border-top: 1px solid $light-grey-2;
+    padding: $block-padding-size;
+  }
+
+  .the-input {
+    margin-bottom: 30px;
+
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+
+  .the-input-grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+    margin-bottom: 30px;
+  }
+
+}
+
+
+
+
+
 
