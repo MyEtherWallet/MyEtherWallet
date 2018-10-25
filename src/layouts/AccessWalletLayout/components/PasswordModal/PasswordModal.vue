@@ -4,14 +4,16 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered @shown="focusInput">
+    centered 
+    @shown="focusInput">
     <form class="password-form">
       <div class="input-container">
         <input
+          ref="passwordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
-          name="Password"
-          autocomplete="off" ref="passwordInput">
+          name="Password" 
+          autocomplete="off">
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"

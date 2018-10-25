@@ -6,14 +6,14 @@
     class="bootstrap-modal modal-software"
     centered
     @shown="focusInput"
-    >
+  >
     <form class="password-form">
       <div class="input-container">
         <input
+          ref="passwordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
-          ref="passwordInput"
           autocomplete="off">
         <img
           v-if="show"
