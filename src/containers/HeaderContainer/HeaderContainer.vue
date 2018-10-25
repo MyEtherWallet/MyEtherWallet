@@ -115,7 +115,7 @@ import store from 'store';
 import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
-import Transaction from '@/components/Transactions'
+import Transaction from '@/components/Transactions';
 import ScrollUpButton from '@/components/ScrollUpButton';
 
 export default {

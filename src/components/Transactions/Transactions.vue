@@ -5,7 +5,7 @@
       @click="dropdownOpen = !dropdownOpen">
       transactions
       <div
-        v-show="unreadCount > 0"
+        v-show="activeSwapCount > 0"
         class="notification-dot"/>
     </div>
     <div
@@ -14,66 +14,28 @@
       <ul>
         <li
           v-show="sortedTransactions.length === 0">
-          <div class="transaction-entry">
-            <p>No Transaction History</p>
+          <div class="no-active-transaction">
+            <p >No Active Transactions</p>
           </div>
         </li>
-        <li
+        <li 
           v-for="tx in sortedTransactions"
           v-show="sortedTransactions.length > 0"
-          :key="tx.key">
+          :key="tx.key"
+          class="transaction-entry">
           <transaction-entry
             :provider="getProvider(tx.provider)"
             :details="tx"/>
-            <!--          <div class="top-row">
-            <div class="from-address">
-              <div class="icon">
-                <img
-                  :src="currencyIcons[tx.fromCurrency]"
-                  height="16"
-                  width="16">
-                <span class="currency">{{ tx.fromCurrency }}</span>
-              </div>
-              <p class="value">{{ tx.fromValue }}</p>
-            </div>
-
-            <div class="right-arrow">
-              <img
-                :src="arrowImage"
-                height="12"
-                width="16">
-            </div>
-
-            <div class="to-address">
-              <div class="icon">
-                <img
-                  :src="currencyIcons[tx.toCurrency]"
-                  height="16"
-                  width="16">
-                <span class="currency">{{ tx.toCurrency }}</span>
-              </div>
-              <p class="value">{{ tx.toValue }}</p>
-            </div>
-          </div>
-
-          <div class="middle-row">
-            <div class="status-indicator-container">
-              <div class="status-indicator">
-                <div class="status-timer">
-                  <p >{{ calculateTimeRemaining(tx.parsed) }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="bottom-row">
+        </li>
+        <li>
+          <div class="check-history-entry">
             <div class="line"/>
             <div class="check-history-container">
               <h4
                 class="check-history"
                 @click="checkHistory">Check history</h4>
             </div>
-          </div>-->
+          </div>
         </li>
       </ul>
     </div>
@@ -87,7 +49,7 @@ import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import TransactionEntry from './TransactionEntry';
+import TransactionEntry from './TransactionEntry/TransactionEntry';
 
 import {
   BitySwap,
@@ -103,8 +65,10 @@ export default {
   data() {
     return {
       network: this.$store.state.network.type.name,
+      currentAddress: this.$store.state.wallet.getChecksumAddressString(),
       dropdownOpen: false,
-      unreadCount: 0,
+      activeSwapCount: 0,
+      activeSwaps: [],
       currencyIcons: {
         BTC: iconBtc,
         ETH: iconEth
@@ -118,17 +82,34 @@ export default {
   },
   computed: {
     ...mapGetters({
-      transactions: 'Transactions'
+      transactions: 'transactions',
+      wallet: 'wallet'
     }),
     sortedTransactions() {
-      this.countUnread();
-
-      if (!this.transactions[this.$store.state.wallet.getAddressString()])
+      this.countActive();
+      if (
+        !this.transactions[this.$store.state.wallet.getChecksumAddressString()]
+      ) {
         return [];
+      }
+      const activeSwaps = this.transactions[
+        this.$store.state.wallet.getChecksumAddressString()
+      ].filter(entry => {
+        if (entry.status !== -1 && entry.status !== 0) {
+          const timeRemaining =
+            800 -
+            parseInt(
+              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+                1000
+            );
+          if (timeRemaining > 0) {
+            return true;
+          }
+          return false;
+        }
+      });
       // eslint-disable-next-line
-      return this.transactions[
-        this.$store.state.wallet.getAddressString()
-      ].sort((a, b) => {
+      return activeSwaps.sort((a, b) => {
         a = new Date(a.timestamp);
         b = new Date(b.timestamp);
 
@@ -137,52 +118,80 @@ export default {
     }
   },
   watch: {
-    notifications() {
-      this.countUnread();
+    transactions() {
+      this.countActive();
+    },
+    dropdownOpen(newVal) {
+      if (newVal) {
+        console.log(newVal); // todo remove dev item
+        this.countActive();
+        this.updateTransactions();
+      }
     }
   },
   mounted() {
     if (
-      this.transactions[this.$store.state.wallet.getAddressString()] ===
+      this.transactions[this.$store.state.wallet.getChecksumAddressString()] ===
       undefined
     ) {
-      this.transactions[this.$store.state.wallet.getAddressString()] = [];
+      this.transactions[
+        this.$store.state.wallet.getChecksumAddressString()
+      ] = [];
       store.set('transactions', this.transactions);
     }
-    this.countUnread();
+    this.countActive();
   },
   methods: {
-    countUnread() {
-      this.unreadCount = 0;
-      // if (
-      //   self.transactions[self.$store.state.wallet.getAddressString()] !==
-      //     undefined &&
-      //   self.transactions[self.$store.state.wallet.getAddressString()].length >
-      //     0
-      // ) {
-      //   self.transactions[self.$store.state.wallet.getAddressString()].map(
-      //     item => {
-      //       if (item.read === false) {
-      //         self.unreadCount++;
-      //       }
-      //     }
-      //   );
-      // }
+    countActive() {
+      this.activeSwapCount = 0;
+      if (
+        this.transactions[this.$store.state.wallet.getAddressString()] !==
+          undefined &&
+        this.transactions[this.$store.state.wallet.getAddressString()].length >
+          0
+      ) {
+        this.activeSwaps = this.transactions[
+          this.$store.state.wallet.getChecksumAddressString()
+        ].filter(entry => {
+          if (entry.status !== -1 && entry.status !== 0) {
+            const timeRemaining =
+              600 -
+              parseInt(
+                (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+                  1000
+              );
+            if (timeRemaining > 0) {
+              this.activeSwapCount++;
+              return true;
+            }
+            return false;
+          }
+          return false;
+        });
+      }
     },
     checkHistory() {},
-    expand(idx, notif) {
-      const updatedNotif = notif;
-      if (notif.expanded !== true) {
-        updatedNotif.read = true;
-        updatedNotif.expanded = true;
-      } else {
-        updatedNotif.expanded = false;
-      }
-      this.$store.dispatch('updateTransactions', [
-        this.$store.state.wallet.getAddressString(),
-        idx,
-        updatedNotif
-      ]);
+    updateTransactions() {
+      this.transactions[
+        this.$store.state.wallet.getChecksumAddressString()
+      ].forEach((entry, idx) => {
+        if (entry.status !== -1 && entry.status !== 0) {
+          const timeRemaining =
+            650 -
+            parseInt(
+              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+                1000
+            );
+          if (timeRemaining < 0) {
+            entry.status = -1;
+            this.$store.dispatch('updateTransaction', [
+              this.$store.state.wallet.getChecksumAddressString(),
+              idx,
+              entry
+            ]);
+          }
+        }
+      });
     },
     getProvider(provider) {
       if (this.providers[provider]) {
@@ -203,18 +212,15 @@ export default {
         );
       }
     },
-    statusUpdater(swapDetails) {
+    statusUpdater(/*swapDetails*/) {
       return () => {
-        let currentStatus;
-        const parsed = this.parseOrder(swapDetails);
-        console.log('parsed', parsed); // todo remove dev item
-        const timeRemaining = this.calculateTimeRemaining(parsed);
-        console.log('timeRemaining', timeRemaining); // todo remove dev item
+        // let currentStatus;
+        // const parsed = this.parseOrder(swapDetails);
+        // const timeRemaining = this.calculateTimeRemaining(parsed);
         const checkStatus = setInterval(async () => {
-          currentStatus = await this.getStatus({
-            orderid: parsed.orderId
-          });
-          console.log('currentStatus', currentStatus); // todo remove dev item
+          // currentStatus = await this.getStatus({
+          //   orderid: parsed.orderId
+          // });
           clearInterval(checkStatus);
         }, 1000);
       };

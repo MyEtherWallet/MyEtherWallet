@@ -150,10 +150,6 @@ export default {
     }
   },
   methods: {
-    prepare() {
-      if (value.dataForInitialization) {
-      }
-    },
     sendTransaction() {
       // this.swapStarted(this.swapDetails);
       // this.$refs.swapconfirmation.hide();
@@ -214,22 +210,16 @@ export default {
       }
     },
     signAndTransmitTransaction() {
-      console.log(this.swapReady); // todo remove dev item
       if(!this.swapReady) return;
-      console.log('data for tx(s): ', this.preparedSwap); // todo remove dev item
       if (Array.isArray(this.preparedSwap)) {
         this.$store.state.web3.eth.sendBatchTransactions(this.preparedSwap);
-        // this.$store.dispatch('addSwapTransaction', [
-        //   this.currentAddress,
-        //   swapDetails
-        // ]);
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
+          // this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
         }
       }
-      this.$refs.swapconfirmation.hide();
       this.$emit('swapStarted', this.swapDetails);
+      this.$refs.swapconfirmation.hide();
     },
     async useBity(swapDetails) {
       if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
