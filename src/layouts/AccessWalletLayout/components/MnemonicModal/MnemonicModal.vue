@@ -4,6 +4,7 @@
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
     class="bootstrap-modal padding-20 modal-metamask"
+    @shown="focusInput"
     centered>
 
     <div class="contents">
@@ -26,27 +27,33 @@
         </div>
 
       </div>
-      <div class="phrases">
-        <ul>
-          <li
-            v-for="index in mnemonicSize"
-            :key="index">
-            <span>{{ index }}.</span><input
-              v-model="mnemonicPhrase[index - 1]"
-              type="text"
-              name="">
-          </li>
-        </ul>
-      </div>
+      <form>
+        <div class="phrases">
+          <ul>
+            <li
+              v-for="index in mnemonicSize"
+              :key="index">
+              <span>{{ index }}.</span>
+              <input
+                v-model="mnemonicPhrase[index - 1]"
+                type="text"
+                name=""
+                :ref="`mnemonicInput${index-1}`"
+                >
+            </li>
+          </ul>
+        </div>
+        <div class="button-container">
+          <b-btn
+            class="mid-round-button-green-filled close-button"
+            type="submit"
+            @click.prevent="openPasswordModal">
+            {{ $t("common.continue") }}
+          </b-btn>
+        </div>
+      </form>
     </div>
 
-    <div class="button-container">
-      <b-btn
-        class="mid-round-button-green-filled close-button"
-        @click="openPasswordModal">
-        {{ $t("common.continue") }}
-      </b-btn>
-    </div>
     <customer-support/>
   </b-modal>
 </template>
@@ -79,6 +86,9 @@ export default {
     },
     openPasswordModal() {
       this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
+    },
+    focusInput() {
+      this.$refs.mnemonicInput0[0].focus();
     }
   },
   watch: {

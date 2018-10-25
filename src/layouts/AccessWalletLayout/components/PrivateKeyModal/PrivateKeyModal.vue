@@ -4,14 +4,14 @@
     :title="$t('accessWallet.accessByPrivateKey')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered @shown="focusInput">
     <form class="private-key-form">
       <div class="input-container">
         <input
           v-model="privateKey"
           type="text"
           name="PrivateKey"
-          autocomplete="off" >
+          autocomplete="off" ref="privateKeyInput">
       </div>
       <button
         :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
@@ -43,6 +43,9 @@ export default {
       );
       this.privateKey = '';
       this.$router.push({ path: 'interface' });
+    },
+    focusInput() {
+      this.$refs.privateKeyInput.focus();
     }
   }
 };
