@@ -1,9 +1,7 @@
 @import '../InformationPages';
 
-
 .extensions-container {
-
-  &>div{
+  & > div {
     background-color: $white;
     padding: 25px;
     border-radius: 4px;
@@ -11,15 +9,15 @@
   }
 }
 
-.logo{
+.logo {
   padding-right: 20px;
-  img{
+  img {
     height: 50px;
   }
 }
 
 .text {
-
+  // Empty
 }
 
 .title {
@@ -38,10 +36,8 @@
   color: $mew-green;
 }
 
-
 // Desktop
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-
   .extensions-container {
     margin-top: 30px;
     display: grid;
@@ -52,7 +48,6 @@
 
 // Tablet
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-
   .extensions-container {
     margin-top: 30px;
     display: grid;
@@ -63,7 +58,6 @@
 
 // Mobile
 @media all and (max-width: $mobile-width) {
-
   .extensions-container {
     margin-top: 30px;
     display: grid;
@@ -71,5 +65,3 @@
     grid-gap: 15px;
   }
 }
-
-
