@@ -167,6 +167,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
+import web3 from 'web3';
 import * as unit from 'ethjs-unit';
 
 export default {
@@ -249,7 +250,7 @@ export default {
     }
   },
   methods: {
-    debounceInput: this.$store.state.web3.utils._.debounce(function(e) {
+    debounceInput: web3.utils._.debounce(function(e) {
       this.address = normalise(e.target.value);
     }, 1500),
     copyToClipboard(ref) {

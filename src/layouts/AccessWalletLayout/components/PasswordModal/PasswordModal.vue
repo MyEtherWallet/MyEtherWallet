@@ -11,7 +11,7 @@
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off">
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
