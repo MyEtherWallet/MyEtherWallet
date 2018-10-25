@@ -381,7 +381,6 @@ export default {
       this.$store
         .dispatch('addSwapTransaction', [this.currentAddress, swapDetails])
         .then(() => {
-          console.log('dispatch complete'); // todo remove dev item
           switch (swapDetails.provider) {
             case this.kyberSwap.name:
               break;
