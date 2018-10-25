@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="transaction-entry">
     <div class="top-row">
       <div class="from-address">
         <div class="icon">
@@ -60,10 +60,8 @@ import Arrow from '@/assets/images/etc/single-arrow.svg';
 export default {
   props: {
     provider: {
-      type: Object,
-      default: function() {
-        return {};
-      }
+      type: Function,
+      default: function() {}
     },
     details: {
       type: Object,
@@ -74,7 +72,7 @@ export default {
   },
   data() {
     return {
-      network: this.$store.state.network.types.name,
+      network: this.$store.state.network.type.name,
       currencyIcons: {
         BTC: iconBtc,
         ETH: iconEth
@@ -128,5 +126,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Transactions.scss';
+@import '../Transactions';
 </style>

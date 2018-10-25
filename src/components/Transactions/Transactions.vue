@@ -22,7 +22,6 @@
           v-for="tx in sortedTransactions"
           v-show="sortedTransactions.length > 0"
           :key="tx.key">
-          {{ tx }}
           <transaction-entry
             :provider="getProvider(tx.provider)"
             :details="tx"/>
@@ -88,7 +87,7 @@ import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import TransactionEntry from './TransactionEntry';
+import TransactionEntry from './TransactionEntry/TransactionEntry';
 
 import {
   BitySwap,
