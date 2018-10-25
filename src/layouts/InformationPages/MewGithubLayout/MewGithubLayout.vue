@@ -36,7 +36,7 @@ export default {
         title: 'MEW Github',
         boldSubTitle: '',
         textContent: [
-           'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.',
+          'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.'
         ]
       }
     };

@@ -6,14 +6,18 @@
         <title-text-contents :options="titleAndTextContents" />
 
         <div class="extensions-container">
-          <div v-for="ext in extensions" :key="ext.key">
+          <div 
+            v-for="ext in extensions" 
+            :key="ext.key">
             <div class="logo">
               <img :src="ext.image">
             </div>
             <div class="text">
-              <p class="title">{{ext.title}}</p>
-              <p class="description">{{ext.description}}</p>
-              <a class="link" :href="ext.linkURL">{{ext.linkName}}</a>
+              <p class="title">{{ ext.title }}</p>
+              <p class="description">{{ ext.description }}</p>
+              <a 
+                :href="ext.linkURL" 
+                class="link">{{ ext.linkName }}</a>
             </div>
           </div>
         </div>
@@ -70,7 +74,7 @@ export default {
         title: 'Extensions',
         boldSubTitle: '',
         textContent: [
-          'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.'           
+          'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.'
         ]
       }
     };
