@@ -4,8 +4,8 @@
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
     class="bootstrap-modal padding-20 modal-metamask"
-    @shown="focusInput"
-    centered>
+    centered
+    @shown="focusInput">
 
     <div class="contents">
       <p class="instruction">{{ $t("accessWallet.pleaseTypeInMnemonicPhrase") }}</p>
@@ -13,7 +13,9 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input type="checkbox" v-model="mnemonic24">
+              <input 
+                v-model="mnemonic24" 
+                type="checkbox">
               <span
                 class="slider round"
                 @click="mnemonicValueBitSizeChange"/>
@@ -36,10 +38,10 @@
               <span>{{ index }}.</span>
               <input
                 v-model="mnemonicPhrase[index - 1]"
+                :ref="`mnemonicInput${index-1}`"
                 type="text"
                 name=""
-                :ref="`mnemonicInput${index-1}`"
-                >
+              >
             </li>
           </ul>
         </div>
@@ -78,19 +80,6 @@ export default {
       mnemonicSize: 12
     };
   },
-  methods: {
-    mnemonicValueBitSizeChange() {
-      this.mnemonic24 = !this.mnemonic24;
-      this.mnemonic24 ? (this.mnemonicSize = 24) : (this.mnemonicSize = 12);
-      this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
-    },
-    openPasswordModal() {
-      this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
-    },
-    focusInput() {
-      this.$refs.mnemonicInput0[0].focus();
-    }
-  },
   watch: {
     mnemonicPhrase(newVal) {
       if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
@@ -103,6 +92,19 @@ export default {
           this.mnemonicPhrase = newVal[0].split(' ');
         }
       }
+    }
+  },
+  methods: {
+    mnemonicValueBitSizeChange() {
+      this.mnemonic24 = !this.mnemonic24;
+      this.mnemonic24 ? (this.mnemonicSize = 24) : (this.mnemonicSize = 12);
+      this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
+    },
+    openPasswordModal() {
+      this.mnemonicPhrasePasswordModalOpen(this.mnemonicPhrase.join(' '));
+    },
+    focusInput() {
+      this.$refs.mnemonicInput0[0].focus();
     }
   }
 };
