@@ -3,12 +3,7 @@
     <div class="wrap">
       <div class="page-container">
 
-        <div class="page-header">
-          <h1>{{ $t("team.title") }}</h1>
-          <p>
-            {{ $t("team.desc") }}
-          </p>
-        </div>
+        <title-text-contents :options="titleAndTextContents" />
 
         <div class="team-info">
           <div 
@@ -22,6 +17,7 @@
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
+              <h6>{{ member.otherInfo }}</h6>
             </div>
           </div>
         </div>
@@ -32,6 +28,8 @@
 </template>
 
 <script>
+import TitleTextContentsLayout from '../InformationPages/Components/TitleTextContentsLayout';
+
 import kosala from '@/assets/images/team/Kosala.jpg';
 import brian from '@/assets/images/team/Brian.jpg';
 import olchik from '@/assets/images/team/Olga.jpg';
@@ -45,62 +43,75 @@ import david from '@/assets/images/team/David.jpg';
 import samantha from '@/assets/images/team/Samantha.jpg';
 
 export default {
+  components: {
+    'title-text-contents': TitleTextContentsLayout
+  },
   data() {
     return {
+      titleAndTextContents: {
+        title: this.$t("team.title"),
+        boldSubTitle: '',
+        textContent: [
+          this.$t("team.desc")
+        ]
+      },
       members: [
         {
-          name: 'Kosala',
+          name: 'Kosala Hemachandra',
           position: 'Founder/CEO',
           img: kosala
         },
         {
-          name: 'Brian',
+          name: 'Brian Norton',
           position: 'COO',
           img: brian
         },
         {
-          name: 'Olchik',
+          name: 'Olchik Kupchevskaya',
           position: 'VP',
           img: olchik
         },
         {
-          name: 'Stephen',
-          position: 'Educational Project Lead',
+          name: 'Stephen Wooldridge II',
+          position: 'Customer Support',
+          otherInfo: '#MEWForce',
           img: stephen
         },
         {
           name: 'Duke & Richie Wolf',
           position: 'Blockchain Specialist',
+          otherInfo: '#MEWForce',
           img: richie
         },
         {
-          name: 'Brittany',
+          name: 'Brittany Evans',
           position: 'Blockchain Specialist',
+          otherInfo: '#MEWForce',
           img: brittany
         },
         {
-          name: 'Yel',
+          name: 'Yel Padill',
           position: 'Full-Stack Developer',
           img: yel
         },
         {
-          name: 'Steve',
+          name: 'Steve Mieskoski',
           position: 'Full-Stack Developer',
           img: steve
         },
         {
-          name: 'Jack',
+          name: 'Jack Huang',
           position: 'UI/UX Designer',
           img: jack
         },
         {
-          name: 'David',
+          name: 'David Hong',
           position: 'Front-End Developer',
           img: david
         },
         {
           name: 'Samantha',
-          position: 'Customer Relation',
+          position: 'Media & Communication Officer',
           img: samantha
         }
       ]
