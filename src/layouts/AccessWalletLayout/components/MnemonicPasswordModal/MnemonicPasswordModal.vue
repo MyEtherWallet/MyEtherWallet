@@ -4,14 +4,15 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered @shown="focusInput">
     <form class="password-form">
       <div class="input-container">
         <input
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off"
+          ref="mnemonicPasswordInput">
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
@@ -77,6 +78,9 @@ export default {
     },
     switchViewPassword() {
       this.show = !this.show;
+    },
+    focusInput() {
+      this.$refs.mnemonicPasswordInput.focus();
     }
   }
 };
