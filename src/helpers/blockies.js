@@ -84,7 +84,6 @@ function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
       cc.fillRect(col * scale, row * scale, scale, scale);
     }
   }
-
   return c;
 }
 
