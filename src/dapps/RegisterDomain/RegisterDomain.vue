@@ -189,7 +189,7 @@ export default {
           .encodeABI(),
         value: 0
       };
-      web3.eth.sendBatchTransactions([rawTx1, rawTx2]);
+      web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
     },
     async finalize() {
       const address = this.$store.state.wallet.getAddressString();

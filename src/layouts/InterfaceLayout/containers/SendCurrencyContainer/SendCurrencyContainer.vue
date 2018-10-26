@@ -285,11 +285,6 @@ export default {
       if (this.address === '') {
         delete this.raw['to'];
       }
-
-      if (window.web3 && this.$store.state.wallet.identifier === 'Web3') {
-        this.raw['web3WalletOnly'] = true;
-      }
-
       this.$store.state.web3.eth.sendTransaction(this.raw);
     },
     confirmationModalOpen() {
@@ -350,12 +345,18 @@ export default {
       this.selectedCurrency = e;
     },
     estimateGas() {
-      const newRaw = this.raw;
-      delete newRaw['gas'];
-      delete newRaw['nonce'];
-      this.createDataHex();
+      const isEth = this.selectedCurrency.name === 'Ethereum';
       this.$store.state.web3.eth
-        .estimateGas(newRaw)
+        .estimateGas({
+          from: this.$store.state.wallet.getAddressString(),
+          value: isEth
+            ? this.amount === ''
+              ? 0
+              : unit.toWei(this.amount, 'ether')
+            : 0,
+          to: isEth ? this.address : this.selectedCurrency.addr,
+          data: this.data
+        })
         .then(res => {
           this.transactionFee = unit.fromWei(
             unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
