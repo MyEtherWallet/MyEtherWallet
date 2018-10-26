@@ -4,6 +4,7 @@ import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
 import { formatters } from 'web3-core-helpers';
+import { toPayload } from './jsonrpc';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -66,7 +67,7 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
-              res(null, hash);
+              res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               res(err);
@@ -80,7 +81,7 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
-              res(null, hash);
+              res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               res(err);
