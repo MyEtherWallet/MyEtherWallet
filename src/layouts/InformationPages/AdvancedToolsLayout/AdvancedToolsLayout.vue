@@ -36,25 +36,47 @@
               class="input-block">
               <div class="inputs">
                 <div class="the-input">
-                  <standard-input :options="inputAddress" />
+                  <dropdown-address-selector :options="addressSelectorFromAddressOptions" />
                 </div>
-                <div class="the-input">
+
+                <div class="the-input the-input-flex">
+                  <standard-input :options="inputAmountBid" />
+                  <dropdown-bid-currency-selector />
+                </div>
+
+                <div class="the-input-grid-2">
                   <standard-input :options="inputEnsNameYouBid" />
-                </div>
-                <div class="the-input">
-                  <standard-input :options="inputHashedEnsName" />
-                </div>
-                <div class="the-input-grid-4">
-                  <standard-input :options="inputAmountYourEthBid" />
-                  <standard-input :options="inputAmountYourWeiBid" />
                   <standard-input :options="inputYourSecret" />
-                  <standard-input :options="inputYourSecretHashed" />
                 </div>
-                <div class="the-input">
+
+              </div>
+
+              <div class="outputs">
+
+                <div class="the-input to-address">
+                  <standard-input :options="inputToAddress" />
+                  <span>Detail</span>
+                </div>
+
+                <div class="the-input-grid-2">
                   <standard-input :options="inputHashedEnsName" />
+                  <standard-input :options="inputYourSecretHashed" />
+
+                  <standard-input :options="inputStartAuctionData" />
+                  <standard-input :options="inputStartAuctionBidData" />
+                  
+                  <standard-input :options="inputNewBidData" />
+                  <standard-input :options="inputRevealData" />
+                  
+                </div>
+
+                <div class="the-input">
+                  <standard-input :options="inputFinalizeAuctionData" />
                 </div>
               </div>
+
             </div>
+
           </li>
 
           <li>
@@ -134,11 +156,25 @@
                 <div class="the-input">
                   <standard-input :options="inputPrivateKey" />
                 </div>
+
                 <div class="the-input">
-                  <standard-input :options="inputToAddress" />
+                  <dropdown-address-selector :options="addressSelectorToAddressOptions" />
                 </div>
+
+              </div>
+              <div class="outputs">
                 <div class="the-input">
                   <standard-input :options="inputActualPrivateKey" />
+                </div>
+                <div class="the-input-button-container">
+                  <standard-button 
+                    :options="buttonCleanAll"
+                    class="the-button"
+                  />
+                  <standard-button 
+                    :options="buttonSearch"
+                    class="the-button"
+                  />
                 </div>
               </div>
             </div>
@@ -198,10 +234,16 @@
 
 <script>
 import TitleTextContentsLayout from '../Components/TitleTextContentsLayout';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import DropDownBidCurrencySelector from '@/components/DropDownBidCurrencySelector';
+
 
 export default {
   components: {
-    'title-text-contents': TitleTextContentsLayout
+    'title-text-contents': TitleTextContentsLayout,
+    'dropdown-address-selector': DropDownAddressSelector,
+    'dropdown-bid-currency-selector': DropDownBidCurrencySelector
+
   },
   props: {
     options: {
@@ -213,8 +255,30 @@ export default {
   },
   data() {
     return {
-      inputAddress: {
-        title: 'Address You Bid From',
+      buttonCleanAll: {
+        title: 'Clean All',
+        buttonStyle: 'green-border',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      buttonSearch: {
+        title: 'Search',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: false
+      },
+      addressSelectorFromAddressOptions: {
+        title: 'Address Bid From'
+      },
+      addressSelectorToAddressOptions: {
+        title: 'To Address',
+        buttonCopy: true
+      },
+      inputAmountBid: {
+        title: 'Amount Bid',
+        titleText: '(0 WEI)',
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -222,11 +286,11 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputEnsNameYouBid: {
-        title: "ENS Name You Bid On (No '.eth' at The End!)",
+        title: "ENS Name Bid On",
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -234,32 +298,47 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
-        rightInputText: ''
+        placeHolder: '',
+        rightInputText: '.eth'
       },
       inputHashedEnsName: {
-        title: 'Hashed ENS Name (Label Hash)',
+        title: 'Label Hash ENS Name',
         value: '',
         type: 'text',
-        buttonCopy: false,
+        buttonCopy: true,
         buttonClear: false,
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
-        rightInputText: ''
+        placeHolder: '',
+        rightInputText: '',
+        inputDisabled: true
       },
-      inputAmountYourEthBid: {
-        title: 'Amount Your ETH Bid',
+      inputStartAuctionData: {
+        title: 'Start Auction Data',
         value: '',
         type: 'text',
-        buttonCopy: false,
+        buttonCopy: true,
         buttonClear: false,
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
-        rightInputText: ''
+        placeHolder: '',
+        rightInputText: '',
+        inputDisabled: true
+      },
+      inputStartAuctionBidData: {
+        title: 'Start Auction & Bid Data',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: '',
+        inputDisabled: true
       },
       inputAmountYourWeiBid: {
         title: 'Amount Your Wei Bid',
@@ -270,7 +349,7 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputYourSecret: {
@@ -282,20 +361,21 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputYourSecretHashed: {
-        title: 'Your Secret (Hashed)',
+        title: 'Hashed Secret',
         value: '',
         type: 'text',
-        buttonCopy: false,
+        buttonCopy: true,
         buttonClear: false,
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
-        rightInputText: ''
+        placeHolder: '',
+        rightInputText: '',
+        inputDisabled: true
       },
 
       inputDecimal: {
@@ -307,7 +387,7 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputHexadecimal: {
@@ -319,11 +399,12 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputHexadecimalPadded: {
-        title: 'Hexadecimal (Padded Left w/64 characters)',
+        title: 'Hexadecimal',
+        titleText: '(Padded Left w/64 characters)',
         value: '',
         type: 'text',
         buttonCopy: true,
@@ -331,12 +412,13 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
 
       inputPrivateKey: {
-        title: "Private Key (This isn't unlocking correct address)",
+        title: 'Private Key',
+        titleText: '(This isn\'t unlocking correct address)',
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -344,19 +426,7 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
-        rightInputText: ''
-      },
-      inputToAddress: {
-        title: 'To Address',
-        value: '',
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputActualPrivateKey: {
@@ -368,7 +438,7 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
 
@@ -381,7 +451,7 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
       inputSHA3Output: {
@@ -393,17 +463,60 @@ export default {
         buttonCustom: '',
         topTextInfo: '',
         popover: '',
-        placeHolder: 'Please Enter........',
+        placeHolder: '',
         rightInputText: ''
       },
+      inputFinalizeAuctionData: {
+        title: 'Finalize Auction Data',
+        value: '0x983b94fbc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: '',
+        borderGrey: false,
+        inputDisabled: true
+      },
+      inputNewBidData: {
+        title: 'New Bid Data',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'Hi',
+        placeHolder: '',
+        rightInputText: '',
+        borderGrey: false,
+        inputDisabled: true
+      },
+      inputRevealData: {
+        title: 'Reveal Data',
+        value: '',
+        type: 'text',
+        buttonCopy: true,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: 'Hello',
+        placeHolder: '',
+        rightInputText: '',
+        borderGrey: false,
+        inputDisabled: true
+      },
 
-      ensDebuggerOpen: false,
+
+      ensDebuggerOpen: true,
       convertDecHexOpen: false,
       mistypedPrivateKeyOpen: false,
       SHA3Open: false,
 
       titleAndTextContents: {
-        title: 'Advanced',
+        title: 'Advanced Tools',
         boldSubTitle: '',
         textContent: [
           'The measured steps are meant to avoid an escalation of operations by Russia to more serious computer-based attacks on US information systems and infrastructure.'

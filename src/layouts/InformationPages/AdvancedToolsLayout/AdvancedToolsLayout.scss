@@ -1,9 +1,15 @@
 @import '../InformationPages';
-$block-opening-speed: 0.4s;
+$block-opening-speed: 0.3s;
 $block-padding-size: 30px;
 
+
+.page-container {
+  max-width: 700px;
+}
+
+
 .user-input-container {
-  margin-top: 30px;
+  margin-top: 50px;
 
   li {
     background-color: $white;
@@ -62,27 +68,72 @@ $block-padding-size: 30px;
   transition: all $block-opening-speed ease;
 
   &.input-block-open {
-    max-height: 1000px;
+    max-height: 1500px;
   }
 
-  .inputs {
-    border-top: 1px solid $light-grey-2;
+  .inputs,
+  .outputs {
+    border-top: 2px solid $light-grey-2;
     padding: $block-padding-size;
+
+    >*:last-child {
+      margin-bottom: 0;
+    }
   }
+
+
+  .to-address {
+    position: relative;
+
+    span {
+      position: absolute;
+      right: 25px;
+      top: 18px;
+      font-weight: 500;
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+
 
   .the-input {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .the-input-grid-4 {
+  .the-input-button-container {
+    width: 100%;
+    text-align: center;
+
+    &>* {
+      display: inline-block;
+    }
+
+    &>*:first-child {
+      margin-right: 10px;
+    }
+  }
+
+  .the-input-flex {
+
+    display: flex;
+    align-items: flex-end;
+
+    &>:first-child {
+      margin-right: 10px;
+    }
+
+  }
+
+  .the-input-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 30px;
-    margin-bottom: 30px;
+    grid-column-gap: 15px;
+    grid-row-gap: 40px;
+    margin-bottom: 40px;
 
     @media all and (max-width: $tablet-width) {
       grid-template-columns: 1fr;

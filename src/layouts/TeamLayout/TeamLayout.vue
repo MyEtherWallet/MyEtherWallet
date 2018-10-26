@@ -49,11 +49,9 @@ export default {
   data() {
     return {
       titleAndTextContents: {
-        title: this.$t("team.title"),
+        title: this.$t('team.title'),
         boldSubTitle: '',
-        textContent: [
-          this.$t("team.desc")
-        ]
+        textContent: [this.$t('team.desc')]
       },
       members: [
         {
