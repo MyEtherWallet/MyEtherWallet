@@ -217,6 +217,8 @@
                 <div class="the-input">
                   <standard-input :options="inputSHA3Input" />
                 </div>
+              </div>
+              <div class="outputs">
                 <div class="the-input">
                   <standard-input :options="inputSHA3Output" />
                 </div>
@@ -237,13 +239,11 @@ import TitleTextContentsLayout from '../Components/TitleTextContentsLayout';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import DropDownBidCurrencySelector from '@/components/DropDownBidCurrencySelector';
 
-
 export default {
   components: {
     'title-text-contents': TitleTextContentsLayout,
     'dropdown-address-selector': DropDownAddressSelector,
     'dropdown-bid-currency-selector': DropDownBidCurrencySelector
-
   },
   props: {
     options: {
@@ -290,7 +290,7 @@ export default {
         rightInputText: ''
       },
       inputEnsNameYouBid: {
-        title: "ENS Name Bid On",
+        title: 'ENS Name Bid On',
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -339,18 +339,6 @@ export default {
         placeHolder: '',
         rightInputText: '',
         inputDisabled: true
-      },
-      inputAmountYourWeiBid: {
-        title: 'Amount Your Wei Bid',
-        value: '',
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: ''
       },
       inputYourSecret: {
         title: 'Your Secret',
@@ -418,7 +406,7 @@ export default {
 
       inputPrivateKey: {
         title: 'Private Key',
-        titleText: '(This isn\'t unlocking correct address)',
+        titleText: "(This isn't unlocking correct address)",
         value: '',
         type: 'text',
         buttonCopy: false,
@@ -468,7 +456,8 @@ export default {
       },
       inputFinalizeAuctionData: {
         title: 'Finalize Auction Data',
-        value: '0x983b94fbc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6',
+        value:
+          '0x983b94fbc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6',
         type: 'text',
         buttonCopy: true,
         buttonClear: false,
@@ -509,8 +498,7 @@ export default {
         inputDisabled: true
       },
 
-
-      ensDebuggerOpen: true,
+      ensDebuggerOpen: false,
       convertDecHexOpen: false,
       mistypedPrivateKeyOpen: false,
       SHA3Open: false,
