@@ -314,6 +314,19 @@ export default {
         rightInputText: '',
         inputDisabled: true
       },
+      inputToAddress: {
+        title: '',
+        value: '',
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: '',
+        inputDisabled: true
+      },
       inputStartAuctionData: {
         title: 'Start Auction Data',
         value: '',

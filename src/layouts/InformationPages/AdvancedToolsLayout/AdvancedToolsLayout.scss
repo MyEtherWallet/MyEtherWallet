@@ -3,12 +3,11 @@ $block-opening-speed: 0.3s;
 $block-padding-size: 30px;
 $block-padding-size-mobile: 15px;
 
-
 .page-container {
   max-width: 700px;
 
   @media all and (max-width: $mobile-width) {
-    padding: 0 0px;
+    padding: 0 0;
   }
 }
 

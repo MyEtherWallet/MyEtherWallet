@@ -35,7 +35,7 @@ $text-info-color: #212529;
   .title-and-subtitle {
     display: flex;
     align-items: center;
-    
+
     @media all and (max-width: $tablet-width) {
       display: block;
     }
@@ -95,6 +95,10 @@ $text-info-color: #212529;
     width: 100%;
     position: relative;
     display: block;
+
+    &.disabled {
+      background-color: $light-green-4;
+    }
 
     &.right-padding {
       padding-right: 70px;
