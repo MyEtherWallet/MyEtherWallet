@@ -1,7 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
-
-.title-block{
+.title-block {
   text-align: center;
 
   .title {
@@ -19,7 +18,6 @@
     }
   } //.title
 } //.title-block
-
 
 .bold-sub-title {
   font-weight: 600;
@@ -42,13 +40,9 @@
   }
 }
 
-
-
-
 // Mobile
 @media all and (max-width: $mobile-width) {
-
-  .title-block{
+  .title-block {
     text-align: left;
 
     .title {
@@ -56,7 +50,7 @@
       align-items: center;
       span {
         font-size: 25px;
-        font-weight: 500;
+        font-weight: 600;
         line-height: 40px;
       }
 
@@ -87,9 +81,4 @@
       }
     }
   }
-
 }
-
-
-
-

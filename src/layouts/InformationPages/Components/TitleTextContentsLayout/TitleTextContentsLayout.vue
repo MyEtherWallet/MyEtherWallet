@@ -4,7 +4,9 @@
       v-if="options.title" 
       class="title-block">
       <div class="title">
-        <img v-if="options.titleIcon" :src="options.titleIcon">
+        <img 
+          v-if="options.titleIcon" 
+          :src="options.titleIcon">
         <span>{{ options.title }}</span>
       </div>
     </div>

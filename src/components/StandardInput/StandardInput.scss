@@ -41,6 +41,10 @@ $text-info-color: #212529;
   color: $input-title-color;
 }
 
+.input-title-text {
+  margin-right: 8px;
+}
+
 .the-button-container {
   margin-left: auto;
   display: flex;
@@ -84,7 +88,7 @@ $text-info-color: #212529;
     display: block;
 
     &.right-padding {
-      padding-right: 110px;
+      padding-right: 70px;
     }
   }
 
@@ -106,6 +110,11 @@ $text-info-color: #212529;
     height: 150px;
     resize: none;
   }
+}
+
+
+.input-container.border-grey input {
+  border: 1px solid $light-green-6;
 }
 
 .input-container.border-red input {

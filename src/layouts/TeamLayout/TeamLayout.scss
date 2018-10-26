@@ -1,9 +1,6 @@
 @import '../InformationPages/InformationPages';
 
-
-
 .team-info {
-  
   .member {
     img {
       width: 100%;
@@ -29,8 +26,6 @@
   }
 }
 
-
-
 // Desktop
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .team-info {
@@ -41,9 +36,6 @@
   }
 }
 
-
-
-
 // Tablet
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .team-info {
@@ -52,11 +44,12 @@
     display: grid;
     grid-row-gap: 80px;
     grid-template-columns: 1fr 1fr;
+
+    @media all and (max-width: 580px) {
+      grid-template-columns: 1fr;
+    }
   }
 }
-
-
-
 
 // Mobile
 @media all and (max-width: $mobile-width) {
@@ -67,10 +60,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-
-
-
-
-
-
