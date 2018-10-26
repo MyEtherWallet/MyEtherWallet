@@ -11,9 +11,9 @@ input {
   background-color: white;
   border: 0;
   border-radius: 4px;
-  height: 46px;
-  padding: 13px 13px;
+  padding: 18px;
   width: 100%;
+  padding: 18px;
 }
 
 select {
@@ -24,6 +24,7 @@ select {
 
 .select-block {
   position: relative;
+  margin-bottom: 5px;
 }
 
 .block-center {

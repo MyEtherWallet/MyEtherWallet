@@ -3,7 +3,9 @@
     <div class="wrap">
       <div class="block-left">
         <div class="select-block">
-          <select v-model="selectedLeft">
+          <dropdown-unit-selector />
+
+          <select v-model="selectedLeft" v-if="false">
             <option
               v-for="(opt, idx) in options"
               :key="opt + idx"
@@ -27,7 +29,9 @@
 
       <div class="block-right">
         <div class="select-block">
-          <select v-model="selectedRight">
+          <dropdown-unit-selector />
+          
+          <select v-model="selectedRight" v-if="false">
             <option
               v-for="(opt, idx) in options"
               :key="opt + idx"
@@ -48,8 +52,12 @@
 
 <script>
 import { BigNumber } from 'bignumber.js';
+import DropDownUnitSelector from '../DropDownUnitSelector';
 
 export default {
+  components: {
+    'dropdown-unit-selector': DropDownUnitSelector
+  },
   props: {
     options: {
       type: Array,

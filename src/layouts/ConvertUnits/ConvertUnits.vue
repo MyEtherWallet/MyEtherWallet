@@ -3,12 +3,9 @@
     <div class="wrap">
 
       <div class="page-container">
+
         <div class="page-title">
-          <h2>Convert Units</h2>
-          <p>
-            MyEtherWallet is comprised of talented, inspiring, and hardworking
-            individuals from around the world. We share the passion to code.
-          </p>
+          <page-title :options="titleOptions" />
         </div>
 
         <div>
@@ -44,13 +41,22 @@
 
 <script>
 import UnitInput from './components/UnitInput';
+import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout'
 
 export default {
   components: {
-    'unit-input': UnitInput
+    'unit-input': UnitInput,
+    'page-title': TitleTextContentsLayout
   },
   data() {
     return {
+      titleOptions: {
+        title: 'Convert Units',
+        boldSubTitle: '',
+        textContent: [
+          'MyEtherWallet is comprised of talented, inspiring, and hardworking individuals from around the world. We share the passion to code.'
+        ]
+      },
       etherUnitRef: [
         {
           name: 'Wei',
