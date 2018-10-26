@@ -6,6 +6,7 @@
       class="input-title-container">
       <div class="input-title-and-helper">
         <p class="input-title">{{ options.title }}</p>
+        <p class="input-title-text" v-if="options.titleText">{{ options.titleText }}</p>
         <popover 
           v-if="options.popover" 
           :popcontent="options.popover"/>
@@ -37,7 +38,7 @@
     </div>
 
     <div 
-      :class="borderClass" 
+      :class="[borderClass, options.borderGrey ? 'border-grey' : '']" 
       class="input-container">
       <input 
         v-if="!options.isTextarea"

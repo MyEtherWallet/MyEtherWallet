@@ -39,8 +39,7 @@ export default {
       titleAndTextContents: {
         title: 'Privacy Policy',
         boldSubTitle: 'Last updated May 10, 2018',
-        textContent: [
-        ]
+        textContent: []
       }
     };
   }
