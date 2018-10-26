@@ -90,7 +90,10 @@ export default {
   methods: {
     signMessage() {
       this.$store.state.web3.eth
-        .sign(this.$refs.message.value)
+        .sign(
+          this.$refs.message.value,
+          this.$store.state.wallet.getAddressString()
+        )
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
