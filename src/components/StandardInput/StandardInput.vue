@@ -47,7 +47,7 @@
       <input 
         v-if="!options.isTextarea"
         :value="options.value"
-        :class="options.rightInputText ? 'right-padding' : ''"
+        :class="[options.rightInputText ? 'right-padding' : '', options.inputDisabled ? 'disabled' : '']"
         :placeholder="options.placeHolder" 
         :type="options.type"
         :disabled="options.inputDisabled"
