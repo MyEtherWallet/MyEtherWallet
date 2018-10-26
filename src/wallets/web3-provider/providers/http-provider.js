@@ -7,7 +7,8 @@ import {
   ethSignTransaction,
   ethSign,
   ethAccounts,
-  ethCoinbase
+  ethCoinbase,
+  netVersion
 } from '../methods';
 class HttpProvider {
   constructor(host, options, store, eventHub) {
@@ -49,6 +50,7 @@ class HttpProvider {
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethCoinbase);
+      middleware.use(netVersion);
       middleware.run(req, callback).then(() => {
         try {
           request.send(JSON.stringify(payload));

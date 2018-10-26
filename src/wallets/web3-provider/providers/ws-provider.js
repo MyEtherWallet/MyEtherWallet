@@ -6,7 +6,8 @@ import {
   ethSignTransaction,
   ethSign,
   ethAccounts,
-  ethCoinbase
+  ethCoinbase,
+  netVersion
 } from '../methods';
 class WSProvider {
   constructor(host, options, store, eventHub) {
@@ -41,6 +42,7 @@ class WSProvider {
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethCoinbase);
+      middleware.use(netVersion);
       middleware.run(req, callback).then(() => {
         _this.connection.send(JSON.stringify(payload));
         _this._addResponseCallback(payload, callback);

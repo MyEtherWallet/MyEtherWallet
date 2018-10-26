@@ -24,7 +24,8 @@ class EtherscanProxy {
         url: this.url + qString
       })
         .then(res => {
-          resolve(res.data);
+          if (!res.data.error) resolve(res.data);
+          else reject(res.data);
         })
         .catch(reject);
     });
@@ -41,6 +42,7 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_getBlockByNumber':
           this.etherscanXHR(true, {
             module: 'proxy',
@@ -52,6 +54,7 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_getBlockTransactionCountByNumber':
           this.etherscanXHR(true, 'eth_getBlockTransactionCountByNumber', {
             module: 'proxy',
@@ -62,6 +65,7 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_getTransactionByHash':
           this.etherscanXHR(true, {
             module: 'proxy',
@@ -72,6 +76,7 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_getBalance':
           this.etherscanXHR(true, {
             module: 'account',
@@ -83,8 +88,9 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_call':
-          etherscanXHR(
+          this.etherscanXHR(
             true,
             Object.assign(payload.params[0], {
               module: 'proxy',
@@ -95,8 +101,25 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
+        case 'eth_estimateGas':
+          this.etherscanXHR(
+            true,
+            Object.assign(
+              {
+                module: 'proxy',
+                action: 'eth_estimateGas'
+              },
+              payload.params[0]
+            )
+          )
+            .then(body => {
+              resolve(toPayload(payload.id, body.result));
+            })
+            .catch(reject);
+          break;
         case 'eth_sendRawTransaction':
-          etherscanXHR(false, {
+          this.etherscanXHR(true, {
             hex: payload.params[0],
             module: 'proxy',
             action: 'eth_sendRawTransaction'
@@ -105,8 +128,9 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         case 'eth_getTransactionReceipt':
-          etherscanXHR(true, {
+          this.etherscanXHR(true, {
             txhash: payload.params[0],
             module: 'proxy',
             action: 'eth_getTransactionReceipt'
@@ -115,9 +139,9 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
-
+          break;
         case 'eth_getTransactionCount':
-          etherscanXHR(true, {
+          this.etherscanXHR(true, {
             address: payload.params[0],
             tag: payload.params[1],
             module: 'proxy',
@@ -127,9 +151,9 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
-
+          break;
         case 'eth_getCode':
-          etherscanXHR(true, {
+          this.etherscanXHR(true, {
             address: payload.params[0],
             tag: payload.params[1],
             module: 'proxy',
@@ -139,9 +163,9 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
-
+          break;
         case 'eth_getStorageAt':
-          etherscanXHR(true, {
+          this.etherscanXHR(true, {
             address: payload.params[0],
             position: payload.params[1],
             tag: payload.params[2],
@@ -152,6 +176,7 @@ class EtherscanProxy {
               resolve(toPayload(payload.id, body.result));
             })
             .catch(reject);
+          break;
         default:
           reject(new Error('Not supported'));
       }

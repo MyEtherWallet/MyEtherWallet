@@ -73,9 +73,9 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
             hostUrl.pathname
           }`,
-      null,
+      {},
       {
-        state: state,
+        state,
         dispatch
       },
       this._vm.$eventHub
