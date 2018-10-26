@@ -5,8 +5,12 @@
       v-if="options.title" 
       class="input-title-container">
       <div class="input-title-and-helper">
-        <p class="input-title">{{ options.title }}</p>
-        <p class="input-title-text" v-if="options.titleText">{{ options.titleText }}</p>
+        <div class="title-and-subtitle">
+          <p class="input-title">{{ options.title }}</p>
+          <p 
+            v-if="options.titleText" 
+            class="input-title-text">{{ options.titleText }}</p>
+        </div>
         <popover 
           v-if="options.popover" 
           :popcontent="options.popover"/>

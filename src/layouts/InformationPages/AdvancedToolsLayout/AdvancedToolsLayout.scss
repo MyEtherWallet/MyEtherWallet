@@ -1,12 +1,16 @@
 @import '../InformationPages';
 $block-opening-speed: 0.3s;
 $block-padding-size: 30px;
+$block-padding-size-mobile: 15px;
 
 
 .page-container {
   max-width: 700px;
-}
 
+  @media all and (max-width: $mobile-width) {
+    padding: 0 0px;
+  }
+}
 
 .user-input-container {
   margin-top: 50px;
@@ -22,6 +26,10 @@ $block-padding-size: 30px;
   user-select: none;
   padding: $block-padding-size;
 
+  @media all and (max-width: $mobile-width) {
+    padding: $block-padding-size-mobile;
+  }
+
   .the-title {
     display: flex;
     align-items: center;
@@ -34,6 +42,7 @@ $block-padding-size: 30px;
 
       @media all and (max-width: $mobile-width) {
         font-size: 18px;
+        line-height: 25px;
       }
     }
     i {
@@ -68,7 +77,7 @@ $block-padding-size: 30px;
   transition: all $block-opening-speed ease;
 
   &.input-block-open {
-    max-height: 1500px;
+    max-height: 2000px;
   }
 
   .inputs,
@@ -76,11 +85,14 @@ $block-padding-size: 30px;
     border-top: 2px solid $light-grey-2;
     padding: $block-padding-size;
 
-    >*:last-child {
+    @media all and (max-width: $mobile-width) {
+      padding: $block-padding-size-mobile;
+    }
+
+    > *:last-child {
       margin-bottom: 0;
     }
   }
-
 
   .to-address {
     position: relative;
@@ -95,7 +107,6 @@ $block-padding-size: 30px;
     }
   }
 
-
   .the-input {
     margin-bottom: 40px;
 
@@ -108,24 +119,22 @@ $block-padding-size: 30px;
     width: 100%;
     text-align: center;
 
-    &>* {
+    & > * {
       display: inline-block;
     }
 
-    &>*:first-child {
+    & > *:first-child {
       margin-right: 10px;
     }
   }
 
   .the-input-flex {
-
     display: flex;
     align-items: flex-end;
 
-    &>:first-child {
+    & > :first-child {
       margin-right: 10px;
     }
-
   }
 
   .the-input-grid-2 {
