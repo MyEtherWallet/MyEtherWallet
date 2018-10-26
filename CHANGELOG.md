@@ -1,7 +1,7 @@
 ### Release v5.0.4
 
 ### Devop
-
+- Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
 - Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
 - Use new contract getter [#119](https://github.com/MyEtherWallet/MyEtherWallet/pull/119)
 - Fix access wallet link, pop success when user clicks download [#115](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/115)
