@@ -30,7 +30,8 @@ const state = {
   customPaths: {},
   notifications: {},
   gasPrice: 41,
-  ens: {}
+  ens: {},
+  ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
 };
 
 export default state;
