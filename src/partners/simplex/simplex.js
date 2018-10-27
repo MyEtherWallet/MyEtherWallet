@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import BigNumber from 'bignumber.js';
-import { networkSymbols } from '../config';
+import { networkSymbols } from '../partnersConfig';
 import { SimplexMinFiat, SimplexMaxFiat, SimplexCurrencies } from './config.js';
 import { getQuote, getOrder, getStatus } from './simplex-api';
 

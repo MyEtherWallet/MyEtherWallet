@@ -1,6 +1,6 @@
 import { post, get } from '@/helpers/httpRequests';
 import { changellyAddresses } from './config';
-import { swapServer } from '../config';
+import { swapServer } from '../partnersConfig';
 
 function buildPath(route) {
   return swapServer + route;
@@ -78,7 +78,7 @@ const login = () => {
   return Promise.resolve({});
 };
 
-export {
+export default {
   getCurrencies,
   getRate,
   getMin,

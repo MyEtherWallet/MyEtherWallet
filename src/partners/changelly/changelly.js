@@ -1,14 +1,8 @@
-import { networkSymbols } from '../config';
-import {
-  getCurrencies,
-  validateAddress,
-  createTransaction,
-  getRate,
-  getMin,
-  getStatus
-} from './call';
-
+import { networkSymbols } from '../partnersConfig';
 import { ChangellyCurrencies } from './config';
+import changellyCalls from './changelly-calls';
+
+import changellyApi from './changelly-api';
 
 import debug from 'debug';
 
@@ -23,7 +17,6 @@ export default class Changelly {
     this.currencyIconList = [];
     this.erc20List = [];
     this.tokenDetails = {};
-    this.requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
     this.getSupportedCurrencies(this.network);
   }
 
@@ -46,7 +39,7 @@ export default class Changelly {
 
   static async getOrderStatus(swapDetails) {
     const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-    return await getStatus(parsed.orderId);
+    return await changellyCalls.getStatus(parsed.orderId);
   }
 
   statusUpdater(/*swapDetails*/) {
@@ -101,7 +94,7 @@ export default class Changelly {
     return {};
   }
 
-  getInitialCurrencyEntries(collectMapFrom, collectMapTo){
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop])
         collectMapTo.set(prop, {
@@ -115,7 +108,7 @@ export default class Changelly {
     }
   }
 
-  getUpdatedFromCurrencyEntries(value, collectMap){
+  getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
         if (prop !== value.symbol) {
@@ -129,7 +122,7 @@ export default class Changelly {
     }
   }
 
-  getUpdatedToCurrencyEntries(value, collectMap){
+  getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
         if (prop !== value.symbol) {
@@ -146,13 +139,14 @@ export default class Changelly {
   async startSwap(swapDetails) {
     if (swapDetails.minValue < swapDetails.fromValue) {
       swapDetails.dataForInitialization = await this.createSwap(swapDetails);
-      swapDetails.parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-      swapDetails.providerAddress = swapDetails.dataForInitialization.payinAddress;
+      swapDetails.parsed = Changelly.parseOrder(
+        swapDetails.dataForInitialization
+      );
+      swapDetails.providerAddress =
+        swapDetails.dataForInitialization.payinAddress;
       return swapDetails;
     }
-      throw Error(
-        'From amount below changelly minimun for currency pair'
-      );
+    throw Error('From amount below changelly minimun for currency pair');
   }
 
   getSupportedTokens() {
@@ -191,40 +185,21 @@ export default class Changelly {
 
   async getSupportedCurrencies() {
     try {
-      const currencyList = await getCurrencies(this.network);
-      this.currencyDetails = {};
-      this.tokenDetails = {};
-      this.currencyIconList = {};
-
-      if (currencyList) {
-        for (let i = 0; i < currencyList.length; i++) {
-          if (
-            !this.requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
-            currencyList[i].enabled
-          ) {
-            const details = {
-              symbol: currencyList[i].name.toUpperCase(),
-              name: currencyList[i].fullName
-            };
-            this.currencyDetails[details.symbol] = details;
-            this.tokenDetails[details.symbol] = details;
-            this.currencyIconList[details.symbol] = details.image;
-          }
-        }
-        this.hasRates =
-          Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
-      } else {
-        throw Error(
-          'Changelly get supported currencies failed to return a value'
-        );
-      }
+      const {
+        currencyDetails,
+        tokenDetails
+      } = await changellyApi.getSupportedCurrencies(this.network);
+      this.currencyDetails = currencyDetails;
+      this.tokenDetails = tokenDetails;
+      this.hasRates =
+        Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
     }
   }
 
   async _getRate(fromCurrency, toCurrency, fromValue) {
-    return await getRate(
+    return await changellyCalls.getRate(
       {
         from: fromCurrency,
         to: toCurrency,
@@ -235,7 +210,7 @@ export default class Changelly {
   }
 
   async getMin(fromCurrency, toCurrency, fromValue) {
-    return await getMin(
+    return await changellyCalls.getMin(
       {
         from: fromCurrency,
         to: toCurrency,
@@ -260,7 +235,7 @@ export default class Changelly {
   }
 
   async validateAddress(toCurrency, address) {
-    return await validateAddress(
+    return await changellyCalls.validateAddress(
       {
         currency: toCurrency,
         address: address
@@ -285,6 +260,6 @@ export default class Changelly {
       refundAddress: fromAddress !== '' ? fromAddress : toAddress,
       refundExtraId: null
     };
-    return await createTransaction(swapParams, this.network);
+    return await changellyCalls.createTransaction(swapParams, this.network);
   }
 }

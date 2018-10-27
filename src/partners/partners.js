@@ -10,7 +10,7 @@ import {
 import {
   Tokens
   // otherChains,
-} from './config';
+} from './partnersConfig';
 
 function comparator(a, b) {
   a = a.symbol;
@@ -23,6 +23,7 @@ export default class SwapProviders {
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
+
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(
@@ -39,10 +40,12 @@ export default class SwapProviders {
     this.providerListPair = {};
     this.providerList = [];
 
+    let checkCount = 0;
     const checkIfAllRatesReceived = setInterval(() => {
+      checkCount++;
       this.checkIfRatesPresent();
-      console.log(this.haveProviderRates); // todo remove dev item
-      if (this.haveProviderRates) {
+      console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
+      if (this.haveProviderRates || checkCount > 400) {
         clearInterval(checkIfAllRatesReceived);
       }
     }, 50);
@@ -135,7 +138,6 @@ export default class SwapProviders {
           }
         });
 
-        console.log(callsToMake); // todo remove dev item
         return { providersFound, callsToMake };
 
       } else {

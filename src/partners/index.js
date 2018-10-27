@@ -10,7 +10,7 @@ import {
   supportedProviders,
   Tokens,
   OtherChains,
-} from './config';
+} from './partnersConfig';
 import {
   bestRateForQuantity,
   bestProviderForQuantity,

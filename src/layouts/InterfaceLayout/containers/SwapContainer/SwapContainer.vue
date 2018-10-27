@@ -208,6 +208,8 @@ import {
   checkInvalidOrMissingValue
 } from '@/partners';
 
+// import '@/partners/helpers/setupServiceWorker.js';
+
 const errorLogger = debug('v5:swapContainer');
 
 BigNumber.config({ DECIMAL_PLACES: 7 });
@@ -261,6 +263,54 @@ export default {
       haveProviderRates: false,
       loadingError: false
     };
+  },
+  beforeCreate() {
+    if ('Worker' in window) {
+      // eslint-disable-next-line no-undef no-unused-vars
+      var myWorker = new Worker('swapWorker.js');
+      myWorker.postMessage([])
+      // navigator.serviceWorker
+      //   .register('swapWorker.js')
+      //   .then(
+      //     function(registration) {
+      //       // Registration was successful
+      //       console.log(
+      //         'ServiceWorker registration successful with scope: ',
+      //         registration.scope
+      //       );
+      //     },
+      //     function(err) {
+      //       // registration failed :(
+      //       console.log('ServiceWorker registration failed: ', err);
+      //     }
+      //   )
+      //   .catch(console.error);
+
+      // new Promise(function(resolve, reject) {
+      //   let sw = ServiceWorker.waiting;
+      //   if (sw === null) return reject(Error('Denied notification permission'));
+      //   console.log('ServiceWorker', sw); // todo remove dev item
+      //   resolve();
+      // })
+      //   .then(function() {
+      //     console.log(
+      //       'navigator.serviceWorker.ready:',
+      //       navigator.serviceWorker.ready
+      //     ); // todo remove dev item
+      //     return navigator.serviceWorker.ready;
+      //   })
+      //   .then(function(reg) {
+      //     console.log('do thing', reg); // todo remove dev item
+      //     return reg.sync.register('syncTest');
+      //   })
+      //   .then(function() {
+      //     console.log('Sync registered');
+      //   })
+      //   .catch(function(err) {
+      //     console.log('It broke');
+      //     console.log(err.message);
+      //   });
+    }
   },
   computed: {
     bestRate() {
@@ -432,10 +482,16 @@ export default {
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
-          this.fromValue = this.swap.calculateFromValue(this.toValue, this.bestRate);
+          this.fromValue = this.swap.calculateFromValue(
+            this.toValue,
+            this.bestRate
+          );
           break;
         case 'from':
-          this.toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
+          this.toValue = this.swap.calculateToValue(
+            this.fromValue,
+            this.bestRate
+          );
           break;
         case 'simplexto':
           simplexProvider = this.swap.getProvider('simplex');
