@@ -23,4 +23,4 @@ const getMin = rateDetails => {
   return post('https://127.0.0.1:9100/getMinAmount', rateDetails);
 };
 
-export { getTokenList, getRates, getRate, getMin };
+export default { getTokenList, getRates, getRate, getMin };

@@ -1,4 +1,4 @@
-import { networkSymbols } from '../config';
+import { networkSymbols } from '../partnersConfig';
 import { getRates, openOrder, getStatus, login } from './call';
 import { BityCurrencies } from './config';
 
@@ -257,7 +257,6 @@ export default class BitySwap {
   }
 
   async getRate(fromCurrency, toCurrency) {
-    console.log(this); // todo remove dev item
     const rate = await this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,

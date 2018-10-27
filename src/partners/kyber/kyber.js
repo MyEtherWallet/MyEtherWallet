@@ -1,7 +1,7 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
-import { networkSymbols } from '../config';
-import { getTokenList, getRates } from './call';
+import { networkSymbols } from '../partnersConfig';
+import kyberApi from './kyber-api';
 import {
   KyberCurrencies,
   kyberAddressFallback,
@@ -11,7 +11,7 @@ import {
 } from './config';
 
 const logger = debugLogger('v5:kyber-swap');
-const errorLogger = debugLogger('v5:error');
+const errorLogger = debugLogger('v5-error:kyber');
 /**
  * Note: Need to implement checks for these:
  *   - Source amount is too small. Minimum amount is 0.001 ETH equivalent.
@@ -32,11 +32,13 @@ export default class Kyber {
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
+    this.rates = new Map();
+
+    // setup actions
     this.retrieveRatesFromAPI();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
     this.setupKyberContractObject();
-    this.rates = new Map();
   }
 
   static getName() {
@@ -160,26 +162,13 @@ export default class Kyber {
   }
 
   async retrieveRatesFromAPI() {
-    const rates = await getRates(this.network);
-    const data = Object.keys(rates);
-    data.forEach(key => {
-      const keyParts = key.split('_');
-      this.rates.set(`${keyParts[0]}/${keyParts[1]}`, rates[key].currentPrice);
-      if (
-        rates[key].symbol &&
-        rates[key].name &&
-        rates[key].decimals &&
-        rates[key].contractAddress
-      ) {
-        // otherwise the entry is invalid
-        this.tokenDetails[rates[key].symbol] = {
-          symbol: rates[key].symbol,
-          name: rates[key].name,
-          contractAddress: rates[key].contractAddress,
-          decimals: rates[key].decimals
-        };
-      }
-    });
+    const { rates, tokenDetails } = await kyberApi.retrieveRatesFromAPI(
+      this.network,
+      this.rates,
+      this.tokenDetails
+    );
+    this.rates = rates;
+    this.tokenDetails = tokenDetails;
     this.hasRates =
       Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
   }
@@ -229,20 +218,7 @@ export default class Kyber {
 
   async getSupportedTokenList() {
     try {
-      const tokenList = await getTokenList(this.network);
-      this.tokenDetails = {};
-      for (let i = 0; i < tokenList.length; i++) {
-        if (
-          tokenList[i].symbol &&
-          tokenList[i].name &&
-          tokenList[i].decimals &&
-          tokenList[i].contractAddress
-        ) {
-          // otherwise the entry is invalid
-          const symbol = tokenList[i].symbol.toUpperCase();
-          this.tokenDetails[symbol] = tokenList[i];
-        }
-      }
+      this.tokenDetails = await kyberApi.getSupportedTokenList(this.network);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -357,7 +333,7 @@ export default class Kyber {
   async getRateInToken(fromToken, toToken, fromValue) {
     if (this.rates.has(`${fromToken}/${toToken}`)) {
       if (fromToken === 'ETH') {
-        return (1 / this.rates.get(`${fromToken}/${toToken}`));
+        return 1 / this.rates.get(`${fromToken}/${toToken}`);
       }
       return this.rates.get(`${fromToken}/${toToken}`);
       // return this.convertToTokenBase('ETH', rate);

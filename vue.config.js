@@ -2,6 +2,7 @@ const Dotenv = require('dotenv-webpack');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
 const webpackConfig = {
   node: {
     process: true
@@ -27,6 +28,9 @@ const webpackConfig = {
     })
   ]
 };
+webpackConfig.plugins.push(
+  new InjectManifest({swSrc: './src/partners/swapWorker.js', swDest: 'swapWorker.js'})
+)
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({

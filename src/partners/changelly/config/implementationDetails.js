@@ -10,4 +10,6 @@ const changellyAddresses = {
   // ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
 };
 
-export { changellyAddresses };
+const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM']
+
+export { changellyAddresses, requireExtraId };

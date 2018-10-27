@@ -1,4 +1,4 @@
-import { swapServer } from '../config';
+import { swapServer } from '../partnersConfig';
 
 const SimplexCurrencies = {
   fiat: {
