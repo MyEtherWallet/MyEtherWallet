@@ -2,11 +2,14 @@ import { BitySwap, BityCurrencies } from './bity';
 import { KyberCurrencies, KyberSwap } from './kyber';
 import { ChangellyCurrencies, ChangellySwap } from './changelly';
 import { Simplex, SimplexCurrencies } from './simplex';
+import Swap from './partners'
 import {
   networkSymbols,
   chainCurrencies,
   fiat,
-  supportedProviders
+  supportedProviders,
+  Tokens,
+  OtherChains,
 } from './config';
 import {
   bestRateForQuantity,
@@ -16,8 +19,10 @@ import {
   dynamicSortMultiple
 } from './helpers/sortAndIdentify';
 import { CurrencyOptionBuilder } from './helpers/currencyOptionBuilder';
-
+const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
 export {
+  Swap,
+  providers,
   supportedProviders,
   BitySwap,
   BityCurrencies,
@@ -30,6 +35,8 @@ export {
   networkSymbols,
   chainCurrencies,
   fiat,
+  Tokens,
+  OtherChains,
   CurrencyOptionBuilder,
   bestRateForQuantity,
   bestProviderForQuantity,

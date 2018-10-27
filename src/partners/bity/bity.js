@@ -2,6 +2,18 @@ import { networkSymbols } from '../config';
 import { getRates, openOrder, getStatus, login } from './call';
 import { BityCurrencies } from './config';
 
+function disabledPairing(currencyList, symbol, invalid, side) {
+  if (currencyList[symbol]) {
+    if (side === 'from') {
+      if (currencyList[symbol].invalidFrom) {
+        return !currencyList[symbol].invalidFrom.includes(invalid);
+      }
+      return true;
+    }
+    return true;
+  }
+}
+
 // ** NOTE this still needs work
 export default class BitySwap {
   constructor(props = {}) {
@@ -49,8 +61,40 @@ export default class BitySwap {
     };
   }
 
-  static async getOrderStatus(swapDetails) {
-    return await getStatus(swapDetails.dataForInitialization);
+  static async getOrderStatus(swapDetails, priorStatus) {
+    let data = await getStatus(swapDetails.dataForInitialization);
+    const validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
+    const invalidStatus = ['CANC'];
+    const convertStatuses = {
+      [1]: 'OPEN',
+      [2]: 'RCVE',
+      [10]: 'CONF',
+      [0]: 'FILL',
+      [-1]: 'CANC'
+    };
+    if (data.status === undefined) data = { input: {}, output: {} };
+    console.log(data.status); // todo remove dev item
+    if (validStatus.includes(data.status)) {
+      return 2;
+      // priorStatus = 'RCVE';
+    }
+    if (data.status === 'OPEN') {
+      return 1;
+    } else if (
+      convertStatuses[priorStatus] === 'OPEN' &&
+      validStatus.includes(data.input.status)
+    ) {
+      return 2;
+    } else if (
+      convertStatuses[priorStatus] === 'RCVE' &&
+      validStatus.includes(data.output.status)
+    ) {
+      return 0;
+    } else if (invalidStatus.includes(data.status)) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 
   statusUpdater(/*swapDetails*/) {
@@ -89,6 +133,7 @@ export default class BitySwap {
       [0]: 'FILL',
       [-1]: 'CANC'
     };
+    console.log(data.status); // todo remove dev item
     if (validStatus.includes(data.status)) {
       priorStatus = 'RCVE';
     }
@@ -106,6 +151,8 @@ export default class BitySwap {
       return 0;
     } else if (invalidStatus.includes(data.status)) {
       return -1;
+    } else {
+      return 1;
     }
   }
 
@@ -150,11 +197,11 @@ export default class BitySwap {
     const overMaxETH =
       (toCurrency === 'ETH' && toValue > this.maxValue) ||
       (fromCurrency === 'ETH' &&
-        fromValue * this.getRate(toCurrency, fromCurrency) > this.maxValue);
+        fromValue * this._getRate(toCurrency, fromCurrency) > this.maxValue);
     const overMaxREP =
       (toCurrency === 'REP' && toValue > this.maxValue) ||
       (fromCurrency === 'REP' &&
-        fromValue * this.getRate(fromCurrency, toCurrency) > this.maxValue);
+        fromValue * this._getRate(fromCurrency, toCurrency) > this.maxValue);
     if (toCurrency === 'BTC' && overMax) {
       // return true;
       return false;
@@ -202,11 +249,76 @@ export default class BitySwap {
     this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
   }
 
-  getRate(fromToken, toToken) {
+  _getRate(fromToken, toToken) {
     if (this.rates.has(`${fromToken}/${toToken}`)) {
       return this.rates.get(`${fromToken}/${toToken}`);
     }
     return -1;
+  }
+
+  async getRate(fromCurrency, toCurrency) {
+    console.log(this); // todo remove dev item
+    const rate = await this._getRate(fromCurrency, toCurrency);
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      rate: rate,
+      minValue: this.minValue,
+      maxValue: this.maxValue // TODO provide better identification and notice of min/max for user
+    };
+  }
+
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
+    for (const prop in this.currencies) {
+      if (this.currencies[prop])
+        collectMapTo.set(prop, {
+          symbol: prop,
+          name: this.currencies[prop].name
+        });
+      collectMapFrom.set(prop, {
+        symbol: prop,
+        name: this.currencies[prop].name
+      });
+    }
+  }
+
+  getUpdatedFromCurrencyEntries(value, collectMap) {
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (
+          prop !== value.symbol &&
+          disabledPairing(this.currencies, value.symbol, prop, 'from')
+        ) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap) {
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (prop !== value.symbol) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  async startSwap(swapDetails) {
+    swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+    swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
+    swapDetails.providerAddress = swapDetails.dataForInitialization.payment_address;
+    return swapDetails;
   }
 
   addRateEntry(pair, from, to, rate) {
@@ -264,6 +376,7 @@ export default class BitySwap {
       throw Error('error creating bity order');
     }
   }
+
   /*
 *       $scope.bity.openOrder(order, function (data) {
         if (!data.error) {

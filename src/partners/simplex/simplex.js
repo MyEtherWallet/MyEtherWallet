@@ -1,15 +1,17 @@
 /* eslint-disable no-unused-vars */
+import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../config';
 import { SimplexMinFiat, SimplexMaxFiat, SimplexCurrencies } from './config.js';
 import { getQuote, getOrder, getStatus } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
-    this.name = 'simplex';
+    this.name = Simplex.getName();
     this.network = props.network || networkSymbols.ETH;
     this.minFiat = props.minFiat || SimplexMinFiat;
     this.maxFiat = props.maxFiat || SimplexMaxFiat;
     this.currencyDetails = props.currencies || SimplexCurrencies;
+    this.hasRates = 1;
     this.status = {
       invalidFiatAmount: true,
       invalidDigitalAmount: true,
@@ -17,6 +19,10 @@ export default class Simplex {
     };
 
     this.currentOrder = {};
+  }
+
+  static getName() {
+    return 'simplex';
   }
 
   get validNetwork() {
@@ -28,6 +34,56 @@ export default class Simplex {
       return this.currencyDetails;
     }
     return { fiat: {}, digital: {} };
+  }
+
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo){
+    for (const prop in this.currencies.fiat) {
+      if (this.currencies.fiat[prop])
+        collectMapFrom.set(prop, {
+          symbol: prop,
+          name: this.currencies.fiat[prop].name
+        });
+    }
+    for (const prop in this.currencies.digital) {
+      if (this.currencies.digital[prop])
+        collectMapTo.set(prop, {
+          symbol: prop,
+          name: this.currencies.digital[prop].name
+        });
+    }
+  }
+
+  getUpdatedFromCurrencyEntries(value, collectMap){
+    if (this.currencies.digital[value.symbol]) {
+      for (const prop in this.currencies.fiat) {
+        if (prop !== value.symbol) {
+          if (this.currencies.fiat[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies.fiat[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap){
+    if (this.currencies.fiat[value.symbol]) {
+      for (const prop in this.currencies.digital) {
+        if (prop !== value.symbol) {
+          if (this.currencies.digital[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies.digital[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  async startSwap(swapDetails) {
+    swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+    return swapDetails;
   }
 
   validSwap(fromCurrency, toCurrency) {
@@ -91,6 +147,61 @@ export default class Simplex {
         });
         clearInterval(checkStatus);
       }, 1000);
+    };
+  }
+
+  async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    if (this.canQuote(fromValue, toValue)) {
+      let simplexRateDetails/*, _fromValue, _toValue*/;
+      if (this.isFiat(fromCurrency) && isFiat) {
+        // TODO restructure to remove redundancy
+        simplexRateDetails = await this.updateFiat(
+          this.fromCurrency,
+          this.toCurrency,
+          fromValue
+        );
+/*        _fromValue = simplexRateDetails.fromValue;
+        _toValue = simplexRateDetails.toValue;*/
+      } else {
+        simplexRateDetails = await this.updateDigital(
+          this.fromCurrency,
+          this.toCurrency,
+          toValue
+        );
+/*        _fromValue = simplexRateDetails.fromValue;
+        _toValue = simplexRateDetails.toValue;*/
+      }
+
+      const rate = new BigNumber(simplexRateDetails.fromValue)
+        .div(simplexRateDetails.toValue)
+        .toString(10);
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: rate,
+        minValue: this.minFiat,
+        maxValue: this.maxFiat
+      };
+    }
+    this.invalidFrom = 'simplexMin';
+    // eslint-disable no-console
+    // errorLogger('indicate invalid simplex'); // TODO: provide ui indication(s)
+    const simplexRateDetails = await this.updateFiat(
+      fromCurrency,
+      toCurrency,
+      51
+    );
+    const rate = new BigNumber(simplexRateDetails.toValue)
+      .div(simplexRateDetails.fromValue)
+      .toString(10);
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      rate: rate,
+      minValue: this.minFiat,
+      maxValue: this.maxFiat
     };
   }
 

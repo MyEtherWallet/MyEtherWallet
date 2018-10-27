@@ -1,52 +1,51 @@
 <template lang="html">
-  <div>
-    <div class="top-row">
-      <div class="from-address">
-        <div class="icon">
-          <img
-            :src="currencyIcons[details.fromCurrency]"
-            height="16"
-            width="16">
-          <span class="currency">{{ details.fromCurrency }}</span>
+  <div class ="transaction-entry-container">
+    <div class="transaction-entry">
+      <div class="top-row">
+        <div class="from-address">
+          <div class="icon">
+            <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+            <span class="currency">{{ details.fromCurrency }}</span>
+          </div>
+          <p class="value">{{ details.fromValue }}</p>
         </div>
-        <p class="value">{{ details.fromValue }}</p>
-      </div>
 
-      <div class="right-arrow">
-        <img
-          :src="arrowImage"
-          height="12"
-          width="16">
-      </div>
-
-      <div class="to-address">
-        <div class="icon">
+        <div class="right-arrow">
           <img
-            :src="currencyIcons[details.toCurrency]"
-            height="16"
+            :src="arrowImage"
+            height="12"
             width="16">
-          <span class="currency">{{ details.toCurrency }}</span>
         </div>
-        <p class="value">{{ details.toValue }}</p>
-      </div>
-    </div>
 
-    <div class="middle-row">
-      <div class="status-indicator-container">
-        <div class="status-indicator">
-          <div class="status-timer">
-            <p v-if="swapWindowOpen && !completed">{{ parseTimeRemaining }}</p>
-            <p v-if="!swapWindowOpen && !completed">Order Expired</p>
-            <p v-if="completed">Order Complete</p>
+        <div class="to-address">
+          <div class="icon">
+            <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+            <span class="currency">{{ details.toCurrency }}</span>
+          </div>
+          <p class="value">{{ details.toValue }}</p>
+        </div>
+      </div>
+      <div class="middle-row">
+        <div class="status-indicator-container">
+          <div class="status-indicator">
+            <div :class="status-timer">
+
+              <p v-if="swapWindowOpen && !completed">{{ parseTimeRemaining }}{{currentStatus}}</p>
+              <p v-if="!swapWindowOpen && !completed">Order Expired</p>
+              <p v-if="completed">Order Complete</p>
+              <p v-if="swapWindowOpen && !completed">{{currentDisplayStatus}}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-{{currentStatus}}
+
   </div>
 </template>
 
 <script>
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
@@ -74,15 +73,14 @@ export default {
       arrowImage: Arrow,
       parsed: {},
       timeRemaining: '',
-      currentStatus: ''
+      currentStatus: '',
+      status: ''
     };
   },
   computed: {
     parseTimeRemaining() {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
-      // const hours = Math.floor((this.timeRemaining / (60 * 60)) % 24);
-      // const days = Math.floor(this.timeRemaining / (60 * 60 * 24));
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
     },
     swapWindowOpen() {
@@ -93,6 +91,20 @@ export default {
         return true;
       }
       return false;
+    },
+    currentDisplayStatus() {
+      switch (this.currentStatus) {
+        case -1:
+          return 'expired';
+        case 0:
+          return 'completed';
+        case 1:
+          return 'pending';
+        case 2:
+          return 'in-progress';
+        case 3:
+          return 'in-progress';
+      }
     }
   },
   watch: {
@@ -134,11 +146,13 @@ export default {
     statusUpdater() {
       let updating = false;
       const getStatus = async () => {
-        // let currentStatus;
-        // const parsed = this.provider.parseOrder(this.details);
         if (!updating) {
           updating = true;
-          this.currentStatus = await this.provider.getOrderStatus(this.details);
+          this.currentStatus = await this.provider.getOrderStatus(
+            this.details,
+            this.currentStatus
+          );
+          console.log(this.currentStatus); // todo remove dev item
           updating = false;
         }
       };
@@ -163,5 +177,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../Transactions';
+@import './TransactionEntry';
 </style>

@@ -36,7 +36,7 @@
 
       <div
         :class="[swapReady ? '': 'disable', 'confirm-send-button']"
-        @click="signAndTransmitTransaction">
+        @click="signTransaction">
         <button-with-qrcode
           :qrcode="qrcode"
           buttonname="Confirm and Send"/>
@@ -50,7 +50,6 @@
 
 <script>
 /* eslint-disable*/
-import web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 
@@ -194,7 +193,10 @@ export default {
       if (swapDetails.dataForInitialization) {
         switch (swapDetails.provider) {
           case 'changelly':
-            this.preparedSwap = await this.useChangelly(swapDetails);
+            console.log('swapDetails', swapDetails); // todo remove dev item
+            const preparedSwap = await this.useChangelly(swapDetails);
+            const signedTx = this.$store.state.web3.eth.signTransaction(preparedSwap)
+            console.log(signedTx); // todo remove dev item
             this.swapReady = true;
             break;
           case 'bity':
@@ -209,13 +211,14 @@ export default {
 
       }
     },
-    signAndTransmitTransaction() {
+    signTransaction() {
       if(!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
-        this.$store.state.web3.eth.sendBatchTransactions(this.preparedSwap);
+        // this.$store.state.web3.mew.sendBatchTransactions(this.preparedSwap);
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          // this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
+          console.log(this.preparedSwap); // todo remove dev item
+          this.$store.state.web3.eth.signTransaction(this.preparedSwap);
         }
       }
       this.$emit('swapStarted', this.swapDetails);

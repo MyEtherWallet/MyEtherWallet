@@ -124,7 +124,7 @@
         :disabled="accessMyWalletBtnDisabled"
         class="mid-round-button-green-filled close-button"
         @click.prevent="unlockWallet">
-        {{ $t("common.accessMyWallet") }}
+        {{ $t('common.accessMyWallet') }}
       </b-btn>
     </div>
     <customer-support/>
@@ -134,6 +134,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import ethUnits from 'ethjs-unit';
+
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -246,8 +247,9 @@ export default {
       }
       this.currentIndex += MAX_ADDRESSES;
     },
-    getAddressBalance(address) {
+    async getAddressBalance(address) {
       const web3 = this.$store.state.web3;
+      if (web3 === null || web3 === undefined) await this.setupWeb3();
       web3.eth.getBalance(address).then(balance => {
         for (const i in this.HDAccounts)
           if (this.HDAccounts[i].account.getAddressString() == address)
@@ -274,6 +276,9 @@ export default {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
       this.customPaths = this.$store.state.customPaths;
+    },
+    setupWeb3() {
+      this.$store.dispatch('setWeb3Instance');
     }
   }
 };

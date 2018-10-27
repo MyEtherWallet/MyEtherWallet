@@ -11,13 +11,14 @@ import {
 import { ChangellyCurrencies } from './config';
 
 import debug from 'debug';
+
 const errorLogger = debug('v5:partners-changelly');
 
 export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
-    this.hasTokens = 0;
+    this.hasRates = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.currencyIconList = [];
     this.erc20List = [];
@@ -82,7 +83,11 @@ export default class Changelly {
       finished: 0,
       failed: -1
     };
-    return statuses[data.status];
+    let status = statuses[data.status];
+    if (typeof status === 'undefined') {
+      return 2;
+    }
+    return status;
   }
 
   get validNetwork() {
@@ -94,6 +99,60 @@ export default class Changelly {
       return this.currencyDetails;
     }
     return {};
+  }
+
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo){
+    for (const prop in this.currencies) {
+      if (this.currencies[prop])
+        collectMapTo.set(prop, {
+          symbol: prop,
+          name: this.currencies[prop].name
+        });
+      collectMapFrom.set(prop, {
+        symbol: prop,
+        name: this.currencies[prop].name
+      });
+    }
+  }
+
+  getUpdatedFromCurrencyEntries(value, collectMap){
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (prop !== value.symbol) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap){
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (prop !== value.symbol) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  async startSwap(swapDetails) {
+    if (swapDetails.minValue < swapDetails.fromValue) {
+      swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+      swapDetails.parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
+      swapDetails.providerAddress = swapDetails.dataForInitialization.payinAddress;
+      return swapDetails;
+    }
+      throw Error(
+        'From amount below changelly minimun for currency pair'
+      );
   }
 
   getSupportedTokens() {
@@ -119,6 +178,7 @@ export default class Changelly {
       swapDetails.fromValue
     );
   }
+
   getCurrencyIcon(currency) {
     if (this.currencyIconList[currency]) {
       return this.currencyIconList[currency];
@@ -151,8 +211,8 @@ export default class Changelly {
             this.currencyIconList[details.symbol] = details.image;
           }
         }
-        this.hasTokens =
-          Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
+        this.hasRates =
+          Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
       } else {
         throw Error(
           'Changelly get supported currencies failed to return a value'
@@ -163,7 +223,7 @@ export default class Changelly {
     }
   }
 
-  async getRate(fromCurrency, toCurrency, fromValue) {
+  async _getRate(fromCurrency, toCurrency, fromValue) {
     return await getRate(
       {
         from: fromCurrency,
@@ -183,6 +243,20 @@ export default class Changelly {
       },
       this.network
     );
+  }
+
+  async getRate(fromCurrency, toCurrency, fromValue) {
+    const changellyDetails = await Promise.all([
+      this.getMin(fromCurrency, toCurrency, fromValue),
+      this._getRate(fromCurrency, toCurrency, fromValue)
+    ]);
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      minValue: changellyDetails[0],
+      rate: changellyDetails[1]
+    };
   }
 
   async validateAddress(toCurrency, address) {
