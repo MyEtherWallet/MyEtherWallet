@@ -18,7 +18,7 @@
             <p >No Active Transactions</p>
           </div>
         </li>
-        <li 
+        <li
           v-for="tx in sortedTransactions"
           v-show="sortedTransactions.length > 0"
           :key="tx.key"
@@ -105,6 +105,7 @@ export default {
           if (timeRemaining > 0) {
             return true;
           }
+          // return true;
           return false;
         }
       });
@@ -123,7 +124,6 @@ export default {
     },
     dropdownOpen(newVal) {
       if (newVal) {
-        console.log(newVal); // todo remove dev item
         this.countActive();
         this.updateTransactions();
       }
@@ -165,8 +165,10 @@ export default {
               return true;
             }
             return false;
+            // return true;
           }
           return false;
+          // return true;
         });
       }
     },

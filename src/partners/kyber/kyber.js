@@ -21,7 +21,7 @@ export default class Kyber {
   constructor(props = {}) {
     this.name = Kyber.getName();
     this.network = props.network || networkSymbols.ETH;
-    this.hasTokens = 0;
+    this.hasRates = 0;
     this.gasLimit = 300000;
     this.maxGasPrice = 30000000000; // 30 Gwei
     this.gasPrice = 2000000000; // 2 Gwei
@@ -48,6 +48,56 @@ export default class Kyber {
       return this.tokenDetails;
     }
     return {};
+  }
+
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
+    for (const prop in this.currencies) {
+      if (this.currencies[prop])
+        collectMapTo.set(prop, {
+          symbol: prop,
+          name: this.currencies[prop].name
+        });
+      collectMapFrom.set(prop, {
+        symbol: prop,
+        name: this.currencies[prop].name
+      });
+    }
+  }
+
+  getUpdatedFromCurrencyEntries(value, collectMap) {
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (prop !== value.symbol) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap) {
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (prop !== value.symbol) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  async startSwap(swapDetails) {
+    swapDetails.maybeToken = true;
+    swapDetails.providerAddress = this.getAddress();
+    swapDetails.kyberMaxGas = await this.getKyberMaxGas();
+    swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+    return swapDetails;
   }
 
   get validNetwork() {
@@ -98,7 +148,7 @@ export default class Kyber {
   }
 
   // potential interface methods
-  getRate(fromToken, toToken, fromValue) {
+  _getRate(fromToken, toToken, fromValue) {
     return this.getExpactedRateInTokens(fromToken, toToken, fromValue);
   }
 
@@ -130,8 +180,8 @@ export default class Kyber {
         };
       }
     });
-    this.hasTokens =
-      Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
+    this.hasRates =
+      Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
   }
 
   getPreliminaryRate(fromToken, toToken) {
@@ -139,6 +189,20 @@ export default class Kyber {
       return this.rates.get(`${fromToken}/${toToken}`);
     }
     return -1;
+  }
+
+  async getRate(fromCurrency, toCurrency, fromValue) {
+    const rate = await this.getExpactedRateInTokens(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      rate: rate
+    };
   }
 
   getMainNetAddress(initialAddress) {
@@ -179,8 +243,8 @@ export default class Kyber {
           this.tokenDetails[symbol] = tokenList[i];
         }
       }
-      this.hasTokens =
-        Object.keys(this.tokenDetails).length > 0 ? this.hasTokens + 1 : 0;
+      this.hasRates =
+        Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
       errorLogger(e);
     }
@@ -258,8 +322,8 @@ export default class Kyber {
 
   getLastRateInToken(fromToken, toToken) {
     if (this.rates.has(`${fromToken}/${toToken}`)) {
-      const rate = this.rates.get(`${fromToken}/${toToken}`);
-      return this.convertToTokenBase('ETH', rate);
+      return this.rates.get(`${fromToken}/${toToken}`);
+      // return this.convertToTokenBase('ETH', rate);
     }
     return -1;
   }
@@ -288,6 +352,18 @@ export default class Kyber {
       return this.convertToTokenBase('ETH', inWei);
     }
     return -1;
+  }
+
+  async getRateInToken(fromToken, toToken, fromValue) {
+    if (this.rates.has(`${fromToken}/${toToken}`)) {
+      if (fromToken === 'ETH') {
+        return (1 / this.rates.get(`${fromToken}/${toToken}`));
+      }
+      return this.rates.get(`${fromToken}/${toToken}`);
+      // return this.convertToTokenBase('ETH', rate);
+    } else {
+      return await this.getExpactedRateInTokens(fromToken, toToken, fromValue);
+    }
   }
 
   async getUserCapInWei(userAddress) {

@@ -27,12 +27,12 @@ export default {
       store.get('network') !== undefined
         ? store.get('network')
         : this.$store.state.Networks['ETH'][3];
-    const hostUrl = url.parse(network.url);
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
+    // const hostUrl = url.parse(network.url);
+    // const newWeb3 = new Web3(
+    //   `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+    //     hostUrl.pathname
+    //   }`
+    // );
     const transactions =
       store.get('transactions') !== undefined ? store.get('transactions') : {};
     const notifications =

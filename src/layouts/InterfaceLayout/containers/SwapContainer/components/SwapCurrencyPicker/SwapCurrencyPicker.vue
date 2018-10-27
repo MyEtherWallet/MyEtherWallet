@@ -6,7 +6,7 @@
       <div
         :class="[open? 'open':'','dropdown-container', token? 'dropdown-text-container': 'dropdown-text-container-white']"
         @click="openDropdown">
-        <p> {{ selectedCurrency.symbol }} <span class="subname">- {{ selectedCurrency.name }}</span></p>
+        <p> <span :class="['cc', selectedCurrency.symbol, 'alt-' + selectedCurrency.symbol, 'cc-icon']"></span> {{ selectedCurrency.symbol }} <span class="subname">- {{ selectedCurrency.name }}</span></p>
         <p v-show="!token"> {{ selectedCurrency.name }} </p>
         <i :class="['fa', open ? 'fa-angle-up':'fa-angle-down']"/>
       </div>
@@ -23,7 +23,7 @@
             :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']"
             :key="token?curr.name+curr.symbol + page: curr.name + page + idx"
             @click="selectCurrency(curr)">
-            <p>{{ curr.symbol }} <span class="subname">- {{ curr.name }}</span></p><p/><p v-show="!token">{{ curr.name }}</p>
+            <p><i :class="['cc', curr.symbol, 'cc-icon']"></i> {{ curr.symbol }} <span class="subname">- {{ curr.name }}</span></p><p/><p v-show="!token">{{ curr.name }}</p>
           </div>
         </div>
       </div>
@@ -32,6 +32,9 @@
 </template>
 
 <script>
+// import '@/assets/images/currency/coins/webfont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 export default {
   props: {
     currencies: {

@@ -5,7 +5,10 @@ import EtherscanProvider from './providers/etherscan-provider';
 import { WEB3_WALLET } from '../bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
-    if (store.state.wallet.identifier == WEB3_WALLET) {
+    const isWeb3Wallet = store.state.wallet !== null
+      ? store.state.wallet.identifier == WEB3_WALLET
+      : false;
+    if (isWeb3Wallet) {
       return new GivenProvider(host, options, store, eventHub);
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {
