@@ -5,7 +5,7 @@
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
-      :is-hardware-walalet="isHardwareWallet"
+      :is-hardware-wallet="isHardwareWallet"
       :gas-price="$store.state.gasPrice"
       :from="fromAddress"
       :to="toAddress"
@@ -53,8 +53,6 @@ import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import debug from 'debug';
-const errorLogger = debug('v5:ConfirmationContainer');
 
 export default {
   components: {
@@ -109,7 +107,7 @@ export default {
   computed: {
     fromAddress() {
       if (this.$store.state.wallet) {
-        return this.$store.state.wallet.getAddressString();
+        return this.$store.state.wallet.getChecksumAddressString();
       }
     }
   },
@@ -172,20 +170,17 @@ export default {
       );
     });
 
-    this.$eventHub.$on(
-      'showTxCollectionConfirmModal',
-      (tx, isHardware, signer) => {
-        const newArr = [];
-        this.isHardwareWallet = isHardware;
-        for (let i = 0; i < tx.length; i++) {
-          signer(tx[i]).then(_response => {
-            newArr.push(_response);
-          });
-        }
-        this.signedArray = newArr;
-        this.confirmationCollectionModalOpen();
+    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
+      const newArr = [];
+      this.isHardwareWallet = isHardware;
+      for (let i = 0; i < tx.length; i++) {
+        this.$store.state.wallet.signTransaction(tx[i]).then(_response => {
+          newArr.push(_response);
+        });
       }
-    );
+      this.signedArray = newArr;
+      this.confirmationCollectionModalOpen();
+    });
 
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
@@ -257,16 +252,44 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
+    async sendBatchCallback(err, response) {
+      if (err !== null) {
+        this.$store.dispatch('addNotification', [
+          this.fromAddress,
+          err,
+          'Transaction Error'
+        ]);
+        return;
+      }
+
+      this.$store.dispatch('addNotification', [
+        this.fromAddress,
+        response,
+        'Transaction Hash'
+      ]);
+
+      const pollReceipt = setInterval(() => {
+        this.$store.state.web3.eth.getTransactionReceipt(response).then(res => {
+          if (res !== null) {
+            this.$store.dispatch('addNotification', [
+              this.fromAddress,
+              res,
+              'Transaction Receipt'
+            ]);
+            this.showSuccessModal('Transaction sent!', 'Okay');
+            clearInterval(pollReceipt);
+          }
+        });
+      }, 500);
+    },
     async sendBatchTransactions() {
       const web3 = this.$store.state.web3;
-      // const dispatch = this.$store.dispatch;
       const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {
         batch.add(
           web3.eth.sendSignedTransaction.request(
             this.signedArray[i].rawTransaction,
-            'receipt',
-            errorLogger
+            this.sendBatchCallback
           )
         );
       }

@@ -13,9 +13,6 @@ import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import store from 'store';
 import nodeList from '@/networks';
-import Web3 from 'web3';
-import ENS from 'ethereum-ens';
-import url from 'url';
 
 export default {
   name: 'App',
@@ -45,7 +42,7 @@ export default {
     const gasPrice =
       store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
     const state = {
-      web3: newWeb3,
+      web3: null,
       network: network,
       customPaths:
         store.get('customPaths') !== undefined ? store.get('customPaths') : {},
@@ -59,8 +56,7 @@ export default {
       online: true,
       notifications: notifications,
       gasPrice: gasPrice,
-      ens:
-        network.type.ensResolver !== '' ? new ENS(newWeb3.currentProvider) : {}
+      ens: network.type.ensResolver == null
     };
     if (store.get('notifications') === undefined)
       store.set('notifications', {});
