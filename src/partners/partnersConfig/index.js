@@ -1,5 +1,5 @@
 import { chainCurrencies, fiat } from './currencyDetails';
-import Tokens from './EthereumTokens';
+import EthereumTokens from './EthereumTokens';
 import OtherChains from './OtherChains'
 
 const networkSymbols = {
@@ -11,7 +11,7 @@ const swapServer = 'https://mew-v5-swap-dev-server.nanoapp.io';
 
 const supportedProviders = ['simplex', 'kybernetwork', 'changelly', 'bity'];
 export {
-  Tokens,
+  EthereumTokens,
   OtherChains,
   networkSymbols,
   chainCurrencies,

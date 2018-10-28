@@ -2,7 +2,9 @@ const changellyAddresses = {
   ETH: {
     currencies: '/getCurrencies',
     rate: '/getExchangeAmount',
+    batchRate: '/getBatchExchangeAmount',
     min: '/getMinAmount',
+    batchMin: '/getBatchMinAmount',
     validate: '/validateAddress',
     createTransaction: '/createTransaction',
     status: '/statusChangelly'

@@ -204,11 +204,8 @@ import {
   providers,
   bestProviderForQuantity,
   bestRateForQuantity,
-  isValidEntry,
-  checkInvalidOrMissingValue
+  isValidEntry
 } from '@/partners';
-
-// import '@/partners/helpers/setupServiceWorker.js';
 
 const errorLogger = debug('v5:swapContainer');
 
@@ -229,8 +226,6 @@ export default {
       currencyOptions: {},
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
-      // fromCurrency: 'OMG',
-      // toCurrency: 'ETH',
       fromValue: 1,
       toValue: 1,
       invalidFrom: 'none',
@@ -264,54 +259,6 @@ export default {
       loadingError: false
     };
   },
-  beforeCreate() {
-    if ('Worker' in window) {
-      // eslint-disable-next-line no-undef no-unused-vars
-      var myWorker = new Worker('swapWorker.js');
-      myWorker.postMessage([])
-      // navigator.serviceWorker
-      //   .register('swapWorker.js')
-      //   .then(
-      //     function(registration) {
-      //       // Registration was successful
-      //       console.log(
-      //         'ServiceWorker registration successful with scope: ',
-      //         registration.scope
-      //       );
-      //     },
-      //     function(err) {
-      //       // registration failed :(
-      //       console.log('ServiceWorker registration failed: ', err);
-      //     }
-      //   )
-      //   .catch(console.error);
-
-      // new Promise(function(resolve, reject) {
-      //   let sw = ServiceWorker.waiting;
-      //   if (sw === null) return reject(Error('Denied notification permission'));
-      //   console.log('ServiceWorker', sw); // todo remove dev item
-      //   resolve();
-      // })
-      //   .then(function() {
-      //     console.log(
-      //       'navigator.serviceWorker.ready:',
-      //       navigator.serviceWorker.ready
-      //     ); // todo remove dev item
-      //     return navigator.serviceWorker.ready;
-      //   })
-      //   .then(function(reg) {
-      //     console.log('do thing', reg); // todo remove dev item
-      //     return reg.sync.register('syncTest');
-      //   })
-      //   .then(function() {
-      //     console.log('Sync registered');
-      //   })
-      //   .catch(function(err) {
-      //     console.log('It broke');
-      //     console.log(err.message);
-      //   });
-    }
-  },
   computed: {
     bestRate() {
       try {
@@ -324,7 +271,6 @@ export default {
           return bestRateForQuantity([...this.providerList], this.fromValue);
         }
       } catch (e) {
-        // eslint-disable no-console
         errorLogger(e);
       }
     },
@@ -374,18 +320,11 @@ export default {
       }
       return false;
     }
-    // haveProviderRates() {
-    //   // //TODO centralize location of name strings for providers
-    //   // if (this.$store.state.network.type.name === 'ETH') {
-    //   //   if (this.ratesRetrived) return this.ratesRetrived;
-    //   //   return supportedProviders.every(entry =>
-    //   //     this.providerRatesRecieved.includes(entry)
-    //   //   );
-    //   // }
-    //   return true;
-    // }
   },
   watch: {
+    ['this.$store.state.network.type.name']() {
+      this.swap.updateNetwork(this.$store.state.network.type.name);
+    },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
       this.toArray = toArray;
@@ -415,20 +354,6 @@ export default {
     this.currentAddress = this.$store.state.wallet.getChecksumAddressString();
   },
   methods: {
-    swapStarted(swapDetails) {
-      // let checkStatus;
-      this.$store.dispatch('addSwapTransaction', [
-        this.currentAddress,
-        swapDetails
-      ]);
-    },
-    resetSwapState() {
-      this.toAddress = '';
-      this.fromCurrency = 'ETH';
-      this.toCurrency = 'BTC';
-      this.fromValue = 1;
-      this.toValue = 1;
-    },
     setSelectedProvider(provider) {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
@@ -463,8 +388,9 @@ export default {
         (isValidEntry(this.fromValue) && to === 'from') ||
         (isValidEntry(this.toValue) && to === 'to')
       ) {
-        const simplexProvider = this.swap.getProvider('simplex');
-        if (simplexProvider.currencies.fiat[this.fromCurrency]) {
+        if (
+          this.swap.getProvider('simplex').currencies.fiat[this.fromCurrency]
+        ) {
           this.$store.state.web3.utils._.debounce(
             this.updateEstimate('simplex' + to),
             200
@@ -519,20 +445,8 @@ export default {
           }
           break;
         default:
-          toValue = checkInvalidOrMissingValue(
-            new BigNumber(this.fromValue)
-              .times(this.bestRate)
-              .toFixed()
-              .toString(10),
-            true
-          );
-          fromValue = checkInvalidOrMissingValue(
-            new BigNumber(this.toValue)
-              .div(this.bestRate)
-              .toFixed()
-              .toString(10),
-            false
-          );
+          toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
+          fromValue = this.swap.calculateFromValue(this.toValue, this.bestRate);
           this.toValue = toValue;
           this.fromValue = fromValue;
           break;
@@ -540,11 +454,6 @@ export default {
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
-        // const loadingTimeout = setTimeout(() => {
-        //   this.loadingData = false;
-        //   this.loadingError = true;
-        // }, 20000);
-        this.loadingError = false;
         this.loadingData = true;
         this.noProvidersPair = { fromCurrency, toCurrency };
         this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
@@ -592,9 +501,7 @@ export default {
             fromValue
           );
           this.updateEstimate(to);
-        } /*else if (this.providerData.length === 0) {
-          this.providerData = [];
-        }*/
+        }
       }
     },
     // ================================ Finalize and Open Modal ============================================
@@ -602,7 +509,27 @@ export default {
       try {
         if (this.validSwap) {
           this.finalizingSwap = true;
-          this.swapDetails = await this.collectSwapDetails();
+          const providerDetails = this.providerList.find(entry => {
+            return entry.provider === this.selectedProvider.provider;
+          });
+          const swapDetails = {
+            provider: providerDetails.provider,
+            fromCurrency: providerDetails.fromCurrency,
+            fromValue: this.fromValue,
+            toValue: this.toValue,
+            toCurrency: providerDetails.toCurrency,
+            rate: providerDetails.rate,
+            minValue: providerDetails.minValue,
+            maxValue: providerDetails.maxValue,
+            toAddress: this.toAddress,
+            fromAddress: this.currentAddress,
+            timestamp: Date.now(),
+            status: 1,
+            maybeToken: false
+          };
+
+          this.swapDetails = await this.swap.startSwap(swapDetails);
+
           this.finalizingSwap = false;
           if (
             this.swapDetails.dataForInitialization &&
@@ -627,31 +554,19 @@ export default {
         errorLogger(e);
       }
     },
-    async collectSwapDetails() {
-      try {
-        const tempDetails = this.providerList.find(entry => {
-          return entry.provider === this.selectedProvider.provider;
-        });
-        const swapDetails = {
-          provider: tempDetails.provider,
-          fromCurrency: tempDetails.fromCurrency,
-          fromValue: this.fromValue,
-          toValue: this.toValue,
-          toCurrency: tempDetails.toCurrency,
-          rate: tempDetails.rate,
-          minValue: tempDetails.minValue,
-          maxValue: tempDetails.maxValue,
-          toAddress: this.toAddress,
-          fromAddress: this.currentAddress,
-          timestamp: Date.now(),
-          status: 1,
-          maybeToken: false
-        };
-
-        return await this.swap.startSwap(swapDetails);
-      } catch (e) {
-        throw e;
-      }
+    swapStarted(swapDetails) {
+      // let checkStatus;
+      this.$store.dispatch('addSwapTransaction', [
+        this.currentAddress,
+        swapDetails
+      ]);
+    },
+    resetSwapState() {
+      this.toAddress = '';
+      this.fromCurrency = 'ETH';
+      this.toCurrency = 'BTC';
+      this.fromValue = 1;
+      this.toValue = 1;
     },
     async createTx(swapDetails) {
       const isEth = this.fromCurrency === 'ETH';

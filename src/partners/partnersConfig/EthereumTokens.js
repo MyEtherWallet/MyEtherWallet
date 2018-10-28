@@ -526,5 +526,90 @@ export default {
     fullName: '0x Protocol Token',
     contractAddress: '0xe41d2489571d322189246dafa5ebde1f4699f498',
     decimals: 18
+  },
+  MANA: {
+    name: 'MANA',
+    decimals: 18,
+    contractAddress: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942'
+  },
+  REQ: {
+    name: 'Request',
+    decimals: 18,
+    contractAddress: '0x8f8221afbb33998d8584a2b05749ba73c37a938a'
+  },
+  GTO: {
+    name: 'Gifto',
+    decimals: 5,
+    contractAddress: '0xc5bbae50781be1669306b9e001eff57a2957b09d'
+  },
+  RDN: {
+    name: 'Raiden',
+    decimals: 18,
+    contractAddress: '0x255aa6df07540cb5d3d297f0d0d4d84cb52bc8e6'
+  },
+  APPC: {
+    name: 'AppCoins',
+    decimals: 18,
+    contractAddress: '0x1a7a8bd9106f2b8d977e08582dc7d24c723ab0db'
+  },
+  ENG: {
+    name: 'Enigma',
+    decimals: 8,
+    contractAddress: '0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4'
+  },
+  BQX: {
+    name: 'Ethos',
+    decimals: 8,
+    contractAddress: '0x5Af2Be193a6ABCa9c8817001F45744777Db30756'
+  },
+  AST: {
+    name: 'AirSwap',
+    decimals: 4,
+    contractAddress: '0x27054b13b1b798b345b591a4d22e6562d47ea75a'
+  },
+  STORM: {
+    name: 'Storm',
+    decimals: 18,
+    contractAddress: '0xd0a4b8946cb52f0661273bfbc6fd0e0c75fc6433'
+  },
+  MOT: {
+    name: 'Olympus Labs',
+    decimals: 18,
+    contractAddress: '0x263c618480dbe35c300d8d5ecda19bbb986acaed'
+  },
+  DGX: {
+    name: 'Digix Gold',
+    decimals: 9,
+    contractAddress: '0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf'
+  },
+  ABT: {
+    name: 'ArcBlock',
+    decimals: 18,
+    contractAddress: '0xb98d4c97425d9908e66e53a6fdf673acca0be986'
+  },
+  BLZ: {
+    name: 'Bluezelle',
+    decimals: 18,
+    contractAddress: '0x5732046a883704404f284ce41ffadd5b007fd668'
+  },
+  PAL: {
+    name: 'PolicyPal Network',
+    decimals: 18,
+    contractAddress: '0xfedae5642668f8636a11987ff386bfd215f942ee'
+  },
+  ELEC: {
+    name: 'ElectrifyAsia',
+    decimals: 18,
+    contractAddress: '0xd49ff13661451313ca1553fd6954bd1d9b6e02b9'
+  },
+  BBO: {
+    name: 'Bigbom',
+    decimals: 18,
+    contractAddress: '0x84f7c44b6fed1080f647e354d552595be2cc602f'
+  },
+  ETH: {
+    name: 'Ethereum',
+    decimals: 18,
+    contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   }
 };

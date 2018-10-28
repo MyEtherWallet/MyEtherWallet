@@ -36,10 +36,10 @@
 
       <div
         :class="[swapReady ? '': 'disable', 'confirm-send-button']"
-        @click="signTransaction">
+        @click="sendTransaction">
         <button-with-qrcode
           :qrcode="qrcode"
-          buttonname="Confirm and Send"/>
+          buttonname="Continue to confirmation"/>
       </div>
 
       <help-center-button/>
@@ -59,7 +59,9 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-// TODO see: https://github.com/MyEtherWallet/MyEtherWallet/blob/89282539248349de09ba64b3171408a23d189460/src/dapps/RegisterDomain/RegisterDomain.vue
+
+import { EthereumTokens } from '@/partners';
+
 export default {
   components: {
     'detail-information': DetailInformation,
@@ -145,153 +147,199 @@ export default {
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
-      this.swapStarted(newValue)
+      this.swapStarted(newValue);
     }
   },
   methods: {
-    sendTransaction() {
-      // this.swapStarted(this.swapDetails);
-      // this.$refs.swapconfirmation.hide();
-      // this.$emit('swapStarted');
-    },
-    createTokenTransferData(fromAddress, amount, tokenDetails) {
-      if (this.swapDetails.fromCurrency !== 'ETH') {
-        const jsonInterface = [
-          {
-            constant: false,
-            inputs: [
-              { name: '_to', type: 'address' },
-              { name: '_amount', type: 'uint256' }
-            ],
-            name: 'transfer',
-            outputs: [{ name: '', type: 'bool' }],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function'
-          }
-        ];
-        const contract = new this.$store.state.web3.eth.Contract(
-          jsonInterface,
-          tokenDetails.address
-        );
-        return contract.methods
-          .transfer(
-            fromAddress,
-            new BigNumber(amount)
-              .times(new BigNumber(10).pow(tokenDetails.decimals))
-              .toFixed()
-          )
-          .encodeABI();
-      } else {
-        return '0x';
-      }
-    },
-    async swapStarted(swapDetails) {
-      this.swapReady = false;
-      this.preparedSwap = {};
-      console.log('swapDetails', swapDetails); // todo remove dev item
-      if (swapDetails.dataForInitialization) {
-        switch (swapDetails.provider) {
-          case 'changelly':
-            console.log('swapDetails', swapDetails); // todo remove dev item
-            const preparedSwap = await this.useChangelly(swapDetails);
-            const signedTx = this.$store.state.web3.eth.signTransaction(preparedSwap)
-            console.log(signedTx); // todo remove dev item
-            this.swapReady = true;
-            break;
-          case 'bity':
-            this.preparedSwap = await this.useBity(swapDetails);
-            this.swapReady = true;
-            break;
-          case 'kybernetwork':
-            this.preparedSwap = await this.useKyber(swapDetails);
-            this.swapReady = true;
-            break;
-        }
-
-      }
-    },
-    signTransaction() {
-      if(!this.swapReady) return;
+    async sendTransaction() {
+      if (!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
-        // this.$store.state.web3.mew.sendBatchTransactions(this.preparedSwap);
+        if (this.preparedSwap.length > 1) {
+
+          const gasPrice = entry.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
+          const cleaned = this.preparedSwap.map(entry => {
+            return {
+              from: entry.from,
+              to: entry.to,
+              value: this.$store.state.web3.utils.toHex(entry.value),
+              data: entry.data || '0x',
+              gasPrice: this.$store.state.web3.utils.toHex(gasPrice)
+            };
+          });
+          console.log('cleaned', cleaned); // todo remove dev item
+          this.$store.state.web3.mew.sendBatchTransactions(cleaned);
+        } else {
+          const  cleaned = await this.prepareSingleTransaction(this.preparedSwap[0]);
+          this.$store.state.web3.eth.sendTransaction(cleaned);
+        }
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          console.log(this.preparedSwap); // todo remove dev item
-          this.$store.state.web3.eth.signTransaction(this.preparedSwap);
+          const  cleaned = await this.prepareSingleTransaction(this.preparedSwap);
+          this.$store.state.web3.eth.sendTransaction(cleaned);
         }
       }
       this.$emit('swapStarted', this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
-    async useBity(swapDetails) {
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.input.amount,
-            'ether'
-          )
-        };
-      }
+    async prepareSingleTransaction(preparedSwap){
+      const gasPrice = preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei')
+      const cleaned = {
+        from: preparedSwap.from,
+        to: preparedSwap.to,
+        value: this.$store.state.web3.utils.toHex(preparedSwap.value),
+        data: preparedSwap.data || '0x',
+        gasPrice: this.$store.state.web3.utils.toHex(gasPrice)
+      };
+
+      cleaned.gas = await this.$store.state.web3.eth.estimateGas(cleaned)
+      return cleaned;
     },
-    async useChangelly(swapDetails) {
-      // TODO: consolidate
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.amountExpectedFrom,
-            'ether'
-          )
-        };
-      }
-    },
-    async useKyber(swapDetails) {
-      const txDatas = swapDetails.dataForInitialization.values();
-      const bulkTx = [];
-      try {
-        for (const value of txDatas) {
-          value.from = this.$store.state.wallet.getChecksumAddressString();
-          if(unit.toWei(this.$store.state.gasPrice, 'gwei') > swapDetails.kyberMaxGas){
-            value.gasPrice = swapDetails.kyberMaxGas
-          }
-          bulkTx.push(value);
+    createTokenTransferData(fromAddress, amount, tokenDetails) {
+      const jsonInterface = [
+        {
+          constant: false,
+          inputs: [
+            { name: '_to', type: 'address' },
+            { name: '_amount', type: 'uint256' }
+          ],
+          name: 'transfer',
+          outputs: [{ name: '', type: 'bool' }],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         }
-        return bulkTx;
-      } catch (e) {
-        console.error(e);
+      ];
+      const contract = new this.$store.state.web3.eth.Contract(
+        jsonInterface,
+        tokenDetails.contractAddress
+      );
+      return contract.methods
+        .transfer(
+          fromAddress,
+          new BigNumber(amount)
+            .times(new BigNumber(10).pow(tokenDetails.decimals))
+            .toFixed()
+        )
+        .encodeABI();
+    },
+    async swapStarted(swapDetails) {
+      this.preparedSwap = await this.finalizeSwap(swapDetails);
+      this.swapReady = true;
+    },
+    async finalizeSwap(swapDetails) {
+      this.swapReady = false;
+      this.preparedSwap = {};
+      console.log('swapDetails', swapDetails); // todo remove dev item
+      if (swapDetails.dataForInitialization && !Array.isArray(swapDetails.dataForInitialization)) {
+        if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
+          const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
+          if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
+
+          return {
+            from: this.$store.state.wallet.getChecksumAddressString(),
+            to: tokenInfo.contractAddress,
+            value: 0,
+            data: this.createTokenTransferData(
+              swapDetails.providerAddress,
+              swapDetails.fromValue,
+              tokenInfo
+            )
+          };
+        } else if (
+          swapDetails.maybeToken &&
+          swapDetails.fromCurrency === 'ETH'
+        ) {
+          return {
+            from: this.$store.state.wallet.getChecksumAddressString(),
+            to: swapDetails.providerAddress,
+            value: unit.toWei(
+              swapDetails.providerReceives,
+              'ether'
+            )
+          };
+        }
+      } else {
+        console.log('kyber only'); // todo remove dev item
+        try {
+          return swapDetails.dataForInitialization.map(entry => {
+
+            entry.from = this.$store.state.wallet.getChecksumAddressString();
+            if (
+              unit.toWei(this.$store.state.gasPrice, 'gwei') >
+              swapDetails.kyberMaxGas
+            ) {
+              entry.gasPrice = swapDetails.kyberMaxGas || unit.toWei(this.$store.state.gasPrice, 'gwei'); //TODO check why gasPrice
+            } else {
+              entry.gasPrice = unit.toWei(this.$store.state.gasPrice, 'gwei');
+            }
+            return entry;
+          });
+        } catch (e) {
+          console.error(e);
+        }
       }
+    },
+    async buildTransaction(){
+      this.nonce = await web3.eth.getTransactionCount(
+        this.$store.state.wallet.getAddressString()
+      );
+      this.gasLimit = await contract.methods[this.selectedMethod.name](
+        ...params
+      )
+        .estimateGas({ from: this.$store.state.wallet.getAddressString() })
+        .then(res => {
+          this.transactionFee = unit.fromWei(
+            unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
+            'ether'
+          );
+          return res;
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.error(err);
+        });
+      this.data = contract.methods[this.selectedMethod.name](
+        ...params
+      ).encodeABI();
+
+      this.raw = {
+        from: this.$store.state.wallet.getAddressString(),
+        gas: this.gasLimit,
+        nonce: this.nonce,
+        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        value: this.value,
+        to:
+          this.resolvedAddress !== ''
+            ? this.resolvedAddress
+            : this.address !== ''
+            ? this.address
+            : '',
+        data: this.data
+      };
+
+      await web3.eth.sendTransaction(this.raw);
+    },
+    signTransaction() {
+      if (!this.swapReady) return;
+      if (Array.isArray(this.preparedSwap)) {
+        // this.$store.state.web3.mew.sendBatchTransactions(this.preparedSwap);
+      } else {
+        if (Object.keys(this.preparedSwap).length > 0) {
+          console.log(this.preparedSwap); // todo remove dev item
+          // this.$store.state.web3.mew.sendTransactions(this.preparedSwap);
+          const cleaned = {
+            from: this.preparedSwap.from,
+            to: this.preparedSwap.to,
+            value: this.preparedSwap.value,
+            data: this.preparedSwap.data || '0x',
+            gasPrice: this.preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei')
+          };
+          console.log('cleaned', cleaned); // todo remove dev item
+          this.$store.state.web3.eth.signTransaction(cleaned);
+        }
+      }
+      this.$emit('swapStarted', this.swapDetails);
+      this.$refs.swapconfirmation.hide();
     }
   }
 };
