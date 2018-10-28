@@ -64,10 +64,9 @@
 <script>
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
-import web3 from 'web3';
 import Blockie from '@/components/Blockie';
+import { EthereumTokens } from '@/partners';
 
-const logger = debugLogger('v5:swapAddressSelector');
 const errorLogger = debugLogger('v5:error');
 
 export default {
@@ -141,15 +140,23 @@ export default {
     validateAddress(addr) {
       if (this.selectedAddress !== '') {
         const checkAddress = addr.address ? addr.address : addr;
-        try {
-          this.validAddress = WAValidator.validate(checkAddress, this.currency);
-        } catch (e) {
-          logger(
-            'validateAddress initial validation faild. could be a token. tying to validate as eth address'
+        if (EthereumTokens[this.currency]) {
+          this.validAddress = WAValidator.validate(
+            checkAddress,
+            'ETH'
           );
-          errorLogger(e);
-          this.validAddress = web3.utils.isAddress(checkAddress);
+        } else {
+          try {
+            this.validAddress = WAValidator.validate(
+              checkAddress,
+              this.currency
+            );
+          } catch (e) {
+            errorLogger(e);
+            this.validAddress = false;
+          }
         }
+
         if (this.validAddress) {
           this.$emit('toAddress', checkAddress);
         } else {

@@ -1,14 +1,15 @@
 /* eslint-disable */
 import BigNumber from 'bignumber.js';
 import {
+  utils,
   // bestRateForQuantity,
   // bestProviderForQuantity,
   // isValidEntry,
-  checkInvalidOrMissingValue,
+  checkInvalidOrMissingValue
   // dynamicSortMultiple
-} from './helpers/sortAndIdentify';
+} from './helpers';
 import {
-  Tokens
+  EthereumTokens
   // otherChains,
 } from './partnersConfig';
 
@@ -20,6 +21,7 @@ function comparator(a, b) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied) {
+    this.overrideProviderRatesDelay = false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
@@ -41,27 +43,46 @@ export default class SwapProviders {
     this.providerList = [];
 
     let checkCount = 0;
-    const checkIfAllRatesReceived = setInterval(() => {
-      checkCount++;
-      this.checkIfRatesPresent();
-      console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
-      if (this.haveProviderRates || checkCount > 400) {
-        clearInterval(checkIfAllRatesReceived);
-      }
-    }, 50);
+    if (environmentSupplied.network !== 'ETH') {
+      const checkIfAllRatesReceived = setInterval(() => {
+        checkCount++;
+        this.checkIfRatesPresent();
+        console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
+        if (this.haveProviderRates || checkCount > 20) {
+          this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
+          clearInterval(checkIfAllRatesReceived);
+        }
+      }, 150);
+    } else {
+      const checkIfAllRatesReceived = setInterval(() => {
+        checkCount++;
+        this.checkIfRatesPresent();
+        console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
+        if (this.haveProviderRates || checkCount > 50) {
+          this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
+          clearInterval(checkIfAllRatesReceived);
+        }
+      }, 150);
+    }
   }
 
   getProviders() {
-    return this.providers;
+    return utils.mapToObject(this.providers);
   }
 
   getProvider(name) {
-    return this.providers[name];
+    return this.providers.get(name);
   }
 
   get haveProviderRates() {
     return Object.keys(this.providerRateUpdates).every(providerName => {
       return this.providerRatesRecieved.includes(providerName);
+    });
+  }
+
+  updateNetwork(network) {
+    this.providers.forEach(provider => {
+      provider.setNetwork(network);
     });
   }
 
@@ -121,11 +142,10 @@ export default class SwapProviders {
     return [{ symbol: 'ETH', name: 'Ether' }, ...toArray];
   }
 
-  async updateRateEstimate(fromCurrency, toCurrency, fromValue, toValue) {
+  async updateRateEstimate(fromCurrency, toCurrency, fromValue) {
     if (this.haveProviderRates) {
       const providersFound = [];
       const callsToMake = [];
-      this.providerData = [];
       if (
         +fromValue > 0 &&
         fromCurrency !== toCurrency &&
@@ -137,35 +157,30 @@ export default class SwapProviders {
             providersFound.push(provider.name);
           }
         });
-
         return { providersFound, callsToMake };
-
-      } else {
-        return { providersFound: [], callsToMake: [] };
-        // throw Error('No Providers Found');
       }
     }
     return { providersFound: [], callsToMake: [] };
   }
 
-  getTokenAddress(currency){
-    if(this.isToken(currency)){
-      return Tokens[currency].contractAddress;
+  getTokenAddress(currency) {
+    if (this.isToken(currency)) {
+      return EthereumTokens[currency].contractAddress;
     }
     throw Error('Not an Ethereum Token');
   }
 
-  calculateFromValue(toValue, bestRate){
+  calculateFromValue(toValue, bestRate) {
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
         .div(bestRate)
         .toFixed()
         .toString(10),
       false
-    )
+    );
   }
 
-  calculateToValue(fromValue, bestRate){
+  calculateToValue(fromValue, bestRate) {
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(bestRate)
@@ -175,15 +190,15 @@ export default class SwapProviders {
     );
   }
 
-  getTokenDecimals(currency){
-    if(this.isToken(currency)){
-      return Tokens[currency].decimals;
+  getTokenDecimals(currency) {
+    if (this.isToken(currency)) {
+      return EthereumTokens[currency].decimals;
     }
     throw Error('Not an Ethereum Token');
   }
 
   isToken(currency) {
-    return !!Tokens[currency];
+    return !!EthereumTokens[currency];
   }
 
   async startSwap(swapDetails) {

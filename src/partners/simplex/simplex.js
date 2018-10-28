@@ -25,69 +25,23 @@ export default class Simplex {
     return 'simplex';
   }
 
-  get validNetwork() {
+  get isValidNetwork() {
     return this.network === networkSymbols.ETH;
   }
 
+  setNetwork(network) {
+    this.network = network;
+  }
+
   get currencies() {
-    if (this.validNetwork) {
+    if (this.isValidNetwork) {
       return this.currencyDetails;
     }
     return { fiat: {}, digital: {} };
   }
 
-  getInitialCurrencyEntries(collectMapFrom, collectMapTo){
-    for (const prop in this.currencies.fiat) {
-      if (this.currencies.fiat[prop])
-        collectMapFrom.set(prop, {
-          symbol: prop,
-          name: this.currencies.fiat[prop].name
-        });
-    }
-    for (const prop in this.currencies.digital) {
-      if (this.currencies.digital[prop])
-        collectMapTo.set(prop, {
-          symbol: prop,
-          name: this.currencies.digital[prop].name
-        });
-    }
-  }
-
-  getUpdatedFromCurrencyEntries(value, collectMap){
-    if (this.currencies.digital[value.symbol]) {
-      for (const prop in this.currencies.fiat) {
-        if (prop !== value.symbol) {
-          if (this.currencies.fiat[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies.fiat[prop].name
-            });
-        }
-      }
-    }
-  }
-
-  getUpdatedToCurrencyEntries(value, collectMap){
-    if (this.currencies.fiat[value.symbol]) {
-      for (const prop in this.currencies.digital) {
-        if (prop !== value.symbol) {
-          if (this.currencies.digital[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies.digital[prop].name
-            });
-        }
-      }
-    }
-  }
-
-  async startSwap(swapDetails) {
-    swapDetails.dataForInitialization = await this.createSwap(swapDetails);
-    return swapDetails;
-  }
-
   validSwap(fromCurrency, toCurrency) {
-    if (this.validNetwork) {
+    if (this.isValidNetwork) {
       return (
         this.currencies.fiat[fromCurrency] &&
         (toCurrency === 'ETH' || toCurrency === 'BTC')
@@ -100,59 +54,15 @@ export default class Simplex {
     return !!this.currencies.fiat[currency];
   }
 
+  // ============================= pair and value selection and update methods  ====================================
+
   canQuote(fiatAmount) {
     return fiatAmount >= this.minFiat && fiatAmount <= this.maxFiat;
   }
 
-  canOrder(fiatAmount, digitalAmount) {
-    return (
-      fiatAmount >= this.minFiat &&
-      fiatAmount <= this.maxFiat &&
-      digitalAmount > 0
-    );
-  }
-
-  parseOrder(order) {
-    return {
-      orderId: order.id,
-      statusId: undefined,
-      sendToAddress: order.payinAddress,
-      recValue: order.amountExpectedTo,
-      sendValue: order.amountExpectedFrom,
-      status: order.status,
-      timestamp: order.createdAt,
-      validFor: 600 // Think it may be valid for longer, but I need to ask
-    };
-  }
-
-  statusUpdater(swapDetails) {
-    return () => {
-      let currentStatus;
-      const calculateTimeRemaining = (validFor, timestamp) => {
-        return (
-          validFor -
-          parseInt(
-            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-          )
-        );
-      };
-      const parsed = this.parseOrder(swapDetails.dataForInitialization);
-      const timeRemaining = calculateTimeRemaining(
-        parsed.validFor,
-        parsed.timestamp
-      );
-      const checkStatus = setInterval(async () => {
-        currentStatus = await getStatus({
-          orderid: parsed.orderId
-        });
-        clearInterval(checkStatus);
-      }, 1000);
-    };
-  }
-
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     if (this.canQuote(fromValue, toValue)) {
-      let simplexRateDetails/*, _fromValue, _toValue*/;
+      let simplexRateDetails /*, _fromValue, _toValue*/;
       if (this.isFiat(fromCurrency) && isFiat) {
         // TODO restructure to remove redundancy
         simplexRateDetails = await this.updateFiat(
@@ -160,7 +70,7 @@ export default class Simplex {
           this.toCurrency,
           fromValue
         );
-/*        _fromValue = simplexRateDetails.fromValue;
+        /*        _fromValue = simplexRateDetails.fromValue;
         _toValue = simplexRateDetails.toValue;*/
       } else {
         simplexRateDetails = await this.updateDigital(
@@ -168,7 +78,7 @@ export default class Simplex {
           this.toCurrency,
           toValue
         );
-/*        _fromValue = simplexRateDetails.fromValue;
+        /*        _fromValue = simplexRateDetails.fromValue;
         _toValue = simplexRateDetails.toValue;*/
       }
 
@@ -247,6 +157,72 @@ export default class Simplex {
     };
   }
 
+  // ============================= Determine inclusion in currency options ====================================
+
+  getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
+    for (const prop in this.currencies.fiat) {
+      if (this.currencies.fiat[prop])
+        collectMapFrom.set(prop, {
+          symbol: prop,
+          name: this.currencies.fiat[prop].name
+        });
+    }
+    for (const prop in this.currencies.digital) {
+      if (this.currencies.digital[prop])
+        collectMapTo.set(prop, {
+          symbol: prop,
+          name: this.currencies.digital[prop].name
+        });
+    }
+  }
+
+  getUpdatedFromCurrencyEntries(value, collectMap) {
+    if (this.currencies.digital[value.symbol]) {
+      for (const prop in this.currencies.fiat) {
+        if (prop !== value.symbol) {
+          if (this.currencies.fiat[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies.fiat[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap) {
+    if (this.currencies.fiat[value.symbol]) {
+      for (const prop in this.currencies.digital) {
+        if (prop !== value.symbol) {
+          if (this.currencies.digital[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies.digital[prop].name
+            });
+        }
+      }
+    }
+  }
+
+  // ============================= Finalize swap details ====================================
+  canOrder(fiatAmount, digitalAmount) {
+    return (
+      fiatAmount >= this.minFiat &&
+      fiatAmount <= this.maxFiat &&
+      digitalAmount > 0
+    );
+  }
+
+  async startSwap(swapDetails) {
+    swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+
+    swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;
+    swapDetails.providerSends = this.currentOrder.digital_money.amount;
+    swapDetails.parsed = Simplex.parseOrder(swapDetails.dataForInitialization);
+    swapDetails.providerAddress = undefined;
+    return swapDetails;
+  }
+
   createSwap(swapDetails) {
     if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
       return getOrder({
@@ -274,5 +250,34 @@ export default class Simplex {
         return _result.result;
       });
     }
+  }
+
+  parseOrder(order) {
+    return {};
+  }
+
+  statusUpdater(swapDetails) {
+    return () => {
+      let currentStatus;
+      const calculateTimeRemaining = (validFor, timestamp) => {
+        return (
+          validFor -
+          parseInt(
+            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+          )
+        );
+      };
+      const parsed = this.parseOrder(swapDetails.dataForInitialization);
+      const timeRemaining = calculateTimeRemaining(
+        parsed.validFor,
+        parsed.timestamp
+      );
+      const checkStatus = setInterval(async () => {
+        currentStatus = await getStatus({
+          orderid: parsed.orderId
+        });
+        clearInterval(checkStatus);
+      }, 1000);
+    };
   }
 }

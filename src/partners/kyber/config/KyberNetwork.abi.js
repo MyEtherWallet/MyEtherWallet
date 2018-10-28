@@ -495,5 +495,3 @@ const kyberNetworkABI = [
     type: 'event'
   }
 ];
-
-export default kyberNetworkABI;

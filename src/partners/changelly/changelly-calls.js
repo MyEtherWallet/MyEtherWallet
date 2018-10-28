@@ -16,22 +16,46 @@ const getCurrencies = async network => {
   return Promise.resolve({});
 };
 
-const getRate = async (rateDetails, network) => {
+const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
+  if (changellyAddresses[network]) {
+    const results = await post(buildPath(changellyAddresses[network].rate), {
+      from: fromCurrency,
+      to: toCurrency,
+      amount: fromValue
+    });
+    return results.result;
+  }
+  return Promise.resolve(-1);
+};
+
+const getBatchRate = async (pairArray, network) => {
   if (changellyAddresses[network]) {
     const results = await post(
-      buildPath(changellyAddresses[network].rate),
-      rateDetails
+      buildPath(changellyAddresses[network].batchRate),
+      { params: pairArray }
     );
     return results.result;
   }
   return Promise.resolve(-1);
 };
 
-const getMin = async (rateDetails, network) => {
+const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
+  if (changellyAddresses[network]) {
+    const results = await post(buildPath(changellyAddresses[network].min), {
+      from: fromCurrency,
+      to: toCurrency,
+      amount: fromValue
+    });
+    return results.result;
+  }
+  return Promise.resolve(-1);
+};
+
+const getBatchMin = async (pairArray, network) => {
   if (changellyAddresses[network]) {
     const results = await post(
-      buildPath(changellyAddresses[network].min),
-      rateDetails
+      buildPath(changellyAddresses[network].batchMin),
+      { params: pairArray }
     );
     return results.result;
   }
@@ -81,7 +105,9 @@ const login = () => {
 export default {
   getCurrencies,
   getRate,
+  getBatchRate,
   getMin,
+  getBatchMin,
   validateAddress,
   createTransaction,
   openOrder,

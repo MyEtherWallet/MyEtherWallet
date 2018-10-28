@@ -2,24 +2,28 @@ import { BitySwap, BityCurrencies } from './bity';
 import { KyberCurrencies, KyberSwap } from './kyber';
 import { ChangellyCurrencies, ChangellySwap } from './changelly';
 import { Simplex, SimplexCurrencies } from './simplex';
-import Swap from './partners'
+import Swap from './partners';
 import {
   networkSymbols,
   chainCurrencies,
   fiat,
   supportedProviders,
-  Tokens,
-  OtherChains,
+  EthereumTokens,
+  OtherChains
 } from './partnersConfig';
 import {
+  utils,
   bestRateForQuantity,
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
-  dynamicSortMultiple
-} from './helpers/sortAndIdentify';
-import { CurrencyOptionBuilder } from './helpers/currencyOptionBuilder';
+  dynamicSortMultiple,
+  CurrencyOptionBuilder
+} from './helpers';
+
+// Array of currently supported providers
 const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+
 export {
   Swap,
   providers,
@@ -35,8 +39,10 @@ export {
   networkSymbols,
   chainCurrencies,
   fiat,
-  Tokens,
+  EthereumTokens,
   OtherChains,
+  // helpers
+  utils,
   CurrencyOptionBuilder,
   bestRateForQuantity,
   bestProviderForQuantity,
