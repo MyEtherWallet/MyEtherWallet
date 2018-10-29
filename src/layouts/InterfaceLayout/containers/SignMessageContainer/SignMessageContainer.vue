@@ -90,15 +90,18 @@ export default {
   methods: {
     signMessage() {
       this.$store.state.web3.eth
-        .sign(this.$refs.message.value)
+        .sign(
+          this.$refs.message.value,
+          this.$store.state.wallet.getAddressString()
+        )
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
-              address: this.wallet.getAddressString(),
+              address: this.wallet.getChecksumAddressString(),
               msg: this.$refs.message.value,
               sig: _signedMessage,
               version: '3',
-              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
+              signer: this.wallet.isHardware ? this.wallet.identifier : 'MEW'
             },
             null,
             2

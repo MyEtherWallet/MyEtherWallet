@@ -1,21 +1,19 @@
 import {
   LedgerWallet,
   TrezorWallet,
-  DigitalBitboxWallet,
+  BitBoxWallet,
   SecalotWallet
 } from './hardware';
-import { BasicWallet, MnemonicWallet } from './software';
+import WalletInterface from './WalletInterface';
+import { MnemonicWallet } from './software';
 import { MewConnectWallet } from './hybrid';
-import { override, WalletWrapper } from './web3-override';
 
 export {
   LedgerWallet,
   TrezorWallet,
-  DigitalBitboxWallet,
+  BitBoxWallet,
   SecalotWallet,
   MewConnectWallet,
-  BasicWallet,
-  MnemonicWallet,
-  override,
-  WalletWrapper
+  WalletInterface,
+  MnemonicWallet
 };

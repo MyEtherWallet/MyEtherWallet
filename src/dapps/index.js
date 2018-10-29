@@ -9,10 +9,10 @@ const dapps = {
     desc: 'interface.registerDomDesc'
   },
   domainSale: {
-    route: '/interface/dapps/domain-sale',
+    route: '/interface/dapps/buy-subdomain',
     icon: domainSale,
-    title: 'interface.domSale',
-    desc: 'interface.domSaleDesc',
+    title: 'Subdomains',
+    desc: 'Buy a subdomain',
     active: true
   }
 };

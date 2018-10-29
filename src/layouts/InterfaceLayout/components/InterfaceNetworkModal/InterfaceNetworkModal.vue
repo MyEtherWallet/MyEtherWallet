@@ -39,7 +39,7 @@
             <p
               v-for="net in $store.state.Networks[key]"
               :key="net.service"
-              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+              :class="net.service === $store.state.network.service && net.type && net.type.name === $store.state.network.type.name ? 'current-network': ''"
               class="switch-network"
               @click="switchNetwork(net)">{{ net.service }}</p>
           </div>
@@ -64,7 +64,8 @@
         </div>
       </div>
       <form
-        ref="networkAdd"
+        v-if="selectedNetwork && selectedNetwork.type"
+        ref="networkAdd" 
         class="network-add hidden">
         <div class="content-block">
           <div class="input-block-container">
@@ -101,7 +102,7 @@
               placeholder="Port"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="blockExplorerTX"
               class="custom-input-text-1"
               type="number"
@@ -109,7 +110,7 @@
               placeholder="https://etherscan.io/tx/"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
@@ -117,7 +118,7 @@
               placeholder="Chain ID"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="blockExplorerAddr"
               class="custom-input-text-1"
               type="number"
@@ -193,7 +194,7 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetwork: networkTypes.ETH,
+      selectedNetwork: this.$store.state.network,
       chainID: '',
       port: '',
       name: '',
@@ -207,14 +208,13 @@ export default {
   },
   watch: {
     selectedNetwork(newVal) {
-      this.chainID = newVal.chainID;
+      this.chainID = newVal ? newVal.type.chainID : -1;
     }
   },
   mounted() {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
-
     this.types['custom'] = {
       name: 'CUS',
       name_long: 'CUSTOM',
@@ -248,7 +248,7 @@ export default {
       this.$refs.networkAdd.classList.toggle('hidden');
     },
     resetCompState() {
-      this.selectedNetwork = { name: 'ETH', name_long: 'Ethereum' };
+      this.selectedNetwork = this.$store.state.network;
       this.chainID = '';
       this.port = '';
       this.name = '';
@@ -293,9 +293,11 @@ export default {
       this.$refs.authForm.classList.toggle('hidden');
     },
     switchNetwork(network) {
-      this.selectedNetwork = network;
-      this.$store.dispatch('switchNetwork', network);
-      this.$store.dispatch('setWeb3Instance');
+      this.$store.dispatch('switchNetwork', network).then(() => {
+        this.$store.dispatch('setWeb3Instance').then(() => {
+          this.selectedNetwork = network;
+        });
+      });
     }
   }
 };

@@ -1,6 +1,8 @@
-import { override, WalletWrapper } from '@/wallets';
 import url from 'url';
 import web3 from 'web3';
+import MEWProvider from '@/wallets/web3-provider';
+import * as unit from 'ethjs-unit';
+import { formatters } from 'web3-core-helpers';
 
 const addNotification = function({ commit, state }, val) {
   const address = web3.utils.toChecksumAddress(val[0]);
@@ -43,12 +45,9 @@ const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, state, dispatch }, wallet) {
-  const wrappedWallet = new WalletWrapper(wallet);
-  const _web3 = state.web3;
-  override(_web3, wrappedWallet, this._vm.$eventHub, { state, dispatch });
-  commit('DECRYPT_WALLET', wrappedWallet);
-  commit('SET_WEB3_INSTANCE', _web3);
+const decryptWallet = function({ commit, dispatch }, wallet) {
+  commit('DECRYPT_WALLET', wallet);
+  dispatch('setWeb3Instance');
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -68,32 +67,58 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  if (provider && provider.currentProvider) {
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(
-        new web3(provider.currentProvider),
-        state.wallet,
-        this._vm.$eventHub,
-        { state, dispatch }
-      )
-    );
-  } else {
-    const hostUrl = url.parse(state.network.url);
-    const web3Instance = new web3(
-      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(web3Instance, state.wallet, this._vm.$eventHub, {
+  const hostUrl = url.parse(state.network.url);
+  const web3Instance = new web3(
+    new MEWProvider(
+      provider
+        ? provider
+        : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
+            hostUrl.pathname
+          }`,
+      {},
+      {
         state,
         dispatch
-      })
+      },
+      this._vm.$eventHub
+    )
+  );
+  web3Instance['mew'] = {};
+  web3Instance['mew'].sendBatchTransactions = async arr => {
+    for (let i = 0; i < arr.length; i++) {
+      const localTx = {
+        to: arr[i].to,
+        data: arr[i].data,
+        from: arr[i].from,
+        value: arr[i].value
+      };
+      arr[i].nonce = await (arr[i].nonce === undefined
+        ? web3Instance.eth.getTransactionCount(
+            state.wallet.getChecksumAddressString()
+          )
+        : arr[i].nonce);
+      arr[i].nonce += i;
+      arr[i].gas = await (arr[i].gas === undefined
+        ? web3Instance.eth.estimateGas(localTx)
+        : arr.gas);
+      arr[i].chainId = !arr[i].chainId
+        ? state.network.type.chainID
+        : arr[i].chainId;
+      arr[i].gasPrice =
+        arr[i].gasPrice === undefined
+          ? unit.toWei(state.gasPrice, 'gwei')
+          : arr[i].gasPrice;
+      arr[i] = formatters.inputCallFormatter(arr[i]);
+    }
+
+    this._vm.$eventHub.$emit(
+      'showTxCollectionConfirmModal',
+      arr,
+      state.wallet.isHardware
     );
-  }
+  };
+
+  commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
 const switchNetwork = function({ commit }, networkObj) {
