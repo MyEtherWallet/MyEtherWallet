@@ -3,9 +3,9 @@
 
     <div class="unit-selector-click-safe-zone">
       <div
-        @click="dropdownOpen = !dropdownOpen"
         :class="dropdownOpen ? 'dropdown-open' : ''"
-        class="dropdown-input-box">
+        class="dropdown-input-box"
+        @click="dropdownOpen = !dropdownOpen">
         
         <div class="selected-unit">
           Wei
@@ -52,11 +52,11 @@ export default {
     return {
       dropdownOpen: false,
       units: [
-        {name: 'Wei'},
-        {name: 'Kwei'},
-        {name: 'Mwei'},
-        {name: 'Gwei'}
-      ]      
+        { name: 'Wei' },
+        { name: 'Kwei' },
+        { name: 'Mwei' },
+        { name: 'Gwei' }
+      ]
     };
   },
   beforeMount() {
