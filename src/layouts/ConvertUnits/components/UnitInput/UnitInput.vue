@@ -5,7 +5,9 @@
         <div class="select-block">
           <dropdown-unit-selector />
 
-          <select v-model="selectedLeft" v-if="false">
+          <select 
+            v-if="false" 
+            v-model="selectedLeft">
             <option
               v-for="(opt, idx) in options"
               :key="opt + idx"
@@ -31,7 +33,9 @@
         <div class="select-block">
           <dropdown-unit-selector />
           
-          <select v-model="selectedRight" v-if="false">
+          <select 
+            v-if="false" 
+            v-model="selectedRight">
             <option
               v-for="(opt, idx) in options"
               :key="opt + idx"

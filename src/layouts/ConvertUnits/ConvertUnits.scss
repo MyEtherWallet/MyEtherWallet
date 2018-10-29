@@ -36,8 +36,8 @@
 
           span {
             position: absolute;
-            top: 23px;
-            left: 26px;
+            top: 3px;
+            left: 17px;
             font-size: 9px;
             margin-top: -10px;
           }
@@ -45,4 +45,23 @@
       }
     }
   }
+
+  .unit-short {
+    &>div {
+      position: relative;
+    }
+  }
 }
+
+@media all and (max-width: 760px) {
+
+  .unit-long {
+    display: none;
+  }
+
+
+}
+
+
+
+

@@ -24,8 +24,10 @@
                   v-for="eu in etherUnitRef"
                   :key="eu.key">
                   <td>{{ eu.name }}</td>
-                  <td>{{ eu.unit1 }}</td>
-                  <td>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></td>
+                  <td class="unit-long">{{ eu.unit1 }}</td>
+                  <td class="unit-short">
+                    <div>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></div>
+                  </td>
                   <td>{{ eu.desc }}</td>
                 </tr>
               </tbody>
@@ -41,7 +43,7 @@
 
 <script>
 import UnitInput from './components/UnitInput';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout'
+import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 
 export default {
   components: {

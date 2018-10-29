@@ -11,7 +11,6 @@ input {
   background-color: white;
   border: 0;
   border-radius: 4px;
-  padding: 18px;
   width: 100%;
   padding: 18px;
 }
@@ -30,3 +29,23 @@ select {
 .block-center {
   text-align: center;
 }
+
+
+
+@media all and (max-width: 800px) {
+  .wrap {
+    display: block;
+  }
+
+  .block-center {
+    margin: 20px 0;
+    text-align: center;
+
+    .convert-icon {
+      img {
+        transform: rotate(90deg);
+      }
+    }
+  }
+}
+
