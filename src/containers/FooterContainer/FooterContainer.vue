@@ -194,6 +194,14 @@ export default {
             {
               text: 'Help Center',
               to: '/help-center'
+            },
+            {
+              text: 'Extensions',
+              to: '/extensions'
+            },
+            {
+              text: 'Convert Units',
+              to: '/convert-units'
             }
           ]
         }
