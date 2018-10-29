@@ -205,9 +205,6 @@ export default {
     },
     hardwareWalletOpen(wallet) {
       try {
-        this.walletConstructor = function() {};
-        this.hardwareBrand = '';
-        wallet.getDerivationPath(); // hacky way to check. should throw an error if not ready (need to implement a better mechanism)
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {

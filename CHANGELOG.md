@@ -1,3 +1,17 @@
+### Feature
+
+- Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
+- Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+
+### Devop
+- Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
+- Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
+- Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
+
+### Hotfix
+
+- Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
+
 ### Release v5.0.4
 
 ### Devop

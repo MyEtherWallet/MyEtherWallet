@@ -13,14 +13,15 @@
         <div class="dropdown-button-container">
           <b-dropdown
             id="hd-derivation-path"
-            :text="selecteDPath.dpath"
+            :text="selectedPath"
             class="dropdown-button-2">
             <b-dropdown-item
               v-for="(val, key) in availablePaths"
-              :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+              v-if="key !== 'default'"
+              :class="selectedPath === val.path ? 'active' : ''"
               :key="'base' + key"
-              @click="selectDPath(key)">
-              {{ val.dpath }}
+              @click="changePath(key)">
+              {{ val.path }}
             </b-dropdown-item>
             <b-dropdown-divider/>
             <b-dropdown-item>
@@ -28,9 +29,9 @@
             </b-dropdown-item>
             <b-dropdown-item
               v-for="(val, key) in customPaths"
-              :class="selecteDPath.dpath === val.dpath ? 'active' : ''"
+              :class="selectedPath.dpath === val.dpath ? 'active' : ''"
               :key="key"
-              @click="selectDPath(key)">
+              @click="changePath(key)">
               {{ val.dpath }}
             </b-dropdown-item>
             <b-dropdown-item @click="showCustomPathInput">
@@ -46,7 +47,7 @@
       </p>
       <p
         v-show="!customPathInput"
-        class="derivation-brands">{{ selecteDPath.label }}</p>
+        class="derivation-brands">{{ getPathLabel(selectedPath) }}</p>
       <div v-show="customPathInput">
         <!-- TODO: how to structure the path input? -->
         <input
@@ -78,19 +79,19 @@
         </ul>
 
         <ul
-          v-for="(details, index) in orderedAddresses"
-          :data-address="'address' + index"
-          :key="index"
-          :class="selectedId === 'address' + index ? 'selected' : ''"
+          v-for="account in HDAccounts"
+          :data-address="'address' + account.index"
+          :key="account.index"
+          :class="selectedId === 'address' + account.index ? 'selected' : ''"
           class="address-block address-data"
-          @click="setAddress(details, 'address' + index)">
-          <li>{{ details.index + 1 }}.</li>
-          <li>{{ details.address }}</li>
-          <li>{{ details.balance }} ETH</li>
+          @click="setAccount(account)">
+          <li>{{ account.index }}.</li>
+          <li>{{ account.account.getChecksumAddressString() }}</li>
+          <li>{{ account.balance }} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
               <input
-                :id="'address' + index"
+                :id="'address' + account.index"
                 type="checkbox"
                 @click="unselectAllAddresses">
               <span class="checkmark checkmark-small"/>
@@ -102,18 +103,9 @@
 
       <div class="address-nav">
         <span
-          v-show="!connectionActive"
-          @click="priorAddressSet()">&lt; {{ $t('common.previous') }}</span>
+          @click="previousAddressSet()">&lt; {{ $t('common.previous') }}</span>
         <span
-          v-show="!connectionActive"
           @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
-        <!-- Probably will need to restructure a bit to allow back browsing while new addresses are retrieved-->
-        <span
-          v-show="connectionActive"
-          class="activeConn">&lt; {{ $t('common.previous') }}</span>
-        <span
-          v-show="connectionActive"
-          class="activeConn">{{ $t('common.next') }} &gt;</span>
       </div>
     </div> <!-- .content-container-2 -->
 
@@ -141,8 +133,8 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import * as unit from 'ethjs-unit';
-
+import ethUnits from 'ethjs-unit';
+const MAX_ADDRESSES = 5;
 export default {
   components: {
     'customer-support': CustomerSupport
@@ -159,35 +151,22 @@ export default {
     return {
       selectedId: '',
       accessMyWalletBtnDisabled: true,
-      walletUnlocked: false,
-      connectionActive: false,
-      offset: 0,
-      count: 5,
       currentIndex: 0,
-      maxIndex: 0,
-      hardwareAddresses: [],
-      displayAddresses: [],
+      HDAccounts: [],
       availablePaths: {},
       customPaths: {},
-      selecteDPath: '',
+      selectedPath: '',
       invalidPath: '',
       customPathInput: false,
+      currentWallet: null,
       customPath: { label: '', dpath: '' }
     };
   },
-  computed: {
-    orderedAddresses() {
-      const addressSet = [...this.displayAddresses];
-      addressSet.sort(this.comparator);
-      return addressSet.sort(this.comparator);
-    }
-  },
+  computed: {},
   watch: {
     hardwareWallet() {
       this.getPaths();
-      this.getAddresses(this.count, this.offset).then(addressSet => {
-        this.displayAddresses = addressSet;
-      });
+      this.setHDAccounts();
     }
   },
   mounted() {
@@ -195,21 +174,16 @@ export default {
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
       this.accessMyWalletBtnDisabled = true;
-      this.walletUnlocked = false;
       this.availablePaths = {};
-      this.selecteDPath = '';
+      this.selectedPath = '';
       this.invalidPath = '';
       this.customPathInput = false;
-      this.customPath = { label: '', dpath: '' };
+      this.currentWallet = null;
+      this.customPath = { label: '', path: '' };
       this.resetPaginationValues();
     });
   },
   methods: {
-    comparator(a, b) {
-      a = a.index + 1;
-      b = b.index + 1;
-      return a < b ? -1 : a > b ? 1 : 0;
-    },
     unselectAllAddresses: function(selected) {
       document
         .querySelectorAll('.user-input-checkbox input')
@@ -217,139 +191,89 @@ export default {
           el.checked = el.id === selected;
         });
     },
+    setAccount(account) {
+      this.selectedId = 'address' + account.index;
+      this.unselectAllAddresses('address' + account.index);
+      this.currentWallet = account.account;
+    },
     resetPaginationValues() {
-      this.offset = 0;
-      this.count = 5;
       this.currentIndex = 0;
-      this.maxIndex = 0;
-      this.displayAddresses = [];
-      this.hardwareAddresses = [];
     },
     showCustomPathInput() {
       this.customPath = { label: '', dpath: '' };
       this.customPathInput = !this.customPathInput;
     },
     addCustomPath() {
-      // TODO: figure out a more precise regex
-      // eslint-disable-next-line no-useless-escape
-      const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
-      if (regExp.test(this.customPath.dpath)) {
-        this.$store.dispatch('addCustomPath', this.customPath).then(() => {
-          this.getPaths();
-        });
-        this.showCustomPathInput(); // reset the path input
-      } else {
-        // TODO: add indication of an invalid path
-      }
+      // // TODO: figure out a more precise regex
+      // // eslint-disable-next-line no-useless-escape
+      // const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
+      // if (regExp.test(this.customPath.dpath)) {
+      //   this.$store.dispatch('addCustomPath', this.customPath).then(() => {
+      //     this.getPaths();
+      //   });
+      //   this.showCustomPathInput(); // reset the path input
+      // } else {
+      //   // TODO: add indication of an invalid path
+      // }
     },
-    selectDPath(key) {
-      // rectify with content above
-      this.customPathInput = false;
+    changePath(key) {
       this.resetPaginationValues();
-      this.hardwareWallet
-        .changeDerivationPath(this.availablePaths[key].dpath)
-        .then(() => {
-          this.selecteDPath = this.availablePaths[key];
-          this.invalidPath = '';
-          this.getAddresses().then(addressSet => {
-            this.displayAddresses = addressSet;
-          });
-        })
-        .catch(_error => {
-          // If not a valid path Inform the user
-          this.invalidPath = this.availablePaths[key].dpath;
-          // eslint-disable-next-line no-console
-          console.error(_error);
-        });
-    },
-    unlockWallet() {
-      this.$store.dispatch('decryptWallet', this.hardwareWallet);
-      this.$router.push({ path: 'interface' });
-    },
-    setAddress(details, element) {
-      this.selectedId = element;
-      this.unselectAllAddresses(element);
-      this.hardwareWallet.setActiveAddress(details.address, details.index);
-    },
-    priorAddressSet() {
-      this.selectedId = '';
-      if (this.currentIndex - this.count > 0) {
-        this.currentIndex = this.currentIndex - this.count;
-        this.displayAddresses = this.hardwareAddresses.slice(
-          this.currentIndex - this.count,
-          this.currentIndex
-        );
-      } else {
-        this.offset = 0;
+      this.hardwareWallet.init(this.availablePaths[key].path).then(() => {
+        this.getPaths();
         this.currentIndex = 0;
-        this.displayAddresses = this.hardwareAddresses.slice(0, 5);
-      }
-    },
-    nextAddressSet() {
-      this.selectedId = '';
-      if (this.currentIndex + this.count < this.maxIndex) {
-        this.currentIndex = this.currentIndex + this.count;
-        this.displayAddresses = this.hardwareAddresses.slice(
-          this.currentIndex,
-          this.currentIndex + this.count
-        );
-      } else if (this.currentIndex + this.count === this.maxIndex) {
-        this.currentIndex = this.currentIndex + this.count;
-        this.getAddresses(this.count, this.currentIndex).then(addressSet => {
-          this.displayAddresses = addressSet;
-        });
-      } else {
-        this.getAddresses(this.count, this.currentIndex).then(addressSet => {
-          this.displayAddresses = addressSet;
-        });
-      }
-    },
-    getAddresses(count = 5, offset = 0) {
-      return new Promise((resolve, reject) => {
-        if (offset + count > this.maxIndex) {
-          this.connectionActive = !this.connectionActive;
-          const web3 = this.$store.state.web3;
-          const hardwareAddresses = [];
-          this.hardwareWallet
-            .getMultipleAccounts(count, offset)
-            .then(_accounts => {
-              Object.values(_accounts).forEach(async (address, i) => {
-                const rawBalance = await this.$store.state.web3.eth.getBalance(
-                  address
-                );
-                const balance = unit.fromWei(
-                  web3.utils.toBN(rawBalance).toString(),
-                  'ether'
-                );
-                hardwareAddresses.push({ index: offset + i, address, balance });
-                this.hardwareAddresses.push({
-                  index: offset + i,
-                  address,
-                  balance
-                });
-              });
-              this.maxIndex = offset + count;
-              this.currentIndex = offset + count;
-              this.connectionActive = !this.connectionActive;
-              resolve(hardwareAddresses);
-            })
-            .catch(error => {
-              // eslint-disable-next-line no-console
-              console.error(error);
-              reject(error);
-            });
-        }
+        this.setHDAccounts();
       });
     },
+    unlockWallet() {
+      this.$store.dispatch('decryptWallet', this.currentWallet);
+      this.$router.push({ path: 'interface' });
+    },
+    setHDAccounts() {
+      this.HDAccounts = [];
+      for (
+        let i = this.currentIndex;
+        i < this.currentIndex + MAX_ADDRESSES;
+        i++
+      ) {
+        this.HDAccounts.push({
+          index: i,
+          account: this.hardwareWallet.getAccount(i),
+          balance: 'loading'
+        });
+        this.getAddressBalance(
+          this.HDAccounts[this.HDAccounts.length - 1].account.getAddressString()
+        );
+      }
+      this.currentIndex += MAX_ADDRESSES;
+    },
+    getAddressBalance(address) {
+      const web3 = this.$store.state.web3;
+      web3.eth.getBalance(address).then(balance => {
+        for (const i in this.HDAccounts)
+          if (this.HDAccounts[i].account.getAddressString() == address)
+            this.HDAccounts[i].balance = ethUnits.fromWei(balance, 'ether');
+      });
+    },
+    nextAddressSet() {
+      this.setHDAccounts();
+    },
+    previousAddressSet() {
+      this.currentIndex =
+        this.currentIndex - 2 * MAX_ADDRESSES < 0
+          ? 0
+          : this.currentIndex - 2 * MAX_ADDRESSES;
+      this.setHDAccounts();
+    },
+    getPathLabel(path) {
+      for (const _p in this.availablePaths)
+        if (this.availablePaths[_p].path === path)
+          return this.availablePaths[_p].label;
+      return 'Unknown';
+    },
     getPaths() {
-      this.selecteDPath = this.hardwareWallet.getDerivationPath();
-      // nodes
-      this.availablePaths = {
-        ...this.hardwareWallet.compatibleChains
-      };
-      this.customPaths = {
-        ...this.$store.state.customPaths
-      };
+      this.selectedPath = this.hardwareWallet.getCurrentPath();
+      this.availablePaths = this.hardwareWallet.getSupportedPaths();
+      this.customPaths = this.$store.state.customPaths;
     }
   }
 };

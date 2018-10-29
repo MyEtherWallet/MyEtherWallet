@@ -4,14 +4,16 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered
+    @shown="focusInput">
     <form class="password-form">
       <div class="input-container">
         <input
+          ref="passwordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off">
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
@@ -36,7 +38,8 @@
 </template>
 
 <script>
-import { BasicWallet } from '@/wallets';
+import { WalletInterface } from '@/wallets';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
 export default {
   props: {
@@ -71,10 +74,7 @@ export default {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
         self.$store.dispatch(
           'decryptWallet',
-          BasicWallet.unlock({
-            type: 'manualPrivateKey',
-            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
-          })
+          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         );
         self.$router.push({ path: 'interface' });
       };
@@ -84,6 +84,9 @@ export default {
     },
     switchViewPassword() {
       this.show = !this.show;
+    },
+    focusInput() {
+      this.$refs.passwordInput.focus();
     }
   }
 };
