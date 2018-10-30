@@ -152,9 +152,8 @@ export default {
         return true;
       } else if (window.web3) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
   }
 };
