@@ -19,7 +19,7 @@
         <div class="the-form gas-amount">
           <input
             ref="fromaddress"
-            :value="$store.state.wallet.getAddressString()"
+            :value="wallet.getChecksumAddressString()"
             type="text"
             placeholder="From Address"
             autocomplete="off" >
@@ -66,6 +66,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../../components/TxSpeedInput';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -86,6 +87,12 @@ export default {
       moreInfoGenerated: false,
       isValid: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet',
+      web3: 'web3'
+    })
   },
   methods: {
     generateInfo() {
@@ -108,9 +115,7 @@ export default {
       this.$emit('nonceUpdate', e);
     },
     checkAddress() {
-      return this.$store.state.web3.utils.isAddress(
-        this.$store.state.wallet.getAddressString()
-      );
+      return this.web3.utils.isAddress(this.wallet.getChecksumAddressString());
     },
     mounted() {
       this.isValid = this.checkAddress();

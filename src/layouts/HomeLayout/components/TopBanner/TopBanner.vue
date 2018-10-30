@@ -15,8 +15,8 @@
           </div>
         </div>
         <div class="grid-col-2 promo-cards">
-          <router-link 
-            to="/create-wallet" 
+          <router-link
+            to="/create-wallet"
             class="nounderline">
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
@@ -36,8 +36,8 @@
               </div>
             </div>
           </router-link>
-          <router-link 
-            :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'" 
+          <router-link
+            :to="wallet === null || wallet === undefined ? '/access-my-wallet' : '/interface'"
             class="nounderline">
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
@@ -64,9 +64,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   }
 };
 </script>

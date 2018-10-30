@@ -1,6 +1,7 @@
 <template>
   <div class="generate-info">
     <success-modal
+      ref="successModal"
       :link-message="'Ok'"
       message="Success"/>
     <div class="wrap">
@@ -45,6 +46,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -64,6 +66,9 @@ export default {
       signedTx: this.rawTx
     };
   },
+  computed: {
+    ...mapGetters({ web3: 'web3' })
+  },
   watch: {
     rawTx(newVal) {
       this.signedTx = newVal;
@@ -78,16 +83,15 @@ export default {
       document.execCommand('copy');
     },
     sendTx() {
-      this.$store.state.web3.eth
+      this.web3.eth
         .sendSignedTransaction(this.signedTx)
         .on('receipt', () => {})
         .then(() => {
-          this.$children[0].$refs.success.show();
-          // eslint-disable-next-line no-console
+          this.$refs.successModal.$refs.success.show();
         });
     },
     hideModal() {
-      this.$children[0].$refs.success.hide();
+      this.$refs.successModal.$refs.success.hide();
     }
   }
 };

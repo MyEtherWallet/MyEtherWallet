@@ -1,6 +1,7 @@
 <template>
   <div class="deploy-contract-container">
     <success-modal
+      ref="successModal"
       message=""
       link-message="Ok"/>
     <interface-container-title :title="$t('common.signMessage')"/>
@@ -84,16 +85,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      wallet: 'wallet',
+      web3: 'web3'
     })
   },
   methods: {
     signMessage() {
-      this.$store.state.web3.eth
-        .sign(
-          this.$refs.message.value,
-          this.$store.state.wallet.getAddressString()
-        )
+      this.web3.eth
+        .sign(this.$refs.message.value, this.wallet.getAddressString())
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
@@ -111,7 +110,7 @@ export default {
         .catch(console.error);
     },
     successModalOpen() {
-      this.$children[0].$refs.success.show();
+      this.$refs.successModal.$refs.success.show();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
