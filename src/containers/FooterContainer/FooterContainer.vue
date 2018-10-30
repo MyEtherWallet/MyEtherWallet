@@ -130,16 +130,16 @@ export default {
               to: '/'
             },
             {
-              text: this.$t('footer.debugs'),
-              to: '/'
+              text: this.$t('footer.advanced'),
+              to: '/advanced-tools'
             },
             {
               text: this.$t('footer.extension'),
-              to: '/'
+              to: '/extensions'
             },
             {
-              text: this.$t('footer.others'),
-              to: '/'
+              text: 'MEW Github',
+              to: '/mew-github'
             }
           ]
         },
