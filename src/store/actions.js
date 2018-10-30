@@ -45,9 +45,10 @@ const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, dispatch }, wallet) {
-  commit('DECRYPT_WALLET', wallet);
-  dispatch('setWeb3Instance');
+const decryptWallet = function({ commit, dispatch }, params) {
+  // params[0] = wallet, params[1] = provider
+  commit('DECRYPT_WALLET', params[0]);
+  dispatch('setWeb3Instance', params[1]);
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -56,10 +57,6 @@ const setAccountBalance = function({ commit }, balance) {
 
 const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
-};
-
-const setWeb3Wallet = function({ commit }, wallet) {
-  commit('SET_WEB3_PROVIDER_WALLET', wallet);
 };
 
 const setState = function({ commit }, stateObj) {
@@ -150,7 +147,6 @@ export default {
   decryptWallet,
   setAccountBalance,
   setGasPrice,
-  setWeb3Wallet,
   setState,
   setENS,
   setWeb3Instance,

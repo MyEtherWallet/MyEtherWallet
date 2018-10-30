@@ -225,7 +225,7 @@ export default {
       });
     },
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', this.currentWallet);
+      this.$store.dispatch('decryptWallet', [this.currentWallet]);
       this.$router.push({ path: 'interface' });
     },
     setHDAccounts() {

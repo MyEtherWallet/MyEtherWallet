@@ -140,8 +140,7 @@ export default {
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
-          this.$store.dispatch('setWeb3Wallet', wallet);
-          this.$store.dispatch('setWeb3Instance', window.web3.currentProvider);
+          this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
           this.$router.push({ path: 'interface' });
         })
         .catch(() => {
