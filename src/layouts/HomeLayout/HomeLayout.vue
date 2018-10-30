@@ -16,6 +16,7 @@ import NewsContainer from '@/containers/NewsContainer';
 import Promo from './components/Promo';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'HomeContainer',
@@ -29,22 +30,14 @@ export default {
   },
   data() {
     return {
-      online: true,
       address: '',
       resolvedAddress: ''
     };
   },
-  watch: {
-    online(newVal) {
-      this.online = newVal;
-    }
-  },
-  mounted() {
-    if (this.$store.state.online) {
-      this.online = true;
-    } else {
-      this.online = false;
-    }
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
   }
 };
 </script>

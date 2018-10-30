@@ -99,6 +99,7 @@
 
     </div>
     <signed-tx-modal
+      ref="signedTxModal"
       :signed-tx="signed"
       :raw-tx="raw"
       :path-update="pathUpdate"/>
@@ -112,8 +113,9 @@ import CurrencyPicker from '../CurrencyPicker';
 import SignedTxModal from '../../components/SignedTxModal';
 import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
-const EthTx = require('ethereumjs-tx')
+const EthTx = require('ethereumjs-tx');
 import * as unit from 'ethjs-unit';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -149,6 +151,15 @@ export default {
       resolvedAddress: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      account: 'account',
+      wallet: 'wallet',
+      network: 'network',
+      web3: 'web3',
+      gasPrice: 'gasPrice'
+    })
+  },
   watch: {
     parsedBalance(newVal) {
       this.parsedBalance = newVal;
@@ -158,10 +169,7 @@ export default {
     }
   },
   mounted() {
-    this.parsedBalance = unit.fromWei(
-      this.$store.state.account.balance.result,
-      'ether'
-    );
+    this.parsedBalance = unit.fromWei(this.account.balance.result, 'ether');
   },
   methods: {
     copyToAddress() {
@@ -171,26 +179,26 @@ export default {
     },
     next() {
       const raw = {
-        from: this.$store.state.wallet.getAddressString(),
+        from: this.wallet.getAddressString(),
         gas: this.localGas,
         value: unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
         nonce: this.locNonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
         to:
           this.resolvedAddress !== ''
             ? this.resolvedAddress
             : this.address !== ''
               ? this.address
               : '',
-        chainId: this.$store.state.network.type.chainID || 1
+        chainId: this.network.type.chainID || 1
       };
-      this.$store.state.web3.eth.signTransaction(raw).then(signedTx => {
+      this.web3.eth.signTransaction(raw).then(signedTx => {
         this.$emit('createdRawTx', signedTx.rawTransaction);
 
         this.raw = raw;
         this.signed = signedTx.rawTransaction;
-        this.$children[5].$refs.signedTx.show();
+        this.$refs.signedTxModal.$refs.signedTx.show();
         window.scrollTo(0, 0);
       });
     },

@@ -11,17 +11,17 @@
         </div>
         <div class="buttons">
           <div
-            :class="[$store.state.gasPrice === 5 ? 'active': '','small-circle-button-green-border']"
+            :class="[gasPrice === 5 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(5)">
             Slow
           </div>
           <div
-            :class="[$store.state.gasPrice === 45 ? 'active': '','small-circle-button-green-border']"
+            :class="[gasPrice === 45 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(45)">
             Regular
           </div>
           <div
-            :class="[$store.state.gasPrice === 75 ? 'active': '','small-circle-button-green-border']"
+            :class="[gasPrice === 75 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(75)">
             Fast
           </div>
@@ -29,7 +29,7 @@
       </div>
       <div class="the-form gas-amount">
         <input
-          :value="$store.state.gasPrice"
+          :value="gasPrice"
           type="number"
           name=""
           placeholder="Gas Price"
@@ -88,11 +88,8 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import 'TxSpeedInput.scss';
-</style>
-
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     data: {
@@ -125,6 +122,11 @@ export default {
       locNonce: this.nonce
     };
   },
+  computed: {
+    ...mapGetters({
+      gasPrice: 'gasPrice'
+    })
+  },
   watch: {
     locNonce(newVal) {
       this.$emit('nonceUpdate', newVal);
@@ -144,3 +146,7 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import 'TxSpeedInput.scss';
+</style>

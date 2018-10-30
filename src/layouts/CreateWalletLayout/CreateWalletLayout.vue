@@ -120,7 +120,7 @@ export default {
       skipTutorial === null ||
       skipTutorial === false
     ) {
-      this.$children[0].$refs.tutorial.show();
+      this.$refs.tutorialModal.$refs.tutorial.show();
     }
   },
   methods: {
