@@ -65,6 +65,14 @@ const setState = function({ commit }, stateObj) {
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
+  const options = {};
+  state.network.username !== '' && state.network.password !== ''
+    ? (options['headers'] = {
+        authorization: `Basic: ${btoa(
+          state.network.username + ':' + state.network.password
+        )}`
+      })
+    : {};
   const web3Instance = new web3(
     new MEWProvider(
       provider
@@ -72,7 +80,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
             hostUrl.pathname
           }`,
-      {},
+      options,
       {
         state,
         dispatch
