@@ -1,5 +1,8 @@
 <template>
   <div class="footer">
+    <!-- Modal -->
+    <feedback-modal />
+
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
@@ -101,11 +104,17 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
+import FeedbackModal from '@/components/FeedbackModal';
+
 export default {
+  components: {
+    'feedback-modal': FeedbackModal
+  },
   data() {
     return {
       lowerLinks: [
@@ -133,7 +142,7 @@ export default {
             },
             {
               text: this.$t('footer.txStat'),
-              to: '/'
+              to: '/tx-status'
             },
             {
               text: this.$t('footer.advanced'),
@@ -200,14 +209,6 @@ export default {
             {
               text: 'Help Center',
               to: '/help-center'
-            },
-            {
-              text: 'Extensions',
-              to: '/extensions'
-            },
-            {
-              text: 'Convert Units',
-              to: '/convert-units'
             }
           ]
         }
@@ -245,6 +246,9 @@ export default {
     };
   },
   methods: {
+    openFeedbackModal() {
+      this.$children[0].$refs.feedback.show();
+    },
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
       const closeButton = document.querySelector('.' + element + ' .close');
@@ -267,6 +271,9 @@ export default {
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }
+  },
+  mounted() {
+    // this.$children[0].$refs.feedback.show();
   }
 };
 </script>

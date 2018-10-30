@@ -1,7 +1,6 @@
 // @import '~@/scss/GlobalVariables';
 @import '~@/layouts/InformationPages/InformationPages';
 
-
 .page-content {
   margin-top: 25px;
 
@@ -14,7 +13,6 @@
     @media all and (max-width: $mobile-width) {
       text-align: left;
     }
-
   }
 }
 
@@ -24,8 +22,6 @@
   margin-top: 40px;
 }
 
-
 .address-input-block {
   margin-bottom: 20px;
 }
-
