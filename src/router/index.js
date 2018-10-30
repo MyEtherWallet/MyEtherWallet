@@ -16,6 +16,7 @@ import InterfaceLayout from '@/layouts/InterfaceLayout';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout';
 import NotFoundLayout from '@/layouts/NotFoundLayout';
 import GettingStarted from '@/layouts/GettingStarted';
+import TxStatusLayout from '@/layouts/TxStatusLayout';
 
 import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer';
 import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer';
@@ -91,6 +92,11 @@ const router = [
     path: '/getting-started',
     name: 'GettingStarted',
     component: GettingStarted
+  },
+  {
+    path: '/tx-status',
+    name: 'TxStatusLayout',
+    component: TxStatusLayout
   },
   {
     path: '*',
