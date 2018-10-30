@@ -44,7 +44,7 @@
     "bignumber.js": "^7.2.1",
     "bip39": "^2.5.0",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "canvas": "^2.0.1",
+    "canvas": "^1.6.12",
     "codecov": "^3.1.0",
     "dotenv-webpack": "^1.5.7",
     "eth-ens-namehash": "^2.0.8",
