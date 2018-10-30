@@ -44,9 +44,6 @@ const SET_GAS_PRICE = function(state, val) {
   store.set('gasPrice', val);
 };
 
-const SET_WEB3_PROVIDER_WALLET = function(state, wallet) {
-  state.wallet = wallet;
-};
 const SET_WEB3_INSTANCE = function(state, web3) {
   state.web3 = web3;
 };
@@ -71,7 +68,6 @@ export default {
   SET_ACCOUNT_BALANCE,
   SET_GAS_PRICE,
   SET_ENS,
-  SET_WEB3_PROVIDER_WALLET,
   SET_WEB3_INSTANCE,
   SWITCH_NETWORK,
   UPDATE_NOTIFICATION
