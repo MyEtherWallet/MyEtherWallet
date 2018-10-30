@@ -4,8 +4,8 @@ const EnsResolver = {
   update: function(el, binding, vnode) {
     const _this = vnode.context;
     const errorPar = document.createElement('p');
-    const web3 = _this.$store.state.web3;
-    const ens = _this.$store.state.ens;
+    const web3 = _this.web3;
+    const ens = _this.ens;
     const removeElements = function() {
       if (vnode.elm.parentElement.children.length > 2) {
         vnode.elm.parentElement.classList.remove('with-resolver');
@@ -32,7 +32,7 @@ const EnsResolver = {
           removeElements();
         }
       } else {
-        if (_this.$store.state.network.type.ens === '') {
+        if (_this.network.type.ens === '') {
           removeElements();
           _this.validAddress = false;
           errorPar.innerText = 'No ENS resolver in this node';

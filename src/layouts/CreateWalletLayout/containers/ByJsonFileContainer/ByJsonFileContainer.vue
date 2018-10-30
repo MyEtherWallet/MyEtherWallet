@@ -1,6 +1,7 @@
 <template>
   <div class="create-wallet-by-json-file">
     <success-modal
+      ref="successModal"
       message="You have created a wallet successfully"
       link-to="/access-my-wallet"
       link-message="Access My Wallet"/>
@@ -127,7 +128,7 @@ export default {
   },
   methods: {
     downloadDone() {
-      this.$children[0].$refs.success.show();
+      this.$refs.successModal.$refs.success.show();
     }
   }
 };

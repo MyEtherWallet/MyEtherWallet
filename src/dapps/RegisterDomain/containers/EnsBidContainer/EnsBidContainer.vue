@@ -189,6 +189,8 @@ import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
 import * as jsPDF from 'jspdf';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     timer: Timer,
@@ -262,6 +264,11 @@ export default {
       jsonText: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
+  },
   watch: {
     localSecretPhrase(newVal) {
       this.$emit('updateSecretPhrase', newVal);
@@ -303,10 +310,7 @@ export default {
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
-        value: this.$store.state.web3.utils.toWei(
-          raw.bidAmount.toString(),
-          'ether'
-        ),
+        value: this.web3.utils.toWei(raw.bidAmount.toString(), 'ether'),
         secretPhrase: raw.secretPhrase,
         secretPhraseSHA3: raw.secretPhraseSHA3
       });
@@ -337,7 +341,7 @@ export default {
 
         doc.save(`${this.raw.name}.eth-bid.pdf`);
       }
-      this.$store.state.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw);
     }
   }
 };

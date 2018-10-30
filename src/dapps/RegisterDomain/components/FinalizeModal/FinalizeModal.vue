@@ -9,21 +9,22 @@
       <div class="finalize-modal-container">
         <h3>Are you about to finalize the auction for <br> {{ domainName }}.eth and claim this name?</h3>
         <div class="button-container">
-          <button 
-            class="cancel" 
+          <button
+            class="cancel"
             @click="close">Cancel</button>
-          <button 
-            class="confirm" 
+          <button
+            class="confirm"
             @click="finalize">Confirm</button>
         </div>
-        <p>The ETH node you are sending through is provided by <a 
-          :href="$store.state.network.url" 
-          target="_blank">{{ $store.state.network.service }}</a></p>
+        <p>The ETH node you are sending through is provided by <a
+          :href="network.url"
+          target="_blank">{{ network.service }}</a></p>
       </div>
     </b-modal>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     finalize: {
@@ -34,6 +35,11 @@ export default {
       type: String,
       default: ''
     }
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   },
   methods: {
     close() {
