@@ -47,21 +47,14 @@
   }
 
   .unit-short {
-    &>div {
+    & > div {
       position: relative;
     }
   }
 }
 
 @media all and (max-width: 760px) {
-
   .unit-long {
     display: none;
   }
-
-
 }
-
-
-
-
