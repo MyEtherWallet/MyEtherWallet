@@ -1,6 +1,6 @@
 <template>
   <div class="transaction-tokens">
-    <interface-tokens-modal :add-token="addToken"/>
+    <interface-tokens-modal ref="tokenModal" :add-token="addToken"/>
     <div class="wrap">
       <div class="tokens-container">
         <div class="token-search">
@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     addTokenModal() {
-      this.$children[0].$refs.token.show();
+      this.$refs.tokenModal.$refs.token.show();
     },
     removeToken(idx) {
       const storedTokens = store.get('customTokens');
@@ -172,7 +172,7 @@ export default {
       localStorageName[this.network.type.name] = this.customTokens;
 
       store.set('customTokens', localStorageName);
-      this.$children[0].$refs.token.hide();
+      this.$refs.tokenModal.$refs.token.show();
     },
     tokenListExpend() {
       this.$refs.tokenTableContainer.classList.toggle('expanded');

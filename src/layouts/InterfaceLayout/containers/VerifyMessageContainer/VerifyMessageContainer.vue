@@ -46,8 +46,9 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { MessageUtil } from '@/helpers';
+import { mapGetters } from 'vuex';
 // eslint-disable-next-line
-const createKeccakHash = require('keccak')
+const createKeccakHash = require('keccak');
 
 export default {
   components: {
@@ -63,6 +64,11 @@ export default {
       },
       showMessage: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   },
   watch: {
     message() {
@@ -101,7 +107,7 @@ export default {
           hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
         }
       } else if (json.version === '1') {
-        hash = this.$store.state.web3.utils.sha3(json.msg);
+        hash = this.web3.utils.sha3(json.msg);
       }
 
       const pubKey = MessageUtil.ecrecover(

@@ -46,11 +46,8 @@
             v-if="modalDetailInformation"
             class="expended-info">
             <div class="grid-block">
-              <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
+              <p>Network</p><p>{{ network.type.name }} by {{ network.service }}</p>
             </div>
-            <!-- <div class="grid-block">
-              <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
-            </div> -->
             <div class="grid-block">
               <p>Gas Limit</p><p>{{ gas }} wei</p>
             </div>
@@ -110,8 +107,8 @@
 
 <script>
 import AddressBlock from '../AddressBlock';
-import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -167,13 +164,16 @@ export default {
     return {
       modalDetailInformation: false,
       transactionSigned: false,
-      unit,
       tokenTransferTo: '',
       tokenTransferVal: '',
       tokenSymbol: ''
     };
   },
   computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network'
+    }),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;
@@ -200,8 +200,8 @@ export default {
       }
     },
     async parseData(data) {
-      const web3 = this.$store.state.web3;
-      const networkToken = this.$store.state.network.type.tokens;
+      const web3 = this.web3;
+      const networkToken = this.network.type.tokens;
       const tokenIndex = networkToken.findIndex(el => {
         return el.address.toLowerCase() === this.to.toLowerCase();
       });

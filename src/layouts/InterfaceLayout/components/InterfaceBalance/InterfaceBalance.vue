@@ -1,6 +1,6 @@
 <template>
   <div>
-    <interface-balance-modal :balance="balance"/>
+    <interface-balance-modal ref="balance" :balance="balance"/>
     <div @click="balanceModalOpen">
       <div class="info-block balance">
         <div class="block-image">
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     balanceModalOpen() {
-      this.$children[0].$refs.balance.show();
+      this.$refs.balance.$refs.balance.show();
     }
   }
 };

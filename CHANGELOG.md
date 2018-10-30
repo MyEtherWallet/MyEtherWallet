@@ -8,6 +8,7 @@
 
 ### Devop
 
+- Refactor state [#148](https://github.com/MyEtherWallet/MyEtherWallet/pull/148)
 - Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
 - Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
 - Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
