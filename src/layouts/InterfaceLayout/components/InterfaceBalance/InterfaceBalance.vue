@@ -1,6 +1,8 @@
 <template>
   <div>
-    <interface-balance-modal ref="balance" :balance="balance"/>
+    <interface-balance-modal 
+      ref="balance" 
+      :balance="balance"/>
     <div @click="balanceModalOpen">
       <div class="info-block balance">
         <div class="block-image">
