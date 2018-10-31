@@ -7,6 +7,7 @@ import {
   ethSign,
   ethAccounts,
   ethCoinbase,
+  ethGetTransactionCount,
   netVersion
 } from '../methods';
 class WSProvider {
@@ -41,6 +42,7 @@ class WSProvider {
       middleware.use(ethSignTransaction);
       middleware.use(ethSign);
       middleware.use(ethAccounts);
+      middleware.use(ethGetTransactionCount);
       middleware.use(ethCoinbase);
       middleware.use(netVersion);
       middleware.run(req, callback).then(() => {
