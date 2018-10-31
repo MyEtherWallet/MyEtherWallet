@@ -125,6 +125,7 @@ import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+//import ConfirmationModal from '../../components/ConfirmationModal';
 
 export default {
   components: {
@@ -134,6 +135,7 @@ export default {
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal
+    //'confirmation-modal': ConfirmationModal
   },
   data() {
     return {
@@ -159,6 +161,9 @@ export default {
     swapConfirmationModalOpen() {
       this.$refs.swapConfirmation.$refs.swapconfirmation.show();
     }
+  },
+  mounted() {
+    //this.$children[1].$refs.confirmation.show();
   }
 };
 </script>
