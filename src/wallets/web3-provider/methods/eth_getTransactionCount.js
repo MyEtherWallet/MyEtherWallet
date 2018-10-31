@@ -21,7 +21,6 @@ export default async ({ payload, requestManager }, res, next) => {
     Math.round(
       (new Date().getTime() - store.get(utils.sha3(addr)).timestamp) / 1000
     ) / 60; // Get minutes
-  console.log(lastFetch);
   if (lastFetch < 1) {
     fetchedNonce = storedNonce;
   } else {
