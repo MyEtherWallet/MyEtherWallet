@@ -2,6 +2,7 @@
   <div class="footer">
     <!-- Modal -->
     <feedback-modal />
+    <confirmation-modal />
 
     <div class="wrap">
       <div class="page-container">
@@ -104,9 +105,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
+// import ConfirmationModal from '../../components/ConfirmationModal';
+
 export default {
   components: {
-    'feedback-modal': FeedbackModal
+    'feedback-modal': FeedbackModal,
+    // 'confirmation-modal': ConfirmationModal
+
   },
   data() {
     return {
@@ -238,10 +243,17 @@ export default {
       ]
     };
   },
+<<<<<<< HEAD
   computed: {
     ...mapGetters({
       ethDonationAddress: 'ethDonationAddress'
     })
+=======
+  mounted() {
+    // this.$children[0].$refs.feedback.show();
+    // this.$children[1].$refs.confirmation.show();
+
+>>>>>>> Confirmation modal update
   },
   methods: {
     openFeedbackModal() {
@@ -267,9 +279,6 @@ export default {
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }
-  },
-  mounted() {
-    // this.$children[0].$refs.feedback.show();
   }
 };
 </script>
