@@ -16,8 +16,12 @@
       </div>
 
       <div class="content-block">
-        <div class="expending-block" :class="blockOpen ? 'expended' : ''">
-          <div class="coin-block" @click="blockOpen = !blockOpen">
+        <div 
+          :class="blockOpen ? 'expended' : ''" 
+          class="expending-block">
+          <div 
+            class="coin-block" 
+            @click="blockOpen = !blockOpen">
             <div class="side-block left-block">
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg">
@@ -40,8 +44,14 @@
               </div>
             </div>
             <div class="up-down-arrow">
-              <i v-if="!blockOpen" class="fa fa-chevron-down" aria-hidden="true"></i>
-              <i v-if="blockOpen" class="fa fa-chevron-up" aria-hidden="true"></i>
+              <i 
+                v-if="!blockOpen" 
+                class="fa fa-chevron-down" 
+                aria-hidden="true"/>
+              <i 
+                v-if="blockOpen" 
+                class="fa fa-chevron-up" 
+                aria-hidden="true"/>
             </div>
           </div><!-- .coin-block -->
 
@@ -71,7 +81,10 @@
           <botton-with-qrcode buttonname="Confirm and Send" />
         </div>
         <div>
-          <bottom-text link-text="Help Center" question="Having issues?" link="/" />
+          <bottom-text 
+            link-text="Help Center" 
+            question="Having issues?" 
+            link="/" />
         </div>
       </div>
     </b-modal>
