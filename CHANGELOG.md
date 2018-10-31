@@ -2,6 +2,7 @@
 
 ### Feature
 
+- implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
