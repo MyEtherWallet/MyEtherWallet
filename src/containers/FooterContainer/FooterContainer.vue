@@ -2,6 +2,7 @@
   <div class="footer">
     <!-- Modal -->
     <feedback-modal />
+    <confirmation-modal />
 
     <div class="wrap">
       <div class="page-container">
@@ -110,10 +111,13 @@
 
 <script>
 import FeedbackModal from '@/components/FeedbackModal';
+// import ConfirmationModal from '../../components/ConfirmationModal';
 
 export default {
   components: {
-    'feedback-modal': FeedbackModal
+    'feedback-modal': FeedbackModal,
+    // 'confirmation-modal': ConfirmationModal
+
   },
   data() {
     return {
@@ -245,6 +249,11 @@ export default {
       ]
     };
   },
+  mounted() {
+    // this.$children[0].$refs.feedback.show();
+    // this.$children[1].$refs.confirmation.show();
+
+  },
   methods: {
     openFeedbackModal() {
       this.$children[0].$refs.feedback.show();
@@ -271,9 +280,6 @@ export default {
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }
-  },
-  mounted() {
-    // this.$children[0].$refs.feedback.show();
   }
 };
 </script>
