@@ -109,9 +109,8 @@ import FeedbackModal from '@/components/FeedbackModal';
 
 export default {
   components: {
-    'feedback-modal': FeedbackModal,
+    'feedback-modal': FeedbackModal
     // 'confirmation-modal': ConfirmationModal
-
   },
   data() {
     return {
@@ -243,17 +242,10 @@ export default {
       ]
     };
   },
-<<<<<<< HEAD
   computed: {
     ...mapGetters({
       ethDonationAddress: 'ethDonationAddress'
     })
-=======
-  mounted() {
-    // this.$children[0].$refs.feedback.show();
-    // this.$children[1].$refs.confirmation.show();
-
->>>>>>> Confirmation modal update
   },
   methods: {
     openFeedbackModal() {

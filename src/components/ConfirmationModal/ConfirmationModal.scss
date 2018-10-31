@@ -28,7 +28,6 @@
 
   p:first-child {
     border-right: 1px solid $grey-1;
-
   }
 }
 
@@ -66,12 +65,7 @@
   }
 
   .tx-detail {
-    .amount {
-
-    }
-
     .address {
-
       span {
         color: $grey-1;
       }
@@ -89,13 +83,13 @@
 
   i {
     font-size: 11px;
-  }  
+  }
 }
 
 .info-block {
   transition: max-height 0.3s ease;
   overflow: hidden;
-  max-height: 0px;
+  max-height: 0;
 
   ul {
     border-top: 1px solid $light-grey-4;
@@ -105,7 +99,7 @@
       margin-bottom: 15px;
 
       &:last-child {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
 
       .info-name {
@@ -122,5 +116,3 @@
 .button-container {
   padding-top: 40px;
 }
-
-
