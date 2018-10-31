@@ -5,23 +5,15 @@
       title="Settings"
       hide-footer
       centered
-      class="bootstrap-modal">
-      
-
-    </b-modal>
+      class="bootstrap-modal"/>
   </div>
 </template>
 
 <script>
-
 export default {
-  components: {
-
-  },
+  components: {},
   data() {
-    return {
-
-    };
+    return {};
   }
 };
 </script>
