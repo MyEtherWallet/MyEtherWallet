@@ -145,7 +145,7 @@ export default {
     'currency-picker': CurrencyPicker,
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
-    'swap-confirmation-modal': SwapConfirmationModal,
+    'swap-confirmation-modal': SwapConfirmationModal
     //'confirmation-modal': ConfirmationModal
   },
   data() {
@@ -168,13 +168,13 @@ export default {
       ]
     };
   },
+  mounted() {
+    //this.$children[1].$refs.confirmation.show();
+  },
   methods: {
     swapConfirmationModalOpen() {
       this.$children[0].$refs.swapconfirmation.show();
     }
-  },
-  mounted() {
-    //this.$children[1].$refs.confirmation.show();
   }
 };
 </script>
