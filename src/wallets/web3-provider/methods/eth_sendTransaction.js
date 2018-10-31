@@ -5,6 +5,8 @@ import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
 import { formatters } from 'web3-core-helpers';
 import { toPayload } from './jsonrpc';
+import store from 'store';
+
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -40,7 +42,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     });
 };
 export default async (
-  { payload, store, requestManager, eventHub },
+  { payload, vStore, requestManager, eventHub },
   res,
   next
 ) => {
@@ -51,28 +53,35 @@ export default async (
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
   tx.nonce = !tx.nonce
-    ? await ethCalls.getTransactionCount(store.state.wallet.getAddressString())
+    ? await ethCalls.getTransactionCount(vStore.state.wallet.getAddressString())
     : tx.nonce;
   tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
-  tx.chainId = !tx.chainId ? store.state.network.type.chainID : tx.chainId;
+  tx.chainId = !tx.chainId ? vStore.state.network.type.chainID : tx.chainId;
   tx.gasPrice = !tx.gasPrice
-    ? unit.toWei(store.state.gasPrice, 'gwei').toString()
+    ? unit.toWei(vStore.state.gasPrice, 'gwei').toString()
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.wallet.identifier === WEB3_WALLET) {
+      if (vStore.state.wallet.identifier === WEB3_WALLET) {
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _response => {
           const _promiObj = ethCalls.sendSignedTransaction(
             _response.rawTransaction
           );
           _promiObj
             .once('transactionHash', hash => {
+              const localNonce = store.get(
+                utils.sha3(vStore.state.wallet.getChecksumAddressString())
+              ).nonce;
+              store.set(
+                utils.sha3(vStore.state.wallet.getChecksumAddressString()),
+                { nonce: localNonce + 1, timestamp: +new Date() }
+              );
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               res(err);
             });
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, _tx, vStore.dispatch);
         });
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
@@ -81,12 +90,19 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
+              const localNonce = store.get(
+                utils.sha3(vStore.state.wallet.getChecksumAddressString())
+              ).nonce;
+              store.set(
+                utils.sha3(vStore.state.wallet.getChecksumAddressString()),
+                { nonce: localNonce + 1, timestamp: +new Date() }
+              );
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               res(err);
             });
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, _tx, vStore.dispatch);
         });
       }
     })

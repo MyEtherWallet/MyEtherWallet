@@ -129,8 +129,8 @@ export default {
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: this.online
+          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.hardwareModalOpen,
@@ -138,8 +138,8 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.online ? hardwareImg : hardwareDisabledImg,
-          disabled: this.online
+          img: !this.online ? hardwareImg : hardwareDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.metamaskModalOpen,
@@ -147,8 +147,8 @@ export default {
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.online ? metamaskImg : metamaskDisabledImg,
-          disabled: this.online
+          img: !this.online ? metamaskImg : metamaskDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.softwareModalOpen,
