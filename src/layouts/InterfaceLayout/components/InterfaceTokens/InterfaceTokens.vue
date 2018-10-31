@@ -1,6 +1,8 @@
 <template>
   <div class="transaction-tokens">
-    <interface-tokens-modal ref="tokenModal" :add-token="addToken"/>
+    <interface-tokens-modal 
+      ref="tokenModal" 
+      :add-token="addToken"/>
     <div class="wrap">
       <div class="tokens-container">
         <div class="token-search">
