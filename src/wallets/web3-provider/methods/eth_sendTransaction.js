@@ -69,12 +69,15 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
-              const localNonce = locStore.get(
+              const localStoredObj = locStore.get(
                 utils.sha3(store.state.wallet.getChecksumAddressString())
-              ).nonce;
+              );
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
-                { nonce: localNonce + 1, timestamp: +new Date() }
+                {
+                  nonce: localStoredObj + 1,
+                  timestamp: localStoredObj.timestamp
+                }
               );
               res(null, toPayload(payload.id, hash));
             })
@@ -90,12 +93,15 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
-              const localNonce = locStore.get(
+              const localStoredObj = locStore.get(
                 utils.sha3(store.state.wallet.getChecksumAddressString())
               ).nonce;
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
-                { nonce: localNonce + 1, timestamp: +new Date() }
+                {
+                  nonce: localStoredObj + 1,
+                  timestamp: localStoredObj.timestamp
+                }
               );
               res(null, toPayload(payload.id, hash));
             })

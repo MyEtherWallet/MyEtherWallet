@@ -7,8 +7,8 @@ export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0];
-  const fetchedNonce = await ethCalls.getTransactionCount(addr);
   let storedNonce = 0;
+  let fetchedNonce;
   if (store.get(utils.sha3(addr)) === undefined) {
     store.set(utils.sha3(addr), {
       nonce: storedNonce,
@@ -17,6 +17,20 @@ export default async ({ payload, requestManager }, res, next) => {
   } else {
     storedNonce = store.get(utils.sha3(addr)).nonce;
   }
+  const lastFetch =
+    Math.round(
+      (new Date().getTime() - store.get(utils.sha3(addr)).timestamp) / 1000
+    ) / 60; // Get minutes
+  console.log(lastFetch);
+  if (lastFetch < 1) {
+    fetchedNonce = storedNonce;
+  } else {
+    fetchedNonce = await ethCalls.getTransactionCount(addr);
+    store.set(utils.sha3(addr), {
+      nonce: Number(fetchedNonce),
+      timestamp: +new Date()
+    });
+  }
 
   if (storedNonce > Number(fetchedNonce)) {
     res(null, toPayload(payload.id, storedNonce.toString('hex')));
@@ -24,7 +38,8 @@ export default async ({ payload, requestManager }, res, next) => {
     store.set(utils.sha3(addr), {
       nonce: Number(fetchedNonce),
       timestamp: +new Date()
-    }).nonce = Number(fetchedNonce);
+    });
+
     res(null, toPayload(payload.id, fetchedNonce));
   }
   res(null, toPayload(payload.id, fetchedNonce));
