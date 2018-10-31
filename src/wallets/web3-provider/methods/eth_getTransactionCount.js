@@ -1,4 +1,5 @@
 import utils from 'web3-utils';
+import { toPayload } from './jsonrpc';
 import EthCalls from '../web3Calls';
 import store from 'store';
 
@@ -18,12 +19,13 @@ export default async ({ payload, requestManager }, res, next) => {
   }
 
   if (storedNonce > Number(fetchedNonce)) {
-    res(storedNonce);
+    res(null, toPayload(payload.id, storedNonce.toString('hex')));
   } else if (storedNonce < Number(fetchedNonce)) {
-    store.get(utils.sha3(addr)).nonce = Number(fetchedNonce);
-    store.get(utils.sha3(addr)).timestamp = +new Date();
-
-    res(fetchedNonce);
+    store.set(utils.sha3(addr), {
+      nonce: Number(fetchedNonce),
+      timestamp: +new Date()
+    }).nonce = Number(fetchedNonce);
+    res(null, toPayload(payload.id, fetchedNonce));
   }
-  res(fetchedNonce);
+  res(null, toPayload(payload.id, fetchedNonce));
 };
