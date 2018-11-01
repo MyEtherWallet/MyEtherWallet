@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="interface-header">
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
@@ -27,16 +27,10 @@
             <div class="top-menu">
 
               <b-nav>
-                <b-nav-item
-                  to="/"
-                  exact
-                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
-                <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item
-                  v-show="online"
-                  to="/#news">{{ $t("common.news") }}</b-nav-item>
-
+                <b-nav-item to="/help-center">Help</b-nav-item>
+                <b-nav-item>
+                  <txs-menu />
+                </b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i
@@ -115,12 +109,15 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import TransactionsDropdownMenu from '@/components/TransactionsDropdownMenu';
+
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    scrollupbutton: ScrollUpButton,
+    'txs-menu': TransactionsDropdownMenu
   },
   data() {
     return {
