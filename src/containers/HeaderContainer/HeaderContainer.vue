@@ -1,6 +1,5 @@
 <template>
   <div class="header">
-    <settingsmodal />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container">
@@ -87,6 +86,9 @@
                       height="35px"/>
                   </template>
                   <b-dropdown-item @click="logout">
+                    Settings
+                  </b-dropdown-item>
+                  <b-dropdown-item @click="logout">
                     Log out
                   </b-dropdown-item>
                 </b-nav-item-dropdown>
@@ -105,6 +107,8 @@
         </div>
       </div>
     </div>
+
+    <settingsmodal />
   </div>
 </template>
 
@@ -122,7 +126,7 @@ export default {
     blockie: Blockie,
     notification: Notification,
     scrollupbutton: ScrollUpButton,
-    settingmodal: SettingsModal
+    settingsmodal: SettingsModal
   },
   data() {
     return {

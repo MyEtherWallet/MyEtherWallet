@@ -1,26 +1,41 @@
 <template>
   <div class="modal-container">
+    <div class="modal-open-button" @click="modalOpen">
+      <h5>Test Button</h5>
+      <p>Open Settings Modal</p>
+    </div>
+
     <b-modal
       ref="settings"
       title="Settings"
       hide-footer
       centered
-      class="bootstrap-modal">
+      class="bootstrap-modal nopadding">
 
-      aaaa
+      <div class="modal-contents">
+        aaa
+      </div>
 
-    </b-modal>
+    </b-modal>    
   </div>
 </template>
 
 <script>
 export default {
+  name: 'Settings',
   components: {},
   data() {
-    return {};
+    return {
+
+    };
+  },
+  methods: {
+    modalOpen() {
+      this.$refs.settings.show();
+    }
   },
   mounted() {
-    this.$refs.settings.show();
+    
   }
 };
 </script>

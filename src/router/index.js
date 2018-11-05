@@ -26,6 +26,7 @@ import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOffli
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
+import DevelopmentResources from '@/layouts/DevelopmentResources';
 
 import { router as routerConfig } from '@/configs/build';
 import dapps from '@/dapps/routes';
@@ -97,6 +98,11 @@ const router = [
     path: '/tx-status',
     name: 'TxStatusLayout',
     component: TxStatusLayout
+  },
+  {
+    path: '/development-resources',
+    name: 'DevelopmentResources',
+    component: DevelopmentResources
   },
   {
     path: '*',
