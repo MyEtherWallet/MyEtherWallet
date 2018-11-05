@@ -5,7 +5,11 @@
       title="Settings"
       hide-footer
       centered
-      class="bootstrap-modal"/>
+      class="bootstrap-modal">
+
+      aaaa
+
+    </b-modal>
   </div>
 </template>
 
@@ -14,10 +18,13 @@ export default {
   components: {},
   data() {
     return {};
+  },
+  mounted() {
+    this.$refs.settings.show();
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'SettingModal.scss';
+@import 'SettingsModal.scss';
 </style>
