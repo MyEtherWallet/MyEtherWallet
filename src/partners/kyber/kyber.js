@@ -447,6 +447,7 @@ export default class Kyber {
         );
       }
     } catch (e) {
+      errorLogger(e);
       throw Error(
         `Token [${token}] not included in kyber network list of tokens`
       );
@@ -457,6 +458,7 @@ export default class Kyber {
     try {
       return +this.tokenDetails[token].decimals;
     } catch (e) {
+      errorLogger(e);
       throw Error(
         `Token [${token}] not included in kyber network list of tokens`
       );

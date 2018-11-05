@@ -251,8 +251,13 @@ export default {
       }
       this.currentIndex += MAX_ADDRESSES;
     },
-    getAddressBalance(address) {
+    async getAddressBalance(address) {
       const web3 = this.web3;
+      if (web3 === null || web3 === undefined){
+        await this.setupWeb3();
+      } else if (Object.keys(web3).length === 0){
+        await this.setupWeb3();
+      }
       web3.eth.getBalance(address).then(balance => {
         for (const i in this.HDAccounts)
           if (this.HDAccounts[i].account.getAddressString() == address)
@@ -278,7 +283,10 @@ export default {
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      this.customPaths = this.customPaths;
+      // this.customPaths = this.customPaths;
+    },
+    async setupWeb3() {
+      await this.$store.dispatch('setWeb3Instance');
     }
   }
 };

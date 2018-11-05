@@ -29,7 +29,7 @@ const state = {
   network: network,
   notifications: notifications,
   online: true,
-  Transactions: {},
+  transactions: {},
   wallet: null,
   web3: {}
 };
