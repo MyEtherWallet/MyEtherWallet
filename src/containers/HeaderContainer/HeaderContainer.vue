@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-
+    <settingsmodal />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container">
@@ -115,12 +115,14 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import SettingsModal from '@/components/SettingsModal';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    scrollupbutton: ScrollUpButton,
+    settingmodal: SettingsModal
   },
   data() {
     return {
