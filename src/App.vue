@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <header-container/>
-    <header-interface-container />
+    <header-container class="header-frontpage" />
+    <header-interface-container class="header-interface" />
     <router-view/>
     <footer-container/>
     <confirmation-container/>
