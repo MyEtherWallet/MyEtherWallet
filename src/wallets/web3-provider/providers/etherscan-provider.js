@@ -3,6 +3,7 @@ import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
   ethSignTransaction,
+  ethGetTransactionCount,
   ethSign,
   ethAccounts,
   ethCoinbase,
@@ -36,6 +37,7 @@ class EtherscanProvider {
     middleware.use(ethSignTransaction);
     middleware.use(ethSign);
     middleware.use(ethAccounts);
+    middleware.use(ethGetTransactionCount);
     middleware.use(ethCoinbase);
     middleware.use(netVersion);
     middleware.use(async ({ payload }, res) => {

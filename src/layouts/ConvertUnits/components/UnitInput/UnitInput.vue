@@ -48,6 +48,7 @@
 
 <script>
 import { BigNumber } from 'bignumber.js';
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -65,6 +66,11 @@ export default {
       valueLeft: 1000000000000000000,
       valueRight: 1
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   },
   watch: {
     valueLeft(newVal) {
@@ -98,7 +104,7 @@ export default {
   },
   methods: {
     getValueOfUnit(unit) {
-      const utils = this.$store.state.web3.utils;
+      const utils = this.web3.utils;
       unit = unit ? unit.toLowerCase() : 'ether';
       const unitValue = utils.unitMap[unit];
       return new BigNumber(unitValue, 10);

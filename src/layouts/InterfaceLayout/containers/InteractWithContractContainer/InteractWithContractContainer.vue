@@ -273,7 +273,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      gasPrice: 'gasPrice',
+      wallet: 'wallet',
+      web3: 'web3'
     })
   },
   watch: {
@@ -334,13 +337,10 @@ export default {
       return 'number';
     },
     selectFunction(method) {
-      const contract = new this.$store.state.web3.eth.Contract(
-        [method],
-        this.address
-      );
+      const contract = new this.web3.eth.Contract([method], this.address);
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.$store.state.wallet.getAddressString() })
+          .call({ from: this.wallet.getAddressString() })
           .then(res => {
             this.result = res;
           })
@@ -374,7 +374,7 @@ export default {
       }
     },
     async write() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       const contract = new web3.eth.Contract(
         [this.selectedMethod],
         this.address
@@ -385,7 +385,7 @@ export default {
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...params)
-          .call({ from: this.$store.state.wallet.getAddressString() })
+          .call({ from: this.wallet.getAddressString() })
           .then(res => {
             this.result = res;
             this.loading = false;
@@ -397,15 +397,15 @@ export default {
           });
       } else {
         this.nonce = await web3.eth.getTransactionCount(
-          this.$store.state.wallet.getAddressString()
+          this.wallet.getAddressString()
         );
         this.gasLimit = await contract.methods[this.selectedMethod.name](
           ...params
         )
-          .estimateGas({ from: this.$store.state.wallet.getAddressString() })
+          .estimateGas({ from: this.wallet.getAddressString() })
           .then(res => {
             this.transactionFee = unit.fromWei(
-              unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
+              unit.toWei(this.gasPrice, 'gwei') * res,
               'ether'
             );
             return res;
@@ -419,10 +419,10 @@ export default {
         ).encodeABI();
 
         this.raw = {
-          from: this.$store.state.wallet.getAddressString(),
+          from: this.wallet.getAddressString(),
           gas: this.gasLimit,
           nonce: this.nonce,
-          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
           value: this.value,
           to:
             this.resolvedAddress !== ''

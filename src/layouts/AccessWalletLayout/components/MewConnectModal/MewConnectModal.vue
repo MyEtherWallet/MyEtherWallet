@@ -38,7 +38,7 @@ export default {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
-          this.$store.dispatch('decryptWallet', wallet);
+          this.$store.dispatch('decryptWallet', [wallet]);
           this.$router.push({ path: 'interface' });
         })
         .catch(_error => {

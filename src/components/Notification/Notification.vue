@@ -63,23 +63,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      notifications: 'notifications'
+      notifications: 'notifications',
+      wallet: 'wallet'
     }),
     sortedNotifications() {
       this.countUnread();
-      if (
-        !this.notifications[this.$store.state.wallet.getChecksumAddressString()]
-      )
+      if (!this.notifications[this.wallet.getChecksumAddressString()])
         return [];
       // eslint-disable-next-line
-      return this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ].sort((a, b) => {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
+      return this.notifications[this.wallet.getChecksumAddressString()].sort(
+        (a, b) => {
+          a = new Date(a.timestamp);
+          b = new Date(b.timestamp);
 
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
+          return a > b ? -1 : a < b ? 1 : 0;
+        }
+      );
     }
   },
   watch: {
@@ -89,13 +88,9 @@ export default {
   },
   mounted() {
     if (
-      this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ] === undefined
+      this.notifications[this.wallet.getChecksumAddressString()] === undefined
     ) {
-      this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ] = [];
+      this.notifications[this.wallet.getChecksumAddressString()] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -105,15 +100,11 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[
-          self.$store.state.wallet.getChecksumAddressString()
-        ] !== undefined &&
-        self.notifications[self.$store.state.wallet.getChecksumAddressString()]
-          .length > 0
+        self.notifications[this.wallet.getChecksumAddressString()] !==
+          undefined &&
+        self.notifications[this.wallet.getChecksumAddressString()].length > 0
       ) {
-        self.notifications[
-          self.$store.state.wallet.getChecksumAddressString()
-        ].map(item => {
+        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
           if (item.read === false) {
             self.unreadCount++;
           }
@@ -132,7 +123,7 @@ export default {
         updatedNotif.expanded = false;
       }
       this.$store.dispatch('updateNotification', [
-        this.$store.state.wallet.getChecksumAddressString(),
+        this.wallet.getChecksumAddressString(),
         idx,
         updatedNotif
       ]);

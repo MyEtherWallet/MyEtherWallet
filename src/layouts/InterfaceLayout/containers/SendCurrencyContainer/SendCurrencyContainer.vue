@@ -74,17 +74,17 @@
         </div>
         <div class="buttons">
           <div
-            :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
+            :class="[gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
             @click="changeGas(5)">
             {{ $t('common.slow') }}
           </div>
           <div
-            :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
+            :class="[gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
             @click="changeGas(45)">
             {{ $t('common.regular') }}
           </div>
           <div
-            :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
+            :class="[gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
             @click="changeGas(75)">
             {{ $t('common.fast') }}
           </div>
@@ -198,7 +198,7 @@ export default {
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
-      gasAmount: this.$store.state.gasPrice,
+      gasAmount: this.gasPrice,
       parsedBalance: 0,
       address: '',
       transactionFee: 0,
@@ -210,7 +210,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      account: 'account'
+      account: 'account',
+      gasPrice: 'gasPrice',
+      web3: 'web3',
+      wallet: 'wallet',
+      network: 'network'
     })
   },
   watch: {
@@ -259,15 +263,15 @@ export default {
     },
     async createTx() {
       const isEth = this.selectedCurrency.name === 'Ethereum';
-      this.nonce = await this.$store.state.web3.eth.getTransactionCount(
-        this.$store.state.wallet.getAddressString()
+      this.nonce = await this.web3.eth.getTransactionCount(
+        this.wallet.getAddressString()
       );
 
       this.raw = {
-        from: this.$store.state.wallet.getAddressString(),
+        from: this.wallet.getAddressString(),
         gas: this.gasLimit,
         nonce: this.nonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
         value: isEth
           ? this.amount === ''
             ? 0
@@ -279,13 +283,13 @@ export default {
             : this.address
           : this.selectedCurrency.addr,
         data: this.data,
-        chainId: this.$store.state.network.type.chainID || 1
+        chainId: this.network.type.chainID || 1
       };
 
       if (this.address === '') {
         delete this.raw['to'];
       }
-      this.$store.state.web3.eth.sendTransaction(this.raw);
+      this.web3.eth.sendTransaction(this.raw);
     },
     confirmationModalOpen() {
       this.createTx();
@@ -325,7 +329,7 @@ export default {
             type: 'function'
           }
         ];
-        const contract = new this.$store.state.web3.eth.Contract(
+        const contract = new this.web3.eth.Contract(
           jsonInterface,
           this.selectedCurrency.addr
         );
@@ -346,9 +350,9 @@ export default {
     },
     estimateGas() {
       const isEth = this.selectedCurrency.name === 'Ethereum';
-      this.$store.state.web3.eth
+      this.web3.eth
         .estimateGas({
-          from: this.$store.state.wallet.getAddressString(),
+          from: this.wallet.getAddressString(),
           value: isEth
             ? this.amount === ''
               ? 0
@@ -359,7 +363,7 @@ export default {
         })
         .then(res => {
           this.transactionFee = unit.fromWei(
-            unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
+            unit.toWei(this.gasPrice, 'gwei') * res,
             'ether'
           );
           this.gasLimit = res;
@@ -371,7 +375,7 @@ export default {
     },
     verifyAddr() {
       if (this.address.length !== 0 && this.address !== '') {
-        const valid = this.$store.state.web3.utils.isAddress(this.address);
+        const valid = this.web3.utils.isAddress(this.address);
         if (!valid) {
           return true;
         }
