@@ -44,11 +44,10 @@
           </div>
           <div
             class="error-message-container">
-            <p v-if="selectedProvider.minValue > +fromValue ">{{ $t('interface.belowMinSwap') }}</p>
+            <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
             <p v-else>&nbsp;</p>
-            <p v-if="+fromValue > selectedProvider.maxValue && selectedProvider.maxValue > 0">{{
-              $t('interface.aboveMaxSwap')
-              }}</p>
+            <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+            <p v-else>&nbsp;</p>
           </div>
         </div>
         <div class="exchange-icon">
@@ -74,13 +73,10 @@
           </div>
           <div
             class="error-message-container">
-            <p
-              v-if="checkBityMin">
-              {{ $t('interface.belowMinSwap') }}</p>
-            <p
-              v-if="checkBityMax">
-              {{ $t('interface.aboveMaxSwap')
-              }}</p>
+            <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
+            <p v-else>&nbsp;</p>
+            <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+            <p v-else>&nbsp;</p>
           </div>
         </div>
       </div>
@@ -108,8 +104,8 @@
         </div>
       </div>
       <providers-radio-selector
-        :loadingProviderError="loadingError"
-        :loadingProviderRates="!haveProviderRates"
+        :loading-provider-error="loadingError"
+        :loading-provider-rates="!haveProviderRates"
         :provider-data="providerList"
         :from-value="+fromValue"
         :to-value="+toValue"
@@ -185,6 +181,7 @@
 import BigNumber from 'bignumber.js';
 import debug from 'debug';
 import * as unit from 'ethjs-unit';
+import { mapGetters } from 'vuex';
 
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import DropDownAddressSelector from './components/SwapAddressSelector';
@@ -207,9 +204,10 @@ import {
   isValidEntry
 } from '@/partners';
 
+
 const errorLogger = debug('v5:swapContainer');
 
-BigNumber.config({ DECIMAL_PLACES: 7 });
+BigNumber.config({ DECIMAL_PLACES: 6 });
 
 export default {
   components: {
@@ -260,6 +258,13 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      ens: 'ens',
+      gasPrice: 'gasPrice',
+      web3: 'web3',
+      wallet: 'wallet',
+      network: 'network'
+    }),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -273,6 +278,29 @@ export default {
       } catch (e) {
         errorLogger(e);
       }
+    },
+    fromBelowMinAllowed() {
+      if (0.000001 > +this.fromValue)
+        return 'Below minimun swap value of 0.000001';
+      if (this.selectedProvider.minValue > +this.fromValue)
+        return this.$t('interface.belowMinSwap');
+      return false;
+    },
+    fromAboveMaxAllowed() {
+      if (
+        +this.fromValue > this.selectedProvider.maxValue &&
+        this.selectedProvider.maxValue > 0
+      )
+        return this.$t('interface.aboveMaxSwap');
+      return false;
+    },
+    toBelowMinAllowed() {
+      if (this.checkBityMin) return this.$t('interface.belowMinSwap');
+      return false;
+    },
+    toAboveMaxAllowed() {
+      if (this.checkBityMax) return this.$t('interface.aboveMaxSwap');
+      return false;
     },
     providerList() {
       if (this.providerData.length > 0) {
@@ -288,6 +316,7 @@ export default {
           this.selectedProvider.maxValue === 0)
       );
     },
+    // temp solution
     checkBityMin() {
       if (this.swap.getProvider('bity')) {
         return (
@@ -304,6 +333,7 @@ export default {
       }
       return false;
     },
+    // temp solution
     checkBityMax() {
       if (this.swap.getProvider('bity')) {
         return (
@@ -330,8 +360,7 @@ export default {
       this.toArray = toArray;
       this.fromArray = fromArray;
     },
-    ['swap.haveProviderRates'](newVal) {
-      console.log(newVal); // todo remove dev item
+    ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
       this.updateRateEstimate(
         this.fromCurrency,
@@ -351,7 +380,7 @@ export default {
     const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
     this.toArray = toArray;
     this.fromArray = fromArray;
-    this.currentAddress = this.$store.state.wallet.getChecksumAddressString();
+    this.currentAddress = this.wallet.getChecksumAddressString();
   },
   methods: {
     setSelectedProvider(provider) {
@@ -391,12 +420,12 @@ export default {
         if (
           this.swap.getProvider('simplex').currencies.fiat[this.fromCurrency]
         ) {
-          this.$store.state.web3.utils._.debounce(
+          this.web3.utils._.debounce(
             this.updateEstimate('simplex' + to),
             200
           );
         } else {
-          this.$store.state.web3.utils._.debounce(this.updateEstimate(to), 200);
+          this.web3.utils._.debounce(this.updateEstimate(to), 200);
         }
       } else if (to === 'from') {
         this.toValue = '';
@@ -570,15 +599,15 @@ export default {
     },
     async createTx(swapDetails) {
       const isEth = this.fromCurrency === 'ETH';
-      let nonce = await this.$store.state.web3.eth.getTransactionCount(
-        this.$store.state.wallet.getAddressString()
+      const nonce = await this.web3.eth.getTransactionCount(
+        this.wallet.getAddressString()
       );
 
       const raw = {
-        from: this.$store.state.wallet.getAddressString(),
+        from: this.wallet.getAddressString(),
         // gas: this.gasLimit,
         nonce: nonce,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
         value: isEth ? unit.toWei(swapDetails.fromValue, 'ether') : 0,
         to: swapDetails.providerAddress,
         data: isEth
@@ -590,7 +619,7 @@ export default {
       if (this.address === '') {
         delete this.raw['to'];
       }
-      return this.$store.state.web3.eth.signTransaction(raw);
+      return this.web3.eth.signTransaction(raw);
     },
     createDataHex(fromCurrency, fromValue) {
       const tokenAddress = this.swap.getTokenAddress(fromCurrency);
