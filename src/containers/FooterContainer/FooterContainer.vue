@@ -2,7 +2,9 @@
   <div class="footer">
     <!-- Modal -->
     <feedback-modal />
+    <!--
     <confirmation-modal />
+    -->
 
     <div class="wrap">
       <div class="page-container">
