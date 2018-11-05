@@ -90,7 +90,12 @@
                       height="35px"
                     />
                   </template>
-                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
+                  <b-dropdown-item @click="logout">
+                    Settings
+                  </b-dropdown-item>
+                  <b-dropdown-item @click="logout">
+                    Log out
+                  </b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -105,6 +110,8 @@
         </div>
       </div>
     </div>
+
+    <settingsmodal />
   </div>
 </template>
 
@@ -122,7 +129,7 @@ export default {
     blockie: Blockie,
     notification: Notification,
     scrollupbutton: ScrollUpButton,
-    settingmodal: SettingsModal
+    settingsmodal: SettingsModal
   },
   data() {
     return {

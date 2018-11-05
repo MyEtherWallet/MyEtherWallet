@@ -1,1 +1,54 @@
 @import '~@/scss/GlobalVariables';
+
+//***************************************************
+// DEVELOPMENT USE ONLY "Modal open button"
+//***************************************************
+.modal-open-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999999999999;
+  background-color: #00e5ff;
+  padding: 3px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  user-select: none;
+
+  h5 {
+    color: white;
+    font-weight: 700;
+    font-size: 10px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0;
+    line-height: 14px;
+  }
+}
+
+
+
+
+
+//***************************************************
+// Modal Contents
+//***************************************************
+.modal-contents {
+
+}
+
+
+
+//***************************************************
+// Modal Contents
+//***************************************************
+
+
+
+
+

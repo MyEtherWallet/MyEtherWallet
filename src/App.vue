@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <header-container class="header-frontpage" />
-    <header-interface-container class="header-interface" />
+    <header-container />
     <router-view/>
     <footer-container/>
     <confirmation-container/>
@@ -11,7 +10,6 @@
 <script>
 import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
-import HeaderInterfaceContainer from '@/containers/HeaderInterfaceContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import store from 'store';
 import nodeList from '@/networks';
@@ -23,7 +21,6 @@ export default {
   name: 'App',
   components: {
     'header-container': HeaderContainer,
-    'header-interface-container': HeaderInterfaceContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer
   },
