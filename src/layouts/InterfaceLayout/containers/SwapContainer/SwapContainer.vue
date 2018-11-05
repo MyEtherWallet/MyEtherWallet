@@ -1,7 +1,7 @@
 <template>
   <div class="swap-container">
     <swap-confirmation-modal
-      ref="swapConfirm"
+      ref="swapConfirmation"
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
@@ -535,7 +535,7 @@ export default {
             this.swapDetails.dataForInitialization &&
             this.swapDetails.maybeToken
           ) {
-            this.$refs.swapConfirm.$refs.swapconfirmation.show();
+            this.$refs.swapConfirmation.$refs.swapconfirmation.show();
           } else if (
             this.swapDetails.dataForInitialization &&
             !this.swapDetails.maybeToken
@@ -548,7 +548,7 @@ export default {
           }
         }
       } catch (e) {
-        this.$refs.swapConfirm.$refs.swapconfirmation.hide();
+        this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
         errorLogger(e);

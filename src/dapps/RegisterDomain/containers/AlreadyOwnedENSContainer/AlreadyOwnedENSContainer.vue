@@ -27,13 +27,13 @@
     </div>
     <div class="owner-options">
       <button
-        v-if="deedOwner === $store.state.wallet.getChecksumAddressString() && owner === '0x0000000000000000000000000000000000000000'"
+        v-if="deedOwner === wallet.getChecksumAddressString() && owner === '0x0000000000000000000000000000000000000000'"
         class="finalize-button"
         @click="openFinalizeModal">
         Finalize
       </button>
       <button
-        v-if="owner === $store.state.wallet.getChecksumAddressString()"
+        v-if="owner === wallet.getChecksumAddressString()"
         class="manage-button"
         @click="manageEns">Manage</button>
     </div>
@@ -47,6 +47,8 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import FinalizeModal from '../../components/FinalizeModal/';
+
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -84,6 +86,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   },
   methods: {
     openFinalizeModal() {

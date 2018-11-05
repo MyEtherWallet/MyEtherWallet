@@ -72,10 +72,9 @@ export default {
       });
       worker.onmessage = function(e) {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
-        self.$store.dispatch(
-          'decryptWallet',
+        self.$store.dispatch('decryptWallet', [
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
-        );
+        ]);
         self.$router.push({ path: 'interface' });
       };
       worker.onerror = function(e) {

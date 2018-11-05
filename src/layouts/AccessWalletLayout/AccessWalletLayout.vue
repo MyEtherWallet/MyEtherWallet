@@ -1,8 +1,8 @@
 <template>
   <div>
     <access-my-wallet-container/>
-    <price-bar 
-      :v-if="$store.state.online && tokens.length > 1" 
+    <price-bar
+      :v-if="online && tokens.length > 1"
       :tokens="tokens"/>
     <faqs/>
   </div>
@@ -12,6 +12,7 @@
 import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
 import PriceBar from './components/PriceBar';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AccessWalletLayout',
@@ -25,8 +26,13 @@ export default {
       tokens: []
     };
   },
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
+  },
   async mounted() {
-    if (this.$store.state.online) {
+    if (this.online) {
       this.tokens = await this.getRates();
     }
   },

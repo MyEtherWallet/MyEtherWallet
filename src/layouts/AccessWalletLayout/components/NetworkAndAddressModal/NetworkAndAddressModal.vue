@@ -134,7 +134,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import ethUnits from 'ethjs-unit';
-
+import { mapGetters } from 'vuex';
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -155,7 +155,6 @@ export default {
       currentIndex: 0,
       HDAccounts: [],
       availablePaths: {},
-      customPaths: {},
       selectedPath: '',
       invalidPath: '',
       customPathInput: false,
@@ -163,7 +162,12 @@ export default {
       customPath: { label: '', dpath: '' }
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      web3: 'web3',
+      customPaths: 'customPaths'
+    })
+  },
   watch: {
     hardwareWallet() {
       this.getPaths();
@@ -226,7 +230,7 @@ export default {
       });
     },
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', this.currentWallet);
+      this.$store.dispatch('decryptWallet', [this.currentWallet]);
       this.$router.push({ path: 'interface' });
     },
     setHDAccounts() {
@@ -247,9 +251,8 @@ export default {
       }
       this.currentIndex += MAX_ADDRESSES;
     },
-    async getAddressBalance(address) {
-      const web3 = this.$store.state.web3;
-      if (web3 === null || web3 === undefined) await this.setupWeb3();
+    getAddressBalance(address) {
+      const web3 = this.web3;
       web3.eth.getBalance(address).then(balance => {
         for (const i in this.HDAccounts)
           if (this.HDAccounts[i].account.getAddressString() == address)
@@ -275,10 +278,7 @@ export default {
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      this.customPaths = this.$store.state.customPaths;
-    },
-    setupWeb3() {
-      this.$store.dispatch('setWeb3Instance');
+      this.customPaths = this.customPaths;
     }
   }
 };

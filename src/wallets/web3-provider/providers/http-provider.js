@@ -8,6 +8,7 @@ import {
   ethSign,
   ethAccounts,
   ethCoinbase,
+  ethGetTransactionCount,
   netVersion
 } from '../methods';
 class HttpProvider {
@@ -47,6 +48,7 @@ class HttpProvider {
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
       middleware.use(ethSignTransaction);
+      middleware.use(ethGetTransactionCount);
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethCoinbase);

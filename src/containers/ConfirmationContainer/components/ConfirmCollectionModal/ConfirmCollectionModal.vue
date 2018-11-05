@@ -9,13 +9,13 @@
       <div class="modal-content">
         <div class="network-info-container">
           <p>
-            <span>Network</span> {{ $store.state.network.type.name }} by {{ $store.state.network.service }}
+            <span>Network</span> {{ network.type.name }} by {{ network.service }}
           </p>
           <div>
             <div class="line"/>
           </div>
           <p>
-            <span>Transaction Total:</span> {{ txTotal }} {{ $store.state.network.type.name }}
+            <span>Transaction Total:</span> {{ txTotal }} {{ network.type.name }}
           </p>
         </div>
         <div class="modal-content-body">
@@ -27,11 +27,11 @@
               v-b-toggle.prevent="`accordion${idx}`"
               class="header">
               <div class="header-item">
-                <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
+                <img :src="require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)" >
                 <div>
-                  <p>- {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>- {{ web3.utils.hexToNumberString(item.tx.value) }} <span>{{ network.type.name }}</span></p>
                   <div>
-                    <span>From</span> {{ $store.state.wallet.getChecksumAddressString() | concatAddr }}
+                    <span>From</span> {{ wallet.getChecksumAddressString() | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -41,9 +41,9 @@
                 <img src="~@/assets/images/icons/right-arrow.svg">
               </div>
               <div class="header-item">
-                <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
+                <img :src="require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)" >
                 <div>
-                  <p>+ {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>+ {{ web3.utils.hexToNumberString(item.tx.value) }} <span>{{ network.type.name }}</span></p>
                   <div>
                     <span>To</span> {{ item.tx.to | concatAddr }}
                   </div>
@@ -59,15 +59,15 @@
               class="body">
               <div class="body-item">
                 <span class="item-title">Gas Limit</span>
-                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.gas) }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.tx.gas) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Gas Price</span>
-                <span>{{ $store.state.web3.utils.hexToNumberString($store.state.web3.utils.fromWei(item.tx.gasPrice, 'gwei')) }} Gwei</span>
+                <span>{{ web3.utils.hexToNumberString(web3.utils.fromWei(item.tx.gasPrice, 'gwei')) }} Gwei</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce </span>
-                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.nonce) }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">Data </span>
@@ -116,6 +116,8 @@
 </template>
 <script>
 import AddressBlock from '../AddressBlock';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     'address-block': AddressBlock
@@ -131,6 +133,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network',
+      wallet: 'wallet'
+    }),
     allSigned() {
       for (let i = 0; i < this.signedArray.length; i++) {
         if (
@@ -143,7 +150,7 @@ export default {
     },
     txTotal() {
       if (this.signedArray.length > 0) {
-        const BN = this.$store.state.web3.utils.BN;
+        const BN = this.web3.utils.BN;
         let totalGas = new BN();
         this.signedArray.forEach(item => {
           totalGas = totalGas.add(
@@ -152,9 +159,7 @@ export default {
             )
           );
         });
-        return this.$store.state.web3.utils
-          .fromWei(totalGas.toString(), 'ether')
-          .toString();
+        return this.web3.utils.fromWei(totalGas.toString(), 'ether').toString();
       }
       return 0;
     }
