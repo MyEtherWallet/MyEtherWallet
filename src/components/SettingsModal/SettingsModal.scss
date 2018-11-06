@@ -31,13 +31,10 @@
   }
 }
 
-
-
 //***************************************************
 // tx-speed
 //***************************************************
 .tx-speed {
-
   .radio-buttons {
     ul {
       li {
@@ -54,7 +51,7 @@
             margin-right: 10px;
           }
 
-          input[type="text"] {
+          input[type='text'] {
             padding: 12px;
             position: absolute;
             left: 25px;
@@ -65,11 +62,9 @@
             width: 150px;
           }
 
-
           .gwei {
             margin-left: 170px;
           }
-           
         }
 
         p {
@@ -77,7 +72,7 @@
         }
       }
 
-      .selected *{
+      .selected * {
         font-weight: 600;
       }
     }
@@ -87,16 +82,12 @@
     margin-top: 45px;
     text-align: center;
   }
-
 }
-
-
 
 //***************************************************
 // Import Configurations
 //***************************************************
 .import-config {
-
   .import-button-block {
     margin-top: 30px;
     display: grid;
@@ -111,10 +102,6 @@
   }
 }
 
-
-
-
-
 //***************************************************
 // Export Configurations
 //***************************************************
@@ -124,10 +111,3 @@
     margin-top: 40px;
   }
 }
-
-
-
-
-
-
-

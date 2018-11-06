@@ -1,16 +1,31 @@
 <template>
   <div class="full-width-dropdown-menu">
     <div class="wrap">
-      <div class="title-container" @click="dropdownOpen = !dropdownOpen">
-        <menu-title class="menu-title-component" :title="title" />
-        <popover v-if="popup" class="popover-box" :popcontent="popup" />
-        <i v-if="!dropdownOpen" class="fa fa-angle-down" aria-hidden="true"></i>
-        <i v-if="dropdownOpen" class="fa fa-angle-up" aria-hidden="true"></i>
+      <div 
+        class="title-container" 
+        @click="dropdownOpen = !dropdownOpen">
+        <menu-title 
+          :title="title" 
+          class="menu-title-component" />
+        <popover 
+          v-if="popup" 
+          :popcontent="popup" 
+          class="popover-box" />
+        <i 
+          v-if="!dropdownOpen" 
+          class="fa fa-angle-down" 
+          aria-hidden="true"/>
+        <i 
+          v-if="dropdownOpen" 
+          class="fa fa-angle-up" 
+          aria-hidden="true"/>
       </div>
 
-      <div class="contents-container" :class="dropdownOpen ? 'opened' : ''">
+      <div 
+        :class="dropdownOpen ? 'opened' : ''" 
+        class="contents-container">
         <div class="padding-block">
-          <slot></slot>
+          <slot/>
         </div>
       </div>
     </div>
@@ -20,12 +35,12 @@
 
 <script>
 import MenuTitle from '@/components/MenuTitle';
-import PopOver from  '@/components/PopOver';
+import PopOver from '@/components/PopOver';
 
 export default {
   components: {
     'menu-title': MenuTitle,
-    'popover': PopOver
+    popover: PopOver
   },
   props: {
     title: {
@@ -42,9 +57,7 @@ export default {
       dropdownOpen: false
     };
   },
-  methods: {
-    
-  }
+  methods: {}
 };
 </script>
 
