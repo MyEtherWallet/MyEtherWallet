@@ -11,15 +11,28 @@
 
               <div class="mew-custom-form__radio-button">
                 <div>
-                  <input type="radio" id="huey" name="drone" value="huey" checked />
+                  <input 
+                    id="huey" 
+                    type="radio" 
+                    name="drone" 
+                    value="huey" 
+                    checked >
                   <label for="huey">Huey</label>
                 </div>
                 <div>
-                  <input type="radio" id="dewey" name="drone" value="dewey" />
+                  <input 
+                    id="dewey" 
+                    type="radio" 
+                    name="drone" 
+                    value="dewey" >
                   <label for="dewey">Dewey</label>
                 </div>
                 <div>
-                  <input type="radio" id="louie" name="drone" value="louie" />
+                  <input 
+                    id="louie" 
+                    type="radio" 
+                    name="drone" 
+                    value="louie" >
                   <label for="louie">Louie</label>
                 </div>
               </div>
@@ -29,24 +42,22 @@
             <div class="html">
               <textarea>
                 <div>
-                  <input type="radio" id="huey" name="drone" value="huey" checked />
-                  <label for="huey">Huey</label>
+                <input type="radio" id="huey" name="drone" value="huey" checked />
+                <label for="huey">Huey</label>
                 </div>
                 <div>
-                  <input type="radio" id="dewey" name="drone" value="dewey" />
-                  <label for="dewey">Dewey</label>
+                <input type="radio" id="dewey" name="drone" value="dewey" />
+                <label for="dewey">Dewey</label>
                 </div>
                 <div>
-                  <input type="radio" id="louie" name="drone" value="louie" />
-                  <label for="louie">Louie</label>
+                <input type="radio" id="louie" name="drone" value="louie" />
+                <label for="louie">Louie</label>
                 </div>
               </textarea>
             </div>
 
             <div class="css">
-              <textarea>
-                
-              </textarea>
+              <textarea/>
             </div>
 
 
@@ -58,15 +69,10 @@
 </template>
 
 <script>
-
 export default {
-  components: {
-
-  },
+  components: {},
   data() {
-    return {
-
-    };
+    return {};
   }
 };
 </script>

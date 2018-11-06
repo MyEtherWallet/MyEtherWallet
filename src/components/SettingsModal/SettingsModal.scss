@@ -33,20 +33,99 @@
 
 
 
+//***************************************************
+// tx-speed
+//***************************************************
+.tx-speed {
+
+  .radio-buttons {
+    ul {
+      li {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+
+        div {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            margin-right: 10px;
+          }
+
+          input[type="text"] {
+            padding: 12px;
+            position: absolute;
+            left: 25px;
+            top: -10px;
+            border: 0;
+            background-color: $light-grey-1;
+            display: block;
+            width: 150px;
+          }
 
 
-//***************************************************
-// Modal Contents
-//***************************************************
-.modal-contents {
+          .gwei {
+            margin-left: 170px;
+          }
+           
+        }
+
+        p {
+          margin-left: auto;
+        }
+      }
+
+      .selected *{
+        font-weight: 600;
+      }
+    }
+  }
+
+  .button-block {
+    margin-top: 45px;
+    text-align: center;
+  }
 
 }
 
 
 
 //***************************************************
-// Modal Contents
+// Import Configurations
 //***************************************************
+.import-config {
+
+  .import-button-block {
+    margin-top: 30px;
+    display: grid;
+    align-items: center;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 183px;
+  }
+
+  .button-block {
+    text-align: center;
+    margin-top: 40px;
+  }
+}
+
+
+
+
+
+//***************************************************
+// Export Configurations
+//***************************************************
+.export-config {
+  .button-block {
+    text-align: center;
+    margin-top: 40px;
+  }
+}
+
+
 
 
 
