@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 .wrap {
   border-bottom: 1px solid $light-grey-2;
 }
@@ -19,23 +18,18 @@
   i {
     margin-left: auto;
   }
-
 }
 
-
 .contents-container {
-  
   overflow: hidden;
-  max-height: 0px;
+  max-height: 0;
   transition: all 0.3s ease;
 
   .padding-block {
-    padding: 0px 30px 20px 30px;
+    padding: 0 30px 20px 30px;
   }
 
   &.opened {
     max-height: 300px;
   }
 }
-
-

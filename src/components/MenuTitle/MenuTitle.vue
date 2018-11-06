@@ -1,7 +1,7 @@
 <template>
   <div class="menu-title">
     <div class="the-title">
-      {{title}}
+      {{ title }}
     </div>
   </div>
 </template>
@@ -19,9 +19,7 @@ export default {
       dropdownOpen: false
     };
   },
-  methods: {
-    
-  }
+  methods: {}
 };
 </script>
 
