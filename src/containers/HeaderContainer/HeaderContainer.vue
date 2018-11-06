@@ -1,5 +1,7 @@
 <template>
   <div class="header">
+    <settingsmodal />
+
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -90,7 +92,7 @@
                       height="35px"
                     />
                   </template>
-                  <b-dropdown-item @click="logout">
+                  <b-dropdown-item @click="openSettings">
                     Settings
                   </b-dropdown-item>
                   <b-dropdown-item @click="logout">
@@ -111,7 +113,6 @@
       </div>
     </div>
 
-    <settingsmodal />
   </div>
 </template>
 
@@ -201,6 +202,9 @@ export default {
     };
   },
   methods: {
+    openSettings() {
+      this.$children[0].$refs.settings.show();
+    },
     languageItemClicked(e) {
       const flag = e.target.getAttribute('data-flag-name');
 
