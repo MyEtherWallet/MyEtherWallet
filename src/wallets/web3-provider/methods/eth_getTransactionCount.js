@@ -41,11 +41,12 @@ export default async ({ payload, requestManager }, res, next) => {
   }
 
   if (new BN(storedNonce).isGreaterThan(new BN(fetchedNonce))) {
-    res(null, toPayload(payload.id, storedNonce.toString('hex')));
+    res(null, toPayload(payload.id, new BN(storedNonce).toString('hex')));
   } else if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
+    const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
       nonce: new BN(fetchedNonce),
-      timestamp: +new Date()
+      timestamp: currentTime
     });
 
     res(null, toPayload(payload.id, fetchedNonce));
