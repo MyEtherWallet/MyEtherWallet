@@ -1,7 +1,8 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal/>
+    <finish-modal ref="finish"/>
     <verification-modal
+      ref="verification"
       :mnemonic-values="mnemonicValues"
       :mnemonic-done-modal-open="mnemonicDoneModalOpen"/>
     <div class="wrap">
@@ -145,7 +146,7 @@ export default {
       });
 
       if (valid === true) {
-        this.$children[0].$refs.done.show();
+        this.$refs.finish.$refs.done.show();
       }
     },
     mnemonicVerificationModalOpen() {
@@ -211,7 +212,7 @@ export default {
           .classList.remove('hidden');
       }
 
-      this.$children[1].$refs.verification.show();
+      this.$refs.verification.$refs.verification.show();
     }
   }
 };

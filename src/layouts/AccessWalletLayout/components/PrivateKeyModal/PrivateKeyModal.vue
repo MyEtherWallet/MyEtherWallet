@@ -37,10 +37,9 @@ export default {
   },
   methods: {
     unlockWallet() {
-      this.$store.dispatch(
-        'decryptWallet',
+      this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
-      );
+      ]);
       this.privateKey = '';
       this.$router.push({ path: 'interface' });
     },
