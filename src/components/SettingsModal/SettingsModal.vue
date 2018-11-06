@@ -1,11 +1,5 @@
 <template>
   <div class="modal-container">
-    <div 
-      class="modal-open-button" 
-      @click="modalOpen">
-      <h5>Test Button</h5>
-      <p>Open Settings Modal</p>
-    </div>
 
     <b-modal
       ref="settings"
