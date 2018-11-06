@@ -16,34 +16,56 @@
 
       <div class="modal-contents">
         
-        <full-width-dropdown title="Transaction Speed" popup="What is TX speed" class="tx-speed">
+        <full-width-dropdown 
+          title="Transaction Speed" 
+          popup="What is TX speed" 
+          class="tx-speed">
           <div class="radio-buttons">
             <ul>
               <li class="selected">
                 <div>
-                  <input type="radio" name="gender" value="male" id="aaa" checked="checked">
+                  <input 
+                    id="aaa" 
+                    type="radio" 
+                    name="gender" 
+                    value="male" 
+                    checked="checked">
                   <label for="aaa">Slow (2000 Gwei)</label>
                 </div>
                 <p>0.000013 ETH ($1.34)</p>
               </li>
               <li>
                 <div>
-                  <input type="radio" name="gender" value="female" id="bbb">
+                  <input 
+                    id="bbb" 
+                    type="radio" 
+                    name="gender" 
+                    value="female">
                   <label for="bbb">Regular (8000 Gwei)</label>
                 </div>
                 <p>0.000023ETH ($3.23)</p>
               </li>
               <li>
                 <div>
-                  <input type="radio" name="gender" value="other" id="ccc">
+                  <input 
+                    id="ccc" 
+                    type="radio" 
+                    name="gender" 
+                    value="other">
                   <label for="ccc">Fast (12000 Gwei)</label>
                 </div>
                 <p>0.000063ETH ($5.16)</p>
               </li>
               <li>
                 <div>
-                  <input type="radio" name="gender" value="other" id="ccc">
-                  <input type="text" name="">
+                  <input 
+                    id="ccc" 
+                    type="radio" 
+                    name="gender" 
+                    value="other">
+                  <input 
+                    type="text" 
+                    name="">
                   <p class="gwei">Gwei</p>
                 </div>
                 <p>0.000063ETH ($5.16)</p>
@@ -55,7 +77,9 @@
           </div>
         </full-width-dropdown>
        
-        <full-width-dropdown title="Import Configurations" class="import-config">
+        <full-width-dropdown 
+          title="Import Configurations" 
+          class="import-config">
           <p>Please click the button below to open and import you configuration file from your local computer.</p>
           <div class="import-button-block">
             <standard-input :options="inputFileName" />
@@ -66,7 +90,9 @@
           </div>
         </full-width-dropdown>
 
-        <full-width-dropdown title="Export Configurations" class="export-config">
+        <full-width-dropdown 
+          title="Export Configurations" 
+          class="export-config">
           <p>Please click the button below to download your configuration file into your local computer.</p>
           <div class="button-block">
             <standard-button :options="buttonExport" />
