@@ -16,7 +16,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!$store.state.web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
+              :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
               type="submit"
               @click.prevent="updateResolver(resolverAddress)">Update</button>
           </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!$store.state.web3.utils.isAddress(transferTo) ? 'disabled': ''"
+              :class="!web3.utils.isAddress(transferTo) ? 'disabled': ''"
               type="submit"
               @click.prevent="transferDomain(transferTo)">Transfer</button>
           </div>
@@ -51,6 +51,7 @@
 </template>
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -74,6 +75,11 @@ export default {
       resolverAddress: '',
       transferTo: ''
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   }
 };
 </script>

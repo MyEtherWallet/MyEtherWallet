@@ -98,6 +98,8 @@ import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
@@ -127,8 +129,8 @@ export default {
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.hardwareModalOpen,
@@ -136,8 +138,8 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? hardwareImg : hardwareDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.metamaskModalOpen,
@@ -145,8 +147,8 @@ export default {
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? metamaskImg : metamaskDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.softwareModalOpen,
@@ -159,6 +161,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
   },
   methods: {
     mewConnectModalOpen() {

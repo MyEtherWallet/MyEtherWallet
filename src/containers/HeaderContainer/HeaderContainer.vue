@@ -65,7 +65,9 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null"/>
+                <notification 
+                  v-if="wallet !== null" 
+                  ref="notification"/>
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
@@ -148,7 +150,6 @@ export default {
         { name: '简体中文', flag: 'zh-Hans' },
         { name: '繁體中文', flag: 'zh-Hant' }
       ],
-      online: true,
       currentName: 'English',
       currentFlag: 'en',
       isPageOnTop: true
@@ -156,24 +157,16 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      wallet: 'wallet',
+      online: 'online'
     })
   },
   watch: {
-    online(newVal) {
-      this.online = newVal;
-    },
     notifications() {
-      this.$children[6].$refs.notification.show();
+      this.$refs.notification.$refs.notification.show();
     }
   },
   mounted() {
-    if (this.$store.state.online) {
-      this.online = true;
-    } else {
-      this.online = false;
-    }
-
     if (Misc.doesExist(store.get('locale'))) {
       this.$root._i18n.locale = store.get('locale');
       this.currentFlag = store.get('locale');
@@ -217,7 +210,7 @@ export default {
       this.$router.push('/');
     },
     showNotifications() {
-      this.$children[6].$refs.notification.show();
+      this.$refs.notification.$refs.notification.show();
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;

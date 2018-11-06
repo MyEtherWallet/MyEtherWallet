@@ -43,6 +43,7 @@ import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
+import { mapGetters } from 'vuex';
 
 const ETH_TLD = '.eth';
 
@@ -74,12 +75,20 @@ export default {
       ensRegistryContract: function() {}
     };
   },
+  computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network',
+      wallet: 'wallet',
+      ens: 'ens'
+    })
+  },
   mounted() {
     this.setup();
   },
   methods: {
     async setup() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
 
       this.domainName = '';
       this.loading = false;
@@ -106,16 +115,14 @@ export default {
       );
       this.contractInitiated = true;
       this.domainNameErr = false;
-      this.ensRegistry = this.$store.state.network.type.contracts.find(
-        contract => {
-          return (
-            web3.utils.toChecksumAddress(contract.address) ===
-            web3.utils.toChecksumAddress(
-              '0x314159265dD8dbb310642f98f50C066173C1259b'
-            )
-          );
-        }
-      );
+      this.ensRegistry = this.network.type.contracts.find(contract => {
+        return (
+          web3.utils.toChecksumAddress(contract.address) ===
+          web3.utils.toChecksumAddress(
+            '0x314159265dD8dbb310642f98f50C066173C1259b'
+          )
+        );
+      });
       this.ensRegistryContract = new web3.eth.Contract(
         this.ensRegistry.abi,
         this.ensRegistry.address
@@ -124,7 +131,7 @@ export default {
     async transferDomain(toAddress) {
       // const domain = this.domainName + ETH_TLD;
       // try {
-      //   const txHash = this.$store.state.ens
+      //   const txHash = this.ens
       //     .setOwner(domain, newResolverAddr)
       //     .then(res => res);
       //   console.log(txHash);
@@ -136,31 +143,30 @@ export default {
         .setOwner(this.nameHash, toAddress)
         .encodeABI();
       const raw = {
-        from: this.$store.state.wallet.getChecksumAddressString(),
+        from: this.wallet.getChecksumAddressString(),
         to: this.ensRegistry.address,
         data: data,
         value: 0
       };
-      this.$store.state.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw);
     },
     async updateResolver(newResolverAddr) {
       // const domain = this.domainName + ETH_TLD;
       // try {
-      //   const txHash = this.$store.state.ens
+      //   const txHash = this.ens
       //     .setResolver(domain, newResolverAddr)
       //     .then(res => res);
       //   console.log(txHash);
       // } catch (e) {
       //   console.error(e);
       // }
-      const state = this.$store.state;
-      const web3 = state.web3;
-      const from = state.wallet.getAddressString();
+      const web3 = this.web3;
+      const from = this.wallet.getAddressString();
 
       // Public resolver address
-      const resolver = await state.ens.resolver('resolver.eth');
+      const resolver = await this.ens.resolver('resolver.eth');
       const publicResolverAddress = await resolver.addr();
-      const publicResolver = state.network.type.contracts.find(contract => {
+      const publicResolver = this.network.type.contracts.find(contract => {
         return (
           web3.utils.toChecksumAddress(contract.address) ===
           web3.utils.toChecksumAddress(publicResolverAddress)
@@ -192,8 +198,8 @@ export default {
       web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
     },
     async finalize() {
-      const address = this.$store.state.wallet.getAddressString();
-      const web3 = this.$store.state.web3;
+      const address = this.wallet.getAddressString();
+      const web3 = this.web3;
       const name = web3.utils.sha3(this.domainName);
       const data = await this.auctionRegistrarContract.methods
         .finalizeAuction(name)
@@ -209,13 +215,11 @@ export default {
       web3.eth.sendTransaction(raw);
     },
     async getRegistrarAddress() {
-      const registrarAddress = await this.$store.state.ens.owner(
-        ETH_TLD.replace('.', '')
-      );
+      const registrarAddress = await this.ens.owner(ETH_TLD.replace('.', ''));
       return registrarAddress;
     },
     async checkDomain() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       this.loading = true;
       this.labelHash = web3.utils.sha3(this.domainName);
 
@@ -281,7 +285,7 @@ export default {
       this.domainName = normalise(value);
     },
     async getMoreInfo(deedOwner) {
-      const deedContract = new this.$store.state.web3.eth.Contract(
+      const deedContract = new this.web3.eth.Contract(
         DeedContractAbi,
         deedOwner
       );
@@ -289,13 +293,13 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.$store.state.ens.owner(this.domainName + ETH_TLD);
+        owner = await this.ens.owner(this.domainName + ETH_TLD);
       } catch (e) {
         owner = '0x';
       }
 
       try {
-        resolverAddress = await this.$store.state.ens
+        resolverAddress = await this.ens
           .resolver(this.domainName + ETH_TLD)
           .addr();
       } catch (e) {
@@ -311,8 +315,8 @@ export default {
     },
     async createTransaction(type) {
       this.loading = true;
-      const address = this.$store.state.wallet.getAddressString();
-      const utils = this.$store.state.web3.utils;
+      const address = this.wallet.getAddressString();
+      const utils = this.web3.utils;
       const domainName = utils.sha3(this.domainName);
       const bidHash = await this.auctionRegistrarContract.methods
         .shaBid(

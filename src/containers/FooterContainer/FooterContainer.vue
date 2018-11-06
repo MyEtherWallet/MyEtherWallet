@@ -53,10 +53,10 @@
               <p>{{ $t("footer.welcomeDes") }}</p>
 
               <a
-                :href="'https://etherscan.io/address/'+$store.state.ethDonationAddress"
+                :href="'https://etherscan.io/address/'+ethDonationAddress"
                 target="_blank">
                 <p
-                  :data-eth="$store.state.ethDonationAddress"
+                  :data-eth="ethDonationAddress"
                   class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -235,6 +236,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      ethDonationAddress: 'ethDonationAddress'
+    })
   },
   methods: {
     openContent(element) {

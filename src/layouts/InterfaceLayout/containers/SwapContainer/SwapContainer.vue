@@ -1,6 +1,6 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal/>
+    <swap-confirmation-modal ref="swapConfirmation"/>
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     swapConfirmationModalOpen() {
-      this.$children[0].$refs.swapconfirmation.show();
+      this.$refs.swapConfirmation.$refs.swapconfirmation.show();
     }
   }
 };
