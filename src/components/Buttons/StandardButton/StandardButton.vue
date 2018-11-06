@@ -1,35 +1,37 @@
 <template>
-  <div 
-    :class="{'full-width': options.fullWidth, 'hide-mobile-button': onBottomOfPage && options.isThisMobileBottomButton}" 
-    class="standard-button">
-     
+  <div
+    v-show="show"
+    :class="fullWidth ? 'full-width' : ''"
+    class="standard-button"
+    @click="buttonClicked">
+
     <div :class="buttonClass">
       <div
-        :class="[(options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''), (options.noMinWidth ? 'no-min-width' : '')]" 
-        class="the-button-box ">{{ options.title }}
-        <img 
-          v-if="options.loadingIcon"
-          class="loading-left" 
+        class="the-button">
+        <slot>{{ title }}</slot>
+        <img
+          v-if="loadingIcon"
+          class="loading-left"
           src="@/assets/images/icons/loading.png">
 
-        <img 
-          v-if="options.rightArrow && options.buttonStyle == 'green'"
-          class="arrow-right" 
+        <img
+          v-if="rightArrow && buttonStyle === 'green'"
+          class="arrow-right"
           src="@/assets/images/icons/arrow-right.svg">
 
-        <img 
-          v-if="options.rightArrow && options.buttonStyle == 'green-border'"
-          class="arrow-right" 
+        <img
+          v-if="rightArrow && buttonStyle === 'green-border'"
+          class="arrow-right"
           src="@/assets/images/icons/arrow-right.svg">
 
-        <img 
-          v-if="options.leftArrow && options.buttonStyle == 'green'" 
-          class="arrow-left" 
+        <img
+          v-if="leftArrow && buttonStyle === 'green'"
+          class="arrow-left"
           src="@/assets/images/icons/arrow-left.svg">
 
-        <img 
-          v-if="options.leftArrow && options.buttonStyle == 'green-border'" 
-          class="arrow-left" 
+        <img
+          v-if="leftArrow && buttonStyle === 'green-border'"
+          class="arrow-left"
           src="@/assets/images/icons/arrow-green-left.svg">
       </div>
     </div>
@@ -40,21 +42,57 @@
 <script>
 export default {
   props: {
-    options: {
-      type: Object,
-      default: function() {
-        return {};
-      }
+    title: {
+      type: String,
+      default: 'button'
+    },
+    show: {
+      type: Boolean,
+      default: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    buttonStyle: {
+      type: String,
+      default: 'standard-button__green'
+    },
+    fullWidth: {
+      type: Boolean,
+      default: true
+    },
+    loadingIcon: {
+      type: Boolean,
+      default: false
+    },
+    rightArrow: {
+      type: Boolean,
+      default: false
+    },
+    leftArrow: {
+      type: Boolean,
+      default: false
+    },
+    mobileBottom: {
+      type: Boolean,
+      default: false
+    },
+    noMinWidth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    return {
-      onBottomOfPage: false
-    };
+    return {};
   },
   computed: {
+    isThisMobileBottomButton() {
+      return this.mobileBottom;
+    },
     buttonClass() {
-      switch (this.options.buttonStyle) {
+      if (this.disabled) return 'standard-button__grey';
+      switch (this.buttonStyle) {
         case 'white':
           return 'standard-button__white';
         case 'white-border':
@@ -69,31 +107,19 @@ export default {
           return 'standard-button__green-border';
         case 'green-noclick':
           return 'standard-button__green-noclick';
-        case 'green-transparent':
-          return 'standard-button__green-transparent';
         case 'blue':
           return 'standard-button__blue';
         case 'blue-border':
           return 'standard-button__blue-border';
         default:
+          return 'standard-button__green';
       }
     }
   },
-  beforeMount() {
-    window.addEventListener('scroll', this.onPageScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.onPageScroll);
-  },
   methods: {
-    onPageScroll() {
-      if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
-      ) {
-        this.onBottomOfPage = true;
-      } else {
-        this.onBottomOfPage = false;
+    buttonClicked() {
+      if (!this.disabled) {
+        this.$emit('click');
       }
     }
   }

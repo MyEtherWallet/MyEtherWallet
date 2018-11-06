@@ -26,17 +26,13 @@
           v-show="error !== ''"
           class="error"> {{ error }} </p>
 
-        <standard-button 
-          :options="buttonContinue"
-        />
-
-        <button
-          v-if="false"
-          class="submit-button large-round-button-green-filled"
-          type="submit"
-          @click.prevent="unlockWallet" >
+        <standard-button
+          :full-width="false"
+          :disabled="password === ''"
+          @click="unlockWallet"
+        >
           {{ $t("common.continue") }}
-        </button>
+        </standard-button>
       </form>
     </div>
   </b-modal>

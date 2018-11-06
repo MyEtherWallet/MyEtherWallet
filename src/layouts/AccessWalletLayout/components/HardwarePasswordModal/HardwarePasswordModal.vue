@@ -25,29 +25,22 @@
         <p
           v-show="error !== ''"
           class="error"> {{ error }} </p>
-        
+
 
         <div class="terms-container">
-          <accept-terms-checker/>
+          <accept-terms-checker @click="needToAcceptTerms = !needToAcceptTerms"/>
         </div>
 
 
         <div class="the-button-container">
-          <standard-button 
-            :options="buttonUnlock"
-          />
-          <standard-button 
-            :options="buttonDisabled"
-          />
+          <standard-button
+            :disabled="continueUnlock"
+            @click.prevent="unlockWallet"
+          >
+            {{ $t("accessWallet.unlock") }} {{ hardwareBrand }}
+          </standard-button>
         </div>
-        <!--
-        <button
-          class="submit-button large-round-button-green-filled"
-          type="submit"
-          @click.prevent="unlockWallet">
-          {{ $t("accessWallet.unlock") }} {{ hardwareBrand }}
-        </button>
-      -->
+
       </form>
       <customer-support/>
     </div>
@@ -75,6 +68,7 @@ export default {
   },
   data() {
     return {
+      needToAcceptTerms: true,
       buttonUnlock: {
         title: 'Unlock',
         buttonStyle: 'green',
@@ -93,6 +87,16 @@ export default {
       password: '',
       error: ''
     };
+  },
+  computed: {
+    continueUnlock() {
+      if (this.password === '') {
+        return true;
+      } else if (this.password !== '' && this.needToAcceptTerms) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     password() {

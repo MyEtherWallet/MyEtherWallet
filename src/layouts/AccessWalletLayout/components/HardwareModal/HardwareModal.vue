@@ -60,25 +60,11 @@
       </div>
 
       <div class="modal-button-container">
-        <standard-button 
-          :options="buttonConnecting"
-        />
-        <standard-button 
-          :options="buttonConnectYourDevice"
-        />
-      </div>
-
-
-      <div 
-        v-if="false" 
-        class="button-container">
-        <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" v-on:click="networkAndAddressOpen">-->
-        <!--<div class="mid-round-button-green-filled connection-button waiting-for-connection" @click="continueAccess">-->
-        <div
-          :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
-          @click="continueAccess">
-          {{ $t("accessWallet.accessDeviceAddresses") }}
-        </div>
+        <standard-button
+          :disabled="selected === ''"
+          :button-style="'green'"
+          @click="continueAccess"
+        >{{ $t("accessWallet.accessDeviceAddresses") }}</standard-button>
       </div>
 
       <div class="support-container">

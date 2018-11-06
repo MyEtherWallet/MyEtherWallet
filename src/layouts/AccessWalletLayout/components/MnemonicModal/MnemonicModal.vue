@@ -42,20 +42,12 @@
       </div>
 
       <div class="button-container">
-        <standard-button 
+        <standard-button
           :options="buttonContinue"
-        />
-        <standard-button 
-          :options="buttonDisabled"
-        />
-
-        <!--
-        <b-btn
-          class="mid-round-button-green-filled close-button"
-          @click="openPasswordModal">
+          @click="openPasswordModal"
+        >
           {{ $t("common.continue") }}
-        </b-btn>
-      -->
+        </standard-button>
       </div>
       <customer-support/>
     </div><!-- .mnemonic-modal-content -->

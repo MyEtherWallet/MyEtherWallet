@@ -24,7 +24,7 @@
         </div>
 
         <div class="terms-container">
-          <accept-terms-checker/>
+          <accept-terms-checker @click="needToAcceptTerms = !needToAcceptTerms"/>
         </div>
 
         <p
@@ -32,30 +32,16 @@
           class="error"> {{ error }} </p>
 
         <div class="password-modal-button-container">
-          <standard-button 
-            :options="buttonAccessMyWallet"
-            @click.native="unlockWallet"
-          />
-          <standard-button 
-            :options="buttonDisabled"
-            @click.native="unlockWallet"
-          />
+          <standard-button
+            :disabled="continueUnlock"
+            @click="unlockWallet"
+          >
+            {{ $t("accessWallet.unlockWallet") }}
+          </standard-button>
         </div>
 
 
         <customer-support/>
-
-
-
-        <!--
-        <button
-          :disabled=" password === '' && password.length === 0 && password.length < 9"
-          class="submit-button large-round-button-green-filled"
-          type="submit"
-          @click.prevent="unlockWallet">
-          {{ $t("accessWallet.unlockWallet") }}
-        </button>
-      -->
       </form>
     </div>
   </b-modal>
@@ -82,6 +68,7 @@ export default {
   },
   data() {
     return {
+      needToAcceptTerms: true,
       buttonAccessMyWallet: {
         title: 'Access My Wallet',
         buttonStyle: 'green',
@@ -100,6 +87,20 @@ export default {
       password: '',
       error: ''
     };
+  },
+  computed: {
+    continueUnlock() {
+      if (
+        this.password === '' &&
+        this.password.length === 0 &&
+        this.password.length < 9
+      ) {
+        return true;
+      } else if (this.needToAcceptTerms) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     password() {

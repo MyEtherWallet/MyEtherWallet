@@ -3,7 +3,7 @@
     <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
       <input
         type="checkbox"
-        @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" >
+        @click="allowAccess" >
       <span class="checkmark"/>
     </label>
   </div>
@@ -11,16 +11,16 @@
 
 <script>
 export default {
-  props: {
-    options: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    }
-  },
   data() {
-    return {};
+    return {
+      grantAccess: false
+    };
+  },
+  methods: {
+    allowAccess() {
+      this.grantAccess = !this.grantAccess;
+      this.$emit('click');
+    }
   }
 };
 </script>

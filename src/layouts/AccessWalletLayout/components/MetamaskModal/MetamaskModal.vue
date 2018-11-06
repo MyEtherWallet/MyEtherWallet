@@ -22,44 +22,23 @@
           {{ $t("accessWallet.metaMaskModalDesc") }}
         </h4>
       </div>
-      <div class="accept-terms">
-        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-          <input
-            type="checkbox"
-            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" >
-          <span class="checkmark"/>
-        </label>
+      <div class="terms-container">
+        <accept-terms-checker @click="needToAcceptTerms = !needToAcceptTerms"/>
       </div>
       <div class="button-container">
-        <standard-button 
-          v-if="accessMyWalletBtnDisabled"
-          :options="buttonDisabled"
+        <standard-button
+          :show="!needToAcceptTerms"
+          :disabled="true"
+          :button-style="'gray'"
           @click.native="interact = true"
-        />
+        >{{ $t("accessWallet.accessMyWallet") }}</standard-button>
         <router-link to="interface">
-          
-          <standard-button 
-            v-if="!accessMyWalletBtnDisabled"
-            :options="buttonAccessMyWallet"
-            @click.native="interact = true"
+
+          <standard-button
+            :show="needToAcceptTerms"
+            @click="interact = true"
           />
-
-          <!--
-          <b-btn
-            :disabled="accessMyWalletBtnDisabled"
-            class="mid-round-button-green-filled close-button">
-            {{ $t("accessWallet.accessMyWallet") }}
-          </b-btn>
-        -->
         </router-link>
-
-        <!--
-        <b-btn
-          :disabled="accessMyWalletBtnDisabled"
-          class="mid-round-button-green-filled close-button">
-          {{ $t("accessWallet.accessMyWallet") }}
-        </b-btn>
-      -->
       </div>
       <customer-support/>
     </div><!-- .metamask-modal-content -->
@@ -68,9 +47,11 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import AcceptTermsChecker from '@/components/AcceptTermsChecker';
 
 export default {
   components: {
+    'accept-terms-checker': AcceptTermsChecker,
     'customer-support': CustomerSupport
   },
   props: {
@@ -95,7 +76,7 @@ export default {
         leftArrow: false,
         fullWidth: true
       },
-      accessMyWalletBtnDisabled: true
+      needToAcceptTerms: true
     };
   },
   mounted() {

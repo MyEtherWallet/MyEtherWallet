@@ -122,22 +122,12 @@
       </div> <!-- .content-container-2 -->
 
       <div class="accept-terms">
-        <accept-terms-checker/>
-        <!--
-        <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }}
-          <a href="/">{{ $t('common.terms') }}</a>.
-          <input
-            ref="accessMyWalletBtn"
-            type="checkbox"
-            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled">
-          <span class="checkmark"/>
-        </label>
-      -->
+        <accept-terms-checker @click="needToAcceptTerms = !needToAcceptTerms"/>
       </div>
       <div class="the-button-container">
-        <standard-button 
-          :options="buttonUnlock"
-        />
+        <standard-button
+          :disabled="continueUnlock"
+        >{{ $t("common.accessMyWallet") }}</standard-button>
 
         <!--
         <b-btn
@@ -186,7 +176,7 @@ export default {
         fullWidth: true
       },
       selectedId: '',
-      accessMyWalletBtnDisabled: true,
+      needToAcceptTerms: true,
       walletUnlocked: false,
       connectionActive: false,
       offset: 0,
@@ -204,6 +194,15 @@ export default {
     };
   },
   computed: {
+    continueUnlock() {
+      console.log(this.selectedId); // todo remove dev item
+      if (this.selectedId === '') {
+        return true;
+      } else if (this.selectedId !== '' && this.needToAcceptTerms) {
+        return true;
+      }
+      return false;
+    },
     orderedAddresses() {
       const addressSet = [...this.displayAddresses];
       addressSet.sort(this.comparator);
