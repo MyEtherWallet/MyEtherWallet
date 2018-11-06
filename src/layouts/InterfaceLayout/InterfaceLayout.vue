@@ -344,6 +344,10 @@ export default {
           this.pollBlock = setInterval(this.getBlock, 10000);
           this.setTokens();
           this.setENS();
+          store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
+            nonce: 0,
+            timestamp: +new Date()
+          });
         }
       }
     },

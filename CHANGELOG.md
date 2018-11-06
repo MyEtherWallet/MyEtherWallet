@@ -9,6 +9,7 @@
 
 ### Devop
 
+- Update packages [#151](https://github.com/MyEtherWallet/MyEtherWallet/pull/151)
 - Refactor state [#148](https://github.com/MyEtherWallet/MyEtherWallet/pull/148)
 - Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
 - Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
