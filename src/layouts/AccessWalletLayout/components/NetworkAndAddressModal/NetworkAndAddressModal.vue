@@ -43,7 +43,7 @@
       <p
         v-show="invalidPath !== ''"
         class="error-message-container">
-        {{$t('accessWallet.invalidPathDesc')}}{{ invalidPath }}{{$t('accessWallet.invalidPathDescCont')}}
+        {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath }}{{ $t('accessWallet.invalidPathDescCont') }}
       </p>
       <p
         v-show="!customPathInput"
@@ -61,7 +61,7 @@
           placeholder="m/44'/1'/0'/0">
         <br>
         <button @click="addCustomPath">{{ $t('accessWallet.addCustomPath') }}</button>
-        <button @click="showCustomPathInput">{{$t('common.cancel')}}</button>
+        <button @click="showCustomPathInput">{{ $t('common.cancel') }}</button>
       </div>
     </div>
     <!-- Address List -->

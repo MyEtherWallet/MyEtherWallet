@@ -50,7 +50,7 @@
       <div class="create-wallet-warnings__footer-container">
         <div class="create-wallet-warnings__mouse-scroll">
           <img src="~@/assets/images/icons/mouse.svg">
-          <p>{{ $t('gettingStarted.scroll')}}</p>
+          <p>{{ $t('gettingStarted.scroll') }}</p>
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">

@@ -20,7 +20,7 @@
           class="custom-textarea-1"/>
       </div>
       <div>
-        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} {{$t('interface.verifiedMessage')}}:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
+        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} {{ $t('interface.verifiedMessage') }}:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
         <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
       </div>
     </div>

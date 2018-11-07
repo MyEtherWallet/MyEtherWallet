@@ -5,10 +5,10 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{$t('interface.byteCode')}}</h4>
+          <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">{{$t('common.clear')}}</span>
-            <span @click="copyToClipboard('bytecode')">{{$t('common.copy')}}</span>
+            <span @click="deleteInput('bytecode')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('bytecode')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -25,8 +25,8 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi')">{{$t('common.clear')}}</span>
-            <span @click="copyToClipboard('abi')">{{$t('common.copy')}}</span>
+            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
       class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{$t('interface.constructor')}} {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
+          <h4>{{ $t('interface.constructor') }} {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
         </div>
       </div>
       <div
@@ -114,9 +114,9 @@
       <div class="the-form gas-amount">
         <input
           v-model="gasLimit"
+          :placeholder="$t('common.gasLimit')"
           type="number"
-          name=""
-          :placeholder="$t('common.gasLimit')">
+          name="">
         <div class="good-button-container">
           <p>Gwei</p>
           <i

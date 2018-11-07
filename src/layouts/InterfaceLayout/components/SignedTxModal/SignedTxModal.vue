@@ -1,12 +1,12 @@
 <template>
   <b-modal
     ref="signedTx"
+    :title="$t('interface.signedTx')"
     hide-footer
-    class="bootstrap-modal signed-tx-modal"
-    :title="$t('interface.signedTx')">
+    class="bootstrap-modal signed-tx-modal">
     <div class="d-block">
       <div class="title-block">
-        <h4 class="block-title">{{$t('interface.signedTx')}}</h4>
+        <h4 class="block-title">{{ $t('interface.signedTx') }}</h4>
       </div>
       <div class="signed-tx-container">
         <code>
@@ -21,7 +21,7 @@
       <div class="raw">
         <div class="title-block">
           <h4 class="block-title">
-            {{$t('interface.raw')}}
+            {{ $t('interface.raw') }}
           </h4>
           <div class="sliding-switch-white">
             <label class="switch">
@@ -45,7 +45,7 @@
       <b-btn
         class="mid-round-button-green-filled close-button"
         @click="copyAndContinue">
-        {{$t('interface.copyAndCont')}}
+        {{ $t('interface.copyAndCont') }}
       </b-btn>
     </div>
   </b-modal>

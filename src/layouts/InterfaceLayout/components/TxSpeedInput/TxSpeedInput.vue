@@ -4,7 +4,7 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{$t('common.speedTx')}}</h4>
+            <h4>{{ $t('common.speedTx') }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
           </div>
         </div>
@@ -12,26 +12,26 @@
           <div
             :class="[gasPrice === 5 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(5)">
-            {{$t('common.slow')}}
+            {{ $t('common.slow') }}
           </div>
           <div
             :class="[gasPrice === 45 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(45)">
-            {{$t('common.regular')}}
+            {{ $t('common.regular') }}
           </div>
           <div
             :class="[gasPrice === 75 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(75)">
-            {{$t('common.fast')}}
+            {{ $t('common.fast') }}
           </div>
         </div>
       </div>
       <div class="the-form gas-amount">
         <input
           :value="gasPrice"
+          :placeholder="$t('common.gasPrice')"
           type="number"
           name=""
-          :placeholder="$t('common.gasPrice')"
           @change="setSpeed" >
         <div class="good-button-container">
           <p>Gwei</p>
@@ -67,7 +67,7 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>{{ $t('common.gasLimit')}}</h4>
+            <h4>{{ $t('common.gasLimit') }}</h4>
             <popover :popcontent="$t('popover.whatIsGas')"/>
           </div>
         </div>
@@ -75,8 +75,8 @@
       <div class="the-form gas-amount">
         <input
           v-model="gasPrice"
-          type="number"
-          :placeholder="$t('common.gasLimit')">
+          :placeholder="$t('common.gasLimit')"
+          type="number">
         <div class="good-button-container">
           <i
             class="fa fa-check-circle good-button not-good"

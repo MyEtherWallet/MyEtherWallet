@@ -15,7 +15,7 @@
             <div class="line"/>
           </div>
           <p>
-            <span>{{$t('confirmation.txTotal')}}:</span> {{ txTotal }} {{ network.type.name }}
+            <span>{{ $t('confirmation.txTotal') }}:</span> {{ txTotal }} {{ network.type.name }}
           </p>
         </div>
         <div class="modal-content-body">
@@ -70,7 +70,7 @@
                 <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{$t('common.data')}} </span>
+                <span class="item-title">{{ $t('common.data') }} </span>
                 <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
@@ -84,7 +84,7 @@
               ref="ConfirmAndSendButton"
               :class="[allSigned? '': 'disabled','submit-button large-round-button-green-filled clickable']"
               @click="sendBatchTransactions">
-              {{$t('common.confirmAndSend')}}
+              {{ $t('common.confirmAndSend') }}
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
@@ -97,7 +97,7 @@
                 triggers="hover focus"
                 placement="top">
                 <div class="qrcode-contents">
-                  <p class="qrcode-title">{{$t('confirmation.scanQrCode')}}</p>
+                  <p class="qrcode-title">{{ $t('confirmation.scanQrCode') }}</p>
                   <div class="qrcode-block">
                     <qrcode
                       :options="{ size: 100 }"

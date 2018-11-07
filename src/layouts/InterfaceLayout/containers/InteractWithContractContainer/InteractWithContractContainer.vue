@@ -71,11 +71,11 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{$t("interface.readWriteC")}}</h4>
+            <h4>{{ $t("interface.readWriteC") }}</h4>
           </div>
         </div>
         <div class="address-container">
-          <div class="address"> {{$t("interface.contractAddr")}}: {{ address }}</div>
+          <div class="address"> {{ $t("interface.contractAddr") }}: {{ address }}</div>
           <div class="functions">
             <currency-picker
               :currency="methods"
@@ -152,7 +152,7 @@
             class="the-form domain-name result-container">
             <div class="title-container">
               <div class="title">
-                <h4>{{$t('common.value')}}: </h4>
+                <h4>{{ $t('common.value') }}: </h4>
               </div>
             </div>
             <input
@@ -206,7 +206,7 @@
             :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']"
             @click="write">
             <span v-show="!loading">
-              {{$t('interface.read') }}
+              {{ $t('interface.read') }}
             </span>
             <i
               v-show="loading"
@@ -217,7 +217,7 @@
             :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']"
             @click="write">
             <span v-show="!loading">
-              {{$t('interface.write') }}
+              {{ $t('interface.write') }}
             </span>
             <i
               v-show="loading"

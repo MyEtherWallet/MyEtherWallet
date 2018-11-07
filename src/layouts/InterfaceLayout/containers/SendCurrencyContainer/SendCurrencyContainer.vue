@@ -137,9 +137,9 @@
           <div class="the-form user-input">
             <input
               v-model="gasLimit"
+              :placeholder="$t('common.gasLimit')"
               type="number"
-              name=""
-              :placeholder="$t('common.gasLimit')" >
+              name="" >
           </div>
         </div>
       </div>
