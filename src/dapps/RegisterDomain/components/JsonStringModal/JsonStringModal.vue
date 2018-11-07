@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="jsonString"
-    title="JSON String"
+    :title="$t('dapps.jsonString')"
     hide-footer
     class="bootstrap-modal json-string-modal"
     centered>
@@ -21,7 +21,7 @@
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="submitJson">
-        Confirm
+        {{ $t('dapps.confirm') }}
       </button>
       <interface-bottom-text
         link="mailto:support@myetherwallet.com"

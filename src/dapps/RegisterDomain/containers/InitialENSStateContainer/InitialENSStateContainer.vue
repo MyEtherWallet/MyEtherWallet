@@ -13,17 +13,17 @@
           :class="[domainNameErr ? 'errored' : '']"
           type="text"
           name=""
-          placeholder="Please Enter at Least 7 Characters" >
+          :placeholder="$t('dapps.registerEnsPlaceholder')" >
         <span>.eth</span>
       </div>
       <p
         v-show="domainNameErr"
         class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
-          Domain name is less than 7 characters.
+          {{$t('dapps."registerEnsWarn1"')}}
         </span>
         <span v-else>
-          Invalid symbols on domain
+          {{$t('dapps."registerEnsWarn2"')}}
         </span>
       </p>
       <div class="submit-button-container">
@@ -39,7 +39,7 @@
       </div>
       <p
         v-show="contractInitiated === false"
-        class="contract-loading-warning">Contract is not ready yet, transaction might fail.</p>
+        class="contract-loading-warning">{{ $t('dapps.registerEnsContractNotReady') }}</p>
     </form>
 
     <interface-bottom-text
