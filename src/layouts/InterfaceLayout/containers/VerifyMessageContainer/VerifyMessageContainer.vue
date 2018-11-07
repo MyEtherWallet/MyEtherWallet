@@ -8,8 +8,8 @@
           <h4>Signature: </h4>
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
           <div class="copy-buttons">
-            <span @click="deleteInput">Clear</span>
-            <span @click="copyToClipboard">Copy</span>
+            <span @click="deleteInput">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
           class="custom-textarea-1"/>
       </div>
       <div>
-        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} did sign the message:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
+        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} {{ $t('interface.verifiedMessage') }}:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
         <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
       </div>
     </div>
@@ -36,7 +36,7 @@
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
 
   </div>

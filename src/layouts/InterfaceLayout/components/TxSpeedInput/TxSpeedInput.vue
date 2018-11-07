@@ -4,35 +4,34 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>Speed of Transaction</h4>
+            <h4>{{ $t('common.speedTx') }}</h4>
             <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
           </div>
-          <!-- <p>Transcation Fee: 0.000013 ETH ($1.234)</p> -->
         </div>
         <div class="buttons">
           <div
             :class="[gasPrice === 5 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(5)">
-            Slow
+            {{ $t('common.slow') }}
           </div>
           <div
             :class="[gasPrice === 45 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(45)">
-            Regular
+            {{ $t('common.regular') }}
           </div>
           <div
             :class="[gasPrice === 75 ? 'active': '','small-circle-button-green-border']"
             @click="setSpeed(75)">
-            Fast
+            {{ $t('common.fast') }}
           </div>
         </div>
       </div>
       <div class="the-form gas-amount">
         <input
           :value="gasPrice"
+          :placeholder="$t('common.gasPrice')"
           type="number"
           name=""
-          placeholder="Gas Price"
           @change="setSpeed" >
         <div class="good-button-container">
           <p>Gwei</p>
@@ -68,7 +67,7 @@
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
-            <h4>Gas Limit</h4>
+            <h4>{{ $t('common.gasLimit') }}</h4>
             <popover :popcontent="$t('popover.whatIsGas')"/>
           </div>
         </div>
@@ -76,8 +75,8 @@
       <div class="the-form gas-amount">
         <input
           v-model="gasPrice"
-          type="number"
-          placeholder="Gas Limit" >
+          :placeholder="$t('common.gasLimit')"
+          type="number">
         <div class="good-button-container">
           <i
             class="fa fa-check-circle good-button not-good"
