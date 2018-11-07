@@ -29,7 +29,7 @@ export default async ({ payload, requestManager }, res, next) => {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
     if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
       store.set(utils.sha3(addr), {
-        nonce: new BN(fetchedNonce).toNumber(),
+        nonce: new BN(fetchedNonce).toFixed(),
         timestamp: +new Date()
       });
     } else {
@@ -41,11 +41,14 @@ export default async ({ payload, requestManager }, res, next) => {
   }
 
   if (new BN(storedNonce).isGreaterThan(new BN(fetchedNonce))) {
-    res(null, toPayload(payload.id, new BN(storedNonce).toString('hex')));
+    res(
+      null,
+      toPayload(payload.id, `0x${new BN(storedNonce).toString('hex')}`)
+    );
   } else if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
     const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
-      nonce: new BN(fetchedNonce),
+      nonce: new BN(fetchedNonce).toFixed(),
       timestamp: currentTime
     });
 
