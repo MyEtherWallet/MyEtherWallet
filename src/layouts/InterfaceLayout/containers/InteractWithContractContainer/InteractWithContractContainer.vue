@@ -62,7 +62,7 @@
         <interface-bottom-text
           :link-text="$t('interface.learnMore')"
           :question="$t('interface.haveIssues')"
-          link="/"/>
+          link="mailto:support@myetherwallet.com"/>
       </div>
     </div>
     <div
@@ -71,11 +71,11 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>Read / Write Contract</h4>
+            <h4>{{ $t("interface.readWriteC") }}</h4>
           </div>
         </div>
         <div class="address-container">
-          <div class="address"> Contract Address: {{ address }}</div>
+          <div class="address"> {{ $t("interface.contractAddr") }}: {{ address }}</div>
           <div class="functions">
             <currency-picker
               :currency="methods"
@@ -152,7 +152,7 @@
             class="the-form domain-name result-container">
             <div class="title-container">
               <div class="title">
-                <h4>Value: </h4>
+                <h4>{{ $t('common.value') }}: </h4>
               </div>
             </div>
             <input
@@ -206,7 +206,7 @@
             :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']"
             @click="write">
             <span v-show="!loading">
-              Read
+              {{ $t('interface.read') }}
             </span>
             <i
               v-show="loading"
@@ -217,7 +217,7 @@
             :class="[inputsFilled? '': 'disabled', loading ? 'disabled': '','submit-button large-round-button-green-filled clickable']"
             @click="write">
             <span v-show="!loading">
-              Write
+              {{ $t('interface.write') }}
             </span>
             <i
               v-show="loading"
@@ -227,7 +227,7 @@
         <interface-bottom-text
           :link-text="$t('interface.learnMore')"
           :question="$t('interface.haveIssues')"
-          link="/"/>
+          link="mailto:support@myetherwallet.com"/>
       </div>
     </div>
   </div>

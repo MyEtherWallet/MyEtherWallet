@@ -24,7 +24,7 @@
                   <img src="~@/assets/images/home/create-wallet.png">
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">{{ $t("common.getAFreeWallet") }}</h2>
+                  <h2 class="color-white">{{ $t("home.getANewWallet") }}</h2>
                   <p class="color-white">
                     {{ $t("home.obtainAddress") }}
                   </p>

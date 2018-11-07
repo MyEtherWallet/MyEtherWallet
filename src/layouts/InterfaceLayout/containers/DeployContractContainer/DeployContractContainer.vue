@@ -5,10 +5,10 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Byte Code</h4>
+          <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">Clear</span>
-            <span @click="copyToClipboard('bytecode')">Copy</span>
+            <span @click="deleteInput('bytecode')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('bytecode')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -23,10 +23,10 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>ABI/JSON Interface</h4>
+          <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi')">Clear</span>
-            <span @click="copyToClipboard('abi')">Copy</span>
+            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
       class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Constructor {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
+          <h4>{{ $t('interface.constructor') }} {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
         </div>
       </div>
       <div
@@ -72,7 +72,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Contract Name</h4>
+          <h4>{{ $t('interface.contractName') }}</h4>
         </div>
       </div>
       <div class="the-form domain-name">
@@ -114,9 +114,9 @@
       <div class="the-form gas-amount">
         <input
           v-model="gasLimit"
+          :placeholder="$t('common.gasLimit')"
           type="number"
-          name=""
-          placeholder="Gas Limit">
+          name="">
         <div class="good-button-container">
           <p>Gwei</p>
           <i
@@ -131,13 +131,13 @@
         <div
           :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']"
           @click="confirmationModalOpen">
-          Sign Transaction
+          {{ $t("common.signTx") }}
         </div>
       </div>
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
   </div>
 </template>

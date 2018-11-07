@@ -15,9 +15,9 @@
               :popovertype="'A'" />
           </div>
           <div class="information-container">
-            <h2>{{ $t("interface.txNetworkTitle") }}</h2>
+            <h2>{{ $t("common.network") }}</h2>
             <p>{{ network.service+"("+network.type.name+")" }}</p>
-            <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
+            <p>{{ $t("interface.lastBlock") }}: # <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
               v-show="parsedNetwork === ''"
               class="fa fa-spinner fa-spin"/> </p>
           </div>

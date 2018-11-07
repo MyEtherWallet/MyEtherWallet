@@ -3,27 +3,27 @@
     <form class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('interface.registerDns') }}</h4>
-          <p>{{ $t('interface.registerDnsDesc') }}</p>
+          <h4>{{ $t('interface.registerEns') }}</h4>
+          <p>{{ $t('interface.registerEnsDesc') }}</p>
         </div>
       </div>
       <div class="the-form domain-name">
         <input
           v-model="localDomainName"
           :class="[domainNameErr ? 'errored' : '']"
+          :placeholder="$t('dapps.registerEnsPlaceholder')"
           type="text"
-          name=""
-          placeholder="Please Enter at Least 7 Characters" >
+          name="" >
         <span>.eth</span>
       </div>
-      <p 
-        v-show="domainNameErr" 
+      <p
+        v-show="domainNameErr"
         class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
-          Domain name is less than 7 characters.
+          {{ $t('dapps."registerEnsWarn1"') }}
         </span>
         <span v-else>
-          Invalid symbols on domain
+          {{ $t('dapps."registerEnsWarn2"') }}
         </span>
       </p>
       <div class="submit-button-container">
@@ -39,13 +39,13 @@
       </div>
       <p
         v-show="contractInitiated === false"
-        class="contract-loading-warning">Contract is not ready yet, transaction might fail.</p>
+        class="contract-loading-warning">{{ $t('dapps.registerEnsContractNotReady') }}</p>
     </form>
 
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="mailto:support@myetherwallet.com"/>
   </div>
 </template>
 

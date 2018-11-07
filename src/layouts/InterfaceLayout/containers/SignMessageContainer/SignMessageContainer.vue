@@ -1,23 +1,14 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal
-      ref="successModal"
-      message=""
-      link-message="Ok"/>
     <interface-container-title :title="$t('common.signMessage')"/>
     <div class="send-form">
       <p>
-        Include your nickname and where
-        you use the nickname so someone
-        else cannot use it.
-        Include a specific reason
-        for the message so it cannot be
-        reused for a different purpose.
+        {{ $t('interface.signMessageDesc') }}
       </p>
 
       <div class="title-container">
         <div class="title">
-          <h4>Message</h4>
+          <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
           <popover :popcontent="$t('popover.whatIsMessageContent')"/>
         </div>
       </div>
@@ -32,12 +23,12 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Signature</h4>
+          <h4>{{ $t('common.signature') }}</h4>
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
 
           <div class="copy-buttons">
-            <span @click="deleteInputText('signature')">Clear</span>
-            <span @click="copyToClipboard('signature')">Copy</span>
+            <span @click="deleteInputText('signature')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('signature')">{{ $t('common.copy') }}</span>
           </div>
 
         </div>
@@ -55,13 +46,13 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="signMessage">
-          {{ $t('Sign') }}
+          {{ $t('common.sign') }}
         </div>
       </div>
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
 
   </div>
@@ -108,9 +99,6 @@ export default {
         })
         // eslint-disable-next-line
         .catch(console.error);
-    },
-    successModalOpen() {
-      this.$refs.successModal.$refs.success.show();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
