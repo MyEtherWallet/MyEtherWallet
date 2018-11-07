@@ -59,7 +59,7 @@
         <div class="title-container">
           <div class="title">
             <div class="title-helper">
-              <h4>Data</h4>
+              <h4>{{ $t('common.data') }}</h4>
               <popover :popcontent="$t('popover.whatIsDataContent')"/>
             </div>
           </div>
@@ -92,7 +92,7 @@
           Generate
         </div>
         <interface-bottom-text
-          link="/"
+          link="mailto:support@myetherwallet.com"
           question="Have issues?"
           link-text="Learn More"/>
       </div>
