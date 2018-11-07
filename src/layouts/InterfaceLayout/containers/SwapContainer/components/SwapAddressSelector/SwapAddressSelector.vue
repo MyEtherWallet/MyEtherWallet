@@ -141,10 +141,7 @@ export default {
       if (this.selectedAddress !== '') {
         const checkAddress = addr.address ? addr.address : addr;
         if (EthereumTokens[this.currency]) {
-          this.validAddress = WAValidator.validate(
-            checkAddress,
-            'ETH'
-          );
+          this.validAddress = WAValidator.validate(checkAddress, 'ETH');
         } else {
           try {
             this.validAddress = WAValidator.validate(

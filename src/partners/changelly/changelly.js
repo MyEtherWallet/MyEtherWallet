@@ -1,5 +1,5 @@
 import { networkSymbols } from '../partnersConfig';
-import { ChangellyCurrencies } from './config';
+import { ChangellyCurrencies, changellyStatuses } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
 
@@ -39,7 +39,6 @@ export default class Changelly {
   }
 
   // ============================= State Methods  ====================================
-
 
   get isValidNetwork() {
     return this.network === networkSymbols.ETH;
@@ -142,11 +141,7 @@ export default class Changelly {
   async startSwap(swapDetails) {
     if (swapDetails.minValue < swapDetails.fromValue) {
       swapDetails.dataForInitialization = await await this.createTransaction(
-        swapDetails.fromCurrency,
-        swapDetails.toCurrency,
-        swapDetails.toAddress,
-        swapDetails.fromAddress,
-        swapDetails.fromValue
+        swapDetails
       );
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.amountExpectedFrom;
@@ -155,6 +150,7 @@ export default class Changelly {
       swapDetails.parsed = Changelly.parseOrder(
         swapDetails.dataForInitialization
       );
+      swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payinAddress;
       return swapDetails;
@@ -162,13 +158,13 @@ export default class Changelly {
     throw Error('From amount below changelly minimun for currency pair');
   }
 
-  async createTransaction(
+  async createTransaction({
     fromCurrency,
     toCurrency,
     toAddress,
     fromAddress,
     fromValue
-  ) {
+  }) {
     const swapParams = {
       from: fromCurrency.toLowerCase(),
       to: toCurrency.toLowerCase(),
@@ -191,13 +187,45 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 600 // Rates provided are only an estimate, and
+      validFor: 6000 // Rates provided are only an estimate, and
     };
   }
 
-  static async getOrderStatus(swapDetails) {
-    const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-    return await changellyCalls.getStatus(parsed.orderId);
+  static async getOrderStatus(swapDetails, network) {
+    try {
+      const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
+      console.log(parsed); // todo remove dev item
+      const status = await changellyCalls.getStatus(parsed.orderId, network);
+      console.log(status); // todo remove dev item
+      return Changelly.parseChangellyStatus(status);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  static parseChangellyStatus(status) {
+    switch (status) {
+      case changellyStatuses.new:
+        return 0;
+      case changellyStatuses.waiting:
+        return 10;
+      case changellyStatuses.confirming:
+        return 30;
+      case changellyStatuses.exchanging:
+        return 50;
+      case changellyStatuses.sending:
+        return 60;
+      case changellyStatuses.finished:
+        return 100;
+      case changellyStatuses.failed:
+        return -100;
+      case changellyStatuses.hold:
+        return -50;
+      case changellyStatuses.overdue:
+        return 500;
+      case changellyStatuses.refunded:
+        return -10;
+    }
   }
 
   statusUpdater(/*swapDetails*/) {
@@ -234,7 +262,7 @@ export default class Changelly {
       finished: 0,
       failed: -1
     };
-    let status = statuses[data.status];
+    const status = statuses[data.status];
     if (typeof status === 'undefined') {
       return 2;
     }

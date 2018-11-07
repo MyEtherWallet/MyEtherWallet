@@ -133,7 +133,7 @@ export default {
       }
     };
   },
-  computed:{
+  computed: {
     ...mapGetters({
       ens: 'ens',
       gasPrice: 'gasPrice',
@@ -166,8 +166,9 @@ export default {
       if (Array.isArray(this.preparedSwap)) {
         if (this.preparedSwap.length > 1) {
 
-          const gasPrice = entry.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
+
           const cleaned = this.preparedSwap.map(entry => {
+            const gasPrice = entry.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
             return {
               from: entry.from,
               to: entry.to,
@@ -176,24 +177,23 @@ export default {
               gasPrice: this.web3.utils.toHex(gasPrice)
             };
           });
-          console.log('cleaned', cleaned); // todo remove dev item
+          console.log('cleaned batch', cleaned); // todo remove dev item
           this.web3.mew.sendBatchTransactions(cleaned);
         } else {
-          const  cleaned = await this.prepareSingleTransaction(this.preparedSwap[0]);
-          this.web3.eth.sendTransaction(cleaned);
+          const cleaned = await this.prepareSingleTransaction(this.preparedSwap[0]);
+          // this.web3.eth.sendTransaction(cleaned);
         }
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          const  cleaned = await this.prepareSingleTransaction(this.preparedSwap);
-          console.log(cleaned); // todo remove dev item
-          this.web3.eth.sendTransaction(cleaned);
+          const cleaned = await this.prepareSingleTransaction(this.preparedSwap);
+          // this.web3.eth.sendTransaction(cleaned);
         }
       }
       this.$emit('swapStarted', this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
-    async prepareSingleTransaction(preparedSwap){
-      const gasPrice = preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei')
+    async prepareSingleTransaction(preparedSwap) {
+      const gasPrice = preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
       const cleaned = {
         from: preparedSwap.from,
         to: preparedSwap.to,
@@ -202,7 +202,7 @@ export default {
         gasPrice: this.web3.utils.toHex(gasPrice)
       };
 
-      cleaned.gas = await this.web3.eth.estimateGas(cleaned)
+      cleaned.gas = await this.web3.eth.estimateGas(cleaned);
       return cleaned;
     },
     createTokenTransferData(fromAddress, amount, tokenDetails) {
@@ -224,7 +224,7 @@ export default {
         jsonInterface,
         tokenDetails.contractAddress
       );
-      return contract.methods
+      const builtData = contract.methods
         .transfer(
           fromAddress,
           new BigNumber(amount)
@@ -232,9 +232,12 @@ export default {
             .toFixed()
         )
         .encodeABI();
+      console.log(builtData); // todo remove dev item
+      return builtData;
     },
     async swapStarted(swapDetails) {
       this.preparedSwap = await this.finalizeSwap(swapDetails);
+      console.log(this.preparedSwap); // todo remove dev item
       this.swapReady = true;
     },
     async finalizeSwap(swapDetails) {

@@ -91,11 +91,11 @@ const openOrder = orderInfo => {
 const getStatus = async (orderId, network) => {
   if (changellyAddresses[network]) {
     const results = await post(buildPath(changellyAddresses[network].status), {
-      orderid: orderId
+      orderId: orderId
     });
     return results.result;
   }
-  return Promise.resolve(-1);
+  throw Error(`Changelly does not support ${network} network`);
 };
 
 const login = () => {

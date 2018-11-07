@@ -204,7 +204,6 @@ import {
   isValidEntry
 } from '@/partners';
 
-
 const errorLogger = debug('v5:swapContainer');
 
 BigNumber.config({ DECIMAL_PLACES: 6 });
@@ -420,10 +419,7 @@ export default {
         if (
           this.swap.getProvider('simplex').currencies.fiat[this.fromCurrency]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate('simplex' + to),
-            200
-          );
+          this.web3.utils._.debounce(this.updateEstimate('simplex' + to), 200);
         } else {
           this.web3.utils._.debounce(this.updateEstimate(to), 200);
         }
@@ -553,7 +549,7 @@ export default {
             toAddress: this.toAddress,
             fromAddress: this.currentAddress,
             timestamp: Date.now(),
-            status: 1,
+            status: 0,
             maybeToken: false
           };
 

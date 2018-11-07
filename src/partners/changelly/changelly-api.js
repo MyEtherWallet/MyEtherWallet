@@ -4,7 +4,7 @@ import { requireExtraId } from './config';
 
 const errorLogger = debugLogger('v5-error:changelly-api');
 
-const getSupportedCurrencies = async ( network) => {
+const getSupportedCurrencies = async network => {
   try {
     const currencyList = await changellyCalls.getCurrencies(network);
     const currencyDetails = {};
@@ -28,11 +28,8 @@ const getSupportedCurrencies = async ( network) => {
       return { currencyDetails, tokenDetails };
       // this.hasRates =
       //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
-    } else {
-      throw Error(
-        'Changelly get supported currencies failed to return a value'
-      );
     }
+    throw Error('Changelly get supported currencies failed to return a value');
   } catch (e) {
     errorLogger(e);
   }
@@ -40,4 +37,4 @@ const getSupportedCurrencies = async ( network) => {
 
 export default {
   getSupportedCurrencies
-}
+};

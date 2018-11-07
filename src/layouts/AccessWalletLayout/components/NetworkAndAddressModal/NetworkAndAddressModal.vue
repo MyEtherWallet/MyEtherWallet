@@ -253,9 +253,9 @@ export default {
     },
     async getAddressBalance(address) {
       const web3 = this.web3;
-      if (web3 === null || web3 === undefined){
+      if (web3 === null || web3 === undefined) {
         await this.setupWeb3();
-      } else if (Object.keys(web3).length === 0){
+      } else if (Object.keys(web3).length === 0) {
         await this.setupWeb3();
       }
       web3.eth.getBalance(address).then(balance => {

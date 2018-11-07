@@ -441,11 +441,10 @@ export default class Kyber {
     try {
       if (token === networkSymbols.ETH) {
         return this.tokenDetails[token].contractAddress;
-      } else {
-        return this.web3.utils.toChecksumAddress(
-          this.tokenDetails[token].contractAddress
-        );
       }
+      return this.web3.utils.toChecksumAddress(
+        this.tokenDetails[token].contractAddress
+      );
     } catch (e) {
       errorLogger(e);
       throw Error(
