@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-{{currentStatus}}
+    {{ currentStatus }}
   </div>
 </template>
 
