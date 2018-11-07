@@ -46,7 +46,7 @@
             v-if="modalDetailInformation"
             class="expended-info">
             <div class="grid-block">
-              <p>{{$t('common.network')}}</p><p>{{ network.type.name }} by {{ network.service }}</p>
+              <p>{{ $t('common.network') }}</p><p>{{ network.type.name }} by {{ network.service }}</p>
             </div>
             <div class="grid-block">
               <p>{{ $t('common.gasLimit') }}</p><p>{{ gas }} wei</p>
@@ -55,13 +55,13 @@
               <p>{{ $t('common.gasPrice') }}</p><p>{{ gasPrice }} gwei</p>
             </div>
             <div class="grid-block">
-              <p>{{$t('common.txFee')}}</p><p> {{ fee }} ETH</p>
+              <p>{{ $t('common.txFee') }}</p><p> {{ fee }} ETH</p>
             </div>
             <div class="grid-block">
               <p>Nonce</p><p>{{ nonce }}</p>
             </div>
             <div class="grid-block">
-              <p>{{$t('common.data')}}</p><p>{{ data }}</p>
+              <p>{{ $t('common.data') }}</p><p>{{ data }}</p>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
                 ref="ConfirmAndSendButton"
                 :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
                 @click="sendTx">
-                {{$t('common.confirmAndSend')}}
+                {{ $t('common.confirmAndSend') }}
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
@@ -86,7 +86,7 @@
                   triggers="hover focus"
                   placement="top">
                   <div class="qrcode-contents">
-                    <p class="qrcode-title">{{$t('confirmation.scanQrCode')}}</p>
+                    <p class="qrcode-title">{{ $t('confirmation.scanQrCode') }}</p>
                     <div class="qrcode-block">
                       <qrcode
                         :options="{ size: 100 }"

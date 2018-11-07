@@ -1,9 +1,9 @@
 <template>
   <b-modal
     ref="mewConnect"
+    :title="$t('accessWallet.mewConnectTitle')"
     hide-footer
     class="bootstrap-modal modal-mew-connect"
-    :title="$t('accessWallet.mewConnectTitle')"
     centered>
     <div class="modal-icon">
       <qrcode
