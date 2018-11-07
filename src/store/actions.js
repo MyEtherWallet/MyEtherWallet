@@ -80,17 +80,17 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const options = {};
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
-        authorization: `Basic: ${btoa(
-          state.network.username + ':' + state.network.password
-        )}`
-      })
+      authorization: `Basic: ${btoa(
+        state.network.username + ':' + state.network.password
+      )}`
+    })
     : {};
   const web3Instance = new web3(
     new MEWProvider(
       provider
         ? provider
         : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-            hostUrl.pathname
+          hostUrl.pathname
           }`,
       options,
       {
@@ -111,8 +111,8 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       };
       arr[i].nonce = await (arr[i].nonce === undefined
         ? web3Instance.eth.getTransactionCount(
-            state.wallet.getChecksumAddressString()
-          )
+          state.wallet.getChecksumAddressString()
+        )
         : arr[i].nonce);
       arr[i].nonce += i;
       arr[i].gas = await (arr[i].gas === undefined
@@ -127,7 +127,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
           : arr[i].gasPrice;
       arr[i] = formatters.inputCallFormatter(arr[i]);
     }
-
+console.log(arr); // todo remove dev item
     this._vm.$eventHub.$emit(
       'showTxCollectionConfirmModal',
       arr,
@@ -166,7 +166,11 @@ const updateTransaction = function({ commit, state }, val) {
     newNotif[item] = state.transactions[item];
   });
 
-  newNotif[address][val[1]] = val[2];
+  const entryIndex = newNotif[address].findIndex(entry => {
+    return entry.orderId === val[1];
+  });
+
+  newNotif[address][entryIndex].status = val[2];
   commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 

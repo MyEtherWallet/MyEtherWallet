@@ -137,7 +137,7 @@ export default {
       type: Boolean,
       default: true
     },
-    loadingProviderError:{
+    loadingProviderError: {
       type: Boolean,
       default: false
     },
@@ -193,7 +193,7 @@ export default {
         if (details.provider === BitySwap.getName()) {
           return `From Min.: ${details.minValue} ${
             details.fromCurrency
-            } & To Min.: ${details.minValue} ${details.toCurrency}`;
+          } & To Min.: ${details.minValue} ${details.toCurrency}`;
         }
         return `Minimum: ${details.minValue} ${details.fromCurrency}`;
       }
@@ -212,7 +212,7 @@ export default {
       const toValue = this.valueForRate(source.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${
         source.toCurrency
-        }`;
+      }`;
     },
     valueForRate(rate, value) {
       return new BigNumber(value).times(rate).toString(10);

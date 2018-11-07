@@ -347,9 +347,8 @@ export default class BitySwap {
       return 0;
     } else if (invalidStatus.includes(data.status)) {
       return -1;
-    } else {
-      return 1;
     }
+    return 1;
   }
 
   statusUpdater(/*swapDetails*/) {
@@ -406,8 +405,7 @@ export default class BitySwap {
       return 0;
     } else if (invalidStatus.includes(data.status)) {
       return -1;
-    } else {
-      return 1;
     }
+    return 1;
   }
 }

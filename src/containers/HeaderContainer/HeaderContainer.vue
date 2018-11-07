@@ -67,7 +67,7 @@
                 </div>
                 <transactions
                   v-if="wallet !== null"
-                ref="transactions"/>
+                  ref="transactions"/>
                 <notification
                   v-if="wallet !== null"
                   ref="notification"/>

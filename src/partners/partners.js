@@ -47,7 +47,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
+        // console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
         if (this.haveProviderRates || checkCount > 20) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
@@ -57,7 +57,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
+        // console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
         if (this.haveProviderRates || checkCount > 50) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);

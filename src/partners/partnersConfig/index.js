@@ -1,6 +1,6 @@
 import { chainCurrencies, fiat } from './currencyDetails';
 import EthereumTokens from './EthereumTokens';
-import OtherChains from './OtherChains'
+import OtherChains from './OtherChains';
 
 const networkSymbols = {
   ETH: 'ETH',

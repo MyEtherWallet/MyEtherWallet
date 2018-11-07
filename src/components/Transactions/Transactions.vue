@@ -58,6 +58,21 @@ import {
   ChangellySwap
 } from '@/partners';
 
+const calculateUpdate = entry => {
+  if (entry.status !== -1 && entry.status !== 0) {
+    const timeRemaining =
+      800 -
+      parseInt(
+        (new Date().getTime() - new Date(entry.timestamp).getTime()) / 1000
+      );
+    if (timeRemaining > 0) {
+      return true;
+    }
+    // return true;
+    return false;
+  }
+};
+
 export default {
   components: {
     'transaction-entry': TransactionEntry
@@ -94,21 +109,7 @@ export default {
       }
       const activeSwaps = this.transactions[
         this.$store.state.wallet.getChecksumAddressString()
-      ].filter(entry => {
-        if (entry.status !== -1 && entry.status !== 0) {
-          const timeRemaining =
-            800 -
-            parseInt(
-              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-                1000
-            );
-          if (timeRemaining > 0) {
-            return true;
-          }
-          // return true;
-          return false;
-        }
-      });
+      ].filter(calculateUpdate);
       // eslint-disable-next-line
       return activeSwaps.sort((a, b) => {
         a = new Date(a.timestamp);
@@ -125,7 +126,7 @@ export default {
     dropdownOpen(newVal) {
       if (newVal) {
         this.countActive();
-        this.updateTransactions();
+        // this.updateTransactions();
       }
     }
   },
@@ -164,56 +165,52 @@ export default {
               this.activeSwapCount++;
               return true;
             }
-            return false;
-            // return true;
+            // return false;
+            return true;
           }
-          return false;
-          // return true;
+          // return false;
+          return true;
         });
       }
     },
     checkHistory() {},
     updateTransactions() {
-      this.transactions[
-        this.$store.state.wallet.getChecksumAddressString()
-      ].forEach((entry, idx) => {
-        if (entry.status !== -1 && entry.status !== 0) {
-          const timeRemaining =
-            650 -
-            parseInt(
-              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-                1000
-            );
-          if (timeRemaining < 0) {
-            entry.status = -1;
-            this.$store.dispatch('updateTransaction', [
-              this.$store.state.wallet.getChecksumAddressString(),
-              idx,
-              entry
-            ]);
-          }
-        }
-      });
+      // this.transactions[
+      //   this.$store.state.wallet.getChecksumAddressString()
+      // ].forEach((entry, idx) => {
+      //   if (entry.status !== -1 && entry.status !== 0) {
+      //     const timeRemaining =
+      //       650 -
+      //       parseInt(
+      //         (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+      //           1000
+      //       );
+      //     if (timeRemaining < 0) {
+      //       entry.status = -1;
+      //
+      //     }
+      //   }
+      // });
     },
     getProvider(provider) {
       if (this.providers[provider]) {
         return this.providers[provider];
       }
     },
-    parseOrder(swapDetails) {
-      if (this.providers[swapDetails.provider]) {
-        return this.providers[swapDetails.provider].parseOrder(
-          swapDetails.dataForInitialization
-        );
-      }
-    },
-    getStatus(swapDetails) {
-      if (this.providers[swapDetails.provider]) {
-        return this.providers[swapDetails.provider].getOrderStatus(
-          swapDetails.dataForInitialization
-        );
-      }
-    },
+    // parseOrder(swapDetails) {
+    //   if (this.providers[swapDetails.provider]) {
+    //     return this.providers[swapDetails.provider].parseOrder(
+    //       swapDetails.dataForInitialization
+    //     );
+    //   }
+    // },
+    // getStatus(swapDetails) {
+    //   if (this.providers[swapDetails.provider]) {
+    //     return this.providers[swapDetails.provider].getOrderStatus(
+    //       swapDetails.dataForInitialization
+    //     );
+    //   }
+    // },
     statusUpdater(/*swapDetails*/) {
       return () => {
         // let currentStatus;

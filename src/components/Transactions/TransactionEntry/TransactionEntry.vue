@@ -1,10 +1,10 @@
 <template lang="html">
-  <div class ="transaction-entry-container">
+  <div class="transaction-entry-container">
     <div class="transaction-entry">
       <div class="top-row">
         <div class="from-address">
           <div class="icon">
-            <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+            <i :class="['cc', details.fromCurrency, 'cc-icon']"/>
             <span class="currency">{{ details.fromCurrency }}</span>
           </div>
           <p class="value">{{ details.fromValue }}</p>
@@ -19,7 +19,7 @@
 
         <div class="to-address">
           <div class="icon">
-            <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+            <i :class="['cc', details.toCurrency, 'cc-icon']"/>
             <span class="currency">{{ details.toCurrency }}</span>
           </div>
           <p class="value">{{ details.toValue }}</p>
@@ -28,12 +28,12 @@
       <div class="middle-row">
         <div class="status-indicator-container">
           <div class="status-indicator">
-            <div :class="status-timer">
+            <div class="status-timer">
 
-              <p v-if="swapWindowOpen && !completed">{{ parseTimeRemaining }}{{currentStatus}}</p>
-              <p v-if="!swapWindowOpen && !completed">Order Expired</p>
-              <p v-if="completed">Order Complete</p>
-              <p v-if="swapWindowOpen && !completed">{{currentDisplayStatus}}</p>
+              <p v-if="swapWindowOpen && currentStatus < 100 && currentStatus > 0">{{ parseTimeRemaining }}</p>
+              <p v-if="currentStatus === -100 || !swapWindowOpen">Order Expired</p>
+              <p v-if="currentStatus === 100">Order Complete</p>
+              <p v-if="swapWindowOpen && currentStatus < 100 && currentStatus > 0">{{ currentDisplayStatus }}</p>
             </div>
           </div>
         </div>
@@ -49,6 +49,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
+// import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -61,6 +62,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    historyIndex: {
+      type: Number,
+      default: -1
     }
   },
   data() {
@@ -74,10 +79,19 @@ export default {
       parsed: {},
       timeRemaining: '',
       currentStatus: '',
-      status: ''
+      status: '',
+      timerInterval: null,
+      statusInterval: null
     };
   },
   computed: {
+    // ...mapGetters({
+    //   ens: 'ens',
+    //   gasPrice: 'gasPrice',
+    //   web3: 'web3',
+    //   wallet: 'wallet',
+    //   network: 'network'
+    // }),
     parseTimeRemaining() {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
@@ -87,29 +101,36 @@ export default {
       return this.timeRemaining > 0;
     },
     completed() {
-      if (this.currentStatus === 0) {
+      if (this.currentStatus === 100) {
         return true;
       }
       return false;
     },
     currentDisplayStatus() {
-      switch (this.currentStatus) {
-        case -1:
-          return 'expired';
-        case 0:
-          return 'completed';
-        case 1:
-          return 'pending';
-        case 2:
-          return 'in-progress';
-        case 3:
-          return 'in-progress';
+      if (this.currentStatus === -100) {
+        return 'expired';
+      } else if (this.currentStatus === 100) {
+        return 'completed';
+      } else if (this.currentStatus < 100 && this.currentStatus > 0) {
+        return 'pending';
+      } else if (this.currentStatus === 0) {
+        return 'created';
       }
+      return 'possible error';
     }
   },
   watch: {
     details(newVal) {
       console.log(newVal); // todo remove dev item
+    }
+  },
+  beforeDestroy() {
+    if (this.timerInterval !== null) {
+      clearInterval(this.timerInterval);
+    }
+
+    if (this.statusInterval !== null) {
+      clearInterval(this.statusInterval);
     }
   },
   mounted() {
@@ -135,32 +156,35 @@ export default {
       ]);
     },
     timeUpdater() {
+      console.log('timerUpdater started'); // todo remove dev item
       this.timeRemaining = this.calculateTimeRemaining(this.parsed);
-      const timerInterval = setInterval(() => {
+      this.timerInterval = setInterval(() => {
         this.timeRemaining = this.calculateTimeRemaining(this.parsed);
         if (this.timeRemaining < 0) {
-          clearInterval(timerInterval);
+          clearInterval(this.timerInterval);
         }
       }, 1000);
     },
     statusUpdater() {
+      console.log('statusUpdater started'); // todo remove dev item
       let updating = false;
       const getStatus = async () => {
         if (!updating) {
           updating = true;
           this.currentStatus = await this.provider.getOrderStatus(
             this.details,
+            this.network,
             this.currentStatus
           );
-          console.log(this.currentStatus); // todo remove dev item
+          this.updateTransactionEntry(this.details.orderId, this.currentStatus);
           updating = false;
         }
       };
 
-      const statusInterval = setInterval(() => {
+      this.statusInterval = setInterval(() => {
         getStatus();
         if (this.timeRemaining < 0) {
-          clearInterval(statusInterval);
+          clearInterval(this.statusInterval);
         }
       }, 1000);
     },
@@ -171,6 +195,13 @@ export default {
           (new Date().getTime() - new Date(parsed.timestamp).getTime()) / 1000
         )
       );
+    },
+    updateTransactionEntry(orderId, status) {
+      this.$store.dispatch('updateTransaction', [
+        this.$store.state.wallet.getChecksumAddressString(),
+        orderId,
+        status
+      ]);
     }
   }
 };
