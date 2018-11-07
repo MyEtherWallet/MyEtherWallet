@@ -3,8 +3,8 @@
     <form class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('interface.registerDns') }}</h4>
-          <p>{{ $t('interface.registerDnsDesc') }}</p>
+          <h4>{{ $t('interface.registerEns') }}</h4>
+          <p>{{ $t('interface.registerEnsDesc') }}</p>
         </div>
       </div>
       <div class="the-form domain-name">
@@ -16,8 +16,8 @@
           placeholder="Please Enter at Least 7 Characters" >
         <span>.eth</span>
       </div>
-      <p 
-        v-show="domainNameErr" 
+      <p
+        v-show="domainNameErr"
         class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
           Domain name is less than 7 characters.
@@ -45,7 +45,7 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="mailto:support@myetherwallet.com"/>
   </div>
 </template>
 

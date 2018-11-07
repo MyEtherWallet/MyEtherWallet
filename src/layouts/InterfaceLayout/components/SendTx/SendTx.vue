@@ -32,7 +32,7 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="sendTx">
-          Send Transaction
+          {{$t('interface.sendTx')}}
         </div>
         <interface-bottom-text
           :link="'/'"

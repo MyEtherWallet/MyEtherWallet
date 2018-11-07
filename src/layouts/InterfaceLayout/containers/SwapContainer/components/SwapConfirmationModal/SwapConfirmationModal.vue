@@ -37,7 +37,7 @@
       <div class="confirm-send-button">
         <button-with-qrcode
           :qrcode="qrcode"
-          buttonname="Confirm and Send"/>
+          :buttonname="$t('common.confirmAndSend')"/>
       </div>
 
       <help-center-button/>

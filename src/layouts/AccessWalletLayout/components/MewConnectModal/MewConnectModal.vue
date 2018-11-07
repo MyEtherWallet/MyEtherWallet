@@ -3,7 +3,7 @@
     ref="mewConnect"
     hide-footer
     class="bootstrap-modal modal-mew-connect"
-    title="Access by MEW Connect"
+    :title="$t('accessWallet.mewConnectTitle')"
     centered>
     <div class="modal-icon">
       <qrcode
@@ -11,11 +11,11 @@
         :options="{ size: 200 }"/>
     </div>
     <div class="d-block content-container text-center">
-      <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
+      <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
     <div class="appstore-button-container">
       <img src="~@/assets/images/icons/appstore.png">
-      <p>Do not have our App? Download now.</p>
+      <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
     <customer-support/>
   </b-modal>

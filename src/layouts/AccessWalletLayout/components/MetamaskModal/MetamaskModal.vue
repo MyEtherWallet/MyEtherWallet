@@ -26,7 +26,7 @@
         </h4>
       </div>
       <div class="accept-terms">
-        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
+        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <router-link to="/terms-and-conditions">{{ $t("common.terms") }}</router-link>.
           <input
             type="checkbox"
             @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" >
@@ -39,7 +39,7 @@
           :disabled="accessMyWalletBtnDisabled"
           class="mid-round-button-green-filled close-button"
           @click="getWeb3Wallet">
-          {{ $t("accessWallet.accessMyWallet") }}
+          {{ $t("common.accessMyWallet") }}
         </b-btn>
         <b-btn
           v-show="unlockWeb3Wallet"
@@ -63,7 +63,7 @@
         </h4>
       </div>
       <div class="accept-terms hidden">
-        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
+        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <router-link to="/terms-and-conditions">{{ $t("common.terms") }}</router-link>.
           <input type="checkbox" >
           <span class="checkmark"/>
         </label>
@@ -81,7 +81,7 @@
           v-show="refreshPage"
           class="mid-round-button-green-filled close-button"
           @click="reload">
-          Refresh
+          {{ $t('accessWallet.refresh') }}
         </b-btn>
       </div>
     </div>
