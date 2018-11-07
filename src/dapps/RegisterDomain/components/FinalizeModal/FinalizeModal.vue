@@ -4,19 +4,19 @@
       ref="finalize"
       hide-footer
       centered
-      title="Finalize"
+      :title="$t('dapps.finalize')"
       class="bootstrap-modal-wide nopadding finalize-modal">
       <div class="finalize-modal-container">
-        <h3>Are you about to finalize the auction for <br> {{ domainName }}.eth and claim this name?</h3>
+        <h3>{{ $t('dapps.areYouFinalizing') }} <br> {{ domainName }}.eth {{ $t('dapps.areYouFinalizingCont') }}</h3>
         <div class="button-container">
           <button
             class="cancel"
-            @click="close">Cancel</button>
+            @click="close">{{ $t('common.cancel') }}</button>
           <button
             class="confirm"
-            @click="finalize">Confirm</button>
+            @click="finalize">{{ $t('dapps.confirm') }}</button>
         </div>
-        <p>The ETH node you are sending through is provided by <a
+        <p>{{ $t('dapps.nodeProvider') }} <a
           :href="network.url"
           target="_blank">{{ network.service }}</a></p>
       </div>
