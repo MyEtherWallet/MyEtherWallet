@@ -8,12 +8,14 @@
   "doNotForgetDesc": "to save your password, and it is your private key. You will need this",
   "keyPass": "Password + Keystore",
   "keyPassDesc": "File to unlock your wallet.",
+  "byMnemonic": "By Mnemonic Phrase",
   "byMnemonicSuccess": "Success",
   "byMnemonicSuccessfullyCreated": "Your have created your wallet successfully.",
   "byMnemonicValue": "Value",
   "byMnemonicRandom": "Random",
   "byMnemonicWriteDown": "Write Down Mnemonic Phrase Key",
   "byMnemonicAlreadyWritten": "I Already Wrote Down the Key",
+  "byJsonFile": "By JSON File",
   "byJsonFileSaveKeystore": "Save My Keystore File",
   "byJsonFileDontLoseTitle": "Don't Lose It",
   "byJsonFileDontLoseDesc": "Be Careful, it can not be recovered if you lose it.",
@@ -25,7 +27,12 @@
   "pageTitleAlreadyHave": "Already have a wallet?",
   "pageFooterTitle": "Learn more about Blockchain or MEW? Please go to",
   "titleMEWConnect": "Recommended Method",
+  "mewConnectDesc": "Safe and easy to access my wallet in 3 steps.",
   "scanToDownload": "Scan to Download",
   "iosVersions": "iOS 9.0 or up0",
-  "androidVersions": "Android 8.0 or up"
+  "androidVersions": "Android 8.0 or up",
+  "tutorialModalHeader": "Welcome to MEW",
+  "tutorialModalDesc": "Please take a moment to read through this short introduction. It's extreamely important to pay attention to what we have to say, for your own security. Ignoring this step will highly increase your chances of getting phished.",
+  "tutorialModalSkip": "Skip",
+  "tutorialModalSkipCont": "at your own risk."
 }
