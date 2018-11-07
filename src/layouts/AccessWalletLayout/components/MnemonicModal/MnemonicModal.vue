@@ -13,8 +13,8 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input 
-                v-model="mnemonic24" 
+              <input
+                v-model="mnemonic24"
                 type="checkbox">
               <span
                 class="slider round"

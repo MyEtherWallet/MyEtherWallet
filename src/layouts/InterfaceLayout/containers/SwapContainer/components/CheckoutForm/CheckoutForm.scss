@@ -1,0 +1,312 @@
+@import '~@/scss/GlobalVariables';
+
+.time-remaining {
+  text-align: center;
+
+  h1 {
+    font-weight: 500;
+    font-size: 50px;
+    color: $red-2;
+    margin: 0;
+  }
+}
+
+.value {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 13px;
+  margin-top: 13px;
+
+  span {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.block-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.address {
+  line-height: 19px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.from-address,
+.to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.confirm-send-button {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  align-items: center;
+  display: flex;
+
+  > * {
+    margin: 0 auto;
+  }
+}
+
+//$mobile-width: 800px;
+//
+//.buy-btc {
+//  padding-top: 90px;
+//  padding-bottom: 160px;
+//  @media all and (max-width: $mobile-width){
+//    padding-top: 40px;
+//    padding-bottom: 60px;
+//  }
+//}
+//
+//.powered-by,
+//.powered-by-mobile {
+//  margin-top: 60px;
+//  .simplex {
+//    display: flex;
+//    align-items: center;
+//    margin-bottom: 20px;
+//    span {
+//      font-size: 14px;
+//    }
+//    img {
+//      height: 40px;
+//      margin-left: 15px;
+//    }
+//  }
+//  .visa-master {
+//    display: flex;
+//    align-items: center;
+//    span {
+//      font-size: 14px;
+//    }
+//    img {
+//      height: 25px;
+//      margin-left: 15px;
+//    }
+//  }
+//}
+//
+//.powered-by-mobile {
+//  display: none;
+//}
+//
+//@media all and (max-width: $mobile-width){
+//  .powered-by-mobile {
+//    display: block;
+//    margin-top: 30px;
+//  }
+//  .powered-by {
+//    display: none;
+//  }
+//
+//}
+//
+//.invalid-field {
+//  border: solid 1px #d5202f !important;
+//}
+//
+//.block-division {
+//  display: grid;
+//  grid-template-columns: 1fr 1fr;
+//
+//  @media all and (max-width: $mobile-width){
+//    grid-template-columns: 1fr;
+//  }
+//
+//  .block-1 {
+//    .mew-logo-container{
+//      .mew-logo-image {
+//        width: 200px;
+//      }
+//    }
+//    .text-contents {
+//      .large-title {
+//        font-size: 55px;
+//        font-weight: 700;
+//        line-height: 60px;
+//        margin-top: 100px;
+//        max-width: 350px;
+//
+//        @media all and (max-width: $mobile-width){
+//          font-size: 30px;
+//          line-height: 33px;
+//          margin-bottom: 40px;
+//          margin-top: 35px;
+//          max-width: 250px;
+//        }
+//      }
+//    }
+//  }
+//
+//  .block-2 {
+//    .buy-form-container {
+//      box-shadow: 0 3px 14px 0 rgba(0, 0, 0, 0.05);
+//      border-radius: 16px;
+//      padding: 40px 35px;
+//      background-color: white;
+//
+//      @media all and (max-width: $mobile-width){
+//        padding: 30px 15px;
+//      }
+//
+//      h4 {
+//        margin-bottom: 15px;
+//        text-transform: uppercase;
+//      }
+//
+//      .price-amount {
+//        @media all and (max-width: $mobile-width){
+//          grid-template-columns: 1fr;
+//
+//          .price {
+//            margin-bottom: 40px;
+//          }
+//        }
+//        display: grid;
+//        grid-template-columns: 1fr 1fr;
+//        grid-column-gap: 20px;
+//        margin-bottom: 40px;
+//
+//        .input-form {
+//          display: grid;
+//          grid-template-columns: 1fr 70px;
+//
+//          input {
+//            width: 100%;
+//            background-color: #f8f8f8;
+//            border-radius: 5px 0 0 5px;
+//            padding: 14px;
+//            border: 1px solid #f8f8f8;
+//          }
+//
+//          select {
+//            width: 100%;
+//            border: 0;
+//            background-color: black;
+//            border-radius: 0 5px 5px 0;
+//            padding: 15px 0 15px 10px;
+//            color: white;
+//            border-right: 6px solid black;
+//
+//
+//            option {
+//              background-color: white;
+//              color: black;
+//              margin: 5px 0;
+//            }
+//          } // select
+//        } // .input-form
+//      } // .price-amount
+//
+//      .amount {
+//
+//      }
+//
+//      .btc-address {
+//        margin-bottom: 60px;
+//
+//
+//        h4 {
+//          span {
+//            float: right;
+//            font-size: 13px;
+//            font-weight: 400;
+//            text-transform: none;
+//          }
+//        }
+//
+//        input {
+//          width: 100%;
+//          background-color: #f8f8f8;
+//          border: 0;
+//          border-radius: 5px;
+//          padding: 15px;
+//
+//          &::placeholder {
+//            color: #bcc1c7;
+//          }
+//        }
+//
+//        // Hack (need David's magic CSS)
+//        .loading-indicator{
+//          position: absolute;
+//          display: inline-block;
+//          z-index: 1;
+//          text-align: center;
+//          right: 30%;
+//          top: 70%;
+//        }
+//
+//      }
+//
+//      .submit-button-container {
+//        text-align: center;
+//
+//        .button-1 {
+//          position: relative;
+//          i {
+//            position: absolute;
+//            right: 44px;
+//            top: 16px;
+//            font-size: 30px;
+//          }
+//        }
+//
+//        @media all and (max-width: $mobile-width){
+//          .button-1 {
+//            width: 100%;
+//            box-sizing: border-box;
+//          }
+//        }
+//
+//        p {
+//          font-size: 14px;
+//          margin-top: 30px;
+//        }
+//      }
+//    }
+//  }
+//}
+//
+//
+//.recaptcha{
+//  position: relative;
+//  margin-bottom: 30px;
+//  left: 15%;
+//}
+//
+//@media (max-width: $mobile-width){
+//  .recaptcha{
+//    display: inline-block;
+//    margin-bottom: 30px;
+//    right: auto;
+//    left: auto;
+//  }
+//}
+//

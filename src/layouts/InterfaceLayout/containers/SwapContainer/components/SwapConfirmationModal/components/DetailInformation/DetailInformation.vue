@@ -19,10 +19,10 @@
           class="expending-block">
           <ul>
             <li
-              v-for="d in details"
-              :key="d.key">
-              <p class="name">{{ d.name }}</p>
-              <p class="value">{{ d.value }}</p>
+              v-for="(key, value) in details"
+              :key="key">
+              <p class="name">{{ value.name }}</p>
+              <p class="value">{{ value.value }}</p>
             </li>
           </ul>
         </div>
@@ -36,9 +36,9 @@
 export default {
   props: {
     details: {
-      type: Array,
+      type: Object,
       default: function() {
-        return [];
+        return {};
       }
     }
   },
