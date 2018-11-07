@@ -12,7 +12,7 @@ import {
 } from '@@/helpers';
 
 
-xdescribe('SendCurrencyContainer.vue', () => {
+xdescribe('[BEFORE EACH ERROR] SendCurrencyContainer.vue', () => {
     let localVue, i18n, wrapper, store;
     const resetView = jest.fn()
     beforeAll(() => {
@@ -28,10 +28,10 @@ xdescribe('SendCurrencyContainer.vue', () => {
               balance: {
                 result:''
               }
-          }, 
+          },
           wallet: {
             getAddressString: function(){}
-          } 
+          }
         })
         wrapper = shallowMount(SendCurrencyContainer, {
           localVue,
@@ -49,9 +49,9 @@ xdescribe('SendCurrencyContainer.vue', () => {
     });
 
     it('should render correct nonce data', () => {
-        
+
     });
     describe('SendCurrencyContainer.vue Methods', () => {
-     
+
     });
 });

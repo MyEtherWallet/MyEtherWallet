@@ -3,6 +3,7 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
+  reporters: ["default", 'jest-skipped-reporter'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
     '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$':
@@ -12,8 +13,8 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@@/(.*)$': '<rootDir>/tests/unit/$1',
-    "^@/test$": "<rootDir>/test/index.js",
-    "^@/test/(.*)$": "<rootDir>/test/$1",
+    '^@/tests$': '<rootDir>/tests/index.js',
+    '^@/tests/(.*)$': '<rootDir>/tests/$1'
   },
   transformIgnorePatterns: [
       "node_modules/(?!vue-router)"
