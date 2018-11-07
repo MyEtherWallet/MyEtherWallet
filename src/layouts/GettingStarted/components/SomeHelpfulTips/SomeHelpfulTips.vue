@@ -4,20 +4,24 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{$t("gettingStarted.aboutSecurity")}}
+          {{ $t("gettingStarted.aboutSecurity") }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
-          <h4>Some helpful tips</h4>
+          <h4>{{ $t("gettingStarted.tipsTitle") }}</h4>
 
           <div class="tips">
-            <div v-for="tip in tips" :key="tip.title">
-              <h5>Never give your Private Key to anyone</h5>
+            <div
+              v-for="tip in tips"
+              :key="$t('gettingStarted.tipsTitle') + '-' +tip.title">
+              <h5>{{ tip.title }}</h5>
               <p>
                 {{ tip.desc }}
-                <a :href="tip.linkUrl" v-if="tip.linkText"> {{ tip.linkText }}</a>
+                <a
+                  v-if="tip.linkText"
+                  :href="tip.linkUrl"> {{ tip.linkText }}</a>
                 {{ tip.descCont !== '' ? tip.descCont : '' }}
               </p>
 
@@ -60,7 +64,8 @@ export default {
           title: this.$t('gettingStarted.tip3Title'),
           desc: this.$t('gettingStarted.tip3Desc'),
           linkText: this.$t('gettingStarted.tip3DescLink'),
-          linkUrl: 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en',
+          linkUrl:
+            'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en',
           descCont: this.$t('gettingStarted.tip3DescCont')
         },
         {
@@ -76,7 +81,7 @@ export default {
           linkText: this.$t('gettingStarted.tip5DescLink'),
           linkUrl: 'mailto:support@myetherwallet.com',
           descCont: this.$t('gettingStarted.tip5DescCont')
-        },
+        }
       ]
     };
   }

@@ -94,6 +94,7 @@ import CreateWalletInput from './components/CreateWalletInput';
 import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
+import store from 'store';
 
 export default {
   components: {
@@ -114,7 +115,7 @@ export default {
     };
   },
   mounted() {
-    const skipTutorial = localStorage.getItem('skipTutorial');
+    const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
       skipTutorial === null ||
@@ -137,7 +138,7 @@ export default {
       }
     },
     skip() {
-      localStorage.setItem('skipTutorial', true);
+      store.set('skipTutorial', true);
       this.$refs.tutorialModal.$refs.tutorial.hide();
     },
     scanToDownloadModalOpen() {

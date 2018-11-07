@@ -33,5 +33,9 @@
   "tip5Title": "Feel free to contact us",
   "tip5Desc": "Please feel free to contact us. Our email is ",
   "tip5DescLink": "support@myetherwallet.com",
-  "tip5DescCont": ". We're here to help."
+  "tip5DescCont": ". We're here to help.",
+  "congratulationsTitle": "Congratulations!",
+  "congratulationsDesc": "You have read through our warning slides, and you're ready to dive in. If you want to know more, please head to our ",
+  "congratulationsLink": "Help Center",
+  "congratulationsDescCont": ". We have many articles to assist you!"
 }

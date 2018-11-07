@@ -4,20 +4,20 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{$t("gettingStarted.aboutSecurity")}}
+          {{ $t("gettingStarted.aboutSecurity") }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue"/>
         </div>
         <div class="block-progressbar__content">
-          <h4>{{$t("gettingStarted.lostPasswordTitle")}}</h4>
+          <h4>{{ $t("gettingStarted.lostPasswordTitle") }}</h4>
           <p>
-            {{$t("gettingStarted.lostPasswordDescHalf")}} <span>{{$t("gettingStarted.lostPasswordDescCaps")}}</span>. {{$t("gettingStarted.lostPasswordDescCont")}}
+            {{ $t("gettingStarted.lostPasswordDescHalf") }} <span>{{ $t("gettingStarted.lostPasswordDescCaps") }}</span>. {{ $t("gettingStarted.lostPasswordDescCont") }}
           </p>
 
           <ul>
-            <li>{{$t("gettingStarted.lostPasswordDescOpt1")}}</li>
-            <li>{{$t("gettingStarted.lostPasswordDescOpt2")}}</li>
+            <li>{{ $t("gettingStarted.lostPasswordDescOpt1") }}</li>
+            <li>{{ $t("gettingStarted.lostPasswordDescOpt2") }}</li>
           </ul>
 
           <div class="block-progressbar__warning hidden"/>
