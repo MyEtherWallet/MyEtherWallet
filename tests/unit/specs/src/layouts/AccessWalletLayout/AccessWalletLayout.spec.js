@@ -9,11 +9,11 @@ import {
 const RouterLinkStub = {
   name:'router-link',
   template:'<div class="routerlink"><slot> </slot></div>',
-  props:['to']  
+  props:['to']
 }
-xdescribe('AccessWalletLayout.vue', () => {
+xdescribe('[EMPTY TEST SUITE] AccessWalletLayout.vue', () => {
   let localVue, i18n, wrapper, store;
-    
+
       // beforeAll(() => {
       //     const baseSetup = Tooling.createLocalVueInstance();
       //     localVue = baseSetup.localVue;
@@ -36,7 +36,7 @@ xdescribe('AccessWalletLayout.vue', () => {
 
 
   it('should render correct contents', () => {
-      
+
      });
 
   describe('AccessWalletLayout.vue Methods', () => {});

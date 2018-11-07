@@ -17,6 +17,7 @@ if (
   !navigator.userAgent.includes('jsdom')
 ) {
   onmessage = function(event) {
+    console.log(event); // todo remove dev item
     if (event.data.type === 'createWallet') {
       const workerResult = create(event.data.data[0]);
       postMessage(workerResult);

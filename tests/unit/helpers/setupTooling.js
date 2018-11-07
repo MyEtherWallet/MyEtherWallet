@@ -4,9 +4,10 @@ import BootstrapVue from "bootstrap-vue";
 import languages from '@/translations';
 import VueX from 'vuex'
 
+// import mockStore from './mockStore'
+
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
-
 
 function createLocalVueInstance(){
   const localVue = createLocalVue();
@@ -19,7 +20,7 @@ function createLocalVueInstance(){
     if(!value) return ''
     value = value.toString().toLowerCase()
     return value.charAt(0).toUpperCase() + value.slice(1)
-  }); 
+  });
   const i18n = new VueI18n({
     locale: 'en_US',
     fallbackLocale: 'en_US',
@@ -27,7 +28,14 @@ function createLocalVueInstance(){
     silentTranslationWarn: true
   });
 
-  const store = new VueX.Store()
+
+  const store = new VueX.Store();
+
+  // const store = new VueX.Store({
+  //   state: mockStore.state,
+  //   getters: mockStore.getters
+  // });
+
   return {
     localVue,
     i18n,
