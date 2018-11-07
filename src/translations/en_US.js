@@ -3,6 +3,7 @@ import common from './common/en_US';
 import header from './header/en_US';
 import home from './home/en_US';
 import footer from './footer/en_US';
+import gettingStarted from './getting-started/en_US';
 import privacyPolicy from './privacy-policy/en_US';
 import termsAndConditions from './terms-and-conditions/en_US';
 import createWallet from './create-wallet/en_US';
@@ -16,6 +17,7 @@ const en_US = {
   header: header,
   home: home,
   footer: footer,
+  gettingStarted: gettingStarted,
   privacyPol: privacyPolicy,
   termsOfConditions: termsAndConditions,
   team: team,

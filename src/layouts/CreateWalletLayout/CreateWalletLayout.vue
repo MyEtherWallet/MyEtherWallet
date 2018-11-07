@@ -21,9 +21,9 @@
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.titleMEWConnect") }}</h3>
-                  <popover :popcontent="'Hi yoyoyoyo'"/>
+                  <popover :popcontent="$t('home.aboutMewConnectDesc')"/>
                 </div>
-                <p>Saft and easy ways to access wallets.</p>
+                <p>{{ $t("createWallet.mewConnectDesc") }}</p>
               </div>
 
               <div class="appstores">
@@ -41,12 +41,12 @@
               </div>
 
             </b-tab>
-            <b-tab title="By JSON File">
+            <b-tab :title="$t('createWallet.byJsonFile')">
 
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <popover :popcontent="$t('popover.password')"/>
                 </div>
               </div>
 
@@ -56,12 +56,12 @@
                 :param="'Json'"/>
               <create-wallet-input-footer/>
             </b-tab>
-            <b-tab title="By Mnemonic Phrase">
+            <b-tab :title="$t('createWallet.byMnemonic')">
 
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <popover :popcontent="$t('popover.password')"/>
                 </div>
               </div>
 

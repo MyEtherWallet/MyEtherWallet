@@ -21,7 +21,7 @@
                 :to="wallet === null || wallet === undefined ? '/access-my-wallet' : '/interface'"
                 class="nounderline">
                 <span class="large-round-button-white-filled__body-text-color">
-                  {{ $t("common.accessMyWallet") }}
+                  {{ $t("home.getANewWallet") }}
                 </span>
               </router-link>
             </div>
