@@ -38,7 +38,7 @@
 
               <p>
                 {{ $t('gettingStarted.whatIsBlockchainDesc2') }} <a
-                  href=""
+                  href="https://kb.myetherwallet.com/getting-started/getting-started-new.html"
                   target="_blank">{{ $t('gettingStarted.whatIsBlockchainDesc2link') }}</a>.
               </p>
             </div>

@@ -56,7 +56,7 @@
         </div>
       </div>
       <interface-bottom-text
-        link="/"
+        link="mailto:support@myetherwallet.com"
         question="Have issues?"
         link-text="Learn More"/>
     </div>

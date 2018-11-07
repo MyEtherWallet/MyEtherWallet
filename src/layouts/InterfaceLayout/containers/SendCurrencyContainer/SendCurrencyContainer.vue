@@ -139,7 +139,7 @@
               v-model="gasLimit"
               type="number"
               name=""
-              placeholder="Gas Limit" >
+              :placeholder="$t('common.gasLimit')" >
           </div>
         </div>
       </div>
@@ -154,7 +154,7 @@
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
   </div>
 </template>

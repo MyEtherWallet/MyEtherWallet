@@ -43,7 +43,7 @@
       <p
         v-show="invalidPath !== ''"
         class="error-message-container">
-        The path {{ invalidPath }} is not valid for this device
+        {{$t('accessWallet.invalidPathDesc')}}{{ invalidPath }}{{$t('accessWallet.invalidPathDescCont')}}
       </p>
       <p
         v-show="!customPathInput"
@@ -60,8 +60,8 @@
           v-model="customPath.dpath"
           placeholder="m/44'/1'/0'/0">
         <br>
-        <button @click="addCustomPath">addCustomPath</button>
-        <button @click="showCustomPathInput">cancel</button>
+        <button @click="addCustomPath">{{ $t('accessWallet.addCustomPath') }}</button>
+        <button @click="showCustomPathInput">{{$t('common.cancel')}}</button>
       </div>
     </div>
     <!-- Address List -->
@@ -111,7 +111,7 @@
 
     <div class="accept-terms">
       <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }}
-        <a href="/">{{ $t('common.terms') }}</a>.
+        <router-link to="/terms-and-conditions">{{ $t('common.terms') }}</router-link>.
         <input
           ref="accessMyWalletBtn"
           type="checkbox"

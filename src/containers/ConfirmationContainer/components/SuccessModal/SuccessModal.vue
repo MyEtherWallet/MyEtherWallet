@@ -9,7 +9,7 @@
       <i
         class="check-icon fa fa-check"
         aria-hidden="true"/>
-      <h2 class="title">Success</h2>
+      <h2 class="title">{{$t('confirmation.success')}}</h2>
       <p>{{ message }}</p>
     </div>
     <div class="button-container">

@@ -18,7 +18,9 @@
             <a href="https://kb.myetherwallet.com">{{ $t("gettingStarted.congratulationsLink") }}</a>{{ $t("gettingStarted.congratulationsDescCont") }}
           </p>
 
-          <div @click="done" class="mid-round-button-green-filled-green-border">Get Started</div>
+          <div 
+            class="mid-round-button-green-filled-green-border" 
+            @click="done">Get Started</div>
         </div>
       </dir>
     </div>
@@ -42,7 +44,7 @@ export default {
   methods: {
     done() {
       store.set('skipTutorial', true);
-      this.$router.push({path: 'create-wallet'});
+      this.$router.push({ path: 'create-wallet' });
     }
   }
 };

@@ -1,8 +1,5 @@
 {
   "title": "Welcome to MEW",
-  "subheading": "MyEtherWallet.com doesn't hold your keys for you. We can’t access accounts, recover keys, reset passwords, nor reverse transactions. Protect your keys & always check that you are on CORRECT URL. You are responsible for your security.",
-  "firstTime": "I'm a Fresher",
-  "veteran": "I'm Experienced",
   "yourPw": "Your Password",
   "doNotForget": "DO NOT FORGET",
   "doNotForgetDesc": "to save your password, and it is your private key. You will need this",

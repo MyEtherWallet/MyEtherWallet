@@ -9,13 +9,13 @@
       <div class="modal-content">
         <div class="network-info-container">
           <p>
-            <span>Network</span> {{ network.type.name }} by {{ network.service }}
+            <span>{{ $t('common.network') }}</span> {{ network.type.name }} by {{ network.service }}
           </p>
           <div>
             <div class="line"/>
           </div>
           <p>
-            <span>Transaction Total:</span> {{ txTotal }} {{ network.type.name }}
+            <span>{{$t('confirmation.txTotal')}}:</span> {{ txTotal }} {{ network.type.name }}
           </p>
         </div>
         <div class="modal-content-body">
@@ -31,7 +31,7 @@
                 <div>
                   <p>- {{ web3.utils.hexToNumberString(item.tx.value) }} <span>{{ network.type.name }}</span></p>
                   <div>
-                    <span>From</span> {{ wallet.getChecksumAddressString() | concatAddr }}
+                    <span>{{ $t('common.from') }}</span> {{ wallet.getChecksumAddressString() | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -45,7 +45,7 @@
                 <div>
                   <p>+ {{ web3.utils.hexToNumberString(item.tx.value) }} <span>{{ network.type.name }}</span></p>
                   <div>
-                    <span>To</span> {{ item.tx.to | concatAddr }}
+                    <span>{{ $t('common.to') }}</span> {{ item.tx.to | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -58,11 +58,11 @@
               :id="`accordion${idx}`"
               class="body">
               <div class="body-item">
-                <span class="item-title">Gas Limit</span>
+                <span class="item-title">{{ $t('common.gasLimit') }}t</span>
                 <span>{{ web3.utils.hexToNumberString(item.tx.gas) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">Gas Price</span>
+                <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span>{{ web3.utils.hexToNumberString(web3.utils.fromWei(item.tx.gasPrice, 'gwei')) }} Gwei</span>
               </div>
               <div class="body-item">
@@ -70,7 +70,7 @@
                 <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">Data </span>
+                <span class="item-title">{{$t('common.data')}} </span>
                 <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
@@ -84,7 +84,7 @@
               ref="ConfirmAndSendButton"
               :class="[allSigned? '': 'disabled','submit-button large-round-button-green-filled clickable']"
               @click="sendBatchTransactions">
-              Confirm and Send
+              {{$t('common.confirmAndSend')}}
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
@@ -97,7 +97,7 @@
                 triggers="hover focus"
                 placement="top">
                 <div class="qrcode-contents">
-                  <p class="qrcode-title">Scan QR code to send/swap instantly</p>
+                  <p class="qrcode-title">{{$t('confirmation.scanQrCode')}}</p>
                   <div class="qrcode-block">
                     <qrcode
                       :options="{ size: 100 }"
