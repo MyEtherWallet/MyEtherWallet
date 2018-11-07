@@ -2,11 +2,11 @@
   <div>
     <div class="finalize-container">
       <h3>
-        {{$t('dapps.finalizeDesc')}}: {{ domainName }}.eth
+        {{ $t('dapps.finalizeDesc') }}: {{ domainName }}.eth
       </h3>
       <button
         class="finalize-button"
-        @click="finalize"> {{$t('dapps.finalize')}} </button>
+        @click="finalize"> {{ $t('dapps.finalize') }} </button>
     </div>
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"

@@ -2,9 +2,9 @@
   <div>
     <b-modal
       ref="finalize"
+      :title="$t('dapps.finalize')"
       hide-footer
       centered
-      :title="$t('dapps.finalize')"
       class="bootstrap-modal-wide nopadding finalize-modal">
       <div class="finalize-modal-container">
         <h3>{{ $t('dapps.areYouFinalizing') }} <br> {{ domainName }}.eth {{ $t('dapps.areYouFinalizingCont') }}</h3>
