@@ -3,12 +3,12 @@
     <back-button/>
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
-        <p>{{$t('interface.subdomains')}}</p>
+        <p>{{ $t('interface.subdomains') }}</p>
         <div class="form">
           <div class="subdomain-input">
             <input
-              type="text"
               :placeholder="$t('dapps.subDomainPlaceholder')"
+              type="text"
               @input="debounceInput"
             >
             <button
