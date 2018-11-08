@@ -5,6 +5,11 @@ const ADD_NOTIFICATION = function(state, newNotif) {
   store.set('notifications', newNotif);
 };
 
+const ADD_SWAP_TRANSACTION = function(state, newTx) {
+  state.transactions = newTx;
+  store.set('transactions', newTx);
+};
+
 const ADD_CUSTOM_PATH = function(state, paths) {
   state.customPaths = paths;
   store.set('customPaths', paths);
@@ -58,8 +63,14 @@ const UPDATE_NOTIFICATION = function(state, newNotif) {
   store.set('notifications', newNotif);
 };
 
+const UPDATE_SWAP_TRANSACTION = function(state, newTx) {
+  state.transactions = newTx;
+  store.set('transactions', newTx);
+};
+
 export default {
   ADD_NOTIFICATION,
+  ADD_SWAP_TRANSACTION,
   ADD_CUSTOM_PATH,
   CHECK_IF_ONLINE,
   CLEAR_WALLET,
@@ -70,5 +81,6 @@ export default {
   SET_ENS,
   SET_WEB3_INSTANCE,
   SWITCH_NETWORK,
-  UPDATE_NOTIFICATION
+  UPDATE_NOTIFICATION,
+  UPDATE_SWAP_TRANSACTION
 };

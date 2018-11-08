@@ -65,8 +65,8 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification 
-                  v-if="wallet !== null" 
+                <notification
+                  v-if="wallet !== null"
                   ref="notification"/>
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
