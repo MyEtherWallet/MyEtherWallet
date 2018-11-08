@@ -6,10 +6,7 @@
 }
 /* stylelint-enable */
 
-
-
-
-.transaction-entry{
+.transaction-entry {
   cursor: pointer;
   position: relative;
 
@@ -37,7 +34,7 @@
       grid-template-rows: 50px;
       padding: 10px 15px;
       .transaction-details {
-        .cc-icon{
+        .cc-icon {
           font-size: 26px;
         }
         //.icon {
@@ -99,26 +96,26 @@
             padding: 2px;
             margin-left: 50px;
             //background-color: #f2f4fa;
-            .cancelledSwap{
+            .cancelledSwap {
               height: 15.8px;
               background-color: red !important;
             }
 
-            &.completedSwap{
+            &.completedSwap {
               background-color: green;
             }
 
-            &.newSwap{
+            &.newSwap {
               width: 25%;
               background-color: green;
             }
 
-            &.swapBar2{
+            &.swapBar2 {
               width: 50%;
               background-color: green;
             }
 
-            &.swapBar3{
+            &.swapBar3 {
               width: 75%;
               background-color: green;
             }

@@ -23,7 +23,7 @@ const changellyStatuses = {
   refunded: 'refunded',
   overdue: 'overdue',
   hold: 'hold'
-}
+};
 
 /*
 * waiting	Transaction is waiting for an incoming payment.

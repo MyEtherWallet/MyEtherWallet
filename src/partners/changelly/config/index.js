@@ -1,4 +1,13 @@
 import { ChangellyCurrencies } from './currencies';
-import { changellyAddresses, changellyStatuses, requireExtraId } from './implementationDetails';
+import {
+  changellyAddresses,
+  changellyStatuses,
+  requireExtraId
+} from './implementationDetails';
 
-export { ChangellyCurrencies, changellyAddresses, changellyStatuses, requireExtraId };
+export {
+  ChangellyCurrencies,
+  changellyAddresses,
+  changellyStatuses,
+  requireExtraId
+};
