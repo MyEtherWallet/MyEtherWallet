@@ -4,10 +4,9 @@ import BootstrapVue from "bootstrap-vue";
 import languages from '@/translations';
 import VueX from 'vuex'
 
-// import mockStore from './mockStore'
-
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
+
 
 function createLocalVueInstance(){
   const localVue = createLocalVue();
@@ -28,14 +27,7 @@ function createLocalVueInstance(){
     silentTranslationWarn: true
   });
 
-
-  const store = new VueX.Store();
-
-  // const store = new VueX.Store({
-  //   state: mockStore.state,
-  //   getters: mockStore.getters
-  // });
-
+  const store = new VueX.Store()
   return {
     localVue,
     i18n,

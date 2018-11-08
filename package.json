@@ -78,7 +78,6 @@
     "unused-files-webpack-plugin": "^3.4.0",
     "vue-i18n": "^8.3.0",
     "vue-infinite-slide-bar": "^1.0.8",
-    "vue-template-compiler": "^2.5.17",
     "vue-worker": "^1.2.1",
     "web3": "^1.0.0-beta.36",
     "web3-core-helpers": "^1.0.0-beta.36",
