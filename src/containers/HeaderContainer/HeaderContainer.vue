@@ -66,7 +66,7 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null"/>
+                <notification @click.native="openNotifications" v-if="wallet !== null"/>
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
@@ -212,6 +212,9 @@ export default {
   methods: {
     openSettings() {
       this.$children[0].$refs.settings.show();
+    },
+    openNotifications() {
+      this.$children[1].$refs.notifications.show();
     },
     languageItemClicked(e) {
       const flag = e.target.getAttribute('data-flag-name');
