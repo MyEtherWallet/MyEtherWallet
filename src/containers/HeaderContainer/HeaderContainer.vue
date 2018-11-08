@@ -207,6 +207,9 @@ export default {
     openSettings() {
       this.$children[0].$refs.settings.show();
     },
+    openNotifications() {
+      this.$children[1].$refs.notifications.show();
+    },
     languageItemClicked(e) {
       const flag = e.target.getAttribute('data-flag-name');
 
