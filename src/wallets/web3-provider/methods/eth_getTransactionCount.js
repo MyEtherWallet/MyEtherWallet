@@ -24,10 +24,11 @@ export default async ({ payload, requestManager }, res, next) => {
     Math.round(
       (new Date().getTime() - store.get(utils.sha3(addr)).timestamp) / 1000
     ) / 60; // Get minutes
-  if (lastFetch === 15) {
+  if (lastFetch >= 15) {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
+    storedNonce = new BN(fetchedNonce).toFixed();
     store.set(utils.sha3(addr), {
-      nonce: new BN(fetchedNonce).toFixed(),
+      nonce: storedNonce,
       timestamp: +new Date()
     });
   } else if (lastFetch < 1) {
@@ -52,7 +53,7 @@ export default async ({ payload, requestManager }, res, next) => {
       null,
       toPayload(payload.id, `0x${new BN(storedNonce).toString('hex')}`)
     );
-  } else if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
+  } else {
     const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
       nonce: new BN(fetchedNonce).toFixed(),
@@ -61,6 +62,4 @@ export default async ({ payload, requestManager }, res, next) => {
 
     res(null, toPayload(payload.id, fetchedNonce));
   }
-
-  res(null, toPayload(payload.id, storedNonce));
 };
