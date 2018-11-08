@@ -8,6 +8,17 @@ export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0];
+
+  const timedFetch = setInterval(async () => {
+    const nonce = await ethCalls.getTransactionCount(addr);
+    store.set(utils.sha3(addr), {
+      nonce: new BN(nonce).toFixed(),
+      timestamp: +new Date()
+    });
+
+    clearInterval(timedFetch);
+  }, 1800000);
+
   let storedNonce = 0;
   let fetchedNonce;
   if (store.get(utils.sha3(addr)) === undefined) {
@@ -54,4 +65,6 @@ export default async ({ payload, requestManager }, res, next) => {
 
     res(null, toPayload(payload.id, fetchedNonce));
   }
+
+  res(null, toPayload(payload.id, storedNonce));
 };
