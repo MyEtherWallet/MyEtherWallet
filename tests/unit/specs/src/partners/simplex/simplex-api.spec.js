@@ -1,7 +1,7 @@
 import { getQuote } from '@/partners/simplex/simplex-api.js';
 
 describe('simplex.js', () => {
-  xit('should instanciate a new instance', async () => {
+  xit('[INTENTIONALLY SKIPPED] should instanciate a new instance', async () => {
     const quote = await getQuote({
       digital_currency: 'ETH',
       fiat_currency: 'USD',

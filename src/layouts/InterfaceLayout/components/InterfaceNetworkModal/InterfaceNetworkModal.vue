@@ -172,7 +172,7 @@
             <interface-bottom-text
               :link-text="$t('interface.learnMore')"
               :question="$t('interface.dontKnow')"
-              link="/"/>
+              link="mailto:support@myetherwallet.com"/>
           </div>
         </div>
 

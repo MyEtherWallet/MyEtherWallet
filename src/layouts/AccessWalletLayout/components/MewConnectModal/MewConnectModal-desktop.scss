@@ -93,3 +93,8 @@
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.modal-icon {
+  display: flex;
+  justify-content: center;
+}

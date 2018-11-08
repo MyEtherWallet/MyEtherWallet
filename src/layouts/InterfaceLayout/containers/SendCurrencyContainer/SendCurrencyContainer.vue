@@ -137,9 +137,9 @@
           <div class="the-form user-input">
             <input
               v-model="gasLimit"
+              :placeholder="$t('common.gasLimit')"
               type="number"
-              name=""
-              placeholder="Gas Limit" >
+              name="" >
           </div>
         </div>
       </div>
@@ -154,7 +154,7 @@
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
   </div>
 </template>

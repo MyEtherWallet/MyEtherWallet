@@ -86,7 +86,7 @@
           </div>
           <div class="copyright">
             <p>
-              Pricing taken from <span>CoinMarketCap</span> <br>
+              {{ $t("footer.pricingP") }} <span>CoinMarketCap</span> <br>
               {{ $t("footer.copyright") }}
             </p>
           </div>
