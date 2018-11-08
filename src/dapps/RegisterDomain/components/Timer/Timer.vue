@@ -5,8 +5,8 @@
         <img
           src="@/assets/images/icons/hourglass.svg"
           alt="">
-        <span v-show="dateType=== 'reveal'"> Reveals bids</span>
-        <span v-show="dateType=== 'auction'">Auction closes</span>
+        <span v-show="dateType === 'reveal'"> {{ $t('dapps.revealsBid') }} </span>
+        <span v-show="dateType === 'auction'"> {{ $t('dapps.auctionCloses') }} </span>
       </div>
       <b>{{ time }}</b>
     </div>

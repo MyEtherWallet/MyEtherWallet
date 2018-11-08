@@ -39,7 +39,7 @@
         @click="sendTransaction">
         <button-with-qrcode
           :qrcode="qrcode"
-          buttonname="Continue to confirmation"/>
+          :buttonname="$t('common.confirmAndSend')"/>
       </div>
 
       <help-center-button/>

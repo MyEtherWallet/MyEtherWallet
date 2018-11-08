@@ -3,12 +3,12 @@
     <back-button/>
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
-        <p>Sub Domain</p>
+        <p>{{ $t('interface.subdomains') }}</p>
         <div class="form">
           <div class="subdomain-input">
             <input
+              :placeholder="$t('dapps.subDomainPlaceholder')"
               type="text"
-              placeholder="Please Enter Sub Domain Name"
               @input="debounceInput"
             >
             <button
@@ -19,7 +19,7 @@
         <div
           v-show="results.length > 0"
           class="result-section">
-          <p>All Sub domains</p>
+          <p>{{ $t('dapps.allSubDomains') }}</p>
           <div class="results-container">
             <div
               v-for="item in sortedResults"
@@ -31,7 +31,7 @@
                 <span class="currency">ETH </span>
                 <button @click="buyDomain(item)" >
                   <span v-if="item.active">
-                    Buy
+                    {{ $t('dapps.buy') }}
                   </span>
                   <span v-else>
                     <i class="fa fa-times" />
@@ -46,7 +46,7 @@
         <interface-bottom-text
           :link-text="$t('interface.learnMore')"
           :question="$t('interface.haveIssues')"
-          link="/"/>
+          link="mailto:support@myetherwallet.com"/>
       </div>
     </div>
   </div>

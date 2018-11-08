@@ -1,12 +1,12 @@
 <template>
   <div class="manage-ens-container">
-    <h3>Manage {{ domainName }}.eth</h3>
+    <h3>{{ $t('dapps.manage') }} {{ domainName }}.eth</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
             <label for="updateResolver">
-              Update Resolver Address:
+              {{ $t('dapps.updateResolver') }}:
             </label>
             <input
               v-model="resolverAddress"
@@ -26,7 +26,7 @@
         <form class="manage-form">
           <div class="input-container">
             <label for="transferEns">
-              Transfer ENS domain to:
+              {{ $t('dapps.transferEnsTo') }}:
             </label>
             <input
               v-model="transferTo"
@@ -46,7 +46,7 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="mailto:support@myetherwallet.com"/>
   </div>
 </template>
 <script>

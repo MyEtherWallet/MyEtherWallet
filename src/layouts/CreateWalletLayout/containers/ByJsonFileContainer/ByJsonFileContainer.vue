@@ -10,7 +10,7 @@
         <b-tabs>
           <div class="progress-bar"/>
           <b-tab
-            title="By JSON File"
+            :title="$t('createWallet.byJsonFile')"
             active>
 
             <div class="title-block">
