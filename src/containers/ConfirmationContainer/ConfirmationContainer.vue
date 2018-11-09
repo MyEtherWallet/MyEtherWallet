@@ -157,6 +157,7 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
+
       this.isHardwareWallet = this.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
@@ -164,6 +165,7 @@ export default {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
+
       this.confirmationModalOpen();
     });
 
@@ -309,6 +311,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
+      if (this.raw.generateOnly) return;
       this.showSuccessModal();
     },
     reset() {

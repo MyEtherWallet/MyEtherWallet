@@ -18,6 +18,21 @@
           autocomplete="off"
         />
       </div>
+      <div class="scan-download-container">
+        <h4 class="block-title">
+          Scan QR code
+        </h4>
+        <div 
+          v-if="signedTx !== ''" 
+          class="scan-download-items">
+          <qrcode
+            :value="JSON.parse(signedTx).rawTransaction"
+            :options="{ size: 200 }"/>
+          or <a 
+            :href="jsonFile" 
+            :download="jsonFileName">Download JSON</a>
+        </div>
+      </div>
       <div class="raw">
         <div class="title-block">
           <h4 class="block-title">{{ $t('interface.raw') }}</h4>
@@ -65,8 +80,24 @@ export default {
   },
   data() {
     return {
-      showRaw: false
+      showRaw: false,
+      jsonFile: '',
+      jsonFileName: `signedTransactionObject-${+new Date()}.json`
     };
+  },
+  watch: {
+    signedTx(newVal) {
+      console.log(newVal);
+      const string =
+        typeof newVal === 'object' ? JSON.stringify(newVal) : newVal;
+      const blob = new Blob([string], {
+        type: 'mime'
+      });
+      this.jsonFile = window.URL.createObjectURL(blob);
+    }
+  },
+  mounted() {
+    console.log(this.signedTx);
   },
   methods: {
     copyAndContinue() {
