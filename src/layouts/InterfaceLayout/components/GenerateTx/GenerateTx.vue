@@ -4,7 +4,9 @@
       <div class="send-form">
         <div class="form-block amount-to-address">
           <div class="amount">
-            <div class="title"><h4>Amount</h4></div>
+            <div class="title">
+              <h4>{{$t('interface.sendTxAmount')}}</h4>
+            </div>
             <currency-picker
               :currency="coinType"
               :token="true"
@@ -15,20 +17,15 @@
                 v-model="toAmt"
                 type="number"
                 name=""
-                placeholder="Deposit Amount"
-              />
+                :placeholder="$t('interface.depAmount')">
               <i
-                :class="[
-                  parsedBalance < toAmt ? 'not-good' : '',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
+                :class="[account.balance < toAmt ? 'not-good': '','fa fa-check-circle good-button']"
+                aria-hidden="true"/>
             </div>
           </div>
           <div class="to-address">
             <div class="title">
-              <h4>To Address</h4>
+              <h4>{{$t('interface.sendTxToAddr')}}</h4>
               <blockie
                 v-show="
                   (address !== '' || resolvedAddress !== '') && !validAddress
@@ -45,10 +42,7 @@
               />
               <p
                 class="copy-button linker-1 prevent-user-select"
-                @click="copyToAddress"
-              >
-                Copy
-              </p>
+                @click="copyToAddress">{{$t('common.copy')}}</p>
             </div>
             <div class="the-form address-block">
               <textarea
@@ -68,8 +62,10 @@
             </div>
           </div>
         </div>
-        <div v-show="parsedBalance < toAmt" class="error-message-container">
-          <p>You don't have enough funds</p>
+        <div
+          v-show="account.balance < toAmt"
+          class="error-message-container">
+          <p>{{$t('interface.notEnoughBalance')}}</p>
         </div>
       </div>
 
@@ -108,13 +104,9 @@
       />
       <div class="submit-button-container">
         <div
-          :class="[
-            !validAddress ? 'disabled' : '',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="next"
-        >
-          Generate
+          :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']"
+          @click="next">
+          {{$t('interface.generateTx')}}
         </div>
         <interface-bottom-text
           link="mailto:support@myetherwallet.com"
@@ -163,14 +155,13 @@ export default {
   },
   data() {
     return {
-      toAmt: 0,
+      toAmt: '0',
       address: '',
       toData: '0x',
-      parsedBalance: 0,
       localGas: this.gasLimit,
       coinType: [{ symbol: 'ETH', name: 'Ethereum' }],
       selectedCoinType: '',
-      raw: '',
+      raw: {},
       signed: '',
       locNonce: this.nonce,
       validAddress: false,
@@ -187,15 +178,9 @@ export default {
     })
   },
   watch: {
-    parsedBalance(newVal) {
-      this.parsedBalance = newVal;
-    },
     gasLimit(newVal) {
       this.localGas = newVal;
     }
-  },
-  mounted() {
-    this.parsedBalance = unit.fromWei(this.account.balance.result, 'ether');
   },
   methods: {
     copyToAddress() {
@@ -203,7 +188,7 @@ export default {
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },
-    next() {
+    async next() {
       const raw = {
         from: this.wallet.getAddressString(),
         gas: this.localGas,
@@ -219,19 +204,19 @@ export default {
               : '',
         chainId: this.network.type.chainID || 1
       };
-      this.web3.eth.signTransaction(raw).then(signedTx => {
-        this.$emit('createdRawTx', signedTx.rawTransaction);
 
-        this.raw = raw;
-        this.signed = signedTx.rawTransaction;
-        this.$refs.signedTxModal.$refs.signedTx.show();
-        window.scrollTo(0, 0);
-      });
+      this.raw = raw;
+      this.signed = await this.wallet.signTransaction(raw);
+      this.$emit('createdRawTx', this.signed.rawTransaction);
+      this.$refs.signedTxModal.$refs.signedTx.show();
+      window.scrollTo(0, 0);
     },
     gasLimitUpdated(e) {
       this.$emit('gasLimitUpdate', e);
     },
     nonceUpdated(e) {
+      console.log(e);
+      this.locNonce = e;
       this.$emit('nonceUpdate', e);
     },
     pathUpdate() {
