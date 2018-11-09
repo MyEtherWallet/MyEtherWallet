@@ -99,7 +99,6 @@ export default {
   },
   mounted() {
     this.setupOnlineEnvironment();
-    console.log(this.$store.state); // todo remove dev item
   },
   destroyed() {
     this.clearIntervals();

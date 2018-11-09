@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 export default {
   props: {
     data: {
@@ -100,8 +99,8 @@ export default {
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     gasLimit: {
       type: Number,
@@ -121,14 +120,9 @@ export default {
       locNonce: this.nonce
     };
   },
-  computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice'
-    })
-  },
   watch: {
     locNonce(newVal) {
-      this.$emit('nonceUpdate', newVal);
+      this.$emit('nonceUpdate', Number(newVal));
     },
     gasPrice(newVal) {
       this.$emit('gasLimitUpdate', newVal);

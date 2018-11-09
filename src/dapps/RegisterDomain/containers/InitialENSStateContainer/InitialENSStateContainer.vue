@@ -20,10 +20,10 @@
         v-show="domainNameErr"
         class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
-          {{ $t('dapps."registerEnsWarn1"') }}
+          {{ $t('dapps.registerEnsWarn1') }}
         </span>
         <span v-else>
-          {{ $t('dapps."registerEnsWarn2"') }}
+          {{ $t('dapps.registerEnsWarn2') }}
         </span>
       </p>
       <div class="submit-button-container">
