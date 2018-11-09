@@ -136,11 +136,6 @@ export default {
       locGasLimit: this.gasLimit
     };
   },
-  computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice'
-    })
-  },
   watch: {
     locNonce(newVal) {
       this.$emit('nonceUpdate', Number(newVal));
