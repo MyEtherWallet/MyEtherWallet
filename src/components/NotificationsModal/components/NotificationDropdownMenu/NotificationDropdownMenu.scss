@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  //empty
 }
 
 .title-container {
@@ -21,7 +22,7 @@
   .time {
     margin-left: auto;
     font-weight: 400;
-    font-family: Dejavu Sans;
+    font-family: Dejavu Sans, sans-serif;
     font-size: 14px;
   }
 
@@ -31,7 +32,6 @@
 }
 
 .contents-container {
-  
   border-top: 0;
   overflow: hidden;
   max-height: 0;
@@ -45,6 +45,5 @@
   &.opened {
     border-top: 1px solid #e2e2e2;
     max-height: 300px;
-
   }
 }
