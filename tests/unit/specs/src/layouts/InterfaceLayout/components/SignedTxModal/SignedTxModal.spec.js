@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
 import sinon from 'sinon'
@@ -9,9 +8,9 @@ import {
 describe('SignedTxModal.vue', () => {
     let localVue, i18n, wrapper, store;
 
-    const signedTx = 'signedTx'
+    const signedTx = '{"rawTransaction":"","tx":{"nonce":"","gasPrice":"","gas":"","to":"","value":"","input":"","v":"","r":"","s":"","hash":""}}'
     const rawTx = {data:'rawTx'}
-    const spy = sinon.stub()    
+    const spy = sinon.stub()
 
     beforeAll(() => {
         const baseSetup = Tooling.createLocalVueInstance();
@@ -34,7 +33,9 @@ describe('SignedTxModal.vue', () => {
         });
 
         wrapper.setData({
-          showRaw: true
+          showRaw: true,
+          jsonFile: '',
+          jsonFileName: `signedTransactionObject-${+new Date()}.json`
         });
     });
 

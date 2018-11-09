@@ -12,6 +12,9 @@
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
+                @click="uploadJson">Upload JSON</p>
+              <p
+                class="linker-1 prevent-user-select"
                 @click="deleteTxHex">{{ $t('common.clear') }}</p>
               <p
                 class="linker-1 prevent-user-select"
@@ -26,6 +29,12 @@
             v-model="signedTx"
             name=""
             placeholder="Enter TX Hex"/>
+          <input
+            ref="jsonInput"
+            type="file"
+            name="file"
+            style="display: none"
+            @change="uploadFile">
         </div>
       </div>
       <div class="submit-button-container">
@@ -73,6 +82,11 @@ export default {
     }
   },
   methods: {
+    uploadJson() {
+      const jsonInput = this.$refs.jsonInput;
+      jsonInput.value = '';
+      jsonInput.click();
+    },
     deleteTxHex() {
       this.signedTx = '';
     },
@@ -81,15 +95,21 @@ export default {
       document.execCommand('copy');
     },
     sendTx() {
-      this.web3.eth
-        .sendSignedTransaction(this.signedTx)
-        .on('receipt', () => {})
-        .then(() => {
-          this.$refs.successModal.$refs.success.show();
-        });
+      this.web3.eth.sendSignedTransaction();
     },
     hideModal() {
       this.$refs.successModal.$refs.success.hide();
+    },
+    uploadFile(e) {
+      const self = this;
+      const reader = new FileReader();
+      reader.onloadend = function(evt) {
+        const res = JSON.parse(evt.target.result);
+        self.signedTx = res.hasOwnProperty('raw')
+          ? res.raw
+          : res.rawTransaction;
+      };
+      reader.readAsBinaryString(e.target.files[0]);
     }
   }
 };

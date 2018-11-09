@@ -184,12 +184,15 @@ export default {
             : this.address !== ''
               ? this.address
               : '',
-        chainId: this.network.type.chainID || 1
+        chainId: this.network.type.chainID || 1,
+        generateOnly: true
       };
 
       this.raw = raw;
-      this.signed = await this.wallet.signTransaction(raw);
-      this.$emit('createdRawTx', this.signed.rawTransaction);
+
+      const signed = await this.web3.eth.signTransaction(this.raw);
+      this.signed = JSON.stringify(signed);
+      this.$emit('createdRawTx', signed.rawTransaction);
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
     },
@@ -197,7 +200,6 @@ export default {
       this.$emit('gasLimitUpdate', e);
     },
     nonceUpdated(e) {
-      console.log(e);
       this.locNonce = e;
       this.$emit('nonceUpdate', e);
     },

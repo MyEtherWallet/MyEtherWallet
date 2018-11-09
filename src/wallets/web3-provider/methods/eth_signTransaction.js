@@ -2,6 +2,7 @@ import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
+import { toPayload } from './jsonrpc';
 import EventNames from '../events';
 import { formatters } from 'web3-core-helpers';
 const getSanitizedTx = tx => {
@@ -51,9 +52,15 @@ export default async (
       if (store.state.wallet.identifier === WEB3_WALLET) {
         res(new Error('web3 wallets doesnt support eth_signTransaction'));
       } else {
-        eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-          res(null, _response);
-        });
+        if (_tx.hasOwnProperty('generateOnly')) {
+          eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
+            res(null, toPayload(payload.id, _response));
+          });
+        } else {
+          eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
+            res(null, _response);
+          });
+        }
       }
     })
     .catch(e => {
