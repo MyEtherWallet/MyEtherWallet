@@ -5,14 +5,14 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <div><h4>{{$t('interface.signedTx')}}</h4></div>
+            <div><h4>{{ $t('interface.signedTx') }}</h4></div>
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
-                @click="deleteTxHex">{{$t('common.clear')}}</p>
+                @click="deleteTxHex">{{ $t('common.clear') }}</p>
               <p
                 class="linker-1 prevent-user-select"
-                @click="copyTxHex">{{$t('common.copy')}}</p>
+                @click="copyTxHex">{{ $t('common.copy') }}</p>
             </div>
           </div>
         </div>

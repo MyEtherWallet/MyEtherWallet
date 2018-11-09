@@ -4,7 +4,7 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title-and-copy">
-            <div><h4>{{$t('interface.fromAddr')}}</h4></div>
+            <div><h4>{{ $t('interface.fromAddr') }}</h4></div>
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
@@ -45,7 +45,7 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="generateInfo">
-          {{ $t('interface.generateInfo')}}
+          {{ $t('interface.generateInfo') }}
         </div>
       </div>
 
@@ -53,7 +53,7 @@
         <div
           class="submit-button large-round-button-green-filled clickable"
           @click="generateTx">
-          {{$t('common.continue')}}
+          {{ $t('common.continue') }}
         </div>
       </div>
       <interface-bottom-text
