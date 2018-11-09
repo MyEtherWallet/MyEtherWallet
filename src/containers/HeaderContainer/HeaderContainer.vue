@@ -39,6 +39,8 @@
                   $t('common.news')
                 }}</b-nav-item>
 
+                <txpoppup />
+
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -125,6 +127,7 @@ import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
+import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 
 export default {
   components: {
@@ -132,7 +135,8 @@ export default {
     notification: Notification,
     scrollupbutton: ScrollUpButton,
     settingsmodal: SettingsModal,
-    notificationsmodal: NotificationsModal
+    notificationsmodal: NotificationsModal,
+    txpoppup: TxTopMenuPopup
   },
   data() {
     return {
