@@ -6,7 +6,7 @@
         <div class="form-block amount-to-address">
           <div class="amount">
             <div class="title">
-              <h4>{{$t('interface.sendTxAmount')}}</h4>
+              <h4>{{ $t('interface.sendTxAmount') }}</h4>
             </div>
             <currency-picker
               :currency="coinType"
@@ -15,9 +15,9 @@
             <div class="the-form amount-number">
               <input
                 v-model="toAmt"
+                :placeholder="$t('interface.depAmount')"
                 type="number"
-                name=""
-                :placeholder="$t('interface.depAmount')">
+                name="">
               <i
                 :class="[account.balance < toAmt ? 'not-good': '','fa fa-check-circle good-button']"
                 aria-hidden="true"/>
@@ -25,7 +25,7 @@
           </div>
           <div class="to-address">
             <div class="title">
-              <h4>{{$t('interface.sendTxToAddr')}}</h4>
+              <h4>{{ $t('interface.sendTxToAddr') }}</h4>
               <blockie
                 v-show="(address !== '' || resolvedAddress !== '') && !validAddress"
                 :address="address !== '' ? address: resolvedAddress !== ''? resolvedAddress:''"
@@ -33,7 +33,7 @@
                 height="22px"/>
               <p
                 class="copy-button linker-1 prevent-user-select"
-                @click="copyToAddress">{{$t('common.copy')}}</p>
+                @click="copyToAddress">{{ $t('common.copy') }}</p>
             </div>
             <div class="the-form address-block">
               <textarea
@@ -51,7 +51,7 @@
         <div
           v-show="account.balance < toAmt"
           class="error-message-container">
-          <p>{{$t('interface.notEnoughBalance')}}</p>
+          <p>{{ $t('interface.notEnoughBalance') }}</p>
         </div>
       </div>
 
@@ -89,7 +89,7 @@
         <div
           :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']"
           @click="next">
-          {{$t('interface.generateTx')}}
+          {{ $t('interface.generateTx') }}
         </div>
         <interface-bottom-text
           link="mailto:support@myetherwallet.com"
@@ -121,7 +121,7 @@ export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'tx-speed-input': TxSpeedInput,
-    'blockie': Blockie,
+    blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker
   },
@@ -197,7 +197,7 @@ export default {
       this.$emit('gasLimitUpdate', e);
     },
     nonceUpdated(e) {
-      console.log(e)
+      console.log(e);
       this.locNonce = e;
       this.$emit('nonceUpdate', e);
     },

@@ -37,10 +37,10 @@
               <blockie
                 v-show="validAddress && address.length !== 0"
                 :address="resolvedAddress !== '' ? resolvedAddress : address"
-                width="32px"
-                height="32px"
                 :size="8"
                 :scale="16"
+                width="32px"
+                height="32px"
                 class="blockie-image"/>
             </h4>
 

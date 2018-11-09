@@ -33,7 +33,11 @@ const EnsResolver = {
           removeElements();
         }
       } else {
-        if (_this.network.type.ens === '' || ens === null || ens === undefined) {
+        if (
+          _this.network.type.ens === '' ||
+          ens === null ||
+          ens === undefined
+        ) {
           removeElements();
           _this.resolvedAddress = '';
           _this.validAddress = false;
