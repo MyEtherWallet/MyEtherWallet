@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <detail-information :details="detailInfo"/>
+      <!--<detail-information :details="detailInfo"/>-->
 
       <div
         :class="[swapReady ? '': 'disable', 'confirm-send-button']"
@@ -165,45 +165,17 @@ export default {
       if (!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
         if (this.preparedSwap.length > 1) {
-
-
-          const cleaned = this.preparedSwap.map(entry => {
-            const gasPrice = entry.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
-            return {
-              from: entry.from,
-              to: entry.to,
-              value: this.web3.utils.toHex(entry.value),
-              data: entry.data || '0x',
-              gasPrice: this.web3.utils.toHex(gasPrice)
-            };
-          });
-          console.log('cleaned batch', cleaned); // todo remove dev item
-          this.web3.mew.sendBatchTransactions(cleaned);
+          this.web3.mew.sendBatchTransactions([...this.preparedSwap]);
         } else {
-          const cleaned = await this.prepareSingleTransaction(this.preparedSwap[0]);
-          // this.web3.eth.sendTransaction(cleaned);
+          this.web3.eth.sendTransaction(this.preparedSwap[0]);
         }
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          const cleaned = await this.prepareSingleTransaction(this.preparedSwap);
-          // this.web3.eth.sendTransaction(cleaned);
+          this.web3.eth.sendTransaction(this.preparedSwap);
         }
       }
       this.$emit('swapStarted', this.swapDetails);
       this.$refs.swapconfirmation.hide();
-    },
-    async prepareSingleTransaction(preparedSwap) {
-      const gasPrice = preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei');
-      const cleaned = {
-        from: preparedSwap.from,
-        to: preparedSwap.to,
-        value: this.web3.utils.toHex(preparedSwap.value),
-        data: preparedSwap.data || '0x',
-        gasPrice: this.web3.utils.toHex(gasPrice)
-      };
-
-      cleaned.gas = await this.web3.eth.estimateGas(cleaned);
-      return cleaned;
     },
     createTokenTransferData(fromAddress, amount, tokenDetails) {
       const jsonInterface = [
@@ -224,7 +196,7 @@ export default {
         jsonInterface,
         tokenDetails.contractAddress
       );
-      const builtData = contract.methods
+      return contract.methods
         .transfer(
           fromAddress,
           new BigNumber(amount)
@@ -232,24 +204,19 @@ export default {
             .toFixed()
         )
         .encodeABI();
-      console.log(builtData); // todo remove dev item
-      return builtData;
     },
     async swapStarted(swapDetails) {
-      this.preparedSwap = await this.finalizeSwap(swapDetails);
-      console.log(this.preparedSwap); // todo remove dev item
-      this.swapReady = true;
-    },
-    async finalizeSwap(swapDetails) {
       this.swapReady = false;
       this.preparedSwap = {};
-      console.log('swapDetails', swapDetails); // todo remove dev item
-      if (swapDetails.dataForInitialization && !Array.isArray(swapDetails.dataForInitialization)) {
+      if (
+        swapDetails.dataForInitialization &&
+        !Array.isArray(swapDetails.dataForInitialization)
+      ) {
         if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
 
-          return {
+          this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,
             value: 0,
@@ -263,57 +230,22 @@ export default {
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === 'ETH'
         ) {
-          return {
+          this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),
             to: swapDetails.providerAddress,
-            value: unit.toWei(
-              swapDetails.providerReceives,
-              'ether'
-            )
+            value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
         }
       } else {
-        console.log('kyber only'); // todo remove dev item
-        try {
-          return swapDetails.dataForInitialization.map(entry => {
-
-            entry.from = this.wallet.getChecksumAddressString();
-            if (
-              unit.toWei(this.gasPrice, 'gwei') >
-              swapDetails.kyberMaxGas
-            ) {
-              entry.gasPrice = swapDetails.kyberMaxGas || unit.toWei(this.gasPrice, 'gwei'); //TODO check why gasPrice
-            } else {
-              entry.gasPrice = unit.toWei(this.gasPrice, 'gwei');
-            }
-            return entry;
-          });
-        } catch (e) {
-          console.error(e);
-        }
+        this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
+          entry.from = this.wallet.getChecksumAddressString();
+          if (unit.toWei(this.gasPrice, 'gwei') > swapDetails.kyberMaxGas) {
+            entry.gasPrice = swapDetails.kyberMaxGas;
+          }
+          return entry;
+        });
       }
-    },
-    signTransaction() {
-      if (!this.swapReady) return;
-      if (Array.isArray(this.preparedSwap)) {
-        // this.web3.mew.sendBatchTransactions(this.preparedSwap);
-      } else {
-        if (Object.keys(this.preparedSwap).length > 0) {
-          console.log(this.preparedSwap); // todo remove dev item
-          // this.web3.mew.sendTransactions(this.preparedSwap);
-          const cleaned = {
-            from: this.preparedSwap.from,
-            to: this.preparedSwap.to,
-            value: this.preparedSwap.value,
-            data: this.preparedSwap.data || '0x',
-            gasPrice: this.preparedSwap.gasPrice || unit.toWei(this.$store.state.gasPrice, 'gwei')
-          };
-          console.log('cleaned', cleaned); // todo remove dev item
-          this.web3.eth.signTransaction(cleaned);
-        }
-      }
-      this.$emit('swapStarted', this.swapDetails);
-      this.$refs.swapconfirmation.hide();
+      this.swapReady = true;
     }
   }
 };
