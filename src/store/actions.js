@@ -107,7 +107,8 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         to: arr[i].to,
         data: arr[i].data,
         from: arr[i].from,
-        value: arr[i].value
+        value: arr[i].value,
+        gasPrice: arr[i].gasPrice
       };
       arr[i].nonce = await (arr[i].nonce === undefined
         ? web3Instance.eth.getTransactionCount(
@@ -117,7 +118,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       arr[i].nonce += i;
       arr[i].gas = await (arr[i].gas === undefined
         ? web3Instance.eth.estimateGas(localTx)
-        : arr.gas);
+        : arr[i].gas);
       arr[i].chainId = !arr[i].chainId
         ? state.network.type.chainID
         : arr[i].chainId;
@@ -127,7 +128,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
           : arr[i].gasPrice;
       arr[i] = formatters.inputCallFormatter(arr[i]);
     }
-    console.log(arr); // todo remove dev item
+
     this._vm.$eventHub.$emit(
       'showTxCollectionConfirmModal',
       arr,

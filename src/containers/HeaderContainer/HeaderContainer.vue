@@ -119,13 +119,15 @@ import store from 'store';
 import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
+import Transactions from '@/components/Transactions';
 import ScrollUpButton from '@/components/ScrollUpButton';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    scrollupbutton: ScrollUpButton,
+    transactions: Transactions
   },
   data() {
     return {
