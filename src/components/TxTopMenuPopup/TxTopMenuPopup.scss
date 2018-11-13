@@ -39,13 +39,13 @@
   position: absolute;
   top: 35px;
   left: 20px;
-  background-color: white;
 }
 
 .popup-container .popup-box {
   border: 1px solid $mew-green;
   border-radius: 4px;
-
+  background-color: white;
+  
   .top {
     padding: 9px 13px;
     border-bottom: 1px solid #00bfa4;
