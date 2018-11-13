@@ -2,6 +2,7 @@
   <div class="header">
     <settingsmodal />
     <notificationsmodal />
+    <logoutmodal />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container">
@@ -125,6 +126,7 @@ import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
+import LogoutModal from '@/components/LogoutModal';
 
 export default {
   components: {
@@ -133,7 +135,8 @@ export default {
     scrollupbutton: ScrollUpButton,
     settingsmodal: SettingsModal,
     notificationsmodal: NotificationsModal,
-    txpoppup: TxTopMenuPopup
+    txpoppup: TxTopMenuPopup,
+    logoutmodal: LogoutModal
   },
   data() {
     return {
@@ -232,8 +235,9 @@ export default {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$store.dispatch('clearWallet');
-      this.$router.push('/');
+      this.$children[2].$refs.logout.show();
+      //this.$store.dispatch('clearWallet');
+      //this.$router.push('/');
     },
     showNotifications() {
       this.$children[6].$refs.notification.show();
