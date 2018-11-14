@@ -23,6 +23,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -33,12 +34,20 @@ export default {
       QrCode: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
           this.$store.dispatch('decryptWallet', [wallet]);
-          this.$router.push({ path: 'interface' });
+          this.$router.push({
+            path: this.path !== '' ? this.path : 'interface'
+          });
+          this.$store.dispatch('setLastPath', '');
         })
         .catch(_error => {
           // eslint-disable-next-line

@@ -34,19 +34,27 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
       privateKey: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   methods: {
     unlockWallet() {
+      console.log(this.path);
       this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
       ]);
       this.privateKey = '';
-      this.$router.push({ path: 'interface' });
+      this.$router.push({ path: this.path !== '' ? this.path : 'interface' });
+      this.$store.dispatch('setLastPath', '');
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

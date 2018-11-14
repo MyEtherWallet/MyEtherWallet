@@ -49,6 +49,11 @@ const SET_GAS_PRICE = function(state, val) {
   store.set('gasPrice', val);
 };
 
+const SET_LAST_PATH = function(state, val) {
+  state.path = val;
+  store.set('lastPath', val);
+};
+
 const SET_WEB3_INSTANCE = function(state, web3) {
   state.web3 = web3;
 };
@@ -77,6 +82,7 @@ export default {
   DECRYPT_WALLET,
   INIT_STATES,
   SET_ACCOUNT_BALANCE,
+  SET_LAST_PATH,
   SET_GAS_PRICE,
   SET_ENS,
   SET_WEB3_INSTANCE,

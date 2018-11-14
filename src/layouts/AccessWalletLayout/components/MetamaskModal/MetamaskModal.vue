@@ -101,6 +101,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
 import Web3 from 'web3';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -119,6 +120,11 @@ export default {
       web3WalletExists: false,
       refreshPage: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
   },
   mounted() {
     this.web3WalletExists = this.checkWeb3();
@@ -149,7 +155,10 @@ export default {
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
           this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
-          this.$router.push({ path: 'interface' });
+          this.$router.push({
+            path: this.path !== '' ? this.path : 'interface'
+          });
+          this.$store.dispatch('setLastPath', '');
         })
         .catch(() => {
           return (this.web3WalletExists = false);

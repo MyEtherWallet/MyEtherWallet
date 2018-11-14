@@ -64,12 +64,14 @@ export default {
   props: {
     rawTx: {
       type: String,
-      default: '0x'
+      default: "{'rawTransaction': '0xasdfasdfasdfasdfasasdfasdf'}"
     }
   },
   data() {
+    const parsedRaw = new Object(this.rawTx);
     return {
-      signedTx: this.rawTx
+      signedTx: parsedRaw.rawTransaction,
+      readTx: {}
     };
   },
   computed: {
@@ -77,7 +79,10 @@ export default {
   },
   watch: {
     rawTx(newVal) {
-      this.signedTx = newVal;
+      this.signedTx = JSON.parse(newVal).rawTransaction;
+    },
+    readTx(newVal) {
+      this.signedTx = newVal.rawTransaction;
     }
   },
   methods: {
@@ -93,8 +98,34 @@ export default {
       this.$refs.txHex.select();
       document.execCommand('copy');
     },
+    sendTxRes(signedTx) {
+      this.$eventHub.$emit('showSuccessModal', 'Sending Transaction', 'Close');
+      this.web3.eth
+        .sendSignedTransaction(signedTx.rawTransaction)
+        .once('transactionHash', hash => {
+          this.$store.dispatch('addNotification', [
+            signedTx.tx.from,
+            hash,
+            'Transaction Hash'
+          ]);
+        })
+        .on('receipt', res => {
+          this.$store.dispatch('addNotification', [
+            signedTx.tx.from,
+            res,
+            'Transaction Receipt'
+          ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            signedTx.tx.from,
+            err,
+            'Transaction Error'
+          ]);
+        });
+    },
     sendTx() {
-      this.web3.eth.sendSignedTransaction();
+      this.$eventHub.$emit('showSendSignedTx', this.signedTx, this.sendTxRes);
     },
     hideModal() {
       this.$refs.successModal.$refs.success.hide();
@@ -103,10 +134,7 @@ export default {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        const res = JSON.parse(evt.target.result);
-        self.signedTx = res.hasOwnProperty('raw')
-          ? res.raw
-          : res.rawTransaction;
+        self.readTx = JSON.parse(evt.target.result);
       };
       reader.readAsBinaryString(e.target.files[0]);
     }

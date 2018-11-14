@@ -4,84 +4,63 @@
 
     <div class="progress-status prevent-user-select">
       <div
-        :class="[currentPage === 'genInfo' ? 'active' : '', 'genInfo']"
-        @click="processChange('genInfo');"
+        v-for="(tab, idx) in tabs"
+        :key="tab.title + idx"
+        :class="[isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '' ,'genInfo']"
+        @click="processChange(tab.name2 ? tab.name2: tab.name)"
       >
         <div class="prevent-pointer-events">
-          <p class="title">{{ $t('interface.online') }}</p>
-          <p class="description prevent-pointer-events">
-            {{ $t('interface.generateInfo') }}
-          </p>
-        </div>
-      </div>
-      <div
-        :class="[currentPage === 'genTx' ? 'active' : '', 'genTx']"
-        @click="processChange('genTx');"
-      >
-        <div class="prevent-pointer-events">
-          <p class="title prevent-pointer-events">
-            {{ $t('interface.offline') }}
-          </p>
-          <p class="description prevent-pointer-events">
-            {{ $t('interface.generateTx') }}
-          </p>
-        </div>
-      </div>
-      <div
-        :class="[currentPage === 'sendPubTx' ? 'active' : '', 'sendPubTx']"
-        @click="processChange('sendPubTx');"
-      >
-        <div class="prevent-pointer-events">
-          <p class="title prevent-pointer-events">
-            {{ $t('interface.online') }}
-          </p>
-          <p class="description prevent-pointer-events">
-            {{ $t('interface.sendPubTx') }}
-          </p>
+          <p class="title">{{ tab.title }}</p>
+          <p class="description prevent-pointer-events">{{ tab.desc }}</p>
         </div>
       </div>
     </div>
-
-    <generate-info
-      v-if="currentPage === 'genInfo'"
+    <router-view
+      :raw-tx="rawTx"
       :nonce="nonce"
       :gas-limit="gasLimit"
-      @pathUpdate="processChange"
-      @nonceUpdate="nonceUpdated"
-      @gasLimitUpdate="gasLimitUpdate"
-    />
-    <generate-tx
-      v-if="currentPage === 'genTx'"
-      :nonce="nonce"
-      :gas-limit="gasLimit"
-      @pathUpdate="processChange"
       @nonceUpdate="nonceUpdated"
       @gasLimitUpdate="gasLimitUpdate"
       @createdRawTx="createdRawTx"
+      @pathUpdate="processChange"
     />
-    <send-tx v-if="currentPage === 'sendPubTx'" :raw-tx="rawTx" />
+
   </div>
 </template>
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import GenerateInfo from '../../components/GenerateInfo';
-import GenerateTx from '../../components/GenerateTx';
-import SendTx from '../../components/SendTx';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'generate-info': GenerateInfo,
-    'generate-tx': GenerateTx,
-    'send-tx': SendTx
+    'interface-container-title': InterfaceContainerTitle
   },
   data() {
     return {
       rawTx: '',
       gasLimit: 21000,
       nonce: 0,
-      currentPage: 'genInfo'
+      tabs: [
+        {
+          title: this.$t('interface.online'),
+          desc: this.$t('interface.generateInfo'),
+          path: 'generate-info',
+          name: 'Send Offline',
+          name2: 'Offline Generate Information'
+        },
+        {
+          title: this.$t('interface.offline'),
+          desc: this.$t('interface.generateTx'),
+          path: 'generate-tx',
+          name: 'Offline Generate Transaction'
+        },
+        {
+          title: this.$t('interface.online'),
+          desc: this.$t('interface.sendPubTx'),
+          path: 'send-tx',
+          name: 'Offline Send Transaction'
+        }
+      ]
     };
   },
   watch: {
@@ -92,12 +71,12 @@ export default {
       this.nonce = newVal;
     }
   },
-  mounted() {
-    this.currentPage = 'genInfo';
-  },
   methods: {
     createdRawTx(e) {
       this.rawTx = e;
+    },
+    isTabActive(name) {
+      return name === this.$route.name;
     },
     gasLimitUpdate(e) {
       this.gasLimit = e;
@@ -105,8 +84,8 @@ export default {
     nonceUpdated(e) {
       this.nonce = e;
     },
-    processChange(page) {
-      this.currentPage = page;
+    processChange(name) {
+      this.$router.push({ name: name });
     }
   }
 };
