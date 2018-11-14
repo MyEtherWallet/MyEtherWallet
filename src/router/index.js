@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import { routerConfig } from '@/configs';
+import { routerConfig } from '@/builds/configs';
 
 Vue.use(Router);
 

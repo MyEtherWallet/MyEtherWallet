@@ -1,5 +1,3 @@
-import HomeLayout from '@/layouts/HomeLayout';
-import CreateWalletLayout from '@/layouts/CreateWalletLayout';
 import ConvertUnits from '@/layouts/ConvertUnits';
 import TeamLayout from '@/layouts/TeamLayout';
 import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
@@ -21,16 +19,6 @@ import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyM
 
 import dapps from '@/dapps/routes';
 const router = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeLayout
-  },
-  {
-    path: '/create-wallet',
-    name: 'CreateWalletLayout',
-    component: CreateWalletLayout
-  },
   {
     path: '/team',
     name: 'TeamLayout',
