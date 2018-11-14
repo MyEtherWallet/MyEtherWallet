@@ -45,9 +45,8 @@ export default {
         .then(wallet => {
           this.$store.dispatch('decryptWallet', [wallet]);
           this.$router.push({
-            path: this.path !== '' ? this.path : 'interface'
+            path: 'interface'
           });
-          this.$store.dispatch('setLastPath', '');
         })
         .catch(_error => {
           // eslint-disable-next-line

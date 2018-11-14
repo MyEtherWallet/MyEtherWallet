@@ -86,8 +86,9 @@ export default {
         self.$store.dispatch('decryptWallet', [
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
-        self.$router.push({ path: self.path !== '' ? self.path : 'interface' });
-        self.$store.dispatch('setLastPath', '');
+        self.$router.push({
+          path: 'interface'
+        });
       };
       worker.onerror = function(e) {
         self.error = e.message;

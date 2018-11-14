@@ -51,7 +51,6 @@ const SET_GAS_PRICE = function(state, val) {
 
 const SET_LAST_PATH = function(state, val) {
   state.path = val;
-  store.set('lastPath', val);
 };
 
 const SET_WEB3_INSTANCE = function(state, web3) {

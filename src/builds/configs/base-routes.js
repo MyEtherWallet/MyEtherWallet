@@ -17,6 +17,7 @@ import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineConta
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
+import store from '@/store';
 
 import dapps from '@/dapps/routes';
 const router = [
@@ -63,6 +64,20 @@ const router = [
   {
     path: '/interface',
     component: InterfaceLayout,
+    beforeEnter(to, ___, next) {
+      if (store.state.wallet === null) {
+        store.dispatch('setLastPath', to.path);
+        next({ name: 'AccessWalletLayout' });
+      } else {
+        if (store.state.path !== '') {
+          const localPath = store.state.path;
+          store.dispatch('setLastPath', '');
+          next({ path: localPath });
+        } else {
+          next();
+        }
+      }
+    },
     children: [
       {
         path: '',

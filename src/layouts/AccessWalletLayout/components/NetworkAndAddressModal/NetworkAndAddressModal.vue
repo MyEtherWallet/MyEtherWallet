@@ -248,8 +248,9 @@ export default {
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      this.$router.push({ path: this.path !== '' ? this.path : 'interface' });
-      this.$store.dispatch('setLastPath', '');
+      this.$router.push({
+        path: 'interface'
+      });
     },
     setHDAccounts() {
       this.HDAccounts = [];

@@ -33,9 +33,6 @@
 export default {
   data() {
     return {};
-  },
-  mounted() {
-    this.$store.dispatch('setLastPath', this.$route.path);
   }
 };
 </script>
