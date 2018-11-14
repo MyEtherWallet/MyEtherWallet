@@ -156,9 +156,8 @@ export default {
           const wallet = new Web3Wallet(address);
           this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
           this.$router.push({
-            path: this.path !== '' ? this.path : 'interface'
+            path: 'interface'
           });
-          this.$store.dispatch('setLastPath', '');
         })
         .catch(() => {
           return (this.web3WalletExists = false);

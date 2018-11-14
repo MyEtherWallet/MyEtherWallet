@@ -52,8 +52,9 @@ export default {
         new WalletInterface(this.privateKey, false, privKeyType)
       ]);
       this.privateKey = '';
-      this.$router.push({ path: this.path !== '' ? this.path : 'interface' });
-      this.$store.dispatch('setLastPath', '');
+      this.$router.push({
+        path: 'interface'
+      });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();
