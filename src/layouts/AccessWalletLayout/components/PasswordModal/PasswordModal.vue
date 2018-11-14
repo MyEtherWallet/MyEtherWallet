@@ -41,6 +41,7 @@
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
+import { mapGetters } from 'vuex';
 export default {
   props: {
     file: {
@@ -56,6 +57,11 @@ export default {
       password: '',
       error: ''
     };
+  },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
   },
   watch: {
     password() {
@@ -75,7 +81,8 @@ export default {
         self.$store.dispatch('decryptWallet', [
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
-        self.$router.push({ path: 'interface' });
+        self.$router.push({ path: self.path !== '' ? self.path : 'interface' });
+        self.$store.dispatch('setLastPath', '');
       };
       worker.onerror = function(e) {
         self.error = e.message;

@@ -162,6 +162,15 @@ export default {
 
       return response;
     },
+    async setNonce() {
+      const nonce = await this.web3.eth.getTransactionCount(
+        this.wallet.getAddressString()
+      );
+      store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
+        nonce: nonce,
+        timestamp: +new Date()
+      });
+    },
     async getTokenBalance(token) {
       const web3 = this.web3;
       const contractAbi = [
@@ -341,13 +350,10 @@ export default {
             this.matchWeb3WalletNetwork();
           }
           this.getBalance();
-          this.pollBlock = setInterval(this.getBlock, 10000);
+          this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
           this.setENS();
-          store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
-            nonce: 0,
-            timestamp: +new Date()
-          });
+          this.setNonce();
         }
       }
     },

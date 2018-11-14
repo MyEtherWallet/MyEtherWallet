@@ -65,7 +65,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import TxSpeedInput from '../../components/TxSpeedInput';
+import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
 export default {
   components: {
@@ -106,7 +106,7 @@ export default {
       this.$refs.fromaddress.value = '';
     },
     generateTx() {
-      this.$emit('pathUpdate', 'genTx');
+      this.$emit('pathUpdate', 'Offline Generate Transaction');
     },
     gasLimitUpdated(e) {
       this.$emit('gasLimitUpdate', e);

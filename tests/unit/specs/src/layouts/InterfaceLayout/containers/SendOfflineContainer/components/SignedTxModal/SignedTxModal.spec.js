@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
+import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SignedTxModal/SignedTxModal.vue';
 import sinon from 'sinon'
 import {
   Tooling

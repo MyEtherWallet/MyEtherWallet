@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import { shallowMount, mount } from '@vue/test-utils'
-import GenerateTx from '@/layouts/InterfaceLayout/components/GenerateTx/GenerateTx.vue';
-import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
-import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
-import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
+import GenerateTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateTx/GenerateTx.vue';
+import TxSpeedInput from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/TxSpeedInput/TxSpeedInput.vue';
+import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SignedTxModal/SignedTxModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 
 import {

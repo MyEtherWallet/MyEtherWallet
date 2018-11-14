@@ -22,14 +22,14 @@
         <h4 class="block-title">
           Scan QR code
         </h4>
-        <div 
-          v-if="signedTx !== ''" 
+        <div
+          v-if="signedTx !== ''"
           class="scan-download-items">
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
             :options="{ size: 200 }"/>
-          or <a 
-            :href="jsonFile" 
+          or <a
+            :href="jsonFile"
             :download="jsonFileName">Download JSON</a>
         </div>
       </div>
@@ -94,17 +94,14 @@ export default {
   },
   watch: {
     signedTx(newVal) {
-      console.log(newVal);
       const string =
         typeof newVal === 'object' ? JSON.stringify(newVal) : newVal;
       const blob = new Blob([string], {
         type: 'mime'
       });
+      this.jsonFileName = `signedTransactionObject-${+new Date()}.json`;
       this.jsonFile = window.URL.createObjectURL(blob);
     }
-  },
-  mounted() {
-    console.log(this.signedTx);
   },
   methods: {
     copyAndContinue() {

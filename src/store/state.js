@@ -14,6 +14,8 @@ const gasPrice =
 
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
+const lastPath =
+  store.get('lastPath') !== undefined ? store.get('lastPath') : {};
 const ens = network.type.ensResolver == null;
 
 const state = {
@@ -28,6 +30,7 @@ const state = {
   Networks: nodeList,
   network: network,
   notifications: notifications,
+  path: lastPath,
   online: true,
   Transactions: {},
   wallet: null,
