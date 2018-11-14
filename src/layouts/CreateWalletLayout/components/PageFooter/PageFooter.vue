@@ -2,7 +2,7 @@
   <div class="page-footer">
     <div class="wrap">
       <div class="page-container">
-        <p>{{ $t("createWallet.pageFooterTitle") }} <router-link to="/">{{ $t("common.faqs") }}</router-link></p>
+        <p class="footer-text">{{ $t("createWallet.pageFooterTitle") }} <router-link to="/">{{ $t("common.faqs") }}</router-link></p>
       </div>
     </div>
   </div>
@@ -17,5 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'PageFooter.scss';
+@import 'PageFooter-desktop.scss';
+@import 'PageFooter-tablet.scss';
+@import 'PageFooter-mobile.scss';
 </style>

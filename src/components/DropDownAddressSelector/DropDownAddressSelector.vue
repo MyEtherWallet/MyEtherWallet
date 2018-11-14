@@ -16,6 +16,8 @@
         class="selected-address-blockie">
         <blockie
           :address="selectedAddress"
+          :size="8"
+          :scale="16"
           width="30px"
           height="30px"/>
       </div>

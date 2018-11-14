@@ -37,7 +37,7 @@
           <interface-bottom-text
             :link-text="$t('interface.learnMore')"
             :question="$t('interface.dontKnow')"
-            link="/"/>
+            link="mailto:support@myetherwallet.com"/>
         </div>
       </form>
     </b-modal>
@@ -46,6 +46,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -65,12 +66,17 @@ export default {
       validAddress: false
     };
   },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
+  },
   watch: {
     tokenAddress(newVal) {
       if (
         newVal !== '' &&
         newVal.length !== 0 &&
-        this.$store.state.web3.utils.isAddress(newVal)
+        this.web3.utils.isAddress(newVal)
       ) {
         this.validAddress = true;
       } else {

@@ -20,8 +20,10 @@
 
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>{{ $t("createWallet.availableAppleGoogleStores") }}</h3>
+                  <h3>{{ $t("createWallet.titleMEWConnect") }}</h3>
+                  <popover :popcontent="$t('home.aboutMewConnectDesc')"/>
                 </div>
+                <p>{{ $t("createWallet.mewConnectDesc") }}</p>
               </div>
 
               <div class="appstores">
@@ -39,12 +41,12 @@
               </div>
 
             </b-tab>
-            <b-tab title="By JSON File">
+            <b-tab :title="$t('createWallet.byJsonFile')">
 
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <popover :popcontent="$t('popover.password')"/>
                 </div>
               </div>
 
@@ -54,12 +56,12 @@
                 :param="'Json'"/>
               <create-wallet-input-footer/>
             </b-tab>
-            <b-tab title="By Mnemonic Phrase">
+            <b-tab :title="$t('createWallet.byMnemonic')">
 
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <popover :popcontent="$t('popover.password')"/>
                 </div>
               </div>
 
@@ -92,6 +94,7 @@ import CreateWalletInput from './components/CreateWalletInput';
 import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
+import store from 'store';
 
 export default {
   components: {
@@ -112,13 +115,13 @@ export default {
     };
   },
   mounted() {
-    const skipTutorial = localStorage.getItem('skipTutorial');
+    const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
       skipTutorial === null ||
       skipTutorial === false
     ) {
-      this.$children[0].$refs.tutorial.show();
+      this.$refs.tutorialModal.$refs.tutorial.show();
     }
   },
   methods: {
@@ -135,7 +138,7 @@ export default {
       }
     },
     skip() {
-      localStorage.setItem('skipTutorial', true);
+      store.set('skipTutorial', true);
       this.$refs.tutorialModal.$refs.tutorial.hide();
     },
     scanToDownloadModalOpen() {
@@ -146,5 +149,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CreateWalletLayout.scss';
+@import 'CreateWalletLayout-desktop.scss';
+@import 'CreateWalletLayout-tablet.scss';
+@import 'CreateWalletLayout-mobile.scss';
 </style>

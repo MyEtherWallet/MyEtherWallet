@@ -1,0 +1,205 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  // *********************************************************************
+  // Block with progress bar
+  // *********************************************************************
+
+  .block-progressbar {
+    width: 100vw;
+    display: flex;
+
+    .block-progressbar__container {
+      width: 650px;
+      border-radius: 4px;
+      padding: 0;
+      margin: 10px 10px;
+      overflow-y: auto;
+      max-height: calc(100vh - 180px);
+    }
+
+    .block-progressbar__title {
+      background-color: $dark-blue-9;
+      color: $text-white;
+      font-size: 20px;
+      font-weight: 500;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .block-progressbar__progressbar {
+      background-color: $white;
+      height: 5px;
+      width: 100%;
+      position: relative;
+
+      > div {
+        content: '';
+        background-color: $light-green-5;
+        height: 5px;
+        position: absolute;
+      }
+
+      .__0percent {
+        width: 0%;
+      }
+      .__5percent {
+        width: 5%;
+      }
+      .__10percent {
+        width: 10%;
+      }
+      .__15percent {
+        width: 15%;
+      }
+      .__20percent {
+        width: 20%;
+      }
+      .__25percent {
+        width: 25%;
+      }
+      .__30percent {
+        width: 30%;
+      }
+      .__35percent {
+        width: 35%;
+      }
+      .__40percent {
+        width: 40%;
+      }
+      .__45percent {
+        width: 45%;
+      }
+      .__50percent {
+        width: 50%;
+      }
+      .__55percent {
+        width: 55%;
+      }
+      .__60percent {
+        width: 60%;
+      }
+      .__65percent {
+        width: 65%;
+      }
+      .__70percent {
+        width: 70%;
+      }
+      .__75percent {
+        width: 75%;
+      }
+      .__80percent {
+        width: 80%;
+      }
+      .__85percent {
+        width: 85%;
+      }
+      .__90percent {
+        width: 90%;
+      }
+      .__95percent {
+        width: 95%;
+      }
+      .__100percent {
+        width: 100%;
+      }
+    } // .block-progressbar__progressbar
+
+    .block-progressbar__content {
+      background-color: $white;
+      padding: 40px 20px;
+
+      &.text-cented {
+        text-align: center;
+      }
+
+      > img {
+        margin-bottom: 40px;
+      }
+
+      h4 {
+        font-size: 20px;
+        margin-bottom: 25px;
+      }
+
+      p {
+        margin-bottom: 25px;
+
+        span {
+          font-weight: 600;
+        }
+      }
+
+      ul {
+        padding: 20px;
+        padding-left: 40px;
+        background-color: $light-green-4;
+
+        li {
+          list-style-type: disc;
+          line-height: 25px;
+        }
+      }
+
+      .tips {
+        > div {
+          margin-bottom: 10px;
+          padding: 20px;
+          background-color: $light-green-4;
+
+          a {
+            text-decoration: underline;
+          }
+
+          h5 {
+            font-weight: 600;
+            margin-bottom: 3px;
+          }
+
+          p {
+            margin: 0;
+            line-height: 20px;
+          }
+        }
+      } // .tips
+    } // .block-progressbar__content
+
+    .block-progressbar__warning {
+      border-radius: 3px;
+      border: 1px solid $red-3;
+      padding: 10px 10px;
+      text-align: left;
+      color: $red-3;
+      font-weight: 700;
+      background-color: $light-red-1;
+      font-size: 13px;
+    } // .block-progressbar__warning
+
+    .block-progressbar__sliding-switch-expender {
+      margin-top: 20px;
+      padding: 15px 0;
+      border-top: 1px solid $light-grey-1;
+      border-bottom: 1px solid $light-grey-1;
+
+      .title {
+        display: flex;
+        align-items: center;
+
+        h4 {
+          margin: 0;
+        }
+
+        .sliding-switch {
+          margin-left: auto;
+        }
+      }
+
+      .content {
+        margin-top: 20px;
+
+        p:last-child {
+          margin: 0;
+        }
+      }
+    }
+  } // .block-progressbar
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

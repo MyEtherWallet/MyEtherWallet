@@ -4,14 +4,14 @@
       <div class="page-container">
 
         <div class="content-block">
-          <div class="block-title">Oops! Wallet not found :(</div>
+          <div class="block-title">{{ $t('interface.walletNotFound') }}</div>
           <div class="buttons">
 
             <router-link to="/create-wallet">
-              <div class="get-a-free-wallet mid__round-button__blue-filled__blue-border">Get a Free Wallet</div>
+              <div class="get-a-free-wallet mid__round-button__blue-filled__blue-border">{{ $t('common.getAFreeWallet') }}</div>
             </router-link>
             <router-link to="/access-my-wallet">
-              <div class="access-my-wallet mid-round-button-green-filled-green-border">Access My Wallet</div>
+              <div class="access-my-wallet mid-round-button-green-filled-green-border">{{ $t('common.accessMyWallet') }}</div>
             </router-link>
 
           </div>
@@ -29,6 +29,9 @@
 export default {
   data() {
     return {};
+  },
+  mounted() {
+    this.$store.dispatch('setLastPath', this.$route.path);
   }
 };
 </script>

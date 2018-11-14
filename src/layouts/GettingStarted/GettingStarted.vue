@@ -1,6 +1,13 @@
 <template>
   <div class="create-wallet-warnings">
 
+    <div
+      v-if="cwwCurrent != '0'"
+      class="back-button"
+      @click="mouseScrollUp">
+      &lt; {{ $t("common.back") }}
+    </div>
+
     <div class="wrap">
 
       <div class="nav-dots">
@@ -43,20 +50,27 @@
       <div class="create-wallet-warnings__footer-container">
         <div class="create-wallet-warnings__mouse-scroll">
           <img src="~@/assets/images/icons/mouse.svg">
-          <p>Scroll</p>
+          <p>{{ $t('gettingStarted.scroll') }}</p>
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link to="/">Home</router-link>
-            <router-link to="/">Privacy</router-link>
-            <router-link to="/">Terms</router-link>
+            <router-link to="/">{{ $t("header.home") }}</router-link>
+            <router-link to="/privacy-policy">{{ $t("footer.privacy") }}</router-link>
+            <router-link to="/terms-and-conditions">{{ $t("common.terms") }}</router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
-            <p>© 2018 MyEtherWallet. All rights reserved.</p>
+            <p>{{ $t('footer.copyright') }}</p>
           </div>
         </div>
       </div>
 
+    </div>
+
+    <div
+      v-if="cwwCurrent != '4'"
+      class="next-button"
+      @click="mouseScrollDown">
+      {{ $t("common.next") }}
     </div>
 
   </div>
@@ -127,5 +141,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'GettingStarted.scss';
+@import 'GettingStarted-desktop.scss';
+@import 'GettingStarted-tablet.scss';
+@import 'GettingStarted-mobile.scss';
 </style>

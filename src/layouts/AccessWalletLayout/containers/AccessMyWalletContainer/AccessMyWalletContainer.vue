@@ -1,6 +1,5 @@
 <template>
   <div class="access-my-wallet-options">
-
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"/>
@@ -99,6 +98,8 @@ import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg'
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
@@ -128,8 +129,8 @@ export default {
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.hardwareModalOpen,
@@ -137,8 +138,8 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? hardwareImg : hardwareDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.metamaskModalOpen,
@@ -146,8 +147,8 @@ export default {
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? metamaskImg : metamaskDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.softwareModalOpen,
@@ -160,6 +161,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
   },
   methods: {
     mewConnectModalOpen() {
@@ -205,10 +211,10 @@ export default {
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
+      if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
+        this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      }
       try {
-        this.walletConstructor = function() {};
-        this.hardwareBrand = '';
-        wallet.getDerivationPath(); // hacky way to check. should throw an error if not ready (need to implement a better mechanism)
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {
@@ -222,5 +228,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccessMyWalletContainer.scss';
+@import 'AccessMyWalletContainer-desktop.scss';
+@import 'AccessMyWalletContainer-tablet.scss';
+@import 'AccessMyWalletContainer-mobile.scss';
 </style>

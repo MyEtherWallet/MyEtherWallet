@@ -18,9 +18,22 @@ import PopOver from '@/components/PopOver';
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
+
+// Import Filters
+import Capitalize from '@/filters/Capitalize';
+import ConcatAddr from '@/filters/ConcatAddr';
 // etc
 import languages from './translations';
+import VueMq from 'vue-mq';
 
+Vue.use(VueMq, {
+  breakpoints: {
+    // default breakpoints - customize this
+    sm: 414,
+    md: 1024,
+    lg: Infinity
+  }
+});
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
@@ -31,6 +44,10 @@ Vue.component('popover', PopOver);
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
 Vue.directive('ens-resolver', EnsResolver);
+
+// Filters!!!
+Vue.filter('capitalize', Capitalize);
+Vue.filter('concatAddr', ConcatAddr);
 
 Vue.config.productionTip = false;
 
@@ -46,12 +63,6 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true
-});
-
-Vue.filter('capitalize', function(value) {
-  if (!value) return '';
-  value = value.toString();
-  return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
 /* eslint-disable no-new */

@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
-    <json-string-modal 
-      ref="jsonStringModal" 
+    <json-string-modal
+      ref="jsonStringModal"
       :update-json-string="updateJson"/>
     <div class="name-available-container">
       <div
@@ -9,22 +9,22 @@
         class="content-header">
         <div>
           <h3> {{ domainName }}.eth </h3>
-          <p>Cheers! This Domain is available.</p>
+          <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
       <div
         v-if="$route.fullPath.includes('bid')"
         class="auction-started">
         <div>
-          <h3> An auction has been started for {{ domainName }}.eth </h3>
+          <h3> {{ $t('dapps.auctionStarted') }} {{ domainName }}.eth </h3>
         </div>
       </div>
       <div
         v-if="$route.fullPath.includes('reveal')"
         class="auction-started">
         <h3>
-          Reveal your bid for {{ domainName }}.eth now. <br>
-          {{ highestBidder }} ETH (Current highest bid)
+          {{ $t('dapps.revealBid') }} {{ domainName }}.eth {{ $t('dapps.revealBidCont') }}. <br>
+          {{ highestBidder }} ETH ({{ $t('dapps.currentHighestBid') }})
         </h3>
       </div>
       <div class="timer-container">
@@ -45,14 +45,14 @@
         >
           <div>
             <span> 1 </span>
-            &nbsp; Bid Information
+            &nbsp; ({{ $t('dapps.bidInfo') }})
           </div>
           <div
             v-show="showDetail"
             class="edit"
             @click="editInputs"
           >
-            Edit
+            {{ $t('dapps.edit') }}
           </div>
         </b-card-header>
         <b-collapse
@@ -62,14 +62,14 @@
           role="tabpanel">
           <div class="inputs-container">
             <div class="input-container">
-              <label for="localBidAmount">Actual Bid Amount</label>
+              <label for="localBidAmount">{{ $t('dapps.actualBid') }}</label>
               <input
                 v-model="localBidAmount"
                 type="number"
                 name="localBidAmount">
             </div>
             <div class="input-container">
-              <label for="localBidMask">Bid Mask</label>
+              <label for="localBidMask">{{ $t('dapps.bidMask') }}</label>
               <input
                 v-model="localBidMask"
                 :class="[localBidAmount >= localBidMask ? 'errored': '']"
@@ -77,16 +77,16 @@
                 name="localBidMask">
               <p
                 v-show="localBidAmount >= localBidMask"
-                class="erroredMsg">We recommend having your Bid mask higher than your Bid amount.</p>
+                class="erroredMsg">{{ $t('dapps.bidMaskDesc') }}</p>
             </div>
             <div class="input-container">
               <label
                 for="localSecretPhrase"
                 class="secret-phrase-label">
-                <span> Secret Phrase </span>
+                <span> {{ $t('dapps.secretPhrase') }} </span>
                 <span
                   class="random"
-                  @click.prevent="generateKeyPhrase"> <i class="fa fa-lg fa-refresh"/> Random  </span>
+                  @click.prevent="generateKeyPhrase"> <i class="fa fa-lg fa-refresh"/> {{ $t('dapps.random') }}  </span>
               </label>
               <input
                 v-model="localSecretPhrase"
@@ -100,7 +100,7 @@
           header-tag="header"
         >
           <div>
-            <span> 2 </span> &nbsp; Details
+            <span> 2 </span> &nbsp; {{ $t('dapps.details') }}
           </div>
         </b-card-header>
         <b-collapse
@@ -109,36 +109,38 @@
           accordion="bidAccordionCollection"
           role="tabpanel">
           <div class="inputs-container">
-            <div class="confirmation-warning">
-              You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.
+            <div
+              v-if="!$route.fullPath.includes('reveal')"
+              class="confirmation-warning">
+              {{ $t('dapps.detailWarning') }}
             </div>
             <div
               ref="printableData"
               class="detail-info">
               <div class="detail-info-item">
-                <span class="detail-title">Actual Bid Amount</span>
+                <span class="detail-title">{{ $t('dapps.actualBid') }}</span>
                 <span class="detail-value">{{ raw.bidAmount }} ETH</span>
               </div>
               <div class="detail-info-item">
-                <span class="detail-title">Secret Phrase</span>
+                <span class="detail-title">{{ $t('dapps.secretPhrase') }}</span>
                 <span class="detail-value">{{ raw.secretPhrase }}</span>
               </div>
               <div class="detail-info-item">
-                <span class="detail-title">Reveal Date</span>
+                <span class="detail-title">{{ $t('dapps.revealDate') }}</span>
                 <span class="detail-value">{{ formatDate(raw.revealDate) }}</span>
               </div>
               <div class="detail-info-item">
-                <span class="detail-title">Bid Mask</span>
+                <span class="detail-title">{{ $t('dapps.bidMask') }}</span>
                 <span class="detail-value">{{ raw.bidMask }} ETH</span>
               </div>
               <div class="detail-info-item">
-                <span class="detail-title">Auction Ends</span>
+                <span class="detail-title">{{ $t('dapps.auctionEnd') }}</span>
                 <span class="detail-value">{{ formatDate(raw.auctionDateEnd) }}</span>
               </div>
 
               <div class="json-container">
                 <div class="json-label-container">
-                  <span class="json-title">JSON String</span>
+                  <span class="json-title">{{ $t('dapps.jsonString') }}</span>
                   <span
                     class="json-copy"
                     @click="copyString">{{ $t('common.copy') }}</span>
@@ -156,7 +158,7 @@
             v-if="$route.fullPath.includes('reveal')"
             class="json-string"
             @click.prevent="openJsonModal">
-            JSON string
+            {{ $t('dapps.jsonString') }}
           </button>
           <button
             v-show="showInfo"
@@ -174,7 +176,7 @@
             class="submit"
             role="tab"
             @click.prevent="downloadAndSend">
-            Save & Next
+            {{ $t('dapps.saveAndNext') }}
           </button>
         </div>
       </div>
@@ -187,6 +189,8 @@ import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
 import * as jsPDF from 'jspdf';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     timer: Timer,
@@ -260,6 +264,11 @@ export default {
       jsonText: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
+  },
   watch: {
     localSecretPhrase(newVal) {
       this.$emit('updateSecretPhrase', newVal);
@@ -301,10 +310,7 @@ export default {
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
-        value: this.$store.state.web3.utils.toWei(
-          raw.bidAmount.toString(),
-          'ether'
-        ),
+        value: this.web3.utils.toWei(raw.bidAmount.toString(), 'ether'),
         secretPhrase: raw.secretPhrase,
         secretPhraseSHA3: raw.secretPhraseSHA3
       });
@@ -327,13 +333,15 @@ export default {
         gas: this.raw['gas'],
         nonce: this.raw['nonce']
       };
-      const doc = new jsPDF();
-      doc.fromHTML(this.$refs.printableData, 15, 15, {
-        width: 300
-      });
+      if (!this.$route.fullPath.includes('reveal')) {
+        const doc = new jsPDF();
+        doc.fromHTML(this.$refs.printableData, 15, 15, {
+          width: 300
+        });
 
-      doc.save(`${this.raw.name}.eth-bid.pdf`);
-      this.$store.state.web3.eth.sendTransaction(raw);
+        doc.save(`${this.raw.name}.eth-bid.pdf`);
+      }
+      this.web3.eth.sendTransaction(raw);
     }
   }
 };

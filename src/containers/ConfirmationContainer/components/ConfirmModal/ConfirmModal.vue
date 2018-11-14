@@ -46,25 +46,22 @@
             v-if="modalDetailInformation"
             class="expended-info">
             <div class="grid-block">
-              <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
-            </div>
-            <!-- <div class="grid-block">
-              <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
-            </div> -->
-            <div class="grid-block">
-              <p>Gas Limit</p><p>{{ gas }} wei</p>
+              <p>{{ $t('interface.network') }}</p><p>{{ network.type.name }} by {{ network.service }}</p>
             </div>
             <div class="grid-block">
-              <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
+              <p>{{ $t('common.gasLimit') }}</p><p>{{ gas }} wei</p>
             </div>
             <div class="grid-block">
-              <p>Transaction Fee</p><p> {{ fee }} ETH</p>
+              <p>{{ $t('common.gasPrice') }}</p><p>{{ gasPrice }} gwei</p>
+            </div>
+            <div class="grid-block">
+              <p>{{ $t('common.txFee') }}</p><p> {{ fee }} ETH</p>
             </div>
             <div class="grid-block">
               <p>Nonce</p><p>{{ nonce }}</p>
             </div>
             <div class="grid-block">
-              <p>Data</p><p>{{ data }}</p>
+              <p>{{ $t('common.data') }}</p><p>{{ data }}</p>
             </div>
           </div>
         </div>
@@ -76,7 +73,7 @@
                 ref="ConfirmAndSendButton"
                 :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
                 @click="sendTx">
-                Confirm and Send
+                {{ $t('common.confirmAndSend') }}
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
@@ -89,7 +86,7 @@
                   triggers="hover focus"
                   placement="top">
                   <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
+                    <p class="qrcode-title">{{ $t('confirmation.scanQrCode') }}</p>
                     <div class="qrcode-block">
                       <qrcode
                         :options="{ size: 100 }"
@@ -110,8 +107,8 @@
 
 <script>
 import AddressBlock from '../AddressBlock';
-import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -167,13 +164,16 @@ export default {
     return {
       modalDetailInformation: false,
       transactionSigned: false,
-      unit,
       tokenTransferTo: '',
       tokenTransferVal: '',
       tokenSymbol: ''
     };
   },
   computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network'
+    }),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;
@@ -200,8 +200,8 @@ export default {
       }
     },
     async parseData(data) {
-      const web3 = this.$store.state.web3;
-      const networkToken = this.$store.state.network.type.tokens;
+      const web3 = this.web3;
+      const networkToken = this.network.type.tokens;
       const tokenIndex = networkToken.findIndex(el => {
         return el.address.toLowerCase() === this.to.toLowerCase();
       });

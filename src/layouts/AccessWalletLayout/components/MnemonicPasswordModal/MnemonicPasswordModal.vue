@@ -4,14 +4,16 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered 
+    @shown="focusInput">
     <form class="password-form">
       <div class="input-container">
         <input
+          ref="mnemonicPasswordInput"
           :type="show ? 'text': 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off">
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
@@ -61,12 +63,9 @@ export default {
   },
   methods: {
     unlockWallet() {
-      MnemonicWallet.unlock({
-        mnemonicPhrase: this.phrase,
-        mnemonicPassword: this.password
-      })
+      MnemonicWallet(this.phrase, this.password)
         .then(wallet => {
-          this.$refs.password.hide();
+          // this.$refs.password.hide();  // TODO: confirm moving this to parent still functions as expected
           this.password = '';
           this.hardwareWalletOpen(wallet);
         })
@@ -77,10 +76,15 @@ export default {
     },
     switchViewPassword() {
       this.show = !this.show;
+    },
+    focusInput() {
+      this.$refs.mnemonicPasswordInput.focus();
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import 'MnemonicPasswordModal.scss';
+@import 'MnemonicPasswordModal-desktop.scss';
+@import 'MnemonicPasswordModal-tablet.scss';
+@import 'MnemonicPasswordModal-mobile.scss';
 </style>

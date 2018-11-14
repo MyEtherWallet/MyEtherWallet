@@ -1,3 +1,26 @@
+### Release v5.0.5
+
+### Feature
+
+- Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
+- implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
+- Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
+- Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
+- Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+
+### Devop
+
+- Move text to translations [#157](https://github.com/MyEtherWallet/MyEtherWallet/pull/157)
+- Update packages [#151](https://github.com/MyEtherWallet/MyEtherWallet/pull/151)
+- Refactor state [#148](https://github.com/MyEtherWallet/MyEtherWallet/pull/148)
+- Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
+- Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
+- Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)
+
+### Hotfix
+
+- Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
+
 ### Release v5.0.4
 
 ### Devop
@@ -16,10 +39,11 @@
 
 ### Feature
 
-- Adds some more inputs for custom network [#86](https://github.com/MyEtherWallet/MyEtherWallet/pull/86)
-- Add light border to flags [#85](https://github.com/MyEtherWallet/MyEtherWallet/pull/85)
-- Decompress images on build [#77](https://github.com/MyEtherWallet/MyEtherWallet/pull/77)
-- Integrate secalot [#76](https://github.com/MyEtherWallet/MyEtherWallet/pull/76)
+- Landing page mobile design [#97](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/97)
+- Adds some more inputs for custom network [#86](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/86)
+- Add light border to flags [#85](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/85)
+- Decompress images on build [#77](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/77)
+- Integrate secalot [#76](ttps://github.com/MyEtherWallet/MyEtherWallet/pull/76)
 - Additional hardware wallets [#57](https://github.com/MyEtherWallet/MyEtherWallet/pull/57)
 - Implement ENS resolver directive, move directives to its own folder [#56](https://github.com/MyEtherWallet/MyEtherWallet/pull/56)
 - Intercept and override signTransaction and signMessage to force confirm modal display and approval [#51](https://github.com/MyEtherWallet/MyEtherWallet/pull/51)

@@ -5,9 +5,12 @@
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
+            :ref="item.class"
             :class="item.class"
             :key="item.title + index">
-            <div class="content-title">
+            <div
+              class="content-title"
+              @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
               <p
                 class="open"
@@ -24,7 +27,7 @@
                   aria-hidden="true"/>
               </p>
             </div>
-            <div class="content-links mobile-hide">
+            <div class="content-links">
               <div
                 v-for="(content, index) in item.contents"
                 :key="content.text+index">
@@ -46,15 +49,15 @@
                 {{ $t("footer.donate") }}
               </h3>
             </div>
-            <div class="content-links">
+            <div class="">
               <p>{{ $t("footer.welcomeDes") }}</p>
 
               <a
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+                :href="'https://etherscan.io/address/'+ethDonationAddress"
                 target="_blank">
                 <p
-                  class="crypto-link"
-                  data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+                  :data-eth="ethDonationAddress"
+                  class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg">
                   &nbsp;Ethereum Donation
                 </p>
@@ -83,7 +86,7 @@
           </div>
           <div class="copyright">
             <p>
-              Pricing taken from <span>CoinMarketCap</span> <br>
+              {{ $t("footer.pricingP") }} <span>CoinMarketCap</span> <br>
               {{ $t("footer.copyright") }}
             </p>
           </div>
@@ -102,6 +105,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -233,6 +237,11 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters({
+      ethDonationAddress: 'ethDonationAddress'
+    })
+  },
   methods: {
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
@@ -249,11 +258,17 @@ export default {
       openButton.style.display = 'block';
       closeButton.style.display = 'none';
       content.classList.add('mobile-hide');
+    },
+    toggler(ref) {
+      const el = this.$refs[ref][0];
+      el.classList.toggle('content-open');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'FooterContainer.scss';
+@import 'FooterContainer-desktop.scss';
+@import 'FooterContainer-tablet.scss';
+@import 'FooterContainer-mobile.scss';
 </style>

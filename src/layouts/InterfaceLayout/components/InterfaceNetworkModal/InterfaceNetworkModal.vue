@@ -27,19 +27,19 @@
         ref="networkList"
         class="network-list">
         <div
-          v-for="(key, index) in Object.keys($store.state.Networks)"
+          v-for="(key, index) in Object.keys(Networks)"
           :key="key + index"
           class="content-block">
           <div class="network-title">
             <img
-              :src="$store.state.Networks[key][0].type.icon">
+              :src="Networks[key][0].type.icon">
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
             <p
-              v-for="net in $store.state.Networks[key]"
+              v-for="net in Networks[key]"
               :key="net.service"
-              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+              :class="net.service === network.service && net.type && net.type.name === network.type.name ? 'current-network': ''"
               class="switch-network"
               @click="switchNetwork(net)">{{ net.service }}</p>
           </div>
@@ -53,7 +53,7 @@
             :key="net.service + '('+ net.type.name + ')' + idx"
             class="grid-3">
             <div
-              :class="net.service === $store.state.network.service && net.type.name === $store.state.network.type.name ? 'current-network': ''"
+              :class="net.service === network.service && net.type.name === network.type.name ? 'current-network': ''"
               class="switch-network custom-network-item">
               <p @click="switchNetwork(net)">{{ net.service }} {{ '('+ net.type.name + ')' }}</p>
               <i
@@ -64,6 +64,7 @@
         </div>
       </div>
       <form
+        v-if="selectedNetwork && selectedNetwork.type"
         ref="networkAdd"
         class="network-add hidden">
         <div class="content-block">
@@ -101,7 +102,7 @@
               placeholder="Port"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="blockExplorerTX"
               class="custom-input-text-1"
               type="number"
@@ -109,7 +110,7 @@
               placeholder="https://etherscan.io/tx/"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
@@ -117,7 +118,7 @@
               placeholder="Chain ID"
               autocomplete="off">
             <input
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetwork.type.name === 'CUS'"
               v-model="blockExplorerAddr"
               class="custom-input-text-1"
               type="number"
@@ -171,7 +172,7 @@
             <interface-bottom-text
               :link-text="$t('interface.learnMore')"
               :question="$t('interface.dontKnow')"
-              link="/"/>
+              link="mailto:support@myetherwallet.com"/>
           </div>
         </div>
 
@@ -186,6 +187,8 @@ import store from 'store';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
 
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -193,7 +196,7 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetwork: networkTypes.ETH,
+      selectedNetwork: this.network,
       chainID: '',
       port: '',
       name: '',
@@ -205,16 +208,21 @@ export default {
       blockExplorerTX: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      network: 'network',
+      Networks: 'Networks'
+    })
+  },
   watch: {
     selectedNetwork(newVal) {
-      this.chainID = newVal.chainID;
+      this.chainID = newVal ? newVal.type.chainID : -1;
     }
   },
   mounted() {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
-
     this.types['custom'] = {
       name: 'CUS',
       name_long: 'CUSTOM',
@@ -229,15 +237,15 @@ export default {
   },
   methods: {
     networkModalOpen() {
-      this.$children[0].$refs.network.show();
+      this.$refs.network.$refs.network.show();
     },
     removeNetwork(net, idx) {
       this.customNetworks.splice(idx, 1);
-      if (net.service === this.$store.state.network.service) {
+      if (net.service === this.network.service) {
         if (this.customNetworks.length > 0) {
           this.switchNetwork(this.customNetworks[0]);
         } else {
-          this.switchNetwork(this.$store.state.Networks.ETH[0]);
+          this.switchNetwork(this.Networks.ETH[0]);
         }
       }
       store.set('customNetworks', this.customNetworks);
@@ -248,7 +256,7 @@ export default {
       this.$refs.networkAdd.classList.toggle('hidden');
     },
     resetCompState() {
-      this.selectedNetwork = { name: 'ETH', name_long: 'Ethereum' };
+      this.selectedNetwork = this.network;
       this.chainID = '';
       this.port = '';
       this.name = '';
@@ -272,13 +280,11 @@ export default {
           blockExplorerTX:
             this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
           chainID: this.chainID,
-          contracts: this.$store.state.Networks[this.selectedNetwork.name][0]
-            .type.contracts,
+          contracts: this.Networks[this.selectedNetwork.name][0].type.contracts,
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: this.$store.state.Networks[this.selectedNetwork.name][0].type
-            .tokens
+          tokens: this.Networks[this.selectedNetwork.name][0].type.tokens
         },
         url: this.url,
         username: this.username
@@ -293,9 +299,11 @@ export default {
       this.$refs.authForm.classList.toggle('hidden');
     },
     switchNetwork(network) {
-      this.selectedNetwork = network;
-      this.$store.dispatch('switchNetwork', network);
-      this.$store.dispatch('setWeb3Instance');
+      this.$store.dispatch('switchNetwork', network).then(() => {
+        this.$store.dispatch('setWeb3Instance').then(() => {
+          this.selectedNetwork = network;
+        });
+      });
     }
   }
 };

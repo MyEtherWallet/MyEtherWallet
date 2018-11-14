@@ -18,12 +18,11 @@
       class="bootstrap-modal-wide nopadding"
       @show="countUnread">
       <template slot="modal-title">
-        <h5 class="modal-title"> {{ unreadCount > 1 ? 'Notifications':'Notification' }}
-          <div
-            v-show="unreadCount > 0"
-            class="notification-count"><span>{{ unreadCount }}</span>
-          </div>
-        </h5>
+        {{ unreadCount > 1 ? 'Notifications':'Notification' }}
+        <div
+          v-show="unreadCount > 0"
+          class="notification-count"><span>{{ unreadCount }}</span>
+        </div>
       </template>
       <div class="notification-item-container">
         <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0">
@@ -64,20 +63,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      notifications: 'notifications'
+      notifications: 'notifications',
+      wallet: 'wallet'
     }),
     sortedNotifications() {
       this.countUnread();
-
-      if (!this.notifications[this.$store.state.wallet.getAddressString()])
+      if (!this.notifications[this.wallet.getChecksumAddressString()])
         return [];
       // eslint-disable-next-line
-      return this.notifications[this.$store.state.wallet.getAddressString()].sort((a, b) => {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
+      return this.notifications[this.wallet.getChecksumAddressString()].sort(
+        (a, b) => {
+          a = new Date(a.timestamp);
+          b = new Date(b.timestamp);
 
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
+          return a > b ? -1 : a < b ? 1 : 0;
+        }
+      );
     }
   },
   watch: {
@@ -87,10 +88,9 @@ export default {
   },
   mounted() {
     if (
-      this.notifications[this.$store.state.wallet.getAddressString()] ===
-      undefined
+      this.notifications[this.wallet.getChecksumAddressString()] === undefined
     ) {
-      this.notifications[this.$store.state.wallet.getAddressString()] = [];
+      this.notifications[this.wallet.getChecksumAddressString()] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -100,18 +100,15 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[self.$store.state.wallet.getAddressString()] !==
+        self.notifications[this.wallet.getChecksumAddressString()] !==
           undefined &&
-        self.notifications[self.$store.state.wallet.getAddressString()].length >
-          0
+        self.notifications[this.wallet.getChecksumAddressString()].length > 0
       ) {
-        self.notifications[self.$store.state.wallet.getAddressString()].map(
-          item => {
-            if (item.read === false) {
-              self.unreadCount++;
-            }
+        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
+          if (item.read === false) {
+            self.unreadCount++;
           }
-        );
+        });
       }
     },
     showNotifications() {
@@ -126,7 +123,7 @@ export default {
         updatedNotif.expanded = false;
       }
       this.$store.dispatch('updateNotification', [
-        this.$store.state.wallet.getAddressString(),
+        this.wallet.getChecksumAddressString(),
         idx,
         updatedNotif
       ]);

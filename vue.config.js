@@ -28,20 +28,36 @@ const webpackConfig = {
   ]
 };
 if (process.env.NODE_ENV === 'production') {
-  webpackConfig.plugins.push(new UnusedFilesWebpackPlugin({
+  webpackConfig.plugins.push(
+    new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
       failOnUnused: true,
       globOptions: {
         ignore: [
+          'src/assets/images/mew-screen.png',
           'src/assets/images/flags/countries.json',
           'src/assets/images/networks/esn.svg',
           'src/translations/README.md',
           'src/translations/terms-of-conditions/en_US.json',
           'src/wallets/hybrid/MEWconnect/deterministicWalletPaths.js',
-          'src/wallets/hardware/deterministicWalletPaths.js'
+          'src/wallets/hardware/deterministicWalletPaths.js',
+          // UnusedFilesWebpackPlugin marked the below files as unused
+          'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
+          'src/components/DropDownAddressSelector/DropDownAddressSelector.vue',
+          'src/components/DropDownAddressSelector/index.js',
+          'src/components/Transactions/TransactionEntry/index.js',
+          'src/components/Transactions/TransactionEntry/TransactionEntry.scss',
+          'src/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.scss',
+          'src/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue',
+          'src/dapps/RegisterDomain/containers/ManageENSContainer/ManageENSContainer.scss',
+          'src/dapps/RegisterDomain/containers/ManageENSContainer/ManageENSContainer.vue',
+          'src/layouts/InterfaceLayout/components/ProvidersRadioSelector/index.js',
+          'src/layouts/InterfaceLayout/components/ProvidersRadioSelector/ProvidersRadioSelector.scss',
+          'src/layouts/InterfaceLayout/components/ProvidersRadioSelector/ProvidersRadioSelector.vue'
         ]
       }
-    }));
+    })
+  );
 }
 module.exports = {
   baseUrl: './',

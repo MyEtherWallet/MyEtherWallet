@@ -1,11 +1,11 @@
 <template>
   <div>
-    <interface-network-modal/>
+    <interface-network-modal ref="network"/>
     <div @click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
           <img
-            :src="$store.state.network.type.icon"
+            :src="network.type.icon"
             class="icon">
         </div>
         <div class="block-content">
@@ -15,9 +15,9 @@
               :popovertype="'A'" />
           </div>
           <div class="information-container">
-            <h2>{{ $t("interface.txNetworkTitle") }}</h2>
-            <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
-            <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
+            <h2>{{ $t("interface.network") }}</h2>
+            <p>{{ network.service+"("+network.type.name+")" }}</p>
+            <p>{{ $t("interface.lastBlock") }}: # <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
               v-show="parsedNetwork === ''"
               class="fa fa-spinner fa-spin"/> </p>
           </div>
@@ -32,6 +32,7 @@
 
 <script>
 import InterfaceNetworkModal from '../InterfaceNetworkModal';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -48,6 +49,11 @@ export default {
       parsedNetwork: 0
     };
   },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
+  },
   watch: {
     blockNumber(newVal) {
       this.parsedNetwork = parseInt(newVal);
@@ -60,7 +66,7 @@ export default {
   },
   methods: {
     networkModalOpen() {
-      this.$children[0].$refs.network.show();
+      this.$refs.network.$refs.network.show();
     }
   }
 };

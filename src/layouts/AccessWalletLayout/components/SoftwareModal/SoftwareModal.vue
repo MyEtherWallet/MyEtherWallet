@@ -3,7 +3,7 @@
     ref="software"
     :title="$t('accessWallet.accessBySoftware')"
     hide-footer
-    class="bootstrap-modal modal-software"
+    class="bootstrap-modal padding-25-20 modal-software"
     centered>
     <div class="d-block content-container text-center">
       <ul class="button-options">

@@ -8,8 +8,8 @@
           <h4>Signature: </h4>
           <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
           <div class="copy-buttons">
-            <span @click="deleteInput">Clear</span>
-            <span @click="copyToClipboard">Copy</span>
+            <span @click="deleteInput">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
           class="custom-textarea-1"/>
       </div>
       <div>
-        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} did sign the message:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
+        <p v-if="message !== '' && showMessage === true">{{ JSON.parse(message).address }} {{ $t('interface.verifiedMessage') }}:<br v-if="JSON.parse(message).msg.length > 20"> <b>{{ JSON.parse(message).msg }}</b></p>
         <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
       </div>
     </div>
@@ -36,7 +36,7 @@
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="mailto:support@myetherwallet.com"/>
     </div>
 
   </div>
@@ -46,8 +46,9 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { MessageUtil } from '@/helpers';
+import { mapGetters } from 'vuex';
 // eslint-disable-next-line
-const createKeccakHash = require('keccak')
+const createKeccakHash = require('keccak');
 
 export default {
   components: {
@@ -63,6 +64,11 @@ export default {
       },
       showMessage: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   },
   watch: {
     message() {
@@ -101,7 +107,7 @@ export default {
           hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
         }
       } else if (json.version === '1') {
-        hash = this.$store.state.web3.utils.sha3(json.msg);
+        hash = this.web3.utils.sha3(json.msg);
       }
 
       const pubKey = MessageUtil.ecrecover(
