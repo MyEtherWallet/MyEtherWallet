@@ -2,6 +2,8 @@ const Dotenv = require('dotenv-webpack');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJS = require('uglify-es');
 const webpackConfig = {
   node: {
     process: true
@@ -27,11 +29,30 @@ const webpackConfig = {
     })
   ]
 };
+if (process.env.BUILD_TYPE === 'MEWCX') {
+  webpackConfig.plugins.push(
+    new CopyWebpackPlugin([
+      {
+        from: 'src/builds/chrome-extension/files',
+        transform: function(content, filePath) {
+          if (filePath.split('.').pop() === ('js' || 'JS'))
+            return UglifyJS.minify(content.toString()).code;
+          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
+            const version = require('./package.json').version;
+            let json = JSON.parse(content);
+            json.version = version;
+            return JSON.stringify(json);
+          } else return content;
+        }
+      }
+    ])
+  );
+}
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: true,
+      failOnUnused: false,
       globOptions: {
         ignore: [
           'src/assets/images/mew-screen.png',
