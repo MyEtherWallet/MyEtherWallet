@@ -12,6 +12,7 @@
     "lint:md": "remark . -o -f",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "build": "npm run update:lists && vue-cli-service build",
+    "build:mewcx": "npm run update:lists && BUILD_TYPE=MEWCX vue-cli-service build",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run test:unit && codecov",
     "update:lists": "node fetchEthListData.js"
@@ -50,6 +51,7 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "canvas": "1.6.12",
     "codecov": "^3.1.0",
+    "copy-webpack-plugin": "^4.6.0",
     "dotenv-webpack": "^1.5.7",
     "eth-ens-namehash": "^2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
@@ -78,6 +80,7 @@
     "stylelint-config-standard": "^18.2.0",
     "trezor-connect": "^6.0.1",
     "u2f-api": "^1.0.7",
+    "uglify-es": "^3.3.9",
     "unused-files-webpack-plugin": "^3.4.0",
     "vue-i18n": "^8.3.0",
     "vue-infinite-slide-bar": "^1.0.8",
@@ -91,6 +94,7 @@
     "web3-providers-http": "^1.0.0-beta.36",
     "web3-providers-ws": "^1.0.0-beta.36",
     "web3-utils": "^1.0.0-beta.36",
+    "webpack": "^4.25.1",
     "worker-loader": "^2.0.0",
     "zxcvbn": "^4.4.2"
   },

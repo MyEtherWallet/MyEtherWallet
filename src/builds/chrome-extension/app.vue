@@ -26,8 +26,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'App.scss';
-
 @import '~@/scss/Global-desktop';
 @import '~@/scss/Global-tablet';
 @import '~@/scss/Global-mobile';
