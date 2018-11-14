@@ -1,15 +1,15 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import { routerConfig } from '@/configs';
 import BootstrapVue from 'bootstrap-vue';
 import InfiniteSlider from 'vue-infinite-slide-bar';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import Vue from 'vue';
-import App from './App';
-import router from './router';
-import store from './store';
+import router from '@/router';
+import store from '@/store';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
@@ -23,7 +23,7 @@ import EnsResolver from '@/directives/EnsResolver';
 import Capitalize from '@/filters/Capitalize';
 import ConcatAddr from '@/filters/ConcatAddr';
 // etc
-import languages from './translations';
+import languages from '@/translations';
 import VueMq from 'vue-mq';
 
 Vue.use(VueMq, {
@@ -70,5 +70,5 @@ new Vue({
   i18n,
   router,
   store,
-  render: h => h(App)
+  render: h => h(routerConfig.app)
 }).$mount('#app');
