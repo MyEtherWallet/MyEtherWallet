@@ -7,7 +7,7 @@
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       title="Confirmation">
       <div class="time-remaining">
-        <h1>09:25</h1>
+        <h1>{{ timeRemaining }}</h1>
         <p>Time Remaining</p>
       </div>
       <div class="swap-detail">
@@ -16,11 +16,11 @@
             <img :src="fromAddress.image">
           </div>
           <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
-          <p 
-            v-show="fromAddress.address !== ''" 
+          <p
+            v-show="fromAddress.address !== ''"
             class="block-title">From Address</p>
-          <p 
-            v-show="fromAddress.address !== ''" 
+          <p
+            v-show="fromAddress.address !== ''"
             class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
@@ -31,33 +31,25 @@
             <img :src="toAddress.image">
           </div>
           <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
-          <p 
-            v-show="toAddress.address !== ''" 
+          <p
+            v-show="toAddress.address !== ''"
             class="block-title">To Address</p>
-          <p 
-            v-show="toAddress.address !== ''" 
+          <p
+            v-show="toAddress.address !== ''"
             class="address">{{ toAddress.address }}</p>
         </div>
-        <div 
-          v-show="!fromFiat" 
-          class="confirm-send-button" >
+        <div
+          v-show="!fromFiat"
+          class="confirm-send-button">
           <h4>Send {{ fromAddress.value }} {{ fromAddress.name }} to <span class="address">{{ qrcode }}</span></h4>
           <qrcode
             :value="qrcode"
             :options="{ size: 200 }"/>
         </div>
-        <simplex-checkout-form 
-          v-if="fromFiat && swapProvider === 'simplex'" 
-          :form-data="swapDetails.dataForInitialization" 
+        <simplex-checkout-form
+          v-if="fromFiat && swapProvider === 'simplex'"
+          :form-data="swapDetails.dataForInitialization"
           :continue-action="redirectToPartner"/>
-
-          <!--<div-->
-          <!--v-show="fromFiat">-->
-          <!--<button-with-qrcode-->
-          <!--:qrcode="qrcode"-->
-          <!--buttonname="Confirm and Send"/>-->
-          <!--</div>-->
-
       </div>
 
       <help-center-button/>
@@ -74,7 +66,7 @@ import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
 
-import { fiat } from '@/partners';
+import { fiat, utils } from '@/partners';
 
 export default {
   components: {
@@ -96,6 +88,8 @@ export default {
         BTC: iconBtc,
         ETH: iconEth
       },
+      timerInterval: {},
+      timeRemaining: 0,
       fiatCurrencies: fiat.map(entry => entry.symbol),
       fromFiat: false,
       qrcode: '',
@@ -121,13 +115,14 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
+      this.timeUpdater(newValue);
       if (this.fiatCurrencies.includes(newValue.fromCurrency)) {
         this.fromFiat = true;
         this.fromAddress = {
           image: this.currencyIcons[newValue.fromCurrency],
           value: newValue.fromValue,
           name: newValue.fromCurrency,
-          address: ''
+          address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
           image: this.currencyIcons[newValue.toCurrency],
@@ -165,11 +160,24 @@ export default {
     }
   },
   methods: {
+    timeUpdater(swapDetails) {
+      clearInterval(this.timerInterval);
+      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timerInterval = setInterval(() => {
+        this.timeRemaining = utils.getTimeRemainingString(
+          swapDetails.timestamp
+        );
+        if (this.timeRemaining === 'expired') {
+          clearInterval(this.timerInterval);
+        }
+      }, 1000);
+    },
     redirectToPartner() {
       this.swapStarted(this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
     swapStarted(swapDetails) {
+      this.timeUpdater(swapDetails);
       if (swapDetails.dataForInitialization) {
         switch (swapDetails.provider) {
           case 'changelly':
@@ -183,12 +191,21 @@ export default {
         throw Error('Invalid details from swap provider');
       }
     },
+    buildQrCodeContent(swapDetails) {
+      if (swapDetails.fromCurrency === 'BTC') {
+        this.qrcode = `bitcoin:${swapDetails.providerAddress}`;
+      } else {
+        this.qrcode = swapDetails.providerAddress;
+      }
+    },
     bitySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress;
+      this.buildQrCodeContent(swapDetails);
+      // this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     },
     changellySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress;
+      this.buildQrCodeContent(swapDetails);
+      // this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
   }

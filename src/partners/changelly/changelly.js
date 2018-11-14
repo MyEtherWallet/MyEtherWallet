@@ -139,10 +139,11 @@ export default class Changelly {
   // ============================= Finalize swap details ====================================
 
   async startSwap(swapDetails) {
-    if (swapDetails.minValue < swapDetails.fromValue) {
+    if (+swapDetails.minValue <= +swapDetails.fromValue) {
       swapDetails.dataForInitialization = await await this.createTransaction(
         swapDetails
       );
+      console.log(swapDetails.dataForInitialization); // todo remove dev item
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.amountExpectedFrom;
       swapDetails.providerSends =
@@ -153,6 +154,7 @@ export default class Changelly {
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payinAddress;
+      console.log(swapDetails); // todo remove dev item
       return swapDetails;
     }
     throw Error('From amount below changelly minimun for currency pair');
@@ -163,7 +165,8 @@ export default class Changelly {
     toCurrency,
     toAddress,
     fromAddress,
-    fromValue
+    fromValue,
+    refundAddress
   }) {
     const swapParams = {
       from: fromCurrency.toLowerCase(),
@@ -171,7 +174,7 @@ export default class Changelly {
       address: toAddress,
       extraId: null,
       amount: fromValue,
-      refundAddress: fromAddress !== '' ? fromAddress : toAddress,
+      refundAddress: refundAddress === '' ? fromAddress : refundAddress,
       refundExtraId: null
     };
     return await changellyCalls.createTransaction(swapParams, this.network);

@@ -10,4 +10,20 @@ const objectToMap = obj => {
   return new Map(Object.entries(obj));
 };
 
-export { mapToObject, objectToMap };
+const getTimeRemaining = (timestamp, validFor = 600) => {
+  return (
+    validFor - parseInt((new Date().getTime() - Date.parse(timestamp)) / 1000)
+  );
+};
+
+const getTimeRemainingString = timestamp => {
+  const timeRemaining = getTimeRemaining(timestamp);
+  if (timeRemaining < 0) {
+    return 'expired';
+  }
+  const seconds = Math.floor(timeRemaining % 60);
+  const minutes = Math.floor((timeRemaining / 60) % 60);
+  return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
+};
+
+export { mapToObject, getTimeRemaining, getTimeRemainingString, objectToMap };

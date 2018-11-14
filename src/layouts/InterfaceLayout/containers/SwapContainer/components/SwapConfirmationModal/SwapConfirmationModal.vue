@@ -5,9 +5,10 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="time-remaining">
-        <h1>09:25</h1>
+        <h1>{{ timeRemaining }}</h1>
         <p>Time Remaining</p>
       </div>
       <div class="swap-detail">
@@ -32,8 +33,6 @@
         </div>
       </div>
 
-      <!--<detail-information :details="detailInfo"/>-->
-
       <div
         :class="[swapReady ? '': 'disable', 'confirm-send-button']"
         @click="sendTransaction">
@@ -49,7 +48,6 @@
 </template>
 
 <script>
-/* eslint-disable*/
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
@@ -61,7 +59,7 @@ import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens } from '@/partners';
+import { EthereumTokens, utils } from '@/partners';
 
 export default {
   components: {
@@ -91,6 +89,7 @@ export default {
         BTC: iconBtc,
         ETH: iconEth
       },
+      timeRemaining: 0,
       qrcode: '',
       arrowImage: Arrow,
       fromAddress: {
@@ -104,32 +103,6 @@ export default {
         value: '0.0034523',
         name: 'BTC',
         address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      detailInfo: {
-        network: {
-          name: 'Network',
-          value: 'ETH by mytherapi.com'
-        },
-        gas: {
-          name: 'Gas Limit',
-          value: '21000'
-        },
-        gasPrice: {
-          name: 'Gas Price',
-          value: '210000 Gwei (0.00321 ETH=$1.234)'
-        },
-        transactionFee: {
-          name: 'Max Transaction Fee',
-          value: '441000 Gwei (0.000441 ETH)'
-        },
-        nonce: {
-          name: 'Nonce',
-          value: '0'
-        },
-        data: {
-          name: 'Data',
-          value: 'None'
-        }
       }
     };
   },
@@ -144,7 +117,7 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
-      console.log('modal watcher:', newValue); // todo remove dev item
+      console.log('modal swapDetails watcher:', newValue); // todo remove dev item
       this.fromAddress = {
         image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,
@@ -157,10 +130,23 @@ export default {
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
+      this.timeUpdater(newValue);
       this.swapStarted(newValue);
     }
   },
   methods: {
+    timeUpdater(swapDetails) {
+      clearInterval(this.timerInterval);
+      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timerInterval = setInterval(() => {
+        this.timeRemaining = utils.getTimeRemainingString(
+          swapDetails.timestamp
+        );
+        if (this.timeRemaining === 'expired') {
+          clearInterval(this.timerInterval);
+        }
+      }, 1000);
+    },
     async sendTransaction() {
       if (!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
@@ -177,35 +163,8 @@ export default {
       this.$emit('swapStarted', this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
-    createTokenTransferData(fromAddress, amount, tokenDetails) {
-      const jsonInterface = [
-        {
-          constant: false,
-          inputs: [
-            { name: '_to', type: 'address' },
-            { name: '_amount', type: 'uint256' }
-          ],
-          name: 'transfer',
-          outputs: [{ name: '', type: 'bool' }],
-          payable: false,
-          stateMutability: 'nonpayable',
-          type: 'function'
-        }
-      ];
-      const contract = new this.web3.eth.Contract(
-        jsonInterface,
-        tokenDetails.contractAddress
-      );
-      return contract.methods
-        .transfer(
-          fromAddress,
-          new BigNumber(amount)
-            .times(new BigNumber(10).pow(tokenDetails.decimals))
-            .toFixed()
-        )
-        .encodeABI();
-    },
     async swapStarted(swapDetails) {
+      this.timeUpdater(swapDetails);
       this.swapReady = false;
       this.preparedSwap = {};
       if (
@@ -216,15 +175,35 @@ export default {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
 
+          const contract = new this.web3.eth.Contract(
+            [
+              {
+                constant: false,
+                inputs: [
+                  { name: '_to', type: 'address' },
+                  { name: '_amount', type: 'uint256' }
+                ],
+                name: 'transfer',
+                outputs: [{ name: '', type: 'bool' }],
+                payable: false,
+                stateMutability: 'nonpayable',
+                type: 'function'
+              }
+            ],
+            tokenInfo.contractAddress
+          );
           this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,
             value: 0,
-            data: this.createTokenTransferData(
-              swapDetails.providerAddress,
-              swapDetails.fromValue,
-              tokenInfo
-            )
+            data: contract.methods
+              .transfer(
+                swapDetails.providerAddress,
+                new BigNumber(swapDetails.fromValue)
+                  .times(new BigNumber(10).pow(tokenInfo.decimals))
+                  .toFixed()
+              )
+              .encodeABI()
           };
         } else if (
           swapDetails.maybeToken &&
@@ -239,7 +218,10 @@ export default {
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
           entry.from = this.wallet.getChecksumAddressString();
-          if (unit.toWei(this.gasPrice, 'gwei') > swapDetails.kyberMaxGas) {
+          if (
+            +unit.toWei(this.gasPrice, 'gwei').toString() >
+            +swapDetails.kyberMaxGas
+          ) {
             entry.gasPrice = swapDetails.kyberMaxGas;
           }
           return entry;

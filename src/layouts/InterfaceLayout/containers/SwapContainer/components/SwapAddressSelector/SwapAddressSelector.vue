@@ -90,6 +90,7 @@ export default {
       dropdownOpen: false,
       addresses: [
         { address: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9', currency: 'BTC' },
+        { address: '17UkfLgnt55hxBALSe1B7wtZx5ijPvbtdk', currency: 'BCH' },
         {
           address: '0x7545566a4339daf3fad6979208b2042f06e8c881',
           currency: 'ETH'

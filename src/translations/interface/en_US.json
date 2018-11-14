@@ -45,5 +45,6 @@
   "signedTx": "Signed Transaction",
   "raw": "Raw",
   "copyAndCont": "Copy and Continue",
-  "lastBlock": "Last block"
+  "lastBlock": "Last block",
+  "refund": "address for refund (if needed) from"
 }

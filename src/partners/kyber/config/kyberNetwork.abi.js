@@ -1,4 +1,4 @@
-const kyberNetworkABI = [
+const kyberNetworkAbi = [
   {
     constant: false,
     inputs: [{ name: 'alerter', type: 'address' }],
@@ -496,4 +496,4 @@ const kyberNetworkABI = [
   }
 ];
 
-export default kyberNetworkABI;
+export default kyberNetworkAbi;
