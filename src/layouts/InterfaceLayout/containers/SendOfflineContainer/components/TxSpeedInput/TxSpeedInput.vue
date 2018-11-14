@@ -86,7 +86,7 @@
       </div>
       <div class="the-form gas-amount">
         <input
-          v-model="gasPrice"
+          v-model="locGasLimit"
           :placeholder="$t('common.gasLimit')"
           type="number"
         />
@@ -102,6 +102,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     data: {
@@ -130,16 +132,21 @@ export default {
       fast: 75,
       regular: 45,
       slow: 5,
-      gasPrice: this.gasLimit,
-      locNonce: this.nonce
+      locNonce: this.nonce,
+      locGasLimit: this.gasLimit
     };
+  },
+  computed: {
+    ...mapGetters({
+      gasPrice: 'gasPrice'
+    })
   },
   watch: {
     locNonce(newVal) {
       this.$emit('nonceUpdate', Number(newVal));
     },
-    gasPrice(newVal) {
-      this.$emit('gasLimitUpdate', newVal);
+    locGasLimit(newVal) {
+      this.$emit('gasLimitUpdate', Number(newVal));
     }
   },
   methods: {

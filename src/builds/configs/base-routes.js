@@ -13,6 +13,7 @@ import DeployContractContainer from '@/layouts/InterfaceLayout/containers/Deploy
 import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer';
 import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer';
 import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer';
+import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
@@ -89,9 +90,9 @@ const router = [
         component: SendCurrencyContainer
       },
       {
-        path: 'send-offline-transaction',
-        name: 'Send Offline',
-        component: SendOfflineContainer
+        path: 'send-offline',
+        component: SendOfflineContainer,
+        children: offlineRoutes.children
       },
       {
         path: 'swap',

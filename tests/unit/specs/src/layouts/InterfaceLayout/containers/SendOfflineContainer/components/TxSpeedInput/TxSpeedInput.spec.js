@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
-import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
+import TxSpeedInput from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/TxSpeedInput/TxSpeedInput.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import {
   Tooling
@@ -9,7 +9,7 @@ import {
 describe('TxSpeedInput.vue', () => {
     let localVue, i18n, wrapper, store;
 
- 
+
     beforeAll(() => {
         const baseSetup = Tooling.createLocalVueInstance();
         localVue = baseSetup.localVue;
@@ -23,8 +23,15 @@ describe('TxSpeedInput.vue', () => {
           i18n,
           store,
           attachToDocument: true,
-          stubs:{
-            'popover':PopOver
+          stubs: {
+            popover: PopOver
+          },
+          propsData: {
+            data: '',
+            toAddress: '',
+            value: '0',
+            gasLimit: 21000,
+            nonce: 0
           }
         });
     });
@@ -34,8 +41,13 @@ describe('TxSpeedInput.vue', () => {
       expect(speedButtons[0].textContent.trim()).toEqual('Slow')
       expect(speedButtons[1].textContent.trim()).toEqual('Regular')
       expect(speedButtons[2].textContent.trim()).toEqual('Fast')
-      expect(wrapper.vm.$data.gasPrice).toEqual(21000)
+      expect(wrapper.vm.data).toEqual('')
+      expect(wrapper.vm.toAddress).toEqual('')
+      expect(wrapper.vm.value).toEqual('0')
+      expect(wrapper.vm.gasLimit).toEqual(21000)
+      expect(wrapper.vm.nonce).toEqual(0)
       expect(wrapper.vm.$data.locNonce).toEqual(0)
+      expect(wrapper.vm.$data.locGasLimit).toEqual(21000)
     });
 
     it('should emit locNonce update when input changed', () => {

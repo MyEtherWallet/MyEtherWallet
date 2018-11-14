@@ -25,18 +25,10 @@
           </div>
           <div class="to-address">
             <div class="title">
-              <h4>{{ $t('interface.sendTxToAddr') }}</h4>
+              <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
               <blockie
-                v-show="
-                  (address !== '' || resolvedAddress !== '') && !validAddress
-                "
-                :address="
-                  address !== ''
-                    ? address
-                    : resolvedAddress !== ''
-                    ? resolvedAddress
-                    : ''
-                "
+                v-show="(address !== '' || resolvedAddress !== '') && validAddress"
+                :address="address !== '' ? address: resolvedAddress !== ''? resolvedAddress:''"
                 width="22px"
                 height="22px"
               />
@@ -126,9 +118,9 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import TxSpeedInput from '../../components/TxSpeedInput';
-import CurrencyPicker from '../CurrencyPicker';
-import SignedTxModal from '../../components/SignedTxModal';
+import TxSpeedInput from '../TxSpeedInput';
+import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
+import SignedTxModal from '../SignedTxModal';
 import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx');
@@ -210,7 +202,7 @@ export default {
 
       const signed = await this.web3.eth.signTransaction(this.raw);
       this.signed = JSON.stringify(signed);
-      this.$emit('createdRawTx', signed.rawTransaction);
+      this.$emit('createdRawTx', JSON.stringify(signed));
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
     },
@@ -222,7 +214,7 @@ export default {
       this.$emit('nonceUpdate', e);
     },
     pathUpdate() {
-      this.$emit('pathUpdate', 'sendPubTx');
+      this.$emit('pathUpdate', 'Offline Send Transaction');
     }
   }
 };

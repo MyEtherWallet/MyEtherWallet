@@ -181,7 +181,8 @@ export default {
   computed: {
     ...mapGetters({
       web3: 'web3',
-      customPaths: 'customPaths'
+      customPaths: 'customPaths',
+      path: 'path'
     })
   },
   watch: {
@@ -247,7 +248,8 @@ export default {
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      this.$router.push({ path: 'interface' });
+      this.$router.push({ path: this.path !== '' ? this.path : 'interface' });
+      this.$store.dispatch('setLastPath', '');
     },
     setHDAccounts() {
       this.HDAccounts = [];
