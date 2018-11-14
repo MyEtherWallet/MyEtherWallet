@@ -97,6 +97,23 @@
       </div>
     </div>
 
+    <div 
+      v-show="showRefundAddress" 
+      class="send-form">
+      <div class="title-container">
+        <div class="title title-and-copy">
+          <h4>{{ fromCurrency }} address for refund (if needed) from Changelly </h4>
+          <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
+        </div>
+      </div>
+      <div class="the-form gas-amount">
+        <drop-down-address-selector
+          :currency="fromCurrency"
+          :current-address="currentAddress"
+          @toAddress="setRefundAddress"/>
+      </div>
+    </div>
+
     <div class="send-form">
       <div class="title-container">
         <div class="title title-and-copy">
@@ -113,45 +130,6 @@
         :loading-data="loadingData"
         :providers-found="providersFound"
         @selectedProvider="setSelectedProvider"/>
-    </div>
-
-    <div
-      v-if="false"
-      class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-and-popover">
-            <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
-          </div>
-          <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
-        </div>
-        <div class="buttons">
-          <div class="small-circle-button-green-border">
-            {{ $t('common.slow') }}
-          </div>
-          <div class="small-circle-button-green-border active">
-            {{ $t('common.regular') }}
-          </div>
-          <div class="small-circle-button-green-border">
-            {{ $t('common.fast') }}
-          </div>
-        </div>
-      </div>
-
-      <div class="the-form gas-amount">
-        <input
-          type="number"
-          name=""
-          value=""
-          placeholder="Gas Amount">
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
-        </div>
-      </div>
     </div>
 
     <div class="submit-button-container">
@@ -180,7 +158,6 @@
 <script>
 import BigNumber from 'bignumber.js';
 import debug from 'debug';
-import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
@@ -231,6 +208,7 @@ export default {
       finalizingSwap: false,
       toAddress: '',
       currentAddress: '',
+      refundAddress: '',
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
         web3: this.$store.state.web3,
@@ -348,6 +326,12 @@ export default {
         );
       }
       return false;
+    },
+    showRefundAddress() {
+      return (
+        !this.swap.isToken(this.fromCurrency) &&
+        this.selectedProvider.provider === 'changelly'
+      );
     }
   },
   watch: {
@@ -390,6 +374,9 @@ export default {
     },
     setToAddress(address) {
       this.toAddress = address;
+    },
+    setRefundAddress(address) {
+      this.refundAddress = address;
     },
     setFromCurrency(value) {
       this.fromCurrency = value.symbol;
@@ -500,7 +487,7 @@ export default {
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
-        // clearTimeout(loadingTimeout);
+
         this.loadingData = false;
         if (
           results.every(
@@ -532,6 +519,7 @@ export default {
     // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       try {
+        console.log('this.validSwap', this.validSwap); // todo remove dev item
         if (this.validSwap) {
           this.finalizingSwap = true;
           const providerDetails = this.providerList.find(entry => {
@@ -548,13 +536,14 @@ export default {
             maxValue: providerDetails.maxValue,
             toAddress: this.toAddress,
             fromAddress: this.currentAddress,
-            timestamp: Date.now(),
+            timestamp: new Date().toISOString(),
             status: 0,
-            maybeToken: false
+            maybeToken: false,
+            refundAddress: this.refundAddress
           };
 
           this.swapDetails = await this.swap.startSwap(swapDetails);
-
+          console.log(this.swapDetails); // todo remove dev item
           this.finalizingSwap = false;
           if (
             this.swapDetails.dataForInitialization &&
@@ -565,6 +554,7 @@ export default {
             this.swapDetails.dataForInitialization &&
             !this.swapDetails.maybeToken
           ) {
+            console.log('send to swap'); // todo remove dev item
             this.$refs.swapSendTo.$refs.swapconfirmation.show();
           } else {
             throw Error(
@@ -576,11 +566,11 @@ export default {
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
+        console.error(e);
         errorLogger(e);
       }
     },
     swapStarted(swapDetails) {
-      // let checkStatus;
       this.$store.dispatch('addSwapTransaction', [
         this.currentAddress,
         swapDetails
@@ -592,60 +582,6 @@ export default {
       this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 1;
-    },
-    async createTx(swapDetails) {
-      const isEth = this.fromCurrency === 'ETH';
-      const nonce = await this.web3.eth.getTransactionCount(
-        this.wallet.getAddressString()
-      );
-
-      const raw = {
-        from: this.wallet.getAddressString(),
-        // gas: this.gasLimit,
-        nonce: nonce,
-        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-        value: isEth ? unit.toWei(swapDetails.fromValue, 'ether') : 0,
-        to: swapDetails.providerAddress,
-        data: isEth
-          ? '0x'
-          : this.createDataHex(swapDetails.fromCurrency, swapDetails.fromValue),
-        chainId: this.$store.state.network.type.chainID || 1
-      };
-
-      if (this.address === '') {
-        delete this.raw['to'];
-      }
-      return this.web3.eth.signTransaction(raw);
-    },
-    createDataHex(fromCurrency, fromValue) {
-      const tokenAddress = this.swap.getTokenAddress(fromCurrency);
-      const tokenDecimals = this.swap.getTokenDecimals(fromCurrency);
-      const jsonInterface = [
-        {
-          constant: false,
-          inputs: [
-            { name: '_to', type: 'address' },
-            { name: '_amount', type: 'uint256' }
-          ],
-          name: 'transfer',
-          outputs: [{ name: '', type: 'bool' }],
-          payable: false,
-          stateMutability: 'nonpayable',
-          type: 'function'
-        }
-      ];
-      const contract = new this.$store.state.web3.eth.Contract(
-        jsonInterface,
-        tokenAddress
-      );
-      return contract.methods
-        .transfer(
-          this.address,
-          new BigNumber(fromValue)
-            .times(new BigNumber(10).pow(tokenDecimals))
-            .toFixed()
-        )
-        .encodeABI();
     }
   }
 };

@@ -39,7 +39,7 @@ export default class Kyber {
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
     this.rates = new Map();
-    console.log(this.gasLimit); // todo remove dev item
+
     // setup actions
     this.retrieveRates();
     this.getSupportedTokenList();
@@ -510,8 +510,7 @@ export default class Kyber {
     const PRECISION = 10 ** 18;
     if (dstDecimals >= srcDecimals) {
       return (srcQty * rate * 10 ** (dstDecimals - srcDecimals)) / PRECISION;
-    } else {
-      return (srcQty * rate) / (PRECISION * 10 ** (srcDecimals - dstDecimals));
     }
+    return (srcQty * rate) / (PRECISION * 10 ** (srcDecimals - dstDecimals));
   }
 }
