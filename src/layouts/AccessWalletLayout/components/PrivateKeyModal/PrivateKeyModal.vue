@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     unlockWallet() {
-      console.log(this.path);
       this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
       ]);
