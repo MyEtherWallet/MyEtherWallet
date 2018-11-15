@@ -16,10 +16,12 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div class="buy-eth" @click="setFiatBuy">
+      <div 
+        class="buy-eth" 
+        @click="setFiatBuy">
         <!--<a href="https://ccswap.myetherwallet.com" target="_blank" >-->
-          <!--<span>Buy ETH with</span>-->
-          <!--<img :src="images.visaMaster">-->
+        <!--<span>Buy ETH with</span>-->
+        <!--<img :src="images.visaMaster">-->
         <!--</a>-->
         <span>Buy ETH with</span>
         <img :src="images.visaMaster">
@@ -399,7 +401,7 @@ export default {
     setRefundAddress(address) {
       this.refundAddress = address;
     },
-    setFiatBuy(){
+    setFiatBuy() {
       this.setFromCurrency({ symbol: 'ETH', name: 'Ether' });
       // this.fromCurrency = 'USD';
       // this.toCurrency = 'ETH';
