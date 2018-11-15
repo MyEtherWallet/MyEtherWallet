@@ -3,7 +3,7 @@ import { KyberCurrencies } from '../kyber/index';
 import { ChangellyCurrencies } from '../changelly/index';
 import { SimplexCurrencies } from '../simplex/index';
 
-function disabledPairing(currencyList, symbol, invalid, side) {
+/*function disabledPairing(currencyList, symbol, invalid, side) {
   if (currencyList[symbol]) {
     if (side === 'from') {
       if (currencyList[symbol].invalidFrom) {
@@ -19,7 +19,7 @@ function comparator(a, b) {
   a = a.symbol;
   b = b.symbol;
   return a < b ? -1 : a > b ? 1 : 0;
-}
+}*/
 
 // TODO: variable conventions & on moving each part into the respective partner dir
 export default class CurrencyOptionBuilder {
@@ -30,56 +30,7 @@ export default class CurrencyOptionBuilder {
     this.simplexCurrencies = props.simplex || SimplexCurrencies;
     this.kybernetworkCurrencies = props.kyber || KyberCurrencies;
   }
-
-  getProviderSupported(provider) {
-    if (this[`${provider}Currencies`]) {
-      return this[`${provider}Currencies`];
-    }
-    return {};
-  }
-
-  // doesProviderSupportPair(provider, fromCurrency, toCurrency) {
-  //   console.log(provider, fromCurrency, toCurrency); // todo remove dev item
-  //   const providerSupported = this.getProviderSupported(provider);
-  //   if (!providerSupported.fiat) {
-  //     return (
-  //       typeof providerSupported[fromCurrency] !== 'undefined' &&
-  //       typeof providerSupported[toCurrency] !== 'undefined'
-  //     );
-  //   }
-  //   return (
-  //     typeof providerSupported.fiat[fromCurrency] !== 'undefined' &&
-  //     (toCurrency === 'ETH' || toCurrency === 'BTC')
-  //   );
-  // }
-
-  updateCurrencyList(provider, updatedList) {
-    if (this[`${provider}Currencies`]) {
-      this[`${provider}Currencies`] = updatedList;
-    }
-  }
-
-  moveToTop(array, currencyObject) {
-    const idx = array.findIndex(item => item.symbol === currencyObject.symbol);
-    array.splice(idx, 1);
-    return [currencyObject, ...array];
-  }
-
-  addBtcAndEthToTop(array, currentSelected) {
-    if (currentSelected.symbol !== 'BTC') {
-      array = this.moveToTop(array, {
-        symbol: 'BTC',
-        name: 'Bitcoin'
-      });
-    }
-    if (currentSelected.symbol !== 'ETH') {
-      array = this.moveToTop(array, { symbol: 'ETH', name: 'Ether' });
-    }
-    return array;
-  }
-
-  addETHtoTop() {}
-
+/*
   buildInitialCurrencyArrays() {
     const collectMapTo = new Map();
     const collectMapFrom = new Map();
@@ -262,7 +213,7 @@ export default class CurrencyOptionBuilder {
     // return Array.from(collectMap.values())
     //   .sort(comparator)
     //   .splice(0, 0, { symbol: 'ETH', name: 'Ether' });
-  }
+  }*/
 }
 
 export { CurrencyOptionBuilder };
