@@ -12,7 +12,7 @@
     "lint:md": "remark . -o -f",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "build": "npm run update:lists && vue-cli-service build",
-    "build:mewcx": "npm run update:lists && BUILD_TYPE=MEWCX vue-cli-service build",
+    "build:mewcx": "npm run update:lists && BUILD_TYPE=mewcx vue-cli-service build",
     "deploy": "gh-pages -d dist -b gh-pages",
     "codecov": "npm run test:unit && codecov",
     "update:lists": "node fetchEthListData.js"
@@ -49,7 +49,6 @@
     "canvas": "1.6.12",
     "codecov": "^3.1.0",
     "copy-webpack-plugin": "^4.6.0",
-    "dotenv-webpack": "^1.5.7",
     "eth-ens-namehash": "^2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
     "ethereumjs-tx": "^1.3.7",
