@@ -139,7 +139,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/partners/simplex/config.js',
           'src/partners/simplex/index.js',
           'src/partners/simplex/simplex-api.js',
-          'src/partners/simplex/simplex.js'
+          'src/partners/simplex/simplex.js',
+          'src/builds/web/storage/index.js'
         ]
       }
     })
