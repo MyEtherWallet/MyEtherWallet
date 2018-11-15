@@ -4,7 +4,8 @@
     :title="$t('dapps.jsonString')"
     hide-footer
     class="bootstrap-modal json-string-modal"
-    centered>
+    centered
+  >
     <form class="json-string-form">
       <div class="input-container">
         <textarea
@@ -15,18 +16,21 @@
   &quot;sig&quot;: &quot;0x32e4c6b54fb88487b1ea6b0bd41509aec82eb98969eec7127ecc8a1f1a8275724f3e97283ca3beb4692dd093150216cf602cd7a915605bfc3fb56f74f6e065d31c&quot;,
   &quot;version&quot;: &quot;3&quot;,
   &quot;signer&quot;: &quot;MEW&quot;
-}"/>
+}"
+        />
       </div>
       <button
         class="submit-button large-round-button-green-filled"
         type="submit"
-        @click.prevent="submitJson">
+        @click.prevent="submitJson"
+      >
         {{ $t('dapps.confirm') }}
       </button>
       <interface-bottom-text
         link="mailto:support@myetherwallet.com"
         link-text="Help Center"
-        question="Having issues?"/>
+        question="Having issues?"
+      />
     </form>
   </b-modal>
 </template>

@@ -1,3 +1,4 @@
 /dist/
 /*.js
-/tests/**/*
+/tests/unit/coverage/
+/tests/

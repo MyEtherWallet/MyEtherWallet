@@ -1,8 +1,8 @@
 <template>
   <div class="bottom-text">
-    <p>{{ question }} <a
-      :href="link"
-      target="_blank">{{ linkText }}</a></p>
+    <p>
+      {{ question }} <a :href="link" target="_blank">{{ linkText }}</a>
+    </p>
   </div>
 </template>
 

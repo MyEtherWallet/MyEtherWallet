@@ -1,7 +1,5 @@
 <template lang="html">
-  <div
-    ref="identicon"
-    class="address-identicon"/>
+  <div ref="identicon" class="address-identicon" />
 </template>
 <script>
 import { Blockies } from '@/helpers';

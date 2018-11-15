@@ -3,48 +3,41 @@
     ref="signedTx"
     :title="$t('interface.signedTx')"
     hide-footer
-    class="bootstrap-modal signed-tx-modal">
+    class="bootstrap-modal signed-tx-modal"
+  >
     <div class="d-block">
       <div class="title-block">
         <h4 class="block-title">{{ $t('interface.signedTx') }}</h4>
       </div>
       <div class="signed-tx-container">
-        <code>
-          {{ signedTx }}
-        </code>
+        <code> {{ signedTx }} </code>
         <input
           ref="signedTxInput"
           :value="signedTx"
           style="position: absolute; top: 0; opacity: 0;"
-          autocomplete="off">
+          autocomplete="off"
+        />
       </div>
       <div class="raw">
         <div class="title-block">
-          <h4 class="block-title">
-            {{ $t('interface.raw') }}
-          </h4>
+          <h4 class="block-title">{{ $t('interface.raw') }}</h4>
           <div class="sliding-switch-white">
             <label class="switch">
-              <input
-                type="checkbox"
-                @click="showRaw = !showRaw">
-              <span class="slider round"/>
+              <input type="checkbox" @click="showRaw = !showRaw;" />
+              <span class="slider round" />
             </label>
           </div>
         </div>
-        <div
-          v-if="showRaw"
-          class="raw-tx-container">
-          <code>
-            {{ rawTx }}
-          </code>
+        <div v-if="showRaw" class="raw-tx-container">
+          <code> {{ rawTx }} </code>
         </div>
       </div>
     </div>
     <div class="button-container">
       <b-btn
         class="mid-round-button-green-filled close-button"
-        @click="copyAndContinue">
+        @click="copyAndContinue"
+      >
         {{ $t('interface.copyAndCont') }}
       </b-btn>
     </div>

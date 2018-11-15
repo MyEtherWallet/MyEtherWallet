@@ -1,57 +1,59 @@
 <template>
   <div class="header">
-
     <div
       :class="isPageOnTop == false ? 'active' : ''"
-      class="scrollup-container">
-      <scrollupbutton/>
+      class="scrollup-container"
+    >
+      <scrollupbutton />
     </div>
 
     <div class="wrap">
       <div
         ref="fixedHeader"
         :class="isPageOnTop == false ? 'tiny-header' : ''"
-        class="fixed-header">
+        class="fixed-header"
+      >
         <div class="page-container">
           <div class="header-container">
-            <router-link
-              to="/"
-              @click.native="scrollTop()">
+            <router-link to="/" @click.native="scrollTop();">
               <div class="top-logo">
                 <img
                   :class="isPageOnTop == false ? 'logo-small' : ''"
                   class="logo-large"
-                  src="~@/assets/images/logo.png">
+                  src="~@/assets/images/logo.png"
+                />
               </div>
             </router-link>
             <div class="top-menu">
-
               <b-nav>
-                <b-nav-item
-                  to="/"
-                  exact
-                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
-                <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item
-                  v-show="online"
-                  to="/#news">{{ $t("common.news") }}</b-nav-item>
+                <b-nav-item to="/" exact @click="scrollTop();">
+                  {{ $t('header.home') }}</b-nav-item
+                >
+                <b-nav-item to="/#about-mew">{{
+                  $t('header.about')
+                }}</b-nav-item>
+                <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
+                <b-nav-item v-show="online" to="/#news">{{
+                  $t('common.news')
+                }}</b-nav-item>
 
                 <div class="language-menu-container">
                   <div class="arrows">
-                    <i
-                      class="fa fa-angle-down"
-                      aria-hidden="true"/>
+                    <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>
                   <b-nav-item-dropdown
                     class="language-menu"
                     extra-toggle-classes="nav-link-custom"
-                    right>
+                    right
+                  >
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
-                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                          class="show">
+                          :src="
+                            require(`@/assets/images/flags/${currentFlag}.svg`)
+                          "
+                          class="show"
+                        />
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
@@ -60,49 +62,45 @@
                       :active="$root._i18n.locale === language.flag"
                       :key="language.key"
                       :data-flag-name="language.flag"
-                      @click="languageItemClicked">
+                      @click="languageItemClicked"
+                    >
                       {{ language.name }}
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification
-                  v-if="wallet !== null"
-                  ref="notification"/>
+                <notification v-if="wallet !== null" ref="notification" />
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
                   :class="isPageOnTop == true ? 'noshow' : ''"
                   class="get-free-wallet nopadding"
-                  to="/create-wallet">
-                  <div class="get-free-wallet-button">
-                    Get a Free Wallet
-                  </div>
+                  to="/create-wallet"
+                >
+                  <div class="get-free-wallet-button">Get a Free Wallet</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"
                   right
                   no-caret
-                  extra-toggle-classes="identicon-dropdown">
+                  extra-toggle-classes="identicon-dropdown"
+                >
                   <template slot="button-content">
                     <blockie
                       :address="wallet.getAddressString()"
                       width="35px"
-                      height="35px"/>
+                      height="35px"
+                    />
                   </template>
-                  <b-dropdown-item @click="logout">
-                    Log out
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
-
             </div>
             <div class="mobile-menu">
               <div class="mobile-menu-button">
-                <div class="bar-1"/>
-                <div class="bar-2"/>
-                <div class="bar-3"/>
+                <div class="bar-1" />
+                <div class="bar-2" />
+                <div class="bar-3" />
               </div>
             </div>
-
           </div>
         </div>
       </div>
