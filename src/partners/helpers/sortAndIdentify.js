@@ -12,8 +12,8 @@ function dynamicSort(property, convertFunc) {
         convertFunc(+a[property]) < convertFunc(+b[property])
           ? -1
           : convertFunc(+a[property]) > convertFunc(+b[property])
-          ? 1
-          : 0;
+            ? 1
+            : 0;
       return result * sortOrder;
     }
     const result =

@@ -215,8 +215,8 @@ export default {
           this.resolvedAddress !== ''
             ? this.resolvedAddress
             : this.address !== ''
-            ? this.address
-            : '',
+              ? this.address
+              : '',
         chainId: this.network.type.chainID || 1
       };
       this.web3.eth.signTransaction(raw).then(signedTx => {
