@@ -1,9 +1,9 @@
-const Dotenv = require('dotenv-webpack');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
+const env_vars = require('./ENV_VARS');
 const webpackConfig = {
   node: {
     process: true
@@ -15,10 +15,7 @@ const webpackConfig = {
     port: 8080
   },
   plugins: [
-    new Dotenv({
-      systemvars: true,
-      silent: true
-    }),
+    new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
       test: /\.(jpe?g|png|gif|svg)$/i,
@@ -29,11 +26,11 @@ const webpackConfig = {
     })
   ]
 };
-if (process.env.BUILD_TYPE === 'MEWCX') {
+if (process.env.BUILD_TYPE === 'mewcx') {
   webpackConfig.plugins.push(
     new CopyWebpackPlugin([
       {
-        from: 'src/builds/chrome-extension/files',
+        from: 'src/builds/mewcx/files',
         transform: function(content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;

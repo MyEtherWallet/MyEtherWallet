@@ -1,23 +1,11 @@
-import * as WEB_APP from '@/builds/web';
-import * as MEWCX_APP from '@/builds/chrome-extension';
-
-import baseRoutes from './base-routes';
-
-let App = null;
-const buildType = process.env.BUILD_TYPE;
-switch (buildType) {
-  case 'WEB' || 'web':
-    App = WEB_APP;
-    break;
-  case 'MEWCX' || 'MEWCX':
-    App = MEWCX_APP;
-    break;
-  default:
-    App = WEB_APP;
-}
-const routerConfig = {
-  mode: process.env.ROUTER_MODE || 'hash',
-  routes: App.configRoutes(baseRoutes),
-  app: App.app
+const baseRoutes = require('./base-routes').default;
+const getApp = () => {
+  return require(`@/builds/${BUILD_TYPE}`).app;
 };
-export { routerConfig };
+const getRoutes = () => {
+  return require(`@/builds/${BUILD_TYPE}`).configRoutes(baseRoutes);
+};
+const getMode = () => {
+  return process.env.ROUTER_MODE || 'hash';
+};
+export { getApp, getMode, getRoutes };
