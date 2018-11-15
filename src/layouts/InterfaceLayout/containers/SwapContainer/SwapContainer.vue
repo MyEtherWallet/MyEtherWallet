@@ -45,7 +45,7 @@
           <div
             class="error-message-container">
             <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="!hasEnough"> Insufficient balance</p>
+            <p v-if="hasEnough"> Insufficient balance</p>
             <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
             <p v-else>&nbsp;</p>
@@ -224,6 +224,7 @@ export default {
       toArray: [],
       fromArray: [],
       providerData: [],
+      tokenBalances: {},
       ratesRetrived: false,
       issueRecievingRates: false,
       providerRatesRecieved: [],
@@ -233,10 +234,12 @@ export default {
       tempStatuses: [],
       haveProviderRates: false,
       loadingError: false
+      // hasEnough: true
     };
   },
   computed: {
     ...mapGetters({
+      account: 'account',
       ens: 'ens',
       gasPrice: 'gasPrice',
       web3: 'web3',
@@ -334,9 +337,22 @@ export default {
         this.selectedProvider.provider === 'changelly'
       );
     },
-    hasEnough(){
-      this.chackBalance(this.fromCurrency);
-      return true;
+    hasEnough() {
+      if (
+        this.swap.isToken(this.fromCurrency) &&
+        this.fromCurrency !== 'ETH' &&
+        this.tokenBalances[this.fromCurrency]
+      ) {
+        const amount = this.swap.convertToTokenWei(this.fromCurrency, this.fromValue);
+        console.log(); // todo remove dev item
+        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
+          new BigNumber(amount)
+        );
+        // eslint-disable-next-line
+      } else if (currency === 'ETH') {
+        return this.account >= +value;
+      }
+      return false;
     }
   },
   watch: {
@@ -356,6 +372,9 @@ export default {
         this.fromValue,
         'from'
       );
+    },
+    fromValue() {
+      this.chackBalance(this.fromCurrency, this.fromValue);
     }
   },
   mounted() {
@@ -385,6 +404,7 @@ export default {
     },
     setFromCurrency(value) {
       this.fromCurrency = value.symbol;
+      this.getBalance(this.fromCurrency);
       this.toArray = this.swap.setToCurrencyBuilder(value);
       this.updateRateEstimate(
         this.fromCurrency,
@@ -403,9 +423,9 @@ export default {
         'to'
       );
     },
-    async chackBalance(currency) {
+    async getBalance(currency) {
       // eslint-disable-next-line
-      console.log(this.swap.isToken(currency)); // todo remove dev item
+      console.log(currency); // todo remove dev item
       if (this.swap.isToken(currency) && currency !== 'ETH') {
         const contract = new this.web3.eth.Contract(
           [
@@ -431,9 +451,9 @@ export default {
           ],
           this.swap.getTokenAddress(currency)
         );
-       const balance = await contract.methods.balanceOf(this.currentAddress).call();
-        // eslint-disable-next-line
-       console.log(balance); // todo remove dev item
+        this.tokenBalances[currency] = await contract.methods
+          .balanceOf(this.currentAddress)
+          .call();
       }
     },
     amountChanged(to) {
