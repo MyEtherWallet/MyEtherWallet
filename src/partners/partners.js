@@ -47,7 +47,6 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        // console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
         if (this.haveProviderRates || checkCount > 20) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
@@ -57,7 +56,6 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        // console.log('haveProviderRates', this.haveProviderRates); // todo remove dev item
         if (this.haveProviderRates || checkCount > 50) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
@@ -163,11 +161,15 @@ export default class SwapProviders {
     return { providersFound: [], callsToMake: [] };
   }
 
-  getTokenAddress(currency) {
+  getTokenAddress(currency, noError) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
+    } else {
+      if(noError){
+        return false;
+      }
+      throw Error('Not an Ethereum Token');
     }
-    throw Error('Not an Ethereum Token');
   }
 
   calculateFromValue(toValue, bestRate) {

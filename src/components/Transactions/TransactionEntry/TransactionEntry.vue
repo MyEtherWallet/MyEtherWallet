@@ -119,11 +119,11 @@ export default {
       return 'possible error';
     }
   },
-  watch: {
-    details(newVal) {
-      console.log(newVal); // todo remove dev item
-    }
-  },
+  // watch: {
+  //   details(newVal) {
+  //     console.log(newVal); // todo remove dev item
+  //   }
+  // },
   beforeDestroy() {
     if (this.timerInterval !== null) {
       clearInterval(this.timerInterval);
@@ -156,7 +156,6 @@ export default {
       ]);
     },
     timeUpdater() {
-      console.log('timerUpdater started'); // todo remove dev item
       this.timeRemaining = this.calculateTimeRemaining(this.parsed);
       this.timerInterval = setInterval(() => {
         this.timeRemaining = this.calculateTimeRemaining(this.parsed);
@@ -166,6 +165,7 @@ export default {
       }, 1000);
     },
     statusUpdater() {
+      // eslint-disable-next-line
       console.log('statusUpdater started'); // todo remove dev item
       let updating = false;
       const getStatus = async () => {
