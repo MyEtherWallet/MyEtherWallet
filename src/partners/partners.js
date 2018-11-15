@@ -192,6 +192,15 @@ export default class SwapProviders {
     );
   }
 
+  convertToTokenWei(token, value) {
+    const decimals = this.getTokenDecimals(token);
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value)
+      .times(denominator)
+      .integerValue(BigNumber.ROUND_DOWN)
+      .toString(10);
+  }
+
   getTokenDecimals(currency) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].decimals;
