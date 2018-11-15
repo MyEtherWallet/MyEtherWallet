@@ -1,6 +1,6 @@
 <template>
   <div class="register-domain-container">
-    <back-button/>
+    <back-button />
     <router-view
       :contract-initiated="contractInitiated"
       :check-domain="checkDomain"

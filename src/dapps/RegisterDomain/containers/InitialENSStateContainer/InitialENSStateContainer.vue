@@ -13,39 +13,38 @@
           :class="[domainNameErr ? 'errored' : '']"
           :placeholder="$t('dapps.registerEnsPlaceholder')"
           type="text"
-          name="" >
+          name=""
+        />
         <span>.eth</span>
       </div>
-      <p
-        v-show="domainNameErr"
-        class="erroredMsg">
+      <p v-show="domainNameErr" class="erroredMsg">
         <span v-if="localDomainName.length < 7 && localDomainName !== ''">
           {{ $t('dapps."registerEnsWarn1"') }}
         </span>
-        <span v-else>
-          {{ $t('dapps."registerEnsWarn2"') }}
-        </span>
+        <span v-else> {{ $t('dapps."registerEnsWarn2"') }} </span>
       </p>
       <div class="submit-button-container">
         <button
-          :class="[domainNameErr || localDomainName === '' ? 'disabled' : '', 'submit-button large-round-button-green-filled clickable']"
-          @click.prevent="checkDomain">
+          :class="[
+            domainNameErr || localDomainName === '' ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click.prevent="checkDomain"
+        >
           <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
-          <i
-            v-show="loading"
-            class="fa fa-spinner fa-spin"/>
+          <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
-
       </div>
-      <p
-        v-show="contractInitiated === false"
-        class="contract-loading-warning">{{ $t('dapps.registerEnsContractNotReady') }}</p>
+      <p v-show="contractInitiated === false" class="contract-loading-warning">
+        {{ $t('dapps.registerEnsContractNotReady') }}
+      </p>
     </form>
 
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"/>
+      link="mailto:support@myetherwallet.com"
+    />
   </div>
 </template>
 

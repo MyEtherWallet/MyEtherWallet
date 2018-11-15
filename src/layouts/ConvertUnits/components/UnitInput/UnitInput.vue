@@ -4,42 +4,32 @@
       <div class="block-left">
         <div class="select-block">
           <select v-model="selectedLeft">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
+            <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
+              >{{ opt | capitalize }}
             </option>
           </select>
         </div>
         <div>
-          <input
-            v-model="valueLeft"
-            type="text"
-            placeholder="Amount">
+          <input v-model="valueLeft" type="text" placeholder="Amount" />
         </div>
       </div>
 
       <div class="block-center">
         <div class="convert-icon">
-          <img src="~@/assets/images/icons/swap.svg">
+          <img src="~@/assets/images/icons/swap.svg" />
         </div>
       </div>
 
       <div class="block-right">
         <div class="select-block">
           <select v-model="selectedRight">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
+            <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
+              >{{ opt | capitalize }}
             </option>
           </select>
         </div>
         <div>
-          <input
-            v-model="valueRight"
-            type="text"
-            placeholder="Amount">
+          <input v-model="valueRight" type="text" placeholder="Amount" />
         </div>
       </div>
     </div>

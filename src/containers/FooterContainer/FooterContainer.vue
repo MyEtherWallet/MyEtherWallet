@@ -7,73 +7,67 @@
             v-for="(item, index) in footerContent"
             :ref="item.class"
             :class="item.class"
-            :key="item.title + index">
-            <div
-              class="content-title"
-              @click="toggler(item.class)">
+            :key="item.title + index"
+          >
+            <div class="content-title" @click="toggler(item.class);">
               <h3 class="lite">{{ item.title }}</h3>
-              <p
-                class="open"
-                @click="openContent(item.class)">
-                <i
-                  class="fa fa-plus"
-                  aria-hidden="true"/>
+              <p class="open" @click="openContent(item.class);">
+                <i class="fa fa-plus" aria-hidden="true" />
               </p>
-              <p
-                class="close"
-                @click="closeContent(item.class)">
-                <i
-                  class="fa fa-minus"
-                  aria-hidden="true"/>
+              <p class="close" @click="closeContent(item.class);">
+                <i class="fa fa-minus" aria-hidden="true" />
               </p>
             </div>
             <div class="content-links">
               <div
                 v-for="(content, index) in item.contents"
-                :key="content.text+index">
-                <router-link
-                  v-if="content.to !== undefined"
-                  :to="content.to"><p>{{ content.text }}</p></router-link>
+                :key="content.text + index"
+              >
+                <router-link v-if="content.to !== undefined" :to="content.to"
+                  ><p>{{ content.text }}</p></router-link
+                >
                 <a
                   v-if="content.to === undefined"
                   :href="content.href"
-                  target="_blank"><p>{{ content.text }}</p></a>
+                  target="_blank"
+                  ><p>{{ content.text }}</p></a
+                >
               </div>
             </div>
           </div>
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                {{ $t("footer.love") }}
-                <img src="~@/assets/images/icons/heart.svg">
-                {{ $t("footer.donate") }}
+                {{ $t('footer.love') }}
+                <img src="~@/assets/images/icons/heart.svg" />
+                {{ $t('footer.donate') }}
               </h3>
             </div>
             <div class="">
-              <p>{{ $t("footer.welcomeDes") }}</p>
+              <p>{{ $t('footer.welcomeDes') }}</p>
 
               <a
-                :href="'https://etherscan.io/address/'+ethDonationAddress"
-                target="_blank">
-                <p
-                  :data-eth="ethDonationAddress"
-                  class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg">
-                  &nbsp;Ethereum Donation
+                :href="'https://etherscan.io/address/' + ethDonationAddress"
+                target="_blank"
+              >
+                <p :data-eth="ethDonationAddress" class="crypto-link">
+                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
+                  Donation
                 </p>
               </a>
 
               <a
                 href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank">
+                target="_blank"
+              >
                 <p
                   class="crypto-link"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
-                  <img src="~@/assets/images/icons/btc.svg">
-                  &nbsp;Bitcoin Donation
+                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                >
+                  <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
+                  Donation
                 </p>
               </a>
-
             </div>
           </div>
         </div>
@@ -82,20 +76,19 @@
             <router-link
               v-for="(link, index) in lowerLinks"
               :key="link.title + index"
-              :to="link.to"><span>{{ link.title }}</span></router-link>
+              :to="link.to"
+              ><span>{{ link.title }}</span></router-link
+            >
           </div>
           <div class="copyright">
             <p>
-              {{ $t("footer.pricingP") }} <span>CoinMarketCap</span> <br>
-              {{ $t("footer.copyright") }}
+              {{ $t('footer.pricingP') }} <span>CoinMarketCap</span> <br />
+              {{ $t('footer.copyright') }}
             </p>
           </div>
           <div class="social">
-            <a
-              v-for="link in links"
-              :href="link.to"
-              :key="link.class">
-              <i :class="'fa '+ link.class"/>
+            <a v-for="link in links" :href="link.to" :key="link.class">
+              <i :class="'fa ' + link.class" />
             </a>
           </div>
         </div>

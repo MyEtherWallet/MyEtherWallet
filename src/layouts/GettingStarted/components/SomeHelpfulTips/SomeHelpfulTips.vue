@@ -1,37 +1,34 @@
 <template>
   <div class="what-is-mew">
-
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t("gettingStarted.aboutSecurity") }}
+          {{ $t('gettingStarted.aboutSecurity') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"/>
+          <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t("gettingStarted.tipsTitle") }}</h4>
+          <h4>{{ $t('gettingStarted.tipsTitle') }}</h4>
 
           <div class="tips">
             <div
               v-for="tip in tips"
-              :key="$t('gettingStarted.tipsTitle') + '-' +tip.title">
+              :key="$t('gettingStarted.tipsTitle') + '-' + tip.title"
+            >
               <h5>{{ tip.title }}</h5>
               <p>
                 {{ tip.desc }}
-                <a
-                  v-if="tip.linkText"
-                  :href="tip.linkUrl"> {{ tip.linkText }}</a>
+                <a v-if="tip.linkText" :href="tip.linkUrl">
+                  {{ tip.linkText }}</a
+                >
                 {{ tip.descCont !== '' ? tip.descCont : '' }}
               </p>
-
             </div>
           </div>
-
         </div>
       </dir>
     </div>
-
   </div>
 </template>
 

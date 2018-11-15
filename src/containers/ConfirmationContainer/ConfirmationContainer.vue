@@ -12,11 +12,13 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce"/>
+      :nonce="nonce"
+    />
     <confirm-collection-modal
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
-      :signed-array="signedArray"/>
+      :signed-array="signedArray"
+    />
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
@@ -29,7 +31,8 @@
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce"/>
+      :nonce="nonce"
+    />
     <confirm-sign-modal
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
@@ -42,7 +45,8 @@
     <success-modal
       ref="successModal"
       :message="successMessage"
-      :link-message="linkMessage"/>
+      :link-message="linkMessage"
+    />
   </div>
 </template>
 
@@ -334,5 +338,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

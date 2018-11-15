@@ -1,20 +1,19 @@
 <template>
   <div class="categories">
     <div class="wrap">
-
       <ul class="category-buttons">
-        <li
-          v-for="button in categoryButtons"
-          :key="button.key"><category-button :content="button" /></li>
+        <li v-for="button in categoryButtons" :key="button.key">
+          <category-button :content="button" />
+        </li>
       </ul>
 
       <div class="link-blocks">
         <link-block
           v-for="block in linkBlocks"
           :key="block.key"
-          :content="block" />
+          :content="block"
+        />
       </div>
-
     </div>
   </div>
 </template>

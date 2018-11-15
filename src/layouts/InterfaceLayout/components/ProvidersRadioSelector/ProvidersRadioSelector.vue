@@ -2,25 +2,14 @@
   <div class="providers-radio-selector">
     <div class="radio-button-container">
       <ul>
-        <li
-          v-for="provider in providers"
-          :key="provider.key">
+        <li v-for="provider in providers" :key="provider.key">
           <div class="mew-custom-form__radio-button">
-            <input
-              :id="provider.name"
-              type="radio"
-              name="provider">
-            <label :for="provider.name"/>
+            <input :id="provider.name" type="radio" name="provider" />
+            <label :for="provider.name" />
           </div>
-          <div class="provider-image">
-            <img :src="provider.image">
-          </div>
-          <div>
-            {{ provider.swapValue1 }}
-          </div>
-          <div>
-            {{ provider.swapValue2 }}
-          </div>
+          <div class="provider-image"><img :src="provider.image" /></div>
+          <div>{{ provider.swapValue1 }}</div>
+          <div>{{ provider.swapValue2 }}</div>
         </li>
       </ul>
     </div>

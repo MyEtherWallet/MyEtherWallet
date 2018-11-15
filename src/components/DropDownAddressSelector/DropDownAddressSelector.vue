@@ -2,51 +2,38 @@
   <div class="drop-down-address-selector">
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
-      class="dropdown-input-box">
+      class="dropdown-input-box"
+    >
       <input
         v-model="selectedAddress"
         type="text"
         placeholder="Please enter the address"
-        @focus="dropdownOpen = false">
-      <div
-        v-if="!validAddress"
-        class="blockie-place-holder-image"/>
-      <div
-        v-if="validAddress"
-        class="selected-address-blockie">
+        @focus="dropdownOpen = false;"
+      />
+      <div v-if="!validAddress" class="blockie-place-holder-image" />
+      <div v-if="validAddress" class="selected-address-blockie">
         <blockie
           :address="selectedAddress"
           :size="8"
           :scale="16"
           width="30px"
-          height="30px"/>
+          height="30px"
+        />
       </div>
-      <div
-        class="dropdown-open-button"
-        @click="dropdownOpen = !dropdownOpen">
-        <i
-          v-if="!dropdownOpen"
-          class="fa fa-chevron-down"
-          aria-hidden="true"/>
-        <i
-          v-if="dropdownOpen"
-          class="fa fa-chevron-up"
-          aria-hidden="true"/>
+      <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen;">
+        <i v-if="!dropdownOpen" class="fa fa-chevron-down" aria-hidden="true" />
+        <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
       </div>
     </div>
-    <div
-      v-if="dropdownOpen"
-      class="dropdown-list-box">
+    <div v-if="dropdownOpen" class="dropdown-list-box">
       <ul>
         <li
           v-for="addr in addresses"
           :key="addr.key"
-          @click="listedAddressClick(addr)">
+          @click="listedAddressClick(addr);"
+        >
           <div class="list-blockie">
-            <blockie
-              :address="addr"
-              width="30px"
-              height="30px"/>
+            <blockie :address="addr" width="30px" height="30px" />
           </div>
           <p class="listed-address">{{ addr }}</p>
         </li>

@@ -4,20 +4,19 @@
     :title="$t('accessWallet.mewConnectTitle')"
     hide-footer
     class="bootstrap-modal modal-mew-connect"
-    centered>
+    centered
+  >
     <div class="modal-icon">
-      <qrcode
-        :value="QrCode"
-        :options="{ size: 200 }"/>
+      <qrcode :value="QrCode" :options="{ size: 200 }" />
     </div>
     <div class="d-block content-container text-center">
       <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
     <div class="appstore-button-container">
-      <img src="~@/assets/images/icons/appstore.png">
+      <img src="~@/assets/images/icons/appstore.png" />
       <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 
