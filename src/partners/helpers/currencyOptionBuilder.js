@@ -30,7 +30,7 @@ export default class CurrencyOptionBuilder {
     this.simplexCurrencies = props.simplex || SimplexCurrencies;
     this.kybernetworkCurrencies = props.kyber || KyberCurrencies;
   }
-/*
+  /*
   buildInitialCurrencyArrays() {
     const collectMapTo = new Map();
     const collectMapFrom = new Map();
