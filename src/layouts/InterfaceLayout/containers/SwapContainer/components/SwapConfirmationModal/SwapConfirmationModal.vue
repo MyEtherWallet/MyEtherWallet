@@ -117,7 +117,6 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
-      console.log('modal swapDetails watcher:', newValue); // todo remove dev item
       this.fromAddress = {
         image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,

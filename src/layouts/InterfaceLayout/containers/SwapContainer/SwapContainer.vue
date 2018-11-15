@@ -45,7 +45,8 @@
           <div
             class="error-message-container">
             <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-else>&nbsp;</p>
+            <p v-if="!hasEnough"> Insufficient balance</p>
+            <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
             <p v-else>&nbsp;</p>
           </div>
@@ -97,8 +98,8 @@
       </div>
     </div>
 
-    <div 
-      v-show="showRefundAddress" 
+    <div
+      v-show="showRefundAddress"
       class="send-form">
       <div class="title-container">
         <div class="title title-and-copy">
@@ -332,6 +333,10 @@ export default {
         !this.swap.isToken(this.fromCurrency) &&
         this.selectedProvider.provider === 'changelly'
       );
+    },
+    hasEnough(){
+      this.chackBalance(this.fromCurrency);
+      return true;
     }
   },
   watch: {
@@ -397,6 +402,39 @@ export default {
         this.fromValue,
         'to'
       );
+    },
+    async chackBalance(currency) {
+      // eslint-disable-next-line
+      console.log(this.swap.isToken(currency)); // todo remove dev item
+      if (this.swap.isToken(currency) && currency !== 'ETH') {
+        const contract = new this.web3.eth.Contract(
+          [
+            {
+              constant: true,
+              inputs: [
+                {
+                  name: '_owner',
+                  type: 'address'
+                }
+              ],
+              name: 'balanceOf',
+              outputs: [
+                {
+                  name: '',
+                  type: 'uint256'
+                }
+              ],
+              payable: false,
+              stateMutability: 'view',
+              type: 'function'
+            }
+          ],
+          this.swap.getTokenAddress(currency)
+        );
+       const balance = await contract.methods.balanceOf(this.currentAddress).call();
+        // eslint-disable-next-line
+       console.log(balance); // todo remove dev item
+      }
     },
     amountChanged(to) {
       if (
@@ -519,7 +557,6 @@ export default {
     // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       try {
-        console.log('this.validSwap', this.validSwap); // todo remove dev item
         if (this.validSwap) {
           this.finalizingSwap = true;
           const providerDetails = this.providerList.find(entry => {
@@ -543,7 +580,6 @@ export default {
           };
 
           this.swapDetails = await this.swap.startSwap(swapDetails);
-          console.log(this.swapDetails); // todo remove dev item
           this.finalizingSwap = false;
           if (
             this.swapDetails.dataForInitialization &&
@@ -554,7 +590,6 @@ export default {
             this.swapDetails.dataForInitialization &&
             !this.swapDetails.maybeToken
           ) {
-            console.log('send to swap'); // todo remove dev item
             this.$refs.swapSendTo.$refs.swapconfirmation.show();
           } else {
             throw Error(
@@ -566,6 +601,7 @@ export default {
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
+        // eslint-disable-next-line
         console.error(e);
         errorLogger(e);
       }

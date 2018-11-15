@@ -415,7 +415,6 @@ export default class Kyber {
           userAddress
         )
       );
-      console.log(prepareSwapTxData); // todo remove dev item
       const swapTransactions = Array.from(prepareSwapTxData);
       return [...swapTransactions];
       // }

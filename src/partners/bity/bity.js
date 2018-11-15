@@ -328,7 +328,6 @@ export default class BitySwap {
       [-1]: 'CANC'
     };
     if (data.status === undefined) data = { input: {}, output: {} };
-    console.log(data.status); // todo remove dev item
     if (validStatus.includes(data.status)) {
       return 2;
       // priorStatus = 'RCVE';

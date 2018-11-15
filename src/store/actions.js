@@ -110,7 +110,6 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         value: arr[i].value,
         gasPrice: arr[i].gasPrice
       };
-      console.log(localTx); // todo remove dev item
       arr[i].nonce = await (arr[i].nonce === undefined
         ? web3Instance.eth.getTransactionCount(
             state.wallet.getChecksumAddressString()
