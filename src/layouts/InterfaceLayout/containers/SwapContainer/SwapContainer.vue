@@ -16,8 +16,8 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div 
-        class="buy-eth" 
+      <div
+        class="buy-eth"
         @click="setFiatBuy">
         <!--<a href="https://ccswap.myetherwallet.com" target="_blank" >-->
         <!--<span>Buy ETH with</span>-->

@@ -1,21 +1,18 @@
 <template>
   <div class="generate-info">
-    <success-modal
-      ref="successModal"
-      :link-message="'Ok'"
-      message="Success"/>
+    <success-modal ref="successModal" :link-message="'Ok'" message="Success" />
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
           <div class="title">
             <div><h4>Signed Transaction</h4></div>
             <div class="form-controller">
-              <p
-                class="linker-1 prevent-user-select"
-                @click="deleteTxHex">Clear</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="copyTxHex">Copy</p>
+              <p class="linker-1 prevent-user-select" @click="deleteTxHex">
+                Clear
+              </p>
+              <p class="linker-1 prevent-user-select" @click="copyTxHex">
+                Copy
+              </p>
             </div>
           </div>
         </div>
@@ -25,19 +22,22 @@
             ref="txHex"
             v-model="signedTx"
             name=""
-            placeholder="Enter TX Hex"/>
+            placeholder="Enter TX Hex"
+          />
         </div>
       </div>
       <div class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="sendTx">
+          @click="sendTx"
+        >
           {{ $t('interface.sendTx') }}
         </div>
         <interface-bottom-text
           :link="'/'"
           :link-text="'Learn more'"
-          :question="'Have any issues?'"/>
+          :question="'Have any issues?'"
+        />
       </div>
     </div>
   </div>

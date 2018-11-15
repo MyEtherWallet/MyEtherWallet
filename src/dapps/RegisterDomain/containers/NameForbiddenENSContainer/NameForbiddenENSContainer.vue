@@ -4,7 +4,8 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"/>
+      link="mailto:support@myetherwallet.com"
+    />
   </div>
 </template>
 

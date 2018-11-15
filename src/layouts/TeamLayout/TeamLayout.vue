@@ -2,30 +2,20 @@
   <div class="team">
     <div class="wrap">
       <div class="page-container">
-
         <div class="page-header">
-          <h1>{{ $t("team.title") }}</h1>
-          <p>
-            {{ $t("team.desc") }}
-          </p>
+          <h1>{{ $t('team.title') }}</h1>
+          <p>{{ $t('team.desc') }}</p>
         </div>
 
         <div class="team-info">
-          <div 
-            v-for="member in members" 
-            :key="member.name" 
-            class="member">
-            <img 
-              :src="member.img" 
-              :alt="member.name" 
-              :title="member.name">
+          <div v-for="member in members" :key="member.name" class="member">
+            <img :src="member.img" :alt="member.name" :title="member.name" />
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>

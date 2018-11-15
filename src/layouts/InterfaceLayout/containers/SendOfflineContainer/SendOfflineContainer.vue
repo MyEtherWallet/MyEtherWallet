@@ -1,53 +1,65 @@
 <template>
   <div class="send-offline-container">
-    <interface-container-title :title="$t('common.offline')"/>
+    <interface-container-title :title="$t('common.offline')" />
 
     <div class="progress-status prevent-user-select">
-      <div 
-        :class="[currentPage === 'genInfo' ? 'active' : '' ,'genInfo']" 
-        @click="processChange('genInfo')">
+      <div
+        :class="[currentPage === 'genInfo' ? 'active' : '', 'genInfo']"
+        @click="processChange('genInfo');"
+      >
         <div class="prevent-pointer-events">
-          <p class="title">{{ $t("interface.online") }}</p>
-          <p class="description prevent-pointer-events">{{ $t("interface.generateInfo") }}</p>
+          <p class="title">{{ $t('interface.online') }}</p>
+          <p class="description prevent-pointer-events">
+            {{ $t('interface.generateInfo') }}
+          </p>
         </div>
       </div>
-      <div 
-        :class="[currentPage === 'genTx' ? 'active' : '' ,'genTx']" 
-        @click="processChange('genTx')">
+      <div
+        :class="[currentPage === 'genTx' ? 'active' : '', 'genTx']"
+        @click="processChange('genTx');"
+      >
         <div class="prevent-pointer-events">
-          <p class="title prevent-pointer-events">{{ $t("interface.offline") }}</p>
-          <p class="description prevent-pointer-events">{{ $t("interface.generateTx") }}</p>
+          <p class="title prevent-pointer-events">
+            {{ $t('interface.offline') }}
+          </p>
+          <p class="description prevent-pointer-events">
+            {{ $t('interface.generateTx') }}
+          </p>
         </div>
       </div>
-      <div 
-        :class="[currentPage === 'sendPubTx' ? 'active' : '' ,'sendPubTx']" 
-        @click="processChange('sendPubTx')">
+      <div
+        :class="[currentPage === 'sendPubTx' ? 'active' : '', 'sendPubTx']"
+        @click="processChange('sendPubTx');"
+      >
         <div class="prevent-pointer-events">
-          <p class="title prevent-pointer-events">{{ $t("interface.online") }}</p>
-          <p class="description prevent-pointer-events">{{ $t("interface.sendPubTx") }}</p>
+          <p class="title prevent-pointer-events">
+            {{ $t('interface.online') }}
+          </p>
+          <p class="description prevent-pointer-events">
+            {{ $t('interface.sendPubTx') }}
+          </p>
         </div>
       </div>
     </div>
 
-    <generate-info 
-      v-if="currentPage === 'genInfo'" 
-      :nonce="nonce" 
-      :gas-limit="gasLimit" 
-      @pathUpdate="processChange" 
-      @nonceUpdate="nonceUpdated" 
-      @gasLimitUpdate="gasLimitUpdate"/>
-    <generate-tx 
-      v-if="currentPage === 'genTx'" 
-      :nonce="nonce" 
-      :gas-limit="gasLimit" 
-      @pathUpdate="processChange" 
-      @nonceUpdate="nonceUpdated" 
-      @gasLimitUpdate="gasLimitUpdate" 
-      @createdRawTx="createdRawTx"/>
-    <send-tx 
-      v-if="currentPage === 'sendPubTx'" 
-      :raw-tx="rawTx"/>
-
+    <generate-info
+      v-if="currentPage === 'genInfo'"
+      :nonce="nonce"
+      :gas-limit="gasLimit"
+      @pathUpdate="processChange"
+      @nonceUpdate="nonceUpdated"
+      @gasLimitUpdate="gasLimitUpdate"
+    />
+    <generate-tx
+      v-if="currentPage === 'genTx'"
+      :nonce="nonce"
+      :gas-limit="gasLimit"
+      @pathUpdate="processChange"
+      @nonceUpdate="nonceUpdated"
+      @gasLimitUpdate="gasLimitUpdate"
+      @createdRawTx="createdRawTx"
+    />
+    <send-tx v-if="currentPage === 'sendPubTx'" :raw-tx="rawTx" />
   </div>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <div class="generate-info">
     <div class="wrap">
-
       <div class="send-form">
         <div class="title-container">
           <div class="title-and-copy">
@@ -9,10 +8,13 @@
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
-                @click="deleteFromAddress">Clear</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="copyFromAddress">Copy</p>
+                @click="deleteFromAddress"
+              >
+                Clear
+              </p>
+              <p class="linker-1 prevent-user-select" @click="copyFromAddress">
+                Copy
+              </p>
             </div>
           </div>
         </div>
@@ -22,11 +24,16 @@
             :value="wallet.getChecksumAddressString()"
             type="text"
             placeholder="From Address"
-            autocomplete="off" >
+            autocomplete="off"
+          />
           <div class="good-button-container">
             <i
-              :class="[isValid ? 'not-good' : '', 'fa fa-check-circle good-button']"
-              aria-hidden="true"/>
+              :class="[
+                isValid ? 'not-good' : '',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
@@ -35,30 +42,30 @@
         :nonce="nonce"
         :gas-limit="gasLimit"
         @gasLimitUpdate="gasLimitUpdated"
-        @nonceUpdate="nonceUpdated"/>
-      <div
-        v-if="!moreInfoGenerated"
-        class="submit-button-container">
+        @nonceUpdate="nonceUpdated"
+      />
+      <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="generateInfo">
+          @click="generateInfo"
+        >
           Generate
         </div>
       </div>
 
-      <div
-        v-if="moreInfoGenerated"
-        class="submit-button-container">
+      <div v-if="moreInfoGenerated" class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="generateTx">
+          @click="generateTx"
+        >
           Continue
         </div>
       </div>
       <interface-bottom-text
         link="mailto:support@myetherwallet.com"
         question="Have issues?"
-        link-text="Learn More"/>
+        link-text="Learn More"
+      />
     </div>
   </div>
 </template>

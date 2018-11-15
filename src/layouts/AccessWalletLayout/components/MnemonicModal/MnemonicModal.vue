@@ -5,43 +5,44 @@
     hide-footer
     class="bootstrap-modal padding-20 modal-metamask"
     centered
-    @shown="focusInput">
-
+    @shown="focusInput"
+  >
     <div class="contents">
-      <p class="instruction">{{ $t("accessWallet.pleaseTypeInMnemonicPhrase") }}</p>
+      <p class="instruction">
+        {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
+      </p>
       <div class="tools">
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input
-                v-model="mnemonic24"
-                type="checkbox">
-              <span
-                class="slider round"
-                @click="mnemonicValueBitSizeChange"/>
+              <input v-model="mnemonic24" type="checkbox" />
+              <span class="slider round" @click="mnemonicValueBitSizeChange" />
             </label>
             <div class="labels">
-              <span :class="[!mnemonic24 ? 'white' : '', 'label-left']">12</span>
-              <span :class="[mnemonic24 ? 'white' : '', 'label-right']">24</span>
+              <span :class="[!mnemonic24 ? 'white' : '', 'label-left']"
+                >12</span
+              >
+              <span :class="[mnemonic24 ? 'white' : '', 'label-right']"
+                >24</span
+              >
             </div>
           </div>
-          <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
+          <span class="text__base link switch-label">{{
+            $t('createWallet.byMnemonicValue')
+          }}</span>
         </div>
-
       </div>
       <form>
         <div class="phrases">
           <ul>
-            <li
-              v-for="index in mnemonicSize"
-              :key="index">
+            <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
                 v-model="mnemonicPhrase[index - 1]"
-                :ref="`mnemonicInput${index-1}`"
+                :ref="`mnemonicInput${index - 1}`"
                 type="text"
                 name=""
-              >
+              />
             </li>
           </ul>
         </div>
@@ -49,14 +50,15 @@
           <b-btn
             class="mid-round-button-green-filled close-button"
             type="submit"
-            @click.prevent="openPasswordModal">
-            {{ $t("common.continue") }}
+            @click.prevent="openPasswordModal"
+          >
+            {{ $t('common.continue') }}
           </b-btn>
         </div>
       </form>
     </div>
 
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 

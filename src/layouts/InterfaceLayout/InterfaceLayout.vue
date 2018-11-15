@@ -1,40 +1,28 @@
 <template>
-  <div
-    v-if="wallet !== null"
-    class="send-eth-and-tokens">
+  <div v-if="wallet !== null" class="send-eth-and-tokens">
     <div class="wrap">
-      <div class="side-nav">
-        <interface-side-menu/>
-      </div>
+      <div class="side-nav"><interface-side-menu /></div>
       <div class="contents">
         <div class="tx-contents">
-          <div>
-            <interface-address :address="address" />
-          </div>
-          <div>
-            <interface-balance :balance="balance"/>
-          </div>
-          <div>
-            <interface-network :block-number="blockNumber" />
-          </div>
+          <div><interface-address :address="address" /></div>
+          <div><interface-balance :balance="balance" /></div>
+          <div><interface-network :block-number="blockNumber" /></div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
-            :get-balance="getBalance"/>
-          <div
-            v-if="online"
-            class="tokens">
+            :get-balance="getBalance"
+          />
+          <div v-if="online" class="tokens">
             <interface-tokens
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
-              :received-tokens="receivedTokens"/>
+              :received-tokens="receivedTokens"
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div v-else>
-    <wallet-not-found-container/>
-  </div>
+  <div v-else><wallet-not-found-container /></div>
 </template>
 
 <script>

@@ -1,22 +1,23 @@
 <template>
   <div class="deploy-contract-container">
-    <interface-container-title :title="$t('common.depContract')"/>
+    <interface-container-title :title="$t('common.depContract')" />
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard('bytecode')">{{ $t('common.copy') }}</span>
+            <span @click="deleteInput('bytecode');">{{
+              $t('common.clear')
+            }}</span>
+            <span @click="copyToClipboard('bytecode');">{{
+              $t('common.copy')
+            }}</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="bytecode"
-          v-model="bytecode"
-          class="custom-textarea-1"/>
+        <textarea ref="bytecode" v-model="bytecode" class="custom-textarea-1" />
       </div>
     </div>
 
@@ -25,45 +26,43 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
+            <span @click="deleteInput('abi');">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi');">{{
+              $t('common.copy')
+            }}</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="abi"
-          v-model="abi"
-          class="custom-textarea-1"/>
+        <textarea ref="abi" v-model="abi" class="custom-textarea-1" />
         <i
-          :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
-          aria-hidden="true"/>
+          :class="[
+            validAbi && validAbi !== '' ? '' : 'not-good',
+            'fa fa-check-circle good-button'
+          ]"
+          aria-hidden="true"
+        />
       </div>
     </div>
 
-    <div
-      v-if="constructors.length !== 0"
-      class="send-form">
+    <div v-if="constructors.length !== 0" class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('interface.constructor') }} {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
+          <h4>
+            {{ $t('interface.constructor') }}
+            {{ constructors.length > 1 ? 'Inputs' : 'Input' }}:
+          </h4>
         </div>
       </div>
-      <div
-        v-for="(construct, idx) in constructors"
-        :key="construct.type+idx">
-        <div
-          v-for="(input, idx) in construct.inputs"
-          :key="input.name + idx">
+      <div v-for="(construct, idx) in constructors" :key="construct.type + idx">
+        <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
           <div class="title-container">
             <div class="title">
-              <h5>{{ input.name | capitalize }}: </h5>
+              <h5>{{ input.name | capitalize }}:</h5>
             </div>
           </div>
           <div class="the-form domain-name">
-            <input
-              ref="contractName"
-              v-model="inputs[input.name]">
+            <input ref="contractName" v-model="inputs[input.name]" />
           </div>
         </div>
       </div>
@@ -79,7 +78,8 @@
         <input
           ref="contractName"
           v-model="contractName"
-          :placeholder="contractNamePlaceholder">
+          :placeholder="contractNamePlaceholder"
+        />
       </div>
     </div>
 
@@ -87,25 +87,39 @@
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
-            <h4>{{ $t("common.speedTx") }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+            <h4>{{ $t('common.speedTx') }}</h4>
+            <popover
+              :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"
+            />
           </div>
-          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
         </div>
         <div class="buttons">
           <div
-            :class="[gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(5)">
+            :class="[
+              gasPrice === 5 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(5);"
+          >
             {{ $t('common.slow') }}
           </div>
           <div
-            :class="[gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(45)">
+            :class="[
+              gasPrice === 45 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(45);"
+          >
             {{ $t('common.regular') }}
           </div>
           <div
-            :class="[gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(75)">
+            :class="[
+              gasPrice === 75 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(75);"
+          >
             {{ $t('common.fast') }}
           </div>
         </div>
@@ -116,12 +130,14 @@
           v-model="gasLimit"
           :placeholder="$t('common.gasLimit')"
           type="number"
-          name="">
+          name=""
+        />
         <div class="good-button-container">
           <p>Gwei</p>
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>
@@ -129,15 +145,20 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div
-          :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']"
-          @click="confirmationModalOpen">
-          {{ $t("common.signTx") }}
+          :class="[
+            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="confirmationModalOpen"
+        >
+          {{ $t('common.signTx') }}
         </div>
       </div>
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"/>
+        link="mailto:support@myetherwallet.com"
+      />
     </div>
   </div>
 </template>

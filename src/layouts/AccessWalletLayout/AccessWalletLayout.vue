@@ -1,10 +1,8 @@
 <template>
   <div>
-    <access-my-wallet-container/>
-    <price-bar
-      :v-if="online && tokens.length > 1"
-      :tokens="tokens"/>
-    <faqs/>
+    <access-my-wallet-container />
+    <price-bar :v-if="online && tokens.length > 1" :tokens="tokens" />
+    <faqs />
   </div>
 </template>
 

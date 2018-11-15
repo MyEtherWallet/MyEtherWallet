@@ -12,33 +12,39 @@
               v-model="resolverAddress"
               type="text"
               name="updateResolver"
-              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+            />
           </div>
           <div class="submit-container">
             <button
               :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="updateResolver(resolverAddress)">Update</button>
+              @click.prevent="updateResolver(resolverAddress);"
+            >
+              Update
+            </button>
           </div>
         </form>
       </div>
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns">
-              {{ $t('dapps.transferEnsTo') }}:
-            </label>
+            <label for="transferEns"> {{ $t('dapps.transferEnsTo') }}: </label>
             <input
               v-model="transferTo"
               type="text"
               name="transferEns"
-              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+            />
           </div>
           <div class="submit-container">
             <button
-              :class="!web3.utils.isAddress(transferTo) ? 'disabled': ''"
+              :class="!web3.utils.isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="transferDomain(transferTo)">Transfer</button>
+              @click.prevent="transferDomain(transferTo);"
+            >
+              Transfer
+            </button>
           </div>
         </form>
       </div>
@@ -46,7 +52,8 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"/>
+      link="mailto:support@myetherwallet.com"
+    />
   </div>
 </template>
 <script>

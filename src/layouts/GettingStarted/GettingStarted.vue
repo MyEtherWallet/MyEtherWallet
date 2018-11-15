@@ -1,78 +1,73 @@
 <template>
   <div class="create-wallet-warnings">
-
-    <div
-      v-if="cwwCurrent != '0'"
-      class="back-button"
-      @click="mouseScrollUp">
-      &lt; {{ $t("common.back") }}
+    <div v-if="cwwCurrent != '0'" class="back-button" @click="mouseScrollUp">
+      &lt; {{ $t('common.back') }}
     </div>
 
     <div class="wrap">
-
       <div class="nav-dots">
-        <p><i
-          class="fa fa-angle-up"
-          aria-hidden="true"/></p>
+        <p><i class="fa fa-angle-up" aria-hidden="true" /></p>
         <ul>
-          <li :class="cwwCurrent == 0 ? 'active' : ''"/>
-          <li :class="cwwCurrent == 1 ? 'active' : ''"/>
-          <li :class="cwwCurrent == 2 ? 'active' : ''"/>
-          <li :class="cwwCurrent == 3 ? 'active' : ''"/>
-          <li :class="cwwCurrent == 4 ? 'active' : ''"/>
+          <li :class="cwwCurrent == 0 ? 'active' : ''" />
+          <li :class="cwwCurrent == 1 ? 'active' : ''" />
+          <li :class="cwwCurrent == 2 ? 'active' : ''" />
+          <li :class="cwwCurrent == 3 ? 'active' : ''" />
+          <li :class="cwwCurrent == 4 ? 'active' : ''" />
         </ul>
-        <p><i
-          class="fa fa-angle-down"
-          aria-hidden="true"/></p>
+        <p><i class="fa fa-angle-down" aria-hidden="true" /></p>
       </div>
 
       <what-is-mew
         ref="cww1"
         :progress-bar-value="'__20percent'"
-        class="cww cww1"/>
+        class="cww cww1"
+      />
       <where-my-funds-stored
         ref="cww2"
         :progress-bar-value="'__40percent'"
-        class="cww cww2 positionBottom"/>
+        class="cww cww2 positionBottom"
+      />
       <what-if-i-lose-key
         ref="cww3"
         :progress-bar-value="'__60percent'"
-        class="cww cww3 positionBottom"/>
+        class="cww cww3 positionBottom"
+      />
       <some-helpful-tips
         ref="cww4"
         :progress-bar-value="'__80percent'"
-        class="cww cww4 positionBottom"/>
+        class="cww cww4 positionBottom"
+      />
       <congratulations
         ref="cww5"
         :progress-bar-value="'__100percent'"
-        class="cww cww5 positionBottom"/>
+        class="cww cww5 positionBottom"
+      />
 
       <div class="create-wallet-warnings__footer-container">
         <div class="create-wallet-warnings__mouse-scroll">
-          <img src="~@/assets/images/icons/mouse.svg">
+          <img src="~@/assets/images/icons/mouse.svg" />
           <p>{{ $t('gettingStarted.scroll') }}</p>
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link to="/">{{ $t("header.home") }}</router-link>
-            <router-link to="/privacy-policy">{{ $t("footer.privacy") }}</router-link>
-            <router-link to="/terms-and-conditions">{{ $t("common.terms") }}</router-link>
+            <router-link to="/">{{ $t('header.home') }}</router-link>
+            <router-link to="/privacy-policy">{{
+              $t('footer.privacy')
+            }}</router-link>
+            <router-link to="/terms-and-conditions">{{
+              $t('common.terms')
+            }}</router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
             <p>{{ $t('footer.copyright') }}</p>
           </div>
         </div>
       </div>
-
     </div>
 
-    <div
-      v-if="cwwCurrent != '4'"
-      class="next-button"
-      @click="mouseScrollDown">
-      {{ $t("common.next") }}
+    <div v-if="cwwCurrent != '4'" class="next-button" @click="mouseScrollDown">
+      {{ $t('common.next') }}
     </div>
-
   </div>
 </template>
 

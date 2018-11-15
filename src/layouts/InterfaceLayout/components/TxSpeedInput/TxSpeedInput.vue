@@ -5,23 +5,35 @@
         <div class="title">
           <div class="title-helper">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
           </div>
         </div>
         <div class="buttons">
           <div
-            :class="[gasPrice === 5 ? 'active': '','small-circle-button-green-border']"
-            @click="setSpeed(5)">
+            :class="[
+              gasPrice === 5 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="setSpeed(5);"
+          >
             {{ $t('common.slow') }}
           </div>
           <div
-            :class="[gasPrice === 45 ? 'active': '','small-circle-button-green-border']"
-            @click="setSpeed(45)">
+            :class="[
+              gasPrice === 45 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="setSpeed(45);"
+          >
             {{ $t('common.regular') }}
           </div>
           <div
-            :class="[gasPrice === 75 ? 'active': '','small-circle-button-green-border']"
-            @click="setSpeed(75)">
+            :class="[
+              gasPrice === 75 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="setSpeed(75);"
+          >
             {{ $t('common.fast') }}
           </div>
         </div>
@@ -32,12 +44,14 @@
           :placeholder="$t('common.gasPrice')"
           type="number"
           name=""
-          @change="setSpeed" >
+          @change="setSpeed"
+        />
         <div class="good-button-container">
           <p>Gwei</p>
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>
@@ -47,19 +61,17 @@
         <div class="title">
           <div class="title-helper">
             <h4>Nonce</h4>
-            <popover :popcontent="$t('popover.whatIsNonce')"/>
+            <popover :popcontent="$t('popover.whatIsNonce')" />
           </div>
         </div>
       </div>
       <div class="the-form gas-amount">
-        <input
-          v-model="locNonce"
-          type="number"
-          placeholder="Nonce" >
+        <input v-model="locNonce" type="number" placeholder="Nonce" />
         <div class="good-button-container">
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>
@@ -68,7 +80,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>{{ $t('common.gasLimit') }}</h4>
-            <popover :popcontent="$t('popover.whatIsGas')"/>
+            <popover :popcontent="$t('popover.whatIsGas')" />
           </div>
         </div>
       </div>
@@ -76,11 +88,13 @@
         <input
           v-model="gasPrice"
           :placeholder="$t('common.gasLimit')"
-          type="number">
+          type="number"
+        />
         <div class="good-button-container">
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>

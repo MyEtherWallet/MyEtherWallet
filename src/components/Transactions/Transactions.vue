@@ -1,39 +1,30 @@
 <template lang="html">
   <div class="notification-container">
-    <div
-      class="notification-logo"
-      @click="dropdownOpen = !dropdownOpen">
+    <div class="notification-logo" @click="dropdownOpen = !dropdownOpen;">
       transactions
-      <div
-        v-show="activeSwapCount > 0"
-        class="notification-dot"/>
+      <div v-show="activeSwapCount > 0" class="notification-dot" />
     </div>
-    <div
-      v-if="dropdownOpen"
-      class="dropdown-list-box">
+    <div v-if="dropdownOpen" class="dropdown-list-box">
       <ul>
-        <li
-          v-show="sortedTransactions.length === 0">
-          <div class="no-active-transaction">
-            <p >No Active Transactions</p>
-          </div>
+        <li v-show="sortedTransactions.length === 0">
+          <div class="no-active-transaction"><p>No Active Transactions</p></div>
         </li>
         <li
           v-for="tx in sortedTransactions"
           v-show="sortedTransactions.length > 0"
           :key="tx.key"
-          class="transaction-entry">
+          class="transaction-entry"
+        >
           <transaction-entry
             :provider="getProvider(tx.provider)"
-            :details="tx"/>
+            :details="tx"
+          />
         </li>
         <li>
           <div class="check-history-entry">
-            <div class="line"/>
+            <div class="line" />
             <div class="check-history-container">
-              <h4
-                class="check-history"
-                @click="checkHistory">Check history</h4>
+              <h4 class="check-history" @click="checkHistory">Check history</h4>
             </div>
           </div>
         </li>

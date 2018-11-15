@@ -1,10 +1,10 @@
 <template>
   <div class="footer-text">
     <p>
-      <span>{{ $t("createWallet.doNotForget") }}</span>
-      {{ $t("createWallet.doNotForgetDesc") }}
-      <span>{{ $t("createWallet.keyPass") }}</span>
-      {{ $t("createWallet.keyPassDesc") }}
+      <span>{{ $t('createWallet.doNotForget') }}</span>
+      {{ $t('createWallet.doNotForgetDesc') }}
+      <span>{{ $t('createWallet.keyPass') }}</span>
+      {{ $t('createWallet.keyPassDesc') }}
     </p>
   </div>
 </template>
