@@ -239,35 +239,31 @@ export default class Kyber {
   }
 
   approveKyber(fromToken, fromValueWei) {
-    const approveAbi = [
-      {
-        constant: false,
-        inputs: [
-          {
-            name: '_spender',
-            type: 'address'
-          },
-          {
-            name: '_value',
-            type: 'uint256'
-          }
-        ],
-        name: 'approve',
-        outputs: [],
-        payable: false,
-        type: 'function'
-      }
-    ];
-
-    const contract = new this.web3.eth.Contract(
-      approveAbi,
-      this.getTokenAddress(fromToken)
-    );
-
     return {
       to: this.getTokenAddress(fromToken),
       value: 0,
-      data: contract.methods
+      data: new this.web3.eth.Contract(
+        [
+          {
+            constant: false,
+            inputs: [
+              {
+                name: '_spender',
+                type: 'address'
+              },
+              {
+                name: '_value',
+                type: 'uint256'
+              }
+            ],
+            name: 'approve',
+            outputs: [],
+            payable: false,
+            type: 'function'
+          }
+        ],
+        this.getTokenAddress(fromToken)
+      ).methods
         .approve(this.getKyberNetworkAddress(), fromValueWei)
         .encodeABI()
     };

@@ -386,7 +386,6 @@ export default class BitySwap {
       [0]: 'FILL',
       [-1]: 'CANC'
     };
-    console.log(data.status); // todo remove dev item
     if (validStatus.includes(data.status)) {
       priorStatus = 'RCVE';
     }

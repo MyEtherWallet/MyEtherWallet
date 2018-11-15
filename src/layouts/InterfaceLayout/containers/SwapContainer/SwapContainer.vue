@@ -16,7 +16,11 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')"/>
-      <div class="buy-eth">
+      <div class="buy-eth" @click="setFiatBuy">
+        <!--<a href="https://ccswap.myetherwallet.com" target="_blank" >-->
+          <!--<span>Buy ETH with</span>-->
+          <!--<img :src="images.visaMaster">-->
+        <!--</a>-->
         <span>Buy ETH with</span>
         <img :src="images.visaMaster">
       </div>
@@ -45,7 +49,7 @@
           <div
             class="error-message-container">
             <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="hasEnough"> Insufficient balance</p>
+            <p v-if="notEnough && !fromBelowMinAllowed"> Insufficient balance</p>
             <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
             <p v-else>&nbsp;</p>
@@ -291,6 +295,7 @@ export default {
     },
     validSwap() {
       return (
+        !this.notEnough &&
         this.toAddress !== '' &&
         this.selectedProvider.minValue < +this.fromValue &&
         (+this.fromValue < this.selectedProvider.maxValue ||
@@ -337,20 +342,15 @@ export default {
         this.selectedProvider.provider === 'changelly'
       );
     },
-    hasEnough() {
-      if (
-        this.swap.isToken(this.fromCurrency) &&
-        this.fromCurrency !== 'ETH' &&
-        this.tokenBalances[this.fromCurrency]
-      ) {
-        const amount = this.swap.convertToTokenWei(this.fromCurrency, this.fromValue);
-        console.log(); // todo remove dev item
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
-          new BigNumber(amount)
+    notEnough() {
+      if (this.swap.isToken(this.fromCurrency) && this.fromCurrency !== 'ETH') {
+        return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
+          new BigNumber(
+            this.swap.convertToTokenWei(this.fromCurrency, this.fromValue)
+          )
         );
-        // eslint-disable-next-line
-      } else if (currency === 'ETH') {
-        return this.account >= +value;
+      } else if (this.fromCurrency === 'ETH') {
+        return +this.fromValue >= this.account.balance;
       }
       return false;
     }
@@ -372,9 +372,6 @@ export default {
         this.fromValue,
         'from'
       );
-    },
-    fromValue() {
-      this.chackBalance(this.fromCurrency, this.fromValue);
     }
   },
   mounted() {
@@ -402,6 +399,11 @@ export default {
     setRefundAddress(address) {
       this.refundAddress = address;
     },
+    setFiatBuy(){
+      this.setFromCurrency({ symbol: 'ETH', name: 'Ether' });
+      // this.fromCurrency = 'USD';
+      // this.toCurrency = 'ETH';
+    },
     setFromCurrency(value) {
       this.fromCurrency = value.symbol;
       this.getBalance(this.fromCurrency);
@@ -424,10 +426,8 @@ export default {
       );
     },
     async getBalance(currency) {
-      // eslint-disable-next-line
-      console.log(currency); // todo remove dev item
       if (this.swap.isToken(currency) && currency !== 'ETH') {
-        const contract = new this.web3.eth.Contract(
+        this.tokenBalances[currency] = await new this.web3.eth.Contract(
           [
             {
               constant: true,
@@ -450,8 +450,7 @@ export default {
             }
           ],
           this.swap.getTokenAddress(currency)
-        );
-        this.tokenBalances[currency] = await contract.methods
+        ).methods
           .balanceOf(this.currentAddress)
           .call();
       }
@@ -476,6 +475,7 @@ export default {
     },
     async updateEstimate(input) {
       let fromValue, toValue, simplexProvider, simplexRateDetails;
+      // this.getBalance(this.fromCurrency);
       switch (input) {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
