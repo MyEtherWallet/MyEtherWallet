@@ -1,22 +1,21 @@
 <template>
-  <div 
-    id="news" 
-    class="news">
+  <div id="news" class="news">
     <div class="wrap">
       <div class="page-container">
         <div class="top-title">
-          <h2>{{ $t("common.news") }}</h2>
+          <h2>{{ $t('common.news') }}</h2>
         </div>
         <div class="grid-col-3 news-container">
-          <news-article 
-            v-for="item in articles" 
-            :key="item.id" 
-            :link="item.link" 
-            :title="item.title" 
-            :desc="item.desc" 
-            :fb="item.fb" 
-            :twitter="item.twitter" 
-            :read-more="item.readMore"/>
+          <news-article
+            v-for="item in articles"
+            :key="item.id"
+            :link="item.link"
+            :title="item.title"
+            :desc="item.desc"
+            :fb="item.fb"
+            :twitter="item.twitter"
+            :read-more="item.readMore"
+          />
         </div>
       </div>
     </div>

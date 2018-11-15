@@ -1,6 +1,6 @@
 <template>
   <div class="buy-subdomain-container">
-    <back-button/>
+    <back-button />
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
         <p>{{ $t('interface.subdomains') }}</p>
@@ -10,32 +10,27 @@
               :placeholder="$t('dapps.subDomainPlaceholder')"
               type="text"
               @input="debounceInput"
-            >
-            <button
-              type="button"
-              @click="query">Check</button>
+            />
+            <button type="button" @click="query">Check</button>
           </div>
         </div>
-        <div
-          v-show="results.length > 0"
-          class="result-section">
+        <div v-show="results.length > 0" class="result-section">
           <p>{{ $t('dapps.allSubDomains') }}</p>
           <div class="results-container">
             <div
               v-for="item in sortedResults"
-              :key="domainName+item.domain"
-              :class="[ item.active? '':'disabled','result-item']">
+              :key="domainName + item.domain"
+              :class="[item.active ? '' : 'disabled', 'result-item']"
+            >
               <span>{{ domainName }}.{{ item.domain }}.eth</span>
               <span>
-                <span class="amt">{{ web3.utils.fromWei(item.price, 'ether') }} </span>
+                <span class="amt"
+                  >{{ web3.utils.fromWei(item.price, 'ether') }}
+                </span>
                 <span class="currency">ETH </span>
-                <button @click="buyDomain(item)" >
-                  <span v-if="item.active">
-                    {{ $t('dapps.buy') }}
-                  </span>
-                  <span v-else>
-                    <i class="fa fa-times" />
-                  </span>
+                <button @click="buyDomain(item);">
+                  <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
+                  <span v-else> <i class="fa fa-times" /> </span>
                 </button>
               </span>
             </div>
@@ -46,7 +41,8 @@
         <interface-bottom-text
           :link-text="$t('interface.learnMore')"
           :question="$t('interface.haveIssues')"
-          link="mailto:support@myetherwallet.com"/>
+          link="mailto:support@myetherwallet.com"
+        />
       </div>
     </div>
   </div>
@@ -89,8 +85,8 @@ export default {
         const ab = new BN(a.price).gt(b.price)
           ? -1
           : new BN(a.price).eq(b.price)
-            ? 0
-            : 1;
+          ? 0
+          : 1;
         return ab;
       });
       const taken = newArr.filter(item => {

@@ -1,7 +1,6 @@
 <template>
   <form class="user-input">
-
-    <!--=== MEW custom form ========================================-->
+    <!-- === MEW custom form ======================================== -->
     <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
@@ -11,36 +10,39 @@
           name="password"
           placeholder="Please Enter At Least 9 Characters"
           autocomplete="off"
-          @input="updateValue($event.target.value)"
-        >
+          @input="updateValue($event.target.value);"
+        />
       </div>
       <div
         class="password-icons"
-        @click="password.showPassword = !password.showPassword">
+        @click="password.showPassword = !password.showPassword;"
+      >
         <img
           v-if="!password.showPassword"
           class="hide-password"
-          src="~@/assets/images/icons/hide-password.svg" >
+          src="~@/assets/images/icons/hide-password.svg"
+        />
         <img
           v-if="password.showPassword"
           class="show-password"
-          src="~@/assets/images/icons/show-password.svg" >
+          src="~@/assets/images/icons/show-password.svg"
+        />
       </div>
 
-      <p
-        v-show="value.length > 0"
-        class="passwd-strength">
+      <p v-show="value.length > 0" class="passwd-strength">
         Password strength:<span :class="strengthClass">{{ strength }}</span>
       </p>
     </div>
-    <!--=== MEW custom form ========================================-->
+    <!-- === MEW custom form ======================================== -->
 
     <button
       :disabled="value.length === 0 && value.length < 9 && strength === ''"
       class="next-button large-round-button-green-filled"
       type="submit"
-      @click.prevent="switcher(param)">
-      {{ $t("common.next") }}<img src="~@/assets/images/icons/right-arrow.png">
+      @click.prevent="switcher(param);"
+    >
+      {{ $t('common.next')
+      }}<img src="~@/assets/images/icons/right-arrow.png" />
     </button>
   </form>
 </template>

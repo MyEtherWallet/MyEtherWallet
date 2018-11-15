@@ -83,10 +83,5 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   baseUrl: './',
   configureWebpack: webpackConfig,
-  chainWebpack: config => {
-    config.module
-      .rule('eslint')
-      .use('eslint-loader')
-      .options({ fix: true });
-  }
+  chainWebpack: config => {}
 };

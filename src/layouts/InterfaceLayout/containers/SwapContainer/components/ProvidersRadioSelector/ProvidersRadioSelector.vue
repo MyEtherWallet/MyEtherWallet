@@ -1,12 +1,11 @@
 <template>
   <div class="providers-radio-selector">
-    <div
-      v-show="providerData.length > 0"
-      class="radio-button-container">
+    <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
         <li
           v-for="(provider, idx) in providerData"
-          :key="provider.provider + idx">
+          :key="provider.provider + idx"
+        >
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
@@ -14,54 +13,58 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider)">
-            <label :for="provider.provider"/>
+              @input="setSelectedProvider(provider.provider);"
+            />
+            <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider.provider)">
+            <img :src="providerLogo(provider.provider)" />
           </div>
-          <div :class="[(minCheck(provider) || maxCheck(provider)) ? 'invalid-min-max' : '']">
+          <div
+            :class="[
+              minCheck(provider) || maxCheck(provider) ? 'invalid-min-max' : ''
+            ]"
+          >
             {{ normalizedRateDisplay(provider) }}
           </div>
           <div>
-            <p :class="[minCheck(provider) ? 'error-message-container': '']">{{ minNote(provider) }}</p>
-            <p :class="[maxCheck(provider) ? 'error-message-container': '']">{{ maxNote(provider) }}</p>
+            <p :class="[minCheck(provider) ? 'error-message-container' : '']">
+              {{ minNote(provider) }}
+            </p>
+            <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
+              {{ maxNote(provider) }}
+            </p>
           </div>
         </li>
       </ul>
     </div>
     <div
       v-show="loadingData"
-      class="radio-button-container animated-background">
+      class="radio-button-container animated-background"
+    >
       <ul>
-        <li
-          v-for="provider in providersFound"
-          :key="provider">
+        <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input
-              type="radio"
-              name="provider">
-            <label :for="provider"/>
+            <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)">
+            <img :src="providerLogo(provider)" />
           </div>
-          <div class="background-masker"/>
+          <div class="background-masker" />
         </li>
       </ul>
     </div>
 
-    <div
-      v-show="noAvaliableProviders"
-      class="radio-button-container">
+    <div v-show="noAvaliableProviders" class="radio-button-container">
       <ul>
         <li>
-          <div class="mew-custom-form__radio-button"/>
-          <div class="provider-image"/>
+          <div class="mew-custom-form__radio-button" />
+          <div class="provider-image" />
           <div>
-            No provider found for {{ noProvidersPair.fromCurrency }} to {{ noProvidersPair.toCurrency }}
+            No provider found for {{ noProvidersPair.fromCurrency }} to
+            {{ noProvidersPair.toCurrency }}
           </div>
-          <div/>
+          <div />
         </li>
       </ul>
     </div>

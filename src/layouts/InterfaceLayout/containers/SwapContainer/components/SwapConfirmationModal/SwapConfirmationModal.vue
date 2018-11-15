@@ -5,45 +5,45 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="time-remaining">
         <h1>09:25</h1>
         <p>Time Remaining</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
-          <div class="icon">
-            <img :src="fromAddress.image">
-          </div>
-          <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
+          <div class="icon"><img :src="fromAddress.image" /></div>
+          <p class="value">
+            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+          </p>
           <p class="block-title">From Address</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
-        <div class="right-arrow">
-          <img :src="arrowImage">
-        </div>
+        <div class="right-arrow"><img :src="arrowImage" /></div>
         <div class="to-address">
-          <div class="icon">
-            <img :src="toAddress.image">
-          </div>
-          <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
+          <div class="icon"><img :src="toAddress.image" /></div>
+          <p class="value">
+            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+          </p>
           <p class="block-title">To Address</p>
           <p class="address">{{ toAddress.address }}</p>
         </div>
       </div>
 
-      <detail-information :details="detailInfo"/>
+      <detail-information :details="detailInfo" />
 
       <div
-        :class="[swapReady ? '': 'disable', 'confirm-send-button']"
-        @click="signAndTransmitTransaction">
+        :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
+        @click="signAndTransmitTransaction"
+      >
         <button-with-qrcode
           :qrcode="qrcode"
-          :buttonname="$t('common.confirmAndSend')"/>
+          :buttonname="$t('common.confirmAndSend')"
+        />
       </div>
 
-      <help-center-button/>
-
+      <help-center-button />
     </b-modal>
   </div>
 </template>

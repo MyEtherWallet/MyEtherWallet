@@ -1,17 +1,16 @@
 <template>
   <div>
     <div class="finalize-container">
-      <h3>
-        {{ $t('dapps.finalizeDesc') }}: {{ domainName }}.eth
-      </h3>
-      <button
-        class="finalize-button"
-        @click="finalize"> {{ $t('dapps.finalize') }} </button>
+      <h3>{{ $t('dapps.finalizeDesc') }}: {{ domainName }}.eth</h3>
+      <button class="finalize-button" @click="finalize">
+        {{ $t('dapps.finalize') }}
+      </button>
     </div>
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"/>
+      link="mailto:support@myetherwallet.com"
+    />
   </div>
 </template>
 <script>

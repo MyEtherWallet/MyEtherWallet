@@ -2,30 +2,21 @@
   <div class="news">
     <div
       class="news-image"
-      style="background-image: url(https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg);"/>
+      style="background-image: url(https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg);"
+    />
     <div class="news-text">
       <h4>{{ title }}</h4>
-      <p>
-        {{ desc }}
-      </p>
+      <p>{{ desc }}</p>
       <div class="links">
-        <p><router-link :to="link">{{ readMore }}</router-link></p>
+        <p>
+          <router-link :to="link">{{ readMore }}</router-link>
+        </p>
         <div>
-          <a
-            v-if="fb !== ''"
-            :href="fb"
-            target="_blank">
-            <i
-              class="fa fa-facebook"
-              aria-hidden="true"/>
+          <a v-if="fb !== ''" :href="fb" target="_blank">
+            <i class="fa fa-facebook" aria-hidden="true" />
           </a>
-          <a
-            v-if="twitter !== ''"
-            :href="twitter"
-            target="_blank">
-            <i
-              class="fa fa-twitter"
-              aria-hidden="true"/>
+          <a v-if="twitter !== ''" :href="twitter" target="_blank">
+            <i class="fa fa-twitter" aria-hidden="true" />
           </a>
         </div>
       </div>

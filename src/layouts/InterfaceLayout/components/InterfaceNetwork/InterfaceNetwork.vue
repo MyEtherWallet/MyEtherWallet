@@ -1,28 +1,29 @@
 <template>
   <div>
-    <interface-network-modal ref="network"/>
+    <interface-network-modal ref="network" />
     <div @click="networkModalOpen">
       <div class="info-block network">
         <div class="block-image">
-          <img
-            :src="network.type.icon"
-            class="icon">
+          <img :src="network.type.icon" class="icon" />
         </div>
         <div class="block-content">
           <div class="helper">
             <popover
               :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'" />
+              :popovertype="'A'"
+            />
           </div>
           <div class="information-container">
-            <h2>{{ $t("common.network") }}</h2>
-            <p>{{ network.service+"("+network.type.name+")" }}</p>
-            <p>{{ $t("interface.lastBlock") }}: # <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
-              v-show="parsedNetwork === ''"
-              class="fa fa-spinner fa-spin"/> </p>
+            <h2>{{ $t('common.network') }}</h2>
+            <p>{{ network.service + '(' + network.type.name + ')' }}</p>
+            <p>
+              {{ $t('interface.lastBlock') }}: #
+              <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
+              <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+            </p>
           </div>
           <div class="icon-container">
-            <img src="~@/assets/images/icons/change.svg">
+            <img src="~@/assets/images/icons/change.svg" />
           </div>
         </div>
       </div>

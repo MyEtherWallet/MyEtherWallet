@@ -6,17 +6,15 @@
           <img
             :src="currencyIcons[details.fromCurrency]"
             height="16"
-            width="16">
+            width="16"
+          />
           <span class="currency">{{ details.fromCurrency }}</span>
         </div>
         <p class="value">{{ details.fromValue }}</p>
       </div>
 
       <div class="right-arrow">
-        <img
-          :src="arrowImage"
-          height="12"
-          width="16">
+        <img :src="arrowImage" height="12" width="16" />
       </div>
 
       <div class="to-address">
@@ -24,7 +22,8 @@
           <img
             :src="currencyIcons[details.toCurrency]"
             height="16"
-            width="16">
+            width="16"
+          />
           <span class="currency">{{ details.toCurrency }}</span>
         </div>
         <p class="value">{{ details.toValue }}</p>

@@ -1,29 +1,49 @@
 <template lang="html">
-  <div
-    v-click-outside="openDropdown"
-    class="currency-picker-container">
+  <div v-click-outside="openDropdown" class="currency-picker-container">
     <div>
       <div
-        :class="[open? 'open':'','dropdown-container', token? 'dropdown-text-container': 'dropdown-text-container-white']"
-        @click="openDropdown">
-        <p> {{ selectedCurrency.symbol }} <span class="subname">- {{ selectedCurrency.name }}</span></p>
-        <p v-show="!token"> {{ selectedCurrency.name }} </p>
-        <i :class="['fa', open ? 'fa-angle-up':'fa-angle-down']"/>
+        :class="[
+          open ? 'open' : '',
+          'dropdown-container',
+          token ? 'dropdown-text-container' : 'dropdown-text-container-white'
+        ]"
+        @click="openDropdown"
+      >
+        <p>
+          {{ selectedCurrency.symbol }}
+          <span class="subname">- {{ selectedCurrency.name }}</span>
+        </p>
+        <p v-show="!token">{{ selectedCurrency.name }}</p>
+        <i :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']" />
       </div>
-      <div :class="[open? 'open':'hide', 'dropdown-item-container']">
+      <div :class="[open ? 'open' : 'hide', 'dropdown-item-container']">
         <div class="dropdown-search-container">
-          <input
-            v-model="search"
-            placeholder="Search">
-          <i class="fa fa-search"/>
+          <input v-model="search" placeholder="Search" />
+          <i class="fa fa-search" />
         </div>
         <div class="item-container">
           <div
             v-for="(curr, idx) in localCurrencies"
-            :class="[token ? selectedCurrency.symbol === curr.symbol ? 'selected': '' : selectedCurrency.name === curr.name? 'selected': '','item']"
-            :key="token?curr.name+curr.symbol + page: curr.name + page + idx"
-            @click="selectCurrency(curr)">
-            <p>{{ curr.symbol }} <span class="subname">- {{ curr.name }}</span></p><p/><p v-show="!token">{{ curr.name }}</p>
+            :class="[
+              token
+                ? selectedCurrency.symbol === curr.symbol
+                  ? 'selected'
+                  : ''
+                : selectedCurrency.name === curr.name
+                ? 'selected'
+                : '',
+              'item'
+            ]"
+            :key="
+              token ? curr.name + curr.symbol + page : curr.name + page + idx
+            "
+            @click="selectCurrency(curr);"
+          >
+            <p>
+              {{ curr.symbol }} <span class="subname">- {{ curr.name }}</span>
+            </p>
+            <p />
+            <p v-show="!token">{{ curr.name }}</p>
           </div>
         </div>
       </div>

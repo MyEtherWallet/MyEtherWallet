@@ -1,30 +1,30 @@
 <template>
   <div class="what-is-mew">
-
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t("gettingStarted.congratulationsTitle") }}
+          {{ $t('gettingStarted.congratulationsTitle') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"/>
+          <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content text-cented">
-
-          <img src="~@/assets/images/icons/drink.svg">
+          <img src="~@/assets/images/icons/drink.svg" />
 
           <p>
-            {{ $t("gettingStarted.congratulationsDesc") }}
-            <a href="https://kb.myetherwallet.com">{{ $t("gettingStarted.congratulationsLink") }}</a>{{ $t("gettingStarted.congratulationsDescCont") }}
+            {{ $t('gettingStarted.congratulationsDesc') }}
+            <a href="https://kb.myetherwallet.com">{{
+              $t('gettingStarted.congratulationsLink')
+            }}</a
+            >{{ $t('gettingStarted.congratulationsDescCont') }}
           </p>
 
-          <div 
-            class="mid-round-button-green-filled-green-border" 
-            @click="done">Get Started</div>
+          <div class="mid-round-button-green-filled-green-border" @click="done">
+            Get Started
+          </div>
         </div>
       </dir>
     </div>
-
   </div>
 </template>
 

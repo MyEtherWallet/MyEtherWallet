@@ -1,22 +1,18 @@
 <template>
   <div class="deploy-contract-container">
-    <interface-container-title :title="$t('common.signMessage')"/>
+    <interface-container-title :title="$t('common.signMessage')" />
     <div class="send-form">
-      <p>
-        {{ $t('interface.signMessageDesc') }}
-      </p>
+      <p>{{ $t('interface.signMessageDesc') }}</p>
 
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
-          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+          <popover :popcontent="$t('popover.whatIsMessageContent')" />
         </div>
       </div>
 
       <div class="the-form">
-        <textarea
-          ref="message"
-          class="custom-textarea-1"/>
+        <textarea ref="message" class="custom-textarea-1" />
       </div>
     </div>
 
@@ -24,20 +20,20 @@
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('common.signature') }}</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
+          <popover :popcontent="$t('popover.whatIsSignatureContent')" />
 
           <div class="copy-buttons">
-            <span @click="deleteInputText('signature')">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard('signature')">{{ $t('common.copy') }}</span>
+            <span @click="deleteInputText('signature');">{{
+              $t('common.clear')
+            }}</span>
+            <span @click="copyToClipboard('signature');">{{
+              $t('common.copy')
+            }}</span>
           </div>
-
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="signature"
-          class="custom-textarea-1"
-          name=""/>
+        <textarea ref="signature" class="custom-textarea-1" name="" />
       </div>
     </div>
 
@@ -45,16 +41,17 @@
       <div class="buttons">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="signMessage">
+          @click="signMessage"
+        >
           {{ $t('common.sign') }}
         </div>
       </div>
       <interface-bottom-text
         :link-text="$t('interface.learnMore')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"/>
+        link="mailto:support@myetherwallet.com"
+      />
     </div>
-
   </div>
 </template>
 
