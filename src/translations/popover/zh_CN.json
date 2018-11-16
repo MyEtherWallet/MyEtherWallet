@@ -7,5 +7,6 @@
   "whatIsGas": "那么“Gas限制”是什么？",
   "print": "打印",
   "copy": "复制",
-  "switchAddress": "切换地址"
+  "switchAddress": "切换地址",
+  "password": "This password encrypts your private key. This does not act as a seed to generate your keys."
 }
