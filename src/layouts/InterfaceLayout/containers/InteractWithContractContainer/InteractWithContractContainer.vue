@@ -476,8 +476,8 @@ export default {
             this.resolvedAddress !== ''
               ? this.resolvedAddress
               : this.address !== ''
-                ? this.address
-                : '',
+              ? this.address
+              : '',
           data: this.data
         };
 

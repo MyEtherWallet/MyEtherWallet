@@ -45,5 +45,8 @@
   "signedTx": "Signed Transaction",
   "raw": "Raw",
   "copyAndCont": "Copy and Continue",
-  "lastBlock": "Last block"
+  "lastBlock": "Last block",
+  "fromAddr": "From Address",
+  "depAmount": "Deposit Amount",
+  "notEnoughBalance": "You have insufficient funds."
 }

@@ -53,7 +53,9 @@
               {{ $t('interface.sendTxToAddr') }}
               <blockie
                 v-show="validAddress && address.length !== 0"
-                :address="address"
+                :address="resolvedAddress !== '' ? resolvedAddress : address"
+                :size="8"
+                :scale="16"
                 width="32px"
                 height="32px"
                 class="blockie-image"
@@ -259,7 +261,8 @@ export default {
       gasPrice: 'gasPrice',
       web3: 'web3',
       wallet: 'wallet',
-      network: 'network'
+      network: 'network',
+      ens: 'ens'
     })
   },
   watch: {

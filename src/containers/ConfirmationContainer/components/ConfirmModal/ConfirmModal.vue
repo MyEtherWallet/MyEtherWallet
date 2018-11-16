@@ -44,7 +44,7 @@
           </div>
           <div v-if="modalDetailInformation" class="expended-info">
             <div class="grid-block">
-              <p>{{ $t('common.network') }}</p>
+              <p>{{ $t('interface.network') }}</p>
               <p>{{ network.type.name }} by {{ network.service }}</p>
             </div>
             <div class="grid-block">

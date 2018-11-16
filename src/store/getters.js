@@ -16,6 +16,9 @@ const ethDonationAddress = state => {
 const gasPrice = state => {
   return state.gasPrice;
 };
+const path = state => {
+  return state.path;
+};
 const Networks = state => {
   return state.Networks;
 };
@@ -48,6 +51,7 @@ export default {
   Networks,
   network,
   notifications,
+  path,
   online,
   Transactions,
   wallet,
