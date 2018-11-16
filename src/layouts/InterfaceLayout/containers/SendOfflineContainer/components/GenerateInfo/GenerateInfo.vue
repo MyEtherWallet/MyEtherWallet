@@ -4,16 +4,18 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title-and-copy">
-            <div><h4>From Address</h4></div>
+            <div>
+              <h4>{{ $t('interface.fromAddr') }}</h4>
+            </div>
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
                 @click="deleteFromAddress"
               >
-                Clear
+                {{ $t('common.clear') }}
               </p>
               <p class="linker-1 prevent-user-select" @click="copyFromAddress">
-                Copy
+                {{ $t('common.copy') }}
               </p>
             </div>
           </div>
@@ -49,7 +51,7 @@
           class="submit-button large-round-button-green-filled clickable"
           @click="generateInfo"
         >
-          Generate
+          {{ $t('interface.generateInfo') }}
         </div>
       </div>
 
@@ -58,7 +60,7 @@
           class="submit-button large-round-button-green-filled clickable"
           @click="generateTx"
         >
-          Continue
+          {{ $t('common.continue') }}
         </div>
       </div>
       <interface-bottom-text
@@ -72,7 +74,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import TxSpeedInput from '../../components/TxSpeedInput';
+import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
 export default {
   components: {
@@ -113,7 +115,7 @@ export default {
       this.$refs.fromaddress.value = '';
     },
     generateTx() {
-      this.$emit('pathUpdate', 'genTx');
+      this.$emit('pathUpdate', 'Offline Generate Transaction');
     },
     gasLimitUpdated(e) {
       this.$emit('gasLimitUpdate', e);

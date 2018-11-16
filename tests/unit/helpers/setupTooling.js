@@ -3,6 +3,7 @@ import VueI18n from 'vue-i18n';
 import BootstrapVue from "bootstrap-vue";
 import languages from '@/translations';
 import VueX from 'vuex'
+import VueQrcode from '@xkeshi/vue-qrcode';
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
@@ -15,6 +16,7 @@ function createLocalVueInstance(){
   localVue.use(VueX)
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
+  localVue.component(VueQrcode.name, VueQrcode);
   localVue.filter('capitalize', function(value){
     if(!value) return ''
     value = value.toString().toLowerCase()

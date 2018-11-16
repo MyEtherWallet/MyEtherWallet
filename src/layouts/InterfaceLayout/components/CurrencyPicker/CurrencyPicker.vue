@@ -35,7 +35,9 @@
               'item'
             ]"
             :key="
-              token ? curr.name + curr.symbol + page : curr.name + page + idx
+              token
+                ? curr.name + idx + curr.symbol + page
+                : curr.name + page + idx
             "
             @click="selectCurrency(curr);"
           >

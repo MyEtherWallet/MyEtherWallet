@@ -81,7 +81,6 @@
         <ul class="address-block table-header">
           <li>{{ $t('accessWallet.id') }}</li>
           <li>{{ $t('common.address') }}</li>
-          <li>{{ $t('common.balance') }}</li>
           <li />
         </ul>
 
@@ -95,7 +94,6 @@
         >
           <li>{{ account.index }}.</li>
           <li>{{ account.account.getChecksumAddressString() }}</li>
-          <li>{{ account.balance }} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
               <input
@@ -149,7 +147,6 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import ethUnits from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 const MAX_ADDRESSES = 5;
 export default {
@@ -180,8 +177,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      web3: 'web3',
-      customPaths: 'customPaths'
+      customPaths: 'customPaths',
+      path: 'path'
     })
   },
   watch: {
@@ -247,7 +244,9 @@ export default {
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      this.$router.push({ path: 'interface' });
+      this.$router.push({
+        path: 'interface'
+      });
     },
     setHDAccounts() {
       this.HDAccounts = [];
@@ -258,22 +257,10 @@ export default {
       ) {
         this.HDAccounts.push({
           index: i,
-          account: this.hardwareWallet.getAccount(i),
-          balance: 'loading'
+          account: this.hardwareWallet.getAccount(i)
         });
-        this.getAddressBalance(
-          this.HDAccounts[this.HDAccounts.length - 1].account.getAddressString()
-        );
       }
       this.currentIndex += MAX_ADDRESSES;
-    },
-    getAddressBalance(address) {
-      const web3 = this.web3;
-      web3.eth.getBalance(address).then(balance => {
-        for (const i in this.HDAccounts)
-          if (this.HDAccounts[i].account.getAddressString() == address)
-            this.HDAccounts[i].balance = ethUnits.fromWei(balance, 'ether');
-      });
     },
     nextAddressSet() {
       this.setHDAccounts();

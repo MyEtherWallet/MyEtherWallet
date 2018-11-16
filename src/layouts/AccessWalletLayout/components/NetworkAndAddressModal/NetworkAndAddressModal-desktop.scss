@@ -57,9 +57,10 @@
 
         .address-block {
           color: $text-color-3;
+          cursor: pointer;
           display: grid;
           grid-column-gap: 15px;
-          grid-template-columns: 35px 3fr 2fr 35px;
+          grid-template-columns: 35px 1fr 35px;
           padding: 8px 25px;
 
           &.table-header {

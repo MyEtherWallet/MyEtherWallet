@@ -16,6 +16,14 @@ export default {
     height: {
       type: String,
       default: '64px'
+    },
+    size: {
+      type: Number,
+      default: 8
+    },
+    scale: {
+      type: Number,
+      default: 16
     }
   },
   data() {
@@ -30,6 +38,12 @@ export default {
     },
     height() {
       this.setBlockie();
+    },
+    scale() {
+      this.setBlockie();
+    },
+    size() {
+      this.setBlockie();
     }
   },
   mounted() {
@@ -39,8 +53,8 @@ export default {
     setBlockie() {
       const data = Blockies({
         seed: this.address.toLowerCase(),
-        size: 8,
-        scale: 16
+        size: this.size,
+        scale: this.scale
       }).toDataURL();
       this.$refs.identicon.style.width = this.width;
       this.$refs.identicon.style.height = this.height;
