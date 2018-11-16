@@ -19,18 +19,13 @@
         />
       </div>
       <div class="scan-download-container">
-        <h4 class="block-title">
-          Scan QR code
-        </h4>
-        <div
-          v-if="signedTx !== ''"
-          class="scan-download-items">
+        <h4 class="block-title">Scan QR code</h4>
+        <div v-if="signedTx !== ''" class="scan-download-items">
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
-            :options="{ size: 200 }"/>
-          or <a
-            :href="jsonFile"
-            :download="jsonFileName">Download JSON</a>
+            :options="{ size: 200 }"
+          />
+          or <a :href="jsonFile" :download="jsonFileName">Download JSON</a>
         </div>
       </div>
       <div class="raw">

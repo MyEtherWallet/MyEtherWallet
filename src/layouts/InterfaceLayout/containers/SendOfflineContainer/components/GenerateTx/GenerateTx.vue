@@ -8,33 +8,35 @@
               <h4>{{ $t('interface.sendTxAmount') }}</h4>
             </div>
             <currency-picker
-              :currency="coinType"
+              :currency="tokens"
               :token="true"
               page="sendOfflineGenTx"
+              @selectedCurrency="setSelectedCurrency"
             />
             <div class="the-form amount-number">
               <input
                 v-model="toAmt"
                 :placeholder="$t('interface.depAmount')"
-                type="number"
-                name="">
-              <i
-                :class="[account.balance < toAmt ? 'not-good': '','fa fa-check-circle good-button']"
-                aria-hidden="true"/>
+                type="string"
+                name=""
+              />
             </div>
           </div>
           <div class="to-address">
             <div class="title">
               <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
               <blockie
-                v-show="(address !== '' || resolvedAddress !== '') && validAddress"
-                :address="address !== '' ? address: resolvedAddress !== ''? resolvedAddress:''"
+                v-show="address !== '' && validAddress"
+                :address="address"
                 width="22px"
                 height="22px"
               />
               <p
                 class="copy-button linker-1 prevent-user-select"
-                @click="copyToAddress">{{ $t('common.copy') }}</p>
+                @click="copyToAddress"
+              >
+                {{ $t('common.copy') }}
+              </p>
             </div>
             <div class="the-form address-block">
               <textarea
@@ -54,11 +56,6 @@
             </div>
           </div>
         </div>
-        <div
-          v-show="account.balance < toAmt"
-          class="error-message-container">
-          <p>{{ $t('interface.notEnoughBalance') }}</p>
-        </div>
       </div>
 
       <div class="send-form">
@@ -73,7 +70,7 @@
         <div class="the-form gas-amount">
           <input
             v-model="toData"
-            type="number"
+            type="string"
             name=""
             placeholder="e.g. 0x65746865726d696e652d657531"
           />
@@ -96,8 +93,12 @@
       />
       <div class="submit-button-container">
         <div
-          :class="[!validAddress ? 'disabled': '' ,'submit-button large-round-button-green-filled']"
-          @click="next">
+          :class="[
+            !validAddress ? 'disabled' : '',
+            'submit-button large-round-button-green-filled'
+          ]"
+          @click="generateTx"
+        >
           {{ $t('interface.generateTx') }}
         </div>
         <interface-bottom-text
@@ -124,6 +125,7 @@ import SignedTxModal from '../SignedTxModal';
 import Blockie from '@/components/Blockie';
 // eslint-disable-next-line
 const EthTx = require('ethereumjs-tx');
+import BN from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 
@@ -143,6 +145,12 @@ export default {
     nonce: {
       type: Number,
       default: 0
+    },
+    tokens: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
@@ -151,13 +159,11 @@ export default {
       address: '',
       toData: '0x',
       localGas: this.gasLimit,
-      coinType: [{ symbol: 'ETH', name: 'Ethereum' }],
-      selectedCoinType: '',
+      selectedCoinType: {},
       raw: {},
       signed: '',
       locNonce: this.nonce,
-      validAddress: false,
-      resolvedAddress: ''
+      validAddress: false
     };
   },
   computed: {
@@ -172,28 +178,91 @@ export default {
   watch: {
     gasLimit(newVal) {
       this.localGas = newVal;
+    },
+    toAmt(newVal) {
+      this.createDataHex(newVal, null, null);
+    },
+    address(newVal) {
+      this.createDataHex(null, newVal, null);
+    },
+    selectedCoinType(newVal) {
+      this.createDataHex(null, null, newVal);
     }
   },
   methods: {
+    async createDataHex(amount, address, currency) {
+      const locAmount = amount !== null ? amount : this.toAmt;
+      const locAddress = address !== null ? address : this.address;
+      const locCurrency = currency !== null ? currency : this.selectedCoinType;
+      const abi = [
+        {
+          constant: false,
+          inputs: [
+            {
+              name: '_to',
+              type: 'address'
+            },
+            {
+              name: '_value',
+              type: 'uint256'
+            }
+          ],
+          name: 'transfer',
+          outputs: [
+            {
+              name: '',
+              type: 'bool'
+            }
+          ],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ];
+      if (
+        locCurrency.hasOwnProperty('symbol') &&
+        locCurrency.symbol !== 'ETH' &&
+        locAddress !== ''
+      ) {
+        const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
+        const contract = new this.web3.eth.Contract(
+          abi,
+          locCurrency.hasOwnProperty('addr')
+            ? locCurrency.addr
+            : locCurrency.address
+        );
+        const convertedAmount = new BN(locVal).exponentiatedBy(
+          locCurrency.decimals
+        );
+        this.toData = await contract.methods
+          .transfer(locAddress, convertedAmount.toFixed())
+          .encodeABI();
+      } else {
+        this.toData = '0x';
+      }
+    },
     copyToAddress() {
       this.$refs('toaddress').select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },
-    async next() {
+    async generateTx() {
       const raw = {
         from: this.wallet.getAddressString(),
         gas: this.localGas,
-        value: unit.toWei(this.toAmt, 'ether'),
+        value:
+          this.selectedCoinType.symbol !== 'ETH'
+            ? 0
+            : unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
         nonce: this.locNonce,
         gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
         to:
-          this.resolvedAddress !== ''
-            ? this.resolvedAddress
-            : this.address !== ''
-            ? this.address
-            : '',
+          this.selectedCoinType.symbol !== 'ETH'
+            ? this.selectedCoinType.hasOwnProperty('addr')
+              ? this.selectedCoinType.addr
+              : this.selectedCoinType.address
+            : this.address,
         chainId: this.network.type.chainID || 1,
         generateOnly: true
       };
@@ -215,6 +284,9 @@ export default {
     },
     pathUpdate() {
       this.$emit('pathUpdate', 'Offline Send Transaction');
+    },
+    setSelectedCurrency(e) {
+      this.selectedCoinType = e;
     }
   }
 };

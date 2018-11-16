@@ -58,7 +58,8 @@
                 :scale="16"
                 width="32px"
                 height="32px"
-                class="blockie-image"/>
+                class="blockie-image"
+              />
             </h4>
 
             <p

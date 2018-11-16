@@ -14,11 +14,13 @@
             />
           </div>
           <div class="information-container">
-            <h2>{{ $t("interface.network") }}</h2>
-            <p>{{ network.service+"("+network.type.name+")" }}</p>
-            <p>{{ $t("interface.lastBlock") }}: # <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
-              v-show="parsedNetwork === ''"
-              class="fa fa-spinner fa-spin"/> </p>
+            <h2>{{ $t('interface.network') }}</h2>
+            <p>{{ network.service + '(' + network.type.name + ')' }}</p>
+            <p>
+              {{ $t('interface.lastBlock') }}: #
+              <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
+              <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+            </p>
           </div>
           <div class="icon-container">
             <img src="~@/assets/images/icons/change.svg" />

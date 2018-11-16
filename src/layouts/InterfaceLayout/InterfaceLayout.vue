@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="send-eth-and-tokens">
+  <div class="send-eth-and-tokens">
     <div class="wrap">
       <div class="side-nav"><interface-side-menu /></div>
       <div class="contents">
@@ -11,6 +10,7 @@
           <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"
+            :tokens="tokens"
           />
           <div v-if="online" class="tokens">
             <interface-tokens

@@ -6,7 +6,7 @@ import { Tooling } from '@@/helpers';
 describe('SendTx.vue', () => {
   let localVue, i18n, wrapper, store;
 
-  const rawTx = '{ rawTransaction: "0xasdfasdfasdfasdfasasdfasdf" }';
+  const rawTx = '{ "rawTransaction": "0xasdfasdfasdfasdfasasdfasdf" }';
   const spy = sinon.stub();
 
   beforeAll(() => {
@@ -29,8 +29,7 @@ describe('SendTx.vue', () => {
     });
   });
 
-  it('should render correct content', () => {
-  });
+  it('should render correct content', () => {});
 
   describe('SendTx.vue Methods', () => {});
 });
