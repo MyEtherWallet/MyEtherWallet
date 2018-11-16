@@ -5,17 +5,19 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <div><h4>{{ $t('interface.signedTx') }}</h4></div>
+            <div>
+              <h4>{{ $t('interface.signedTx') }}</h4>
+            </div>
             <div class="form-controller">
-              <p
-                class="linker-1 prevent-user-select"
-                @click="uploadJson">Upload JSON</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="deleteTxHex">{{ $t('common.clear') }}</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="copyTxHex">{{ $t('common.copy') }}</p>
+              <p class="linker-1 prevent-user-select" @click="uploadJson">
+                Upload JSON
+              </p>
+              <p class="linker-1 prevent-user-select" @click="deleteTxHex">
+                {{ $t('common.clear') }}
+              </p>
+              <p class="linker-1 prevent-user-select" @click="copyTxHex">
+                {{ $t('common.copy') }}
+              </p>
             </div>
           </div>
         </div>
@@ -25,13 +27,15 @@
             ref="txHex"
             v-model="signedTx"
             name=""
-            placeholder="Enter TX Hex"/>
+            placeholder="Enter TX Hex"
+          />
           <input
             ref="jsonInput"
             type="file"
             name="file"
             style="display: none"
-            @change="uploadFile">
+            @change="uploadFile"
+          />
         </div>
       </div>
       <div class="submit-button-container">
@@ -68,14 +72,17 @@ export default {
     }
   },
   data() {
-    const parsedRaw = new Object(this.rawTx);
     return {
-      signedTx: parsedRaw.rawTransaction,
       readTx: {}
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' })
+    ...mapGetters({ web3: 'web3' }),
+    signedTx() {
+      return this.readTx.hasOwnProperty('rawTransaction')
+        ? this.readTx.rawTransaction
+        : JSON.parse(this.rawTx).rawTransaction;
+    }
   },
   watch: {
     rawTx(newVal) {

@@ -4,14 +4,19 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title-and-copy">
-            <div><h4>{{ $t('interface.fromAddr') }}</h4></div>
+            <div>
+              <h4>{{ $t('interface.fromAddr') }}</h4>
+            </div>
             <div class="form-controller">
               <p
                 class="linker-1 prevent-user-select"
-                @click="deleteFromAddress">{{ $t('common.clear') }}</p>
-              <p
-                class="linker-1 prevent-user-select"
-                @click="copyFromAddress">{{ $t('common.copy') }}</p>
+                @click="deleteFromAddress"
+              >
+                {{ $t('common.clear') }}
+              </p>
+              <p class="linker-1 prevent-user-select" @click="copyFromAddress">
+                {{ $t('common.copy') }}
+              </p>
             </div>
           </div>
         </div>
@@ -44,7 +49,8 @@
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="generateInfo">
+          @click="generateInfo"
+        >
           {{ $t('interface.generateInfo') }}
         </div>
       </div>
@@ -52,7 +58,8 @@
       <div v-if="moreInfoGenerated" class="submit-button-container">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="generateTx">
+          @click="generateTx"
+        >
           {{ $t('common.continue') }}
         </div>
       </div>

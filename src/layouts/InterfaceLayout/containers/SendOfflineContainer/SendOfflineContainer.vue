@@ -6,8 +6,11 @@
       <div
         v-for="(tab, idx) in tabs"
         :key="tab.title + idx"
-        :class="[isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '' ,'genInfo']"
-        @click="processChange(tab.name2 ? tab.name2: tab.name)"
+        :class="[
+          isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
+          'genInfo'
+        ]"
+        @click="processChange(tab.name2 ? tab.name2 : tab.name);"
       >
         <div class="prevent-pointer-events">
           <p class="title">{{ tab.title }}</p>
@@ -19,12 +22,12 @@
       :raw-tx="rawTx"
       :nonce="nonce"
       :gas-limit="gasLimit"
+      :tokens="tokens"
       @nonceUpdate="nonceUpdated"
       @gasLimitUpdate="gasLimitUpdate"
       @createdRawTx="createdRawTx"
       @pathUpdate="processChange"
     />
-
   </div>
 </template>
 
@@ -34,6 +37,14 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle
+  },
+  props: {
+    tokens: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   data() {
     return {
