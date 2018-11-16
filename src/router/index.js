@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import { routerConfig } from '@/builds/configs';
+import { getMode, getRoutes } from '@/builds/configs';
 
 Vue.use(Router);
 
 export default new Router({
-  mode: routerConfig.mode,
-  routes: routerConfig.routes,
+  mode: getMode(),
+  routes: getRoutes(),
   scrollBehavior(to) {
     if (to.hash) {
       return {

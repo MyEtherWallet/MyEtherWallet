@@ -40,7 +40,7 @@
             @click="selectCurrency(curr);"
           >
             <p v-show="token">
-              {{ curr.symbol }} <span class="subname">- {{ curr.name }}</span>
+              {{ curr.symbol }}<span class="subname"> - {{ curr.name }}</span>
             </p>
             <p />
             <p v-show="!token">{{ curr.name }}</p>
