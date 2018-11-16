@@ -1,5 +1,4 @@
-// https://github.com/alexvandesande/blockies/blob/master/blockies.js
-// The random number is a js implementation of the Xorshift PRNG
+import Canvas from 'canvas';
 const randseed = new Array(4); // Xorshift: [x, y, z, w] 32 bit values
 
 function seedrand(seed) {
@@ -64,9 +63,8 @@ function createImageData(size) {
 }
 
 function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
-  const c = document.createElement('canvas');
   const width = Math.sqrt(imageData.length);
-  c.width = c.height = width * scale;
+  const c = new Canvas(width * scale, width * scale);
 
   const cc = c.getContext('2d');
   cc.fillStyle = bgcolor;
@@ -76,10 +74,7 @@ function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
   for (let i = 0; i < imageData.length; i++) {
     const row = Math.floor(i / width);
     const col = i % width;
-    // if data is 2, choose spot color, if 1 choose foreground
     cc.fillStyle = imageData[i] === 1 ? color : spotcolor;
-
-    // if data is 0, leave the background
     if (imageData[i]) {
       cc.fillRect(col * scale, row * scale, scale, scale);
     }
@@ -93,9 +88,7 @@ function createIcon(opts) {
   const scale = opts.scale || 4;
   const seed =
     opts.seed || Math.floor(Math.random() * Math.pow(10, 16)).toString(16);
-
   seedrand(seed);
-
   const color = opts.color || createColor();
   const bgcolor = opts.bgcolor || createColor();
   const spotcolor = opts.spotcolor || createColor();
