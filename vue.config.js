@@ -140,7 +140,15 @@ if (process.env.NODE_ENV === 'production') {
           'src/partners/simplex/index.js',
           'src/partners/simplex/simplex-api.js',
           'src/partners/simplex/simplex.js',
-          'src/builds/web/storage/index.js'
+          'src/builds/web/storage/index.js',
+          'src/builds/mewcx/app.vue',
+          'src/builds/mewcx/files/img/icons/icon128.png',
+          'src/builds/mewcx/files/img/icons/icon16.png',
+          'src/builds/mewcx/files/img/icons/icon192.png',
+          'src/builds/mewcx/files/img/icons/icon32.png',
+          'src/builds/mewcx/files/img/icons/icon48.png',
+          'src/builds/mewcx/files/manifest.json',
+          'src/builds/mewcx/index.js'
         ]
       }
     })
