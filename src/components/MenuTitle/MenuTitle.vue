@@ -1,8 +1,6 @@
 <template>
   <div class="menu-title">
-    <div class="the-title">
-      {{ title }}
-    </div>
+    <div class="the-title">{{ title }}</div>
   </div>
 </template>
 

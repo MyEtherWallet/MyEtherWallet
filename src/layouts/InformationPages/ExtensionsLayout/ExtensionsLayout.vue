@@ -1,29 +1,23 @@
 <template>
   <div class="extensions">
     <div class="wrap">
-      
       <div class="page-container">
         <title-text-contents :options="titleAndTextContents" />
 
         <div class="extensions-container">
-          <div 
-            v-for="ext in extensions" 
-            :key="ext.key">
-            <div class="logo">
-              <img :src="ext.image">
-            </div>
+          <div v-for="ext in extensions" :key="ext.key">
+            <div class="logo"><img :src="ext.image" /></div>
             <div class="text">
               <p class="title">{{ ext.title }}</p>
               <p class="description">{{ ext.description }}</p>
-              <a 
-                :href="ext.linkURL" 
-                class="link">{{ ext.linkName }}</a>
+              <a :href="ext.linkURL" class="link">{{ ext.linkName }}</a>
             </div>
           </div>
         </div>
-      </div><!-- .page-container -->
-
-    </div><!-- .wrap -->
+      </div>
+      <!-- .page-container -->
+    </div>
+    <!-- .wrap -->
   </div>
 </template>
 

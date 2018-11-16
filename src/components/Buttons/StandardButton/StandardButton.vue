@@ -1,39 +1,51 @@
 <template>
-  <div 
-    :class="{'full-width': options.fullWidth, 'hide-mobile-button': onBottomOfPage && options.isThisMobileBottomButton}" 
-    class="standard-button">
-     
+  <div
+    :class="{
+      'full-width': options.fullWidth,
+      'hide-mobile-button': onBottomOfPage && options.isThisMobileBottomButton
+    }"
+    class="standard-button"
+  >
     <div :class="buttonClass">
       <div
-        :class="[(options.isThisMobileBottomButton ? 'mobile-bottom-button' : ''), (options.noMinWidth ? 'no-min-width' : '')]" 
-        class="the-button-box ">{{ options.title }}
-        <img 
+        :class="[
+          options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
+          options.noMinWidth ? 'no-min-width' : ''
+        ]"
+        class="the-button-box "
+      >
+        {{ options.title }}
+        <img
           v-if="options.loadingIcon"
-          class="loading-left" 
-          src="@/assets/images/icons/loading.png">
+          class="loading-left"
+          src="@/assets/images/icons/loading.png"
+        />
 
-        <img 
+        <img
           v-if="options.rightArrow && options.buttonStyle == 'green'"
-          class="arrow-right" 
-          src="@/assets/images/icons/arrow-right.svg">
+          class="arrow-right"
+          src="@/assets/images/icons/arrow-right.svg"
+        />
 
-        <img 
+        <img
           v-if="options.rightArrow && options.buttonStyle == 'green-border'"
-          class="arrow-right" 
-          src="@/assets/images/icons/arrow-right.svg">
+          class="arrow-right"
+          src="@/assets/images/icons/arrow-right.svg"
+        />
 
-        <img 
-          v-if="options.leftArrow && options.buttonStyle == 'green'" 
-          class="arrow-left" 
-          src="@/assets/images/icons/arrow-left.svg">
+        <img
+          v-if="options.leftArrow && options.buttonStyle == 'green'"
+          class="arrow-left"
+          src="@/assets/images/icons/arrow-left.svg"
+        />
 
-        <img 
-          v-if="options.leftArrow && options.buttonStyle == 'green-border'" 
-          class="arrow-left" 
-          src="@/assets/images/icons/arrow-green-left.svg">
+        <img
+          v-if="options.leftArrow && options.buttonStyle == 'green-border'"
+          class="arrow-left"
+          src="@/assets/images/icons/arrow-green-left.svg"
+        />
       </div>
     </div>
-
   </div>
 </template>
 

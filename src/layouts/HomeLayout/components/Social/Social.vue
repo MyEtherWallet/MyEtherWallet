@@ -48,7 +48,7 @@ export default {
         */
         {
           img: facebook,
-          to: 'https://www.facebook.com/MyEtherWallet/',
+          to: 'https://www.facebook.com/MyEtherWallet',
           name: 'Facebook'
         },
         {

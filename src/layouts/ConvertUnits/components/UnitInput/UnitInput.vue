@@ -5,13 +5,9 @@
         <div class="select-block">
           <dropdown-unit-selector />
 
-          <select
-            v-if="false"
-            v-model="selectedLeft">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
+          <select v-if="false" v-model="selectedLeft">
+            <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
+              >{{ opt | capitalize }}
             </option>
           </select>
         </div>
@@ -30,13 +26,9 @@
         <div class="select-block">
           <dropdown-unit-selector />
 
-          <select
-            v-if="false"
-            v-model="selectedRight">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
+          <select v-if="false" v-model="selectedRight">
+            <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
+              >{{ opt | capitalize }}
             </option>
           </select>
         </div>

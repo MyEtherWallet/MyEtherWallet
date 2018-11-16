@@ -1,41 +1,35 @@
 <template>
   <div class="drop-down-address-selector">
-
     <div class="input-title-container">
       <div class="input-title-and-helper">
         <p class="input-title">{{ options.title }}</p>
-        <popover
-          v-if="options.popover"
-          :popcontent="options.popover"/>
+        <popover v-if="options.popover" :popcontent="options.popover" />
       </div>
 
       <div class="the-button-container">
-        <div
-          v-if="options.buttonClear == true"
-          class="the-button clean">Clear</div>
-        <div
-          v-if="options.buttonCopy == true"
-          class="the-button copy">Copy</div>
+        <div v-if="options.buttonClear == true" class="the-button clean">
+          Clear
+        </div>
+        <div v-if="options.buttonCopy == true" class="the-button copy">
+          Copy
+        </div>
       </div>
     </div>
 
-
     <div
       :class="dropdownOpen ? 'dropdown-open' : ''"
-      class="address-dropdown-input-box">
+      class="address-dropdown-input-box"
+    >
       <input
         :class="options.inputDisabled ? 'input-disabled' : ''"
         :placeholder="options.placeholder"
         :disabled="options.inputDisabled"
         v-model="selectedAddress"
         type="text"
-        @focus="dropdownOpen = false">
-      <div
-        v-if="!validAddress"
-        class="blockie-place-holder-image"/>
-      <div
-        v-if="validAddress"
-        class="selected-address-blockie">
+        @focus="dropdownOpen = false;"
+      />
+      <div v-if="!validAddress" class="blockie-place-holder-image" />
+      <div v-if="validAddress" class="selected-address-blockie">
         <blockie
           :address="selectedAddress"
           :size="8"
@@ -47,20 +41,13 @@
       <div
         v-if="!options.inputDisabled"
         class="dropdown-open-button"
-        @click="dropdownOpen = !dropdownOpen">
-        <i
-          v-if="!dropdownOpen"
-          class="fa fa-chevron-down"
-          aria-hidden="true"/>
-        <i
-          v-if="dropdownOpen"
-          class="fa fa-chevron-up"
-          aria-hidden="true"/>
+        @click="dropdownOpen = !dropdownOpen;"
+      >
+        <i v-if="!dropdownOpen" class="fa fa-chevron-down" aria-hidden="true" />
+        <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
       </div>
     </div>
-    <div
-      :class="dropdownOpen ? 'show-dropdown' : ''"
-      class="dropdown-list-box">
+    <div :class="dropdownOpen ? 'show-dropdown' : ''" class="dropdown-list-box">
       <ul>
         <li
           v-for="addr in addresses"
@@ -70,12 +57,10 @@
           <div class="list-blockie">
             <blockie :address="addr" width="30px" height="30px" />
           </div>
-          <p
-            v-if="$mq === 'lg'"
-            class="listed-address">{{ addr }}</p>
-          <p
-            v-if="$mq !== 'lg'"
-            class="listed-address">{{ shortenAddress(addr) }}</p>
+          <p v-if="$mq === 'lg'" class="listed-address">{{ addr }}</p>
+          <p v-if="$mq !== 'lg'" class="listed-address">
+            {{ shortenAddress(addr) }}
+          </p>
         </li>
       </ul>
     </div>

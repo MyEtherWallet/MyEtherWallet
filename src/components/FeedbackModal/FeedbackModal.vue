@@ -5,11 +5,12 @@
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Feedback / Custommer Support">
+      title="Feedback / Custommer Support"
+    >
       <div class="modal-content">
         If you want to send us your feedback, please use
-        <a href="mailto:support@myetherwallet.com">support@myetherwallet.com</a>.
-        Thank you.
+        <a href="mailto:support@myetherwallet.com">support@myetherwallet.com</a
+        >. Thank you.
       </div>
     </b-modal>
   </div>

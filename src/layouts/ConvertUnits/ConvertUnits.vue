@@ -2,10 +2,7 @@
   <div class="convert-units">
     <div class="wrap">
       <div class="page-container">
-
-        <div class="page-title">
-          <page-title :options="titleOptions" />
-        </div>
+        <div class="page-title"><page-title :options="titleOptions" /></div>
 
         <div><unit-input :options="options" /></div>
 
@@ -19,7 +16,9 @@
                   <td>{{ eu.name }}</td>
                   <td class="unit-long">{{ eu.unit1 }}</td>
                   <td class="unit-short">
-                    <div>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></div>
+                    <div>
+                      {{ eu.unit2 }}<span>{{ eu.unit2e }}</span>
+                    </div>
                   </td>
                   <td>{{ eu.desc }}</td>
                 </tr>

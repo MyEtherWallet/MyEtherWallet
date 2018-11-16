@@ -1,8 +1,6 @@
 <template>
   <div class="header">
-    <settingsmodal />
-    <notificationsmodal />
-    <logoutmodal />
+    <settingsmodal /> <notificationsmodal /> <logoutmodal />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -98,9 +96,7 @@
                   <b-dropdown-item @click="openSettings">
                     Settings
                   </b-dropdown-item>
-                  <b-dropdown-item @click="logout">
-                    Log out
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -115,7 +111,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

@@ -1,65 +1,51 @@
 <template>
   <div class="modal-container">
-
     <b-modal
       ref="settings"
       title="Settings"
       hide-footer
       centered
-      class="bootstrap-modal nopadding">
-
+      class="bootstrap-modal nopadding"
+    >
       <div class="modal-contents">
-        
-        <full-width-dropdown 
-          title="Transaction Speed" 
-          popup="What is TX speed" 
-          class="tx-speed">
+        <full-width-dropdown
+          title="Transaction Speed"
+          popup="What is TX speed"
+          class="tx-speed"
+        >
           <div class="radio-buttons">
             <ul>
               <li class="selected">
                 <div>
-                  <input 
-                    id="aaa" 
-                    type="radio" 
-                    name="gender" 
-                    value="male" 
-                    checked="checked">
+                  <input
+                    id="aaa"
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked="checked"
+                  />
                   <label for="aaa">Slow (2000 Gwei)</label>
                 </div>
                 <p>0.000013 ETH ($1.34)</p>
               </li>
               <li>
                 <div>
-                  <input 
-                    id="bbb" 
-                    type="radio" 
-                    name="gender" 
-                    value="female">
+                  <input id="bbb" type="radio" name="gender" value="female" />
                   <label for="bbb">Regular (8000 Gwei)</label>
                 </div>
                 <p>0.000023ETH ($3.23)</p>
               </li>
               <li>
                 <div>
-                  <input 
-                    id="ccc" 
-                    type="radio" 
-                    name="gender" 
-                    value="other">
+                  <input id="ccc" type="radio" name="gender" value="other" />
                   <label for="ccc">Fast (12000 Gwei)</label>
                 </div>
                 <p>0.000063ETH ($5.16)</p>
               </li>
               <li>
                 <div>
-                  <input 
-                    id="ccc" 
-                    type="radio" 
-                    name="gender" 
-                    value="other">
-                  <input 
-                    type="text" 
-                    name="">
+                  <input id="ccc" type="radio" name="gender" value="other" />
+                  <input type="text" name="" />
                   <p class="gwei">Gwei</p>
                 </div>
                 <p>0.000063ETH ($5.16)</p>
@@ -70,11 +56,15 @@
             <standard-button :options="buttonSave" />
           </div>
         </full-width-dropdown>
-       
-        <full-width-dropdown 
-          title="Import Configurations" 
-          class="import-config">
-          <p>Please click the button below to open and import you configuration file from your local computer.</p>
+
+        <full-width-dropdown
+          title="Import Configurations"
+          class="import-config"
+        >
+          <p>
+            Please click the button below to open and import you configuration
+            file from your local computer.
+          </p>
           <div class="import-button-block">
             <standard-input :options="inputFileName" />
             <standard-button :options="buttonUploadFile" />
@@ -84,17 +74,20 @@
           </div>
         </full-width-dropdown>
 
-        <full-width-dropdown 
-          title="Export Configurations" 
-          class="export-config">
-          <p>Please click the button below to download your configuration file into your local computer.</p>
+        <full-width-dropdown
+          title="Export Configurations"
+          class="export-config"
+        >
+          <p>
+            Please click the button below to download your configuration file
+            into your local computer.
+          </p>
           <div class="button-block">
             <standard-button :options="buttonExport" />
           </div>
         </full-width-dropdown>
-
       </div>
-    </b-modal>    
+    </b-modal>
   </div>
 </template>
 
