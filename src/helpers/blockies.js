@@ -1,4 +1,3 @@
-import Canvas from 'canvas';
 const randseed = new Array(4); // Xorshift: [x, y, z, w] 32 bit values
 
 function seedrand(seed) {
@@ -64,8 +63,8 @@ function createImageData(size) {
 
 function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
   const width = Math.sqrt(imageData.length);
-  const c = new Canvas(width * scale, width * scale);
-
+  const c = document.createElement('canvas');
+  c.width = c.height = width * scale;
   const cc = c.getContext('2d');
   cc.fillStyle = bgcolor;
   cc.fillRect(0, 0, c.width, c.height);
