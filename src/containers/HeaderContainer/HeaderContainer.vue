@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <settingsmodal /> <notificationsmodal /> <logoutmodal />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -36,6 +37,8 @@
                 <b-nav-item v-show="online" to="/#news">{{
                   $t('common.news')
                 }}</b-nav-item>
+
+                <txpoppup />
 
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -90,6 +93,9 @@
                       height="35px"
                     />
                   </template>
+                  <b-dropdown-item @click="openSettings">
+                    Settings
+                  </b-dropdown-item>
                   <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
@@ -115,12 +121,20 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import SettingsModal from '@/components/SettingsModal';
+import NotificationsModal from '@/components/NotificationsModal';
+import TxTopMenuPopup from '@/components/TxTopMenuPopup';
+import LogoutModal from '@/components/LogoutModal';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    scrollupbutton: ScrollUpButton,
+    settingsmodal: SettingsModal,
+    notificationsmodal: NotificationsModal,
+    txpoppup: TxTopMenuPopup,
+    logoutmodal: LogoutModal
   },
   data() {
     return {
@@ -192,6 +206,12 @@ export default {
     };
   },
   methods: {
+    openSettings() {
+      this.$children[0].$refs.settings.show();
+    },
+    openNotifications() {
+      this.$children[1].$refs.notifications.show();
+    },
     languageItemClicked(e) {
       const flag = e.target.getAttribute('data-flag-name');
 
@@ -204,8 +224,9 @@ export default {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$store.dispatch('clearWallet');
-      this.$router.push('/');
+      this.$children[2].$refs.logout.show();
+      //this.$store.dispatch('clearWallet');
+      //this.$router.push('/');
     },
     showNotifications() {
       this.$refs.notification.$refs.notification.show();

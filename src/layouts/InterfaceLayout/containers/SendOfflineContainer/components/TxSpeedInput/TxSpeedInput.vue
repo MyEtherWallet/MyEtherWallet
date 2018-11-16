@@ -102,8 +102,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
   props: {
     data: {
@@ -135,11 +133,6 @@ export default {
       locNonce: this.nonce,
       locGasLimit: this.gasLimit
     };
-  },
-  computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice'
-    })
   },
   watch: {
     locNonce(newVal) {
