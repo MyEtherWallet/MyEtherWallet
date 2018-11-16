@@ -5,7 +5,6 @@ import {
   checkInvalidOrMissingValue,
   dynamicSortMultiple
 } from './sortAndIdentify';
-import { CurrencyOptionBuilder } from './currencyOptionBuilder';
 import * as utils from './utils';
 
 export {
@@ -14,6 +13,5 @@ export {
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
-  dynamicSortMultiple,
-  CurrencyOptionBuilder
+  dynamicSortMultiple
 };

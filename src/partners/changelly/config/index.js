@@ -2,12 +2,14 @@ import { ChangellyCurrencies } from './currencies';
 import {
   changellyAddresses,
   changellyStatuses,
-  requireExtraId
+  requireExtraId,
+  providerName
 } from './implementationDetails';
 
 export {
   ChangellyCurrencies,
   changellyAddresses,
   changellyStatuses,
-  requireExtraId
+  requireExtraId,
+  providerName
 };

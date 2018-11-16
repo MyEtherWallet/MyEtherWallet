@@ -1,18 +1,11 @@
-/* eslint-disable */
 import BigNumber from 'bignumber.js';
+import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
-  utils,
-  // bestRateForQuantity,
-  // bestProviderForQuantity,
-  // isValidEntry,
-  checkInvalidOrMissingValue
-  // dynamicSortMultiple
-} from './helpers';
-import {
+  baseCurrency,
+  baseCurrencyEntry,
   EthereumTokens
   // otherChains,
 } from './partnersConfig';
-
 function comparator(a, b) {
   a = a.symbol;
   b = b.symbol;
@@ -21,7 +14,6 @@ function comparator(a, b) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied) {
-    this.overrideProviderRatesDelay = false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
@@ -39,11 +31,9 @@ export default class SwapProviders {
     });
 
     this.providerRatesRecieved = [];
-    this.providerListPair = {};
-    this.providerList = [];
 
     let checkCount = 0;
-    if (environmentSupplied.network !== 'ETH') {
+    if (environmentSupplied.network !== baseCurrency) {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
@@ -69,7 +59,13 @@ export default class SwapProviders {
   }
 
   getProvider(name) {
+    if (!this.isProvider(name))
+      throw Error(`${name} is not a supported swap provider`);
     return this.providers.get(name);
+  }
+
+  isProvider(name) {
+    return this.providers.has(name);
   }
 
   get haveProviderRates() {
@@ -110,13 +106,13 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getInitialCurrencyEntries(collectMapFrom, collectMapTo);
     });
-    if (collectMapTo.has('ETH')) collectMapTo.delete('ETH');
-    if (collectMapFrom.has('ETH')) collectMapFrom.delete('ETH');
+    if (collectMapTo.has(baseCurrency)) collectMapTo.delete(baseCurrency);
+    if (collectMapFrom.has(baseCurrency)) collectMapFrom.delete(baseCurrency);
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
-    toArray.splice(0, 0, { symbol: 'ETH', name: 'Ether' });
-    fromArray.splice(0, 0, { symbol: 'ETH', name: 'Ether' });
+    toArray.splice(0, 0, baseCurrencyEntry);
+    fromArray.splice(0, 0, baseCurrencyEntry);
     return { toArray, fromArray };
   }
 
@@ -125,9 +121,9 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedFromCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has('ETH')) collectMap.delete('ETH');
+    if (collectMap.has(baseCurrency)) collectMap.delete(baseCurrency);
     const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray];
+    return [baseCurrencyEntry, ...toArray];
   }
 
   setToCurrencyBuilder(value) {
@@ -135,9 +131,9 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedToCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has('ETH')) collectMap.delete('ETH');
+    if (collectMap.has(baseCurrency)) collectMap.delete(baseCurrency);
     const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [{ symbol: 'ETH', name: 'Ether' }, ...toArray];
+    return [baseCurrencyEntry, ...toArray];
   }
 
   async updateRateEstimate(fromCurrency, toCurrency, fromValue) {
@@ -164,12 +160,11 @@ export default class SwapProviders {
   getTokenAddress(currency, noError) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
-    } else {
-      if(noError){
-        return false;
-      }
-      throw Error('Not an Ethereum Token');
     }
+    if (noError) {
+      return false;
+    }
+    throw Error('Not an Ethereum Token');
   }
 
   calculateFromValue(toValue, bestRate) {
@@ -212,8 +207,29 @@ export default class SwapProviders {
     return !!EthereumTokens[currency];
   }
 
-  async startSwap(swapDetails) {
+  async startSwap({
+    providerDetails,
+    fromValue,
+    toValue,
+    toAddress,
+    currentAddress,
+    refundAddress
+  }) {
     try {
+      const swapDetails = {
+        provider: providerDetails.provider,
+        fromCurrency: providerDetails.fromCurrency,
+        fromValue: fromValue,
+        toValue: toValue,
+        toCurrency: providerDetails.toCurrency,
+        rate: providerDetails.rate,
+        minValue: providerDetails.minValue,
+        maxValue: providerDetails.maxValue,
+        toAddress: toAddress,
+        fromAddress: currentAddress,
+        timestamp: new Date().toISOString(),
+        refundAddress: refundAddress
+      };
       if (this.providers.has(swapDetails.provider)) {
         const provider = this.providers.get(swapDetails.provider);
         swapDetails.maybeToken = this.isToken(swapDetails.fromCurrency);

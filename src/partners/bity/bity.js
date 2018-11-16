@@ -1,6 +1,6 @@
 import { networkSymbols } from '../partnersConfig';
 import { getRates, openOrder, getStatus, login } from './bity-calls';
-import { BityCurrencies } from './config';
+import { BityCurrencies, providerName } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
   if (currencyList[symbol]) {
@@ -33,7 +33,7 @@ export default class BitySwap {
   }
 
   static getName() {
-    return 'bity';
+    return providerName;
   }
 
   get isValidNetwork() {
@@ -45,6 +45,10 @@ export default class BitySwap {
       return BityCurrencies;
     }
     return {};
+  }
+
+  getBTCEquivalent(fromCurrency) {
+    return 0.1 / this._getRate(fromCurrency, 'BTC');
   }
 
   async retrieveRates() {
@@ -228,41 +232,6 @@ export default class BitySwap {
     }
   }
 
-  /*
-        /*
-        amount: 1
-        amount_mode: 0
-        id: "6d46713d03446f7b8b4262bf98961960514927bf0fa6ec6a71fb5c8a5fac8bdadbe4c0c36d3ae9a0d767715e55b45898tuHefEaeNklK1GVmeEw/FQ=="
-        input: {
-          amount: "1.00000000"
-          currency: "ETH"
-          reference: "bity.com 4BV8-ACNT"
-          status: "OPEN"
-        },
-        output: {
-          amount: "0.03100900"
-          currency: "BTC"
-          reference: ""
-          status: "OPEN"
-        },
-        pair: "ETHBTC"
-        payment_address: "0x243e980b527d9d1c60d0d162dc53730c88ee587b"
-        payment_amount: "1"
-        reference: "bity.com 4BV8-ACNT"
-        status: "OPEN"
-        timestamp_created: "2018-10-17T20:36:49.934971Z"
-        validFor: 600
-*       $scope.bity.openOrder(order, function (data) {
-        if (!data.error) {
-          $scope.orderResult = data.data;
-          $scope.orderResult.swapOrder = $scope.swapOrder;
-          var orderResult = $scope.orderResult;
-          saveOrderToStorage(orderResult);
-          processOrder();
-        } else $scope.notifier.danger(data.msg);
-        if (!$scope.$$phase) $scope.$apply();
-      });
-      */
   getStatus(id) {
     getStatus({
       orderid: id
@@ -348,31 +317,6 @@ export default class BitySwap {
       return -1;
     }
     return 1;
-  }
-
-  statusUpdater(/*swapDetails*/) {
-    return () => {
-      // let currentStatus;
-      // // const calculateTimeRemaining = (validFor, timestamp) => {
-      // //   return (
-      // //     validFor -
-      // //     parseInt(
-      // //       (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-      // //     )
-      // //   );
-      // // };
-      // const parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
-      // // let timeRemaining = calculateTimeRemaining(
-      // //   parsed.validFor,
-      // //   parsed.timestamp
-      // // );
-      // let checkStatus = setInterval(async () => {
-      //   currentStatus = await getStatus({
-      //     orderid: parsed.orderId
-      //   });
-      //   clearInterval(checkStatus);
-      // }, 1000);
-    };
   }
 
   // TODO: just use the numbers instead of an intermediate conversion key

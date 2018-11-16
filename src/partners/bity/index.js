@@ -1,4 +1,4 @@
 import BitySwap from './bity';
-import { BityCurrencies } from './config';
+import { BityCurrencies, providerName } from './config';
 
-export { BitySwap, BityCurrencies };
+export { BitySwap, BityCurrencies, providerName };

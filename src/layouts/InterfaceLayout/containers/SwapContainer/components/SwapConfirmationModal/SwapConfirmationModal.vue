@@ -14,40 +14,46 @@
       <div class="swap-detail">
         <div class="from-address">
           <div class="icon">
-            <img :src="fromAddress.image">
+            <i :class="['cc', fromAddress.name, 'cc-icon']" />
           </div>
-          <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
+          <p class="value">
+            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+          </p>
           <p class="block-title">From Address</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
-        <div class="right-arrow">
-          <img :src="arrowImage">
-        </div>
+        <div class="right-arrow"><img :src="arrowImage" /></div>
         <div class="to-address">
           <div class="icon">
-            <img :src="toAddress.image">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
-          <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
+          <p class="value">
+            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+          </p>
           <p class="block-title">To Address</p>
           <p class="address">{{ toAddress.address }}</p>
         </div>
       </div>
 
       <div
-        :class="[swapReady ? '': 'disable', 'confirm-send-button']"
-        @click="sendTransaction">
+        :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
+        @click="sendTransaction"
+      >
         <button-with-qrcode
           :qrcode="qrcode"
-          :buttonname="$t('common.continue')"/>
+          :buttonname="$t('common.continue')"
+        />
       </div>
 
-      <help-center-button/>
-
+      <help-center-button />
     </b-modal>
   </div>
 </template>
 
 <script>
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
@@ -59,7 +65,7 @@ import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, utils } from '@/partners';
+import { EthereumTokens, baseCurrency, utils } from '@/partners';
 
 export default {
   components: {
@@ -92,18 +98,8 @@ export default {
       timeRemaining: 0,
       qrcode: '',
       arrowImage: Arrow,
-      fromAddress: {
-        image: iconEth,
-        value: '1.0000000000',
-        name: 'ETH',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      toAddress: {
-        image: iconBtc,
-        value: '0.0034523',
-        name: 'BTC',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      }
+      fromAddress: {},
+      toAddress: {}
     };
   },
   computed: {
@@ -118,13 +114,11 @@ export default {
   watch: {
     swapDetails(newValue) {
       this.fromAddress = {
-        image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,
         name: newValue.fromCurrency,
         address: newValue.fromAddress ? newValue.fromAddress : ''
       };
       this.toAddress = {
-        image: this.currencyIcons[newValue.toCurrency],
         value: newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
@@ -150,7 +144,7 @@ export default {
       if (!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
         if (this.preparedSwap.length > 1) {
-          this.web3.mew.sendBatchTransactions([...this.preparedSwap]);
+          this.web3.mew.sendBatchTransactions(this.preparedSwap);
         } else {
           this.web3.eth.sendTransaction(this.preparedSwap[0]);
         }
@@ -170,32 +164,34 @@ export default {
         swapDetails.dataForInitialization &&
         !Array.isArray(swapDetails.dataForInitialization)
       ) {
-        if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
+        if (
+          swapDetails.maybeToken &&
+          swapDetails.fromCurrency !== baseCurrency
+        ) {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
 
-          const contract = new this.web3.eth.Contract(
-            [
-              {
-                constant: false,
-                inputs: [
-                  { name: '_to', type: 'address' },
-                  { name: '_amount', type: 'uint256' }
-                ],
-                name: 'transfer',
-                outputs: [{ name: '', type: 'bool' }],
-                payable: false,
-                stateMutability: 'nonpayable',
-                type: 'function'
-              }
-            ],
-            tokenInfo.contractAddress
-          );
           this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,
             value: 0,
-            data: contract.methods
+            data: new this.web3.eth.Contract(
+              [
+                {
+                  constant: false,
+                  inputs: [
+                    { name: '_to', type: 'address' },
+                    { name: '_amount', type: 'uint256' }
+                  ],
+                  name: 'transfer',
+                  outputs: [{ name: '', type: 'bool' }],
+                  payable: false,
+                  stateMutability: 'nonpayable',
+                  type: 'function'
+                }
+              ],
+              tokenInfo.contractAddress
+            ).methods
               .transfer(
                 swapDetails.providerAddress,
                 new BigNumber(swapDetails.fromValue)
@@ -206,7 +202,7 @@ export default {
           };
         } else if (
           swapDetails.maybeToken &&
-          swapDetails.fromCurrency === 'ETH'
+          swapDetails.fromCurrency === baseCurrency
         ) {
           this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),

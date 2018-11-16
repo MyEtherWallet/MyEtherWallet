@@ -1,12 +1,11 @@
 <template>
   <div class="providers-radio-selector">
-    <div
-      v-show="providerData.length > 0"
-      class="radio-button-container">
+    <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
         <li
           v-for="(provider, idx) in providerData"
-          :key="provider.provider + idx">
+          :key="provider.provider + idx"
+        >
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
@@ -14,92 +13,93 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider)">
-            <label :for="provider.provider"/>
+              @input="setSelectedProvider(provider.provider);"
+            />
+            <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider.provider)">
+            <img :src="providerLogo(provider.provider)" />
           </div>
-          <div :class="[(minCheck(provider) || maxCheck(provider)) ? 'invalid-min-max' : '']">
+          <div
+            :class="[
+              minCheck(provider) || maxCheck(provider) ? 'invalid-min-max' : ''
+            ]"
+          >
             {{ normalizedRateDisplay(provider) }}
           </div>
           <div>
-            <p :class="[minCheck(provider) ? 'error-message-container': '']">{{ minNote(provider) }}</p>
-            <p :class="[maxCheck(provider) ? 'error-message-container': '']">{{ maxNote(provider) }}</p>
+            <p :class="[minCheck(provider) ? 'error-message-container' : '']">
+              {{ minNote(provider) }}
+            </p>
+            <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
+              {{ maxNote(provider) }}
+            </p>
           </div>
         </li>
       </ul>
     </div>
     <div
       v-show="loadingData"
-      class="radio-button-container animated-background">
+      class="radio-button-container animated-background"
+    >
       <ul>
-        <li
-          v-for="provider in providersFound"
-          :key="provider">
+        <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input
-              type="radio"
-              name="provider">
-            <label :for="provider"/>
+            <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)">
+            <img :src="providerLogo(provider)" />
           </div>
-          <div class="background-masker"/>
+          <div class="background-masker" />
         </li>
       </ul>
     </div>
-    <!-- Animation while retrieving the supporting providers rates-->
+    <!-- Animation while retrieving the supporting providers rates -->
     <div
       v-show="loadingProviderRates"
-      class="radio-button-container animated-background">
+      class="radio-button-container animated-background"
+    >
       <ul>
         <li>
           <div class="mew-custom-form__radio-button">
-            <input
-              type="radio"
-              name="provider">
+            <input type="radio" name="provider" />
           </div>
-          <div class="provider-image">
-            <img :src="providerLogo('mew')">
-          </div>
+          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
           <div>Please wait while we load provider rates</div>
-          <div class="background-masker"/>
+          <div class="background-masker" />
         </li>
       </ul>
     </div>
-    <!-- Message When Error Seems to have occured while retrieving rate-->
+    <!-- Message When Error Seems to have occured while retrieving rate -->
     <div
       v-show="loadingProviderError && !noAvaliableProviders"
-      class="radio-button-container animated-background">
+      class="radio-button-container animated-background"
+    >
       <ul>
         <li>
           <div class="mew-custom-form__radio-button">
-            <input
-              type="radio"
-              name="provider">
+            <input type="radio" name="provider" />
           </div>
-          <div class="provider-image">
-            <img :src="providerLogo('mew')">
+          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div>
+            An Error occured while retrieving the rates for
+            {{ noProvidersPair.fromCurrency }} to
+            {{ noProvidersPair.toCurrency }} please wait an try agian
           </div>
-          <div>An Error occured while retrieving the rates for {{ noProvidersPair.fromCurrency }} to {{ noProvidersPair.toCurrency }} please wait an try agian </div>
-          <!--<div class="background-masker"/>-->
         </li>
       </ul>
     </div>
-    <!-- Message when no valid provider is found for the selected pair-->
-    <div
-      v-show="noAvaliableProviders"
-      class="radio-button-container">
+    <!-- Message when no valid provider is found for the selected pair -->
+    <div v-show="noAvaliableProviders" class="radio-button-container">
       <ul>
         <li>
-          <div class="mew-custom-form__radio-button"/>
-          <div class="provider-image"/>
+          <div class="mew-custom-form__radio-button" />
+          <div class="provider-image" />
           <div>
-            No provider found for {{ noProvidersPair.fromCurrency }} to {{ noProvidersPair.toCurrency }}
+            No provider found for {{ noProvidersPair.fromCurrency }} to
+            {{ noProvidersPair.toCurrency }}
           </div>
-          <div/>
+          <div />
         </li>
       </ul>
     </div>
@@ -113,7 +113,7 @@ import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import { BitySwap } from '@/partners';
+import { providerNames } from '@/partners';
 
 export default {
   props: {
@@ -190,7 +190,7 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
-        if (details.provider === BitySwap.getName()) {
+        if (details.provider === providerNames.bity) {
           return `From Min.: ${details.minValue} ${
             details.fromCurrency
           } & To Min.: ${details.minValue} ${details.toCurrency}`;
@@ -201,7 +201,7 @@ export default {
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        if (details.provider === BitySwap.getName()) {
+        if (details.provider === providerNames.bity) {
           return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
         }
         return `Maximum: ${details.maxValue} ${details.fromCurrency}`;

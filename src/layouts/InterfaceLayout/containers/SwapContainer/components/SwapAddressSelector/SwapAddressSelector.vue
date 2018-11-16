@@ -50,7 +50,7 @@
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
 import Blockie from '@/components/Blockie';
-import { EthereumTokens } from '@/partners';
+import { EthereumTokens, baseCurrency } from '@/partners';
 
 const errorLogger = debugLogger('v5:error');
 
@@ -105,7 +105,7 @@ export default {
         this.addresses = [
           {
             address: address,
-            currency: 'ETH'
+            currency: baseCurrency
           },
           ...this.addresses
         ];
