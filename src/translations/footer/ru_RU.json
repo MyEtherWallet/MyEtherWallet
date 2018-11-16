@@ -12,13 +12,14 @@
   "trezor": "Trezor",
   "bity": "Bity",
   "mew": "MEW",
-  "about": "О нас",
+  "about": "About",
   "team": "Команда",
-  "welcome": "Добро пожаловать на страницу пожертвований",
   "welcomeDes": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашим пожертвованиям.",
   "feedback": "Отзывы",
   "privacy": "Конфиденциальность",
   "copyright": "© 2018 MyEtherWallet. Все права защищены.",
   "love": "Нравится",
-  "donate": "MEW? Сделайте пожертвование!"
+  "donate": "MEW? Сделайте пожертвование!",
+  "pricingP": "Pricing taken from",
+  "advanced": "Advanced"
 }
