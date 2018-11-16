@@ -7,5 +7,6 @@
   "whatIsGas": "Так... какое же ограничение газа?",
   "print": "Печатать",
   "copy": "Скопировать",
-  "switchAddress": "Поменять адрес"
+  "switchAddress": "Поменять адрес",
+  "password": "This password encrypts your private key. This does not act as a seed to generate your keys."
 }
