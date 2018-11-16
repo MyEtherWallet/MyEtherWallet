@@ -34,7 +34,7 @@ stages:
   - name: run on pull requests
     if: type = pull_request and fork = true
   - name: add to mewbuilds
-    if: type == pull_request
+    if: type != pull_request
   - name: add to codecov
     if: type != pull_request
   - name: add to mewbuilds develop
