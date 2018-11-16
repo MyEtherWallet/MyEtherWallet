@@ -4,29 +4,20 @@
       <div class="page-container">
         <div class="content-width-limit">
           <div class="page-header">
-            <h1>{{ $t("privacyPol.title") }}</h1>
+            <h1>{{ $t('privacyPol.title') }}</h1>
           </div>
 
           <div class="content">
-            <h6>
-              {{ $t("privacyPol.date") }}
-            </h6>
+            <h6>{{ $t('privacyPol.date') }}</h6>
             <p>
-              {{ $t("privacyPol.paragraph1") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph2") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph3") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph4") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph5") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph6") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph7") }}
-              <br ><br >
-              {{ $t("privacyPol.paragraph8") }}
+              {{ $t('privacyPol.paragraph1') }} <br /><br />
+              {{ $t('privacyPol.paragraph2') }} <br /><br />
+              {{ $t('privacyPol.paragraph3') }} <br /><br />
+              {{ $t('privacyPol.paragraph4') }} <br /><br />
+              {{ $t('privacyPol.paragraph5') }} <br /><br />
+              {{ $t('privacyPol.paragraph6') }} <br /><br />
+              {{ $t('privacyPol.paragraph7') }} <br /><br />
+              {{ $t('privacyPol.paragraph8') }}
             </p>
           </div>
         </div>

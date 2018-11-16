@@ -11,9 +11,16 @@ function create(password) {
   return createdWallet;
 }
 
-onmessage = function(event) {
-  if (event.data.type === 'createWallet') {
-    const workerResult = create(event.data.data[0]);
-    postMessage(workerResult);
-  }
-};
+// onmessage breaks tests as it is undefined
+if (
+  !navigator.userAgent.includes('Node.js') &&
+  !navigator.userAgent.includes('jsdom')
+) {
+  onmessage = function(event) {
+    console.log(event); // todo remove dev item
+    if (event.data.type === 'createWallet') {
+      const workerResult = create(event.data.data[0]);
+      postMessage(workerResult);
+    }
+  };
+}

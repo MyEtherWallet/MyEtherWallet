@@ -1,12 +1,11 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal/>
+    <swap-confirmation-modal ref="swapConfirmation" />
 
     <div class="title-block">
-      <interface-container-title :title="$t('common.swap')"/>
+      <interface-container-title :title="$t('common.swap')" />
       <div class="buy-eth">
-        <span>Buy ETH with</span>
-        <img :src="images.visaMaster">
+        <span>Buy ETH with</span> <img :src="images.visaMaster" />
       </div>
     </div>
 
@@ -19,18 +18,18 @@
           <currency-picker
             :currency="fromArray"
             :token="true"
-            page="SwapContainerFrom"/>
+            page="SwapContainerFrom"
+          />
           <div class="the-form amount-number">
             <input
               type="number"
               name=""
               value=""
-              placeholder="Deposit Amount" >
+              placeholder="Deposit Amount"
+            />
           </div>
         </div>
-        <div class="exchange-icon">
-          <img :src="images.swap">
-        </div>
+        <div class="exchange-icon"><img :src="images.swap" /></div>
         <div class="amount">
           <div class="title">
             <h4>{{ $t('common.to') }}</h4>
@@ -38,13 +37,15 @@
           <currency-picker
             :currency="toArray"
             :token="true"
-            page="SwapContainerTo"/>
+            page="SwapContainerTo"
+          />
           <div class="the-form amount-number">
             <input
               type="number"
               name=""
               value=""
-              placeholder="Received Amount" >
+              placeholder="Received Amount"
+            />
           </div>
         </div>
       </div>
@@ -57,28 +58,22 @@
           <p class="copy-button prevent-user-select">Copy</p>
         </div>
       </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector/>
-      </div>
+      <div class="the-form gas-amount"><drop-down-address-selector /></div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>Providers</h4>
-        </div>
+        <div class="title title-and-copy"><h4>Providers</h4></div>
       </div>
-      <providers-radio-selector/>
+      <providers-radio-selector />
     </div>
 
-    <div
-      v-if="false"
-      class="send-form">
+    <div v-if="false" class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')"/>
+            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
           </div>
           <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
         </div>
@@ -96,16 +91,13 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input
-          type="number"
-          name=""
-          value=""
-          placeholder="Gas Amount" >
+        <input type="number" name="" value="" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>
@@ -114,14 +106,12 @@
       <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
       <div
         class="submit-button large-round-button-green-filled clickable"
-        @click="swapConfirmationModalOpen">
+        @click="swapConfirmationModalOpen"
+      >
         {{ $t('common.continue') }}
-        <i
-          class="fa fa-long-arrow-right"
-          aria-hidden="true"/>
+        <i class="fa fa-long-arrow-right" aria-hidden="true" />
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -135,6 +125,7 @@ import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+//import ConfirmationModal from '../../components/ConfirmationModal';
 
 export default {
   components: {
@@ -144,6 +135,7 @@ export default {
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal
+    //'confirmation-modal': ConfirmationModal
   },
   data() {
     return {
@@ -165,9 +157,12 @@ export default {
       ]
     };
   },
+  mounted() {
+    //this.$children[1].$refs.confirmation.show();
+  },
   methods: {
     swapConfirmationModalOpen() {
-      this.$children[0].$refs.swapconfirmation.show();
+      this.$refs.swapConfirmation.$refs.swapconfirmation.show();
     }
   }
 };

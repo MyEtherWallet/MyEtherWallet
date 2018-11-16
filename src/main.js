@@ -1,19 +1,22 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 import InfiniteSlider from 'vue-infinite-slide-bar';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import Vue from 'vue';
-import App from './App';
-import router from './router';
-import store from './store';
+import router from '@/router';
+import store from '@/store';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import PopOver from '@/components/PopOver';
+
+import StandardButton from '@/components/Buttons/StandardButton';
+import StandardInput from '@/components/StandardInput';
 
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
@@ -23,7 +26,7 @@ import EnsResolver from '@/directives/EnsResolver';
 import Capitalize from '@/filters/Capitalize';
 import ConcatAddr from '@/filters/ConcatAddr';
 // etc
-import languages from './translations';
+import languages from '@/translations';
 import VueMq from 'vue-mq';
 
 Vue.use(VueMq, {
@@ -49,6 +52,9 @@ Vue.directive('ens-resolver', EnsResolver);
 Vue.filter('capitalize', Capitalize);
 Vue.filter('concatAddr', ConcatAddr);
 
+Vue.component('standard-button', StandardButton);
+Vue.component('standard-input', StandardInput);
+
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
@@ -70,5 +76,5 @@ new Vue({
   i18n,
   router,
   store,
-  render: h => h(App)
+  render: h => h(getApp())
 }).$mount('#app');

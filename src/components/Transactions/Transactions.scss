@@ -1,0 +1,197 @@
+@import '~@/scss/GlobalVariables';
+
+/* stylelint-disable */
+.modal-body {
+  padding: 0 !important;
+}
+/* stylelint-enable */
+
+.dropdown-list-box {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  width: 189px;
+  border-radius: 4px;
+  border: solid 1px #05c0a5;
+  background-color: #fff;
+  position: absolute;
+  z-index: 1;
+
+  ul {
+    li {
+      cursor: pointer;
+      position: relative;
+
+      &:nth-child(n) {
+        background-color: $white;
+        border-bottom: 1px dotted black;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $light-grey-3;
+      }
+
+      .line {
+        width: 189px;
+        height: 1px;
+        border-top: solid 1px #05c0a5;
+        &:hover {
+          background-color: $white;
+        }
+      }
+
+      .check-history-entry {
+        width: 100%;
+        height: 50px;
+        display: grid;
+
+        .line {
+          width: 189px;
+          height: 1px;
+          border-top: solid 1px #05c0a5;
+        }
+
+        .check-history-container {
+          padding: 15px 45px;
+          .check-history {
+            text-align: center;
+            width: 89px;
+            height: 19px;
+            font-family: AvenirNext, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            color: #05c0a5;
+          }
+        }
+      }
+
+      .no-active-transaction {
+        width: 100%;
+        height: 50px;
+        display: grid;
+        p {
+          padding: 15px 0;
+          text-align: center;
+          font-family: AvenirNext, sans-serif;
+          font-size: 14px;
+          font-weight: normal;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: normal;
+          letter-spacing: normal;
+        }
+      }
+
+      .transaction-entry {
+        width: 100%;
+        height: 125px;
+        display: grid;
+        grid-template-rows: 50px 20px 50px;
+        grid-row-gap: 0;
+
+        .top-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 50px;
+          padding: 10px 15px;
+          .transaction-details {
+            .icon {
+              width: 15.9px;
+              height: 16px;
+            }
+
+            .currency {
+              display: inline-block;
+              padding-left: 5px;
+            }
+
+            .from-address,
+            .to-address {
+              background-color: $background-color-1;
+              padding: 5px;
+              border-radius: 5px;
+              .value {
+                text-align: center;
+              }
+            }
+
+            .right-arrow {
+              background-color: #05c0a5;
+              justify-self: center;
+            }
+          }
+        }
+
+        .middle-row {
+          padding: 10px 15px;
+          .status-indicator-container {
+            width: 100%;
+            grid-column-start: 1;
+            grid-column-end: 3;
+            .status-indicator {
+              width: 168px;
+              height: 15.8px;
+              border-radius: 7.9px;
+              background-color: #f2f4fa;
+              text-align: center;
+
+              .status-timer {
+                padding: 2px;
+                margin-left: 50px;
+                p {
+                  width: 58.6px;
+                  height: 15px;
+                  font-family: AvenirNext, sans-serif;
+                  font-size: 11px;
+                  font-weight: normal;
+                  font-style: normal;
+                  font-stretch: normal;
+                  line-height: normal;
+                  letter-spacing: normal;
+                  text-align: center;
+                  color: #506175;
+                }
+              }
+            }
+          }
+        }
+
+        //.bottom-row {
+        //  width: 100%;
+        //  padding: 10px 0;
+        //  .line {
+        //    width: 189px;
+        //    height: 1px;
+        //    border-top: solid 1px #05c0a5;
+        //  }
+        //
+        //  .check-history-container {
+        //    padding: 20px 45px;
+        //    .check-history {
+        //      text-align: center;
+        //      width: 89px;
+        //      height: 19px;
+        //      font-family: AvenirNext, sans-serif;
+        //      font-size: 14px;
+        //      font-weight: normal;
+        //      font-style: normal;
+        //      font-stretch: normal;
+        //      line-height: normal;
+        //      letter-spacing: normal;
+        //      color: #05c0a5;
+        //    }
+        //  }
+        //}
+      }
+    }
+  }
+}
+.notification-container {
+  margin-left: 30px;
+}

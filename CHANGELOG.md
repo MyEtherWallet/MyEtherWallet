@@ -2,11 +2,17 @@
 
 ### Feature
 
+- Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
+- implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
+- Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
 
 ### Devop
 
+- Move text to translations [#157](https://github.com/MyEtherWallet/MyEtherWallet/pull/157)
+- Update packages [#151](https://github.com/MyEtherWallet/MyEtherWallet/pull/151)
+- Refactor state [#148](https://github.com/MyEtherWallet/MyEtherWallet/pull/148)
 - Refactor web3 provider [#141](https://github.com/MyEtherWallet/MyEtherWallet/pull/141)
 - Refactor Wallet interface [#129](https://github.com/MyEtherWallet/MyEtherWallet/pull/129)
 - Normalise ens-resolver, use resolved address in send container [#126](https://github.com/MyEtherWallet/MyEtherWallet/pull/126)

@@ -25,12 +25,11 @@ addons:
       - libjpeg8-dev
       - libpango1.0-dev
       - libgif-dev
-      - librsvg2-dev
 branches:
   except:
     - gh-pages
 before_install:
-  - npm install -g npm@'>=6.0.0'
+  - npm explore npm -g -- npm install node-gyp@latest
 stages:
   - name: run on pull requests
     if: type = pull_request and fork = true

@@ -1,44 +1,50 @@
 <template>
   <div class="manage-ens-container">
-    <h3>Manage {{ domainName }}.eth</h3>
+    <h3>{{ $t('dapps.manage') }} {{ domainName }}.eth</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
             <label for="updateResolver">
-              Update Resolver Address:
+              {{ $t('dapps.updateResolver') }}:
             </label>
             <input
               v-model="resolverAddress"
               type="text"
               name="updateResolver"
-              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+            />
           </div>
           <div class="submit-container">
             <button
-              :class="!$store.state.web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
+              :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="updateResolver(resolverAddress)">Update</button>
+              @click.prevent="updateResolver(resolverAddress);"
+            >
+              Update
+            </button>
           </div>
         </form>
       </div>
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns">
-              Transfer ENS domain to:
-            </label>
+            <label for="transferEns"> {{ $t('dapps.transferEnsTo') }}: </label>
             <input
               v-model="transferTo"
               type="text"
               name="transferEns"
-              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
+              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+            />
           </div>
           <div class="submit-container">
             <button
-              :class="!$store.state.web3.utils.isAddress(transferTo) ? 'disabled': ''"
+              :class="!web3.utils.isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="transferDomain(transferTo)">Transfer</button>
+              @click.prevent="transferDomain(transferTo);"
+            >
+              Transfer
+            </button>
           </div>
         </form>
       </div>
@@ -46,11 +52,13 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="mailto:support@myetherwallet.com"
+    />
   </div>
 </template>
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -74,6 +82,11 @@ export default {
       resolverAddress: '',
       transferTo: ''
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   }
 };
 </script>

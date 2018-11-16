@@ -2,47 +2,52 @@
   <div class="access-my-wallet-options">
     <mew-connect-modal
       ref="mewconnectModal"
-      :network-and-address-open="networkAndAddressOpen"/>
+      :network-and-address-open="networkAndAddressOpen"
+    />
 
     <hardware-modal
       ref="hardwareModal"
       :network-and-address-open="networkAndAddressOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
-      @hardwareWalletOpen="hardwareWalletOpen"/>
+      @hardwareWalletOpen="hardwareWalletOpen"
+    />
 
     <hardware-password-modal
       ref="hardwarePasswordModal"
       :wallet-constructor="walletConstructor"
       :hardware-brand="hardwareBrand"
-      @hardwareWalletOpen="hardwareWalletOpen"/>
+      @hardwareWalletOpen="hardwareWalletOpen"
+    />
 
     <network-and-address-modal
       ref="networkandaddressModal"
-      :hardware-wallet="hardwareWallet"/>
+      :hardware-wallet="hardwareWallet"
+    />
 
-    <metamask-modal ref="metamaskModal"/>
+    <metamask-modal ref="metamaskModal" />
 
     <software-modal
       ref="softwareModal"
       :open-password="passwordOpen"
       :open-private-key-input="privateKeyOpen"
       :open-mnemonic-phrase-input="mnemonicphraseModalOpen"
-      @file="fileUploaded"/>
+      @file="fileUploaded"
+    />
 
-    <password-modal
-      ref="passwordModal"
-      :file="file"/>
+    <password-modal ref="passwordModal" :file="file" />
 
-    <private-key-modal ref="privatekeyModal"/>
+    <private-key-modal ref="privatekeyModal" />
 
     <mnemonic-modal
       ref="mnemonicPhraseModal"
-      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"/>
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+    />
 
     <mnemonic-password-modal
       ref="mnemonicPhrasePassword"
       :hardware-wallet-open="hardwareWalletOpen"
-      :phrase="phrase"/>
+      :phrase="phrase"
+    />
 
     <div class="wrap">
       <div class="page-container">
@@ -50,9 +55,7 @@
           <h2>{{ $t('common.accessMyWallet') }}</h2>
           <h5>
             {{ $t('common.noWallet') }}
-            <router-link
-              :to="'/create-wallet'"
-              class="nounderline">
+            <router-link :to="'/create-wallet'" class="nounderline">
               {{ $t('common.getAFreeWallet') }}
             </router-link>
           </h5>
@@ -60,7 +63,7 @@
         <div class="buttons-container">
           <access-wallet-button
             v-for="(button, index) in buttons"
-            :key="button.title+index"
+            :key="button.title + index"
             :func="button.func"
             :img="button.img"
             :title="button.title"
@@ -72,7 +75,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -97,6 +99,8 @@ import softwareImg from '@/assets/images/icons/button-software.svg';
 import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
 import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
+
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -127,8 +131,8 @@ export default {
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.hardwareModalOpen,
@@ -136,8 +140,8 @@ export default {
           desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? hardwareImg : hardwareDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? hardwareImg : hardwareDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.metamaskModalOpen,
@@ -145,8 +149,8 @@ export default {
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: this.$store.state.online ? metamaskImg : metamaskDisabledImg,
-          disabled: this.$store.state.online
+          img: !this.online ? metamaskImg : metamaskDisabledImg,
+          disabled: !this.online
         },
         {
           func: this.softwareModalOpen,
@@ -159,6 +163,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
   },
   methods: {
     mewConnectModalOpen() {
@@ -204,6 +213,9 @@ export default {
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
+      if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
+        this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      }
       try {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();

@@ -1,39 +1,27 @@
 <template>
-  <div
-    v-if="$store.state.wallet !== null"
-    class="send-eth-and-tokens">
+  <div class="send-eth-and-tokens">
     <div class="wrap">
-      <div class="side-nav">
-        <interface-side-menu/>
-      </div>
+      <div class="side-nav"><interface-side-menu /></div>
       <div class="contents">
         <div class="tx-contents">
-          <div>
-            <interface-address :address="address" />
-          </div>
-          <div>
-            <interface-balance :balance="balance"/>
-          </div>
-          <div>
-            <interface-network :block-number="blockNumber" />
-          </div>
+          <div><interface-address :address="address" /></div>
+          <div><interface-balance :balance="balance" /></div>
+          <div><interface-network :block-number="blockNumber" /></div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
-            :get-balance="getBalance"/>
-          <div
-            v-if="$store.state.online"
-            class="tokens">
+            :get-balance="getBalance"
+            :tokens="tokens"
+          />
+          <div v-if="online" class="tokens">
             <interface-tokens
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
-              :received-tokens="receivedTokens"/>
+              :received-tokens="receivedTokens"
+            />
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    <wallet-not-found-container/>
   </div>
 </template>
 
@@ -41,8 +29,6 @@
 import { mapGetters } from 'vuex';
 import { parseTokensHex } from '@/helpers';
 import ENS from 'ethereum-ens';
-
-import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
 
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
@@ -60,8 +46,7 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens,
-    'wallet-not-found-container': WalletNotFoundContainer
+    'interface-tokens': InterfaceTokens
   },
   data() {
     return {
@@ -83,7 +68,10 @@ export default {
     },
     ...mapGetters({
       network: 'network',
-      wallet: 'wallet'
+      wallet: 'wallet',
+      online: 'online',
+      web3: 'web3',
+      Networks: 'Networks'
     })
   },
   watch: {
@@ -140,11 +128,11 @@ export default {
           type: 'function'
         }
       ];
-      const contract = new this.$store.state.web3.eth.Contract(abi);
+      const contract = new this.web3.eth.Contract(abi);
       const data = contract.methods
         .getAllBalance(this.wallet.getAddressString(), true, true, true, 0)
         .encodeABI();
-      const response = this.$store.state.web3.eth
+      const response = this.web3.eth
         .call({
           to: '0xdAFf2b3BdC710EB33A847CCb30A24789c0Ef9c5b',
           data: data
@@ -159,8 +147,17 @@ export default {
 
       return response;
     },
+    async setNonce() {
+      const nonce = await this.web3.eth.getTransactionCount(
+        this.wallet.getAddressString()
+      );
+      store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
+        nonce: nonce,
+        timestamp: +new Date()
+      });
+    },
     async getTokenBalance(token) {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       const contractAbi = [
         {
           name: 'balanceOf',
@@ -203,7 +200,7 @@ export default {
       return balance;
     },
     async setTokens() {
-      const utils = this.$store.state.web3.utils;
+      const utils = this.web3.utils;
       if (this.network.type.chainID === 1) {
         this.receivedTokens = false;
         const hex = await this.fetchTokens();
@@ -259,7 +256,7 @@ export default {
       this.tokensWithBalance = allTokens;
     },
     getBlock() {
-      this.$store.state.web3.eth
+      this.web3.eth
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
@@ -270,7 +267,7 @@ export default {
         });
     },
     getBalance() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       web3.eth
         .getBalance(this.address)
         .then(res => {
@@ -311,13 +308,10 @@ export default {
       this.pollNetwork = setInterval(() => {
         window.web3.version.getNetwork((err, netId) => {
           if (err) return;
-          if (this.$store.state.network.type.chainID.toString() !== netId) {
+          if (this.network.type.chainID.toString() !== netId) {
             Object.keys(networkTypes).forEach(net => {
               if (networkTypes[net].chainID.toString() === netId) {
-                this.$store.dispatch(
-                  'switchNetwork',
-                  this.$store.state.Networks[net][0]
-                );
+                this.$store.dispatch('switchNetwork', this.Networks[net][0]);
                 clearInterval(this.pollNetwork);
               }
             });
@@ -334,16 +328,17 @@ export default {
       }
     },
     setupOnlineEnvironment() {
-      if (this.$store.state.online === true) {
+      if (this.online === true) {
         if (this.wallet !== null) {
           if (this.wallet.identifier === 'Web3') {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
           this.getBalance();
-          this.pollBlock = setInterval(this.getBlock, 10000);
+          this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
           this.setENS();
+          this.setNonce();
         }
       }
     },
@@ -351,10 +346,7 @@ export default {
       if (this.wallet.identifier === 'Web3') {
         this.$store.dispatch('setENS', new ENS(window.web3.currentProvider));
       } else {
-        this.$store.dispatch(
-          'setENS',
-          new ENS(this.$store.state.web3.currentProvider)
-        );
+        this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
       }
     }
   }

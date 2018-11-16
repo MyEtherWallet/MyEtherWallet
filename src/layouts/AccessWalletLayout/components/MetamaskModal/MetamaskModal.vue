@@ -4,33 +4,37 @@
     :title="$t('accessWallet.accessByMetaMask')"
     hide-footer
     class="bootstrap-modal modal-metamask"
-    centered>
+    centered
+  >
     <div v-if="web3WalletExists">
       <div class="modal-multi-icons">
         <img
           class="icon"
-          src="~@/assets/images/icons/button-metamask-fox.svg">
-        <img
-          class="icon"
-          src="~@/assets/images/icons/clip.svg">
-        <img
-          class="icon logo-small"
-          src="~@/assets/images/logo-small.png">
+          src="~@/assets/images/icons/button-metamask-fox.svg"
+        />
+        <img class="icon" src="~@/assets/images/icons/clip.svg" />
+        <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
       </div>
       <div class="d-block content-container text-center">
         <h4 v-show="!unlockWeb3Wallet">
-          {{ $t("accessWallet.metaMaskModalDesc") }}
+          {{ $t('accessWallet.metaMaskModalDesc') }}
         </h4>
         <h4 v-show="unlockWeb3Wallet">
-          {{ $t("accessWallet.unlockMetamaskWallet") }}
+          {{ $t('accessWallet.unlockMetamaskWallet') }}
         </h4>
       </div>
       <div class="accept-terms">
-        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
+        <label class="checkbox-container"
+          >{{ $t('accessWallet.acceptTerms') }}
+          <router-link to="/terms-and-conditions">{{
+            $t('common.terms')
+          }}</router-link
+          >.
           <input
             type="checkbox"
-            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled" >
-          <span class="checkmark"/>
+            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+          />
+          <span class="checkmark" />
         </label>
       </div>
       <div class="button-container">
@@ -38,16 +42,16 @@
           v-show="!unlockWeb3Wallet"
           :disabled="accessMyWalletBtnDisabled"
           class="mid-round-button-green-filled close-button"
-          @click="getWeb3Wallet">
-          {{ $t("accessWallet.accessMyWallet") }}
+          @click="getWeb3Wallet"
+        >
+          {{ $t('common.accessMyWallet') }}
         </b-btn>
         <b-btn
           v-show="unlockWeb3Wallet"
           class="mid-round-button-green-filled close-button"
           @click="getWeb3Wallet"
         >
-
-          {{ $t("accessWallet.tryAgain") }}
+          {{ $t('accessWallet.tryAgain') }}
         </b-btn>
       </div>
     </div>
@@ -55,17 +59,19 @@
       <div class="modal-multi-icons">
         <img
           class="icon"
-          src="~@/assets/images/icons/button-metamask-fox.svg">
+          src="~@/assets/images/icons/button-metamask-fox.svg"
+        />
       </div>
       <div class="d-block content-container text-center">
-        <h4>
-          {{ $t("accessWallet.installMetaMaskModalDesc") }}
-        </h4>
+        <h4>{{ $t('accessWallet.installMetaMaskModalDesc') }}</h4>
       </div>
       <div class="accept-terms hidden">
-        <label class="checkbox-container">{{ $t("accessWallet.acceptTerms") }} <a href="/">{{ $t("common.terms") }}</a>.
-          <input type="checkbox" >
-          <span class="checkmark"/>
+        <label class="checkbox-container"
+          >{{ $t('accessWallet.acceptTerms') }}
+          <router-link to="/terms-and-conditions">{{
+            $t('common.terms')
+          }}</router-link
+          >. <input type="checkbox" /> <span class="checkmark" />
         </label>
       </div>
       <div class="button-container">
@@ -74,18 +80,20 @@
           href="https://metamask.io/"
           target="_blank"
           class="mid-round-button-green-filled close-button"
-          @click="refreshPage=true">
-          {{ $t("accessWallet.installMetamask") }}
+          @click="refreshPage = true;"
+        >
+          {{ $t('accessWallet.installMetamask') }}
         </a>
         <b-btn
           v-show="refreshPage"
           class="mid-round-button-green-filled close-button"
-          @click="reload">
-          Refresh
+          @click="reload"
+        >
+          {{ $t('accessWallet.refresh') }}
         </b-btn>
       </div>
     </div>
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 
@@ -93,6 +101,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
 import Web3 from 'web3';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -112,6 +121,11 @@ export default {
       refreshPage: false
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   mounted() {
     this.web3WalletExists = this.checkWeb3();
   },
@@ -119,37 +133,42 @@ export default {
     reload() {
       window.location.reload();
     },
-    getWeb3Wallet() {
-      // NOTE: Uncomment code and debug when metamask's new version launches
-      // if (window.web3 === undefined) {
-      //   window.addEventListener('message', ({ data }) => {
-      //     if (data && data.type && data.type === 'ETHEREUM_PROVIDER_SUCCESS') {
-      //       window.web3 = new Web3(ethereum);
-      //     }
-      //   });
-      //   window.postMessage(
-      //     { type: 'ETHEREUM_PROVIDER_REQUEST', web3: true },
-      //     '*'
-      //   );
-      // }
-
+    async getWeb3Wallet() {
       if (this.checkWeb3() !== true) return;
-      new Web3(window.web3.currentProvider).eth
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        try {
+          await window.ethereum.enable();
+        } catch (e) {
+          this.web3WalletExists = false;
+        }
+        this.signIn(window.web3);
+      } else if (window.web3) {
+        this.signIn(window.web3);
+      }
+    },
+    signIn(web3) {
+      new Web3(web3.currentProvider).eth
         .getAccounts()
         .then(accounts => {
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
-          this.$store.dispatch('setWeb3Wallet', wallet);
-          this.$store.dispatch('setWeb3Instance', window.web3.currentProvider);
-          this.$router.push({ path: 'interface' });
+          this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
+          this.$router.push({
+            path: 'interface'
+          });
         })
         .catch(() => {
           return (this.web3WalletExists = false);
         });
     },
     checkWeb3() {
-      if (window.web3 !== undefined) return true;
+      if (window.ethereum) {
+        return true;
+      } else if (window.web3) {
+        return true;
+      }
       return false;
     }
   }

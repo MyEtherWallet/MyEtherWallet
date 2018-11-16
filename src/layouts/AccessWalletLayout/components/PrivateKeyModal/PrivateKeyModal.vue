@@ -5,7 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-software"
     centered
-    @shown="focusInput">
+    @shown="focusInput"
+  >
     <form class="private-key-form">
       <div class="input-container">
         <input
@@ -13,14 +14,18 @@
           v-model="privateKey"
           type="text"
           name="PrivateKey"
-          autocomplete="off">
+          autocomplete="off"
+        />
       </div>
       <button
-        :disabled=" privateKey === '' && privateKey.length === 0 && privateKey.length < 9"
+        :disabled="
+          privateKey === '' && privateKey.length === 0 && privateKey.length < 9
+        "
         class="submit-button large-round-button-green-filled"
         type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlock") }}
+        @click.prevent="unlockWallet"
+      >
+        {{ $t('accessWallet.unlock') }}
       </button>
     </form>
   </b-modal>
@@ -29,20 +34,27 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
       privateKey: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   methods: {
     unlockWallet() {
-      this.$store.dispatch(
-        'decryptWallet',
+      this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
-      );
+      ]);
       this.privateKey = '';
-      this.$router.push({ path: 'interface' });
+      this.$router.push({
+        path: 'interface'
+      });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

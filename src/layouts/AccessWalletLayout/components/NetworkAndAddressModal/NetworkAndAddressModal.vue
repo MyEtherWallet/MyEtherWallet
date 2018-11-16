@@ -4,8 +4,9 @@
     :title="$t('accessWallet.networkAndAddress')"
     hide-footer
     class="bootstrap-modal padding-25-20 modal-network-and-address"
-    centered>
-    <!-- Derivation Path Drop down-->
+    centered
+  >
+    <!-- Derivation Path Drop down -->
     <div class="content-container-1">
       <div class="hd-derivation">
         <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
@@ -14,16 +15,18 @@
           <b-dropdown
             id="hd-derivation-path"
             :text="selectedPath"
-            class="dropdown-button-2">
+            class="dropdown-button-2"
+          >
             <b-dropdown-item
               v-for="(val, key) in availablePaths"
               v-if="key !== 'default'"
               :class="selectedPath === val.path ? 'active' : ''"
               :key="'base' + key"
-              @click="changePath(key)">
+              @click="changePath(key);"
+            >
               {{ val.path }}
             </b-dropdown-item>
-            <b-dropdown-divider/>
+            <b-dropdown-divider />
             <b-dropdown-item>
               {{ $t('accessWallet.customPaths') }}
             </b-dropdown-item>
@@ -31,7 +34,8 @@
               v-for="(val, key) in customPaths"
               :class="selectedPath.dpath === val.dpath ? 'active' : ''"
               :key="key"
-              @click="changePath(key)">
+              @click="changePath(key);"
+            >
               {{ val.dpath }}
             </b-dropdown-item>
             <b-dropdown-item @click="showCustomPathInput">
@@ -40,28 +44,31 @@
           </b-dropdown>
         </div>
       </div>
-      <p
-        v-show="invalidPath !== ''"
-        class="error-message-container">
-        The path {{ invalidPath }} is not valid for this device
+      <p v-show="invalidPath !== ''" class="error-message-container">
+        {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath
+        }}{{ $t('accessWallet.invalidPathDescCont') }}
       </p>
-      <p
-        v-show="!customPathInput"
-        class="derivation-brands">{{ getPathLabel(selectedPath) }}</p>
+      <p v-show="!customPathInput" class="derivation-brands">
+        {{ getPathLabel(selectedPath) }}
+      </p>
       <div v-show="customPathInput">
         <!-- TODO: how to structure the path input? -->
         <input
           id="customPathLabel"
           v-model="customPath.label"
-          placeholder="my custom path">
-        <br>
+          placeholder="my custom path"
+        />
+        <br />
         <input
           id="customPathInput"
           v-model="customPath.dpath"
-          placeholder="m/44'/1'/0'/0">
-        <br>
-        <button @click="addCustomPath">addCustomPath</button>
-        <button @click="showCustomPathInput">cancel</button>
+          placeholder="m/44'/1'/0'/0"
+        />
+        <br />
+        <button @click="addCustomPath">
+          {{ $t('accessWallet.addCustomPath') }}
+        </button>
+        <button @click="showCustomPathInput">{{ $t('common.cancel') }}</button>
       </div>
     </div>
     <!-- Address List -->
@@ -74,8 +81,7 @@
         <ul class="address-block table-header">
           <li>{{ $t('accessWallet.id') }}</li>
           <li>{{ $t('common.address') }}</li>
-          <li>{{ $t('common.balance') }}</li>
-          <li/>
+          <li />
         </ul>
 
         <ul
@@ -84,56 +90,64 @@
           :key="account.index"
           :class="selectedId === 'address' + account.index ? 'selected' : ''"
           class="address-block address-data"
-          @click="setAccount(account)">
+          @click="setAccount(account);"
+        >
           <li>{{ account.index }}.</li>
           <li>{{ account.account.getChecksumAddressString() }}</li>
-          <li>{{ account.balance }} ETH</li>
           <li class="user-input-checkbox">
             <label class="checkbox-container checkbox-container-small">
               <input
                 :id="'address' + account.index"
                 type="checkbox"
-                @click="unselectAllAddresses">
-              <span class="checkmark checkmark-small"/>
+                @click="unselectAllAddresses"
+              />
+              <span class="checkmark checkmark-small" />
             </label>
           </li>
         </ul>
-
-      </div> <!-- .address-block-container -->
+      </div>
+      <!-- .address-block-container -->
 
       <div class="address-nav">
-        <span
-          @click="previousAddressSet()">&lt; {{ $t('common.previous') }}</span>
-        <span
-          @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
+        <span @click="previousAddressSet();"
+          >&lt; {{ $t('common.previous') }}</span
+        >
+        <span @click="nextAddressSet();">{{ $t('common.next') }} &gt;</span>
       </div>
-    </div> <!-- .content-container-2 -->
+    </div>
+    <!-- .content-container-2 -->
 
     <div class="accept-terms">
-      <label class="checkbox-container">{{ $t('accessWallet.acceptTerms') }}
-        <a href="/">{{ $t('common.terms') }}</a>.
+      <label class="checkbox-container"
+        >{{ $t('accessWallet.acceptTerms') }}
+        <router-link to="/terms-and-conditions">{{
+          $t('common.terms')
+        }}</router-link
+        >.
         <input
           ref="accessMyWalletBtn"
           type="checkbox"
-          @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled">
-        <span class="checkmark"/>
+          @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+        />
+        <span class="checkmark" />
       </label>
     </div>
     <div class="button-container">
       <b-btn
         :disabled="accessMyWalletBtnDisabled"
         class="mid-round-button-green-filled close-button"
-        @click.prevent="unlockWallet">
-        {{ $t("common.accessMyWallet") }}
+        @click.prevent="unlockWallet"
+      >
+        {{ $t('common.accessMyWallet') }}
       </b-btn>
     </div>
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import ethUnits from 'ethjs-unit';
+import { mapGetters } from 'vuex';
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -154,7 +168,6 @@ export default {
       currentIndex: 0,
       HDAccounts: [],
       availablePaths: {},
-      customPaths: {},
       selectedPath: '',
       invalidPath: '',
       customPathInput: false,
@@ -162,7 +175,12 @@ export default {
       customPath: { label: '', dpath: '' }
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      customPaths: 'customPaths',
+      path: 'path'
+    })
+  },
   watch: {
     hardwareWallet() {
       this.getPaths();
@@ -225,8 +243,10 @@ export default {
       });
     },
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', this.currentWallet);
-      this.$router.push({ path: 'interface' });
+      this.$store.dispatch('decryptWallet', [this.currentWallet]);
+      this.$router.push({
+        path: 'interface'
+      });
     },
     setHDAccounts() {
       this.HDAccounts = [];
@@ -237,22 +257,10 @@ export default {
       ) {
         this.HDAccounts.push({
           index: i,
-          account: this.hardwareWallet.getAccount(i),
-          balance: 'loading'
+          account: this.hardwareWallet.getAccount(i)
         });
-        this.getAddressBalance(
-          this.HDAccounts[this.HDAccounts.length - 1].account.getAddressString()
-        );
       }
       this.currentIndex += MAX_ADDRESSES;
-    },
-    getAddressBalance(address) {
-      const web3 = this.$store.state.web3;
-      web3.eth.getBalance(address).then(balance => {
-        for (const i in this.HDAccounts)
-          if (this.HDAccounts[i].account.getAddressString() == address)
-            this.HDAccounts[i].balance = ethUnits.fromWei(balance, 'ether');
-      });
     },
     nextAddressSet() {
       this.setHDAccounts();
@@ -273,7 +281,7 @@ export default {
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      this.customPaths = this.$store.state.customPaths;
+      this.customPaths = this.customPaths;
     }
   }
 };

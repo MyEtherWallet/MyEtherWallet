@@ -1,23 +1,20 @@
 <template>
   <div class="create-wallet-by-json-file">
     <success-modal
+      ref="successModal"
       message="You have created a wallet successfully"
       link-to="/access-my-wallet"
-      link-message="Access My Wallet"/>
+      link-message="Access My Wallet"
+    />
     <div class="wrap">
       <div class="nav-tab-user-input-box">
         <b-tabs>
-          <div class="progress-bar"/>
-          <b-tab
-            title="By JSON File"
-            active>
-
+          <div class="progress-bar" />
+          <b-tab :title="$t('createWallet.byJsonFile')" active>
             <div class="title-block">
               <div class="title-popover">
-                <h3>
-                  {{ $t('createWallet.byJsonFileSaveKeystore') }}
-                </h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
+                <popover :popcontent="$t('popover.whatIsMessageContent')" />
               </div>
             </div>
             <div class="contents">
@@ -26,19 +23,27 @@
                 :img="content.img"
                 :title="content.title"
                 :desc="content.desc"
-                :key="content.title"/>
+                :key="content.title"
+              />
             </div>
             <div class="user-input-container">
               <div class="user-input">
                 <div class="user-button">
                   <a
                     :href="walletJson"
-                    :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
+                    :class="[
+                      { disable: !downloadable },
+                      'next-button',
+                      'large-round-button-green-filled'
+                    ]"
                     :download="name"
-                    @click="downloadDone()">
-                    <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
+                    @click="downloadDone();"
+                  >
+                    <span v-if="downloadable">
+                      {{ $t('createWallet.byJsonFileDownloadKeyFile') }}
+                    </span>
                     <div v-if="!downloadable">
-                      <i class="fa fa-spinner fa-lg fa-spin"/>
+                      <i class="fa fa-spinner fa-lg fa-spin" />
                     </div>
                   </a>
                 </div>
@@ -46,16 +51,15 @@
                   <router-link to="/">
                     <img
                       class="icon"
-                      src="~@/assets/images/icons/printer.svg">
+                      src="~@/assets/images/icons/printer.svg"
+                    />
                   </router-link>
                 </div>
               </div>
             </div>
-
           </b-tab>
         </b-tabs>
       </div>
-
     </div>
   </div>
 </template>
@@ -127,7 +131,7 @@ export default {
   },
   methods: {
     downloadDone() {
-      this.$children[0].$refs.success.show();
+      this.$refs.successModal.$refs.success.show();
     }
   }
 };

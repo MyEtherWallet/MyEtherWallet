@@ -5,6 +5,8 @@ import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
 import { formatters } from 'web3-core-helpers';
 import { toPayload } from './jsonrpc';
+import * as locStore from 'store';
+
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -67,6 +69,16 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
+              const localStoredObj = locStore.get(
+                utils.sha3(store.state.wallet.getChecksumAddressString())
+              );
+              locStore.set(
+                utils.sha3(store.state.wallet.getChecksumAddressString()),
+                {
+                  nonce: localStoredObj + 1,
+                  timestamp: localStoredObj.timestamp
+                }
+              );
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
@@ -81,6 +93,16 @@ export default async (
           );
           _promiObj
             .once('transactionHash', hash => {
+              const localStoredObj = locStore.get(
+                utils.sha3(store.state.wallet.getChecksumAddressString())
+              ).nonce;
+              locStore.set(
+                utils.sha3(store.state.wallet.getChecksumAddressString()),
+                {
+                  nonce: localStoredObj + 1,
+                  timestamp: localStoredObj.timestamp
+                }
+              );
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
