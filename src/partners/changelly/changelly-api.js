@@ -24,10 +24,7 @@ const getSupportedCurrencies = async network => {
           tokenDetails[details.symbol] = details;
         }
       }
-
       return { currencyDetails, tokenDetails };
-      // this.hasRates =
-      //   Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     }
     throw Error('Changelly get supported currencies failed to return a value');
   } catch (e) {

@@ -1,20 +1,20 @@
-import { kyberAddressFallback, KyberCurrencies } from './fallbacks';
-
 import {
-  mainChainCurrency,
+  kyberBaseCurrency,
   providerName,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
   kyberNetworkENS,
-  walletDepositeAddress
+  walletDepositeAddress,
+  kyberAddressFallback,
+  KyberCurrencies
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
 import ERC20 from './ERC20Token.abi';
 
 export {
-  mainChainCurrency,
+  kyberBaseCurrency,
   providerName,
   defaultValues,
   walletDepositeAddress,

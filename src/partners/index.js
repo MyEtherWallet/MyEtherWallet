@@ -1,15 +1,23 @@
-import { BitySwap, BityCurrencies } from './bity';
-import { KyberCurrencies, KyberSwap } from './kyber';
-import { ChangellyCurrencies, ChangellySwap } from './changelly';
-import { Simplex, SimplexCurrencies } from './simplex';
+import { BitySwap, BityCurrencies, providerName as bity } from './bity';
+import {
+  KyberCurrencies,
+  KyberSwap,
+  providerName as kybernetwork
+} from './kyber';
+import {
+  ChangellyCurrencies,
+  ChangellySwap,
+  providerName as changelly
+} from './changelly';
+import { Simplex, SimplexCurrencies, providerName as simplex } from './simplex';
 import Swap from './partners';
 import {
   networkSymbols,
   chainCurrencies,
   fiat,
-  supportedProviders,
   EthereumTokens,
-  OtherChains
+  OtherChains,
+  baseCurrency
 } from './partnersConfig';
 import {
   utils,
@@ -17,17 +25,27 @@ import {
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
-  dynamicSortMultiple,
-  CurrencyOptionBuilder
+  dynamicSortMultiple
 } from './helpers';
 
 // Array of currently supported providers
 const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
 
+const providerNames = {
+  simplex: simplex,
+  kyber: kybernetwork,
+  changelly: changelly,
+  bity: bity
+};
+
+const supportedProviders = Object.values(providerNames);
+
 export {
   Swap,
   providers,
   supportedProviders,
+  providerNames,
+  baseCurrency,
   BitySwap,
   BityCurrencies,
   KyberSwap,
@@ -43,7 +61,6 @@ export {
   OtherChains,
   // helpers
   utils,
-  CurrencyOptionBuilder,
   bestRateForQuantity,
   bestProviderForQuantity,
   isValidEntry,

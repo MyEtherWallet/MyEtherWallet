@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
-  mainChainCurrency,
+  kyberBaseCurrency,
   providerName,
   defaultValues,
   KyberCurrencies,
@@ -188,7 +188,7 @@ export default class Kyber {
     logger(fromWei);
     const inWei = await this.getExpectedRate(fromToken, toToken, fromWei);
     if (+inWei > -1) {
-      return this.convertToTokenBase(mainChainCurrency, inWei);
+      return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
     return -1;
   }
@@ -278,14 +278,13 @@ export default class Kyber {
       fromValueWei,
       userAddress
     ) => {
-      if (fromToken === 'ETH') return { approve: false, reset: false };
+      if (fromToken === kyberBaseCurrency)
+        return { approve: false, reset: false };
 
-      const contract = new this.web3.eth.Contract(
+      const currentAllowance = await new this.web3.eth.Contract(
         ERC20,
         this.getTokenAddress(fromToken)
-      );
-
-      const currentAllowance = await contract.methods
+      ).methods
         .allowance(userAddress, this.getKyberNetworkAddress())
         .call();
 
@@ -304,9 +303,9 @@ export default class Kyber {
       userAddress
     );
 
-    if (fromToken === mainChainCurrency || toToken === mainChainCurrency) {
+    if (fromToken === kyberBaseCurrency || toToken === kyberBaseCurrency) {
       const checkValue =
-        fromToken === mainChainCurrency ? fromValueWei : toValueWei;
+        fromToken === kyberBaseCurrency ? fromValueWei : toValueWei;
 
       const kyberUserCap = await this.callKyberContract(
         'getUserCapInWei',
@@ -395,6 +394,10 @@ export default class Kyber {
         toToken,
         fromValueWei
       );
+      if (finalRate === 0)
+        throw Error(
+          'Recieved a rate of 0. Invalid quantity.  Try swaping a lower amount.'
+        );
       const prepareSwapTxData = await this.canUserSwap(
         fromToken,
         toToken,
@@ -413,7 +416,6 @@ export default class Kyber {
       );
       const swapTransactions = Array.from(prepareSwapTxData);
       return [...swapTransactions];
-      // }
     } catch (e) {
       // eslint-disable no-console
       errorLogger(e); // todo remove dev item
@@ -430,7 +432,7 @@ export default class Kyber {
       swapDetails.toCurrency,
       swapDetails.fromValue,
       swapDetails.toValue,
-      this.convertToTokenWei(mainChainCurrency, swapDetails.rate),
+      this.convertToTokenWei(kyberBaseCurrency, swapDetails.rate),
       swapDetails.fromAddress
     );
     swapDetails.providerReceives = swapDetails.fromValue;

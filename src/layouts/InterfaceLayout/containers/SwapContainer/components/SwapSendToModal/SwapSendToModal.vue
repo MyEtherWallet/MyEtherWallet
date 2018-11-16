@@ -5,7 +5,8 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
         <p>Time Remaining</p>
@@ -13,55 +14,57 @@
       <div class="swap-detail">
         <div class="from-address">
           <div class="icon">
-            <img :src="fromAddress.image">
+            <i :class="['cc', fromAddress.name, 'cc-icon']" />
           </div>
-          <p class="value">{{ fromAddress.value }} <span>{{ fromAddress.name }}</span></p>
+          <p class="value">
+            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+          </p>
           <p
-            v-show="fromAddress.address !== ''"
-            class="block-title">From Address</p>
-          <p
-            v-show="fromAddress.address !== ''"
-            class="address">{{ fromAddress.address }}</p>
+            v-show="fromAddress.address !== '' && !isFromFiat"
+            class="block-title"
+          >
+            From Address
+          </p>
+          <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
+            {{ fromAddress.address }}
+          </p>
         </div>
-        <div class="right-arrow">
-          <img :src="arrowImage">
-        </div>
+        <div class="right-arrow"><img :src="arrowImage" /></div>
         <div class="to-address">
           <div class="icon">
-            <img :src="toAddress.image">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
-          <p class="value">{{ toAddress.value }} <span>{{ toAddress.name }}</span></p>
-          <p
-            v-show="toAddress.address !== ''"
-            class="block-title">To Address</p>
-          <p
-            v-show="toAddress.address !== ''"
-            class="address">{{ toAddress.address }}</p>
+          <p class="value">
+            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+          </p>
+          <p v-show="toAddress.address !== ''" class="block-title">
+            To Address
+          </p>
+          <p v-show="toAddress.address !== ''" class="address">
+            {{ toAddress.address }}
+          </p>
         </div>
-        <div
-          v-show="!fromFiat"
-          class="confirm-send-button">
-          <h4>Send {{ fromAddress.value }} {{ fromAddress.name }} to <span class="address">{{ qrcode }}</span></h4>
-          <qrcode
-            :value="qrcode"
-            :options="{ size: 200 }"/>
+        <div v-show="!isFromFiat" class="confirm-send-button">
+          <h4>
+            Send {{ fromAddress.value }} {{ fromAddress.name }} to
+            <span class="address">{{ qrcode }}</span>
+          </h4>
+          <qrcode :value="qrcode" :options="{ size: 200 }" />
         </div>
         <simplex-checkout-form
-          v-if="fromFiat && swapProvider === 'simplex'"
+          v-if="isFromFiat && swapProvider === 'simplex'"
           :form-data="swapDetails.dataForInitialization"
-          :continue-action="redirectToPartner"/>
+          :continue-action="redirectToPartner"
+        />
       </div>
 
-      <help-center-button/>
-
+      <help-center-button />
     </b-modal>
   </div>
 </template>
 
 <script>
 import Arrow from '@/assets/images/etc/single-arrow.svg';
-import iconBtc from '@/assets/images/currency/btc.svg';
-import iconEth from '@/assets/images/currency/eth.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
@@ -84,74 +87,49 @@ export default {
   },
   data() {
     return {
-      currencyIcons: {
-        BTC: iconBtc,
-        ETH: iconEth
-      },
+      rawSwapDetails: {},
       timerInterval: {},
       timeRemaining: 0,
       fiatCurrencies: fiat.map(entry => entry.symbol),
-      fromFiat: false,
       qrcode: '',
       arrowImage: Arrow,
-      fromAddress: {
-        image: iconEth,
-        value: '1.0000000000',
-        name: 'ETH',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      toAddress: {
-        image: iconBtc,
-        value: '0.0034523',
-        name: 'BTC',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      }
+      fromAddress: {},
+      toAddress: {}
     };
   },
   computed: {
     swapProvider() {
       return this.swapDetails.provider;
+    },
+    isFromFiat() {
+      return this.fiatCurrencies.includes(this.rawSwapDetails.fromCurrency);
     }
   },
   watch: {
     swapDetails(newValue) {
+      this.rawSwapDetails = newValue;
       this.timeUpdater(newValue);
-      if (this.fiatCurrencies.includes(newValue.fromCurrency)) {
-        this.fromFiat = true;
+      if (
+        this.fiatCurrencies.includes(newValue.toCurrency) ||
+        this.fiatCurrencies.includes(newValue.fromCurrency)
+      ) {
         this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
           value: newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
           value: newValue.toValue,
           name: newValue.toCurrency,
-          address: newValue.toAddress
-        };
-      } else if (this.fiatCurrencies.includes(newValue.toCurrency)) {
-        this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
-          value: newValue.fromValue,
-          name: newValue.fromCurrency,
-          address: newValue.fromAddress ? newValue.fromAddress : ''
-        };
-        this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
-          value: newValue.toValue,
-          name: newValue.toCurrency,
-          address: ''
+          address: newValue.toAddress ? newValue.toAddress : ''
         };
       } else {
         this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
           value: newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
           value: newValue.toValue,
           name: newValue.toCurrency,
           address: newValue.toAddress
@@ -200,12 +178,10 @@ export default {
     },
     bitySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
-      // this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     },
     changellySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
-      // this.qrcode = swapDetails.providerAddress;
       // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
   }

@@ -17,5 +17,6 @@ const bityEndpoints = {
   server: 'https://bity.myetherapi.com',
   rates: 'https://bity.com/api/v1/rate2/'
 };
-const name = 'bity';
-export { BityCurrencies, bityEndpoints, name };
+const providerName = 'bity';
+
+export { BityCurrencies, bityEndpoints, providerName };

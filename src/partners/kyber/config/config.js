@@ -8,6 +8,16 @@ const kyberTokenInfoList = {
   ETH: 'https://tracker.kyber.network/api/tokens/pairs'
 };
 
+const kyberAddressFallback = {
+  ETH: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
+  ROP: '0x818E6FECD516Ecc3849DAf6845e3EC868087B755'
+};
+
+import { KyberCurrenciesETH } from './currenciesETH';
+import { KyberCurrenciesROP } from './currenciesROP';
+
+const KyberCurrencies = { ETH: KyberCurrenciesETH, ROP: KyberCurrenciesROP };
+
 const walletDepositeAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'; // i.e. where payments go
 const kyberNetworkENS = 'kybernetwork.eth';
 const kyberValidNetworks = ['ETH', 'ROP'];
@@ -20,15 +30,17 @@ const defaultValues = {
 };
 
 const providerName = 'kybernetwork';
-const mainChainCurrency = 'ETH';
+const kyberBaseCurrency = 'ETH';
 
 export {
-  mainChainCurrency,
+  kyberBaseCurrency,
   providerName,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
   kyberNetworkENS,
-  walletDepositeAddress
+  walletDepositeAddress,
+  KyberCurrencies,
+  kyberAddressFallback
 };

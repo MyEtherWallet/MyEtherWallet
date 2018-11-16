@@ -1,5 +1,5 @@
 import { networkSymbols } from '../partnersConfig';
-import { ChangellyCurrencies, changellyStatuses } from './config';
+import { ChangellyCurrencies, changellyStatuses, providerName } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
 
@@ -19,7 +19,7 @@ export default class Changelly {
   }
 
   static getName() {
-    return 'changelly';
+    return providerName;
   }
 
   // ============================= Setup Methods  ====================================
@@ -139,20 +139,17 @@ export default class Changelly {
   // ============================= Finalize swap details ====================================
 
   async startSwap(swapDetails) {
+    let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
-      swapDetails.dataForInitialization = await await this.createTransaction(
-        swapDetails
-      );
-      swapDetails.providerReceives =
-        swapDetails.dataForInitialization.amountExpectedFrom;
-      swapDetails.providerSends =
-        swapDetails.dataForInitialization.amountExpectedTo;
-      swapDetails.parsed = Changelly.parseOrder(
-        swapDetails.dataForInitialization
-      );
+      details = await await this.createTransaction(swapDetails);
+      if (details.message) throw Error(details.message);
+      swapDetails.providerReceives = details.amountExpectedFrom;
+      swapDetails.providerSends = details.amountExpectedTo;
+      swapDetails.parsed = Changelly.parseOrder(details);
       swapDetails.orderId = swapDetails.parsed.orderId;
-      swapDetails.providerAddress =
-        swapDetails.dataForInitialization.payinAddress;
+      swapDetails.providerAddress = details.payinAddress;
+      console.log(swapDetails); // todo remove dev item
+      swapDetails.dataForInitialization = details;
       return swapDetails;
     }
     throw Error('From amount below changelly minimun for currency pair');
@@ -229,28 +226,7 @@ export default class Changelly {
   }
 
   statusUpdater(/*swapDetails*/) {
-    return () => {
-      // let currentStatus;
-      // const calculateTimeRemaining = (validFor, timestamp) => {
-      //   return (
-      //     validFor -
-      //     parseInt(
-      //       (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-      //     )
-      //   );
-      // };
-      // const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-      // // let timeRemaining = calculateTimeRemaining(
-      // //   parsed.validFor,
-      // //   parsed.timestamp
-      // // );
-      // let checkStatus = setInterval(async () => {
-      //   currentStatus = await getStatus({
-      //     orderid: parsed.orderId
-      //   });
-      //   clearInterval(checkStatus);
-      // }, 1000);
-    };
+    return () => {};
   }
 
   static statuses(data) {

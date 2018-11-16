@@ -5,26 +5,23 @@
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="swapStarted"/>
+      @swapStarted="swapStarted"
+    />
 
     <swap-send-to-modal
       ref="swapSendTo"
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="resetSwapState"/>
+      @swapStarted="resetSwapState"
+    />
 
     <div class="title-block">
-      <interface-container-title :title="$t('common.swap')"/>
-      <div
-        class="buy-eth"
-        @click="setFiatBuy">
-        <!--<a href="https://ccswap.myetherwallet.com" target="_blank" >-->
-        <!--<span>Buy ETH with</span>-->
-        <!--<img :src="images.visaMaster">-->
-        <!--</a>-->
-        <span>Buy ETH with</span>
-        <img :src="images.visaMaster">
+      <interface-container-title :title="$t('common.swap')" />
+      <div class="buy-eth">
+        <a href="https://ccswap.myetherwallet.com" target="_blank">
+          <span>Buy ETH with</span> <img :src="images.visaMaster" />
+        </a>
       </div>
     </div>
 
@@ -38,7 +35,8 @@
             :currencies="fromArray"
             :from-source="true"
             page="SwapContainerFrom"
-            @selectedCurrency="setFromCurrency"/>
+            @selectedCurrency="setFromCurrency"
+          />
           <div class="the-form amount-number">
             <input
               v-model="fromValue"
@@ -46,20 +44,18 @@
               name=""
               value=""
               placeholder="Deposit Amount"
-              @input="amountChanged('from')">
+              @input="amountChanged('from');"
+            />
           </div>
-          <div
-            class="error-message-container">
+          <div class="error-message-container">
             <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="notEnough && !fromBelowMinAllowed"> Insufficient balance</p>
+            <p v-if="notEnough && !fromBelowMinAllowed">Insufficient balance</p>
             <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
             <p v-else>&nbsp;</p>
           </div>
         </div>
-        <div class="exchange-icon">
-          <img :src="images.swap">
-        </div>
+        <div class="exchange-icon"><img :src="images.swap" /></div>
         <div class="amount">
           <div class="title">
             <h4>{{ $t('common.to') }}</h4>
@@ -68,7 +64,8 @@
             :currencies="toArray"
             :from-source="false"
             page="SwapContainerTo"
-            @selectedCurrency="setToCurrency"/>
+            @selectedCurrency="setToCurrency"
+          />
           <div class="the-form amount-number">
             <input
               v-model="toValue"
@@ -76,10 +73,10 @@
               name=""
               value=""
               placeholder="Received Amount"
-              @input="amountChanged('to')">
+              @input="amountChanged('to');"
+            />
           </div>
-          <div
-            class="error-message-container">
+          <div class="error-message-container">
             <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
             <p v-else>&nbsp;</p>
             <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
@@ -100,16 +97,17 @@
         <drop-down-address-selector
           :currency="toCurrency"
           :current-address="currentAddress"
-          @toAddress="setToAddress"/>
+          @toAddress="setToAddress"
+        />
       </div>
     </div>
 
-    <div
-      v-show="showRefundAddress"
-      class="send-form">
+    <div v-show="showRefundAddress" class="send-form">
       <div class="title-container">
         <div class="title title-and-copy">
-          <h4>{{ fromCurrency }} address for refund (if needed) from Changelly </h4>
+          <h4>
+            {{ fromCurrency }} address for refund (if needed) from Changelly
+          </h4>
           <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
         </div>
       </div>
@@ -117,15 +115,14 @@
         <drop-down-address-selector
           :currency="fromCurrency"
           :current-address="currentAddress"
-          @toAddress="setRefundAddress"/>
+          @toAddress="setRefundAddress"
+        />
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>Providers</h4>
-        </div>
+        <div class="title title-and-copy"><h4>Providers</h4></div>
       </div>
       <providers-radio-selector
         :loading-provider-error="loadingError"
@@ -136,30 +133,31 @@
         :no-providers-pair="noProvidersPair"
         :loading-data="loadingData"
         :providers-found="providersFound"
-        @selectedProvider="setSelectedProvider"/>
+        @selectedProvider="setSelectedProvider"
+      />
     </div>
 
     <div class="submit-button-container">
       <div
         v-show="finalizingSwap"
-        class="disabled submit-button large-round-button-green-filled clickable">
+        class="disabled submit-button large-round-button-green-filled clickable"
+      >
         Finalizing Swap Details
-        <!--{{ $t('common.continue') }}-->
-        <i
-          class="fa fa-long-arrow-right"
-          aria-hidden="true"/>
+        <!-- {{ $t('common.continue') }} -->
+        <i class="fa fa-long-arrow-right" aria-hidden="true" />
       </div>
       <div
         v-show="!finalizingSwap"
-        :class="[validSwap ? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-        @click="swapConfirmationModalOpen">
+        :class="[
+          validSwap ? '' : 'disabled',
+          'submit-button large-round-button-green-filled clickable'
+        ]"
+        @click="swapConfirmationModalOpen"
+      >
         {{ $t('common.continue') }}
-        <i
-          class="fa fa-long-arrow-right"
-          aria-hidden="true"/>
+        <i class="fa fa-long-arrow-right" aria-hidden="true" />
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -185,7 +183,9 @@ import {
   providers,
   bestProviderForQuantity,
   bestRateForQuantity,
-  isValidEntry
+  isValidEntry,
+  providerNames,
+  baseCurrency
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
@@ -204,7 +204,8 @@ export default {
   },
   data() {
     return {
-      currencyOptions: {},
+      baseCurrency: baseCurrency,
+      currencyDetails: {},
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
       fromValue: 1,
@@ -230,6 +231,7 @@ export default {
       toArray: [],
       fromArray: [],
       providerData: [],
+      providerNames: providerNames,
       tokenBalances: {},
       ratesRetrived: false,
       issueRecievingRates: false,
@@ -297,43 +299,41 @@ export default {
     },
     validSwap() {
       return (
-        !this.notEnough &&
+        // !this.notEnough &&
         this.toAddress !== '' &&
-        this.selectedProvider.minValue < +this.fromValue &&
-        (+this.fromValue < this.selectedProvider.maxValue ||
+        this.selectedProvider.minValue <= +this.fromValue &&
+        (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
       );
     },
     // temp solution
     checkBityMin() {
-      if (this.swap.getProvider('bity')) {
+      if (this.swap.isProvider(this.providerNames.bity)) {
         return (
           !this.swap
-            .getProvider('bity')
+            .getProvider(this.providerNames.bity)
             .minCheck(
               this.fromCurrency,
               this.fromValue,
               this.toCurrency,
               this.toValue
-            ) &&
-          this.selectedProvider.provider === this.swap.getProvider('bity').name
+            ) && this.selectedProvider.provider === this.providerNames.bity
         );
       }
       return false;
     },
     // temp solution
     checkBityMax() {
-      if (this.swap.getProvider('bity')) {
+      if (this.swap.isProvider(this.providerNames.bity)) {
         return (
           !this.swap
-            .getProvider('bity')
+            .getProvider(this.providerNames.bity)
             .maxCheck(
               this.fromCurrency,
               this.fromValue,
               this.toCurrency,
               this.toValue
-            ) &&
-          this.selectedProvider.provider === this.swap.getProvider('bity').name
+            ) && this.selectedProvider.provider === this.providerNames.bity
         );
       }
       return false;
@@ -341,17 +341,20 @@ export default {
     showRefundAddress() {
       return (
         !this.swap.isToken(this.fromCurrency) &&
-        this.selectedProvider.provider === 'changelly'
+        this.selectedProvider.provider === this.providerNames.changelly
       );
     },
     notEnough() {
-      if (this.swap.isToken(this.fromCurrency) && this.fromCurrency !== 'ETH') {
+      if (
+        this.swap.isToken(this.fromCurrency) &&
+        this.fromCurrency !== this.baseCurrency
+      ) {
         return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
           new BigNumber(
             this.swap.convertToTokenWei(this.fromCurrency, this.fromValue)
           )
         );
-      } else if (this.fromCurrency === 'ETH') {
+      } else if (this.fromCurrency === this.baseCurrency) {
         return +this.fromValue >= this.account.balance;
       }
       return false;
@@ -401,12 +404,8 @@ export default {
     setRefundAddress(address) {
       this.refundAddress = address;
     },
-    setFiatBuy() {
-      this.setFromCurrency({ symbol: 'ETH', name: 'Ether' });
-      // this.fromCurrency = 'USD';
-      // this.toCurrency = 'ETH';
-    },
     setFromCurrency(value) {
+      this.currencyDetails.from = value;
       this.fromCurrency = value.symbol;
       this.getBalance(this.fromCurrency);
       this.toArray = this.swap.setToCurrencyBuilder(value);
@@ -418,6 +417,7 @@ export default {
       );
     },
     setToCurrency(value) {
+      this.currencyDetails.to = value;
       this.toCurrency = value.symbol;
       this.fromArray = this.swap.setFromCurrencyBuilder(value);
       this.updateRateEstimate(
@@ -428,8 +428,8 @@ export default {
       );
     },
     async getBalance(currency) {
-      if (this.swap.isToken(currency) && currency !== 'ETH') {
-        this.tokenBalances[currency] = await new this.web3.eth.Contract(
+      if (this.swap.isToken(currency) && currency !== this.baseCurrency) {
+        const balance = await new this.web3.eth.Contract(
           [
             {
               constant: true,
@@ -455,6 +455,8 @@ export default {
         ).methods
           .balanceOf(this.currentAddress)
           .call();
+
+        this.$set(this.tokenBalances, currency, balance);
       }
     },
     amountChanged(to) {
@@ -463,9 +465,14 @@ export default {
         (isValidEntry(this.toValue) && to === 'to')
       ) {
         if (
-          this.swap.getProvider('simplex').currencies.fiat[this.fromCurrency]
+          this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
+            this.fromCurrency
+          ]
         ) {
-          this.web3.utils._.debounce(this.updateEstimate('simplex' + to), 200);
+          this.web3.utils._.debounce(
+            this.updateEstimate(this.providerNames.simplex + to),
+            200
+          );
         } else {
           this.web3.utils._.debounce(this.updateEstimate(to), 200);
         }
@@ -477,7 +484,6 @@ export default {
     },
     async updateEstimate(input) {
       let fromValue, toValue, simplexProvider, simplexRateDetails;
-      // this.getBalance(this.fromCurrency);
       switch (input) {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
@@ -491,8 +497,8 @@ export default {
             this.bestRate
           );
           break;
-        case 'simplexto':
-          simplexProvider = this.swap.getProvider('simplex');
+        case `${this.providerNames.simplex}to`:
+          simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateDigital(
@@ -504,8 +510,8 @@ export default {
             this.toValue = simplexRateDetails.toValue;
           }
           break;
-        case 'simplexfrom':
-          simplexProvider = this.swap.getProvider('simplex');
+        case `${this.providerNames.simplex}from`:
+          simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(
               this.fromCurrency,
@@ -581,23 +587,16 @@ export default {
       try {
         if (this.validSwap) {
           this.finalizingSwap = true;
+          // TODO: should move the swap object to data and build as values change and are updated.
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });
           const swapDetails = {
-            provider: providerDetails.provider,
-            fromCurrency: providerDetails.fromCurrency,
+            providerDetails: providerDetails,
             fromValue: this.fromValue,
             toValue: this.toValue,
-            toCurrency: providerDetails.toCurrency,
-            rate: providerDetails.rate,
-            minValue: providerDetails.minValue,
-            maxValue: providerDetails.maxValue,
             toAddress: this.toAddress,
             fromAddress: this.currentAddress,
-            timestamp: new Date().toISOString(),
-            status: 0,
-            maybeToken: false,
             refundAddress: this.refundAddress
           };
 
@@ -636,7 +635,7 @@ export default {
     },
     resetSwapState() {
       this.toAddress = '';
-      this.fromCurrency = 'ETH';
+      this.fromCurrency = this.baseCurrency;
       this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 1;

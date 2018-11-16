@@ -33,9 +33,16 @@ const SimplexCurrencies = {
 
 const SimplexMinFiat = 50;
 const SimplexMaxFiat = 20000;
+const providerName = 'simplex';
 
 const host = {
   url: process.env.API_HOST || swapServer //'https://apiccswap.myetherwallet.com'
 };
 
-export { SimplexCurrencies, host, SimplexMinFiat, SimplexMaxFiat };
+export {
+  SimplexCurrencies,
+  host,
+  SimplexMinFiat,
+  SimplexMaxFiat,
+  providerName
+};

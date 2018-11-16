@@ -4,22 +4,19 @@
       <div class="top-row">
         <div class="from-address">
           <div class="icon">
-            <i :class="['cc', details.fromCurrency, 'cc-icon']"/>
+            <i :class="['cc', details.fromCurrency, 'cc-icon']" />
             <span class="currency">{{ details.fromCurrency }}</span>
           </div>
           <p class="value">{{ details.fromValue }}</p>
         </div>
 
         <div class="right-arrow">
-          <img
-            :src="arrowImage"
-            height="12"
-            width="16">
+          <img :src="arrowImage" height="12" width="16" />
         </div>
 
         <div class="to-address">
           <div class="icon">
-            <i :class="['cc', details.toCurrency, 'cc-icon']"/>
+            <i :class="['cc', details.toCurrency, 'cc-icon']" />
             <span class="currency">{{ details.toCurrency }}</span>
           </div>
           <p class="value">{{ details.toValue }}</p>
@@ -29,17 +26,29 @@
         <div class="status-indicator-container">
           <div class="status-indicator">
             <div class="status-timer">
-
-              <p v-if="swapWindowOpen && currentStatus < 100 && currentStatus > 0">{{ parseTimeRemaining }}</p>
-              <p v-if="currentStatus === -100 || !swapWindowOpen">Order Expired</p>
+              <p
+                v-if="
+                  swapWindowOpen && currentStatus < 100 && currentStatus > 0
+                "
+              >
+                {{ parseTimeRemaining }}
+              </p>
+              <p v-if="currentStatus === -100 || !swapWindowOpen">
+                Order Expired
+              </p>
               <p v-if="currentStatus === 100">Order Complete</p>
-              <p v-if="swapWindowOpen && currentStatus < 100 && currentStatus > 0">{{ currentDisplayStatus }}</p>
+              <p
+                v-if="
+                  swapWindowOpen && currentStatus < 100 && currentStatus > 0
+                "
+              >
+                {{ currentDisplayStatus }}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

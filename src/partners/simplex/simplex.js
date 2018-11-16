@@ -1,8 +1,12 @@
-/* eslint-disable no-unused-vars */
 import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
-import { SimplexMinFiat, SimplexMaxFiat, SimplexCurrencies } from './config.js';
-import { getQuote, getOrder, getStatus } from './simplex-api';
+import {
+  SimplexMinFiat,
+  SimplexMaxFiat,
+  SimplexCurrencies,
+  providerName
+} from './config.js';
+import { getQuote, getOrder /*, getStatus*/ } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
@@ -22,7 +26,7 @@ export default class Simplex {
   }
 
   static getName() {
-    return 'simplex';
+    return providerName;
   }
 
   get isValidNetwork() {
@@ -70,16 +74,12 @@ export default class Simplex {
           this.toCurrency,
           fromValue
         );
-        /*        _fromValue = simplexRateDetails.fromValue;
-        _toValue = simplexRateDetails.toValue;*/
       } else {
         simplexRateDetails = await this.updateDigital(
           this.fromCurrency,
           this.toCurrency,
           toValue
         );
-        /*        _fromValue = simplexRateDetails.fromValue;
-        _toValue = simplexRateDetails.toValue;*/
       }
 
       const rate = new BigNumber(simplexRateDetails.fromValue)
@@ -95,8 +95,6 @@ export default class Simplex {
       };
     }
     this.invalidFrom = 'simplexMin';
-    // eslint-disable no-console
-    // errorLogger('indicate invalid simplex'); // TODO: provide ui indication(s)
     const simplexRateDetails = await this.updateFiat(
       fromCurrency,
       toCurrency,
@@ -214,8 +212,13 @@ export default class Simplex {
   }
 
   async startSwap(swapDetails) {
+    await this.updateFiat(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.fromValue
+    );
     swapDetails.dataForInitialization = await this.createSwap(swapDetails);
-
+    swapDetails.timestamp = new Date().toISOString();
     swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;
     swapDetails.providerSends = this.currentOrder.digital_money.amount;
     swapDetails.parsed = Simplex.parseOrder(swapDetails.dataForInitialization);
@@ -252,32 +255,42 @@ export default class Simplex {
     }
   }
 
-  parseOrder(order) {
-    return {};
-  }
-
-  statusUpdater(swapDetails) {
-    return () => {
-      let currentStatus;
-      const calculateTimeRemaining = (validFor, timestamp) => {
-        return (
-          validFor -
-          parseInt(
-            (new Date().getTime() - new Date(timestamp).getTime()) / 1000
-          )
-        );
-      };
-      const parsed = this.parseOrder(swapDetails.dataForInitialization);
-      const timeRemaining = calculateTimeRemaining(
-        parsed.validFor,
-        parsed.timestamp
-      );
-      const checkStatus = setInterval(async () => {
-        currentStatus = await getStatus({
-          orderid: parsed.orderId
-        });
-        clearInterval(checkStatus);
-      }, 1000);
+  static parseOrder(order) {
+    return {
+      orderId: order.quote_id,
+      statusId: order.user_id,
+      sendToAddress: 'None',
+      recValue: order.digital_total_amount_amount,
+      sendValue: order.fiat_total_amount_amount,
+      status: 'new',
+      timestamp: order.timestamp,
+      userAddress: order.destination_wallet_address,
+      validFor: 600
     };
   }
+
+  // statusUpdater(swapDetails) {
+  //   return () => {
+  //     let currentStatus;
+  //     const calculateTimeRemaining = (validFor, timestamp) => {
+  //       return (
+  //         validFor -
+  //         parseInt(
+  //           (new Date().getTime() - new Date(timestamp).getTime()) / 1000
+  //         )
+  //       );
+  //     };
+  //     const parsed = this.parseOrder(swapDetails.dataForInitialization);
+  //     const timeRemaining = calculateTimeRemaining(
+  //       parsed.validFor,
+  //       parsed.timestamp
+  //     );
+  //     const checkStatus = setInterval(async () => {
+  //       currentStatus = await getStatus({
+  //         orderid: parsed.orderId
+  //       });
+  //       clearInterval(checkStatus);
+  //     }, 1000);
+  //   };
+  // }
 }
