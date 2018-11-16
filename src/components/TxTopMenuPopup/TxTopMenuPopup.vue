@@ -1,11 +1,9 @@
 <template>
   <div class="tx-topmenu-popup">
     <div class="wrap">
-      <div class="menu-title" @click.native="popupOpen = !popupOpen">
+      <div class="menu-title" @click.native="popupOpen = !popupOpen;">
         <i class="indicator fa fa-circle" aria-hidden="true"></i>
-        <p>
-          Transactions
-        </p>
+        <p>Transactions</p>
         <i v-if="popupOpen" class="fa fa-angle-up" aria-hidden="true"></i>
         <i v-if="!popupOpen" class="fa fa-angle-down" aria-hidden="true"></i>
       </div>
@@ -13,20 +11,18 @@
       <div
         v-if="popupOpen"
         :class="popupOpen ? 'popup-open' : ''"
-        class="popup-container">
-        
+        class="popup-container"
+      >
         <div class="popup-box">
-          <div class="top">
-            <txinfo />
-          </div>
-          <div class="bottom">
-            Check History
-          </div>
+          <div class="top"><txinfo /></div>
+          <div class="bottom">Check History</div>
         </div>
-
-      </div><!-- .popup-container -->
-    </div><!-- .wrap -->
-  </div><!-- .tx-topmenu-popup -->
+      </div>
+      <!-- .popup-container -->
+    </div>
+    <!-- .wrap -->
+  </div>
+  <!-- .tx-topmenu-popup -->
 </template>
 
 <script>
@@ -55,7 +51,7 @@ export default {
         }
       }
       this.popupOpen = false;
-    }    
+    }
   }
 };
 </script>

@@ -1,14 +1,13 @@
 <template>
   <div class="modal-container">
-
     <b-modal
       ref="logout"
       hide-footer
       hide-header
       centered
-      class="bootstrap-modal nopadding">
+      class="bootstrap-modal nopadding"
+    >
       <div class="modal-contents">
-        
         <h2>Are you sure to logout your wallet?</h2>
 
         <div class="buttons">
@@ -16,16 +15,14 @@
           <standard-button :options="buttonYes" />
         </div>
       </div>
-    </b-modal>    
+    </b-modal>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Lougout',
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       buttonNo: {
@@ -46,12 +43,8 @@ export default {
       }
     };
   },
-  mounted() {
-
-  },
-  methods: {
-
-  }
+  mounted() {},
+  methods: {}
 };
 </script>
 

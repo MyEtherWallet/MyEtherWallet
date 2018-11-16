@@ -5,38 +5,44 @@
         <title-text-contents :options="titleAndTextContents" />
 
         <ul class="user-input-container">
-          
           <li>
             <div class="input-title">
-              <div 
-                class="the-title" 
-                @click="ensDebuggerOpen = !ensDebuggerOpen">
+              <div
+                class="the-title"
+                @click="ensDebuggerOpen = !ensDebuggerOpen;"
+              >
                 <p>ENS Debugger & Data Grabber</p>
-                <i 
-                  v-if="!ensDebuggerOpen" 
-                  class="fa fa-angle-down" 
-                  aria-hidden="true"/>
-                <i 
-                  v-if="ensDebuggerOpen" 
-                  class="fa fa-angle-up" 
-                  aria-hidden="true"/>
+                <i
+                  v-if="!ensDebuggerOpen"
+                  class="fa fa-angle-down"
+                  aria-hidden="true"
+                />
+                <i
+                  v-if="ensDebuggerOpen"
+                  class="fa fa-angle-up"
+                  aria-hidden="true"
+                />
               </div>
-              <div 
-                :class="ensDebuggerOpen ? 'the-description-open' : ''" 
-                class="the-description">
+              <div
+                :class="ensDebuggerOpen ? 'the-description-open' : ''"
+                class="the-description"
+              >
                 <p>
-                  The measured steps are meant to avoid an escalation
-                  of operations by Russia to more serious computer-based
-                  attacks on US information systems and infrastructure.
+                  The measured steps are meant to avoid an escalation of
+                  operations by Russia to more serious computer-based attacks on
+                  US information systems and infrastructure.
                 </p>
               </div>
             </div>
-            <div 
-              :class="ensDebuggerOpen ? 'input-block-open' : ''" 
-              class="input-block">
+            <div
+              :class="ensDebuggerOpen ? 'input-block-open' : ''"
+              class="input-block"
+            >
               <div class="inputs">
                 <div class="the-input">
-                  <dropdown-address-selector :options="addressSelectorFromAddressOptions" />
+                  <dropdown-address-selector
+                    :options="addressSelectorFromAddressOptions"
+                  />
                 </div>
 
                 <div class="the-input the-input-flex">
@@ -48,11 +54,9 @@
                   <standard-input :options="inputEnsNameYouBid" />
                   <standard-input :options="inputYourSecret" />
                 </div>
-
               </div>
 
               <div class="outputs">
-
                 <div class="the-input to-address">
                   <standard-input :options="inputToAddress" />
                   <span>Detail</span>
@@ -64,49 +68,51 @@
 
                   <standard-input :options="inputStartAuctionData" />
                   <standard-input :options="inputStartAuctionBidData" />
-                  
+
                   <standard-input :options="inputNewBidData" />
                   <standard-input :options="inputRevealData" />
-                  
                 </div>
 
                 <div class="the-input">
                   <standard-input :options="inputFinalizeAuctionData" />
                 </div>
               </div>
-
             </div>
-
           </li>
 
           <li>
             <div class="input-title">
-              <div 
-                class="the-title" 
-                @click="convertDecHexOpen = !convertDecHexOpen">
+              <div
+                class="the-title"
+                @click="convertDecHexOpen = !convertDecHexOpen;"
+              >
                 <p>Convert Decimal to Hexadecimal & Hex to Decimal</p>
-                <i 
-                  v-if="!convertDecHexOpen" 
-                  class="fa fa-angle-down" 
-                  aria-hidden="true"/>
-                <i 
-                  v-if="convertDecHexOpen" 
-                  class="fa fa-angle-up" 
-                  aria-hidden="true"/>
-              </div>              
-              <div 
-                :class="convertDecHexOpen ? 'the-description-open' : ''" 
-                class="the-description">
+                <i
+                  v-if="!convertDecHexOpen"
+                  class="fa fa-angle-down"
+                  aria-hidden="true"
+                />
+                <i
+                  v-if="convertDecHexOpen"
+                  class="fa fa-angle-up"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                :class="convertDecHexOpen ? 'the-description-open' : ''"
+                class="the-description"
+              >
                 <p>
-                  The measured steps are meant to avoid an escalation
-                  of operations by Russia to more serious computer-based
-                  attacks on US information systems and infrastructure.
+                  The measured steps are meant to avoid an escalation of
+                  operations by Russia to more serious computer-based attacks on
+                  US information systems and infrastructure.
                 </p>
               </div>
             </div>
-            <div 
-              :class="convertDecHexOpen ? 'input-block-open' : ''" 
-              class="input-block">
+            <div
+              :class="convertDecHexOpen ? 'input-block-open' : ''"
+              class="input-block"
+            >
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputDecimal" />
@@ -123,96 +129,93 @@
 
           <li>
             <div class="input-title">
-              <div 
-                class="the-title" 
-                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen">
+              <div
+                class="the-title"
+                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen;"
+              >
                 <p>Mistyped Private Key</p>
-                <i 
-                  v-if="!mistypedPrivateKeyOpen" 
-                  class="fa fa-angle-down" 
-                  aria-hidden="true"/>
-                <i 
-                  v-if="mistypedPrivateKeyOpen" 
-                  class="fa fa-angle-up" 
-                  aria-hidden="true"/>
-              </div>              
-              <div 
-                :class="mistypedPrivateKeyOpen ? 'the-description-open' : ''" 
-                class="the-description">
+                <i
+                  v-if="!mistypedPrivateKeyOpen"
+                  class="fa fa-angle-down"
+                  aria-hidden="true"
+                />
+                <i
+                  v-if="mistypedPrivateKeyOpen"
+                  class="fa fa-angle-up"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                :class="mistypedPrivateKeyOpen ? 'the-description-open' : ''"
+                class="the-description"
+              >
                 <p>
-                  The measured steps are meant to avoid an escalation
-                  of operations by Russia to more serious computer-based
-                  attacks on US information systems and infrastructure.
+                  The measured steps are meant to avoid an escalation of
+                  operations by Russia to more serious computer-based attacks on
+                  US information systems and infrastructure.
                 </p>
-                <div class="link-block">
-                  <a href="">Learn more</a>
-                </div>
+                <div class="link-block"><a href="">Learn more</a></div>
               </div>
             </div>
-            <div 
-              :class="mistypedPrivateKeyOpen ? 'input-block-open' : ''" 
-              class="input-block">
+            <div
+              :class="mistypedPrivateKeyOpen ? 'input-block-open' : ''"
+              class="input-block"
+            >
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputPrivateKey" />
                 </div>
 
                 <div class="the-input">
-                  <dropdown-address-selector :options="addressSelectorToAddressOptions" />
+                  <dropdown-address-selector
+                    :options="addressSelectorToAddressOptions"
+                  />
                 </div>
-
               </div>
               <div class="outputs">
                 <div class="the-input">
                   <standard-input :options="inputActualPrivateKey" />
                 </div>
                 <div class="the-input-button-container">
-                  <standard-button 
+                  <standard-button
                     :options="buttonCleanAll"
                     class="the-button"
                   />
-                  <standard-button 
-                    :options="buttonSearch"
-                    class="the-button"
-                  />
+                  <standard-button :options="buttonSearch" class="the-button" />
                 </div>
               </div>
             </div>
           </li>
 
-
-
           <li>
             <div class="input-title">
-              <div 
-                class="the-title" 
-                @click="SHA3Open = !SHA3Open">
+              <div class="the-title" @click="SHA3Open = !SHA3Open;">
                 <p>"SHA3" (Keccak-256) It!</p>
-                <i 
-                  v-if="!SHA3Open" 
-                  class="fa fa-angle-down" 
-                  aria-hidden="true"/>
-                <i 
-                  v-if="SHA3Open" 
-                  class="fa fa-angle-up" 
-                  aria-hidden="true"/>
-              </div>              
-              <div 
-                :class="SHA3Open ? 'the-description-open' : ''" 
-                class="the-description">
+                <i
+                  v-if="!SHA3Open"
+                  class="fa fa-angle-down"
+                  aria-hidden="true"
+                />
+                <i v-if="SHA3Open" class="fa fa-angle-up" aria-hidden="true" />
+              </div>
+              <div
+                :class="SHA3Open ? 'the-description-open' : ''"
+                class="the-description"
+              >
                 <p>
-                  The measured steps are meant to avoid an escalation
-                  of operations by Russia to more serious computer-based
-                  attacks on US information systems and infrastructure.
+                  The measured steps are meant to avoid an escalation of
+                  operations by Russia to more serious computer-based attacks on
+                  US information systems and infrastructure.
                 </p>
                 <div class="link-block">
                   <a href="">Yooo... sha3 !== Keccak-256?!</a>
                 </div>
               </div>
             </div>
-            <div 
-              :class="SHA3Open ? 'input-block-open' : ''" 
-              class="input-block">
+            <div
+              :class="SHA3Open ? 'input-block-open' : ''"
+              class="input-block"
+            >
               <div class="inputs">
                 <div class="the-input">
                   <standard-input :options="inputSHA3Input" />
@@ -225,9 +228,6 @@
               </div>
             </div>
           </li>
-
-
-
         </ul>
       </div>
     </div>

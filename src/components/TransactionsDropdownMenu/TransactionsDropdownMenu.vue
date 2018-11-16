@@ -1,19 +1,17 @@
 <template>
   <div class="transactions-dropdown-menu">
-    
-    <div 
-      class="transactions-dropdown-menu__title" 
-      @click="dropdownOpen = !dropdownOpen">
+    <div
+      class="transactions-dropdown-menu__title"
+      @click="dropdownOpen = !dropdownOpen;"
+    >
       <p>Transactions</p>
-      <i 
-        class="fa fa-angle-down" 
-        aria-hidden="true"/>
+      <i class="fa fa-angle-down" aria-hidden="true" />
     </div>
 
-    <div 
-      :class="dropdownOpen ? 'dropdown-open' : ''" 
-      class="transactions-menu__content transactions-click-safe-zone"/>
-
+    <div
+      :class="dropdownOpen ? 'dropdown-open' : ''"
+      class="transactions-menu__content transactions-click-safe-zone"
+    />
   </div>
 </template>
 

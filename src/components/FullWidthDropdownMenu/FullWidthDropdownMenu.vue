@@ -1,35 +1,17 @@
 <template>
   <div class="full-width-dropdown-menu">
     <div class="wrap">
-      <div 
-        class="title-container" 
-        @click="dropdownOpen = !dropdownOpen">
-        <menu-title 
-          :title="title" 
-          class="menu-title-component" />
-        <popover 
-          v-if="popup" 
-          :popcontent="popup" 
-          class="popover-box" />
-        <i 
-          v-if="!dropdownOpen" 
-          class="fa fa-angle-down" 
-          aria-hidden="true"/>
-        <i 
-          v-if="dropdownOpen" 
-          class="fa fa-angle-up" 
-          aria-hidden="true"/>
+      <div class="title-container" @click="dropdownOpen = !dropdownOpen;">
+        <menu-title :title="title" class="menu-title-component" />
+        <popover v-if="popup" :popcontent="popup" class="popover-box" />
+        <i v-if="!dropdownOpen" class="fa fa-angle-down" aria-hidden="true" />
+        <i v-if="dropdownOpen" class="fa fa-angle-up" aria-hidden="true" />
       </div>
 
-      <div 
-        :class="dropdownOpen ? 'opened' : ''" 
-        class="contents-container">
-        <div class="padding-block">
-          <slot/>
-        </div>
+      <div :class="dropdownOpen ? 'opened' : ''" class="contents-container">
+        <div class="padding-block"><slot /></div>
       </div>
     </div>
-
   </div>
 </template>
 

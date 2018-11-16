@@ -4,18 +4,14 @@
       <div class="tx">
         <div class="currency left">
           <div class="currency-type">
-            <img :src="imageETH">
-            <span>ETH</span>
+            <img :src="imageETH" /> <span>ETH</span>
           </div>
           <p class="amount">1.0000</p>
         </div>
-        <div class="tx-direction">
-          <img :src="rArrow">
-        </div>
+        <div class="tx-direction"><img :src="rArrow" /></div>
         <div class="currency right">
           <div class="currency-type">
-            <img :src="imageBTC">
-            <span>BTC</span>
+            <img :src="imageBTC" /> <span>BTC</span>
           </div>
           <p class="amount">0.0004352</p>
         </div>
@@ -23,7 +19,14 @@
 
       <div class="progress">
         <p class="progress-time">08:25</p>
-        <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: 25%;"
+          aria-valuenow="25"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
       </div>
     </div>
   </div>

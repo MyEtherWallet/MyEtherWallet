@@ -5,10 +5,9 @@
       title="Confirmation"
       hide-footer
       centered
-      class="bootstrap-modal-wide balance nopadding">
-      <div class="title-sub-text">
-        (Total 10 conversions)
-      </div>
+      class="bootstrap-modal-wide balance nopadding"
+    >
+      <div class="title-sub-text">(Total 10 conversions)</div>
 
       <div class="top-block">
         <p><span>Network</span> ETH by myetherapi.com</p>
@@ -16,15 +15,11 @@
       </div>
 
       <div class="content-block">
-        <div 
-          :class="blockOpen ? 'expended' : ''" 
-          class="expending-block">
-          <div 
-            class="coin-block" 
-            @click="blockOpen = !blockOpen">
+        <div :class="blockOpen ? 'expended' : ''" class="expending-block">
+          <div class="coin-block" @click="blockOpen = !blockOpen;">
             <div class="side-block left-block">
               <div class="icon">
-                <img src="~@/assets/images/currency/eth.svg">
+                <img src="~@/assets/images/currency/eth.svg" />
               </div>
               <div class="tx-detail">
                 <p class="amount">1.00000 ETH</p>
@@ -32,11 +27,11 @@
               </div>
             </div>
             <div class="center-block">
-              <img src="~@/assets/images/icons/right-arrow.svg">
+              <img src="~@/assets/images/icons/right-arrow.svg" />
             </div>
             <div class="side-block right-block">
               <div class="icon">
-                <img src="~@/assets/images/currency/btc.svg">
+                <img src="~@/assets/images/currency/btc.svg" />
               </div>
               <div class="tx-detail">
                 <p class="amount">1.00000 ETH</p>
@@ -44,16 +39,15 @@
               </div>
             </div>
             <div class="up-down-arrow">
-              <i 
-                v-if="!blockOpen" 
-                class="fa fa-chevron-down" 
-                aria-hidden="true"/>
-              <i 
-                v-if="blockOpen" 
-                class="fa fa-chevron-up" 
-                aria-hidden="true"/>
+              <i
+                v-if="!blockOpen"
+                class="fa fa-chevron-down"
+                aria-hidden="true"
+              />
+              <i v-if="blockOpen" class="fa fa-chevron-up" aria-hidden="true" />
             </div>
-          </div><!-- .coin-block -->
+          </div>
+          <!-- .coin-block -->
 
           <div class="info-block">
             <ul>
@@ -74,17 +68,20 @@
                 <p>None</p>
               </li>
             </ul>
-          </div><!-- .info-block -->
-        </div><!-- .expending-block -->
+          </div>
+          <!-- .info-block -->
+        </div>
+        <!-- .expending-block -->
 
         <div class="button-container">
           <botton-with-qrcode buttonname="Confirm and Send" />
         </div>
         <div>
-          <bottom-text 
-            link-text="Help Center" 
-            question="Having issues?" 
-            link="/" />
+          <bottom-text
+            link-text="Help Center"
+            question="Having issues?"
+            link="/"
+          />
         </div>
       </div>
     </b-modal>

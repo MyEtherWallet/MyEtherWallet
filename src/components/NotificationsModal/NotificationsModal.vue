@@ -1,6 +1,5 @@
 <template>
   <div class="modal-container">
-
     <div v-if="false" class="modal-open-button" @click="modalOpen">
       <h5>Open Notifications</h5>
       <p>Open</p>
@@ -11,39 +10,35 @@
       title="Notifications"
       hide-footer
       centered
-      class="bootstrap-modal nopadding">
-
-      <div class="title-notification-count">
-        <p>11</p>
-      </div>
+      class="bootstrap-modal nopadding"
+    >
+      <div class="title-notification-count"><p>11</p></div>
 
       <div class="modal-contents">
-        <full-width-dropdown 
-          title="Transaction Speed" 
-          popup="What is TX speed" 
-          class="tx-speed">
-
+        <full-width-dropdown
+          title="Transaction Speed"
+          popup="What is TX speed"
+          class="tx-speed"
+        >
           <div class="tx-success">
             Your transaction amount <span>2.100000 ETH</span> to address
             <p>0x1d3649b580f77f8fd81a6546398d1926c49eb336</p>
             has been successfully transferred.
           </div>
-
         </full-width-dropdown>
-        <full-width-dropdown 
-          title="Import Configurations" 
-          class="import-config">
-          
-
+        <full-width-dropdown
+          title="Import Configurations"
+          class="import-config"
+        >
         </full-width-dropdown>
-        <full-width-dropdown 
-          title="Export Configurations" 
-          class="export-config">
-
-
+        <full-width-dropdown
+          title="Export Configurations"
+          class="export-config"
+        >
         </full-width-dropdown>
-      </div><!-- .modal-contents -->
-    </b-modal>    
+      </div>
+      <!-- .modal-contents -->
+    </b-modal>
   </div>
 </template>
 
@@ -56,9 +51,7 @@ export default {
     'full-width-dropdown': NotificationDropdownMenu
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   mounted() {},
   methods: {

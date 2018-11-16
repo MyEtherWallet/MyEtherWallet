@@ -2,7 +2,6 @@
   <div class="team">
     <div class="wrap">
       <div class="page-container">
-
         <title-text-contents :options="titleAndTextContents" />
 
         <div class="team-info">

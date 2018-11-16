@@ -2,17 +2,13 @@
   <div class="tx-status">
     <div class="wrap">
       <div class="page-container">
-
-        <div class="page-title">
-          <page-title :options="titleOptions" />
-        </div>
+        <div class="page-title"><page-title :options="titleOptions" /></div>
 
         <div class="page-content">
           <p class="bold-message">
-            This is not typically something you can do.
-            It should not be relied upon & will only
-            work when the TX pools are not full.
-            Please read more <a href="/">here</a>.
+            This is not typically something you can do. It should not be relied
+            upon & will only work when the TX pools are not full. Please read
+            more <a href="/">here</a>.
           </p>
 
           <div class="user-input-block">
@@ -21,14 +17,12 @@
             </div>
 
             <div class="check-button-block">
-              <standard-button 
-                :options="buttonCheck"
-              />
+              <standard-button :options="buttonCheck" />
             </div>
           </div>
         </div>
-
-      </div><!-- .page-container -->
+      </div>
+      <!-- .page-container -->
     </div>
   </div>
 </template>
