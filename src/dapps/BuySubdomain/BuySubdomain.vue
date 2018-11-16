@@ -85,8 +85,8 @@ export default {
         const ab = new BN(a.price).gt(b.price)
           ? -1
           : new BN(a.price).eq(b.price)
-            ? 0
-            : 1;
+          ? 0
+          : 1;
         return ab;
       });
       const taken = newArr.filter(item => {
