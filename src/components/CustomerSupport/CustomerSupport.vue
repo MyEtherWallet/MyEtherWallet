@@ -1,11 +1,15 @@
 <template>
   <div class="support">
-    <router-link to="/">
+    <a href="mailto:support@myetherwallet.com">
       <div class="support-content">
-        <div class="support-icon"><img src="~@/assets/images/icons/help-center.svg"></div>
-        <div class="support-label"><h5>{{ $t("common.customerSupport") }}</h5></div>
+        <div class="support-icon">
+          <img src="~@/assets/images/icons/help-center.svg" />
+        </div>
+        <div class="support-label">
+          <h5>{{ $t('common.customerSupport') }}</h5>
+        </div>
       </div>
-    </router-link>
+    </a>
   </div>
 </template>
 
@@ -17,5 +21,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

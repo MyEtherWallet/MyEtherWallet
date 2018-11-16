@@ -4,8 +4,8 @@ const EnsResolver = {
   update: function(el, binding, vnode) {
     const _this = vnode.context;
     const errorPar = document.createElement('p');
-    const web3 = _this.$store.state.web3;
-    const ens = _this.$store.state.ens;
+    const web3 = _this.web3;
+    const ens = _this.ens;
     const removeElements = function() {
       if (vnode.elm.parentElement.children.length > 2) {
         vnode.elm.parentElement.classList.remove('with-resolver');
@@ -24,6 +24,7 @@ const EnsResolver = {
         if (!web3.utils.isAddress(normalise(el.value))) {
           _this.validAddress = false;
           removeElements();
+          _this.resolvedAddress = '';
           errorPar.innerText = 'Invalid address';
           vnode.elm.parentElement.classList.add('with-resolver');
           vnode.elm.parentNode.insertBefore(errorPar, el.nextSibling);
@@ -32,8 +33,13 @@ const EnsResolver = {
           removeElements();
         }
       } else {
-        if (_this.$store.state.network.type.ens === '') {
+        if (
+          _this.network.type.ens === '' ||
+          ens === null ||
+          ens === undefined
+        ) {
           removeElements();
+          _this.resolvedAddress = '';
           _this.validAddress = false;
           errorPar.innerText = 'No ENS resolver in this node';
           vnode.elm.parentElement.classList.add('with-resolver');
@@ -52,6 +58,7 @@ const EnsResolver = {
             })
             .catch(() => {
               removeElements();
+              _this.resolvedAddress = '';
               errorPar.innerText = 'ENS name is invalid or not found';
               _this.validAddress = false;
               vnode.elm.parentElement.classList.add('with-resolver');

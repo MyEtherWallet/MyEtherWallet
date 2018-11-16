@@ -24,6 +24,18 @@ const addNotification = function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
+const addSwapTransaction = function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[0]);
+  const newNotif = {};
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
+  });
+  if (!Array.isArray(newNotif[address])) newNotif[address] = [];
+
+  newNotif[address].push(val[1]); // TODO: reduce the ammount of information stored
+  commit('ADD_SWAP_TRANSACTION', newNotif);
+};
+
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
@@ -45,9 +57,10 @@ const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, dispatch }, wallet) {
-  commit('DECRYPT_WALLET', wallet);
-  dispatch('setWeb3Instance');
+const decryptWallet = function({ commit, dispatch }, params) {
+  // params[0] = wallet, params[1] = provider
+  commit('DECRYPT_WALLET', params[0]);
+  dispatch('setWeb3Instance', params[1]);
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -58,16 +71,20 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
-const setWeb3Wallet = function({ commit }, wallet) {
-  commit('SET_WEB3_PROVIDER_WALLET', wallet);
-};
-
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
+  const options = {};
+  state.network.username !== '' && state.network.password !== ''
+    ? (options['headers'] = {
+        authorization: `Basic: ${btoa(
+          state.network.username + ':' + state.network.password
+        )}`
+      })
+    : {};
   const web3Instance = new web3(
     new MEWProvider(
       provider
@@ -75,7 +92,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
             hostUrl.pathname
           }`,
-      {},
+      options,
       {
         state,
         dispatch
@@ -141,8 +158,25 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
+const updateTransaction = function({ commit, state }, val) {
+  // address, index, object
+  const address = web3.utils.toChecksumAddress(val[0]);
+  const newNotif = {};
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
+  });
+
+  newNotif[address][val[1]] = val[2];
+  commit('UPDATE_SWAP_TRANSACTION', newNotif);
+};
+
+const setLastPath = function({ commit }, val) {
+  commit('SET_LAST_PATH', val);
+};
+
 export default {
   addNotification,
+  addSwapTransaction,
   addCustomPath,
   checkIfOnline,
   clearWallet,
@@ -150,10 +184,11 @@ export default {
   decryptWallet,
   setAccountBalance,
   setGasPrice,
-  setWeb3Wallet,
   setState,
   setENS,
+  setLastPath,
   setWeb3Instance,
   switchNetwork,
-  updateNotification
+  updateNotification,
+  updateTransaction
 };

@@ -11,27 +11,29 @@
       <div class="input-container">
         <input
           ref="passwordInput"
-          :type="show ? 'text': 'password'"
+          :type="show ? 'text' : 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off">
+          autocomplete="off"
+        />
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
         <img
           v-if="!show"
           src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
       </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
+      <p v-show="error !== ''" class="error">{{ error }}</p>
       <button
         class="submit-button large-round-button-green-filled"
         type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlock") }} {{ hardwareBrand }}
+        @click.prevent="unlockWallet"
+      >
+        {{ $t('accessWallet.unlock') }} {{ hardwareBrand }}
       </button>
     </form>
   </b-modal>

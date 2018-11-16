@@ -1,29 +1,29 @@
 <template>
   <b-modal
     ref="mewConnect"
+    :title="$t('accessWallet.mewConnectTitle')"
     hide-footer
     class="bootstrap-modal modal-mew-connect"
-    title="Access by MEW Connect"
-    centered>
+    centered
+  >
     <div class="modal-icon">
-      <qrcode
-        :value="QrCode"
-        :options="{ size: 200 }"/>
+      <qrcode :value="QrCode" :options="{ size: 200 }" />
     </div>
     <div class="d-block content-container text-center">
-      <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
+      <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
     <div class="appstore-button-container">
-      <img src="~@/assets/images/icons/appstore.png">
-      <p>Do not have our App? Download now.</p>
+      <img src="~@/assets/images/icons/appstore.png" />
+      <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -34,12 +34,19 @@ export default {
       QrCode: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
-          this.$store.dispatch('decryptWallet', wallet);
-          this.$router.push({ path: 'interface' });
+          this.$store.dispatch('decryptWallet', [wallet]);
+          this.$router.push({
+            path: 'interface'
+          });
         })
         .catch(_error => {
           // eslint-disable-next-line

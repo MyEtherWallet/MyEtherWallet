@@ -5,47 +5,64 @@
       :title="`Confirmation (Total of ${signedArray.length} transactions)`"
       hide-footer
       centered
-      class="bootstrap-modal-wide confirmation-modal nopadding">
+      class="bootstrap-modal-wide confirmation-modal nopadding"
+    >
       <div class="modal-content">
         <div class="network-info-container">
           <p>
-            <span>Network</span> {{ $store.state.network.type.name }} by {{ $store.state.network.service }}
+            <span>{{ $t('interface.network') }}</span>
+            {{ network.type.name }} by {{ network.service }}
           </p>
-          <div>
-            <div class="line"/>
-          </div>
+          <div><div class="line" /></div>
           <p>
-            <span>Transaction Total:</span> {{ txTotal }} {{ $store.state.network.type.name }}
+            <span>{{ $t('confirmation.txTotal') }}:</span> {{ txTotal }}
+            {{ network.type.name }}
           </p>
         </div>
         <div class="modal-content-body">
           <div
             v-for="(item, idx) in signedArray"
-            :key="item.tx.to+idx+item.tx.value"
-            class="item">
-            <div
-              v-b-toggle.prevent="`accordion${idx}`"
-              class="header">
+            :key="item.tx.to + idx + item.tx.value"
+            class="item"
+          >
+            <div v-b-toggle.prevent="`accordion${idx}`" class="header">
               <div class="header-item">
-                <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
+                <img
+                  :src="
+                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
+                  "
+                />
                 <div>
-                  <p>- {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>
+                    - {{ web3.utils.hexToNumberString(item.tx.value) }}
+                    <span>{{ network.type.name }}</span>
+                  </p>
                   <div>
-                    <span>From</span> {{ $store.state.wallet.getChecksumAddressString() | concatAddr }}
+                    <span>{{ $t('common.from') }}</span>
+                    {{ wallet.getChecksumAddressString() | concatAddr }}
                   </div>
                 </div>
               </div>
               <div
                 v-show="item.tx.to !== '' && item.tx.to !== undefined"
-                class="direction">
-                <img src="~@/assets/images/icons/right-arrow.svg">
+                class="direction"
+              >
+                <img src="~@/assets/images/icons/right-arrow.svg" />
               </div>
               <div class="header-item">
-                <img :src="require(`@/assets/images/currency/${$store.state.network.type.name.toLowerCase()}.svg`)" >
+                <img
+                  :src="
+                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
+                  "
+                />
                 <div>
-                  <p>+ {{ $store.state.web3.utils.hexToNumberString(item.tx.value) }} <span>{{ $store.state.network.type.name }}</span></p>
+                  <p>
+                    + {{ web3.utils.hexToNumberString(item.tx.value) }}
+                    <span>{{ network.type.name }}</span>
+                  </p>
                   <div>
-                    <span>To</span> {{ item.tx.to | concatAddr }}
+                    <span>{{ $t('common.to') }}</span>
+                    {{ item.tx.to | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -54,23 +71,28 @@
                 <i class="fa fa-lg fa-angle-down" />
               </div>
             </div>
-            <b-collapse
-              :id="`accordion${idx}`"
-              class="body">
+            <b-collapse :id="`accordion${idx}`" class="body">
               <div class="body-item">
-                <span class="item-title">Gas Limit</span>
-                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.gas) }}</span>
+                <span class="item-title">{{ $t('common.gasLimit') }}t</span>
+                <span>{{ web3.utils.hexToNumberString(item.tx.gas) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">Gas Price</span>
-                <span>{{ $store.state.web3.utils.hexToNumberString($store.state.web3.utils.fromWei(item.tx.gasPrice, 'gwei')) }} Gwei</span>
+                <span class="item-title">{{ $t('common.gasPrice') }}</span>
+                <span
+                  >{{
+                    web3.utils.hexToNumberString(
+                      web3.utils.fromWei(item.tx.gasPrice, 'gwei')
+                    )
+                  }}
+                  Gwei</span
+                >
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce </span>
-                <span>{{ $store.state.web3.utils.hexToNumberString(item.tx.nonce) }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">Data </span>
+                <span class="item-title">{{ $t('common.data') }} </span>
                 <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
@@ -82,26 +104,29 @@
           <div class="button-with-helper">
             <div
               ref="ConfirmAndSendButton"
-              :class="[allSigned? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-              @click="sendBatchTransactions">
-              Confirm and Send
+              :class="[
+                allSigned ? '' : 'disabled',
+                'submit-button large-round-button-green-filled clickable'
+              ]"
+              @click="sendBatchTransactions"
+            >
+              {{ $t('common.confirmAndSend') }}
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
-                <img
-                  class="icon"
-                  src="~@/assets/images/icons/qr-code.svg">
+                <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
               </b-btn>
               <b-popover
                 target="exPopover9"
                 triggers="hover focus"
-                placement="top">
+                placement="top"
+              >
                 <div class="qrcode-contents">
-                  <p class="qrcode-title">Scan QR code to send/swap instantly</p>
+                  <p class="qrcode-title">
+                    {{ $t('confirmation.scanQrCode') }}
+                  </p>
                   <div class="qrcode-block">
-                    <qrcode
-                      :options="{ size: 100 }"
-                      value="Hello, World!"/>
+                    <qrcode :options="{ size: 100 }" value="Hello, World!" />
                   </div>
                   <p class="qrcode-helper">What is that?</p>
                 </div>
@@ -116,6 +141,8 @@
 </template>
 <script>
 import AddressBlock from '../AddressBlock';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     'address-block': AddressBlock
@@ -131,6 +158,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network',
+      wallet: 'wallet'
+    }),
     allSigned() {
       for (let i = 0; i < this.signedArray.length; i++) {
         if (
@@ -143,7 +175,7 @@ export default {
     },
     txTotal() {
       if (this.signedArray.length > 0) {
-        const BN = this.$store.state.web3.utils.BN;
+        const BN = this.web3.utils.BN;
         let totalGas = new BN();
         this.signedArray.forEach(item => {
           totalGas = totalGas.add(
@@ -152,9 +184,7 @@ export default {
             )
           );
         });
-        return this.$store.state.web3.utils
-          .fromWei(totalGas.toString(), 'ether')
-          .toString();
+        return this.web3.utils.fromWei(totalGas.toString(), 'ether').toString();
       }
       return 0;
     }

@@ -1,87 +1,80 @@
 <template>
   <div class="your-password">
-    <tutorial-modal
-      ref="tutorialModal"
-      :skip="skip"/>
-    <scan-to-download-modal ref="scanToDownloadModal"/>
+    <tutorial-modal ref="tutorialModal" :skip="skip" />
+    <scan-to-download-modal ref="scanToDownloadModal" />
 
-    <by-json-page-title/>
+    <by-json-page-title />
     <div class="wrap">
       <div class="page-container">
-        <div
-          v-show="!byJson && !byMnemonic"
-          class="nav-tab-user-input-box">
+        <div v-show="!byJson && !byMnemonic" class="nav-tab-user-input-box">
           <b-tabs class="x100">
-            <div class="progress-bar"/>
-            <b-tab
-              class="mew-connect-block"
-              title="MEWconnect"
-              active>
-
+            <div class="progress-bar" />
+            <b-tab class="mew-connect-block" title="MEWconnect" active>
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>{{ $t("createWallet.titleMEWConnect") }}</h3>
-                  <popover :popcontent="'Hi yoyoyoyo'"/>
+                  <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
+                  <popover :popcontent="$t('home.aboutMewConnectDesc')" />
                 </div>
-                <p>Saft and easy ways to access wallets.</p>
+                <p>{{ $t('createWallet.mewConnectDesc') }}</p>
               </div>
 
               <div class="appstores">
                 <div class="icons">
-                  <img src="@/assets/images/icons/appstore.png">
-                  <img src="@/assets/images/icons/playstore.png">
+                  <img src="@/assets/images/icons/appstore.png" />
+                  <img src="@/assets/images/icons/playstore.png" />
                 </div>
                 <div class="download">
-                  <p @click="scanToDownloadModalOpen">{{ $t("createWallet.scanToDownload") }}</p>
+                  <p @click="scanToDownloadModalOpen">
+                    {{ $t('createWallet.scanToDownload') }}
+                  </p>
                 </div>
               </div>
 
               <div class="bottom-image">
-                <img src="@/assets/images/etc/phones.png">
+                <img src="@/assets/images/etc/phones.png" />
               </div>
-
             </b-tab>
-            <b-tab title="By JSON File">
-
+            <b-tab :title="$t('createWallet.byJsonFile')">
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <h3>{{ $t('createWallet.yourPw') }}</h3>
+                  <popover :popcontent="$t('popover.password')" />
                 </div>
               </div>
 
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Json'"/>
-              <create-wallet-input-footer/>
+                :param="'Json'"
+              />
+              <create-wallet-input-footer />
             </b-tab>
-            <b-tab title="By Mnemonic Phrase">
-
+            <b-tab :title="$t('createWallet.byMnemonic')">
               <div class="title-block">
                 <div class="title-popover">
-                  <h3>{{ $t("createWallet.yourPw") }}</h3>
-                  <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                  <h3>{{ $t('createWallet.yourPw') }}</h3>
+                  <popover :popcontent="$t('popover.password')" />
                 </div>
               </div>
 
               <create-wallet-input
                 v-model="password"
                 :switcher="switcher"
-                :param="'Mnemonic'"/>
-              <create-wallet-input-footer/>
+                :param="'Mnemonic'"
+              />
+              <create-wallet-input-footer />
             </b-tab>
           </b-tabs>
         </div>
         <by-json-file-container
           v-if="byJson && !byMnemonic"
-          :password="password"/>
-        <by-mnemonic-container v-if="!byJson && byMnemonic"/>
+          :password="password"
+        />
+        <by-mnemonic-container v-if="!byJson && byMnemonic" />
       </div>
     </div>
 
-    <by-json-page-footer/>
-
+    <by-json-page-footer />
   </div>
 </template>
 
@@ -94,6 +87,7 @@ import CreateWalletInput from './components/CreateWalletInput';
 import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
+import store from 'store';
 
 export default {
   components: {
@@ -114,13 +108,13 @@ export default {
     };
   },
   mounted() {
-    const skipTutorial = localStorage.getItem('skipTutorial');
+    const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
       skipTutorial === null ||
       skipTutorial === false
     ) {
-      this.$children[0].$refs.tutorial.show();
+      this.$refs.tutorialModal.$refs.tutorial.show();
     }
   },
   methods: {
@@ -137,7 +131,7 @@ export default {
       }
     },
     skip() {
-      localStorage.setItem('skipTutorial', true);
+      store.set('skipTutorial', true);
       this.$refs.tutorialModal.$refs.tutorial.hide();
     },
     scanToDownloadModalOpen() {

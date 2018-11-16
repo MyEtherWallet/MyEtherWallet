@@ -1,14 +1,8 @@
 <template lang="html">
   <div class="notification-container">
-    <div
-      class="notification-logo"
-      @click="showNotifications">
-      <img
-        class="logo-large"
-        src="~@/assets/images/icons/notification.svg">
-      <div
-        v-show="unreadCount > 0"
-        class="notification-dot"/>
+    <div class="notification-logo" @click="showNotifications">
+      <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
+      <div v-show="unreadCount > 0" class="notification-dot" />
     </div>
     <b-modal
       ref="notification"
@@ -16,36 +10,47 @@
       centered
       no-padding
       class="bootstrap-modal-wide nopadding"
-      @show="countUnread">
+      @show="countUnread"
+    >
       <template slot="modal-title">
-        {{ unreadCount > 1 ? 'Notifications':'Notification' }}
-        <div
-          v-show="unreadCount > 0"
-          class="notification-count"><span>{{ unreadCount }}</span>
+        {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
+        <div v-show="unreadCount > 0" class="notification-count">
+          <span>{{ unreadCount }}</span>
         </div>
       </template>
       <div class="notification-item-container">
-        <div v-if="sortedNotifications !== undefined && sortedNotifications.length > 0">
+        <div
+          v-if="
+            sortedNotifications !== undefined && sortedNotifications.length > 0
+          "
+        >
           <div
             v-for="(notification, idx) in sortedNotifications"
             :key="notification.title + notification.timestamp + idx"
-            class="notification-item">
+            class="notification-item"
+          >
             <div
               class="notification-header"
-              @click="expand(idx, notification, $event)">
-              <p :class="[notification.read? '': 'unread']"> {{ notification.title }} </p>
-              <p :class="[notification.read? '': 'unread']"> {{ notification.timestamp }}</p>
+              @click="expand(idx, notification, $event);"
+            >
+              <p :class="[notification.read ? '' : 'unread']">
+                {{ notification.title }}
+              </p>
+              <p :class="[notification.read ? '' : 'unread']">
+                {{ notification.timestamp }}
+              </p>
             </div>
-            <div :class="[notification.expanded?'':'unexpanded', 'notification-body']">
+            <div
+              :class="[
+                notification.expanded ? '' : 'unexpanded',
+                'notification-body'
+              ]"
+            >
               {{ notification.body }}
             </div>
           </div>
         </div>
-        <div
-          v-else
-          class="notification-no-item">
-          No notifications found :(
-        </div>
+        <div v-else class="notification-no-item">No notifications found :(</div>
       </div>
     </b-modal>
   </div>
@@ -63,23 +68,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      notifications: 'notifications'
+      notifications: 'notifications',
+      wallet: 'wallet'
     }),
     sortedNotifications() {
       this.countUnread();
-      if (
-        !this.notifications[this.$store.state.wallet.getChecksumAddressString()]
-      )
+      if (!this.notifications[this.wallet.getChecksumAddressString()])
         return [];
       // eslint-disable-next-line
-      return this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ].sort((a, b) => {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
+      return this.notifications[this.wallet.getChecksumAddressString()].sort(
+        (a, b) => {
+          a = new Date(a.timestamp);
+          b = new Date(b.timestamp);
 
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
+          return a > b ? -1 : a < b ? 1 : 0;
+        }
+      );
     }
   },
   watch: {
@@ -89,13 +93,9 @@ export default {
   },
   mounted() {
     if (
-      this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ] === undefined
+      this.notifications[this.wallet.getChecksumAddressString()] === undefined
     ) {
-      this.notifications[
-        this.$store.state.wallet.getChecksumAddressString()
-      ] = [];
+      this.notifications[this.wallet.getChecksumAddressString()] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -105,15 +105,11 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[
-          self.$store.state.wallet.getChecksumAddressString()
-        ] !== undefined &&
-        self.notifications[self.$store.state.wallet.getChecksumAddressString()]
-          .length > 0
+        self.notifications[this.wallet.getChecksumAddressString()] !==
+          undefined &&
+        self.notifications[this.wallet.getChecksumAddressString()].length > 0
       ) {
-        self.notifications[
-          self.$store.state.wallet.getChecksumAddressString()
-        ].map(item => {
+        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
           if (item.read === false) {
             self.unreadCount++;
           }
@@ -132,7 +128,7 @@ export default {
         updatedNotif.expanded = false;
       }
       this.$store.dispatch('updateNotification', [
-        this.$store.state.wallet.getChecksumAddressString(),
+        this.wallet.getChecksumAddressString(),
         idx,
         updatedNotif
       ]);

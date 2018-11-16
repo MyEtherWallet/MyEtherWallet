@@ -5,21 +5,24 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
             <div class="address-info">
-              <p class="address-title">Signing Address</p>
+              <p class="address-title">{{ $t('confirmation.signingAddr') }}</p>
               <p>{{ from }}</p>
             </div>
           </div>
           <div class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg">
+            <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
           <div class="tx-data tx-to">
             <div class="address-info">
-              <p class="address-title">Message</p>
+              <p class="address-title">
+                {{ $t('interface.txSideMenuMessage') }}
+              </p>
               <p>{{ messageToSign }}</p>
             </div>
           </div>
@@ -29,26 +32,27 @@
             <div class="button-with-helper">
               <div
                 ref="ConfirmAndSendButton"
-                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="signMessage">
-                Confirm Signing
+                :class="[
+                  signedMessage !== '' ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled clickable'
+                ]"
+                @click="signMessage"
+              >
+                {{ $t('confirm.confirmSigning') }}
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
+                  <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
                 </b-btn>
                 <b-popover
                   target="exPopover9"
                   triggers="hover focus"
-                  placement="top">
+                  placement="top"
+                >
                   <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
+                    <p class="qrcode-title">{{ $t('confirm.scanQrCode') }}</p>
                     <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
+                      <qrcode :options="{ size: 100 }" value="Hello, World!" />
                     </div>
                     <p class="qrcode-helper">What is that?</p>
                   </div>

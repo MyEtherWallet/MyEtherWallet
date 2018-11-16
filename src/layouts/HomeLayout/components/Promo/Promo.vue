@@ -4,24 +4,27 @@
       <div class="page-container">
         <div class="flex-col-vertical-center content">
           <div class="title">
-            <h2>{{ $t("home.promoTitle") }}</h2>
+            <h2>{{ $t('home.promoTitle') }}</h2>
           </div>
           <div class="buttons">
             <div class="button-block">
-              <router-link
-                to="/create-wallet"
-                class="nounderline">
+              <router-link to="/create-wallet" class="nounderline">
                 <span class="large-round-button-white-border">
-                  {{ $t("common.getAFreeWallet") }}
+                  {{ $t('common.getAFreeWallet') }}
                 </span>
               </router-link>
             </div>
             <div class="button-block">
               <router-link
-                :to="$store.state.wallet === null || $store.state.wallet === undefined ? '/access-my-wallet' : '/interface'"
-                class="nounderline">
+                :to="
+                  wallet === null || wallet === undefined
+                    ? '/access-my-wallet'
+                    : '/interface'
+                "
+                class="nounderline"
+              >
                 <span class="large-round-button-white-filled__body-text-color">
-                  {{ $t("common.accessMyWallet") }}
+                  {{ $t('home.getANewWallet') }}
                 </span>
               </router-link>
             </div>
@@ -33,9 +36,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   }
 };
 </script>

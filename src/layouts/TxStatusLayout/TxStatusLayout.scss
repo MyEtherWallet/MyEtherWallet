@@ -1,0 +1,27 @@
+// @import '~@/scss/GlobalVariables';
+@import '~@/layouts/InformationPages/InformationPages';
+
+.page-content {
+  margin-top: 25px;
+
+  .bold-message {
+    max-width: 600px;
+    font-weight: 600;
+    margin: 0 auto;
+    text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+    }
+  }
+}
+
+.user-input-block {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.address-input-block {
+  margin-bottom: 20px;
+}

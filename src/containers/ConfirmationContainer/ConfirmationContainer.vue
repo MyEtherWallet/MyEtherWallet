@@ -6,30 +6,33 @@
       :signed-tx="signedTx"
       :fee="transactionFee"
       :is-hardware-wallet="isHardwareWallet"
-      :gas-price="$store.state.gasPrice"
+      :gas-price="gasPrice"
       :from="fromAddress"
       :to="toAddress"
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce"/>
+      :nonce="nonce"
+    />
     <confirm-collection-modal
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
-      :signed-array="signedArray"/>
+      :signed-array="signedArray"
+    />
     <confirm-modal
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
       :fee="transactionFee"
       :is-hardware-wallet="isHardwareWallet"
-      :gas-price="$store.state.gasPrice"
+      :gas-price="gasPrice"
       :from="fromAddress"
       :to="toAddress"
       :value="amount"
       :gas="gasLimit"
       :data="data"
-      :nonce="nonce"/>
+      :nonce="nonce"
+    />
     <confirm-sign-modal
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
@@ -42,7 +45,8 @@
     <success-modal
       ref="successModal"
       :message="successMessage"
-      :link-message="linkMessage"/>
+      :link-message="linkMessage"
+    />
   </div>
 </template>
 
@@ -53,6 +57,8 @@ import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
+import { mapGetters } from 'vuex';
+import ethTx from 'ethereumjs-tx';
 
 export default {
   components: {
@@ -84,7 +90,7 @@ export default {
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
-      gasAmount: this.$store.state.gasPrice,
+      gasAmount: this.gasPrice,
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
@@ -105,9 +111,14 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      gasPrice: 'gasPrice',
+      wallet: 'wallet',
+      web3: 'web3'
+    }),
     fromAddress() {
-      if (this.$store.state.wallet) {
-        return this.$store.state.wallet.getChecksumAddressString();
+      if (this.wallet) {
+        return this.wallet.getChecksumAddressString();
       }
     }
   },
@@ -119,7 +130,7 @@ export default {
         'Transaction Hash'
       ]);
       const pollReceipt = setInterval(() => {
-        this.$store.state.web3.eth.getTransactionReceipt(newVal).then(res => {
+        this.web3.eth.getTransactionReceipt(newVal).then(res => {
           if (res !== null) {
             this.web3WalletRes = res;
             this.showSuccessModal('Transaction sent!', 'Okay');
@@ -147,13 +158,39 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
-      this.isHardwareWallet = this.$store.state.wallet.isHardware;
+
+      this.isHardwareWallet = this.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.$store.state.wallet.signTransaction(tx).then(_response => {
+      this.wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
+
+      this.confirmationModalOpen();
+    });
+
+    this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
+      const newTx = new ethTx(tx);
+      this.isHardwareWallet = this.wallet.isHardware;
+      this.responseFunction = resolve;
+      this.successMessage = 'Sending Transaction';
+      this.signedTxObject = {
+        rawTransaction: tx,
+        tx: {
+          to: `0x${newTx.to.toString('hex')}`,
+          from: `0x${newTx.from.toString('hex')}`,
+          value: `0x${newTx.value.toString('hex')}`,
+          gas: `0x${newTx.gasPrice.toString('hex')}`,
+          gasLimit: `0x${newTx.gasLimit.toString('hex')}`,
+          data: `0x${newTx.data.toString('hex')}`,
+          nonce: `0x${newTx.nonce.toString('hex')}`,
+          v: `0x${newTx.v.toString('hex')}`,
+          r: `0x${newTx.r.toString('hex')}`,
+          s: `0x${newTx.s.toString('hex')}`
+        }
+      };
+      this.signedTx = this.signedTxObject.rawTransaction;
       this.confirmationModalOpen();
     });
 
@@ -161,7 +198,7 @@ export default {
       this.parseRawTx(tx);
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.$store.state.wallet.signTransaction(tx).then(_response => {
+      this.wallet.signTransaction(tx).then(_response => {
         this.web3WalletHash = _response;
       });
       this.showSuccessModal(
@@ -174,7 +211,7 @@ export default {
       const newArr = [];
       this.isHardwareWallet = isHardware;
       for (let i = 0; i < tx.length; i++) {
-        this.$store.state.wallet.signTransaction(tx[i]).then(_response => {
+        this.wallet.signTransaction(tx[i]).then(_response => {
           newArr.push(_response);
         });
       }
@@ -185,7 +222,7 @@ export default {
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
-      this.$store.state.wallet.signMessage(data).then(_response => {
+      this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
       this.signConfirmationModalOpen();
@@ -269,7 +306,7 @@ export default {
       ]);
 
       const pollReceipt = setInterval(() => {
-        this.$store.state.web3.eth.getTransactionReceipt(response).then(res => {
+        this.web3.eth.getTransactionReceipt(response).then(res => {
           if (res !== null) {
             this.$store.dispatch('addNotification', [
               this.fromAddress,
@@ -283,7 +320,7 @@ export default {
       }, 500);
     },
     async sendBatchTransactions() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {
         batch.add(
@@ -299,6 +336,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
+      if (this.raw.generateOnly) return;
       this.showSuccessModal();
     },
     reset() {
@@ -310,7 +348,7 @@ export default {
       this.nonce = 0;
       this.gasLimit = 21000;
       this.data = '0x';
-      this.gasAmount = this.$store.state.gasPrice;
+      this.gasAmount = this.gasPrice;
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = 0;
@@ -328,5 +366,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
