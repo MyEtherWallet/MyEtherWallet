@@ -1,0 +1,59 @@
+@import '~@/scss/GlobalVariables';
+
+//******************************************************
+// Wrap
+//******************************************************
+.tx-topmenu-popup .wrap {
+  position: relative;
+}
+
+//******************************************************
+// Menu Title
+//******************************************************
+.menu-title {
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: 30px;
+  margin-right: 10px;
+
+  .indicator {
+    color: red;
+    margin-right: 7px;
+    font-size: 9px;
+  }
+
+  i {
+    color: #536d8b;
+    margin-left: 7px;
+    font-size: 18px;
+  }
+}
+
+//******************************************************
+// Popup Container
+//******************************************************
+.popup-container {
+  position: absolute;
+  top: 35px;
+  left: 20px;
+}
+
+.popup-container .popup-box {
+  border: 1px solid $mew-green;
+  border-radius: 4px;
+  background-color: white;
+
+  .top {
+    padding: 9px 13px;
+    border-bottom: 1px solid #00bfa4;
+  }
+
+  .bottom {
+    padding: 9px 13px;
+    text-align: center;
+    color: $mew-green;
+  }
+}

@@ -15,6 +15,9 @@ import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import PopOver from '@/components/PopOver';
 
+import StandardButton from '@/components/Buttons/StandardButton';
+import StandardInput from '@/components/StandardInput';
+
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
@@ -48,6 +51,9 @@ Vue.directive('ens-resolver', EnsResolver);
 // Filters!!!
 Vue.filter('capitalize', Capitalize);
 Vue.filter('concatAddr', ConcatAddr);
+
+Vue.component('standard-button', StandardButton);
+Vue.component('standard-input', StandardInput);
 
 Vue.config.productionTip = false;
 

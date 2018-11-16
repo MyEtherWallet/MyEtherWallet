@@ -1,14 +1,5 @@
-@import '~@/scss/GlobalVariables';
-
-.wrap {
-  padding: 70px 0;
-  background-color: $light-grey-2;
-  background-image: url('~@/assets/images/background/bg-left.png'),
-    url('~@/assets/images/background/bg-right.png');
-  background-position: top left, top right;
-  background-repeat: no-repeat;
-  background-size: 220px;
-}
+//@import '~@/scss/GlobalVariables';
+@import '~@/layouts/InformationPages/InformationPages';
 
 .page-title {
   text-align: center;
@@ -45,13 +36,25 @@
 
           span {
             position: absolute;
-            top: 23px;
-            left: 26px;
+            top: 3px;
+            left: 17px;
             font-size: 9px;
             margin-top: -10px;
           }
         }
       }
     }
+  }
+
+  .unit-short {
+    & > div {
+      position: relative;
+    }
+  }
+}
+
+@media all and (max-width: 760px) {
+  .unit-long {
+    display: none;
   }
 }

@@ -1,27 +1,87 @@
 @import '~@/scss/GlobalVariables';
 
+$input-title-color: #212529;
+$button-color: #05c0a5;
+$button-hover-color: #00947f;
+$text-info-color: #212529;
+
 .drop-down-address-selector {
   position: relative;
+  user-select: none;
 }
 
-.dropdown-input-box {
+.input-title-container {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.input-title-and-helper {
+  display: flex;
+  align-items: center;
+}
+
+.input-title {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: initial;
+  margin-right: 8px;
+  color: $input-title-color;
+}
+
+.the-button-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  > div {
+    margin-left: 20px;
+    font-size: 13px;
+  }
+
+  .the-button {
+    user-select: none;
+    color: $button-color;
+    cursor: pointer;
+
+    &:hover {
+      color: $button-hover-color;
+    }
+  }
+
+  .the-text {
+    color: $text-info-color;
+  }
+}
+
+.address-dropdown-input-box {
   position: relative;
   border: 1px solid $background-color-1;
   border-radius: 4px;
+  transition: all 0.2s ease;
 
   &.dropdown-open {
     border: 1px solid $grey-1;
     border-bottom: 1px solid $background-color-1;
     border-radius: 4px 4px 0 0;
+
+    input {
+      background-color: $white;
+    }
   }
 
   input {
     background-color: $background-color-1;
-    padding: 15px;
+    padding: 17px;
     border: 0;
     width: 100%;
     padding-left: 55px;
     padding-right: 70px;
+
+    &.input-disabled {
+      padding-right: 10px;
+    }
   }
 
   .blockie-place-holder-image {
@@ -30,13 +90,13 @@
     border-radius: 100px;
     background-color: $light-grey-3;
     position: absolute;
-    top: 10px;
+    top: 13px;
     left: 15px;
   }
 
   .selected-address-blockie {
     position: absolute;
-    top: 10px;
+    top: 13px;
     left: 15px;
   }
 
@@ -53,7 +113,7 @@
       border-left: 1px solid #e0e0e0;
       padding: 10px 22px;
       color: #3766aa;
-      margin-top: 11px;
+      margin-top: 12px;
     }
   }
 } // .dropdown-input-box
@@ -63,13 +123,21 @@
   width: 100%;
   position: absolute;
   user-select: none;
-  background-color: $background-color-1;
+  background-color: $white;
   border: 1px solid $grey-1;
   border-radius: 0 0 4px 4px;
   z-index: 1;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 230px;
+  transition: all 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+
+  &.show-dropdown {
+    opacity: 1;
+    pointer-events: initial;
+  }
 
   ul {
     li {

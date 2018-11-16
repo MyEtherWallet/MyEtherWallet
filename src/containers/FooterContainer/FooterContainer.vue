@@ -1,5 +1,9 @@
 <template>
   <div class="footer">
+    <!-- Modal -->
+    <feedback-modal />
+    <!-- <confirmation-modal /> -->
+
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
@@ -99,7 +103,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import FeedbackModal from '@/components/FeedbackModal';
+// import ConfirmationModal from '../../components/ConfirmationModal';
+
 export default {
+  components: {
+    'feedback-modal': FeedbackModal
+    // 'confirmation-modal': ConfirmationModal
+  },
   data() {
     return {
       lowerLinks: [
@@ -127,19 +138,19 @@ export default {
             },
             {
               text: this.$t('footer.txStat'),
-              to: '/'
+              to: '/tx-status'
             },
             {
-              text: this.$t('footer.debugs'),
-              to: '/'
+              text: this.$t('footer.advanced'),
+              to: '/advanced-tools'
             },
             {
               text: this.$t('footer.extension'),
-              to: '/'
+              to: '/extensions'
             },
             {
-              text: this.$t('footer.others'),
-              to: '/'
+              text: 'MEW Github',
+              to: '/mew-github'
             }
           ]
         },
@@ -236,6 +247,9 @@ export default {
     })
   },
   methods: {
+    openFeedbackModal() {
+      this.$children[0].$refs.feedback.show();
+    },
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
       const closeButton = document.querySelector('.' + element + ' .close');
