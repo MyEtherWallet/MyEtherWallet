@@ -1,4 +1,6 @@
+const env_vars = require('./ENV_VARS');
 module.exports = {
+  globals: env_vars,
   root: true,
   env: {
     node: true

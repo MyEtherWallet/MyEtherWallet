@@ -22,23 +22,6 @@ module.exports = {
   testMatch: [
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
-  testEnvironmentOptions: {
-    beforeParse(window) {
-      window.scrollTo = (x, y) => {
-        window.pageXOffset = x;
-        window.pageYOffset = y;
-      };
-
-      window.HTMLCanvasElement.prototype.getContext = () => {
-        return {
-          fillStyle: function() {},
-          fillRect: function() {},
-          clearRect: function() {}
-        };
-      };
-
-      window.HTMLCanvasElement.prototype.toDataURL = () => {};
-    }
-  },
+  testEnvironmentOptions: {},
   testURL: 'http://localhost/'
 };
