@@ -25,21 +25,23 @@ describe('InterfaceBottomText.vue', () => {
           i18n,
           store,
           attachToDocument: true,
-          propsData: {
-            link:link,
-            linkText:linkText,
-            question:question
-          }
+          propsData: {link,linkText,question}
         });
     });
 
-  it('should render correct link, linkText, question', () => {
+  it('should render correct question', () => {
     expect(wrapper.vm.$el.querySelector('div p').textContent.trim()).toEqual(
       question + " " + linkText 
     );
+  });
+
+  it('should render correct linkText', () => {
     expect(wrapper.vm.$el.querySelector('div p a').textContent.trim()).toEqual(
       linkText
     );
+  });
+
+  it('should render correct link', () => {
     expect(wrapper.vm.$el.querySelector('div p a').getAttribute('href')).toEqual(
       link
     );

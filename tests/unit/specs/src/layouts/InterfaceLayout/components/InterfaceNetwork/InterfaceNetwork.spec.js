@@ -43,7 +43,17 @@ describe('InterfaceNetwork.vue', () => {
           }`
         );
 
+        let getters = {
+          Networks: () =>  {
+            return nodeList
+            },
+          network: () => {
+            return network
+          }
+        };
+
         store = new Vuex.Store({
+          getters,
           state: {
             web3: newWeb3,
             Networks: nodeList,
@@ -63,7 +73,6 @@ describe('InterfaceNetwork.vue', () => {
             store,
             stubs:{
                 'interface-network-modal':InterfaceNetworkModal,
-                'popover':PopOver,
                 'b-modal':BModalStub
             }
         });

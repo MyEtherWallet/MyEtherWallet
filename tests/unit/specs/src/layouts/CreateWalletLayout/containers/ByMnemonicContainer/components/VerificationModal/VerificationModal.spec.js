@@ -1,17 +1,49 @@
 import Vue from 'vue';
+import { shallowMount, mount } from '@vue/test-utils';
+import VerificationModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/VerificationModal/VerificationModal.vue';
+import sinon from 'sinon';
 
-xdescribe('VerificationModal.vue', () => {
+import {
+  Tooling
+} from '@@/helpers';
+
+describe('VerificationModal.vue', () => {
+    let localVue, i18n, wrapper, store;
+    beforeAll(() => {
+            const baseSetup = Tooling.createLocalVueInstance();
+            localVue = baseSetup.localVue;
+            i18n = baseSetup.i18n;
+            store = baseSetup.store;
+    });
+
+        beforeEach(() => {
+            wrapper = shallowMount(VerificationModal, {
+              localVue,
+              i18n,
+              store,
+              attachToDocument: true,
+            });
+        });
+
   it('should render correct contents', () => {
-    /*    const Constructor = Vue.extend(Component)
-        const vm = new Constructor({
-          propsData: {
-            // address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-          }
-        }).$mount()
-        expect(vm.$el.style['background-image'])
-          .toEqual('')
-          */
+    const mnemonicValues = [];
+    mnemonicValues.push('values1');
+    mnemonicValues.push('values2');
+    mnemonicValues.push('values3');
+    wrapper.setProps({mnemonicValues});
+    const liElements = wrapper.vm.$el.querySelectorAll('li');
+    for(var i =0 ; i<liElements.length; i++) {
+      let liElement = liElements[i];
+      expect(liElement.querySelector('span').textContent.trim()).toEqual(mnemonicValues[i])
+    }
   });
 
-  describe('VerificationModal.vue Methods', () => {});
+  describe('VerificationModal.vue Methods', () => {
+    it('should verify-button', () => {
+      const mnemonicDoneModalOpen = sinon.stub();
+      wrapper.setProps({mnemonicDoneModalOpen});
+      wrapper.find('.verify-button').trigger('click');
+      expect(mnemonicDoneModalOpen.called).toBe(true);
+    })
+  });
 });

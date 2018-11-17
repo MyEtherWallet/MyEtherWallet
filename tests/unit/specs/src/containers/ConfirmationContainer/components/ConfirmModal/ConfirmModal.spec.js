@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
@@ -38,6 +39,19 @@ describe('ConfirmModal.vue', () => {
     });
 
     beforeEach(() => {
+
+        let getters = {
+          network: () => {
+            return network;
+          },
+          web3: () =>{
+            return newWeb3;
+          }
+        };
+        store = new Vuex.Store({
+          getters
+        });
+
         wrapper = shallowMount(ConfirmModal, {
           localVue,
           i18n,

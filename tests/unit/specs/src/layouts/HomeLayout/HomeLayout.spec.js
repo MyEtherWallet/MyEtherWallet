@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
 import NewsContainer from '@/containers/NewsContainer/NewsContainer.vue';
@@ -19,7 +20,18 @@ describe('HomeLayout.vue', () => {
           localVue = baseSetup.localVue;
           i18n = baseSetup.i18n;
           store = baseSetup.store;
-          store.replaceState({online:true })
+          
+
+        let getters = {
+          online: () => {
+            return true;
+          }
+        };
+
+        store = new Vuex.Store({
+          getters
+        });
+
       });
 
       beforeEach(() => {
@@ -37,7 +49,6 @@ describe('HomeLayout.vue', () => {
 
 
   it('should render correct contents', () => {
-       expect(wrapper.vm.$data.online).toBe(true);  
        expect(wrapper.find('div.news').exists()).toBe(true)
      });
 

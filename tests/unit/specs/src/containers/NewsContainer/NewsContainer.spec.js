@@ -32,8 +32,8 @@ describe('NewsContainer.vue', () => {
           stubs: {'news-article':NewsArticle, 'router-link':RouterLinkStub }
         });
     });
-
-  it('should render correct contents', () => {
+    
+  it('should render correct articles', () => {
     const newsArticleElements = wrapper.vm.$el.querySelectorAll('.news-text')
     for(var i=0; i< newsArticleElements.length; i++) {
       let newsArticleElement = newsArticleElements[i]

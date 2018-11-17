@@ -32,23 +32,17 @@ describe('InitialENSStateContainer.vue', () => {
       expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(domainName);
     });
 
-    it('should render correct input element classname according to domainname', () => {
-      expect(wrapper.find('.domain-name input').classes().indexOf('errored')).toBe(-1);
-      wrapper.setData({localDomainName:'domain'});
-      expect(wrapper.find('.domain-name input').classes().indexOf('errored')).toBeGreaterThan(-1);
-    });
+    it('should render correct localdomainName watch method', () => {
+      wrapper.setProps({domainName:'domainName11'});
+      expect(wrapper.emitted().domainNameChange).toBeTruthy();
+    })
 
-    it('should render correct submit button element classname according to domainname', () => {
-      expect(wrapper.find('.submit-button').classes().indexOf('disabled')).toBe(-1);
-      wrapper.setData({localDomainName:'domain'});
-      expect(wrapper.find('.submit-button').classes().indexOf('disabled')).toBeGreaterThan(-1);
-    });
-
-    it('should show/hide erroredMsg p element according to domain name', () => {
-      expect(wrapper.find('.erroredMsg').isVisible()).toBe(false);
-      wrapper.setData({localDomainName:'domain'});
-      expect(wrapper.find('.erroredMsg').isVisible()).toBe(true);
-    });
+    it('should render correct domainNameErr props', () => {
+      wrapper.setData({domainNameErr:true});
+      expect(wrapper.find('p.erroredMsg').isVisible()).toBe(true);
+      wrapper.setData({domainNameErr:false});
+      expect(wrapper.find('p.erroredMsg').isVisible()).toBe(false);
+    }); 
 
     it('should show/hide contract loading warning according to contractInitiated flag', () => {
       expect(wrapper.find('.contract-loading-warning').isVisible()).toBe(true);
@@ -66,12 +60,6 @@ describe('InitialENSStateContainer.vue', () => {
       it('should check domain when submit button clicked', () => {
         wrapper.find('.submit-button').trigger('click');
         expect(checkDomain.called).toBe(true);
-      });
-
-      it('should expand domain check form when checkbox clicked', () => {
-        // wrapper.find('.switch input').trigger('click');
-        // console.log(wrapper.vm.$refs);
-        // console.log(wrapper.find('.domain-check-form').classes());
       });
     });
 });

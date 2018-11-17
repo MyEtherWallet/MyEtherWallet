@@ -1,11 +1,14 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount, mount } from '@vue/test-utils'
 import GenerateTx from '@/layouts/InterfaceLayout/components/GenerateTx/GenerateTx.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
 import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
 import {
   Tooling
 } from '@@/helpers';
@@ -24,16 +27,45 @@ describe('GenerateTx.vue', () => {
         i18n = baseSetup.i18n;
         store = baseSetup.store;
         Vue.config.warnHandler = ()=>{};
-    });
 
-    beforeEach(() => {
-       store.replaceState({
-          account: {
+        const network = nodeList['ETH'][3];
+        const hostUrl = url.parse(network.url);
+         const newWeb3 = new Web3(
+          `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+            hostUrl.pathname
+          }`
+        );
+
+        let account =  {
             balance: {
               result:''
             }
-          } 
-        })
+        } 
+
+         let  getters = {
+            account: () => {
+                return account
+            },
+            web3: () => {
+              return newWeb3
+            }
+          }
+
+       
+        store = new Vuex.Store({
+          getters,  
+        });
+
+    });
+
+    beforeEach(() => {
+       // store.replaceState({
+       //    account: {
+       //      balance: {
+       //        result:''
+       //      }
+       //    } 
+       //  })
         wrapper = mount(GenerateTx, {
           localVue,
           i18n,
@@ -80,10 +112,20 @@ describe('GenerateTx.vue', () => {
 
     })
 
-  describe('GenerateTx.vue Methods', () => {  
+  describe('GenerateTx.vue Methods',  () => {  
      it('should emit pathUpdate when button click', () => {
-      // wrapper.find('.generate-info .close-button').trigger('click')
-      // expect(wrapper.emitted().pathUpdate).toBeTruthy();
+        // wrapper.find('.generate-info .close-button').trigger('click')
+        // expect(wrapper.emitted().pathUpdate).toBeTruthy();
+
+
+      //       let browser =  puppeteer.launch({ headless: false, });
+      // let page = browser.newPage();
+
+      // const result = await page.evaluate(() => {
+
+      //   wrapper.find('.generate-info .close-button').trigger('click')
+      //   expect(wrapper.emitted().pathUpdate).toBeTruthy();
+      // });
     });
 
     it('should emit locNonce update when input changed', () => {

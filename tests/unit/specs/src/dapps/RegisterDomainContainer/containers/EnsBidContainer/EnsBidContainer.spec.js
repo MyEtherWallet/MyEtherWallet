@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
@@ -59,7 +60,18 @@ describe('EnsBidContainer.vue', () => {
             hostUrl.pathname
           }`
         );
-      
+          
+        let getters = {
+          web3: () => {
+            return newWeb3;
+          }
+        };
+
+
+        store = new Vuex.Store({
+          getters
+        });
+
         store.replaceState({
           web3: newWeb3
         })

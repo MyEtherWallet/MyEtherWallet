@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import  sinon from 'sinon' 
@@ -31,10 +32,12 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     it('should reset the privateKey via input element', () => {
+      const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const textInput = wrapper.find('.input-container input')
-      textInput.setValue(longMnemonic);
-      expect(wrapper.vm.$data.privateKey).toBe(longMnemonic)
+      textInput.setValue(privateKey);
+      expect(wrapper.vm.$data.privateKey).toBe(privateKey);
     });
+    
   });
 
   describe('PrivateKeyModal.vue Methods', () => {
@@ -49,6 +52,15 @@ describe('PrivateKeyModal.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+
+        let actions = {
+          decryptWallet: jest.fn()
+        };
+
+        store = new Vuex.Store({
+          actions
+        });
+
     });
 
     beforeEach(() => {
@@ -61,23 +73,24 @@ describe('PrivateKeyModal.vue', () => {
             $router: mockRoute,
           }
         });
-        spy = jest.spyOn(wrapper.vm.$router,'push')
     });
 
     it('should reset the privateKey directly', () => {
-      // const button = wrapper.find('button');
-      // wrapper.setData({privateKey:longMnemonic})
-      // button.trigger('click')
-      // expect(wrapper.vm.$data.privateKey).toBe('')
+      const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
+      const button = wrapper.find('button');
+      wrapper.setData({privateKey});
+      button.trigger('click');
+      expect(wrapper.vm.$data.privateKey).toBe('')
     });
 
     it('should navigate to interface page', () => {
-      // wrapper.setData({privateKey:'0ADD'})
-      // const button = wrapper.find('button');
-      // wrapper.setData({privateKey:longMnemonic})
-      // button.trigger('click')
-      // expect(spy.called).toBe(true)
-
+      const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
+      const button = wrapper.find('button');
+      wrapper.setData({privateKey});
+      button.trigger('click');
+      expect(wrapper.vm.$data.privateKey).toBe('')
+      button.trigger('click')
+      expect(spy.calledWith({ path: 'interface' })).toBe(true)
     });
-});
+  });
 });

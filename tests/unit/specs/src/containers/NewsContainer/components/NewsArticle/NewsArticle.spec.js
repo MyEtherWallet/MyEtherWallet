@@ -39,13 +39,25 @@ describe('NewsArticle.vue', () => {
         });
     });
 
-  it('should render correct contents', () => {
+    it('should render correct title props', () => {
       expect(wrapper.vm.$el.querySelector('.news-text h4').textContent.trim()).toEqual(title);
-      expect(wrapper.vm.$el.querySelector('.news-text p').textContent.trim()).toEqual(desc);
+    });
+
+    it('should render correct readMore props', () => {
       expect(wrapper.vm.$el.querySelector('.links p').textContent.trim()).toEqual(readMore);
+    });
+
+    it('should render correct description props', () => {
+      expect(wrapper.vm.$el.querySelector('.news-text p').textContent.trim()).toEqual(desc);
+    });
+
+    it('should render correct fb props', () => {
       expect(wrapper.vm.$el.querySelector('.fa-facebook').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + fb);
-      expect(wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + twitter);
-  });
+    });
+
+    it('should render correct twitter props', () => {
+        expect(wrapper.vm.$el.querySelector('.fa-twitter').parentElement.href.trim()).toEqual(window.location.protocol + "//" + window.location.host + "/" + twitter);
+    });
 
   describe('NewsArticle.vue Methods', () => { });
 });

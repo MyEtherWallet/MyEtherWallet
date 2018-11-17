@@ -19,7 +19,7 @@ function createLocalVueInstance(){
     if(!value) return ''
     value = value.toString().toLowerCase()
     return value.charAt(0).toUpperCase() + value.slice(1)
-  }); 
+  });
   const i18n = new VueI18n({
     locale: 'en_US',
     fallbackLocale: 'en_US',

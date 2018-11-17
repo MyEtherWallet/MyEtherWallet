@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
 import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/SendOfflineContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
@@ -24,16 +25,44 @@ describe('SendOfflineContainer.vue', () => {
     });
 
     beforeEach(() => {
-       store.replaceState({
-          account: {
-              balance: {
-                result:''
+
+       const wallet = {
+              getChecksumAddressString: jest.fn(x=> 0),
+              getAddressString: function(){
+                return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
               }
-          }, 
-          wallet: {
-            getAddressString: function(){}
-          } 
-        })
+        };
+
+        let account =  {
+                balance: {
+                  result:''
+                }
+            };
+        let getters = {
+          wallet: () => {
+            return wallet;
+          },
+          account: () => {
+            return account;
+          }
+        };
+
+
+        store = new Vuex.Store({
+          getters,
+          state:{
+             account: {
+                balance: {
+                  result:''
+                }
+            }, 
+            wallet: {
+              getAddressString: function(){ return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'; }
+            }
+          }
+        });
+
+    
         wrapper = shallowMount(SendOfflineContainer, {
           localVue,
           i18n,
