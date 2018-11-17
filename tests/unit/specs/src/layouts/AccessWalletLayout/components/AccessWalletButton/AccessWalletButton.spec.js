@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
-import sinon from 'sinon'
+import sinon from 'sinon';
 import {
   Tooling
 } from '@@/helpers';
@@ -36,7 +36,7 @@ describe('AccessWalletButton.vue', () => {
           i18n,
           store,
           stubs: {
-            "b-btn":BBtnStub
+            'b-btn':BBtnStub
           },
           attachToDocument: true,
           propsData: { img, title, desc, recommend, tooltip, disabled, func:clickHandler}
@@ -60,7 +60,7 @@ describe('AccessWalletButton.vue', () => {
   });
 
   it('should render correct tooltip', () => {
-    expect(wrapper.vm.$el.querySelector('.b-btn').textContent).toEqual(tooltip);
+    expect(wrapper.vm.$el.querySelector('.b-btn').textContent.trim()).toEqual(tooltip);
   });
 
   it('should render correct disabled', () => {

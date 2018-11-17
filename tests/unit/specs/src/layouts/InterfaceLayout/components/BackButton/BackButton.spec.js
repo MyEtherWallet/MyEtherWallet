@@ -40,7 +40,7 @@ describe('BackButton.vue', () => {
   describe('BackButton.vue Methods', () => {
     it('should go back when button clicked', () => {
         wrapper.find('.back-container').trigger('click')
-        expect(spy.called).toBe(true)
+        expect(spy.calledWith(-1)).toBe(true)
     });
   });
 });

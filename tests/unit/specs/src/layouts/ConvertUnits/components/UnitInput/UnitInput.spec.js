@@ -9,8 +9,8 @@ import {
 
 describe('UnitInput.vue', () => {
     let localVue, i18n, wrapper, store;
-    const content = 'UnitInput content';
-
+    
+    let options = ['Wei','Kwei','Mwei','Gwei','Szabo'];
     beforeAll(() => {
         const baseSetup = Tooling.createLocalVueInstance();
         localVue = baseSetup.localVue;
@@ -24,25 +24,24 @@ describe('UnitInput.vue', () => {
           i18n,
           store,
           attachToDocument: true,
-          propsData: { content },
+          propsData: { options },
      
         });
     });
 
-  it('should render correct contents', () => {
-    for(var i=0; i< wrapper.vm.$el.querySelector('.block-left .select-block select').length; i++) {
-        const dropDownText = wrapper.vm.$el.querySelector('.block-left .select-block select').options[i].text;
-        const unitInputData = wrapper.vm.$data.leftDropDown[i].label;
-        expect(dropDownText.trim()).toEqual(unitInputData);
-    }
-
-    for(var i=0; i< wrapper.vm.$el.querySelector('.block-right .select-block select').length; i++) {
-        const dropDownText = wrapper.vm.$el.querySelector('.block-right .select-block select').options[i].text;
-        const unitInputData = wrapper.vm.$data.rightDropDown[i].label;
-        expect(dropDownText.trim()).toEqual(unitInputData);
-    }
-
+  it('should render correct valueLeft data', () => {
+    expect(wrapper.vm.$el.querySelector('.block-left input').value).toEqual(String(wrapper.vm.$data.valueLeft));
   });
 
+  it('should render correct valueRight data', () => {
+    expect(wrapper.vm.$el.querySelector('.block-right input').value).toEqual(String(wrapper.vm.$data.valueRight));
+  });
+
+  it('should render correct options data', () => {
+       for(var i=0; i< wrapper.vm.$el.querySelector('.block-right .select-block select').length; i++) {
+        const dropDownText = wrapper.vm.$el.querySelector('.block-right .select-block select').options[i].text;
+        expect(dropDownText.trim()).toEqual(options[i]);
+    }
+  });
   describe('UnitInput.vue Methods', () => {});
 });
