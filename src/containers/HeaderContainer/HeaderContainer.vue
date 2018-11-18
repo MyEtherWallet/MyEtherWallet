@@ -38,7 +38,7 @@
                   $t('common.news')
                 }}</b-nav-item>
 
-                <txpoppup />
+                <!-- <txpoppup /> -->
 
                 <div class="language-menu-container">
                   <div class="arrows">
