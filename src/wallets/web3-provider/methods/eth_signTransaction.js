@@ -20,7 +20,7 @@ const getSanitizedTx = tx => {
       transaction.to = tx.to || '0x';
       transaction.data = tx.data || '0x';
       transaction.value = tx.value || '0x';
-      transaction.chainId = utils.numberToHex(tx.chainId);
+      transaction.chainId = tx.chainId;
       resolve(transaction);
     } catch (e) {
       reject(e);
