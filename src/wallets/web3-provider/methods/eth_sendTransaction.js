@@ -3,32 +3,10 @@ import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
-import { formatters } from 'web3-core-helpers';
 import { toPayload } from './jsonrpc';
 import * as locStore from 'store';
+import { getSanitizedTx } from './utils';
 
-const getSanitizedTx = tx => {
-  return new Promise((resolve, reject) => {
-    if (!tx.gas && !tx.gasLimit && !tx.chainId)
-      return reject(new Error('"gas" or "chainId" is missing'));
-    if (tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0 || tx.chainId < 0)
-      return reject(
-        new Error('Gas, gasPrice, nonce or chainId is lower than 0')
-      );
-
-    try {
-      tx = formatters.inputCallFormatter(tx);
-      const transaction = tx;
-      transaction.to = tx.to || '0x';
-      transaction.data = tx.data || '0x';
-      transaction.value = tx.value || '0x';
-      transaction.chainId = tx.chainId;
-      resolve(transaction);
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
@@ -53,7 +31,9 @@ export default async (
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
   tx.nonce = !tx.nonce
-    ? await ethCalls.getTransactionCount(store.state.wallet.getAddressString())
+    ? await store.state.web3.eth.getTransactionCount(
+        store.state.wallet.getAddressString()
+      )
     : tx.nonce;
   tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
   tx.chainId = !tx.chainId ? store.state.network.type.chainID : tx.chainId;
