@@ -10,6 +10,7 @@
 
 ### Devop
 
+- refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)
 - fix invalid chain id error [#164](https://github.com/MyEtherWallet/MyEtherWallet/pull/164)
 - Devop/fix router mode [#162](https://github.com/MyEtherWallet/MyEtherWallet/pull/162)
 - Move text to translations [#157](https://github.com/MyEtherWallet/MyEtherWallet/pull/157)
