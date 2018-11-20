@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Fix for issue where amount can add too many decimal places []()
+- Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
 
 ### Feature
 
