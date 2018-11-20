@@ -1249,3 +1249,12 @@
     pointer-events: none;
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
+
+.not-recommended {
+  border: 1px solid $red-1;
+  background-color: $light-red-1;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  padding: 10px;
+  text-align: center;
+}

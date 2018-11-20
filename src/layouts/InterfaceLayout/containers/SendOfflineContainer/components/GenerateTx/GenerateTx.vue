@@ -63,7 +63,6 @@
           <div class="title">
             <div class="title-helper">
               <h4>{{ $t('common.data') }}</h4>
-              <popover :popcontent="$t('popover.whatIsDataContent')" />
             </div>
           </div>
         </div>

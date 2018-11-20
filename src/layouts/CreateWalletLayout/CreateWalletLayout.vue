@@ -36,6 +36,9 @@
             </b-tab>
             <b-tab :title="$t('createWallet.byJsonFile')">
               <div class="title-block">
+                <div class="not-recommended">
+                  {{ $t('createWallet.notARecommendedWay') }}
+                </div>
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.yourPw') }}</h3>
                   <popover :popcontent="$t('popover.password')" />
@@ -51,6 +54,9 @@
             </b-tab>
             <b-tab :title="$t('createWallet.byMnemonic')">
               <div class="title-block">
+                <div class="not-recommended">
+                  {{ $t('createWallet.notARecommendedWay') }}
+                </div>
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.yourPw') }}</h3>
                   <popover :popcontent="$t('popover.password')" />
