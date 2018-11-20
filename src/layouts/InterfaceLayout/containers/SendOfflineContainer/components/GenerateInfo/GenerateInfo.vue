@@ -43,6 +43,7 @@
         v-show="moreInfoGenerated"
         :nonce="nonce"
         :gas-limit="gasLimit"
+        :highest-gas="highestGas"
         @gasLimitUpdate="gasLimitUpdated"
         @nonceUpdate="nonceUpdated"
       />
@@ -87,6 +88,10 @@ export default {
       default: 0
     },
     nonce: {
+      type: Number,
+      default: 0
+    },
+    highestGas: {
       type: Number,
       default: 0
     }

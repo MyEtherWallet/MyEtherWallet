@@ -88,6 +88,7 @@
         :value="toAmt"
         :to-address="address"
         :gas-limit="gasLimit"
+        :highest-gas="highestGas"
         @nonceUpdate="nonceUpdated"
         @gasLimitUpdate="gasLimitUpdated"
       />
@@ -151,6 +152,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    highestGas: {
+      type: Number,
+      default: 0
     }
   },
   data() {
