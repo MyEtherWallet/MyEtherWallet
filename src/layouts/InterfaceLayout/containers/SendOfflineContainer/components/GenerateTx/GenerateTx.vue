@@ -15,10 +15,11 @@
             />
             <div class="the-form amount-number">
               <input
-                v-model="toAmt"
+                :value="toAmt"
                 :placeholder="$t('interface.depAmount')"
                 type="string"
                 name=""
+                @input="debouncedAmount"
               />
             </div>
           </div>
@@ -129,6 +130,7 @@ const EthTx = require('ethereumjs-tx');
 import BN from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -195,6 +197,10 @@ export default {
     }
   },
   methods: {
+    debouncedAmount: utils._.debounce(function(e) {
+      this.toAmt = new BN(e.target.value).decimalPlaces(18).toFixed();
+      e.target.value = this.toAmt;
+    }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;
       const locAddress = address !== null ? address : this.address;

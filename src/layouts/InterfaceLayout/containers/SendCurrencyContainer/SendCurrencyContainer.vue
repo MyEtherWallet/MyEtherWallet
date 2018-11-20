@@ -218,8 +218,8 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
-import web3 from 'web3';
 import * as unit from 'ethjs-unit';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -305,14 +305,14 @@ export default {
     this.gasAmount = this.gasPrice;
   },
   methods: {
-    debouncedAmount: web3.utils._.debounce(function(e) {
+    debouncedAmount: utils._.debounce(function(e) {
       this.amount = new BigNumber(e.target.value).decimalPlaces(18).toFixed();
       e.target.value = this.amount;
       if (this.verifyAddr()) {
         this.estimateGas();
       }
     }, 300),
-    debounceInput: web3.utils._.debounce(function(e) {
+    debounceInput: utils._.debounce(function(e) {
       this.address = normalise(e.target.value);
     }, 1500),
     copyToClipboard(ref) {
