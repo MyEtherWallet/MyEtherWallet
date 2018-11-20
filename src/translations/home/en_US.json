@@ -4,7 +4,7 @@
   "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy to use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "obtainAddress": "Obtain an ETH address and generate your private key. Saving and safekeeping the key will be your responsibility.",
   "getStarted": "Get Started",
-  "getANewWallet": "Access My Wallet",
+  "getANewWallet": "Get a New Wallet",
   "accessMyWalletDesc": "Send or swap your ETH and tokens, purchase ENS domains, interact with smart contracts, and more! This is where the magic happens.",
   "accessNow": "Access Now",
   "aboutTitle": "About MEW",
