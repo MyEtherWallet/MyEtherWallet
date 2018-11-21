@@ -147,10 +147,6 @@ export default {
             {
               text: this.$t('footer.extension'),
               to: '/extensions'
-            },
-            {
-              text: 'MEW Github',
-              to: '/mew-github'
             }
           ]
         },

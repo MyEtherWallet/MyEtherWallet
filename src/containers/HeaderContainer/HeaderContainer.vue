@@ -1,11 +1,13 @@
 <template>
   <div class="header">
-    <settingsmodal /> <notificationsmodal /> <logoutmodal />
+    <settings-modal ref="settings" />
+    <notifications-modal ref="notifications" />
+    <logout-modal ref="logout" />
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
-      <scrollupbutton />
+      <scroll-up-button />
     </div>
 
     <div class="wrap">
@@ -38,8 +40,6 @@
                   $t('common.news')
                 }}</b-nav-item>
 
-                <!-- <txpoppup /> -->
-
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -64,6 +64,7 @@
                       v-for="language in supportedLanguages"
                       :active="$root._i18n.locale === language.flag"
                       :key="language.key"
+                      :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
                     >
@@ -123,44 +124,44 @@ import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import TxTopMenuPopup from '@/components/TxTopMenuPopup';
+// import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton,
-    settingsmodal: SettingsModal,
-    notificationsmodal: NotificationsModal,
-    txpoppup: TxTopMenuPopup,
-    logoutmodal: LogoutModal
+    'scroll-up-button': ScrollUpButton,
+    'settings-modal': SettingsModal,
+    'notifications-modal': NotificationsModal,
+    // txpoppup: TxTopMenuPopup,
+    'logout-modal': LogoutModal
   },
   data() {
     return {
       supportedLanguages: [
-        { name: 'Deutsch', flag: 'de' },
-        { name: 'Ελληνικά', flag: 'gr' },
-        { name: 'English', flag: 'en' },
-        { name: 'Español', flag: 'es' },
-        { name: 'Farsi', flag: 'ir' },
-        { name: 'Suomi', flag: 'fi' },
-        { name: 'Magyar', flag: 'hu' },
-        { name: 'Haitian Creole', flag: 'ht' },
-        { name: 'Bahasa Indonesia', flag: 'id' },
-        { name: 'Italiano', flag: 'it' },
-        { name: '日本語', flag: 'ja' },
-        { name: '한국어', flag: 'ko' },
-        { name: 'Nederlands', flag: 'nl' },
-        { name: 'Norsk Bokmål', flag: 'no' },
-        { name: 'Polski', flag: 'pl' },
-        { name: 'Português', flag: 'pt' },
-        { name: 'Русский', flag: 'ru' },
-        { name: 'ภาษาไทย', flag: 'th' },
-        { name: 'Türkçe', flag: 'tr' },
-        { name: 'Tiếng Việt', flag: 'vn' },
-        { name: '简体中文', flag: 'zh-Hans' },
-        { name: '繁體中文', flag: 'zh-Hant' }
+        { name: 'Deutsch', flag: 'de', langCode: 'en_EN' },
+        { name: 'Ελληνικά', flag: 'gr', langCode: 'en_EN' },
+        { name: 'English', flag: 'en', langCode: 'en_EN' },
+        { name: 'Español', flag: 'es', langCode: 'es_ES' },
+        { name: 'Farsi', flag: 'ir', langCode: 'en_EN' },
+        { name: 'Suomi', flag: 'fi', langCode: 'en_EN' },
+        { name: 'Magyar', flag: 'hu', langCode: 'en_EN' },
+        { name: 'Haitian Creole', flag: 'ht', langCode: 'en_EN' },
+        { name: 'Bahasa Indonesia', flag: 'id', langCode: 'en_EN' },
+        { name: 'Italiano', flag: 'it', langCode: 'en_EN' },
+        { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
+        { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
+        { name: 'Nederlands', flag: 'nl', langCode: 'en_EN' },
+        { name: 'Norsk Bokmål', flag: 'no', langCode: 'en_EN' },
+        { name: 'Polski', flag: 'pl', langCode: 'en_EN' },
+        { name: 'Português', flag: 'pt', langCode: 'en_EN' },
+        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
+        { name: 'ภาษาไทย', flag: 'th', langCode: 'en_EN' },
+        { name: 'Türkçe', flag: 'tr', langCode: 'en_EN' },
+        { name: 'Tiếng Việt', flag: 'vn', langCode: 'en_EN' },
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',
       currentFlag: 'en',
@@ -173,18 +174,24 @@ export default {
       online: 'online'
     })
   },
-  watch: {
-    notifications() {
-      this.$refs.notification.$refs.notification.show();
-    }
-  },
+  // watch: {
+  //   notifications() {
+  //     this.$refs.notification.$refs.notification.show();
+  //   }
+  // },
   mounted() {
     if (Misc.doesExist(store.get('locale'))) {
-      this.$root._i18n.locale = store.get('locale');
-      this.currentFlag = store.get('locale');
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === store.get('locale');
+      });
+      this._i18n.locale = store.get('locale');
+      this.currentFlag = storedLocale.flag;
     } else {
-      store.set('locale', this.$root._i18n.locale);
-      this.currentFlag = this.$root._i18n.locale;
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this._i18n.locale;
+      });
+      store.set('locale', storedLocale.langCode);
+      this.currentFlag = storedLocale.flag;
     }
 
     // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
@@ -207,29 +214,30 @@ export default {
   },
   methods: {
     openSettings() {
-      this.$children[0].$refs.settings.show();
+      this.$refs.settings.$refs.settings.show();
     },
-    openNotifications() {
-      this.$children[1].$refs.notifications.show();
-    },
+    // openNotifications() {
+    //   this.$children[1].$refs.notifications.show();
+    // },
     languageItemClicked(e) {
+      const code = e.target.getAttribute('data-language-code');
       const flag = e.target.getAttribute('data-flag-name');
 
-      this.$root._i18n.locale = flag;
+      this._i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
-      store.set('locale', flag);
+      store.set('locale', code);
     },
     scrollTop() {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$children[2].$refs.logout.show();
+      this.$refs.logout.$refs.logout.show();
       //this.$store.dispatch('clearWallet');
       //this.$router.push('/');
     },
     showNotifications() {
-      this.$refs.notification.$refs.notification.show();
+      this.$refs.notifications.$refs.notification.show();
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
