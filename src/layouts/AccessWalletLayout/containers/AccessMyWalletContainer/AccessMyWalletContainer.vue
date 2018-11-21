@@ -137,7 +137,7 @@ export default {
         {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
-          desc: 'Ledger wallet; Trezor; Digital bitbox; Secalot',
+          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? hardwareImg : hardwareDisabledImg,

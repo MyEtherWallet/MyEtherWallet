@@ -61,7 +61,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>Nonce</h4>
-            <popover :popcontent="$t('popover.whatIsNonce')" />
+            <popover :popcontent="$t('popover.nonce')" />
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
         <div class="title">
           <div class="title-helper">
             <h4>{{ $t('common.gasLimit') }}</h4>
-            <popover :popcontent="$t('popover.whatIsGas')" />
+            <popover :popcontent="$t('popover.gasLimit')" />
           </div>
         </div>
       </div>
