@@ -10,7 +10,7 @@
             <div class="button-block">
               <router-link to="/create-wallet" class="nounderline">
                 <span class="large-round-button-white-border">
-                  {{ $t('common.getAFreeWallet') }}
+                  {{ $t('home.createNewWallet') }}
                 </span>
               </router-link>
             </div>

@@ -3,11 +3,9 @@
     <interface-container-title :title="$t('common.signMessage')" />
     <div class="send-form">
       <p>{{ $t('interface.signMessageDesc') }}</p>
-
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
-          <popover :popcontent="$t('popover.whatIsMessageContent')" />
         </div>
       </div>
 
@@ -20,7 +18,7 @@
       <div class="title-container">
         <div class="title">
           <h4>{{ $t('common.signature') }}</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')" />
+          <popover :popcontent="$t('popover.signature')" />
 
           <div class="copy-buttons">
             <span @click="deleteInputText('signature');">{{
