@@ -1,5 +1,9 @@
 ### Release v5.0.5
 
+### Bug
+
+- Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
+
 ### Feature
 
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)

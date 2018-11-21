@@ -11,6 +11,7 @@
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"
             :tokens="tokens"
+            :highest-gas="highestGas"
           />
           <div v-if="online" class="tokens">
             <interface-tokens
@@ -57,7 +58,8 @@ export default {
       tokensWithBalance: [],
       pollNetwork: () => {},
       pollBlock: () => {},
-      pollAddress: () => {}
+      pollAddress: () => {},
+      highestGas: 0
     };
   },
   computed: {
@@ -339,8 +341,21 @@ export default {
           this.setTokens();
           this.setENS();
           this.setNonce();
+          this.getHighestGas();
         }
       }
+    },
+    getHighestGas() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.highestGas = new BigNumber(
+            this.web3.utils.fromWei(res, 'gwei')
+          ).toNumber();
+        })
+        .catch(err => {
+          console.error(err);
+        });
     },
     setENS() {
       if (this.wallet.identifier === 'Web3') {
