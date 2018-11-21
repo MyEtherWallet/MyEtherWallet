@@ -21,7 +21,12 @@
             @selectedCurrency="setSelectedCurrency"
           />
           <div class="the-form amount-number">
-            <input v-model="amount" type="number" placeholder="Amount" />
+            <input
+              :value="amount"
+              type="number"
+              placeholder="Amount"
+              @input="debouncedAmount"
+            />
             <i
               :class="[
                 selectedCurrency.name === 'Ether'
@@ -53,7 +58,11 @@
               {{ $t('interface.sendTxToAddr') }}
               <blockie
                 v-show="validAddress && address.length !== 0"
-                :address="resolvedAddress !== '' ? resolvedAddress : address"
+                :address="
+                  resolvedAddress !== ''
+                    ? resolvedAddress.toLowerCase()
+                    : address
+                "
                 :size="8"
                 :scale="16"
                 width="32px"
@@ -103,28 +112,28 @@
         <div class="buttons">
           <div
             :class="[
-              gasPrice === 5 ? 'active' : '',
+              gasPrice === highestGas / 4 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(5);"
+            @click="changeGas(highestGas / 4);"
           >
             {{ $t('common.slow') }}
           </div>
           <div
             :class="[
-              gasPrice === 45 ? 'active' : '',
+              gasPrice === highestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(45);"
+            @click="changeGas(highestGas / 2);"
           >
             {{ $t('common.regular') }}
           </div>
           <div
             :class="[
-              gasPrice === 75 ? 'active' : '',
+              gasPrice === highestGas ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(75);"
+            @click="changeGas(highestGas);"
           >
             {{ $t('common.fast') }}
           </div>
@@ -132,12 +141,7 @@
       </div>
 
       <div class="the-form gas-amount">
-        <input
-          v-model="gasAmount"
-          type="number"
-          name=""
-          placeholder="Gas Amount"
-        />
+        <input v-model="gasAmount" type="number" placeholder="Gas Amount" />
         <div class="good-button-container">
           <p>Gwei</p>
           <i
@@ -214,8 +218,8 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
-import web3 from 'web3';
 import * as unit from 'ethjs-unit';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -234,6 +238,10 @@ export default {
     getBalance: {
       type: Function,
       default: function() {}
+    },
+    highestGas: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -245,7 +253,7 @@ export default {
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
-      gasAmount: this.gasPrice,
+      gasAmount: 0,
       parsedBalance: 0,
       address: '',
       transactionFee: 0,
@@ -280,16 +288,10 @@ export default {
     },
     gasAmount(newVal) {
       this.gasAmount = newVal;
-      if (!this.verifyAddr()) {
+      if (this.verifyAddr()) {
         this.estimateGas();
       }
       this.$store.dispatch('setGasPrice', Number(newVal));
-    },
-    amount(newVal) {
-      this.amount = newVal;
-      if (!this.verifyAddr()) {
-        this.estimateGas();
-      }
     },
     selectedCurrency(newVal) {
       this.selectedCurrency = newVal;
@@ -300,9 +302,17 @@ export default {
     if (this.account.balance) {
       this.parsedBalance = this.account.balance;
     }
+    this.gasAmount = this.gasPrice;
   },
   methods: {
-    debounceInput: web3.utils._.debounce(function(e) {
+    debouncedAmount: utils._.debounce(function(e) {
+      this.amount = new BigNumber(e.target.value).decimalPlaces(18).toFixed();
+      e.target.value = this.amount;
+      if (this.verifyAddr()) {
+        this.estimateGas();
+      }
+    }, 300),
+    debounceInput: utils._.debounce(function(e) {
       this.address = normalise(e.target.value);
     }, 1500),
     copyToClipboard(ref) {
@@ -342,11 +352,6 @@ export default {
     confirmationModalOpen() {
       this.createTx();
       window.scrollTo(0, 0);
-    },
-    changeGas(val) {
-      this.gasAmount = val;
-      this.createDataHex();
-      this.$store.dispatch('setGasPrice', Number(val));
     },
     setBalanceToAmt() {
       if (this.selectedCurrency.name === 'Ethereum') {
@@ -398,13 +403,14 @@ export default {
     },
     estimateGas() {
       const isEth = this.selectedCurrency.name === 'Ethereum';
+      const bnAmount = new BigNumber(this.amount);
       this.web3.eth
         .estimateGas({
           from: this.wallet.getAddressString(),
           value: isEth
             ? this.amount === ''
               ? 0
-              : unit.toWei(this.amount, 'ether')
+              : unit.toWei(bnAmount, 'ether')
             : 0,
           to: isEth ? this.address : this.selectedCurrency.addr,
           data: this.data
@@ -420,6 +426,11 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err);
         });
+    },
+    changeGas(val) {
+      this.gasAmount = val;
+      this.createDataHex();
+      this.$store.dispatch('setGasPrice', Number(val));
     },
     verifyAddr() {
       if (this.address.length !== 0 && this.address !== '') {

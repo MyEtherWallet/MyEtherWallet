@@ -23,6 +23,7 @@
       :nonce="nonce"
       :gas-limit="gasLimit"
       :tokens="tokens"
+      :highest-gas="highestGas"
       @nonceUpdate="nonceUpdated"
       @gasLimitUpdate="gasLimitUpdate"
       @createdRawTx="createdRawTx"
@@ -44,6 +45,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    highestGas: {
+      type: Number,
+      default: 0
     }
   },
   data() {

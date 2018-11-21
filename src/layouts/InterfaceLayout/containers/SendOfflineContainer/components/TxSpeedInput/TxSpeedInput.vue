@@ -11,28 +11,28 @@
         <div class="buttons">
           <div
             :class="[
-              gasPrice === 5 ? 'active' : '',
+              gasPrice === locHighestGas / 4 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(5);"
+            @click="setSpeed(locHighestGas / 4);"
           >
             {{ $t('common.slow') }}
           </div>
           <div
             :class="[
-              gasPrice === 45 ? 'active' : '',
+              gasPrice === locHighestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(45);"
+            @click="setSpeed(locHighestGas / 2);"
           >
             {{ $t('common.regular') }}
           </div>
           <div
             :class="[
-              gasPrice === 75 ? 'active' : '',
+              gasPrice === locHighestGas ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(75);"
+            @click="setSpeed(locHighestGas);"
           >
             {{ $t('common.fast') }}
           </div>
@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     data: {
@@ -123,16 +124,23 @@ export default {
     nonce: {
       type: Number,
       default: 0
+    },
+    highestGas: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
-      fast: 75,
-      regular: 45,
-      slow: 5,
       locNonce: this.nonce,
-      locGasLimit: this.gasLimit
+      locGasLimit: this.gasLimit,
+      locHighestGas: this.highestGas
     };
+  },
+  computed: {
+    ...mapGetters({
+      gasPrice: 'gasPrice'
+    })
   },
   watch: {
     locNonce(newVal) {
@@ -141,6 +149,11 @@ export default {
     locGasLimit(newVal) {
       this.$emit('gasLimitUpdate', Number(newVal));
     }
+  },
+  mounted() {
+    this.highestGas === 0
+      ? (this.locHighestGas = 10)
+      : (this.locHighestGas = this.highestGas);
   },
   methods: {
     setSpeed(val) {
