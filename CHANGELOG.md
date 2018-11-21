@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Fix missing text issue on getting started modal []()
+- Fix missing text issue on getting started modal [](<>)
 - Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
 
 ### Feature
