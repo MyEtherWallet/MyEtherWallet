@@ -45,7 +45,6 @@ describe('ConfirmModal.vue', () => {
         qrcode: VueQrcode,
         'address-block': AddressBlockStub
       },
-      sync: false,
       propsData: {
         confirmSendTx,
         signedTx,
