@@ -1,12 +1,16 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
-import languages from '@/translations';
 import VueX from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
+
+import en_US from '@/translations/en_US.js';
+const languages = {
+  en_US: en_US
+};
 
 function createLocalVueInstance() {
   const localVue = createLocalVue();
