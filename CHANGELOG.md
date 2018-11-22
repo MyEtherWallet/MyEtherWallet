@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Reimplement logout with the new logout modal []()
 - Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
 
 ### Feature
