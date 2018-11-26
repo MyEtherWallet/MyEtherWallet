@@ -82,7 +82,7 @@ export default {
     async fetchBalanceData() {
       this.equivalentValues = [];
       // 1027 is coinmarketcap's id for ethereum
-      const url = 'https://still-waters-52916.herokuapp.com/convert/1027';
+      const url = 'https://cryptorates.mewapi.io/convert/1027';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       delete values['lastCalled'];
