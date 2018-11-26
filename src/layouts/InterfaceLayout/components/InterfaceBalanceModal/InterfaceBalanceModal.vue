@@ -22,7 +22,11 @@
         </h4>
         <ul class="equivalent-values">
           <li v-for="ev in equivalentValues" :key="ev.key">
-            <img :src="ev.image" />
+            <img
+              :src="
+                require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
+              "
+            />
             <p>{{ ev.name }}</p>
             <p class="ev-value">{{ ev.value }}</p>
           </li>
@@ -33,13 +37,7 @@
 </template>
 
 <script>
-import iconBtc from '@/assets/images/currency/btc.svg';
-import iconRep from '@/assets/images/currency/rep.svg';
-import iconEur from '@/assets/images/currency/eur.svg';
-import iconChf from '@/assets/images/currency/chf.svg';
-import iconGbp from '@/assets/images/currency/gbp.svg';
-import iconUsd from '@/assets/images/currency/usd.svg';
-
+import BigNumber from 'bignumber.js';
 export default {
   props: {
     balance: {
@@ -51,37 +49,60 @@ export default {
     return {
       equivalentValues: [
         {
-          image: iconBtc,
           name: 'BTC',
           value: '102.22453'
         },
         {
-          image: iconRep,
           name: 'REP',
           value: '5656.22'
         },
         {
-          image: iconChf,
           name: 'CHF',
           value: '12410004.22453'
         },
         {
-          image: iconUsd,
           name: 'USD',
           value: '312004.53'
         },
         {
-          image: iconEur,
           name: 'EUR',
           value: '12410.22'
         },
         {
-          image: iconGbp,
           name: 'GBP',
           value: '687867.53'
         }
       ]
     };
+  },
+  mounted() {
+    this.fetchBalanceData();
+  },
+  methods: {
+    async fetchBalanceData() {
+      this.equivalentValues = [];
+      // 1027 is coinmarketcap's id for ethereum
+      const url = 'https://still-waters-52916.herokuapp.com/convert/1027';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      delete values['lastCalled'];
+      for (const key in values) {
+        const objectRes = {
+          name: key,
+          value: new BigNumber(this.balance)
+            .multipliedBy(new BigNumber(values[key]))
+            .decimalPlaces(18)
+            .toFixed()
+        };
+        console.log(
+          new BigNumber(this.balance)
+            .multipliedBy(new BigNumber(values[key]))
+            .decimalPlaces(18)
+            .toFixed()
+        );
+        this.equivalentValues.push(objectRes);
+      }
+    }
   }
 };
 </script>
