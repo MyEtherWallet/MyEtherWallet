@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix balance modal, and show equivalent values [#176](https://github.com/MyEtherWallet/MyEtherWallet/pull/176)
 - Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
 
 ### Feature
