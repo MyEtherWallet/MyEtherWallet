@@ -11,8 +11,8 @@
         <h2>Are you sure to logout your wallet?</h2>
 
         <div class="buttons">
-          <standard-button :options="buttonNo" />
-          <standard-button :options="buttonYes" />
+          <standard-button :options="buttonNo" @click.native="cancel" />
+          <standard-button :options="buttonYes" @click.native="logout" />
         </div>
       </div>
     </b-modal>
@@ -21,8 +21,7 @@
 
 <script>
 export default {
-  name: 'Lougout',
-  components: {},
+  name: 'Logout',
   data() {
     return {
       buttonNo: {
@@ -43,8 +42,16 @@ export default {
       }
     };
   },
-  mounted() {},
-  methods: {}
+  methods: {
+    logout() {
+      this.$store.dispatch('clearWallet');
+      this.$refs.logout.hide();
+      this.$router.push('/');
+    },
+    cancel() {
+      this.$refs.logout.hide();
+    }
+  }
 };
 </script>
 
