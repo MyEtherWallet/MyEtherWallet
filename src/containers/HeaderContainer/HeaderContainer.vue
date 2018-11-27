@@ -62,7 +62,7 @@
                     </template>
                     <b-dropdown-item
                       v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.flag"
+                      :active="$root._i18n.locale === language.langCode"
                       :key="language.key"
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
@@ -140,27 +140,27 @@ export default {
   data() {
     return {
       supportedLanguages: [
-        { name: 'Deutsch', flag: 'de', langCode: 'en_EN' },
-        { name: 'Ελληνικά', flag: 'gr', langCode: 'en_EN' },
+        { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
+        { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
         { name: 'English', flag: 'en', langCode: 'en_EN' },
         { name: 'Español', flag: 'es', langCode: 'es_ES' },
-        { name: 'Farsi', flag: 'ir', langCode: 'en_EN' },
-        { name: 'Suomi', flag: 'fi', langCode: 'en_EN' },
-        { name: 'Magyar', flag: 'hu', langCode: 'en_EN' },
-        { name: 'Haitian Creole', flag: 'ht', langCode: 'en_EN' },
-        { name: 'Bahasa Indonesia', flag: 'id', langCode: 'en_EN' },
-        { name: 'Italiano', flag: 'it', langCode: 'en_EN' },
+        { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
+        { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
+        { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
+        { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
+        { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
+        { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
         { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
         { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
-        { name: 'Nederlands', flag: 'nl', langCode: 'en_EN' },
-        { name: 'Norsk Bokmål', flag: 'no', langCode: 'en_EN' },
-        { name: 'Polski', flag: 'pl', langCode: 'en_EN' },
-        { name: 'Português', flag: 'pt', langCode: 'en_EN' },
+        { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
+        { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
+        { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
+        { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
         { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
-        { name: 'ภาษาไทย', flag: 'th', langCode: 'en_EN' },
-        { name: 'Türkçe', flag: 'tr', langCode: 'en_EN' },
-        { name: 'Tiếng Việt', flag: 'vn', langCode: 'en_EN' },
-        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
+        { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
+        { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' },
         { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',
@@ -196,13 +196,13 @@ export default {
 
     // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
     // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    if (!/zh[-_]/.test(this.currentFlag)) {
-      this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    }
+    // if (!/zh[-_]/.test(this.currentFlag)) {
+    //   this.currentFlag = this.currentFlag.split(/[-_]/)[0];
+    // }
 
-    this.currentName = this.supportedLanguages.filter(
+    this.currentName = this.supportedLanguages.find(
       item => item.flag === this.currentFlag
-    )[0].name;
+    ).name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
     this.onPageScroll();
@@ -233,8 +233,6 @@ export default {
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
-      //this.$store.dispatch('clearWallet');
-      //this.$router.push('/');
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();
