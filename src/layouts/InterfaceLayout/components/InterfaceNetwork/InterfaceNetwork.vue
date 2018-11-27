@@ -7,14 +7,16 @@
           <img :src="network.type.icon" class="icon" />
         </div>
         <div class="block-content">
-          <div class="helper">
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'"
-            />
-          </div>
           <div class="information-container">
-            <h2>{{ $t('interface.network') }}</h2>
+            <h2>
+              {{ $t('interface.network') }}
+              <div class="helper">
+                <popover
+                  :popcontent="$t('popover.whatIsMessageContent')"
+                  :popovertype="'A'"
+                />
+              </div>
+            </h2>
             <p>{{ network.service + '(' + network.type.name + ')' }}</p>
             <p>
               {{ $t('interface.lastBlock') }}: #
