@@ -155,7 +155,7 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 module.exports = {
-  baseUrl: '/',
+  baseUrl: process.env.NODE_ENV === 'production'? '':'./',
   configureWebpack: webpackConfig,
   chainWebpack: config => {}
 };
