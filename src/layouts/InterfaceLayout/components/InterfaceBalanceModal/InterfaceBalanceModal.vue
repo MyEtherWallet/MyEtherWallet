@@ -94,12 +94,6 @@ export default {
             .decimalPlaces(18)
             .toFixed()
         };
-        console.log(
-          new BigNumber(this.balance)
-            .multipliedBy(new BigNumber(values[key]))
-            .decimalPlaces(18)
-            .toFixed()
-        );
         this.equivalentValues.push(objectRes);
       }
     }
