@@ -175,6 +175,10 @@ const updateTransaction = function({ commit, state }, val) {
   commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 
+const setLastPath = function({ commit }, val) {
+  commit('SET_LAST_PATH', val);
+};
+
 export default {
   addNotification,
   addSwapTransaction,
@@ -187,6 +191,7 @@ export default {
   setGasPrice,
   setState,
   setENS,
+  setLastPath,
   setWeb3Instance,
   switchNetwork,
   updateNotification,

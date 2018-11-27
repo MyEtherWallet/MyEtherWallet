@@ -38,7 +38,7 @@
                 ]"
                 @click="signMessage"
               >
-                {{ $t('confirm.confirmSigning') }}
+                {{ $t('confirmation.confirmSigning') }}
               </div>
               <div class="tooltip-box-2">
                 <b-btn id="exPopover9">

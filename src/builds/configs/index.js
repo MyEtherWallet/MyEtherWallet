@@ -6,6 +6,6 @@ const getRoutes = () => {
   return require(`@/builds/${BUILD_TYPE}`).configRoutes(baseRoutes);
 };
 const getMode = () => {
-  return process.env.ROUTER_MODE || 'hash';
+  return ROUTER_MODE || 'hash';
 };
 export { getApp, getMode, getRoutes };

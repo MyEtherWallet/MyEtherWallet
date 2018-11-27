@@ -1,7 +1,16 @@
 ### Release v5.0.5
 
+### Bug
+
+- Fix missing text issue on getting started modal [#173](https://github.com/MyEtherWallet/MyEtherWallet/pull/173)
+- Reimplement logout with the new logout modal [#177](https://github.com/MyEtherWallet/MyEtherWallet/pull/177)
+- Close modal when adding a custom token [#175](https://github.com/MyEtherWallet/MyEtherWallet/pull/175)
+- Fix balance modal, and show equivalent values [#176](https://github.com/MyEtherWallet/MyEtherWallet/pull/176)
+- Fix for issue where amount can add too many decimal places [#166](https://github.com/MyEtherWallet/MyEtherWallet/pull/166)
+
 ### Feature
 
+- Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
 - implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
@@ -9,6 +18,10 @@
 
 ### Devop
 
+- Crowdin translations [#75](https://github.com/MyEtherWallet/MyEtherWallet/pull/75)
+- refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)
+- fix invalid chain id error [#164](https://github.com/MyEtherWallet/MyEtherWallet/pull/164)
+- Devop/fix router mode [#162](https://github.com/MyEtherWallet/MyEtherWallet/pull/162)
 - Move text to translations [#157](https://github.com/MyEtherWallet/MyEtherWallet/pull/157)
 - Update packages [#151](https://github.com/MyEtherWallet/MyEtherWallet/pull/151)
 - Refactor state [#148](https://github.com/MyEtherWallet/MyEtherWallet/pull/148)

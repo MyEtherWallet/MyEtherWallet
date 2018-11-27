@@ -3,7 +3,9 @@
     <div class="wrap">
       <div class="block-left">
         <div class="select-block">
-          <select v-model="selectedLeft">
+          <dropdown-unit-selector />
+
+          <select v-if="false" v-model="selectedLeft">
             <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
               >{{ opt | capitalize }}
             </option>
@@ -22,7 +24,9 @@
 
       <div class="block-right">
         <div class="select-block">
-          <select v-model="selectedRight">
+          <dropdown-unit-selector />
+
+          <select v-if="false" v-model="selectedRight">
             <option v-for="(opt, idx) in options" :key="opt + idx" :value="opt"
               >{{ opt | capitalize }}
             </option>
@@ -39,8 +43,12 @@
 <script>
 import { BigNumber } from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import DropDownUnitSelector from '../DropDownUnitSelector';
 
 export default {
+  components: {
+    'dropdown-unit-selector': DropDownUnitSelector
+  },
   props: {
     options: {
       type: Array,

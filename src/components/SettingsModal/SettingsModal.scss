@@ -1,0 +1,113 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// DEVELOPMENT USE ONLY "Modal open button"
+//***************************************************
+.modal-open-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999999999999;
+  background-color: #00e5ff;
+  padding: 3px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  user-select: none;
+
+  h5 {
+    color: white;
+    font-weight: 700;
+    font-size: 10px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0;
+    line-height: 14px;
+  }
+}
+
+//***************************************************
+// tx-speed
+//***************************************************
+.tx-speed {
+  .radio-buttons {
+    ul {
+      li {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+
+        div {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            margin-right: 10px;
+          }
+
+          input[type='text'] {
+            padding: 12px;
+            position: absolute;
+            left: 25px;
+            top: -10px;
+            border: 0;
+            background-color: $light-grey-1;
+            display: block;
+            width: 150px;
+          }
+
+          .gwei {
+            margin-left: 170px;
+          }
+        }
+
+        p {
+          margin-left: auto;
+        }
+      }
+
+      .selected * {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .button-block {
+    margin-top: 45px;
+    text-align: center;
+  }
+}
+
+//***************************************************
+// Import Configurations
+//***************************************************
+.import-config {
+  .import-button-block {
+    margin-top: 30px;
+    display: grid;
+    align-items: center;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 183px;
+  }
+
+  .button-block {
+    text-align: center;
+    margin-top: 40px;
+  }
+}
+
+//***************************************************
+// Export Configurations
+//***************************************************
+.export-config {
+  .button-block {
+    text-align: center;
+    margin-top: 40px;
+  }
+}

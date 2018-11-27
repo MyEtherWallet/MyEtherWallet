@@ -1,0 +1,59 @@
+@import '~@/scss/GlobalVariables';
+
+//******************************************************
+// Wrap
+//******************************************************
+.wrap {
+  //empty
+}
+
+.tx {
+  display: flex;
+  align-items: flex-start;
+
+  .currency {
+    .currency-type {
+      display: flex;
+      align-items: center;
+      img {
+        margin-right: 4px;
+        height: 17px;
+      }
+    }
+
+    .amount {
+      font-weight: 600;
+    }
+  }
+
+  .tx-direction {
+    padding: 0 12px;
+    img {
+      height: 12px;
+    }
+  }
+}
+
+.progress {
+  margin-top: 5px;
+  border-radius: 6px;
+  position: relative;
+
+  .progress-time {
+    position: absolute;
+    font-size: 10px;
+    line-height: initial;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .progress-bar {
+    font-size: 10px;
+    text-align: center;
+    background-color: $mew-green;
+  }
+}
