@@ -299,7 +299,7 @@ export default {
     },
     validSwap() {
       return (
-        // !this.notEnough &&
+        !this.notEnough &&
         this.toAddress !== '' &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
@@ -597,7 +597,9 @@ export default {
             toValue: this.toValue,
             toAddress: this.toAddress,
             fromAddress: this.currentAddress,
-            refundAddress: this.refundAddress
+            refundAddress: this.swap.isToken(providerDetails.fromCurrency)
+              ? this.currentAddress
+              : this.refundAddress
           };
 
           this.swapDetails = await this.swap.startSwap(swapDetails);
