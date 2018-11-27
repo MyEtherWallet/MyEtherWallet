@@ -7,13 +7,13 @@
 }
 
 .block-content {
-  position: relative;
+  h2 {
+    display: flex;
+  }
 }
 
 .helper {
-  position: absolute;
-  right: 60px;
-  top: 5px;
+  padding: 5px 0 0 5px;
 
   .popover-container button {
     background: transparent !important;
