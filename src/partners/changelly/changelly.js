@@ -148,7 +148,6 @@ export default class Changelly {
       swapDetails.parsed = Changelly.parseOrder(details);
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress = details.payinAddress;
-      console.log(swapDetails); // todo remove dev item
       swapDetails.dataForInitialization = details;
       return swapDetails;
     }

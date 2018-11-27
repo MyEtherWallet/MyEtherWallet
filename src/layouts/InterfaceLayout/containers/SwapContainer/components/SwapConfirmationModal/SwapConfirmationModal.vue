@@ -116,7 +116,9 @@ export default {
       this.fromAddress = {
         value: newValue.fromValue,
         name: newValue.fromCurrency,
-        address: newValue.fromAddress ? newValue.fromAddress : ''
+        address: newValue.fromAddress
+          ? newValue.fromAddress
+          : this.currentAddress
       };
       this.toAddress = {
         value: newValue.toValue,
