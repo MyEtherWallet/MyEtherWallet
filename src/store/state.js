@@ -28,6 +28,7 @@ const state = {
   Networks: nodeList,
   network: network,
   notifications: notifications,
+  path: '',
   online: true,
   transactions: {},
   wallet: null,

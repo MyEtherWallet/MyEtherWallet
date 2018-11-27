@@ -20,7 +20,7 @@
   "offline": "Offline",
   "sendPubTx": "Send/Publish Transaction",
   "generate": "Generate",
-  "registerENSDescShort": "Register or buy your domain",
+  "registerENSDescShort": "Bid on or register an ENS domain",
   "balance": "Balance",
   "network": "Network",
   "equivalentValues": "Equivalent Values",
@@ -46,5 +46,8 @@
   "raw": "Raw",
   "copyAndCont": "Copy and Continue",
   "lastBlock": "Last block",
+  "fromAddr": "From Address",
+  "depAmount": "Deposit Amount",
+  "notEnoughBalance": "You have insufficient funds."
   "refund": "address for refund (if needed) from"
 }

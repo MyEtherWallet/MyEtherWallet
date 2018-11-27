@@ -1,5 +1,5 @@
 <template>
-  <div v-if="wallet !== null" class="send-eth-and-tokens">
+  <div class="send-eth-and-tokens">
     <div class="wrap">
       <div class="side-nav"><interface-side-menu /></div>
       <div class="contents">
@@ -10,6 +10,8 @@
           <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"
+            :tokens="tokens"
+            :highest-gas="highestGas"
           />
           <div v-if="online" class="tokens">
             <interface-tokens
@@ -22,15 +24,12 @@
       </div>
     </div>
   </div>
-  <div v-else><wallet-not-found-container /></div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { parseTokensHex } from '@/helpers';
 import ENS from 'ethereum-ens';
-
-import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
 
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
@@ -48,8 +47,7 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens,
-    'wallet-not-found-container': WalletNotFoundContainer
+    'interface-tokens': InterfaceTokens
   },
   data() {
     return {
@@ -60,7 +58,8 @@ export default {
       tokensWithBalance: [],
       pollNetwork: () => {},
       pollBlock: () => {},
-      pollAddress: () => {}
+      pollAddress: () => {},
+      highestGas: 0
     };
   },
   computed: {
@@ -149,6 +148,15 @@ export default {
         });
 
       return response;
+    },
+    async setNonce() {
+      const nonce = await this.web3.eth.getTransactionCount(
+        this.wallet.getAddressString()
+      );
+      store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
+        nonce: nonce,
+        timestamp: +new Date()
+      });
     },
     async getTokenBalance(token) {
       const web3 = this.web3;
@@ -329,15 +337,25 @@ export default {
             this.matchWeb3WalletNetwork();
           }
           this.getBalance();
-          this.pollBlock = setInterval(this.getBlock, 10000);
+          this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
           this.setENS();
-          store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
-            nonce: 0,
-            timestamp: +new Date()
-          });
+          this.setNonce();
+          this.getHighestGas();
         }
       }
+    },
+    getHighestGas() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.highestGas = new BigNumber(
+            this.web3.utils.fromWei(res, 'gwei')
+          ).toNumber();
+        })
+        .catch(err => {
+          console.error(err);
+        });
     },
     setENS() {
       if (this.wallet.identifier === 'Web3') {

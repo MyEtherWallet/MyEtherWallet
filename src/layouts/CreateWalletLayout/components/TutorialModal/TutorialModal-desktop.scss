@@ -45,3 +45,9 @@
     padding: 0;
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.button-container {
+  a {
+    color: $white;
+  }
+}

@@ -13,9 +13,11 @@ import DeployContractContainer from '@/layouts/InterfaceLayout/containers/Deploy
 import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer';
 import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer';
 import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer';
+import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
+import store from '@/store';
 
 import dapps from '@/dapps/routes';
 const router = [
@@ -62,6 +64,20 @@ const router = [
   {
     path: '/interface',
     component: InterfaceLayout,
+    beforeEnter(to, ___, next) {
+      if (store.state.wallet === null) {
+        store.dispatch('setLastPath', to.path);
+        next({ name: 'AccessWalletLayout' });
+      } else {
+        if (store.state.path !== '') {
+          const localPath = store.state.path;
+          store.dispatch('setLastPath', '');
+          next({ path: localPath });
+        } else {
+          next();
+        }
+      }
+    },
     children: [
       {
         path: '',
@@ -89,9 +105,9 @@ const router = [
         component: SendCurrencyContainer
       },
       {
-        path: 'send-offline-transaction',
-        name: 'Send Offline',
-        component: SendOfflineContainer
+        path: 'send-offline',
+        component: SendOfflineContainer,
+        children: offlineRoutes.children
       },
       {
         path: 'swap',

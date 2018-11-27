@@ -58,6 +58,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
+import ethTx from 'ethereumjs-tx';
 
 export default {
   components: {
@@ -157,6 +158,7 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
+
       this.isHardwareWallet = this.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
@@ -164,6 +166,31 @@ export default {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
+
+      this.confirmationModalOpen();
+    });
+
+    this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
+      const newTx = new ethTx(tx);
+      this.isHardwareWallet = this.wallet.isHardware;
+      this.responseFunction = resolve;
+      this.successMessage = 'Sending Transaction';
+      this.signedTxObject = {
+        rawTransaction: tx,
+        tx: {
+          to: `0x${newTx.to.toString('hex')}`,
+          from: `0x${newTx.from.toString('hex')}`,
+          value: `0x${newTx.value.toString('hex')}`,
+          gas: `0x${newTx.gasPrice.toString('hex')}`,
+          gasLimit: `0x${newTx.gasLimit.toString('hex')}`,
+          data: `0x${newTx.data.toString('hex')}`,
+          nonce: `0x${newTx.nonce.toString('hex')}`,
+          v: `0x${newTx.v.toString('hex')}`,
+          r: `0x${newTx.r.toString('hex')}`,
+          s: `0x${newTx.s.toString('hex')}`
+        }
+      };
+      this.signedTx = this.signedTxObject.rawTransaction;
       this.confirmationModalOpen();
     });
 
@@ -309,6 +336,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
+      if (this.raw.generateOnly) return;
       this.showSuccessModal();
     },
     reset() {
