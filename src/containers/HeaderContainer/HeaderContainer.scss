@@ -166,6 +166,43 @@
   } // .header-container
 } // .fixed-header
 
+
+
+//********************************************************
+// .mobile-menu-content
+//********************************************************
+.mobile-menu-content {
+  transition: all 0.2s ease;
+  height: 0px;
+  overflow: hidden;
+  ul {
+    padding: 30px 0px;
+    li{
+      >*{
+        padding: 20px;
+        font-size: 20px;
+        display: block;
+        color: $text-base-color;
+      }
+    }
+  }
+
+  @media all and (max-width: $tablet-width) {
+    &.mobile-menu-open-height-change {
+      height: 100vh;
+      box-shadow: 0px 0px 2px #0000001f;
+    }
+  }
+}
+
+@media all and (max-width: $tablet-width) {
+  .mobile-menu-boxshadow {
+    box-shadow: 0 0px 1px #adadad1f;
+  }
+}
+
+
+
 .identicon-dropdown {
   padding: 0 !important;
 }

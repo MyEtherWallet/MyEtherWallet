@@ -16,7 +16,10 @@
         :class="isPageOnTop == false ? 'tiny-header' : ''"
         class="fixed-header"
       >
-        <div class="page-container">
+        <div
+          :class="(isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow'"
+          class="page-container"
+        >
           <div class="header-container">
             <router-link to="/" @click.native="scrollTop();">
               <div class="top-logo">
@@ -75,7 +78,7 @@
                 <notification v-if="wallet !== null" ref="notification" />
                 <b-nav-item
                   v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop == true ? 'noshow' : ''"
+                  :class="isPageOnTop && 'noshow'"
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
@@ -101,18 +104,50 @@
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
+            <!-- .top-menu -->
             <div class="mobile-menu">
-              <div class="mobile-menu-button">
+              <div
+                class="mobile-menu-button"
+                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+              >
                 <div class="bar-1" />
                 <div class="bar-2" />
                 <div class="bar-3" />
               </div>
             </div>
+            <!-- .mobile-menu -->
+          </div>
+          <!-- .header-container -->
+        </div>
+        <!-- .page-container -->
+        <div
+          :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
+          class="mobile-menu-content"
+        >
+          <div class="page-container">
+            <ul>
+              <li>
+                <div @click="scrollTop();">{{ $t('header.home') }}</div>
+              </li>
+              <li>
+                <a href="/#about-mew">{{ $t('header.about') }}</a>
+              </li>
+              <li>
+                <a href="/#faqs">{{ $t('common.faqs') }}</a>
+              </li>
+              <li v-if="false">
+                <a href="/#news">{{ $t('common.news') }}</a>
+              </li>
+            </ul>
           </div>
         </div>
+        <!-- .mobile-menu-content -->
       </div>
+      <!-- .fixed-header -->
     </div>
+    <!-- .wrap -->
   </div>
+  <!-- .header -->
 </template>
 
 <script>
@@ -165,7 +200,8 @@ export default {
       ],
       currentName: 'English',
       currentFlag: 'en',
-      isPageOnTop: true
+      isPageOnTop: true,
+      isMobileMenuOpen: false
     };
   },
   computed: {
