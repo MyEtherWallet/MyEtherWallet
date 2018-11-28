@@ -27,9 +27,18 @@ describe('Notification.vue', () => {
         store = baseSetup.store;
     });
 
+   
+
     beforeEach(() => {
+
+       let wallet =  {
+        getChecksumAddressString: jest.fn(x=> 0)
+      }
       getters = {
-        notifications: () => []
+        notifications: () => [],
+        wallet: () => {
+          return wallet
+        }
       }
 
       store = new VueX.Store({

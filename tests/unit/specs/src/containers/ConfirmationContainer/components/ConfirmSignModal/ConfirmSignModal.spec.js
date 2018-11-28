@@ -37,14 +37,17 @@ describe('ConfirmSignModal.vue', () => {
     });
 
 
-    it('should render correct contents', () => {
-        expect(wrapper.vm.$el.querySelector('.tx-from .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(from);
-        expect(wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(messageToSign);
-        expect(wrapper.vm.modalDetailInformation).toBe(false)
-        expect(wrapper.vm.transactionSigned).toBe(false)
+    it('should render correct signedMessage props', () => {
         expect(wrapper.vm.signedMessageSignature).toEqual(signedMessage)
     });
 
+    it('should render correct from props', () => {
+      expect(wrapper.vm.$el.querySelector('.tx-from .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(from);
+    });
+
+    it('should render correct messageToSign props', () => {
+      expect(wrapper.vm.$el.querySelector('.tx-to .address-info').getElementsByTagName('p')[1].textContent.trim()).toEqual(messageToSign);
+    });
 
     describe('ConfirmSignModal.vue Methods', () => {
       it('should confirm SignMessage when click submit button', () => {

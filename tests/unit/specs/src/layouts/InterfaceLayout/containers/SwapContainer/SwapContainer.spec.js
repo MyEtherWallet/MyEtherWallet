@@ -8,6 +8,7 @@ import {
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
 
+import sinon from 'sinon';
 const RouterLinkStub = {
   name:'router-link',
   template:'<p> <slot> </slot></p>',
@@ -15,6 +16,17 @@ const RouterLinkStub = {
   props:['to']  
 }
 
+
+const showModal = sinon.spy();
+
+const BModalStub = {
+  name:'b-modal',
+  template:'<div><slot></slot></div>',
+  props:['to'],
+  methods: {
+    show: showModal
+  }  
+}
 
 describe('SwapContainer.vue', () => {
     let localVue, i18n, wrapper, store;
@@ -35,7 +47,8 @@ describe('SwapContainer.vue', () => {
           stubs: {
             'currency-picker': CurrencyPicker,
             'swap-confirmation-modal':SwapConfirmationModal,
-            'router-link':RouterLinkStub
+            'router-link':RouterLinkStub,
+            'b-modal':BModalStub
           }
         });
     });
@@ -87,18 +100,16 @@ describe('SwapContainer.vue', () => {
             stubs: {
             'currency-picker': CurrencyPicker,
             'swap-confirmation-modal':SwapConfirmationModal,
-            'router-link':RouterLinkStub
+            'router-link':RouterLinkStub,
+            'b-modal':BModalStub
             }
           });
       });
 
-      it('should expand domainCheckForm when click button', () => {
+      it('should open swapConfirmationModal when click button', () => {
         const btnSubmit = wrapper.find('.submit-button');
-        // console.log(wrapper.findAll('.show').length)
-        // console.log(wrapper.find('.bootstrap-modal').html())
-        btnSubmit.trigger('click')
-        // console.log(wrapper.findAll('.show').length)
-        // console.log(wrapper.find('.bootstrap-modal').html())
+        btnSubmit.trigger('click');
+        expect(showModal.called).toBe(true);
       })
   });
 });

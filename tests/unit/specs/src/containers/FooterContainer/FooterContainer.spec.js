@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount , mount } from '@vue/test-utils'
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
 
@@ -25,6 +26,14 @@ describe('FooterContainer.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+
+        let getters = {
+          ethDonationAddress: () =>{}
+        };
+
+        store = new Vuex.Store({
+          getters
+        });
     });
 
     beforeEach(() => {
@@ -65,7 +74,7 @@ describe('FooterContainer.vue', () => {
       const linksElement = linksElements[i];
       var link = wrapper.vm.$data.links[i];
 
-      const icoClassName = linksElement.getElementsByTagName('i')[0].className
+      let icoClassName = linksElement.getElementsByTagName('i')[0].className
       icoClassName = icoClassName.replace('fa ','')
       expect(link.to).toEqual(linksElement.href)
       expect(link.class).toEqual(icoClassName)

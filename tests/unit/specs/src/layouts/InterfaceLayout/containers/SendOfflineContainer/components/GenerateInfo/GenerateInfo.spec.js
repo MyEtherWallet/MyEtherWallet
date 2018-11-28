@@ -1,8 +1,11 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
-import GenerateInfo from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateInfo/GenerateInfo.vue';
-import TxSpeedInput from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/TxSpeedInput/TxSpeedInput.vue';
+import GenerateInfo from '@/layouts/InterfaceLayout/components/GenerateInfo/GenerateInfo.vue';
+import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
+
+
 
 import {
   Tooling
@@ -10,7 +13,7 @@ import {
 
 describe('GenerateInfo.vue', () => {
     let localVue, i18n, wrapper, store;
-
+    
     const gasLimit = 1000;
     const nonce = 1;
 
@@ -19,14 +22,31 @@ describe('GenerateInfo.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
+        Vue.config.warnHandler = () => {}
+        Vue.config.errorHandler = () => {}
     });
 
     beforeEach(() => {
-       store.replaceState({
-          wallet: {
-            getAddressString: function(){}
-          }
-        })
+
+       const wallet = {
+              getChecksumAddressString: jest.fn(x=> 0),
+              getAddressString: function(){
+                return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
+              }
+        };
+
+         let getters = {
+          wallet: () => {
+            return wallet;
+          },
+          gasPrice: () => {}
+        };
+
+
+        store = new Vuex.Store({
+          getters
+        });
+
         wrapper = shallowMount(GenerateInfo, {
           localVue,
           i18n,
@@ -38,34 +58,29 @@ describe('GenerateInfo.vue', () => {
           },
           propsData: { gasLimit, nonce }
         });
-
+        
     });
 
-    xit('[FAILING] should render correct content', () => {
+    it('should render correct content', () => {
       expect(wrapper.vm.$data.isValid).toBe(false)
-
        var inputElements = wrapper.vm.$el.querySelectorAll('.gas-amount input')
-
        expect(inputElements[2].value).toEqual(String(nonce))
        expect(inputElements[3].value).toEqual(String(gasLimit))
-
     });
-
-
 
   describe('GenerateInfo.vue Methods', () => {
-    xit('[FAILING] should generate Info when button click', () => {
-      wrapper.find('.submit-button-container div.submit-button').trigger('click')
-      expect(wrapper.vm.$data.moreInfoGenerated).toBe(true)
+    it('should generate Info when button click', () => {
+        wrapper.find('.submit-button-container div.submit-button').trigger('click')
+        expect(wrapper.vm.$data.moreInfoGenerated).toBe(true)
     });
 
-    xit('[FAILING] should generate tx when button click', () => {
+    it('should generate tx when button click', () => {
       wrapper.find('.submit-button-container div.submit-button').trigger('click')
       wrapper.find('.submit-button-container div.submit-button').trigger('click')
       expect(wrapper.emitted().pathUpdate).toBeTruthy();
     });
 
-    xit('[FAILING] should emit locNonce update when input changed', () => {
+    it('should emit locNonce update when input changed', () => {
       var inputElement = wrapper.findAll('.gas-amount input').at(2)
       var inputText= 11
       inputElement.setValue(inputText)
@@ -73,7 +88,7 @@ describe('GenerateInfo.vue', () => {
       expect(wrapper.emitted().nonceUpdate).toBeTruthy();
     })
 
-    xit('[FAILING] should emit gasLimitUpdate update when input changed', () => {
+    it('should emit gasLimitUpdate update when input changed', () => {
       var inputElement = wrapper.findAll('.gas-amount input').at(3)
       var inputText= 11
       inputElement.setValue(inputText)
@@ -81,7 +96,7 @@ describe('GenerateInfo.vue', () => {
       expect(wrapper.emitted().gasLimitUpdate).toBeTruthy();
     })
 
-    xit('[FAILING] should delete FromAddress when button clicked', () => {
+    it('should delete FromAddress when button clicked', () => {
       var inputElement = wrapper.findAll('.gas-amount input').at(0);
       var inputText= 11
       inputElement.setValue(inputText)

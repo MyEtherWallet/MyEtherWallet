@@ -1,7 +1,11 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer/SignMessageContainer.vue';
+import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
+import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
+
 import {
   Tooling
 } from '@@/helpers';
@@ -22,18 +26,18 @@ describe('SignMessageContainer.vue', () => {
           i18n,
           store,
           attachToDocument: true,
-          stubs:{
-            'popover':PopOver
+          stubs: {
+            'interface-bottom-text': InterfaceBottomText,
+            'interface-container-title':InterfaceContainerTitle,
+            'popover':PopOver,
+            'success-modal': SuccessModal
           }
         });
     });
 
-  it('should render correct contents', () => {
-    
-  });
 
   describe('SignMessageContainer.vue Methods', () => {
-    it('should render correct contents', () => {
+    it('should render correct deleteInputText method', () => {
       const textArea = wrapper.find('.domain-name .custom-textarea-1');
       wrapper.find('.copy-buttons span').trigger('click');
       expect(wrapper.vm.$el.querySelector('.domain-name .custom-textarea-1').textContent.trim()).toEqual('')

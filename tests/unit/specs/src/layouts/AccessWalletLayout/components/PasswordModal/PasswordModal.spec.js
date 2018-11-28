@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-// import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
+import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import  sinon from 'sinon' 
 import {
   Tooling
@@ -7,7 +7,6 @@ import {
 
 describe('PasswordModal.vue', () => {
 
-  describe('PasswordModal.vue', () => {
     let localVue, i18n, wrapper, store;
 
     beforeAll(() => {
@@ -18,47 +17,32 @@ describe('PasswordModal.vue', () => {
     });
 
     beforeEach(() => {
-        // wrapper = shallowMount(PasswordModal, {
-        //   localVue,
-        //   i18n,
-        //   store,
-        //   attachToDocument: true
-        // });
+        wrapper = shallowMount(PasswordModal, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true
+        });
     });
 
-    it('should render content', () => {
-
-    });
-  });
-
-  describe('PasswordModal.vue Methods', () => {
-    let localVue, i18n, wrapper, store, spy;
-    spy = sinon.stub()
-    const mockRoute = {
-      push: spy
-    };
-
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+    it('should render password data', () => {
+        const password='password';
+        wrapper.setData({password})
+        expect(wrapper.vm.$el.querySelector('.password-form input').value).toEqual(password);
     });
 
-    beforeEach(() => {
-        // wrapper = shallowMount(PasswordModal, {
-        //   localVue,
-        //   i18n,
-        //   store,
-        //   attachToDocument: true,
-        //   mocks: {
-        //     $router: mockRoute,
-        //   }
-        // });
+    it('should render error data', () => {
+        const error='error';
+        wrapper.setData({error})
+        expect(wrapper.vm.$el.querySelector('.password-form p').textContent.trim()).toEqual(error);
     });
 
-    it('should render content', () => {
-
+    describe('PasswordModal.vue Methods', () => {
+        it('should switch view password when image button clicked', () => {
+            wrapper.find('.password-form img').trigger('click');
+            expect(wrapper.vm.$data.show).toBe(true);
+            wrapper.find('.password-form img').trigger('click');
+            expect(wrapper.vm.$data.show).toBe(false);
+        });
     });
-});
 });

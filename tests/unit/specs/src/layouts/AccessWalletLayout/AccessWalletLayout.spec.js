@@ -1,37 +1,55 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
-// import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
-import { Tooling } from '@@/helpers';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils'
+import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
+import {
+  Tooling
+} from '@@/helpers';
 
 const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-};
-xdescribe('[EMPTY TEST SUITE] AccessWalletLayout.vue', () => {
-  let localVue, i18n, wrapper, store;
+  name:'router-link',
+  template:'<div class="routerlink"><slot> </slot></div>',
+  props:['to']
+}
 
-  // beforeAll(() => {
-  //     const baseSetup = Tooling.createLocalVueInstance();
-  //     localVue = baseSetup.localVue;
-  //     i18n = baseSetup.i18n;
-  //     store = baseSetup.store;
-  //     store.replaceState({online:true })
-  // });
+describe('AccessWalletLayout.vue', () => {
+    let localVue, i18n, wrapper, store;
 
-  // beforeEach(() => {
-  //     wrapper = shallowMount(AccessWalletLayout, {
-  //       localVue,
-  //       i18n,
-  //       store,
-  //       attachToDocument: true,
-  //       stubs:{
-  //         'router-link':RouterLinkStub
-  //       }
-  //     });
-  // });
+    beforeAll(() => {
+        const baseSetup = Tooling.createLocalVueInstance();
+        localVue = baseSetup.localVue;
+        i18n = baseSetup.i18n;
+        store = baseSetup.store;
 
-  it('should render correct contents', () => {});
+
+        let getters = {
+          online:() => {
+            return true;
+          }
+        };
+
+        store = new Vuex.Store({
+          getters
+        });
+
+    });
+
+    beforeEach(() => {
+        wrapper = shallowMount(AccessWalletLayout, {
+          localVue,
+          i18n,
+          store,
+          attachToDocument: true,
+          stubs:{
+            'router-link':RouterLinkStub
+          }
+        });
+    });
+
+
+  it('should render correct contents', () => {
+
+     });
 
   describe('AccessWalletLayout.vue Methods', () => {});
 });
