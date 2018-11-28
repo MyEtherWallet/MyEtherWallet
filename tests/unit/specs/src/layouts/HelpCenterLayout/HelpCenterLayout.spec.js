@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout/HelpCenterLayout.vue';
 
 import {

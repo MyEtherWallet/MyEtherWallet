@@ -8,7 +8,7 @@ import {
 
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode/ButtonWithQrCode.vue';
 import DetailInformation from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/components/DetailInformation/DetailInformation.vue';
-
+import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 const RouterLinkStub = {
   name:'router-link',
   template:'<p> <slot> </slot></p>',
@@ -34,8 +34,10 @@ describe('SwapConfirmationModal.vue', () => {
           store,
           attachToDocument: true,
           stubs: {
-            'router-link':RouterLinkStub,
-            'detail-information':DetailInformation
+            'detail-information': DetailInformation,
+            'button-with-qrcode': ButtonWithQrCode,
+            'help-center-button': HelpCenterButton,
+            'router-link':RouterLinkStub
           }
         });
     });
@@ -45,11 +47,13 @@ describe('SwapConfirmationModal.vue', () => {
       expect(wrapper.find('.detail-information .expending-block').exists()).toBe(true)
 
       const liElements = wrapper.vm.$el.querySelectorAll('.detail-information .expending-block li')
-      for(var i=0; i<liElements.length; i++) {
-        const liElement = liElements[i];
-        const detailInfo = wrapper.vm.$data.detailInfo[i]
-        expect(liElement.querySelector('p.name').textContent.trim()).toEqual(detailInfo.name)
-        expect(liElement.querySelector('p.value').textContent.trim()).toEqual(detailInfo.value)
+      var num = 0;
+      for( var key in wrapper.vm.$data.detailInfo) {
+        const detailInfo = wrapper.vm.$data.detailInfo[key];        
+          const liElement = liElements[num];
+         expect(liElement.querySelector('p.name').textContent.trim()).toEqual(detailInfo.name)
+         expect(liElement.querySelector('p.value').textContent.trim()).toEqual(detailInfo.value)
+         num += 1;
       }
     });
     describe('SwapConfirmationModal.vue Methods', () => {
