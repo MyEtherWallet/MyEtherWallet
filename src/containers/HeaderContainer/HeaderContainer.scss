@@ -21,7 +21,8 @@
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: $z-menu;
+  //z-index: $z-menu + 100;
+  z-index: 1000;
 
   &.tiny-header {
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
@@ -166,19 +167,24 @@
   } // .header-container
 } // .fixed-header
 
-
-
 //********************************************************
 // .mobile-menu-content
 //********************************************************
 .mobile-menu-content {
+  position: fixed;
+  width: 100vw;
+  //z-index: $z-menu + 100;
+  z-index: 1000;
+  top: 0;
+  left: 0;
   transition: all 0.2s ease;
-  height: 0px;
+  height: 0;
   overflow: hidden;
+  background-color: white;
   ul {
-    padding: 30px 0px;
-    li{
-      >*{
+    padding: 80px 0 0 0;
+    li {
+      > * {
         padding: 20px;
         font-size: 20px;
         display: block;
@@ -190,18 +196,15 @@
   @media all and (max-width: $tablet-width) {
     &.mobile-menu-open-height-change {
       height: 100vh;
-      box-shadow: 0px 0px 2px #0000001f;
     }
   }
 }
 
 @media all and (max-width: $tablet-width) {
   .mobile-menu-boxshadow {
-    box-shadow: 0 0px 1px #adadad1f;
+    //box-shadow: 0 0 1px #adadad1f;
   }
 }
-
-
 
 .identicon-dropdown {
   padding: 0 !important;
