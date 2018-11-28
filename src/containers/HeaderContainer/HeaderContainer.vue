@@ -9,7 +9,28 @@
     >
       <scroll-up-button />
     </div>
-
+    <div
+      :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
+      class="mobile-menu-content"
+    >
+      <div class="page-container">
+        <ul>
+          <li>
+            <div @click="scrollTop();">{{ $t('header.home') }}</div>
+          </li>
+          <li>
+            <a href="/#about-mew">{{ $t('header.about') }}</a>
+          </li>
+          <li>
+            <a href="/#faqs">{{ $t('common.faqs') }}</a>
+          </li>
+          <li v-if="false">
+            <a href="/#news">{{ $t('common.news') }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- .mobile-menu-content -->
     <div class="wrap">
       <div
         ref="fixedHeader"
@@ -120,28 +141,6 @@
           <!-- .header-container -->
         </div>
         <!-- .page-container -->
-        <div
-          :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
-          class="mobile-menu-content"
-        >
-          <div class="page-container">
-            <ul>
-              <li>
-                <div @click="scrollTop();">{{ $t('header.home') }}</div>
-              </li>
-              <li>
-                <a href="/#about-mew">{{ $t('header.about') }}</a>
-              </li>
-              <li>
-                <a href="/#faqs">{{ $t('common.faqs') }}</a>
-              </li>
-              <li v-if="false">
-                <a href="/#news">{{ $t('common.news') }}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- .mobile-menu-content -->
       </div>
       <!-- .fixed-header -->
     </div>
