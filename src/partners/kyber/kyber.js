@@ -239,44 +239,54 @@ export default class Kyber {
   }
 
   approveKyber(fromToken, fromValueWei) {
-    return {
-      to: this.getTokenAddress(fromToken),
-      value: 0,
-      data: new this.web3.eth.Contract(
-        [
-          {
-            constant: false,
-            inputs: [
-              {
-                name: '_spender',
-                type: 'address'
-              },
-              {
-                name: '_value',
-                type: 'uint256'
-              }
-            ],
-            name: 'approve',
-            outputs: [],
-            payable: false,
-            type: 'function'
-          }
-        ],
-        this.getTokenAddress(fromToken)
-      ).methods
-        .approve(this.getKyberNetworkAddress(), fromValueWei)
-        .encodeABI()
-    };
+    try {
+      return {
+        to: this.getTokenAddress(fromToken),
+        value: 0,
+        data: new this.web3.eth.Contract(
+          [
+            {
+              constant: false,
+              inputs: [
+                {
+                  name: '_spender',
+                  type: 'address'
+                },
+                {
+                  name: '_value',
+                  type: 'uint256'
+                }
+              ],
+              name: 'approve',
+              outputs: [],
+              payable: false,
+              type: 'function'
+            }
+          ],
+          this.getTokenAddress(fromToken)
+        ).methods
+          .approve(this.getKyberNetworkAddress(), fromValueWei)
+          .encodeABI()
+      };
+    } catch (e) {
+      errorLogger(e);
+    }
   }
 
-  async canUserSwap(fromToken, toToken, fromValueWei, toValueWei, userAddress) {
+  async canUserSwap({
+    fromCurrency,
+    toCurrency,
+    fromValueWei,
+    toValueWei,
+    fromAddress
+  }) {
     let userCap = true;
 
     const isTokenApprovalNeeded = async (
       fromToken,
       toToken,
       fromValueWei,
-      userAddress
+      fromAddress
     ) => {
       if (fromToken === kyberBaseCurrency)
         return { approve: false, reset: false };
@@ -285,7 +295,7 @@ export default class Kyber {
         ERC20,
         this.getTokenAddress(fromToken)
       ).methods
-        .allowance(userAddress, this.getKyberNetworkAddress())
+        .allowance(fromAddress, this.getKyberNetworkAddress())
         .call();
 
       if (currentAllowance > 0) {
@@ -297,44 +307,48 @@ export default class Kyber {
       return { approve: true, reset: false };
     };
 
-    const tokenBalance = await this.callKyberContract(
-      'getBalance',
-      this.getTokenAddress(fromToken),
-      userAddress
-    );
-
-    if (fromToken === kyberBaseCurrency || toToken === kyberBaseCurrency) {
-      const checkValue =
-        fromToken === kyberBaseCurrency ? fromValueWei : toValueWei;
-
-      const kyberUserCap = await this.callKyberContract(
-        'getUserCapInWei',
-        userAddress
-      );
-
-      userCap = new BigNumber(kyberUserCap)
+    if (
+      fromCurrency === kyberBaseCurrency ||
+      toCurrency === kyberBaseCurrency
+    ) {
+      userCap = new BigNumber(
+        await this.callKyberContract('getUserCapInWei', fromAddress)
+      )
         .times(0.95)
-        .gt(new BigNumber(checkValue));
+        .gt(
+          new BigNumber(
+            fromCurrency === kyberBaseCurrency ? fromValueWei : toValueWei
+          )
+        );
     }
 
-    if (userCap && new BigNumber(tokenBalance).gte(fromValueWei)) {
+    if (
+      userCap &&
+      new BigNumber(
+        await this.callKyberContract(
+          'getBalance',
+          this.getTokenAddress(fromCurrency),
+          fromAddress
+        )
+      ).gte(fromValueWei)
+    ) {
       const { approve, reset } = await isTokenApprovalNeeded(
-        fromToken,
-        toToken,
+        fromCurrency,
+        toCurrency,
         fromValueWei,
-        userAddress
+        fromAddress
       );
       if (approve && reset) {
         return new Set([
-          this.approveKyber(fromToken, 0, userAddress),
+          this.approveKyber(fromCurrency, 0, fromAddress),
           {
-            ...this.approveKyber(fromToken, fromValueWei, userAddress),
+            ...this.approveKyber(fromCurrency, fromValueWei, fromAddress),
             gas: this.tokenApprovalGas
           }
         ]);
       } else if (approve) {
         return new Set([
-          this.approveKyber(fromToken, fromValueWei, userAddress)
+          this.approveKyber(fromCurrency, fromValueWei, fromAddress)
         ]);
       }
       return new Set();
@@ -345,23 +359,21 @@ export default class Kyber {
   }
 
   async getTradeData(
-    fromToken,
-    toToken,
-    fromValueWei,
-    minRateWei,
-    userAddress
+    { fromCurrency, toCurrency, fromValueWei, fromAddress },
+    minRateWei
   ) {
     const walletId = walletDepositeAddress;
     // Cannot use a larger value (which solidity supports due to error from web3/ethers,
     // see: https://github.com/ethereum/web3.js/issues/1920
+    // This can cause the transaction to fail and revert
     const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
 
     const data = this.getKyberContractObject()
       .methods.trade(
-        await this.getTokenAddress(fromToken),
+        await this.getTokenAddress(fromCurrency),
         fromValueWei,
-        await this.getTokenAddress(toToken),
-        userAddress,
+        await this.getTokenAddress(toCurrency),
+        fromAddress,
         maxDestAmount,
         minRateWei,
         walletId
@@ -370,7 +382,7 @@ export default class Kyber {
 
     return {
       to: this.getKyberNetworkAddress(),
-      value: Object.values(networkSymbols).includes(fromToken)
+      value: Object.values(networkSymbols).includes(fromCurrency)
         ? fromValueWei
         : 0,
       gas: this.gasLimit,
@@ -378,47 +390,41 @@ export default class Kyber {
     };
   }
 
-  async generateDataForTransactions(
-    fromToken,
-    toToken,
+  async generateDataForTransactions({
+    fromCurrency,
+    toCurrency,
     fromValue,
     toValue,
-    rate,
-    userAddress
-  ) {
+    fromAddress
+  }) {
     try {
-      const fromValueWei = this.convertToTokenWei(fromToken, fromValue);
-      const toValueWei = this.convertToTokenWei(toToken, toValue);
+      const fromValueWei = this.convertToTokenWei(fromCurrency, fromValue);
+      const toValueWei = this.convertToTokenWei(toCurrency, toValue);
+      const kyberSwapDetails = {
+        fromCurrency,
+        toCurrency,
+        fromAddress,
+        fromValueWei,
+        toValueWei
+      };
       const finalRate = await this.getExpectedRate(
-        fromToken,
-        toToken,
+        fromCurrency,
+        toCurrency,
         fromValueWei
       );
       if (finalRate === 0)
         throw Error(
           'Recieved a rate of 0. Invalid quantity.  Try swaping a lower amount.'
         );
-      const prepareSwapTxData = await this.canUserSwap(
-        fromToken,
-        toToken,
-        fromValueWei,
-        toValueWei,
-        userAddress
-      );
+      const prepareSwapTxData = await this.canUserSwap(kyberSwapDetails);
       prepareSwapTxData.add(
-        await this.getTradeData(
-          fromToken,
-          toToken,
-          fromValueWei,
-          finalRate,
-          userAddress
-        )
+        await this.getTradeData(kyberSwapDetails, finalRate)
       );
       const swapTransactions = Array.from(prepareSwapTxData);
       return [...swapTransactions];
     } catch (e) {
       // eslint-disable no-console
-      errorLogger(e); // todo remove dev item
+      errorLogger(e);
       throw e;
     }
   }
@@ -428,12 +434,7 @@ export default class Kyber {
     swapDetails.providerAddress = this.getAddress();
     swapDetails.kyberMaxGas = await this.callKyberContract('maxGasPrice');
     swapDetails.dataForInitialization = await this.generateDataForTransactions(
-      swapDetails.fromCurrency,
-      swapDetails.toCurrency,
-      swapDetails.fromValue,
-      swapDetails.toValue,
-      this.convertToTokenWei(kyberBaseCurrency, swapDetails.rate),
-      swapDetails.fromAddress
+      swapDetails
     );
     swapDetails.providerReceives = swapDetails.fromValue;
     swapDetails.providerSends = swapDetails.toValue;
@@ -481,33 +482,9 @@ export default class Kyber {
   convertToTokenWei(token, value) {
     const decimals = this.getTokenDecimals(token);
     const denominator = new BigNumber(10).pow(decimals);
-    // getting strange cases where decimals are appearing at the end of the converted value
-    logger('convertToTokenWei', denominator.toString(10));
     return new BigNumber(value)
       .times(denominator)
       .integerValue(BigNumber.ROUND_DOWN)
       .toString(10);
-  }
-
-  calcSrcQty(dstQty, srcDecimals, dstDecimals, rate) {
-    let numerator, denominator;
-    const PRECISION = 10 ** 18;
-    //source quantity is rounded up. to avoid dest quantity being too low.
-    if (srcDecimals >= dstDecimals) {
-      numerator = PRECISION * dstQty * 10 ** (srcDecimals - dstDecimals);
-      denominator = rate;
-    } else {
-      numerator = PRECISION * dstQty;
-      denominator = rate * 10 ** (dstDecimals - srcDecimals);
-    }
-    return (numerator + denominator - 1) / denominator; //avoid rounding down errors
-  }
-
-  calcDstQty(srcQty, srcDecimals, dstDecimals, rate) {
-    const PRECISION = 10 ** 18;
-    if (dstDecimals >= srcDecimals) {
-      return (srcQty * rate * 10 ** (dstDecimals - srcDecimals)) / PRECISION;
-    }
-    return (srcQty * rate) / (PRECISION * 10 ** (srcDecimals - dstDecimals));
   }
 }

@@ -6,6 +6,7 @@ import {
   EthereumTokens
   // otherChains,
 } from './partnersConfig';
+
 function comparator(a, b) {
   a = a.symbol;
   b = b.symbol;
@@ -88,14 +89,6 @@ export default class SwapProviders {
       ) {
         this.updateProviderRates++;
         this.providerRatesRecieved.push(provider.name);
-      }
-    });
-  }
-
-  checkForProviderRateUpdates() {
-    this.providers.forEach(provider => {
-      if (this.providerRateUpdates[provider.name] < provider.hasRates) {
-        this.providerRateUpdates[provider.name] = provider.hasRates;
       }
     });
   }
@@ -207,12 +200,16 @@ export default class SwapProviders {
     return !!EthereumTokens[currency];
   }
 
+  hasKnownTokenBalance() {
+    return;
+  }
+
   async startSwap({
     providerDetails,
     fromValue,
     toValue,
     toAddress,
-    currentAddress,
+    fromAddress,
     refundAddress
   }) {
     try {
@@ -226,7 +223,7 @@ export default class SwapProviders {
         minValue: providerDetails.minValue,
         maxValue: providerDetails.maxValue,
         toAddress: toAddress,
-        fromAddress: currentAddress,
+        fromAddress: fromAddress,
         timestamp: new Date().toISOString(),
         refundAddress: refundAddress
       };

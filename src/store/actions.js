@@ -115,7 +115,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
             state.wallet.getChecksumAddressString()
           )
         : arr[i].nonce);
-      arr[i].nonce += i;
+      arr[i].nonce = +arr[i].nonce + i;
       arr[i].gas = await (arr[i].gas === undefined
         ? web3Instance.eth.estimateGas(localTx)
         : arr[i].gas);

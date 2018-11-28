@@ -4,7 +4,7 @@ import {
   changellyStatuses,
   requireExtraId,
   providerName
-} from './implementationDetails';
+} from './config';
 
 export {
   ChangellyCurrencies,

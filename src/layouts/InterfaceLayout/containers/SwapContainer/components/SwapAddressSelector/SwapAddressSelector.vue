@@ -73,30 +73,7 @@ export default {
       selectedAddress: '',
       validAddress: false,
       dropdownOpen: false,
-      addresses: [
-        { address: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9', currency: 'BTC' },
-        { address: '17UkfLgnt55hxBALSe1B7wtZx5ijPvbtdk', currency: 'BCH' },
-        {
-          address: '0x7545566a4339daf3fad6979208b2042f06e8c881',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545196a7339daf3fad6979208b2042f06e8c882',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545193a4339daf3fad6979208b2042f06e8c883',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7515196a4339daf3fad6979208b2042f06e8c884',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545296a4339daf3fad6979208b2042f06e8c885',
-          currency: 'ETH'
-        }
-      ]
+      addresses: []
     };
   },
   watch: {

@@ -49,7 +49,9 @@
           </div>
           <div class="error-message-container">
             <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="notEnough && !fromBelowMinAllowed">Insufficient balance</p>
+            <p v-if="notEnough && !fromBelowMinAllowed">
+              {{ $t('common.dontHaveEnough') }}
+            </p>
             <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
             <p v-else>&nbsp;</p>
@@ -142,9 +144,8 @@
         v-show="finalizingSwap"
         class="disabled submit-button large-round-button-green-filled clickable"
       >
-        Finalizing Swap Details
-        <!-- {{ $t('common.continue') }} -->
-        <i class="fa fa-long-arrow-right" aria-hidden="true" />
+        <i class="fa fa-spinner fa-spin" />
+        {{ $t('interface.swapButtonLoading') }}
       </div>
       <div
         v-show="!finalizingSwap"
@@ -501,11 +502,11 @@ export default {
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateDigital(
-              this.fromCurrency,
-              this.toCurrency,
-              this.toValue
-            );
+            simplexRateDetails = await simplexProvider.updateDigital({
+              fromCurrency: this.fromCurrency,
+              toCurrency: this.toCurrency,
+              toValue: this.toValue
+            });
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
           }
@@ -513,11 +514,11 @@ export default {
         case `${this.providerNames.simplex}from`:
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateFiat(
-              this.fromCurrency,
-              this.toCurrency,
-              this.fromValue
-            );
+            simplexRateDetails = await simplexProvider.updateFiat({
+              fromCurrency: this.fromCurrency,
+              toCurrency: this.toCurrency,
+              fromValue: this.fromValue
+            });
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
           }
@@ -545,7 +546,6 @@ export default {
           fromValue,
           this.toValue
         );
-
         this.providersFound = providersFound;
 
         const results = await Promise.all(
