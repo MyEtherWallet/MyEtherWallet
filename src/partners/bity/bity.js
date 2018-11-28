@@ -1,5 +1,5 @@
 import { networkSymbols } from '../partnersConfig';
-import { getRates, openOrder, getStatus, login } from './bity-calls';
+import { getRates, openOrder, getStatus } from './bity-calls';
 import { BityCurrencies, providerName } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
@@ -45,10 +45,6 @@ export default class BitySwap {
       return BityCurrencies;
     }
     return {};
-  }
-
-  getBTCEquivalent(fromCurrency) {
-    return 0.1 / this._getRate(fromCurrency, 'BTC');
   }
 
   async retrieveRates() {
@@ -186,13 +182,8 @@ export default class BitySwap {
 
   async startSwap(swapDetails) {
     swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency,
-      swapDetails.toCurrency,
-      swapDetails.fromValue,
-      swapDetails.toValue,
-      swapDetails.rate,
-      swapDetails.toAddress,
-      swapDetails.fromCurrency === 'ETH'
+      swapDetails.fromCurrency === 'ETH',
+      swapDetails
     );
     swapDetails.providerReceives =
       swapDetails.dataForInitialization.input.amount;
@@ -204,26 +195,21 @@ export default class BitySwap {
   }
 
   async buildOrder(
-    fromToken,
-    toToken,
-    fromValue,
-    toValue,
-    rate,
-    userAddress,
-    isFrom
+    isFrom,
+    { fromCurrency, toCurrency, fromValue, toValue, toAddress }
   ) {
     if (
-      this.minCheck(fromToken, fromValue, toToken, toValue) &&
-      this.maxCheck(fromToken, fromValue, toToken, toValue)
+      this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
+      this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
     ) {
       const order = {
         amount: fromValue,
         mode: isFrom ? 0 : 1, // check how I should handle this now
-        pair: fromToken + toToken,
-        destAddress: userAddress
+        pair: fromCurrency + toCurrency,
+        destAddress: toAddress
       };
 
-      const bityOrder = await this.openOrder(order);
+      const bityOrder = await openOrder(order);
 
       if (!bityOrder.error) {
         return bityOrder.data;
@@ -263,15 +249,6 @@ export default class BitySwap {
     });
   }
 
-  openOrder(orderInfo) {
-    return openOrder(orderInfo);
-  }
-
-  requireLogin(callback) {
-    if (this.token) callback();
-    else login(callback);
-  }
-
   static parseOrder(order) {
     return {
       orderId: order.id,
@@ -300,38 +277,6 @@ export default class BitySwap {
     if (validStatus.includes(data.status)) {
       return 2;
       // priorStatus = 'RCVE';
-    }
-    if (data.status === 'OPEN') {
-      return 1;
-    } else if (
-      convertStatuses[priorStatus] === 'OPEN' &&
-      validStatus.includes(data.input.status)
-    ) {
-      return 2;
-    } else if (
-      convertStatuses[priorStatus] === 'RCVE' &&
-      validStatus.includes(data.output.status)
-    ) {
-      return 0;
-    } else if (invalidStatus.includes(data.status)) {
-      return -1;
-    }
-    return 1;
-  }
-
-  // TODO: just use the numbers instead of an intermediate conversion key
-  static statuses(data, priorStatus) {
-    const validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
-    const invalidStatus = ['CANC'];
-    const convertStatuses = {
-      [1]: 'OPEN',
-      [2]: 'RCVE',
-      [10]: 'CONF',
-      [0]: 'FILL',
-      [-1]: 'CANC'
-    };
-    if (validStatus.includes(data.status)) {
-      priorStatus = 'RCVE';
     }
     if (data.status === 'OPEN') {
       return 1;
