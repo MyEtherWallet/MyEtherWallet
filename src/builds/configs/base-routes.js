@@ -17,67 +17,62 @@ import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineConta
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
-import store from '@/store';
 
 import dapps from '@/dapps/routes';
+
 const router = [
   {
     path: '/team',
     name: 'TeamLayout',
-    component: TeamLayout
+    component: TeamLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/privacy-policy',
     name: 'PrivacyPolicyLayout',
-    component: PrivacyPolicyLayout
+    component: PrivacyPolicyLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/terms-and-conditions',
     name: 'TermsAndConditionsLayout',
-    component: TermsAndConditionsLayout
+    component: TermsAndConditionsLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/access-my-wallet',
     name: 'AccessWalletLayout',
-    component: AccessWalletLayout
+    component: AccessWalletLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/help-center',
     name: 'HelpCenterLayout',
-    component: HelpCenterLayout
+    component: HelpCenterLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/convert-units',
     name: 'ConvertUnits',
-    component: ConvertUnits
+    component: ConvertUnits,
+    meta: { requiresAuth: false }
   },
   {
     path: '/getting-started',
     name: 'GettingStarted',
-    component: GettingStarted
+    component: GettingStarted,
+    meta: { requiresAuth: false }
   },
   {
     path: '*',
     name: '404',
-    component: NotFoundLayout
+    component: NotFoundLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/interface',
     component: InterfaceLayout,
-    beforeEnter(to, ___, next) {
-      if (store.state.wallet === null) {
-        store.dispatch('setLastPath', to.path);
-        next({ name: 'AccessWalletLayout' });
-      } else {
-        if (store.state.path !== '') {
-          const localPath = store.state.path;
-          store.dispatch('setLastPath', '');
-          next({ path: localPath });
-        } else {
-          next();
-        }
-      }
-    },
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -107,7 +102,10 @@ const router = [
       {
         path: 'send-offline',
         component: SendOfflineContainer,
-        children: offlineRoutes.children
+        children: offlineRoutes.children.map(item => {
+          item['meta'] = { requiresAuth: true };
+          return item;
+        })
       },
       {
         path: 'swap',
@@ -130,6 +128,18 @@ const router = [
 
 Object.keys(dapps).forEach(dapp => {
   router[router.length - 1].children.push(dapps[dapp]);
+});
+
+router[router.length - 1].children.map(route => {
+  if (route.hasOwnProperty('children')) {
+    route.children.map(childRoute => {
+      childRoute['meta'] = { requiresAuth: true };
+      return childRoute;
+    });
+  }
+
+  route['meta'] = { requiresAuth: true };
+  return route;
 });
 
 export default router;
