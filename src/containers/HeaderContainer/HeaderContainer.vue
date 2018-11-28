@@ -138,7 +138,7 @@ export default {
       supportedLanguages: [
         { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
         { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
-        { name: 'English', flag: 'en', langCode: 'en_EN' },
+        { name: 'English', flag: 'en', langCode: 'en_US' },
         { name: 'Español', flag: 'es', langCode: 'es_ES' },
         { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
         { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
