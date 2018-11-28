@@ -101,6 +101,11 @@ export default {
       wallet: 'wallet'
     })
   },
+  mounted() {
+    if (this.domainName === '') {
+      this.$router.push('/interface/dapps/register-domain');
+    }
+  },
   methods: {
     openFinalizeModal() {
       this.$refs.finalizeModal.$refs.finalize.show();

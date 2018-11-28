@@ -20,6 +20,11 @@ export default {
       type: String,
       default: ''
     }
+  },
+  mounted() {
+    if (this.domainName === '') {
+      this.$router.push('/interface/dapps/register-domain');
+    }
   }
 };
 </script>
