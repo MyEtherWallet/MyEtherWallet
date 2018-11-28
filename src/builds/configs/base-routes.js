@@ -102,10 +102,7 @@ const router = [
       {
         path: 'send-offline',
         component: SendOfflineContainer,
-        children: offlineRoutes.children.map(item => {
-          item['meta'] = { requiresAuth: true };
-          return item;
-        })
+        children: offlineRoutes.children
       },
       {
         path: 'swap',
