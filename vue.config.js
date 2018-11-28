@@ -155,7 +155,7 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 module.exports = {
-  baseUrl: '/',
+  baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
   chainWebpack: config => {}
 };
