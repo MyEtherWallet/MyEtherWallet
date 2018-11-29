@@ -1,7 +1,7 @@
 <template>
   <div class="tx-topmenu-popup">
-    <div class="wrap">
-      <div class="menu-title" @click.native="popupOpen = !popupOpen;">
+    <div class="wrap txpopup-container">
+      <div class="menu-title" @click="popupOpen = !popupOpen;">
         <i class="indicator fa fa-circle" aria-hidden="true"></i>
         <p>Transactions</p>
         <i v-if="popupOpen" class="fa fa-angle-up" aria-hidden="true"></i>
@@ -34,19 +34,19 @@ export default {
   },
   data() {
     return {
-      popupOpen: true
+      popupOpen: false
     };
   },
   beforeMount() {
-    //document.addEventListener('click', this.clickEvent, false);
+    document.addEventListener('click', this.clickEvent, false);
   },
   beforeDestroy() {
-    //document.removeEventListener('click', this.clickEvent, false);
+    document.removeEventListener('click', this.clickEvent, false);
   },
   methods: {
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
-        if (event.path[count].className === 'popup-container') {
+        if (event.path[count].className === 'wrap txpopup-container') {
           return;
         }
       }
