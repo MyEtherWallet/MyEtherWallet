@@ -17,7 +17,7 @@
 
 .fixed-header-border-bottom {
   //border-bottom: 1px solid black;
-  box-shadow: 0px 0px 2px #0000003b;
+  box-shadow: 0 0 2px #0000003b;
 }
 
 .fixed-header {
@@ -172,8 +172,6 @@
   } // .header-container
 } // .fixed-header
 
-
-
 //********************************************************
 // .mobile-language-menu-container
 //********************************************************
@@ -186,11 +184,9 @@
   .arrows {
     margin-left: auto;
   }
-
 }
 
 .mobile-language-menu {
-
   .current-language-flag {
     display: flex;
     align-items: center;
@@ -211,7 +207,6 @@
     }
   }
 }
-
 
 //********************************************************
 // .mobile-menu-content
