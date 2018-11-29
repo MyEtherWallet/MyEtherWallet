@@ -24,7 +24,7 @@
                 class="nounderline"
               >
                 <span class="large-round-button-white-filled__body-text-color">
-                  {{ $t('home.getANewWallet') }}
+                  {{ $t('common.accessMyWallet') }}
                 </span>
               </router-link>
             </div>
