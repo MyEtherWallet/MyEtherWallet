@@ -10,22 +10,71 @@
       <scroll-up-button />
     </div>
     <div
+      :class="isMobileMenuOpen && 'mobile-menu-open'"
+      class="mobile-menu-underblock"
+    />
+    <div
       :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
       class="mobile-menu-content"
     >
       <div class="page-container">
         <ul>
           <li>
-            <div @click="scrollTop();">{{ $t('header.home') }}</div>
+            <div
+              @click="
+                scrollTop();
+                isMobileMenuOpen = false;
+              "
+            >
+              {{ $t('header.home') }}
+            </div>
           </li>
           <li>
-            <a href="/#about-mew">{{ $t('header.about') }}</a>
+            <a href="/#about-mew" @click="isMobileMenuOpen = false;">{{
+              $t('header.about')
+            }}</a>
           </li>
           <li>
-            <a href="/#faqs">{{ $t('common.faqs') }}</a>
+            <a href="/#faqs" @click="isMobileMenuOpen = false;">{{
+              $t('common.faqs')
+            }}</a>
           </li>
           <li v-if="false">
-            <a href="/#news">{{ $t('common.news') }}</a>
+            <a href="/#news" @click="isMobileMenuOpen = false;">{{
+              $t('common.news')
+            }}</a>
+          </li>
+          <li>
+            <div class="mobile-language-menu-container">
+              <b-nav-item-dropdown
+                class="mobile-language-menu"
+                extra-toggle-classes="nav-link-custom"
+                right
+              >
+                <template slot="button-content">
+                  <div class="current-language-flag">
+                    <p>{{ currentName }}</p>
+                    <img
+                      :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                      class="show"
+                    />
+                  </div>
+                </template>
+                <b-dropdown-item
+                  v-for="language in supportedLanguages"
+                  :active="$root._i18n.locale === language.flag"
+                  :key="language.key"
+                  :data-language-code="language.langCode"
+                  :data-flag-name="language.flag"
+                  @click="languageItemClicked"
+                >
+                  {{ language.name }}
+                </b-dropdown-item>
+              </b-nav-item-dropdown>
+              <div class="arrows">
+                <i class="fa fa-angle-right" aria-hidden="true" />
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -34,7 +83,10 @@
     <div class="wrap">
       <div
         ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
+        :class="[
+          !isPageOnTop && !isMobileMenuOpen && 'tiny-header',
+          isMobileMenuOpen && 'fixed-header-border-bottom'
+        ]"
         class="fixed-header"
       >
         <div
@@ -42,10 +94,16 @@
           class="page-container"
         >
           <div class="header-container">
-            <router-link to="/" @click.native="scrollTop();">
+            <router-link
+              to="/"
+              @click.native="
+                scrollTop();
+                isMobileMenuOpen = false;
+              "
+            >
               <div class="top-logo">
                 <img
-                  :class="isPageOnTop == false ? 'logo-small' : ''"
+                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
                   src="~@/assets/images/logo.png"
                 />
