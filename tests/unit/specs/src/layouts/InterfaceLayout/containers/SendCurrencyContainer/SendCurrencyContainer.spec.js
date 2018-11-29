@@ -12,7 +12,6 @@ import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import store from 'store';
 
 import {
   Tooling
@@ -39,17 +38,17 @@ describe('SendCurrencyContainer.vue', () => {
           setGasPrice: jest.fn()
         };
 
-      
+
 
         const network = nodeList['ETH'][3];
         const hostUrl = url.parse(network.url);
-        
+
         const newWeb3 = new Web3(
           `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
             hostUrl.pathname
           }`
         );
-        
+
           const wallet = {
               getChecksumAddressString: jest.fn(x=> 0),
               getAddressString: function(){
@@ -66,7 +65,7 @@ describe('SendCurrencyContainer.vue', () => {
           web3: ()=> {
             return newWeb3
           },
-          account: () => { 
+          account: () => {
               return  {balance: {
                   result:''
                 }
@@ -140,7 +139,7 @@ describe('SendCurrencyContainer.vue', () => {
       wrapper.setData({advancedExpend: true, gasAmount:gasAmount});
       expect(wrapper.vm.$el.querySelector('.gas-amount input').value).toEqual(String(gasAmount));
     });
-    
+
     it('should render correct transactionFee data', () => {
       const transactionFee = 100;
       wrapper.setData({transactionFee});

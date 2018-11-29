@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     close() {
-      this.refs.finalize.hide();
+      this.$refs.finalize.hide();
     }
   }
 };

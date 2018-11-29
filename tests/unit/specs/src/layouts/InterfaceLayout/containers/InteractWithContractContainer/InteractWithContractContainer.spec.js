@@ -220,7 +220,7 @@ describe('InteractWithContractContainer.vue', () => {
       }
     });
 
-    xit('[FAILED] should switch view when submit button clicked', () => {
+    xit('[FAILING MAX STACK] should switch view when submit button clicked', () => {
       const abi = [
         {
           constant: true,

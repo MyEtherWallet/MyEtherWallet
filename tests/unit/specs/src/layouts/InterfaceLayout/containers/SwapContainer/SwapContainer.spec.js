@@ -13,7 +13,7 @@ const RouterLinkStub = {
   name:'router-link',
   template:'<p> <slot> </slot></p>',
   // render: ()=>{},
-  props:['to']  
+  props:['to']
 }
 
 
@@ -25,10 +25,10 @@ const BModalStub = {
   props:['to'],
   methods: {
     show: showModal
-  }  
+  }
 }
 
-describe('SwapContainer.vue', () => {
+xdescribe('[UNDER ACTIVE DEVELOPMENT] SwapContainer.vue', () => {
     let localVue, i18n, wrapper, store;
     const resetView = jest.fn(()=> console.log('resetView function called'))
     beforeAll(() => {
