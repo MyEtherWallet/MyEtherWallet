@@ -13,6 +13,7 @@
       :class="isMobileMenuOpen && 'mobile-menu-open'"
       class="mobile-menu-underblock"
     />
+    <!-- Fixed position mobile menu starts here ------------- -->
     <div
       :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
       class="mobile-menu-content"
@@ -29,7 +30,7 @@
               {{ $t('header.home') }}
             </div>
           </li>
-          <li>
+          <li v-if="isHomePage">
             <a href="/#about-mew" @click="isMobileMenuOpen = false;">{{
               $t('header.about')
             }}</a>
@@ -80,6 +81,7 @@
       </div>
     </div>
     <!-- .mobile-menu-content -->
+    <!-- Fixed position mobile menu ends here ------------- -->
     <div class="wrap">
       <div
         ref="fixedHeader"
@@ -111,14 +113,22 @@
             </router-link>
             <div class="top-menu">
               <b-nav>
-                <b-nav-item to="/" exact @click="scrollTop();">
+                <b-nav-item
+                  v-if="isHomePage"
+                  to="/"
+                  exact
+                  @click="scrollTop();"
+                >
                   {{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item to="/#about-mew">{{
+                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
                   $t('header.about')
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <b-nav-item v-show="online" to="/#news">{{
+                <div v-if="!isHomePage" class="menu-tx-popup">
+                  <txpoppup isopen="false" />
+                </div>
+                <b-nav-item v-if="isHomePage" v-show="online" to="/#news">{{
                   $t('common.news')
                 }}</b-nav-item>
 
@@ -216,7 +226,7 @@ import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-// import TxTopMenuPopup from '@/components/TxTopMenuPopup';
+import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
 
 export default {
@@ -226,7 +236,7 @@ export default {
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    // txpoppup: TxTopMenuPopup,
+    txpoppup: TxTopMenuPopup,
     'logout-modal': LogoutModal
   },
   data() {
@@ -258,7 +268,8 @@ export default {
       currentName: 'English',
       currentFlag: 'en',
       isPageOnTop: true,
-      isMobileMenuOpen: false
+      isMobileMenuOpen: false,
+      isHomePage: false
     };
   },
   computed: {

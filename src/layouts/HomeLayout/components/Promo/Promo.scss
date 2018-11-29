@@ -42,7 +42,7 @@
 
       @media all and (min-width: $mobile-width + 1) and (max-width: $tablet-width) {
         .button-block {
-          margin-left: 0px;
+          margin-left: 0;
         }
         div {
           &:last-child span {
