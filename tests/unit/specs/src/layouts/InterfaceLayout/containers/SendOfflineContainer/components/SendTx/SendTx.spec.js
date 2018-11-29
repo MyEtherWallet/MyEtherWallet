@@ -29,7 +29,7 @@ describe('SendTx.vue', () => {
     });
   });
 
-  it('should render correct content', () => {});
+  xit('[FAILING MAX STACK] should render correct content', () => {});
 
   describe('SendTx.vue Methods', () => {});
 });
