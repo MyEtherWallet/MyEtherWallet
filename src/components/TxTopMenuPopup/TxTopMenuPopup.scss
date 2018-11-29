@@ -39,6 +39,14 @@
   position: absolute;
   top: 35px;
   left: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s linear;
+
+  &.popup-open {
+    pointer-events: initial;
+    opacity: 1;
+  }
 }
 
 .popup-container .popup-box {
