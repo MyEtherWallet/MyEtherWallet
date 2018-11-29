@@ -71,7 +71,7 @@ describe('kyber.js', () => {
     expect(approveData).toMatchObject(dataValue);
   });
 
-  if (withNetwork) {
+  if (WITH_NETWORK) {
     // requires network to function
     it('should return data for kyber trade tx', async () => {
       const dataValue = {

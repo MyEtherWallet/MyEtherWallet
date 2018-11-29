@@ -362,7 +362,6 @@ export default class Kyber {
     { fromCurrency, toCurrency, fromValueWei, fromAddress },
     minRateWei
   ) {
-    const walletId = walletDepositeAddress;
     // Cannot use a larger value (which solidity supports due to error from web3/ethers,
     // see: https://github.com/ethereum/web3.js/issues/1920
     // This can cause the transaction to fail and revert
@@ -376,7 +375,7 @@ export default class Kyber {
         fromAddress,
         maxDestAmount,
         minRateWei,
-        walletId
+        walletDepositeAddress
       )
       .encodeABI();
 

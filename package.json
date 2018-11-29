@@ -7,7 +7,7 @@
     "start": "npm run update:lists && npm run dev",
     "test:single": "DEBUG=test:* vue-cli-service test:unit --runTestsByPath",
     "test:unit": "vue-cli-service test:unit",
-    "test": "jest --clearCache && npm run test:unit",
+    "test": "WITH_NETWORK=no jest --clearCache && npm run test:unit",
     "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
