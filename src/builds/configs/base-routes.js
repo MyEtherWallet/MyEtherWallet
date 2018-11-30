@@ -81,7 +81,6 @@ const router = [
   {
     path: '/interface',
     component: InterfaceLayout,
-    meta: { requiresAuth: true },
     children: [
       {
         path: '',

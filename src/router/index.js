@@ -20,7 +20,7 @@ const router = new Router({
 });
 
 router.beforeResolve((to, ___, next) => {
-  if (to.meta.requiresAuth === false) {
+  if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
     if (store.state.wallet === null) {

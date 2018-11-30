@@ -80,22 +80,29 @@ export default {
   },
   methods: {
     async fetchBalanceData() {
-      this.equivalentValues = [];
-      // 1027 is coinmarketcap's id for ethereum
-      const url = 'https://cryptorates.mewapi.io/convert/1027';
+      const newArr = [];
+      const url =
+        'https://0spkoad0rl.execute-api.us-east-1.amazonaws.com/latest/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      delete values['lastCalled'];
-      for (const key in values) {
-        const objectRes = {
-          name: key,
-          value: new BigNumber(this.balance)
-            .multipliedBy(new BigNumber(values[key]))
-            .decimalPlaces(18)
-            .toFixed()
-        };
-        this.equivalentValues.push(objectRes);
-      }
+      Object.keys(values).forEach(item => {
+        if (
+          this.equivalentValues.find(curr => {
+            return curr.name === item;
+          })
+        ) {
+          const objectRes = {
+            name: item,
+            value: new BigNumber(this.balance)
+              .multipliedBy(new BigNumber(values[item]))
+              .decimalPlaces(18)
+              .toFixed()
+          };
+          newArr.push(objectRes);
+        }
+      });
+
+      this.equivalentValues = newArr;
     }
   }
 };
