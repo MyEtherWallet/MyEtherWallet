@@ -45,7 +45,7 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
+import Worker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapGetters } from 'vuex';
 export default {
   props: {
