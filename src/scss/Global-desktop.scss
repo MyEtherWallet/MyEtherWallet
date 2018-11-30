@@ -626,6 +626,11 @@
   // Tooltip
   // *********************************************************************
 
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+  }
+
   .popover {
     pointer-events: none;
   }

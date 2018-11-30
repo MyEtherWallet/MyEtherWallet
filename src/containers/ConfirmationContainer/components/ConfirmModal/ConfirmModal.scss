@@ -30,9 +30,15 @@
     }
 
     .tx-info {
+      $tx-info-grid-size: 270px;
+
       display: grid;
-      grid-template-columns: 1fr 70px 1fr;
+      grid-template-columns: $tx-info-grid-size 70px $tx-info-grid-size;
       padding-bottom: 15px;
+
+      .address-container {
+        width: 100%;
+      }
 
       .tx-data {
         background-color: $background-color-7;
@@ -79,7 +85,17 @@
       } // .info
 
       .expended-info {
-        padding-top: 10px;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+
+        &.expended-info-open {
+          max-height: 600px;
+        }
+
+        .padding-container {
+          padding-top: 10px;
+        }
 
         .grid-block {
           display: grid;

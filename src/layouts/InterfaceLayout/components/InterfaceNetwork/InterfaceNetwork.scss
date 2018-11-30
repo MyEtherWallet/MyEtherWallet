@@ -15,8 +15,8 @@
   border-radius: 100%;
   margin-right: 25px !important;
 
-
   $network-image-size: 60px !important;
+
   height: $network-image-size;
   width: $network-image-size;
 
@@ -27,9 +27,7 @@
       height: 45px !important;
     }
   }
-  
 }
-
 
 .title-and-helper {
   display: flex;

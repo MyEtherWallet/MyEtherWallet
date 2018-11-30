@@ -167,23 +167,28 @@
             </div>
           </div>
         </div>
-        <div v-if="advancedExpend" class="input-container">
-          <div class="the-form user-input">
-            <input
-              v-model="data"
-              type="text"
-              name=""
-              placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-              autocomplete="off"
-            />
-          </div>
-          <div class="the-form user-input">
-            <input
-              v-model="gasLimit"
-              :placeholder="$t('common.gasLimit')"
-              type="number"
-              name=""
-            />
+        <div
+          :class="advancedExpend && 'input-container-open'"
+          class="input-container"
+        >
+          <div class="margin-container">
+            <div class="the-form user-input">
+              <input
+                v-model="data"
+                type="text"
+                name=""
+                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
+                autocomplete="off"
+              />
+            </div>
+            <div class="the-form user-input">
+              <input
+                v-model="gasLimit"
+                :placeholder="$t('common.gasLimit')"
+                type="number"
+                name=""
+              />
+            </div>
           </div>
         </div>
       </div>
