@@ -125,9 +125,7 @@
                   $t('header.about')
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div v-if="!isHomePage" class="menu-tx-popup">
-                  <txpoppup isopen="false" />
-                </div>
+                <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
                 <b-nav-item v-if="isHomePage" v-show="online" to="/#news">{{
                   $t('common.news')
                 }}</b-nav-item>
@@ -269,7 +267,7 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: false
+      isHomePage: true
     };
   },
   computed: {

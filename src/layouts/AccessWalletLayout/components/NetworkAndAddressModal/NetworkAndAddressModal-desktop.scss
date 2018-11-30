@@ -1,5 +1,86 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  $collapse-button-color: #334758;
+
+  .collapse-container {
+    margin-bottom: 10px;
+    &:last-child {
+      margin: 0;
+    }
+
+    ul.networks {
+      max-height: 300px;
+      overflow-y: auto;
+      li {
+        padding: 10px 5px;
+        border-bottom: 1px solid #ececec;
+        &:last-child {
+          border: 0;
+        }
+
+        .network-content {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-column-gap: 20px;
+          padding-left: 30px;
+        }
+
+        .network-title {
+          display: flex;
+          align-items: center;
+          margin-bottom: 5px;
+
+          img {
+            height: 25px;
+            opacity: 0.3;
+            margin-right: 10px;
+          }
+
+          p {
+            font-size: 18px;
+            font-weight: 500;
+          }
+        } // .network-title
+      } // li
+    } // ul
+
+    .collapse-content {
+      padding: 10px;
+    }
+
+    .collapse-open-button {
+      width: 100%;
+      background-color: $collapse-button-color !important;
+      border-color: $collapse-button-color !important;
+      display: flex;
+
+      p {
+        font-weight: 600;
+        color: white;
+        span {
+          font-weight: 400;
+        }
+      }
+
+      .right-button {
+        margin-left: auto;
+      }
+
+      .button-number {
+        line-height: 18px;
+        border: 1px solid white;
+        border-radius: 100%;
+        text-align: center;
+        margin-right: 10px;
+
+        $number-size: 20px;
+
+        width: $number-size;
+        height: $number-size;
+      }
+    }
+  }
+
   .modal-body .button-container button {
     width: 100%;
   }
@@ -11,8 +92,8 @@
 
   .modal-network-and-address {
     .content-container-1 {
-      margin: -20px -40px 0;
-      padding: 0 25px;
+      //margin: -20px -40px 0;
+      padding: 0 0;
 
       .hd-derivation {
         align-items: center;
@@ -32,7 +113,7 @@
 
     .content-container-2 {
       background-color: $background-color-1;
-      margin: 0 -40px;
+      margin: 0 -30px;
       margin-bottom: 30px;
       padding: 0;
 

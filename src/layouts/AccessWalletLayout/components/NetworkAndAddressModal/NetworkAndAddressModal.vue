@@ -6,148 +6,238 @@
     class="bootstrap-modal padding-25-20 modal-network-and-address"
     centered
   >
-    <!-- Derivation Path Drop down -->
-    <div class="content-container-1">
-      <div class="hd-derivation">
-        <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
-        <p>Jaxx, Metamask, Exodus, imToken, Trezor(ETH) & Digital Bitbox</p>
-        <div class="dropdown-button-container">
-          <b-dropdown
-            id="hd-derivation-path"
-            :text="selectedPath"
-            class="dropdown-button-2"
-          >
-            <b-dropdown-item
-              v-for="(val, key) in availablePaths"
-              v-if="key !== 'default'"
-              :class="selectedPath === val.path ? 'active' : ''"
-              :key="'base' + key"
-              @click="changePath(key);"
-            >
-              {{ val.path }}
-            </b-dropdown-item>
-            <b-dropdown-divider />
-            <b-dropdown-item>
-              {{ $t('accessWallet.customPaths') }}
-            </b-dropdown-item>
-            <b-dropdown-item
-              v-for="(val, key) in customPaths"
-              :class="selectedPath.dpath === val.dpath ? 'active' : ''"
-              :key="key"
-              @click="changePath(key);"
-            >
-              {{ val.dpath }}
-            </b-dropdown-item>
-            <b-dropdown-item @click="showCustomPathInput">
-              {{ $t('accessWallet.addCustomPath') }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </div>
-      </div>
-      <p v-show="invalidPath !== ''" class="error-message-container">
-        {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath
-        }}{{ $t('accessWallet.invalidPathDescCont') }}
-      </p>
-      <p v-show="!customPathInput" class="derivation-brands">
-        {{ getPathLabel(selectedPath) }}
-      </p>
-      <div v-show="customPathInput">
-        <!-- TODO: how to structure the path input? -->
-        <input
-          id="customPathLabel"
-          v-model="customPath.label"
-          placeholder="my custom path"
-        />
-        <br />
-        <input
-          id="customPathInput"
-          v-model="customPath.dpath"
-          placeholder="m/44'/1'/0'/0"
-        />
-        <br />
-        <button @click="addCustomPath">
-          {{ $t('accessWallet.addCustomPath') }}
-        </button>
-        <button @click="showCustomPathInput">{{ $t('common.cancel') }}</button>
-      </div>
-    </div>
-    <!-- Address List -->
-    <div class="content-container-2">
-      <div class="address-block-container">
-        <div class="block-title">
-          <h4>{{ $t('accessWallet.interactAddr') }}</h4>
-        </div>
-
-        <ul class="address-block table-header">
-          <li>{{ $t('accessWallet.id') }}</li>
-          <li>{{ $t('common.address') }}</li>
-          <li />
-        </ul>
-
-        <ul
-          v-for="account in HDAccounts"
-          :data-address="'address' + account.index"
-          :key="account.index"
-          :class="selectedId === 'address' + account.index ? 'selected' : ''"
-          class="address-block address-data"
-          @click="setAccount(account);"
-        >
-          <li>{{ account.index }}.</li>
-          <li>{{ account.account.getChecksumAddressString() }}</li>
-          <li class="user-input-checkbox">
-            <label class="checkbox-container checkbox-container-small">
-              <input
-                :id="'address' + account.index"
-                type="checkbox"
-                @click="unselectAllAddresses"
-              />
-              <span class="checkmark checkmark-small" />
-            </label>
+    <div class="collapse-container">
+      <b-btn
+        v-b-toggle.collapse1
+        v-b-toggle.collapse2
+        class="collapse-open-button"
+        variant="primary"
+      >
+        <p class="button-number">1</p>
+        <p>Network <span>(ETH - myetherapi.com)</span></p>
+        <p class="right-button">Cancel</p>
+      </b-btn>
+      <b-collapse
+        id="collapse1"
+        v-model="showCollapse1"
+        class="mt-2 collapse-content"
+      >
+        <ul class="networks">
+          <li>
+            <div class="network-title">
+              <img :src="ethereumIcon" />
+              <p>ETH</p>
+            </div>
+            <div class="network-content">
+              <p>myetherwalletapi.com</p>
+              <p>infura.io</p>
+              <p>giveth.io</p>
+              <p>etherscan.io</p>
+            </div>
+          </li>
+          <li>
+            <div class="network-title">
+              <img :src="ethereumIcon" />
+              <p>ETH</p>
+            </div>
+            <div class="network-content">
+              <p>myetherwalletapi.com</p>
+              <p>infura.io</p>
+              <p>giveth.io</p>
+              <p>etherscan.io</p>
+            </div>
+          </li>
+          <li>
+            <div class="network-title">
+              <img :src="ethereumIcon" />
+              <p>ETH</p>
+            </div>
+            <div class="network-content">
+              <p>myetherwalletapi.com</p>
+              <p>infura.io</p>
+              <p>giveth.io</p>
+              <p>etherscan.io</p>
+            </div>
+          </li>
+          <li>
+            <div class="network-title">
+              <img :src="ethereumIcon" />
+              <p>ETH</p>
+            </div>
+            <div class="network-content">
+              <p>myetherwalletapi.com</p>
+              <p>infura.io</p>
+              <p>giveth.io</p>
+              <p>etherscan.io</p>
+            </div>
           </li>
         </ul>
-      </div>
-      <!-- .address-block-container -->
-
-      <div class="address-nav">
-        <span @click="previousAddressSet();"
-          >&lt; {{ $t('common.previous') }}</span
-        >
-        <span @click="nextAddressSet();">{{ $t('common.next') }} &gt;</span>
-      </div>
+      </b-collapse>
     </div>
-    <!-- .content-container-2 -->
-
-    <div class="accept-terms">
-      <label class="checkbox-container"
-        >{{ $t('accessWallet.acceptTerms') }}
-        <router-link to="/terms-and-conditions">{{
-          $t('common.terms')
-        }}</router-link
-        >.
-        <input
-          ref="accessMyWalletBtn"
-          type="checkbox"
-          @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
-        />
-        <span class="checkmark" />
-      </label>
-    </div>
-    <div class="button-container">
+    <div class="collapse-container">
       <b-btn
-        :disabled="accessMyWalletBtnDisabled"
-        class="mid-round-button-green-filled close-button"
-        @click.prevent="unlockWallet"
+        v-b-toggle.collapse1
+        v-b-toggle.collapse2
+        class="collapse-open-button"
+        variant="primary"
       >
-        {{ $t('common.accessMyWallet') }}
+        <p class="button-number">2</p>
+        <p>Address</p>
       </b-btn>
+      <b-collapse
+        id="collapse2"
+        v-model="showCollapse2"
+        class="mt-2 collapse-content"
+      >
+        <!-- Derivation Path Drop down -->
+        <div class="content-container-1">
+          <div class="hd-derivation">
+            <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+            <div class="dropdown-button-container">
+              <b-dropdown
+                id="hd-derivation-path"
+                text="selectedPath"
+                class="dropdown-button-2"
+              >
+                <b-dropdown-item
+                  v-for="(val, key) in availablePaths"
+                  v-if="key !== 'default'"
+                  :class="selectedPath === val.path ? 'active' : ''"
+                  :key="'base' + key"
+                  @click="changePath(key);"
+                >
+                  {{ val.path }}
+                </b-dropdown-item>
+                <b-dropdown-divider />
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
+                <b-dropdown-item
+                  v-for="(val, key) in customPaths"
+                  :class="selectedPath.dpath === val.dpath ? 'active' : ''"
+                  :key="key"
+                  @click="changePath(key);"
+                >
+                  {{ val.dpath }}
+                </b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </div>
+          <p v-show="invalidPath !== ''" class="error-message-container">
+            {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath
+            }}{{ $t('accessWallet.invalidPathDescCont') }}
+          </p>
+          <p v-show="!customPathInput" class="derivation-brands">
+            {{ getPathLabel(selectedPath) }}
+          </p>
+          <div v-show="customPathInput">
+            <!-- TODO: how to structure the path input? -->
+            <input
+              id="customPathLabel"
+              v-model="customPath.label"
+              placeholder="my custom path"
+            />
+            <br />
+            <input
+              id="customPathInput"
+              v-model="customPath.dpath"
+              placeholder="m/44'/1'/0'/0"
+            />
+            <br />
+            <button @click="addCustomPath">
+              {{ $t('accessWallet.addCustomPath') }}
+            </button>
+            <button @click="showCustomPathInput">
+              {{ $t('common.cancel') }}
+            </button>
+          </div>
+        </div>
+        <!-- Address List -->
+        <div class="content-container-2">
+          <div class="address-block-container">
+            <div class="block-title">
+              <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+            </div>
+
+            <ul class="address-block table-header">
+              <li>{{ $t('accessWallet.id') }}</li>
+              <li>{{ $t('common.address') }}</li>
+              <li />
+            </ul>
+
+            <ul
+              v-for="account in HDAccounts"
+              :data-address="'address' + account.index"
+              :key="account.index"
+              :class="
+                selectedId === 'address' + account.index ? 'selected' : ''
+              "
+              class="address-block address-data"
+              @click="setAccount(account);"
+            >
+              <li>{{ account.index }}.</li>
+              <li>{{ account.account.getChecksumAddressString() }}</li>
+              <li class="user-input-checkbox">
+                <label class="checkbox-container checkbox-container-small">
+                  <input
+                    :id="'address' + account.index"
+                    type="checkbox"
+                    @click="unselectAllAddresses"
+                  />
+                  <span class="checkmark checkmark-small" />
+                </label>
+              </li>
+            </ul>
+          </div>
+          <!-- .address-block-container -->
+
+          <div class="address-nav">
+            <span @click="previousAddressSet();"
+              >&lt; {{ $t('common.previous') }}</span
+            >
+            <span @click="nextAddressSet();">{{ $t('common.next') }} &gt;</span>
+          </div>
+        </div>
+        <!-- .content-container-2 -->
+
+        <div class="accept-terms">
+          <label class="checkbox-container"
+            >{{ $t('accessWallet.acceptTerms') }}
+            <router-link to="/terms-and-conditions">{{
+              $t('common.terms')
+            }}</router-link
+            >.
+            <input
+              ref="accessMyWalletBtn"
+              type="checkbox"
+              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+            />
+            <span class="checkmark" />
+          </label>
+        </div>
+        <div class="button-container">
+          <b-btn
+            :disabled="accessMyWalletBtnDisabled"
+            class="mid-round-button-green-filled close-button"
+            @click.prevent="unlockWallet"
+          >
+            {{ $t('common.accessMyWallet') }}
+          </b-btn>
+        </div>
+        <customer-support />
+      </b-collapse>
     </div>
-    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
+import ethIcon from '@/assets/images/icons/ethereum-icon.png';
+
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -163,6 +253,7 @@ export default {
   },
   data() {
     return {
+      ethereumIcon: ethIcon,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       currentIndex: 0,
@@ -172,7 +263,9 @@ export default {
       invalidPath: '',
       customPathInput: false,
       currentWallet: null,
-      customPath: { label: '', dpath: '' }
+      customPath: { label: '', dpath: '' },
+      showCollapse1: false,
+      showCollapse2: true
     };
   },
   computed: {
@@ -188,6 +281,7 @@ export default {
     }
   },
   mounted() {
+    //this.$refs.networkAndAddress.show();
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
