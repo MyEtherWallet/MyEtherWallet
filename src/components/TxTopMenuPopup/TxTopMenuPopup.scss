@@ -41,7 +41,7 @@
   left: 20px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s linear;
+  transition: opacity 0.1s linear;
 
   &.popup-open {
     pointer-events: initial;

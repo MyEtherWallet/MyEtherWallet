@@ -566,6 +566,7 @@
   // *********************************************************************
   .modal {
     z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
   .modal-backdrop {
@@ -791,7 +792,7 @@
     }
 
     .modal-body {
-      padding: 40px;
+      padding: 20px;
     }
   }
 
