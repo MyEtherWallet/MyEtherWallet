@@ -1,15 +1,15 @@
 import { ChangellyCurrencies } from './currencies';
 import {
-  changellyAddresses,
+  changellyMethods,
   changellyStatuses,
   requireExtraId,
-  providerName
+  PROVIDER_NAME
 } from './config';
 
 export {
   ChangellyCurrencies,
-  changellyAddresses,
+  changellyMethods,
   changellyStatuses,
   requireExtraId,
-  providerName
+  PROVIDER_NAME
 };

@@ -4,7 +4,7 @@ import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
   kyberBaseCurrency,
-  providerName,
+  PROVIDER_NAME,
   defaultValues,
   KyberCurrencies,
   kyberAddressFallback,
@@ -47,7 +47,7 @@ export default class Kyber {
   }
 
   static getName() {
-    return providerName;
+    return PROVIDER_NAME;
   }
 
   get currencies() {

@@ -1,6 +1,13 @@
-import { networkSymbols } from '../partnersConfig';
+import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
 import { getRates, openOrder, getStatus } from './bity-calls';
-import { BityCurrencies, providerName } from './config';
+import {
+  BityCurrencies,
+  bityFiatCurrencies,
+  PROVIDER_NAME,
+  BITY_MAX,
+  BITY_MIN,
+  BITY_DECIMALS
+} from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
   if (currencyList[symbol]) {
@@ -18,14 +25,14 @@ export default class BitySwap {
   constructor(props = {}) {
     this.name = BitySwap.getName();
     this.network = props.network || networkSymbols.ETH;
-    this.decimals = 6;
+    this.decimals = BITY_DECIMALS;
     this.hasRates = 0;
     this.validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
     this.invalidStatus = ['CANC'];
     this.mainPairs = ['REP', 'ETH'];
-    this.minValue = 0.01;
-    this.maxValue = 3;
-    this.fiatCurrencies = ['CHF', 'USD', 'EUR'];
+    this.minValue = BITY_MIN;
+    this.maxValue = BITY_MAX;
+    this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.currentOrderStatus = ''; // temporary placeholder variable
     this.rates = new Map();
 
@@ -33,7 +40,7 @@ export default class BitySwap {
   }
 
   static getName() {
-    return providerName;
+    return PROVIDER_NAME;
   }
 
   get isValidNetwork() {
@@ -182,7 +189,7 @@ export default class BitySwap {
 
   async startSwap(swapDetails) {
     swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency === 'ETH',
+      swapDetails.fromCurrency === BASE_CURRENCY,
       swapDetails
     );
     swapDetails.providerReceives =
@@ -224,6 +231,7 @@ export default class BitySwap {
     }).then(this.updateStatus);
   }
 
+  // ================= Check status of order methods ===================================
   updateStatus(data) {
     return new Promise(resolve => {
       if (this.validStatus.indexOf(data.status) !== -1) {

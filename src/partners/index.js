@@ -1,15 +1,19 @@
-import { BitySwap, BityCurrencies, providerName as bity } from './bity';
+import { BitySwap, BityCurrencies, PROVIDER_NAME as bity } from './bity';
 import {
   KyberCurrencies,
   KyberSwap,
-  providerName as kybernetwork
+  PROVIDER_NAME as kybernetwork
 } from './kyber';
 import {
   ChangellyCurrencies,
   ChangellySwap,
-  providerName as changelly
+  PROVIDER_NAME as changelly
 } from './changelly';
-import { Simplex, SimplexCurrencies, providerName as simplex } from './simplex';
+import {
+  Simplex,
+  SimplexCurrencies,
+  PROVIDER_NAME as simplex
+} from './simplex';
 import Swap from './partners';
 import {
   networkSymbols,
@@ -17,7 +21,8 @@ import {
   fiat,
   EthereumTokens,
   OtherChains,
-  baseCurrency
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT
 } from './partnersConfig';
 import {
   utils,
@@ -45,7 +50,8 @@ export {
   providers,
   supportedProviders,
   providerNames,
-  baseCurrency,
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT,
   BitySwap,
   BityCurrencies,
   KyberSwap,
@@ -59,7 +65,6 @@ export {
   fiat,
   EthereumTokens,
   OtherChains,
-  // helpers
   utils,
   bestRateForQuantity,
   bestProviderForQuantity,

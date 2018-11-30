@@ -1,5 +1,9 @@
 import { networkSymbols } from '../partnersConfig';
-import { ChangellyCurrencies, changellyStatuses, providerName } from './config';
+import {
+  ChangellyCurrencies,
+  changellyStatuses,
+  PROVIDER_NAME
+} from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
 
@@ -19,7 +23,7 @@ export default class Changelly {
   }
 
   static getName() {
-    return providerName;
+    return PROVIDER_NAME;
   }
 
   // ============================= Setup Methods  ====================================

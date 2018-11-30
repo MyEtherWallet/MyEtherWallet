@@ -3,18 +3,22 @@ import EthereumTokens from './EthereumTokens';
 import OtherChains from './OtherChains';
 import {
   networkSymbols,
-  baseCurrency,
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT,
   baseCurrencyEntry,
-  swapServer
+  swapApiEndpoints,
+  mewSimplex
 } from './config';
 
 export {
-  baseCurrency,
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT,
   baseCurrencyEntry,
   EthereumTokens,
   OtherChains,
   networkSymbols,
   chainCurrencies,
   fiat,
-  swapServer
+  swapApiEndpoints,
+  mewSimplex
 };

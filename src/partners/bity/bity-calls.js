@@ -1,22 +1,33 @@
 import { post, get } from '@/helpers/httpRequests';
-import { bityEndpoints } from './config';
+import { bityRateEndpoint, bityMethods } from './config';
+import { swapApiEndpoints } from '../partnersConfig';
+
+function buildPath() {
+  return swapApiEndpoints.base + swapApiEndpoints.bity;
+}
+
+function buildPayload(method, data) {
+  return {
+    jsonrpc: '2.0',
+    method: method,
+    params: data,
+    id: parseInt(Math.random() * 100)
+  };
+}
 
 const getRates = () => {
-  return get(bityEndpoints.rates);
+  return get(bityRateEndpoint);
 };
 
 const openOrder = orderInfo => {
-  return post(`${bityEndpoints.server}/order`, orderInfo);
+  return post(
+    buildPath(),
+    buildPayload(bityMethods.createTransaction, orderInfo)
+  );
 };
 
 const getStatus = orderInfo => {
-  return post(`${bityEndpoints.server}/status`, orderInfo);
+  return post(buildPath(), buildPayload(bityMethods.status, orderInfo));
 };
 
-const login = () => {
-  post(`${bityEndpoints.server}/login`, {}).then(data => {
-    return data.token;
-  });
-};
-
-export { getRates, openOrder, getStatus, login };
+export { getRates, openOrder, getStatus };

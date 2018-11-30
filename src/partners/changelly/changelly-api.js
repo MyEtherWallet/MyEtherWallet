@@ -9,7 +9,6 @@ const getSupportedCurrencies = async network => {
     const currencyList = await changellyCalls.getCurrencies(network);
     const currencyDetails = {};
     const tokenDetails = {};
-
     if (currencyList) {
       for (let i = 0; i < currencyList.length; i++) {
         if (

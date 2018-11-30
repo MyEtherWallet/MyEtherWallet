@@ -29,12 +29,12 @@ const defaultValues = {
   gasPrice: 2000000000 // 2 Gwei
 };
 
-const providerName = 'kybernetwork';
+const PROVIDER_NAME = 'kybernetwork';
 const kyberBaseCurrency = 'ETH';
 
 export {
   kyberBaseCurrency,
-  providerName,
+  PROVIDER_NAME,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,

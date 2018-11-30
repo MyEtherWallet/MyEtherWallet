@@ -1,15 +1,25 @@
-import { post, get } from '@/helpers/httpRequests';
-import { changellyAddresses } from './config';
-import { swapServer } from '../partnersConfig';
+import { post } from '@/helpers/httpRequests';
+import { changellyMethods } from './config';
+import { swapApiEndpoints } from '../partnersConfig';
 
-function buildPath(route) {
-  return swapServer + route;
+function buildPath() {
+  return swapApiEndpoints.base + swapApiEndpoints.changelly;
+}
+
+function buildPayload(method, data) {
+  return {
+    jsonrpc: '2.0',
+    method: method,
+    params: data,
+    id: parseInt(Math.random() * 100)
+  };
 }
 
 const getCurrencies = async network => {
-  if (changellyAddresses[network]) {
-    const results = await get(
-      buildPath(changellyAddresses[network].currencies)
+  if (changellyMethods[network]) {
+    const results = await post(
+      buildPath(),
+      buildPayload(changellyMethods[network].currenciesFull, {})
     );
     return results.result;
   }
@@ -17,34 +27,39 @@ const getCurrencies = async network => {
 };
 
 const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
-  if (changellyAddresses[network]) {
-    const results = await post(buildPath(changellyAddresses[network].rate), {
-      from: fromCurrency,
-      to: toCurrency,
-      amount: fromValue
-    });
+  if (changellyMethods[network]) {
+    const results = await post(
+      buildPath(),
+      buildPayload(changellyMethods[network].rate, {
+        from: fromCurrency,
+        to: toCurrency,
+        amount: fromValue
+      })
+    );
     return results.result;
   }
   return Promise.resolve(-1);
 };
 
 const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
-  if (changellyAddresses[network]) {
-    const results = await post(buildPath(changellyAddresses[network].min), {
-      from: fromCurrency,
-      to: toCurrency,
-      amount: fromValue
-    });
+  if (changellyMethods[network]) {
+    const results = await post(
+      buildPath(),
+      buildPayload(changellyMethods[network].min, {
+        from: fromCurrency,
+        to: toCurrency
+      })
+    );
     return results.result;
   }
   return Promise.resolve(-1);
 };
 
 const validateAddress = async (addressDetails, network) => {
-  if (changellyAddresses[network]) {
+  if (changellyMethods[network]) {
     const results = await post(
-      buildPath(changellyAddresses[network].validate),
-      addressDetails
+      buildPath(),
+      buildPayload(changellyMethods[network].validate, addressDetails)
     );
     return results.result;
   }
@@ -52,10 +67,13 @@ const validateAddress = async (addressDetails, network) => {
 };
 
 const createTransaction = async (transactionParams, network) => {
-  if (changellyAddresses[network]) {
+  if (changellyMethods[network]) {
     const results = await post(
-      buildPath(changellyAddresses[network].createTransaction),
-      transactionParams
+      buildPath(),
+      buildPayload(
+        changellyMethods[network].createTransaction,
+        transactionParams
+      )
     );
     return results.result;
   }
@@ -63,10 +81,13 @@ const createTransaction = async (transactionParams, network) => {
 };
 
 const getStatus = async (orderId, network) => {
-  if (changellyAddresses[network]) {
-    const results = await post(buildPath(changellyAddresses[network].status), {
-      orderId: orderId
-    });
+  if (changellyMethods[network]) {
+    const results = await post(
+      buildPath(),
+      buildPayload(changellyMethods[network].status, {
+        id: orderId
+      })
+    );
     return results.result;
   }
   throw Error(`Changelly does not support ${network} network`);
