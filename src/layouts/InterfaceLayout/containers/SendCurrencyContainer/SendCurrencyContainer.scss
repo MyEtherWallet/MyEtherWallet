@@ -24,13 +24,21 @@
 
         .title-helper {
           display: flex;
+          align-items: center;
           margin-bottom: 2px;
+          h4 {
+            margin-right: 5px;
+          }
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
+
+        >div {
+          margin-left: 5px;
+        }
       }
     }
 
