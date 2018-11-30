@@ -4,5 +4,6 @@ export default {
   path: 'dapps/buy-subdomain',
   name: 'Buy Subdomain',
   component: BuySubdomain,
-  props: true
+  props: true,
+  meta: { requiresAuth: true }
 };

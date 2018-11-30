@@ -87,6 +87,11 @@ export default {
     ...mapGetters({
       web3: 'web3'
     })
+  },
+  mounted() {
+    if (this.domainName === '') {
+      this.$router.push('/interface/dapps/register-domain');
+    }
   }
 };
 </script>
