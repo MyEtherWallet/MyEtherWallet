@@ -28,7 +28,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { parseTokensHex } from '@/helpers';
 import ENS from 'ethereum-ens';
 
 import InterfaceAddress from './components/InterfaceAddress';
@@ -40,6 +39,7 @@ import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
+import TokenBalance from '@myetherwallet/eth-token-balance';
 
 export default {
   components: {
@@ -93,61 +93,11 @@ export default {
   methods: {
     async fetchTokens() {
       this.receivedTokens = true;
-      const abi = [
-        {
-          constant: true,
-          inputs: [
-            {
-              name: '_owner',
-              type: 'address'
-            },
-            {
-              name: 'name',
-              type: 'bool'
-            },
-            {
-              name: 'website',
-              type: 'bool'
-            },
-            {
-              name: 'email',
-              type: 'bool'
-            },
-            {
-              name: '_count',
-              type: 'uint256'
-            }
-          ],
-          name: 'getAllBalance',
-          outputs: [
-            {
-              name: '',
-              type: 'bytes'
-            }
-          ],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        }
-      ];
-      const contract = new this.web3.eth.Contract(abi);
-      const data = contract.methods
-        .getAllBalance(this.wallet.getAddressString(), true, true, true, 0)
-        .encodeABI();
-      const response = this.web3.eth
-        .call({
-          to: '0xdAFf2b3BdC710EB33A847CCb30A24789c0Ef9c5b',
-          data: data
-        })
-        .then(response => {
-          return response;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err); // todo replace with proper error
-        });
-
-      return response;
+      const tb = new TokenBalance(this.web3.currentProvider);
+      const tokens = await tb.getBalance(
+        this.wallet.getChecksumAddressString()
+      );
+      return tokens;
     },
     async setNonce() {
       const nonce = await this.web3.eth.getTransactionCount(
@@ -202,11 +152,10 @@ export default {
       return balance;
     },
     async setTokens() {
-      const utils = this.web3.utils;
       if (this.network.type.chainID === 1) {
         this.receivedTokens = false;
         const hex = await this.fetchTokens();
-        const parsedTokens = parseTokensHex(hex)
+        hex
           .sort((a, b) => {
             if (a.name.toUpperCase() < b.name.toUpperCase()) {
               return -1;
@@ -223,14 +172,14 @@ export default {
                 .div(new BigNumber(10).pow(token.decimals))
                 .toString(),
               decimals: token.decimals,
-              email: utils.hexToAscii(token.email),
-              name: utils.hexToAscii(token.name),
-              symbol: utils.hexToAscii(token.symbol),
-              website: utils.hexToAscii(token.website)
+              email: token.email,
+              name: token.name,
+              symbol: token.symbol,
+              website: token.website
             };
             return convertedToken;
           });
-        this.tokens = parsedTokens;
+        this.tokens = hex;
       } else {
         const tokenWithBalance = [];
         this.network.type.tokens.map(async token => {
