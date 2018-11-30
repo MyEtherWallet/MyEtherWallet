@@ -65,7 +65,7 @@ import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, baseCurrency, utils } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, utils } from '@/partners';
 
 export default {
   components: {
@@ -168,7 +168,7 @@ export default {
       ) {
         if (
           swapDetails.maybeToken &&
-          swapDetails.fromCurrency !== baseCurrency
+          swapDetails.fromCurrency !== BASE_CURRENCY
         ) {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
@@ -204,7 +204,7 @@ export default {
           };
         } else if (
           swapDetails.maybeToken &&
-          swapDetails.fromCurrency === baseCurrency
+          swapDetails.fromCurrency === BASE_CURRENCY
         ) {
           this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),

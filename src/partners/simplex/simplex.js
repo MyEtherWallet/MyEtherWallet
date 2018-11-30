@@ -1,10 +1,10 @@
 import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
-  SimplexMinFiat,
-  SimplexMaxFiat,
+  MIN_FIAT,
+  MAX_FIAT,
   SimplexCurrencies,
-  providerName
+  PROVIDER_NAME
 } from './config.js';
 import { getQuote, getOrder } from './simplex-api';
 
@@ -12,8 +12,8 @@ export default class Simplex {
   constructor(props = {}) {
     this.name = Simplex.getName();
     this.network = props.network || networkSymbols.ETH;
-    this.minFiat = props.minFiat || SimplexMinFiat;
-    this.maxFiat = props.maxFiat || SimplexMaxFiat;
+    this.minFiat = props.minFiat || MIN_FIAT;
+    this.maxFiat = props.maxFiat || MAX_FIAT;
     this.currencyDetails = props.currencies || SimplexCurrencies;
     this.hasRates = 1;
     this.status = {
@@ -26,7 +26,7 @@ export default class Simplex {
   }
 
   static getName() {
-    return providerName;
+    return PROVIDER_NAME;
   }
 
   get isValidNetwork() {
@@ -48,7 +48,7 @@ export default class Simplex {
     if (this.isValidNetwork) {
       return (
         this.currencies.fiat[fromCurrency] &&
-        (toCurrency === 'ETH' || toCurrency === 'BTC')
+        this.currencies.digital[toCurrency]
       );
     }
     return false;
@@ -75,8 +75,8 @@ export default class Simplex {
       }
 
       simplexRateDetails = await this[updateType]({
-        fromCurrency: this.fromCurrency,
-        toCurrency: this.toCurrency,
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
         toValue: toValue,
         fromValue: fromValue
       });
@@ -84,8 +84,8 @@ export default class Simplex {
         .div(simplexRateDetails.toValue)
         .toString(10);
       return {
-        fromCurrency,
-        toCurrency,
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
         provider: this.name,
         rate: rate,
         minValue: this.minFiat,
@@ -93,18 +93,14 @@ export default class Simplex {
       };
     }
     this.invalidFrom = 'simplexMin';
-    simplexRateDetails = await this.updateFiat({
-      fromCurrency,
-      toCurrency,
-      fromValue: 51
-    });
+    simplexRateDetails = await this.updateFiat(fromCurrency, toCurrency, 51);
 
     const rate = new BigNumber(simplexRateDetails.toValue)
       .div(simplexRateDetails.fromValue)
       .toString(10);
     return {
-      fromCurrency,
-      toCurrency,
+      fromCurrency: fromCurrency,
+      toCurrency: toCurrency,
       provider: this.name,
       rate: rate,
       minValue: this.minFiat,
@@ -112,7 +108,7 @@ export default class Simplex {
     };
   }
 
-  async updateFiat({ fromCurrency, toCurrency, fromValue }) {
+  async updateFiat(fromCurrency, toCurrency, fromValue) {
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -124,7 +120,7 @@ export default class Simplex {
       return {
         error: result.result,
         fromValue: fromValue,
-        toValue: -1
+        toValue: 0
       };
     }
     this.currentOrder = result.result;
@@ -134,7 +130,7 @@ export default class Simplex {
     };
   }
 
-  async updateDigital({ fromCurrency, toCurrency, toValue }) {
+  async updateDigital(fromCurrency, toCurrency, toValue) {
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -144,7 +140,7 @@ export default class Simplex {
     if (result.error) {
       return {
         error: result.result,
-        fromValue: -1,
+        fromValue: 0,
         toValue: toValue
       };
     }
@@ -212,7 +208,11 @@ export default class Simplex {
   }
 
   async startSwap(swapDetails) {
-    await this.updateFiat(swapDetails);
+    await this.updateFiat(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      swapDetails.fromCurrency
+    );
     swapDetails.dataForInitialization = await this.createSwap(swapDetails);
     swapDetails.timestamp = new Date().toISOString();
     swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;

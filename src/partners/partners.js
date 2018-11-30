@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
-  baseCurrency,
+  BASE_CURRENCY,
   baseCurrencyEntry,
   EthereumTokens
-  // otherChains,
 } from './partnersConfig';
 
 function comparator(a, b) {
@@ -34,7 +33,7 @@ export default class SwapProviders {
     this.providerRatesRecieved = [];
 
     let checkCount = 0;
-    if (environmentSupplied.network !== baseCurrency) {
+    if (environmentSupplied.network !== BASE_CURRENCY) {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
@@ -99,8 +98,8 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getInitialCurrencyEntries(collectMapFrom, collectMapTo);
     });
-    if (collectMapTo.has(baseCurrency)) collectMapTo.delete(baseCurrency);
-    if (collectMapFrom.has(baseCurrency)) collectMapFrom.delete(baseCurrency);
+    if (collectMapTo.has(BASE_CURRENCY)) collectMapTo.delete(BASE_CURRENCY);
+    if (collectMapFrom.has(BASE_CURRENCY)) collectMapFrom.delete(BASE_CURRENCY);
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
@@ -114,7 +113,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedFromCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(baseCurrency)) collectMap.delete(baseCurrency);
+    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
     const toArray = Array.from(collectMap.values()).sort(comparator);
     return [baseCurrencyEntry, ...toArray];
   }
@@ -124,7 +123,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedToCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(baseCurrency)) collectMap.delete(baseCurrency);
+    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
     const toArray = Array.from(collectMap.values()).sort(comparator);
     return [baseCurrencyEntry, ...toArray];
   }

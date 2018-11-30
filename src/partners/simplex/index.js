@@ -1,4 +1,4 @@
 import Simplex from './simplex';
-import { SimplexCurrencies, providerName } from './config';
+import { SimplexCurrencies, PROVIDER_NAME } from './config';
 
-export { Simplex, SimplexCurrencies, providerName };
+export { Simplex, SimplexCurrencies, PROVIDER_NAME };

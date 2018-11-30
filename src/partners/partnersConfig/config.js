@@ -3,9 +3,22 @@ const networkSymbols = {
   ROP: 'ROP'
 };
 
-const baseCurrency = 'ETH';
+const BASE_CURRENCY = 'ETH';
 const baseCurrencyEntry = { symbol: 'ETH', name: 'Ether' };
+const MIN_SWAP_AMOUNT = 0.000001;
 
-const swapServer = 'https://mew-v5-swap-dev-server.nanoapp.io';
+const swapApiEndpoints = {
+  base: 'https://swap.mewapi.io',
+  changelly: '/changelly',
+  bity: '/bity'
+};
+const mewSimplex = 'https://apiccswap.myetherwallet.com'; // 'https://apiccswap.myetherwallet.com'; // 'https://mew-v5-swap-dev-server.nanoapp.io';
 
-export { baseCurrency, baseCurrencyEntry, networkSymbols, swapServer };
+export {
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT,
+  baseCurrencyEntry,
+  networkSymbols,
+  swapApiEndpoints,
+  mewSimplex
+};

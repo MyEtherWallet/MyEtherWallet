@@ -1,6 +1,6 @@
 import {
   kyberBaseCurrency,
-  providerName,
+  PROVIDER_NAME,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
@@ -15,7 +15,7 @@ import ERC20 from './ERC20Token.abi';
 
 export {
   kyberBaseCurrency,
-  providerName,
+  PROVIDER_NAME,
   defaultValues,
   walletDepositeAddress,
   kyberNetworkENS,

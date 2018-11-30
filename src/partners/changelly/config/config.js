@@ -1,13 +1,12 @@
-const changellyAddresses = {
+const changellyMethods = {
   ETH: {
-    currencies: '/getCurrencies',
-    rate: '/getExchangeAmount',
-    batchRate: '/getBatchExchangeAmount',
-    min: '/getMinAmount',
-    batchMin: '/getBatchMinAmount',
-    validate: '/validateAddress',
-    createTransaction: '/createTransaction',
-    status: '/statusChangelly'
+    currencies: 'getCurrencies',
+    currenciesFull: 'getCurrenciesFull',
+    rate: 'getExchangeAmount',
+    min: 'getMinAmount',
+    validate: 'validateAddress',
+    createTransaction: 'createTransaction',
+    status: 'getStatus'
   }
 };
 
@@ -24,8 +23,8 @@ const changellyStatuses = {
   hold: 'hold'
 };
 
-const providerName = 'changelly';
+const PROVIDER_NAME = 'changelly';
 
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
-export { changellyAddresses, changellyStatuses, requireExtraId, providerName };
+export { changellyMethods, changellyStatuses, requireExtraId, PROVIDER_NAME };

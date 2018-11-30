@@ -186,7 +186,8 @@ import {
   bestRateForQuantity,
   isValidEntry,
   providerNames,
-  baseCurrency
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
@@ -205,7 +206,7 @@ export default {
   },
   data() {
     return {
-      baseCurrency: baseCurrency,
+      baseCurrency: BASE_CURRENCY,
       currencyDetails: {},
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
@@ -270,8 +271,8 @@ export default {
       }
     },
     fromBelowMinAllowed() {
-      if (0.000001 > +this.fromValue)
-        return 'Below minimun swap value of 0.000001';
+      if (MIN_SWAP_AMOUNT > +this.fromValue)
+        return `Below minimun swap value of ${MIN_SWAP_AMOUNT}`;
       if (this.selectedProvider.minValue > +this.fromValue)
         return this.$t('interface.belowMinSwap');
       return false;
@@ -502,11 +503,11 @@ export default {
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateDigital({
-              fromCurrency: this.fromCurrency,
-              toCurrency: this.toCurrency,
-              toValue: this.toValue
-            });
+            simplexRateDetails = await simplexProvider.updateDigital(
+              this.fromCurrency,
+              this.toCurrency,
+              this.toValue
+            );
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
           }
@@ -514,11 +515,11 @@ export default {
         case `${this.providerNames.simplex}from`:
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateFiat({
-              fromCurrency: this.fromCurrency,
-              toCurrency: this.toCurrency,
-              fromValue: this.fromValue
-            });
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              this.fromValue
+            );
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
           }
