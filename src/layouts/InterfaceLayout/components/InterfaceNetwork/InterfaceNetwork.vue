@@ -3,18 +3,20 @@
     <interface-network-modal ref="network" />
     <div @click="networkModalOpen">
       <div class="info-block network">
-        <div class="block-image">
-          <img :src="network.type.icon" class="icon" />
+        <div class="block-image network-type">
+          <div class="icon-block">
+            <img :src="network.type.icon" class="icon" />
+          </div>
         </div>
         <div class="block-content">
-          <div class="helper">
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'"
-            />
-          </div>
           <div class="information-container">
-            <h2>{{ $t('interface.network') }}</h2>
+            <div class="title-and-helper">
+              <h2>{{ $t('interface.network') }}</h2>
+              <popover
+                :popcontent="$t('popover.whatIsMessageContent')"
+                :popovertype="'A'"
+              />
+            </div>
             <p>{{ network.service + '(' + network.type.name + ')' }}</p>
             <p>
               {{ $t('interface.lastBlock') }}: #
