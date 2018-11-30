@@ -20,7 +20,9 @@ const router = new Router({
 });
 
 router.beforeResolve((to, ___, next) => {
-  if (to.meta.requiresAuth) {
+  if (to.meta.requiresAuth === false) {
+    next();
+  } else {
     if (store.state.wallet === null) {
       store.dispatch('setLastPath', to.path);
       next({ name: 'AccessWalletLayout' });
@@ -33,8 +35,6 @@ router.beforeResolve((to, ___, next) => {
         next();
       }
     }
-  } else {
-    next();
   }
 });
 
