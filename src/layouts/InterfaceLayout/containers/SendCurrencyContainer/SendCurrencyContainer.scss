@@ -36,7 +36,7 @@
         margin-bottom: 3px;
         margin-left: auto;
 
-        >div {
+        > div {
           margin-left: 5px;
         }
       }
@@ -221,8 +221,17 @@
       } // .toggle-button-container
 
       .input-container {
-        margin-top: 20px;
-        margin-bottom: -15px;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+
+        &.input-container-open {
+          max-height: 400px;
+        }
+
+        .margin-container {
+          margin-top: 20px;
+        }
 
         .user-input {
           margin-bottom: 5px;
