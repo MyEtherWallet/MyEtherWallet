@@ -24,7 +24,26 @@ const webpackConfig = {
         quality: '95-100'
       }
     })
-  ]
+  ],
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 0,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1];
+            return `vendor.${packageName.replace('@', '')}`;
+          }
+        }
+      }
+    }
+  }
 };
 if (process.env.BUILD_TYPE === 'mewcx') {
   webpackConfig.plugins.push(
