@@ -1,27 +1,33 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .wrap {
 
-.wrap {
-  display: grid;
-  grid-column-gap: 0;
-  grid-template-columns: 270px 1fr;
+    .contents {
+      background-color: $light-grey-2;
+      padding: 10px;
+      margin: 0px;
 
-  .contents {
-    background-color: $light-grey-2;
-    padding: 40px 60px;
+      .tx-contents {
 
-    .tx-contents {
-      display: grid;
-      grid-gap: 15px;
-      grid-template-areas: 'info-1 info-2 info-3' 'main main tokens';
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto;
-
-      .tokens {
-        border-radius: 5px;
+        .tokens {
+          border-radius: 5px;
+        }
       }
     }
   }
-}
 
+  .tx-contents {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .mobile-hide {
+    display: none;
+  }
+
+  .side-nav {
+    position: absolute;
+    left: -400px;
+    top: 0;
+  }
 }

@@ -4,9 +4,15 @@
       <div class="side-nav"><interface-side-menu /></div>
       <div class="contents">
         <div class="tx-contents">
-          <div><interface-address :address="address" /></div>
-          <div><interface-balance :balance="balance" /></div>
-          <div><interface-network :block-number="blockNumber" /></div>
+          <div class="mobile-hide">
+            <interface-address :address="address" />
+          </div>
+          <div class="mobile-hide">
+            <interface-balance :balance="balance" />
+          </div>
+          <div class="mobile-hide">
+            <interface-network :block-number="blockNumber" />
+          </div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"
