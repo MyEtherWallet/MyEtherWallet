@@ -2,6 +2,7 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const webpackConfig = {
@@ -26,20 +27,12 @@ const webpackConfig = {
     })
   ],
   optimization: {
-    runtimeChunk: 'single',
     splitChunks: {
-      chunks: 'all',
-      maxInitialRequests: Infinity,
-      minSize: 0,
       cacheGroups: {
-        vendor: {
+        commons: {
           test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `vendor.${packageName.replace('@', '')}`;
-          }
+          name: 'vendors',
+          chunks: 'all'
         }
       }
     }
@@ -66,6 +59,12 @@ if (process.env.BUILD_TYPE === 'mewcx') {
 }
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
+    new BrotliPlugin({
+      asset: '[path].br[query]',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
       failOnUnused: false,
