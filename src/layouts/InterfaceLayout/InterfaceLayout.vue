@@ -369,5 +369,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceLayout.scss';
+@import 'InterfaceLayout-desktop.scss';
+@import 'InterfaceLayout-tablet.scss';
+@import 'InterfaceLayout-mobile.scss';
 </style>
