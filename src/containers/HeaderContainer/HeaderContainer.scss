@@ -2,6 +2,10 @@
 
 .wrap {
   padding-top: 71px;
+  @media all and (max-width: $tablet-width) {
+    padding-top: 82px;
+  }
+
 }
 
 .scrollup-container {
