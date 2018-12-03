@@ -55,7 +55,7 @@ export default async (
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
-                  nonce: localStoredObj + 1,
+                  nonce: +localStoredObj.nonce + 1,
                   timestamp: localStoredObj.timestamp
                 }
               );
@@ -75,11 +75,11 @@ export default async (
             .once('transactionHash', hash => {
               const localStoredObj = locStore.get(
                 utils.sha3(store.state.wallet.getChecksumAddressString())
-              ).nonce;
+              );
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
-                  nonce: localStoredObj + 1,
+                  nonce: +localStoredObj.nonce + 1,
                   timestamp: localStoredObj.timestamp
                 }
               );
