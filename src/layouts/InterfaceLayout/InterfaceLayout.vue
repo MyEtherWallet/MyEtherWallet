@@ -354,6 +354,7 @@ export default {
           ).toNumber();
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.error(err);
         });
     },
