@@ -1,6 +1,10 @@
 <template>
   <div class="send-eth-and-tokens">
     <div class="wrap">
+      <div
+        :class="isSidemenuOpen && 'side-nav-open'"
+        class="side-nav-background"
+      />
       <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
         <interface-side-menu />
       </div>
