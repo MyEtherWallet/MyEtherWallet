@@ -26,8 +26,10 @@
   }
 
   .side-nav {
-    position: absolute;
-    left: -400px;
+    position: fixed;
+    left: 990px;
     top: 0;
+    background-color: $white;
+    z-index: 99;
   }
 }
