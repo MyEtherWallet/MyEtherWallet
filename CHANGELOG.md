@@ -1,3 +1,7 @@
+### Devop
+
+- Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
+
 ### Release v5.0.5
 
 ### Bug
