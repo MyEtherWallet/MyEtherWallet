@@ -1,5 +1,12 @@
 <template>
   <div class="transactions-side-menu">
+    <div class="side-menu-header">
+      <img src="~@/assets/images/logo.png" />
+      <div class="side-menu-close-button" @click="toggleSideMenu">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <div class="side-menu">
       <ul>
         <li v-for="(tab, idx) in tabData" :key="tab.name + idx">
@@ -50,6 +57,9 @@ export default {
     };
   },
   methods: {
+    toggleSideMenu() {
+      this.$store.commit('TOGGLE_SIDEMENU');
+    },
     isTabActive(routes) {
       return routes.includes(this.$route.path);
     },

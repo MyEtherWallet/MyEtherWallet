@@ -25,10 +25,10 @@
 
   .side-nav {
     position: fixed;
-    left: -300px;
+    left: -500px;
     top: 0;
     background-color: $white;
-    z-index: 99;
+    z-index: 9999;
     transition: all 0.1s linear;
 
     &.side-nav-open {
