@@ -1,7 +1,9 @@
 <template>
   <div class="send-eth-and-tokens">
     <div class="wrap">
-      <div class="side-nav"><interface-side-menu /></div>
+      <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
+        <interface-side-menu />
+      </div>
       <div class="contents">
         <div class="tx-contents">
           <div class="mobile-hide">
@@ -69,6 +71,9 @@ export default {
     };
   },
   computed: {
+    isSidemenuOpen() {
+      return this.$store.getters.sidemenuOpen;
+    },
     address() {
       if (this.wallet !== null) {
         return this.wallet.getChecksumAddressString();

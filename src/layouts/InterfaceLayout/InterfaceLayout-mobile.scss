@@ -1,14 +1,12 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .wrap {
-
     .contents {
       background-color: $light-grey-2;
       padding: 10px;
-      margin: 0px;
+      margin: 0;
 
       .tx-contents {
-
         .tokens {
           border-radius: 5px;
         }
@@ -17,8 +15,8 @@
   }
 
   .tx-contents {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
   }
 
   .mobile-hide {
@@ -27,9 +25,14 @@
 
   .side-nav {
     position: fixed;
-    left: 990px;
+    left: -300px;
     top: 0;
     background-color: $white;
     z-index: 99;
+    transition: all 0.1s linear;
+
+    &.side-nav-open {
+      left: 0;
+    }
   }
 }
