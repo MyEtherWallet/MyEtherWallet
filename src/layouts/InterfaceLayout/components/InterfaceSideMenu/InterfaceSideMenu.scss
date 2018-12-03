@@ -2,6 +2,11 @@
 
 .side-menu {
   padding: 40px 20px;
+  
+  @media all and (max-width: $mobile-width) {
+    width: 100vw;
+    height: 100vh;
+  }
 
   ul {
     li {
@@ -53,3 +58,51 @@
     }
   }
 }
+
+
+
+//--------------------------------------
+// .side-menu-header
+//--------------------------------------
+.side-menu-header {
+  display: none;
+  padding: 25px 25px;
+  box-shadow: 0 0 3px #0000003b;
+
+  @media all and (max-width: $mobile-width) {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    height: 33px;
+  }
+}
+
+.side-menu-close-button {
+  margin-left: auto;
+  position: relative;
+  margin-right: 30px;
+  >div {
+    height: 3px;
+    width: 30px;
+    background-color: black;
+  }
+
+  >div:nth-child(1){
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transform: rotate(45deg);
+  }
+
+  >div:nth-child(2){
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transform: rotate(-45deg);
+  }
+}
+
+
+
