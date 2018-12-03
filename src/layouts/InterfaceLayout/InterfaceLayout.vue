@@ -94,9 +94,12 @@ export default {
     async fetchTokens() {
       this.receivedTokens = true;
       const tb = new TokenBalance(this.web3.currentProvider);
-      const tokens = await tb.getBalance(
-        this.wallet.getChecksumAddressString()
-      );
+      let tokens = [];
+      try {
+        tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
+      } catch (e) {
+        console.error(e);
+      }
       return tokens;
     },
     async setNonce() {
