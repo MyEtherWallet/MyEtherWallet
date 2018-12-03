@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="content-title">
     <h2>{{ title }}</h2>
-    <div class="side-menu-button"><round-button title="Change" /></div>
+    <div class="side-menu-button">
+      <round-button title="Change" @click.native="toggleSideMenu" />
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,11 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    toggleSideMenu() {
+      this.$store.commit('TOGGLE_SIDEMENU');
+    }
   }
 };
 </script>
