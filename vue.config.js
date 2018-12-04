@@ -181,5 +181,6 @@ module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
   pwa: pwa,
+  lintOnSave: true,
   chainWebpack: config => {}
 };
