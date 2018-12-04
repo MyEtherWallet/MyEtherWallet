@@ -5,41 +5,48 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('interface.sendTxAmount') }}</h4>
-            <p
-              class="title-button prevent-user-select"
-              @click="setBalanceToAmt"
-            >
-              Entire Balance
-            </p>
+          <div class="single-input-block">
+            <div class="title">
+              <h4>{{ $t('interface.sendTxType') }}</h4>
+            </div>
+            <currency-picker
+              :currency="tokensWithBalance"
+              :page="'sendEthAndTokens'"
+              :token="true"
+              @selectedCurrency="setSelectedCurrency"
+            />
           </div>
-          <currency-picker
-            :currency="tokensWithBalance"
-            :page="'sendEthAndTokens'"
-            :token="true"
-            @selectedCurrency="setSelectedCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              :value="amount"
-              type="number"
-              placeholder="Amount"
-              @input="debouncedAmount"
-            />
-            <i
-              :class="[
-                selectedCurrency.name === 'Ether'
-                  ? parsedBalance < amount
+          <div class="single-input-block">
+            <div class="title">
+              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <p
+                class="title-button prevent-user-select"
+                @click="setBalanceToAmt"
+              >
+                Entire Balance
+              </p>
+            </div>
+            <div class="the-form amount-number">
+              <input
+                :value="amount"
+                type="number"
+                placeholder="Amount"
+                @input="debouncedAmount"
+              />
+              <i
+                :class="[
+                  selectedCurrency.name === 'Ether'
+                    ? parsedBalance < amount
+                      ? 'not-good'
+                      : ''
+                    : selectedCurrency.balance < amount
                     ? 'not-good'
-                    : ''
-                  : selectedCurrency.balance < amount
-                  ? 'not-good'
-                  : '',
-                'fa fa-check-circle good-button'
-              ]"
-              aria-hidden="true"
-            />
+                    : '',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
           </div>
           <div
             v-if="
@@ -98,7 +105,7 @@
       </div>
     </div>
 
-    <div class="send-form">
+    <div v-if="false" class="send-form">
       <div class="title-container">
         <div class="title">
           <div class="title-helper">
@@ -450,4 +457,7 @@ export default {
 
 <style lang="scss" scoped>
 @import 'SendCurrencyContainer.scss';
+//@import 'SendCurrencyContainer-desktop.scss';
+//@import 'SendCurrencyContainer-tablet.scss';
+//@import 'SendCurrencyContainer-mobile.scss';
 </style>

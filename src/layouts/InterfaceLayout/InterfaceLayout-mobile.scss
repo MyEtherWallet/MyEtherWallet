@@ -23,8 +23,6 @@
     display: none;
   }
 
-}
-
 
 .side-nav {
   position: fixed;
@@ -33,7 +31,6 @@
   background-color: $white;
   z-index: 9999;
   transition: all 0.2s linear;
-
 
   &.side-nav-open .side-nav-background {
     opacity: 1;
@@ -59,4 +56,7 @@
   &.side-nav-open {
     opacity: 1;
   }
+}
+
+
 }

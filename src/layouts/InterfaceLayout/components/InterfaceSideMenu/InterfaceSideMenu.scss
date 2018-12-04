@@ -2,7 +2,7 @@
 
 .side-menu {
   padding: 40px 20px;
-  
+
   @media all and (max-width: $mobile-width) {
     width: 100vw;
     height: 100vh;
@@ -59,8 +59,6 @@
   }
 }
 
-
-
 //--------------------------------------
 // .side-menu-header
 //--------------------------------------
@@ -83,26 +81,23 @@
   margin-left: auto;
   position: relative;
   margin-right: 30px;
-  >div {
+  > div {
     height: 3px;
     width: 30px;
     background-color: black;
   }
 
-  >div:nth-child(1){
+  > div:nth-child(1) {
     position: absolute;
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     transform: rotate(45deg);
   }
 
-  >div:nth-child(2){
+  > div:nth-child(2) {
     position: absolute;
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     transform: rotate(-45deg);
   }
 }
-
-
-

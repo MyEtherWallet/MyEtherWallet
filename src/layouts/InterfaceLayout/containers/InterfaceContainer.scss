@@ -5,6 +5,10 @@
   grid-area: main;
   overflow: hidden;
 
+  @media all and (max-width: $mobile-width) {
+    margin-bottom: 10px;
+  }
+
   > div {
     background: $background-color-white;
   }

@@ -1,12 +1,14 @@
 <template>
   <div class="send-eth-and-tokens">
     <div class="wrap">
-      <div
-        :class="isSidemenuOpen && 'side-nav-open'"
-        class="side-nav-background"
-      />
-      <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
-        <interface-side-menu />
+      <div>
+        <div
+          :class="isSidemenuOpen && 'side-nav-open'"
+          class="side-nav-background"
+        />
+        <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
+          <interface-side-menu />
+        </div>
       </div>
       <div class="contents">
         <div class="tx-contents">
