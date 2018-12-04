@@ -48,7 +48,7 @@ export default async ({ payload, requestManager }, res, next) => {
     }
   }
 
-  if (storedNonce.isGreaterThan(new BN(fetchedNonce))) {
+  if (new BN(storedNonce).isGreaterThan(new BN(fetchedNonce))) {
     res(
       null,
       toPayload(payload.id, `0x${new BN(storedNonce).toString('hex')}`)
