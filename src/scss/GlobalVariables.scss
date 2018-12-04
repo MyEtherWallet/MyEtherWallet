@@ -80,6 +80,7 @@ $dark-grey-8: #888;
 $dark-grey-9: #555;
 $dark-grey-10: #8a8a8a;
 $dark-grey-11: #999;
+$dark-grey-12: #000000ba;
 
 $dark-blue-1: #506175;
 $dark-blue-2: #0b2840;
@@ -127,6 +128,11 @@ $tablet-width: 1024px;
 $mobile-width: 414px;
 
 // *********************************************************************
+// TX-interfaces window width sizes
+// *********************************************************************
+$interface--mobile-side-menu--width: 1270px;
+
+// *********************************************************************
 // Box Shadow color styles
 // *********************************************************************
 $box-shadow-color-1: $opaque-black-1;
@@ -168,6 +174,7 @@ $transaction-block-token-search: $dark-grey-2;
 
 $button-background-color-1: $dark-grey-4;
 $small-tooltip-shadow: $opaque-black-5;
+$menu-under-background-color: $dark-grey-12;
 
 // *********************************************************************
 // Social button styles
