@@ -48,5 +48,6 @@
   "lastBlock": "Last block",
   "fromAddr": "From Address",
   "depAmount": "Deposit Amount",
-  "notEnoughBalance": "You have insufficient funds."
+  "notEnoughBalance": "You have insufficient funds.",
+  "sendTxType": "Type"
 }
