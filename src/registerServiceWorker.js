@@ -36,6 +36,8 @@ if (process.env.NODE_ENV === 'production') {
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       if (!isMobile()) console.log('Possible to add to Desktop');
+      e = null;
+      return false;
     });
   }
 }
