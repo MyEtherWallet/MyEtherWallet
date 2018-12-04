@@ -172,8 +172,14 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 }
+const pwa = {
+  workboxOptions: {
+    importWorkboxFrom: 'local'
+  }
+};
 module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
+  pwa: pwa,
   chainWebpack: config => {}
 };

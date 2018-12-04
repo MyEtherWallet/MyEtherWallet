@@ -31,6 +31,7 @@ import ConcatAddr from '@/filters/ConcatAddr';
 // etc
 import languages from '@/translations';
 import VueMq from 'vue-mq';
+import './registerServiceWorker';
 
 Vue.use(VueMq, {
   breakpoints: {
