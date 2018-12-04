@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import { register } from 'register-service-worker';
+import isMobile from 'is-mobile';
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
@@ -31,4 +32,10 @@ if (process.env.NODE_ENV === 'production') {
       console.error('Error during service worker registration:', error);
     }
   });
+  if (window) {
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      if (!isMobile()) console.log('Possible to add to Desktop');
+    });
+  }
 }
