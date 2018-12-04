@@ -10,12 +10,12 @@
               class="token-container"
             >
               <p class="token-text">{{ token.symbol }}</p>
-              <p class="token-text">${{ token.quote.USD.price }}</p>
+              <p class="token-text">${{ token.quotes.USD.price }}</p>
               <p class="token-text percent-container">
-                <span>{{ token.quote.USD.percent_change_24h }}%</span>
+                <span>{{ token.quotes.USD.percent_change_24h }}%</span>
                 <i
                   :class="
-                    token.quote.USD.percent_change_24h > 0
+                    token.quotes.USD.percent_change_24h > 0
                       ? 'fa fa-arrow-up'
                       : 'fa fa-arrow-down'
                   "
