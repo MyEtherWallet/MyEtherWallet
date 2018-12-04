@@ -1,27 +1,25 @@
 {
-  "name": "myetherwallet",
+  "name": "MyEtherWallet",
   "version": "5.0.5",
   "description": "Client side ethereum wallet",
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "start": "npm run update:lists && npm run dev",
-    "test:unit": "vue-cli-service test:unit",
+    "build": "npm run update:lists && vue-cli-service build",
     "test": "jest --clearCache && npm run test:unit",
-    "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
+    "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
+    "deploy": "gh-pages -d dist -b gh-pages",
+    "build:mewcx": "npm run update:lists && BUILD_TYPE=mewcx vue-cli-service build",
+    "codecov": "npm run test:unit && codecov",
+    "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
-    "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
-    "build": "npm run update:lists && vue-cli-service build",
-    "build:mewcx": "npm run update:lists && BUILD_TYPE=mewcx vue-cli-service build",
-    "deploy": "gh-pages -d dist -b gh-pages",
-    "codecov": "npm run test:unit && codecov",
+    "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
+    "start": "npm run update:lists && npm run dev",
+    "test:unit": "vue-cli-service test:unit",
     "update:lists": "node fetchEthListData.js"
-  },
-  "gitHooks": {
-    "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
     "idna-uts46": "^1.1.0",
+    "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
     "vue-mq": "^0.2.1",
     "vue-router": "^3.0.1",
@@ -34,6 +32,7 @@
     "@myetherwallet/mewconnect-web-client": "^1.0.9",
     "@vue/cli-plugin-babel": "^3.1.1",
     "@vue/cli-plugin-eslint": "^3.1.5",
+    "@vue/cli-plugin-pwa": "^3.2.0",
     "@vue/cli-plugin-unit-jest": "^3.1.1",
     "@vue/cli-service": "^3.1.4",
     "@vue/eslint-config-prettier": "^4.0.1",
@@ -98,5 +97,8 @@
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
+  },
+  "gitHooks": {
+    "pre-commit": "npm run lint && npm run test"
   }
 }
