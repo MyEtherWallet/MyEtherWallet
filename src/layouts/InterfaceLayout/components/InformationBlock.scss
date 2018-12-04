@@ -58,21 +58,17 @@
     justify-content: space-around;
     max-width: 230px;
 
-
-    @media all and (max-width: 1570px) { 
+    @media all and (max-width: 1570px) {
       max-width: 200px;
     }
 
-
-    @media all and (max-width: 1450px) { 
+    @media all and (max-width: 1450px) {
       max-width: 160px;
     }
 
-    @media all and (max-width: 1350px) { 
+    @media all and (max-width: 1350px) {
       max-width: 120px;
     }
-
-
   }
 
   .information-container {

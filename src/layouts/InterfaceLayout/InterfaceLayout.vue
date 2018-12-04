@@ -5,6 +5,7 @@
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
+          @click="toggleSideMenu;"
         />
         <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
           <interface-side-menu />
@@ -108,6 +109,10 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    toggleSideMenu() {
+      console.log('aaaaaaaaaaaaaaaaa');
+      this.$store.commit('TOGGLE_SIDEMENU');
+    },
     async fetchTokens() {
       this.receivedTokens = true;
       const abi = [

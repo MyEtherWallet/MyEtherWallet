@@ -28,7 +28,7 @@
   margin-left: auto;
   margin-right: 20px;
 
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: $interface--mobile-side-menu--width) {
     display: block;
   }
 }

@@ -63,7 +63,8 @@
 // .side-menu-header
 //--------------------------------------
 .side-menu-header {
-  display: none;
+  display: flex;
+  align-items: center;
   padding: 25px 25px;
   box-shadow: 0 0 2px #0000003b;
 
