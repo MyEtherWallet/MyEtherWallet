@@ -155,7 +155,7 @@ export default {
       return balance;
     },
     async setTokens() {
-      if (this.network.type.chainID === 1) {
+      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         this.receivedTokens = false;
         const hex = await this.fetchTokens();
         hex
