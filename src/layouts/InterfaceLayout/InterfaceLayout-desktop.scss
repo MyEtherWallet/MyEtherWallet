@@ -6,7 +6,7 @@
     grid-template-columns: 270px 1fr;
 
     @media all and (max-width: $interface--mobile-side-menu--width) {
-      grid-template-columns: 0px 1fr;
+      grid-template-columns: 0 1fr;
     }
 
     .contents {

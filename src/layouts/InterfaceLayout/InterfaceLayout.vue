@@ -110,7 +110,6 @@ export default {
   },
   methods: {
     toggleSideMenu() {
-      console.log('aaaaaaaaaaaaaaaaa');
       this.$store.commit('TOGGLE_SIDEMENU');
     },
     async fetchTokens() {

@@ -311,7 +311,6 @@ export default {
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = () => {
-      console.log('ok');
       this.onPageScroll();
     };
   },
