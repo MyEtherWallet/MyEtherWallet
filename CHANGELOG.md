@@ -18,6 +18,8 @@
 
 ### Devop
 
+- Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
+- Replace heroku urls [#178](https://github.com/MyEtherWallet/MyEtherWallet/pull/178)
 - Crowdin translations [#75](https://github.com/MyEtherWallet/MyEtherWallet/pull/75)
 - refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)
 - fix invalid chain id error [#164](https://github.com/MyEtherWallet/MyEtherWallet/pull/164)

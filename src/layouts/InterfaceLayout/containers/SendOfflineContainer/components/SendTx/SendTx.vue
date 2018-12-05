@@ -81,7 +81,9 @@ export default {
     signedTx() {
       return this.readTx.hasOwnProperty('rawTransaction')
         ? this.readTx.rawTransaction
-        : JSON.parse(this.rawTx).rawTransaction;
+        : this.rawTx.hasOwnProperty('rawTransaction')
+        ? JSON.parse(this.rawTx).rawTransaction
+        : '';
     }
   },
   watch: {

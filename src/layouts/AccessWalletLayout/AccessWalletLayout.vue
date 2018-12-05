@@ -37,7 +37,7 @@ export default {
   methods: {
     async getRates() {
       const rates = await fetch(
-        'https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT'
+        'https://cryptorates.mewapi.io/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT'
       )
         .then(res => {
           return res.json();
