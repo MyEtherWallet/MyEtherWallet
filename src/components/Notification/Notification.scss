@@ -14,12 +14,12 @@
   padding: 0 10px;
 
   &::before {
-    content: "(";
+    content: '(';
     font-size: 20px;
   }
 
   &::after {
-    content: ")";
+    content: ')';
     font-size: 20px;
   }
 
@@ -89,18 +89,15 @@
   }
 }
 
-
-
 .notification-item-container {
-  >ul {
-    >li {
+  > ul {
+    > li {
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
     }
   }
 }
-
 
 //*******************************************************
 // Notification header
@@ -135,7 +132,6 @@
       color: $red-2;
     }
   }
-
 }
 
 .time-date {
@@ -143,7 +139,7 @@
   display: flex;
   align-items: center;
 
-  >p {
+  > p {
     margin-left: 10px;
   }
 
@@ -154,7 +150,6 @@
     color: $dark-blue-1;
   }
 }
-
 
 //*******************************************************
 // Notification content
@@ -169,7 +164,7 @@
     top: 0;
     left: 0;
     right: 0;
-    content: "";
+    content: '';
     width: calc(100% - 30px);
     border-top: 1px solid $light-grey-3;
   }
@@ -178,10 +173,10 @@
   align-items: center;
   padding: 10px 30px;
 
-  >ul {
+  > ul {
     display: block;
     width: 100%;
-    >li {
+    > li {
       display: flex;
       align-items: center;
 
@@ -200,9 +195,3 @@
     }
   }
 }
-
-
-
-
-
-
