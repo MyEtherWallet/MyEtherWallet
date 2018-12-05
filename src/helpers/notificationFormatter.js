@@ -9,7 +9,7 @@ const type = {
 };
 
 const notificationType = {
-  TRANSACTION: 'Transaction',
+  TRANSACTION: 'transaction',
   SWAP: 'swap',
   ERROR: 'transactionError'
 };
@@ -18,7 +18,7 @@ const status = {
   PENDING: 'pending',
   COMPLETE: 'complete',
   FAILED: 'failed'
-}
+};
 
 const transactionHash = (notifArray, val) => {
   // TODO: use transfer method call signature to identify token transfer.
@@ -41,10 +41,10 @@ const transactionHash = (notifArray, val) => {
       error: false,
       hash: val[2],
       to: val[1].to,
-      amount: val[1].value,
-      nonce: val[1].nonce,
-      gasPrice: val[1].gasPrice,
-      gasLimit: val[1].gas
+      amount: new Bignumber(val[1].value).toString(),
+      nonce: new Bignumber(val[1].nonce).toString(),
+      gasPrice: new Bignumber(val[1].gasPrice).toString(),
+      gasLimit: new Bignumber(val[1].gas).toString()
     },
     expanded: false
   });
@@ -65,8 +65,10 @@ const transactionReceipt = (notifArray, val) => {
     }
   }
   notifArray[idx].status = status.COMPLETE;
-  notifArray[idx].body.gasUsed = val[2].gasUsed;
-  notifArray[idx].body.blockNumber = val[2].blockNumber;
+  notifArray[idx].body.gasUsed = new Bignumber(val[2].gasUsed).toString();
+  notifArray[idx].body.blockNumber = new Bignumber(
+    val[2].blockNumber
+  ).toString();
   return notifArray;
 };
 
