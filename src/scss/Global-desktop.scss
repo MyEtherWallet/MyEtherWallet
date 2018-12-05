@@ -566,6 +566,7 @@
   // *********************************************************************
   .modal {
     z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
   .modal-backdrop {
@@ -624,6 +625,11 @@
   // *********************************************************************
   // Tooltip
   // *********************************************************************
+
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+  }
 
   .popover {
     pointer-events: none;
@@ -791,7 +797,7 @@
     }
 
     .modal-body {
-      padding: 40px;
+      padding: 20px;
     }
   }
 
