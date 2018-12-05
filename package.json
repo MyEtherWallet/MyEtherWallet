@@ -21,6 +21,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "@myetherwallet/eth-token-balance": "^0.1.1",
     "idna-uts46": "^1.1.0",
     "vue": "^2.5.17",
     "vue-mq": "^0.2.1",
