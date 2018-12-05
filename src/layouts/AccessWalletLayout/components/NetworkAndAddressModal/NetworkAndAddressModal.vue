@@ -9,12 +9,17 @@
     <div class="collapse-container">
       <b-btn
         v-b-toggle.collapse1
-        v-b-toggle.collapse2
         class="collapse-open-button"
         variant="primary"
       >
         <p class="button-number">1</p>
-        <p>Network <span>(ETH - myetherapi.com)</span></p>
+        <p>
+          Network
+          <span
+            >({{ selectedNetwork.type.name }} -
+            {{ selectedNetwork.service }})</span
+          >
+        </p>
         <p class="right-button">Cancel</p>
       </b-btn>
       <b-collapse
@@ -23,52 +28,26 @@
         class="mt-2 collapse-content"
       >
         <ul class="networks">
-          <li>
+          <li v-for="(key, index) in Object.keys(Networks)" :key="key + index">
             <div class="network-title">
-              <img :src="ethereumIcon" />
-              <p>ETH</p>
+              <img :src="Networks[key][0].type.icon" />
+              <p>{{ key }}</p>
             </div>
             <div class="network-content">
-              <p>myetherwalletapi.com</p>
-              <p>infura.io</p>
-              <p>giveth.io</p>
-              <p>etherscan.io</p>
-            </div>
-          </li>
-          <li>
-            <div class="network-title">
-              <img :src="ethereumIcon" />
-              <p>ETH</p>
-            </div>
-            <div class="network-content">
-              <p>myetherwalletapi.com</p>
-              <p>infura.io</p>
-              <p>giveth.io</p>
-              <p>etherscan.io</p>
-            </div>
-          </li>
-          <li>
-            <div class="network-title">
-              <img :src="ethereumIcon" />
-              <p>ETH</p>
-            </div>
-            <div class="network-content">
-              <p>myetherwalletapi.com</p>
-              <p>infura.io</p>
-              <p>giveth.io</p>
-              <p>etherscan.io</p>
-            </div>
-          </li>
-          <li>
-            <div class="network-title">
-              <img :src="ethereumIcon" />
-              <p>ETH</p>
-            </div>
-            <div class="network-content">
-              <p>myetherwalletapi.com</p>
-              <p>infura.io</p>
-              <p>giveth.io</p>
-              <p>etherscan.io</p>
+              <p
+                v-for="net in Networks[key]"
+                :key="net.service"
+                :class="
+                  net.service === network.service &&
+                  net.type &&
+                  net.type.name === network.type.name
+                    ? 'current-network'
+                    : ''
+                "
+                @click="switchNetwork(net);"
+              >
+                {{ net.service }}
+              </p>
             </div>
           </li>
         </ul>
@@ -76,7 +55,6 @@
     </div>
     <div class="collapse-container">
       <b-btn
-        v-b-toggle.collapse1
         v-b-toggle.collapse2
         class="collapse-open-button"
         variant="primary"
@@ -254,6 +232,7 @@ export default {
   data() {
     return {
       ethereumIcon: ethIcon,
+      selectedNetwork: this.$store.state.network,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       currentIndex: 0,
@@ -270,6 +249,8 @@ export default {
   },
   computed: {
     ...mapGetters({
+      network: 'network',
+      Networks: 'Networks',
       customPaths: 'customPaths',
       path: 'path'
     })
@@ -296,6 +277,11 @@ export default {
     });
   },
   methods: {
+    switchNetwork(network) {
+      this.$store.dispatch('switchNetwork', network).then(() => {
+        this.selectedNetwork = network;
+      });
+    },
     unselectAllAddresses: function(selected) {
       document
         .querySelectorAll('.user-input-checkbox input')
@@ -375,7 +361,7 @@ export default {
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      this.customPaths = this.customPaths;
+      // this.customPaths = this.customPaths;
     }
   }
 };

@@ -79,7 +79,7 @@ export default {
   },
   computed: {
     isSidemenuOpen() {
-      return this.$store.getters.sidemenuOpen;
+      return this.sidemenuOpen;
     },
     address() {
       if (this.wallet !== null) {
@@ -91,7 +91,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      Networks: 'Networks'
+      Networks: 'Networks',
+      sidemenuOpen: 'sidemenuOpen'
     })
   },
   watch: {

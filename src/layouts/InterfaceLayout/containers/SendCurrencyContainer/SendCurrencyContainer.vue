@@ -106,57 +106,6 @@
       </div>
     </div>
 
-    <div v-if="false" class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-helper">
-            <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
-          </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
-        </div>
-        <div class="buttons">
-          <div
-            :class="[
-              gasPrice === highestGas / 4 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas / 4);"
-          >
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === highestGas / 2 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas / 2);"
-          >
-            {{ $t('common.regular') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === highestGas ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas);"
-          >
-            {{ $t('common.fast') }}
-          </div>
-        </div>
-      </div>
-
-      <div class="the-form gas-amount">
-        <input v-model="gasAmount" type="number" placeholder="Gas Amount" />
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-    </div>
     <div class="send-form advanced">
       <div class="advanced-content">
         <div class="toggle-button-container">
