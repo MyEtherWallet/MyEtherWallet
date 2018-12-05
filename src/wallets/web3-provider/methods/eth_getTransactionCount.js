@@ -13,11 +13,11 @@ export default async ({ payload, requestManager }, res, next) => {
   let fetchedNonce;
   if (store.get(utils.sha3(addr)) === undefined) {
     store.set(utils.sha3(addr), {
-      nonce: storedNonce,
+      nonce: utils.toHex(storedNonce),
       timestamp: +new Date()
     });
   } else {
-    storedNonce = store.get(utils.sha3(addr)).nonce;
+    storedNonce = new BN(store.get(utils.sha3(addr)).nonce);
   }
 
   const lastFetch =
@@ -28,7 +28,7 @@ export default async ({ payload, requestManager }, res, next) => {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
     storedNonce = new BN(fetchedNonce).toFixed();
     store.set(utils.sha3(addr), {
-      nonce: storedNonce,
+      nonce: utils.toHex(storedNonce),
       timestamp: +new Date()
     });
   } else if (lastFetch < 1) {
@@ -37,12 +37,12 @@ export default async ({ payload, requestManager }, res, next) => {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
     if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
       store.set(utils.sha3(addr), {
-        nonce: new BN(fetchedNonce).toFixed(),
+        nonce: utils.toHex(new BN(fetchedNonce).toFixed()),
         timestamp: +new Date()
       });
     } else {
       store.set(utils.sha3(addr), {
-        nonce: storedNonce,
+        nonce: utils.toHex(storedNonce),
         timestamp: +new Date()
       });
     }
@@ -56,7 +56,7 @@ export default async ({ payload, requestManager }, res, next) => {
   } else {
     const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
-      nonce: new BN(fetchedNonce).toFixed(),
+      nonce: utils.toHex(new BN(fetchedNonce).toFixed()),
       timestamp: currentTime
     });
 
