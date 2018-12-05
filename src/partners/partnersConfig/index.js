@@ -1,6 +1,5 @@
 import { chainCurrencies, fiat } from './currencyDetails';
 import EthereumTokens from './EthereumTokens';
-import OtherChains from './OtherChains';
 import {
   networkSymbols,
   BASE_CURRENCY,
@@ -15,7 +14,6 @@ export {
   MIN_SWAP_AMOUNT,
   baseCurrencyEntry,
   EthereumTokens,
-  OtherChains,
   networkSymbols,
   chainCurrencies,
   fiat,

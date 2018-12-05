@@ -98,6 +98,7 @@ export default {
       try {
         tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
       return tokens;
