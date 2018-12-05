@@ -1,10 +1,6 @@
 {
-  "whatIsMessageContent": "So what is Message??? More info needed...",
   "signature": "A personal identifier to accompany your transaction",
-  "whatIsSpeedOfTX": "This field regulates speed of transaction, which is always paid in ETH.  We recommend having at least .01 ETH before making transactions.",
-  "whatIsNonce": "So... What is Nonce?",
-  "whatIsDataContent": "So what is data???",
-  "whatIsGas": "So.... What is Gas Limit?",
+  "txSpeed": "This field regulates speed of transaction, which is always paid in ETH.  We recommend having at least .01 ETH before making transactions.",
   "print": "Print",
   "copy": "Copy",
   "switchAddress": "Switch Address",
