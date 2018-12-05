@@ -11,13 +11,13 @@ import BN from 'bignumber.js';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
-      dispatch('addNotification', [tx.from, hash, 'Transaction Hash']);
+      dispatch('addNotification', ['Hash', tx, hash]);
     })
     .on('receipt', res => {
-      dispatch('addNotification', [tx.from, res, 'Transaction Receipt']);
+      dispatch('addNotification', ['Receipt', tx, res]);
     })
     .on('error', err => {
-      dispatch('addNotification', [tx.from, err, 'Transaction Error']);
+      dispatch('addNotification', ['Error', tx, err]);
     });
 };
 export default async (
@@ -57,7 +57,7 @@ export default async (
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
                   nonce: utils.toHex(
-                    new BN(localStoredObj.nonce).add(1).toFixed()
+                    new BN(localStoredObj.nonce).plus(1).toFixed()
                   ),
                   timestamp: localStoredObj.timestamp
                 }
@@ -83,7 +83,7 @@ export default async (
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
                   nonce: utils.toHex(
-                    new BN(localStoredObj.nonce).add(1).toFixed()
+                    new BN(localStoredObj.nonce).plus(1).toFixed()
                   ),
                   timestamp: localStoredObj.timestamp
                 }

@@ -632,6 +632,7 @@ export default {
     },
     swapStarted(swapDetails) {
       this.$store.dispatch('addSwapTransaction', [
+        `Swap`,
         this.currentAddress,
         swapDetails
       ]);
