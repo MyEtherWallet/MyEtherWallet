@@ -13,114 +13,42 @@
       @show="countUnread"
     >
       <template slot="modal-title">
-        {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
-        <div v-show="unreadCount >= 0" class="notification-count">
-          <span>{{ unreadCount }}</span>
+        <div>
+          <div v-if="!detailsShown">
+            {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
+            <div v-show="unreadCount >= 0" class="notification-count">
+              <span>{{ unreadCount }}</span>
+            </div>
+          </div>
+          <div v-else @click="hideDetails">Back</div>
         </div>
       </template>
-      <div class="notification-item-container">
-        <ul>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Transaction</p>
-                <p class="status status-succeed">(Succeed)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Swap</p>
-                <p class="status status-processing">(Processing)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-            <div class="notification-content">
-              <ul>
-                <li>
-                  <p>Amount:</p>
-                  <p>2.100000 ETH</p>
-                </li>
-                <li>
-                  <p>To Address:</p>
-                  <p>
-                    <a href="/" target="_blank">
-                      0xbfe394bf28b7cbf72e7656e0e6740b196521b074
-                    </a>
-                  </p>
-                </li>
-                <li>
-                  <p>TX Fee:</p>
-                  <p>0.100000346482 ETH ($0.09)</p>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Transaction</p>
-                <p class="status status-failed">(Failed)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <div
+      <div v-if="!detailsShown" class="notification-item-container">
+        <ul
           v-if="
             sortedNotifications !== undefined && sortedNotifications.length > 0
           "
         >
-          <div
+          <li
             v-for="(notification, idx) in sortedNotifications"
             :key="notification.title + notification.timestamp + idx"
             class="notification-item"
           >
-            <div
-              class="notification-header"
-              @click="expand(idx, notification, $event);"
+            <component
+              :is="useComponent(notification.type)"
+              :index="idx"
+              :notice="notification"
+              @showDetails="showDetails"
             >
-              <p :class="[notification.read ? '' : 'unread']">
-                {{ notification.title }}
-              </p>
-              <p :class="[notification.read ? '' : 'unread']">
-                {{ notification.timestamp }}
-              </p>
-            </div>
-            <div
-              :class="[
-                notification.expanded ? '' : 'unexpanded',
-                'notification-body'
-              ]"
-            >
-              {{ notification.body }}
-            </div>
-          </div>
-        </div>
+            </component>
+          </li>
+        </ul>
         <div v-else class="notification-no-item">No notifications found :(</div>
+      </div>
+      <div v-if="detailsShown" class="notification-item-container">
+        <transaction-details
+          :notice="notificationDetails"
+        ></transaction-details>
       </div>
     </b-modal>
   </div>
@@ -129,11 +57,23 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import SwapNotification from './NotificationTypes/SwapNotification';
+import TransactionNotification from './NotificationTypes/TransactionNotification';
+import TransactionError from './NotificationTypes/TransactionError';
+import TransactionDetails from './NotificationTypes/TransactionDetails';
 
 export default {
+  components: {
+    'swap-notification': SwapNotification,
+    'transaction-notification': TransactionNotification,
+    'transaction-error': TransactionError,
+    'transaction-details': TransactionDetails
+  },
   data() {
     return {
-      unreadCount: 0
+      unreadCount: 0,
+      detailsShown: false,
+      notificationDetails: {}
     };
   },
   computed: {
@@ -169,8 +109,27 @@ export default {
       store.set('notifications', this.notifications);
     }
     this.countUnread();
+    this.$refs.notification.$on('hide', () => {
+      this.hideDetails();
+    });
   },
   methods: {
+    showDetails(details) {
+      this.detailsShown = true;
+      this.notificationDetails = details;
+    },
+    hideDetails() {
+      this.detailsShown = false;
+      this.notificationDetails = {};
+    },
+    useComponent(type) {
+      if (type === 'swap') {
+        return 'swap-notification';
+      } else if (type === 'transactionError') {
+        return 'transaction-error';
+      }
+      return 'transaction-notification';
+    },
     countUnread() {
       const self = this;
       self.unreadCount = 0;

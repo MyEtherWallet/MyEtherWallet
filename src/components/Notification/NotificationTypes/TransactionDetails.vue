@@ -1,33 +1,55 @@
 <template lang="html">
-  <div class="notification-header">
-    <div class="notification-type-status">
-      <p class="type">Transaction</p>
-      <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-    </div>
-    <div class="time-date">
-      <p>13:20:23</p>
-      <p>04/05/2018</p>
-      <div class="expender-icon">
-        <i aria-hidden="true" class="fa fa-angle-down"></i>
-        <i aria-hidden="true" class="fa fa-angle-up"></i>
+  <div>
+    <div class="notification-header">
+      <div class="notification-type-status">
+        <p class="type">Transaction Detail</p>
       </div>
     </div>
-  </div>
-  <div class="notification-content">
     <ul>
+      <li>
+        <p>To Address:</p>
+        <p>
+          <a :href="addressLink" target="_blank"> {{ details.to }} </a>
+        </p>
+      </li>
+      <li><p>Transaction Hash:</p></li>
+      <li>
+        <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+      </li>
       <li>
         <p>Amount:</p>
         <p>{{ details.amount }} ETH</p>
       </li>
       <li>
-        <p>To Address:</p>
-        <p>
-          <a href="/" target="_blank"> {{ details.to }} </a>
-        </p>
+        <p>Status:</p>
+        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+      </li>
+      <li>
+        <p>Time:</p>
+        <div class="time-date">
+          <p>13:20:23</p>
+          <p>04/05/2018</p>
+        </div>
       </li>
       <li>
         <p>TX Fee:</p>
-        <p>{{ details.gasLimit }} ETH ($0.09)</p>
+        <p>{{ details.gasLimit }} WEI ($0.09)</p>
+      </li>
+      <li>
+        <p>Gas Price:</p>
+        <p>{{ details.gasLimit }} WEI ($0.09)</p>
+      </li>
+      <li>
+        <p>Gas Limit:</p>
+        <p>{{ details.gasLimit }} WEI ($0.09)</p>
+      </li>
+      <li v-if="txStatus.text === 'Succeed'">
+        <p>Gas Used:</p>
+        <p>{{ details.gasLimit }} WEI ($0.09)</p>
+      </li>
+      <li>
+        <p>Nonce:</p>
+        <p>{{ details.nonce }} </p>
       </li>
     </ul>
   </div>
@@ -36,14 +58,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import unit from 'ethjs-unit';
+import Bignumber from 'bignumber.js';
 
 export default {
   props: {
-    status: {
-      type: String,
-      default: 'pending'
-    },
-    details: {
+    notice: {
       type: Object,
       default: function() {
         return {};
@@ -57,9 +77,30 @@ export default {
   },
   computed: {
     ...mapGetters({
+      web3: 'web3',
+      network: 'network',
       notifications: 'notifications',
       wallet: 'wallet'
     }),
+    hashLink() {
+      if (this.network.type.blockExplorerTX) {
+        return this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          this.notice.hash
+        );
+      }
+    },
+    addressLink() {
+      if (this.network.type.blockExplorerAddr) {
+        return this.network.type.blockExplorerAddr.replace(
+          '[[address]]',
+          this.notice.body.to
+        );
+      }
+    },
+    details() {
+      return this.notice.body;
+    },
     txStatus() {
       const status = {
         pending: { text: 'Processing', class: 'status-processing' },
@@ -68,8 +109,8 @@ export default {
         error: { text: 'Display Error', class: 'status-failed' }
       };
 
-      if (status[this.status]) {
-        return status[this.status];
+      if (status[this.notice.status]) {
+        return status[this.notice.status];
       }
       return status.error;
     },
@@ -103,6 +144,9 @@ export default {
     this.countUnread();
   },
   methods: {
+    emitShowDetails() {
+      this.$emit('showDetails');
+    },
     countUnread() {
       const self = this;
       self.unreadCount = 0;
