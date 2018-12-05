@@ -14,7 +14,14 @@ const notificationType = {
   ERROR: 'transactionError'
 };
 
+const status = {
+  PENDING: 'pending',
+  COMPLETE: 'complete',
+  FAILED: 'failed'
+}
+
 const transactionHash = (notifArray, val) => {
+  // TODO: use transfer method call signature to identify token transfer.
   if (notifArray.length > 1) {
     if (
       notifArray[notifArray.length - 1].type === notificationType.SWAP &&
@@ -28,7 +35,7 @@ const transactionHash = (notifArray, val) => {
     read: false,
     timestamp: new Date(),
     type: notificationType.TRANSACTION,
-    status: 'processing',
+    status: status.PENDING,
     hash: val[2],
     body: {
       error: false,
@@ -57,7 +64,7 @@ const transactionReceipt = (notifArray, val) => {
       notifArray[idx].status = 'complete';
     }
   }
-  notifArray[idx].status = 'complete';
+  notifArray[idx].status = status.COMPLETE;
   notifArray[idx].body.gasUsed = val[2].gasUsed;
   notifArray[idx].body.blockNumber = val[2].blockNumber;
   return notifArray;
@@ -65,11 +72,11 @@ const transactionReceipt = (notifArray, val) => {
 
 const transactionError = (notifArray, val) => {
   notifArray.push({
-    title: 'transaction',
+    title: 'Transaction',
     read: false,
     timestamp: new Date(),
     type: notificationType.ERROR,
-    status: 'failed',
+    status: status.FAILED,
     hash: val[2],
     body: {
       error: true,
@@ -83,11 +90,11 @@ const transactionError = (notifArray, val) => {
 
 const swapOrder = (notifArray, val) => {
   notifArray.push({
-    title: 'swap',
+    title: 'Swap',
     read: false,
     timestamp: new Date(),
     type: notificationType.SWAP,
-    status: 'processing',
+    status: status.PENDING,
     hasTransaction: false,
     body: {
       to: val[2].toAddress,
