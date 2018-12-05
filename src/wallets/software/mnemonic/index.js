@@ -5,7 +5,7 @@ import ethUtil from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { getSignTransactionObject, sanitizeHex } from '../../utils';
+import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 
 const NEED_PASSWORD = true;
 const IS_HARDWARE = false;
@@ -30,9 +30,7 @@ class MnemonicWallet {
       tx = new ethTx(tx);
       const networkId = tx._chainId;
       tx.sign(derivedKey.privateKey);
-      const signedChainId = Math.floor(
-        (parseInt(sanitizeHex(tx.v.toString('hex'))) - 35) / 2
-      );
+      const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
