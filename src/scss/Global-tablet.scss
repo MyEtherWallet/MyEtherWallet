@@ -560,7 +560,8 @@
   // [Bootstrap] Dropdown language menu style
   // *********************************************************************
   .modal {
-    z-index: $z-bootstrap-modal;
+    //z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
   .modal-backdrop {

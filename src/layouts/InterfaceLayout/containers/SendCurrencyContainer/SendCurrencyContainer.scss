@@ -80,6 +80,10 @@
         grid-column-gap: 7px;
         grid-template-columns: 2fr 3fr;
 
+        @media all and (max-width: $tablet-width) {
+          display: block;
+        }
+
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -103,7 +107,7 @@
           input {
             background-color: transparent;
             border: 0;
-            padding: 13px 15px;
+            padding: 13px 45px 13px 15px;
             width: 100%;
           }
 
@@ -150,7 +154,6 @@
         }
 
         .address-block {
-          height: 98px;
           position: relative;
 
           i {
@@ -159,11 +162,10 @@
             right: 13px;
           }
 
-          textarea {
+          input {
             background-color: transparent;
             border: 0;
-            height: 100%;
-            padding: 13px 15px;
+            padding: 13px 45px 13px 15px;
             resize: none;
             width: 100%;
           }
@@ -262,7 +264,7 @@
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      width: 300px;
+      //width: 200px;
     }
 
     p {

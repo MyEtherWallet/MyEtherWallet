@@ -86,9 +86,10 @@
             </p>
           </div>
           <div class="the-form address-block">
-            <textarea
+            <input
               v-ens-resolver="address"
               ref="address"
+              type="text"
               name="name"
               autocomplete="off"
               @input="debounceInput"
