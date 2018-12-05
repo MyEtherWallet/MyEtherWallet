@@ -3,9 +3,10 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import { addUpdateNotification } from '@/helpers/notificationFormatter';
 
 const addNotification = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = web3.utils.toChecksumAddress(val[1].from);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -13,26 +14,30 @@ const addNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push({
-    title: val[2],
-    read: false,
-    timestamp: new Date(),
-    body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
-    expanded: false
-  });
+  newNotif[address] = addUpdateNotification(newNotif[address], val);
+  // newNotif[address].push({
+  //   title: val[0]
+  //     .split('_')
+  //     .slice(2)
+  //     .join(' '),
+  //   read: false,
+  //   timestamp: new Date(),
+  //   body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
+  //   expanded: false
+  // });
 
   commit('ADD_NOTIFICATION', newNotif);
 };
 
 const addSwapTransaction = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = web3.utils.toChecksumAddress(val[2]);
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
     newNotif[item] = state.transactions[item];
   });
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push(val[1]); // TODO: reduce the ammount of information stored
+  newNotif[address].push(val[3]); // TODO: reduce the ammount of information stored
   commit('ADD_SWAP_TRANSACTION', newNotif);
 };
 

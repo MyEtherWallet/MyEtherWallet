@@ -144,19 +144,28 @@ export default {
     },
     async sendTransaction() {
       if (!this.swapReady) return;
-      if (Array.isArray(this.preparedSwap)) {
-        if (this.preparedSwap.length > 1) {
-          this.web3.mew.sendBatchTransactions(this.preparedSwap);
+
+      if (
+        Array.isArray(this.preparedSwap) ||
+        Object.keys(this.preparedSwap).length > 0
+      ) {
+        this.$store.dispatch('addNotification', [
+          `Swap`,
+          this.currentAddress,
+          this.swapDetails
+        ]);
+        if (Array.isArray(this.preparedSwap)) {
+          if (this.preparedSwap.length > 1) {
+            this.web3.mew.sendBatchTransactions(this.preparedSwap);
+          } else {
+            this.web3.eth.sendTransaction(this.preparedSwap[0]);
+          }
         } else {
-          this.web3.eth.sendTransaction(this.preparedSwap[0]);
-        }
-      } else {
-        if (Object.keys(this.preparedSwap).length > 0) {
           this.web3.eth.sendTransaction(this.preparedSwap);
         }
+        this.$emit('swapStarted', this.swapDetails);
+        this.$refs.swapconfirmation.hide();
       }
-      this.$emit('swapStarted', this.swapDetails);
-      this.$refs.swapconfirmation.hide();
     },
     async swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
