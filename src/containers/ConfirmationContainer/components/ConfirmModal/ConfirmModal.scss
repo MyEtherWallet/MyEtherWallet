@@ -29,12 +29,29 @@
       }
     }
 
+    @media all and (max-width: $tablet-width) {
+      .direction {
+        padding: 20px 0;
+        display: flex;
+
+        img {
+          transform: rotate(90deg);
+          margin: 0 auto;
+          height: 20px;
+        }
+      }
+    }
+
     .tx-info {
       $tx-info-grid-size: 270px;
 
       display: grid;
       grid-template-columns: $tx-info-grid-size 70px $tx-info-grid-size;
       padding-bottom: 15px;
+
+      @media all and (max-width: $tablet-width) {
+        display: block;
+      }
 
       .address-container {
         width: 100%;
@@ -148,7 +165,6 @@
   .submit-button {
     margin: 0 auto;
     text-align: center;
-    width: 300px;
   }
 
   p {
