@@ -73,7 +73,7 @@
         <div class="title">
           <div class="title-and-popover">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
+            <popover :popcontent="$t('popover.txSpeed')" />
           </div>
           <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
         </div>
