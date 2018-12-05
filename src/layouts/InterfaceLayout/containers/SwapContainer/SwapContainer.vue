@@ -244,7 +244,6 @@ export default {
       tempStatuses: [],
       haveProviderRates: false,
       loadingError: false
-      // hasEnough: true
     };
   },
   computed: {
@@ -308,7 +307,6 @@ export default {
           this.selectedProvider.maxValue === 0)
       );
     },
-    // temp solution
     checkBityMin() {
       if (this.swap.isProvider(this.providerNames.bity)) {
         return (
@@ -324,7 +322,6 @@ export default {
       }
       return false;
     },
-    // temp solution
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
         return (
@@ -588,7 +585,6 @@ export default {
       try {
         if (this.validSwap) {
           this.finalizingSwap = true;
-          // TODO: should move the swap object to data and build as values change and are updated.
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });

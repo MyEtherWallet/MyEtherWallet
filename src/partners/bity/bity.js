@@ -284,7 +284,6 @@ export default class BitySwap {
     if (data.status === undefined) data = { input: {}, output: {} };
     if (validStatus.includes(data.status)) {
       return 2;
-      // priorStatus = 'RCVE';
     }
     if (data.status === 'OPEN') {
       return 1;

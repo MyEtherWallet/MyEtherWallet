@@ -17,11 +17,7 @@ import {
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
-/**
- * Note: Need to implement checks for these:
- *   - Source amount is too small. Minimum amount is 0.001 ETH equivalent.
- *   - Ask about ETH equivalent in relation to User Cap
- */
+
 export default class Kyber {
   constructor(props = {}) {
     this.name = Kyber.getName();
