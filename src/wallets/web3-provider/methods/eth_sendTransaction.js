@@ -57,7 +57,7 @@ export default async (
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
                   nonce: utils.toHex(
-                    new BN(localStoredObj.nonce).add(1).toFixed()
+                    new BN(localStoredObj.nonce).plus(1).toFixed()
                   ),
                   timestamp: localStoredObj.timestamp
                 }
@@ -83,7 +83,7 @@ export default async (
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
                   nonce: utils.toHex(
-                    new BN(localStoredObj.nonce).add(1).toFixed()
+                    new BN(localStoredObj.nonce).plus(1).toFixed()
                   ),
                   timestamp: localStoredObj.timestamp
                 }
