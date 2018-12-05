@@ -32,7 +32,8 @@ const state = {
   online: true,
   transactions: {},
   wallet: null,
-  web3: {}
+  web3: {},
+  sidemenuOpen: false
 };
 
 export default state;

@@ -9,12 +9,17 @@
     margin-bottom: 40px;
     display: block;
 
+    p {
+      text-align: center;
+    }
+
     .title-popover {
       margin: 0 auto;
       display: flex;
       align-items: center;
       text-align: center;
       margin-bottom: 10px;
+      justify-content: center;
 
       h3 {
         max-width: 320px;
