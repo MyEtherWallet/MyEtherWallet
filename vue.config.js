@@ -106,6 +106,9 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/TxStatusLayout/index.js',
           'src/layouts/TxStatusLayout/TxStatusLayout.scss',
           'src/layouts/TxStatusLayout/TxStatusLayout.vue',
+          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-desktop.scss',
+          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-mobile.scss',
+          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-tablet.scss',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/files/img/icons/icon128.png',
