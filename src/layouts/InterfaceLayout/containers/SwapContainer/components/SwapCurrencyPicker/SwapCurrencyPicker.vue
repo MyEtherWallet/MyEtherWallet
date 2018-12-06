@@ -9,7 +9,7 @@
         ]"
         @click="openDropdown"
       >
-        <p>
+        <p class="symbol-name">
           <span
             :class="[
               'cc',
@@ -47,7 +47,7 @@
             "
             @click="selectCurrency(curr);"
           >
-            <p>
+            <p class="symbol-name">
               <i :class="['cc', curr.symbol, 'cc-icon']" /> {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>
             </p>

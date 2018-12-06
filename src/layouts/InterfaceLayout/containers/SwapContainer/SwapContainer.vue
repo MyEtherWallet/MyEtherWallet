@@ -18,11 +18,7 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')" />
-      <div class="buy-eth">
-        <a href="https://ccswap.myetherwallet.com" target="_blank">
-          <span>Buy ETH with</span> <img :src="images.visaMaster" />
-        </a>
-      </div>
+      <img :src="images.bity" class="logo-bity" />
     </div>
 
     <div class="send-form">
