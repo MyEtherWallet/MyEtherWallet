@@ -379,6 +379,16 @@ export default {
         this.fromValue,
         'from'
       );
+    },
+    network(newVal) {
+      console.log(newVal); // todo remove dev item
+      this.swap.updateNetwork(newVal.type.name);
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        this.fromValue,
+        'from'
+      );
     }
   },
   mounted() {
@@ -630,12 +640,8 @@ export default {
         errorLogger(e);
       }
     },
-    swapStarted(swapDetails) {
-      this.$store.dispatch('addSwapTransaction', [
-        `Swap`,
-        this.currentAddress,
-        swapDetails
-      ]);
+    swapStarted(details) {
+      console.log(details); // todo remove dev item
     },
     resetSwapState() {
       this.toAddress = '';

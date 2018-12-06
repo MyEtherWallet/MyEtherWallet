@@ -149,7 +149,7 @@ export default {
         Array.isArray(this.preparedSwap) ||
         Object.keys(this.preparedSwap).length > 0
       ) {
-        this.$store.dispatch('addNotification', [
+        this.$store.dispatch('addSwapNotification', [
           `Swap`,
           this.currentAddress,
           this.swapDetails
@@ -163,7 +163,7 @@ export default {
         } else {
           this.web3.eth.sendTransaction(this.preparedSwap);
         }
-        this.$emit('swapStarted', this.swapDetails);
+        this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);
         this.$refs.swapconfirmation.hide();
       }
     },
@@ -181,7 +181,6 @@ export default {
         ) {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
-
           this.preparedSwap = {
             from: this.$store.state.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,

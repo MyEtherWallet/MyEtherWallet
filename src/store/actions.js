@@ -3,7 +3,7 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-import { addUpdateNotification } from '@/helpers/notificationFormatter';
+import { addUpdateNotification, addUpdateSwapNotification } from '@/helpers/notificationFormatter';
 
 const addNotification = function({ commit, state }, val) {
   const address = web3.utils.toChecksumAddress(val[1].from);
@@ -15,6 +15,7 @@ const addNotification = function({ commit, state }, val) {
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
   newNotif[address] = addUpdateNotification(newNotif[address], val);
+  console.log(newNotif[address]); // todo remove dev item
   // newNotif[address].push({
   //   title: val[0]
   //     .split('_')
@@ -29,16 +30,29 @@ const addNotification = function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
-const addSwapTransaction = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[2]);
+const addSwapNotification = function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[1]);
   const newNotif = {};
-  Object.keys(state.transactions).forEach(item => {
-    newNotif[item] = state.transactions[item];
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
   });
+
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push(val[3]); // TODO: reduce the ammount of information stored
-  commit('ADD_SWAP_TRANSACTION', newNotif);
+  newNotif[address] = addUpdateSwapNotification(newNotif[address], val);
+  console.log('addSwapNotification'); // todo remove dev item
+  // newNotif[address].push({
+  //   title: val[0]
+  //     .split('_')
+  //     .slice(2)
+  //     .join(' '),
+  //   read: false,
+  //   timestamp: new Date(),
+  //   body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
+  //   expanded: false
+  // });
+
+  commit('ADD_NOTIFICATION', newNotif);
 };
 
 const addCustomPath = function({ commit, state }, val) {
@@ -186,7 +200,7 @@ const setLastPath = function({ commit }, val) {
 
 export default {
   addNotification,
-  addSwapTransaction,
+  addSwapNotification,
   addCustomPath,
   checkIfOnline,
   clearWallet,
