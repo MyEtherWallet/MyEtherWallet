@@ -1,7 +1,9 @@
 <template>
   <div class="home">
     <top-banner />
-    <about /> <faqs /> <social />
+    <about />
+    <faqs />
+    <social />
   </div>
 </template>
 
