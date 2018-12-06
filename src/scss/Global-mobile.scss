@@ -119,6 +119,11 @@
     box-shadow: none !important;
   }
 
+  .popover-container button {
+    background-color: transparent !important;
+    border-color: transparent;
+  }
+
   // *********************************************************************
   // Disable WebKit Spinners
   // *********************************************************************
@@ -215,7 +220,7 @@
   }
 
   .page-container {
-    padding: 0 15px;
+    padding: 0 25px;
   }
 
   // *********************************************************************
@@ -559,7 +564,8 @@
   // [Bootstrap] Dropdown language menu style
   // *********************************************************************
   .modal {
-    z-index: $z-bootstrap-modal;
+    //z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
   .modal-backdrop {
@@ -594,6 +600,20 @@
     position: absolute !important;
     right: 13px !important;
     top: 16px !important;
+    display: none;
+  }
+
+  .mobile-language-menu-container {
+    .dropdown-menu {
+      left: 40px !important;
+      height: 200px;
+      overflow-y: auto;
+
+      > a {
+        font-size: 20px;
+        padding: 10px 10px;
+      }
+    }
   }
 
   // *********************************************************************
@@ -618,6 +638,10 @@
   // *********************************************************************
   // Tooltip
   // *********************************************************************
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+  }
 
   .popover {
     pointer-events: none;

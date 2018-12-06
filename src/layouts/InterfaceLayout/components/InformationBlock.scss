@@ -1,13 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
+.info-block-container {
+  height: 100%;
+}
+
 .info-block {
   border-radius: 5px;
   color: $text-white;
   display: flex;
-  min-height: 140px;
-  min-width: 360px;
+  height: 100%;
+  //min-width: 360px;
   padding: 25px;
   position: relative;
+  align-items: center;
 
   h2,
   h4 {
@@ -37,7 +42,7 @@
   .block-image {
     display: flex;
     flex-direction: column;
-    height: 90px;
+    //height: 90px;
     justify-content: center;
     margin-right: 15px;
     position: relative;
@@ -52,6 +57,18 @@
     flex-direction: column;
     justify-content: space-around;
     max-width: 230px;
+
+    @media all and (max-width: 1570px) {
+      max-width: 200px;
+    }
+
+    @media all and (max-width: 1450px) {
+      max-width: 160px;
+    }
+
+    @media all and (max-width: 1350px) {
+      max-width: 120px;
+    }
   }
 
   .information-container {

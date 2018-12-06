@@ -5,41 +5,48 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('interface.sendTxAmount') }}</h4>
-            <p
-              class="title-button prevent-user-select"
-              @click="setBalanceToAmt"
-            >
-              Entire Balance
-            </p>
+          <div class="single-input-block">
+            <div class="title">
+              <h4>{{ $t('interface.sendTxType') }}</h4>
+            </div>
+            <currency-picker
+              :currency="tokensWithBalance"
+              :page="'sendEthAndTokens'"
+              :token="true"
+              @selectedCurrency="setSelectedCurrency"
+            />
           </div>
-          <currency-picker
-            :currency="tokensWithBalance"
-            :page="'sendEthAndTokens'"
-            :token="true"
-            @selectedCurrency="setSelectedCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              :value="amount"
-              type="number"
-              placeholder="Amount"
-              @input="debouncedAmount"
-            />
-            <i
-              :class="[
-                selectedCurrency.name === 'Ether'
-                  ? parsedBalance < amount
+          <div class="single-input-block">
+            <div class="title">
+              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <p
+                class="title-button prevent-user-select"
+                @click="setBalanceToAmt"
+              >
+                Entire Balance
+              </p>
+            </div>
+            <div class="the-form amount-number">
+              <input
+                :value="amount"
+                type="number"
+                placeholder="Amount"
+                @input="debouncedAmount"
+              />
+              <i
+                :class="[
+                  selectedCurrency.name === 'Ether'
+                    ? parsedBalance < amount
+                      ? 'not-good'
+                      : ''
+                    : selectedCurrency.balance < amount
                     ? 'not-good'
-                    : ''
-                  : selectedCurrency.balance < amount
-                  ? 'not-good'
-                  : '',
-                'fa fa-check-circle good-button'
-              ]"
-              aria-hidden="true"
-            />
+                    : '',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
           </div>
           <div
             v-if="
@@ -79,9 +86,10 @@
             </p>
           </div>
           <div class="the-form address-block">
-            <textarea
+            <input
               v-ens-resolver="address"
               ref="address"
+              type="text"
               name="name"
               autocomplete="off"
               @input="debounceInput"
@@ -98,57 +106,6 @@
       </div>
     </div>
 
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-helper">
-            <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
-          </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
-        </div>
-        <div class="buttons">
-          <div
-            :class="[
-              gasPrice === highestGas / 4 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas / 4);"
-          >
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === highestGas / 2 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas / 2);"
-          >
-            {{ $t('common.regular') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === highestGas ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(highestGas);"
-          >
-            {{ $t('common.fast') }}
-          </div>
-        </div>
-      </div>
-
-      <div class="the-form gas-amount">
-        <input v-model="gasAmount" type="number" placeholder="Gas Amount" />
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-    </div>
     <div class="send-form advanced">
       <div class="advanced-content">
         <div class="toggle-button-container">
@@ -167,23 +124,28 @@
             </div>
           </div>
         </div>
-        <div v-if="advancedExpend" class="input-container">
-          <div class="the-form user-input">
-            <input
-              v-model="data"
-              type="text"
-              name=""
-              placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-              autocomplete="off"
-            />
-          </div>
-          <div class="the-form user-input">
-            <input
-              v-model="gasLimit"
-              :placeholder="$t('common.gasLimit')"
-              type="number"
-              name=""
-            />
+        <div
+          :class="advancedExpend && 'input-container-open'"
+          class="input-container"
+        >
+          <div class="margin-container">
+            <div class="the-form user-input">
+              <input
+                v-model="data"
+                type="text"
+                name=""
+                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
+                autocomplete="off"
+              />
+            </div>
+            <div class="the-form user-input">
+              <input
+                v-model="gasLimit"
+                :placeholder="$t('common.gasLimit')"
+                type="number"
+                name=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -445,4 +407,7 @@ export default {
 
 <style lang="scss" scoped>
 @import 'SendCurrencyContainer.scss';
+//@import 'SendCurrencyContainer-desktop.scss';
+//@import 'SendCurrencyContainer-tablet.scss';
+//@import 'SendCurrencyContainer-mobile.scss';
 </style>
