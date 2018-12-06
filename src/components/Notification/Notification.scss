@@ -44,6 +44,14 @@
     }
   }
 
+  > ul {
+    > li {
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+    }
+  }
+
   .notification-item {
     display: flex;
     flex-direction: column;

@@ -15,9 +15,13 @@
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+- Implement Swap [#127](https://github.com/MyEtherWallet/MyEtherWallet/pull/127)
 
 ### Devop
 
+- Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
+- Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
+- Replace heroku urls [#178](https://github.com/MyEtherWallet/MyEtherWallet/pull/178)
 - Crowdin translations [#75](https://github.com/MyEtherWallet/MyEtherWallet/pull/75)
 - refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)
 - fix invalid chain id error [#164](https://github.com/MyEtherWallet/MyEtherWallet/pull/164)

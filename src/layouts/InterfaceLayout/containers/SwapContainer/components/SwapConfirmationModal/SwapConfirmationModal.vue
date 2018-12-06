@@ -8,12 +8,14 @@
       title="Confirmation"
     >
       <div class="time-remaining">
-        <h1>09:25</h1>
+        <h1>{{ timeRemaining }}</h1>
         <p>Time Remaining</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
-          <div class="icon"><img :src="fromAddress.image" /></div>
+          <div class="icon">
+            <i :class="['cc', fromAddress.name, 'cc-icon']" />
+          </div>
           <p class="value">
             {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
           </p>
@@ -22,7 +24,9 @@
         </div>
         <div class="right-arrow"><img :src="arrowImage" /></div>
         <div class="to-address">
-          <div class="icon"><img :src="toAddress.image" /></div>
+          <div class="icon">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          </div>
           <p class="value">
             {{ toAddress.value }} <span>{{ toAddress.name }}</span>
           </p>
@@ -31,15 +35,13 @@
         </div>
       </div>
 
-      <detail-information :details="detailInfo" />
-
       <div
         :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
-        @click="signAndTransmitTransaction"
+        @click="sendTransaction"
       >
         <button-with-qrcode
           :qrcode="qrcode"
-          :buttonname="$t('common.confirmAndSend')"
+          :buttonname="$t('common.continue')"
         />
       </div>
 
@@ -49,10 +51,12 @@
 </template>
 
 <script>
-/* eslint-disable*/
-import web3 from 'web3';
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
+import { mapGetters } from 'vuex';
 
 import Arrow from '@/assets/images/icons/swap.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
@@ -60,7 +64,9 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-// TODO see: https://github.com/MyEtherWallet/MyEtherWallet/blob/89282539248349de09ba64b3171408a23d189460/src/dapps/RegisterDomain/RegisterDomain.vue
+
+import { EthereumTokens, BASE_CURRENCY, utils } from '@/partners';
+
 export default {
   components: {
     'detail-information': DetailInformation,
@@ -89,206 +95,136 @@ export default {
         BTC: iconBtc,
         ETH: iconEth
       },
+      timeRemaining: 0,
       qrcode: '',
       arrowImage: Arrow,
-      fromAddress: {
-        image: iconEth,
-        value: '1.0000000000',
-        name: 'ETH',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      toAddress: {
-        image: iconBtc,
-        value: '0.0034523',
-        name: 'BTC',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      detailInfo: {
-        network: {
-          name: 'Network',
-          value: 'ETH by mytherapi.com'
-        },
-        gas: {
-          name: 'Gas Limit',
-          value: '21000'
-        },
-        gasPrice: {
-          name: 'Gas Price',
-          value: '210000 Gwei (0.00321 ETH=$1.234)'
-        },
-        transactionFee: {
-          name: 'Max Transaction Fee',
-          value: '441000 Gwei (0.000441 ETH)'
-        },
-        nonce: {
-          name: 'Nonce',
-          value: '0'
-        },
-        data: {
-          name: 'Data',
-          value: 'None'
-        }
-      }
+      fromAddress: {},
+      toAddress: {}
     };
+  },
+  computed: {
+    ...mapGetters({
+      ens: 'ens',
+      gasPrice: 'gasPrice',
+      web3: 'web3',
+      wallet: 'wallet',
+      network: 'network'
+    })
   },
   watch: {
     swapDetails(newValue) {
-      console.log('modal watcher:', newValue); // todo remove dev item
       this.fromAddress = {
-        image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,
         name: newValue.fromCurrency,
-        address: newValue.fromAddress ? newValue.fromAddress : ''
+        address: newValue.fromAddress
+          ? newValue.fromAddress
+          : this.currentAddress
       };
       this.toAddress = {
-        image: this.currencyIcons[newValue.toCurrency],
         value: newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
-      this.swapStarted(newValue)
+      this.timeUpdater(newValue);
+      this.swapStarted(newValue);
     }
   },
   methods: {
-    sendTransaction() {
-      // this.swapStarted(this.swapDetails);
-      // this.$refs.swapconfirmation.hide();
-      // this.$emit('swapStarted');
-    },
-    createTokenTransferData(fromAddress, amount, tokenDetails) {
-      if (this.swapDetails.fromCurrency !== 'ETH') {
-        const jsonInterface = [
-          {
-            constant: false,
-            inputs: [
-              { name: '_to', type: 'address' },
-              { name: '_amount', type: 'uint256' }
-            ],
-            name: 'transfer',
-            outputs: [{ name: '', type: 'bool' }],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function'
-          }
-        ];
-        const contract = new this.$store.state.web3.eth.Contract(
-          jsonInterface,
-          tokenDetails.address
+    timeUpdater(swapDetails) {
+      clearInterval(this.timerInterval);
+      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timerInterval = setInterval(() => {
+        this.timeRemaining = utils.getTimeRemainingString(
+          swapDetails.timestamp
         );
-        return contract.methods
-          .transfer(
-            fromAddress,
-            new BigNumber(amount)
-              .times(new BigNumber(10).pow(tokenDetails.decimals))
-              .toFixed()
-          )
-          .encodeABI();
-      } else {
-        return '0x';
-      }
-    },
-    async swapStarted(swapDetails) {
-      this.swapReady = false;
-      this.preparedSwap = {};
-      console.log('swapDetails', swapDetails); // todo remove dev item
-      if (swapDetails.dataForInitialization) {
-        switch (swapDetails.provider) {
-          case 'changelly':
-            this.preparedSwap = await this.useChangelly(swapDetails);
-            this.swapReady = true;
-            break;
-          case 'bity':
-            this.preparedSwap = await this.useBity(swapDetails);
-            this.swapReady = true;
-            break;
-          case 'kybernetwork':
-            this.preparedSwap = await this.useKyber(swapDetails);
-            this.swapReady = true;
-            break;
+        if (this.timeRemaining === 'expired') {
+          clearInterval(this.timerInterval);
         }
-
-      }
+      }, 1000);
     },
-    signAndTransmitTransaction() {
-      if(!this.swapReady) return;
+    async sendTransaction() {
+      if (!this.swapReady) return;
       if (Array.isArray(this.preparedSwap)) {
-        this.$store.state.web3.eth.sendBatchTransactions(this.preparedSwap);
+        if (this.preparedSwap.length > 1) {
+          this.web3.mew.sendBatchTransactions(this.preparedSwap);
+        } else {
+          this.web3.eth.sendTransaction(this.preparedSwap[0]);
+        }
       } else {
         if (Object.keys(this.preparedSwap).length > 0) {
-          // this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
+          this.web3.eth.sendTransaction(this.preparedSwap);
         }
       }
       this.$emit('swapStarted', this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
-    async useBity(swapDetails) {
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.input.amount,
-            'ether'
-          )
-        };
-      }
-    },
-    async useChangelly(swapDetails) {
-      // TODO: consolidate
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.amountExpectedFrom,
-            'ether'
-          )
-        };
-      }
-    },
-    async useKyber(swapDetails) {
-      const txDatas = swapDetails.dataForInitialization.values();
-      const bulkTx = [];
-      try {
-        for (const value of txDatas) {
-          value.from = this.$store.state.wallet.getChecksumAddressString();
-          if(unit.toWei(this.$store.state.gasPrice, 'gwei') > swapDetails.kyberMaxGas){
-            value.gasPrice = swapDetails.kyberMaxGas
-          }
-          bulkTx.push(value);
+    async swapStarted(swapDetails) {
+      this.timeUpdater(swapDetails);
+      this.swapReady = false;
+      this.preparedSwap = {};
+      if (
+        swapDetails.dataForInitialization &&
+        !Array.isArray(swapDetails.dataForInitialization)
+      ) {
+        if (
+          swapDetails.maybeToken &&
+          swapDetails.fromCurrency !== BASE_CURRENCY
+        ) {
+          const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
+          if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
+
+          this.preparedSwap = {
+            from: this.$store.state.wallet.getChecksumAddressString(),
+            to: tokenInfo.contractAddress,
+            value: 0,
+            data: new this.web3.eth.Contract(
+              [
+                {
+                  constant: false,
+                  inputs: [
+                    { name: '_to', type: 'address' },
+                    { name: '_amount', type: 'uint256' }
+                  ],
+                  name: 'transfer',
+                  outputs: [{ name: '', type: 'bool' }],
+                  payable: false,
+                  stateMutability: 'nonpayable',
+                  type: 'function'
+                }
+              ],
+              tokenInfo.contractAddress
+            ).methods
+              .transfer(
+                swapDetails.providerAddress,
+                new BigNumber(swapDetails.fromValue)
+                  .times(new BigNumber(10).pow(tokenInfo.decimals))
+                  .toFixed()
+              )
+              .encodeABI()
+          };
+        } else if (
+          swapDetails.maybeToken &&
+          swapDetails.fromCurrency === BASE_CURRENCY
+        ) {
+          this.preparedSwap = {
+            from: this.$store.state.wallet.getChecksumAddressString(),
+            to: swapDetails.providerAddress,
+            value: unit.toWei(swapDetails.providerReceives, 'ether')
+          };
         }
-        return bulkTx;
-      } catch (e) {
-        console.error(e);
+      } else {
+        this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
+          entry.from = this.wallet.getChecksumAddressString();
+          if (
+            +unit.toWei(this.gasPrice, 'gwei').toString() >
+            +swapDetails.kyberMaxGas
+          ) {
+            entry.gasPrice = swapDetails.kyberMaxGas;
+          }
+          return entry;
+        });
       }
+      this.swapReady = true;
     }
   }
 };

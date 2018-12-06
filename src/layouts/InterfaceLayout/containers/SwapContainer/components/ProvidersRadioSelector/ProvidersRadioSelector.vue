@@ -54,7 +54,42 @@
         </li>
       </ul>
     </div>
-
+    <!-- Animation while retrieving the supporting providers rates -->
+    <div
+      v-show="loadingProviderRates"
+      class="radio-button-container animated-background"
+    >
+      <ul>
+        <li>
+          <div class="mew-custom-form__radio-button">
+            <input type="radio" name="provider" />
+          </div>
+          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div>Please wait while we load provider rates</div>
+          <div class="background-masker" />
+        </li>
+      </ul>
+    </div>
+    <!-- Message When Error Seems to have occured while retrieving rate -->
+    <div
+      v-show="loadingProviderError && !noAvaliableProviders"
+      class="radio-button-container animated-background"
+    >
+      <ul>
+        <li>
+          <div class="mew-custom-form__radio-button">
+            <input type="radio" name="provider" />
+          </div>
+          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div>
+            An Error occured while retrieving the rates for
+            {{ noProvidersPair.fromCurrency }} to
+            {{ noProvidersPair.toCurrency }} please wait an try agian
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- Message when no valid provider is found for the selected pair -->
     <div v-show="noAvaliableProviders" class="radio-button-container">
       <ul>
         <li>
@@ -73,11 +108,12 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+import MEW from '@/assets/images/logo.png';
 import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import { BitySwap } from '@/partners';
+import { providerNames } from '@/partners';
 
 export default {
   props: {
@@ -97,6 +133,14 @@ export default {
       type: Boolean,
       default: true
     },
+    loadingProviderRates: {
+      type: Boolean,
+      default: true
+    },
+    loadingProviderError: {
+      type: Boolean,
+      default: false
+    },
     providersFound: {
       type: Array,
       default: function() {
@@ -115,6 +159,7 @@ export default {
   data() {
     return {
       logos: {
+        mew: MEW,
         kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
@@ -145,7 +190,7 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
-        if (details.provider === BitySwap.getName()) {
+        if (details.provider === providerNames.bity) {
           return `From Min.: ${details.minValue} ${
             details.fromCurrency
           } & To Min.: ${details.minValue} ${details.toCurrency}`;
@@ -156,7 +201,7 @@ export default {
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        if (details.provider === BitySwap.getName()) {
+        if (details.provider === providerNames.bity) {
           return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
         }
         return `Maximum: ${details.maxValue} ${details.fromCurrency}`;

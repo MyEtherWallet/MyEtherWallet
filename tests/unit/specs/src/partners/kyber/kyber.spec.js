@@ -49,32 +49,7 @@ describe('kyber.js', () => {
     expect(baseValue).toBe('100000');
   });
 
-  it('should return data for kyber trade tx', async () => {
-    const dataValue = {
-      data:
-        '0xcb3c28c7000000000000000000000000c5bbae50781be1669306b9e001eff57a2957b09d00000000000000000000000000000000000000000000000000000000000186a00000000000000000000000000d8775f648430679a709e98d2b0cb6250d2887ef000000000000000000000000decaf9cd2367cdbb726e904cd6397edfcae6068d000000000000000000000000000000000000000000000000001fffffffffffff000000000000000000000000000000000000000000000000054ee7e7894c2000000000000000000000000000decaf9cd2367cdbb726e904cd6397edfcae6068d',
-      to: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
-      value: 0
-    };
-    const web3 = new Web3(nodeUrl);
-    const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
-      network,
-      web3: web3,
-      ens: ens
-    });
 
-    const baseValue = kyber.convertToTokenWei('GTO', 1);
-    const minRate = kyber.convertToTokenWei('BAT', 0.382498);
-    const tradeData = await kyber.getTradeData(
-      'GTO',
-      'BAT',
-      baseValue,
-      minRate,
-      '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-    );
-    expect(tradeData).toMatchObject(dataValue);
-  });
 
   it('should return data for kyber approval tx', async () => {
     const dataValue = {
@@ -96,7 +71,34 @@ describe('kyber.js', () => {
     expect(approveData).toMatchObject(dataValue);
   });
 
-  if (withNetwork) {
+  if (WITH_NETWORK) {
+    // requires network to function
+    it('should return data for kyber trade tx', async () => {
+      const dataValue = {
+        data:
+          '0xcb3c28c7000000000000000000000000c5bbae50781be1669306b9e001eff57a2957b09d00000000000000000000000000000000000000000000000000000000000186a00000000000000000000000000d8775f648430679a709e98d2b0cb6250d2887ef000000000000000000000000decaf9cd2367cdbb726e904cd6397edfcae6068d000000000000000000000000000000000000000000000000001fffffffffffff000000000000000000000000000000000000000000000000054ee7e7894c2000000000000000000000000000decaf9cd2367cdbb726e904cd6397edfcae6068d',
+        to: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
+        value: 0
+      };
+      const web3 = new Web3(nodeUrl);
+      const ens = new ENS(web3.currentProvider);
+      const kyber = new Kyber({
+        network,
+        web3: web3,
+        ens: ens
+      });
+
+      const baseValue = kyber.convertToTokenWei('GTO', 1);
+      const minRate = kyber.convertToTokenWei('BAT', 0.382498);
+      const tradeData = await kyber.getTradeData(
+        'GTO',
+        'BAT',
+        baseValue,
+        minRate,
+        '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+      );
+      expect(tradeData).toMatchObject(dataValue);
+    });
     // requires network to function
     it('should retrieve rate for pair in token wei', async () => {
       expect.assertions(1);
@@ -379,7 +381,6 @@ describe('kyber.js', () => {
         0.382958,
         '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       );
-      console.log(dataForTxs); // todo remove dev item
       expect(dataForTxs).toEqual(expect.anything());
     });
   }

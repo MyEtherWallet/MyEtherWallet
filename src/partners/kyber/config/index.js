@@ -1,16 +1,24 @@
-import { KyberCurrenciesETH } from './currencies';
-import { KyberCurrenciesROP } from './currenciesRop';
 import {
-  kyberAddressFallback,
+  kyberBaseCurrency,
+  PROVIDER_NAME,
+  defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
-  kyberValidNetworks
+  kyberValidNetworks,
+  kyberNetworkENS,
+  walletDepositeAddress,
+  kyberAddressFallback,
+  KyberCurrencies
 } from './config';
-import kyberNetworkABI from './kyberNetworkABI';
-import ERC20 from './ERC20TokenABI';
+import kyberNetworkABI from './kyberNetwork.abi';
+import ERC20 from './ERC20Token.abi';
 
-const KyberCurrencies = { ETH: KyberCurrenciesETH, ROP: KyberCurrenciesROP };
 export {
+  kyberBaseCurrency,
+  PROVIDER_NAME,
+  defaultValues,
+  walletDepositeAddress,
+  kyberNetworkENS,
   KyberCurrencies,
   kyberAddressFallback,
   kyberTokenList,

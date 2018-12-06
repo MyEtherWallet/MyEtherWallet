@@ -1,4 +1,6 @@
 import KyberSwap from './kyber';
-import { KyberCurrencies } from './config';
+import { KyberCurrencies, PROVIDER_NAME } from './config';
+import * as kyberCalls from './kyber-calls';
+import * as kyberApi from './kyber-api';
 
-export { KyberSwap, KyberCurrencies };
+export { KyberSwap, KyberCurrencies, PROVIDER_NAME, kyberCalls, kyberApi };
