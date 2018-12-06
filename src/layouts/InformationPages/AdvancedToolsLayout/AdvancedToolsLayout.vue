@@ -9,7 +9,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="ensDebuggerOpen = !ensDebuggerOpen;"
+                @click="ensDebuggerOpen = !ensDebuggerOpen"
               >
                 <p>ENS Debugger & Data Grabber</p>
                 <i
@@ -84,7 +84,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="convertDecHexOpen = !convertDecHexOpen;"
+                @click="convertDecHexOpen = !convertDecHexOpen"
               >
                 <p>Convert Decimal to Hexadecimal & Hex to Decimal</p>
                 <i
@@ -131,7 +131,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen;"
+                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen"
               >
                 <p>Mistyped Private Key</p>
                 <i
@@ -189,7 +189,7 @@
 
           <li>
             <div class="input-title">
-              <div class="the-title" @click="SHA3Open = !SHA3Open;">
+              <div class="the-title" @click="SHA3Open = !SHA3Open">
                 <p>"SHA3" (Keccak-256) It!</p>
                 <i
                   v-if="!SHA3Open"

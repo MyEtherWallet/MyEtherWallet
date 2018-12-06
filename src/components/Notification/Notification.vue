@@ -101,7 +101,7 @@
           >
             <div
               class="notification-header"
-              @click="expand(idx, notification, $event);"
+              @click="expand(idx, notification, $event)"
             >
               <p :class="[notification.read ? '' : 'unread']">
                 {{ notification.title }}

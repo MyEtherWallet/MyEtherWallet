@@ -44,7 +44,7 @@
                     ? 'current-network'
                     : ''
                 "
-                @click="switchNetwork(net);"
+                @click="switchNetwork(net)"
               >
                 {{ net.service }}
               </p>
@@ -82,7 +82,7 @@
                   v-if="key !== 'default'"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
-                  @click="changePath(key);"
+                  @click="changePath(key)"
                 >
                   {{ val.path }}
                 </b-dropdown-item>
@@ -94,7 +94,7 @@
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
-                  @click="changePath(key);"
+                  @click="changePath(key)"
                 >
                   {{ val.dpath }}
                 </b-dropdown-item>
@@ -154,7 +154,7 @@
                 selectedId === 'address' + account.index ? 'selected' : ''
               "
               class="address-block address-data"
-              @click="setAccount(account);"
+              @click="setAccount(account)"
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
@@ -173,10 +173,10 @@
           <!-- .address-block-container -->
 
           <div class="address-nav">
-            <span @click="previousAddressSet();"
+            <span @click="previousAddressSet()"
               >&lt; {{ $t('common.previous') }}</span
             >
-            <span @click="nextAddressSet();">{{ $t('common.next') }} &gt;</span>
+            <span @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
           </div>
         </div>
         <!-- .content-container-2 -->
@@ -191,7 +191,7 @@
             <input
               ref="accessMyWalletBtn"
               type="checkbox"
-              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
             />
             <span class="checkmark" />
           </label>

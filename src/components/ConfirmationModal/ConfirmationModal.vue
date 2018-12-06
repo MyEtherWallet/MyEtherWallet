@@ -16,7 +16,7 @@
 
       <div class="content-block">
         <div :class="blockOpen ? 'expended' : ''" class="expending-block">
-          <div class="coin-block" @click="blockOpen = !blockOpen;">
+          <div class="coin-block" @click="blockOpen = !blockOpen">
             <div class="side-block left-block">
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg" />
