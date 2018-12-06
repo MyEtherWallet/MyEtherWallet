@@ -111,7 +111,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapCurrencyPicker/SwapCurrencyPicker.vue',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/index.js',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.scss',
-          'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
+          'src/layouts/InterfaceLayout/ceslintrcrs/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
           'src/partners/bity/bity.js',
           'src/partners/bity/call.js',
           'src/partners/bity/config.js',
@@ -157,5 +157,6 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
-  chainWebpack: config => {}
+  chainWebpack: config => {},
+  lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true
 };
