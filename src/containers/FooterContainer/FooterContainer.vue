@@ -200,7 +200,7 @@ export default {
             },
             {
               text: 'Help Center',
-              to: '/help-center'
+              href: 'https://kb.myetherwallet.com'
             }
           ]
         }

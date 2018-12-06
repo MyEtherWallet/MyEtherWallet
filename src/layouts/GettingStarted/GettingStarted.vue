@@ -50,7 +50,9 @@
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link class="footer-color" to="/">{{ $t('header.home') }}</router-link>
+            <router-link class="footer-color" to="/">{{
+              $t('header.home')
+            }}</router-link>
             <router-link class="footer-color" to="/privacy-policy">{{
               $t('footer.privacy')
             }}</router-link>
