@@ -1,35 +1,29 @@
 /* eslint-disable no-console */
 
 import { register } from 'register-service-worker';
-import isMobile from 'is-mobile';
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
-      console.log(
-        'App is being served from cache by a service worker.\n' +
-          'For more details, visit https://goo.gl/AFskqB'
-      );
+      if (window) window.dispatchEvent(new Event('PWA_READY'));
     },
     registered() {
-      console.log('Service worker has been registered.');
+      if (window) window.dispatchEvent(new Event('PWA_REGISTERED'));
     },
     cached() {
-      console.log('Content has been cached for offline use.');
+      if (window) window.dispatchEvent(new Event('PWA_CACHED'));
     },
     updatefound() {
-      console.log('New content is downloading.');
+      if (window) window.dispatchEvent(new Event('PWA_NEWUPDATE'));
     },
     updated() {
-      console.log('New content is available; please refresh.');
+      if (window) window.dispatchEvent(new Event('PWA_UPDATED'));
     },
     offline() {
-      console.log(
-        'No internet connection found. App is running in offline mode.'
-      );
+      if (window) window.dispatchEvent(new Event('PWA_OFFLINE'));
     },
     error(error) {
-      console.error('Error during service worker registration:', error);
+      if (window) window.dispatchEvent(new Event('PWA_ERROR'), error);
     }
   });
 }
