@@ -22,6 +22,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "@myetherwallet/eth-token-balance": "^0.1.1",
     "idna-uts46": "^1.1.0",
     "register-service-worker": "^1.5.2",
     "solc": "^0.4.25",
