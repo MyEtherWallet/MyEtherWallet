@@ -15,7 +15,7 @@
               isTabActive(tab.routes) ? 'active' : '',
               'menu-group-title'
             ]"
-            @click.prevent="tabAction(tab);"
+            @click.prevent="tabAction(tab)"
           >
             <img
               :src="
@@ -37,7 +37,7 @@
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
               :class="isTabActive(child.routes) ? 'active' : ''"
-              @click.prevent="tabAction(child);"
+              @click.prevent="tabAction(child)"
             >
               {{ $t(child.titleKey) }}
             </li>

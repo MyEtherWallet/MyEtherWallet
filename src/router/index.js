@@ -30,7 +30,6 @@ router.beforeResolve((to, ___, next) => {
         store.dispatch('setLastPath', '');
         next({ path: localPath });
       } else {
-        console.log(next);
         next();
       }
     }

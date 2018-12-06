@@ -24,7 +24,7 @@
                 {{ token.balance }}
                 <i
                   class="fa fa-times-circle clickable"
-                  @click="removeToken(index);"
+                  @click="removeToken(index)"
                 />
               </td>
             </tr>

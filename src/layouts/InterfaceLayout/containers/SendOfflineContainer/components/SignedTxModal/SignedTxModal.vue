@@ -33,7 +33,7 @@
           <h4 class="block-title">{{ $t('interface.raw') }}</h4>
           <div class="sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" @click="showRaw = !showRaw;" />
+              <input type="checkbox" @click="showRaw = !showRaw" />
               <span class="slider round" />
             </label>
           </div>

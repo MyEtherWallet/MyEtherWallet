@@ -40,7 +40,7 @@
               'save-button large-round-button-green-filled clickable'
             ]"
             type="submit"
-            @click.prevent="addToken(tokenAddress, tokenSymbol, tokenDecimal);"
+            @click.prevent="addToken(tokenAddress, tokenSymbol, tokenDecimal)"
           >
             {{ $t('interface.save') }}
           </button>

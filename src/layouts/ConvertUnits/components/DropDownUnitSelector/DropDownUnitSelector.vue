@@ -4,7 +4,7 @@
       <div
         :class="dropdownOpen ? 'dropdown-open' : ''"
         class="dropdown-input-box"
-        @click="dropdownOpen = !dropdownOpen;"
+        @click="dropdownOpen = !dropdownOpen"
       >
         <div class="selected-unit">Wei</div>
         <div class="dropdown-open-button">
