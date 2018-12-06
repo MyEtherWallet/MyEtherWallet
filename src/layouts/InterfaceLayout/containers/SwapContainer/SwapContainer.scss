@@ -5,17 +5,15 @@
 
   .title-block {
     position: relative;
-    .buy-eth {
-      right: 30px;
-      top: 28px;
+    
+    .logo-bity {
+      height: 40px;
       position: absolute;
-      display: flex;
-      align-items: center;
-      color: $mew-green;
-
-      img {
-        height: 20px;
-        margin-left: 10px;
+      top: 13px;
+      left: 120px;
+      @media all and (max-width: $mobile-width) {
+        top: 13px;
+        left: 80px;
       }
     }
   }
@@ -68,16 +66,27 @@
       grid-column-gap: 5px;
       grid-template-columns: 1fr 70px 1fr;
 
+      @media all and (max-width: $mobile-width) {
+        display: block;
+      }
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
       }
 
       .exchange-icon {
-        color: $text-color-9;
-        font-size: 30px;
         padding-top: 62px;
         text-align: center;
+
+        @media all and (max-width: $mobile-width) {
+          padding-top: 10px;
+          margin-bottom: -20px;
+          img {
+            height: 30px;
+            transform: rotate(90deg);
+          }
+        }
       }
 
       .amount {

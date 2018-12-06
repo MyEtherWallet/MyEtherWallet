@@ -8,8 +8,12 @@
             <label :for="provider.name" />
           </div>
           <div class="provider-image"><img :src="provider.image" /></div>
-          <div>{{ provider.swapValue1 }}</div>
-          <div>{{ provider.swapValue2 }}</div>
+          <div class="desktop-swap-values">{{ provider.swapValue1 }}</div>
+          <div class="desktop-swap-values">{{ provider.swapValue2 }}</div>
+          <div class="mobile-swap-values">
+            <div>{{ provider.swapValue1 }}</div>
+            <div>{{ provider.swapValue2 }}</div>
+          </div>
         </li>
       </ul>
     </div>

@@ -54,7 +54,7 @@ import web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 
-import Arrow from '@/assets/images/etc/single-arrow.svg';
+import Arrow from '@/assets/images/icons/swap.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
 import DetailInformation from './components/DetailInformation';

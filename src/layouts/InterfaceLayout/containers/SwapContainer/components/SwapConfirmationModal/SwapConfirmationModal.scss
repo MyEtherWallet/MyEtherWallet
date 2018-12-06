@@ -47,6 +47,10 @@
   grid-template-columns: 1fr 80px 1fr;
   margin-top: 20px;
   margin-bottom: 20px;
+
+  @media all and (max-width: $tablet-width) {
+    display: block;
+  }
 }
 
 .from-address,
@@ -60,6 +64,14 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  @media all and (max-width: $tablet-width) {
+    height: 60px;
+    transform: rotate(90deg);
+
+    img {
+      height: 40px;
+    }
+  }
 }
 
 .confirm-send-button {

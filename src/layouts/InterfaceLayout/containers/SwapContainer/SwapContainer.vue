@@ -4,9 +4,7 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')" />
-      <div class="buy-eth">
-        <span>Buy ETH with</span> <img :src="images.visaMaster" />
-      </div>
+      <img :src="images.bity" class="logo-bity" />
     </div>
 
     <div class="send-form">

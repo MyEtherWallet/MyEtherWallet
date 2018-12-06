@@ -17,6 +17,11 @@
       display: grid;
       grid-template-columns: 50px 2fr 3fr 3fr;
       align-items: center;
+      grid-gap: 5px;
+
+      @media all and (max-width: $tablet-width) {
+        grid-template-columns: 30px 1fr 3fr;
+      }
 
       &:last-child {
         border-bottom: 0;
@@ -27,7 +32,26 @@
 
 .provider-image {
   img {
-    height: 30px;
+    width: 90%;
+    max-width: 80px;
+  }
+}
+
+.desktop-swap-values {
+  @media all and (max-width: $tablet-width) {
+    display: none;
+  }
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    display: block;
+  }
+}
+
+.mobile-swap-values {
+  @media all and (max-width: $tablet-width) {
+    display: block;
+  }
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    display: none;
   }
 }
 
