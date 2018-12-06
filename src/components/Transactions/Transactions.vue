@@ -114,7 +114,6 @@ export default {
     },
     dropdownOpen(newVal) {
       if (newVal) {
-        console.log(newVal); // todo remove dev item
         this.countActive();
         this.updateTransactions();
       }
