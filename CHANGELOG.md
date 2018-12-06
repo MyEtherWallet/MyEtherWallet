@@ -18,6 +18,7 @@
 
 ### Devop
 
+- Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
 - Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
 - Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
 - Replace heroku urls [#178](https://github.com/MyEtherWallet/MyEtherWallet/pull/178)
