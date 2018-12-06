@@ -36,10 +36,11 @@ if (process.env.BUILD_TYPE === 'mewcx') {
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
             const version = require('./package.json').version;
-            let json = JSON.parse(content);
+            const json = JSON.parse(content);
             json.version = version;
             return JSON.stringify(json);
-          } else return content;
+          }
+          return content;
         }
       }
     ])
@@ -158,5 +159,6 @@ module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
   chainWebpack: config => {},
+  integrity: true,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true
 };
