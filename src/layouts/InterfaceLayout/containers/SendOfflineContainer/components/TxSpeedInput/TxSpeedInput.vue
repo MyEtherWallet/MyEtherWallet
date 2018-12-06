@@ -44,6 +44,7 @@
           :placeholder="$t('common.gasPrice')"
           type="number"
           name=""
+          class="input-speed"
           @change="setSpeed"
         />
         <div class="good-button-container">

@@ -1,7 +1,27 @@
 @import '../InterfaceContainer';
 
+
+::-webkit-scrollbar {
+  width:0px;
+}
+::-webkit-scrollbar * {
+  background:transparent;
+}
+::-webkit-scrollbar-thumb {
+  background:transparent;
+}
+
+
 .send-offline-container {
   @extend %interface-container;
+
+  .progress-status-container {
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+  }
 
   .progress-status {
     background-color: $background-color-5;
@@ -12,6 +32,10 @@
     grid-template-columns: 27% 27% 27%;
     justify-content: space-evenly;
     text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      width: 500px;
+    }
 
     > div {
       cursor: pointer;

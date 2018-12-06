@@ -3,6 +3,9 @@
 .wrap {
   .send-form {
     padding: 40px 60px 0;
+    @media all and (max-width: $tablet-width) {
+      padding: 10px;
+    }
 
     .title-container {
       align-items: flex-end;
@@ -36,12 +39,20 @@
         .title-helper {
           display: flex;
           margin-bottom: 2px;
+
+          h4 {
+            margin-right: 7px;
+          }
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
+        @media all and (max-width: $tablet-width) {
+          display: none;
+        }
+
       }
     }
 
@@ -144,7 +155,12 @@
         background-color: $background-color-1;
         border: 0;
         padding: 13px 15px;
+        padding-right: 40px;
         width: 100%;
+      }
+
+      .input-speed {
+        padding-right: 80px;
       }
 
       .good-button-container {

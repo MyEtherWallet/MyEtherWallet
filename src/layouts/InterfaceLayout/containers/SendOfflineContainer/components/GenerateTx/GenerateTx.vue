@@ -1,19 +1,24 @@
 <template>
   <div class="generate-info">
     <div class="wrap">
-      <div class="send-form">
+      <div class="send-form send-form-top">
         <div class="form-block amount-to-address">
           <div class="amount">
-            <div class="title">
-              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+            <div class="to-type">
+              <div class="title">
+                <h4>{{ $t('interface.sendTxType') }}</h4>
+              </div>
+              <currency-picker
+                :currency="tokens"
+                :token="true"
+                page="sendOfflineGenTx"
+                @selectedCurrency="setSelectedCurrency"
+              />
             </div>
-            <currency-picker
-              :currency="tokens"
-              :token="true"
-              page="sendOfflineGenTx"
-              @selectedCurrency="setSelectedCurrency"
-            />
             <div class="the-form amount-number">
+              <div class="title">
+                <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              </div>
               <input
                 :value="toAmt"
                 :placeholder="$t('interface.depAmount')"
@@ -40,12 +45,14 @@
               </p>
             </div>
             <div class="the-form address-block">
-              <textarea
+              <input
                 v-ens-resolver="address"
                 ref="toaddress"
                 v-model="address"
+                type="text"
                 name="name"
                 placeholder="Please Enter The Address"
+                class="verified-input"
               />
               <i
                 :class="[
@@ -73,6 +80,7 @@
             type="string"
             name=""
             placeholder="e.g. 0x65746865726d696e652d657531"
+            class="verified-input"
           />
           <div class="good-button-container">
             <i
