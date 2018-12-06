@@ -6,14 +6,14 @@
         <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
       </div>
       <div class="time-date">
-        <p>13:20:23</p>
-        <p>04/05/2018</p>
+        <p>{{ timeString(notice) }}</p>
+        <p>{{ dateString(notice) }}</p>
+      </div>
         <div class="expender-icon">
           <i aria-hidden="true" class="fa fa-angle-down"></i>
           <i aria-hidden="true" class="fa fa-angle-up"></i>
         </div>
       </div>
-    </div>
     <div
       :class="[
         notice.expanded ? '' : 'unexpanded',
@@ -56,7 +56,7 @@ export default {
   props: {
     expand: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
     notice: {
       type: Object,
@@ -64,9 +64,25 @@ export default {
         return {};
       }
     },
-    ethPrice: {
-      type: BigNumber,
-      default: new BigNumber(0)
+    convertToGwei: {
+      type: Function,
+      default: function() {}
+    },
+    convertToEth: {
+      type: Function,
+      default: function() {}
+    },
+    getFiatValue: {
+      type: Function,
+      default: function() {}
+    },
+    dateString: {
+      type: Function,
+      default: function() {}
+    },
+    timeString: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -113,31 +129,31 @@ export default {
       }
       return status.error;
     },
-    dateString() {
-      if (this.notice !== {}) {
-        return new Date(this.notice.timestamp).toLocaleDateString(
-          this._i18n.locale.replace('_', '-')
-        );
-      }
-      return '';
-    }
+    // dateString() {
+    //   if (this.notice !== {}) {
+    //     return new Date(this.notice.timestamp).toLocaleDateString(
+    //       this._i18n.locale.replace('_', '-')
+    //     );
+    //   }
+    //   return '';
+    // }
   },
   methods: {
     emitShowDetails() {
       this.$emit('showDetails', this.notice);
-    },
-    convertToGwei(value) {
-      return unit.fromWei(value, 'Gwei');
-    },
-    convertToEth(value) {
-      return unit.fromWei(value, 'ether');
-    },
-    getFiatValue(value) {
-      return new BigNumber(this.convertToEth(value))
-        .multipliedBy(new BigNumber(this.ethPrice))
-        .decimalPlaces(2)
-        .toFixed();
     }
+    // convertToGwei(value) {
+    //   return unit.fromWei(value, 'Gwei');
+    // },
+    // convertToEth(value) {
+    //   return unit.fromWei(value, 'ether');
+    // },
+    // getFiatValue(value) {
+    //   return new BigNumber(this.convertToEth(value))
+    //     .multipliedBy(new BigNumber(this.ethPrice))
+    //     .decimalPlaces(2)
+    //     .toFixed();
+    // }
   }
 };
 </script>

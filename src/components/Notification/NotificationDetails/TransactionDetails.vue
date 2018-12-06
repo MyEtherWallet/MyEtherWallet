@@ -19,8 +19,8 @@
         <li>
           <p>Time:</p>
           <div class="time-date">
-            <p>{{ timeString }}</p>
-            <p>{{ dateString }}</p>
+            <p>{{ timeString(notice) }}</p>
+            <p>{{ dateString(notice) }}</p>
           </div>
         </li>
         <li class="notification-type-status">
@@ -29,7 +29,7 @@
         </li>
         <li>
           <p>Amount:</p>
-          <p>{{ details.amount }} ETH</p>
+          <p>{{ convertToEth(details.amount) }} ETH</p>
         </li>
         <li>
           <p>To Address:</p>
@@ -84,9 +84,25 @@ export default {
         return {};
       }
     },
-    ethPrice: {
-      type: BigNumber,
-      default: new BigNumber(0)
+    convertToGwei: {
+      type: Function,
+      default: function() {}
+    },
+    convertToEth: {
+      type: Function,
+      default: function() {}
+    },
+    getFiatValue: {
+      type: Function,
+      default: function() {}
+    },
+    dateString: {
+      type: Function,
+      default: function() {}
+    },
+    timeString: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -133,38 +149,26 @@ export default {
       }
       return status.error;
     },
-    dateString() {
-      if (this.notice !== {}) {
-        return new Date(this.notice.timestamp).toLocaleDateString(
-          this._i18n.locale.replace('_', '-')
-        );
-      }
-      return '';
-    },
-    timeString() {
-      if (this.notice !== {}) {
-        return new Date(this.notice.timestamp).toLocaleTimeString(
-          this._i18n.locale.replace('_', '-')
-        );
-      }
-      return '';
-    }
+    // dateString() {
+    //   if (this.notice !== {}) {
+    //     return new Date(this.notice.timestamp).toLocaleDateString(
+    //       this._i18n.locale.replace('_', '-')
+    //     );
+    //   }
+    //   return '';
+    // },
+    // timeString() {
+    //   if (this.notice !== {}) {
+    //     return new Date(this.notice.timestamp).toLocaleTimeString(
+    //       this._i18n.locale.replace('_', '-')
+    //     );
+    //   }
+    //   return '';
+    // }
   },
   methods: {
     emitShowDetails() {
       this.$emit('showDetails');
-    },
-    convertToGwei(value) {
-      return unit.fromWei(value, 'Gwei');
-    },
-    convertToEth(value) {
-      return unit.fromWei(value, 'ether');
-    },
-    getFiatValue(value) {
-      return new BigNumber(this.convertToEth(value))
-        .multipliedBy(new BigNumber(this.ethPrice))
-        .decimalPlaces(2)
-        .toFixed();
     }
   }
 };

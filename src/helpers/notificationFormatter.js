@@ -93,6 +93,8 @@ const transactionError = (notifArray, val) => {
 };
 
 const swapOrder = (notifArray, val) => {
+  console.log('swapOrder'); // todo remove dev item
+  console.log(val); // todo remove dev item
   notifArray.push({
     title: 'Swap',
     read: false,
@@ -104,13 +106,13 @@ const swapOrder = (notifArray, val) => {
       to: val[2].toAddress,
       fromValue: val[2].fromValue,
       toValue: val[2].toValue,
-      fromCurrency: val[2].providerDetails.fromCurrency,
-      toCurrency: val[2].providerDetails.toCurrency,
+      fromCurrency: val[2].fromCurrency,
+      toCurrency: val[2].toCurrency,
       // nonce: val[2].nonce,
       // gasPrice: val[2].gasPrice,
       // gasLimit: val[2].gas,
       rate: val[2].rate,
-      provider: val[2].providerDetails.provider
+      provider: val[2].provider
     },
     // body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
     expanded: false
@@ -120,6 +122,7 @@ const swapOrder = (notifArray, val) => {
 };
 
 const addUpdateNotification = function(newNotif, val) {
+  console.log('addUpdateNotification', val); // todo remove dev item
   switch (val[0]) {
     case type.TRANSACTION_HASH:
       return transactionHash(newNotif, val);
@@ -134,4 +137,14 @@ const addUpdateNotification = function(newNotif, val) {
   }
 };
 
-export { addUpdateNotification };
+const addUpdateSwapNotification = function(newNotif, val) {
+  console.log('addUpdateSwapNotification', val); // todo remove dev item
+  switch (val[0]) {
+    case type.SWAP_ORDER:
+      return swapOrder(newNotif, val);
+    default:
+      break;
+  }
+};
+
+export { addUpdateNotification, addUpdateSwapNotification };

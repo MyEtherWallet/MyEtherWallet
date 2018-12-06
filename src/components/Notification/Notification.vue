@@ -31,6 +31,10 @@
             sortedNotifications !== undefined && sortedNotifications.length > 0
           "
         >
+          <li>
+            <p @click="expandAll">Expand All</p>
+            <p @click="CallapseAll">Collapse All</p>
+          </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
             :key="notification.title + notification.timestamp + idx"
@@ -40,6 +44,11 @@
               :is="useComponent(notification.type)"
               :expand="expand(idx, notification)"
               :notice="notification"
+              :convert-to-gwei="convertToGwei"
+              :convert-to-eth="convertToEth"
+              :get-fiat-value="getFiatValue"
+              :date-string="dateString"
+              :time-string="timeString"
               @showDetails="showDetails"
             >
             </component>
@@ -50,7 +59,11 @@
       <div v-if="detailsShown" class="notification-item-container">
         <transaction-details
           :notice="notificationDetails"
-          :eth-price="ethPrice"
+          :convert-to-gwei="convertToGwei"
+          :convert-to-eth="convertToEth"
+          :get-fiat-value="getFiatValue"
+          :date-string="dateString"
+          :time-string="timeString"
         ></transaction-details>
       </div>
     </b-modal>
@@ -60,11 +73,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import unit from 'ethjs-unit';
+import BigNumber from 'bignumber.js';
+
 import SwapNotification from './NotificationTypes/SwapNotification';
 import TransactionNotification from './NotificationTypes/TransactionNotification';
 import TransactionError from './NotificationTypes/TransactionError';
 import TransactionDetails from './NotificationDetails';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -170,11 +185,68 @@ export default {
         ]);
       };
     },
+    expandAll() {
+      this.notifications[this.wallet.getChecksumAddressString()].forEach(
+        (notice, idx) => {
+          const updatedNotif = notice;
+          if (notice.expanded !== true) {
+            updatedNotif.read = true;
+            updatedNotif.expanded = true;
+          }
+          this.$store.dispatch('updateNotification', [
+            this.wallet.getChecksumAddressString(),
+            idx,
+            updatedNotif
+          ]);
+        }
+      );
+    },
+    CallapseAll() {
+      this.notifications[this.wallet.getChecksumAddressString()].forEach(
+        (notice, idx) => {
+          const updatedNotif = notice;
+          updatedNotif.expanded = false;
+          this.$store.dispatch('updateNotification', [
+            this.wallet.getChecksumAddressString(),
+            idx,
+            updatedNotif
+          ]);
+        }
+      );
+    },
+    dateString(notice) {
+      if (notice !== {}) {
+        return new Date(notice.timestamp).toLocaleDateString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
+    },
+    timeString(notice) {
+      if (notice !== {}) {
+        return new Date(notice.timestamp).toLocaleTimeString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
+    },
     async fetchBalanceData() {
       const url = 'https://cryptorates.mewapi.io/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       this.ethPrice = new BigNumber(values['USD']);
+    },
+    convertToGwei(value) {
+      return unit.fromWei(value, 'Gwei');
+    },
+    convertToEth(value) {
+      return unit.fromWei(value, 'ether');
+    },
+    getFiatValue(value) {
+      return new BigNumber(this.convertToEth(value))
+        .multipliedBy(new BigNumber(this.ethPrice))
+        .decimalPlaces(2)
+        .toFixed();
     }
   }
 };
