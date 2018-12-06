@@ -43,7 +43,6 @@ export default {
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
         if (event.path[count].className === 'wrap txpopup-container') {
-          console.log('Exited!');
           return;
         }
       }
