@@ -14,7 +14,7 @@ export default async ({ payload, requestManager }, res, next) => {
   if (store.get(utils.sha3(addr)) === undefined) {
     store.set(utils.sha3(addr), {
       nonce: utils.toHex(storedNonce),
-      timestamp: +new Date()
+      timestamp: 0
     });
   } else {
     storedNonce = new BN(store.get(utils.sha3(addr)).nonce);
