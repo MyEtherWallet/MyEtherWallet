@@ -4,7 +4,7 @@
     .button-options {
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       margin-bottom: 40px;
 
       &.hardware-button-options {
@@ -16,7 +16,7 @@
         color: $text--link-color;
         cursor: pointer;
         display: flex;
-        padding: 20px 0 20px 20px;
+        padding: 20px;
         text-align: left;
         user-select: none;
 
