@@ -50,16 +50,16 @@
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link to="/">{{ $t('header.home') }}</router-link>
-            <router-link to="/privacy-policy">{{
+            <router-link class="footer-color" to="/">{{ $t('header.home') }}</router-link>
+            <router-link class="footer-color" to="/privacy-policy">{{
               $t('footer.privacy')
             }}</router-link>
-            <router-link to="/terms-and-conditions">{{
+            <router-link class="footer-color" to="/terms-and-conditions">{{
               $t('common.terms')
             }}</router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
-            <p>{{ $t('footer.copyright') }}</p>
+            <p class="footer-color">{{ $t('footer.copyright') }}</p>
           </div>
         </div>
       </div>
