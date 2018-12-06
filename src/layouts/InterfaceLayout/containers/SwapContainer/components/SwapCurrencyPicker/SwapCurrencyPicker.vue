@@ -61,7 +61,6 @@
 </template>
 
 <script>
-// import '@/assets/images/currency/coins/webfont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 export default {
