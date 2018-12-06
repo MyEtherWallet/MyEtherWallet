@@ -2,8 +2,10 @@
   <router-link :to="param">
     <div :class="['dapps-button', active ? '' : 'disabled']">
       <img :src="icon" />
-      <h4>{{ title }}</h4>
-      <p>{{ desc }}</p>
+      <div class="button-info">
+        <h4>{{ title }}</h4>
+        <p>{{ desc }}</p>
+      </div>
     </div>
   </router-link>
 </template>

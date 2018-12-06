@@ -9,5 +9,19 @@
     grid-template-columns: 1fr 1fr 1fr;
     padding: 40px 60px;
     padding-bottom: 400px;
+
+    @media all and (max-width: $mobile-width) {
+      display: block;
+      padding: 15px;
+
+      a {
+        margin-bottom: 10px;
+        display: block;
+
+        &:last-child {
+          margin-bottom: 0px;
+        }
+      }
+    }
   }
 }

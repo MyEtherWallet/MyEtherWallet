@@ -48,9 +48,7 @@
             <p v-if="notEnough && !fromBelowMinAllowed">
               {{ $t('common.dontHaveEnough') }}
             </p>
-            <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
-            <p v-else>&nbsp;</p>
           </div>
         </div>
         <div class="exchange-icon"><img :src="images.swap" /></div>
@@ -76,9 +74,7 @@
           </div>
           <div class="error-message-container">
             <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-            <p v-else>&nbsp;</p>
             <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
-            <p v-else>&nbsp;</p>
           </div>
         </div>
       </div>
@@ -97,6 +93,9 @@
           :current-address="currentAddress"
           @toAddress="setToAddress"
         />
+      </div>
+      <div class="error-message-container">
+        <p>You have entered wrong address.</p>
       </div>
     </div>
 
