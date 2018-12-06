@@ -1,12 +1,27 @@
 <template>
   <div class="send-eth-and-tokens">
     <div class="wrap">
-      <div class="side-nav"><interface-side-menu /></div>
+      <div>
+        <div
+          :class="isSidemenuOpen && 'side-nav-open'"
+          class="side-nav-background"
+          @click="toggleSideMenu;"
+        />
+        <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
+          <interface-side-menu />
+        </div>
+      </div>
       <div class="contents">
         <div class="tx-contents">
-          <div><interface-address :address="address" /></div>
-          <div><interface-balance :balance="balance" /></div>
-          <div><interface-network :block-number="blockNumber" /></div>
+          <div class="mobile-hide">
+            <interface-address :address="address" />
+          </div>
+          <div class="mobile-hide">
+            <interface-balance :balance="balance" />
+          </div>
+          <div class="mobile-hide">
+            <interface-network :block-number="blockNumber" />
+          </div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
             :get-balance="getBalance"
@@ -63,6 +78,9 @@ export default {
     };
   },
   computed: {
+    isSidemenuOpen() {
+      return this.sidemenuOpen;
+    },
     address() {
       if (this.wallet !== null) {
         return this.wallet.getChecksumAddressString();
@@ -73,7 +91,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      Networks: 'Networks'
+      Networks: 'Networks',
+      sidemenuOpen: 'sidemenuOpen'
     })
   },
   watch: {
@@ -91,6 +110,9 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    toggleSideMenu() {
+      this.$store.commit('TOGGLE_SIDEMENU');
+    },
     async fetchTokens() {
       this.receivedTokens = true;
       const tb = new TokenBalance(this.web3.currentProvider);
@@ -323,5 +345,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceLayout.scss';
+@import 'InterfaceLayout-desktop.scss';
+@import 'InterfaceLayout-tablet.scss';
+@import 'InterfaceLayout-mobile.scss';
 </style>
