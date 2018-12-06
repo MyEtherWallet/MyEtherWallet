@@ -271,7 +271,10 @@ export default {
       this.toAddress = tx.to;
       this.amount = +tx.value;
       this.transactionFee = Number(
-        unit.fromWei(new BigNumber(tx.gasPrice).times(tx.gas).toString(), 'ether')
+        unit.fromWei(
+          new BigNumber(tx.gasPrice).times(tx.gas).toString(),
+          'ether'
+        )
       );
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {

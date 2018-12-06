@@ -49,7 +49,10 @@ export default async ({ payload, requestManager }, res, next) => {
   }
 
   if (new BigNumber(storedNonce).isGreaterThan(new BigNumber(fetchedNonce))) {
-    res(null, toPayload(payload.id, `0x${new BigNumber(storedNonce).toString(16)}`));
+    res(
+      null,
+      toPayload(payload.id, `0x${new BigNumber(storedNonce).toString(16)}`)
+    );
   } else {
     const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
