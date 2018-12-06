@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
-
+  padding-bottom: 30px;
   @media all and (max-width: $tablet-width) {
     padding: 10px 0 20px 0;
   }
@@ -75,7 +75,6 @@
       @media all and (max-width: $tablet-width) {
         display: block;
       }
-
 
       .title {
         margin-bottom: 13px;
@@ -214,17 +213,20 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 40px 0 0 0;
     text-align: center;
 
     @media all and (max-width: $mobile-width) {
-      padding: 10px 0;
+      padding: 20px 0;
     }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
       width: 300px;
+      @media all and (max-width: $mobile-width) {
+        width: initial;
+      }
     }
 
     p {

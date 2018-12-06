@@ -5,7 +5,8 @@
     padding: 10px 0;
   }
 
-  input, textarea {
+  input,
+  textarea {
     background-color: $background-color-1;
   }
 
@@ -18,7 +19,6 @@
       @media all and (max-width: $tablet-width) {
         padding: 10px;
       }
-
     }
 
     @media all and (max-width: $tablet-width) {
@@ -55,11 +55,11 @@
     }
 
     .amount-to-address {
-      display: grid;
-      grid-column-gap: 5px;
-      grid-template-columns: 2fr 3fr;
+      //display: grid;
+      //grid-column-gap: 5px;
+      //grid-template-columns: 2fr 3fr;
       display: block;
-      
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
@@ -112,7 +112,7 @@
       .to-address {
         position: relative;
         margin-top: 20px;
-        
+
         .title {
           align-items: center;
           display: flex;
