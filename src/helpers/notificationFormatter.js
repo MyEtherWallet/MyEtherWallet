@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 const type = {
   TRANSACTION: 'Transaction',
   TRANSACTION_HASH: 'Hash',
@@ -41,10 +43,10 @@ const transactionHash = (notifArray, val) => {
       error: false,
       hash: val[2],
       to: val[1].to,
-      amount: new Bignumber(val[1].value).toString(),
-      nonce: new Bignumber(val[1].nonce).toString(),
-      gasPrice: new Bignumber(val[1].gasPrice).toString(),
-      gasLimit: new Bignumber(val[1].gas).toString()
+      amount: new BigNumber(val[1].value).toString(),
+      nonce: new BigNumber(val[1].nonce).toString(),
+      gasPrice: new BigNumber(val[1].gasPrice).toString(),
+      gasLimit: new BigNumber(val[1].gas).toString()
     },
     expanded: false
   });
@@ -65,8 +67,8 @@ const transactionReceipt = (notifArray, val) => {
     }
   }
   notifArray[idx].status = status.COMPLETE;
-  notifArray[idx].body.gasUsed = new Bignumber(val[2].gasUsed).toString();
-  notifArray[idx].body.blockNumber = new Bignumber(
+  notifArray[idx].body.gasUsed = new BigNumber(val[2].gasUsed).toString();
+  notifArray[idx].body.blockNumber = new BigNumber(
     val[2].blockNumber
   ).toString();
   return notifArray;

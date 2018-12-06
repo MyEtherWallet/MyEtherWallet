@@ -192,6 +192,11 @@
           color: $light-blue-1;
         }
       }
+
+      &:last-child{
+        color: #455061;
+        font-weight: 600;
+      }
     }
   }
 }

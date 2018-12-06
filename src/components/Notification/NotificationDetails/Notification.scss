@@ -32,14 +32,9 @@
   margin-left: 30px;
 }
 
-.modal-title {
-  font-size: 20px;
-  font-weight: 500;
-}
-
 .notification-item-container {
   background-color: $white;
-  height: 300px;
+  height: 450px !important;
   overflow-y: scroll;
 
   .notification-item {
@@ -97,6 +92,7 @@
 .notification-item-container {
   > ul {
     > li {
+      padding-bottom: 20px;
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
@@ -111,6 +107,15 @@
   display: flex;
   align-items: center;
   padding: 10px 20px;
+
+  font-family: AvenirNext, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #0b2840;
 }
 
 .notification-type-status {
@@ -156,6 +161,7 @@
   }
 }
 
+
 //*******************************************************
 // Notification content
 //*******************************************************
@@ -184,6 +190,7 @@
     > li {
       display: flex;
       align-items: center;
+      padding-bottom: 5px;
 
       p:nth-child(1) {
         min-width: 100px;

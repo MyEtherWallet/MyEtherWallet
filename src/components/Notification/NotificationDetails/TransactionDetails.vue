@@ -1,27 +1,32 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand();">
-      <div class="notification-type-status">
-        <p class="type">Transaction</p>
-        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-      </div>
-      <div class="time-date">
-        <p>13:20:23</p>
-        <p>04/05/2018</p>
-        <div class="expender-icon">
-          <i aria-hidden="true" class="fa fa-angle-down"></i>
-          <i aria-hidden="true" class="fa fa-angle-up"></i>
+    <div class="notification-header">
+      Transaction Detail
+      <!--
+        <div class="notification-type-status">
+          <p class="type">Transaction Detail</p>
         </div>
-      </div>
+      -->
     </div>
-    <div
-      :class="[
-        notice.expanded ? '' : 'unexpanded',
-        'notification-body',
-        'notification-content'
-      ]"
-    >
+    <div class="notification-content">
       <ul>
+        <li><p>Transaction Hash:</p></li>
+        <li>
+          <p>
+            <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+          </p>
+        </li>
+        <li>
+          <p>Time:</p>
+          <div class="time-date">
+            <p>{{ timeString }}</p>
+            <p>{{ dateString }}</p>
+          </div>
+        </li>
+        <li class="notification-type-status">
+          <p>Status:</p>
+          <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+        </li>
         <li>
           <p>Amount:</p>
           <p>{{ details.amount }} ETH</p>
@@ -34,13 +39,32 @@
         </li>
         <li>
           <p>TX Fee:</p>
-          <p>{{ details.gasLimit }} WEI ($0.09)</p>
+          <p>
+            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              getFiatValue(details.gasPrice * details.gasLimit)
+            }})
+          </p>
         </li>
-        <li><p>Transaction Hash:</p></li>
         <li>
-          <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+          <p>Gas Price:</p>
+          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
         </li>
-        <li @click="emitShowDetails">More</li>
+        <li>
+          <p>Gas Limit:</p>
+          <p>{{ details.gasLimit }}</p>
+        </li>
+        <li v-if="txStatus.text === 'Succeed'">
+          <p>Gas Used:</p>
+          <p>
+            {{ details.gasUsed }} (${{
+              getFiatValue(details.gasPrice * details.gasUsed)
+            }})
+          </p>
+        </li>
+        <li>
+          <p>Nonce:</p>
+          <p>{{ details.nonce }}</p>
+        </li>
       </ul>
     </div>
   </div>
@@ -54,10 +78,6 @@ import BigNumber from 'bignumber.js';
 
 export default {
   props: {
-    expand: {
-      type: Function,
-      default: function(){}
-    },
     notice: {
       type: Object,
       default: function() {
@@ -120,11 +140,19 @@ export default {
         );
       }
       return '';
+    },
+    timeString() {
+      if (this.notice !== {}) {
+        return new Date(this.notice.timestamp).toLocaleTimeString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
     }
   },
   methods: {
     emitShowDetails() {
-      this.$emit('showDetails', this.notice);
+      this.$emit('showDetails');
     },
     convertToGwei(value) {
       return unit.fromWei(value, 'Gwei');
@@ -143,5 +171,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './Notification';
 </style>

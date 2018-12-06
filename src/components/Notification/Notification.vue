@@ -14,13 +14,15 @@
     >
       <template slot="modal-title">
         <div>
-          <div v-if="!detailsShown">
+          <div v-if="!detailsShown" class="modal-title">
             {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
             <div v-show="unreadCount >= 0" class="notification-count">
               <span>{{ unreadCount }}</span>
             </div>
           </div>
-          <div v-else @click="hideDetails">Back</div>
+          <div v-else class="modal-title" @click="hideDetails">
+            <i class="fa fa-long-arrow-left" aria-hidden="true" /> Back
+          </div>
         </div>
       </template>
       <div v-if="!detailsShown" class="notification-item-container">
@@ -36,7 +38,7 @@
           >
             <component
               :is="useComponent(notification.type)"
-              :index="idx"
+              :expand="expand(idx, notification)"
               :notice="notification"
               @showDetails="showDetails"
             >
@@ -48,6 +50,7 @@
       <div v-if="detailsShown" class="notification-item-container">
         <transaction-details
           :notice="notificationDetails"
+          :eth-price="ethPrice"
         ></transaction-details>
       </div>
     </b-modal>
@@ -60,7 +63,8 @@ import store from 'store';
 import SwapNotification from './NotificationTypes/SwapNotification';
 import TransactionNotification from './NotificationTypes/TransactionNotification';
 import TransactionError from './NotificationTypes/TransactionError';
-import TransactionDetails from './NotificationTypes/TransactionDetails';
+import TransactionDetails from './NotificationDetails';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -72,6 +76,7 @@ export default {
   data() {
     return {
       unreadCount: 0,
+      ethPrice: new BigNumber(0),
       detailsShown: false,
       notificationDetails: {}
     };
@@ -109,6 +114,7 @@ export default {
       store.set('notifications', this.notifications);
     }
     this.countUnread();
+    this.fetchBalanceData();
     this.$refs.notification.$on('hide', () => {
       this.hideDetails();
     });
@@ -149,18 +155,26 @@ export default {
       this.$refs.notification.show();
     },
     expand(idx, notif) {
-      const updatedNotif = notif;
-      if (notif.expanded !== true) {
-        updatedNotif.read = true;
-        updatedNotif.expanded = true;
-      } else {
-        updatedNotif.expanded = false;
-      }
-      this.$store.dispatch('updateNotification', [
-        this.wallet.getChecksumAddressString(),
-        idx,
-        updatedNotif
-      ]);
+      return () => {
+        const updatedNotif = notif;
+        if (notif.expanded !== true) {
+          updatedNotif.read = true;
+          updatedNotif.expanded = true;
+        } else {
+          updatedNotif.expanded = false;
+        }
+        this.$store.dispatch('updateNotification', [
+          this.wallet.getChecksumAddressString(),
+          idx,
+          updatedNotif
+        ]);
+      };
+    },
+    async fetchBalanceData() {
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      this.ethPrice = new BigNumber(values['USD']);
     }
   }
 };

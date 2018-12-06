@@ -21,6 +21,10 @@ import store from 'store';
 
 export default {
   props: {
+    expand: {
+      type: Function,
+      default: function() {}
+    },
     details: {
       type: Object,
       default: function() {
@@ -38,19 +42,13 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
-    sortedNotifications() {
-      this.countUnread();
-      if (!this.notifications[this.wallet.getChecksumAddressString()])
-        return [];
-      // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()].sort(
-        (a, b) => {
-          a = new Date(a.timestamp);
-          b = new Date(b.timestamp);
-
-          return a > b ? -1 : a < b ? 1 : 0;
-        }
-      );
+    dateString() {
+      if (this.notice !== {}) {
+        return new Date(this.notice.timestamp).toLocaleDateString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
     }
   },
   watch: {
@@ -58,47 +56,21 @@ export default {
       this.countUnread();
     }
   },
-  mounted() {
-    if (
-      this.notifications[this.wallet.getChecksumAddressString()] === undefined
-    ) {
-      this.notifications[this.wallet.getChecksumAddressString()] = [];
-      store.set('notifications', this.notifications);
-    }
-    this.countUnread();
-  },
   methods: {
-    countUnread() {
-      const self = this;
-      self.unreadCount = 0;
-      if (
-        self.notifications[this.wallet.getChecksumAddressString()] !==
-          undefined &&
-        self.notifications[this.wallet.getChecksumAddressString()].length > 0
-      ) {
-        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
-          if (item.read === false) {
-            self.unreadCount++;
-          }
-        });
-      }
+    emitShowDetails() {
+      this.$emit('showDetails', this.notice);
     },
-    showNotifications() {
-      this.$refs.notification.show();
+    convertToGwei(value) {
+      return unit.fromWei(value, 'Gwei');
     },
-    expand(idx, notif) {
-      const updatedNotif = notif;
-      if (notif.expanded !== true) {
-        updatedNotif.read = true;
-        updatedNotif.expanded = true;
-      } else {
-        updatedNotif.expanded = false;
-      }
-      this.$store.dispatch('updateNotification', [
-        this.wallet.getChecksumAddressString(),
-        idx,
-        updatedNotif
-      ]);
+    convertToEth(value) {
+      return unit.fromWei(value, 'ether');
+    },
+    getFiatValue(value) {
+      return new BigNumber(this.convertToEth(value))
+        .multipliedBy(new BigNumber(this.ethPrice))
+        .decimalPlaces(2)
+        .toFixed();
     }
   }
 };
