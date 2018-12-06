@@ -42,6 +42,7 @@ $light-violet-1: #5c74eb;
 
 $light-orange: #f37240;
 $light-orange-1: #f5a623;
+$light-orange-2: #ffa500;
 
 $light-green-1: #f2fafa;
 $light-green-2: #6f0;
@@ -80,6 +81,7 @@ $dark-grey-8: #888;
 $dark-grey-9: #555;
 $dark-grey-10: #8a8a8a;
 $dark-grey-11: #999;
+$dark-grey-12: rgba(0, 0, 0, 0.7294117647058823);
 
 $dark-blue-1: #506175;
 $dark-blue-2: #0b2840;
@@ -127,6 +129,11 @@ $tablet-width: 1024px;
 $mobile-width: 414px;
 
 // *********************************************************************
+// TX-interfaces window width sizes
+// *********************************************************************
+$interface--mobile-side-menu--width: 1270px;
+
+// *********************************************************************
 // Box Shadow color styles
 // *********************************************************************
 $box-shadow-color-1: $opaque-black-1;
@@ -168,6 +175,7 @@ $transaction-block-token-search: $dark-grey-2;
 
 $button-background-color-1: $dark-grey-4;
 $small-tooltip-shadow: $opaque-black-5;
+$menu-under-background-color: $dark-grey-12;
 
 // *********************************************************************
 // Social button styles

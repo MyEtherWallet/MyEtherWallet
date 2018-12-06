@@ -149,5 +149,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SoftwareModal.scss';
+@import 'SoftwareModal-desktop.scss';
+@import 'SoftwareModal-tablet.scss';
+@import 'SoftwareModal-mobile.scss';
 </style>

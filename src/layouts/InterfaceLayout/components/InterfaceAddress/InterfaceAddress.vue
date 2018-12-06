@@ -8,6 +8,7 @@
           :scale="16"
           width="64px"
           height="64px"
+          class="blockie-image"
         />
         <input
           ref="copyAddress"
