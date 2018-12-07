@@ -79,6 +79,7 @@ import WhereAreMyFundsStored from './components/WhereAreMyFundsStored';
 import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword';
 import SomeHelpfulTips from './components/SomeHelpfulTips';
 import Congratulations from './components/Congratulations';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -97,18 +98,18 @@ export default {
   },
   mounted: function() {
     this.scrollListener = e => {
-      if (e.deltaY < 0) {
+      if (e.deltaY < -5) {
         this.mouseScrollUp();
       }
-      if (e.deltaY > 0) {
+      if (e.deltaY > 5) {
         this.mouseScrollDown();
       }
     };
 
-    window.addEventListener('wheel', this.scrollListener);
+    window.addEventListener('wheel', utils._.throttle(this.scrollListener, 600));
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', this.scrollListener);
+    window.removeEventListener('wheel', utils._.throttle(this.scrollListener, 600));
   },
   methods: {
     mouseScrollDown: function() {
