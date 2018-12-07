@@ -106,10 +106,16 @@ export default {
       }
     };
 
-    window.addEventListener('wheel', utils._.throttle(this.scrollListener, 600));
+    window.addEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', utils._.throttle(this.scrollListener, 600));
+    window.removeEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   methods: {
     mouseScrollDown: function() {
