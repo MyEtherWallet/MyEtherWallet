@@ -4,6 +4,8 @@
     hide-footer
     centered
     hide-header
+    no-close-on-backdrop
+    no-close-on-esc
     class="bootstrap-modal padding-40-20 background-image-1"
   >
     <div class="d-block text-center">
