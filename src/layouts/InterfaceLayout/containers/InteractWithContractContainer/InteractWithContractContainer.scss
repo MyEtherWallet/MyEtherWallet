@@ -23,7 +23,7 @@
         width: 100%;
 
         @media all and (max-width: $mobile-width) {
-          margin-bottom: 22px;
+          margin-bottom: 32px;
         }
 
         .select-contract {
@@ -35,7 +35,7 @@
           z-index: 1;
 
           @media all and (max-width: $mobile-width) {
-            top: 11px;
+            top: 17px;
             left: 0;
             right: initial;
           }
@@ -97,7 +97,7 @@
   }
 
   .submit-button-container {
-    padding: 40px 0px;
+    padding: 40px 0;
     text-align: center;
 
     .submit-button {
