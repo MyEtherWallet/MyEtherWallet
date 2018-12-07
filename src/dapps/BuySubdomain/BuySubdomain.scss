@@ -12,9 +12,8 @@
 
 .buy-subdomain-form-container {
   p {
-    color: $dark-blue-7;
+    color: $text-base-color;
     font-size: 16px;
-    font-weight: bold;
   }
 
   .form {
@@ -32,7 +31,7 @@
       border-radius: 4px;
       height: 52px;
       padding-left: 24px;
-      min-width: 485px;
+      //min-width: 485px;
       width: 100%;
     }
 
@@ -52,11 +51,15 @@
     flex-direction: column;
 
     .result-item {
-      border-top: 2px dashed $opaque-grey;
+      border-top: 1px dashed $light-grey-3;
       color: $dark-blue-1;
       display: flex;
+      align-items: center;
       justify-content: space-between;
       padding: 14px 0;
+      >div>span {
+        word-break: break-all;
+      }
     }
 
     .result-item.disabled {
@@ -65,9 +68,16 @@
 
     button {
       border-radius: 12px;
-      border: 1px solid $dark-grey-11;
-      color: $dark-grey-11;
+      border: 1px solid $mew-green;
+      color: $mew-green;
       cursor: pointer;
+      margin-left: 10px;
+      background-color: white;
+      padding: 0px 10px;
+
+      span {
+        font-size: 12px;
+      }      
 
       &:hover {
         background-color: $mew-green;
@@ -76,4 +86,9 @@
       }
     }
   }
+}
+
+.title-sub-domain {
+  margin-top: 40px;
+  margin-bottom: 20px;
 }

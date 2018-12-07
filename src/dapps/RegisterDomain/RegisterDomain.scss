@@ -3,6 +3,10 @@
 %template-container {
   padding: 24px 56px;
   border-radius: 5px;
+
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
 }
 
 .auction-started {

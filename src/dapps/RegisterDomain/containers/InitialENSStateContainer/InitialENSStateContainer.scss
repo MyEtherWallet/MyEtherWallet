@@ -1,6 +1,7 @@
 @import '../../RegisterDomain';
 .initial-state-ens {
   @extend %template-container;
+
 }
 .advanced {
   padding-top: 10px;
@@ -145,6 +146,12 @@
   display: flex;
   justify-content: center;
   padding: 40px 60px;
+
+  @media all and (max-width: $tablet-width) {
+    padding: 0px;
+    margin-top: 50px;
+  }
+
 }
 
 .flex-container {

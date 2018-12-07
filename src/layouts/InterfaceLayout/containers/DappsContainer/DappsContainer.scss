@@ -6,11 +6,15 @@
   .buttons-container {
     display: grid;
     grid-column-gap: 20px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     padding: 40px 60px;
     padding-bottom: 400px;
 
-    @media all and (max-width: $mobile-width) {
+    @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media all and (max-width: 600px) {
       display: block;
       padding: 15px;
 
@@ -19,7 +23,7 @@
         display: block;
 
         &:last-child {
-          margin-bottom: 0px;
+          margin-bottom: 0;
         }
       }
     }
