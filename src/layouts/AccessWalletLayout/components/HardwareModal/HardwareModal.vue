@@ -15,9 +15,6 @@
           :class="selected === 'ledger' ? 'active' : ''"
           @click="select('ledger');"
         >
-          <!--
-            <img class="icon" :src="selected === 'ledger'? require('@/assets/images/icons/button-ledger.png') : require('@/assets/images/icons/button-ledger-hover.png')">
-          -->
           <img class="icon" src="~@/assets/images/icons/button-ledger.png" />
           <img
             class="icon-hover"
