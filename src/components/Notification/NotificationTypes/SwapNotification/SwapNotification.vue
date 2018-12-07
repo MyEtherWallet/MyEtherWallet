@@ -2,18 +2,18 @@
   <div>
     <div class="notification-header" @click="expand();">
       <div class="notification-type-status">
-        <p class="type">Transaction</p>
+        <p class="type">Swap</p>
         <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
       </div>
       <div class="time-date">
         <p>{{ timeString(notice) }}</p>
         <p>{{ dateString(notice) }}</p>
-      </div>
         <div class="expender-icon">
           <i aria-hidden="true" class="fa fa-angle-down"></i>
           <i aria-hidden="true" class="fa fa-angle-up"></i>
         </div>
       </div>
+    </div>
     <div
       :class="[
         notice.expanded ? '' : 'unexpanded',
@@ -23,24 +23,35 @@
     >
       <ul>
         <li>
-          <p>Amount:</p>
-          <p>{{ details.amount }} ETH</p>
+          <ul>
+            <li>
+              <p class="icon from-swap-icon">
+                <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+              </p>
+            </li>
+            <li>
+              <p class="from-swap-text">
+                {{ details.fromValue }} {{ details.fromCurrency }}
+              </p>
+              <p class="address">{{ details.from | concatAddress }}</p>
+            </li>
+            <li>
+              <p class="swap-right-arrow"><img :src="arrowImage" /></p>
+            </li>
+            <li>
+              <p class="icon to-swap-icon">
+                <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+              </p>
+            </li>
+            <li>
+              <p class="to-swap-text">
+                {{ details.toValue }} {{ details.toCurrency }}
+              </p>
+              <p class="address">{{ details.from | concatAddress }}</p>
+            </li>
+          </ul>
         </li>
-        <li>
-          <p>To Address:</p>
-          <p>
-            <a :href="addressLink" target="_blank"> {{ details.to }} </a>
-          </p>
-        </li>
-        <li>
-          <p>TX Fee:</p>
-          <p>{{ details.gasLimit }} WEI ($0.09)</p>
-        </li>
-        <li><p>Transaction Hash:</p></li>
-        <li>
-          <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
-        </li>
-        <li @click="emitShowDetails">More</li>
+        <li ><p @click="emitShowDetails">More</p></li>
       </ul>
     </div>
   </div>
@@ -51,6 +62,10 @@ import { mapGetters } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import Arrow from '@/assets/images/etc/single-arrow.svg';
 
 export default {
   props: {
@@ -87,8 +102,15 @@ export default {
   },
   data() {
     return {
+      arrowImage: Arrow,
       unreadCount: 0
     };
+  },
+  filters: {
+    concatAddress(value) {
+      if (!value) return '';
+      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
+    }
   },
   computed: {
     ...mapGetters({
@@ -128,36 +150,17 @@ export default {
         return status[this.notice.status];
       }
       return status.error;
-    },
-    // dateString() {
-    //   if (this.notice !== {}) {
-    //     return new Date(this.notice.timestamp).toLocaleDateString(
-    //       this._i18n.locale.replace('_', '-')
-    //     );
-    //   }
-    //   return '';
-    // }
+    }
   },
   methods: {
     emitShowDetails() {
-      this.$emit('showDetails', this.notice);
+      this.$emit('showDetails', ['swap', this.notice]);
     }
-    // convertToGwei(value) {
-    //   return unit.fromWei(value, 'Gwei');
-    // },
-    // convertToEth(value) {
-    //   return unit.fromWei(value, 'ether');
-    // },
-    // getFiatValue(value) {
-    //   return new BigNumber(this.convertToEth(value))
-    //     .multipliedBy(new BigNumber(this.ethPrice))
-    //     .decimalPlaces(2)
-    //     .toFixed();
-    // }
+
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './SwapNotification.scss';
 </style>

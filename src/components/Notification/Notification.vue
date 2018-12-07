@@ -57,14 +57,26 @@
         <div v-else class="notification-no-item">No notifications found :(</div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
-        <transaction-details
+        <component
+          :is="useDetailComponent(detailType)"
           :notice="notificationDetails"
           :convert-to-gwei="convertToGwei"
           :convert-to-eth="convertToEth"
           :get-fiat-value="getFiatValue"
           :date-string="dateString"
           :time-string="timeString"
-        ></transaction-details>
+        >
+        </component>
+        <!--
+          <transaction-details
+            :notice="notificationDetails"
+            :convert-to-gwei="convertToGwei"
+            :convert-to-eth="convertToEth"
+            :get-fiat-value="getFiatValue"
+            :date-string="dateString"
+            :time-string="timeString"
+          ></transaction-details>
+        -->
       </div>
     </b-modal>
   </div>
@@ -76,23 +88,26 @@ import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 
-import SwapNotification from './NotificationTypes/SwapNotification';
-import TransactionNotification from './NotificationTypes/TransactionNotification';
-import TransactionError from './NotificationTypes/TransactionError';
-import TransactionDetails from './NotificationDetails';
+import SwapNotification from './NotificationTypes/SwapNotification/SwapNotification';
+import TransactionNotification from './NotificationTypes/TransactionNotification/TransactionNotification';
+import TransactionError from './NotificationTypes/TransactionError/TransactionError';
+import TransactionDetails from './NotificationTypes/NotificationDetails';
+import SwapDetails from './NotificationTypes/SwapDetails';
 
 export default {
   components: {
     'swap-notification': SwapNotification,
     'transaction-notification': TransactionNotification,
     'transaction-error': TransactionError,
-    'transaction-details': TransactionDetails
+    'transaction-details': TransactionDetails,
+    'swap-details': SwapDetails
   },
   data() {
     return {
       unreadCount: 0,
       ethPrice: new BigNumber(0),
       detailsShown: false,
+      detailType: '',
       notificationDetails: {}
     };
   },
@@ -137,11 +152,13 @@ export default {
   methods: {
     showDetails(details) {
       this.detailsShown = true;
-      this.notificationDetails = details;
+      this.detailType = details[0];
+      this.notificationDetails = details[1];
     },
     hideDetails() {
       this.detailsShown = false;
       this.notificationDetails = {};
+      this.detailType = '';
     },
     useComponent(type) {
       if (type === 'swap') {
@@ -150,6 +167,14 @@ export default {
         return 'transaction-error';
       }
       return 'transaction-notification';
+    },
+    useDetailComponent(type) {
+      if (type === 'swap') {
+        return 'swap-details';
+      } else if (type === 'transactionError') {
+        return 'transaction-error';
+      }
+      return 'transaction-details';
     },
     countUnread() {
       const self = this;
@@ -237,12 +262,15 @@ export default {
       this.ethPrice = new BigNumber(values['USD']);
     },
     convertToGwei(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
       return unit.fromWei(value, 'Gwei');
     },
     convertToEth(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
       return unit.fromWei(value, 'ether');
     },
     getFiatValue(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
       return new BigNumber(this.convertToEth(value))
         .multipliedBy(new BigNumber(this.ethPrice))
         .decimalPlaces(2)

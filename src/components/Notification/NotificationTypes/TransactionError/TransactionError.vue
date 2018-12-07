@@ -151,5 +151,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './TransactionError.scss';
 </style>

@@ -196,7 +196,35 @@
       &:last-child{
         color: #455061;
         font-weight: 600;
+        justify-content: flex-end;
       }
     }
   }
+}
+
+//*******************************************************
+// Swap Notification
+//*******************************************************
+.cc-icon {
+  font-size: 36px;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.swap-from-address,
+.swap-to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.swap-right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }

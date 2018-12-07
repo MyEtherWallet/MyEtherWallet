@@ -363,11 +363,8 @@ export default {
     }
   },
   watch: {
-    ['this.$store.state.network.type.name']() {
-      this.swap.updateNetwork(this.$store.state.network.type.name);
-    },
     ['swap.updateProviderRates']() {
-      const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+      const { toArray, fromArray } = this.swap.initialCurrencyLists;
       this.toArray = toArray;
       this.fromArray = fromArray;
     },
@@ -381,14 +378,14 @@ export default {
       );
     },
     network(newVal) {
-      console.log(newVal); // todo remove dev item
-      this.swap.updateNetwork(newVal.type.name);
-      this.updateRateEstimate(
-        this.fromCurrency,
-        this.toCurrency,
-        this.fromValue,
-        'from'
-      );
+      this.providerData = [];
+      this.haveProviderRates = false;
+      this.loadingData = false;
+      this.swap = new Swap(providers, {
+        network: newVal.type.name,
+        web3: this.web3,
+        ens: this.ens
+      });
     }
   },
   mounted() {
@@ -398,7 +395,7 @@ export default {
         this.ratesRetrived = true;
       }
     }, 3000);
-    const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+    const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.wallet.getChecksumAddressString();
