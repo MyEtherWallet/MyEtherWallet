@@ -16,7 +16,7 @@
         class="mid-round-button-green-filled close-button"
         @click="hideModal"
       >
-        {{ linkMessage === '' ? 'Ok':linkMessage }}
+        {{ linkMessage === '' ? 'Ok' : linkMessage }}
       </b-btn>
     </div>
   </b-modal>
