@@ -6,7 +6,7 @@
   .submit-button {
     margin: 0 auto;
     text-align: center;
-    width: 300px;
+    min-width: 230px;
   }
 
   .send-form {
@@ -22,12 +22,23 @@
         position: relative;
         width: 100%;
 
+        @media all and (max-width: $mobile-width) {
+          margin-bottom: 22px;
+        }
+
         .select-contract {
           margin-left: auto;
-          min-width: 330px;
+          min-width: 220px;
           position: absolute;
           right: 0;
-          top: -17px;
+          top: -10px;
+          z-index: 1;
+
+          @media all and (max-width: $mobile-width) {
+            top: 11px;
+            left: 0;
+            right: initial;
+          }
         }
 
         .copy-buttons {
@@ -86,7 +97,7 @@
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    padding: 40px 0px;
     text-align: center;
 
     .submit-button {

@@ -65,7 +65,7 @@
     flex-direction: column;
     margin-top: 32px;
     @media all and (max-width: $tablet-width) {
-      margin-top: 0px;
+      margin-top: 0;
     }
 
     label {
