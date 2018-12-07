@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div class="notification-header">
-      Transaction Detail
+      Swap Detail
       <!--
         <div class="notification-type-status">
           <p class="type">Transaction Detail</p>
@@ -10,11 +10,43 @@
     </div>
     <div class="notification-content">
       <ul>
-        <li><p>Transaction Hash:</p></li>
         <li>
-          <p>
-            <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
-          </p>
+          <ul>
+            <li>
+              <p class="icon from-swap-icon">
+                <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+              </p>
+            </li>
+            <li>
+              <p class="from-swap-text">
+                {{ details.fromValue }} {{ details.fromCurrency }}
+              </p>
+              <p class="address">{{ details.from | concatAddress }}</p>
+            </li>
+            <li>
+              <p class="swap-right-arrow"><img :src="arrowImage" /></p>
+            </li>
+            <li>
+              <p class="icon to-swap-icon">
+                <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
+              </p>
+            </li>
+            <li>
+              <p class="to-swap-text">
+                {{ details.toValue }} {{ details.toCurrency }}
+              </p>
+              <p class="address">{{ details.from | concatAddress }}</p>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <p>Transaction Hash:</p>
+          <div class="detail-data">
+            <p>
+              <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+            </p>
+          </div>
         </li>
         <li>
           <p>Time:</p>
@@ -25,45 +57,61 @@
         </li>
         <li class="notification-type-status">
           <p>Status:</p>
-          <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+          <div class="detail-data">
+            <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+          </div>
         </li>
         <li>
           <p>Amount:</p>
-          <p>{{ convertToEth(details.amount) }} ETH</p>
+          <div class="detail-data">
+            <p>{{ convertToEth(details.amount) }} ETH</p>
+          </div>
         </li>
         <li>
           <p>To Address:</p>
-          <p>
-            <a :href="addressLink" target="_blank"> {{ details.to }} </a>
-          </p>
+          <div class="detail-data">
+            <p>
+              <a :href="addressLink" target="_blank"> {{ details.to }} </a>
+            </p>
+          </div>
         </li>
         <li>
           <p>TX Fee:</p>
-          <p>
-            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
-              getFiatValue(details.gasPrice * details.gasLimit)
-            }})
-          </p>
+          <div class="detail-data">
+            <p>
+              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+                getFiatValue(details.gasPrice * details.gasLimit)
+              }})
+            </p>
+          </div>
         </li>
         <li>
           <p>Gas Price:</p>
-          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+          <div class="detail-data">
+            <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+          </div>
         </li>
         <li>
           <p>Gas Limit:</p>
-          <p>{{ details.gasLimit }}</p>
+          <div class="detail-data">
+            <p>{{ details.gasLimit }}</p>
+          </div>
         </li>
         <li v-if="txStatus.text === 'Succeed'">
           <p>Gas Used:</p>
-          <p>
-            {{ details.gasUsed }} (${{
-              getFiatValue(details.gasPrice * details.gasUsed)
-            }})
-          </p>
+          <div class="detail-data">
+            <p>
+              {{ details.gasUsed }} (${{
+                getFiatValue(details.gasPrice * details.gasUsed)
+              }})
+            </p>
+          </div>
         </li>
         <li>
           <p>Nonce:</p>
-          <p>{{ details.nonce }}</p>
+          <div class="detail-data">
+            <p>{{ details.nonce }}</p>
+          </div>
         </li>
       </ul>
     </div>
@@ -75,6 +123,10 @@ import { mapGetters } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import Arrow from '@/assets/images/etc/single-arrow.svg';
 
 export default {
   props: {
@@ -107,8 +159,15 @@ export default {
   },
   data() {
     return {
+      arrowImage: Arrow,
       unreadCount: 0
     };
+  },
+  filters: {
+    concatAddress(value) {
+      if (!value) return '';
+      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
+    }
   },
   computed: {
     ...mapGetters({
@@ -148,23 +207,7 @@ export default {
         return status[this.notice.status];
       }
       return status.error;
-    },
-    // dateString() {
-    //   if (this.notice !== {}) {
-    //     return new Date(this.notice.timestamp).toLocaleDateString(
-    //       this._i18n.locale.replace('_', '-')
-    //     );
-    //   }
-    //   return '';
-    // },
-    // timeString() {
-    //   if (this.notice !== {}) {
-    //     return new Date(this.notice.timestamp).toLocaleTimeString(
-    //       this._i18n.locale.replace('_', '-')
-    //     );
-    //   }
-    //   return '';
-    // }
+    }
   },
   methods: {
     emitShowDetails() {
@@ -175,5 +218,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification';
+@import 'SwapDetails';
 </style>

@@ -24,14 +24,21 @@ const status = {
 
 const transactionHash = (notifArray, val) => {
   // TODO: use transfer method call signature to identify token transfer.
-  if (notifArray.length > 1) {
-    if (
-      notifArray[notifArray.length - 1].type === notificationType.SWAP &&
-      val[1].to === notifArray[notifArray.length - 1].to
-    ) {
-      notifArray[notifArray.length - 1].hash = val[2];
-    }
-  }
+  console.log(notifArray[notifArray.length - 1].type); // todo remove dev item
+  const idx = notifArray.findIndex(
+    entry => entry.type === 'swap' && entry.body.to === val[1].to
+  );
+console.log(idx); // todo remove dev item
+  // if (notifArray.length > 1) {
+  //   console.log(notifArray[notifArray.length - 1].type); // todo remove dev item
+  //   if (
+  //     notifArray[notifArray.length - 1].type === notificationType.SWAP &&
+  //     val[1].to === notifArray[notifArray.length - 1].to
+  //   ) {
+  //     console.log('is a swap'); // todo remove dev item
+  //     notifArray[notifArray.length - 1].hash = val[2];
+  //   }
+  // }
   notifArray.push({
     title: 'Transaction',
     read: false,
@@ -55,6 +62,17 @@ const transactionHash = (notifArray, val) => {
 };
 
 const transactionReceipt = (notifArray, val) => {
+  if (notifArray.length > 1) {
+    console.log(notifArray[notifArray.length - 1].type); // todo remove dev item
+    if (
+      notifArray[notifArray.length - 1].type === notificationType.SWAP &&
+      val[1].to === notifArray[notifArray.length - 1].to
+    ) {
+      console.log('is a swap'); // todo remove dev item
+      notifArray[notifArray.length - 1].hash = val[2];
+    }
+  }
+
   const idx = notifArray.findIndex(
     entry => entry.hash === val[2].transactionHash
   );
@@ -104,6 +122,7 @@ const swapOrder = (notifArray, val) => {
     hasTransaction: false,
     body: {
       to: val[2].toAddress,
+      from: val[2].fromAddress,
       fromValue: val[2].fromValue,
       toValue: val[2].toValue,
       fromCurrency: val[2].fromCurrency,

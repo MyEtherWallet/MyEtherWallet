@@ -1,33 +1,35 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand();">
-      <div class="notification-type-status">
-        <p class="type">Swap</p>
-        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-      </div>
-      <div class="time-date">
-        <p>{{ timeString(notice) }}</p>
-        <p>{{ dateString(notice) }}</p>
-        <div class="expender-icon">
-          <i aria-hidden="true" class="fa fa-angle-down"></i>
-          <i aria-hidden="true" class="fa fa-angle-up"></i>
+    <div class="notification-header">
+      Transaction Detail
+      <!--
+        <div class="notification-type-status">
+          <p class="type">Transaction Detail</p>
         </div>
-      </div>
+      -->
     </div>
-    <div
-      :class="[
-        notice.expanded ? '' : 'unexpanded',
-        'notification-body',
-        'notification-content'
-      ]"
-    >
+    <div class="notification-content">
       <ul>
+        <li><p>Transaction Hash:</p></li>
         <li>
-          <p class="icon">
-            <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
+          <p>
+            <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
           </p>
+        </li>
+        <li>
+          <p>Time:</p>
+          <div class="time-date">
+            <p>{{ timeString(notice) }}</p>
+            <p>{{ dateString(notice) }}</p>
+          </div>
+        </li>
+        <li class="notification-type-status">
+          <p>Status:</p>
+          <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+        </li>
+        <li>
           <p>Amount:</p>
-          <p>{{ details.amount }} ETH</p>
+          <p>{{ convertToEth(details.amount) }} ETH</p>
         </li>
         <li>
           <p>To Address:</p>
@@ -37,13 +39,32 @@
         </li>
         <li>
           <p>TX Fee:</p>
-          <p>{{ details.gasLimit }} WEI ($0.09)</p>
+          <p>
+            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              getFiatValue(details.gasPrice * details.gasLimit)
+            }})
+          </p>
         </li>
-        <li><p>Transaction Hash:</p></li>
         <li>
-          <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+          <p>Gas Price:</p>
+          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
         </li>
-        <li @click="emitShowDetails">More</li>
+        <li>
+          <p>Gas Limit:</p>
+          <p>{{ details.gasLimit }}</p>
+        </li>
+        <li v-if="txStatus.text === 'Succeed'">
+          <p>Gas Used:</p>
+          <p>
+            {{ details.gasUsed }} (${{
+              getFiatValue(details.gasPrice * details.gasUsed)
+            }})
+          </p>
+        </li>
+        <li>
+          <p>Nonce:</p>
+          <p>{{ details.nonce }}</p>
+        </li>
       </ul>
     </div>
   </div>
@@ -55,15 +76,8 @@ import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 
-import '@/assets/images/currency/coins/asFont/cryptocoins.css';
-import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
-
 export default {
   props: {
-    expand: {
-      type: Function,
-      default: function() {}
-    },
     notice: {
       type: Object,
       default: function() {
@@ -142,28 +156,24 @@ export default {
     //     );
     //   }
     //   return '';
+    // },
+    // timeString() {
+    //   if (this.notice !== {}) {
+    //     return new Date(this.notice.timestamp).toLocaleTimeString(
+    //       this._i18n.locale.replace('_', '-')
+    //     );
+    //   }
+    //   return '';
     // }
   },
   methods: {
     emitShowDetails() {
-      this.$emit('showDetails', this.notice);
+      this.$emit('showDetails');
     }
-    // convertToGwei(value) {
-    //   return unit.fromWei(value, 'Gwei');
-    // },
-    // convertToEth(value) {
-    //   return unit.fromWei(value, 'ether');
-    // },
-    // getFiatValue(value) {
-    //   return new BigNumber(this.convertToEth(value))
-    //     .multipliedBy(new BigNumber(this.ethPrice))
-    //     .decimalPlaces(2)
-    //     .toFixed();
-    // }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import 'Notification';
 </style>
