@@ -75,6 +75,11 @@ export default {
       ]
     };
   },
+  watch: {
+    balance() {
+      this.fetchBalanceData();
+    }
+  },
   mounted() {
     this.fetchBalanceData();
   },
