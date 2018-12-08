@@ -3,7 +3,10 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-import { addUpdateNotification, addUpdateSwapNotification } from '@/helpers/notificationFormatter';
+import {
+  addUpdateNotification,
+  addUpdateSwapNotification
+} from '@/helpers/notificationFormatter';
 
 const addNotification = function({ commit, state }, val) {
   const address = web3.utils.toChecksumAddress(val[1].from);
@@ -15,17 +18,7 @@ const addNotification = function({ commit, state }, val) {
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
   newNotif[address] = addUpdateNotification(newNotif[address], val);
-  console.log(newNotif[address]); // todo remove dev item
-  // newNotif[address].push({
-  //   title: val[0]
-  //     .split('_')
-  //     .slice(2)
-  //     .join(' '),
-  //   read: false,
-  //   timestamp: new Date(),
-  //   body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
-  //   expanded: false
-  // });
+  console.log('addNotification'); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
 };
@@ -41,16 +34,7 @@ const addSwapNotification = function({ commit, state }, val) {
 
   newNotif[address] = addUpdateSwapNotification(newNotif[address], val);
   console.log('addSwapNotification'); // todo remove dev item
-  // newNotif[address].push({
-  //   title: val[0]
-  //     .split('_')
-  //     .slice(2)
-  //     .join(' '),
-  //   read: false,
-  //   timestamp: new Date(),
-  //   body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
-  //   expanded: false
-  // });
+
 
   commit('ADD_NOTIFICATION', newNotif);
 };

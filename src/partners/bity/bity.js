@@ -1,6 +1,7 @@
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
 import { getRates, openOrder, getStatus } from './bity-calls';
 import {
+  bityStatuses,
   BityCurrencies,
   bityFiatCurrencies,
   PROVIDER_NAME,
@@ -233,28 +234,29 @@ export default class BitySwap {
 
   // ================= Check status of order methods ===================================
   updateStatus(data) {
-    return new Promise(resolve => {
-      if (this.validStatus.indexOf(data.status) !== -1) {
-        this.currentOrderStatus = 'RCVE';
-        resolve({ status: 'RCVE', completed: false }); // order finalized: false
-      }
-      if (
-        this.currentOrderStatus === 'OPEN' &&
-        this.validStatus.indexOf(data.input.status) !== -1
-      ) {
-        this.currentOrderStatus = 'RCVE';
-        resolve({ status: 'RCVE', completed: false }); // order finalized: false
-      } else if (
-        this.currentOrderStatus === 'RCVE' &&
-        this.validStatus.indexOf(data.output.status) !== -1
-      ) {
-        this.currentOrderStatus = 'FILL';
-        resolve({ status: 'FILL', completed: true }); // order finalized: true
-      } else if (this.invalidStatus.indexOf(data.status) !== -1) {
-        this.currentOrderStatus = 'CANC';
-        resolve({ status: 'CANC', completed: true }); // order finalized: true
-      }
-    });
+    return Promise.resolve('')
+    // return new Promise(resolve => {
+    //   if (this.validStatus.indexOf(data.status) !== -1) {
+    //     this.currentOrderStatus = 'RCVE';
+    //     resolve({ status: 'RCVE', completed: false }); // order finalized: false
+    //   }
+    //   if (
+    //     this.currentOrderStatus === 'OPEN' &&
+    //     this.validStatus.indexOf(data.input.status) !== -1
+    //   ) {
+    //     this.currentOrderStatus = 'RCVE';
+    //     resolve({ status: 'RCVE', completed: false }); // order finalized: false
+    //   } else if (
+    //     this.currentOrderStatus === 'RCVE' &&
+    //     this.validStatus.indexOf(data.output.status) !== -1
+    //   ) {
+    //     this.currentOrderStatus = 'FILL';
+    //     resolve({ status: 'FILL', completed: true }); // order finalized: true
+    //   } else if (this.invalidStatus.indexOf(data.status) !== -1) {
+    //     this.currentOrderStatus = 'CANC';
+    //     resolve({ status: 'CANC', completed: true }); // order finalized: true
+    //   }
+    // });
   }
 
   static parseOrder(order) {
@@ -270,37 +272,18 @@ export default class BitySwap {
     };
   }
 
-  static async getOrderStatus(swapDetails, priorStatus) {
-    let data = await getStatus(swapDetails.dataForInitialization);
-    const validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
-    const invalidStatus = ['CANC'];
-    const convertStatuses = {
-      [1]: 'OPEN',
-      [2]: 'RCVE',
-      [10]: 'CONF',
-      [0]: 'FILL',
-      [-1]: 'CANC'
-    };
-    if (data.status === undefined) data = { input: {}, output: {} };
-    if (validStatus.includes(data.status)) {
-      return 2;
-      // priorStatus = 'RCVE';
+  static async getOrderStatus(swapDetails) {
+    let data = await getStatus({ orderid: swapDetails.statusId });
+    switch (data.status) {
+      case bityStatuses.OPEN:
+        return 'new';
+      case bityStatuses.RCVE:
+      case bityStatuses.CONF:
+        return 'pending';
+      case bityStatuses.FILL:
+        return 'complete';
+      case bityStatuses.CANC:
+        return 'cancelled';
     }
-    if (data.status === 'OPEN') {
-      return 1;
-    } else if (
-      convertStatuses[priorStatus] === 'OPEN' &&
-      validStatus.includes(data.input.status)
-    ) {
-      return 2;
-    } else if (
-      convertStatuses[priorStatus] === 'RCVE' &&
-      validStatus.includes(data.output.status)
-    ) {
-      return 0;
-    } else if (invalidStatus.includes(data.status)) {
-      return -1;
-    }
-    return 1;
   }
 }

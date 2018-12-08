@@ -143,9 +143,11 @@ export default class Changelly {
   // ============================= Finalize swap details ====================================
 
   async startSwap(swapDetails) {
+    console.log(swapDetails); // todo remove dev item
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
       details = await await this.createTransaction(swapDetails);
+      console.log(details); // todo remove dev item
       if (details.message) throw Error(details.message);
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
@@ -194,8 +196,10 @@ export default class Changelly {
 
   static async getOrderStatus(swapDetails, network) {
     try {
-      const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-      const status = await changellyCalls.getStatus(parsed.orderId, network);
+      const status = await changellyCalls.getStatus(
+        swapDetails.orderId,
+        network
+      );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
       // eslint-disable-next-line
@@ -206,25 +210,20 @@ export default class Changelly {
   static parseChangellyStatus(status) {
     switch (status) {
       case changellyStatuses.new:
-        return 0;
       case changellyStatuses.waiting:
-        return 10;
+        return 'new';
       case changellyStatuses.confirming:
-        return 30;
       case changellyStatuses.exchanging:
-        return 50;
       case changellyStatuses.sending:
-        return 60;
-      case changellyStatuses.finished:
-        return 100;
-      case changellyStatuses.failed:
-        return -100;
       case changellyStatuses.hold:
-        return -50;
+        return 'pending';
+      case changellyStatuses.finished:
+        return 'complete';
+      case changellyStatuses.failed:
+        return 'failed';
       case changellyStatuses.overdue:
-        return 500;
       case changellyStatuses.refunded:
-        return -10;
+        return 'cancelled';
     }
   }
 

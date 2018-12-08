@@ -55,6 +55,12 @@
             <p>{{ dateString(notice) }}</p>
           </div>
         </li>
+        <li>
+          <p>Time Remaining:</p>
+          <div class="detail-data">
+            <p>{{ convertToEth(details.timeRemaining) }}</p>
+          </div>
+        </li>
         <li class="notification-type-status">
           <p>Status:</p>
           <div class="detail-data">
@@ -128,6 +134,11 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
+import {
+  swapOnlyStatuses,
+  notificationStatuses
+} from '@/helpers/notificationFormatter';
+
 export default {
   props: {
     notice: {
@@ -153,6 +164,14 @@ export default {
       default: function() {}
     },
     timeString: {
+      type: Function,
+      default: function() {}
+    },
+    getProvider: {
+      type: Function,
+      default: function() {}
+    },
+    childUpdateNotification: {
       type: Function,
       default: function() {}
     }
@@ -209,9 +228,102 @@ export default {
       return status.error;
     }
   },
+  beforeDestroy() {
+    if (this.timerInterval !== null) {
+      clearInterval(this.timerInterval);
+    }
+
+    if (this.statusInterval !== null) {
+      clearInterval(this.statusInterval);
+    }
+  },
+  mounted() {
+    this.provider = this.getProvider(this.notice.body.provider);
+    this.currentStatus = this.notice.swapStatus;
+    this.timeUpdater();
+    this.statusUpdater();
+    console.log(this.notice); // todo remove dev item
+  },
   methods: {
     emitShowDetails() {
-      this.$emit('showDetails');
+      this.$emit('showDetails', ['swap', this.notice]);
+    },
+    shouldCheckStatus() {
+      return [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
+        this.notice.swapStatus
+      ) /*|| this.details.timeRemaining > 0*/;
+    },
+    statusUpdater() {
+      // NOTE: if active then should get checked even after time expires
+      // eslint-disable-next-line
+      console.log('statusUpdater started'); // todo remove dev item
+      let updating = false;
+      const getStatus = async () => {
+        if (!updating) {
+          updating = true;
+          const newStatus = await this.getProvider(
+            this.notice.body.provider
+          ).getOrderStatus(this.details, this.network.type.name);
+          console.log(newStatus); // todo remove dev item
+          if (this.currentStatus !== newStatus) {
+            this.currentStatus = newStatus;
+            if (Object.values(swapOnlyStatuses).includes(newStatus)) {
+              this.notice.swapStatus = newStatus;
+            } else {
+              this.notice.swapStatus = newStatus;
+              this.notice.status = newStatus;
+            }
+            this.childUpdateNotification(this.notice);
+          }
+          if (this.shouldCheckStatus()) {
+            clearInterval(this.statusInterval);
+          }
+          updating = false;
+        }
+      };
+
+      if (this.shouldCheckStatus()) {
+        getStatus();
+        this.statusInterval = setInterval(() => {
+          getStatus();
+          if (!this.shouldCheckStatus()) {
+            clearInterval(this.statusInterval);
+          }
+        }, 1000);
+      }
+    },
+    timeUpdater() {
+      const updateTime = () => {
+        this.timeRemaining = this.calculateTimeRemaining(this.details);
+        if (
+          this.notice.swapStatus === swapOnlyStatuses.NEW &&
+          this.timeRemaining <= 0
+        ) {
+          this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
+          this.notice.status = notificationStatuses.FAILED;
+          this.timeRemaining = -1;
+        }
+        this.notice.body.timeRemaining = this.timeRemaining;
+        this.childUpdateNotification(this.notice);
+      };
+
+      if (this.shouldCheckStatus()) {
+        updateTime();
+        this.timerInterval = setInterval(() => {
+          updateTime();
+          if (this.timeRemaining < 0) {
+            clearInterval(this.timerInterval);
+          }
+        }, 1000);
+      }
+    },
+    calculateTimeRemaining(details) {
+      return (
+        details.timeRemaining -
+        parseInt(
+          (new Date().getTime() - new Date(details.createdAt).getTime()) / 1000
+        )
+      );
     }
   }
 };

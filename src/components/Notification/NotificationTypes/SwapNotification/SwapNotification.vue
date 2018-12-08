@@ -51,7 +51,7 @@
             </li>
           </ul>
         </li>
-        <li ><p @click="emitShowDetails">More</p></li>
+        <li><p @click="emitShowDetails">More</p></li>
       </ul>
     </div>
   </div>
@@ -67,11 +67,22 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
+import { providers } from '@/partners';
+
+import {
+  swapOnlyStatuses,
+  notificationStatuses
+} from '@/helpers/notificationFormatter';
+
 export default {
   props: {
     expand: {
       type: Function,
       default: function() {}
+    },
+    index: {
+      type: Number,
+      default: 0
     },
     notice: {
       type: Object,
@@ -98,18 +109,38 @@ export default {
     timeString: {
       type: Function,
       default: function() {}
+    },
+    // getProvider: {
+    //   type: Function,
+    //   default: function() {}
+    // },
+    childUpdateNotification: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
     return {
       arrowImage: Arrow,
-      unreadCount: 0
+      unreadCount: 0,
+      currentStatus: '',
+      timeRemaining: 1,
+      provider: {},
+      timerInterval: {},
+      statusInterval: {}
     };
   },
   filters: {
     concatAddress(value) {
       if (!value) return '';
       return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
+    }
+  },
+  watch: {
+    ['notice.expanded']() {
+      console.log('expanded'); // todo remove dev item
+      this.statusUpdater();
+      this.timeUpdater();
     }
   },
   computed: {
@@ -152,11 +183,123 @@ export default {
       return status.error;
     }
   },
-  methods: {
-    emitShowDetails() {
-      this.$emit('showDetails', ['swap', this.notice]);
+  beforeDestroy() {
+    if (this.timerInterval !== null) {
+      clearInterval(this.timerInterval);
     }
 
+    if (this.statusInterval !== null) {
+      clearInterval(this.statusInterval);
+    }
+  },
+  mounted() {
+    this.provider = providers.find(entry => {
+      console.log(entry.getName()); // todo remove dev item
+      return entry.getName() === this.notice.provider;
+    });
+    console.log('this.provider name', this.notice.body.provider); // todo remove dev item
+
+    console.log('this.provider', this.provider); // todo remove dev item
+    this.currentStatus = this.notice.status;
+    this.timeUpdater();
+    this.statusUpdater();
+  },
+  methods: {
+    emitShowDetails() {
+      this.$emit('showDetails', ['swap', this.notice, this.index]);
+    },
+    shouldCheckStatus() {
+      return [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
+        this.notice.swapStatus
+      ) /*|| this.details.timeRemaining > 0*/;
+    },
+    statusUpdater() {
+      // NOTE: if active then should get checked even after time expires
+      // eslint-disable-next-line
+      console.log('statusUpdater started'); // todo remove dev item
+      let updating = false;
+      const currentProvider = providers.find(
+        entry => entry.getName() === this.notice.provider
+      );
+      console.log('currentProvider', currentProvider); // todo remove dev item
+      const getStatus = async () => {
+        if (!updating) {
+          updating = true;
+          console.log(this.notice.body.provider); // todo remove dev item
+          console.log(this.getProvider); // todo remove dev item
+          const newStatus = await currentProvider.getOrderStatus(
+            this.details,
+            this.network
+          );
+          if (this.currentStatus !== newStatus) {
+            this.currentStatus = newStatus;
+            if (Object.values(swapOnlyStatuses).includes(newStatus)) {
+              this.notice.swapStatus = newStatus;
+            } else {
+              this.notice.swapStatus = newStatus;
+              this.notice.status = newStatus;
+            }
+            this.childUpdateNotification(this.notice);
+          }
+          if (this.shouldCheckStatus()) {
+            clearInterval(this.statusInterval);
+          }
+          updating = false;
+        }
+      };
+
+      if (this.shouldCheckStatus()) {
+        getStatus();
+        this.statusInterval = setInterval(() => {
+          getStatus();
+          if (!this.shouldCheckStatus()) {
+            clearInterval(this.statusInterval);
+          }
+        }, 1000);
+      }
+    },
+    timeUpdater() {
+      const updateTime = () => {
+        this.timeRemaining = this.calculateTimeRemaining(this.details);
+        if (
+          this.notice.swapStatus === swapOnlyStatuses.NEW &&
+          this.notice.timeRemaining <= 0
+        ) {
+          this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
+          this.notice.status = notificationStatuses.FAILED;
+          this.timeRemaining = -1;
+        }
+        this.notice.body.timeRemaining = this.timeRemaining;
+        this.childUpdateNotification(this.notice);
+      };
+
+      if (this.shouldCheckStatus()) {
+        updateTime();
+        this.timerInterval = setInterval(() => {
+          updateTime();
+          if (this.timeRemaining < 0) {
+            clearInterval(this.timerInterval);
+          }
+        }, 1000);
+      }
+    },
+    calculateTimeRemaining(details) {
+      return (
+        details.timeRemaining -
+        parseInt(
+          (new Date().getTime() - new Date(details.createdAt).getTime()) / 1000
+        )
+      );
+    },
+    getProvider(provider) {
+      console.log(provider); // todo remove dev item
+      if (providers[provider]) {
+        console.log('provider', providers[provider]); // todo remove dev item
+        return providers.find(entry => {
+          return entry.getName() === provider;
+        });
+      }
+    }
   }
 };
 </script>

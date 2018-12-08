@@ -49,6 +49,9 @@
               :get-fiat-value="getFiatValue"
               :date-string="dateString"
               :time-string="timeString"
+              :get-provider="getProvider"
+              :index="idx"
+              :child-update-notification="childUpdateNotification(idx)"
               @showDetails="showDetails"
             >
             </component>
@@ -65,6 +68,10 @@
           :get-fiat-value="getFiatValue"
           :date-string="dateString"
           :time-string="timeString"
+          :get-provider="getProvider"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
         >
         </component>
         <!--
@@ -94,6 +101,8 @@ import TransactionError from './NotificationTypes/TransactionError/TransactionEr
 import TransactionDetails from './NotificationTypes/NotificationDetails';
 import SwapDetails from './NotificationTypes/SwapDetails';
 
+import { providers } from '@/partners';
+
 export default {
   components: {
     'swap-notification': SwapNotification,
@@ -108,7 +117,8 @@ export default {
       ethPrice: new BigNumber(0),
       detailsShown: false,
       detailType: '',
-      notificationDetails: {}
+      notificationDetails: {},
+      providers: {}
     };
   },
   computed: {
@@ -137,6 +147,11 @@ export default {
     }
   },
   mounted() {
+    this.providers = providers.reduce((acc, entry) => {
+      acc[entry.getName()] = entry;
+      return acc;
+    }, {});
+    console.log(this.providers); // todo remove dev item
     if (
       this.notifications[this.wallet.getChecksumAddressString()] === undefined
     ) {
@@ -154,6 +169,9 @@ export default {
       this.detailsShown = true;
       this.detailType = details[0];
       this.notificationDetails = details[1];
+      if (details.length === 3) {
+        this.notificationDetails.index = details[2];
+      }
     },
     hideDetails() {
       this.detailsShown = false;
@@ -239,6 +257,16 @@ export default {
         }
       );
     },
+    childUpdateNotification(idx) {
+      if (typeof idx === 'undefined') return () => {};
+      return updatedNotif => {
+        this.$store.dispatch('updateNotification', [
+          this.wallet.getChecksumAddressString(),
+          idx,
+          updatedNotif
+        ]);
+      };
+    },
     dateString(notice) {
       if (notice !== {}) {
         return new Date(notice.timestamp).toLocaleDateString(
@@ -275,6 +303,15 @@ export default {
         .multipliedBy(new BigNumber(this.ethPrice))
         .decimalPlaces(2)
         .toFixed();
+    },
+    getProvider(provider) {
+      console.log(provider); // todo remove dev item
+      if (this.providers[provider]) {
+        console.log('provider', this.providers[provider]); // todo remove dev item
+        return providers.find(entry => {
+          return entry.getName() === provider;
+        });
+      }
     }
   }
 };

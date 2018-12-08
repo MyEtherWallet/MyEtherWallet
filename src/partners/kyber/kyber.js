@@ -437,10 +437,26 @@ export default class Kyber {
     );
     swapDetails.providerReceives = swapDetails.fromValue;
     swapDetails.providerSends = swapDetails.toValue;
-    swapDetails.parsed = {};
+    swapDetails.parsed = {
+      sendToAddress: this.getKyberNetworkAddress(),
+      status: 'pending'
+    };
     swapDetails.providerAddress = this.getKyberNetworkAddress();
     return swapDetails;
   }
+
+  // static parseOrder(order) {
+  //   return {
+  //     orderId: undefined,
+  //     statusId: undefined,
+  //     sendToAddress: undefined,
+  //     recValue: undefined,
+  //     sendValue: order.amountExpectedFrom,
+  //     status: order.status,
+  //     timestamp: order.createdAt,
+  //     validFor: 6000 // Rates provided are only an estimate, and
+  //   };
+  // }
 
   // ================= Util methods ===================================
 

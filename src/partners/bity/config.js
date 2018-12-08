@@ -25,6 +25,14 @@ const bityMethods = {
   status: 'getStatus'
 };
 
+const bityStatuses = {
+  OPEN: 'OPEN',
+  RCVE: 'RCVE',
+  CONF: 'CONF',
+  FILL: 'FILL',
+  CANC: 'CANC'
+};
+
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
 
 const BITY_MIN = 0.01;
@@ -33,6 +41,7 @@ const BITY_DECIMALS = 6;
 const PROVIDER_NAME = 'bity';
 
 export {
+  bityStatuses,
   BityCurrencies,
   bityRateEndpoint,
   bityMethods,
