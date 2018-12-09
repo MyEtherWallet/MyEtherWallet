@@ -58,7 +58,8 @@
         <li>
           <p>Time Remaining:</p>
           <div class="detail-data">
-            <p>{{ convertToEth(details.timeRemaining) }}</p>
+            <p>{{ parseTimeRemaining }}</p>
+            <p>{{this.timeRemaining}}</p>
           </div>
         </li>
         <li class="notification-type-status">
@@ -77,7 +78,9 @@
           <p>To Address:</p>
           <div class="detail-data">
             <p>
-              <a :href="addressLink" target="_blank"> {{ details.to }} </a>
+              <a :href="addressLink(details.to)" target="_blank">
+                {{ details.to }}
+              </a>
             </p>
           </div>
         </li>
@@ -134,6 +137,8 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
+import { providers, providerMap } from '@/partners';
+
 import {
   swapOnlyStatuses,
   notificationStatuses
@@ -167,7 +172,15 @@ export default {
       type: Function,
       default: function() {}
     },
-    getProvider: {
+    hashLink: {
+      type: Function,
+      default: function() {}
+    },
+    addressLink: {
+      type: Function,
+      default: function() {}
+    },
+    processStatus: {
       type: Function,
       default: function() {}
     },
@@ -178,7 +191,10 @@ export default {
   },
   data() {
     return {
+      timerInterval: null,
+      statusInterval: null,
       arrowImage: Arrow,
+      timeRemaining: 0,
       unreadCount: 0
     };
   },
@@ -195,37 +211,16 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
-    hashLink() {
-      if (this.network.type.blockExplorerTX) {
-        return this.network.type.blockExplorerTX.replace(
-          '[[txHash]]',
-          this.notice.hash
-        );
-      }
-    },
-    addressLink() {
-      if (this.network.type.blockExplorerAddr) {
-        return this.network.type.blockExplorerAddr.replace(
-          '[[address]]',
-          this.notice.body.to
-        );
-      }
-    },
     details() {
       return this.notice.body;
     },
     txStatus() {
-      const status = {
-        pending: { text: 'Processing', class: 'status-processing' },
-        complete: { text: 'Succeed', class: 'status-succeed' },
-        failed: { text: 'Failed', class: 'status-failed' },
-        error: { text: 'Display Error', class: 'status-failed' }
-      };
-
-      if (status[this.notice.status]) {
-        return status[this.notice.status];
-      }
-      return status.error;
+      return this.processStatus(this.notice.status);
+    },
+    parseTimeRemaining() {
+      const seconds = Math.floor(this.timeRemaining % 60);
+      const minutes = Math.floor((this.timeRemaining / 60) % 60);
+      return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
     }
   },
   beforeDestroy() {
@@ -238,7 +233,7 @@ export default {
     }
   },
   mounted() {
-    this.provider = this.getProvider(this.notice.body.provider);
+    this.provider = providerMap.get(this.notice.body.provider);
     this.currentStatus = this.notice.swapStatus;
     this.timeUpdater();
     this.statusUpdater();
@@ -261,11 +256,12 @@ export default {
       const getStatus = async () => {
         if (!updating) {
           updating = true;
-          const newStatus = await this.getProvider(
-            this.notice.body.provider
-          ).getOrderStatus(this.details, this.network.type.name);
-          console.log(newStatus); // todo remove dev item
+          const newStatus = await this.provider.getOrderStatus(
+            this.details,
+            this.network.type.name
+          );
           if (this.currentStatus !== newStatus) {
+            console.log(newStatus); // todo remove dev item
             this.currentStatus = newStatus;
             if (Object.values(swapOnlyStatuses).includes(newStatus)) {
               this.notice.swapStatus = newStatus;
@@ -294,10 +290,17 @@ export default {
     },
     timeUpdater() {
       const updateTime = () => {
-        this.timeRemaining = this.calculateTimeRemaining(this.details);
+        const timeRemaining =
+          this.details.validFor -
+          parseInt(
+            (new Date().getTime() -
+              new Date(this.details.createdAt).getTime()) /
+            1000
+          );
+        this.timeRemaining = timeRemaining;
         if (
           this.notice.swapStatus === swapOnlyStatuses.NEW &&
-          this.timeRemaining <= 0
+          timeRemaining <= 0
         ) {
           this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
           this.notice.status = notificationStatuses.FAILED;
@@ -305,6 +308,10 @@ export default {
         }
         this.notice.body.timeRemaining = this.timeRemaining;
         this.childUpdateNotification(this.notice);
+
+        if (timeRemaining < 0) {
+          clearInterval(this.timerInterval);
+        }
       };
 
       if (this.shouldCheckStatus()) {

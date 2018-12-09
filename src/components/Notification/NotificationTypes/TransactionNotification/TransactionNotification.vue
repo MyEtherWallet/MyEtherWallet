@@ -9,11 +9,11 @@
         <p>{{ timeString(notice) }}</p>
         <p>{{ dateString(notice) }}</p>
       </div>
-        <div class="expender-icon">
-          <i aria-hidden="true" class="fa fa-angle-down"></i>
-          <i aria-hidden="true" class="fa fa-angle-up"></i>
-        </div>
+      <div class="expender-icon">
+        <i aria-hidden="true" class="fa fa-angle-down"></i>
+        <i aria-hidden="true" class="fa fa-angle-up"></i>
       </div>
+    </div>
     <div
       :class="[
         notice.expanded ? '' : 'unexpanded',
@@ -29,7 +29,9 @@
         <li>
           <p>To Address:</p>
           <p>
-            <a :href="addressLink" target="_blank"> {{ details.to }} </a>
+            <a :href="addressLink(details.to)" target="_blank">
+              {{ details.to }}
+            </a>
           </p>
         </li>
         <li>
@@ -38,7 +40,9 @@
         </li>
         <li><p>Transaction Hash:</p></li>
         <li>
-          <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+          <a :href="hashLink(notice.hash)" target="_blank">
+            {{ notice.hash }}
+          </a>
         </li>
         <li @click="emitShowDetails">More</li>
       </ul>
@@ -51,6 +55,8 @@ import { mapGetters } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+
+import { statusTypes } from '../config';
 
 export default {
   props: {
@@ -83,6 +89,18 @@ export default {
     timeString: {
       type: Function,
       default: function() {}
+    },
+    processStatus: {
+      type: Function,
+      default: function() {}
+    },
+    hashLink: {
+      type: Function,
+      default: function() {}
+    },
+    addressLink: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -97,37 +115,12 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
-    hashLink() {
-      if (this.network.type.blockExplorerTX) {
-        return this.network.type.blockExplorerTX.replace(
-          '[[txHash]]',
-          this.notice.hash
-        );
-      }
-    },
-    addressLink() {
-      if (this.network.type.blockExplorerAddr) {
-        return this.network.type.blockExplorerAddr.replace(
-          '[[address]]',
-          this.notice.body.to
-        );
-      }
-    },
     details() {
       return this.notice.body;
     },
     txStatus() {
-      const status = {
-        pending: { text: 'Processing', class: 'status-processing' },
-        complete: { text: 'Succeed', class: 'status-succeed' },
-        failed: { text: 'Failed', class: 'status-failed' },
-        error: { text: 'Display Error', class: 'status-failed' }
-      };
+      return this.processStatus(this.notice.status);
 
-      if (status[this.notice.status]) {
-        return status[this.notice.status];
-      }
-      return status.error;
     }
   },
   methods: {

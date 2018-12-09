@@ -17,7 +17,11 @@ const addNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address] = addUpdateNotification(newNotif[address], val);
+  newNotif[address] = addUpdateNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
   console.log('addNotification'); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
@@ -32,9 +36,12 @@ const addSwapNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address] = addUpdateSwapNotification(newNotif[address], val);
+  newNotif[address] = addUpdateSwapNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
   console.log('addSwapNotification'); // todo remove dev item
-
 
   commit('ADD_NOTIFICATION', newNotif);
 };
