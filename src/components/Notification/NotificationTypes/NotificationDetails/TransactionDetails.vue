@@ -13,7 +13,7 @@
         <li><p>Transaction Hash:</p></li>
         <li>
           <p>
-            <a :href="hashLink" target="_blank"> {{ notice.hash }} </a>
+            <a :href="hashLink(notice.hash)" target="_blank"> {{ notice.hash }} </a>
           </p>
         </li>
         <li>
@@ -34,7 +34,7 @@
         <li>
           <p>To Address:</p>
           <p>
-            <a :href="addressLink" target="_blank"> {{ details.to }} </a>
+            <a :href="addressLink(details.to)" target="_blank"> {{ details.to }} </a>
           </p>
         </li>
         <li>
@@ -75,6 +75,7 @@ import { mapGetters } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import { statusTypes } from '../config';
 
 export default {
   props: {
@@ -103,6 +104,14 @@ export default {
     timeString: {
       type: Function,
       default: function() {}
+    },
+    hashLink: {
+      type: Function,
+      default: function() {}
+    },
+    addressLink: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -117,54 +126,13 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
-    hashLink() {
-      if (this.network.type.blockExplorerTX) {
-        return this.network.type.blockExplorerTX.replace(
-          '[[txHash]]',
-          this.notice.hash
-        );
-      }
-    },
-    addressLink() {
-      if (this.network.type.blockExplorerAddr) {
-        return this.network.type.blockExplorerAddr.replace(
-          '[[address]]',
-          this.notice.body.to
-        );
-      }
-    },
     details() {
       return this.notice.body;
     },
     txStatus() {
-      const status = {
-        pending: { text: 'Processing', class: 'status-processing' },
-        complete: { text: 'Succeed', class: 'status-succeed' },
-        failed: { text: 'Failed', class: 'status-failed' },
-        error: { text: 'Display Error', class: 'status-failed' }
-      };
+      return this.processStatus(this.notice.status);
 
-      if (status[this.notice.status]) {
-        return status[this.notice.status];
-      }
-      return status.error;
-    },
-    // dateString() {
-    //   if (this.notice !== {}) {
-    //     return new Date(this.notice.timestamp).toLocaleDateString(
-    //       this._i18n.locale.replace('_', '-')
-    //     );
-    //   }
-    //   return '';
-    // },
-    // timeString() {
-    //   if (this.notice !== {}) {
-    //     return new Date(this.notice.timestamp).toLocaleTimeString(
-    //       this._i18n.locale.replace('_', '-')
-    //     );
-    //   }
-    //   return '';
-    // }
+    }
   },
   methods: {
     emitShowDetails() {

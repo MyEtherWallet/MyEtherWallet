@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import { networkSymbols } from '../partnersConfig';
 import {
   ChangellyCurrencies,
@@ -84,15 +86,15 @@ export default class Changelly {
     ]);
 
     this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: changellyDetails[0],
+      minAmount: new BigNumber(changellyDetails[0]).times(0.001).plus(new BigNumber(changellyDetails[0])).toFixed(),
       rate: changellyDetails[1]
     };
-
+    console.log(changellyDetails[0]); // todo remove dev item
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      minValue: changellyDetails[0],
+      minValue: new BigNumber(changellyDetails[0]).times(0.001).plus(new BigNumber(changellyDetails[0])).toFixed(),
       rate: changellyDetails[1]
     };
   }
@@ -190,7 +192,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 6000 // Rates provided are only an estimate, and
+      validFor: 600 // Rates provided are only an estimate, and
     };
   }
 

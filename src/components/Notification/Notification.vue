@@ -49,7 +49,9 @@
               :get-fiat-value="getFiatValue"
               :date-string="dateString"
               :time-string="timeString"
-              :get-provider="getProvider"
+              :hashLink="hashLink"
+              :addressLink="addressLink"
+              :process-status="processStatus"
               :index="idx"
               :child-update-notification="childUpdateNotification(idx)"
               @showDetails="showDetails"
@@ -68,22 +70,14 @@
           :get-fiat-value="getFiatValue"
           :date-string="dateString"
           :time-string="timeString"
-          :get-provider="getProvider"
+          :hashLink="hashLink"
+          :addressLink="addressLink"
+          :process-status="processStatus"
           :child-update-notification="
             childUpdateNotification(notificationDetails.index)
           "
         >
         </component>
-        <!--
-          <transaction-details
-            :notice="notificationDetails"
-            :convert-to-gwei="convertToGwei"
-            :convert-to-eth="convertToEth"
-            :get-fiat-value="getFiatValue"
-            :date-string="dateString"
-            :time-string="timeString"
-          ></transaction-details>
-        -->
       </div>
     </b-modal>
   </div>
@@ -103,6 +97,16 @@ import SwapDetails from './NotificationTypes/SwapDetails';
 
 import { providers } from '@/partners';
 
+const status = {
+  new: { text: 'Swap Created', class: 'status-processing' },
+  pending: { text: 'Processing', class: 'status-processing' },
+  complete: { text: 'Succeed', class: 'status-succeed' },
+  failed: { text: 'Failed', class: 'status-failed' },
+  cancelled: { text: 'Cancelled', class: 'status-processing' },
+  error: { text: 'Error', class: 'status-failed' },
+  statusError: { text: 'Status Error', class: 'status-failed' }
+};
+
 export default {
   components: {
     'swap-notification': SwapNotification,
@@ -117,12 +121,13 @@ export default {
       ethPrice: new BigNumber(0),
       detailsShown: false,
       detailType: '',
-      notificationDetails: {},
-      providers: {}
+      notificationDetails: {}
     };
   },
   computed: {
     ...mapGetters({
+      web3: 'web3',
+      network: 'network',
       notifications: 'notifications',
       wallet: 'wallet'
     }),
@@ -131,14 +136,14 @@ export default {
       if (!this.notifications[this.wallet.getChecksumAddressString()])
         return [];
       // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()].sort(
-        (a, b) => {
+      return this.notifications[this.wallet.getChecksumAddressString()]
+        .sort((a, b) => {
           a = new Date(a.timestamp);
           b = new Date(b.timestamp);
 
           return a > b ? -1 : a < b ? 1 : 0;
-        }
-      );
+        })
+        .filter(entry => entry.network === this.network.type.name);
     }
   },
   watch: {
@@ -147,11 +152,6 @@ export default {
     }
   },
   mounted() {
-    this.providers = providers.reduce((acc, entry) => {
-      acc[entry.getName()] = entry;
-      return acc;
-    }, {});
-    console.log(this.providers); // todo remove dev item
     if (
       this.notifications[this.wallet.getChecksumAddressString()] === undefined
     ) {
@@ -267,6 +267,22 @@ export default {
         ]);
       };
     },
+    processStatus(rawStatus) {
+      if (status[rawStatus]) {
+        return status[rawStatus];
+      }
+      return status.statusError;
+    },
+    hashLink(hash) {
+      if (this.network.type.blockExplorerTX) {
+        return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
+      }
+    },
+    addressLink(addr) {
+      if (this.network.type.blockExplorerAddr) {
+        return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+      }
+    },
     dateString(notice) {
       if (notice !== {}) {
         return new Date(notice.timestamp).toLocaleDateString(
@@ -303,15 +319,6 @@ export default {
         .multipliedBy(new BigNumber(this.ethPrice))
         .decimalPlaces(2)
         .toFixed();
-    },
-    getProvider(provider) {
-      console.log(provider); // todo remove dev item
-      if (this.providers[provider]) {
-        console.log('provider', this.providers[provider]); // todo remove dev item
-        return providers.find(entry => {
-          return entry.getName() === provider;
-        });
-      }
     }
   }
 };
