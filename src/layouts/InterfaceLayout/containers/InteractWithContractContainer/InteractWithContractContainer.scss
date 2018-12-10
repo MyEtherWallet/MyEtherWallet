@@ -4,9 +4,10 @@
   @extend %interface-container;
 
   .submit-button {
-    margin: 0 auto;
+    //margin: 0 auto;
     text-align: center;
     min-width: 230px;
+    margin: 5px;
   }
 
   .send-form {
@@ -23,7 +24,9 @@
         width: 100%;
 
         @media all and (max-width: $mobile-width) {
-          margin-bottom: 32px;
+          &.title-currency-picker {
+            margin-bottom: 32px;
+          }
         }
 
         .select-contract {
@@ -121,12 +124,24 @@
   .address-container {
     align-items: center;
     color: $dark-blue-7;
-    display: flex;
-    justify-content: space-between;
+    //display: flex;
+    //justify-content: space-between;
     padding: 0 8px;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    grid-gap: 10px;
 
     .address {
+      display: grid;
+      padding: 10px 0;
       border-bottom: 2px solid $background-color-1;
+      grid-template-columns: auto 1fr;
+
+      input {
+        color: $dark-blue-1;
+        border: 0;
+        margin-left: 10px;
+      }
     }
 
     .functions {
@@ -138,6 +153,7 @@
 
   .interact-buttons {
     display: flex;
+    justify-content: center;
   }
 }
 

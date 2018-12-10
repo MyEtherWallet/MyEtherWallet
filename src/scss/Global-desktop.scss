@@ -363,7 +363,7 @@
 
   .large-round-button-green-filled {
     background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
+    border: 1px solid $button--background-color-1;
     border-radius: 6px;
     color: $button--text-color-1;
     cursor: pointer;
