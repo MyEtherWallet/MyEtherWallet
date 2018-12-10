@@ -37,9 +37,7 @@ DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
     );
     if (data.length > 7) {
       callback(data.slice(5));
-      // eslint-disable-next-line
-    } else {
-    } // Empty frame received, wait for data
+    } else return;
   } else {
     callback(undefined, response);
   }
