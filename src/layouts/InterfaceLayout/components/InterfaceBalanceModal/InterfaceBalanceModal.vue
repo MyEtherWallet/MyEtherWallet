@@ -61,7 +61,7 @@ export default {
           value: '12410004.22453'
         },
         {
-          name: 'USD',
+          name: 'USD'
         },
         {
           name: 'EUR',
