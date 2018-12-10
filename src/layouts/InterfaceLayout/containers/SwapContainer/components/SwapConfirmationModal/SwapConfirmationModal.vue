@@ -133,7 +133,6 @@ export default {
   },
   watch: {
     swapDetails(newValue) {
-      console.log('modal watcher:', newValue); // todo remove dev item
       this.fromAddress = {
         image: this.currencyIcons[newValue.fromCurrency],
         value: newValue.fromValue,
@@ -190,7 +189,6 @@ export default {
     async swapStarted(swapDetails) {
       this.swapReady = false;
       this.preparedSwap = {};
-      console.log('swapDetails', swapDetails); // todo remove dev item
       if (swapDetails.dataForInitialization) {
         switch (swapDetails.provider) {
           case 'changelly':
@@ -287,6 +285,7 @@ export default {
         }
         return bulkTx;
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
     }

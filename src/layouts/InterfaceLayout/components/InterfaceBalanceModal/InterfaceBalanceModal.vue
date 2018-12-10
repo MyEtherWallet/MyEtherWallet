@@ -75,6 +75,11 @@ export default {
       ]
     };
   },
+  watch: {
+    balance() {
+      this.fetchBalanceData();
+    }
+  },
   mounted() {
     this.fetchBalanceData();
   },
@@ -82,7 +87,7 @@ export default {
     async fetchBalanceData() {
       this.equivalentValues = [];
       // 1027 is coinmarketcap's id for ethereum
-      const url = 'https://cryptorates.mewapi.io/convert/1027';
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       delete values['lastCalled'];

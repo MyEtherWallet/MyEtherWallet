@@ -14,7 +14,6 @@
             <div class="title-block">
               <div class="title-popover">
                 <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')" />
               </div>
             </div>
             <div class="contents">
@@ -37,7 +36,7 @@
                       'large-round-button-green-filled'
                     ]"
                     :download="name"
-                    @click="downloadDone();"
+                    @click="downloadDone()"
                   >
                     <span v-if="downloadable">
                       {{ $t('createWallet.byJsonFileDownloadKeyFile') }}

@@ -6,6 +6,7 @@ import EventNames from '../events';
 import { toPayload } from './jsonrpc';
 import * as locStore from 'store';
 import { getSanitizedTx } from './utils';
+import BigNumber from 'bignumber.js';
 
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
@@ -55,7 +56,9 @@ export default async (
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
-                  nonce: localStoredObj + 1,
+                  nonce: utils.toHex(
+                    new BigNumber(localStoredObj.nonce).plus(1).toFixed()
+                  ),
                   timestamp: localStoredObj.timestamp
                 }
               );
@@ -75,11 +78,13 @@ export default async (
             .once('transactionHash', hash => {
               const localStoredObj = locStore.get(
                 utils.sha3(store.state.wallet.getChecksumAddressString())
-              ).nonce;
+              );
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
-                  nonce: localStoredObj + 1,
+                  nonce: utils.toHex(
+                    new BigNumber(localStoredObj.nonce).plus(1).toFixed()
+                  ),
                   timestamp: localStoredObj.timestamp
                 }
               );

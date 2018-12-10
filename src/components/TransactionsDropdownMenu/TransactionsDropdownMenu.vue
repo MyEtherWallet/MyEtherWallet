@@ -2,7 +2,7 @@
   <div class="transactions-dropdown-menu">
     <div
       class="transactions-dropdown-menu__title"
-      @click="dropdownOpen = !dropdownOpen;"
+      @click="dropdownOpen = !dropdownOpen"
     >
       <p>Transactions</p>
       <i class="fa fa-angle-down" aria-hidden="true" />

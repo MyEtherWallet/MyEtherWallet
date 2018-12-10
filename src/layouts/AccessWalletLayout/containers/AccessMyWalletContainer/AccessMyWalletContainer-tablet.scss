@@ -2,20 +2,20 @@
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
     background-color: $background-color-1;
-    padding: 80px 0;
+    padding: 45px 0;
   }
 
   .title {
     margin-bottom: 50px;
-    text-align: center;
+    text-align: left;
   }
 
   .buttons-container {
     display: grid;
     grid-column-gap: 20px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 215px);
     margin: 0 auto;
-    max-width: 900px;
+    overflow-y: auto;
     position: relative;
     text-align: center;
   }

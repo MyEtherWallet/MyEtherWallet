@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="notification-container">
-    <div class="notification-logo" @click="dropdownOpen = !dropdownOpen;">
+    <div class="notification-logo" @click="dropdownOpen = !dropdownOpen">
       transactions
       <div v-show="activeSwapCount > 0" class="notification-dot" />
     </div>
@@ -114,7 +114,6 @@ export default {
     },
     dropdownOpen(newVal) {
       if (newVal) {
-        console.log(newVal); // todo remove dev item
         this.countActive();
         this.updateTransactions();
       }

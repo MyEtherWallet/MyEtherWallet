@@ -50,16 +50,18 @@
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link to="/">{{ $t('header.home') }}</router-link>
-            <router-link to="/privacy-policy">{{
+            <router-link class="footer-color" to="/">{{
+              $t('header.home')
+            }}</router-link>
+            <router-link class="footer-color" to="/privacy-policy">{{
               $t('footer.privacy')
             }}</router-link>
-            <router-link to="/terms-and-conditions">{{
+            <router-link class="footer-color" to="/terms-and-conditions">{{
               $t('common.terms')
             }}</router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
-            <p>{{ $t('footer.copyright') }}</p>
+            <p class="footer-color">{{ $t('footer.copyright') }}</p>
           </div>
         </div>
       </div>
@@ -77,6 +79,7 @@ import WhereAreMyFundsStored from './components/WhereAreMyFundsStored';
 import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword';
 import SomeHelpfulTips from './components/SomeHelpfulTips';
 import Congratulations from './components/Congratulations';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -95,18 +98,24 @@ export default {
   },
   mounted: function() {
     this.scrollListener = e => {
-      if (e.deltaY < 0) {
+      if (e.deltaY < -5) {
         this.mouseScrollUp();
       }
-      if (e.deltaY > 0) {
+      if (e.deltaY > 5) {
         this.mouseScrollDown();
       }
     };
 
-    window.addEventListener('wheel', this.scrollListener);
+    window.addEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', this.scrollListener);
+    window.removeEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   methods: {
     mouseScrollDown: function() {
