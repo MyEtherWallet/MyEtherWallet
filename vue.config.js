@@ -50,10 +50,11 @@ if (process.env.BUILD_TYPE === 'mewcx') {
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
             const version = require('./package.json').version;
-            let json = JSON.parse(content);
+            const json = JSON.parse(content);
             json.version = version;
             return JSON.stringify(json);
-          } else return content;
+          }
+          return content;
         }
       }
     ])
@@ -133,7 +134,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapCurrencyPicker/SwapCurrencyPicker.vue',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/index.js',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.scss',
-          'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
+          'src/layouts/InterfaceLayout/ceslintrcrs/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
           'src/partners/bity/bity.js',
           'src/partners/bity/call.js',
           'src/partners/bity/config.js',
@@ -186,6 +187,7 @@ module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
   pwa: pwa,
-  lintOnSave: true,
+  lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
+  integrity: true,
   chainWebpack: config => {}
 };

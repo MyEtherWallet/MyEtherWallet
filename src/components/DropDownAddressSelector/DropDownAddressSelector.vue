@@ -26,7 +26,7 @@
         :disabled="options.inputDisabled"
         v-model="selectedAddress"
         type="text"
-        @focus="dropdownOpen = false;"
+        @focus="dropdownOpen = false"
       />
       <div v-if="!validAddress" class="blockie-place-holder-image" />
       <div v-if="validAddress" class="selected-address-blockie">
@@ -41,7 +41,7 @@
       <div
         v-if="!options.inputDisabled"
         class="dropdown-open-button"
-        @click="dropdownOpen = !dropdownOpen;"
+        @click="dropdownOpen = !dropdownOpen"
       >
         <i v-if="!dropdownOpen" class="fa fa-chevron-down" aria-hidden="true" />
         <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
@@ -52,7 +52,7 @@
         <li
           v-for="addr in addresses"
           :key="addr.key"
-          @click="listedAddressClick(addr);"
+          @click="listedAddressClick(addr)"
         >
           <div class="list-blockie">
             <blockie :address="addr" width="30px" height="30px" />

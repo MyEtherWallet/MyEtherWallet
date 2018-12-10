@@ -36,36 +36,41 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation;"
+                  @click="modalDetailInformation = !modalDetailInformation"
                 />
                 <span class="slider round" />
               </label>
             </div>
           </div>
-          <div v-if="modalDetailInformation" class="expended-info">
-            <div class="grid-block">
-              <p>{{ $t('interface.network') }}</p>
-              <p>{{ network.type.name }} by {{ network.service }}</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.gasLimit') }}</p>
-              <p>{{ gas }} wei</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.gasPrice') }}</p>
-              <p>{{ gasPrice }} gwei</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.txFee') }}</p>
-              <p>{{ fee }} ETH</p>
-            </div>
-            <div class="grid-block">
-              <p>Nonce</p>
-              <p>{{ nonce }}</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.data') }}</p>
-              <p>{{ data }}</p>
+          <div
+            :class="modalDetailInformation && 'expended-info-open'"
+            class="expended-info"
+          >
+            <div class="padding-container">
+              <div class="grid-block">
+                <p>{{ $t('interface.network') }}</p>
+                <p>{{ network.type.name }} by {{ network.service }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasLimit') }}</p>
+                <p>{{ gas }} wei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasPrice') }}</p>
+                <p>{{ gasPrice }} gwei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.txFee') }}</p>
+                <p>{{ fee }} ETH</p>
+              </div>
+              <div class="grid-block">
+                <p>Nonce</p>
+                <p>{{ nonce }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.data') }}</p>
+                <p>{{ data }}</p>
+              </div>
             </div>
           </div>
         </div>

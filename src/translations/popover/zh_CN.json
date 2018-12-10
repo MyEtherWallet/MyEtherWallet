@@ -1,10 +1,6 @@
 {
-  "whatIsMessageContent": "So what is Message??? More info needed...",
-  "whatIsSignatureContent": "那么“签名”是什么？？？需要更多信息...",
-  "whatIsSpeedOfTX": "那么，什么是“交易速度”？",
-  "whatIsNonce": "那么“Nonce”是什么？",
-  "whatIsDataContent": "那么“数据”是什么？",
-  "whatIsGas": "那么“Gas限制”是什么？",
+  "signature": "那么“签名”是什么？？？需要更多信息...",
+  "txSpeed": "那么，什么是“交易速度”？",
   "print": "打印",
   "copy": "复制",
   "switchAddress": "切换地址",

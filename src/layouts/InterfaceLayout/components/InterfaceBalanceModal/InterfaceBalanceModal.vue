@@ -62,7 +62,6 @@ export default {
         },
         {
           name: 'USD',
-          value: '312004.53'
         },
         {
           name: 'EUR',
@@ -75,14 +74,19 @@ export default {
       ]
     };
   },
+  watch: {
+    balance() {
+      this.fetchBalanceData();
+    }
+  },
   mounted() {
     this.fetchBalanceData();
   },
   methods: {
     async fetchBalanceData() {
+      this.equivalentValues = [];
       const newArr = [];
-      const url =
-        'https://0spkoad0rl.execute-api.us-east-1.amazonaws.com/latest/convert/ETH';
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       Object.keys(values).forEach(item => {

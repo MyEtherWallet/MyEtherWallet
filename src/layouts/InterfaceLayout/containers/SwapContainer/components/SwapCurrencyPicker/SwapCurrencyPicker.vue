@@ -37,7 +37,7 @@
             :key="
               token ? curr.name + curr.symbol + page : curr.name + page + idx
             "
-            @click="selectCurrency(curr);"
+            @click="selectCurrency(curr)"
           >
             <p>
               {{ curr.symbol }} <span class="subname">- {{ curr.name }}</span>
