@@ -8,7 +8,8 @@ import * as HDKey from 'hdkey';
 import {
   getSignTransactionObject,
   getBufferFromHex,
-  sanitizeHex
+  sanitizeHex,
+  calculateChainIdFromV
 } from '../../utils';
 
 const NEED_PASSWORD = false;
@@ -62,7 +63,7 @@ class ledgerWallet {
       tx.v = getBufferFromHex(result.v);
       tx.r = getBufferFromHex(result.r);
       tx.s = getBufferFromHex(result.s);
-      const signedChainId = Math.floor((tx.v[0] - 35) / 2);
+      const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +

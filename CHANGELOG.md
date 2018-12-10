@@ -20,6 +20,7 @@
 
 ### Devop
 
+- ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
 - Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
 - Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
 - Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
