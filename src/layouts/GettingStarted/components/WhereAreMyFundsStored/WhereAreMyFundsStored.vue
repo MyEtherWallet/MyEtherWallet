@@ -21,7 +21,7 @@
                 <label class="switch">
                   <input
                     type="checkbox"
-                    @click="expenderContentShow = !expenderContentShow;"
+                    @click="expenderContentShow = !expenderContentShow"
                   />
                   <span class="slider round" />
                 </label>
