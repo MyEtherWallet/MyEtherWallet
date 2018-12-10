@@ -10,12 +10,12 @@
           name="password"
           placeholder="Please Enter At Least 9 Characters"
           autocomplete="off"
-          @input="updateValue($event.target.value);"
+          @input="updateValue($event.target.value)"
         />
       </div>
       <div
         class="password-icons"
-        @click="password.showPassword = !password.showPassword;"
+        @click="password.showPassword = !password.showPassword"
       >
         <img
           v-if="!password.showPassword"
@@ -38,7 +38,7 @@
       :disabled="value.length === 0 && value.length < 9 && strength === ''"
       class="next-button large-round-button-green-filled"
       type="submit"
-      @click.prevent="switcher(param);"
+      @click.prevent="switcher(param)"
     >
       {{ $t('common.next') }}
       <img src="~@/assets/images/icons/right-arrow.png" />

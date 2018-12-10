@@ -40,6 +40,9 @@ const wallet = state => {
 const web3 = state => {
   return state.web3;
 };
+const sidemenuOpen = state => {
+  return state.sidemenuOpen;
+};
 
 export default {
   account,
@@ -55,5 +58,6 @@ export default {
   online,
   Transactions,
   wallet,
-  web3
+  web3,
+  sidemenuOpen
 };

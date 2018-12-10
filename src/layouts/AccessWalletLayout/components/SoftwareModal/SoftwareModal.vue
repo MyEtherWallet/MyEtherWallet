@@ -10,7 +10,7 @@
       <ul class="button-options">
         <li
           :class="selected === 'byJson' ? 'selected' : ''"
-          @click="select('byJson');"
+          @click="select('byJson')"
         >
           <img
             :src="
@@ -28,7 +28,7 @@
         </li>
         <li
           :class="selected === 'byMnem' ? 'selected' : ''"
-          @click="select('byMnem');"
+          @click="select('byMnem')"
         >
           <img
             :src="
@@ -46,7 +46,7 @@
         </li>
         <li
           :class="selected === 'byPriv' ? 'selected' : ''"
-          @click="select('byPriv');"
+          @click="select('byPriv')"
         >
           <img
             :src="
@@ -149,5 +149,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SoftwareModal.scss';
+@import 'SoftwareModal-desktop.scss';
+@import 'SoftwareModal-tablet.scss';
+@import 'SoftwareModal-mobile.scss';
 </style>

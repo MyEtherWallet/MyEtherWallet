@@ -14,11 +14,81 @@
     >
       <template slot="modal-title">
         {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
-        <div v-show="unreadCount > 0" class="notification-count">
+        <div v-show="unreadCount >= 0" class="notification-count">
           <span>{{ unreadCount }}</span>
         </div>
       </template>
       <div class="notification-item-container">
+        <ul>
+          <li>
+            <div class="notification-header">
+              <div class="notification-type-status">
+                <p class="type">Transaction</p>
+                <p class="status status-succeed">(Succeed)</p>
+              </div>
+              <div class="time-date">
+                <p>13:20:23</p>
+                <p>04/05/2018</p>
+                <div class="expender-icon">
+                  <i aria-hidden="true" class="fa fa-angle-down"></i>
+                  <i aria-hidden="true" class="fa fa-angle-up"></i>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="notification-header">
+              <div class="notification-type-status">
+                <p class="type">Swap</p>
+                <p class="status status-processing">(Processing)</p>
+              </div>
+              <div class="time-date">
+                <p>13:20:23</p>
+                <p>04/05/2018</p>
+                <div class="expender-icon">
+                  <i aria-hidden="true" class="fa fa-angle-down"></i>
+                  <i aria-hidden="true" class="fa fa-angle-up"></i>
+                </div>
+              </div>
+            </div>
+            <div class="notification-content">
+              <ul>
+                <li>
+                  <p>Amount:</p>
+                  <p>2.100000 ETH</p>
+                </li>
+                <li>
+                  <p>To Address:</p>
+                  <p>
+                    <a href="/" target="_blank">
+                      0xbfe394bf28b7cbf72e7656e0e6740b196521b074
+                    </a>
+                  </p>
+                </li>
+                <li>
+                  <p>TX Fee:</p>
+                  <p>0.100000346482 ETH ($0.09)</p>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="notification-header">
+              <div class="notification-type-status">
+                <p class="type">Transaction</p>
+                <p class="status status-failed">(Failed)</p>
+              </div>
+              <div class="time-date">
+                <p>13:20:23</p>
+                <p>04/05/2018</p>
+                <div class="expender-icon">
+                  <i aria-hidden="true" class="fa fa-angle-down"></i>
+                  <i aria-hidden="true" class="fa fa-angle-up"></i>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
         <div
           v-if="
             sortedNotifications !== undefined && sortedNotifications.length > 0
@@ -31,7 +101,7 @@
           >
             <div
               class="notification-header"
-              @click="expand(idx, notification, $event);"
+              @click="expand(idx, notification, $event)"
             >
               <p :class="[notification.read ? '' : 'unread']">
                 {{ notification.title }}

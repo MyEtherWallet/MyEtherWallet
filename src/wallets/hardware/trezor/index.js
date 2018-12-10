@@ -7,7 +7,8 @@ import ethTx from 'ethereumjs-tx';
 import {
   getSignTransactionObject,
   getHexTxObject,
-  getBufferFromHex
+  getBufferFromHex,
+  calculateChainIdFromV
 } from '../../utils';
 
 const NEED_PASSWORD = false;
@@ -40,7 +41,7 @@ class TrezorWallet {
       tx.v = getBufferFromHex(result.payload.v);
       tx.r = getBufferFromHex(result.payload.r);
       tx.s = getBufferFromHex(result.payload.s);
-      const signedChainId = Math.floor((parseInt(result.payload.v) - 35) / 2);
+      const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
