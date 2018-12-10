@@ -8,7 +8,4 @@ const statusTypes = {
   statusError: { text: 'Status Error', class: 'status-failed' }
 };
 
-
-export {
-  statusTypes
-}
+export { statusTypes };

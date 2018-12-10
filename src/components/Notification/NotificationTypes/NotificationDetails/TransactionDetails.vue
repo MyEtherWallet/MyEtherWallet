@@ -13,7 +13,9 @@
         <li><p>Transaction Hash:</p></li>
         <li>
           <p>
-            <a :href="hashLink(notice.hash)" target="_blank"> {{ notice.hash }} </a>
+            <a :href="hashLink(notice.hash)" target="_blank">
+              {{ notice.hash }}
+            </a>
           </p>
         </li>
         <li>
@@ -34,7 +36,9 @@
         <li>
           <p>To Address:</p>
           <p>
-            <a :href="addressLink(details.to)" target="_blank"> {{ details.to }} </a>
+            <a :href="addressLink(details.to)" target="_blank">
+              {{ details.to }}
+            </a>
           </p>
         </li>
         <li>
@@ -72,10 +76,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from 'store';
-import unit from 'ethjs-unit';
-import BigNumber from 'bignumber.js';
-import { statusTypes } from '../config';
 
 export default {
   props: {
@@ -131,7 +131,6 @@ export default {
     },
     txStatus() {
       return this.processStatus(this.notice.status);
-
     }
   },
   methods: {

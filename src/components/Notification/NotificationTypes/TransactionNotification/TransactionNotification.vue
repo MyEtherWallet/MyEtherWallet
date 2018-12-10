@@ -52,11 +52,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from 'store';
-import unit from 'ethjs-unit';
-import BigNumber from 'bignumber.js';
-
-import { statusTypes } from '../config';
 
 export default {
   props: {
@@ -120,7 +115,6 @@ export default {
     },
     txStatus() {
       return this.processStatus(this.notice.status);
-
     }
   },
   methods: {

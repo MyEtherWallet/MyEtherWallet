@@ -43,14 +43,15 @@
             <component
               :is="useComponent(notification.type)"
               :expand="expand(idx, notification)"
+              :shown="shown"
               :notice="notification"
               :convert-to-gwei="convertToGwei"
               :convert-to-eth="convertToEth"
               :get-fiat-value="getFiatValue"
               :date-string="dateString"
               :time-string="timeString"
-              :hashLink="hashLink"
-              :addressLink="addressLink"
+              :hash-link="hashLink"
+              :address-link="addressLink"
               :process-status="processStatus"
               :index="idx"
               :child-update-notification="childUpdateNotification(idx)"
@@ -64,14 +65,15 @@
       <div v-if="detailsShown" class="notification-item-container">
         <component
           :is="useDetailComponent(detailType)"
+          :shown="shown"
           :notice="notificationDetails"
           :convert-to-gwei="convertToGwei"
           :convert-to-eth="convertToEth"
           :get-fiat-value="getFiatValue"
           :date-string="dateString"
           :time-string="timeString"
-          :hashLink="hashLink"
-          :addressLink="addressLink"
+          :hash-link="hashLink"
+          :address-link="addressLink"
           :process-status="processStatus"
           :child-update-notification="
             childUpdateNotification(notificationDetails.index)
@@ -95,8 +97,6 @@ import TransactionError from './NotificationTypes/TransactionError/TransactionEr
 import TransactionDetails from './NotificationTypes/NotificationDetails';
 import SwapDetails from './NotificationTypes/SwapDetails';
 
-import { providers } from '@/partners';
-
 const status = {
   new: { text: 'Swap Created', class: 'status-processing' },
   pending: { text: 'Processing', class: 'status-processing' },
@@ -117,6 +117,7 @@ export default {
   },
   data() {
     return {
+      shown: false,
       unreadCount: 0,
       ethPrice: new BigNumber(0),
       detailsShown: false,
@@ -161,10 +162,17 @@ export default {
     this.countUnread();
     this.fetchBalanceData();
     this.$refs.notification.$on('hide', () => {
+      this.shown = !this.shown;
+      console.log(this.shown); // todo remove dev item
       this.hideDetails();
     });
   },
   methods: {
+    showNotifications() {
+      this.shown = !this.shown;
+      console.log(this.shown); // todo remove dev item
+      this.$refs.notification.show();
+    },
     showDetails(details) {
       this.detailsShown = true;
       this.detailType = details[0];
@@ -208,9 +216,6 @@ export default {
           }
         });
       }
-    },
-    showNotifications() {
-      this.$refs.notification.show();
     },
     expand(idx, notif) {
       return () => {

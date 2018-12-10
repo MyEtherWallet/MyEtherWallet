@@ -51,7 +51,7 @@
             </li>
           </ul>
         </li>
-        <li>
+        <li v-if="timeRemains">
           <p>Time Remaining:</p>
           <p>{{ parseTimeRemaining }}</p>
         </li>
@@ -63,15 +63,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from 'store';
-import unit from 'ethjs-unit';
-import BigNumber from 'bignumber.js';
 
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providers, providerMap } from '@/partners';
+import { providerMap } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -79,7 +76,17 @@ import {
 } from '@/helpers/notificationFormatter';
 
 export default {
+  filters: {
+    concatAddress(value) {
+      if (!value) return '';
+      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
+    }
+  },
   props: {
+    shown: {
+      type: Boolean,
+      default: false
+    },
     expand: {
       type: Function,
       default: function() {}
@@ -143,18 +150,6 @@ export default {
       statusInterval: null
     };
   },
-  filters: {
-    concatAddress(value) {
-      if (!value) return '';
-      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
-    }
-  },
-  watch: {
-    ['notice.expanded']() {
-      this.statusUpdater();
-      this.timeUpdater();
-    }
-  },
   computed: {
     ...mapGetters({
       web3: 'web3',
@@ -172,26 +167,6 @@ export default {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
-    }
-  },
-  beforeDestroy() {
-    if (this.timerInterval !== null) {
-      clearInterval(this.timerInterval);
-    }
-
-    if (this.statusInterval !== null) {
-      clearInterval(this.statusInterval);
-    }
-  },
-  mounted() {
-    this.provider = providerMap.get(this.notice.body.provider);
-    this.currentStatus = this.notice.status;
-    this.timeUpdater();
-    this.statusUpdater();
-  },
-  methods: {
-    emitShowDetails() {
-      this.$emit('showDetails', ['swap', this.notice, this.index]);
     },
     shouldCheckStatus() {
       return (
@@ -200,21 +175,58 @@ export default {
         ) && this.notice.status === notificationStatuses.PENDING
       );
     },
+    timeRemains() {
+      return this.notice.timeRemaining > 0;
+    },
+    modalShown() {
+      console.log('modalShown', this.shown); // todo remove dev item
+      return this.shown;
+    }
+  },
+  watch: {
+    shown(val) {
+      console.log('shown:', val); // todo remove dev item
+    }
+  },
+  beforeDestroy() {
+    this.stopPolling();
+  },
+  mounted() {
+    this.startPolling();
+  },
+  methods: {
+    emitShowDetails() {
+      this.$emit('showDetails', ['swap', this.notice, this.index]);
+    },
+    startPolling() {
+      console.log('startPolling'); // todo remove dev item
+      this.provider = providerMap.get(this.notice.body.provider);
+      this.currentStatus = this.notice.status;
+      this.timeUpdater();
+      this.statusUpdater();
+    },
+    stopPolling() {
+      console.log('stopPolling'); // todo remove dev item
+      if (this.timerInterval !== null) {
+        clearInterval(this.timerInterval);
+      }
+
+      if (this.statusInterval !== null) {
+        clearInterval(this.statusInterval);
+      }
+    },
     statusUpdater() {
       // NOTE: if active then should get checked even after time expires
       // eslint-disable-next-line
 
       let updating = false;
       const getStatus = async () => {
-        console.log('statusUpdater start'); // todo remove dev item
         if (!updating) {
-          console.log('statusUpdater run'); // todo remove dev item
           updating = true;
           const newStatus = await this.provider.getOrderStatus(
             this.notice.body,
             this.network.type.name
           );
-          console.log(newStatus); // todo remove dev item
           if (this.currentStatus !== newStatus) {
             this.currentStatus = newStatus;
             if (Object.values(swapOnlyStatuses).includes(newStatus)) {
@@ -225,21 +237,21 @@ export default {
             }
             this.childUpdateNotification(this.notice);
           }
-          if (this.shouldCheckStatus()) {
+          if (this.shouldCheckStatus) {
             clearInterval(this.statusInterval);
           }
           updating = false;
         }
       };
 
-      if (this.shouldCheckStatus()) {
+      if (this.shouldCheckStatus) {
         getStatus();
         this.statusInterval = setInterval(() => {
           getStatus();
-          if (!this.shouldCheckStatus()) {
+          if (!this.shouldCheckStatus) {
             clearInterval(this.statusInterval);
           }
-        }, 1000);
+        }, 2000);
       }
     },
     timeUpdater() {
@@ -270,7 +282,7 @@ export default {
         }
       };
 
-      if (this.shouldCheckStatus()) {
+      if (this.shouldCheckStatus) {
         if (this.timeRemaining > 0) {
           updateTime();
           this.timerInterval = setInterval(() => {
