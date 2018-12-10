@@ -28,7 +28,9 @@
 .wrap {
   .send-form {
     padding: 40px 60px 0;
-
+    @media all and (max-width: $mobile-width) {
+      padding: 20px 10px;
+    }
     .title-container {
       align-items: flex-end;
       display: flex;
@@ -38,6 +40,10 @@
         display: flex;
         padding: 0 8px;
         width: 100%;
+
+        @media all and (max-width: $tablet-width) {
+          display: block;
+        }
 
         div {
           h4 {
@@ -51,6 +57,11 @@
 
           p {
             margin-left: 25px;
+
+            @media all and (max-width: $tablet-width) {
+              margin-left: 0px;
+              margin-right: 25px;
+            }
           }
         }
       }
@@ -71,13 +82,16 @@
   } // .send-form
 
   .submit-button-container {
-    padding: 60px 0 200px;
+    padding: 20px 0;
     text-align: center;
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
       width: 300px;
+      @media all and (max-width: $mobile-width) {
+        width: initial;
+      }
     }
 
     p {
