@@ -37,6 +37,14 @@
   height: 300px;
   overflow-y: scroll;
 
+  > ul {
+    > li {
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+    }
+  }
+
   .notification-item {
     display: flex;
     flex-direction: column;
@@ -86,16 +94,6 @@
     right: 5px;
     top: 5px;
     width: 8px;
-  }
-}
-
-.notification-item-container {
-  > ul {
-    > li {
-      &:nth-child(odd) {
-        background-color: $light-grey-2;
-      }
-    }
   }
 }
 
@@ -193,7 +191,7 @@
         }
       }
 
-      &:last-child{
+      &:last-child {
         color: #455061;
         font-weight: 600;
         justify-content: flex-end;

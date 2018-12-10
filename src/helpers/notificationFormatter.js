@@ -29,37 +29,37 @@ const notificationStatuses = {
   CANCELLED: 'cancelled'
 };
 
-const identifySwapForTransaction = (notifArray, val) => {
-  console.log(notifArray[notifArray.length - 1]); // todo remove dev item
-  const idx = notifArray.findIndex(
-    entry => entry.type === 'swap' && entry.body.to === val[1].to
-  );
-  notifArray.forEach(entry => {
-    if (entry.body.to === val[1].to) {
-      console.log(entry.type);
-    }
-  });
-
-  if (idx > 0) {
-    if (
-      notifArray[idx - 1].type === notificationType.SWAP &&
-      val[1].to === notifArray[idx - 1].to
-    ) {
-      notifArray[idx].status = 'complete';
-    }
-  }
-
-  if (notifArray.length > 1) {
-    console.log(notifArray[notifArray.length - 1].type); // todo remove dev item
-    if (
-      notifArray[notifArray.length - 1].type === notificationType.SWAP &&
-      val[1].to === notifArray[notifArray.length - 1].to
-    ) {
-      console.log('is a swap'); // todo remove dev item
-      notifArray[notifArray.length - 1].hash = val[2];
-    }
-  }
-};
+// const identifySwapForTransaction = (notifArray, val) => {
+//   console.log(notifArray[notifArray.length - 1]); // todo remove dev item
+//   const idx = notifArray.findIndex(
+//     entry => entry.type === 'swap' && entry.body.to === val[1].to
+//   );
+//   notifArray.forEach(entry => {
+//     if (entry.body.to === val[1].to) {
+//       console.log(entry.type);
+//     }
+//   });
+//
+//   if (idx > 0) {
+//     if (
+//       notifArray[idx - 1].type === notificationType.SWAP &&
+//       val[1].to === notifArray[idx - 1].to
+//     ) {
+//       notifArray[idx].status = 'complete';
+//     }
+//   }
+//
+//   if (notifArray.length > 1) {
+//     console.log(notifArray[notifArray.length - 1].type); // todo remove dev item
+//     if (
+//       notifArray[notifArray.length - 1].type === notificationType.SWAP &&
+//       val[1].to === notifArray[notifArray.length - 1].to
+//     ) {
+//       console.log('is a swap'); // todo remove dev item
+//       notifArray[notifArray.length - 1].hash = val[2];
+//     }
+//   }
+// };
 
 const transactionHash = (notifArray, val, network) => {
   // TODO: use transfer method call signature to identify token transfer.

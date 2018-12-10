@@ -86,7 +86,10 @@ export default class Changelly {
     ]);
 
     this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: new BigNumber(changellyDetails[0]).times(0.001).plus(new BigNumber(changellyDetails[0])).toFixed(),
+      minAmount: new BigNumber(changellyDetails[0])
+        .times(0.001)
+        .plus(new BigNumber(changellyDetails[0]))
+        .toFixed(),
       rate: changellyDetails[1]
     };
     console.log(changellyDetails[0]); // todo remove dev item
@@ -94,7 +97,10 @@ export default class Changelly {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      minValue: new BigNumber(changellyDetails[0]).times(0.001).plus(new BigNumber(changellyDetails[0])).toFixed(),
+      minValue: new BigNumber(changellyDetails[0])
+        .times(0.001)
+        .plus(new BigNumber(changellyDetails[0]))
+        .toFixed(),
       rate: changellyDetails[1]
     };
   }
@@ -202,6 +208,7 @@ export default class Changelly {
         swapDetails.orderId,
         network
       );
+      console.log('changelly status', status); // todo remove dev item
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
       // eslint-disable-next-line

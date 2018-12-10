@@ -233,8 +233,8 @@ export default class BitySwap {
   }
 
   // ================= Check status of order methods ===================================
-  updateStatus(data) {
-    return Promise.resolve('')
+  updateStatus() {
+    return Promise.resolve('');
     // return new Promise(resolve => {
     //   if (this.validStatus.indexOf(data.status) !== -1) {
     //     this.currentOrderStatus = 'RCVE';
@@ -273,7 +273,7 @@ export default class BitySwap {
   }
 
   static async getOrderStatus(swapDetails) {
-    let data = await getStatus({ orderid: swapDetails.statusId });
+    const data = await getStatus({ orderid: swapDetails.statusId });
     switch (data.status) {
       case bityStatuses.OPEN:
         return 'new';

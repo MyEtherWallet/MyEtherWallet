@@ -37,6 +37,14 @@
   height: 300px;
   overflow-y: scroll;
 
+  > ul {
+    > li {
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+    }
+  }
+
   .notification-item {
     display: flex;
     flex-direction: column;
@@ -86,16 +94,6 @@
     right: 5px;
     top: 5px;
     width: 8px;
-  }
-}
-
-.notification-item-container {
-  > ul {
-    > li {
-      &:nth-child(odd) {
-        background-color: $light-grey-2;
-      }
-    }
   }
 }
 
@@ -188,7 +186,6 @@
         justify-content: space-between;
 
         > li {
-
           padding-top: 10px;
           .from-swap-icon {
             padding-left: 10px;
@@ -210,7 +207,6 @@
             padding-right: 10px;
             min-width: 50px;
           }
-
         }
       }
       .cc-icon {

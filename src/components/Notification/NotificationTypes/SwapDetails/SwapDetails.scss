@@ -37,6 +37,14 @@
   height: 450px !important;
   overflow-y: scroll;
 
+  > ul {
+    > li {
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+    }
+  }
+
   .notification-item {
     display: flex;
     flex-direction: column;
@@ -89,17 +97,6 @@
   }
 }
 
-.notification-item-container {
-  > ul {
-    > li {
-      padding-bottom: 20px;
-      &:nth-child(odd) {
-        background-color: $light-grey-2;
-      }
-    }
-  }
-}
-
 //*******************************************************
 // Notification header
 //*******************************************************
@@ -107,7 +104,6 @@
   display: flex;
   align-items: center;
   padding: 10px 20px;
-
   font-family: AvenirNext, sans-serif;
   font-size: 20px;
   font-weight: 500;
@@ -235,13 +231,11 @@
             padding-right: 10px;
             min-width: 50px;
           }
-
         }
       }
       .cc-icon {
         font-size: 36px;
       }
-
     }
   }
 }

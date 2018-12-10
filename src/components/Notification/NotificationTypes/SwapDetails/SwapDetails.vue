@@ -59,7 +59,6 @@
           <p>Time Remaining:</p>
           <div class="detail-data">
             <p>{{ parseTimeRemaining }}</p>
-            <p>{{this.timeRemaining}}</p>
           </div>
         </li>
         <li class="notification-type-status">
@@ -129,15 +128,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from 'store';
-import unit from 'ethjs-unit';
-import BigNumber from 'bignumber.js';
 
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providers, providerMap } from '@/partners';
+import { providerMap } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -145,7 +141,17 @@ import {
 } from '@/helpers/notificationFormatter';
 
 export default {
+  filters: {
+    concatAddress(value) {
+      if (!value) return '';
+      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
+    }
+  },
   props: {
+    shown: {
+      type: Boolean,
+      default: false
+    },
     notice: {
       type: Object,
       default: function() {
@@ -198,12 +204,6 @@ export default {
       unreadCount: 0
     };
   },
-  filters: {
-    concatAddress(value) {
-      if (!value) return '';
-      return `${value.substr(0, 7)}...${value.substr(value.length - 7)}`;
-    }
-  },
   computed: {
     ...mapGetters({
       web3: 'web3',
@@ -221,6 +221,11 @@ export default {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
+    }
+  },
+  watch: {
+    shown(val) {
+      console.log('shown:', val); // todo remove dev item
     }
   },
   beforeDestroy() {
@@ -295,7 +300,7 @@ export default {
           parseInt(
             (new Date().getTime() -
               new Date(this.details.createdAt).getTime()) /
-            1000
+              1000
           );
         this.timeRemaining = timeRemaining;
         if (
