@@ -43,7 +43,7 @@
                     ? 'current-network'
                     : ''
                 "
-                @click="switchNetwork(net);"
+                @click="switchNetwork(net)"
               >
                 {{ net.service }}
               </p>
@@ -81,23 +81,21 @@
                   v-if="key !== 'default'"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
-                  @click="changePath(key);"
-                  >{{ val.label }}</b-dropdown-item
-                >
+                  @click="changePath(key)"
+                />
                 <b-dropdown-divider />
-                <b-dropdown-item>{{
-                  $t('accessWallet.customPaths')
-                }}</b-dropdown-item>
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
-                  @click="changePath(key);"
-                  >{{ val.dpath }}</b-dropdown-item
-                >
-                <b-dropdown-item @click="showCustomPathInput">{{
-                  $t('accessWallet.addCustomPath')
-                }}</b-dropdown-item>
+                  @click="changePath(key)"
+                />
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -151,7 +149,7 @@
                 selectedId === 'address' + account.index ? 'selected' : ''
               "
               class="address-block address-data"
-              @click="setAccount(account);"
+              @click="setAccount(account)"
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
@@ -169,10 +167,10 @@
           </div>
           <!-- .address-block-container -->
           <div class="address-nav">
-            <span @click="previousAddressSet();"
+            <span @click="previousAddressSet()"
               >&lt; {{ $t('common.previous') }}</span
             >
-            <span @click="nextAddressSet();">{{ $t('common.next') }} &gt;</span>
+            <span @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
           </div>
         </div>
         <!-- .content-container-2 -->
@@ -185,7 +183,7 @@
             <input
               ref="accessMyWalletBtn"
               type="checkbox"
-              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
             />
             <span class="checkmark" />
           </label>

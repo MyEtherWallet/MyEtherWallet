@@ -7,10 +7,10 @@
         <div class="title">
           <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode');">{{
+            <span @click="deleteInput('bytecode')">{{
               $t('common.clear')
             }}</span>
-            <span @click="copyToClipboard('bytecode');">{{
+            <span @click="copyToClipboard('bytecode')">{{
               $t('common.copy')
             }}</span>
           </div>
@@ -26,10 +26,8 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi');">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard('abi');">{{
-              $t('common.copy')
-            }}</span>
+            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -98,7 +96,7 @@
               gasPrice === 5 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(5);"
+            @click="changeGas(5)"
           >
             {{ $t('common.slow') }}
           </div>
@@ -107,7 +105,7 @@
               gasPrice === 45 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(45);"
+            @click="changeGas(45)"
           >
             {{ $t('common.regular') }}
           </div>
@@ -116,7 +114,7 @@
               gasPrice === 75 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(75);"
+            @click="changeGas(75)"
           >
             {{ $t('common.fast') }}
           </div>

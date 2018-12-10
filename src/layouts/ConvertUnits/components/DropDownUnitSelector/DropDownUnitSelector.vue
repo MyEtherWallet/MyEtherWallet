@@ -4,7 +4,7 @@
       <div
         :class="dropdownOpen ? 'dropdown-open' : ''"
         class="dropdown-input-box"
-        @click="dropdownOpen = !dropdownOpen;"
+        @click="dropdownOpen = !dropdownOpen"
       >
         <div class="selected-unit">{{ currentSelected | capitalize }}</div>
         <div class="dropdown-open-button">
@@ -24,7 +24,7 @@
           <li
             v-for="(opt, idx) in options"
             :key="opt + idx"
-            @click="selected(opt);"
+            @click="selected(opt)"
           >
             {{ opt | capitalize }}
           </li>

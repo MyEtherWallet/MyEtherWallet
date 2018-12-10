@@ -36,7 +36,7 @@
                       'large-round-button-green-filled'
                     ]"
                     :download="name"
-                    @click="downloadDone();"
+                    @click="downloadDone()"
                   >
                     <span v-if="downloadable">
                       {{ $t('createWallet.byJsonFileDownloadKeyFile') }}

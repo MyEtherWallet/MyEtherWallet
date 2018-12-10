@@ -21,10 +21,10 @@
           <popover :popcontent="$t('popover.signature')" />
 
           <div class="copy-buttons">
-            <span @click="deleteInputText('signature');">{{
+            <span @click="deleteInputText('signature')">{{
               $t('common.clear')
             }}</span>
-            <span @click="copyToClipboard('signature');">{{
+            <span @click="copyToClipboard('signature')">{{
               $t('common.copy')
             }}</span>
           </div>

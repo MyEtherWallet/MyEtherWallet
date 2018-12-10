@@ -94,11 +94,6 @@ export default {
       return false;
     }
   },
-  watch: {
-    details(newVal) {
-      console.log(newVal); // todo remove dev item
-    }
-  },
   mounted() {
     this.parsed = this.provider.parseOrder(this.details.dataForInitialization);
     this.timeUpdater();
