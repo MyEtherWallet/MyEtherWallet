@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
 - Fix missing text issue on getting started modal [#173](https://github.com/MyEtherWallet/MyEtherWallet/pull/173)
 - Reimplement logout with the new logout modal [#177](https://github.com/MyEtherWallet/MyEtherWallet/pull/177)
 - Close modal when adding a custom token [#175](https://github.com/MyEtherWallet/MyEtherWallet/pull/175)
@@ -15,10 +16,14 @@
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+- Add support for Ledger live paths. [#216](https://github.com/MyEtherWallet/MyEtherWallet/pull/216)
 
 ### Devop
 
 - ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
+- Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
+- Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
+- Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
 - Replace heroku urls [#178](https://github.com/MyEtherWallet/MyEtherWallet/pull/178)
 - Crowdin translations [#75](https://github.com/MyEtherWallet/MyEtherWallet/pull/75)
 - refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)

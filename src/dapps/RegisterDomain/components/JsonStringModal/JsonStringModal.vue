@@ -28,7 +28,7 @@
       </button>
       <interface-bottom-text
         link="mailto:support@myetherwallet.com"
-        link-text="Help Center"
+        link-text="https://kb.myetherwallet.com"
         question="Having issues?"
       />
     </form>

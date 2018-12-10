@@ -3,6 +3,11 @@
 .side-menu {
   padding: 40px 20px;
 
+  @media all and (max-width: $mobile-width) {
+    width: 100vw;
+    height: 100vh;
+  }
+
   ul {
     li {
       cursor: pointer;
@@ -51,5 +56,49 @@
     i {
       color: $text-black !important;
     }
+  }
+}
+
+//--------------------------------------
+// .side-menu-header
+//--------------------------------------
+.side-menu-header {
+  align-items: center;
+  padding: 25px 25px;
+  box-shadow: 0 0 2px #0000003b;
+  display: none;
+
+  @media all and (max-width: $interface--mobile-side-menu--width) {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    height: 33px;
+  }
+}
+
+.side-menu-close-button {
+  margin-left: auto;
+  position: relative;
+  margin-right: 30px;
+  > div {
+    height: 3px;
+    width: 30px;
+    background-color: black;
+  }
+
+  > div:nth-child(1) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  > div:nth-child(2) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: rotate(-45deg);
   }
 }

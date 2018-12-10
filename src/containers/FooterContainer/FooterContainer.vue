@@ -13,12 +13,12 @@
             :class="item.class"
             :key="item.title + index"
           >
-            <div class="content-title" @click="toggler(item.class);">
+            <div class="content-title" @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
-              <p class="open" @click="openContent(item.class);">
+              <p class="open" @click="openContent(item.class)">
                 <i class="fa fa-plus" aria-hidden="true" />
               </p>
-              <p class="close" @click="closeContent(item.class);">
+              <p class="close" @click="closeContent(item.class)">
                 <i class="fa fa-minus" aria-hidden="true" />
               </p>
             </div>
@@ -200,7 +200,7 @@ export default {
             },
             {
               text: 'Help Center',
-              to: '/help-center'
+              href: 'https://kb.myetherwallet.com'
             }
           ]
         }

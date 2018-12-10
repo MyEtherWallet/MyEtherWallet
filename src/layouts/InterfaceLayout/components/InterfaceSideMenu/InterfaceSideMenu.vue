@@ -1,5 +1,12 @@
 <template>
   <div class="transactions-side-menu">
+    <div class="side-menu-header">
+      <img src="~@/assets/images/logo.png" />
+      <div class="side-menu-close-button" @click="toggleSideMenu">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <div class="side-menu">
       <ul>
         <li v-for="(tab, idx) in tabData" :key="tab.name + idx">
@@ -8,7 +15,7 @@
               isTabActive(tab.routes) ? 'active' : '',
               'menu-group-title'
             ]"
-            @click.prevent="tabAction(tab);"
+            @click.prevent="tabAction(tab)"
           >
             <img
               :src="
@@ -30,7 +37,7 @@
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
               :class="isTabActive(child.routes) ? 'active' : ''"
-              @click.prevent="tabAction(child);"
+              @click.prevent="tabAction(child)"
             >
               {{ $t(child.titleKey) }}
             </li>
@@ -50,6 +57,9 @@ export default {
     };
   },
   methods: {
+    toggleSideMenu() {
+      this.$store.commit('TOGGLE_SIDEMENU');
+    },
     isTabActive(routes) {
       return routes.includes(this.$route.path);
     },

@@ -163,7 +163,7 @@
                 ? startAuctionAndBid()
                 : $route.fullPath.includes('bid')
                 ? sendBid()
-                : revealBid();
+                : revealBid()
             "
           >
             <span v-if="loading === false"> Next </span>

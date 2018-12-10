@@ -6,7 +6,7 @@
           <h4>Detail Information</h4>
           <div class="sliding-switch sliding-switch-white">
             <label class="switch">
-              <input type="checkbox" @click="isExpended = !isExpended;" />
+              <input type="checkbox" @click="isExpended = !isExpended" />
               <span class="slider round" />
             </label>
           </div>

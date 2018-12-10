@@ -23,16 +23,33 @@ class ledgerWallet {
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+    this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.transport = await getLedgerTransport();
     this.ledger = new Ledger(this.transport);
     this.appConfig = await getLedgerAppConfig(this.ledger);
-    const rootPub = await getRootPubKey(this.ledger, this.basePath);
-    this.hdKey = new HDKey();
-    this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
-    this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+    if (!this.isHardened) {
+      const rootPub = await getRootPubKey(this.ledger, this.basePath);
+      this.hdKey = new HDKey();
+      this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
+      this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+    }
   }
-  getAccount(idx) {
-    const derivedKey = this.hdKey.derive('m/' + idx);
+  async getAccount(idx) {
+    let derivedKey, accountPath;
+    if (this.isHardened) {
+      const rootPub = await getRootPubKey(
+        this.ledger,
+        this.basePath + '/' + idx + "'"
+      );
+      const hdKey = new HDKey();
+      hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
+      hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+      derivedKey = hdKey.derive('m/0/0');
+      accountPath = this.basePath + '/' + idx + "'" + '/0/0';
+    } else {
+      derivedKey = this.hdKey.derive('m/' + idx);
+      accountPath = this.basePath + '/' + idx;
+    }
     const txSigner = async tx => {
       tx = new ethTx(tx);
       const networkId = tx._chainId;
@@ -40,7 +57,7 @@ class ledgerWallet {
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
       const result = await this.ledger.signTransaction(
-        this.basePath + '/' + idx,
+        accountPath,
         tx.serialize().toString('hex')
       );
       tx.v = getBufferFromHex(result.v);
@@ -59,7 +76,7 @@ class ledgerWallet {
     };
     const msgSigner = async msg => {
       const result = await this.ledger.signPersonalMessage(
-        this.basePath + '/' + idx,
+        accountPath,
         Buffer.from(msg).toString('hex')
       );
       const v = parseInt(result.v, 10) - 27;
@@ -71,7 +88,7 @@ class ledgerWallet {
       ]);
     };
     return new HDWalletInterface(
-      this.basePath + '/' + idx,
+      accountPath,
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
