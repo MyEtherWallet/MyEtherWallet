@@ -15,10 +15,9 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span
-            >({{ selectedNetwork.type.name }} -
-            {{ selectedNetwork.service }})</span
-          >
+          <span>
+            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+          </span>
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -74,7 +73,7 @@
             <div class="dropdown-button-container">
               <b-dropdown
                 id="hd-derivation-path"
-                text="selectedPath"
+                :text="getPathLabel(selectedPath)"
                 class="dropdown-button-2"
               >
                 <b-dropdown-item
@@ -83,24 +82,22 @@
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
                   @click="changePath(key);"
+                  >{{ val.label }}</b-dropdown-item
                 >
-                  {{ val.path }}
-                </b-dropdown-item>
                 <b-dropdown-divider />
-                <b-dropdown-item>
-                  {{ $t('accessWallet.customPaths') }}
-                </b-dropdown-item>
+                <b-dropdown-item>{{
+                  $t('accessWallet.customPaths')
+                }}</b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
                   @click="changePath(key);"
+                  >{{ val.dpath }}</b-dropdown-item
                 >
-                  {{ val.dpath }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="showCustomPathInput">
-                  {{ $t('accessWallet.addCustomPath') }}
-                </b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">{{
+                  $t('accessWallet.addCustomPath')
+                }}</b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -109,7 +106,7 @@
             }}{{ $t('accessWallet.invalidPathDescCont') }}
           </p>
           <p v-show="!customPathInput" class="derivation-brands">
-            {{ getPathLabel(selectedPath) }}
+            {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
           </p>
           <div v-show="customPathInput">
             <!-- TODO: how to structure the path input? -->
@@ -171,7 +168,6 @@
             </ul>
           </div>
           <!-- .address-block-container -->
-
           <div class="address-nav">
             <span @click="previousAddressSet();"
               >&lt; {{ $t('common.previous') }}</span
@@ -180,13 +176,11 @@
           </div>
         </div>
         <!-- .content-container-2 -->
-
         <div class="accept-terms">
-          <label class="checkbox-container"
-            >{{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link
+          <label class="checkbox-container">
+            {{ $t('accessWallet.acceptTerms') }}
+            <router-link to="/terms-and-conditions">
+              {{ $t('common.terms') }} </router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -201,9 +195,8 @@
             :disabled="accessMyWalletBtnDisabled"
             class="mid-round-button-green-filled close-button"
             @click.prevent="unlockWallet"
+            >{{ $t('common.accessMyWallet') }}</b-btn
           >
-            {{ $t('common.accessMyWallet') }}
-          </b-btn>
         </div>
         <customer-support />
       </b-collapse>
@@ -321,6 +314,7 @@ export default {
         this.currentIndex = 0;
         this.setHDAccounts();
       });
+      this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
@@ -328,7 +322,7 @@ export default {
         path: 'interface'
       });
     },
-    setHDAccounts() {
+    async setHDAccounts() {
       this.HDAccounts = [];
       for (
         let i = this.currentIndex;
@@ -337,7 +331,7 @@ export default {
       ) {
         this.HDAccounts.push({
           index: i,
-          account: this.hardwareWallet.getAccount(i)
+          account: await this.hardwareWallet.getAccount(i)
         });
       }
       this.currentIndex += MAX_ADDRESSES;
