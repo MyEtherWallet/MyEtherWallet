@@ -1,4 +1,4 @@
-### Release v5.0.5
+### Release v5.0.0.alpha.5
 
 ### Bug
 
@@ -41,7 +41,7 @@
 
 - Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
 
-### Release v5.0.4
+### Release v5.0.0.alpha.4
 
 ### Devop
 
@@ -55,7 +55,7 @@
 - Finish unit conversion [#114](https://github.com/MyEtherWallet/MyEtherWallet/pull/114)
 - Finish ENS registrar dapp [#81](https://github.com/MyEtherWallet/MyEtherWallet/pull/81)
 
-### Release v5.0.3
+### Release v5.0.0.alpha.3
 
 ### Feature
 
@@ -87,7 +87,7 @@
 - Add Network logo and change dot colors [#49](https://github.com/MyEtherWallet/MyEtherWallet/pull/49)
 - Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
 
-### Release v5.0.2
+### Release v5.0.0.alpha.2
 
 ### Feature
 
@@ -99,7 +99,7 @@
 - Update footer to match design [#29](https://github.com/MyEtherWallet/MyEtherWallet/pull/29)
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
 
-### Release v5.0.1
+### Release v5.0.0.alpha.1
 
 ### Devop
 
