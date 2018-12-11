@@ -84,11 +84,11 @@ export default {
   },
   methods: {
     async fetchBalanceData() {
-      this.equivalentValues = [];
       const newArr = [];
       const url = 'https://cryptorates.mewapi.io/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
+      delete values['lastCalled'];
       Object.keys(values).forEach(item => {
         if (
           this.equivalentValues.find(curr => {
@@ -105,7 +105,6 @@ export default {
           newArr.push(objectRes);
         }
       });
-
       this.equivalentValues = newArr;
     }
   }
