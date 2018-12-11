@@ -61,7 +61,6 @@ import { mapGetters } from 'vuex';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
-import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
@@ -69,7 +68,6 @@ import { EthereumTokens, BASE_CURRENCY, ERC20, utils } from '@/partners';
 
 export default {
   components: {
-    'detail-information': DetailInformation,
     'button-with-qrcode': ButtonWithQrCode,
     'help-center-button': HelpCenterButton
   },

@@ -194,8 +194,6 @@ import {
 
 const errorLogger = debug('v5:swapContainer');
 
-// BigNumber.config({ DECIMAL_PLACES: 6 });
-
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -273,7 +271,7 @@ export default {
     },
     fromBelowMinAllowed() {
       if (MIN_SWAP_AMOUNT > +this.fromValue)
-        return `Below minimun swap value of ${MIN_SWAP_AMOUNT}`;
+        return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
       if (this.selectedProvider.minValue > +this.fromValue)
         return this.$t('interface.belowMinSwap');
       return false;
