@@ -1,11 +1,10 @@
-import Vue from 'vue';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector/DropDownAddressSelector.vue';
 import { shallowMount } from '@vue/test-utils';
 
 import { Tooling } from '@@/helpers';
 
 describe('DropDownAddressSelector.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -15,7 +14,7 @@ describe('DropDownAddressSelector.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(DropDownAddressSelector, {
+    shallowMount(DropDownAddressSelector, {
       localVue,
       i18n,
       store,
@@ -31,7 +30,7 @@ describe('DropDownAddressSelector.vue', () => {
     const addressElements = wrapper.vm.$el.querySelectorAll(
       '.dropdown-list-box .listed-address'
     );
-    for (var i = 0; i < addressElements.length; i++) {
+    for (let i = 0; i < addressElements.length; i++) {
       const addressElement = addressElements[i];
       expect(addressElement.textContent.trim()).toEqual(
         `${wrapper.vm.$data.addresses[i].slice(
