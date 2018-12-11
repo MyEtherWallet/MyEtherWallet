@@ -17,16 +17,16 @@ const notificationType = {
 };
 
 const swapOnlyStatuses = {
+  new: 'new',
+  cancelled: 'cancelled',
   NEW: 'new',
   CANCELLED: 'cancelled'
 };
 
 const notificationStatuses = {
-  NEW: 'new',
   PENDING: 'pending',
   COMPLETE: 'complete',
-  FAILED: 'failed',
-  CANCELLED: 'cancelled'
+  FAILED: 'failed'
 };
 
 const identifySwapForTransaction = (notifArray, val) => {
@@ -58,7 +58,7 @@ const transactionHash = (notifArray, val, network) => {
   notifArray.push({
     title: 'Transaction',
     read: false,
-    timestamp: new Date(),
+    timestamp: Date.now(),
     type: notificationType.TRANSACTION,
     status: notificationStatuses.PENDING,
     hash: val[2],
@@ -97,7 +97,7 @@ const transactionError = (notifArray, val, network) => {
   notifArray.push({
     title: 'Transaction',
     read: false,
-    timestamp: new Date(),
+    timestamp: Date.now(),
     type: notificationType.ERROR,
     status: notificationStatuses.FAILED,
     hash: val[2],
@@ -124,7 +124,7 @@ const swapOrder = (notifArray, val, network) => {
   notifArray.push({
     title: 'Swap',
     read: false,
-    timestamp: new Date(),
+    timestamp: Date.now(),
     type: notificationType.SWAP,
     status: notificationStatuses.PENDING,
     swapStatus: swapOnlyStatuses.NEW,
@@ -144,13 +144,9 @@ const swapOrder = (notifArray, val, network) => {
       timeRemaining: val[2].parsed.validFor,
       validFor: val[2].parsed.validFor,
       createdAt: val[2].parsed.timestamp,
-      // nonce: val[2].nonce,
-      // gasPrice: val[2].gasPrice,
-      // gasLimit: val[2].gas,
       rate: val[2].rate,
       provider: val[2].provider
     },
-    // body: val[2].hasOwnProperty('message') ? val[2].message : val[2],
     expanded: false
   });
 

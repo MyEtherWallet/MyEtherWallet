@@ -215,7 +215,7 @@ export default {
       return this.notice.body;
     },
     txStatus() {
-      return this.processStatus(this.notice.status);
+      return this.processStatus(this.notice.swapStatus);
     },
     parseTimeRemaining() {
       const seconds = Math.floor(this.timeRemaining % 60);
@@ -249,26 +249,22 @@ export default {
       this.$emit('showDetails', ['swap', this.notice]);
     },
     shouldCheckStatus() {
-      return [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
+      return [swapOnlyStatuses.NEW, notificationStatuses.PENDING].includes(
         this.notice.swapStatus
       );
     },
     statusUpdater() {
-      // NOTE: if active then should get checked even after time expires
-      // eslint-disable-next-line
-      console.log('statusUpdater started'); // todo remove dev item
       let updating = false;
       const getStatus = async () => {
         if (!updating) {
           updating = true;
           const newStatus = await this.provider.getOrderStatus(
-            this.details,
+            this.notice.body,
             this.network.type.name
           );
           if (this.currentStatus !== newStatus) {
-            console.log(newStatus); // todo remove dev item
             this.currentStatus = newStatus;
-            if (Object.values(swapOnlyStatuses).includes(newStatus)) {
+            if (swapOnlyStatuses[newStatus]) {
               this.notice.swapStatus = newStatus;
             } else {
               this.notice.swapStatus = newStatus;
@@ -276,6 +272,7 @@ export default {
             }
             this.childUpdateNotification(this.notice);
           }
+
           if (this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
           }
@@ -290,52 +287,47 @@ export default {
           if (!this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
           }
-        }, 1000);
+        }, 2500);
       }
     },
     timeUpdater() {
       const updateTime = () => {
-        const timeRemaining =
-          this.details.validFor -
+        this.timeRemaining =
+          this.notice.body.validFor -
           parseInt(
             (new Date().getTime() -
-              new Date(this.details.createdAt).getTime()) /
+              new Date(this.notice.body.createdAt).getTime()) /
               1000
           );
-        this.timeRemaining = timeRemaining;
         if (
-          this.notice.swapStatus === swapOnlyStatuses.NEW &&
-          timeRemaining <= 0
+          (this.notice.swapStatus === swapOnlyStatuses.NEW ||
+            this.currentStatus === swapOnlyStatuses.NEW) &&
+          this.timeRemaining <= 0
         ) {
           this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
           this.notice.status = notificationStatuses.FAILED;
+          this.notice.body.errorMessage =
+            'Swap window timeout. Swap Cancelled.';
           this.timeRemaining = -1;
         }
-        this.notice.body.timeRemaining = this.timeRemaining;
+        this.notice.body.timeRemaining = +this.timeRemaining;
         this.childUpdateNotification(this.notice);
-
-        if (timeRemaining < 0) {
+        if (+this.timeRemaining <= 0) {
           clearInterval(this.timerInterval);
         }
       };
 
-      if (this.shouldCheckStatus()) {
-        updateTime();
-        this.timerInterval = setInterval(() => {
+      if (this.shouldCheckStatus() && this.notice.body.timeRemaining > 0) {
+        if (this.timeRemaining > 0) {
           updateTime();
-          if (this.timeRemaining < 0) {
-            clearInterval(this.timerInterval);
-          }
-        }, 1000);
+          this.timerInterval = setInterval(() => {
+            updateTime();
+            if (this.timeRemaining < 0) {
+              clearInterval(this.timerInterval);
+            }
+          }, 1000);
+        }
       }
-    },
-    calculateTimeRemaining(details) {
-      return (
-        details.timeRemaining -
-        parseInt(
-          (new Date().getTime() - new Date(details.createdAt).getTime()) / 1000
-        )
-      );
     }
   }
 };

@@ -11,6 +11,7 @@ export {
   ChangellyCurrencies,
   changellyMethods,
   statuses,
+  TIME_SWAP_VALID,
   requireExtraId,
   PROVIDER_NAME
 };

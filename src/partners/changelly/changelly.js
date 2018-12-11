@@ -193,7 +193,7 @@ export default class Changelly {
   static parseOrder(order) {
     return {
       orderId: order.id,
-      statusId: undefined,
+      statusId: order.id,
       sendToAddress: order.payinAddress,
       recValue: order.amountExpectedTo,
       sendValue: order.amountExpectedFrom,
@@ -206,7 +206,7 @@ export default class Changelly {
   static async getOrderStatus(noticeDetails, network) {
     try {
       const status = await changellyCalls.getStatus(
-        noticeDetails.orderId,
+        noticeDetails.statusId,
         network
       );
       console.log('changelly status', status); // todo remove dev item

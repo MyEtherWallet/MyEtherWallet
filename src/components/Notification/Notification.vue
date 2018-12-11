@@ -102,16 +102,6 @@ import TransactionError from './NotificationTypes/TransactionError/TransactionEr
 import TransactionDetails from './NotificationTypes/NotificationDetails';
 import SwapDetails from './NotificationTypes/SwapDetails';
 
-const status = {
-  new: { text: 'Swap Created', class: 'status-processing' },
-  pending: { text: 'Processing', class: 'status-processing' },
-  complete: { text: 'Succeed', class: 'status-succeed' },
-  failed: { text: 'Failed', class: 'status-failed' },
-  cancelled: { text: 'Cancelled', class: 'status-processing' },
-  error: { text: 'Error', class: 'status-failed' },
-  statusError: { text: 'Status Error', class: 'status-failed' }
-};
-
 export default {
   components: {
     'swap-notification': SwapNotification,
@@ -144,8 +134,8 @@ export default {
       // eslint-disable-next-line
       return this.notifications[this.wallet.getChecksumAddressString()]
         .sort((a, b) => {
-          a = new Date(a.timestamp);
-          b = new Date(b.timestamp);
+          a = a.timestamp;
+          b = b.timestamp;
 
           return a > b ? -1 : a < b ? 1 : 0;
         })
@@ -167,15 +157,13 @@ export default {
     this.countUnread();
     this.fetchBalanceData();
     this.$refs.notification.$on('hide', () => {
-      this.shown = !this.shown;
-      console.log(this.shown); // todo remove dev item
+      this.shown = false;
       this.hideDetails();
     });
   },
   methods: {
     showNotifications() {
-      this.shown = !this.shown;
-      console.log(this.shown); // todo remove dev item
+      this.shown = true;
       this.$refs.notification.show();
     },
     showDetails(details) {
@@ -278,6 +266,16 @@ export default {
       };
     },
     processStatus(rawStatus) {
+      const status = {
+        new: { text: 'Swap Created', class: 'status-processing' },
+        pending: { text: 'Processing', class: 'status-processing' },
+        complete: { text: 'Succeed', class: 'status-succeed' },
+        failed: { text: 'Failed', class: 'status-failed' },
+        cancelled: { text: 'Cancelled', class: 'status-processing' },
+        error: { text: 'Error', class: 'status-failed' },
+        statusError: { text: 'Status Error', class: 'status-failed' }
+      };
+
       if (status[rawStatus]) {
         return status[rawStatus];
       }
