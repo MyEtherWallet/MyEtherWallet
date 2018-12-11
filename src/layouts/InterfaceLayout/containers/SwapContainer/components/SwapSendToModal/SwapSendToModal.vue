@@ -9,7 +9,7 @@
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
-        <p>Time Remaining</p>
+        <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
@@ -23,7 +23,7 @@
             v-show="fromAddress.address !== '' && !isFromFiat"
             class="block-title"
           >
-            From Address
+            {{ $t('interface.fromAddr') }}
           </p>
           <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
             {{ fromAddress.address }}
@@ -38,7 +38,7 @@
             {{ toAddress.value }} <span>{{ toAddress.name }}</span>
           </p>
           <p v-show="toAddress.address !== ''" class="block-title">
-            To Address
+            {{ $t('interface.sendTxToAddr') }}
           </p>
           <p v-show="toAddress.address !== ''" class="address">
             {{ toAddress.address }}
@@ -46,7 +46,8 @@
         </div>
         <div v-show="!isFromFiat" class="confirm-send-button">
           <h4>
-            Send {{ fromAddress.value }} {{ fromAddress.name }} to
+            {{ $t('interface.send') }} {{ fromAddress.value }}
+            {{ fromAddress.name }} {{ $t('interface.articleTo') }}
             <span class="address">{{ qrcode }}</span>
           </h4>
           <qrcode :value="qrcode" :options="{ size: 200 }" />

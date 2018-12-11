@@ -18,7 +18,7 @@ import { KyberCurrenciesROP } from './currenciesROP';
 
 const KyberCurrencies = { ETH: KyberCurrenciesETH, ROP: KyberCurrenciesROP };
 
-const walletDepositeAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'; // i.e. where payments go
+const walletDepositeAddress = '0x4247951c2eb6d0bA38d233fe7d542c8c80c9d46A'; // i.e. where payments go
 const kyberNetworkENS = 'kybernetwork.eth';
 const kyberValidNetworks = ['ETH', 'ROP'];
 
