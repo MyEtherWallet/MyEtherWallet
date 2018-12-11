@@ -326,6 +326,8 @@ export default {
           this.selectedNetwork = network;
         });
       });
+
+      this.$refs.network.hide();
     }
   }
 };
