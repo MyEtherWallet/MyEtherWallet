@@ -45,7 +45,7 @@ describe('FooterContainer.vue', () => {
     var lowerLinkWrappers = []
     for(var i=0; i< linkWrappers.length; i++) {
       const linkWrapper = linkWrappers.at(i);
-      if(linkWrapper.vm.$el.parentElement.parentElement.className.indexOf('foot-note')>-1) {
+      if(linkWrapper.vm.$el.parentElement.parentElement.parentElement.className.indexOf('foot-note')>-1) {
         lowerLinkWrappers.push(linkWrapper)
       }
     }
@@ -53,7 +53,10 @@ describe('FooterContainer.vue', () => {
     for(var i=0; i< wrapper.vm.$data.lowerLinks.length; i++) {
       var lowerLink = wrapper.vm.$data.lowerLinks[i];
       const lowerLinkWrapper = lowerLinkWrappers[i];
-      expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to)
+      console.log(lowerLinkWrapper)
+      if(lowerLinkWrapper !== undefined && lowerLinkWrapper.hasOwnProperty('vm') && lowerLinkWrapper.vm.hasOwnProperty('to')) {
+        expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to)
+      }
     }
   });
 
