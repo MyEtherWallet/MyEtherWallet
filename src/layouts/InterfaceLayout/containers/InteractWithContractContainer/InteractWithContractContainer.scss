@@ -139,7 +139,6 @@
     grid-gap: 10px;
 
     @media all and (max-width: $tablet-width) {
-
       .functions {
         grid-area: functions;
       }
@@ -150,9 +149,9 @@
 
       grid-template-columns: 1fr;
       grid-template-rows: auto;
-      grid-template-areas: 
-        "functions"
-        "address";
+      grid-template-areas:
+        'functions'
+        'address';
     }
 
     .address {
@@ -171,7 +170,7 @@
         border: 0;
         margin-left: 10px;
         @media all and (max-width: $tablet-width) {
-          margin-left: 0px;
+          margin-left: 0;
         }
       }
     }

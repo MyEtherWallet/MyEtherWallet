@@ -133,7 +133,7 @@
         margin-bottom: 3px;
         margin-left: auto;
 
-        >* {
+        > * {
           margin-left: 5px;
         }
 
@@ -299,7 +299,6 @@
 
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .form-container {
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 }
-
