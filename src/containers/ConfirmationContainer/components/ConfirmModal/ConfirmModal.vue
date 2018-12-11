@@ -36,7 +36,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation;"
+                  @click="modalDetailInformation = !modalDetailInformation"
                 />
                 <span class="slider round" />
               </label>

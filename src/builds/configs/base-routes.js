@@ -1,24 +1,33 @@
-import ConvertUnits from '@/layouts/ConvertUnits';
-import TeamLayout from '@/layouts/TeamLayout';
-import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
-import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
-import AccessWalletLayout from '@/layouts/AccessWalletLayout';
-import InterfaceLayout from '@/layouts/InterfaceLayout';
-import HelpCenterLayout from '@/layouts/HelpCenterLayout';
-import NotFoundLayout from '@/layouts/NotFoundLayout';
-import GettingStarted from '@/layouts/GettingStarted';
+const ConvertUnits = () => import('@/layouts/ConvertUnits');
+const TeamLayout = () => import('@/layouts/TeamLayout');
+const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
+const TermsAndConditionsLayout = () =>
+  import('@/layouts/TermsAndConditionsLayout');
+const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
+const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
+const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
+const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
+const GettingStarted = () => import('@/layouts/GettingStarted');
 
-import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer';
-import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer';
-import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer';
-import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer';
-import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer';
-import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
-import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
-import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
-import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
+const DappsContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DappsContainer');
+const DeployContractContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DeployContractContainer');
+const InteractWithContractContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/InteractWithContractContainer');
+const SendCurrencyContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
+const SendOfflineContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SendOfflineContainer');
+const SwapContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SwapContainer');
+const SignMessageContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
+const VerifyMessageContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
+import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
 
 const router = [
   {
@@ -72,7 +81,6 @@ const router = [
   {
     path: '/interface',
     component: InterfaceLayout,
-    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -125,18 +133,6 @@ const router = [
 
 Object.keys(dapps).forEach(dapp => {
   router[router.length - 1].children.push(dapps[dapp]);
-});
-
-router[router.length - 1].children.map(route => {
-  if (route.hasOwnProperty('children')) {
-    route.children.map(childRoute => {
-      childRoute['meta'] = { requiresAuth: true };
-      return childRoute;
-    });
-  }
-
-  route['meta'] = { requiresAuth: true };
-  return route;
 });
 
 export default router;

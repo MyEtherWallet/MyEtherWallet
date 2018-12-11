@@ -31,17 +31,17 @@
             </div>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false;">{{
+            <a href="/#about-mew" @click="isMobileMenuOpen = false">{{
               $t('header.about')
             }}</a>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false;">{{
+            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
               $t('common.faqs')
             }}</a>
           </li>
           <li v-if="false">
-            <a href="/#news" @click="isMobileMenuOpen = false;">{{
+            <a href="/#news" @click="isMobileMenuOpen = false">{{
               $t('common.news')
             }}</a>
           </li>
@@ -113,12 +113,7 @@
             </router-link>
             <div class="top-menu">
               <b-nav>
-                <b-nav-item
-                  v-if="isHomePage"
-                  to="/"
-                  exact
-                  @click="scrollTop();"
-                >
+                <b-nav-item v-if="isHomePage" to="/" exact @click="scrollTop()">
                   {{ $t('header.home') }}</b-nav-item
                 >
                 <b-nav-item v-if="isHomePage" to="/#about-mew">{{
@@ -126,10 +121,6 @@
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
-                <b-nav-item v-if="isHomePage" v-show="online" to="/#news">{{
-                  $t('common.news')
-                }}</b-nav-item>
-
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -195,7 +186,7 @@
             <div class="mobile-menu">
               <div
                 class="mobile-menu-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
