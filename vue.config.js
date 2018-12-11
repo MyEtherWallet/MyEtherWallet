@@ -2,6 +2,9 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const webpackConfig = {
@@ -24,7 +27,18 @@ const webpackConfig = {
         quality: '95-100'
       }
     })
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 };
 if (process.env.BUILD_TYPE === 'mewcx') {
   webpackConfig.plugins.push(
@@ -36,16 +50,25 @@ if (process.env.BUILD_TYPE === 'mewcx') {
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
             const version = require('./package.json').version;
-            let json = JSON.parse(content);
+            const json = JSON.parse(content);
             json.version = version;
             return JSON.stringify(json);
-          } else return content;
+          }
+          return content;
         }
       }
     ])
   );
 }
 if (process.env.NODE_ENV === 'production') {
+  webpackConfig.plugins.push(
+    new BrotliPlugin({
+      asset: '[path].br[query]',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240,
+      minRatio: 0.8
+    })
+  );
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
@@ -111,7 +134,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapCurrencyPicker/SwapCurrencyPicker.vue',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/index.js',
           'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.scss',
-          'src/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
+          'src/layouts/InterfaceLayout/ceslintrcrs/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue',
           'src/partners/bity/bity.js',
           'src/partners/bity/call.js',
           'src/partners/bity/config.js',
@@ -154,8 +177,17 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 }
+const pwa = {
+  name: 'MyEtherWallet',
+  workboxOptions: {
+    importWorkboxFrom: 'local'
+  }
+};
 module.exports = {
   baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
+  pwa: pwa,
+  lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
+  integrity: true,
   chainWebpack: config => {}
 };

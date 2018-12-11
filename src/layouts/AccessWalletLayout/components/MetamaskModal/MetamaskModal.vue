@@ -32,7 +32,7 @@
           >.
           <input
             type="checkbox"
-            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled;"
+            @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
           />
           <span class="checkmark" />
         </label>
@@ -80,7 +80,7 @@
           href="https://metamask.io/"
           target="_blank"
           class="mid-round-button-green-filled close-button"
-          @click="refreshPage = true;"
+          @click="refreshPage = true"
         >
           {{ $t('accessWallet.installMetamask') }}
         </a>
