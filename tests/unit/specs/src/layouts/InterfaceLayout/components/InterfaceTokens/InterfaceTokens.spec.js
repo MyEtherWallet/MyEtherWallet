@@ -26,7 +26,7 @@ describe('InterfaceTokens.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    let getters = {
+    const getters = {
       network: () => []
     };
 
@@ -60,7 +60,7 @@ describe('InterfaceTokens.vue', () => {
       '.token-table-container table'
     )[0];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
       expect(trElement.querySelectorAll('td')[0].textContent).toEqual(
         customTokens[i].name
@@ -77,7 +77,7 @@ describe('InterfaceTokens.vue', () => {
       '.token-table-container table'
     )[1];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
       expect(trElement.querySelectorAll('td')[0].textContent).toEqual(
         localTokens[i].name
