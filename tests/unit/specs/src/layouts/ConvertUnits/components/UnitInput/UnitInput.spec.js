@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import UnitInput from '@/layouts/ConvertUnits/components/UnitInput/UnitInput.vue';
 
@@ -27,7 +26,7 @@ describe('UnitInput.vue', () => {
 
   it('should render correct contents', () => {
     for (
-      var i = 0;
+      let i = 0;
       i < wrapper.vm.$el.querySelector('.block-left .select-block').length;
       i++
     ) {
@@ -39,7 +38,7 @@ describe('UnitInput.vue', () => {
     }
 
     for (
-      var i = 0;
+      let i = 0;
       i < wrapper.vm.$el.querySelector('.block-right .select-block').length;
       i++
     ) {
