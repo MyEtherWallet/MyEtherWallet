@@ -45,7 +45,7 @@
               name=""
               value=""
               placeholder="Deposit Amount"
-              @input="amountChanged('from');"
+              @input="amountChanged('from')"
             />
           </div>
           <div class="error-message-container">
@@ -76,7 +76,7 @@
               name=""
               value=""
               placeholder="Received Amount"
-              @input="amountChanged('to');"
+              @input="amountChanged('to')"
             />
           </div>
           <div class="error-message-container">
