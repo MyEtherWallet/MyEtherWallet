@@ -60,7 +60,9 @@
   "articleTo": "to",
   "send": "Send",
   "addr": "Address",
+  "search": "Search",
   "timeRemaining": "Time Remaining",
   "swapButtonLoading": "Finalizing Swap Details",
-  "sendTxType": "Type"
+  "sendTxType": "Type",
+  "belowMin":"Below minimun swap value of"
 }
