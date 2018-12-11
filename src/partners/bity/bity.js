@@ -272,8 +272,8 @@ export default class BitySwap {
     };
   }
 
-  static async getOrderStatus(swapDetails) {
-    const data = await getStatus({ orderid: swapDetails.statusId });
+  static async getOrderStatus(noticeDetails) {
+    const data = await getStatus({ orderid: noticeDetails.orderId });
     switch (data.status) {
       case bityStatuses.OPEN:
         return 'new';

@@ -23,6 +23,16 @@ const SimplexCurrencies = {
   }
 };
 
+const statuses = {
+  new: 'new',
+  initiated: 'INITIATED',
+  declined: 'simplexcc_declined',
+  pending: 'pending_simplexcc_approval',
+  payment: 'pending_simplexcc_payment_to_partner',
+  sent: 'SENT_TO_SIMPLEX',
+  cancelled: 'cancelled'
+};
+
 const MIN_FIAT = 50;
 const MAX_FIAT = 20000;
 const PROVIDER_NAME = 'simplex';
@@ -31,4 +41,4 @@ const host = {
   url: process.env.SIMPLEX_API_HOST || mewSimplex
 };
 
-export { SimplexCurrencies, host, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };
+export { SimplexCurrencies, host, statuses, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };

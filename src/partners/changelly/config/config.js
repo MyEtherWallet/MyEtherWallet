@@ -10,7 +10,7 @@ const changellyMethods = {
   }
 };
 
-const changellyStatuses = {
+const statuses = {
   new: 'new',
   waiting: 'waiting',
   confirming: 'confirming',
@@ -27,4 +27,4 @@ const PROVIDER_NAME = 'changelly';
 
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
-export { changellyMethods, changellyStatuses, requireExtraId, PROVIDER_NAME };
+export { changellyMethods, statuses, requireExtraId, PROVIDER_NAME };

@@ -40,24 +40,29 @@
             :key="notification.title + notification.timestamp + idx"
             class="notification-item"
           >
-            <component
-              :is="useComponent(notification.type)"
-              :expand="expand(idx, notification)"
-              :shown="shown"
-              :notice="notification"
-              :convert-to-gwei="convertToGwei"
-              :convert-to-eth="convertToEth"
-              :get-fiat-value="getFiatValue"
-              :date-string="dateString"
-              :time-string="timeString"
-              :hash-link="hashLink"
-              :address-link="addressLink"
-              :process-status="processStatus"
-              :index="idx"
-              :child-update-notification="childUpdateNotification(idx)"
-              @showDetails="showDetails"
+            <keep-alive
+              :max="10"
+              :exclude="['transaction-notification', 'transaction-error']"
             >
-            </component>
+              <component
+                :is="useComponent(notification.type)"
+                :expand="expand(idx, notification)"
+                :shown="shown"
+                :notice="notification"
+                :convert-to-gwei="convertToGwei"
+                :convert-to-eth="convertToEth"
+                :get-fiat-value="getFiatValue"
+                :date-string="dateString"
+                :time-string="timeString"
+                :hash-link="hashLink"
+                :address-link="addressLink"
+                :process-status="processStatus"
+                :index="idx"
+                :child-update-notification="childUpdateNotification(idx)"
+                @showDetails="showDetails"
+              >
+              </component>
+            </keep-alive>
           </li>
         </ul>
         <div v-else class="notification-no-item">No notifications found :(</div>
