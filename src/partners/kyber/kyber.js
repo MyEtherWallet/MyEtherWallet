@@ -1,6 +1,6 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
-import { networkSymbols } from '../partnersConfig';
+import { networkSymbols, ERC20 } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
   kyberBaseCurrency,
@@ -9,7 +9,6 @@ import {
   KyberCurrencies,
   kyberAddressFallback,
   kyberNetworkABI,
-  ERC20,
   kyberValidNetworks,
   kyberNetworkENS,
   walletDepositeAddress
@@ -240,25 +239,7 @@ export default class Kyber {
         to: this.getTokenAddress(fromToken),
         value: 0,
         data: new this.web3.eth.Contract(
-          [
-            {
-              constant: false,
-              inputs: [
-                {
-                  name: '_spender',
-                  type: 'address'
-                },
-                {
-                  name: '_value',
-                  type: 'uint256'
-                }
-              ],
-              name: 'approve',
-              outputs: [],
-              payable: false,
-              type: 'function'
-            }
-          ],
+          ERC20,
           this.getTokenAddress(fromToken)
         ).methods
           .approve(this.getKyberNetworkAddress(), fromValueWei)
