@@ -4,7 +4,8 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="/"
+    />
   </div>
 </template>
 

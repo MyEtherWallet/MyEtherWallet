@@ -10,29 +10,38 @@
       <div class="the-form domain-name">
         <input
           v-model="localDomainName"
-          :class="[localDomainName.length < 7 && localDomainName !== '' ? 'errored' : '']"
+          :class="[
+            localDomainName.length < 7 && localDomainName !== ''
+              ? 'errored'
+              : ''
+          ]"
           type="text"
           name=""
-          placeholder="Please Enter at Least 7 Characters" >
+          placeholder="Please Enter at Least 7 Characters"
+        />
         <span>.eth</span>
       </div>
       <p
         v-show="localDomainName.length < 7 && localDomainName !== ''"
-        class="erroredMsg"> Domain name is less than 7 characters. </p>
+        class="erroredMsg"
+      >
+        Domain name is less than 7 characters.
+      </p>
       <div class="submit-button-container">
         <button
-          :class="[localDomainName.length < 7 ? 'disabled' : '', 'submit-button large-round-button-green-filled clickable']"
-          @click.prevent="checkDomain">
+          :class="[
+            localDomainName.length < 7 ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click.prevent="checkDomain"
+        >
           <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
-          <i
-            v-show="loading"
-            class="fa fa-spinner fa-spin"/>
+          <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
-
       </div>
-      <p
-        v-show="contractInitiated === false"
-        class="contract-loading-warning">Contract is not ready yet, transaction might fail.</p>
+      <p v-show="contractInitiated === false" class="contract-loading-warning">
+        Contract is not ready yet, transaction might fail.
+      </p>
     </form>
 
     <div class="flex-container">
@@ -41,26 +50,21 @@
         <div class="margin-left-auto add-custom-network">
           <div class="sliding-switch-white">
             <label class="switch">
-              <input
-                type="checkbox"
-                @click="expendDomainCheckForm" >
-              <span class="slider round"/>
+              <input type="checkbox" @click="expendDomainCheckForm" />
+              <span class="slider round" />
             </label>
           </div>
         </div>
       </div>
-      <div
-        ref="checkForm"
-        class="domain-check-form hidden">
+      <div ref="checkForm" class="domain-check-form hidden">
         <div class="domain-checker">
           <input
             type="number"
             name=""
             value=""
-            placeholder="Enter Domain Name" >
-          <div
-            class="check-button"
-            @click="domainAvailabilityCheck">
+            placeholder="Enter Domain Name"
+          />
+          <div class="check-button" @click="domainAvailabilityCheck">
             {{ $t('common.check') }}
           </div>
         </div>
@@ -153,7 +157,8 @@
     <interface-bottom-text
       :link-text="$t('interface.learnMore')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="/"
+    />
   </div>
 </template>
 
