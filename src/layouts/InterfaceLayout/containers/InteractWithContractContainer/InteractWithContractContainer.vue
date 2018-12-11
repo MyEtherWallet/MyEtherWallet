@@ -417,6 +417,7 @@ export default {
             .filter(func => func.type !== 'constructor')
             .filter(func => func.constant !== undefined);
           this.interact = true;
+          window.scrollTo(0, 0);
           break;
         default:
           this.interact = false;

@@ -21,117 +21,123 @@
       <img :src="images.bity" class="logo-bity" />
     </div>
 
-    <div class="send-form">
-      <div class="form-block amount-to-address">
-        <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.from') }}</h4>
-          </div>
-          <swap-currency-picker
-            :currencies="fromArray"
-            :from-source="true"
-            page="SwapContainerFrom"
-            @selectedCurrency="setFromCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              v-model="fromValue"
-              type="number"
-              name=""
-              value=""
-              placeholder="Deposit Amount"
-              @input="amountChanged('from');"
+    <div class="form-container">
+      <div class="send-form">
+        <div class="form-block amount-to-address">
+          <div class="amount">
+            <div class="title">
+              <h4>{{ $t('common.from') }}</h4>
+            </div>
+            <swap-currency-picker
+              :currencies="fromArray"
+              :from-source="true"
+              page="SwapContainerFrom"
+              @selectedCurrency="setFromCurrency"
             />
+            <div class="the-form amount-number">
+              <input
+                v-model="fromValue"
+                type="number"
+                name=""
+                value=""
+                placeholder="Deposit Amount"
+                @input="amountChanged('from');"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
+              <p v-if="notEnough && !fromBelowMinAllowed">
+                {{ $t('common.dontHaveEnough') }}
+              </p>
+              <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+            </div>
           </div>
-          <div class="error-message-container">
-            <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="notEnough && !fromBelowMinAllowed">
-              {{ $t('common.dontHaveEnough') }}
+          <div class="exchange-icon"><img :src="images.swap" /></div>
+          <div class="amount">
+            <div class="title">
+              <h4>{{ $t('common.to') }}</h4>
+            </div>
+            <swap-currency-picker
+              :currencies="toArray"
+              :from-source="false"
+              page="SwapContainerTo"
+              @selectedCurrency="setToCurrency"
+            />
+            <div class="the-form amount-number">
+              <input
+                v-model="toValue"
+                type="number"
+                name=""
+                value=""
+                placeholder="Received Amount"
+                @input="amountChanged('to');"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
+              <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title title-and-copy">
+            <h4>{{ $t('common.toAddress') }}</h4>
+            <p class="copy-button prevent-user-select">
+              {{ $t('common.copy') }}
             </p>
-            <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
           </div>
         </div>
-        <div class="exchange-icon"><img :src="images.swap" /></div>
-        <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.to') }}</h4>
-          </div>
-          <swap-currency-picker
-            :currencies="toArray"
-            :from-source="false"
-            page="SwapContainerTo"
-            @selectedCurrency="setToCurrency"
+        <div class="the-form gas-amount">
+          <drop-down-address-selector
+            :currency="toCurrency"
+            :current-address="currentAddress"
+            @toAddress="setToAddress"
           />
-          <div class="the-form amount-number">
-            <input
-              v-model="toValue"
-              type="number"
-              name=""
-              value=""
-              placeholder="Received Amount"
-              @input="amountChanged('to');"
-            />
-          </div>
-          <div class="error-message-container">
-            <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-            <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
-          </div>
+        </div>
+        <div class="error-message-container">
+          <p>You have entered wrong address.</p>
         </div>
       </div>
-    </div>
 
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>{{ $t('common.toAddress') }}</h4>
-          <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
+      <div v-show="showRefundAddress" class="send-form">
+        <div class="title-container">
+          <div class="title title-and-copy">
+            <h4>
+              {{ fromCurrency }} address for refund (if needed) from Changelly
+            </h4>
+            <p class="copy-button prevent-user-select">
+              {{ $t('common.copy') }}
+            </p>
+          </div>
+        </div>
+        <div class="the-form gas-amount">
+          <drop-down-address-selector
+            :currency="fromCurrency"
+            :current-address="currentAddress"
+            @toAddress="setRefundAddress"
+          />
         </div>
       </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector
-          :currency="toCurrency"
-          :current-address="currentAddress"
-          @toAddress="setToAddress"
+
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title title-and-copy"><h4>Providers</h4></div>
+        </div>
+        <providers-radio-selector
+          :loading-provider-error="loadingError"
+          :loading-provider-rates="!haveProviderRates"
+          :provider-data="providerList"
+          :from-value="+fromValue"
+          :to-value="+toValue"
+          :no-providers-pair="noProvidersPair"
+          :loading-data="loadingData"
+          :providers-found="providersFound"
+          @selectedProvider="setSelectedProvider"
         />
       </div>
-      <div class="error-message-container">
-        <p>You have entered wrong address.</p>
-      </div>
-    </div>
-
-    <div v-show="showRefundAddress" class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>
-            {{ fromCurrency }} address for refund (if needed) from Changelly
-          </h4>
-          <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
-        </div>
-      </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector
-          :currency="fromCurrency"
-          :current-address="currentAddress"
-          @toAddress="setRefundAddress"
-        />
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy"><h4>Providers</h4></div>
-      </div>
-      <providers-radio-selector
-        :loading-provider-error="loadingError"
-        :loading-provider-rates="!haveProviderRates"
-        :provider-data="providerList"
-        :from-value="+fromValue"
-        :to-value="+toValue"
-        :no-providers-pair="noProvidersPair"
-        :loading-data="loadingData"
-        :providers-found="providersFound"
-        @selectedProvider="setSelectedProvider"
-      />
     </div>
 
     <div class="submit-button-container">

@@ -23,6 +23,14 @@
 
     .direction {
       display: flex;
+      margin: 15px 0;
+
+      @media all and (max-width: $tablet-width) {
+        img {
+          transform: rotate(90deg);
+          height: 15px;
+        }
+      }
 
       img {
         margin: 0 auto;
@@ -33,6 +41,11 @@
       display: grid;
       grid-template-columns: 1fr 70px 1fr;
       padding-bottom: 15px;
+
+      @media all and (max-width: $tablet-width) {
+        display: block;
+      }
+
 
       .tx-data {
         background-color: $background-color-7;
@@ -133,6 +146,9 @@
     margin: 0 auto;
     text-align: center;
     width: 300px;
+    @media all and (max-width: $tablet-width) {
+      width: initial;
+    }
   }
 
   p {

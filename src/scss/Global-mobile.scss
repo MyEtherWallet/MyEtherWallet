@@ -1274,6 +1274,15 @@
     resize: none;
     width: 100%;
   }
+  
+  .custom-textarea-2 {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    resize: none;
+    width: 100%;
+  }
 
   // *********************************************************************
   // Custom Links
@@ -1290,6 +1299,7 @@
 
   .disabled {
     background-color: $light-grey-12;
+    border-color: $light-grey-12;
     pointer-events: none;
   }
 } //@media all and ( max-width: $mobile-width )

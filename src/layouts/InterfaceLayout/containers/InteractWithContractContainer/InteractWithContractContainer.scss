@@ -8,6 +8,9 @@
     text-align: center;
     min-width: 230px;
     margin: 5px;
+    @media all and (max-width: $tablet-width) {
+      min-width: initial;
+    }
   }
 
   .send-form {
@@ -105,12 +108,16 @@
 
     .submit-button {
       position: relative;
+      min-width: 200px;
+      @media all and (max-width: $tablet-width) {
+        min-width: initial;
+      }
     }
 
     img {
       position: absolute;
-      right: 25px;
-      top: 25px;
+      right: 20px;
+      top: 23px;
       width: 30px;
     }
   }
@@ -131,16 +138,41 @@
     grid-template-columns: 1fr 200px;
     grid-gap: 10px;
 
+    @media all and (max-width: $tablet-width) {
+
+      .functions {
+        grid-area: functions;
+      }
+
+      .address {
+        grid-area: address;
+      }
+
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-template-areas: 
+        "functions"
+        "address";
+    }
+
     .address {
       display: grid;
       padding: 10px 0;
       border-bottom: 2px solid $background-color-1;
       grid-template-columns: auto 1fr;
 
+      @media all and (max-width: $tablet-width) {
+        display: block;
+      }
+
       input {
+        width: 100%;
         color: $dark-blue-1;
         border: 0;
         margin-left: 10px;
+        @media all and (max-width: $tablet-width) {
+          margin-left: 0px;
+        }
       }
     }
 
@@ -178,6 +210,10 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 400px;
+
+  @media all and (max-width: $tablet-width) {
+    padding: 10px 0;
+  }
 }
 
 .result-container {

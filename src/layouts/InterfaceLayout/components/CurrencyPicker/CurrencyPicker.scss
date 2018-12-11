@@ -17,7 +17,7 @@
   position: relative;
   justify-content: flex-end;
 
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: $tablet-width) {
     justify-content: flex-start;
   }
 
@@ -44,7 +44,7 @@
     right: 20px;
     top: 16px;
 
-    @media all and (max-width: $mobile-width) {
+    @media all and (max-width: $tablet-width) {
       left: 10px;
       top: 16px;
     }
@@ -52,7 +52,7 @@
 
   p {
     padding-right: 25px;
-    @media all and (max-width: $mobile-width) {
+    @media all and (max-width: $tablet-width) {
       padding-left: 15px;
     }
   }

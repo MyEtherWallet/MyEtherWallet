@@ -8,6 +8,10 @@
 
 .buy-subdomain-content {
   padding: 35px 62px;
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+    margin-bottom: 10px;
+  }
 }
 
 .buy-subdomain-form-container {
@@ -24,6 +28,11 @@
 
   .subdomain-input {
     display: flex;
+    text-align: center;
+
+    @media all and (max-width: $tablet-width) {
+      display: block;
+    }
 
     input {
       background-color: $light-grey-1;
@@ -42,6 +51,11 @@
       cursor: pointer;
       border-radius: 4px;
       padding: 15px 35px;
+
+      @media all and (max-width: $tablet-width) {
+        display: inline-block;
+        margin-top: 20px;
+      }
     }
   }
 
