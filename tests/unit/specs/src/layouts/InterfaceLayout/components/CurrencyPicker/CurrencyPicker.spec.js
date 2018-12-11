@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 
@@ -32,7 +31,7 @@ describe('CurrencyPicker.vue', () => {
     const currencyElements = wrapper.vm.$el.querySelectorAll(
       '.item-container div'
     );
-    for (var i = 0; i < currencyElements.length; i++) {
+    for (let i = 0; i < currencyElements.length; i++) {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.$data.localCurrency[i];
       expect(
@@ -103,7 +102,7 @@ describe('CurrencyPicker.vue', () => {
     const currencyElements = wrapper.vm.$el.querySelectorAll(
       '.item-container div'
     );
-    for (var i = 0; i < currencyElements.length; i++) {
+    for (let i = 0; i < currencyElements.length; i++) {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.$data.localCurrency[i];
       expect(
@@ -138,7 +137,7 @@ describe('CurrencyPicker.vue', () => {
 
     it('should render correct localCurrency data', () => {
       const currencyElements = wrapper.findAll('.item-container div');
-      for (var i = 0; i < currencyElements.length; i++) {
+      for (let i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
         const localCurrency = wrapper.vm.$data.localCurrency[i];
         currencyElement.trigger('click');

@@ -1,64 +1,54 @@
-import { shallowMount } from '@vue/test-utils'
-// import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
-import  sinon from 'sinon' 
-import {
-  Tooling
-} from '@@/helpers';
+// import sinon from 'sinon';
+// import { shallowMount } from '@vue/test-utils';
+// import { Tooling } from '@@/helpers';
+// import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal';
 
 describe('PasswordModal.vue', () => {
+  // let localVue, i18n, store, baseSetup;
+  // beforeAll(() => {
+  //   baseSetup = Tooling.createLocalVueInstance();
+  //   localVue = baseSetup.localVue;
+  //   i18n = baseSetup.i18n;
+  //   store = baseSetup.store;
+  // });
 
-  describe('PasswordModal.vue', () => {
-    let localVue, i18n, wrapper, store;
+  // beforeEach(() => {
+  //   shallowMount(PasswordModal, {
+  //     localVue,
+  //     i18n,
+  //     store,
+  //     attachToDocument: true
+  //   });
+  // });
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  // it('should render content', () => {});
 
-    beforeEach(() => {
-        // wrapper = shallowMount(PasswordModal, {
-        //   localVue,
-        //   i18n,
-        //   store,
-        //   attachToDocument: true
-        // });
-    });
+  // describe('PasswordModal.vue Methods', () => {
+  //   let localVue, i18n, store;
+  //   const spy = sinon.stub();
+  //   const mockRoute = {
+  //     push: spy
+  //   };
 
-    it('should render content', () => {
+  //   beforeAll(() => {
+  //     const baseSetup = Tooling.createLocalVueInstance();
+  //     localVue = baseSetup.localVue;
+  //     i18n = baseSetup.i18n;
+  //     store = baseSetup.store;
+  //   });
 
-    });
-  });
+  //   beforeEach(() => {
+  //     shallowMount(PasswordModal, {
+  //       localVue,
+  //       i18n,
+  //       store,
+  //       attachToDocument: true,
+  //       mocks: {
+  //         $router: mockRoute
+  //       }
+  //     });
+  //   });
 
-  describe('PasswordModal.vue Methods', () => {
-    let localVue, i18n, wrapper, store, spy;
-    spy = sinon.stub()
-    const mockRoute = {
-      push: spy
-    };
-
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
-
-    beforeEach(() => {
-        // wrapper = shallowMount(PasswordModal, {
-        //   localVue,
-        //   i18n,
-        //   store,
-        //   attachToDocument: true,
-        //   mocks: {
-        //     $router: mockRoute,
-        //   }
-        // });
-    });
-
-    it('should render content', () => {
-
-    });
-});
+  it('should render content', () => {});
+  // });
 });
