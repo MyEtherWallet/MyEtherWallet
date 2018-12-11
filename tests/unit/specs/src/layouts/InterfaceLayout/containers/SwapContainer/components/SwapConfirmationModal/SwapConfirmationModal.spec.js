@@ -7,7 +7,6 @@ import {
 
 
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode/ButtonWithQrCode.vue';
-import DetailInformation from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/components/DetailInformation/DetailInformation.vue';
 
 const RouterLinkStub = {
   name:'router-link',
@@ -34,8 +33,7 @@ describe('SwapConfirmationModal.vue', () => {
           store,
           attachToDocument: true,
           stubs: {
-            'router-link':RouterLinkStub,
-            'detail-information':DetailInformation
+            'router-link':RouterLinkStub
           }
         });
     });
