@@ -5,6 +5,7 @@ import {
   BityCurrencies,
   bityFiatCurrencies,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   BITY_MAX,
   BITY_MIN,
   BITY_DECIMALS
@@ -226,38 +227,7 @@ export default class BitySwap {
     }
   }
 
-  getStatus(id) {
-    getStatus({
-      orderid: id
-    }).then(this.updateStatus);
-  }
-
   // ================= Check status of order methods ===================================
-  updateStatus() {
-    return Promise.resolve('');
-    // return new Promise(resolve => {
-    //   if (this.validStatus.indexOf(data.status) !== -1) {
-    //     this.currentOrderStatus = 'RCVE';
-    //     resolve({ status: 'RCVE', completed: false }); // order finalized: false
-    //   }
-    //   if (
-    //     this.currentOrderStatus === 'OPEN' &&
-    //     this.validStatus.indexOf(data.input.status) !== -1
-    //   ) {
-    //     this.currentOrderStatus = 'RCVE';
-    //     resolve({ status: 'RCVE', completed: false }); // order finalized: false
-    //   } else if (
-    //     this.currentOrderStatus === 'RCVE' &&
-    //     this.validStatus.indexOf(data.output.status) !== -1
-    //   ) {
-    //     this.currentOrderStatus = 'FILL';
-    //     resolve({ status: 'FILL', completed: true }); // order finalized: true
-    //   } else if (this.invalidStatus.indexOf(data.status) !== -1) {
-    //     this.currentOrderStatus = 'CANC';
-    //     resolve({ status: 'CANC', completed: true }); // order finalized: true
-    //   }
-    // });
-  }
 
   static parseOrder(order) {
     return {
@@ -268,7 +238,7 @@ export default class BitySwap {
       sendValue: order.input.amount,
       status: order.status,
       timestamp: order.timestamp_created,
-      validFor: order.validFor
+      validFor: order.validFor || TIME_SWAP_VALID
     };
   }
 

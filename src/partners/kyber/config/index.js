@@ -1,6 +1,7 @@
 import {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
@@ -14,6 +15,7 @@ import kyberNetworkABI from './kyberNetwork.abi';
 export {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   defaultValues,
   walletDepositeAddress,
   kyberNetworkENS,

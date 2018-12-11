@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
   statuses,
+  TIME_SWAP_VALID,
   MIN_FIAT,
   MAX_FIAT,
   SimplexCurrencies,
@@ -253,6 +254,7 @@ export default class Simplex {
   }
 
   static async getOrderStatus(noticeDetails) {
+    console.log('simplex status start'); // todo remove dev item
     const status = await getStatus(noticeDetails.orderId);
     console.log(status); // todo remove dev item
     return Simplex.parseSimplexStatus(status);
@@ -283,7 +285,7 @@ export default class Simplex {
       status: 'new',
       timestamp: order.timestamp,
       userAddress: order.destination_wallet_address,
-      validFor: 600
+      validFor: TIME_SWAP_VALID
     };
   }
 }

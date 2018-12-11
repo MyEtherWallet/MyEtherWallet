@@ -3,7 +3,8 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
   ChangellyCurrencies,
-  changellyStatuses,
+  statuses,
+  TIME_SWAP_VALID,
   PROVIDER_NAME
 } from './config';
 import changellyCalls from './changelly-calls';
@@ -198,7 +199,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 600 // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // Rates provided are only an estimate, and
     };
   }
 

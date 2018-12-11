@@ -5,6 +5,7 @@ import kyberApi from './kyber-api';
 import {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   defaultValues,
   KyberCurrencies,
   kyberAddressFallback,
@@ -416,7 +417,8 @@ export default class Kyber {
     swapDetails.providerSends = swapDetails.toValue;
     swapDetails.parsed = {
       sendToAddress: this.getKyberNetworkAddress(),
-      status: 'pending'
+      status: 'pending',
+      validFor: TIME_SWAP_VALID
     };
     swapDetails.providerAddress = this.getKyberNetworkAddress();
     return swapDetails;

@@ -1,7 +1,8 @@
 import { ChangellyCurrencies } from './currencies';
 import {
   changellyMethods,
-  changellyStatuses,
+  statuses,
+  TIME_SWAP_VALID,
   requireExtraId,
   PROVIDER_NAME
 } from './config';
@@ -9,7 +10,7 @@ import {
 export {
   ChangellyCurrencies,
   changellyMethods,
-  changellyStatuses,
+  statuses,
   requireExtraId,
   PROVIDER_NAME
 };
