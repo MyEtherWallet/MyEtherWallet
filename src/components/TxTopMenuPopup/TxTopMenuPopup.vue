@@ -1,7 +1,7 @@
 <template>
   <div class="tx-topmenu-popup">
     <div class="wrap txpopup-container">
-      <div class="menu-title" @click="popupOpen = !popupOpen;">
+      <div class="menu-title" @click="popupOpen = !popupOpen">
         <i class="indicator fa fa-circle" aria-hidden="true"></i>
         <p>Transactions</p>
         <i v-if="popupOpen" class="fa fa-angle-up" aria-hidden="true"></i>
@@ -43,7 +43,6 @@ export default {
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
         if (event.path[count].className === 'wrap txpopup-container') {
-          console.log('Exited!');
           return;
         }
       }

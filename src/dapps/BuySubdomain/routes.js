@@ -1,4 +1,4 @@
-import BuySubdomain from './BuySubdomain';
+const BuySubdomain = () => import('./BuySubdomain');
 
 export default {
   path: 'dapps/buy-subdomain',

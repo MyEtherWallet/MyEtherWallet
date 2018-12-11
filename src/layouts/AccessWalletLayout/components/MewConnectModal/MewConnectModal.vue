@@ -13,7 +13,12 @@
       <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
     <div class="appstore-button-container">
-      <img src="~@/assets/images/icons/appstore.png" />
+      <a
+        href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+        target="_blank"
+      >
+        <img src="~@/assets/images/icons/appstore.png" />
+      </a>
       <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
     <customer-support />

@@ -1,6 +1,6 @@
-import GenerateInfo from './components/GenerateInfo';
-import GenerateTx from './components/GenerateTx';
-import SendTx from './components/SendTx';
+const GenerateInfo = () => import('./components/GenerateInfo');
+const GenerateTx = () => import('./components/GenerateTx');
+const SendTx = () => import('./components/SendTx');
 
 export default {
   children: [
