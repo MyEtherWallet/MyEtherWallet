@@ -209,6 +209,21 @@ export default class Simplex {
     );
   }
 
+
+  static parseOrder(order) {
+    return {
+      orderId: order.quote_id,
+      statusId: order.user_id,
+      sendToAddress: 'None',
+      recValue: order.digital_total_amount_amount,
+      sendValue: order.fiat_total_amount_amount,
+      status: 'new',
+      timestamp: order.timestamp || new Date().toISOString(),
+      userAddress: order.destination_wallet_address,
+      validFor: TIME_SWAP_VALID
+    };
+  }
+
   async startSwap(swapDetails) {
     await this.updateFiat(
       swapDetails.fromCurrency,
@@ -255,12 +270,16 @@ export default class Simplex {
 
   static async getOrderStatus(noticeDetails) {
     console.log('simplex status start'); // todo remove dev item
-    const status = await getStatus(noticeDetails.orderId);
+    const result = await getStatus(noticeDetails.statusId);
+    if (result.error) {
+      return 'error';
+    }
     console.log(status); // todo remove dev item
-    return Simplex.parseSimplexStatus(status);
+    return Simplex.parseSimplexStatus(result.result.status);
   }
 
   static parseSimplexStatus(status) {
+    console.log(status); // todo remove dev item
     switch (status) {
       case statuses.new:
       case statuses.initiated:
@@ -275,17 +294,5 @@ export default class Simplex {
     }
   }
 
-  static parseOrder(order) {
-    return {
-      orderId: order.quote_id,
-      statusId: order.user_id,
-      sendToAddress: 'None',
-      recValue: order.digital_total_amount_amount,
-      sendValue: order.fiat_total_amount_amount,
-      status: 'new',
-      timestamp: order.timestamp,
-      userAddress: order.destination_wallet_address,
-      validFor: TIME_SWAP_VALID
-    };
-  }
+
 }

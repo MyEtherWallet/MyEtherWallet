@@ -3,6 +3,7 @@ import EthereumTokens from './EthereumTokens';
 import ERC20 from './ERC20Token.abi';
 import {
   networkSymbols,
+  TIME_SWAP_VALID_DEFAULT,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
   baseCurrencyEntry,
@@ -14,6 +15,7 @@ export {
   ERC20,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
+  TIME_SWAP_VALID_DEFAULT,
   baseCurrencyEntry,
   EthereumTokens,
   networkSymbols,
