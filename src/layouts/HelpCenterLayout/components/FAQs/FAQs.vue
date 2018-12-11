@@ -4,7 +4,7 @@
       <div class="qa-cards">
         <ul class="qa__contents">
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq1');">
+            <div class="qa__contents--title" @click="openFAQ('faq1')">
               <h3>Balances not loading or showing on MyEtherWallet</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq1 == false" class="show-more">+</span>
@@ -16,7 +16,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq2');">
+            <div class="qa__contents--title" @click="openFAQ('faq2')">
               <h3>
                 Does MyEtherWallet support Bitcoin or other coins (LTC STEEM
                 ZEC)?
@@ -31,7 +31,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq3');">
+            <div class="qa__contents--title" @click="openFAQ('faq3')">
               <h3>ETH or Tokens sent to or from exchange haven't shown up</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq3 == false" class="show-more">+</span>
@@ -43,7 +43,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq4');">
+            <div class="qa__contents--title" @click="openFAQ('faq4')">
               <h3>
                 Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?
               </h3>
@@ -57,7 +57,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq5');">
+            <div class="qa__contents--title" @click="openFAQ('faq5')">
               <h3>What Is An ICO?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq5 == false" class="show-more">+</span>
@@ -70,7 +70,7 @@
           </li>
 
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq6');">
+            <div class="qa__contents--title" @click="openFAQ('faq6')">
               <h3>How to buy Ethereum(ETH) with USD?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq6 == false" class="show-more">+</span>
@@ -82,7 +82,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq7');">
+            <div class="qa__contents--title" @click="openFAQ('faq7')">
               <h3>
                 Couldn't everybody put in random private keys, look for a
                 balance, and send to their own address?
@@ -97,7 +97,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq8');">
+            <div class="qa__contents--title" @click="openFAQ('faq8')">
               <h3>What happens if MyEtherWallet goes down?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq8 == false" class="show-more">+</span>
@@ -109,7 +109,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq9');">
+            <div class="qa__contents--title" @click="openFAQ('faq9')">
               <h3>How do I interact with a Multisig Contract?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq9 == false" class="show-more">+</span>
@@ -121,7 +121,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq10');">
+            <div class="qa__contents--title" @click="openFAQ('faq10')">
               <h3>Check the current block number on MyEtherWallet</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq10 == false" class="show-more">+</span>
@@ -133,7 +133,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq11');">
+            <div class="qa__contents--title" @click="openFAQ('faq11')">
               <h3>When I unlock via keystore file, it freezes my browser</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq11 == false" class="show-more">+</span>
@@ -145,7 +145,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq12');">
+            <div class="qa__contents--title" @click="openFAQ('faq12')">
               <h3>Withdrawing DAO tokens</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq12 == false" class="show-more">+</span>
@@ -157,7 +157,7 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq13');">
+            <div class="qa__contents--title" @click="openFAQ('faq13')">
               <h3>Why don't you make me move my mouse to generate a seed?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq13 == false" class="show-more">+</span>

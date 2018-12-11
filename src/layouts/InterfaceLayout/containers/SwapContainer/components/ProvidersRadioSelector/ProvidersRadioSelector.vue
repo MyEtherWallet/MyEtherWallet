@@ -13,7 +13,7 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider);"
+              @input="setSelectedProvider(provider.provider)"
             />
             <label :for="provider.provider" />
           </div>

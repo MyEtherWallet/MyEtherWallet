@@ -1,7 +1,8 @@
 import {
   getBufferFromHex,
   getSignTransactionObject,
-  sanitizeHex
+  sanitizeHex,
+  calculateChainIdFromV
 } from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
@@ -65,7 +66,17 @@ class WalletInterface {
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
         const tx = new ethTx(txParams);
+        const networkId = tx._chainId;
         tx.sign(this.privateKey);
+        const signedChainId = calculateChainIdFromV(tx.v);
+        if (signedChainId !== networkId)
+          throw new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
+          );
         resolve(getSignTransactionObject(tx));
       } else {
         signer(txParams)

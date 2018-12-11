@@ -1,30 +1,30 @@
 <template>
-  <div>
+  <div class="info-block-container">
     <interface-network-modal ref="network" />
-    <div @click="networkModalOpen">
-      <div class="info-block network">
-        <div class="block-image">
+    <div class="info-block network" @click="networkModalOpen">
+      <div class="block-image network-type">
+        <div class="icon-block">
           <img :src="network.type.icon" class="icon" />
         </div>
-        <div class="block-content">
-          <div class="helper">
+      </div>
+      <div class="block-content">
+        <div class="information-container">
+          <div class="title-and-helper">
+            <h2>{{ $t('interface.network') }}</h2>
             <popover
               :popcontent="$t('popover.whatIsMessageContent')"
               :popovertype="'A'"
             />
           </div>
-          <div class="information-container">
-            <h2>{{ $t('interface.network') }}</h2>
-            <p>{{ network.service + '(' + network.type.name + ')' }}</p>
-            <p>
-              {{ $t('interface.lastBlock') }}: #
-              <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
-              <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
-            </p>
-          </div>
-          <div class="icon-container">
-            <img src="~@/assets/images/icons/change.svg" />
-          </div>
+          <p>{{ network.service + '(' + network.type.name + ')' }}</p>
+          <p>
+            {{ $t('interface.lastBlock') }}: #
+            <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
+            <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+          </p>
+        </div>
+        <div class="icon-container">
+          <img src="~@/assets/images/icons/change.svg" />
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@
                 {{ token.balance }}
                 <i
                   class="fa fa-times-circle clickable"
-                  @click="removeToken(index);"
+                  @click="removeToken(index)"
                 />
               </td>
             </tr>
@@ -171,7 +171,7 @@ export default {
       localStorageName[this.network.type.name] = this.customTokens;
 
       store.set('customTokens', localStorageName);
-      this.$refs.tokenModal.$refs.token.show();
+      this.$refs.tokenModal.$refs.token.hide();
     },
     tokenListExpend() {
       this.$refs.tokenTableContainer.classList.toggle('expanded');
