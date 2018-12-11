@@ -28,7 +28,7 @@
                   >{{ web3.utils.fromWei(item.price, 'ether') }}
                 </span>
                 <span class="currency">ETH </span>
-                <button @click="buyDomain(item);">
+                <button @click="buyDomain(item)">
                   <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
                   <span v-else> <i class="fa fa-times" /> </span>
                 </button>
@@ -54,7 +54,7 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import domains from './domains.json';
 import normalise from '@/helpers/normalise';
-import BN from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import web3 from 'web3';
 import { mapGetters } from 'vuex';
 
@@ -82,9 +82,9 @@ export default {
     sortedResults() {
       const newArr = this.results;
       newArr.sort((a, b) => {
-        const ab = new BN(a.price).gt(b.price)
+        const ab = new BigNumber(a.price).gt(b.price)
           ? -1
-          : new BN(a.price).eq(b.price)
+          : new BigNumber(a.price).eq(b.price)
           ? 0
           : 1;
         return ab;

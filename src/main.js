@@ -1,9 +1,12 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
-import InfiniteSlider from 'vue-infinite-slide-bar';
+// import InfiniteSlider from 'vue-infinite-slide-bar';
+import '@/assets/font-awesome.css';
+import '@/assets/google-fonts.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -28,6 +31,7 @@ import ConcatAddr from '@/filters/ConcatAddr';
 // etc
 import languages from '@/translations';
 import VueMq from 'vue-mq';
+import './registerServiceWorker';
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -40,7 +44,7 @@ Vue.use(VueMq, {
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
-Vue.component('infinite-slider', InfiniteSlider);
+// Vue.component('infinite-slider', InfiniteSlider);
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 

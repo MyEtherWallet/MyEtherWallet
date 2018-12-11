@@ -13,11 +13,8 @@
       <ul ref="hardwareList" class="button-options hardware-button-options">
         <li
           :class="selected === 'ledger' ? 'active' : ''"
-          @click="select('ledger');"
+          @click="select('ledger')"
         >
-          <!--
-            <img class="icon" :src="selected === 'ledger'? require('@/assets/images/icons/button-ledger.png') : require('@/assets/images/icons/button-ledger-hover.png')">
-          -->
           <img class="icon" src="~@/assets/images/icons/button-ledger.png" />
           <img
             class="icon-hover"
@@ -27,7 +24,7 @@
         </li>
         <li
           :class="selected === 'trezor' ? 'active' : ''"
-          @click="select('trezor');"
+          @click="select('trezor')"
         >
           <img class="icon" src="~@/assets/images/icons/button-trezor.png" />
           <img
@@ -38,7 +35,7 @@
         </li>
         <li
           :class="selected === 'bitbox' ? 'active' : ''"
-          @click="select('bitbox');"
+          @click="select('bitbox')"
         >
           <img class="icon" src="~@/assets/images/icons/button-bitbox.png" />
           <img
@@ -49,7 +46,7 @@
         </li>
         <li
           :class="selected === 'secalot' ? 'active' : ''"
-          @click="select('secalot');"
+          @click="select('secalot')"
         >
           <img class="icon" src="~@/assets/images/icons/button-secalot.png" />
           <img

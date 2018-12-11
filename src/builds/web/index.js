@@ -6,12 +6,14 @@ const webRoutes = [
   {
     path: '/',
     name: 'Home',
-    component: HomeLayout
+    component: HomeLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/create-wallet',
     name: 'CreateWalletLayout',
-    component: CreateWalletLayout
+    component: CreateWalletLayout,
+    meta: { requiresAuth: false }
   }
 ];
 const configRoutes = routes => {

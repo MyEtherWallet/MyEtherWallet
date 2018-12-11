@@ -16,7 +16,7 @@
 
       <div class="content-block">
         <div :class="blockOpen ? 'expended' : ''" class="expending-block">
-          <div class="coin-block" @click="blockOpen = !blockOpen;">
+          <div class="coin-block" @click="blockOpen = !blockOpen">
             <div class="side-block left-block">
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg" />
@@ -80,7 +80,7 @@
           <bottom-text
             link-text="Help Center"
             question="Having issues?"
-            link="/"
+            link="https://kb.myetherwallet.com"
           />
         </div>
       </div>
