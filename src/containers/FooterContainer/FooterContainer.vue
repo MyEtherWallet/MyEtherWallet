@@ -77,16 +77,22 @@
         </div>
         <div class="flex-space-between foot-note">
           <div class="links">
-            <router-link
-              v-for="(link, index) in lowerLinks"
-              :key="link.title + index"
-              :to="link.to"
-              ><span>{{ link.title }}</span></router-link
-            >
+            <div v-for="(link, index) in lowerLinks" :key="link.title + index">
+              <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                <span> {{ link.title }} </span>
+              </router-link>
+              <a v-else :href="link.href" target="_blank">
+                <span> {{ link.title }} </span>
+              </a>
+            </div>
           </div>
           <div class="copyright">
             <p>
-              {{ $t('footer.pricingP') }} <span>CoinMarketCap</span> <br />
+              {{ $t('footer.pricingP') }}
+              <a href="https://coinmarketcap.com/" target="_blank">
+                CoinMarketCap
+              </a>
+              <br />
               {{ $t('footer.copyright') }}
             </p>
           </div>
@@ -104,19 +110,17 @@
 <script>
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
-// import ConfirmationModal from '../../components/ConfirmationModal';
 
 export default {
   components: {
     'feedback-modal': FeedbackModal
-    // 'confirmation-modal': ConfirmationModal
   },
   data() {
     return {
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
-          to: '/'
+          href: 'https://github.com/MyEtherWallet/MyEtherWallet/issues'
         },
         {
           title: this.$t('footer.privacy'),
@@ -136,17 +140,14 @@ export default {
               text: this.$t('footer.units'),
               to: '/convert-units'
             },
-            {
-              text: this.$t('footer.txStat'),
-              to: '/tx-status'
-            },
-            {
-              text: this.$t('footer.advanced'),
-              to: '/advanced-tools'
-            },
+            // {
+            //   text: this.$t('footer.advanced'),
+            //   to: '/advanced-tools'
+            // },
             {
               text: this.$t('footer.extension'),
-              to: '/extensions'
+              href:
+                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             }
           ]
         },
@@ -196,7 +197,7 @@ export default {
             },
             {
               text: this.$t('common.customerSupport'),
-              to: '/'
+              href: 'mailto:support@myetherwallet.com'
             },
             {
               text: 'Help Center',
