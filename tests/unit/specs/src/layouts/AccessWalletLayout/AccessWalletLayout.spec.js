@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+// import Vue from 'vue';
+// import { shallowMount } from '@vue/test-utils';
 // import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
-import { Tooling } from '@@/helpers';
+// import { Tooling } from '@@/helpers';
 
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-};
+// const RouterLinkStub = {
+//   name: 'router-link',
+//   template: '<div class="routerlink"><slot> </slot></div>',
+//   props: ['to']
+// };
 xdescribe('[EMPTY TEST SUITE] AccessWalletLayout.vue', () => {
-  let localVue, i18n, wrapper, store;
+  // let localVue, i18n, wrapper, store;
 
   // beforeAll(() => {
   //     const baseSetup = Tooling.createLocalVueInstance();
