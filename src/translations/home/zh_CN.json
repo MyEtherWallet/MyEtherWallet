@@ -21,5 +21,15 @@
   "socialTitle": "Join MEW Community",
   "socialSubheading": "Get in the know and see your balance grow (we hope)!",
   "promoTitle": "以太坊的原生钱包",
-  "lostTitle": "Oops! Looks like you're lost."
+  "lostTitle": "Oops! Looks like you're lost.",
+  "howToCreateWalletTitle": "",
+  "howToCreateWalletDesc": "",
+  "whatIsMewConnectTitle": "",
+  "whatIsMewConnectDesc": "",
+  "workingWOtherWalletsTitle": "",
+  "workingWOtherWalletsDesc": "",
+  "howToSendTxTitle": "",
+  "howToSendTxDesc": "",
+  "forgotPasswordPrivKeyTitle": "",
+  "forgotPasswordPrivKeyDesc": ""
 }
