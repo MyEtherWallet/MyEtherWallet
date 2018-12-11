@@ -35,6 +35,7 @@ const bityStatuses = {
 
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
 
+const TIME_SWAP_VALID = 600;
 const BITY_MIN = 0.01;
 const BITY_MAX = 3;
 const BITY_DECIMALS = 6;
@@ -46,6 +47,7 @@ export {
   bityRateEndpoint,
   bityMethods,
   bityFiatCurrencies,
+  TIME_SWAP_VALID,
   PROVIDER_NAME,
   BITY_MIN,
   BITY_MAX,

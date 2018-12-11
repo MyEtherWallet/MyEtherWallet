@@ -240,7 +240,7 @@ export default {
         }
       };
 
-      if (this.shouldCheckStatus) {
+      // if (this.shouldCheckStatus) {
         getStatus();
         this.statusInterval = setInterval(() => {
           getStatus();
@@ -248,7 +248,7 @@ export default {
             clearInterval(this.statusInterval);
           }
         }, 2000);
-      }
+      // }
     },
     timeUpdater() {
       const updateTime = () => {

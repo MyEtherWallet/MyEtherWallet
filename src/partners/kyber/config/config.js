@@ -1,4 +1,6 @@
 // TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
+import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
+
 const kyberTokenList = {
   ETH: 'https://tracker.kyber.network/api/tokens/supported',
   ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
@@ -29,12 +31,14 @@ const defaultValues = {
   gasPrice: 2000000000 // 2 Gwei
 };
 
+const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT
 const PROVIDER_NAME = 'kybernetwork';
 const kyberBaseCurrency = 'ETH';
 
 export {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,

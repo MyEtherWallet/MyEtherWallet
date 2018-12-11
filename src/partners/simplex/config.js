@@ -1,4 +1,4 @@
-import { mewSimplex } from '../partnersConfig';
+import { mewSimplex, TIME_SWAP_VALID_DEFAULT } from '../partnersConfig';
 
 const SimplexCurrencies = {
   fiat: {
@@ -33,6 +33,7 @@ const statuses = {
   cancelled: 'cancelled'
 };
 
+const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const MIN_FIAT = 50;
 const MAX_FIAT = 20000;
 const PROVIDER_NAME = 'simplex';
@@ -41,4 +42,4 @@ const host = {
   url: process.env.SIMPLEX_API_HOST || mewSimplex
 };
 
-export { SimplexCurrencies, host, statuses, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };
+export { SimplexCurrencies, host, statuses, TIME_SWAP_VALID, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };
