@@ -251,7 +251,7 @@ export default {
     shouldCheckStatus() {
       return [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
         this.notice.swapStatus
-      ) /*|| this.details.timeRemaining > 0*/;
+      );
     },
     statusUpdater() {
       // NOTE: if active then should get checked even after time expires

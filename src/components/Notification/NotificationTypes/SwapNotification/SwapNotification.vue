@@ -143,7 +143,7 @@ export default {
       arrowImage: Arrow,
       unreadCount: 0,
       currentStatus: '',
-      timeRemaining: 1,
+      timeRemaining: this.notice.body.timeRemaining,
       providers: providerMap,
       provider: {},
       timerInterval: null,
@@ -157,9 +157,6 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
-    details() {
-      return this.notice.body;
-    },
     txStatus() {
       return this.processStatus(this.notice.status);
     },
@@ -169,44 +166,42 @@ export default {
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
     },
     shouldCheckStatus() {
-      return (
-        [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
-          this.notice.swapStatus
-        ) && this.notice.status === notificationStatuses.PENDING
+      return [notificationStatuses.NEW, notificationStatuses.PENDING].includes(
+        this.notice.swapStatus
       );
     },
     timeRemains() {
-      return this.notice.timeRemaining > 0;
-    },
-    modalShown() {
-      console.log('modalShown', this.shown); // todo remove dev item
-      return this.shown;
+      return this.timeRemaining > 0;
     }
   },
   watch: {
     shown(val) {
-      console.log('shown:', val); // todo remove dev item
+      if (val) {
+        this.startPolling();
+      } else {
+        this.stopPolling();
+      }
     }
   },
   beforeDestroy() {
     this.stopPolling();
-  },
-  mounted() {
-    this.startPolling();
   },
   methods: {
     emitShowDetails() {
       this.$emit('showDetails', ['swap', this.notice, this.index]);
     },
     startPolling() {
-      console.log('startPolling'); // todo remove dev item
+      console.log(this.notice.timeRemaining);
       this.provider = providerMap.get(this.notice.body.provider);
       this.currentStatus = this.notice.status;
+      // console.log(this.notice); // todo remove dev item
+      // console.log(this.notice.swapStatus); // todo remove dev item
+      // console.log(this.notice.status); // todo remove dev item
+      // console.log(this.notice.body.timeRemaining); // todo remove dev item
       this.timeUpdater();
       this.statusUpdater();
     },
     stopPolling() {
-      console.log('stopPolling'); // todo remove dev item
       if (this.timerInterval !== null) {
         clearInterval(this.timerInterval);
       }
@@ -237,6 +232,7 @@ export default {
             }
             this.childUpdateNotification(this.notice);
           }
+
           if (this.shouldCheckStatus) {
             clearInterval(this.statusInterval);
           }
@@ -256,17 +252,17 @@ export default {
     },
     timeUpdater() {
       const updateTime = () => {
-        const timeRemaining =
-          this.details.validFor -
+        this.timeRemaining =
+          this.notice.body.validFor -
           parseInt(
             (new Date().getTime() -
-              new Date(this.details.createdAt).getTime()) /
+              new Date(this.notice.body.createdAt).getTime()) /
               1000
           );
-        this.timeRemaining = +timeRemaining;
+
         if (
           this.notice.swapStatus === swapOnlyStatuses.NEW &&
-          this.notice.timeRemaining <= 0
+          this.timeRemaining <= 0
         ) {
           this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
           this.notice.status = notificationStatuses.FAILED;
@@ -274,15 +270,15 @@ export default {
             'Swap window timeout. Swap Cancelled.';
           this.timeRemaining = -1;
         }
-        this.notice.body.timeRemaining = +timeRemaining;
-        // this.childUpdateNotification(this.notice);
-        if (+timeRemaining < 0) {
-          this.childUpdateNotification(this.notice);
+        this.notice.body.timeRemaining = +this.timeRemaining;
+        this.childUpdateNotification(this.notice);
+        if (+this.timeRemaining <= 0) {
+          // this.childUpdateNotification(this.notice);
           clearInterval(this.timerInterval);
         }
       };
 
-      if (this.shouldCheckStatus) {
+      if (this.shouldCheckStatus && this.notice.body.timeRemaining > 0) {
         if (this.timeRemaining > 0) {
           updateTime();
           this.timerInterval = setInterval(() => {
@@ -292,6 +288,11 @@ export default {
             }
           }, 1000);
         }
+      } else {
+        this.notice.swapStatus = swapOnlyStatuses.CANCELLED;
+        this.notice.status = notificationStatuses.FAILED;
+        this.notice.body.errorMessage = 'Swap window timeout. Swap Cancelled.';
+        this.timeRemaining = -1;
       }
     }
   }

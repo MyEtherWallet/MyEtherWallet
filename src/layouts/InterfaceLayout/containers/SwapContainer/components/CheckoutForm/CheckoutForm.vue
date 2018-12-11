@@ -79,6 +79,7 @@ export default {
   },
   methods: {
     submit() {
+      this.continueAction();
       document.querySelector('#payment_form').submit();
     }
   }

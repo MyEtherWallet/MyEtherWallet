@@ -202,10 +202,10 @@ export default class Changelly {
     };
   }
 
-  static async getOrderStatus(swapDetails, network) {
+  static async getOrderStatus(noticeDetails, network) {
     try {
       const status = await changellyCalls.getStatus(
-        swapDetails.orderId,
+        noticeDetails.orderId,
         network
       );
       console.log('changelly status', status); // todo remove dev item
@@ -218,20 +218,20 @@ export default class Changelly {
 
   static parseChangellyStatus(status) {
     switch (status) {
-      case changellyStatuses.new:
-      case changellyStatuses.waiting:
+      case statuses.new:
+      case statuses.waiting:
         return 'new';
-      case changellyStatuses.confirming:
-      case changellyStatuses.exchanging:
-      case changellyStatuses.sending:
-      case changellyStatuses.hold:
+      case statuses.confirming:
+      case statuses.exchanging:
+      case statuses.sending:
+      case statuses.hold:
         return 'pending';
-      case changellyStatuses.finished:
+      case statuses.finished:
         return 'complete';
-      case changellyStatuses.failed:
+      case statuses.failed:
         return 'failed';
-      case changellyStatuses.overdue:
-      case changellyStatuses.refunded:
+      case statuses.overdue:
+      case statuses.refunded:
         return 'cancelled';
     }
   }

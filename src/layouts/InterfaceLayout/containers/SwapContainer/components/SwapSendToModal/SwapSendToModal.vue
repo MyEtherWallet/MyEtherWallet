@@ -83,6 +83,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    currentAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -151,8 +155,17 @@ export default {
       }, 1000);
     },
     redirectToPartner() {
-      this.swapStarted(this.swapDetails);
-      this.$refs.swapconfirmation.hide();
+      console.log(this.swapDetails); // todo remove dev item
+      // this.swapStarted(this.swapDetails);
+      this.$store
+        .dispatch('addSwapNotification', [
+          `Swap`,
+          this.currentAddress,
+          this.swapDetails
+        ])
+        .then(() => {
+          this.$refs.swapconfirmation.hide();
+        });
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);

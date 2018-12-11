@@ -1,12 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
+  statuses,
   MIN_FIAT,
   MAX_FIAT,
   SimplexCurrencies,
   PROVIDER_NAME
 } from './config.js';
-import { getQuote, getOrder } from './simplex-api';
+import { getQuote, getOrder, getStatus } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
@@ -248,6 +249,27 @@ export default class Simplex {
       }).then(_result => {
         return _result.result;
       });
+    }
+  }
+
+  static async getOrderStatus(noticeDetails) {
+    const status = await getStatus(noticeDetails.orderId);
+    console.log(status); // todo remove dev item
+    return Simplex.parseSimplexStatus(status);
+  }
+
+  static parseSimplexStatus(status) {
+    switch (status) {
+      case statuses.new:
+      case statuses.initiated:
+      case statuses.sent:
+        return 'new';
+      case statuses.pending:
+        return 'pending';
+      case statuses.payment:
+        return 'complete';
+      case statuses.cancelled:
+        return 'cancelled';
     }
   }
 
