@@ -4,7 +4,7 @@
 
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
-import InfiniteSlider from 'vue-infinite-slide-bar';
+// import InfiniteSlider from 'vue-infinite-slide-bar';
 import '@/assets/font-awesome.css';
 import '@/assets/google-fonts.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -44,7 +44,7 @@ Vue.use(VueMq, {
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
-Vue.component('infinite-slider', InfiniteSlider);
+// Vue.component('infinite-slider', InfiniteSlider);
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
