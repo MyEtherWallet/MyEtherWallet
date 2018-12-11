@@ -1,28 +1,25 @@
-import Vue from 'vue';
 import ScrollUpButton from '@/components/ScrollUpButton/ScrollUpButton.vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('ScrollUpButton.vue', () => {
   let localVue, i18n, wrapper, store;
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(ScrollUpButton, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(ScrollUpButton, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true
     });
+  });
 
   xit('[FAILING] should scroll To Top when block button clicked', () => {
     const buttonBlock = wrapper.find('.button-block');
