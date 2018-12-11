@@ -20,7 +20,8 @@
       <interface-container-title :title="$t('common.swap')" />
       <div class="buy-eth">
         <a href="https://ccswap.myetherwallet.com" target="_blank">
-          <span>Buy ETH with</span> <img :src="images.visaMaster" />
+          <span>{{ $t('interface.buyEth') }}</span>
+          <img :src="images.visaMaster" />
         </a>
       </div>
     </div>
@@ -107,9 +108,7 @@
     <div v-show="showRefundAddress" class="send-form">
       <div class="title-container">
         <div class="title title-and-copy">
-          <h4>
-            {{ fromCurrency }} address for refund (if needed) from Changelly
-          </h4>
+          <h4>{{ fromCurrency }} {{ $t('interface.refund') }}</h4>
           <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
         </div>
       </div>
@@ -124,7 +123,9 @@
 
     <div class="send-form">
       <div class="title-container">
-        <div class="title title-and-copy"><h4>Providers</h4></div>
+        <div class="title title-and-copy">
+          <h4>{{ $t('interface.providers') }}</h4>
+        </div>
       </div>
       <providers-radio-selector
         :loading-provider-error="loadingError"
@@ -187,12 +188,13 @@ import {
   isValidEntry,
   providerNames,
   BASE_CURRENCY,
-  MIN_SWAP_AMOUNT
+  MIN_SWAP_AMOUNT,
+  ERC20
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
 
-BigNumber.config({ DECIMAL_PLACES: 6 });
+// BigNumber.config({ DECIMAL_PLACES: 6 });
 
 export default {
   components: {
@@ -244,7 +246,6 @@ export default {
       tempStatuses: [],
       haveProviderRates: false,
       loadingError: false
-      // hasEnough: true
     };
   },
   computed: {
@@ -308,7 +309,6 @@ export default {
           this.selectedProvider.maxValue === 0)
       );
     },
-    // temp solution
     checkBityMin() {
       if (this.swap.isProvider(this.providerNames.bity)) {
         return (
@@ -324,7 +324,6 @@ export default {
       }
       return false;
     },
-    // temp solution
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
         return (
@@ -363,6 +362,9 @@ export default {
     }
   },
   watch: {
+    ['this.network.type.name']() {
+      this.swap.updateNetwork(this.network.type.name);
+    },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
       this.toArray = toArray;
@@ -439,27 +441,7 @@ export default {
     async getBalance(currency) {
       if (this.swap.isToken(currency) && currency !== this.baseCurrency) {
         const balance = await new this.web3.eth.Contract(
-          [
-            {
-              constant: true,
-              inputs: [
-                {
-                  name: '_owner',
-                  type: 'address'
-                }
-              ],
-              name: 'balanceOf',
-              outputs: [
-                {
-                  name: '',
-                  type: 'uint256'
-                }
-              ],
-              payable: false,
-              stateMutability: 'view',
-              type: 'function'
-            }
-          ],
+          ERC20,
           this.swap.getTokenAddress(currency)
         ).methods
           .balanceOf(this.currentAddress)
@@ -468,10 +450,10 @@ export default {
         this.$set(this.tokenBalances, currency, balance);
       }
     },
-    amountChanged(to) {
+    amountChanged(direction) {
       if (
-        (isValidEntry(this.fromValue) && to === 'from') ||
-        (isValidEntry(this.toValue) && to === 'to')
+        (isValidEntry(this.fromValue) && direction === 'from') ||
+        (isValidEntry(this.toValue) && direction === 'to')
       ) {
         if (
           this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
@@ -479,15 +461,15 @@ export default {
           ]
         ) {
           this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + to),
+            this.updateEstimate(this.providerNames.simplex + direction),
             200
           );
         } else {
-          this.web3.utils._.debounce(this.updateEstimate(to), 200);
+          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         }
-      } else if (to === 'from') {
+      } else if (direction === 'from') {
         this.toValue = '';
-      } else if (to === 'to') {
+      } else if (direction === 'to') {
         this.fromValue = '';
       }
     },
@@ -595,7 +577,6 @@ export default {
       try {
         if (this.validSwap) {
           this.finalizingSwap = true;
-          // TODO: should move the swap object to data and build as values change and are updated.
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });

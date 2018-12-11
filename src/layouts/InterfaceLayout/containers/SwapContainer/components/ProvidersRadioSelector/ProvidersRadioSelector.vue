@@ -65,7 +65,7 @@
             <input type="radio" name="provider" />
           </div>
           <div class="provider-image"><img :src="providerLogo('mew')" /></div>
-          <div>Please wait while we load provider rates</div>
+          <div>{{ $t('interface.loadingProviders') }}</div>
           <div class="background-masker" />
         </li>
       </ul>
@@ -82,9 +82,10 @@
           </div>
           <div class="provider-image"><img :src="providerLogo('mew')" /></div>
           <div>
-            An Error occured while retrieving the rates for
-            {{ noProvidersPair.fromCurrency }} to
-            {{ noProvidersPair.toCurrency }} please wait an try agian
+            {{ $t('interface.loadRateError') }}
+            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
+            {{ noProvidersPair.toCurrency }}
+            {{ $t('interface.pleaseTryAgain') }}
           </div>
         </li>
       </ul>
@@ -96,7 +97,8 @@
           <div class="mew-custom-form__radio-button" />
           <div class="provider-image" />
           <div>
-            No provider found for {{ noProvidersPair.fromCurrency }} to
+            {{ $t('interface.noProviderFound') }}
+            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
             {{ noProvidersPair.toCurrency }}
           </div>
           <div />
@@ -215,7 +217,10 @@ export default {
       }`;
     },
     valueForRate(rate, value) {
-      return new BigNumber(value).times(rate).toString(10);
+      return new BigNumber(value)
+        .times(rate)
+        .toFixed(6)
+        .toString(10);
     }
   }
 };

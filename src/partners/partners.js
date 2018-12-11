@@ -168,7 +168,7 @@ export default class SwapProviders {
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
         .div(bestRate)
-        .toFixed()
+        .toFixed(6)
         .toString(10),
       false
     );
@@ -178,7 +178,7 @@ export default class SwapProviders {
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(bestRate)
-        .toFixed()
+        .toFixed(6)
         .toString(10),
       true
     );

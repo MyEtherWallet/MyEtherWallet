@@ -201,11 +201,6 @@ export default {
       return 0;
     }
   }
-  // methods:{
-  //   send(){
-  //     this.sendBatchTransactions();
-  //   }
-  // }
 };
 </script>
 <style lang="scss" scoped>
