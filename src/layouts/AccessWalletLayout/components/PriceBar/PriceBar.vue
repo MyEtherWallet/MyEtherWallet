@@ -29,9 +29,13 @@
     </div>
   </div>
 </template>
-
+2
 <script>
+import InfiniteSlider from '@/components/InfiniteSlider/InfiniteSlider.vue';
 export default {
+  components: {
+    'infinite-slider': InfiniteSlider
+  },
   props: {
     tokens: {
       type: Array,
