@@ -16,6 +16,7 @@ import {
 } from './simplex';
 import Swap from './partners';
 import {
+  ERC20,
   networkSymbols,
   chainCurrencies,
   fiat,
@@ -63,6 +64,7 @@ export {
   chainCurrencies,
   fiat,
   EthereumTokens,
+  ERC20,
   utils,
   bestRateForQuantity,
   bestProviderForQuantity,

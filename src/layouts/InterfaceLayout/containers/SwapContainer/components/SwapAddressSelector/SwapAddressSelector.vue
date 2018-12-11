@@ -31,13 +31,13 @@
           </div>
           <p class="listed-address">
             {{ addr.address }}
-            <span v-if="addr.address === currentAddress" class="address-note"
-              >Your Address</span
-            >
+            <span v-if="addr.address === currentAddress" class="address-note">{{
+              $t('interface.yourAddr')
+            }}</span>
             <span
               v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
               class="address-note"
-              >{{ addr.currency }} Address</span
+              >{{ addr.currency }} {{ $t('interface.addr') }}</span
             >
           </p>
         </li>

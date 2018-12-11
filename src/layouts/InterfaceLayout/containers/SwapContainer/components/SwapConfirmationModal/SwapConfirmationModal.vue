@@ -9,7 +9,7 @@
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
-        <p>Time Remaining</p>
+        <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
@@ -19,7 +19,7 @@
           <p class="value">
             {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
           </p>
-          <p class="block-title">From Address</p>
+          <p class="block-title">{{ $t('interface.fromAddr') }}</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow"><img :src="arrowImage" /></div>
@@ -30,7 +30,7 @@
           <p class="value">
             {{ toAddress.value }} <span>{{ toAddress.name }}</span>
           </p>
-          <p class="block-title">To Address</p>
+          <p class="block-title">{{ $t('interface.sendTxToAddr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
         </div>
       </div>
@@ -65,7 +65,7 @@ import DetailInformation from './components/DetailInformation';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, BASE_CURRENCY, utils } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, ERC20, utils } from '@/partners';
 
 export default {
   components: {
@@ -174,24 +174,11 @@ export default {
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
 
           this.preparedSwap = {
-            from: this.$store.state.wallet.getChecksumAddressString(),
+            from: this.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,
             value: 0,
             data: new this.web3.eth.Contract(
-              [
-                {
-                  constant: false,
-                  inputs: [
-                    { name: '_to', type: 'address' },
-                    { name: '_amount', type: 'uint256' }
-                  ],
-                  name: 'transfer',
-                  outputs: [{ name: '', type: 'bool' }],
-                  payable: false,
-                  stateMutability: 'nonpayable',
-                  type: 'function'
-                }
-              ],
+              ERC20,
               tokenInfo.contractAddress
             ).methods
               .transfer(
@@ -207,7 +194,7 @@ export default {
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
           this.preparedSwap = {
-            from: this.$store.state.wallet.getChecksumAddressString(),
+            from: this.wallet.getChecksumAddressString(),
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
