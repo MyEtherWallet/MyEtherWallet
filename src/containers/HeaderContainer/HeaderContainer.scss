@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
+.page-container {
+  padding: 0 10px;
+}
+
 .wrap {
   padding-top: 99px;
   @media all and (max-width: $tablet-width) {
@@ -184,6 +188,10 @@
   align-items: center;
   padding: 16px 21px 16px 7px !important;
 
+  li {
+    width: 100%;
+  }
+
   .arrows {
     margin-left: auto;
   }
@@ -241,7 +249,6 @@
 .mobile-menu-content {
   position: fixed;
   width: 100vw;
-  //z-index: $z-menu + 100;
   z-index: 1000;
   top: 0;
   left: 0;
@@ -250,8 +257,12 @@
   overflow: hidden;
   background-color: white;
 
+  .page-container {
+    padding-top: 90px;
+    padding-bottom: 90px;
+  }
+
   ul {
-    padding: 110px 0 0 0;
     li {
       > * {
         padding: 20px;
@@ -265,6 +276,11 @@
   @media all and (max-width: $tablet-width) {
     &.mobile-menu-open-height-change {
       height: 100vh;
+      
+      >div {
+        height: 100%;
+        overflow-y: auto;
+      }
     }
   }
 }
@@ -353,3 +369,18 @@
     }
   }
 } // .get-free-wallet
+
+
+
+//********************************************************
+// .info-block-container for mobile interface menu
+//********************************************************
+.info-block-container {
+  //margin-top: 160px;
+
+  >* {
+    margin-bottom: 5px;
+  }
+}
+
+

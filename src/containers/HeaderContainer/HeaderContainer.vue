@@ -19,6 +19,11 @@
       class="mobile-menu-content"
     >
       <div class="page-container">
+        <div v-if="!isHomePage" class="info-block-container">
+          <info-block-address />
+          <info-block-balance />
+          <info-block-network />
+        </div>
         <ul>
           <li>
             <div
@@ -226,6 +231,9 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import InfoBlockAddress from './components/InfoBlockAddress';
+import InfoBlockBalance from './components/InfoBlockBalance';
+import InfoBlockNetwork from './components/InfoBlockNetwork';
 
 export default {
   components: {
@@ -235,7 +243,10 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     txpoppup: TxTopMenuPopup,
-    'logout-modal': LogoutModal
+    'logout-modal': LogoutModal,
+    'info-block-address': InfoBlockAddress,
+    'info-block-balance': InfoBlockBalance,
+    'info-block-network': InfoBlockNetwork
   },
   data() {
     return {
@@ -267,7 +278,7 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: false
     };
   },
   computed: {

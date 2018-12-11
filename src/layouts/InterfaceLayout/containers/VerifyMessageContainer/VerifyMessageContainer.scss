@@ -17,14 +17,22 @@
   .send-form {
     @extend %send-form-base;
 
+    @media all and (max-width: $mobile-width) {
+      padding-top: 20px;
+    }
+
     .title-container {
       .title {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
         // align-items: center;
         margin-bottom: 10px;
         padding: 0 8px;
         width: 100%;
+
+        h4 {
+          margin-right: 5px;
+        }
 
         .select-contract {
           margin-left: auto;
@@ -103,7 +111,7 @@
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    padding: 40px 0px;
 
     .bottom-text {
       margin-top: 20px;
