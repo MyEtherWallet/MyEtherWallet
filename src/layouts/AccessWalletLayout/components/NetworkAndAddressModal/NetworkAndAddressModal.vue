@@ -74,6 +74,7 @@
               <b-dropdown
                 id="hd-derivation-path"
                 :text="getPathLabel(selectedPath)"
+                right
                 class="dropdown-button-2"
               >
                 <b-dropdown-item
@@ -82,7 +83,9 @@
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
                   @click="changePath(key)"
-                />
+                >
+                  {{ val.label }}
+                </b-dropdown-item>
                 <b-dropdown-divider />
                 <b-dropdown-item>
                   {{ $t('accessWallet.customPaths') }}
@@ -92,7 +95,9 @@
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
                   @click="changePath(key)"
-                />
+                >
+                  {{ val.dpath }}
+                </b-dropdown-item>
                 <b-dropdown-item @click="showCustomPathInput">
                   {{ $t('accessWallet.addCustomPath') }}
                 </b-dropdown-item>
