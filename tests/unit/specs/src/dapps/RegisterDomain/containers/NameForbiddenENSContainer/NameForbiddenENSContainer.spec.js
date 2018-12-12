@@ -1,31 +1,32 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import NameForbiddenENSContainer from '@/dapps/RegisterDomain/containers/NameForbiddenENSContainer/NameForbiddenENSContainer.vue';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('NameForbiddenENSContainer.vue', () => {
-    let localVue, i18n, wrapper, store;
-    const domainName = 'MyEtherWallet';
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
+  const domainName = 'MyEtherWallet';
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(NameForbiddenENSContainer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: {domainName}
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(NameForbiddenENSContainer, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      propsData: { domainName }
     });
+  });
 
-    it('should render correct domain name', () => {
-        expect(wrapper.vm.$el.querySelector('.name-forbidden-container h3').textContent.trim()).toEqual(domainName + '.eth is not available yet!');
-    });
+  it('should render correct domain name', () => {
+    expect(
+      wrapper.vm.$el
+        .querySelector('.name-forbidden-container h3')
+        .textContent.trim()
+    ).toEqual(domainName + '.eth is not available yet!');
+  });
 });

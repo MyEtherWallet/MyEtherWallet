@@ -121,10 +121,6 @@
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
-                <b-nav-item v-if="isHomePage" v-show="online" to="/#news">{{
-                  $t('common.news')
-                }}</b-nav-item>
-
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />

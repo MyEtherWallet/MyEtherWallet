@@ -1,10 +1,13 @@
-import RegisterDomain from './RegisterDomain';
-import EnsBidContainer from './containers/EnsBidContainer';
-import InitialENSStateContainer from './containers/InitialENSStateContainer';
-import NameForbiddenENSContainer from './containers/NameForbiddenENSContainer';
-import AlreadyOwnedENSContainer from './containers/AlreadyOwnedENSContainer';
-import FinalizeContainer from './containers/FinalizeContainer';
-import ManageENSContainer from './containers/ManageENSContainer';
+const RegisterDomain = () => import('./RegisterDomain');
+const EnsBidContainer = () => import('./containers/EnsBidContainer');
+const InitialENSStateContainer = () =>
+  import('./containers/InitialENSStateContainer');
+const NameForbiddenENSContainer = () =>
+  import('./containers/NameForbiddenENSContainer');
+const AlreadyOwnedENSContainer = () =>
+  import('./containers/AlreadyOwnedENSContainer');
+const FinalizeContainer = () => import('./containers/FinalizeContainer');
+const ManageENSContainer = () => import('./containers/ManageENSContainer');
 
 export default {
   path: 'dapps/register-domain',
@@ -16,57 +19,49 @@ export default {
       path: '',
       name: 'ENS initial state',
       component: InitialENSStateContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'auction',
       name: 'Bid on ENS and start auction',
       component: EnsBidContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'bid',
       name: 'Bid on ENS',
       component: EnsBidContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'owned',
       name: 'ENS owned',
       component: AlreadyOwnedENSContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'reveal',
       name: 'Reveal ENS bid',
       component: EnsBidContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'forbidden',
       name: 'ENS forbidden',
       component: NameForbiddenENSContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'finalize',
       name: 'ENS finalize',
       component: FinalizeContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     },
     {
       path: 'manage',
       name: 'Manage ENS',
       component: ManageENSContainer,
-      props: true,
-      meta: { requiresAuth: true }
+      props: true
     }
   ]
 };

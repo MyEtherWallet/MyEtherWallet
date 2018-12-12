@@ -1,7 +1,15 @@
 export default [
   {
+    path: "m/44'/60'",
+    label: 'Ethereum - Ledger Live'
+  },
+  {
     path: "m/44'/60'/0'",
     label: 'Ethereum'
+  },
+  {
+    path: "m/44'/61'",
+    label: 'Ethereum Classic - Ledger Live'
   },
   {
     path: "m/44'/60'/160720'/0",

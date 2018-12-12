@@ -1,4 +1,5 @@
 module.exports = {
+  collectCoverage: process.env.NODE_ENV === 'production'? true:false,
   "globals": {
     "WITH_NETWORK": false
   },

@@ -120,7 +120,7 @@ export default {
       try {
         tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
       } catch (e) {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-console
         console.error(e);
       }
       return tokens;
@@ -329,7 +329,7 @@ export default {
           ).toNumber();
         })
         .catch(err => {
-          // eslint-disable-next-line
+          // eslint-disable-next-line no-console
           console.error(err);
         });
     },
