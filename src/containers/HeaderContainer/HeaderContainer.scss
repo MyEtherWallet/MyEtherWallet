@@ -34,7 +34,7 @@
   top: 0;
   width: 100%;
   //z-index: $z-menu + 100;
-  z-index: 1000;
+  z-index: 100;
 
   &.tiny-header {
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
@@ -249,7 +249,7 @@
 
 .mobile-menu-underblock {
   pointer-events: none;
-  z-index: 999;
+  z-index: 99;
   position: fixed;
   top: 0;
   left: 0;
@@ -267,7 +267,7 @@
 .mobile-menu-content {
   position: fixed;
   width: 100vw;
-  z-index: 1000;
+  z-index: 99;
   top: 0;
   left: 0;
   transition: all 0.2s linear;
