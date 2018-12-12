@@ -7,7 +7,8 @@ import {
   ethSign,
   ethAccounts,
   ethCoinbase,
-  netVersion
+  netVersion,
+  ethGetTransactionReceipt
 } from '../methods';
 import EtherscanProxy from '../etherscan-proxy';
 class EtherscanProvider {
@@ -35,6 +36,7 @@ class EtherscanProvider {
     const middleware = new MiddleWare();
     middleware.use(ethSendTransaction);
     middleware.use(ethSignTransaction);
+    middleware.use(ethGetTransactionReceipt);
     middleware.use(ethSign);
     middleware.use(ethAccounts);
     middleware.use(ethGetTransactionCount);
