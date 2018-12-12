@@ -9,12 +9,6 @@ import Web3 from 'web3';
 
 import { Tooling } from '@@/helpers';
 
-// function capitalize(value) {
-//   if (!value) return '';
-//   value = value.toString();
-//   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-// }
-
 xdescribe('[FAILING] InterfaceNetworkModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -24,7 +18,7 @@ xdescribe('[FAILING] InterfaceNetworkModal.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][2];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(
