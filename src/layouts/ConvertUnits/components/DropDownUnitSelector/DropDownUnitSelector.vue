@@ -6,7 +6,7 @@
         class="dropdown-input-box"
         @click="dropdownOpen = !dropdownOpen"
       >
-        <div class="selected-unit">Wei</div>
+        <div class="selected-unit">{{ currentSelected | capitalize }}</div>
         <div class="dropdown-open-button">
           <i
             v-if="!dropdownOpen"
@@ -21,10 +21,13 @@
         class="dropdown-list-box"
       >
         <ul>
-          <li>Wei</li>
-          <li>Kwei</li>
-          <li>Mwei</li>
-          <li>Gwei</li>
+          <li
+            v-for="(opt, idx) in options"
+            :key="opt + idx"
+            @click="selected(opt)"
+          >
+            {{ opt | capitalize }}
+          </li>
         </ul>
       </div>
     </div>
@@ -35,21 +38,23 @@
 export default {
   props: {
     options: {
-      type: Object,
+      type: Array,
       default: function() {
-        return {};
+        return [];
       }
+    },
+    currentSelected: {
+      type: String,
+      default: ''
+    },
+    left: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      dropdownOpen: false,
-      units: [
-        { name: 'Wei' },
-        { name: 'Kwei' },
-        { name: 'Mwei' },
-        { name: 'Gwei' }
-      ]
+      dropdownOpen: false
     };
   },
   beforeMount() {
@@ -67,6 +72,10 @@ export default {
         }
       }
       this.dropdownOpen = false;
+    },
+    selected(val) {
+      this.dropdownOpen = false;
+      this.$emit('updateSelected', [val, this.left ? 'left' : 'right']);
     }
   }
 };

@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 xdescribe('blockies.js', () => {
   it('should render correct contents', () => {
     /*    const Constructor = Vue.extend(Component)

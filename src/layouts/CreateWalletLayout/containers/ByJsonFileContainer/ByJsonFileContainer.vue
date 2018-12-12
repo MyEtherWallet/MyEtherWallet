@@ -14,7 +14,6 @@
             <div class="title-block">
               <div class="title-popover">
                 <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')" />
               </div>
             </div>
             <div class="contents">

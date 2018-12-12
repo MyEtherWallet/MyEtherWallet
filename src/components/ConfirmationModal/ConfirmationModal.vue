@@ -80,7 +80,7 @@
           <bottom-text
             link-text="Help Center"
             question="Having issues?"
-            link="/"
+            link="https://kb.myetherwallet.com"
           />
         </div>
       </div>
