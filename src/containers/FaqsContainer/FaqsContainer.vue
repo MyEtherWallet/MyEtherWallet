@@ -7,9 +7,13 @@
             <h2>{{ $t('common.faqs') }}</h2>
             <h5>
               {{ $t('home.faqsSubheading') }}
-              <a href="https://kb.myetherwallet.com/">{{
-                $t('home.faqsSeeMore')
-              }}</a>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://kb.myetherwallet.com/"
+              >
+                {{ $t('home.faqsSeeMore') }}
+              </a>
             </h5>
           </div>
           <customer-support />
