@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
 - Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
 - Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
 - Fix network and address modal dropdown issue [#234](https://github.com/MyEtherWallet/MyEtherWallet/pull/234)
