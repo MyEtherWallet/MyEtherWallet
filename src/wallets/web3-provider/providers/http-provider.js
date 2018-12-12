@@ -15,9 +15,12 @@ import {
 class HttpProvider {
   constructor(host, options, store, eventHub) {
     this.httpProvider = new Web3HttpProvider(host, options);
+    const _this = this.httpProvider;
+    const requestManager = new Web3RequestManager(
+      new Web3HttpProvider(host, options)
+    );
     delete this.httpProvider['send'];
     this.httpProvider.send = (payload, callback) => {
-      const _this = this.httpProvider;
       const request = _this._prepareRequest();
       request.onreadystatechange = function() {
         if (request.readyState === 4 && request.timeout !== 1) {
@@ -41,9 +44,7 @@ class HttpProvider {
       const req = {
         payload,
         store,
-        requestManager: new Web3RequestManager(
-          new Web3HttpProvider(host, options)
-        ),
+        requestManager,
         eventHub
       };
       const middleware = new MiddleWare();
