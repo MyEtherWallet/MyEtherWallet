@@ -8,6 +8,10 @@
         <i v-if="!popupOpen" class="fa fa-angle-down" aria-hidden="true"></i>
       </div>
 
+      <div class="menu-title-mobile" @click="popupOpen = !popupOpen;">
+        <p>Transactions</p>
+      </div>
+
       <div :class="popupOpen && 'popup-open'" class="popup-container">
         <div class="popup-box">
           <div class="top"><txinfo /></div>
@@ -43,7 +47,6 @@ export default {
     clickEvent: function(event) {
       for (let count = 0; count < event.path.length; count++) {
         if (event.path[count].className === 'wrap txpopup-container') {
-          console.log('Exited!');
           return;
         }
       }

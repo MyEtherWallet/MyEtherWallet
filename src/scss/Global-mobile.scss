@@ -604,8 +604,12 @@
   }
 
   .mobile-language-menu-container {
+    .nav-link {
+      padding: 0;
+    }
     .dropdown-menu {
-      left: 0px !important;
+      left: -146px !important;
+      top: -20px !important;
       height: 200px;
       overflow-y: auto;
 
@@ -1301,5 +1305,10 @@
     background-color: $light-grey-12;
     border-color: $light-grey-12;
     pointer-events: none;
+  }
+
+
+  .progress .progress-time {
+    font-size: 12px !important;
   }
 } //@media all and ( max-width: $mobile-width )

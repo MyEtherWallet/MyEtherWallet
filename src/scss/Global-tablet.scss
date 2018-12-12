@@ -600,6 +600,9 @@
   }
 
   .mobile-language-menu-container {
+    .nav-link {
+      padding: 0;
+    }
     .dropdown-menu {
       left: 40px !important;
       height: 200px;

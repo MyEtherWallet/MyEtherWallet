@@ -25,7 +25,7 @@
           <info-block-network />
         </div>
         <ul>
-          <li>
+          <li v-if="isHomePage">
             <div
               @click="
                 scrollTop();
@@ -45,12 +45,15 @@
               $t('common.faqs')
             }}</a>
           </li>
+          <li class="list-right-arrow">
+            <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
+          </li>
           <li v-if="false">
             <a href="/#news" @click="isMobileMenuOpen = false;">{{
               $t('common.news')
             }}</a>
           </li>
-          <li>
+          <li class="list-right-arrow">
             <div class="mobile-language-menu-container">
               <b-nav-item-dropdown
                 class="mobile-language-menu"
@@ -77,11 +80,9 @@
                   {{ language.name }}
                 </b-dropdown-item>
               </b-nav-item-dropdown>
-              <div class="arrows">
-                <i class="fa fa-angle-right" aria-hidden="true" />
-              </div>
             </div>
           </li>
+          <li><button class="logout-button">Log out</button></li>
         </ul>
       </div>
     </div>
@@ -199,12 +200,21 @@
             <!-- .top-menu -->
             <div class="mobile-menu">
               <div
-                class="mobile-menu-button"
+                v-if="!isMobileMenuOpen"
+                class="mobile-menu-open-button"
                 @click="isMobileMenuOpen = !isMobileMenuOpen;"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
                 <div class="bar-3" />
+              </div>
+              <div
+                v-if="isMobileMenuOpen"
+                class="mobile-menu-close-button"
+                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+              >
+                <div class="bar-1" />
+                <div class="bar-2" />
               </div>
             </div>
             <!-- .mobile-menu -->
