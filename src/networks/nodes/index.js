@@ -14,6 +14,7 @@ import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
 import ethgiveth from './eth-giveth';
 import ethinfura from './eth-infura';
+import ethinfuraws from './eth-infura-ws';
 import ethmew from './eth-mew';
 import etho from './etho';
 import etsc from './etsc';
@@ -27,6 +28,8 @@ import poa from './poa';
 import rinethscan from './rin-ethscan';
 import rininfura from './rin-infura';
 import ropinfura from './rop-infura';
+import rininfuraws from './rin-infura-ws';
+import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
 import tomo from './tomo';
 import ubq from './ubq';
@@ -47,6 +50,7 @@ export {
   ethethscan,
   ethgiveth,
   ethinfura,
+  ethinfuraws,
   ethmew,
   etho,
   etsc,
@@ -60,6 +64,8 @@ export {
   rinethscan,
   rininfura,
   ropinfura,
+  rininfuraws,
+  ropinfuraws,
   ropmew,
   tomo,
   ubq
