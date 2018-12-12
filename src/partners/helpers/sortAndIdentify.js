@@ -1,5 +1,5 @@
-// from https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value/4760279#4760279
-// Use `-` to reverse the sort order for the specified property
+/* from https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value/4760279#4760279
+   Use `-` to reverse the sort order for the specified property */
 function dynamicSort(property, convertFunc) {
   let sortOrder = 1;
   if (property[0] === '-') {

@@ -52,6 +52,11 @@ export default class SwapProviders {
         }
       }, 150);
     }
+    this.initialCurrencyArrays = this.buildInitialCurrencyArrays();
+  }
+
+  get initialCurrencyLists() {
+    return this.initialCurrencyArrays;
   }
 
   getProviders() {

@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import { networkSymbols } from '../partnersConfig';
 import {
   ChangellyCurrencies,
@@ -26,7 +28,6 @@ export default class Changelly {
     return PROVIDER_NAME;
   }
 
-  // ============================= Setup Methods  ====================================
   async getSupportedCurrencies() {
     try {
       const {
@@ -41,8 +42,6 @@ export default class Changelly {
       errorLogger(e);
     }
   }
-
-  // ============================= State Methods  ====================================
 
   get isValidNetwork() {
     return this.network === networkSymbols.ETH;
@@ -59,7 +58,6 @@ export default class Changelly {
     return {};
   }
 
-  // ============================= pair and value selection and update methods  ====================================
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
@@ -83,8 +81,13 @@ export default class Changelly {
       changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
     ]);
 
+    const minAmount = new BigNumber(changellyDetails[0])
+      .times(0.001)
+      .plus(new BigNumber(changellyDetails[0]))
+      .toFixed();
+
     this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: changellyDetails[0],
+      minAmount: minAmount,
       rate: changellyDetails[1]
     };
 
@@ -92,12 +95,11 @@ export default class Changelly {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      minValue: changellyDetails[0],
+      minValue: minAmount,
       rate: changellyDetails[1]
     };
   }
 
-  // ============================= Determine inclusion in currency options ====================================
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop])
@@ -140,8 +142,6 @@ export default class Changelly {
     }
   }
 
-  // ============================= Finalize swap details ====================================
-
   async startSwap(swapDetails) {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
@@ -178,7 +178,6 @@ export default class Changelly {
     return await changellyCalls.createTransaction(swapParams, this.network);
   }
 
-  // ================= Check status of order methods ===================================
   static parseOrder(order) {
     return {
       orderId: order.id,
@@ -188,14 +187,16 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 6000 // Rates provided are only an estimate, and
+      validFor: 600 // Rates provided are only an estimate
     };
   }
 
   static async getOrderStatus(swapDetails, network) {
     try {
-      const parsed = Changelly.parseOrder(swapDetails.dataForInitialization);
-      const status = await changellyCalls.getStatus(parsed.orderId, network);
+      const status = await changellyCalls.getStatus(
+        swapDetails.orderId,
+        network
+      );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
       // eslint-disable-next-line
@@ -206,30 +207,21 @@ export default class Changelly {
   static parseChangellyStatus(status) {
     switch (status) {
       case changellyStatuses.new:
-        return 0;
       case changellyStatuses.waiting:
-        return 10;
+        return 'new';
       case changellyStatuses.confirming:
-        return 30;
       case changellyStatuses.exchanging:
-        return 50;
       case changellyStatuses.sending:
-        return 60;
-      case changellyStatuses.finished:
-        return 100;
-      case changellyStatuses.failed:
-        return -100;
       case changellyStatuses.hold:
-        return -50;
+        return 'pending';
+      case changellyStatuses.finished:
+        return 'complete';
+      case changellyStatuses.failed:
+        return 'failed';
       case changellyStatuses.overdue:
-        return 500;
       case changellyStatuses.refunded:
-        return -10;
+        return 'cancelled';
     }
-  }
-
-  statusUpdater(/*swapDetails*/) {
-    return () => {};
   }
 
   static statuses(data) {
@@ -248,7 +240,6 @@ export default class Changelly {
     return status;
   }
 
-  // ================= Util methods ===================================
   async validateAddress(toCurrency, address) {
     return await changellyCalls.validateAddress(
       {

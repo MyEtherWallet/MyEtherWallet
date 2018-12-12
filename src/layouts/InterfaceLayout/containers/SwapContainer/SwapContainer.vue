@@ -348,10 +348,16 @@ export default {
         this.swap.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
       ) {
+        const enteredVal = this.swap.convertToTokenWei(
+          this.fromCurrency,
+          this.fromValue
+        );
+
+        if (+this.tokenBalances[this.fromCurrency] === +enteredVal) {
+          return false;
+        }
         return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
-          new BigNumber(
-            this.swap.convertToTokenWei(this.fromCurrency, this.fromValue)
-          )
+          new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
         return +this.fromValue >= this.account.balance;
@@ -364,7 +370,7 @@ export default {
       this.swap.updateNetwork(this.network.type.name);
     },
     ['swap.updateProviderRates']() {
-      const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+      const { toArray, fromArray } = this.swap.initialCurrencyLists;
       this.toArray = toArray;
       this.fromArray = fromArray;
     },
@@ -376,6 +382,16 @@ export default {
         this.fromValue,
         'from'
       );
+    },
+    network(newVal) {
+      this.providerData = [];
+      this.haveProviderRates = false;
+      this.loadingData = false;
+      this.swap = new Swap(providers, {
+        network: newVal.type.name,
+        web3: this.web3,
+        ens: this.ens
+      });
     }
   },
   mounted() {
@@ -385,7 +401,7 @@ export default {
         this.ratesRetrived = true;
       }
     }, 3000);
-    const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+    const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.wallet.getChecksumAddressString();

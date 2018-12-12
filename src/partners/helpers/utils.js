@@ -1,3 +1,5 @@
+import uuid from 'uuid/v4';
+
 const mapToObject = map => {
   const obj = {};
   for (const prop of map) {
@@ -22,4 +24,13 @@ const getTimeRemainingString = timestamp => {
   return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
 };
 
-export { mapToObject, getTimeRemaining, getTimeRemainingString };
+function buildPayload(method, data) {
+  return {
+    jsonrpc: '2.0',
+    method: method,
+    params: data,
+    id: uuid()
+  };
+}
+
+export { mapToObject, getTimeRemaining, getTimeRemainingString, buildPayload };

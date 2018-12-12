@@ -165,7 +165,7 @@ export default {
         kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
-        changelly: Changelly // TODO: get logo from changelly
+        changelly: Changelly
       }
     };
   },
