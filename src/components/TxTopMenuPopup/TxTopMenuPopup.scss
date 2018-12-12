@@ -3,8 +3,11 @@
 //******************************************************
 // Wrap
 //******************************************************
-.tx-topmenu-popup .wrap {
-  position: relative;
+.tx-topmenu-popup {
+  width: 100%;
+  .wrap {
+    position: relative;
+  }
 }
 
 //******************************************************
@@ -62,9 +65,7 @@
   transition: all 0.1s linear;
 
   @media all and (max-width: $tablet-width) {
-    margin: 0 -20px;
     transition: max-height 0.2s linear;
-    max-height: 0px;
     top: initial;
     left: initial;
     position: relative;
@@ -83,9 +84,6 @@
   border: 1px solid $mew-green;
   border-radius: 4px;
   background-color: white;
-  @media all and (max-width: $tablet-width) {
-    margin-top: 20px;
-  }
 
   .top {
     padding: 9px 13px;

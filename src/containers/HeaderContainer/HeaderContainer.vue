@@ -40,13 +40,13 @@
               $t('header.about')
             }}</a>
           </li>
-          <li>
+          <li v-if="isHomePage">
             <a href="/#faqs" @click="isMobileMenuOpen = false;">{{
               $t('common.faqs')
             }}</a>
           </li>
           <li class="list-right-arrow">
-            <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
+            <notification v-if="wallet !== null" ref="notification" />
           </li>
           <li v-if="false">
             <a href="/#news" @click="isMobileMenuOpen = false;">{{

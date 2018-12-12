@@ -4,6 +4,9 @@
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
       <div v-show="unreadCount > 0" class="notification-dot" />
     </div>
+    <div class="notification-logo-mobile" @click="showNotifications">
+      <p>Notifications</p>
+    </div>
     <b-modal
       ref="notification"
       hide-footer
@@ -51,26 +54,7 @@
                 </div>
               </div>
             </div>
-            <div class="notification-content">
-              <ul>
-                <li>
-                  <p>Amount:</p>
-                  <p>2.100000 ETH</p>
-                </li>
-                <li>
-                  <p>To Address:</p>
-                  <p>
-                    <a href="/" target="_blank">
-                      0xbfe394bf28b7cbf72e7656e0e6740b196521b074
-                    </a>
-                  </p>
-                </li>
-                <li>
-                  <p>TX Fee:</p>
-                  <p>0.100000346482 ETH ($0.09)</p>
-                </li>
-              </ul>
-            </div>
+            <div class="notification-content"><txpoppup /></div>
           </li>
           <li>
             <div class="notification-header">
@@ -129,8 +113,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 
 export default {
+  components: {
+    txpoppup: TxTopMenuPopup
+  },
   data() {
     return {
       unreadCount: 0

@@ -30,6 +30,9 @@
 
 .notification-container {
   margin-left: 30px;
+  @media all and (max-width: $mobile-width) {
+    margin-left: 0px;
+  }
 }
 
 .modal-title {
@@ -39,7 +42,7 @@
 
 .notification-item-container {
   background-color: $white;
-  height: 300px;
+  max-height: 500px;
   overflow-y: scroll;
 
   > ul {
@@ -91,6 +94,10 @@
   cursor: pointer;
   position: relative;
 
+  @media all and (max-width: $mobile-width) {
+    display: none;
+  }
+
   .notification-dot {
     background-color: $notification-dot-background-color;
     border-radius: 40px;
@@ -101,6 +108,22 @@
     width: 8px;
   }
 }
+
+.notification-logo-mobile {
+  position: relative;
+  display: none;
+
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
+  p {
+    font-size: 20px;
+  }
+
+}
+
+
 
 //*******************************************************
 // Notification header
@@ -176,6 +199,10 @@
   align-items: center;
   padding: 10px 30px;
 
+  @media all and (max-width: $tablet-width) {
+    padding: 10px;
+  }
+
   > ul {
     display: block;
     width: 100%;
@@ -189,7 +216,10 @@
 
       p:nth-child(2) {
         margin-left: auto;
-        word-break: break-all;
+        //word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         a {
           color: $light-blue-1;
