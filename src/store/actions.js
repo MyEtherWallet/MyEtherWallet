@@ -87,8 +87,6 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         )}`
       })
     : {};
-
-  console.log(parsedUrl);
   const web3Instance = new web3(
     new MEWProvider(
       provider ? provider : parsedUrl,

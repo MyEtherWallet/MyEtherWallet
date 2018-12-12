@@ -136,9 +136,7 @@ describe('DeployContractContainer.vue', () => {
     it('should delete Input when click button', () => {
       const bytecode = 'bytecode';
       wrapper.setData({ bytecode });
-      console.log(wrapper.vm.$el.querySelectorAll('textarea')[0].value);
       wrapper.find('.copy-buttons span').trigger('click');
-      // console.log(wrapper.vm.$data.bytecode)
     });
   });
 });
