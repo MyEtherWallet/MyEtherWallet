@@ -115,14 +115,24 @@ export default {
     },
     async fetchTokens() {
       this.receivedTokens = true;
-      const tb = new TokenBalance(this.web3.currentProvider);
       let tokens = [];
-      try {
-        tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
+        const tb = new TokenBalance(this.web3.currentProvider);
+        try {
+          tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
+        } catch (e) {
+          tokens = this.network.type.tokens.map(token => {
+            token.balance = 'Load';
+            return token;
+          });
+        }
+      } else {
+        tokens = this.network.type.tokens.map(token => {
+          token.balance = 'Load';
+          return token;
+        });
       }
+
       return tokens;
     },
     async setNonce() {
@@ -178,43 +188,38 @@ export default {
       return balance;
     },
     async setTokens() {
-      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
-        this.receivedTokens = false;
-        const hex = await this.fetchTokens();
-        hex
-          .sort((a, b) => {
-            if (a.name.toUpperCase() < b.name.toUpperCase()) {
-              return -1;
-            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-              return 1;
-            }
-            return 0;
-          })
-          .map(token => {
-            const balance = new BigNumber(token.balance);
-            const convertedToken = {
-              addr: token.addr,
-              balance: balance
-                .div(new BigNumber(10).pow(token.decimals))
-                .toString(),
-              decimals: token.decimals,
-              email: token.email,
-              name: token.name,
-              symbol: token.symbol,
-              website: token.website
-            };
-            return convertedToken;
-          });
-        this.tokens = hex;
-      } else {
-        const tokenWithBalance = [];
-        this.network.type.tokens.map(async token => {
-          token.balance = await this.getTokenBalance(token);
-          tokenWithBalance.push(token);
+      this.receivedTokens = false;
+      const tokens = await this.fetchTokens();
+      tokens
+        .sort((a, b) => {
+          if (a.name.toUpperCase() < b.name.toUpperCase()) {
+            return -1;
+          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+            return 1;
+          }
+          return 0;
+        })
+        .map(token => {
+          const balanceCheck = new BigNumber(token.balance);
+          const balance = balanceCheck.isNaN()
+            ? token.balance
+            : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
+          const convertedToken = {
+            addr: token.addr,
+            balance: balance,
+            decimals: token.decimals,
+            email: token.email,
+            name: token.name,
+            symbol: token.symbol,
+            website: token.website
+          };
+          return convertedToken;
+        })
+        .sort((a, b) => {
+          return b.balance - a.balance;
         });
-        this.receivedTokens = false;
-        this.tokens = tokenWithBalance;
-      }
+
+      this.tokens = tokens;
 
       let customTokens = [];
       if (
@@ -275,7 +280,10 @@ export default {
             address !== this.wallet.getAddressString()
           ) {
             const wallet = new Web3Wallet(address);
-            this.$store.dispatch('setWeb3Wallet', wallet);
+            this.$store.dispatch('decryptWallet', [
+              wallet,
+              window.web3.currentProvider
+            ]);
             clearInterval(this.pollAddress);
           }
         });
@@ -283,17 +291,22 @@ export default {
     },
     matchWeb3WalletNetwork() {
       this.pollNetwork = setInterval(() => {
-        window.web3.version.getNetwork((err, netId) => {
-          if (err) return;
-          if (this.network.type.chainID.toString() !== netId) {
-            Object.keys(networkTypes).forEach(net => {
-              if (networkTypes[net].chainID.toString() === netId) {
-                this.$store.dispatch('switchNetwork', this.Networks[net][0]);
-                clearInterval(this.pollNetwork);
-              }
-            });
-          }
-        });
+        window.web3.eth.net
+          .getId()
+          .then(netId => {
+            if (this.network.type.chainID.toString() !== netId) {
+              Object.keys(networkTypes).forEach(net => {
+                if (networkTypes[net].chainID === netId) {
+                  this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+                  clearInterval(this.pollNetwork);
+                }
+              });
+            }
+          })
+          .catch(e => {
+            // eslint-disable-next-line
+            console.error(e)
+          });
       }, 500);
     },
     clearIntervals() {
@@ -307,7 +320,7 @@ export default {
     setupOnlineEnvironment() {
       if (this.online === true) {
         if (this.wallet !== null) {
-          if (this.wallet.identifier === 'Web3') {
+          if (this.wallet.identifier === 'web3_wallet') {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }

@@ -33,7 +33,13 @@
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
-              <td>{{ token.balance }}</td>
+              <td
+                v-if="token.balance === 'Load'"
+                @click="getSpecificTokenBalance(token, index)"
+              >
+                {{ token.balance }}
+              </td>
+              <td v-else>{{ token.balance }}</td>
             </tr>
           </table>
 
@@ -136,6 +142,12 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    async getSpecificTokenBalance(token, idx) {
+      this.tokens[idx].balance = await this.getTokenBalance(token);
+      this.tokens.sort((a, b) => {
+        return b.balance - a.balance;
+      });
+    },
     addTokenModal() {
       this.$refs.tokenModal.$refs.token.show();
     },
