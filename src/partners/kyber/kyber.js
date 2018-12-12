@@ -14,6 +14,7 @@ import {
   kyberNetworkENS,
   walletDepositeAddress
 } from './config';
+import { statuses } from '../simplex/config';
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
@@ -436,6 +437,27 @@ export default class Kyber {
   //     validFor: 6000 // Rates provided are only an estimate, and
   //   };
   // }
+
+  // ============================= Get and Parse Swap Status  ====================================
+  static async getOrderStatus(/*noticeDetails*/) {
+    return 'new';
+  }
+
+  static parseKyberStatus(status) {
+    console.log(status); // todo remove dev item
+    switch (status) {
+      case statuses.new:
+      case statuses.initiated:
+      case statuses.sent:
+        return 'new';
+      case statuses.pending:
+        return 'pending';
+      case statuses.payment:
+        return 'complete';
+      case statuses.cancelled:
+        return 'cancelled';
+    }
+  }
 
   // ================= Util methods ===================================
 

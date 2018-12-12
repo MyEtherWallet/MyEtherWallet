@@ -112,6 +112,10 @@ export default {
     addressLink: {
       type: Function,
       default: function() {}
+    },
+    processStatus: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {

@@ -14,7 +14,7 @@
               gasPrice === locHighestGas / 4 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(locHighestGas / 4);"
+            @click="setSpeed(locHighestGas / 4)"
           >
             {{ $t('common.slow') }}
           </div>
@@ -23,7 +23,7 @@
               gasPrice === locHighestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(locHighestGas / 2);"
+            @click="setSpeed(locHighestGas / 2)"
           >
             {{ $t('common.regular') }}
           </div>
@@ -32,7 +32,7 @@
               gasPrice === locHighestGas ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="setSpeed(locHighestGas);"
+            @click="setSpeed(locHighestGas)"
           >
             {{ $t('common.fast') }}
           </div>

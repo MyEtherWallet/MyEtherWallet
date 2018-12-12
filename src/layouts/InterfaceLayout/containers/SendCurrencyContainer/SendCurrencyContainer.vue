@@ -80,7 +80,7 @@
 
             <p
               class="copy-button prevent-user-select"
-              @click="copyToClipboard('address');"
+              @click="copyToClipboard('address')"
             >
               {{ $t('common.copy') }}
             </p>
@@ -117,7 +117,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="advancedExpend = !advancedExpend;"
+                  @click="advancedExpend = !advancedExpend"
                 />
                 <span class="slider round" />
               </label>
