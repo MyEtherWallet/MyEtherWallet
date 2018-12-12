@@ -51,27 +51,31 @@ describe('kyber.js', () => {
 
 
 
-  it('should return data for kyber approval tx', async () => {
-    const dataValue = {
-      data:
-        '0x095ea7b3000000000000000000000000818e6fecd516ecc3849daf6845e3ec868087b75500000000000000000000000000000000000000000000000000000000000186a0',
-      to: '0xC5bBaE50781Be1669306b9e001EFF57a2957b09d',
-      value: 0
-    };
 
-    const web3 = new Web3(nodeUrl);
-    const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
-      network,
-      web3: web3,
-      ens: ens
-    });
-    const baseValue = kyber.convertToTokenWei('GTO', 1);
-    const approveData = await kyber.approveKyber('GTO', baseValue);
-    expect(approveData).toMatchObject(dataValue);
-  });
 
   if (WITH_NETWORK) {
+
+    // requires network to function
+    it('should return data for kyber approval tx', async () => {
+      const dataValue = {
+        data:
+          '0x095ea7b3000000000000000000000000818e6fecd516ecc3849daf6845e3ec868087b75500000000000000000000000000000000000000000000000000000000000186a0',
+        to: '0xC5bBaE50781Be1669306b9e001EFF57a2957b09d',
+        value: 0
+      };
+
+      const web3 = new Web3(nodeUrl);
+      const ens = new ENS(web3.currentProvider);
+      const kyber = new Kyber({
+        network,
+        web3: web3,
+        ens: ens
+      });
+      const baseValue = kyber.convertToTokenWei('GTO', 1);
+      const approveData = await kyber.approveKyber('GTO', baseValue);
+      expect(approveData).toMatchObject(dataValue);
+    });
+
     // requires network to function
     it('should return data for kyber trade tx', async () => {
       const dataValue = {

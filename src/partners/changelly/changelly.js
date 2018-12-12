@@ -29,7 +29,6 @@ export default class Changelly {
     return PROVIDER_NAME;
   }
 
-  // ============================= Setup Methods  ====================================
   async getSupportedCurrencies() {
     try {
       const {
@@ -44,8 +43,6 @@ export default class Changelly {
       errorLogger(e);
     }
   }
-
-  // ============================= State Methods  ====================================
 
   get isValidNetwork() {
     return this.network === networkSymbols.ETH;
@@ -62,7 +59,6 @@ export default class Changelly {
     return {};
   }
 
-  // ============================= pair and value selection and update methods  ====================================
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
@@ -86,11 +82,13 @@ export default class Changelly {
       changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
     ]);
 
+    const minAmount = new BigNumber(changellyDetails[0])
+      .times(0.001)
+      .plus(new BigNumber(changellyDetails[0]))
+      .toFixed();
+
     this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: new BigNumber(changellyDetails[0])
-        .times(0.001)
-        .plus(new BigNumber(changellyDetails[0]))
-        .toFixed(),
+      minAmount: minAmount,
       rate: changellyDetails[1]
     };
     console.log(changellyDetails[0]); // todo remove dev item
@@ -98,15 +96,11 @@ export default class Changelly {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      minValue: new BigNumber(changellyDetails[0])
-        .times(0.001)
-        .plus(new BigNumber(changellyDetails[0]))
-        .toFixed(),
+      minValue: minAmount,
       rate: changellyDetails[1]
     };
   }
 
-  // ============================= Determine inclusion in currency options ====================================
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop])
@@ -149,8 +143,6 @@ export default class Changelly {
     }
   }
 
-  // ============================= Finalize swap details ====================================
-
   async startSwap(swapDetails) {
     console.log(swapDetails); // todo remove dev item
     let details;
@@ -189,7 +181,6 @@ export default class Changelly {
     return await changellyCalls.createTransaction(swapParams, this.network);
   }
 
-  // ================= Check status of order methods ===================================
   static parseOrder(order) {
     return {
       orderId: order.id,
@@ -237,10 +228,6 @@ export default class Changelly {
     }
   }
 
-  statusUpdater(/*swapDetails*/) {
-    return () => {};
-  }
-
   static statuses(data) {
     const statuses = {
       new: 1,
@@ -257,7 +244,6 @@ export default class Changelly {
     return status;
   }
 
-  // ================= Util methods ===================================
   async validateAddress(toCurrency, address) {
     return await changellyCalls.validateAddress(
       {

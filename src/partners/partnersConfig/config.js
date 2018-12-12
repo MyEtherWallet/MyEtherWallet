@@ -13,7 +13,7 @@ const swapApiEndpoints = {
   changelly: '/changelly',
   bity: '/bity'
 };
-const mewSimplex = 'https://apiccswap.myetherwallet.com'; // 'https://apiccswap.myetherwallet.com'; // 'https://mew-v5-swap-dev-server.nanoapp.io';
+const mewSimplex = 'https://apiccswap.myetherwallet.com';
 
 export {
   BASE_CURRENCY,

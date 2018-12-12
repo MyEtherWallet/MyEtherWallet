@@ -35,12 +35,13 @@ import {
 
 // Array of currently supported providers
 const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>
     accumulator.set(currentValue.getName(), currentValue),
   new Map()
 );
-console.log(providerMap); // todo remove dev item
+
 const providerNames = {
   simplex: simplex,
   kyber: kybernetwork,
