@@ -1,4 +1,3 @@
-// TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
 const kyberTokenList = {
   ETH: 'https://tracker.kyber.network/api/tokens/supported',
   ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'

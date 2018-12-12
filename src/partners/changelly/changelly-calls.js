@@ -1,25 +1,17 @@
 import { post } from '@/helpers/httpRequests';
 import { changellyMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
+import { utils } from '../helpers';
 
 function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.changelly;
-}
-
-function buildPayload(method, data) {
-  return {
-    jsonrpc: '2.0',
-    method: method,
-    params: data,
-    id: parseInt(Math.random() * 100)
-  };
 }
 
 const getCurrencies = async network => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(changellyMethods[network].currenciesFull, {})
+      utils.buildPayload(changellyMethods[network].currenciesFull, {})
     );
     return results.result;
   }
@@ -30,7 +22,7 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(changellyMethods[network].rate, {
+      utils.buildPayload(changellyMethods[network].rate, {
         from: fromCurrency,
         to: toCurrency,
         amount: fromValue
@@ -45,7 +37,7 @@ const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(changellyMethods[network].min, {
+      utils.buildPayload(changellyMethods[network].min, {
         from: fromCurrency,
         to: toCurrency
       })
@@ -59,7 +51,7 @@ const validateAddress = async (addressDetails, network) => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(changellyMethods[network].validate, addressDetails)
+      utils.buildPayload(changellyMethods[network].validate, addressDetails)
     );
     return results.result;
   }
@@ -70,7 +62,7 @@ const createTransaction = async (transactionParams, network) => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(
+      utils.buildPayload(
         changellyMethods[network].createTransaction,
         transactionParams
       )
@@ -84,7 +76,7 @@ const getStatus = async (orderId, network) => {
   if (changellyMethods[network]) {
     const results = await post(
       buildPath(),
-      buildPayload(changellyMethods[network].status, {
+      utils.buildPayload(changellyMethods[network].status, {
         id: orderId
       })
     );

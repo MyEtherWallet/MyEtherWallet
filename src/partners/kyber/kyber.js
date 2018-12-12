@@ -1,8 +1,9 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
-import { networkSymbols, ERC20 } from '../partnersConfig';
+import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
+  ERC20,
   kyberBaseCurrency,
   PROVIDER_NAME,
   defaultValues,
@@ -35,7 +36,6 @@ export default class Kyber {
       props.kyberAddress || kyberAddressFallback[this.network];
     this.rates = new Map();
 
-    // setup actions
     this.retrieveRates();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
@@ -73,8 +73,6 @@ export default class Kyber {
       .methods.enabled()
       .call();
   }
-
-  // ============================= Setup Methods  ====================================
 
   setNetwork(network) {
     this.network = network;
@@ -141,7 +139,6 @@ export default class Kyber {
     );
   }
 
-  // ============================= pair and value selection and update methods  ====================================
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
@@ -188,7 +185,6 @@ export default class Kyber {
     return -1;
   }
 
-  // ============================= Determine inclusion in currency options ====================================
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
       if (this.currencies[prop])
@@ -224,8 +220,6 @@ export default class Kyber {
   getUpdatedToCurrencyEntries(value, collectMap) {
     this.getUpdatedCurrencyEntries(value, collectMap);
   }
-
-  // ============================= Finalize swap details ====================================
 
   async callKyberContract(method, ...parameters) {
     return await this.getKyberContractObject()
@@ -339,9 +333,9 @@ export default class Kyber {
     { fromCurrency, toCurrency, fromValueWei, fromAddress },
     minRateWei
   ) {
-    // Cannot use a larger value (which solidity supports due to error from web3/ethers,
-    // see: https://github.com/ethereum/web3.js/issues/1920
-    // This can cause the transaction to fail and revert
+    /* Cannot use a larger value (which solidity supports due to error from web3/ethers,
+       see: https://github.com/ethereum/web3.js/issues/1920
+       This can cause the transaction to fail and revert */
     const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
 
     const data = this.getKyberContractObject()
@@ -399,7 +393,6 @@ export default class Kyber {
       const swapTransactions = Array.from(prepareSwapTxData);
       return [...swapTransactions];
     } catch (e) {
-      // eslint-disable no-console
       errorLogger(e);
       throw e;
     }
@@ -414,12 +407,13 @@ export default class Kyber {
     );
     swapDetails.providerReceives = swapDetails.fromValue;
     swapDetails.providerSends = swapDetails.toValue;
-    swapDetails.parsed = {};
+    swapDetails.parsed = {
+      sendToAddress: this.getKyberNetworkAddress(),
+      status: 'pending'
+    };
     swapDetails.providerAddress = this.getKyberNetworkAddress();
     return swapDetails;
   }
-
-  // ================= Util methods ===================================
 
   getTokenAddress(token) {
     try {
@@ -454,7 +448,6 @@ export default class Kyber {
     return new BigNumber(value).div(denominator).toString(10);
   }
 
-  // TODO: Investigate rate conversion and decimals appearing at the end of the converted value
   convertToTokenWei(token, value) {
     const decimals = this.getTokenDecimals(token);
     const denominator = new BigNumber(10).pow(decimals);
