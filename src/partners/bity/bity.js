@@ -35,7 +35,6 @@ export default class BitySwap {
     this.minValue = BITY_MIN;
     this.maxValue = BITY_MAX;
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
-    this.currentOrderStatus = ''; // temporary placeholder variable
     this.rates = new Map();
 
     this.retrieveRates();
@@ -99,7 +98,7 @@ export default class BitySwap {
       provider: this.name,
       rate: rate,
       minValue: this.minValue,
-      maxValue: this.maxValue // TODO provide better identification and notice of min/max for user
+      maxValue: this.maxValue
     };
   }
 
@@ -139,8 +138,6 @@ export default class BitySwap {
   setNetwork(network) {
     this.network = network;
   }
-
-  // ============================= Determine inclusion in currency options ====================================
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
@@ -187,8 +184,6 @@ export default class BitySwap {
     }
   }
 
-  // ============================= Finalize swap details ====================================
-
   async startSwap(swapDetails) {
     swapDetails.dataForInitialization = await this.buildOrder(
       swapDetails.fromCurrency === BASE_CURRENCY,
@@ -226,8 +221,6 @@ export default class BitySwap {
       throw Error('error creating bity order');
     }
   }
-
-  // ================= Check status of order methods ===================================
 
   static parseOrder(order) {
     return {

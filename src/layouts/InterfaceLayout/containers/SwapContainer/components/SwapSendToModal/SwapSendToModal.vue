@@ -192,11 +192,9 @@ export default {
     },
     bitySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
-      // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     },
     changellySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
-      // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
     }
   }
 };

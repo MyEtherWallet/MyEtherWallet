@@ -60,8 +60,6 @@ export default class Simplex {
     return !!this.currencies.fiat[currency];
   }
 
-  // ============================= pair and value selection and update methods  ====================================
-
   canQuote(fiatAmount) {
     return fiatAmount >= this.minFiat && fiatAmount <= this.maxFiat;
   }
@@ -153,8 +151,6 @@ export default class Simplex {
     };
   }
 
-  // ============================= Determine inclusion in currency options ====================================
-
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies.fiat) {
       if (this.currencies.fiat[prop])
@@ -200,7 +196,6 @@ export default class Simplex {
     }
   }
 
-  // ============================= Finalize swap details ====================================
   canOrder(fiatAmount, digitalAmount) {
     return (
       fiatAmount >= this.minFiat &&

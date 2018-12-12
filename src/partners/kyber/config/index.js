@@ -12,6 +12,8 @@ import {
   KyberCurrencies
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
+import ERC20 from '../../partnersConfig';
+
 export {
   kyberBaseCurrency,
   PROVIDER_NAME,
@@ -24,5 +26,6 @@ export {
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
-  kyberNetworkABI
+  kyberNetworkABI,
+  ERC20
 };

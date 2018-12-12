@@ -402,6 +402,7 @@ export default {
       }
     }, 3000);
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
+    const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.wallet.getChecksumAddressString();
@@ -576,7 +577,6 @@ export default {
         }
       }
     },
-    // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       try {
         if (this.validSwap) {
