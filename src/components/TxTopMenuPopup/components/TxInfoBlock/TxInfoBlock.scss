@@ -11,18 +11,27 @@
   display: flex;
   align-items: flex-start;
 
+  @media all and (max-width: $tablet-width) {
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
   .currency {
     .currency-type {
       display: flex;
       align-items: center;
+      span {
+        font-size: 19px;
+      }
       img {
         margin-right: 4px;
-        height: 17px;
+        height: 20px;
       }
     }
 
     .amount {
       font-weight: 600;
+      font-size: 16px;
     }
   }
 
@@ -30,6 +39,9 @@
     padding: 0 12px;
     img {
       height: 12px;
+      @media all and (max-width: $tablet-width) {
+        height: 22px;
+      }
     }
   }
 }

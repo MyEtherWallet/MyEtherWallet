@@ -106,6 +106,10 @@
   .send-form2 {
     padding: 40px 60px 0;
 
+    @media all and (max-width: $tablet-width) {
+      padding: 10px;
+    }
+
     .title-container {
       align-items: flex-end;
       display: flex;
@@ -116,16 +120,26 @@
 
         .title-and-popover {
           display: flex;
+          align-items: center;
         }
 
         h4 {
           margin-bottom: 2px;
+          margin-right: 5px;
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
+
+        > * {
+          margin-left: 5px;
+        }
+
+        @media all and (max-width: $tablet-width) {
+          display: none;
+        }
       }
     }
 
@@ -280,5 +294,11 @@
         width: 300px;
       }
     }
+  }
+}
+
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .form-container {
+    padding: 10px 0;
   }
 }

@@ -41,7 +41,7 @@
           :class="[showDetail ? 'done' : '', 'accordion-header']"
           header-tag="header"
         >
-          <div><span> 1 </span> &nbsp; ({{ $t('dapps.bidInfo') }})</div>
+          <div><span> 1 </span> &nbsp; {{ $t('dapps.bidInfo') }}</div>
           <div v-show="showDetail" class="edit" @click="editInputs">
             {{ $t('dapps.edit') }}
           </div>

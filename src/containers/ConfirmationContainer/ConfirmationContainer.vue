@@ -18,6 +18,7 @@
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :signed-array="signedArray"
+      :sending="sending"
     />
     <confirm-modal
       ref="offlineGenerateConfirmModal"
@@ -107,7 +108,8 @@ export default {
       dismissed: true,
       web3WalletHash: '',
       web3WalletRes: '',
-      signedArray: []
+      signedArray: [],
+      sending: false
     };
   },
   computed: {
@@ -323,6 +325,7 @@ export default {
       }, 500);
     },
     async sendBatchTransactions() {
+      this.sending = true;
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {

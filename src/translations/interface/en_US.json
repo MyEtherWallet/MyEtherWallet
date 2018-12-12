@@ -49,5 +49,7 @@
   "fromAddr": "From Address",
   "depAmount": "Deposit Amount",
   "notEnoughBalance": "You have insufficient funds.",
+  "refund": "address for refund (if needed) from",
+  "swapButtonLoading": "Finalizing Swap Details",
   "sendTxType": "Type"
 }

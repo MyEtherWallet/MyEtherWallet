@@ -363,7 +363,7 @@
 
   .large-round-button-green-filled {
     background-color: $button--background-color-1;
-    border: 1px solid $button--border-color-1;
+    border: 1px solid $button--background-color-1;
     border-radius: 6px;
     color: $button--text-color-1;
     cursor: pointer;
@@ -1237,6 +1237,15 @@
     width: 100%;
   }
 
+  .custom-textarea-2 {
+    background-color: $background-color-1;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 15px;
+    resize: none;
+    width: 100%;
+  }
+
   // *********************************************************************
   // Custom Links
   // *********************************************************************
@@ -1252,6 +1261,7 @@
 
   .disabled {
     background-color: $light-grey-12;
+    border-color: $light-grey-12;
     pointer-events: none;
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )

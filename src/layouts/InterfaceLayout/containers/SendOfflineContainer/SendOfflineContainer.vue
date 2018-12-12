@@ -2,19 +2,21 @@
   <div class="send-offline-container">
     <interface-container-title :title="$t('common.offline')" />
 
-    <div class="progress-status prevent-user-select">
-      <div
-        v-for="(tab, idx) in tabs"
-        :key="tab.title + idx"
-        :class="[
-          isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
-          'genInfo'
-        ]"
-        @click="processChange(tab.name2 ? tab.name2 : tab.name)"
-      >
-        <div class="prevent-pointer-events">
-          <p class="title">{{ tab.title }}</p>
-          <p class="description prevent-pointer-events">{{ tab.desc }}</p>
+    <div class="progress-status-container">
+      <div class="progress-status prevent-user-select">
+        <div
+          v-for="(tab, idx) in tabs"
+          :key="tab.title + idx"
+          :class="[
+            isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
+            'genInfo'
+          ]"
+          @click="processChange(tab.name2 ? tab.name2 : tab.name);"
+        >
+          <div class="prevent-pointer-events">
+            <p class="title">{{ tab.title }}</p>
+            <p class="description prevent-pointer-events">{{ tab.desc }}</p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,13 +1,30 @@
-const changellyAddresses = {
+const changellyMethods = {
   ETH: {
-    currencies: '/getCurrencies',
-    rate: '/getExchangeAmount',
-    min: '/getMinAmount',
-    validate: '/validateAddress',
-    createTransaction: '/createTransaction',
-    status: '/statusChangelly'
+    currencies: 'getCurrencies',
+    currenciesFull: 'getCurrenciesFull',
+    rate: 'getExchangeAmount',
+    min: 'getMinAmount',
+    validate: 'validateAddress',
+    createTransaction: 'createTransaction',
+    status: 'getStatus'
   }
-  // ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
 };
 
-export { changellyAddresses };
+const changellyStatuses = {
+  new: 'new',
+  waiting: 'waiting',
+  confirming: 'confirming',
+  exchanging: 'exchanging',
+  sending: 'sending',
+  finished: 'finished',
+  failed: 'failed',
+  refunded: 'refunded',
+  overdue: 'overdue',
+  hold: 'hold'
+};
+
+const PROVIDER_NAME = 'changelly';
+
+const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
+
+export { changellyMethods, changellyStatuses, requireExtraId, PROVIDER_NAME };

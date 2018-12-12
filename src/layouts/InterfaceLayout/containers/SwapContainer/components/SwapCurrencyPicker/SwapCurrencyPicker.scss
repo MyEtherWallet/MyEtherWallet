@@ -5,6 +5,10 @@
   border: 1px solid $mew-green;
 }
 
+.cc-icon {
+  font-size: 26px;
+}
+
 .currency-picker-container {
   margin-bottom: 5px;
   min-width: 150px;
@@ -37,7 +41,7 @@
   i {
     position: absolute;
     right: 20px;
-    top: 16px;
+    top: 20px;
   }
 
   p {
@@ -127,4 +131,13 @@
 
 .subname {
   color: $light-blue-6;
+}
+
+.symbol-name {
+  display: flex;
+  align-items: center;
+
+  .cc {
+    width: 40px;
+  }
 }

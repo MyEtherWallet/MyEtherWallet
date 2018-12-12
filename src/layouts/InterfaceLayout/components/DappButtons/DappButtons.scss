@@ -30,4 +30,24 @@
   a {
     color: black;
   }
+
+  @media all and (max-width: $mobile-width) {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+
+    img {
+      height: 70px;
+      margin: 0;
+      margin-right: 10px;
+    }
+
+    .button-info {
+      text-align: left;
+    }
+
+    p {
+      padding: 0;
+    }
+  }
 }

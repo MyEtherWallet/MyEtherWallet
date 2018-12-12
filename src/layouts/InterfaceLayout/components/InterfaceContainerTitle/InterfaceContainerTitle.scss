@@ -17,6 +17,7 @@
     padding-left: 27px;
 
     @media all and (max-width: $mobile-width) {
+      line-height: 24px;
       font-size: 18px;
       padding-left: 10px;
     }
@@ -27,6 +28,7 @@
   display: none;
   margin-left: auto;
   margin-right: 20px;
+  background-color: $white;
 
   @media all and (max-width: $interface--mobile-side-menu--width) {
     display: block;

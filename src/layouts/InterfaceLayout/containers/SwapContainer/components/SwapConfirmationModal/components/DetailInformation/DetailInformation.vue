@@ -39,7 +39,9 @@ export default {
       isExpended: false
     };
   },
-  mounted() {}
+  mounted() {
+    console.log(this.details);
+  }
 };
 </script>
 

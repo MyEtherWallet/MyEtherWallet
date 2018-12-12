@@ -64,6 +64,9 @@
     display: flex;
     flex-direction: column;
     margin-top: 32px;
+    @media all and (max-width: $tablet-width) {
+      margin-top: 0;
+    }
 
     label {
       color: $dark-blue-2;
@@ -153,6 +156,16 @@
     display: flex;
     justify-content: space-between;
     padding: 7px 10px;
+
+    @media all and (max-width: $tablet-width) {
+      display: block;
+      border-bottom: 1px solid $light-grey-15;
+      padding: 10px 0;
+
+      span {
+        display: block;
+      }
+    }
 
     .detail-title {
       color: $dark-grey-11;

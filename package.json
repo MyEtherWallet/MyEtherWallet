@@ -19,13 +19,15 @@
     "update:lists": "node fetchEthListData.js"
   },
   "dependencies": {
-    "idna-uts46": "1.1.0",
-    "register-service-worker": "1.5.2",
-    "vue": "2.5.20",
-    "vue-mq": "0.2.1",
-    "vue-router": "3.0.2",
-    "vuex": "3.0.1",
-    "websocket": "1.0.28"
+    "@myetherwallet/eth-token-balance": "^0.1.1",
+    "idna-uts46": "^1.1.0",
+    "register-service-worker": "^1.5.2",
+    "vue": "^2.5.17",
+    "vue-mq": "^0.2.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "websocket": "^1.0.28",
+    "workbox-webpack-plugin": "^3.6.3"
   },
   "devDependencies": {
     "@ledgerhq/hw-app-eth": "4.24.0",
@@ -92,7 +94,9 @@
     "web3-utils": "1.0.0-beta.37",
     "webpack": "4.27.1",
     "worker-loader": "2.0.0",
-    "zxcvbn": "4.4.2"
+    "zxcvbn": "4.4.2",
+    "vue-infinite-slide-bar": "^1.0.8",
+    "wallet-address-validator": "^0.2.1"
   },
   "engines": {
     "node": ">= 8.0.0",

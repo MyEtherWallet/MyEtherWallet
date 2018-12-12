@@ -15,6 +15,11 @@
   border-radius: 4px;
   display: flex;
   position: relative;
+  justify-content: flex-end;
+
+  @media all and (max-width: $tablet-width) {
+    justify-content: flex-start;
+  }
 
   &.open {
     @extend %open;
@@ -38,10 +43,18 @@
     position: absolute;
     right: 20px;
     top: 16px;
+
+    @media all and (max-width: $tablet-width) {
+      left: 10px;
+      top: 16px;
+    }
   }
 
   p {
-    padding-right: 15px;
+    padding-right: 25px;
+    @media all and (max-width: $tablet-width) {
+      padding-left: 15px;
+    }
   }
 }
 
@@ -54,7 +67,8 @@
 .dropdown-text-container-white {
   @extend %dropdown-text-container-base;
 
-  background-color: $white;
+  border: 0;
+  //background-color: $white;
 }
 
 .dropdown-search-container {
@@ -127,4 +141,14 @@
 
 .subname {
   color: $light-blue-6;
+}
+
+.symbol {
+  display: flex;
+  align-items: center;
+}
+
+.currency-symbol-name {
+  display: flex;
+  align-items: center;
 }

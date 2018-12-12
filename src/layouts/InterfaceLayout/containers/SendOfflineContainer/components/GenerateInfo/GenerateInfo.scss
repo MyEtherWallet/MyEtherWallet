@@ -1,8 +1,17 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  padding-bottom: 30px;
+  @media all and (max-width: $tablet-width) {
+    padding: 10px 0 20px 0;
+  }
+
   .send-form {
     padding: 40px 60px 0;
+
+    @media all and (max-width: $tablet-width) {
+      padding: 10px;
+    }
 
     .title-container {
       align-items: flex-end;
@@ -62,6 +71,10 @@
       display: grid;
       grid-column-gap: 5px;
       grid-template-columns: 2fr 3fr;
+
+      @media all and (max-width: $tablet-width) {
+        display: block;
+      }
 
       .title {
         margin-bottom: 13px;
@@ -149,6 +162,9 @@
         border: 0;
         padding: 13px 15px;
         width: 100%;
+        @media all and (max-width: $mobile-width) {
+          padding: 13px 45px 13px 15px;
+        }
       }
 
       .good-button-container {
@@ -197,13 +213,20 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 40px 0 0 0;
     text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      padding: 20px 0;
+    }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
       width: 300px;
+      @media all and (max-width: $mobile-width) {
+        width: initial;
+      }
     }
 
     p {

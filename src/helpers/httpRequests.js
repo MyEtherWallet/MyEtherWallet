@@ -1,10 +1,5 @@
 import fetch from 'node-fetch';
 
-// const https = require("https");
-// const agent = new https.Agent({
-//   rejectUnauthorized: false
-// })
-
 function post(url = ``, data = {}, opts = {}) {
   const defaultOptions = {
     mode: 'cors',

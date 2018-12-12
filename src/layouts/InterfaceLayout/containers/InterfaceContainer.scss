@@ -5,7 +5,7 @@
   grid-area: main;
   overflow: hidden;
 
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: $tablet-width) {
     margin-bottom: 10px;
   }
 
@@ -17,7 +17,7 @@
 %send-form-base {
   padding: 40px 60px 0;
 
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: $tablet-width) {
     padding: 10px;
   }
 

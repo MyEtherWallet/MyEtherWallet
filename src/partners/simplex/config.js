@@ -1,4 +1,4 @@
-import { swapServer } from '../config';
+import { mewSimplex } from '../partnersConfig';
 
 const SimplexCurrencies = {
   fiat: {
@@ -19,23 +19,16 @@ const SimplexCurrencies = {
     ETH: {
       symbol: 'ETH',
       name: 'Ether'
-    },
-    BCH: {
-      symbol: 'BCH',
-      name: 'Bitcoin Cash'
-    },
-    LTC: {
-      symbol: 'LTC',
-      name: 'Litecoin'
     }
   }
 };
 
-const SimplexMinFiat = 50;
-const SimplexMaxFiat = 20000;
+const MIN_FIAT = 50;
+const MAX_FIAT = 20000;
+const PROVIDER_NAME = 'simplex';
 
 const host = {
-  url: process.env.API_HOST || swapServer //'https://apiccswap.myetherwallet.com'
+  url: process.env.SIMPLEX_API_HOST || mewSimplex
 };
 
-export { SimplexCurrencies, host, SimplexMinFiat, SimplexMaxFiat };
+export { SimplexCurrencies, host, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };

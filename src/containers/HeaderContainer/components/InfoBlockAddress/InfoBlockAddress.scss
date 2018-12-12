@@ -1,0 +1,40 @@
+@import '../InfoBlock.scss';
+
+//********************************************************
+// .block-wrap
+//********************************************************
+.block-wrap {
+  background-color: $transaction-block-address;
+}
+
+
+
+//********************************************************
+// .block-content
+//********************************************************
+.block-content {
+  display: grid;
+  grid-template-columns: 70% 1fr;
+}
+
+.block-content-left {
+  word-wrap: break-word;
+  p {
+    word-wrap: break-word;
+  }
+}
+
+.block-content-right {
+  justify-self: end;
+
+  >div {
+    border: 2px solid $white;
+    border-radius: 100%;
+  }
+}
+
+
+
+
+
+
