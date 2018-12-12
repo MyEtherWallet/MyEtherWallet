@@ -10,7 +10,7 @@
       <ul class="button-options">
         <li
           :class="selected === 'byJson' ? 'selected' : ''"
-          @click="select('byJson');"
+          @click="select('byJson')"
         >
           <img
             :src="
@@ -28,7 +28,7 @@
         </li>
         <li
           :class="selected === 'byMnem' ? 'selected' : ''"
-          @click="select('byMnem');"
+          @click="select('byMnem')"
         >
           <img
             :src="
@@ -46,7 +46,7 @@
         </li>
         <li
           :class="selected === 'byPriv' ? 'selected' : ''"
-          @click="select('byPriv');"
+          @click="select('byPriv')"
         >
           <img
             :src="

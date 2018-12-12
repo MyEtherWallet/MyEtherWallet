@@ -45,7 +45,7 @@
               name=""
               value=""
               placeholder="Deposit Amount"
-              @input="amountChanged('from');"
+              @input="amountChanged('from')"
             />
           </div>
           <div class="error-message-container">
@@ -76,7 +76,7 @@
               name=""
               value=""
               placeholder="Received Amount"
-              @input="amountChanged('to');"
+              @input="amountChanged('to')"
             />
           </div>
           <div class="error-message-container">
@@ -348,10 +348,16 @@ export default {
         this.swap.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
       ) {
+        const enteredVal = this.swap.convertToTokenWei(
+          this.fromCurrency,
+          this.fromValue
+        );
+
+        if (+this.tokenBalances[this.fromCurrency] === +enteredVal) {
+          return false;
+        }
         return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
-          new BigNumber(
-            this.swap.convertToTokenWei(this.fromCurrency, this.fromValue)
-          )
+          new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
         return +this.fromValue >= this.account.balance;

@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand();">
+    <div class="notification-header" @click="expand()">
       <div class="notification-type-status">
         <p class="type">Transaction</p>
         <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>

@@ -28,7 +28,7 @@
                   >{{ web3.utils.fromWei(item.price, 'ether') }}
                 </span>
                 <span class="currency">ETH </span>
-                <button @click="buyDomain(item);">
+                <button @click="buyDomain(item)">
                   <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
                   <span v-else> <i class="fa fa-times" /> </span>
                 </button>

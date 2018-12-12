@@ -18,7 +18,7 @@
         <div class="qa-cards">
           <ul class="qa__contents">
             <li>
-              <div class="qa__contents--title" @click="openFAQ('faq1');">
+              <div class="qa__contents--title" @click="openFAQ('faq1')">
                 <h3>Balances not loading or showing on MyEtherWallet</h3>
                 <div class="show-more-buttons">
                   <span v-if="showFAQs.faq1 == false" class="show-more">+</span>
@@ -30,7 +30,7 @@
               </div>
             </li>
             <li>
-              <div class="qa__contents--title" @click="openFAQ('faq2');">
+              <div class="qa__contents--title" @click="openFAQ('faq2')">
                 <h3>
                   Does MyEtherWallet support Bitcoin or other coins (LTC STEEM
                   ZEC)?
@@ -45,7 +45,7 @@
               </div>
             </li>
             <li>
-              <div class="qa__contents--title" @click="openFAQ('faq3');">
+              <div class="qa__contents--title" @click="openFAQ('faq3')">
                 <h3>ETH or Tokens sent to or from exchange haven't shown up</h3>
                 <div class="show-more-buttons">
                   <span v-if="showFAQs.faq3 == false" class="show-more">+</span>
@@ -57,7 +57,7 @@
               </div>
             </li>
             <li>
-              <div class="qa__contents--title" @click="openFAQ('faq4');">
+              <div class="qa__contents--title" @click="openFAQ('faq4')">
                 <h3>
                   Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?
                 </h3>
@@ -71,7 +71,7 @@
               </div>
             </li>
             <li>
-              <div class="qa__contents--title" @click="openFAQ('faq5');">
+              <div class="qa__contents--title" @click="openFAQ('faq5')">
                 <h3>What Is An ICO?</h3>
                 <div class="show-more-buttons">
                   <span v-if="showFAQs.faq5 == false" class="show-more">+</span>

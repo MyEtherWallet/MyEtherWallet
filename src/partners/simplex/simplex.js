@@ -209,7 +209,6 @@ export default class Simplex {
     );
   }
 
-
   static parseOrder(order) {
     return {
       orderId: order.quote_id,
@@ -268,6 +267,7 @@ export default class Simplex {
     }
   }
 
+  // ============================= Get and Parse Swap Status  ====================================
   static async getOrderStatus(noticeDetails) {
     console.log('simplex status start'); // todo remove dev item
     const result = await getStatus(noticeDetails.statusId);
@@ -293,6 +293,4 @@ export default class Simplex {
         return 'cancelled';
     }
   }
-
-
 }

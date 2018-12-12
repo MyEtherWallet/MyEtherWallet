@@ -189,7 +189,7 @@ export default class SwapProviders {
     const denominator = new BigNumber(10).pow(decimals);
     return new BigNumber(value)
       .times(denominator)
-      .integerValue(BigNumber.ROUND_DOWN)
+      .toFixed(0)
       .toString(10);
   }
 

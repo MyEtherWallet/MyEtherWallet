@@ -7,6 +7,9 @@ const type = {
   TRANSACTION_ERROR: 'Error',
   CONTRACT_CALL: '',
   SWAP: 'swap',
+  SWAP_HASH: 'Swap_Hash',
+  SWAP_RECEIPT: 'Swap_Receipt',
+  SWAP_ERROR: 'Swap_Error',
   SWAP_ORDER: 'Swap'
 };
 
@@ -29,32 +32,27 @@ const notificationStatuses = {
   FAILED: 'failed'
 };
 
-const identifySwapForTransaction = (notifArray, val) => {
-  console.log(notifArray[notifArray.length - 1]); // todo remove dev item
-  const try1 = notifArray.findIndex(
-    entry => entry.type === 'swap' && entry.body.to === val[1].to
-  );
-
-  if (try1 >= 0) {
-    console.log(try1); // todo remove dev item
-  }
-  notifArray.forEach(entry => {
-    if (entry.body.to === val[1].to) {
-      console.log(entry.type);
+const identifySwapForHash = (notifArray, val) => {
+  return notifArray.findIndex(entry => {
+    console.log('entry.body.providerAddress', entry.body.providerAddress); // todo remove dev item
+    console.log('val[1].to', val[1].to); // todo remove dev item
+    if (entry.body.providerAddress) {
+      return (
+        entry.type === 'swap' &&
+        entry.body.providerAddress.toLowerCase() === val[1].to.toLowerCase() &&
+        !entry.body.hasTransaction
+      );
     }
+    return false;
   });
 
-  if (
-    notifArray[notifArray.length - 1].type === notificationType.SWAP &&
-    val[1].to === notifArray[notifArray.length - 1].to
-  ) {
-    console.log('is a swap'); // todo remove dev item
-  }
+  // if (idx >= 0) {
+  //   notifArray[idx].body.hasTransaction = true;
+  //   notifArray[idx].hash = val[2]
+  // }
 };
 
 const transactionHash = (notifArray, val, network) => {
-  // TODO: use transfer method call signature to identify token transfer.
-  identifySwapForTransaction(notifArray, val);
   notifArray.push({
     title: 'Transaction',
     read: false,
@@ -75,7 +73,6 @@ const transactionHash = (notifArray, val, network) => {
     },
     expanded: false
   });
-
   return notifArray;
 };
 
@@ -83,13 +80,13 @@ const transactionReceipt = (notifArray, val) => {
   const idx = notifArray.findIndex(
     entry => entry.hash === val[2].transactionHash
   );
-  console.log(idx); // todo remove dev item
-  console.log('REciept', val); // todo remove dev item
+
   notifArray[idx].status = notificationStatuses.COMPLETE;
   notifArray[idx].body.gasUsed = new BigNumber(val[2].gasUsed).toString();
   notifArray[idx].body.blockNumber = new BigNumber(
     val[2].blockNumber
   ).toString();
+
   return notifArray;
 };
 
@@ -128,11 +125,13 @@ const swapOrder = (notifArray, val, network) => {
     type: notificationType.SWAP,
     status: notificationStatuses.PENDING,
     swapStatus: swapOnlyStatuses.NEW,
-    hasTransaction: false,
+    hasTransaction: true,
+    hash: val[3],
     network: network,
     body: {
       error: false,
       errorMessage: '',
+      providerAddress: val[2].providerAddress,
       to: val[2].toAddress,
       from: val[2].fromAddress,
       fromValue: val[2].fromValue,
@@ -153,6 +152,23 @@ const swapOrder = (notifArray, val, network) => {
   return notifArray;
 };
 
+const swapReceipt = (notifArray, val) => {
+  const idx = notifArray.findIndex(
+    entry => entry.hash === val[3].transactionHash && entry.type === 'swap'
+  );
+
+  notifArray[idx].status = notificationStatuses.COMPLETE;
+  if (notifArray[idx].body.provider === 'kybernetwork') {
+    notifArray[idx].swapStatus = notificationStatuses.COMPLETE;
+  }
+  notifArray[idx].body.gasUsed = new BigNumber(val[3].gasUsed).toString();
+  notifArray[idx].body.blockNumber = new BigNumber(
+    val[3].blockNumber
+  ).toString();
+
+  return notifArray;
+};
+
 const addUpdateNotification = function(newNotif, val, network) {
   console.log('addUpdateNotification', val, network); // todo remove dev item
   switch (val[0]) {
@@ -162,8 +178,6 @@ const addUpdateNotification = function(newNotif, val, network) {
       return transactionReceipt(newNotif, val, network);
     case type.TRANSACTION_ERROR:
       return transactionError(newNotif, val, network);
-    case type.SWAP_ORDER:
-      return swapOrder(newNotif, val, network);
     default:
       break;
   }
@@ -172,8 +186,15 @@ const addUpdateNotification = function(newNotif, val, network) {
 const addUpdateSwapNotification = function(newNotif, val, network) {
   console.log('addUpdateSwapNotification', val); // todo remove dev item
   switch (val[0]) {
-    case type.SWAP_ORDER:
+    case type.SWAP_HASH:
       return swapOrder(newNotif, val, network);
+    case type.SWAP_RECEIPT:
+      console.log(val); // todo remove dev item
+      return swapReceipt(newNotif, val, network);
+    case type.SWAP_ERROR:
+      return transactionError(newNotif, val, network);
+    // case type.SWAP_ORDER:
+    //   return swapOrder(newNotif, val, network);
     default:
       break;
   }

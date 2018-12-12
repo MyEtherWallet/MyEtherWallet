@@ -67,12 +67,12 @@
             <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
           </div>
         </li>
-        <li>
-          <p>Amount:</p>
-          <div class="detail-data">
-            <p>{{ convertToEth(details.amount) }} ETH</p>
-          </div>
-        </li>
+        <!--<li>-->
+        <!--<p>Amount:</p>-->
+        <!--<div class="detail-data">-->
+        <!--<p>{{ convertToEth(details.amount) }} ETH</p>-->
+        <!--</div>-->
+        <!--</li>-->
         <li>
           <p>To Address:</p>
           <div class="detail-data">
@@ -83,44 +83,44 @@
             </p>
           </div>
         </li>
-        <li>
-          <p>TX Fee:</p>
-          <div class="detail-data">
-            <p>
-              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
-                getFiatValue(details.gasPrice * details.gasLimit)
-              }})
-            </p>
-          </div>
-        </li>
-        <li>
-          <p>Gas Price:</p>
-          <div class="detail-data">
-            <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
-          </div>
-        </li>
-        <li>
-          <p>Gas Limit:</p>
-          <div class="detail-data">
-            <p>{{ details.gasLimit }}</p>
-          </div>
-        </li>
+        <!--<li>-->
+        <!--<p>TX Fee:</p>-->
+        <!--<div class="detail-data">-->
+        <!--<p>-->
+        <!--{{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{-->
+        <!--getFiatValue(details.gasPrice * details.gasLimit)-->
+        <!--}})-->
+        <!--</p>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<p>Gas Price:</p>-->
+        <!--<div class="detail-data">-->
+        <!--<p>{{ convertToGwei(details.gasPrice) }} Gwei</p>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<p>Gas Limit:</p>-->
+        <!--<div class="detail-data">-->
+        <!--<p>{{ details.gasLimit }}</p>-->
+        <!--</div>-->
+        <!--</li>-->
         <li v-if="txStatus.text === 'Succeed'">
           <p>Gas Used:</p>
           <div class="detail-data">
             <p>
               {{ details.gasUsed }} (${{
-                getFiatValue(details.gasPrice * details.gasUsed)
+                getFiatValue(gasPrice * details.gasUsed)
               }})
             </p>
           </div>
         </li>
-        <li>
-          <p>Nonce:</p>
-          <div class="detail-data">
-            <p>{{ details.nonce }}</p>
-          </div>
-        </li>
+        <!--<li>-->
+        <!--<p>Nonce:</p>-->
+        <!--<div class="detail-data">-->
+        <!--<p>{{ details.nonce }}</p>-->
+        <!--</div>-->
+        <!--</li>-->
       </ul>
     </div>
   </div>
@@ -209,7 +209,8 @@ export default {
       web3: 'web3',
       network: 'network',
       notifications: 'notifications',
-      wallet: 'wallet'
+      wallet: 'wallet',
+      gasPrice: 'gasPrice'
     }),
     details() {
       return this.notice.body;

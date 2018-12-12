@@ -25,9 +25,15 @@ const statuses = {
   hold: 'hold'
 };
 
-const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT
+const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const PROVIDER_NAME = 'changelly';
 
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
-export { changellyMethods, statuses, requireExtraId, TIME_SWAP_VALID, PROVIDER_NAME };
+export {
+  changellyMethods,
+  statuses,
+  requireExtraId,
+  TIME_SWAP_VALID,
+  PROVIDER_NAME
+};

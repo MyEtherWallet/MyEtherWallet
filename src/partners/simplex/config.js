@@ -42,4 +42,12 @@ const host = {
   url: process.env.SIMPLEX_API_HOST || mewSimplex
 };
 
-export { SimplexCurrencies, host, statuses, TIME_SWAP_VALID, MIN_FIAT, MAX_FIAT, PROVIDER_NAME };
+export {
+  SimplexCurrencies,
+  host,
+  statuses,
+  TIME_SWAP_VALID,
+  MIN_FIAT,
+  MAX_FIAT,
+  PROVIDER_NAME
+};

@@ -147,19 +147,69 @@ export default {
         Array.isArray(this.preparedSwap) ||
         Object.keys(this.preparedSwap).length > 0
       ) {
-        this.$store.dispatch('addSwapNotification', [
-          `Swap`,
-          this.currentAddress,
-          this.swapDetails
-        ]);
+        // this.$store.dispatch('addSwapNotification', [
+        //   `Swap`,
+        //   this.currentAddress,
+        //   this.swapDetails
+        // ]);
         if (Array.isArray(this.preparedSwap)) {
           if (this.preparedSwap.length > 1) {
             this.web3.mew.sendBatchTransactions(this.preparedSwap);
           } else {
-            this.web3.eth.sendTransaction(this.preparedSwap[0]);
+            this.web3.eth
+              .sendTransaction(this.preparedSwap[0])
+              .once('transactionHash', hash => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Hash',
+                  this.currentAddress,
+                  this.swapDetails,
+                  hash
+                ]);
+              })
+              .on('receipt', res => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Receipt',
+                  this.currentAddress,
+                  this.swapDetails,
+                  res
+                ]);
+              })
+              .on('error', err => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Error',
+                  this.currentAddress,
+                  this.swapDetails,
+                  err
+                ]);
+              });
           }
         } else {
-          this.web3.eth.sendTransaction(this.preparedSwap);
+          this.web3.eth
+            .sendTransaction(this.preparedSwap)
+            .once('transactionHash', hash => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Hash',
+                this.currentAddress,
+                this.swapDetails,
+                hash
+              ]);
+            })
+            .on('receipt', res => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Receipt',
+                this.currentAddress,
+                this.swapDetails,
+                res
+              ]);
+            })
+            .on('error', err => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Error',
+                this.currentAddress,
+                this.swapDetails,
+                err
+              ]);
+            });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);
         this.$refs.swapconfirmation.hide();
