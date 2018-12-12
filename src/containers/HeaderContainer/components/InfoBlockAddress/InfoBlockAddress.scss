@@ -7,8 +7,6 @@
   background-color: $transaction-block-address;
 }
 
-
-
 //********************************************************
 // .block-content
 //********************************************************
@@ -27,14 +25,8 @@
 .block-content-right {
   justify-self: end;
 
-  >div {
+  > div {
     border: 2px solid $white;
     border-radius: 100%;
   }
 }
-
-
-
-
-
-

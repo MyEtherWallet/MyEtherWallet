@@ -290,7 +290,7 @@
     }
 
     &::after {
-      content: ">";
+      content: '>';
       position: absolute;
       top: 19px;
       right: 24px;
@@ -314,16 +314,16 @@
     &:active {
       background-color: $red-1;
       color: $white;
-    }    
+    }
   }
 
   ul {
     position: relative;
-    >li {
+    > li {
       position: relative;
       border-bottom: 1px solid $light-grey-2;
       &:last-child {
-        border-bottom: 0px;
+        border-bottom: 0;
       }
       > * {
         padding: 20px;
@@ -340,8 +340,8 @@
   @media all and (max-width: $tablet-width) {
     &.mobile-menu-open-height-change {
       height: 100vh;
-      
-      >div {
+
+      > div {
         height: 100%;
         overflow-y: auto;
       }
@@ -434,17 +434,13 @@
   }
 } // .get-free-wallet
 
-
-
 //********************************************************
 // .info-block-container for mobile interface menu
 //********************************************************
 .info-block-container {
   //margin-top: 160px;
 
-  >* {
+  > * {
     margin-bottom: 5px;
   }
 }
-
-

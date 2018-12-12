@@ -207,7 +207,7 @@ export default {
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
           this.preparedSwap = {
-            from: this.$store.state.wallet.getChecksumAddressString(),
+            from: this.wallet.getChecksumAddressString(),
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
@@ -223,109 +223,6 @@ export default {
           }
           return entry;
         });
-      }
-    },
-    async swapStarted(swapDetails) {
-      this.swapReady = false;
-      this.preparedSwap = {};
-      if (swapDetails.dataForInitialization) {
-        switch (swapDetails.provider) {
-          case 'changelly':
-            this.preparedSwap = await this.useChangelly(swapDetails);
-            this.swapReady = true;
-            break;
-          case 'bity':
-            this.preparedSwap = await this.useBity(swapDetails);
-            this.swapReady = true;
-            break;
-          case 'kybernetwork':
-            this.preparedSwap = await this.useKyber(swapDetails);
-            this.swapReady = true;
-            break;
-        }
-
-      }
-    },
-    signAndTransmitTransaction() {
-      if(!this.swapReady) return;
-      if (Array.isArray(this.preparedSwap)) {
-        this.$store.state.web3.eth.sendBatchTransactions(this.preparedSwap);
-      } else {
-        if (Object.keys(this.preparedSwap).length > 0) {
-          // this.$store.state.web3.eth.sendTransaction(this.preparedSwap);
-        }
-      }
-      this.$emit('swapStarted', this.swapDetails);
-      this.$refs.swapconfirmation.hide();
-    },
-    async useBity(swapDetails) {
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payment_address,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.input.amount,
-            'ether'
-          )
-        };
-      }
-    },
-    async useChangelly(swapDetails) {
-      // TODO: consolidate
-      if (swapDetails.maybeToken && swapDetails.fromCurrency !== 'ETH') {
-        const tokenInfo = this.$store.state.network.type.tokens.find(item => {
-          return item.symbol === swapDetails.fromCurrency;
-        });
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: 0,
-          data: this.createTokenTransferData(
-            this.currentAddress,
-            swapDetails.fromValue,
-            tokenInfo
-          )
-        };
-      } else if (swapDetails.maybeToken && swapDetails.fromCurrency === 'ETH') {
-        return {
-          from: this.$store.state.wallet.getChecksumAddressString(),
-          to: swapDetails.dataForInitialization.payinAddress,
-          value: unit.toWei(
-            swapDetails.dataForInitialization.amountExpectedFrom,
-            'ether'
-          )
-        };
-      }
-    },
-    async useKyber(swapDetails) {
-      const txDatas = swapDetails.dataForInitialization.values();
-      const bulkTx = [];
-      try {
-        for (const value of txDatas) {
-          value.from = this.$store.state.wallet.getChecksumAddressString();
-          if(unit.toWei(this.$store.state.gasPrice, 'gwei') > swapDetails.kyberMaxGas){
-            value.gasPrice = swapDetails.kyberMaxGas
-          }
-          bulkTx.push(value);
-        }
-        return bulkTx;
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
       }
     }
   }

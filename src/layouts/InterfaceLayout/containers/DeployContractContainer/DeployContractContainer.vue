@@ -7,10 +7,10 @@
           <div class="title">
             <h4>{{ $t('interface.byteCode') }}</h4>
             <div class="copy-buttons">
-              <span @click="deleteInput('bytecode');">{{
+              <span @click="deleteInput('bytecode')">{{
                 $t('common.clear')
               }}</span>
-              <span @click="copyToClipboard('bytecode');">{{
+              <span @click="copyToClipboard('bytecode')">{{
                 $t('common.copy')
               }}</span>
             </div>
@@ -30,8 +30,8 @@
           <div class="title">
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
-              <span @click="deleteInput('abi');">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi');">{{
+              <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+              <span @click="copyToClipboard('abi')">{{
                 $t('common.copy')
               }}</span>
             </div>
@@ -90,45 +90,45 @@
         </div>
       </div>
 
-    <div class="send-form2">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-and-popover">
-            <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.txSpeed')" />
+      <div class="send-form2">
+        <div class="title-container">
+          <div class="title">
+            <div class="title-and-popover">
+              <h4>{{ $t('common.speedTx') }}</h4>
+              <popover :popcontent="$t('popover.txSpeed')" />
+            </div>
+            <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
           </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
+          <div class="buttons">
+            <div
+              :class="[
+                gasPrice === 5 ? 'active' : '',
+                'small-circle-button-green-border'
+              ]"
+              @click="changeGas(5)"
+            >
+              {{ $t('common.slow') }}
+            </div>
+            <div
+              :class="[
+                gasPrice === 45 ? 'active' : '',
+                'small-circle-button-green-border'
+              ]"
+              @click="changeGas(45)"
+            >
+              {{ $t('common.regular') }}
+            </div>
+            <div
+              :class="[
+                gasPrice === 75 ? 'active' : '',
+                'small-circle-button-green-border'
+              ]"
+              @click="changeGas(75)"
+            >
+              {{ $t('common.fast') }}
+            </div>
+          </div>
         </div>
-        <div class="buttons">
-          <div
-            :class="[
-              gasPrice === 5 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(5)"
-          >
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === 45 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(45)"
-          >
-            {{ $t('common.regular') }}
-          </div>
-          <div
-            :class="[
-              gasPrice === 75 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="changeGas(75)"
-          >
-            {{ $t('common.fast') }}
-          </div>
-        </div>
-      </div>
 
         <div class="the-form gas-amount">
           <input

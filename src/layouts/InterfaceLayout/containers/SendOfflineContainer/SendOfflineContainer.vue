@@ -11,7 +11,7 @@
             isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
             'genInfo'
           ]"
-          @click="processChange(tab.name2 ? tab.name2 : tab.name);"
+          @click="processChange(tab.name2 ? tab.name2 : tab.name)"
         >
           <div class="prevent-pointer-events">
             <p class="title">{{ tab.title }}</p>

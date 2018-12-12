@@ -45,9 +45,6 @@
               $t('common.faqs')
             }}</a>
           </li>
-          <li class="list-right-arrow">
-            <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
-          </li>
           <li v-if="false">
             <a href="/#news" @click="isMobileMenuOpen = false">{{
               $t('common.news')
@@ -126,7 +123,6 @@
                   $t('header.about')
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -193,7 +189,7 @@
               <div
                 v-if="!isMobileMenuOpen"
                 class="mobile-menu-open-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
@@ -202,7 +198,7 @@
               <div
                 v-if="isMobileMenuOpen"
                 class="mobile-menu-close-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
@@ -230,7 +226,6 @@ import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
 import InfoBlockAddress from './components/InfoBlockAddress';
 import InfoBlockBalance from './components/InfoBlockBalance';
@@ -243,7 +238,6 @@ export default {
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    txpoppup: TxTopMenuPopup,
     'logout-modal': LogoutModal,
     'info-block-address': InfoBlockAddress,
     'info-block-balance': InfoBlockBalance,
@@ -288,11 +282,6 @@ export default {
       online: 'online'
     })
   },
-  // watch: {
-  //   notifications() {
-  //     this.$refs.notification.$refs.notification.show();
-  //   }
-  // },
   mounted() {
     if (Misc.doesExist(store.get('locale'))) {
       const storedLocale = this.supportedLanguages.find(item => {
@@ -307,13 +296,6 @@ export default {
       store.set('locale', storedLocale.langCode);
       this.currentFlag = storedLocale.flag;
     }
-
-    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
-    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    // if (!/zh[-_]/.test(this.currentFlag)) {
-    //   this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    // }
-
     this.currentName = this.supportedLanguages.find(
       item => item.flag === this.currentFlag
     ).name;
@@ -330,9 +312,6 @@ export default {
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
-    // openNotifications() {
-    //   this.$children[1].$refs.notifications.show();
-    // },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
       const flag = e.target.getAttribute('data-flag-name');
