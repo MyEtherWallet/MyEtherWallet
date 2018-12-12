@@ -395,12 +395,6 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      if (!this.haveProviderRates) {
-        this.issueRecievingRates = true;
-        this.ratesRetrived = true;
-      }
-    }, 3000);
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
@@ -576,7 +570,6 @@ export default {
         }
       }
     },
-    // ================================ Finalize and Open Modal ============================================
     async swapConfirmationModalOpen() {
       try {
         if (this.validSwap) {
