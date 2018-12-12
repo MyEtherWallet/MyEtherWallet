@@ -134,7 +134,6 @@ export default {
       //   const txHash = this.ens
       //     .setOwner(domain, newResolverAddr)
       //     .then(res => res);
-      //   console.log(txHash);
       // } catch (e) {
       //   console.error(e);
       // }
@@ -156,7 +155,6 @@ export default {
       //   const txHash = this.ens
       //     .setResolver(domain, newResolverAddr)
       //     .then(res => res);
-      //   console.log(txHash);
       // } catch (e) {
       //   console.error(e);
       // }
