@@ -14,7 +14,7 @@
             :key="item.title + index"
           >
             <div class="content-title" @click="toggler(item.class)">
-              <h3 class="lite">{{ item.title }}</h3>
+              <h3 class="lite">{{ item.title }} /abc</h3>
               <p class="open" @click="openContent(item.class)">
                 <i class="fa fa-plus" aria-hidden="true" />
               </p>
