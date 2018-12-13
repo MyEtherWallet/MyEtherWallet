@@ -52,7 +52,7 @@ class DigitalBitboxEth {
       const encryptionKey = h.slice(0, 32);
       const authenticationKey = h.slice(32, 64);
 
-      const iv = Crypto.pseudoRandomBytes(16);
+      const iv = Crypto.randomBytes(16);
       const cipher = Crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
       const ciphertext = Buffer.concat([
         iv,
