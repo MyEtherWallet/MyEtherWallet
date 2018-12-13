@@ -44,6 +44,10 @@ export default class BitySwap {
     return PROVIDER_NAME;
   }
 
+  static isDex() {
+    return false;
+  }
+
   get isValidNetwork() {
     return this.network === networkSymbols.ETH;
   }
@@ -195,6 +199,7 @@ export default class BitySwap {
     swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
     swapDetails.providerAddress =
       swapDetails.dataForInitialization.payment_address;
+    swapDetails.isDex = BitySwap.isDex();
     return swapDetails;
   }
 
