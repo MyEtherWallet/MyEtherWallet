@@ -1,4 +1,7 @@
-import { TIME_SWAP_VALID_DEFAULT, swapNotificationStatuses as notificationStatuses } from '../../partnersConfig/config';
+import {
+  TIME_SWAP_VALID_DEFAULT,
+  swapNotificationStatuses as notificationStatuses
+} from '../../partnersConfig/config';
 
 const changellyMethods = {
   ETH: {

@@ -27,7 +27,6 @@ const swapNotificationStatuses = {
   FAILED: 'failed'
 };
 
-
 export {
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,

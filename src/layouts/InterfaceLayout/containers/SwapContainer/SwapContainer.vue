@@ -32,7 +32,13 @@
           <div class="title-container">
             <div class="title title-and-copy">
               <h4>{{ $t('common.from') }}</h4>
-              <p class="all-button prevent-user-select" v-if="tokenBalances[fromCurrency] > 0" @click="swapAll">{{ $t('common.totalBalance') }}</p>
+              <p
+                v-if="tokenBalances[fromCurrency] > 0"
+                class="all-button prevent-user-select"
+                @click="swapAll"
+              >
+                {{ $t('common.totalBalance') }}
+              </p>
             </div>
           </div>
           <swap-currency-picker
