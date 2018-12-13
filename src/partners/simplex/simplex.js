@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
   statuses,
+  notificationStatuses,
   TIME_SWAP_VALID,
   MIN_FIAT,
   MAX_FIAT,
@@ -264,28 +265,25 @@ export default class Simplex {
 
   // ============================= Get and Parse Swap Status  ====================================
   static async getOrderStatus(noticeDetails) {
-    console.log('simplex status start'); // todo remove dev item
     const result = await getStatus(noticeDetails.statusId);
     if (result.error) {
       return 'error';
     }
-    console.log(status); // todo remove dev item
     return Simplex.parseSimplexStatus(result.result.status);
   }
 
   static parseSimplexStatus(status) {
-    console.log(status); // todo remove dev item
     switch (status) {
       case statuses.new:
+        return notificationStatuses.NEW;
       case statuses.initiated:
       case statuses.sent:
-        return 'new';
       case statuses.pending:
-        return 'pending';
+        return notificationStatuses.PENDING;
       case statuses.payment:
-        return 'complete';
+        return notificationStatuses.COMPLETE;
       case statuses.cancelled:
-        return 'cancelled';
+        return notificationStatuses.CANCELLED;
     }
   }
 }

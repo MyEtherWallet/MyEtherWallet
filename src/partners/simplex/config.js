@@ -1,4 +1,4 @@
-import { mewSimplex, TIME_SWAP_VALID_DEFAULT } from '../partnersConfig';
+import { mewSimplex, TIME_SWAP_VALID_DEFAULT, swapNotificationStatuses as notificationStatuses } from '../partnersConfig';
 
 const SimplexCurrencies = {
   fiat: {
@@ -46,6 +46,7 @@ export {
   SimplexCurrencies,
   host,
   statuses,
+  notificationStatuses,
   TIME_SWAP_VALID,
   MIN_FIAT,
   MAX_FIAT,

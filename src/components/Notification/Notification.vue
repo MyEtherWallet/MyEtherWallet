@@ -268,6 +268,7 @@ export default {
     processStatus(rawStatus) {
       const status = {
         new: { text: 'Swap Created', class: 'status-processing' },
+        sent: { text: 'Processing', class: 'status-processing' },
         pending: { text: 'Processing', class: 'status-processing' },
         complete: { text: 'Succeed', class: 'status-succeed' },
         failed: { text: 'Failed', class: 'status-failed' },

@@ -29,8 +29,11 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.from') }}</h4>
+          <div class="title-container">
+            <div class="title title-and-copy">
+              <h4>{{ $t('common.from') }}</h4>
+              <p class="copy-button prevent-user-select" v-if="tokenBalances[fromCurrency] > 0" @click="swapAll">{{ $t('common.totalBalance') }}</p>
+            </div>
           </div>
           <swap-currency-picker
             :currencies="fromArray"
@@ -101,7 +104,11 @@
           :currency="toCurrency"
           :current-address="currentAddress"
           @toAddress="setToAddress"
+          @validAddress="setAddressValid"
         />
+      </div>
+      <div v-show="!isValidAddress" class="error-message-container">
+        <p>{{ $t('interface.notValidAddr') }}</p>
       </div>
     </div>
 
@@ -219,6 +226,7 @@ export default {
       toAddress: '',
       currentAddress: '',
       refundAddress: '',
+      validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
         web3: this.$store.state.web3,
@@ -343,6 +351,9 @@ export default {
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
+    isValidAddress() {
+      return this.validAddress;
+    },
     notEnough() {
       if (
         this.swap.isToken(this.fromCurrency) &&
@@ -402,7 +413,6 @@ export default {
       }
     }, 3000);
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
-    const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.wallet.getChecksumAddressString();
@@ -419,6 +429,15 @@ export default {
     },
     setRefundAddress(address) {
       this.refundAddress = address;
+    },
+    setAddressValid(value) {
+      this.validAddress = value;
+    },
+    swapAll() {
+      this.fromValue = this.swap.convertToTokenBase(
+        this.fromCurrency,
+        this.tokenBalances[this.fromCurrency]
+      );
     },
     setFromCurrency(value) {
       this.currencyDetails.from = value;

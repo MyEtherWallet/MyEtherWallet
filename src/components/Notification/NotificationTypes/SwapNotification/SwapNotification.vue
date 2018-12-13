@@ -51,10 +51,10 @@
             </li>
           </ul>
         </li>
-        <li v-if="timeRemains">
-          <p>Time Remaining:</p>
-          <p>{{ parseTimeRemaining }}</p>
-        </li>
+        <!--<li v-if="timeRemains">-->
+        <!--<p>Time Remaining:</p>-->
+        <!--<p>{{ parseTimeRemaining }}</p>-->
+        <!--</li>-->
         <li><p @click="emitShowDetails">More</p></li>
       </ul>
     </div>
@@ -193,26 +193,35 @@ export default {
     },
     startPolling() {
       if (this.notice.body.provider === providerNames.kyber) return;
-      console.log(this.notice.timeRemaining);
+
       this.provider = providerMap.get(this.notice.body.provider);
       this.currentStatus = this.notice.status;
 
-      this.timeUpdater();
-      this.statusUpdater();
+      if (this.timerInterval === null) {
+        this.timeUpdater();
+      }
+
+      if (this.statusInterval === null) {
+        this.statusUpdater();
+      }
     },
     stopPolling() {
       if (this.timerInterval !== null) {
         clearInterval(this.timerInterval);
+        this.timerInterval = null;
       }
 
       if (this.statusInterval !== null) {
         clearInterval(this.statusInterval);
+        this.statusInterval = null;
       }
     },
     shouldCheckStatus() {
-      return [swapOnlyStatuses.NEW, notificationStatuses.PENDING].includes(
-        this.notice.swapStatus
-      );
+      return [
+        swapOnlyStatuses.NEW,
+        swapOnlyStatuses.SENT,
+        notificationStatuses.PENDING
+      ].includes(this.notice.swapStatus);
     },
     statusUpdater() {
       let updating = false;
@@ -223,6 +232,7 @@ export default {
             this.notice.body,
             this.network.type.name
           );
+          if (typeof newStatus === 'undefined') return;
           if (this.currentStatus !== newStatus) {
             this.currentStatus = newStatus;
             if (swapOnlyStatuses[newStatus]) {
@@ -234,7 +244,7 @@ export default {
             this.childUpdateNotification(this.notice);
           }
 
-          if (this.shouldCheckStatus()) {
+          if (!this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
           }
           updating = false;
@@ -283,7 +293,7 @@ export default {
           updateTime();
           this.timerInterval = setInterval(() => {
             updateTime();
-            if (this.timeRemaining < 0) {
+            if (this.timeRemaining <= 0) {
               clearInterval(this.timerInterval);
             }
           }, 1000);

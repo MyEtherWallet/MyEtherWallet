@@ -22,7 +22,6 @@ const addNotification = function({ commit, state }, val) {
     val,
     state.network.type.name
   );
-  console.log('addNotification'); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
 };
@@ -41,7 +40,6 @@ const addSwapNotification = function({ commit, state }, val) {
     val,
     state.network.type.name
   );
-  console.log('addSwapNotification'); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
 };

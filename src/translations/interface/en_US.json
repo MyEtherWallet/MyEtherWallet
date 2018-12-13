@@ -63,7 +63,7 @@
   "addr": "Address",
   "search": "Search",
   "timeRemaining": "Time Remaining",
-  "swapButtonLoading": "Finalizing Swap Details",
   "sendTxType": "Type",
-  "belowMin":"Below minimun swap value of"
+  "belowMin":"Below minimun swap value of",
+  "notValidAddr":"Not a valid address for destination chain"
 }

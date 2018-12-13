@@ -224,11 +224,6 @@ export default {
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
     }
   },
-  watch: {
-    shown(val) {
-      console.log('shown:', val); // todo remove dev item
-    }
-  },
   beforeDestroy() {
     if (this.timerInterval !== null) {
       clearInterval(this.timerInterval);
@@ -243,16 +238,17 @@ export default {
     this.currentStatus = this.notice.swapStatus;
     this.timeUpdater();
     this.statusUpdater();
-    console.log(this.notice); // todo remove dev item
   },
   methods: {
     emitShowDetails() {
       this.$emit('showDetails', ['swap', this.notice]);
     },
     shouldCheckStatus() {
-      return [swapOnlyStatuses.NEW, notificationStatuses.PENDING].includes(
-        this.notice.swapStatus
-      );
+      return [
+        swapOnlyStatuses.NEW,
+        swapOnlyStatuses.SENT,
+        notificationStatuses.PENDING
+      ].includes(this.notice.swapStatus);
     },
     statusUpdater() {
       let updating = false;
@@ -263,6 +259,7 @@ export default {
             this.notice.body,
             this.network.type.name
           );
+          if (typeof newStatus === 'undefined') return;
           if (this.currentStatus !== newStatus) {
             this.currentStatus = newStatus;
             if (swapOnlyStatuses[newStatus]) {
@@ -274,7 +271,7 @@ export default {
             this.childUpdateNotification(this.notice);
           }
 
-          if (this.shouldCheckStatus()) {
+          if (!this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
           }
           updating = false;
@@ -323,7 +320,7 @@ export default {
           updateTime();
           this.timerInterval = setInterval(() => {
             updateTime();
-            if (this.timeRemaining < 0) {
+            if (this.timeRemaining <= 0) {
               clearInterval(this.timerInterval);
             }
           }, 1000);

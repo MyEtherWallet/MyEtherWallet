@@ -418,13 +418,11 @@ export default class Kyber {
     return swapDetails;
   }
 
-
   static async getOrderStatus(/*noticeDetails*/) {
     return 'new';
   }
 
   static parseKyberStatus(status) {
-    console.log(status); // todo remove dev item
     switch (status) {
       case statuses.new:
       case statuses.initiated:
