@@ -50,6 +50,10 @@
     color: $text-white;
     top: -8px;
 
+    @media all and (max-width: $tablet-width) {
+      top: 0px;
+    }
+
     h3,
     p {
       color: $text-white;
@@ -70,3 +74,11 @@
     color: $light-grey-10;
   }
 }
+
+@media all and (max-width: $tablet-width) {
+  .button-metamask {
+    display: none;
+  }
+}
+
+

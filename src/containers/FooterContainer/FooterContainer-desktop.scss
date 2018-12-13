@@ -16,11 +16,9 @@
     background-color: $footer-background-color;
     color: $text-color-1;
     padding: 70px 0 20px;
-
   }
 
   .footer-contents {
-
     > div {
       display: flex;
       flex-direction: column;
@@ -33,9 +31,10 @@
           font-size: 19px;
         }
 
-        .open, .close {
+        .open,
+        .close {
           display: none;
-        }        
+        }
       }
 
       .content-links {
