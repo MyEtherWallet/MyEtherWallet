@@ -1,5 +1,6 @@
 <img src="./src/assets/images/logo.png" width="300px"/>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/adec82421a0e465f9bf108827de507c1)](https://app.codacy.com/app/kvhnuke/MyEtherWallet?utm_source=github.com&utm_medium=referral&utm_content=MyEtherWallet/MyEtherWallet&utm_campaign=Badge_Grade_Dashboard)
 [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
 [![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
