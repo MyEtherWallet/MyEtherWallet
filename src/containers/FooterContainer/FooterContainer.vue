@@ -23,19 +23,22 @@
               </p>
             </div>
             <div class="content-links">
-              <div
-                v-for="(content, index) in item.contents"
-                :key="content.text + index"
-              >
-                <router-link v-if="content.to !== undefined" :to="content.to"
-                  ><p>{{ content.text }}</p></router-link
+              <div class="content-links-animation-block">
+                <div
+                  v-for="(content, index) in item.contents"
+                  :key="content.text + index"
+                  class="content"
                 >
-                <a
-                  v-if="content.to === undefined"
-                  :href="content.href"
-                  target="_blank"
-                  ><p>{{ content.text }}</p></a
-                >
+                  <router-link v-if="content.to !== undefined" :to="content.to"
+                    ><p>{{ content.text }}</p></router-link
+                  >
+                  <a
+                    v-if="content.to === undefined"
+                    :href="content.href"
+                    target="_blank"
+                    ><p>{{ content.text }}</p></a
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -47,7 +50,7 @@
                 {{ $t('footer.donate') }}
               </h3>
             </div>
-            <div class="">
+            <div class="links">
               <p>{{ $t('footer.welcomeDes') }}</p>
 
               <a
@@ -65,7 +68,7 @@
                 target="_blank"
               >
                 <p
-                  class="crypto-link"
+                  class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
                   <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
@@ -120,7 +123,7 @@ export default {
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
-          href: 'https://github.com/MyEtherWallet/MyEtherWallet/issues'
+          href: 'mailto:support@myetherwallet.com'
         },
         {
           title: this.$t('footer.privacy'),
@@ -138,7 +141,8 @@ export default {
           contents: [
             {
               text: this.$t('footer.units'),
-              to: '/convert-units'
+              //to: '/convert-units'
+              href: '/convert-units'
             },
             // {
             //   text: this.$t('footer.advanced'),
