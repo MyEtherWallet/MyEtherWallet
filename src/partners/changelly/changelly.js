@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
 import {
+  notificationStatuses,
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
@@ -91,7 +92,7 @@ export default class Changelly {
       minAmount: minAmount,
       rate: changellyDetails[1]
     };
-    console.log(changellyDetails[0]); // todo remove dev item
+
     return {
       fromCurrency,
       toCurrency,
@@ -144,11 +145,9 @@ export default class Changelly {
   }
 
   async startSwap(swapDetails) {
-    console.log(swapDetails); // todo remove dev item
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
       details = await await this.createTransaction(swapDetails);
-      console.log(details); // todo remove dev item
       if (details.message) throw Error(details.message);
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
@@ -200,7 +199,6 @@ export default class Changelly {
         noticeDetails.statusId,
         network
       );
-      console.log('changelly status', status); // todo remove dev item
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
       // eslint-disable-next-line
@@ -211,37 +209,22 @@ export default class Changelly {
   static parseChangellyStatus(status) {
     switch (status) {
       case statuses.new:
+        return notificationStatuses.NEW;
       case statuses.waiting:
-        return 'new';
+       return notificationStatuses.SENT;
       case statuses.confirming:
       case statuses.exchanging:
       case statuses.sending:
       case statuses.hold:
-        return 'pending';
+        return notificationStatuses.PENDING;
       case statuses.finished:
-        return 'complete';
+        return notificationStatuses.COMPLETE;
       case statuses.failed:
-        return 'failed';
+        return notificationStatuses.FAILED;
       case statuses.overdue:
       case statuses.refunded:
-        return 'cancelled';
+        return notificationStatuses.CANCELLED;
     }
-  }
-
-  static statuses(data) {
-    const statuses = {
-      new: 1,
-      waiting: 2,
-      confirming: 3,
-      confirmed: 10,
-      finished: 0,
-      failed: -1
-    };
-    const status = statuses[data.status];
-    if (typeof status === 'undefined') {
-      return 2;
-    }
-    return status;
   }
 
   async validateAddress(toCurrency, address) {

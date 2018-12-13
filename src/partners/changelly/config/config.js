@@ -1,4 +1,4 @@
-import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
+import { TIME_SWAP_VALID_DEFAULT, swapNotificationStatuses as notificationStatuses } from '../../partnersConfig/config';
 
 const changellyMethods = {
   ETH: {
@@ -31,6 +31,7 @@ const PROVIDER_NAME = 'changelly';
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
 export {
+  notificationStatuses,
   changellyMethods,
   statuses,
   requireExtraId,

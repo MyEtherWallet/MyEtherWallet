@@ -156,11 +156,9 @@ export default {
       }, 1000);
     },
     redirectToPartner() {
-      console.log(this.swapDetails); // todo remove dev item
-      // this.swapStarted(this.swapDetails);
       this.$store
         .dispatch('addSwapNotification', [
-          `Swap`,
+          `Swap_Order`,
           this.currentAddress,
           this.swapDetails
         ])

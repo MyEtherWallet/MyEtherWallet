@@ -4,7 +4,6 @@ import ENS from 'ethereum-ens';
 
 const nodeUrl = 'https://api.myetherwallet.com/eth';
 const network = 'ETH';
-const withNetwork = false;
 
 describe('kyber.js', () => {
   beforeEach(done => {
@@ -49,12 +48,8 @@ describe('kyber.js', () => {
     expect(baseValue).toBe('100000');
   });
 
-
-
-
-
+  // eslint-disable-next-line no-undef
   if (WITH_NETWORK) {
-
     // requires network to function
     it('should return data for kyber approval tx', async () => {
       const dataValue = {

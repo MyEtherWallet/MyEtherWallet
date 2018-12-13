@@ -119,11 +119,14 @@ export default {
 
         if (this.validAddress) {
           this.$emit('toAddress', checkAddress);
+          this.$emit('validAddress', true);
         } else {
           this.$emit('toAddress', '');
+          this.$emit('validAddress', false);
         }
       } else {
         this.validAddress = false;
+        this.$emit('validAddress', false);
       }
     }
   }
