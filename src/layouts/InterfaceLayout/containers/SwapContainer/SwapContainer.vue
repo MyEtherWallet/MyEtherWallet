@@ -32,7 +32,7 @@
           <div class="title-container">
             <div class="title title-and-copy">
               <h4>{{ $t('common.from') }}</h4>
-              <p class="copy-button prevent-user-select" v-if="tokenBalances[fromCurrency] > 0" @click="swapAll">{{ $t('common.totalBalance') }}</p>
+              <p class="all-button prevent-user-select" v-if="tokenBalances[fromCurrency] > 0" @click="swapAll">{{ $t('common.totalBalance') }}</p>
             </div>
           </div>
           <swap-currency-picker
@@ -229,8 +229,7 @@ export default {
       validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3,
-        ens: this.$store.state.ens
+        web3: this.$store.state.web3
       }),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -400,8 +399,7 @@ export default {
       this.loadingData = false;
       this.swap = new Swap(providers, {
         network: newVal.type.name,
-        web3: this.web3,
-        ens: this.ens
+        web3: this.web3
       });
     }
   },

@@ -20,14 +20,7 @@ export default class SwapProviders {
 
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
-      this.providers.set(
-        entry.getName(),
-        new entry({
-          web3: environmentSupplied.web3,
-          ens: environmentSupplied.ens,
-          network: environmentSupplied.network
-        })
-      );
+      this.providers.set(entry.getName(), new entry(environmentSupplied));
     });
 
     this.providerRatesRecieved = [];

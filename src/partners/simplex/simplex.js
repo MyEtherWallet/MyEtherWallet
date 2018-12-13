@@ -32,6 +32,10 @@ export default class Simplex {
     return PROVIDER_NAME;
   }
 
+  static isDex() {
+    return false;
+  }
+
   get isValidNetwork() {
     return this.network === networkSymbols.ETH;
   }
@@ -118,11 +122,7 @@ export default class Simplex {
     });
 
     if (result.error) {
-      return {
-        error: result.result,
-        fromValue: fromValue,
-        toValue: 0
-      };
+      return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
     this.currentOrder = result.result;
     return {
@@ -139,11 +139,7 @@ export default class Simplex {
       requested_amount: +toValue
     });
     if (result.error) {
-      return {
-        error: result.result,
-        fromValue: 0,
-        toValue: toValue
-      };
+      return { error: result.result, fromValue: 0, toValue: toValue };
     }
     this.currentOrder = result.result;
     return {
@@ -231,6 +227,7 @@ export default class Simplex {
     swapDetails.providerSends = this.currentOrder.digital_money.amount;
     swapDetails.parsed = Simplex.parseOrder(swapDetails.dataForInitialization);
     swapDetails.providerAddress = undefined;
+    swapDetails.isDex = Simplex.isDex();
     return swapDetails;
   }
 

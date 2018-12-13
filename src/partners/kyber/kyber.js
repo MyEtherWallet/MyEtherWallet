@@ -1,5 +1,6 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
+import ENS from 'ethereum-ens';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
@@ -32,7 +33,7 @@ export default class Kyber {
     this.tokenDetails = {};
     this.setDefaultCurrencyList();
     this.web3 = props.web3;
-    this.ens = props.ens;
+    this.ens = new ENS(props.web3.currentProvider);
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
@@ -45,6 +46,10 @@ export default class Kyber {
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  static isDex() {
+    return true;
   }
 
   get currencies() {
@@ -415,6 +420,7 @@ export default class Kyber {
       validFor: TIME_SWAP_VALID
     };
     swapDetails.providerAddress = this.getKyberNetworkAddress();
+    swapDetails.isDex = Kyber.isDex();
     return swapDetails;
   }
 

@@ -30,6 +30,10 @@ export default class Changelly {
     return PROVIDER_NAME;
   }
 
+  static isDex() {
+    return false;
+  }
+
   async getSupportedCurrencies() {
     try {
       const {
@@ -155,6 +159,7 @@ export default class Changelly {
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;
+      swapDetails.isDex = Changelly.isDex();
       return swapDetails;
     }
     throw Error('From amount below changelly minimun for currency pair');
@@ -211,7 +216,7 @@ export default class Changelly {
       case statuses.new:
         return notificationStatuses.NEW;
       case statuses.waiting:
-       return notificationStatuses.SENT;
+        return notificationStatuses.SENT;
       case statuses.confirming:
       case statuses.exchanging:
       case statuses.sending:

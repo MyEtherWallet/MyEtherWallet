@@ -162,7 +162,8 @@ const swapOrder = (notifArray, val, network) => {
       validFor: val[2].parsed.validFor,
       createdAt: val[2].parsed.timestamp,
       rate: val[2].rate,
-      provider: val[2].provider
+      provider: val[2].provider,
+      isDex: val[2].isDex
     },
     expanded: false
   });
@@ -176,7 +177,7 @@ const swapReceipt = (notifArray, val) => {
   );
 
   notifArray[idx].status = notificationStatuses.COMPLETE;
-  if (notifArray[idx].body.provider === 'kybernetwork') {
+  if (notifArray[idx].body.isDex) {
     notifArray[idx].swapStatus = notificationStatuses.COMPLETE;
     notifArray[idx].body.timeRemaining = -1;
   }
