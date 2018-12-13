@@ -44,7 +44,9 @@
           <p>Transaction Hash:</p>
           <div class="detail-data">
             <p>
-              <a :href="hashLink(notice.hash)" target="_blank"> {{ notice.hash }} </a>
+              <a :href="hashLink(notice.hash)" target="_blank">
+                {{ notice.hash }}
+              </a>
             </p>
           </div>
         </li>
