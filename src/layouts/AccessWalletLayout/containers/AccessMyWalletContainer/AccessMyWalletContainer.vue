@@ -71,6 +71,7 @@
             :recommend="button.recommend"
             :tooltip="button.tooltip"
             :disabled="button.disabled"
+            :classname="button.classname"
           />
         </div>
       </div>
@@ -132,7 +133,8 @@ export default {
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: !this.online
+          disabled: !this.online,
+          classname: 'button-mewconnect'
         },
         {
           func: this.hardwareModalOpen,
@@ -141,7 +143,8 @@ export default {
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? hardwareImg : hardwareDisabledImg,
-          disabled: !this.online
+          disabled: !this.online,
+          classname: 'button-hardware'
         },
         {
           func: this.metamaskModalOpen,
@@ -150,7 +153,8 @@ export default {
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? metamaskImg : metamaskDisabledImg,
-          disabled: !this.online
+          disabled: !this.online,
+          classname: 'button-metamask'
         },
         {
           func: this.softwareModalOpen,
@@ -159,7 +163,8 @@ export default {
           recommend: this.$t('accessWallet.notRecommended'),
           tooltip: this.$t('common.toolTip3'),
           img: softwareImg,
-          disabled: true
+          disabled: true,
+          classname: 'button-software'
         }
       ]
     };
