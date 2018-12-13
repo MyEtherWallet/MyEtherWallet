@@ -33,27 +33,27 @@ jobs:
   include:
     - stage: run on pull requests
       script:
-        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && npm run lint && npm run codecov && ROUTER_MODE=history npm run build"
+        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm run lint && npm run codecov && ROUTER_MODE=history npm run build"
     - stage: add to codecov
       script:
-        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && npm run codecov"
+        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm run codecov"
     - stage: add to mewbuilds staging
       before_script:
-        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && ROUTER_MODE=history npm run build"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && ROUTER_MODE=history npm run build"
         - pip install --user awscli
       script:
         - aws s3 rm s3://mewbuilds/staging/ --recursive
         - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
     - stage: add to mewbuilds develop
       before_script:
-        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && ROUTER_MODE=history npm run build"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && ROUTER_MODE=history npm run build"
         - pip install --user awscli
       script:
         - aws s3 rm s3://mewbuilds/develop/ --recursive
         - aws s3 sync --acl public-read dist/ s3://mewbuilds/develop/
     - stage: add to mewbuilds
       before_script:
-        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && ROUTER_MODE=hash npm run build"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && ROUTER_MODE=hash npm run build"
         - pip install --user awscli
         - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
       script:
@@ -72,7 +72,7 @@ jobs:
     - stage: create release
       script: skip
       before_deploy:
-        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && npm install && ROUTER_MODE=hash npm run build"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm update && ROUTER_MODE=hash npm run build"
         - sudo mkdir deploy
         - ls -a /dist | sort
         - |
