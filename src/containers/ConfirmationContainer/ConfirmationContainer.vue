@@ -109,7 +109,7 @@ export default {
       web3WalletHash: '',
       web3WalletRes: '',
       signedArray: [],
-      originalArray: [],
+      txBatch: null,
       sending: false
     };
   },
@@ -210,19 +210,21 @@ export default {
       );
     });
 
-    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
-      this.originalArray = tx;
-      const newArr = [];
-      this.isHardwareWallet = isHardware;
-      for (let i = 0; i < tx.length; i++) {
-        this.wallet.signTransaction(tx[i]).then(_response => {
-          newArr.push(_response);
-        });
+    this.$eventHub.$on(
+      'showTxCollectionConfirmModal',
+      (signedArray, txBatch, isHardware) => {
+        // const newArr = [];
+        // this.isHardwareWallet = isHardware;
+        // for (let i = 0; i < tx.length; i++) {
+        //   this.wallet.signTransaction(tx[i]).then(_response => {
+        //     newArr.push(_response);
+        //   });
+        // }
+        this.txBatch = txBatch;
+        this.signedArray = signedArray;
+        this.confirmationCollectionModalOpen();
       }
-
-      this.signedArray = newArr;
-      this.confirmationCollectionModalOpen();
-    });
+    );
 
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
@@ -330,19 +332,17 @@ export default {
       }, 500);
     },
     async sendBatchTransactions() {
-      this.sending = true;
-      const web3 = this.web3;
-      const batch = new web3.eth.BatchRequest();
-      for (let i = 0; i < this.signedArray.length; i++) {
-        console.log(i); // todo remove dev item
-        batch.add(
-          web3.eth.sendSignedTransaction.request(
-            this.signedArray[i].rawTransaction,
-            this.sendBatchCallback
-          )
-        );
-      }
-      batch.execute();
+      // const web3 = this.web3;
+      // const batch = new web3.eth.BatchRequest();
+      // for (let i = 0; i < this.signedArray.length; i++) {
+      //   batch.add(
+      //     web3.eth.sendSignedTransaction.request(
+      //       this.signedArray[i].rawTransaction,
+      //       this.sendBatchCallback
+      //     )
+      //   );
+      // }
+      this.txBatch.execute();
     },
     sendTx() {
       this.dismissed = false;
