@@ -128,11 +128,56 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       arr[i] = formatters.inputCallFormatter(arr[i]);
     }
 
+    const popAndSign = async (txArray, signed) => {
+      if (signed === undefined) signed = [];
+      const _signedTx = await this.wallet.signTransaction(txArray.shift());
+      signed.push(_signedTx);
+      if (txArray.length > 0) {
+        popAndSign(txArray, signed);
+      } else {
+        return signed;
+      }
+    };
+
+    const makeBatchRequest = signedTransactionArray => {
+      let batch = new web3Instance.eth.BatchRequest();
+
+      const promises = signedTransactionArray.map(tx => {
+        return new Promise((res, rej) => {
+          let req = web3Instance.eth.sendSignedTransaction.request(
+            tx.rawTransaction,
+            (err, data) => {
+              if (err) rej(err);
+              else res(data);
+            }
+          );
+          batch.add(req);
+        });
+      });
+
+      return { promises, batch };
+      // batch.execute();
+
+      // return Promise.all(promises);
+    };
+
+    const signedTx = popAndSign(arr);
+    const batchRequests = makeBatchRequest(signedTx);
+
     this._vm.$eventHub.$emit(
       'showTxCollectionConfirmModal',
-      arr,
+      signedTx,
+      batchRequests.batch,
       state.wallet.isHardware
     );
+
+    return batchRequests.promises;
+
+    // this._vm.$eventHub.$emit(
+    //   'showTxCollectionConfirmModal',
+    //   arr,
+    //   state.wallet.isHardware
+    // );
   };
 
   commit('SET_WEB3_INSTANCE', web3Instance);

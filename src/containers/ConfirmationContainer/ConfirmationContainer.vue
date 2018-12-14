@@ -107,7 +107,8 @@ export default {
       dismissed: true,
       web3WalletHash: '',
       web3WalletRes: '',
-      signedArray: []
+      signedArray: [],
+      txBatch: null
     };
   },
   computed: {
@@ -207,15 +208,16 @@ export default {
       );
     });
 
-    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
-      const newArr = [];
-      this.isHardwareWallet = isHardware;
-      for (let i = 0; i < tx.length; i++) {
-        this.wallet.signTransaction(tx[i]).then(_response => {
-          newArr.push(_response);
-        });
-      }
-      this.signedArray = newArr;
+    this.$eventHub.$on('showTxCollectionConfirmModal', (signedArray, txBatch, isHardware) => {
+      // const newArr = [];
+      // this.isHardwareWallet = isHardware;
+      // for (let i = 0; i < tx.length; i++) {
+      //   this.wallet.signTransaction(tx[i]).then(_response => {
+      //     newArr.push(_response);
+      //   });
+      // }
+      this.txBatch = txBatch;
+      this.signedArray = signedArray;
       this.confirmationCollectionModalOpen();
     });
 
@@ -323,17 +325,17 @@ export default {
       }, 500);
     },
     async sendBatchTransactions() {
-      const web3 = this.web3;
-      const batch = new web3.eth.BatchRequest();
-      for (let i = 0; i < this.signedArray.length; i++) {
-        batch.add(
-          web3.eth.sendSignedTransaction.request(
-            this.signedArray[i].rawTransaction,
-            this.sendBatchCallback
-          )
-        );
-      }
-      batch.execute();
+      // const web3 = this.web3;
+      // const batch = new web3.eth.BatchRequest();
+      // for (let i = 0; i < this.signedArray.length; i++) {
+      //   batch.add(
+      //     web3.eth.sendSignedTransaction.request(
+      //       this.signedArray[i].rawTransaction,
+      //       this.sendBatchCallback
+      //     )
+      //   );
+      // }
+      this.txBatch.execute();
     },
     sendTx() {
       this.dismissed = false;
