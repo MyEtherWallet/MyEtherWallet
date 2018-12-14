@@ -89,6 +89,7 @@
         :to-address="address"
         :gas-limit="gasLimit"
         :highest-gas="highestGas"
+        class="tx-speed-input"
         @nonceUpdate="nonceUpdated"
         @gasLimitUpdate="gasLimitUpdated"
       />

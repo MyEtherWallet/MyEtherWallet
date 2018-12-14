@@ -11,19 +11,21 @@
         <div class="tx-info">
           <div class="tx-data tx-from">
             <div class="address-info">
-              <p class="address-title">{{ $t('confirmation.signingAddr') }}</p>
-              <p>{{ from }}</p>
+              <p class="title address-title">
+                {{ $t('confirmation.signingAddr') }}
+              </p>
+              <div class="from-address">
+                <blockie :address="addr" width="30px" height="30px" />
+                <span>{{ from }}</span>
+              </div>
             </div>
-          </div>
-          <div class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
           <div class="tx-data tx-to">
             <div class="address-info">
-              <p class="address-title">
+              <p class="title address-title">
                 {{ $t('interface.txSideMenuMessage') }}
               </p>
-              <p>{{ messageToSign }}</p>
+              <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
           </div>
         </div>
@@ -49,13 +51,6 @@
                   triggers="hover focus"
                   placement="top"
                 >
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">{{ $t('confirm.scanQrCode') }}</p>
-                    <div class="qrcode-block">
-                      <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
                 </b-popover>
               </div>
             </div>
@@ -68,7 +63,12 @@
 </template>
 
 <script>
+import Blockie from '@/components/Blockie';
+
 export default {
+  components: {
+    blockie: Blockie
+  },
   props: {
     confirmSignMessage: {
       type: Function,
@@ -93,6 +93,7 @@ export default {
   },
   data() {
     return {
+      addr: '0x7545566a4339daf3fad6979208b2042f06e8c881',
       modalDetailInformation: false,
       transactionSigned: false
     };
