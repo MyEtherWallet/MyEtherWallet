@@ -155,8 +155,13 @@
                 </div>
                 <notification v-if="wallet !== null" ref="notification" />
                 <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop && 'noshow'"
+                  v-if="
+                    wallet === null &&
+                      ($route.fullPath === '/' ||
+                        $route.fullPath === '/#about-mew' ||
+                        $route.fullPath === '/#faqs')
+                  "
+                  :class="!isPageOnTop && 'show'"
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >

@@ -91,8 +91,8 @@
           outline: none;
 
           &.active {
-            color: $text-black;
-            font-weight: 500;
+            //color: $text-black;
+            //font-weight: 500;
           }
         }
       }
@@ -281,9 +281,9 @@
 
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.5s ease-out;
+  animation: fadeOutFromBlock 0.5s ease-out;
   animation-fill-mode: forwards;
-  opacity: 1;
+
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -302,8 +302,8 @@
     }
   }
 
-  &.noshow {
-    animation: fadeOutFromBlock 0.5s ease-out;
+  &.show {
+    animation: fadeInFromNone 0.5s ease-out;
     animation-fill-mode: forwards;
   }
 
