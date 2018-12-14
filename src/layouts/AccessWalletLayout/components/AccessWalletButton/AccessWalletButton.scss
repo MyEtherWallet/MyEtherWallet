@@ -51,7 +51,7 @@
     top: -8px;
 
     @media all and (max-width: $tablet-width) {
-      top: 0px;
+      top: 0;
     }
 
     h3,
@@ -80,5 +80,3 @@
     display: none;
   }
 }
-
-
