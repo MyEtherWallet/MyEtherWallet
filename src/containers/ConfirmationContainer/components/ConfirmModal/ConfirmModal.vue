@@ -97,12 +97,6 @@
                   triggers="hover focus"
                   placement="top"
                 >
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">
-                      {{ $t('confirmation.scanQrCode') }}
-                    </p>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
                 </b-popover>
               </div>
             </div>
