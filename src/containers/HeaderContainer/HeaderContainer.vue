@@ -161,7 +161,7 @@
                         $route.fullPath === '/#about-mew' ||
                         $route.fullPath === '/#faqs')
                   "
-                  :class="!isPageOnTop && 'show'"
+                  :class="showGetFreeWallet && 'show'"
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
@@ -263,7 +263,8 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: true,
+      showGetFreeWallet: false
     };
   },
   computed: {
@@ -338,6 +339,9 @@ export default {
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
+      if (topPos < -150) {
+        this.showGetFreeWallet = true;
+      }
     }
   }
 };

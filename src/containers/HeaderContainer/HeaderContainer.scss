@@ -136,6 +136,9 @@
           margin-left: 26px;
           padding: 13px 0;
 
+          &.get-free-wallet {
+            margin-left: 0;
+          }
           &.nopadding {
             padding: 0;
           }
@@ -281,9 +284,13 @@
 
 .get-free-wallet {
   position: relative;
-  animation: fadeOutFromBlock 0.5s ease-out;
-  animation-fill-mode: forwards;
-
+  //animation: fadeOutFromBlock 0.5s ease-out;
+  //animation-fill-mode: forwards;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  margin-left: 0;
+  overflow: hidden;
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
