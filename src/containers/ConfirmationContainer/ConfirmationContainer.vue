@@ -109,6 +109,7 @@ export default {
       web3WalletHash: '',
       web3WalletRes: '',
       signedArray: [],
+      originalArray: [],
       sending: false
     };
   },
@@ -210,6 +211,7 @@ export default {
     });
 
     this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
+      this.originalArray = tx;
       const newArr = [];
       this.isHardwareWallet = isHardware;
       for (let i = 0; i < tx.length; i++) {
@@ -217,6 +219,7 @@ export default {
           newArr.push(_response);
         });
       }
+
       this.signedArray = newArr;
       this.confirmationCollectionModalOpen();
     });
@@ -295,30 +298,32 @@ export default {
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
     async sendBatchCallback(err, response) {
+      console.log(err, response); // todo remove dev item
       if (err !== null) {
         this.$store.dispatch('addNotification', [
-          this.fromAddress,
-          err,
-          'Transaction Error'
+          'Batch_Error',
+          this.originalArray,
+          err
         ]);
         return;
       }
 
       this.$store.dispatch('addNotification', [
-        this.fromAddress,
-        response,
-        'Transaction Hash'
+        'Batch_Hash',
+        this.originalArray,
+        response
       ]);
+      this.showSuccessModal('Transaction sent!', 'Okay');
 
       const pollReceipt = setInterval(() => {
         this.web3.eth.getTransactionReceipt(response).then(res => {
           if (res !== null) {
             this.$store.dispatch('addNotification', [
-              this.fromAddress,
-              res,
-              'Transaction Receipt'
+              'Batch_Receipt',
+              this.originalArray,
+              res
             ]);
-            this.showSuccessModal('Transaction sent!', 'Okay');
+            // this.showSuccessModal('Transaction sent!', 'Okay');
             clearInterval(pollReceipt);
           }
         });
@@ -329,6 +334,7 @@ export default {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       for (let i = 0; i < this.signedArray.length; i++) {
+        console.log(i); // todo remove dev item
         batch.add(
           web3.eth.sendSignedTransaction.request(
             this.signedArray[i].rawTransaction,

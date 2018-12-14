@@ -154,8 +154,16 @@ export default {
         // ]);
         if (Array.isArray(this.preparedSwap)) {
           if (this.preparedSwap.length > 1) {
+            this.$store.dispatch('addSwapNotification', [
+              'Dex_Swap',
+              this.currentAddress,
+              this.swapDetails,
+              this.preparedSwap
+            ]);
+            console.log(this.preparedSwap); // todo remove dev item
             this.web3.mew.sendBatchTransactions(this.preparedSwap);
           } else {
+            console.log(this.preparedSwap[0]); // todo remove dev item
             this.web3.eth
               .sendTransaction(this.preparedSwap[0])
               .once('transactionHash', hash => {

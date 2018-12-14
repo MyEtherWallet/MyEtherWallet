@@ -6,9 +6,10 @@ import { formatters } from 'web3-core-helpers';
 import {
   addUpdateNotification,
   addUpdateSwapNotification
-} from '@/helpers/notificationFormatter';
+} from '@/helpers/notificationFormatters';
 
 const addNotification = function({ commit, state }, val) {
+  console.log('add notification: val', val); // todo remove dev item
   const address = web3.utils.toChecksumAddress(val[1].from);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
