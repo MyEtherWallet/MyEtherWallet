@@ -8,6 +8,7 @@ import {
   kyberBaseCurrency,
   PROVIDER_NAME,
   TIME_SWAP_VALID,
+  MAX_DEST_AMOUNT,
   defaultValues,
   KyberCurrencies,
   kyberAddressFallback,
@@ -38,7 +39,6 @@ export default class Kyber {
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
     this.rates = new Map();
-
     this.retrieveRates();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
@@ -340,18 +340,13 @@ export default class Kyber {
     { fromCurrency, toCurrency, fromValueWei, fromAddress },
     minRateWei
   ) {
-    /* Cannot use a larger value (which solidity supports due to error from web3/ethers,
-       see: https://github.com/ethereum/web3.js/issues/1920
-       This can cause the transaction to fail and revert */
-    const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
-
     const data = this.getKyberContractObject()
       .methods.trade(
         await this.getTokenAddress(fromCurrency),
         fromValueWei,
         await this.getTokenAddress(toCurrency),
         fromAddress,
-        maxDestAmount,
+        MAX_DEST_AMOUNT,
         minRateWei,
         walletDepositeAddress
       )

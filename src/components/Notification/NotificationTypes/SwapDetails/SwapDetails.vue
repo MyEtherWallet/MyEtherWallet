@@ -140,7 +140,7 @@ import { providerMap } from '@/partners';
 import {
   swapOnlyStatuses,
   notificationStatuses
-} from '@/helpers/notificationFormatter';
+} from '@/helpers/notificationFormatters';
 
 export default {
   filters: {

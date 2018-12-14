@@ -586,7 +586,7 @@ export default {
                 return {
                   provider: entry.provider,
                   fromCurrency,
-                  fromValue: 0.1, //this.fromValue, // todo uncomment after dev
+                  fromValue: this.fromValue, // todo uncomment after dev
                   toCurrency,
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
