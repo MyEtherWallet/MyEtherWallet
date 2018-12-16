@@ -19,6 +19,7 @@ import {
 } from './transactionNotification';
 
 const addUpdateNotification = function(newNotif, val, network) {
+  console.log(val[0], val[val.length - 1]); // todo remove dev item
   switch (val[0]) {
     case type.TRANSACTION_HASH:
       return transactionHash(newNotif, val, network);
@@ -27,11 +28,19 @@ const addUpdateNotification = function(newNotif, val, network) {
     case type.TRANSACTION_ERROR:
       return transactionError(newNotif, val, network);
     case type.BATCH_TRANSACTION_HASH:
-      return batchTransactionHash(newNotif, val, network);
+      return transactionHash(newNotif, val, network);
     case type.BATCH_TRANSACTION_RECEIPT:
-      return batchTransactionReceipt(newNotif, val, network);
+      return transactionReceipt(
+        batchTransactionReceipt(newNotif, val, network),
+        val,
+        network
+      );
     case type.BATCH_TRANSACTION_ERROR:
-      return batchTransactionError(newNotif, val, network);
+      return transactionError(
+        batchTransactionError(newNotif, val, network),
+        val,
+        network
+      );
     default:
       break;
   }

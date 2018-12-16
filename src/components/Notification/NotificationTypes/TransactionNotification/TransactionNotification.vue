@@ -5,6 +5,7 @@
         <p class="type">Transaction</p>
         <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
       </div>
+      <span v-if="!notice.read">un-read</span>
       <div class="time-date">
         <p>{{ timeString(notice) }}</p>
         <p>{{ dateString(notice) }}</p>

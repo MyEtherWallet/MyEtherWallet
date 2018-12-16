@@ -130,6 +130,7 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
+      console.log('web3WalletHash', newVal); // todo remove dev item
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
@@ -146,6 +147,7 @@ export default {
       }, 500);
     },
     web3WalletRes(newVal) {
+      console.log('web3WalletRes', newVal); // todo remove dev item
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
@@ -217,19 +219,18 @@ export default {
       'showTxCollectionConfirmModal',
       async (tx, signCallback, isHardware) => {
         this.unSignedArray = tx;
-        console.log('unSignedArray', this.unSignedArray); // todo remove dev item
+
         if (!signCallback) signCallback = () => {};
         this.signCallback = signCallback;
         const popAndSign = async (origTxArray, signed) => {
           const txArray = [...origTxArray];
-          console.log('signed', signed); // todo remove dev item
+
           if (signed === undefined) signed = [];
           const _signedTx = await this.wallet.signTransaction(txArray.shift());
           signed.push(_signedTx);
           if (txArray.length > 0) {
             return popAndSign(txArray, signed);
           }
-          console.log(signed); // todo remove dev item
           return signed;
         };
         this.confirmationCollectionModalOpen();
@@ -313,7 +314,6 @@ export default {
     async sendBatchTransactions() {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
-      console.log('this.signedArray', this.signedArray); // todo remove dev item
       const promises = this.signedArray.map(tx => {
         return new Promise((res, rej) => {
           const _tx = tx.tx;
@@ -334,15 +334,18 @@ export default {
                 this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
                 data
               ]);
-              console.log('add notification', data); // todo remove dev item
+              console.log('add batch notification: ', data); // todo remove dev item
               this.showSuccessModal('Transaction sent!', 'Okay');
 
               const pollReceipt = setInterval(() => {
+                console.log('poll for receipt', data); // todo remove dev item
                 this.web3.eth.getTransactionReceipt(data).then(res => {
                   if (res !== null) {
                     this.$store.dispatch('addNotification', [
                       'Batch_Receipt',
-                      this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                      this.unSignedArray.find(
+                        entry => _tx.nonce === entry.nonce
+                      ),
                       res
                     ]);
                     clearInterval(pollReceipt);
