@@ -7,7 +7,7 @@ import {
 } from './config';
 
 const identifySwapForTransaction = (notifArray, val) => {
-  const finalTx = val[1][val[1].length - 1];
+  const finalTx = val[1];
   console.log(finalTx); // todo remove dev item
   const swapNotificationIndex = notifArray.findIndex(entry => {
     console.log('entry.body.providerAddress', entry.body.providerAddress); // todo remove dev item
@@ -34,7 +34,7 @@ const identifySwapForTransaction = (notifArray, val) => {
 };
 
 const batchTransactionHash = (notifArray, val, network) => {
-  const finalTx = val[1][val[1].length - 1];
+  const finalTx = val[1];
   const swapIdx = identifySwapForTransaction(notifArray, val);
   console.log(swapIdx); // todo remove dev item
   if (swapIdx !== null) {
@@ -91,7 +91,7 @@ const batchTransactionReceipt = (notifArray, val) => {
 };
 
 const batchTransactionError = (notifArray, val, network) => {
-  const finalTx = val[1][val[1].length - 1];
+  const finalTx = val[1];
   notifArray.push({
     title: 'Transaction',
     read: false,
