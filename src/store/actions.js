@@ -148,6 +148,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     });
   };
 
+
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 

@@ -113,23 +113,23 @@ export default {
         .sendSignedTransaction(signedTx.rawTransaction)
         .once('transactionHash', hash => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
+            'Hash',
+            signedTx.tx,
             hash,
-            'Transaction Hash'
           ]);
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
+            'Receipt',
+            signedTx.tx,
             res,
-            'Transaction Receipt'
           ]);
         })
         .on('error', err => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
+            'Error',
+            signedTx.tx,
             err,
-            'Transaction Error'
           ]);
         });
     },
