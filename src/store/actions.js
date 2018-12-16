@@ -110,84 +110,42 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     )
   );
   web3Instance['mew'] = {};
-  web3Instance['mew'].sendBatchTransactions = async arr => {
-    for (let i = 0; i < arr.length; i++) {
-      const localTx = {
-        to: arr[i].to,
-        data: arr[i].data,
-        from: arr[i].from,
-        value: arr[i].value,
-        gasPrice: arr[i].gasPrice
-      };
-      arr[i].nonce = await (arr[i].nonce === undefined
-        ? web3Instance.eth.getTransactionCount(
-            state.wallet.getChecksumAddressString()
-          )
-        : arr[i].nonce);
-      arr[i].nonce = +arr[i].nonce + i;
-      arr[i].gas = await (arr[i].gas === undefined
-        ? web3Instance.eth.estimateGas(localTx)
-        : arr[i].gas);
-      arr[i].chainId = !arr[i].chainId
-        ? state.network.type.chainID
-        : arr[i].chainId;
-      arr[i].gasPrice =
-        arr[i].gasPrice === undefined
-          ? unit.toWei(state.gasPrice, 'gwei')
-          : arr[i].gasPrice;
-      arr[i] = formatters.inputCallFormatter(arr[i]);
-    }
-
-    const popAndSign = async (txArray, signed) => {
-      if (signed === undefined) signed = [];
-      const _signedTx = await this.wallet.signTransaction(txArray.shift());
-      signed.push(_signedTx);
-      if (txArray.length > 0) {
-        popAndSign(txArray, signed);
-      } else {
-        return signed;
+  web3Instance['mew'].sendBatchTransactions = arr => {
+    return new Promise(async resolve => {
+      for (let i = 0; i < arr.length; i++) {
+        const localTx = {
+          to: arr[i].to,
+          data: arr[i].data,
+          from: arr[i].from,
+          value: arr[i].value,
+          gasPrice: arr[i].gasPrice
+        };
+        arr[i].nonce = await (arr[i].nonce === undefined
+          ? web3Instance.eth.getTransactionCount(
+              state.wallet.getChecksumAddressString()
+            )
+          : arr[i].nonce);
+        arr[i].nonce = +arr[i].nonce + i;
+        arr[i].gas = await (arr[i].gas === undefined
+          ? web3Instance.eth.estimateGas(localTx)
+          : arr[i].gas);
+        arr[i].chainId = !arr[i].chainId
+          ? state.network.type.chainID
+          : arr[i].chainId;
+        arr[i].gasPrice =
+          arr[i].gasPrice === undefined
+            ? unit.toWei(state.gasPrice, 'gwei')
+            : arr[i].gasPrice;
+        arr[i] = formatters.inputCallFormatter(arr[i]);
       }
-    };
 
-    const makeBatchRequest = signedTransactionArray => {
-      let batch = new web3Instance.eth.BatchRequest();
-
-      const promises = signedTransactionArray.map(tx => {
-        return new Promise((res, rej) => {
-          let req = web3Instance.eth.sendSignedTransaction.request(
-            tx.rawTransaction,
-            (err, data) => {
-              if (err) rej(err);
-              else res(data);
-            }
-          );
-          batch.add(req);
-        });
-      });
-
-      return { promises, batch };
-      // batch.execute();
-
-      // return Promise.all(promises);
-    };
-
-    const signedTx = popAndSign(arr);
-    const batchRequests = makeBatchRequest(signedTx);
-
-    this._vm.$eventHub.$emit(
-      'showTxCollectionConfirmModal',
-      signedTx,
-      batchRequests.batch,
-      state.wallet.isHardware
-    );
-
-    return batchRequests.promises;
-
-    // this._vm.$eventHub.$emit(
-    //   'showTxCollectionConfirmModal',
-    //   arr,
-    //   state.wallet.isHardware
-    // );
+      this._vm.$eventHub.$emit(
+        'showTxCollectionConfirmModal',
+        arr,
+        resolve,
+        state.wallet.isHardware
+      );
+    });
   };
 
   commit('SET_WEB3_INSTANCE', web3Instance);

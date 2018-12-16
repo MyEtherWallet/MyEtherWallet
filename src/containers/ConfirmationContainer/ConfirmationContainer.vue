@@ -18,6 +18,7 @@
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :signed-array="signedArray"
+      :un-signed-array="unSignedArray"
       :sending="sending"
     />
     <confirm-modal
@@ -59,7 +60,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
-import ethTx from 'ethereumjs-tx';
+import PromiEvent from 'web3-core-promievent';
 
 export default {
   components: {
@@ -110,7 +111,9 @@ export default {
       web3WalletRes: '',
       signedArray: [],
       txBatch: null,
-      sending: false
+      sending: false,
+      unSignedArray: [],
+      signCallback: {}
     };
   },
   computed: {
@@ -212,17 +215,25 @@ export default {
 
     this.$eventHub.$on(
       'showTxCollectionConfirmModal',
-      (signedArray, txBatch, isHardware) => {
-        // const newArr = [];
-        // this.isHardwareWallet = isHardware;
-        // for (let i = 0; i < tx.length; i++) {
-        //   this.wallet.signTransaction(tx[i]).then(_response => {
-        //     newArr.push(_response);
-        //   });
-        // }
-        this.txBatch = txBatch;
-        this.signedArray = signedArray;
+      async (tx, signCallback, isHardware) => {
+        this.unSignedArray = tx;
+        console.log('unSignedArray', this.unSignedArray); // todo remove dev item
+        if (!signCallback) signCallback = () => {};
+        this.signCallback = signCallback;
+        const popAndSign = async (origTxArray, signed) => {
+          const txArray = [...origTxArray];
+          console.log('signed', signed); // todo remove dev item
+          if (signed === undefined) signed = [];
+          const _signedTx = await this.wallet.signTransaction(txArray.shift());
+          signed.push(_signedTx);
+          if (txArray.length > 0) {
+            return popAndSign(txArray, signed);
+          }
+          console.log(signed); // todo remove dev item
+          return signed;
+        };
         this.confirmationCollectionModalOpen();
+        this.signedArray = await popAndSign(tx);
       }
     );
 
@@ -299,50 +310,56 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
-    async sendBatchCallback(err, response) {
-      console.log(err, response); // todo remove dev item
-      if (err !== null) {
-        this.$store.dispatch('addNotification', [
-          'Batch_Error',
-          this.originalArray,
-          err
-        ]);
-        return;
-      }
-
-      this.$store.dispatch('addNotification', [
-        'Batch_Hash',
-        this.originalArray,
-        response
-      ]);
-      this.showSuccessModal('Transaction sent!', 'Okay');
-
-      const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(response).then(res => {
-          if (res !== null) {
-            this.$store.dispatch('addNotification', [
-              'Batch_Receipt',
-              this.originalArray,
-              res
-            ]);
-            // this.showSuccessModal('Transaction sent!', 'Okay');
-            clearInterval(pollReceipt);
-          }
-        });
-      }, 500);
-    },
     async sendBatchTransactions() {
-      // const web3 = this.web3;
-      // const batch = new web3.eth.BatchRequest();
-      // for (let i = 0; i < this.signedArray.length; i++) {
-      //   batch.add(
-      //     web3.eth.sendSignedTransaction.request(
-      //       this.signedArray[i].rawTransaction,
-      //       this.sendBatchCallback
-      //     )
-      //   );
-      // }
-      this.txBatch.execute();
+      const web3 = this.web3;
+      const batch = new web3.eth.BatchRequest();
+      console.log('this.signedArray', this.signedArray); // todo remove dev item
+      const promises = this.signedArray.map(tx => {
+        return new Promise((res, rej) => {
+          const _tx = tx.tx;
+          const req = web3.eth.sendSignedTransaction.request(
+            tx.rawTransaction,
+            (err, data) => {
+              if (err !== null) {
+                this.$store.dispatch('addNotification', [
+                  'Batch_Error',
+                  this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                  err
+                ]);
+                rej(err);
+              }
+
+              this.$store.dispatch('addNotification', [
+                'Batch_Hash',
+                this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                data
+              ]);
+              console.log('add notification', data); // todo remove dev item
+              this.showSuccessModal('Transaction sent!', 'Okay');
+
+              const pollReceipt = setInterval(() => {
+                this.web3.eth.getTransactionReceipt(data).then(res => {
+                  if (res !== null) {
+                    this.$store.dispatch('addNotification', [
+                      'Batch_Receipt',
+                      this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                      res
+                    ]);
+                    clearInterval(pollReceipt);
+                  }
+                });
+              }, 500);
+              res(data);
+            }
+          );
+          console.log(req); // todo remove dev item
+          batch.add(req);
+        });
+      });
+
+      this.signCallback(promises);
+      batch.execute();
+      this.showSuccessModal('Transaction sent!', 'Okay');
     },
     sendTx() {
       this.dismissed = false;

@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="confirmCollection"
-      :title="`Confirmation (Total of ${signedArray.length} transactions)`"
+      :title="`Confirmation (Total of ${unSignedArray.length} transactions)`"
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
@@ -21,8 +21,8 @@
         </div>
         <div class="modal-content-body">
           <div
-            v-for="(item, idx) in signedArray"
-            :key="item.tx.to + idx + item.tx.value"
+            v-for="(item, idx) in unSignedArray"
+            :key="item.to + idx + item.value"
             class="item"
           >
             <div v-b-toggle.prevent="`accordion${idx}`" class="header">
@@ -34,7 +34,7 @@
                 />
                 <div>
                   <p>
-                    - {{ web3.utils.hexToNumberString(item.tx.value) }}
+                    - {{ web3.utils.hexToNumberString(item.value) }}
                     <span>{{ network.type.name }}</span>
                   </p>
                   <div>
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <div
-                v-show="item.tx.to !== '' && item.tx.to !== undefined"
+                v-show="item.to !== '' && item.to !== undefined"
                 class="direction"
               >
                 <img src="~@/assets/images/icons/right-arrow.svg" />
@@ -57,12 +57,12 @@
                 />
                 <div>
                   <p>
-                    + {{ web3.utils.hexToNumberString(item.tx.value) }}
+                    + {{ web3.utils.hexToNumberString(item.value) }}
                     <span>{{ network.type.name }}</span>
                   </p>
                   <div>
                     <span>{{ $t('common.to') }}</span>
-                    {{ item.tx.to | concatAddr }}
+                    {{ item.to | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -74,14 +74,14 @@
             <b-collapse :id="`accordion${idx}`" class="body">
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasLimit') }}t</span>
-                <span>{{ web3.utils.hexToNumberString(item.tx.gas) }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.gas) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span
                   >{{
                     web3.utils.hexToNumberString(
-                      web3.utils.fromWei(item.tx.gasPrice, 'gwei')
+                      web3.utils.fromWei(item.gasPrice, 'gwei')
                     )
                   }}
                   Gwei</span
@@ -89,11 +89,11 @@
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce </span>
-                <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
+                <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.data') }} </span>
-                <span class="data-string">{{ item.tx.input }}</span>
+                <span class="data-string">{{ item.input }}</span>
               </div>
             </b-collapse>
           </div>
@@ -156,6 +156,10 @@ export default {
     'address-block': AddressBlock
   },
   props: {
+    unSignedArray: {
+      type: Array,
+      default: () => []
+    },
     signedArray: {
       type: Array,
       default: () => []
@@ -176,6 +180,7 @@ export default {
       wallet: 'wallet'
     }),
     allSigned() {
+      if (this.signedArray.length === 0) return false;
       for (let i = 0; i < this.signedArray.length; i++) {
         if (
           this.signedArray[i].rawTransaction === '' ||
@@ -186,13 +191,13 @@ export default {
       return true;
     },
     txTotal() {
-      if (this.signedArray.length > 0) {
+      if (this.unSignedArray.length > 0) {
         const BN = this.web3.utils.BN;
         let totalGas = new BN();
-        this.signedArray.forEach(item => {
+        this.unSignedArray.forEach(item => {
           totalGas = totalGas.add(
-            new BN(item.tx.gasPrice.replace('0x', ''), 'hex').mul(
-              new BN(item.tx.gas.replace('0x', ''), 'hex')
+            new BN(item.gasPrice.replace('0x', ''), 'hex').mul(
+              new BN(item.gas.replace('0x', ''), 'hex')
             )
           );
         });

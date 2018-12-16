@@ -161,7 +161,14 @@ export default {
               this.preparedSwap
             ]);
             console.log(this.preparedSwap); // todo remove dev item
-            this.web3.mew.sendBatchTransactions(this.preparedSwap);
+            const promises = await this.web3.mew.sendBatchTransactions(
+              this.preparedSwap
+            );
+            console.log('sendBatchTransactions Promises', promises); // todo remove dev item
+            for(let i=0; i<promises.length; i++){
+              console.log(promises[i]); // todo remove dev item
+              promises[i].then(console.log)
+            }
           } else {
             console.log(this.preparedSwap[0]); // todo remove dev item
             this.web3.eth
