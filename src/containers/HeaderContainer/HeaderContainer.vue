@@ -3,6 +3,8 @@
     <settings-modal ref="settings" />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
+    <issue-log-modal ref="issuelog" />
+
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -227,6 +229,7 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import IssueLogModal from '@/components/IssueLogModal';
 
 export default {
   components: {
@@ -236,7 +239,8 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     txpoppup: TxTopMenuPopup,
-    'logout-modal': LogoutModal
+    'logout-modal': LogoutModal,
+    'issue-log-modal': IssueLogModal
   },
   data() {
     return {
