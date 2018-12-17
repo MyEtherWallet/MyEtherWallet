@@ -56,7 +56,7 @@
           <h5>
             {{ $t('common.noWallet') }}
             <router-link :to="'/create-wallet'" class="nounderline">
-              {{ $t('common.getAFreeWallet') }}
+              {{ $t('common.createANewWallet') }}
             </router-link>
           </h5>
         </div>
