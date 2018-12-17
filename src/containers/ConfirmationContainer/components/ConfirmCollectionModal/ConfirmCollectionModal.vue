@@ -78,21 +78,21 @@
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
-                <span
-                  >{{
+                <span>
+                  {{
                     web3.utils.hexToNumberString(
                       web3.utils.fromWei(item.tx.gasPrice, 'gwei')
                     )
                   }}
-                  Gwei</span
-                >
+                  Gwei
+                </span>
               </div>
               <div class="body-item">
-                <span class="item-title">Nonce </span>
+                <span class="item-title">Nonce</span>
                 <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.data') }} </span>
+                <span class="item-title">{{ $t('common.data') }}</span>
                 <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
@@ -134,7 +134,10 @@
             </div>
           </div>
         </div>
-        <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+        <p class="learn-more">
+          Have any issues?
+          <a href="/" target="_blank" rel="noopener noreferrer">Learn more</a>
+        </p>
       </div>
     </b-modal>
   </div>

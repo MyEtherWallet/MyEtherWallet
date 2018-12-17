@@ -3,7 +3,6 @@
     <!-- Modal -->
     <feedback-modal />
     <!-- <confirmation-modal /> -->
-
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
@@ -27,15 +26,17 @@
                 v-for="(content, index) in item.contents"
                 :key="content.text + index"
               >
-                <router-link v-if="content.to !== undefined" :to="content.to"
-                  ><p>{{ content.text }}</p></router-link
-                >
+                <router-link v-if="content.to !== undefined" :to="content.to">
+                  <p>{{ content.text }}</p>
+                </router-link>
                 <a
                   v-if="content.to === undefined"
                   :href="content.href"
                   target="_blank"
-                  ><p>{{ content.text }}</p></a
+                  rel="noopener noreferrer"
                 >
+                  <p>{{ content.text }}</p>
+                </a>
               </div>
             </div>
           </div>
@@ -47,12 +48,13 @@
                 {{ $t('footer.donate') }}
               </h3>
             </div>
-            <div class="">
+            <div class>
               <p>{{ $t('footer.welcomeDes') }}</p>
 
               <a
                 :href="'https://etherscan.io/address/' + ethDonationAddress"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
@@ -63,6 +65,7 @@
               <a
                 href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <p
                   class="crypto-link"
@@ -79,25 +82,39 @@
           <div class="links">
             <div v-for="(link, index) in lowerLinks" :key="link.title + index">
               <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                <span> {{ link.title }} </span>
+                <span>{{ link.title }}</span>
               </router-link>
-              <a v-else :href="link.href" target="_blank">
-                <span> {{ link.title }} </span>
+              <a
+                v-else
+                :href="link.href"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{{ link.title }}</span>
               </a>
             </div>
           </div>
           <div class="copyright">
             <p>
               {{ $t('footer.pricingP') }}
-              <a href="https://coinmarketcap.com/" target="_blank">
-                CoinMarketCap
-              </a>
+              <a
+                href="https://coinmarketcap.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >CoinMarketCap</a
+              >
               <br />
               {{ $t('footer.copyright') }}
             </p>
           </div>
           <div class="social">
-            <a v-for="link in links" :href="link.to" :key="link.class">
+            <a
+              v-for="link in links"
+              :href="link.to"
+              :key="link.class"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <i :class="'fa ' + link.class" />
             </a>
           </div>
