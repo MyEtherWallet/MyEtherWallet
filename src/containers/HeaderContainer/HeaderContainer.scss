@@ -214,6 +214,22 @@
   }
 }
 
+
+
+//********************************************************
+// .notification-menu-container
+//********************************************************
+.notification-menu-container {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
+  }
+}
+
+
+
 //********************************************************
 // .mobile-menu-content
 //********************************************************
@@ -360,3 +376,21 @@
     }
   }
 } // .get-free-wallet
+
+
+
+//********************************************************
+// .settings-container
+//********************************************************
+.settings-container {
+  display: flex;
+  align-items: center;
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
+}
+
+
