@@ -10,7 +10,13 @@
             <div class="text">
               <p class="title">{{ ext.title }}</p>
               <p class="description">{{ ext.description }}</p>
-              <a :href="ext.linkURL" class="link">{{ ext.linkName }}</a>
+              <a
+                :href="ext.linkURL"
+                class="link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >{{ ext.linkName }}</a
+              >
             </div>
           </div>
         </div>
