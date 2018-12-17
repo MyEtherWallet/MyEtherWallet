@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
 describe('SendTx.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, store;
 
   const rawTx = '{ "rawTransaction": "0xasdfasdfasdfasdfasasdfasdf" }';
   const spy = sinon.stub();
@@ -17,7 +17,7 @@ describe('SendTx.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(SendTx, {
+    shallowMount(SendTx, {
       localVue,
       i18n,
       store,

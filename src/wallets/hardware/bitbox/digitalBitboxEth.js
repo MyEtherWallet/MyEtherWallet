@@ -142,7 +142,7 @@ class DigitalBitboxEth {
       if (!('device' in pingResponse)) {
         callback(
           undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank">BitBox Desktop app.</a>'
+          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
         );
         return;
       }
@@ -154,7 +154,7 @@ class DigitalBitboxEth {
       if (majorVersion < BitBoxSupportedMajorVersion) {
         callback(
           undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank">BitBox Desktop app.</a>'
+          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
         );
         return;
       }

@@ -24,11 +24,10 @@
         </h4>
       </div>
       <div class="accept-terms">
-        <label class="checkbox-container"
-          >{{ $t('accessWallet.acceptTerms') }}
-          <router-link to="/terms-and-conditions">{{
-            $t('common.terms')
-          }}</router-link
+        <label class="checkbox-container">
+          {{ $t('accessWallet.acceptTerms') }}
+          <router-link to="/terms-and-conditions">
+            {{ $t('common.terms') }} </router-link
           >.
           <input
             type="checkbox"
@@ -43,16 +42,14 @@
           :disabled="accessMyWalletBtnDisabled"
           class="mid-round-button-green-filled close-button"
           @click="getWeb3Wallet"
+          >{{ $t('common.accessMyWallet') }}</b-btn
         >
-          {{ $t('common.accessMyWallet') }}
-        </b-btn>
         <b-btn
           v-show="unlockWeb3Wallet"
           class="mid-round-button-green-filled close-button"
           @click="getWeb3Wallet"
+          >{{ $t('accessWallet.tryAgain') }}</b-btn
         >
-          {{ $t('accessWallet.tryAgain') }}
-        </b-btn>
       </div>
     </div>
     <div v-else>
@@ -66,11 +63,10 @@
         <h4>{{ $t('accessWallet.installMetaMaskModalDesc') }}</h4>
       </div>
       <div class="accept-terms hidden">
-        <label class="checkbox-container"
-          >{{ $t('accessWallet.acceptTerms') }}
-          <router-link to="/terms-and-conditions">{{
-            $t('common.terms')
-          }}</router-link
+        <label class="checkbox-container">
+          {{ $t('accessWallet.acceptTerms') }}
+          <router-link to="/terms-and-conditions">
+            {{ $t('common.terms') }} </router-link
           >. <input type="checkbox" /> <span class="checkmark" />
         </label>
       </div>
@@ -79,18 +75,17 @@
           v-show="!refreshPage"
           href="https://metamask.io/"
           target="_blank"
+          rel="noopener noreferrer"
           class="mid-round-button-green-filled close-button"
           @click="refreshPage = true"
+          >{{ $t('accessWallet.installMetamask') }}</a
         >
-          {{ $t('accessWallet.installMetamask') }}
-        </a>
         <b-btn
           v-show="refreshPage"
           class="mid-round-button-green-filled close-button"
           @click="reload"
+          >{{ $t('accessWallet.refresh') }}</b-btn
         >
-          {{ $t('accessWallet.refresh') }}
-        </b-btn>
       </div>
     </div>
     <customer-support />
