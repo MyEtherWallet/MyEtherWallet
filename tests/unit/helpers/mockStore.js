@@ -52,7 +52,8 @@ const getters = {
   Transactions: () => {},
   wallet: () => {
     return {
-      getChecksumAddressString: () => ''
+      getChecksumAddressString: () => '',
+      wallet: 'wallet'
     };
   },
   web3: () => {
