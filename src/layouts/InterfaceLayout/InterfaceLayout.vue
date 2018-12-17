@@ -55,6 +55,7 @@ import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
+import sortByBalance from '@/helpers/sortByBalance.js';
 
 export default {
   components: {
@@ -214,12 +215,9 @@ export default {
             website: token.website
           };
           return convertedToken;
-        })
-        .sort((a, b) => {
-          return b.balance - a.balance;
         });
 
-      this.tokens = tokens;
+      this.tokens = tokens.sort(sortByBalance);
 
       let customTokens = [];
       if (
