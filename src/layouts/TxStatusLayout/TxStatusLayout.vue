@@ -8,7 +8,7 @@
           <p class="bold-message">
             This is not typically something you can do. It should not be relied
             upon & will only work when the TX pools are not full. Please read
-            more <a href="/">here</a>.
+            more <a href="/" target="_blank" rel="noopener noreferrer">here</a>.
           </p>
 
           <div class="user-input-block">
