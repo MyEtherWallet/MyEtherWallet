@@ -28,6 +28,8 @@ import rinethscan from './rin-ethscan';
 import rininfura from './rin-infura';
 import ropinfura from './rop-infura';
 import ropmew from './rop-mew';
+import rskpublic from './rsk-public';
+import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
 export {
@@ -61,6 +63,8 @@ export {
   rininfura,
   ropinfura,
   ropmew,
+  rskpublic,
+  rsktestpublic,
   tomo,
   ubq
 };
