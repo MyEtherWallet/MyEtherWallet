@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { shallowMount, mount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
-import store from 'store';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';

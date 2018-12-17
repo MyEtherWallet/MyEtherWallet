@@ -1,11 +1,10 @@
-import Vue from 'vue';
 import Blockie from '@/components/Blockie';
 import { mount, shallowMount } from '@vue/test-utils';
 
 import { Tooling } from '@@/helpers';
 
 describe('Blockie.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, store;
   const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
 
   beforeAll(() => {
@@ -16,7 +15,7 @@ describe('Blockie.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(Blockie, {
+    shallowMount(Blockie, {
       localVue,
       i18n,
       store,
