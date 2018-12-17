@@ -26,7 +26,7 @@
 
 - Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
 - Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
-- Fixes #237, #238, #236, #260, [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)
+- Fixes #237, #238, #236, #260, #253 [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)
 - Lazy loading components for faster loading [#181](https://github.com/MyEtherWallet/MyEtherWallet/pull/181)
 - ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
 - Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
