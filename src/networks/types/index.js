@@ -17,6 +17,8 @@ import PIRL from './PIRL.js';
 import POA from './POA.js';
 import RIN from './RIN.js';
 import ROP from './ROP.js';
+import RSK from './RSK.js';
+import RSKTEST from './RSKTEST.js';
 import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
 export {
@@ -39,6 +41,8 @@ export {
   PIRL,
   RIN,
   ROP,
+  RSK,
+  RSKTEST,
   TOMO,
   UBQ
 };
