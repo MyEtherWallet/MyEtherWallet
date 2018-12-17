@@ -60,7 +60,10 @@
               <qrcode :value="address" :options="{ size: 100 }" />
               <div class="text-container">
                 <h4>{{ myAddress }}</h4>
-                <span> {{ address }} </span>
+                <span>
+                  {{ address.slice(0, 21) }} <br />
+                  {{ address.slice(21, 42) }}
+                </span>
               </div>
             </div>
             <div></div>
@@ -133,6 +136,7 @@
 <script>
 import Blockie from '@/components/Blockie';
 import printJS from 'print-js';
+import html2canvas from 'html2canvas';
 
 export default {
   components: {
@@ -170,14 +174,18 @@ export default {
     };
   },
   methods: {
-    print() {
+    async print() {
+      const element = document.getElementById('printContainer');
+      const screen = await html2canvas(element, {
+        async: true,
+        logging: false
+      }).then(canvas => {
+        return canvas;
+      });
+
       printJS({
-        printable: 'printContainer',
-        type: 'html',
-        header: 'MyEtherWallet - Paper Wallet',
-        css: './PrintModal.scss',
-        scanStyles: true,
-        targetStyles: ['*']
+        printable: screen.toDataURL('image/png'),
+        type: 'image'
       });
     }
   }
