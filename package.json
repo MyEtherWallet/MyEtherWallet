@@ -19,6 +19,7 @@
     "update:lists": "node fetchEthListData.js"
   },
   "dependencies": {
+    "html2canvas": "^1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "print-js": "^1.0.54",
     "register-service-worker": "1.5.2",
