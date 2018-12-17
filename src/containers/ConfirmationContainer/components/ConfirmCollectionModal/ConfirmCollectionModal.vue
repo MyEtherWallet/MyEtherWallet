@@ -136,7 +136,13 @@
         </div>
         <p class="learn-more">
           Have any issues?
+<<<<<<< HEAD
           <a href="/" target="_blank" rel="noopener noreferrer">Learn more</a>
+=======
+          <a href="https:/kb.myetherwallet.com" target="_blank">
+            Help Center
+          </a>
+>>>>>>> Fix #253
         </p>
       </div>
     </b-modal>
