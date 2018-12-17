@@ -104,21 +104,30 @@ const swapOrder = (notifArray, val, network) => {
   return notifArray;
 };
 
-const swapError = (notifArray, val, network) => {
-  console.log(notifArray, val, network); // todo remove dev item
+const swapError = (notifArray, val) => {
   const idx = notifArray.findIndex(
     entry =>
       entry.hash === val[2].transactionHash &&
       entry.type === notificationType.SWAP
   );
 
+  notifArray[idx].body.error = true;
   notifArray[idx].status = notificationStatuses.FAILED;
+  notifArray[idx].swapStatus = notificationStatuses.FAILED;
+  notifArray[idx].body.errorMessage = val[2].hasOwnProperty(
+    'message'
+  )
+    ? val[2].message
+    : val[2];
+  notifArray[swapNotificationIndex].body.blockNumber = new BigNumber(
+    val[2].blockNumber
+  ).toString();
 
   return notifArray;
+
 };
 
 const batchSwap = (notifArray, val, network) => {
-  console.log(val); // todo remove dev item
   notifArray.push({
     title: 'Swap Kyber',
     read: false,
