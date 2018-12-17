@@ -98,12 +98,15 @@
             </div>
             <qrcode :value="address" :options="{ size: 120 }" />
           </div>
-          <div class="my-priv-container">
+          <div v-if="!wallet.isPubOnly" class="my-priv-container">
             <div class="text-container">
               <h3>{{ myPriv }}</h3>
-              <p>{{ privKey.toString('hex') }}</p>
+              <p>{{ wallet.privateKey.toString('hex') }}</p>
             </div>
-            <qrcode :value="privKey.toString('hex')" :options="{ size: 120 }" />
+            <qrcode
+              :value="wallet.privateKey.toString('hex')"
+              :options="{ size: 120 }"
+            />
           </div>
         </div>
         <div class="footer-container">
@@ -137,18 +140,13 @@
 import Blockie from '@/components/Blockie';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     blockie: Blockie
   },
   props: {
-    privKey: {
-      type: Uint8Array,
-      default: function() {
-        return [];
-      }
-    },
     address: {
       type: String,
       default: ''
@@ -172,6 +170,11 @@ export default {
         red2: 'DO NOT'
       }
     };
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   },
   methods: {
     async print() {
