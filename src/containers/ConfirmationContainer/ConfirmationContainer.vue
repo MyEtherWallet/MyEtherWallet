@@ -334,11 +334,9 @@ export default {
                 this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
                 data
               ]);
-              console.log('add batch notification: ', data); // todo remove dev item
               this.showSuccessModal('Transaction sent!', 'Okay');
 
               const pollReceipt = setInterval(() => {
-                console.log('poll for receipt', data); // todo remove dev item
                 this.web3.eth.getTransactionReceipt(data).then(res => {
                   if (res !== null) {
                     this.$store.dispatch('addNotification', [
@@ -355,7 +353,6 @@ export default {
               res(data);
             }
           );
-          console.log(req); // todo remove dev item
           batch.add(req);
         });
       });
@@ -369,7 +366,7 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
       if (this.raw.generateOnly) return;
-      this.showSuccessModal();
+      this.showSuccessModal('Transaction sent!', 'Okay');
     },
     reset() {
       this.responseFunction = null;
