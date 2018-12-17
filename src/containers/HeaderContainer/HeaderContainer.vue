@@ -153,7 +153,9 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null" ref="notification" />
+                <div v-if="wallet !== null" class="notification-menu-container">
+                  <notification ref="notification" />
+                </div>
                 <b-nav-item
                   v-if="
                     wallet === null &&
@@ -174,11 +176,14 @@
                   extra-toggle-classes="identicon-dropdown"
                 >
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"
-                    />
+                    <div class="settings-container">
+                      <blockie
+                        :address="wallet.getAddressString()"
+                        width="35px"
+                        height="35px"
+                      />
+                      <i class="fa fa-angle-down" aria-hidden="true" />
+                    </div>
                   </template>
                   <b-dropdown-item @click="openSettings">
                     Settings

@@ -85,6 +85,14 @@
 .notification-logo {
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 0px;
+  }
 
   .notification-dot {
     background-color: $notification-dot-background-color;

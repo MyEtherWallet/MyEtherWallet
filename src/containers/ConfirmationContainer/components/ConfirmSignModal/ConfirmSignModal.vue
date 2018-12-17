@@ -42,17 +42,6 @@
               >
                 {{ $t('confirmation.confirmSigning') }}
               </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top"
-                >
-                </b-popover>
-              </div>
             </div>
           </div>
           <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
