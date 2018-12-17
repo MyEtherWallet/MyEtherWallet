@@ -4,7 +4,7 @@
       <div class="page-container">
         <p class="footer-text">
           {{ $t('createWallet.pageFooterTitle') }}
-          <router-link to="/">{{ $t('common.faqs') }}</router-link>
+          <router-link to="/#faqs">{{ $t('common.faqs') }}</router-link>
         </p>
       </div>
     </div>

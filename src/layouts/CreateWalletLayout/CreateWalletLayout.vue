@@ -50,7 +50,10 @@
                 :switcher="switcher"
                 :param="'Json'"
               />
-              <create-wallet-input-footer />
+              <create-wallet-input-footer
+                :combo="$t('createWallet.passMnem')"
+                :desc="$t('createWallet.passMnemDesc')"
+              />
             </b-tab>
             <b-tab :title="$t('createWallet.byMnemonic')">
               <div class="title-block">
@@ -68,7 +71,10 @@
                 :switcher="switcher"
                 :param="'Mnemonic'"
               />
-              <create-wallet-input-footer />
+              <create-wallet-input-footer
+                :combo="$t('createWallet.keyPass')"
+                :desc="$t('createWallet.keyPassDesc')"
+              />
             </b-tab>
           </b-tabs>
         </div>
