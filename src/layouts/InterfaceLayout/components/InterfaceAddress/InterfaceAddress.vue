@@ -23,13 +23,13 @@
           <p class="address">{{ address }}</p>
         </div>
         <div class="icon-container">
-          <b-btn id="print" class="custom-tooltip">
+          <b-btn id="print" class="custom-tooltip" @click="print">
             <img src="~@/assets/images/icons/printer-white.svg" />
           </b-btn>
           <b-btn id="copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
-          <b-btn id="switch" class="custom-tooltip">
+          <b-btn v-if="hasMultipleAddr" id="switch" class="custom-tooltip">
             <img src="~@/assets/images/icons/change.svg" />
           </b-btn>
           <b-popover
@@ -61,6 +61,8 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     blockie: Blockie
@@ -69,10 +71,42 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+    triggerAlert: {
+      type: Function,
+      default: function() {}
+    },
+    print: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
+    return {
+      hasMultipleAddr: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
+  },
+  mounted() {
+    if (this.wallet !== null) {
+      if (
+        this.wallet.identifier !== 'priv_key' &&
+        this.wallet.identifier !== 'keystore' &&
+        this.wallet.identifier !== 'MEWconnect'
+      ) {
+        this.hasMultipleAddr = true;
+      } else {
+        this.hasMultipleAddr = false;
+      }
     }
   },
   methods: {
     copy() {
+      this.triggerAlert('Address Copied!');
       this.$refs.copyAddress.select();
       document.execCommand('copy');
     }

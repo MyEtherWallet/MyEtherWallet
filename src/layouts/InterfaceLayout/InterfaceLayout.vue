@@ -1,5 +1,10 @@
 <template>
   <div class="send-eth-and-tokens">
+    <print-modal
+      ref="printModal"
+      :priv-key="wallet.privateKey"
+      :address="wallet.getChecksumAddressString()"
+    />
     <div class="wrap">
       <div>
         <div
@@ -12,9 +17,21 @@
         </div>
       </div>
       <div class="contents">
+        <b-alert
+          :show="alert.show"
+          fade
+          variant="info"
+          @click.native="triggerAlert(null)"
+        >
+          {{ alert.msg }}
+        </b-alert>
         <div class="tx-contents">
           <div class="mobile-hide">
-            <interface-address :address="address" />
+            <interface-address
+              :address="address"
+              :trigger-alert="triggerAlert"
+              :print="print"
+            />
           </div>
           <div class="mobile-hide">
             <interface-balance :balance="balance" />
@@ -50,6 +67,7 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -63,7 +81,8 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens
+    'interface-tokens': InterfaceTokens,
+    'print-modal': PrintModal
   },
   data() {
     return {
@@ -75,7 +94,11 @@ export default {
       pollNetwork: () => {},
       pollBlock: () => {},
       pollAddress: () => {},
-      highestGas: 0
+      highestGas: 0,
+      alert: {
+        show: false,
+        msg: ''
+      }
     };
   },
   computed: {
@@ -111,6 +134,30 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    print() {
+      this.$refs.printModal.$refs.print.show();
+    },
+    triggerAlert(msg) {
+      let timeout;
+      if (msg !== null) {
+        this.alert = {
+          show: true,
+          msg: msg
+        };
+        timeout = setTimeout(() => {
+          this.alert = {
+            show: false,
+            msg: ''
+          };
+        }, 3000);
+      } else {
+        clearTimeout(timeout);
+        this.alert = {
+          show: false,
+          msg: ''
+        };
+      }
+    },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
