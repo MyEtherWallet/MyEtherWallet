@@ -353,7 +353,7 @@ export default {
             unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
             'ether'
           );
-          this.gasLimit = res;
+          this.gasLimit = res ? res : this.gasLimit;
         })
         .catch(err => {
           // eslint-disable-next-line no-console
