@@ -5,14 +5,7 @@ import {
   swapOnlyStatuses
 } from './config';
 import BigNumber from 'bignumber.js';
-import { formatSwap } from './formatters';
-
-const index = {
-  label: 0,
-  address: 1,
-  txDetails: 2,
-  response: 3
-};
+import { formatSwap, formatSwapError } from './formatters';
 
 const swapHash = (notifArray, val, network) => {
   console.log('swapHash', val); // todo remove dev item
@@ -60,44 +53,35 @@ const swapError = (notifArray, val, network) => {
       entry.hash === val[swapIndexes.response].transactionHash &&
       entry.type === notificationType.SWAP
   );
-
-  if (idx >= 0 && !/known transaction/.test(val[2])) {
-    notifArray[idx].body.error = true;
-    notifArray[idx].status = notificationStatuses.FAILED;
-    notifArray[idx].swapStatus = notificationStatuses.FAILED;
-    notifArray[idx].body.errorMessage = val[2].hasOwnProperty('message')
-      ? val[2].message
-      : val[2];
-    notifArray[idx].body.blockNumber = new BigNumber(
-      val[2].blockNumber
-    ).toString();
-
-    return notifArray;
+  console.log('notifArray length1', notifArray.length); // todo remove dev item
+  console.log('swap error:', idx); // todo remove dev item
+  console.log(
+    '!/known transaction/.test(swapIndexes.response)',
+    !/known transaction/.test(swapIndexes.response)
+  ); // todo remove dev item
+  if (!/known transaction/.test(swapIndexes.response)) {
+    if (idx >= 0) {
+      notifArray[idx].body.error = true;
+      notifArray[idx].status = notificationStatuses.FAILED;
+      notifArray[idx].swapStatus = notificationStatuses.FAILED;
+      notifArray[idx].body.errorMessage = val[
+        swapIndexes.response
+      ].hasOwnProperty('message')
+        ? val[swapIndexes.response].message
+        : val[swapIndexes.response];
+      notifArray[idx].body.blockNumber = new BigNumber(
+        val[swapIndexes.response].blockNumber
+      ).toString();
+      return notifArray;
+    } else {
+      notifArray.push(formatSwapError(val, network));
+      return notifArray;
+    }
   }
 
-  // notifArray.push({
-  //   title: 'Swap',
-  //   read: false,
-  //   timestamp: Date.now(),
-  //   type: notificationType.SWAP,
-  //   status: notificationStatuses.FAILED,
-  //   swapStatus: swapOnlyStatuses.FAILED,
-  //   hasTransaction: true,
-  //   hash: undefined,
-  //   network: network,
-  //   body: {
-  //     error: true,
-  //     errorMessage: val[2].hasOwnProperty('message') ? val[2].message : val[2],
-  //     hash: undefined,
-  //     to: val[1].to,
-  //     amount: new BigNumber(val[1].value).toString(),
-  //     nonce: new BigNumber(val[1].nonce).toString(),
-  //     gasPrice: new BigNumber(val[1].gasPrice).toString(),
-  //     gasLimit: new BigNumber(val[1].gas).toString()
-  //   },
-  //   expanded: false
-  // });
-  //
+  console.log('notifArray length2', notifArray.length); // todo remove dev item
+
+  notifArray.push(formatSwapError(val, network));
   return notifArray;
 };
 

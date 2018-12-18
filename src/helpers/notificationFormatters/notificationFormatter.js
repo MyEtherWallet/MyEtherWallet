@@ -46,10 +46,13 @@ const addUpdateNotification = function(newNotif, val, network) {
 
 const addUpdateSwapNotification = function(newNotif, val, network) {
   switch (val[0]) {
+    case type.TRANSACTION_HASH:
     case type.SWAP_HASH:
       return swapHash(newNotif, val, network);
+    case type.TRANSACTION_RECEIPT:
     case type.SWAP_RECEIPT:
       return swapReceipt(newNotif, val, network);
+    case type.TRANSACTION_ERROR:
     case type.SWAP_ERROR:
       return swapError(newNotif, val, network);
     case type.DEX_SWAP:

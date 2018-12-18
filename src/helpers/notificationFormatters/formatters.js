@@ -79,6 +79,33 @@ const formatSwap = (val, network) => {
   };
 };
 
+const formatSwapError = (val, network) => {
+  return {
+    title: 'Swap',
+    read: false,
+    timestamp: Date.now(),
+    type: notificationType.SWAP,
+    status: notificationStatuses.FAILED,
+    swapStatus: swapOnlyStatuses.FAILED,
+    hasTransaction: true,
+    hash: undefined,
+    network: network,
+    body: {
+      error: true,
+      errorMessage: val[swapIndexes.response].hasOwnProperty('message')
+        ? val[swapIndexes.response].message
+        : val[swapIndexes.response],
+      hash: undefined,
+      to: val[swapIndexes.details].to,
+      amount: new BigNumber(val[swapIndexes.details].value).toString(),
+      nonce: new BigNumber(val[swapIndexes.details].nonce).toString(),
+      gasPrice: new BigNumber(val[swapIndexes.details].gasPrice).toString(),
+      gasLimit: new BigNumber(val[swapIndexes.details].gas).toString()
+    },
+    expanded: false
+  };
+};
+
 const formatError = (val, network) => {
   return {
     title: 'Transaction',
@@ -108,4 +135,4 @@ const formatError = (val, network) => {
   };
 };
 
-export { formatHash, formatError, formatSwap };
+export { formatHash, formatError, formatSwap, formatSwapError };
