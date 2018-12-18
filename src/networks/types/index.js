@@ -8,7 +8,6 @@ import ESN from './ESN.js';
 import ETC from './ETC.js';
 import ETH from './ETH.js';
 import ETHO from './ETHO.js';
-import EXP from './EXP.js';
 import GO from './GO.js';
 import KOV from './KOV.js';
 import MUSIC from './MUSIC.js';
@@ -29,7 +28,6 @@ export {
   ETC,
   ETH,
   ETHO,
-  EXP,
   GO,
   KOV,
   MUSIC,
