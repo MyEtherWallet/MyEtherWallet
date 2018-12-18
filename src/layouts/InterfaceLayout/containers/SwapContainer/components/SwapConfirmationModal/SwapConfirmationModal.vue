@@ -147,40 +147,29 @@ export default {
         Array.isArray(this.preparedSwap) ||
         Object.keys(this.preparedSwap).length > 0
       ) {
-        // this.$store.dispatch('addSwapNotification', [
-        //   `Swap`,
-        //   this.currentAddress,
-        //   this.swapDetails
-        // ]);
         if (Array.isArray(this.preparedSwap)) {
           if (this.preparedSwap.length > 1) {
-            // this.$store.dispatch('addSwapNotification', [
-            //   'Dex_Swap',
-            //   this.currentAddress,
-            //   this.swapDetails,
-            //   this.preparedSwap
-            // ]);
-            console.log(this.preparedSwap); // todo remove dev item
             const promises = await this.web3.mew.sendBatchTransactions(
               this.preparedSwap
             );
-            console.log('sendBatchTransactions Promises', promises); // todo remove dev item
-            promises[promises.length - 1].then(hash => {
-              this.$store.dispatch('addSwapNotification', [
-                'Dex_Swap',
-                this.currentAddress,
-                this.swapDetails,
-                hash
-              ]);
-            });
-            for (let i = 0; i < promises.length; i++) {
-              console.log(promises[i]); // todo remove dev item
-              promises[i].then(result => {
-                console.log(result);
+            promises[promises.length - 1]
+              .then(hash => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Dex_Swap',
+                  this.currentAddress,
+                  this.swapDetails,
+                  hash
+                ]);
+              })
+              .catch(err => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Error',
+                  this.currentAddress,
+                  this.swapDetails,
+                  err
+                ]);
               });
-            }
           } else {
-            console.log(this.preparedSwap[0]); // todo remove dev item
             this.web3.eth
               .sendTransaction(this.preparedSwap[0])
               .once('transactionHash', hash => {

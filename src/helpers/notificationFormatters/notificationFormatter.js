@@ -8,7 +8,6 @@ import {
   batchSwap
 } from './swapNotification';
 import {
-  batchTransactionHash,
   batchTransactionReceipt,
   batchTransactionError
 } from './batchNotification';
@@ -19,7 +18,6 @@ import {
 } from './transactionNotification';
 
 const addUpdateNotification = function(newNotif, val, network) {
-  console.log(val[0], val[val.length - 1]); // todo remove dev item
   switch (val[0]) {
     case type.TRANSACTION_HASH:
       return transactionHash(newNotif, val, network);
