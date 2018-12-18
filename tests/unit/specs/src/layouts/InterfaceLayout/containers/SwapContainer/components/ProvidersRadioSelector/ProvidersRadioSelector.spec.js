@@ -2,27 +2,25 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import ProvidersRadioSelector from '@/layouts/InterfaceLayout/containers/SwapContainer/components/ProvidersRadioSelector/ProvidersRadioSelector.vue';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('ProvidersRadioSelector.vue', () => {
-    let localVue, i18n, wrapper, store;
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(ProvidersRadioSelector, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(ProvidersRadioSelector, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true
     });
+  });
 
     xit('[FAILING] should render correct content', () => {
         const containerElements = wrapper.vm.$el.querySelectorAll('.radio-button-container')
@@ -34,6 +32,5 @@ describe('ProvidersRadioSelector.vue', () => {
         }
     });
 
-  describe('ProvidersRadioSelector.vue Methods', () => {
-  });
+  describe('ProvidersRadioSelector.vue Methods', () => {});
 });

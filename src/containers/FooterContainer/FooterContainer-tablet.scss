@@ -153,14 +153,18 @@
     }
 
     .links {
-      span {
+      display: flex;
+
+      div {
         border-right: 1px solid $border-color-2;
-        color: $text-color-1;
-        margin-right: 15px;
-        padding-right: 15px;
+        padding: 0 15px;
       }
 
-      a:last-child span {
+      span {
+        color: $text-color-1;
+      }
+
+      div:last-child {
         border-right: 0;
       }
     }
@@ -172,7 +176,7 @@
         color: $text--footer-link-color;
       }
 
-      span {
+      a {
         color: $white;
       }
     }

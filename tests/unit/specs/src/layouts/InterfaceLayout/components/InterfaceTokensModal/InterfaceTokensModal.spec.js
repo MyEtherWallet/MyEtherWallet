@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal/InterfaceTokensModal.vue';
 import sinon from 'sinon';
@@ -9,7 +8,7 @@ describe('InterfaceTokensModal.vue', () => {
   const tokenDecimal = '100';
   const tokenAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
   const tokenSymbol = 'tokenSymbol';
-  var addToken = sinon.stub();
+  const addToken = sinon.stub();
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -21,7 +20,7 @@ describe('InterfaceTokensModal.vue', () => {
     store.replaceState({
       web3: {
         utils: {
-          isAddress: function(val) {}
+          // isAddress: function(val) {}
         }
       }
     });
@@ -48,7 +47,7 @@ describe('InterfaceTokensModal.vue', () => {
     expect(inputElements[0].value).toEqual(tokenAddress);
   });
 
-  xit('[FAILED] should render correct tokenSymbol', () => {
+  it('should render correct tokenSymbol', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'
     );

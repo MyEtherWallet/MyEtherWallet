@@ -2,7 +2,11 @@
 
 ### Bug
 
+- Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
+- Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
+- Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
 - Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
+- Fix network and address modal dropdown issue [#234](https://github.com/MyEtherWallet/MyEtherWallet/pull/234)
 - Fix missing text issue on getting started modal [#173](https://github.com/MyEtherWallet/MyEtherWallet/pull/173)
 - Reimplement logout with the new logout modal [#177](https://github.com/MyEtherWallet/MyEtherWallet/pull/177)
 - Close modal when adding a custom token [#175](https://github.com/MyEtherWallet/MyEtherWallet/pull/175)
@@ -21,6 +25,8 @@
 
 ### Devop
 
+- Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
+- Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
 - Lazy loading components for faster loading [#181](https://github.com/MyEtherWallet/MyEtherWallet/pull/181)
 - ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
 - Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
