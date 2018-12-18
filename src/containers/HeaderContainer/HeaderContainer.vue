@@ -276,7 +276,7 @@ export default {
       ],
       currentName: 'English',
       currentFlag: 'en',
-      isPageOnTop: false,
+      isPageOnTop: true,
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false
