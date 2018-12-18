@@ -28,6 +28,7 @@
               placeholder="Deposit Amount"
             />
           </div>
+          <div class="global__input-error-message">Please enter amount.</div>
         </div>
         <div class="exchange-icon"><img :src="images.swap" /></div>
         <div class="amount">
@@ -47,6 +48,7 @@
               placeholder="Received Amount"
             />
           </div>
+          <div class="global__input-error-message">Please enter amount.</div>
         </div>
       </div>
     </div>
@@ -59,6 +61,7 @@
         </div>
       </div>
       <div class="the-form gas-amount"><drop-down-address-selector /></div>
+      <div class="global__input-error-message">Please enter to address.</div>
     </div>
 
     <div class="send-form">
@@ -66,6 +69,7 @@
         <div class="title title-and-copy"><h4>Providers</h4></div>
       </div>
       <providers-radio-selector />
+      <div class="global__input-error-message">Please select one provider.</div>
     </div>
 
     <div v-if="false" class="send-form">

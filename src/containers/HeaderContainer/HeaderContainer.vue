@@ -4,6 +4,7 @@
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal ref="issuelog" />
+    <logout-warning-modal ref="logoutwarning" />
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
@@ -229,6 +230,7 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 
 export default {
@@ -240,6 +242,7 @@ export default {
     'notifications-modal': NotificationsModal,
     txpoppup: TxTopMenuPopup,
     'logout-modal': LogoutModal,
+    'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal
   },
   data() {
@@ -320,7 +323,29 @@ export default {
       this.onPageScroll();
     };
   },
+  created() {
+    const _this = this;
+    // Logout Warning modal
+    function dummyErrorHandler() {}
+
+    try {
+      window.addEventListener(
+        'popstate',
+        function(event) {
+          if (event.target.location.hash === '#/') {
+            _this.$refs.logoutwarning.$refs.logoutwarning.show();
+          }
+        },
+        false
+      );
+    } catch (err) {
+      dummyErrorHandler(err);
+    }
+  },
   methods: {
+    logoutWarning() {
+      alert('logoutWarning');
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
