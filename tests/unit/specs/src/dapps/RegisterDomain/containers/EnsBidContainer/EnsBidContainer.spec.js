@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import nodeList from '@/networks';
@@ -17,13 +17,15 @@ const TimerStub = {
 };
 
 const showModal = jest.fn();
+const hideModal = jest.fn();
 
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
   props: ['to'],
   methods: {
-    show: showModal
+    show: showModal,
+    hide: hideModal
   }
 };
 
@@ -63,7 +65,7 @@ describe('EnsBidContainer.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(EnsBidContainer, {
+    wrapper = mount(EnsBidContainer, {
       localVue,
       i18n,
       store,
@@ -284,7 +286,7 @@ describe('EnsBidContainer.vue', () => {
 
     xit('[FAILING] should trigger openJsonModal method when button clicked', () => {
       mockRoute.fullPath = 'revealBid';
-      wrapper = shallowMount(EnsBidContainer, {
+      wrapper = mount(EnsBidContainer, {
         localVue,
         i18n,
         store,
