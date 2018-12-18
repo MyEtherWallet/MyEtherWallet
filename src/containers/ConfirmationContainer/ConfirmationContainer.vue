@@ -66,7 +66,7 @@ import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
-import PromiEvent from 'web3-core-promievent';
+import Web3PromiEvent from 'web3-core-promievent';
 
 export default {
   components: {
@@ -326,66 +326,71 @@ export default {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       const promises = this.signedArray.map(tx => {
-        return new Promise((res, rej) => {
-          try {
-            const _tx = tx.tx;
-            const req = web3.eth.sendSignedTransaction.request(
-              tx.rawTransaction,
-              (err, data) => {
-                console.log(err, data); // todo remove dev item
-                // was falling through on success
-                if (err !== null) {
-                  this.$store.dispatch('addNotification', [
-                    'Error',
+        const promiEvent = new Web3PromiEvent();
+        // return new Promise((res, rej) => {
+        try {
+          const _tx = tx.tx;
+          const req = web3.eth.sendSignedTransaction.request(
+            tx.rawTransaction,
+            (err, data) => {
+              console.log(err, data); // todo remove dev item
+              // was falling through on success
+              if (err !== null) {
+                promiEvent.eventEmitter.emit('error', err);
+                promiEvent.reject(err);
+                this.$store.dispatch('addNotification', [
+                  'Error',
+                  this.fromAddress,
+                  this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                  err
+                ]);
+                this.showErrorModal('Transaction Error!', 'Return');
+                // rej(err);
+              }
+
+              // was falling through on error
+              if (err === null) {
+                console.log('NO ERROR'); // todo remove dev item
+                promiEvent.eventEmitter.emit('transactionHash', data);
+                this.$store
+                  .dispatch('addNotification', [
+                    'Batch_Hash',
                     this.fromAddress,
                     this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
-                    err
-                  ]);
-                  this.showErrorModal('Transaction Error!', 'Return');
-                  rej(err);
-                }
+                    data
+                  ])
+                  .then(() => {
+                    this.showSuccessModal('Transaction sent!', 'Okay');
+                  });
 
-                // was falling through on error
-                if (err === null) {
-                  console.log('NO ERROR'); // todo remove dev item
-                  this.$store
-                    .dispatch('addNotification', [
-                      'Batch_Hash',
-                      this.fromAddress,
-                      this.unSignedArray.find(
-                        entry => _tx.nonce === entry.nonce
-                      ),
-                      data
-                    ])
-                    .then(() => {
-                      this.showSuccessModal('Transaction sent!', 'Okay');
-                    });
-
-                  const pollReceipt = setInterval(() => {
-                    if (data == undefined) clearInterval(pollReceipt);
-                    web3.eth.getTransactionReceipt(data).then(res => {
-                      if (res !== null) {
-                        this.$store.dispatch('addNotification', [
-                          'Batch_Receipt',
-                          this.fromAddress,
-                          this.unSignedArray.find(
-                            entry => _tx.nonce === entry.nonce
-                          ),
-                          res
-                        ]);
-                        clearInterval(pollReceipt);
-                      }
-                    });
-                  }, 500);
-                  res(data);
-                }
+                const pollReceipt = setInterval(() => {
+                  if (data == undefined) clearInterval(pollReceipt);
+                  web3.eth.getTransactionReceipt(data).then(res => {
+                    if (res !== null) {
+                      promiEvent.eventEmitter.emit('receipt', res);
+                      promiEvent.resolve(res);
+                      this.$store.dispatch('addNotification', [
+                        'Batch_Receipt',
+                        this.fromAddress,
+                        this.unSignedArray.find(
+                          entry => _tx.nonce === entry.nonce
+                        ),
+                        res
+                      ]);
+                      clearInterval(pollReceipt);
+                    }
+                  });
+                }, 500);
+                // res(data);
               }
-            );
-            batch.add(req);
-          } catch (e) {
-            console.error(e);
-          }
-        });
+            }
+          );
+          batch.add(req);
+        } catch (e) {
+          console.error(e);
+        }
+        return promiEvent.eventEmitter;
+        // });
       });
 
       this.signCallback(promises);

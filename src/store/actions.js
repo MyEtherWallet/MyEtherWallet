@@ -3,7 +3,7 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-import Web3PromiEvent from 'web3-core-promievent';
+
 import {
   txIndexes,
   swapIndexes,
@@ -39,6 +39,8 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = function({ commit, state }, val) {
+  console.log(val); // todo remove dev item
+
   const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -47,11 +49,13 @@ const addSwapNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
+  console.log('newNotif[address] length1:', newNotif[address].length); // todo remove dev item
   newNotif[address] = addUpdateSwapNotification(
     newNotif[address],
     val,
     state.network.type.name
   );
+  console.log('newNotif[address] length2:', newNotif[address].length); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
 };
@@ -153,7 +157,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       const batchSignCallback = promises => {
         resolve(promises);
       };
-      Web3PromiEvent
+
       this._vm.$eventHub.$emit(
         'showTxCollectionConfirmModal',
         arr,
@@ -162,7 +166,6 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       );
     });
   };
-
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 

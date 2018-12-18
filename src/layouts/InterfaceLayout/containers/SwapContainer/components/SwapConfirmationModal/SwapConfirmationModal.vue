@@ -149,11 +149,55 @@ export default {
       ) {
         if (Array.isArray(this.preparedSwap)) {
           if (this.preparedSwap.length > 1) {
+            const promises = this.web3.mew
+              .sendBatchTransactions(this.preparedSwap)
+              .then(_result => {
+                console.log(_result); // todo remove dev item
+                _result[0].catch(() => {
+                  console.log('swap error1'); // todo remove dev item
+                });
+                _result[_result.length - 1]
+                  .once('transactionHash', hash => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Hash',
+                      this.currentAddress,
+                      this.swapDetails,
+                      hash
+                    ]);
+                  })
+                  .once('receipt', res => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Receipt',
+                      this.currentAddress,
+                      this.swapDetails,
+                      res
+                    ]);
+                  })
+                  .on('error', err => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Error',
+                      this.currentAddress,
+                      this.swapDetails,
+                      err
+                    ]);
+                  })
+                  .catch(err => {
+                    console.log('swap error2'); // todo remove dev item
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Error',
+                      this.currentAddress,
+                      this.swapDetails,
+                      err
+                    ]);
+                  });
+              });
+
+            console.log(promises); // todo remove dev item
             // const promises = await this.web3.mew.sendBatchTransactions(
             //   this.preparedSwap
             // );
             // console.log(promises); // todo remove dev item
-            try {
+            /*            try {
               const results = await Promise.all(
                 this.web3.mew.sendBatchTransactions(this.preparedSwap)
               );
@@ -165,7 +209,7 @@ export default {
               ]);
             } catch (e) {
               console.error(e);
-            }
+            }*/
             // promises[promises.length - 1]
             //   .then(hash => {
             //     this.$store.dispatch('addSwapNotification', [
