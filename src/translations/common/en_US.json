@@ -52,5 +52,9 @@
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
-  "confirmAndSend": "Confirm and Send"
+  "confirmAndSend": "Confirm and Send",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet."
 }
