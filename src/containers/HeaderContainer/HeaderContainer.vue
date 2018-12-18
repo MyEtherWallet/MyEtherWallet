@@ -84,7 +84,7 @@
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->
-    <div class="wrap">
+    <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
         :class="[
