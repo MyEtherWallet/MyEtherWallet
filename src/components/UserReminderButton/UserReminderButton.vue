@@ -1,7 +1,9 @@
 <template>
   <div class="user-reminder-button" popup="Security">
     <div class="popup-box">Security</div>
-    <div class="button-block"><img src="~@/assets/images/icons/up.svg" /></div>
+    <div class="button-block">
+      <img src="~@/assets/images/icons/acknowledge.png" />
+    </div>
   </div>
 </template>
 
