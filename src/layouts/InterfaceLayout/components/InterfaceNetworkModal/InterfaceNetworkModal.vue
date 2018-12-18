@@ -80,11 +80,7 @@
           </div>
         </div>
       </div>
-      <form
-        v-if="selectedNetwork && selectedNetwork.type"
-        ref="networkAdd"
-        class="network-add hidden"
-      >
+      <form ref="networkAdd" class="network-add hidden">
         <div class="content-block">
           <div class="input-block-container">
             <input
@@ -122,7 +118,7 @@
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="blockExplorerTX"
               class="custom-input-text-1"
               type="number"
@@ -131,7 +127,7 @@
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
@@ -140,7 +136,7 @@
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="blockExplorerAddr"
               class="custom-input-text-1"
               type="number"
@@ -218,7 +214,7 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetwork: this.network,
+      selectedNetwork: {},
       chainID: '',
       port: '',
       name: '',
@@ -238,7 +234,7 @@ export default {
   },
   watch: {
     selectedNetwork(newVal) {
-      this.chainID = newVal ? newVal.type.chainID : -1;
+      this.chainID = newVal ? newVal.chainID : -1;
     }
   },
   mounted() {
@@ -326,6 +322,8 @@ export default {
           this.selectedNetwork = network;
         });
       });
+
+      this.$refs.network.hide();
     }
   }
 };
