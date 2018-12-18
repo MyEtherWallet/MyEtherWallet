@@ -10,7 +10,7 @@
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
-      <user-reminder-button />
+      <router-link to="/getting-started"><user-reminder-button /></router-link>
       <scroll-up-button />
     </div>
     <div
