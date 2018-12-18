@@ -3,7 +3,10 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import Web3PromiEvent from 'web3-core-promievent';
 import {
+  txIndexes,
+  swapIndexes,
   addUpdateNotification,
   addUpdateSwapNotification
 } from '@/helpers/notificationFormatters';
@@ -13,9 +16,9 @@ const addNotification = function({ commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
-    address = web3.utils.toChecksumAddress(val[1].from);
+    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
   } else if (val[0] === 'Batch_Receipt') {
-    address = web3.utils.toChecksumAddress(val[2].from);
+    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
   } else {
     throw Error('Unable to determine sending address for notification.');
   }
@@ -36,7 +39,7 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[1]);
+  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -147,10 +150,14 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
 
+      const batchSignCallback = promises => {
+        resolve(promises);
+      };
+      Web3PromiEvent
       this._vm.$eventHub.$emit(
         'showTxCollectionConfirmModal',
         arr,
-        resolve,
+        batchSignCallback,
         state.wallet.isHardware
       );
     });

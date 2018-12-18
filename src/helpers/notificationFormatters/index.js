@@ -1,4 +1,11 @@
-import { type, notificationStatuses, swapOnlyStatuses } from './config';
+import {
+  type,
+  notificationType,
+  notificationStatuses,
+  swapOnlyStatuses,
+  swapIndexes,
+  txIndexes
+} from './config';
 
 import {
   addUpdateNotification,
@@ -6,8 +13,12 @@ import {
 } from './notificationFormatter';
 
 export {
-  swapOnlyStatuses,
+  type,
+  notificationType,
   notificationStatuses,
+  swapOnlyStatuses,
+  swapIndexes,
+  txIndexes,
   addUpdateNotification,
   addUpdateSwapNotification
 };

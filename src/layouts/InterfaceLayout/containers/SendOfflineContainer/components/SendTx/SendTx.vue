@@ -77,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' }),
+    ...mapGetters({ web3: 'web3', wallet: 'wallet' }),
     signedTx() {
       return this.readTx.hasOwnProperty('rawTransaction')
         ? this.readTx.rawTransaction
@@ -114,22 +114,25 @@ export default {
         .once('transactionHash', hash => {
           this.$store.dispatch('addNotification', [
             'Hash',
+            this.wallet.getChecksumAddressString(),
             signedTx.tx,
-            hash,
+            hash
           ]);
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
             'Receipt',
+            this.wallet.getChecksumAddressString(),
             signedTx.tx,
-            res,
+            res
           ]);
         })
         .on('error', err => {
           this.$store.dispatch('addNotification', [
             'Error',
+            this.wallet.getChecksumAddressString(),
             signedTx.tx,
-            err,
+            err
           ]);
         });
     },

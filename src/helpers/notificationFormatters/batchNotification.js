@@ -1,13 +1,14 @@
 import BigNumber from 'bignumber.js';
-import { notificationStatuses, notificationType } from './config';
+import { notificationStatuses, swapIndexes } from './config';
 
 const batchTransactionReceipt = (notifArray, val) => {
   try {
     const swapNotificationIndex = notifArray.findIndex(entry => {
       if (entry.body.providerAddress) {
         return (
-          entry.hash === val[2].transactionHash &&
-          entry.body.providerAddress.toLowerCase() === val[1].to.toLowerCase()
+          entry.hash === val[swapIndexes.response].transactionHash &&
+          entry.body.providerAddress.toLowerCase() ===
+            val[swapIndexes.details].to.toLowerCase()
         );
       }
       return false;
@@ -17,10 +18,10 @@ const batchTransactionReceipt = (notifArray, val) => {
       notifArray[swapNotificationIndex].swapStatus =
         notificationStatuses.COMPLETE;
       notifArray[swapNotificationIndex].body.gasUsed = new BigNumber(
-        val[2].gasUsed
+        val[swapIndexes.response].gasUsed
       ).toString();
       notifArray[swapNotificationIndex].body.blockNumber = new BigNumber(
-        val[2].blockNumber
+        val[swapIndexes.response].blockNumber
       ).toString();
       return notifArray;
     }
@@ -35,8 +36,9 @@ const batchTransactionError = (notifArray, val) => {
   const swapNotificationIndex = notifArray.findIndex(entry => {
     if (entry.body.providerAddress) {
       return (
-        entry.hash === val[2].transactionHash &&
-        entry.body.providerAddress.toLowerCase() === val[1].to.toLowerCase()
+        entry.hash === val[swapIndexes.response].transactionHash &&
+        entry.body.providerAddress.toLowerCase() ===
+          val[swapIndexes.details].to.toLowerCase()
       );
     }
     return false;
@@ -45,13 +47,13 @@ const batchTransactionError = (notifArray, val) => {
     notifArray[swapNotificationIndex].body.error = true;
     notifArray[swapNotificationIndex].status = notificationStatuses.FAILED;
     notifArray[swapNotificationIndex].swapStatus = notificationStatuses.FAILED;
-    notifArray[swapNotificationIndex].body.errorMessage = val[2].hasOwnProperty(
-      'message'
-    )
-      ? val[2].message
-      : val[2];
+    notifArray[swapNotificationIndex].body.errorMessage = val[
+      swapIndexes.response
+    ].hasOwnProperty('message')
+      ? val[swapIndexes.response].message
+      : val[swapIndexes.response];
     notifArray[swapNotificationIndex].body.blockNumber = new BigNumber(
-      val[2].blockNumber
+      val[swapIndexes.response].blockNumber
     ).toString();
 
     return notifArray;

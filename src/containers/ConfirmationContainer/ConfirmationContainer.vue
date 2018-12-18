@@ -139,9 +139,10 @@ export default {
     web3WalletHash(newVal) {
       console.log('web3WalletHash', newVal); // todo remove dev item
       this.$store.dispatch('addNotification', [
+        'Hash',
         this.fromAddress,
-        newVal,
-        'Transaction Hash'
+        this.raw,
+        newVal
       ]);
       const pollReceipt = setInterval(() => {
         this.web3.eth.getTransactionReceipt(newVal).then(res => {
@@ -154,11 +155,11 @@ export default {
       }, 500);
     },
     web3WalletRes(newVal) {
-      console.log('web3WalletRes', newVal); // todo remove dev item
       this.$store.dispatch('addNotification', [
+        'Receipt',
         this.fromAddress,
-        newVal,
-        'Transaction Receipt'
+        this.raw,
+        newVal
       ]);
     }
   },
@@ -227,23 +228,18 @@ export default {
       async (tx, signCallback, isHardware) => {
         this.unSignedArray = [];
         this.unSignedArray = tx;
-
+        const signed = [];
         if (!signCallback) signCallback = () => {};
         this.signCallback = signCallback;
-        const popAndSign = async (origTxArray, signed) => {
-          const txArray = [...origTxArray];
-
-          if (signed === undefined) signed = [];
-          const _signedTx = await this.wallet.signTransaction(txArray.shift());
-          signed.push(_signedTx);
-          if (txArray.length > 0) {
-            return popAndSign(txArray, signed);
-          }
-          return signed;
-        };
 
         this.confirmationCollectionModalOpen();
-        this.signedArray = await popAndSign(tx);
+
+        for (let i = 0; i < tx.length; i++) {
+          const _signedTx = await this.wallet.signTransaction(tx[i]);
+          signed.push(_signedTx);
+        }
+
+        this.signedArray = signed;
       }
     );
 
@@ -326,66 +322,78 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
-    async sendBatchTransactions() {
+    async doBatchTransactions() {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       const promises = this.signedArray.map(tx => {
         return new Promise((res, rej) => {
-          const _tx = tx.tx;
-          const req = web3.eth.sendSignedTransaction.request(
-            tx.rawTransaction,
-            (err, data) => {
-              console.log(err, data); // todo remove dev item
-              // was falling through on success
-              if (err !== null) {
-                this.$store.dispatch('addNotification', [
-                  'Error',
-                  this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
-                  err
-                ]);
-                this.showErrorModal('Transaction Error!', 'Return');
-                rej(err);
-              }
-
-              // was falling through on error
-              if (err === null) {
-                console.log('NO ERROR'); // todo remove dev item
-                this.$store
-                  .dispatch('addNotification', [
-                    'Batch_Hash',
+          try {
+            const _tx = tx.tx;
+            const req = web3.eth.sendSignedTransaction.request(
+              tx.rawTransaction,
+              (err, data) => {
+                console.log(err, data); // todo remove dev item
+                // was falling through on success
+                if (err !== null) {
+                  this.$store.dispatch('addNotification', [
+                    'Error',
+                    this.fromAddress,
                     this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
-                    data
-                  ])
-                  .then(() => {
-                    this.showSuccessModal('Transaction sent!', 'Okay');
-                  });
+                    err
+                  ]);
+                  this.showErrorModal('Transaction Error!', 'Return');
+                  rej(err);
+                }
 
-                const pollReceipt = setInterval(() => {
-                  if (data == undefined) clearInterval(pollReceipt);
-                  web3.eth.getTransactionReceipt(data).then(res => {
-                    if (res !== null) {
-                      this.$store.dispatch('addNotification', [
-                        'Batch_Receipt',
-                        this.unSignedArray.find(
-                          entry => _tx.nonce === entry.nonce
-                        ),
-                        res
-                      ]);
-                      clearInterval(pollReceipt);
-                    }
-                  });
-                }, 500);
-                res(data);
+                // was falling through on error
+                if (err === null) {
+                  console.log('NO ERROR'); // todo remove dev item
+                  this.$store
+                    .dispatch('addNotification', [
+                      'Batch_Hash',
+                      this.fromAddress,
+                      this.unSignedArray.find(
+                        entry => _tx.nonce === entry.nonce
+                      ),
+                      data
+                    ])
+                    .then(() => {
+                      this.showSuccessModal('Transaction sent!', 'Okay');
+                    });
+
+                  const pollReceipt = setInterval(() => {
+                    if (data == undefined) clearInterval(pollReceipt);
+                    web3.eth.getTransactionReceipt(data).then(res => {
+                      if (res !== null) {
+                        this.$store.dispatch('addNotification', [
+                          'Batch_Receipt',
+                          this.fromAddress,
+                          this.unSignedArray.find(
+                            entry => _tx.nonce === entry.nonce
+                          ),
+                          res
+                        ]);
+                        clearInterval(pollReceipt);
+                      }
+                    });
+                  }, 500);
+                  res(data);
+                }
               }
-            }
-          );
-          batch.add(req);
+            );
+            batch.add(req);
+          } catch (e) {
+            console.error(e);
+          }
         });
       });
 
       this.signCallback(promises);
       batch.execute();
       this.sending = true;
+    },
+    sendBatchTransactions() {
+      this.doBatchTransactions();
     },
     sendTx() {
       this.dismissed = false;

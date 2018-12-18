@@ -1,11 +1,18 @@
 import {
-  type,
+  swapIndexes,
   notificationType,
   notificationStatuses,
   swapOnlyStatuses
 } from './config';
 import BigNumber from 'bignumber.js';
-import { formatSwap } from './formatters'
+import { formatSwap } from './formatters';
+
+const index = {
+  label: 0,
+  address: 1,
+  txDetails: 2,
+  response: 3
+};
 
 const swapHash = (notifArray, val, network) => {
   console.log('swapHash', val); // todo remove dev item
@@ -20,7 +27,7 @@ const swapReceipt = (notifArray, val) => {
 
   const idx = notifArray.findIndex(
     entry =>
-      entry.hash === val[3].transactionHash &&
+      entry.hash === val[swapIndexes.response].transactionHash &&
       entry.type === notificationType.SWAP
   );
 
@@ -29,9 +36,11 @@ const swapReceipt = (notifArray, val) => {
     notifArray[idx].swapStatus = notificationStatuses.COMPLETE;
     notifArray[idx].body.timeRemaining = -1;
   }
-  notifArray[idx].body.gasUsed = new BigNumber(val[3].gasUsed).toString();
+  notifArray[idx].body.gasUsed = new BigNumber(
+    val[swapIndexes.response].gasUsed
+  ).toString();
   notifArray[idx].body.blockNumber = new BigNumber(
-    val[3].blockNumber
+    val[swapIndexes.response].blockNumber
   ).toString();
   console.log(notifArray[idx]); // todo remove dev item
   return notifArray;
@@ -46,10 +55,9 @@ const swapOrder = (notifArray, val, network) => {
 };
 
 const swapError = (notifArray, val, network) => {
-
   const idx = notifArray.findIndex(
     entry =>
-      entry.hash === val[2].transactionHash &&
+      entry.hash === val[swapIndexes.response].transactionHash &&
       entry.type === notificationType.SWAP
   );
 
