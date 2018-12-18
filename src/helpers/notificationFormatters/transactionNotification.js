@@ -2,7 +2,8 @@ import {
   type,
   notificationType,
   notificationStatuses,
-  swapOnlyStatuses
+  swapOnlyStatuses,
+  txIndexes
 } from './config';
 import BigNumber from 'bignumber.js';
 
@@ -16,14 +17,16 @@ const transactionHash = (notifArray, val, network) => {
 const transactionReceipt = (notifArray, val, network) => {
   const idx = notifArray.findIndex(
     entry =>
-      entry.hash === val[2].transactionHash &&
+      entry.hash === val[txIndexes.response].transactionHash &&
       entry.type !== notificationType.SWAP
   );
 
   notifArray[idx].status = notificationStatuses.COMPLETE;
-  notifArray[idx].body.gasUsed = new BigNumber(val[2].gasUsed).toString();
+  notifArray[idx].body.gasUsed = new BigNumber(
+    val[txIndexes.response].gasUsed
+  ).toString();
   notifArray[idx].body.blockNumber = new BigNumber(
-    val[2].blockNumber
+    val[txIndexes.response].blockNumber
   ).toString();
 
   return notifArray;
@@ -32,17 +35,19 @@ const transactionReceipt = (notifArray, val, network) => {
 const transactionError = (notifArray, val, network) => {
   const idx = notifArray.findIndex(
     entry =>
-      entry.hash === val[2].transactionHash &&
+      entry.hash === val[txIndexes.response].transactionHash &&
       entry.type !== notificationType.SWAP
   );
   console.log('error item location:', idx); // todo remove dev item
-  if (idx >= 0 && !val[2].message) {
+  if (idx >= 0 && !val[txIndexes.response].message) {
     notifArray[idx].body.error = true;
     notifArray[idx].type = notificationType.ERROR;
     notifArray[idx].status = notificationStatuses.FAILED;
-    notifArray[idx].body.errorMessage = val[2].hasOwnProperty('message')
-      ? val[2].message
-      : val[2];
+    notifArray[idx].body.errorMessage = val[txIndexes.response].hasOwnProperty(
+      'message'
+    )
+      ? val[txIndexes.response].message
+      : val[txIndexes.response];
 
     return notifArray;
   }

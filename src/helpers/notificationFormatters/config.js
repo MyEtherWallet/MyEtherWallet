@@ -37,4 +37,25 @@ const notificationStatuses = {
   FAILED: 'failed'
 };
 
-export { type, notificationType, notificationStatuses, swapOnlyStatuses };
+const swapIndexes = {
+  label: 0,
+  address: 1,
+  details: 2,
+  response: 3
+};
+
+const txIndexes = {
+  label: 0,
+  address: 1,
+  details: 2,
+  response: 3
+};
+
+export {
+  type,
+  notificationType,
+  notificationStatuses,
+  swapOnlyStatuses,
+  swapIndexes,
+  txIndexes
+};

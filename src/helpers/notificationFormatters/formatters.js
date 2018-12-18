@@ -2,35 +2,40 @@ import {
   type,
   notificationStatuses,
   notificationType,
-  swapOnlyStatuses
+  swapOnlyStatuses,
+  swapIndexes,
+  txIndexes
 } from './config';
 import BigNumber from 'bignumber.js';
 
 const formatHash = (val, network) => {
+  console.log(val); // todo remove dev item
   return {
     title: 'Transaction',
     read: false,
     timestamp: Date.now(),
     type: notificationType.TRANSACTION,
-    status: val[2] ? notificationStatuses.PENDING : notificationStatuses.FAILED,
-    hash: val[2],
+    status: val[txIndexes.response]
+      ? notificationStatuses.PENDING
+      : notificationStatuses.FAILED,
+    hash: val[txIndexes.response],
     network: network,
     body: {
       error: false,
       errorMessage: '',
-      hash: val[2],
-      to: val[1].to,
-      amount: new BigNumber(val[1].value).toString(),
-      nonce: new BigNumber(val[1].nonce).toString(),
-      gasPrice: new BigNumber(val[1].gasPrice).toString(),
-      gasLimit: new BigNumber(val[1].gas).toString()
+      hash: val[txIndexes.response],
+      to: val[txIndexes.details].to,
+      amount: new BigNumber(val[txIndexes.details].value).toString(),
+      nonce: new BigNumber(val[txIndexes.details].nonce).toString(),
+      gasPrice: new BigNumber(val[txIndexes.details].gasPrice).toString(),
+      gasLimit: new BigNumber(val[txIndexes.details].gas).toString()
     },
     expanded: false
   };
 };
 
 const formatSwap = (val, network) => {
-  const isEthereum = val[0] !== type.SWAP_ORDER;
+  const isEthereum = val[swapIndexes.label] !== type.SWAP_ORDER;
   const initialState = isEthereum
     ? swapOnlyStatuses.SENT
     : swapOnlyStatuses.NEW;
@@ -41,32 +46,34 @@ const formatSwap = (val, network) => {
     timestamp: Date.now(),
     type: notificationType.SWAP,
     status:
-      val[3] && isEthereum
+      val[swapIndexes.response] && isEthereum
         ? notificationStatuses.PENDING
         : notificationStatuses.FAILED,
     swapStatus:
-      val[3] && isEthereum ? initialState : notificationStatuses.FAILED,
-    hasTransaction: isEthereum && val[3],
-    hash: isEthereum ? undefined : val[3],
+      val[swapIndexes.response] && isEthereum
+        ? initialState
+        : notificationStatuses.FAILED,
+    hasTransaction: isEthereum && val[swapIndexes.response],
+    hash: isEthereum ? val[swapIndexes.response] : undefined,
     network: network,
     body: {
       error: false,
       errorMessage: '',
-      providerAddress: val[2].providerAddress,
-      to: val[2].toAddress,
-      from: val[2].fromAddress,
-      fromValue: val[2].fromValue,
-      toValue: val[2].toValue,
-      fromCurrency: val[2].fromCurrency,
-      toCurrency: val[2].toCurrency,
-      orderId: val[2].parsed.orderId,
-      statusId: val[2].parsed.statusId,
-      timeRemaining: val[2].parsed.validFor,
-      validFor: val[2].parsed.validFor,
-      createdAt: val[2].parsed.timestamp,
-      rate: val[2].rate,
-      provider: val[2].provider,
-      isDex: val[2].isDex
+      providerAddress: val[swapIndexes.details].providerAddress,
+      to: val[swapIndexes.details].toAddress,
+      from: val[swapIndexes.details].fromAddress,
+      fromValue: val[swapIndexes.details].fromValue,
+      toValue: val[swapIndexes.details].toValue,
+      fromCurrency: val[swapIndexes.details].fromCurrency,
+      toCurrency: val[swapIndexes.details].toCurrency,
+      orderId: val[swapIndexes.details].parsed.orderId,
+      statusId: val[swapIndexes.details].parsed.statusId,
+      timeRemaining: val[swapIndexes.details].parsed.validFor,
+      validFor: val[swapIndexes.details].parsed.validFor,
+      createdAt: val[swapIndexes.details].parsed.timestamp,
+      rate: val[swapIndexes.details].rate,
+      provider: val[swapIndexes.details].provider,
+      isDex: val[swapIndexes.details].isDex
     },
     expanded: false
   };
@@ -76,20 +83,26 @@ const formatError = (val, network) => {
   return {
     title: 'Transaction',
     read: false,
-    timestamp: new Date(),
+    timestamp: Date.now(),
     type: notificationType.ERROR,
     status: notificationStatuses.FAILED,
-    hash: val[2],
+    hash: val[txIndexes.details].hasOwnProperty('hash')
+      ? val[txIndexes.details].hash
+      : undefined,
     network: network,
     body: {
       error: true,
-      errorMessage: val[2].hasOwnProperty('message') ? val[2].message : val[2],
-      hash: val[2],
-      to: val[1].to,
-      amount: new BigNumber(val[1].value).toString(),
-      nonce: new BigNumber(val[1].nonce).toString(),
-      gasPrice: new BigNumber(val[1].gasPrice).toString(),
-      gasLimit: new BigNumber(val[1].gas).toString()
+      errorMessage: val[txIndexes.response].hasOwnProperty('message')
+        ? val[txIndexes.response].message
+        : val[txIndexes.response],
+      hash: val[txIndexes.details].hasOwnProperty('hash')
+        ? val[txIndexes.details].hash
+        : undefined,
+      to: val[txIndexes.details].to,
+      amount: new BigNumber(val[txIndexes.details].value).toString(),
+      nonce: new BigNumber(val[txIndexes.details].nonce).toString(),
+      gasPrice: new BigNumber(val[txIndexes.details].gasPrice).toString(),
+      gasLimit: new BigNumber(val[txIndexes.details].gas).toString()
     },
     expanded: false
   };
