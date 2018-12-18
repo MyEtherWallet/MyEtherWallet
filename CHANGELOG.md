@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix network modal issues pt 2 []()
 - Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
 - Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
 - Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
