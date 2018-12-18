@@ -1,22 +1,15 @@
 import { shallowMount } from '@vue/test-utils';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
-import {
-  Tooling
-} from '@@/helpers';
-
-
-import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode/ButtonWithQrCode.vue';
+import { Tooling } from '@@/helpers';
 
 const RouterLinkStub = {
   name: 'router-link',
   template: '<p> <slot> </slot></p>',
-  // render: ()=>{},
   props: ['to']
 };
 
 describe('SwapConfirmationModal.vue', () => {
   let localVue, i18n, wrapper, store;
-  // const resetView = jest.fn(() => console.log('resetView function called'));
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -24,17 +17,17 @@ describe('SwapConfirmationModal.vue', () => {
     store = baseSetup.store;
   });
 
-    beforeEach(() => {
-        wrapper = shallowMount(SwapConfirmationModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {
-            'router-link':RouterLinkStub
-          }
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(SwapConfirmationModal, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      stubs: {
+        'router-link': RouterLinkStub
+      }
     });
+  });
 
   xit('[FAILING] should render correct fromArray to currenPicker element', () => {
     wrapper.find('.detail-information input').trigger('click');

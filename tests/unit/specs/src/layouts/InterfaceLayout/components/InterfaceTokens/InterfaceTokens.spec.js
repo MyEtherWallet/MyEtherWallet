@@ -53,8 +53,8 @@ describe('InterfaceTokens.vue', () => {
     );
   });
 
-    xit(' [FAILED] should render correct customTokens data', () => {
-      wrapper.setData({customTokens});
+  xit(' [FAILED] should render correct customTokens data', () => {
+    wrapper.setData({ customTokens });
 
     const tableElement = wrapper.vm.$el.querySelectorAll(
       '.token-table-container table'
