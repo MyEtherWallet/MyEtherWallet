@@ -9,8 +9,17 @@ import {
 } from '@/helpers/notificationFormatters';
 
 const addNotification = function({ commit, state }, val) {
-  console.log('add notification: val', val); // todo remove dev item
-  const address = web3.utils.toChecksumAddress(val[1].from);
+  console.log(val); // todo remove dev item
+  let address;
+
+  if (val[1] != undefined) {
+    address = web3.utils.toChecksumAddress(val[1].from);
+  } else if (val[0] === 'Batch_Receipt') {
+    address = web3.utils.toChecksumAddress(val[2].from);
+  } else {
+    throw Error('Unable to determine sending address for notification.');
+  }
+
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -23,7 +32,6 @@ const addNotification = function({ commit, state }, val) {
     val,
     state.network.type.name
   );
-
   commit('ADD_NOTIFICATION', newNotif);
 };
 
@@ -147,7 +155,6 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       );
     });
   };
-
 
   commit('SET_WEB3_INSTANCE', web3Instance);
 };

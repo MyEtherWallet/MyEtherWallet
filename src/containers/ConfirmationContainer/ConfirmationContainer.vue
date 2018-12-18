@@ -49,6 +49,11 @@
       :message="successMessage"
       :link-message="linkMessage"
     />
+    <error-modal
+      ref="errorModal"
+      :message="successMessage"
+      :link-message="linkMessage"
+    />
   </div>
 </template>
 
@@ -58,6 +63,7 @@ import BigNumber from 'bignumber.js';
 import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
+import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import PromiEvent from 'web3-core-promievent';
@@ -67,6 +73,7 @@ export default {
     'confirm-modal': ConfirmModal,
     'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
+    'error-modal': ErrorModal,
     'confirm-sign-modal': ConfirmSignModal
   },
   props: {
@@ -218,6 +225,7 @@ export default {
     this.$eventHub.$on(
       'showTxCollectionConfirmModal',
       async (tx, signCallback, isHardware) => {
+        this.unSignedArray = [];
         this.unSignedArray = tx;
 
         if (!signCallback) signCallback = () => {};
@@ -233,6 +241,7 @@ export default {
           }
           return signed;
         };
+
         this.confirmationCollectionModalOpen();
         this.signedArray = await popAndSign(tx);
       }
@@ -282,6 +291,12 @@ export default {
       if (linkMessage !== null) this.linkMessage = linkMessage;
       this.$refs.successModal.$refs.success.show();
     },
+    showErrorModal(message, linkMessage) {
+      this.reset();
+      if (message !== null) this.successMessage = message;
+      if (linkMessage !== null) this.linkMessage = linkMessage;
+      this.$refs.errorModal.$refs.success.show();
+    },
     parseRawTx(tx) {
       this.raw = tx;
       this.nonce = +tx.nonce;
@@ -320,37 +335,48 @@ export default {
           const req = web3.eth.sendSignedTransaction.request(
             tx.rawTransaction,
             (err, data) => {
+              console.log(err, data); // todo remove dev item
+              // was falling through on success
               if (err !== null) {
                 this.$store.dispatch('addNotification', [
-                  'Batch_Error',
+                  'Error',
                   this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
                   err
                 ]);
+                this.showErrorModal('Transaction Error!', 'Return');
                 rej(err);
               }
 
-              this.$store.dispatch('addNotification', [
-                'Batch_Hash',
-                this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
-                data
-              ]);
-              this.showSuccessModal('Transaction sent!', 'Okay');
+              // was falling through on error
+              if (err === null) {
+                console.log('NO ERROR'); // todo remove dev item
+                this.$store
+                  .dispatch('addNotification', [
+                    'Batch_Hash',
+                    this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                    data
+                  ])
+                  .then(() => {
+                    this.showSuccessModal('Transaction sent!', 'Okay');
+                  });
 
-              const pollReceipt = setInterval(() => {
-                this.web3.eth.getTransactionReceipt(data).then(res => {
-                  if (res !== null) {
-                    this.$store.dispatch('addNotification', [
-                      'Batch_Receipt',
-                      this.unSignedArray.find(
-                        entry => _tx.nonce === entry.nonce
-                      ),
-                      res
-                    ]);
-                    clearInterval(pollReceipt);
-                  }
-                });
-              }, 500);
-              res(data);
+                const pollReceipt = setInterval(() => {
+                  if (data == undefined) clearInterval(pollReceipt);
+                  web3.eth.getTransactionReceipt(data).then(res => {
+                    if (res !== null) {
+                      this.$store.dispatch('addNotification', [
+                        'Batch_Receipt',
+                        this.unSignedArray.find(
+                          entry => _tx.nonce === entry.nonce
+                        ),
+                        res
+                      ]);
+                      clearInterval(pollReceipt);
+                    }
+                  });
+                }, 500);
+                res(data);
+              }
             }
           );
           batch.add(req);
@@ -359,7 +385,7 @@ export default {
 
       this.signCallback(promises);
       batch.execute();
-      this.showSuccessModal('Transaction sent!', 'Okay');
+      this.sending = true;
     },
     sendTx() {
       this.dismissed = false;
@@ -390,6 +416,9 @@ export default {
       this.signedArray = [];
       this.web3WalletHash = '';
       this.web3WalletRes = '';
+      this.txBatch = null;
+      this.sending = false;
+      this.signCallback = {};
     }
   }
 };
