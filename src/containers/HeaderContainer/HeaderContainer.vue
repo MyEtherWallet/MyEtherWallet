@@ -10,6 +10,7 @@
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
+      <user-reminder-button />
       <scroll-up-button />
     </div>
     <div
@@ -226,6 +227,7 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
@@ -243,7 +245,8 @@ export default {
     txpoppup: TxTopMenuPopup,
     'logout-modal': LogoutModal,
     'logout-warning-modal': LogoutWarningModal,
-    'issue-log-modal': IssueLogModal
+    'issue-log-modal': IssueLogModal,
+    'user-reminder-button': UserReminderButton
   },
   data() {
     return {
@@ -273,7 +276,7 @@ export default {
       ],
       currentName: 'English',
       currentFlag: 'en',
-      isPageOnTop: true,
+      isPageOnTop: false,
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false
