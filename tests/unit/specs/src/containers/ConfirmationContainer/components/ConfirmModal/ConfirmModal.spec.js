@@ -58,7 +58,7 @@ describe('ConfirmModal.vue', () => {
       }
     });
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][2];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(

@@ -78,6 +78,8 @@ const setState = function({ commit }, stateObj) {
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
   const options = {};
+  // eslint-disable-next-line
+  const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${state.network.port ? ':' + state.network.port : ''}${hostUrl.pathname}`;
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
         authorization: `Basic: ${btoa(
@@ -87,11 +89,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     : {};
   const web3Instance = new web3(
     new MEWProvider(
-      provider
-        ? provider
-        : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-            hostUrl.pathname
-          }`,
+      provider ? provider : parsedUrl,
       options,
       {
         state,
