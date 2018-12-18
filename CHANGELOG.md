@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Add Logout warning modal component
+- Fix fixed buttons, scroll-up, security [282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
 - Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
 - Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
 - Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
