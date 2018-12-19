@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+$mobile-width: 530px;
+
 //***************************************************
 // DEVELOPMENT USE ONLY "Modal open button"
 //***************************************************
@@ -43,12 +45,13 @@
             padding: 12px;
             position: absolute;
             left: 25px;
-            top: -1px;
+            top: -12px;
             border: 0;
             background-color: $light-grey-1;
             display: block;
             width: 150px;
             @media all and (max-width: $mobile-width) {
+              top: -1px;
               padding: 4px;
             }
           }
@@ -93,11 +96,25 @@
     align-items: center;
     grid-gap: 10px;
     grid-template-columns: 1fr 183px;
+
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+      text-align: center;
+
+      .upload-file-button {
+        margin-top: 10px;
+      }
+    }
   }
 
   .button-block {
     text-align: center;
     margin-top: 40px;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+    }
   }
 }
 

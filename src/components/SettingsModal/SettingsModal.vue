@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-modal">
     <h1 class="div-only-button" @click="$refs.settings.show()">
       Open Settings
     </h1>
@@ -71,7 +71,10 @@
             </p>
             <div class="import-button-block">
               <standard-input :options="inputFileName" />
-              <standard-button :options="buttonUploadFile" />
+              <standard-button
+                :options="buttonUploadFile"
+                class="upload-file-button"
+              />
             </div>
             <div class="button-block">
               <standard-button :options="buttonImport" />
@@ -118,7 +121,7 @@ export default {
         buttonStyle: 'green-border',
         rightArrow: false,
         leftArrow: false,
-        fullWidth: false,
+        fullWidth: true,
         noMinWidth: true
       },
       buttonImport: {
@@ -126,7 +129,7 @@ export default {
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
-        fullWidth: false,
+        fullWidth: true,
         noMinWidth: false
       },
       buttonExport: {
@@ -134,7 +137,7 @@ export default {
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
-        fullWidth: false,
+        fullWidth: true,
         noMinWidth: false
       },
       inputFileName: {
