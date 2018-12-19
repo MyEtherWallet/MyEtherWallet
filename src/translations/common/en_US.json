@@ -53,5 +53,6 @@
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
-  "confirmAndSend": "Confirm and Send"
+  "confirmAndSend": "Confirm and Send",
+  "waitingForHash" : "Waiting for Transaction Hash"
 }

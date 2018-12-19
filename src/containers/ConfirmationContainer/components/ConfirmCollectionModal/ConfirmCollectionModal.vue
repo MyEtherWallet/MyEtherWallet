@@ -103,6 +103,7 @@
         <div class="flex-center-align">
           <div class="button-with-helper">
             <div
+              v-show="!sending"
               ref="ConfirmAndSendButton"
               :class="[
                 allSigned ? '' : 'disabled',
@@ -111,6 +112,13 @@
               @click="sendBatchTransactions"
             >
               {{ $t('common.confirmAndSend') }}
+            </div>
+            <div
+              v-show="sending"
+              class="submit-button large-round-button-green-filled clickable disabled"
+            >
+              {{ $t('common.waitingForHash') }}
+              <i class="fa fa-spinner fa-spin" />
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
@@ -164,6 +172,10 @@ export default {
     sendBatchTransactions: {
       type: Function,
       default: () => {}
+    },
+    sending: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
