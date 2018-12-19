@@ -24,7 +24,7 @@
       <ul>
         <li class="swap-details">
           <ul>
-            <li >
+            <li>
               <p class="icon from-swap-icon">
                 <i :class="['cc', notice.body.fromCurrency, 'cc-icon']"></i>
               </p>
@@ -51,7 +51,7 @@
             </li>
           </ul>
         </li>
-        <li class="tx-hash"><p >Transaction Hash:</p></li>
+        <li class="tx-hash"><p>Transaction Hash:</p></li>
         <li v-if="notice.hash" class="tx-hash">
           <a :href="hashLink(notice.hash)" target="_blank">
             {{ notice.hash }}
