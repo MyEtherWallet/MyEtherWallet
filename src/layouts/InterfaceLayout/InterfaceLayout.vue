@@ -1,5 +1,9 @@
 <template>
   <div class="send-eth-and-tokens">
+    <network-and-address-modal
+      ref="networkAddress"
+      :hardware-wallet="hwInstance"
+    />
     <print-modal
       ref="printModal"
       :priv-key="wallet.privateKey"
@@ -31,6 +35,7 @@
               :address="address"
               :trigger-alert="triggerAlert"
               :print="print"
+              :switch-addr="switchAddress"
             />
           </div>
           <div class="mobile-hide">
@@ -62,6 +67,7 @@
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
 
+import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -74,6 +80,12 @@ import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  BitBoxWallet,
+  SecalotWallet
+} from '@/wallets';
 
 export default {
   components: {
@@ -82,7 +94,8 @@ export default {
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
-    'print-modal': PrintModal
+    'print-modal': PrintModal,
+    'network-and-address-modal': NetworkAndAddressModal
   },
   data() {
     return {
@@ -98,7 +111,14 @@ export default {
       alert: {
         show: false,
         msg: ''
-      }
+      },
+      hws: {
+        ledger: LedgerWallet,
+        trezor: TrezorWallet,
+        bitbox: BitBoxWallet,
+        secalot: SecalotWallet
+      },
+      hwInstance: {}
     };
   },
   computed: {
@@ -134,6 +154,38 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    switchAddress() {
+      switch (this.wallet.identifier) {
+        case 'ledger':
+          LedgerWallet().then(_newWallet => {
+            this.hwInstance = _newWallet;
+            this.$refs.networkAddress.$refs.networkAndAddress.show();
+          });
+          break;
+        case 'trezor':
+          TrezorWallet().then(_newWallet => {
+            this.hwInstance = _newWallet;
+            this.$refs.networkAddress.$refs.networkAndAddress.show();
+          });
+          break;
+        case 'bitbox':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: BitBoxWallet,
+            hardwareBrand: 'DigitalBitbox'
+          });
+          break;
+        case 'secalot':
+          this.$emit('hardwareRequiresPassword', {
+            walletConstructor: SecalotWallet,
+            hardwareBrand: 'Secalot'
+          });
+          break;
+        default:
+          // eslint-disable-next-line
+          console.error('something not right'); // todo remove dev item
+          break;
+      }
+    },
     print() {
       this.$refs.printModal.$refs.print.show();
     },
