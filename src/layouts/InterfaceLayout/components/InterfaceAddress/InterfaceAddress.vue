@@ -29,7 +29,7 @@
           <b-btn id="copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
-          <b-btn v-if="hasMultipleAddr" id="switch" class="custom-tooltip">
+          <b-btn v-if="hasMultipleAddr" id="switch" class="custom-tooltip" @click="switchAddr">
             <img src="~@/assets/images/icons/change.svg" />
           </b-btn>
           <b-popover
@@ -77,6 +77,10 @@ export default {
       default: function() {}
     },
     print: {
+      type: Function,
+      default: function() {}
+    },
+    switchAddr: {
       type: Function,
       default: function() {}
     }

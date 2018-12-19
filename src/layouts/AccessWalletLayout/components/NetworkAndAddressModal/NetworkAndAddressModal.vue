@@ -324,6 +324,8 @@ export default {
       this.$router.push({
         path: 'interface'
       });
+
+      this.$refs.networkAndAddress.hide();
     },
     async setHDAccounts() {
       this.HDAccounts = [];
