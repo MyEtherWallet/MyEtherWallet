@@ -29,7 +29,12 @@
           <b-btn id="copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
-          <b-btn v-if="hasMultipleAddr" id="switch" class="custom-tooltip" @click="switchAddr">
+          <b-btn
+            v-if="hasMultipleAddr"
+            id="switch"
+            class="custom-tooltip"
+            @click="switchAddr"
+          >
             <img src="~@/assets/images/icons/change.svg" />
           </b-btn>
           <b-popover
