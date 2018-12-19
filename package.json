@@ -91,7 +91,7 @@
     "vue-i18n": "8.4.0",
     "vue-template-compiler": "2.5.21",
     "vue-worker": "1.2.1",
-    "wallet-address-validator": "0.2.1",
+    "wallet-address-validator": "0.2.4",
     "web3": "1.0.0-beta.37",
     "web3-core-helpers": "1.0.0-beta.37",
     "web3-core-method": "1.0.0-beta.37",
