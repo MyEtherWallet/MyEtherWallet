@@ -152,9 +152,9 @@ export default {
         if (Object.keys(this.preparedSwap).length > 0) {
           this.web3.eth.sendTransaction(this.preparedSwap);
         }
+        this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);
+        this.$refs.swapconfirmation.hide();
       }
-      this.$emit('swapStarted', this.swapDetails);
-      this.$refs.swapconfirmation.hide();
     },
     async swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);

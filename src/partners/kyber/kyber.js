@@ -1,11 +1,14 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
+import ENS from 'ethereum-ens';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
   ERC20,
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
+  MAX_DEST_AMOUNT,
   defaultValues,
   KyberCurrencies,
   kyberAddressFallback,
@@ -14,6 +17,7 @@ import {
   kyberNetworkENS,
   walletDepositeAddress
 } from './config';
+import { statuses } from '../simplex/config';
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
@@ -30,12 +34,11 @@ export default class Kyber {
     this.tokenDetails = {};
     this.setDefaultCurrencyList();
     this.web3 = props.web3;
-    this.ens = props.ens;
+    this.ens = new ENS(props.web3.currentProvider);
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
     this.rates = new Map();
-
     this.retrieveRates();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
@@ -43,6 +46,10 @@ export default class Kyber {
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  static isDex() {
+    return true;
   }
 
   get currencies() {
@@ -333,18 +340,13 @@ export default class Kyber {
     { fromCurrency, toCurrency, fromValueWei, fromAddress },
     minRateWei
   ) {
-    /* Cannot use a larger value (which solidity supports due to error from web3/ethers,
-       see: https://github.com/ethereum/web3.js/issues/1920
-       This can cause the transaction to fail and revert */
-    const maxDestAmount = Number.MAX_SAFE_INTEGER; // 2 ** 200; // TODO move to config
-
     const data = this.getKyberContractObject()
       .methods.trade(
         await this.getTokenAddress(fromCurrency),
         fromValueWei,
         await this.getTokenAddress(toCurrency),
         fromAddress,
-        maxDestAmount,
+        MAX_DEST_AMOUNT,
         minRateWei,
         walletDepositeAddress
       )
@@ -409,10 +411,31 @@ export default class Kyber {
     swapDetails.providerSends = swapDetails.toValue;
     swapDetails.parsed = {
       sendToAddress: this.getKyberNetworkAddress(),
-      status: 'pending'
+      status: 'pending',
+      validFor: TIME_SWAP_VALID
     };
     swapDetails.providerAddress = this.getKyberNetworkAddress();
+    swapDetails.isDex = Kyber.isDex();
     return swapDetails;
+  }
+
+  static async getOrderStatus(/*noticeDetails*/) {
+    return 'new';
+  }
+
+  static parseKyberStatus(status) {
+    switch (status) {
+      case statuses.new:
+      case statuses.initiated:
+      case statuses.sent:
+        return 'new';
+      case statuses.pending:
+        return 'pending';
+      case statuses.payment:
+        return 'complete';
+      case statuses.cancelled:
+        return 'cancelled';
+    }
   }
 
   getTokenAddress(token) {

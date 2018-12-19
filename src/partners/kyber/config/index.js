@@ -1,6 +1,8 @@
 import {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
+  MAX_DEST_AMOUNT,
   defaultValues,
   kyberTokenList,
   kyberTokenInfoList,
@@ -11,11 +13,13 @@ import {
   KyberCurrencies
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
-import ERC20 from '../../partnersConfig';
+import { ERC20 } from '../../partnersConfig';
 
 export {
   kyberBaseCurrency,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
+  MAX_DEST_AMOUNT,
   defaultValues,
   walletDepositeAddress,
   kyberNetworkENS,

@@ -1,12 +1,15 @@
 import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import {
+  statuses,
+  notificationStatuses,
+  TIME_SWAP_VALID,
   MIN_FIAT,
   MAX_FIAT,
   SimplexCurrencies,
   PROVIDER_NAME
 } from './config.js';
-import { getQuote, getOrder } from './simplex-api';
+import { getQuote, getOrder, getStatus } from './simplex-api';
 
 export default class Simplex {
   constructor(props = {}) {
@@ -27,6 +30,10 @@ export default class Simplex {
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  static isDex() {
+    return false;
   }
 
   get isValidNetwork() {
@@ -115,11 +122,7 @@ export default class Simplex {
     });
 
     if (result.error) {
-      return {
-        error: result.result,
-        fromValue: fromValue,
-        toValue: 0
-      };
+      return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
     this.currentOrder = result.result;
     return {
@@ -136,11 +139,7 @@ export default class Simplex {
       requested_amount: +toValue
     });
     if (result.error) {
-      return {
-        error: result.result,
-        fromValue: 0,
-        toValue: toValue
-      };
+      return { error: result.result, fromValue: 0, toValue: toValue };
     }
     this.currentOrder = result.result;
     return {
@@ -202,6 +201,20 @@ export default class Simplex {
     );
   }
 
+  static parseOrder(order) {
+    return {
+      orderId: order.quote_id,
+      statusId: order.user_id,
+      sendToAddress: 'None',
+      recValue: order.digital_total_amount_amount,
+      sendValue: order.fiat_total_amount_amount,
+      status: 'new',
+      timestamp: order.timestamp || new Date().toISOString(),
+      userAddress: order.destination_wallet_address,
+      validFor: TIME_SWAP_VALID
+    };
+  }
+
   async startSwap(swapDetails) {
     await this.updateFiat(
       swapDetails.fromCurrency,
@@ -214,6 +227,7 @@ export default class Simplex {
     swapDetails.providerSends = this.currentOrder.digital_money.amount;
     swapDetails.parsed = Simplex.parseOrder(swapDetails.dataForInitialization);
     swapDetails.providerAddress = undefined;
+    swapDetails.isDex = Simplex.isDex();
     return swapDetails;
   }
 
@@ -246,17 +260,26 @@ export default class Simplex {
     }
   }
 
-  static parseOrder(order) {
-    return {
-      orderId: order.quote_id,
-      statusId: order.user_id,
-      sendToAddress: 'None',
-      recValue: order.digital_total_amount_amount,
-      sendValue: order.fiat_total_amount_amount,
-      status: 'new',
-      timestamp: order.timestamp,
-      userAddress: order.destination_wallet_address,
-      validFor: 600
-    };
+  static async getOrderStatus(noticeDetails) {
+    const result = await getStatus(noticeDetails.statusId);
+    if (result.error) {
+      return 'error';
+    }
+    return Simplex.parseSimplexStatus(result.result.status);
+  }
+
+  static parseSimplexStatus(status) {
+    switch (status) {
+      case statuses.new:
+        return notificationStatuses.NEW;
+      case statuses.initiated:
+      case statuses.sent:
+      case statuses.pending:
+        return notificationStatuses.PENDING;
+      case statuses.payment:
+        return notificationStatuses.COMPLETE;
+      case statuses.cancelled:
+        return notificationStatuses.CANCELLED;
+    }
   }
 }

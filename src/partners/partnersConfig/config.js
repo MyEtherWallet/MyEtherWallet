@@ -6,6 +6,7 @@ const networkSymbols = {
 const BASE_CURRENCY = 'ETH';
 const baseCurrencyEntry = { symbol: 'ETH', name: 'Ether' };
 const MIN_SWAP_AMOUNT = 0.000001;
+const TIME_SWAP_VALID_DEFAULT = 600;
 
 const swapApiEndpoints = {
   base: 'https://swap.mewapi.io',
@@ -14,9 +15,23 @@ const swapApiEndpoints = {
 };
 const mewSimplex = 'https://apiccswap.myetherwallet.com';
 
+const swapNotificationStatuses = {
+  new: 'new',
+  sent: 'sent',
+  cancelled: 'cancelled',
+  NEW: 'new',
+  SENT: 'sent',
+  CANCELLED: 'cancelled',
+  PENDING: 'pending',
+  COMPLETE: 'complete',
+  FAILED: 'failed'
+};
+
 export {
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT,
+  TIME_SWAP_VALID_DEFAULT,
+  swapNotificationStatuses,
   baseCurrencyEntry,
   networkSymbols,
   swapApiEndpoints,
