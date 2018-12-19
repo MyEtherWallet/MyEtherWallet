@@ -33,4 +33,18 @@ function buildPayload(method, data) {
   };
 }
 
-export { mapToObject, getTimeRemaining, getTimeRemainingString, buildPayload };
+function stringEqual(strA, strB) {
+  let mismatch = 0;
+  for (let i = 0; i < strA.length; ++i) {
+    mismatch |= strA.charCodeAt(i) ^ strB.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+export {
+  mapToObject,
+  stringEqual,
+  getTimeRemaining,
+  getTimeRemainingString,
+  buildPayload
+};
