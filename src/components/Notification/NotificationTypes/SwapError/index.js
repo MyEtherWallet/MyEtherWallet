@@ -1,1 +1,1 @@
-export { default } from './SwapNotification';
+export { default } from './SwapError';

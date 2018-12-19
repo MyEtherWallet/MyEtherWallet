@@ -24,11 +24,11 @@ const formatHash = (val, network) => {
       error: false,
       errorMessage: '',
       hash: val[txIndexes.response],
-      to: val[txIndexes.details].to,
-      amount: new BigNumber(val[txIndexes.details].value).toString(),
-      nonce: new BigNumber(val[txIndexes.details].nonce).toString(),
-      gasPrice: new BigNumber(val[txIndexes.details].gasPrice).toString(),
-      gasLimit: new BigNumber(val[txIndexes.details].gas).toString()
+      to: val[txIndexes.txDetails].to,
+      amount: new BigNumber(val[txIndexes.txDetails].value).toString(),
+      nonce: new BigNumber(val[txIndexes.txDetails].nonce).toString(),
+      gasPrice: new BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
+      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString()
     },
     expanded: false
   };
@@ -84,7 +84,7 @@ const formatSwapError = (val, network) => {
     title: 'Swap',
     read: false,
     timestamp: Date.now(),
-    type: notificationType.SWAP,
+    type: notificationType.SWAP_ERROR,
     status: notificationStatuses.FAILED,
     swapStatus: swapOnlyStatuses.FAILED,
     hasTransaction: true,
@@ -96,11 +96,24 @@ const formatSwapError = (val, network) => {
         ? val[swapIndexes.response].message
         : val[swapIndexes.response],
       hash: undefined,
-      to: val[swapIndexes.details].to,
-      amount: new BigNumber(val[swapIndexes.details].value).toString(),
-      nonce: new BigNumber(val[swapIndexes.details].nonce).toString(),
-      gasPrice: new BigNumber(val[swapIndexes.details].gasPrice).toString(),
-      gasLimit: new BigNumber(val[swapIndexes.details].gas).toString()
+      amount: new BigNumber(val[swapIndexes.txDetails].value).toString(),
+      nonce: new BigNumber(val[swapIndexes.txDetails].nonce).toString(),
+      gasPrice: new BigNumber(val[swapIndexes.txDetails].gasPrice).toString(),
+      gasLimit: new BigNumber(val[swapIndexes.txDetails].gas).toString(),
+      to: val[swapIndexes.details].toAddress,
+      from: val[swapIndexes.details].fromAddress,
+      fromValue: val[swapIndexes.details].fromValue,
+      toValue: val[swapIndexes.details].toValue,
+      fromCurrency: val[swapIndexes.details].fromCurrency,
+      toCurrency: val[swapIndexes.details].toCurrency,
+      orderId: val[swapIndexes.details].parsed.orderId,
+      statusId: val[swapIndexes.details].parsed.statusId,
+      timeRemaining: val[swapIndexes.details].parsed.validFor,
+      validFor: val[swapIndexes.details].parsed.validFor,
+      createdAt: val[swapIndexes.details].parsed.timestamp,
+      rate: val[swapIndexes.details].rate,
+      provider: val[swapIndexes.details].provider,
+      isDex: val[swapIndexes.details].isDex
     },
     expanded: false
   };
@@ -113,8 +126,8 @@ const formatError = (val, network) => {
     timestamp: Date.now(),
     type: notificationType.ERROR,
     status: notificationStatuses.FAILED,
-    hash: val[txIndexes.details].hasOwnProperty('hash')
-      ? val[txIndexes.details].hash
+    hash: val[txIndexes.txDetails].hasOwnProperty('hash')
+      ? val[txIndexes.txDetails].hash
       : undefined,
     network: network,
     body: {
@@ -122,14 +135,14 @@ const formatError = (val, network) => {
       errorMessage: val[txIndexes.response].hasOwnProperty('message')
         ? val[txIndexes.response].message
         : val[txIndexes.response],
-      hash: val[txIndexes.details].hasOwnProperty('hash')
-        ? val[txIndexes.details].hash
+      hash: val[txIndexes.txDetails].hasOwnProperty('hash')
+        ? val[txIndexes.txDetails].hash
         : undefined,
-      to: val[txIndexes.details].to,
-      amount: new BigNumber(val[txIndexes.details].value).toString(),
-      nonce: new BigNumber(val[txIndexes.details].nonce).toString(),
-      gasPrice: new BigNumber(val[txIndexes.details].gasPrice).toString(),
-      gasLimit: new BigNumber(val[txIndexes.details].gas).toString()
+      to: val[txIndexes.txDetails].to,
+      amount: new BigNumber(val[txIndexes.txDetails].value).toString(),
+      nonce: new BigNumber(val[txIndexes.txDetails].nonce).toString(),
+      gasPrice: new BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
+      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString()
     },
     expanded: false
   };

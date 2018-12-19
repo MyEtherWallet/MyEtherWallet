@@ -13,7 +13,7 @@ const batchTransactionReceipt = (notifArray, val) => {
       }
       return false;
     });
-    if (swapNotificationIndex >= 0) {
+    if (~swapNotificationIndex) {
       notifArray[swapNotificationIndex].status = notificationStatuses.COMPLETE;
       notifArray[swapNotificationIndex].swapStatus =
         notificationStatuses.COMPLETE;
@@ -45,7 +45,7 @@ const batchTransactionError = (notifArray, val) => {
   });
 
 
-  if (swapNotificationIndex >= 0) {
+  if (~swapNotificationIndex) {
     notifArray[swapNotificationIndex].body.error = true;
     notifArray[swapNotificationIndex].status = notificationStatuses.FAILED;
     notifArray[swapNotificationIndex].swapStatus = notificationStatuses.FAILED;

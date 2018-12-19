@@ -12,7 +12,7 @@ import {
 } from '@/helpers/notificationFormatters';
 
 const addNotification = function({ commit, state }, val) {
-  console.log(val); // todo remove dev item
+  console.log('tx notification: ', val); // todo remove dev item
   let address;
 
   if (val[1] != undefined) {
@@ -38,8 +38,8 @@ const addNotification = function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
-const addSwapNotification = function({ commit, state }, val) {
-  console.log(val); // todo remove dev item
+const addSwapNotification = async function({ commit, state }, val) {
+  console.log('swap notification: ', val); // todo remove dev item
 
   const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
@@ -50,7 +50,7 @@ const addSwapNotification = function({ commit, state }, val) {
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
   console.log('newNotif[address] length1:', newNotif[address].length); // todo remove dev item
-  newNotif[address] = addUpdateSwapNotification(
+  newNotif[address] = await addUpdateSwapNotification(
     newNotif[address],
     val,
     state.network.type.name

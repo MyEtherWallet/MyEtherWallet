@@ -18,6 +18,7 @@ const type = {
 const notificationType = {
   TRANSACTION: 'transaction',
   SWAP: 'swap',
+  SWAP_ERROR: 'swapError',
   DEX_SWAP: 'dex_swap',
   ERROR: 'transactionError'
 };
@@ -41,13 +42,14 @@ const swapIndexes = {
   label: 0,
   address: 1,
   details: 2,
-  response: 3
+  txDetails: 3,
+  response: 4
 };
 
 const txIndexes = {
   label: 0,
   address: 1,
-  details: 2,
+  txDetails: 2,
   response: 3
 };
 

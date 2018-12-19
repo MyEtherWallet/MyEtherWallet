@@ -646,11 +646,11 @@ export default {
       }
     },
     resetSwapState() {
-      this.toAddress = '';
+      // this.toAddress = '';
       this.fromCurrency = this.baseCurrency;
-      this.toCurrency = 'BTC';
+      // this.toCurrency = 'BTC';
       this.fromValue = 1;
-      this.toValue = 1;
+      this.toValue = 0;
     }
   }
 };

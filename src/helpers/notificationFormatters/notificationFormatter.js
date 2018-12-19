@@ -44,21 +44,21 @@ const addUpdateNotification = function(newNotif, val, network) {
   }
 };
 
-const addUpdateSwapNotification = function(newNotif, val, network) {
+const addUpdateSwapNotification = async function(newNotif, val, network) {
   switch (val[0]) {
     case type.TRANSACTION_HASH:
     case type.SWAP_HASH:
-      return swapHash(newNotif, val, network);
+      return await swapHash(newNotif, val, network);
     case type.TRANSACTION_RECEIPT:
     case type.SWAP_RECEIPT:
-      return swapReceipt(newNotif, val, network);
+      return await swapReceipt(newNotif, val, network);
     case type.TRANSACTION_ERROR:
     case type.SWAP_ERROR:
-      return swapError(newNotif, val, network);
+      return await swapError(newNotif, val, network);
     case type.DEX_SWAP:
-      return batchSwap(newNotif, val, network);
+      return await batchSwap(newNotif, val, network);
     case type.SWAP_ORDER:
-      return swapOrder(newNotif, val, network);
+      return await swapOrder(newNotif, val, network);
     default:
       break;
   }

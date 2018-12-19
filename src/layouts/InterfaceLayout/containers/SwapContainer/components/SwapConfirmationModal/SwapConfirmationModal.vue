@@ -162,6 +162,7 @@ export default {
                       'Swap_Hash',
                       this.currentAddress,
                       this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
                       hash
                     ]);
                   })
@@ -170,25 +171,29 @@ export default {
                       'Swap_Receipt',
                       this.currentAddress,
                       this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
                       res
                     ]);
                   })
                   .on('error', err => {
+                    console.log('swap error2.1'); // todo remove dev item
                     this.$store.dispatch('addSwapNotification', [
                       'Swap_Error',
                       this.currentAddress,
                       this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
                       err
                     ]);
                   })
                   .catch(err => {
-                    console.log('swap error2'); // todo remove dev item
-                    this.$store.dispatch('addSwapNotification', [
-                      'Swap_Error',
-                      this.currentAddress,
-                      this.swapDetails,
-                      err
-                    ]);
+                    console.log('swap error2.2'); // todo remove dev item
+                    // this.$store.dispatch('addSwapNotification', [
+                    //   'Swap_Error',
+                    //   this.currentAddress,
+                    //   this.swapDetails,
+                    //   this.preparedSwap[this.preparedSwap.length - 1],
+                    //   err
+                    // ]);
                   });
               });
 
@@ -235,6 +240,7 @@ export default {
                   'Swap_Hash',
                   this.currentAddress,
                   this.swapDetails,
+                  this.preparedSwap[0],
                   hash
                 ]);
               })
@@ -243,6 +249,7 @@ export default {
                   'Swap_Receipt',
                   this.currentAddress,
                   this.swapDetails,
+                  this.preparedSwap[0],
                   res
                 ]);
               })
@@ -251,6 +258,7 @@ export default {
                   'Swap_Error',
                   this.currentAddress,
                   this.swapDetails,
+                  this.preparedSwap[0],
                   err
                 ]);
               });
@@ -263,6 +271,7 @@ export default {
                 'Swap_Hash',
                 this.currentAddress,
                 this.swapDetails,
+                this.preparedSwap,
                 hash
               ]);
             })
@@ -271,6 +280,7 @@ export default {
                 'Swap_Receipt',
                 this.currentAddress,
                 this.swapDetails,
+                this.preparedSwap,
                 res
               ]);
             })
@@ -279,6 +289,7 @@ export default {
                 'Swap_Error',
                 this.currentAddress,
                 this.swapDetails,
+                this.preparedSwap,
                 err
               ]);
             });

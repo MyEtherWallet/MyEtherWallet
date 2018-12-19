@@ -168,7 +168,7 @@
   }
 
   display: flex;
-  align-items: center;
+  //align-items: center;
   padding: 10px 30px;
 
   > ul {
@@ -219,6 +219,15 @@
         font-weight: 600;
       }
     }
+  }
+
+  .tx-hash {
+    p {
+      margin-top: 10px;
+    }
+    align-items: self-start;
+    left: 0 !important;
+    justify-content: flex-start;
   }
 }
 
