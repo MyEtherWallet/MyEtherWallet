@@ -34,8 +34,8 @@ function buildPayload(method, data) {
 }
 
 function stringEqual(strA, strB) {
-  var mismatch = 0;
-  for (var i = 0; i < strA.length; ++i) {
+  let mismatch = 0;
+  for (let i = 0; i < strA.length; ++i) {
     mismatch |= strA.charCodeAt(i) ^ strB.charCodeAt(i);
   }
   return mismatch === 0;
