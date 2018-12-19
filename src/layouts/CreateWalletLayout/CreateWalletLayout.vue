@@ -51,8 +51,8 @@
                 :param="'Json'"
               />
               <create-wallet-input-footer
-                :combo="$t('createWallet.passMnem')"
-                :desc="$t('createWallet.passMnemDesc')"
+                :combo="$t('createWallet.keyPass')"
+                :desc="$t('createWallet.keyPassDesc')"
               />
             </b-tab>
             <b-tab :title="$t('createWallet.byMnemonic')">
@@ -72,8 +72,8 @@
                 :param="'Mnemonic'"
               />
               <create-wallet-input-footer
-                :combo="$t('createWallet.keyPass')"
-                :desc="$t('createWallet.keyPassDesc')"
+                :combo="$t('createWallet.passMnem')"
+                :desc="$t('createWallet.passMnemDesc')"
               />
             </b-tab>
           </b-tabs>

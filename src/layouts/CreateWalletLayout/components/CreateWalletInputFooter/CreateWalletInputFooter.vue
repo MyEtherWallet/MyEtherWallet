@@ -2,7 +2,7 @@
   <div class="footer-text">
     <p>
       <span>{{ $t('createWallet.doNotForget') }}</span>
-      {{ $t('createWallet.doNotForgetDesc') }}<span>{{ combo }}</span>
+      {{ $t('createWallet.doNotForgetDesc') }}<span> {{ combo }}</span>
       {{ desc }}
     </p>
   </div>
