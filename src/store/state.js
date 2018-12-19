@@ -30,7 +30,7 @@ const state = {
   notifications: notifications,
   path: '',
   online: true,
-  Transactions: {},
+  transactions: {},
   wallet: null,
   web3: {},
   sidemenuOpen: false

@@ -22,6 +22,7 @@
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
 - Add support for Ledger live paths. [#216](https://github.com/MyEtherWallet/MyEtherWallet/pull/216)
+- Implement Swap [#127](https://github.com/MyEtherWallet/MyEtherWallet/pull/127)
 
 ### Devop
 

@@ -1,18 +1,15 @@
 import { shallowMount } from '@vue/test-utils';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
 import { Tooling } from '@@/helpers';
-import DetailInformation from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/components/DetailInformation/DetailInformation.vue';
 
 const RouterLinkStub = {
   name: 'router-link',
   template: '<p> <slot> </slot></p>',
-  // render: ()=>{},
   props: ['to']
 };
 
 describe('SwapConfirmationModal.vue', () => {
   let localVue, i18n, wrapper, store;
-  // const resetView = jest.fn(() => console.log('resetView function called'));
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -27,8 +24,7 @@ describe('SwapConfirmationModal.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'router-link': RouterLinkStub,
-        'detail-information': DetailInformation
+        'router-link': RouterLinkStub
       }
     });
   });
