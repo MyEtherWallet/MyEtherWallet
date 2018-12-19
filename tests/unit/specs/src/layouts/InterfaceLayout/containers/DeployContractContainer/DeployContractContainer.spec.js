@@ -25,7 +25,7 @@ describe('DeployContractContainer.vue', () => {
       setGasPrice: jest.fn()
     };
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][2];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(
@@ -136,9 +136,7 @@ describe('DeployContractContainer.vue', () => {
     it('should delete Input when click button', () => {
       const bytecode = 'bytecode';
       wrapper.setData({ bytecode });
-      //console.log(wrapper.vm.$el.querySelectorAll('textarea')[0].value);
       wrapper.find('.copy-buttons span').trigger('click');
-      // console.log(wrapper.vm.$data.bytecode)
     });
   });
 });

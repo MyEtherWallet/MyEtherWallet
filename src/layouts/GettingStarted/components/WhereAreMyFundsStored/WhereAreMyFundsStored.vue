@@ -35,6 +35,7 @@
                 <a
                   href="https://kb.myetherwallet.com/getting-started/getting-started-new.html"
                   target="_blank"
+                  rel="noopener noreferrer"
                   >{{ $t('gettingStarted.whatIsBlockchainDesc2link') }}</a
                 >.
               </p>

@@ -33,7 +33,13 @@
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
-              <td>{{ token.balance }}</td>
+              <td
+                v-if="token.balance === 'Load'"
+                @click="getSpecificTokenBalance(token, index)"
+              >
+                {{ token.balance }}
+              </td>
+              <td v-else>{{ token.balance }}</td>
             </tr>
           </table>
 
@@ -78,6 +84,8 @@
 import store from 'store';
 import { mapGetters } from 'vuex';
 import InterfaceTokensModal from '../InterfaceTokensModal';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -103,7 +111,8 @@ export default {
     return {
       search: '',
       localTokens: [],
-      customTokens: []
+      customTokens: [],
+      util: utils
     };
   },
   computed: {
@@ -136,6 +145,10 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    async getSpecificTokenBalance(token, idx) {
+      this.tokens[idx].balance = await this.getTokenBalance(token);
+      this.tokens.sort(sortByBalance);
+    },
     addTokenModal() {
       this.$refs.tokenModal.$refs.token.show();
     },
@@ -181,16 +194,20 @@ export default {
     async assignTokens(arr, query) {
       const oldArray = this.customTokens.slice();
       if (query !== '') {
-        this.customTokens = oldArray.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
-        this.localTokens = this.tokens.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
+        this.customTokens = oldArray
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
+        this.localTokens = this.tokens
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
       } else {
         this.localTokens = arr;
         if (

@@ -1,6 +1,7 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
+import { utils } from '../helpers';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
 import {
@@ -440,7 +441,7 @@ export default class Kyber {
 
   getTokenAddress(token) {
     try {
-      if (token === networkSymbols.ETH) {
+      if (utils.stringEqual(networkSymbols.ETH, token)) {
         return this.tokenDetails[token].contractAddress;
       }
       return this.web3.utils.toChecksumAddress(

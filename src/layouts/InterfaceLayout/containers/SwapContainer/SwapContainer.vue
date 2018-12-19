@@ -5,7 +5,7 @@
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="swapStarted"
+      @swapStarted="resetSwapState"
     />
 
     <swap-send-to-modal
@@ -644,9 +644,6 @@ export default {
         console.error(e);
         errorLogger(e);
       }
-    },
-    swapStarted(details) {
-      console.log(details); // todo remove dev item
     },
     resetSwapState() {
       this.toAddress = '';

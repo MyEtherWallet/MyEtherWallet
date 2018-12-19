@@ -260,7 +260,6 @@ export default class Simplex {
     }
   }
 
-  // ============================= Get and Parse Swap Status  ====================================
   static async getOrderStatus(noticeDetails) {
     const result = await getStatus(noticeDetails.statusId);
     if (result.error) {
