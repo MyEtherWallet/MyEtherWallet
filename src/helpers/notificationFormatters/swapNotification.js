@@ -98,10 +98,9 @@ const swapError = (notifArray, val, network) => {
         val[swapIndexes.response].blockNumber
       ).toString();
       return notifArray;
-    } else {
-      notifArray.push(formatSwapError(val, network));
-      return notifArray;
     }
+    notifArray.push(formatSwapError(val, network));
+    return notifArray;
   }
 
   console.log('notifArray length2', notifArray.length); // todo remove dev item

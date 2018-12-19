@@ -44,7 +44,6 @@ const batchTransactionError = (notifArray, val) => {
     return false;
   });
 
-
   if (~swapNotificationIndex) {
     notifArray[swapNotificationIndex].body.error = true;
     notifArray[swapNotificationIndex].status = notificationStatuses.FAILED;

@@ -101,7 +101,7 @@ import TransactionNotification from './NotificationTypes/TransactionNotification
 import TransactionError from './NotificationTypes/TransactionError/TransactionError';
 import TransactionDetails from './NotificationTypes/NotificationDetails';
 import SwapDetails from './NotificationTypes/SwapDetails';
-import SwapError from './NotificationTypes/SwapError'
+import SwapError from './NotificationTypes/SwapError';
 
 export default {
   components: {
