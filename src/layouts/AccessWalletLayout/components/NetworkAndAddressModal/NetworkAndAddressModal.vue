@@ -37,9 +37,9 @@
                 v-for="net in Networks[key]"
                 :key="net.service"
                 :class="
-                  net.service === network.service &&
+                  net.service === selectedNetwork.service &&
                   net.type &&
-                  net.type.name === network.type.name
+                  net.type.name === selectedNetwork.type.name
                     ? 'current-network'
                     : ''
                 "
