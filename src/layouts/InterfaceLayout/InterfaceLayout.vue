@@ -4,6 +4,12 @@
       ref="networkAddress"
       :hardware-wallet="hwInstance"
     />
+    <hardware-password-modal
+      ref="hardwareModal"
+      :wallet-constructor="walletConstructor"
+      :hardware-brand="hardwareBrand"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
     <print-modal
       ref="printModal"
       :priv-key="wallet.privateKey"
@@ -66,8 +72,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
-
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
+import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -95,7 +101,8 @@ export default {
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
     'print-modal': PrintModal,
-    'network-and-address-modal': NetworkAndAddressModal
+    'network-and-address-modal': NetworkAndAddressModal,
+    'hardware-password-modal': HardwarePasswordModal
   },
   data() {
     return {
@@ -118,7 +125,9 @@ export default {
         bitbox: BitBoxWallet,
         secalot: SecalotWallet
       },
-      hwInstance: {}
+      hwInstance: {},
+      walletConstructor: () => {},
+      hardwareBrand: ''
     };
   },
   computed: {
@@ -154,31 +163,33 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    toggleNetworkAddrModal(walletInstance) {
+      this.$refs.hardwareModal.$refs.password.hide();
+      this.hwInstance = walletInstance;
+      this.$refs.networkAddress.$refs.networkAndAddress.show();
+    },
+    togglePasswordModal(construct, brand) {
+      this.walletConstructor = construct;
+      this.hardwareBrand = brand;
+      this.$refs.hardwareModal.$refs.password.show();
+    },
     switchAddress() {
       switch (this.wallet.identifier) {
         case 'ledger':
           LedgerWallet().then(_newWallet => {
-            this.hwInstance = _newWallet;
-            this.$refs.networkAddress.$refs.networkAndAddress.show();
+            this.toggleNetworkAddrModal(_newWallet);
           });
           break;
         case 'trezor':
           TrezorWallet().then(_newWallet => {
-            this.hwInstance = _newWallet;
-            this.$refs.networkAddress.$refs.networkAndAddress.show();
+            this.toggleNetworkAddrModal(_newWallet);
           });
           break;
         case 'bitbox':
-          this.$emit('hardwareRequiresPassword', {
-            walletConstructor: BitBoxWallet,
-            hardwareBrand: 'DigitalBitbox'
-          });
+          this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
           break;
         case 'secalot':
-          this.$emit('hardwareRequiresPassword', {
-            walletConstructor: SecalotWallet,
-            hardwareBrand: 'Secalot'
-          });
+          this.togglePasswordModal(SecalotWallet, 'Secalot');
           break;
         default:
           // eslint-disable-next-line
