@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
 - Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
 - Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
 - Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
@@ -24,6 +25,8 @@
 
 ### Devop
 
+- Check and verify npm package versions [#233](https://github.com/MyEtherWallet/MyEtherWallet/pull/233)
+- Setup automated travis builds and release [#280](https://github.com/MyEtherWallet/MyEtherWallet/pull/280)
 - Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
 - Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
 - Fixes #237, #238, #236, #260, #253 [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)

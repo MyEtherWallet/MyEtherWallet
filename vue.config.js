@@ -181,6 +181,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/github-black.png',
           'src/assets/images/icons/slack.png',
           'src/assets/images/networks/etsc.svg',
+          'src/assets/images/networks/exp.svg',
           'src/components/ConfirmationModal/ConfirmationModal.scss',
           'src/components/ConfirmationModal/ConfirmationModal.vue',
           'src/components/ConfirmationModal/index.js',
@@ -191,6 +192,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/TransactionsDropdownMenu/TransactionsDropdownMenu.scss',
           'src/components/TransactionsDropdownMenu/TransactionsDropdownMenu.vue',
           'src/contracts/contract-abi-etsc.json',
+          'src/contracts/contract-abi-exp.json',
           'src/layouts/DevelopmentResources/DevelopmentResources.scss',
           'src/layouts/DevelopmentResources/DevelopmentResources.vue',
           'src/layouts/DevelopmentResources/index.js',
@@ -216,7 +218,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/TxStatusLayout/index.js',
           'src/layouts/TxStatusLayout/TxStatusLayout.scss',
           'src/layouts/TxStatusLayout/TxStatusLayout.vue',
-          'src/tokens/tokens-etsc.json'
+          'src/tokens/tokens-etsc.json',
+          'src/tokens/tokens-exp.json'
         ]
       }
     })
