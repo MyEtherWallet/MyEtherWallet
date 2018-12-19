@@ -3,7 +3,8 @@ import {
   notificationType,
   notificationStatuses,
   swapOnlyStatuses,
-  txIndexes
+  txIndexes,
+  swapIndexes
 } from './config';
 import BigNumber from 'bignumber.js';
 
@@ -14,14 +15,19 @@ const transactionHash = (notifArray, val, network) => {
   return notifArray;
 };
 
-const transactionReceipt = (notifArray, val, network) => {
-  const idx = notifArray.findIndex(
-    entry =>
-      entry.hash === val[txIndexes.response].transactionHash &&
-      entry.type !== notificationType.SWAP
+const getNotificationIndex = (entry, val) => {
+  return (
+    entry.hash === val[txIndexes.response].transactionHash &&
+    entry.type !== notificationType.SWAP
   );
+};
 
-  notifArray[idx].status = notificationStatuses.COMPLETE;
+const transactionReceipt = (notifArray, val, network) => {
+  const idx = notifArray.findIndex(entry => getNotificationIndex(entry, val));
+
+  notifArray[idx].status = val[txIndexes.response].status
+    ? notificationStatuses.COMPLETE
+    : notificationStatuses.FAILED;
   notifArray[idx].body.gasUsed = new BigNumber(
     val[txIndexes.response].gasUsed
   ).toString();
@@ -33,12 +39,9 @@ const transactionReceipt = (notifArray, val, network) => {
 };
 
 const transactionError = (notifArray, val, network) => {
-  const idx = notifArray.findIndex(
-    entry =>
-      entry.hash === val[txIndexes.response].transactionHash &&
-      entry.type !== notificationType.SWAP
-  );
-  console.log('error item location:', idx); // todo remove dev item
+  const idx = notifArray.findIndex(entry => getNotificationIndex(entry, val));
+
+  console.log('tx error item location:', idx); // todo remove dev item
   if (idx >= 0 && !val[txIndexes.response].message) {
     notifArray[idx].body.error = true;
     notifArray[idx].type = notificationType.ERROR;

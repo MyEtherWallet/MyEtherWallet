@@ -101,6 +101,7 @@ import TransactionNotification from './NotificationTypes/TransactionNotification
 import TransactionError from './NotificationTypes/TransactionError/TransactionError';
 import TransactionDetails from './NotificationTypes/NotificationDetails';
 import SwapDetails from './NotificationTypes/SwapDetails';
+import SwapError from './NotificationTypes/SwapError'
 
 export default {
   components: {
@@ -108,7 +109,8 @@ export default {
     'transaction-notification': TransactionNotification,
     'transaction-error': TransactionError,
     'transaction-details': TransactionDetails,
-    'swap-details': SwapDetails
+    'swap-details': SwapDetails,
+    'swap-error': SwapError
   },
   data() {
     return {
@@ -182,6 +184,8 @@ export default {
     useComponent(type) {
       if (type === 'swap') {
         return 'swap-notification';
+      } else if (type === 'swapError') {
+        return 'swap-error';
       } else if (type === 'transactionError') {
         return 'transaction-error';
       }

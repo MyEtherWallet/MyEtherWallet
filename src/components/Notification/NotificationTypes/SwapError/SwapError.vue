@@ -24,7 +24,7 @@
       <ul>
         <li class="swap-details">
           <ul>
-            <li >
+            <li>
               <p class="icon from-swap-icon">
                 <i :class="['cc', notice.body.fromCurrency, 'cc-icon']"></i>
               </p>
@@ -51,7 +51,11 @@
             </li>
           </ul>
         </li>
-        <li class="tx-hash"><p >Transaction Hash:</p></li>
+        <li v-if="notice.body.errorMessage" class="tx-hash">
+          <p>Error Message:</p>
+          <p>{{ notice.body.errorMessage }}</p>
+        </li>
+        <li class="tx-hash"><p>Transaction Hash:</p></li>
         <li v-if="notice.hash" class="tx-hash">
           <a :href="hashLink(notice.hash)" target="_blank">
             {{ notice.hash }}
@@ -307,5 +311,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './SwapNotification.scss';
+@import './SwapError.scss';
 </style>

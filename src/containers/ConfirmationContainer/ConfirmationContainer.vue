@@ -341,7 +341,9 @@ export default {
                 this.$store.dispatch('addNotification', [
                   'Error',
                   this.fromAddress,
-                  this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                  this.unSignedArray.find(
+                    entry => +_tx.nonce === +entry.nonce
+                  ) || _tx,
                   err
                 ]);
                 this.showErrorModal('Transaction Error!', 'Return');
@@ -351,12 +353,15 @@ export default {
               // was falling through on error
               if (err === null) {
                 console.log('NO ERROR'); // todo remove dev item
+
                 promiEvent.eventEmitter.emit('transactionHash', data);
                 this.$store
                   .dispatch('addNotification', [
-                    'Batch_Hash',
+                    'Hash',
                     this.fromAddress,
-                    this.unSignedArray.find(entry => _tx.nonce === entry.nonce),
+                    this.unSignedArray.find(
+                      entry => +_tx.nonce === +entry.nonce
+                    ),
                     data
                   ])
                   .then(() => {
@@ -364,16 +369,17 @@ export default {
                   });
 
                 const pollReceipt = setInterval(() => {
-                  if (data == undefined) clearInterval(pollReceipt);
+                  if (data === undefined || data === null)
+                    clearInterval(pollReceipt);
                   web3.eth.getTransactionReceipt(data).then(res => {
                     if (res !== null) {
                       promiEvent.eventEmitter.emit('receipt', res);
                       promiEvent.resolve(res);
                       this.$store.dispatch('addNotification', [
-                        'Batch_Receipt',
+                        'Receipt',
                         this.fromAddress,
                         this.unSignedArray.find(
-                          entry => _tx.nonce === entry.nonce
+                          entry => +_tx.nonce === +entry.nonce
                         ),
                         res
                       ]);
