@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
 
@@ -87,7 +87,7 @@ describe('SwapContainer.vue', () => {
     });
 
     beforeEach(() => {
-      wrapper = shallowMount(SwapContainer, {
+      wrapper = mount(SwapContainer, {
         localVue,
         i18n,
         store,
