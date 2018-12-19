@@ -20,6 +20,9 @@
     "update:lists": "node fetchEthListData.js",
     "update": "npm run update:packages && npm run update:lists"
   },
+  "gitHooks": {
+    "pre-commit": "npm run lint && npm run test"
+  },
   "dependencies": {
     "idna-uts46": "1.1.0",
     "register-service-worker": "1.5.2",
@@ -84,9 +87,11 @@
     "u2f-api": "1.0.9",
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
+    "uuid": "3.3.2",
     "vue-i18n": "8.4.0",
     "vue-template-compiler": "2.5.21",
     "vue-worker": "1.2.1",
+    "wallet-address-validator": "0.2.4",
     "web3": "1.0.0-beta.37",
     "web3-core-helpers": "1.0.0-beta.37",
     "web3-core-method": "1.0.0-beta.37",
@@ -101,8 +106,5 @@
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
-  },
-  "gitHooks": {
-    "pre-commit": "npm run lint && npm run test"
   }
 }
