@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount, mount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
@@ -15,7 +14,6 @@ const RouterLinkStub = {
 
 describe('SwapContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const resetView = jest.fn(() => console.log('resetView function called'));
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;

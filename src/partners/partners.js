@@ -20,14 +20,7 @@ export default class SwapProviders {
 
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
-      this.providers.set(
-        entry.getName(),
-        new entry({
-          web3: environmentSupplied.web3,
-          ens: environmentSupplied.ens,
-          network: environmentSupplied.network
-        })
-      );
+      this.providers.set(entry.getName(), new entry(environmentSupplied));
     });
 
     this.providerRatesRecieved = [];
@@ -189,8 +182,14 @@ export default class SwapProviders {
     const denominator = new BigNumber(10).pow(decimals);
     return new BigNumber(value)
       .times(denominator)
-      .integerValue(BigNumber.ROUND_DOWN)
+      .toFixed(0)
       .toString(10);
+  }
+
+  convertToTokenBase(token, value) {
+    const decimals = this.getTokenDecimals(token);
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value).div(denominator).toString(10);
   }
 
   getTokenDecimals(currency) {

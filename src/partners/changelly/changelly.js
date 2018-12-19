@@ -2,8 +2,10 @@ import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
 import {
+  notificationStatuses,
   ChangellyCurrencies,
-  changellyStatuses,
+  statuses,
+  TIME_SWAP_VALID,
   PROVIDER_NAME
 } from './config';
 import changellyCalls from './changelly-calls';
@@ -26,6 +28,10 @@ export default class Changelly {
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  static isDex() {
+    return false;
   }
 
   async getSupportedCurrencies() {
@@ -153,6 +159,7 @@ export default class Changelly {
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;
+      swapDetails.isDex = Changelly.isDex();
       return swapDetails;
     }
     throw Error('From amount below changelly minimun for currency pair');
@@ -181,20 +188,20 @@ export default class Changelly {
   static parseOrder(order) {
     return {
       orderId: order.id,
-      statusId: undefined,
+      statusId: order.id,
       sendToAddress: order.payinAddress,
       recValue: order.amountExpectedTo,
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 600 // Rates provided are only an estimate
+      validFor: TIME_SWAP_VALID // Rates provided are only an estimate, and
     };
   }
 
-  static async getOrderStatus(swapDetails, network) {
+  static async getOrderStatus(noticeDetails, network) {
     try {
       const status = await changellyCalls.getStatus(
-        swapDetails.orderId,
+        noticeDetails.statusId,
         network
       );
       return Changelly.parseChangellyStatus(status);
@@ -206,38 +213,23 @@ export default class Changelly {
 
   static parseChangellyStatus(status) {
     switch (status) {
-      case changellyStatuses.new:
-      case changellyStatuses.waiting:
-        return 'new';
-      case changellyStatuses.confirming:
-      case changellyStatuses.exchanging:
-      case changellyStatuses.sending:
-      case changellyStatuses.hold:
-        return 'pending';
-      case changellyStatuses.finished:
-        return 'complete';
-      case changellyStatuses.failed:
-        return 'failed';
-      case changellyStatuses.overdue:
-      case changellyStatuses.refunded:
-        return 'cancelled';
+      case statuses.new:
+        return notificationStatuses.NEW;
+      case statuses.waiting:
+        return notificationStatuses.SENT;
+      case statuses.confirming:
+      case statuses.exchanging:
+      case statuses.sending:
+      case statuses.hold:
+        return notificationStatuses.PENDING;
+      case statuses.finished:
+        return notificationStatuses.COMPLETE;
+      case statuses.failed:
+        return notificationStatuses.FAILED;
+      case statuses.overdue:
+      case statuses.refunded:
+        return notificationStatuses.CANCELLED;
     }
-  }
-
-  static statuses(data) {
-    const statuses = {
-      new: 1,
-      waiting: 2,
-      confirming: 3,
-      confirmed: 10,
-      finished: 0,
-      failed: -1
-    };
-    const status = statuses[data.status];
-    if (typeof status === 'undefined') {
-      return 2;
-    }
-    return status;
   }
 
   async validateAddress(toCurrency, address) {

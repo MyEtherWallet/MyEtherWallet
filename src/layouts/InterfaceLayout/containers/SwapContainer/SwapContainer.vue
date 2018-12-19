@@ -5,7 +5,7 @@
       :selected-provider="selectedProvider"
       :swap-details="swapDetails"
       :current-address="currentAddress"
-      @swapStarted="swapStarted"
+      @swapStarted="resetSwapState"
     />
 
     <swap-send-to-modal
@@ -29,8 +29,17 @@
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.from') }}</h4>
+          <div class="title-container">
+            <div class="title title-and-copy">
+              <h4>{{ $t('common.from') }}</h4>
+              <p
+                v-if="tokenBalances[fromCurrency] > 0"
+                class="all-button prevent-user-select"
+                @click="swapAll"
+              >
+                {{ $t('common.totalBalance') }}
+              </p>
+            </div>
           </div>
           <swap-currency-picker
             :currencies="fromArray"
@@ -101,7 +110,11 @@
           :currency="toCurrency"
           :current-address="currentAddress"
           @toAddress="setToAddress"
+          @validAddress="setAddressValid"
         />
+      </div>
+      <div v-show="!isValidAddress" class="error-message-container">
+        <p>{{ $t('interface.notValidAddr') }}</p>
       </div>
     </div>
 
@@ -219,10 +232,10 @@ export default {
       toAddress: '',
       currentAddress: '',
       refundAddress: '',
+      validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3,
-        ens: this.$store.state.ens
+        web3: this.$store.state.web3
       }),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -343,6 +356,9 @@ export default {
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
+    isValidAddress() {
+      return this.validAddress;
+    },
     notEnough() {
       if (
         this.swap.isToken(this.fromCurrency) &&
@@ -389,8 +405,7 @@ export default {
       this.loadingData = false;
       this.swap = new Swap(providers, {
         network: newVal.type.name,
-        web3: this.web3,
-        ens: this.ens
+        web3: this.web3
       });
     }
   },
@@ -412,6 +427,15 @@ export default {
     },
     setRefundAddress(address) {
       this.refundAddress = address;
+    },
+    setAddressValid(value) {
+      this.validAddress = value;
+    },
+    swapAll() {
+      this.fromValue = this.swap.convertToTokenBase(
+        this.fromCurrency,
+        this.tokenBalances[this.fromCurrency]
+      );
     },
     setFromCurrency(value) {
       this.currencyDetails.from = value;
@@ -556,7 +580,7 @@ export default {
                 return {
                   provider: entry.provider,
                   fromCurrency,
-                  fromValue: 1,
+                  fromValue: this.fromValue, // todo uncomment after dev
                   toCurrency,
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
@@ -614,12 +638,6 @@ export default {
         console.error(e);
         errorLogger(e);
       }
-    },
-    swapStarted(swapDetails) {
-      this.$store.dispatch('addSwapTransaction', [
-        this.currentAddress,
-        swapDetails
-      ]);
     },
     resetSwapState() {
       this.toAddress = '';

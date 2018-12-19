@@ -50,6 +50,7 @@
   "lastBlock": "Last block",
   "depAmount": "Deposit Amount",
   "notEnoughBalance": "You have insufficient funds.",
+  "swapButtonLoading": "Finalizing Swap Details",
   "refund": "address for refund (if needed) from Changelly",
   "providers": "Providers",
   "buyEth": "Buy ETH with",
@@ -62,7 +63,7 @@
   "addr": "Address",
   "search": "Search",
   "timeRemaining": "Time Remaining",
-  "swapButtonLoading": "Finalizing Swap Details",
   "sendTxType": "Type",
-  "belowMin":"Below minimun swap value of"
+  "belowMin":"Below minimun swap value of",
+  "notValidAddr":"Not a valid address for destination chain"
 }

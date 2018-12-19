@@ -5,6 +5,7 @@ import {
   BityCurrencies,
   bityFiatCurrencies,
   PROVIDER_NAME,
+  TIME_SWAP_VALID,
   BITY_MAX,
   BITY_MIN,
   BITY_DECIMALS
@@ -41,6 +42,10 @@ export default class BitySwap {
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  static isDex() {
+    return false;
   }
 
   get isValidNetwork() {
@@ -194,6 +199,7 @@ export default class BitySwap {
     swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
     swapDetails.providerAddress =
       swapDetails.dataForInitialization.payment_address;
+    swapDetails.isDex = BitySwap.isDex();
     return swapDetails;
   }
 
@@ -230,12 +236,12 @@ export default class BitySwap {
       sendValue: order.input.amount,
       status: order.status,
       timestamp: order.timestamp_created,
-      validFor: order.validFor
+      validFor: order.validFor || TIME_SWAP_VALID
     };
   }
 
-  static async getOrderStatus(swapDetails) {
-    const data = await getStatus({ orderid: swapDetails.statusId });
+  static async getOrderStatus(noticeDetails) {
+    const data = await getStatus({ orderid: noticeDetails.statusId });
     switch (data.status) {
       case bityStatuses.OPEN:
         return 'new';
