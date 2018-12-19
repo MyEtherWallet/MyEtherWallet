@@ -1281,3 +1281,11 @@
   line-height: 15px;
   font-size: 13px;
 }
+
+// *********************************************************************
+// [Temporary fix] for Settings modal's expending menu's
+// max-height.
+// *********************************************************************
+.settings-modal .contents-container.opened {
+  max-height: 600px !important;
+}
