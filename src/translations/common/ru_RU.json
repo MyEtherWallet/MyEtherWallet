@@ -1,6 +1,7 @@
 {
   "getAFreeWallet": "Получить бесплатный кошелек",
   "accessMyWallet": "Войти в мой кошелек",
+  "accessWallet": "Access Wallet",
   "faqs": "ЧаВо",
   "sendTx": "Отправить ETH и токены",
   "swap": "Обменять",

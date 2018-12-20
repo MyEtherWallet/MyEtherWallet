@@ -112,7 +112,13 @@
           </div>
           <p class="learn-more">
             Have any issues?
-            <a href="/" target="_blank" rel="noopener noreferrer">Learn more</a>
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
           </p>
         </div>
       </div>
