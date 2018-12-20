@@ -11,7 +11,9 @@ const derivationPaths = {
   [nodes.ETHO.name]: "m/44'/1313114'/0'/0",
   [nodes.ROP.name]: "m/44'/1'/0'/0",
   [nodes.RIN.name]: "m/44'/1'/0'/0",
-  [nodes.KOV.name]: "m/44'/1'/0'/0"
+  [nodes.KOV.name]: "m/44'/1'/0'/0",
+  [nodes.RSK.name]: "m/44'/137'/0'/0",
+  [nodes.RSKTEST.name]: "m/44'/37310'/0'/0"
 };
 
 export default derivationPaths;

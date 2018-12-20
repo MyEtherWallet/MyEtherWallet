@@ -19,7 +19,9 @@ const derivationPaths = {
   [nodes.MUSIC.name]: "m/44'/1'/0'/0",
   [nodes.GO.name]: "m/44'/1'/0'/0",
   [nodes.EOSC.name]: "m/44'/1'/0'/0",
-  [nodes.ESN.name]: "m/44'/1'/0'/0"
+  [nodes.ESN.name]: "m/44'/1'/0'/0",
+  [nodes.RSK.name]: "m/44'/137'/0'/0",
+  [nodes.RSKTEST.name]: "m/44'/37310'/0'/0"
 };
 
 function getDerivationPath(networkName) {

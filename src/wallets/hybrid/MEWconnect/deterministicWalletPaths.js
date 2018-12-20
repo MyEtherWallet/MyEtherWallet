@@ -31,7 +31,9 @@ const paths = {
   goPath: { label: 'GoChain (GO)', dpath: "m/44'/6060'/0'/0" }, // first address: m/44'/6060'/0'/0/0
   hwEOSClassicPath: { label: 'EOS Classic (EOS)', dpath: "m/44'/2018'/0'/0" }, // first address: m/44'/2018'/0'/0/0
   hwAkromaPath: { label: 'Akroma (AKA)', dpath: "m/44'/200625'/0'/0" }, // first address: m/44'/200625'/0'/0/0
-  hwESNetworkPath: { label: 'EtherSocial (ESN)', dpath: "m/44'/31102'/0'/0" } // first address: m/44'/31102'/0'/0/0
+  hwESNetworkPath: { label: 'EtherSocial (ESN)', dpath: "m/44'/31102'/0'/0" }, // first address: m/44'/31102'/0'/0/0
+  rskNetworkPath: { label: 'Mainnet (RSK)', dpath: "m/44'/137'/0'/0" }, // first address: m/44'/137'/0'/0/0
+  rskTestNetworkPath: { label: 'Testnet (RSK)', dpath: "m/44'/37310'/0'/0" }, // first address: m/44'/37310'/0'/0/0
 };
 
 export { paths, ledger, trezor };
@@ -52,6 +54,10 @@ export function getDerivationPath(networkName, deviceBrand) {
           return ledger.defaultDPath;
         case 'AKROMA':
           return paths.hwAkromaPath;
+        case 'RSK':
+          return paths.rskNetworkPath;
+        case 'RSKTEST':
+          return paths.rskTestNetworkPath;
         default:
           return ledger.defaultDPath;
       }
@@ -89,6 +95,10 @@ export function getDerivationPath(networkName, deviceBrand) {
           return paths.hwAkromaPath;
         case 'ESN':
           return paths.hwESNetworkPath;
+        case 'RSK':
+          return paths.rskNetworkPath;
+        case 'RSKTEST':
+          return paths.rskTestNetworkPath;
         default:
           return paths.defaultDPath;
       }
@@ -123,6 +133,10 @@ export function getDerivationPath(networkName, deviceBrand) {
         return paths.hwAkromaPath;
       case 'ESN':
         return paths.hwESNetworkPath;
+      case 'RSK':
+        return paths.rskNetworkPath;
+      case 'RSKTEST':
+        return paths.rskTestNetworkPath;
       default:
         return paths.defaultDPath;
     }
