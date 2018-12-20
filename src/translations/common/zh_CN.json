@@ -1,6 +1,7 @@
 {
-  "getAFreeWallet": "免费获取钱包",
+  "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "访问我的钱包",
+  "accessWallet": "Access Wallet",
   "faqs": "常见问题",
   "sendTx": "发送以太币和代币",
   "swap": "货币交换",
