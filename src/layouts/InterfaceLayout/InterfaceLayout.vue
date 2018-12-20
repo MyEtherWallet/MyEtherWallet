@@ -1,5 +1,15 @@
 <template>
   <div class="send-eth-and-tokens">
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+    />
+
+    <mnemonic-password-modal
+      ref="mnemonicPhrasePassword"
+      :hardware-wallet-open="toggleNetworkAddrModal"
+      :phrase="phrase"
+    />
     <network-and-address-modal
       ref="networkAddress"
       :hardware-wallet="hwInstance"
@@ -74,6 +84,8 @@ import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
+import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
+import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -102,7 +114,9 @@ export default {
     'interface-tokens': InterfaceTokens,
     'print-modal': PrintModal,
     'network-and-address-modal': NetworkAndAddressModal,
-    'hardware-password-modal': HardwarePasswordModal
+    'hardware-password-modal': HardwarePasswordModal,
+    'mnemonic-modal': MnemonicModal,
+    'mnemonic-password-modal': MnemonicPasswordModal
   },
   data() {
     return {
@@ -127,7 +141,8 @@ export default {
       },
       hwInstance: {},
       walletConstructor: () => {},
-      hardwareBrand: ''
+      hardwareBrand: '',
+      phrase: ''
     };
   },
   computed: {
@@ -163,8 +178,14 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    mnemonicphrasePasswordModalOpen(phrase) {
+      this.phrase = phrase;
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    },
     toggleNetworkAddrModal(walletInstance) {
       this.$refs.hardwareModal.$refs.password.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.hide();
       this.hwInstance = walletInstance;
       this.$refs.networkAddress.$refs.networkAndAddress.show();
     },
@@ -173,6 +194,7 @@ export default {
       this.hardwareBrand = brand;
       this.$refs.hardwareModal.$refs.password.show();
     },
+
     switchAddress() {
       switch (this.wallet.identifier) {
         case 'ledger':
@@ -190,6 +212,9 @@ export default {
           break;
         case 'secalot':
           this.togglePasswordModal(SecalotWallet, 'Secalot');
+          break;
+        case 'mnemonic':
+          this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
           break;
         default:
           // eslint-disable-next-line
