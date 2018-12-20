@@ -12,7 +12,7 @@
     "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
-    "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
+    "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "start": "npm run update && npm run dev",
     "test:unit": "vue-cli-service test:unit",
