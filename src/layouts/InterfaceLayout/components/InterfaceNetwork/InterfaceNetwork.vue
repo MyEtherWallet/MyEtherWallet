@@ -11,10 +11,6 @@
         <div class="information-container">
           <div class="title-and-helper">
             <h2>{{ $t('interface.network') }}</h2>
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'"
-            />
           </div>
           <p v-if="wallet.identifier !== 'web3_wallet'">
             {{ network.service + '(' + network.type.name + ')' }}
