@@ -1,7 +1,6 @@
 import tokens from '@/tokens/tokens-rsk.json';
 import contracts from '@/contracts/contract-abi-rsk.json';
 import rsk from '@/assets/images/networks/rsk.svg';
-import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'RSK',
@@ -12,7 +11,7 @@ export default {
   chainID: 30,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '0x4efd25e3d348f8f25a14fb7655fba6f72edfe93a',
-  ensAbi: EthAbi,
+  ensResolver: '',
+  ensAbi: '',
   icon: rsk
 };

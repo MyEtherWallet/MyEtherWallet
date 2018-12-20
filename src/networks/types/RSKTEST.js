@@ -1,7 +1,6 @@
 import tokens from '@/tokens/tokens-rsk-test.json';
 import contracts from '@/contracts/contract-abi-rsk-test.json';
 import rsk from '@/assets/images/networks/rsk.svg';
-import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'RSKTEST',
@@ -13,6 +12,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ensResolver: '',
-  ensAbi: EthAbi,
+  ensAbi: '',
   icon: rsk
 };
