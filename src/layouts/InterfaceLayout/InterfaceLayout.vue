@@ -303,7 +303,7 @@ export default {
           })
           .catch(e => {
             // eslint-disable-next-line
-            console.error(e)
+            console.error(e);
           });
       }, 500);
     },

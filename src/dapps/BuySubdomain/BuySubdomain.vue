@@ -31,7 +31,7 @@
                   <span class="currency">ETH </span>
                 </div>
               </div>
-              <button @click="buyDomain(item);">
+              <button @click="buyDomain(item)">
                 <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
                 <span v-else> <i class="fa fa-times" /> </span>
               </button>

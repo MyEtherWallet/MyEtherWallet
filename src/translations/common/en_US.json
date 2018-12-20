@@ -53,5 +53,5 @@
   "gasPrice": "Gas Price",
   "data": "Data",
   "confirmAndSend": "Confirm and Send",
-  "waitingForHash" : "Waiting for Transaction Hash"
+  "waitingForHash": "Waiting for Transaction Hash"
 }

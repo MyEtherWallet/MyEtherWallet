@@ -41,7 +41,7 @@
             }}</a>
           </li>
           <li v-if="isHomePage">
-            <a href="/#faqs" @click="isMobileMenuOpen = false;">{{
+            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
               $t('common.faqs')
             }}</a>
           </li>
@@ -193,7 +193,7 @@
               <div
                 v-if="!isMobileMenuOpen"
                 class="mobile-menu-open-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
@@ -202,7 +202,7 @@
               <div
                 v-if="isMobileMenuOpen"
                 class="mobile-menu-close-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
