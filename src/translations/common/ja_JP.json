@@ -1,6 +1,7 @@
 {
-  "getAFreeWallet": "Get a Free wallet",
+  "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "Access My Wallet",
+  "accessWallet": "Access Wallet",
   "faqs": "FAQs",
   "sendTx": "Send ETH & Tokens",
   "swap": "Swap",
