@@ -5,6 +5,8 @@
   "doNotForgetDesc": "to save your password. You will need this",
   "keyPass": "密码 + 密钥库",
   "keyPassDesc": "解锁你钱包的文档。",
+  "passMnem": "Password + Mnemonic Phrase",
+  "passMnemDesc": "to unlock your wallet.",
   "byMnemonic": "By Mnemonic Phrase",
   "byMnemonicSuccess": "成功",
   "byMnemonicSuccessfullyCreated": "您已成功创建了钱包。",
