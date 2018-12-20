@@ -5,7 +5,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Signature:</h4>
+          <h4>Signature</h4>
           <popover :popcontent="$t('popover.whatIsSignatureContent')" />
           <div class="copy-buttons">
             <span @click="deleteInput">{{ $t('common.clear') }}</span>

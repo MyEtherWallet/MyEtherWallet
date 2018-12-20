@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
+.page-container {
+  padding: 0 10px;
+}
+
 .wrap {
   padding-top: 99px;
   @media all and (max-width: $tablet-width) {
@@ -30,7 +34,7 @@
   top: 0;
   width: 100%;
   //z-index: $z-menu + 100;
-  z-index: 1000;
+  z-index: 100;
 
   &.tiny-header {
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
@@ -155,7 +159,7 @@
         display: block;
       }
 
-      .mobile-menu-button {
+      .mobile-menu-open-button {
         padding: 10px 5px;
 
         div {
@@ -170,7 +174,25 @@
           margin: 0;
           width: 15px;
         }
-      }
+      } // .mobile-menu-open-button
+      .mobile-menu-close-button {
+        height: 42px;
+        padding-top: 19px;
+        padding-right: 5px;
+        div {
+          background-color: $background-color-black;
+          border-radius: 2px;
+          height: 4px;
+          width: 31px;
+        }
+        .bar-1 {
+          transform: rotate(45deg);
+        }
+        .bar-2 {
+          margin-top: -4px;
+          transform: rotate(-45deg);
+        }
+      } // .mobile-menu-close-button
     } // .mobile-menu
   } // .header-container
 } // .fixed-header
@@ -182,7 +204,11 @@
   user-select: none;
   display: flex !important;
   align-items: center;
-  padding: 16px 21px 16px 7px !important;
+  //padding: 16px 21px 16px 7px !important;
+
+  li {
+    width: 100%;
+  }
 
   .arrows {
     margin-left: auto;
@@ -199,7 +225,7 @@
     }
 
     img {
-      height: 25px;
+      height: 17px;
       border-radius: 4px;
     }
     p {
@@ -223,7 +249,7 @@
 
 .mobile-menu-underblock {
   pointer-events: none;
-  z-index: 999;
+  z-index: 99;
   position: fixed;
   top: 0;
   left: 0;
@@ -241,8 +267,7 @@
 .mobile-menu-content {
   position: fixed;
   width: 100vw;
-  //z-index: $z-menu + 100;
-  z-index: 1000;
+  z-index: 99;
   top: 0;
   left: 0;
   transition: all 0.2s linear;
@@ -250,14 +275,64 @@
   overflow: hidden;
   background-color: white;
 
+  .page-container {
+    padding-top: 95px;
+    padding-bottom: 90px;
+  }
+
+  .list-right-arrow {
+    display: flex;
+    align-items: center;
+
+    i {
+      margin-left: auto;
+      font-size: 14px;
+    }
+
+    &::after {
+      content: ">";
+      position: absolute;
+      top: 19px;
+      right: 24px;
+      color: $dark-blue-1;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+  .logout-button {
+    margin-top: 15px;
+    border: 1px solid $red-1;
+    border-radius: 4px;
+    text-align: center;
+    padding: 15px;
+    font-size: 15px;
+    color: $red-1;
+    font-weight: 500;
+    background-color: $white;
+
+    &:active {
+      background-color: $red-1;
+      color: $white;
+    }    
+  }
+
   ul {
-    padding: 110px 0 0 0;
-    li {
+    position: relative;
+    >li {
+      position: relative;
+      border-bottom: 1px solid $light-grey-2;
+      &:last-child {
+        border-bottom: 0px;
+      }
       > * {
         padding: 20px;
         font-size: 20px;
         display: block;
         color: $text-base-color;
+        width: 100%;
+        line-height: 21px;
+        user-select: none;
       }
     }
   }
@@ -265,6 +340,11 @@
   @media all and (max-width: $tablet-width) {
     &.mobile-menu-open-height-change {
       height: 100vh;
+      
+      >div {
+        height: 100%;
+        overflow-y: auto;
+      }
     }
   }
 }
@@ -353,3 +433,18 @@
     }
   }
 } // .get-free-wallet
+
+
+
+//********************************************************
+// .info-block-container for mobile interface menu
+//********************************************************
+.info-block-container {
+  //margin-top: 160px;
+
+  >* {
+    margin-bottom: 5px;
+  }
+}
+
+

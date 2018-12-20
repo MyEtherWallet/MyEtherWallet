@@ -19,8 +19,13 @@
       class="mobile-menu-content"
     >
       <div class="page-container">
+        <div v-if="!isHomePage" class="info-block-container">
+          <info-block-address />
+          <info-block-balance />
+          <info-block-network />
+        </div>
         <ul>
-          <li>
+          <li v-if="isHomePage">
             <div
               @click="
                 scrollTop();
@@ -35,17 +40,20 @@
               $t('header.about')
             }}</a>
           </li>
-          <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
+          <li v-if="isHomePage">
+            <a href="/#faqs" @click="isMobileMenuOpen = false;">{{
               $t('common.faqs')
             }}</a>
+          </li>
+          <li class="list-right-arrow">
+            <notification v-if="wallet !== null" ref="notification" />
           </li>
           <li v-if="false">
             <a href="/#news" @click="isMobileMenuOpen = false">{{
               $t('common.news')
             }}</a>
           </li>
-          <li>
+          <li class="list-right-arrow">
             <div class="mobile-language-menu-container">
               <b-nav-item-dropdown
                 class="mobile-language-menu"
@@ -72,11 +80,9 @@
                   {{ language.name }}
                 </b-dropdown-item>
               </b-nav-item-dropdown>
-              <div class="arrows">
-                <i class="fa fa-angle-right" aria-hidden="true" />
-              </div>
             </div>
           </li>
+          <li><button class="logout-button">Log out</button></li>
         </ul>
       </div>
     </div>
@@ -185,12 +191,21 @@
             <!-- .top-menu -->
             <div class="mobile-menu">
               <div
-                class="mobile-menu-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen"
+                v-if="!isMobileMenuOpen"
+                class="mobile-menu-open-button"
+                @click="isMobileMenuOpen = !isMobileMenuOpen;"
               >
                 <div class="bar-1" />
                 <div class="bar-2" />
                 <div class="bar-3" />
+              </div>
+              <div
+                v-if="isMobileMenuOpen"
+                class="mobile-menu-close-button"
+                @click="isMobileMenuOpen = !isMobileMenuOpen;"
+              >
+                <div class="bar-1" />
+                <div class="bar-2" />
               </div>
             </div>
             <!-- .mobile-menu -->
@@ -217,6 +232,9 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import InfoBlockAddress from './components/InfoBlockAddress';
+import InfoBlockBalance from './components/InfoBlockBalance';
+import InfoBlockNetwork from './components/InfoBlockNetwork';
 
 export default {
   components: {
@@ -226,7 +244,10 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     txpoppup: TxTopMenuPopup,
-    'logout-modal': LogoutModal
+    'logout-modal': LogoutModal,
+    'info-block-address': InfoBlockAddress,
+    'info-block-balance': InfoBlockBalance,
+    'info-block-network': InfoBlockNetwork
   },
   data() {
     return {
@@ -258,7 +279,7 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: false
     };
   },
   computed: {

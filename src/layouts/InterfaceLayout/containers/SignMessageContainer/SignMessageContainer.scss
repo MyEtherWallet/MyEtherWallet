@@ -30,6 +30,10 @@ p {
         padding: $interface-text-padding-1;
         width: 100%;
 
+        h4 {
+          margin-right: 5px;
+        }
+
         .select-contract {
           margin-left: auto;
         }

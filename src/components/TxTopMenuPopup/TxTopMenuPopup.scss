@@ -3,8 +3,11 @@
 //******************************************************
 // Wrap
 //******************************************************
-.tx-topmenu-popup .wrap {
-  position: relative;
+.tx-topmenu-popup {
+  width: 100%;
+  .wrap {
+    position: relative;
+  }
 }
 
 //******************************************************
@@ -19,6 +22,10 @@
   margin-left: 30px;
   margin-right: 10px;
 
+  @media all and (max-width: $tablet-width) {
+    display: none;
+  }
+
   .indicator {
     color: red;
     margin-right: 7px;
@@ -32,6 +39,20 @@
   }
 }
 
+.menu-title-mobile {
+  display: none;
+  @media all and (max-width: $tablet-width) {
+    display: block;
+  }
+
+  p {
+    font-size: 20px;
+    display: block;
+    color: $dark-blue-1;
+  }
+}
+
+
 //******************************************************
 // Popup Container
 //******************************************************
@@ -41,11 +62,21 @@
   left: 20px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.1s linear;
+  transition: all 0.1s linear;
+
+  @media all and (max-width: $tablet-width) {
+    transition: max-height 0.2s linear;
+    top: initial;
+    left: initial;
+    position: relative;
+    overflow: hidden;
+    opacity: 1;
+  }
 
   &.popup-open {
     pointer-events: initial;
     opacity: 1;
+    max-height: 200px;
   }
 }
 

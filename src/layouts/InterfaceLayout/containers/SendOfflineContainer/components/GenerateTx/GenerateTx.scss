@@ -1,8 +1,29 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  @media all and (max-width: $tablet-width) {
+    padding: 10px 0;
+  }
+
+  input,
+  textarea {
+    background-color: $background-color-1;
+  }
+
   .send-form {
-    padding: 40px 60px 0;
+    padding: 20px 60px 0;
+
+    &.send-form-top {
+      padding: 40px 60px 0;
+
+      @media all and (max-width: $tablet-width) {
+        padding: 10px;
+      }
+    }
+
+    @media all and (max-width: $tablet-width) {
+      padding: 10px;
+    }
 
     .title-container {
       align-items: flex-end;
@@ -28,15 +49,16 @@
       border-radius: 5px;
 
       .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
+        //background-color: $background-color-1;
+        //border-radius: 5px;
       }
     }
 
     .amount-to-address {
-      display: grid;
-      grid-column-gap: 5px;
-      grid-template-columns: 2fr 3fr;
+      //display: grid;
+      //grid-column-gap: 5px;
+      //grid-template-columns: 2fr 3fr;
+      display: block;
 
       .title {
         margin-bottom: 13px;
@@ -44,6 +66,14 @@
       }
 
       .amount {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 10px;
+
+        @media all and (max-width: $tablet-width) {
+          display: block;
+        }
+
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -59,12 +89,16 @@
 
         .amount-number {
           position: relative;
+          @media all and (max-width: $tablet-width) {
+            margin-top: 20px;
+          }
 
           input {
-            background-color: transparent;
+            //background-color: transparent;
             border: 0;
             padding: 13px 15px;
             width: 100%;
+            border-radius: 4px;
           }
 
           i {
@@ -77,6 +111,7 @@
 
       .to-address {
         position: relative;
+        margin-top: 20px;
 
         .title {
           align-items: center;
@@ -96,18 +131,19 @@
         }
 
         .address-block {
-          height: 98px;
+          //height: 98px;
+          position: relative;
 
           i {
-            bottom: 13px;
+            top: 14px;
             position: absolute;
             right: 13px;
           }
 
-          textarea {
-            background-color: transparent;
+          input {
+            //background-color: transparent;
+            border-radius: 4px;
             border: 0;
-            height: 100%;
             padding: 13px 15px;
             resize: none;
             width: 100%;
@@ -131,7 +167,7 @@
         display: flex;
         position: absolute;
         right: 10px;
-        top: 12px;
+        top: 13px;
 
         p {
           color: $text--link-color;
@@ -175,6 +211,10 @@
     padding: 60px 0;
     text-align: center;
 
+    @media all and (max-width: $mobile-width) {
+      padding: 30px 0;
+    }
+
     .submit-button {
       margin: 0 auto;
       text-align: center;
@@ -189,4 +229,8 @@
 
 .with-resolver {
   display: block !important;
+}
+
+.verified-input {
+  padding-right: 40px !important;
 }

@@ -145,6 +145,11 @@
   display: flex;
   justify-content: center;
   padding: 40px 60px;
+
+  @media all and (max-width: $tablet-width) {
+    padding: 0;
+    margin-top: 50px;
+  }
 }
 
 .flex-container {

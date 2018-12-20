@@ -41,7 +41,7 @@
   i {
     position: absolute;
     right: 20px;
-    top: 16px;
+    top: 20px;
   }
 
   p {
@@ -131,4 +131,13 @@
 
 .subname {
   color: $light-blue-6;
+}
+
+.symbol-name {
+  display: flex;
+  align-items: center;
+
+  .cc {
+    width: 40px;
+  }
 }

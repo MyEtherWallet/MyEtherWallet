@@ -1,0 +1,28 @@
+@import '../InfoBlock.scss';
+
+//********************************************************
+// .block-wrap
+//********************************************************
+.block-wrap {
+  background-color: $create-wallet-background-color;
+}
+
+
+
+//********************************************************
+// .block-content
+//********************************************************
+.block-content {
+  display: flex;
+  align-items: center;
+
+  p {
+    font-size: 17px;
+  }
+}
+
+
+
+
+
+

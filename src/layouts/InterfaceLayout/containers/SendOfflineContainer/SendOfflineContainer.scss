@@ -1,17 +1,40 @@
 @import '../InterfaceContainer';
 
+::-webkit-scrollbar {
+  width: 0;
+}
+::-webkit-scrollbar * {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 .send-offline-container {
   @extend %interface-container;
 
+  .progress-status-container {
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    border-bottom: 2px solid $light-grey-2;
+  }
+
   .progress-status {
     background-color: $background-color-5;
-    border-bottom: 1px solid $opaque-black-9;
-    box-shadow: 0 2px 0 $black;
+    //border-bottom: 1px solid $opaque-black-9;
+    //box-shadow: 0 2px 0 $black;
     display: grid;
     grid-column-gap: 20px;
     grid-template-columns: 27% 27% 27%;
     justify-content: space-evenly;
     text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      width: 500px;
+    }
 
     > div {
       cursor: pointer;

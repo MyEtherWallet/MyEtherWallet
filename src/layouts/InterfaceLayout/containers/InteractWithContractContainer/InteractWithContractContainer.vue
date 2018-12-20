@@ -4,7 +4,7 @@
     <div v-if="!interact" class="interact-div">
       <div class="send-form">
         <div class="title-container">
-          <div class="title">
+          <div class="title title-currency-picker">
             <h4>{{ $t('interface.contractAddr') }}</h4>
             <div class="select-contract no-border">
               <currency-picker
@@ -87,7 +87,8 @@
         </div>
         <div class="address-container">
           <div class="address">
-            {{ $t('interface.contractAddr') }}: {{ address }}
+            <p>{{ $t('interface.contractAddr') }}:</p>
+            <input :value="address" type="text" name="" readonly />
           </div>
           <div class="functions">
             <currency-picker
@@ -416,6 +417,7 @@ export default {
             .filter(func => func.type !== 'constructor')
             .filter(func => func.constant !== undefined);
           this.interact = true;
+          window.scrollTo(0, 0);
           break;
         default:
           this.interact = false;

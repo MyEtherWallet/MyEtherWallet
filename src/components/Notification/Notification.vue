@@ -4,6 +4,9 @@
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
       <div v-show="unreadCount > 0" class="notification-dot" />
     </div>
+    <div class="notification-logo-mobile" @click="showNotifications">
+      <p>Notifications</p>
+    </div>
     <b-modal
       ref="notification"
       hide-footer
@@ -129,8 +132,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 
 export default {
+  components: {
+    txpoppup: TxTopMenuPopup
+  },
   data() {
     return {
       unreadCount: 0

@@ -1,25 +1,29 @@
 <template>
   <div class="deploy-contract-container">
     <interface-container-title :title="$t('common.depContract')" />
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('interface.byteCode') }}</h4>
-          <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">{{
-              $t('common.clear')
-            }}</span>
-            <span @click="copyToClipboard('bytecode')">{{
-              $t('common.copy')
-            }}</span>
+    <div class="form-container">
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>{{ $t('interface.byteCode') }}</h4>
+            <div class="copy-buttons">
+              <span @click="deleteInput('bytecode');">{{
+                $t('common.clear')
+              }}</span>
+              <span @click="copyToClipboard('bytecode');">{{
+                $t('common.copy')
+              }}</span>
+            </div>
           </div>
         </div>
+        <div class="the-form domain-name">
+          <textarea
+            ref="bytecode"
+            v-model="bytecode"
+            class="custom-textarea-2"
+          />
+        </div>
       </div>
-      <div class="the-form domain-name">
-        <textarea ref="bytecode" v-model="bytecode" class="custom-textarea-1" />
-      </div>
-    </div>
 
     <div class="send-form">
       <div class="title-container">
@@ -43,43 +47,46 @@
       </div>
     </div>
 
-    <div v-if="constructors.length !== 0" class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>
-            {{ $t('interface.constructor') }}
-            {{ constructors.length > 1 ? 'Inputs' : 'Input' }}:
-          </h4>
+      <div v-if="constructors.length !== 0" class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>
+              {{ $t('interface.constructor') }}
+              {{ constructors.length > 1 ? 'Inputs' : 'Input' }}:
+            </h4>
+          </div>
         </div>
-      </div>
-      <div v-for="(construct, idx) in constructors" :key="construct.type + idx">
-        <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
-          <div class="title-container">
-            <div class="title">
-              <h5>{{ input.name | capitalize }}:</h5>
+        <div
+          v-for="(construct, idx) in constructors"
+          :key="construct.type + idx"
+        >
+          <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
+            <div class="title-container">
+              <div class="title">
+                <h5>{{ input.name | capitalize }}:</h5>
+              </div>
+            </div>
+            <div class="the-form domain-name">
+              <input ref="contractName" v-model="inputs[input.name]" />
             </div>
           </div>
-          <div class="the-form domain-name">
-            <input ref="contractName" v-model="inputs[input.name]" />
+        </div>
+      </div>
+
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>{{ $t('interface.contractName') }}</h4>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('interface.contractName') }}</h4>
+        <div class="the-form domain-name">
+          <input
+            ref="contractName"
+            v-model="contractName"
+            :placeholder="contractNamePlaceholder"
+          />
         </div>
       </div>
-      <div class="the-form domain-name">
-        <input
-          ref="contractName"
-          v-model="contractName"
-          :placeholder="contractNamePlaceholder"
-        />
-      </div>
-    </div>
 
     <div class="send-form2">
       <div class="title-container">
@@ -121,22 +128,24 @@
         </div>
       </div>
 
-      <div class="the-form gas-amount">
-        <input
-          v-model="gasLimit"
-          :placeholder="$t('common.gasLimit')"
-          type="number"
-          name=""
-        />
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"
+        <div class="the-form gas-amount">
+          <input
+            v-model="gasLimit"
+            :placeholder="$t('common.gasLimit')"
+            type="number"
+            name=""
           />
+          <div class="good-button-container">
+            <p>Gwei</p>
+            <i
+              class="fa fa-check-circle good-button not-good"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       </div>
     </div>
+    <!-- .form-container -->
 
     <div class="submit-button-container">
       <div class="buttons">
