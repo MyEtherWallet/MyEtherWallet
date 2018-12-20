@@ -5,6 +5,8 @@
   "doNotForgetDesc": "to save your password. You will need this",
   "keyPass": "Пароль + хранилище ключа",
   "keyPassDesc": "Файл, чтобы разблокировать ваш кошелек.",
+  "passMnem": "Password + Mnemonic Phrase",
+  "passMnemDesc": "to unlock your wallet.",
   "byMnemonic": "By Mnemonic Phrase",
   "byMnemonicSuccess": "Готово",
   "byMnemonicSuccessfullyCreated": "Вы успешно создали свой кошелек",
