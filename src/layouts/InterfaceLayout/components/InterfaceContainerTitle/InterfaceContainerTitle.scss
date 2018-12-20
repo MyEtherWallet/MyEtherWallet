@@ -1,10 +1,25 @@
 @import '~@/scss/GlobalVariables';
 
+// *********************************************************************
+// .content-title
+// *********************************************************************
+h2 {
+  padding: 0;
+  margin: 0;
+}
+
 .content-title {
-  align-items: center;
   background-color: $background-color-white;
   border-bottom: 2px solid $background-color-1;
   display: flex;
+  align-items: center;
+}
+
+
+// *********************************************************************
+// .content-title-standard
+// *********************************************************************
+.content-title-standard {
   padding: 15px 0;
 
   h2 {
@@ -32,3 +47,35 @@
     display: block;
   }
 }
+
+
+// *********************************************************************
+// .content-title-backbutton
+// *********************************************************************
+.content-title-backbutton {
+  padding: 19px 25px;
+
+  .backbutton-block {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    $backbutton-size: 30px;
+    width: $backbutton-size;
+    height: $backbutton-size;
+    margin-right: 10px;
+  }
+
+  h2 {
+    font-size: 14px;
+    line-height: 28px;
+  }
+}
+
+
+
+
+
+

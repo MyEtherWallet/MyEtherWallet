@@ -112,6 +112,7 @@
         <i class="fa fa-long-arrow-right" aria-hidden="true" />
       </div>
     </div>
+    <swap-send-form />
   </div>
 </template>
 <script>
@@ -125,6 +126,7 @@ import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+import SwapSendForm from './components/SwapSendForm';
 //import ConfirmationModal from '../../components/ConfirmationModal';
 
 export default {
@@ -134,7 +136,8 @@ export default {
     'currency-picker': CurrencyPicker,
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
-    'swap-confirmation-modal': SwapConfirmationModal
+    'swap-confirmation-modal': SwapConfirmationModal,
+    'swap-send-form': SwapSendForm
     //'confirmation-modal': ConfirmationModal
   },
   data() {
