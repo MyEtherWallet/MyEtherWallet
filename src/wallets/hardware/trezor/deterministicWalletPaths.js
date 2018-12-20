@@ -24,7 +24,7 @@ function buildPathsObject() {
   const paths = {};
 
   Object.keys(derivationPaths).forEach(key => {
-    paths[derivationPaths[key]] = {
+    paths[key] = {
       dpath: derivationPaths[key],
       label: nodes[key].name_long
     };
