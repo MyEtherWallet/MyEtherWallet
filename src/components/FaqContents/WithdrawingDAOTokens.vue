@@ -8,23 +8,30 @@
       New instructions & where you can go to get help:
       <a
         href="https://www.reddit.com/r/ethereum/comments/7ojy4h/there_are_still_200_million_unclaimed_funds_in/dsap0gr/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://www.reddit.com/r/ethereum/comments/7ojy4h/there_are_still_200_million_unclaimed_funds_in/dsap0gr/</a
       >
-        https://www.reddit.com/r/ethereum/comments/7ojy4h/there_are_still_200_million_unclaimed_funds_in/dsap0gr/
-      </a>
     </p>
 
     <ul>
       <li>
         Check which funds you can withdraw:
-        <a href="https://refunds.thedao.fund/">https://refunds.thedao.fund/</a>
+        <a
+          href="https://refunds.thedao.fund/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://refunds.thedao.fund/</a
+        >
       </li>
       <li>
         A general over view of what you can collect is here:
         <a
           href="https://medium.com/curator-multisig-phf-official-channel/dao-token-holders-come-claim-your-money-b428f186572a#.9ur5tfm26"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://medium.com/curator-multisig-phf-official-channel/dao-token-holders-come-claim-your-money-b428f186572a#.9ur5tfm26</a
         >
-          https://medium.com/curator-multisig-phf-official-channel/dao-token-holders-come-claim-your-money-b428f186572a#.9ur5tfm26
-        </a>
       </li>
     </ul>
 
@@ -36,9 +43,12 @@
       </li>
       <li>
         Go to
-        <a href="https://www.myetherwallet.com/#send-transaction">
-          https://www.myetherwallet.com/#send-transaction
-        </a>
+        <a
+          href="https://www.myetherwallet.com/#send-transaction"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://www.myetherwallet.com/#send-transaction</a
+        >
         (the current version)
       </li>
       <li>
@@ -51,7 +61,12 @@
         CryptoKitties are still breeding like CryptoBunnies this might need to
         be 61 Gwei or more! If the network isnt under much load 1 Gwei or less
         will work, check
-        <a href="https://ethgasstation.info/"> https://ethgasstation.info/ </a>
+        <a
+          href="https://ethgasstation.info/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://ethgasstation.info/</a
+        >
         to find the Standard gasPrice that will work immediately.
       </li>
       <li>
@@ -113,7 +128,10 @@
       <li>Have ETH in the account that can collect the refund.</li>
       <li>
         Go to
-        <a href="https://www.myetherwallet.com/#send-transaction"
+        <a
+          href="https://www.myetherwallet.com/#send-transaction"
+          target="_blank"
+          rel="noopener noreferrer"
           >https://www.myetherwallet.com/#send-transaction</a
         >
         (the current version)
@@ -128,8 +146,13 @@
         CryptoKitties are still breeding like CryptoBunnies this might need to
         be 61 Gwei or more! If the network isnt under much load 1 Gwei or less
         will work, check
-        <a href="https://ethgasstation.info/">https://ethgasstation.info/</a> to
-        find the Standard gasPrice that will work immediately.
+        <a
+          href="https://ethgasstation.info/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://ethgasstation.info/</a
+        >
+        to find the Standard gasPrice that will work immediately.
       </li>
       <li>
         Access your key (this usu means selecting "Keystore / JSON File" finding
@@ -176,7 +199,10 @@
       </li>
       <li>
         Go to
-        <a href="https://www.myetherwallet.com/#send-transaction"
+        <a
+          href="https://www.myetherwallet.com/#send-transaction"
+          target="_blank"
+          rel="noopener noreferrer"
           >https://www.myetherwallet.com/#send-transaction</a
         >
         (the current version)
@@ -206,9 +232,10 @@
     <p>
       <a
         href="https://github.com/BitySA/whetcwithdraw/blob/master/whetcwithdraw.sol#L155"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://github.com/BitySA/whetcwithdraw/blob/master/whetcwithdraw.sol#L155</a
       >
-        https://github.com/BitySA/whetcwithdraw/blob/master/whetcwithdraw.sol#L155
-      </a>
     </p>
     <p>you are calling that line ^^^. The data breaks down like this:</p>
 
@@ -252,7 +279,10 @@
 
     <ul>
       <li>
-        <a href="https://github.com/kvhnuke/etherwallet/releases/tag/v3.3.7"
+        <a
+          href="https://github.com/kvhnuke/etherwallet/releases/tag/v3.3.7"
+          target="_blank"
+          rel="noopener noreferrer"
           >MyEtherWallet (v3.3.7)</a
         >
       </li>
@@ -284,17 +314,20 @@
     </ul>
 
     <p>
-      <strong
-        >Note: You will need minimum 0.01 ETH and 0.01 ETC in order to cover the
-        cost of gas necessary to process the withdrawals.</strong
-      >
+      <strong>
+        Note: You will need minimum 0.01 ETH and 0.01 ETC in order to cover the
+        cost of gas necessary to process the withdrawals.
+      </strong>
     </p>
 
     <p>
       <em>
         Etherscan.io was kind enough to host this older version of MyEtherWallet
         on their site for 1.5 years. Thank you etherscan!
-        <a href="https://etherscan.io/myetherwallet/"
+        <a
+          href="https://etherscan.io/myetherwallet/"
+          target="_blank"
+          rel="noopener noreferrer"
           >https://etherscan.io/myetherwallet/</a
         >
       </em>
@@ -305,9 +338,7 @@
         href="https://github.com/MyEtherWallet/knowledge-base/blob/master/src/content/faq/withdrawing-dao-tokens.md"
         target="_blank"
         rel="noopener noreferrer"
-      >
-        Found a typo? Want to improve this article? <br />
-        It's easy!
+        >Found a typo? Want to improve this article? <br />It's easy!
       </a>
     </p>
     <p class="col">
@@ -315,9 +346,7 @@
         href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html"
         target="_blank"
         rel="noopener noreferrer"
-      >
-        Don't know how to submit a pull request? <br />
-        It's also easy!
+        >Don't know how to submit a pull request? <br />It's also easy!
       </a>
     </p>
   </div>

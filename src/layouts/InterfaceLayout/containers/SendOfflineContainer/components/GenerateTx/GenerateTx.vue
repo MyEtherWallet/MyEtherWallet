@@ -103,9 +103,9 @@
           {{ $t('interface.generateTx') }}
         </div>
         <interface-bottom-text
-          link="mailto:support@myetherwallet.com"
+          link="https://kb.myetherwallet.com"
           question="Have issues?"
-          link-text="Learn More"
+          link-text="Help Center"
         />
       </div>
     </div>

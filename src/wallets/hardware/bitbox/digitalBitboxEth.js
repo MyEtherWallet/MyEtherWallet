@@ -52,7 +52,7 @@ class DigitalBitboxEth {
       const encryptionKey = h.slice(0, 32);
       const authenticationKey = h.slice(32, 64);
 
-      const iv = Crypto.pseudoRandomBytes(16);
+      const iv = Crypto.randomBytes(16);
       const cipher = Crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
       const ciphertext = Buffer.concat([
         iv,
@@ -142,7 +142,7 @@ class DigitalBitboxEth {
       if (!('device' in pingResponse)) {
         callback(
           undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank">BitBox Desktop app.</a>'
+          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
         );
         return;
       }
@@ -154,7 +154,7 @@ class DigitalBitboxEth {
       if (majorVersion < BitBoxSupportedMajorVersion) {
         callback(
           undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank">BitBox Desktop app.</a>'
+          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
         );
         return;
       }

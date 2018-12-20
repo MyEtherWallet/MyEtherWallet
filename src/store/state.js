@@ -6,7 +6,7 @@ if (store.get('notifications') === undefined) store.set('notifications', {});
 const network =
   store.get('network') !== undefined
     ? store.get('network')
-    : nodeList['ETH'][3];
+    : nodeList['ETH'][2];
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
@@ -30,7 +30,7 @@ const state = {
   notifications: notifications,
   path: '',
   online: true,
-  Transactions: {},
+  transactions: {},
   wallet: null,
   web3: {},
   sidemenuOpen: false

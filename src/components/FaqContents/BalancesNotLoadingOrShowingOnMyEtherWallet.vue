@@ -14,29 +14,36 @@
     </p>
     <code>ETH</code>
     <p>
-      <a href="https://etherscan.io/">https://etherscan.io/</a>. Paste your
-      address into the search bar and it will pull up your address and
-      transaction history.
+      <a href="https://etherscan.io/" rel="noopener noreferrer" target="_blank"
+        >https://etherscan.io/</a
+      >. Paste your address into the search bar and it will pull up your address
+      and transaction history.
     </p>
     <code>Tokens</code>
     <p>
-      <a href="https://ethplorer.io/">https://ethplorer.io/</a> allows you to
-      easily see token balances and transfers.
+      <a href="https://ethplorer.io/" rel="noopener noreferrer" target="_blank"
+        >https://ethplorer.io/</a
+      >
+      allows you to easily see token balances and transfers.
     </p>
     <p>
       You can also see all tokens on
-      <a href="https://etherscan.io/">https://etherscan.io/</a> now. Your
-      balances are in the dropdown in the header section thingy. Your transfers
-      can be viewed on the "<a
+      <a href="https://etherscan.io/" rel="noopener noreferrer" target="_blank"
+        >https://etherscan.io/</a
+      >
+      now. Your balances are in the dropdown in the header section thingy. Your
+      transfers can be viewed on the "
+      <a
         href="https://etherscan.io/address/0x7cb57b5a97eabe94205c07890be4c1ad31e486a8#tokentxns"
         >Token Transfers</a
       >" tab.
     </p>
     <code>ETC</code>
     <p>
-      <a href="https://gastracker.io/">https://gastracker.io/</a>. Paste your
-      address into the search bar and it will pull up your address and
-      transaction history.
+      <a href="https://gastracker.io/" rel="noopener noreferrer" target="_blank"
+        >https://gastracker.io/</a
+      >. Paste your address into the search bar and it will pull up your address
+      and transaction history.
     </p>
 
     <h5>
@@ -46,9 +53,9 @@
 
     <ol>
       <li>
-        Hard refresh the page. On Chrome on OSX you hit
-        <abbr>cmd</abbr>+<abbr>shift</abbr>+<abbr>r</abbr>. On a PC, I assume it
-        is <abbr>ctrl</abbr>+<abbr>shift</abbr>+<abbr>r</abbr>.
+        Hard refresh the page. On Chrome on OSX you hit <abbr>cmd</abbr>+
+        <abbr>shift</abbr>+ <abbr>r</abbr>. On a PC, I assume it is
+        <abbr>ctrl</abbr>+ <abbr>shift</abbr>+ <abbr>r</abbr>.
       </li>
       <li>Check your internet / firewall.</li>
       <li>
@@ -56,7 +63,6 @@
         one that you are not currently connected to may solve your problem. If
         you are interacting with the Ethereum blockchain, you have four nodes to
         choose from:
-
         <ul class="list-in-block">
           <li>MyEtherWallet</li>
           <li>Etherscan.io</li>
