@@ -1,1254 +1,1257 @@
 @font-face {
   font-family: 'cryptocoins';
-  src: url('cryptocoins.woff2') format('woff2'),
-    url('cryptocoins.woff') format('woff'),
-    url('cryptocoins.ttf') format('truetype');
+  src: url('./cryptocoins.eot#iefix') format('embedded-opentype'),
+    url('./cryptocoins.woff2') format('woff2'),
+    url('./cryptocoins.woff') format('woff'),
+    url('./cryptocoins.ttf') format('truetype'),
+    url('./cryptocoins.svg#cryptocoins') format('svg');
 }
 
-/* .cc:before { */
+i {
+  line-height: 1;
+}
+
 .cc::before {
-  font-family: 'cryptocoins';
+  font-family: cryptocoins !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-style: normal;
-  font-variant: normal;
-  font-weight: normal;
-
-  /* speak: none; only necessary if not using the private unicode range (firstGlyph option) */
-  text-decoration: none;
-  text-transform: none;
 }
 
-.cc.1st::before {
-  content: '\ea01';
+.cc.\1st::before {
+  content: '\f101';
 }
 .cc.ABYSS::before {
-  content: '\ea02';
+  content: '\f102';
 }
 .cc.ADA-alt::before {
-  content: '\ea03';
+  content: '\f103';
 }
 .cc.ADA::before {
-  content: '\ea04';
+  content: '\f104';
 }
 .cc.ADC-alt::before {
-  content: '\ea05';
+  content: '\f105';
 }
 .cc.ADC::before {
-  content: '\ea06';
+  content: '\f106';
 }
 .cc.ADX::before {
-  content: '\ea07';
-}
-.cc.AE::before {
-  content: '\ea08';
+  content: '\f107';
 }
 .cc.AEON-alt::before {
-  content: '\ea09';
+  content: '\f108';
 }
 .cc.AEON::before {
-  content: '\ea0a';
+  content: '\f109';
+}
+.cc.AE::before {
+  content: '\f10a';
 }
 .cc.AION::before {
-  content: '\ea0b';
+  content: '\f10b';
 }
 .cc.AMP-alt::before {
-  content: '\ea0c';
+  content: '\f10c';
 }
 .cc.AMP::before {
-  content: '\ea0d';
+  content: '\f10d';
 }
 .cc.ANC-alt::before {
-  content: '\ea0e';
+  content: '\f10e';
 }
 .cc.ANC::before {
-  content: '\ea0f';
+  content: '\f10f';
 }
 .cc.ANT::before {
-  content: '\ea10';
+  content: '\f110';
 }
 .cc.ARCH-alt::before {
-  content: '\ea11';
+  content: '\f111';
 }
 .cc.ARCH::before {
-  content: '\ea12';
+  content: '\f112';
 }
 .cc.ARDR-alt::before {
-  content: '\ea13';
+  content: '\f113';
 }
 .cc.ARDR::before {
-  content: '\ea14';
+  content: '\f114';
 }
 .cc.ARK-alt::before {
-  content: '\ea15';
+  content: '\f115';
 }
 .cc.ARK::before {
-  content: '\ea16';
+  content: '\f116';
 }
 .cc.ARN::before {
-  content: '\ea17';
+  content: '\f117';
 }
 .cc.AST::before {
-  content: '\ea18';
+  content: '\f118';
 }
 .cc.ATL::before {
-  content: '\ea19';
+  content: '\f119';
 }
 .cc.AUR-alt::before {
-  content: '\ea1a';
+  content: '\f11a';
 }
 .cc.AUR::before {
-  content: '\ea1b';
+  content: '\f11b';
 }
 .cc.BANX-alt::before {
-  content: '\ea1c';
+  content: '\f11c';
 }
 .cc.BANX::before {
-  content: '\ea1d';
+  content: '\f11d';
 }
 .cc.BAT-alt::before {
-  content: '\ea1e';
+  content: '\f11e';
 }
 .cc.BAT::before {
-  content: '\ea1f';
+  content: '\f11f';
 }
 .cc.BAY-alt::before {
-  content: '\ea20';
+  content: '\f120';
 }
 .cc.BAY::before {
-  content: '\ea21';
+  content: '\f121';
 }
 .cc.BC-alt::before {
-  content: '\ea22';
-}
-.cc.BC::before {
-  content: '\ea23';
+  content: '\f122';
 }
 .cc.BCD::before {
-  content: '\ea24';
+  content: '\f123';
 }
 .cc.BCH-alt::before {
-  content: '\ea25';
+  content: '\f124';
 }
 .cc.BCH::before {
-  content: '\ea26';
+  content: '\f125';
 }
 .cc.BCN-alt::before {
-  content: '\ea27';
+  content: '\f126';
 }
 .cc.BCN::before {
-  content: '\ea28';
+  content: '\f127';
+}
+.cc.BC::before {
+  content: '\f128';
 }
 .cc.BCY::before {
-  content: '\ea29';
+  content: '\f129';
 }
 .cc.BELA::before {
-  content: '\ea2a';
+  content: '\f12a';
 }
 .cc.BETR::before {
-  content: '\ea2b';
+  content: '\f12b';
 }
 .cc.BFT-alt::before {
-  content: '\ea2c';
+  content: '\f12c';
 }
 .cc.BFT::before {
-  content: '\ea2d';
+  content: '\f12d';
 }
 .cc.BKX::before {
-  content: '\ea2e';
+  content: '\f12e';
 }
 .cc.BLZ::before {
-  content: '\ea2f';
+  content: '\f12f';
 }
 .cc.BNB::before {
-  content: '\ea30';
+  content: '\f130';
 }
 .cc.BNT::before {
-  content: '\ea31';
+  content: '\f131';
 }
 .cc.BRD::before {
-  content: '\ea32';
+  content: '\f132';
 }
 .cc.BRK-alt::before {
-  content: '\ea33';
+  content: '\f133';
 }
 .cc.BRK::before {
-  content: '\ea34';
+  content: '\f134';
 }
 .cc.BRX-alt::before {
-  content: '\ea35';
+  content: '\f135';
 }
 .cc.BRX::before {
-  content: '\ea36';
+  content: '\f136';
 }
 .cc.BSD-alt::before {
-  content: '\ea37';
+  content: '\f137';
 }
 .cc.BSD::before {
-  content: '\ea38';
+  content: '\f138';
 }
 .cc.BTA::before {
-  content: '\ea39';
+  content: '\f139';
 }
 .cc.BTC-alt::before {
-  content: '\ea3a';
-}
-.cc.BTC::before {
-  content: '\ea3b';
+  content: '\f13a';
 }
 .cc.BTCD-alt::before {
-  content: '\ea3c';
+  content: '\f13b';
 }
 .cc.BTCD::before {
-  content: '\ea3d';
+  content: '\f13c';
 }
 .cc.BTCP-alt::before {
-  content: '\ea3e';
+  content: '\f13d';
 }
 .cc.BTCP::before {
-  content: '\ea3f';
+  content: '\f13e';
+}
+.cc.BTC::before {
+  content: '\f13f';
 }
 .cc.BTG::before {
-  content: '\ea40';
+  content: '\f140';
 }
 .cc.BTM-alt::before {
-  content: '\ea41';
+  content: '\f141';
 }
 .cc.BTM::before {
-  content: '\ea42';
+  content: '\f142';
 }
 .cc.BTS-alt::before {
-  content: '\ea43';
+  content: '\f143';
 }
 .cc.BTS::before {
-  content: '\ea44';
+  content: '\f144';
 }
 .cc.BURST::before {
-  content: '\ea45';
+  content: '\f145';
 }
 .cc.CFI::before {
-  content: '\ea46';
-}
-.cc.CL::before {
-  content: '\ea47';
+  content: '\f146';
 }
 .cc.CLAM-alt::before {
-  content: '\ea48';
+  content: '\f147';
 }
 .cc.CLAM::before {
-  content: '\ea49';
+  content: '\f148';
 }
 .cc.CLOAK-alt::before {
-  content: '\ea4a';
+  content: '\f149';
 }
 .cc.CLOAK::before {
-  content: '\ea4b';
+  content: '\f14a';
+}
+.cc.CL::before {
+  content: '\f14b';
 }
 .cc.CMT::before {
-  content: '\ea4c';
+  content: '\f14c';
 }
 .cc.CTR::before {
-  content: '\ea4d';
+  content: '\f14d';
 }
 .cc.CVC-alt::before {
-  content: '\ea4e';
+  content: '\f14e';
 }
 .cc.CVC::before {
-  content: '\ea4f';
+  content: '\f14f';
 }
 .cc.DAI::before {
-  content: '\ea50';
+  content: '\f150';
 }
 .cc.DAO-alt::before {
-  content: '\ea51';
+  content: '\f151';
 }
 .cc.DAO::before {
-  content: '\ea52';
+  content: '\f152';
 }
 .cc.DAR::before {
-  content: '\ea53';
+  content: '\f153';
 }
 .cc.DASH-alt::before {
-  content: '\ea54';
+  content: '\f154';
 }
 .cc.DASH::before {
-  content: '\ea55';
+  content: '\f155';
 }
 .cc.DCN::before {
-  content: '\ea56';
+  content: '\f156';
 }
 .cc.DCR-alt::before {
-  content: '\ea57';
+  content: '\f157';
 }
 .cc.DCR::before {
-  content: '\ea58';
+  content: '\f158';
 }
 .cc.DCT-alt::before {
-  content: '\ea59';
+  content: '\f159';
 }
 .cc.DCT::before {
-  content: '\ea5a';
+  content: '\f15a';
 }
 .cc.DENT::before {
-  content: '\ea5b';
+  content: '\f15b';
 }
 .cc.DGB-alt::before {
-  content: '\ea5c';
+  content: '\f15c';
 }
 .cc.DGB::before {
-  content: '\ea5d';
+  content: '\f15d';
 }
 .cc.DGD::before {
-  content: '\ea5e';
+  content: '\f15e';
 }
 .cc.DGX::before {
-  content: '\ea5f';
+  content: '\f15f';
 }
 .cc.DMD-alt::before {
-  content: '\ea60';
+  content: '\f160';
 }
 .cc.DMD::before {
-  content: '\ea61';
+  content: '\f161';
 }
 .cc.DNT::before {
-  content: '\ea62';
+  content: '\f162';
 }
 .cc.DOGE-alt::before {
-  content: '\ea63';
+  content: '\f163';
 }
 .cc.DOGE::before {
-  content: '\ea64';
+  content: '\f164';
 }
 .cc.DSH::before {
-  content: '\ea65';
+  content: '\f165';
 }
 .cc.EDG::before {
-  content: '\ea66';
+  content: '\f166';
 }
 .cc.ELF::before {
-  content: '\ea67';
-}
-.cc.EMC-alt::before {
-  content: '\ea68';
-}
-.cc.EMC::before {
-  content: '\ea69';
+  content: '\f167';
 }
 .cc.EMC2-alt::before {
-  content: '\ea6a';
+  content: '\f168';
 }
 .cc.EMC2::before {
-  content: '\ea6b';
+  content: '\f169';
+}
+.cc.EMC-alt::before {
+  content: '\f16a';
+}
+.cc.EMC::before {
+  content: '\f16b';
 }
 .cc.ENJ::before {
-  content: '\ea6c';
+  content: '\f16c';
 }
 .cc.EOS-alt::before {
-  content: '\ea6d';
+  content: '\f16d';
 }
 .cc.EOS::before {
-  content: '\ea6e';
+  content: '\f16e';
 }
 .cc.ERC-alt::before {
-  content: '\ea6f';
+  content: '\f16f';
 }
 .cc.ERC::before {
-  content: '\ea70';
+  content: '\f170';
 }
 .cc.ETC-alt::before {
-  content: '\ea71';
+  content: '\f171';
 }
 .cc.ETC::before {
-  content: '\ea72';
+  content: '\f172';
 }
 .cc.ETH-alt::before {
-  content: '\ea73';
+  content: '\f173';
 }
 .cc.ETH::before {
-  content: '\ea74';
+  content: '\f174';
 }
 .cc.EURS::before {
-  content: '\ea75';
+  content: '\f175';
 }
 .cc.EXP-alt::before {
-  content: '\ea76';
+  content: '\f176';
 }
 .cc.EXP::before {
-  content: '\ea77';
+  content: '\f177';
 }
 .cc.FC2-alt::before {
-  content: '\ea78';
+  content: '\f178';
 }
 .cc.FC2::before {
-  content: '\ea79';
+  content: '\f179';
 }
 .cc.FCN::before {
-  content: '\ea7a';
+  content: '\f17a';
 }
 .cc.FCT-alt::before {
-  content: '\ea7b';
+  content: '\f17b';
 }
 .cc.FCT::before {
-  content: '\ea7c';
+  content: '\f17c';
 }
 .cc.FLDC-alt::before {
-  content: '\ea7d';
+  content: '\f17d';
 }
 .cc.FLDC::before {
-  content: '\ea7e';
+  content: '\f17e';
 }
 .cc.FLO-alt::before {
-  content: '\ea7f';
+  content: '\f17f';
 }
 .cc.FLO::before {
-  content: '\ea80';
+  content: '\f180';
 }
 .cc.FRK-alt::before {
-  content: '\ea81';
+  content: '\f181';
 }
 .cc.FRK::before {
-  content: '\ea82';
+  content: '\f182';
 }
 .cc.FTC-alt::before {
-  content: '\ea83';
+  content: '\f183';
 }
 .cc.FTC::before {
-  content: '\ea84';
+  content: '\f184';
 }
 .cc.FUN::before {
-  content: '\ea85';
+  content: '\f185';
 }
 .cc.GAME-alt::before {
-  content: '\ea86';
+  content: '\f186';
 }
 .cc.GAME::before {
-  content: '\ea87';
+  content: '\f187';
 }
 .cc.GBG::before {
-  content: '\ea88';
+  content: '\f188';
 }
 .cc.GBYTE-alt::before {
-  content: '\ea89';
+  content: '\f189';
 }
 .cc.GBYTE::before {
-  content: '\ea8a';
+  content: '\f18a';
 }
 .cc.GDC-alt::before {
-  content: '\ea8b';
+  content: '\f18b';
 }
 .cc.GDC::before {
-  content: '\ea8c';
+  content: '\f18c';
 }
 .cc.GEMZ-alt::before {
-  content: '\ea8d';
+  content: '\f18d';
 }
 .cc.GEMZ::before {
-  content: '\ea8e';
+  content: '\f18e';
 }
 .cc.GLD-alt::before {
-  content: '\ea8f';
+  content: '\f18f';
 }
 .cc.GLD::before {
-  content: '\ea90';
+  content: '\f190';
 }
 .cc.GNO-alt::before {
-  content: '\ea91';
+  content: '\f191';
 }
 .cc.GNO::before {
-  content: '\ea92';
+  content: '\f192';
 }
 .cc.GNT-alt::before {
-  content: '\ea93';
+  content: '\f193';
 }
 .cc.GNT::before {
-  content: '\ea94';
+  content: '\f194';
 }
 .cc.GOLOS-alt::before {
-  content: '\ea95';
+  content: '\f195';
 }
 .cc.GOLOS::before {
-  content: '\ea96';
+  content: '\f196';
 }
 .cc.GRC-alt::before {
-  content: '\ea97';
+  content: '\f197';
 }
 .cc.GRC::before {
-  content: '\ea98';
+  content: '\f198';
 }
 .cc.GRS::before {
-  content: '\ea99';
+  content: '\f199';
 }
 .cc.GUP::before {
-  content: '\ea9a';
+  content: '\f19a';
 }
 .cc.GUSD::before {
-  content: '\ea9b';
+  content: '\f19b';
 }
 .cc.HEAT-alt::before {
-  content: '\ea9c';
+  content: '\f19c';
 }
 .cc.HEAT::before {
-  content: '\ea9d';
+  content: '\f19d';
 }
 .cc.HMQ::before {
-  content: '\ea9e';
+  content: '\f19e';
 }
 .cc.HSR::before {
-  content: '\ea9f';
+  content: '\f19f';
 }
 .cc.HUC-alt::before {
-  content: '\eaa0';
+  content: '\f1a0';
 }
 .cc.HUC::before {
-  content: '\eaa1';
+  content: '\f1a1';
 }
 .cc.ICN-alt::before {
-  content: '\eaa2';
+  content: '\f1a2';
 }
 .cc.ICN::before {
-  content: '\eaa3';
+  content: '\f1a3';
 }
 .cc.ICX::before {
-  content: '\eaa4';
+  content: '\f1a4';
 }
 .cc.IFC-alt::before {
-  content: '\eaa5';
+  content: '\f1a5';
 }
 .cc.IFC::before {
-  content: '\eaa6';
+  content: '\f1a6';
 }
 .cc.IGNIS::before {
-  content: '\eaa7';
+  content: '\f1a7';
 }
 .cc.INCNT-alt::before {
-  content: '\eaa8';
+  content: '\f1a8';
 }
 .cc.INCNT::before {
-  content: '\eaa9';
+  content: '\f1a9';
 }
 .cc.IOC-alt::before {
-  content: '\eaaa';
+  content: '\f1aa';
 }
 .cc.IOC::before {
-  content: '\eaab';
+  content: '\f1ab';
 }
 .cc.IOST::before {
-  content: '\eaac';
+  content: '\f1ac';
 }
 .cc.IOTA-alt::before {
-  content: '\eaad';
+  content: '\f1ad';
 }
 .cc.IOTA::before {
-  content: '\eaae';
+  content: '\f1ae';
 }
 .cc.JBS-alt::before {
-  content: '\eaaf';
+  content: '\f1af';
 }
 .cc.JBS::before {
-  content: '\eab0';
+  content: '\f1b0';
 }
 .cc.KIN::before {
-  content: '\eab1';
+  content: '\f1b1';
 }
 .cc.KMD-alt::before {
-  content: '\eab2';
+  content: '\f1b2';
 }
 .cc.KMD::before {
-  content: '\eab3';
+  content: '\f1b3';
 }
 .cc.KNC::before {
-  content: '\eab4';
+  content: '\f1b4';
 }
 .cc.KOBO::before {
-  content: '\eab5';
+  content: '\f1b5';
 }
 .cc.KORE-alt::before {
-  content: '\eab6';
+  content: '\f1b6';
 }
 .cc.KORE::before {
-  content: '\eab7';
+  content: '\f1b7';
 }
 .cc.LBC-alt::before {
-  content: '\eab8';
+  content: '\f1b8';
 }
 .cc.LBC::before {
-  content: '\eab9';
+  content: '\f1b9';
 }
 .cc.LDOGE-alt::before {
-  content: '\eaba';
+  content: '\f1ba';
 }
 .cc.LDOGE::before {
-  content: '\eabb';
+  content: '\f1bb';
 }
 .cc.LINK::before {
-  content: '\eabc';
+  content: '\f1bc';
 }
 .cc.LRC::before {
-  content: '\eabd';
+  content: '\f1bd';
 }
 .cc.LSK-alt::before {
-  content: '\eabe';
+  content: '\f1be';
 }
 .cc.LSK::before {
-  content: '\eabf';
+  content: '\f1bf';
 }
 .cc.LTC-alt::before {
-  content: '\eac0';
+  content: '\f1c0';
 }
 .cc.LTC::before {
-  content: '\eac1';
+  content: '\f1c1';
 }
 .cc.LUN::before {
-  content: '\eac2';
+  content: '\f1c2';
 }
 .cc.MAID-alt::before {
-  content: '\eac3';
+  content: '\f1c3';
 }
 .cc.MAID::before {
-  content: '\eac4';
+  content: '\f1c4';
 }
 .cc.MARKS-alt::before {
-  content: '\eac5';
+  content: '\f1c5';
 }
 .cc.MARKS::before {
-  content: '\eac6';
+  content: '\f1c6';
 }
 .cc.MCO-alt::before {
-  content: '\eac7';
+  content: '\f1c7';
 }
 .cc.MCO::before {
-  content: '\eac8';
+  content: '\f1c8';
 }
 .cc.MINT-alt::before {
-  content: '\eac9';
+  content: '\f1c9';
 }
 .cc.MINT::before {
-  content: '\eaca';
+  content: '\f1ca';
 }
 .cc.MITH::before {
-  content: '\eacb';
+  content: '\f1cb';
 }
 .cc.MKR::before {
-  content: '\eacc';
+  content: '\f1cc';
 }
 .cc.MLN::before {
-  content: '\eacd';
+  content: '\f1cd';
 }
 .cc.MONA-alt::before {
-  content: '\eace';
+  content: '\f1ce';
 }
 .cc.MONA::before {
-  content: '\eacf';
+  content: '\f1cf';
 }
 .cc.MRC::before {
-  content: '\ead0';
+  content: '\f1d0';
 }
 .cc.MSC-alt::before {
-  content: '\ead1';
+  content: '\f1d1';
 }
 .cc.MSC::before {
-  content: '\ead2';
+  content: '\f1d2';
 }
 .cc.MTL-alt::before {
-  content: '\ead3';
+  content: '\f1d3';
 }
 .cc.MTL::before {
-  content: '\ead4';
+  content: '\f1d4';
 }
 .cc.MTR-alt::before {
-  content: '\ead5';
+  content: '\f1d5';
 }
 .cc.MTR::before {
-  content: '\ead6';
+  content: '\f1d6';
 }
 .cc.MUE-alt::before {
-  content: '\ead7';
+  content: '\f1d7';
 }
 .cc.MUE::before {
-  content: '\ead8';
+  content: '\f1d8';
 }
 .cc.MYST-alt::before {
-  content: '\ead9';
+  content: '\f1d9';
 }
 .cc.MYST::before {
-  content: '\eada';
+  content: '\f1da';
 }
 .cc.NAV-alt::before {
-  content: '\eadb';
+  content: '\f1db';
 }
 .cc.NAV::before {
-  content: '\eadc';
+  content: '\f1dc';
 }
 .cc.NBT::before {
-  content: '\eadd';
+  content: '\f1dd';
 }
 .cc.NEO-alt::before {
-  content: '\eade';
-}
-.cc.NEO::before {
-  content: '\eadf';
+  content: '\f1de';
 }
 .cc.NEOS-alt::before {
-  content: '\eae0';
+  content: '\f1df';
 }
 .cc.NEOS::before {
-  content: '\eae1';
+  content: '\f1e0';
+}
+.cc.NEO::before {
+  content: '\f1e1';
 }
 .cc.NEU-alt::before {
-  content: '\eae2';
+  content: '\f1e2';
 }
 .cc.NEU::before {
-  content: '\eae3';
+  content: '\f1e3';
 }
 .cc.NEXO::before {
-  content: '\eae4';
+  content: '\f1e4';
 }
 .cc.NGC::before {
-  content: '\eae5';
+  content: '\f1e5';
 }
 .cc.NLG-alt::before {
-  content: '\eae6';
+  content: '\f1e6';
 }
 .cc.NLG::before {
-  content: '\eae7';
+  content: '\f1e7';
 }
 .cc.NMC-alt::before {
-  content: '\eae8';
+  content: '\f1e8';
 }
 .cc.NMC::before {
-  content: '\eae9';
+  content: '\f1e9';
 }
 .cc.NMR::before {
-  content: '\eaea';
+  content: '\f1ea';
 }
 .cc.NOAH::before {
-  content: '\eaeb';
+  content: '\f1eb';
 }
 .cc.NOTE-alt::before {
-  content: '\eaec';
+  content: '\f1ec';
 }
 .cc.NOTE::before {
-  content: '\eaed';
+  content: '\f1ed';
 }
 .cc.NVC-alt::before {
-  content: '\eaee';
+  content: '\f1ee';
 }
 .cc.NVC::before {
-  content: '\eaef';
+  content: '\f1ef';
 }
 .cc.NXT-alt::before {
-  content: '\eaf0';
+  content: '\f1f0';
 }
 .cc.NXT::before {
-  content: '\eaf1';
+  content: '\f1f1';
 }
 .cc.OK-alt::before {
-  content: '\eaf2';
+  content: '\f1f2';
 }
 .cc.OK::before {
-  content: '\eaf3';
+  content: '\f1f3';
 }
 .cc.OMG-alt::before {
-  content: '\eaf4';
+  content: '\f1f4';
 }
 .cc.OMG::before {
-  content: '\eaf5';
+  content: '\f1f5';
 }
 .cc.OMNI-alt::before {
-  content: '\eaf6';
+  content: '\f1f6';
 }
 .cc.OMNI::before {
-  content: '\eaf7';
+  content: '\f1f7';
 }
 .cc.ONT::before {
-  content: '\eaf8';
+  content: '\f1f8';
 }
 .cc.OPAL-alt::before {
-  content: '\eaf9';
+  content: '\f1f9';
 }
 .cc.OPAL::before {
-  content: '\eafa';
+  content: '\f1fa';
 }
 .cc.PART-alt::before {
-  content: '\eafb';
+  content: '\f1fb';
 }
 .cc.PART::before {
-  content: '\eafc';
+  content: '\f1fc';
 }
 .cc.PASC::before {
-  content: '\eafd';
+  content: '\f1fd';
 }
 .cc.PAT::before {
-  content: '\eafe';
+  content: '\f1fe';
 }
 .cc.PAY::before {
-  content: '\eaff';
+  content: '\f1ff';
 }
 .cc.PIGGY-alt::before {
-  content: '\eb00';
+  content: '\f200';
 }
 .cc.PIGGY::before {
-  content: '\eb01';
+  content: '\f201';
 }
 .cc.PINK-alt::before {
-  content: '\eb02';
+  content: '\f202';
 }
 .cc.PINK::before {
-  content: '\eb03';
+  content: '\f203';
 }
 .cc.PIVX-alt::before {
-  content: '\eb04';
+  content: '\f204';
 }
 .cc.PIVX::before {
-  content: '\eb05';
+  content: '\f205';
 }
 .cc.POLY::before {
-  content: '\eb06';
+  content: '\f206';
 }
 .cc.POT-alt::before {
-  content: '\eb07';
+  content: '\f207';
 }
 .cc.POT::before {
-  content: '\eb08';
+  content: '\f208';
 }
 .cc.POWR::before {
-  content: '\eb09';
+  content: '\f209';
 }
 .cc.PPC-alt::before {
-  content: '\eb0a';
+  content: '\f20a';
 }
 .cc.PPC::before {
-  content: '\eb0b';
+  content: '\f20b';
 }
 .cc.PPT::before {
-  content: '\eb0c';
+  content: '\f20c';
 }
 .cc.PROC::before {
-  content: '\eb0d';
+  content: '\f20d';
 }
 .cc.PTOY::before {
-  content: '\eb0e';
+  content: '\f20e';
 }
 .cc.QCN::before {
-  content: '\eb0f';
+  content: '\f20f';
 }
 .cc.QRK-alt::before {
-  content: '\eb10';
+  content: '\f210';
 }
 .cc.QRK::before {
-  content: '\eb11';
+  content: '\f211';
 }
 .cc.QTUM-alt::before {
-  content: '\eb12';
+  content: '\f212';
 }
 .cc.QTUM::before {
-  content: '\eb13';
-}
-.cc.R::before {
-  content: '\eb14';
+  content: '\f213';
 }
 .cc.RADS-alt::before {
-  content: '\eb15';
+  content: '\f214';
 }
 .cc.RADS::before {
-  content: '\eb16';
+  content: '\f215';
 }
 .cc.RBIES-alt::before {
-  content: '\eb17';
+  content: '\f216';
 }
 .cc.RBIES::before {
-  content: '\eb18';
+  content: '\f217';
 }
 .cc.RBT-alt::before {
-  content: '\eb19';
+  content: '\f218';
 }
 .cc.RBT::before {
-  content: '\eb1a';
+  content: '\f219';
 }
 .cc.RBY-alt::before {
-  content: '\eb1b';
+  content: '\f21a';
 }
 .cc.RBY::before {
-  content: '\eb1c';
+  content: '\f21b';
 }
 .cc.RCN::before {
-  content: '\eb1d';
+  content: '\f21c';
 }
 .cc.RDD-alt::before {
-  content: '\eb1e';
+  content: '\f21d';
 }
 .cc.RDD::before {
-  content: '\eb1f';
+  content: '\f21e';
 }
 .cc.REP-alt::before {
-  content: '\eb20';
+  content: '\f21f';
 }
 .cc.REP::before {
-  content: '\eb21';
+  content: '\f220';
 }
 .cc.RHOC::before {
-  content: '\eb22';
+  content: '\f221';
 }
 .cc.RIC-alt::before {
-  content: '\eb23';
+  content: '\f222';
 }
 .cc.RIC::before {
-  content: '\eb24';
+  content: '\f223';
 }
 .cc.RISE-alt::before {
-  content: '\eb25';
+  content: '\f224';
 }
 .cc.RISE::before {
-  content: '\eb26';
+  content: '\f225';
 }
 .cc.RLC::before {
-  content: '\eb27';
+  content: '\f226';
+}
+.cc.R::before {
+  content: '\f227';
 }
 .cc.SALT-alt::before {
-  content: '\eb28';
+  content: '\f228';
 }
 .cc.SALT::before {
-  content: '\eb29';
+  content: '\f229';
 }
 .cc.SAR-alt::before {
-  content: '\eb2a';
+  content: '\f22a';
 }
 .cc.SAR::before {
-  content: '\eb2b';
+  content: '\f22b';
 }
 .cc.SBD::before {
-  content: '\eb2c';
+  content: '\f22c';
 }
 .cc.SCOT-alt::before {
-  content: '\eb2d';
+  content: '\f22d';
 }
 .cc.SCOT::before {
-  content: '\eb2e';
+  content: '\f22e';
 }
 .cc.SDC-alt::before {
-  content: '\eb2f';
+  content: '\f22f';
 }
 .cc.SDC::before {
-  content: '\eb30';
+  content: '\f230';
 }
 .cc.SIA-alt::before {
-  content: '\eb31';
+  content: '\f231';
 }
 .cc.SIA::before {
-  content: '\eb32';
+  content: '\f232';
 }
 .cc.SJCX-alt::before {
-  content: '\eb33';
+  content: '\f233';
 }
 .cc.SJCX::before {
-  content: '\eb34';
+  content: '\f234';
 }
 .cc.SKIN::before {
-  content: '\eb35';
+  content: '\f235';
 }
 .cc.SLG-alt::before {
-  content: '\eb36';
+  content: '\f236';
 }
 .cc.SLG::before {
-  content: '\eb37';
+  content: '\f237';
 }
 .cc.SLS-alt::before {
-  content: '\eb38';
+  content: '\f238';
 }
 .cc.SLS::before {
-  content: '\eb39';
+  content: '\f239';
 }
 .cc.SMART::before {
-  content: '\eb3a';
+  content: '\f23a';
 }
 .cc.SNGLS::before {
-  content: '\eb3b';
+  content: '\f23b';
 }
 .cc.SNM::before {
-  content: '\eb3c';
+  content: '\f23c';
 }
 .cc.SNRG-alt::before {
-  content: '\eb3d';
+  content: '\f23d';
 }
 .cc.SNRG::before {
-  content: '\eb3e';
+  content: '\f23e';
 }
 .cc.SNT::before {
-  content: '\eb3f';
+  content: '\f23f';
 }
 .cc.START-alt::before {
-  content: '\eb40';
+  content: '\f240';
 }
 .cc.START::before {
-  content: '\eb41';
+  content: '\f241';
 }
 .cc.STEEM-alt::before {
-  content: '\eb42';
+  content: '\f242';
 }
 .cc.STEEM::before {
-  content: '\eb43';
+  content: '\f243';
 }
 .cc.STORJ::before {
-  content: '\eb44';
+  content: '\f244';
 }
 .cc.STRAT-alt::before {
-  content: '\eb45';
+  content: '\f245';
 }
 .cc.STRAT::before {
-  content: '\eb46';
+  content: '\f246';
 }
 .cc.STX::before {
-  content: '\eb47';
+  content: '\f247';
 }
 .cc.SWIFT-alt::before {
-  content: '\eb48';
+  content: '\f248';
 }
 .cc.SWIFT::before {
-  content: '\eb49';
+  content: '\f249';
 }
 .cc.SWT::before {
-  content: '\eb4a';
+  content: '\f24a';
 }
 .cc.SYNC-alt::before {
-  content: '\eb4b';
+  content: '\f24b';
 }
 .cc.SYNC::before {
-  content: '\eb4c';
+  content: '\f24c';
 }
 .cc.SYS-alt::before {
-  content: '\eb4d';
+  content: '\f24d';
 }
 .cc.SYS::before {
-  content: '\eb4e';
+  content: '\f24e';
 }
 .cc.TEL::before {
-  content: '\eb4f';
+  content: '\f24f';
 }
 .cc.TIME::before {
-  content: '\eb50';
+  content: '\f250';
 }
 .cc.TKN::before {
-  content: '\eb51';
+  content: '\f251';
 }
 .cc.TRIG-alt::before {
-  content: '\eb52';
+  content: '\f252';
 }
 .cc.TRIG::before {
-  content: '\eb53';
+  content: '\f253';
 }
 .cc.TRST::before {
-  content: '\eb54';
+  content: '\f254';
 }
 .cc.TRX::before {
-  content: '\eb55';
+  content: '\f255';
 }
 .cc.TUSD::before {
-  content: '\eb56';
+  content: '\f256';
 }
 .cc.TX-alt::before {
-  content: '\eb57';
+  content: '\f257';
 }
 .cc.TX::before {
-  content: '\eb58';
+  content: '\f258';
 }
 .cc.UBQ-alt::before {
-  content: '\eb59';
+  content: '\f259';
 }
 .cc.UBQ::before {
-  content: '\eb5a';
+  content: '\f25a';
 }
 .cc.UNITY-alt::before {
-  content: '\eb5b';
+  content: '\f25b';
 }
 .cc.UNITY::before {
-  content: '\eb5c';
+  content: '\f25c';
 }
 .cc.USDC::before {
-  content: '\eb5d';
+  content: '\f25d';
 }
 .cc.USDT-alt::before {
-  content: '\eb5e';
+  content: '\f25e';
 }
 .cc.USDT::before {
-  content: '\eb5f';
+  content: '\f25f';
 }
 .cc.USNBT::before {
-  content: '\eb60';
+  content: '\f260';
 }
 .cc.VEN::before {
-  content: '\eb61';
+  content: '\f261';
 }
 .cc.VIA-alt::before {
-  content: '\eb62';
+  content: '\f262';
 }
 .cc.VIA::before {
-  content: '\eb63';
+  content: '\f263';
 }
 .cc.VIB::before {
-  content: '\eb64';
+  content: '\f264';
 }
 .cc.VIOR-alt::before {
-  content: '\eb65';
+  content: '\f265';
 }
 .cc.VIOR::before {
-  content: '\eb66';
+  content: '\f266';
 }
 .cc.VNL-alt::before {
-  content: '\eb67';
+  content: '\f267';
 }
 .cc.VNL::before {
-  content: '\eb68';
+  content: '\f268';
 }
 .cc.VPN-alt::before {
-  content: '\eb69';
+  content: '\f269';
 }
 .cc.VPN::before {
-  content: '\eb6a';
+  content: '\f26a';
 }
 .cc.VRC-alt::before {
-  content: '\eb6b';
+  content: '\f26b';
 }
 .cc.VRC::before {
-  content: '\eb6c';
+  content: '\f26c';
 }
 .cc.VTC-alt::before {
-  content: '\eb6d';
+  content: '\f26d';
 }
 .cc.VTC::before {
-  content: '\eb6e';
+  content: '\f26e';
 }
 .cc.WAVES-alt::before {
-  content: '\eb6f';
+  content: '\f26f';
 }
 .cc.WAVES::before {
-  content: '\eb70';
+  content: '\f270';
 }
 .cc.WAX::before {
-  content: '\eb71';
+  content: '\f271';
 }
 .cc.WINGS::before {
-  content: '\eb72';
+  content: '\f272';
 }
 .cc.WTC::before {
-  content: '\eb73';
+  content: '\f273';
 }
 .cc.XAI-alt::before {
-  content: '\eb74';
+  content: '\f274';
 }
 .cc.XAI::before {
-  content: '\eb75';
+  content: '\f275';
 }
 .cc.XAUR::before {
-  content: '\eb76';
+  content: '\f276';
 }
 .cc.XBC::before {
-  content: '\eb77';
+  content: '\f277';
 }
 .cc.XBS-alt::before {
-  content: '\eb78';
+  content: '\f278';
 }
 .cc.XBS::before {
-  content: '\eb79';
+  content: '\f279';
 }
 .cc.XCP-alt::before {
-  content: '\eb7a';
+  content: '\f27a';
 }
 .cc.XCP::before {
-  content: '\eb7b';
+  content: '\f27b';
 }
 .cc.XDN::before {
-  content: '\eb7c';
+  content: '\f27c';
 }
 .cc.XEM-alt::before {
-  content: '\eb7d';
+  content: '\f27d';
 }
 .cc.XEM::before {
-  content: '\eb7e';
+  content: '\f27e';
 }
 .cc.XLM-alt::before {
-  content: '\eb7f';
+  content: '\f27f';
 }
 .cc.XLM::before {
-  content: '\eb80';
+  content: '\f280';
 }
 .cc.XMO::before {
-  content: '\eb81';
+  content: '\f281';
 }
 .cc.XMR::before {
-  content: '\eb82';
+  content: '\f282';
 }
 .cc.XMY::before {
-  content: '\eb83';
+  content: '\f283';
 }
 .cc.XPM-alt::before {
-  content: '\eb84';
+  content: '\f284';
 }
 .cc.XPM::before {
-  content: '\eb85';
+  content: '\f285';
 }
 .cc.XRP-alt::before {
-  content: '\eb86';
+  content: '\f286';
 }
 .cc.XRP::before {
-  content: '\eb87';
+  content: '\f287';
 }
 .cc.XTZ-alt::before {
-  content: '\eb88';
+  content: '\f288';
 }
 .cc.XTZ::before {
-  content: '\eb89';
+  content: '\f289';
 }
 .cc.XVC-alt::before {
-  content: '\eb8a';
+  content: '\f28a';
 }
 .cc.XVC::before {
-  content: '\eb8b';
+  content: '\f28b';
 }
 .cc.XVG-alt::before {
-  content: '\eb8c';
+  content: '\f28c';
 }
 .cc.XVG::before {
-  content: '\eb8d';
+  content: '\f28d';
 }
 .cc.XZC-alt::before {
-  content: '\eb8e';
+  content: '\f28e';
 }
 .cc.XZC::before {
-  content: '\eb8f';
+  content: '\f28f';
 }
 .cc.YBC-alt::before {
-  content: '\eb90';
+  content: '\f290';
 }
 .cc.YBC::before {
-  content: '\eb91';
+  content: '\f291';
 }
 .cc.ZAP::before {
-  content: '\eb92';
+  content: '\f292';
 }
 .cc.ZCL::before {
-  content: '\eb93';
+  content: '\f293';
 }
 .cc.ZEC-alt::before {
-  content: '\eb94';
+  content: '\f294';
 }
 .cc.ZEC::before {
-  content: '\eb95';
+  content: '\f295';
 }
 .cc.ZEIT-alt::before {
-  content: '\eb96';
+  content: '\f296';
 }
 .cc.ZEIT::before {
-  content: '\eb97';
+  content: '\f297';
 }
 .cc.ZEN::before {
-  content: '\eb98';
+  content: '\f298';
 }
 .cc.ZIL::before {
-  content: '\eb99';
+  content: '\f299';
 }
 .cc.ZRX-alt::before {
-  content: '\eb9a';
+  content: '\f29a';
 }
 .cc.ZRX::before {
-  content: '\eb9b';
+  content: '\f29b';
 }

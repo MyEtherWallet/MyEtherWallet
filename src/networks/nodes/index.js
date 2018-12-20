@@ -1,24 +1,19 @@
 import akaremote from './aka-remote';
-import akarpc from './aka-rpc';
 import ath from './ath';
 import clo from './clo';
 import egem from './egem';
 import ella from './ella';
 import eosc from './eosc';
 import esn from './esn';
-import etcepool from './etc-epool';
 import etcetccoop from './etc-etccoop';
 import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
 import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
 import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
-import ethgiveth from './eth-giveth';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
 import ethmew from './eth-mew';
 import etho from './etho';
-import etsc from './etsc';
-import exp from './exp';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
@@ -35,26 +30,21 @@ import tomo from './tomo';
 import ubq from './ubq';
 export {
   akaremote,
-  akarpc,
   ath,
   clo,
   egem,
   ella,
   eosc,
   esn,
-  etcepool,
   etcetccoop,
   etcethereumcommonwealthgeth,
   etcethereumcommonwealthparity,
   etcgastracker,
   ethethscan,
-  ethgiveth,
   ethinfura,
   ethinfuraws,
   ethmew,
   etho,
-  etsc,
-  exp,
   go,
   kovethscan,
   kovinfura,

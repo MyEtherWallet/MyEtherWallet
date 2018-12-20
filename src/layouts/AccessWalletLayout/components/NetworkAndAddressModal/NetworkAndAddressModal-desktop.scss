@@ -164,3 +164,16 @@
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.current-network {
+  background-color: $mew-green;
+  border-radius: 5px;
+  color: $white;
+  padding: 5px;
+}
+
+.network-content {
+  p {
+    cursor: pointer;
+  }
+}

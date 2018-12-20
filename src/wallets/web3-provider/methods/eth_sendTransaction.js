@@ -27,7 +27,7 @@ export default async (
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = payload.params[0];
-  const localTx = Object.assign({}, payload);
+  const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
