@@ -33,7 +33,7 @@ const paths = {
   hwAkromaPath: { label: 'Akroma (AKA)', dpath: "m/44'/200625'/0'/0" }, // first address: m/44'/200625'/0'/0/0
   hwESNetworkPath: { label: 'EtherSocial (ESN)', dpath: "m/44'/31102'/0'/0" }, // first address: m/44'/31102'/0'/0/0
   rskNetworkPath: { label: 'Mainnet (RSK)', dpath: "m/44'/137'/0'/0" }, // first address: m/44'/137'/0'/0/0
-  rskTestNetworkPath: { label: 'Testnet (RSK)', dpath: "m/44'/37310'/0'/0" }, // first address: m/44'/37310'/0'/0/0
+  rskTestNetworkPath: { label: 'Testnet (RSK)', dpath: "m/44'/37310'/0'/0" } // first address: m/44'/37310'/0'/0/0
 };
 
 export { paths, ledger, trezor };
