@@ -2,9 +2,7 @@
   <div class="swap-send-form">
     <div class="wrap">
       <interface-container-title isbackbutton="true" />
-      <div class="content-container">
-        iuehfowh osijfo gv
-      </div>
+      <div class="content-container">iuehfowh osijfo gv</div>
     </div>
   </div>
 </template>
