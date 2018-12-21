@@ -1,19 +1,13 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand()">
-      <div class="notification-type-status">
-        <p class="type">Swap</p>
-        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-      </div>
-      <div class="time-date">
-        <p>{{ timeString(notice) }}</p>
-        <p>{{ dateString(notice) }}</p>
-        <div class="expender-icon">
-          <i aria-hidden="true" class="fa fa-angle-down"></i>
-          <i aria-hidden="true" class="fa fa-angle-up"></i>
-        </div>
-      </div>
-    </div>
+    <notification-header
+      :expand="expand"
+      :notice="notice"
+      :process-status="processStatus"
+      :time-string="timeString"
+      :date-string="dateString"
+    >
+    </notification-header>
     <div
       :class="[
         notice.expanded ? '' : 'unexpanded',
@@ -51,17 +45,21 @@
             </li>
           </ul>
         </li>
-        <li v-if="notice.body.errorMessage" class="tx-hash">
-          <p>Error Message:</p>
-          <p>{{ notice.body.errorMessage }}</p>
+        <li v-if="notice.hash" class="tx-hash">
+          <p>{{ $t('header.transactionHash') }}:</p>
         </li>
-        <li class="tx-hash"><p>Transaction Hash:</p></li>
         <li v-if="notice.hash" class="tx-hash">
           <a :href="hashLink(notice.hash)" target="_blank">
             {{ notice.hash }}
           </a>
         </li>
-        <li><p @click="emitShowDetails">More</p></li>
+        <li v-if="isError" class="tx-info">
+          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ errorMessage }}</p>
+        </li>
+        <li>
+          <p @click="emitShowDetails">{{ $t('header.more') }}</p>
+        </li>
       </ul>
     </div>
   </div>
@@ -74,6 +72,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
+import NotificationHeader from '../../NotificationHeader';
 import { providerMap, providerNames } from '@/partners';
 
 import {
@@ -82,6 +81,9 @@ import {
 } from '@/helpers/notificationFormatters';
 
 export default {
+  components: {
+    'notification-header': NotificationHeader
+  },
   filters: {
     concatAddress(value) {
       if (!value) return '';
@@ -127,6 +129,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    errorMessageString: {
+      type: Function,
+      default: function() {}
+    },
     hashLink: {
       type: Function,
       default: function() {}
@@ -164,6 +170,12 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
+    errorMessage() {
+      return this.errorMessageString(this.notice);
+    },
+    isError() {
+      return this.notice.body.error;
+    },
     txStatus() {
       return this.processStatus(this.notice.swapStatus);
     },
@@ -311,5 +323,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './SwapError.scss';
+@import 'SwapNotification';
 </style>

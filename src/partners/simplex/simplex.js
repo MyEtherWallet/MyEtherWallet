@@ -271,13 +271,14 @@ export default class Simplex {
   static parseSimplexStatus(status) {
     switch (status) {
       case statuses.new:
-        return notificationStatuses.NEW;
       case statuses.initiated:
       case statuses.sent:
+        return notificationStatuses.NEW;
       case statuses.pending:
         return notificationStatuses.PENDING;
       case statuses.payment:
         return notificationStatuses.COMPLETE;
+      case statuses.declined:
       case statuses.cancelled:
         return notificationStatuses.CANCELLED;
     }

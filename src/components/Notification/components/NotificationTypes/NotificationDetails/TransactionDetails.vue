@@ -1,40 +1,28 @@
 <template lang="html">
   <div>
-    <div class="notification-header">
-      Transaction Detail
-      <!--
-        <div class="notification-type-status">
-          <p class="type">Transaction Detail</p>
-        </div>
-      -->
-    </div>
+    <div class="notification-header">{{ $t('header.transactionDetail') }}</div>
     <div class="notification-content">
       <ul>
-        <li><p>Transaction Hash:</p></li>
         <li>
-          <p>
-            <a :href="hashLink(notice.hash)" target="_blank">
-              {{ notice.hash }}
-            </a>
-          </p>
+          <p>{{ $t('header.detailInfo') }}</p>
         </li>
         <li>
-          <p>Time:</p>
+          <p>{{ $t('header.time') }}:</p>
           <div class="time-date">
             <p>{{ timeString(notice) }}</p>
             <p>{{ dateString(notice) }}</p>
           </div>
         </li>
         <li class="notification-type-status">
-          <p>Status:</p>
+          <p>{{ $t('header.status') }}:</p>
           <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
         </li>
         <li>
-          <p>Amount:</p>
+          <p>{{ $t('header.amount') }}:</p>
           <p>{{ convertToEth(details.amount) }} ETH</p>
         </li>
         <li>
-          <p>To Address:</p>
+          <p>{{ $t('common.toAddress') }}:</p>
           <p>
             <a :href="addressLink(details.to)" target="_blank">
               {{ details.to }}
@@ -42,7 +30,23 @@
           </p>
         </li>
         <li>
-          <p>TX Fee:</p>
+          <p>{{ $t('common.gasPrice') }}:</p>
+          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+        </li>
+        <li>
+          <p>{{ $t('common.gasLimit') }}:</p>
+          <p>{{ details.gasLimit }}</p>
+        </li>
+        <li v-if="notice.body.gasUsed">
+          <p>{{ $t('common.txFee') }}:</p>
+          <p>
+            {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+              getFiatValue(details.gasPrice * details.gasUsed)
+            }})
+          </p>
+        </li>
+        <li>
+          <p>{{ $t('header.maxTxFee') }}:</p>
           <p>
             {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
               getFiatValue(details.gasPrice * details.gasLimit)
@@ -50,24 +54,22 @@
           </p>
         </li>
         <li>
-          <p>Gas Price:</p>
-          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+          <p>{{ $t('header.nonce') }}:</p>
+          <p>{{ details.nonce }}</p>
         </li>
-        <li>
-          <p>Gas Limit:</p>
-          <p>{{ details.gasLimit }}</p>
+        <li v-if="notice.hash">
+          <p>{{ $t('header.transactionHash') }}:</p>
         </li>
-        <li v-if="txStatus.text === 'Succeed'">
-          <p>Gas Used:</p>
+        <li v-if="notice.hash">
           <p>
-            {{ details.gasUsed }} (${{
-              getFiatValue(details.gasPrice * details.gasUsed)
-            }})
+            <a :href="hashLink(notice.hash)" target="_blank">
+              {{ notice.hash }}
+            </a>
           </p>
         </li>
-        <li>
-          <p>Nonce:</p>
-          <p>{{ details.nonce }}</p>
+        <li v-if="isError">
+          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ errorMessage }}</p>
         </li>
       </ul>
     </div>
@@ -105,6 +107,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    errorMessageString: {
+      type: Function,
+      default: function() {}
+    },
     hashLink: {
       type: Function,
       default: function() {}
@@ -130,6 +136,12 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
+    errorMessage() {
+      return this.errorMessageString(this.notice);
+    },
+    isError() {
+      return this.notice.body.error;
+    },
     details() {
       return this.notice.body;
     },

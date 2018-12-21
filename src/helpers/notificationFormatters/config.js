@@ -3,23 +3,18 @@ const type = {
   TRANSACTION_HASH: 'Hash',
   TRANSACTION_RECEIPT: 'Receipt',
   TRANSACTION_ERROR: 'Error',
-  BATCH_TRANSACTION_HASH: 'Batch_Hash',
-  BATCH_TRANSACTION_RECEIPT: 'Batch_Receipt',
-  BATCH_TRANSACTION_ERROR: 'Batch_Error',
   CONTRACT_CALL: '',
   SWAP: 'swap',
   SWAP_HASH: 'Swap_Hash',
   SWAP_RECEIPT: 'Swap_Receipt',
   SWAP_ERROR: 'Swap_Error',
-  SWAP_ORDER: 'Swap_Order',
-  DEX_SWAP: 'Dex_Swap'
+  SWAP_ORDER: 'Swap_Order'
 };
 
 const notificationType = {
   TRANSACTION: 'transaction',
   SWAP: 'swap',
   SWAP_ERROR: 'swapError',
-  DEX_SWAP: 'dex_swap',
   ERROR: 'transactionError'
 };
 
@@ -53,7 +48,10 @@ const txIndexes = {
   response: 3
 };
 
+const INVESTIGATE_FAILURE_KEY = 'Investigate';
+
 export {
+  INVESTIGATE_FAILURE_KEY,
   type,
   notificationType,
   notificationStatuses,

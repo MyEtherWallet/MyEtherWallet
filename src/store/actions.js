@@ -12,12 +12,9 @@ import {
 } from '@/helpers/notificationFormatters';
 
 const addNotification = function({ commit, state }, val) {
-  console.log('tx notification: ', val); // todo remove dev item
   let address;
 
   if (val[1] != undefined) {
-    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
-  } else if (val[0] === 'Batch_Receipt') {
     address = web3.utils.toChecksumAddress(val[txIndexes.address]);
   } else {
     throw Error('Unable to determine sending address for notification.');
@@ -39,8 +36,6 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = async function({ commit, state }, val) {
-  console.log('swap notification: ', val); // todo remove dev item
-
   const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -49,13 +44,11 @@ const addSwapNotification = async function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  console.log('newNotif[address] length1:', newNotif[address].length); // todo remove dev item
   newNotif[address] = await addUpdateSwapNotification(
     newNotif[address],
     val,
     state.network.type.name
   );
-  console.log('newNotif[address] length2:', newNotif[address].length); // todo remove dev item
 
   commit('ADD_NOTIFICATION', newNotif);
 };
@@ -103,7 +96,9 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
   const options = {};
   // eslint-disable-next-line
-  const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${state.network.port ? ':' + state.network.port : ''}${hostUrl.pathname}`;
+  const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
+    state.network.port ? ':' + state.network.port : ''
+  }${hostUrl.pathname}`;
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
         authorization: `Basic: ${btoa(

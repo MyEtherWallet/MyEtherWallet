@@ -1,19 +1,13 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand()">
-      <div class="notification-type-status">
-        <p class="type">Transaction</p>
-        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-      </div>
-      <div class="time-date">
-        <p>{{ timeString(notice) }}</p>
-        <p>{{ dateString(notice) }}</p>
-      </div>
-      <div class="expender-icon">
-        <i aria-hidden="true" class="fa fa-angle-down"></i>
-        <i aria-hidden="true" class="fa fa-angle-up"></i>
-      </div>
-    </div>
+    <notification-header
+      :expand="expand"
+      :notice="notice"
+      :process-status="processStatus"
+      :time-string="timeString"
+      :date-string="dateString"
+    >
+    </notification-header>
     <div
       :class="[
         notice.expanded ? '' : 'unexpanded',
@@ -23,18 +17,38 @@
     >
       <ul>
         <li>
-          <p>Error Message:</p>
-          <p>{{ details.errorMessage }}</p>
+          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ convertToEth(details.amount) }} ETH</p>
         </li>
         <li>
-          <p>To Address:</p>
+          <p>{{ $t('common.toAddress') }}:</p>
           <p>
             <a :href="addressLink(details.to)" target="_blank">
               {{ details.to }}
             </a>
           </p>
         </li>
-        <li @click="emitShowDetails">More</li>
+        <li>
+          <p>{{ $t('common.txFee') }}:</p>
+          <p>
+            {{ details.gasLimit }} WEI (${{
+              getFiatValue(details.gasPrice * details.gasUsed)
+            }})
+          </p>
+        </li>
+        <li v-if="notice.hash">
+          <p>{{ $t('header.transactionHash') }}:</p>
+        </li>
+        <li v-if="notice.hash">
+          <a :href="hashLink(notice.hash)" target="_blank">
+            {{ notice.hash }}
+          </a>
+        </li>
+        <li v-if="isError">
+          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ errorMessage }}</p>
+        </li>
+        <li @click="emitShowDetails">{{ $t('header.more') }}</li>
       </ul>
     </div>
   </div>
@@ -42,8 +56,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import NotificationHeader from '../../NotificationHeader';
 
 export default {
+  components: {
+    'notification-header': NotificationHeader
+  },
   props: {
     expand: {
       type: Function,
@@ -75,6 +93,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    errorMessageString: {
+      type: Function,
+      default: function() {}
+    },
     processStatus: {
       type: Function,
       default: function() {}
@@ -100,6 +122,12 @@ export default {
       notifications: 'notifications',
       wallet: 'wallet'
     }),
+    errorMessage() {
+      return this.errorMessageString(this.notice);
+    },
+    isError() {
+      return this.notice.body.error;
+    },
     details() {
       return this.notice.body;
     },
@@ -116,5 +144,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './TransactionError.scss';
+@import 'TransactionNotification';
 </style>

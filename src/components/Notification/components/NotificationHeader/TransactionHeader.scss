@@ -112,22 +112,35 @@
 
   .type {
     margin-right: 10px;
-    font-weight: 600;
+    &.read {
+      font-weight: 400;
+      color: #999;
+    }
+    &.un-read {
+      font-weight: 600;
+    }
   }
 
   .status {
-    font-weight: 600;
-
-    &.status-succeed {
-      color: $mew-green;
+    //font-weight: 600;
+    &.read {
+      font-weight: 400;
+      color: #999;
     }
+    &.un-read {
+      font-weight: 700;
 
-    &.status-processing {
-      color: $light-orange-2;
-    }
+      &.status-succeed {
+        color: $mew-green;
+      }
 
-    &.status-failed {
-      color: $red-2;
+      &.status-processing {
+        color: $light-orange-2;
+      }
+
+      &.status-failed {
+        color: $red-2;
+      }
     }
   }
 }
@@ -194,6 +207,7 @@
       &:last-child {
         color: #455061;
         font-weight: 600;
+        justify-content: flex-end;
       }
     }
   }

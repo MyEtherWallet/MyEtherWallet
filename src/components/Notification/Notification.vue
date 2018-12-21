@@ -32,8 +32,12 @@
           "
         >
           <li>
-            <p @click="expandAll">Expand All</p>
-            <p @click="CallapseAll">Collapse All</p>
+            <p @click="expandAll">
+              <i aria-hidden="true" class="fa fa-2x fa-angle-down"></i>
+            </p>
+            <p @click="CallapseAll">
+              <i aria-hidden="true" class="fa fa-2x fa-angle-up"></i>
+            </p>
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
@@ -57,6 +61,7 @@
                 :hash-link="hashLink"
                 :address-link="addressLink"
                 :process-status="processStatus"
+                :error-message-string="errorMessageString"
                 :index="idx"
                 :child-update-notification="childUpdateNotification(idx)"
                 @showDetails="showDetails"
@@ -80,6 +85,7 @@
           :hash-link="hashLink"
           :address-link="addressLink"
           :process-status="processStatus"
+          :error-message-string="errorMessageString"
           :child-update-notification="
             childUpdateNotification(notificationDetails.index)
           "
@@ -96,21 +102,25 @@ import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 
-import SwapNotification from './NotificationTypes/SwapNotification/SwapNotification';
-import TransactionNotification from './NotificationTypes/TransactionNotification/TransactionNotification';
-import TransactionError from './NotificationTypes/TransactionError/TransactionError';
-import TransactionDetails from './NotificationTypes/NotificationDetails';
-import SwapDetails from './NotificationTypes/SwapDetails';
-import SwapError from './NotificationTypes/SwapError';
+import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
+import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
+import TransactionDetails from './components/NotificationTypes/NotificationDetails';
+import SwapDetails from './components/NotificationTypes/SwapDetails';
+
+import {
+  statusTypes,
+  listComponentMapping,
+  detailComponentMapping
+} from './components/config';
+
+import { INVESTIGATE_FAILURE_KEY } from '@/helpers/notificationFormatters';
 
 export default {
   components: {
     'swap-notification': SwapNotification,
     'transaction-notification': TransactionNotification,
-    'transaction-error': TransactionError,
     'transaction-details': TransactionDetails,
-    'swap-details': SwapDetails,
-    'swap-error': SwapError
+    'swap-details': SwapDetails
   },
   data() {
     return {
@@ -182,20 +192,14 @@ export default {
       this.detailType = '';
     },
     useComponent(type) {
-      if (type === 'swap') {
-        return 'swap-notification';
-      } else if (type === 'swapError') {
-        return 'swap-error';
-      } else if (type === 'transactionError') {
-        return 'transaction-error';
+      if (listComponentMapping[type]) {
+        return listComponentMapping[type];
       }
       return 'transaction-notification';
     },
     useDetailComponent(type) {
-      if (type === 'swap') {
-        return 'swap-details';
-      } else if (type === 'transactionError') {
-        return 'transaction-error';
+      if (detailComponentMapping[type]) {
+        return detailComponentMapping[type];
       }
       return 'transaction-details';
     },
@@ -270,21 +274,16 @@ export default {
       };
     },
     processStatus(rawStatus) {
-      const status = {
-        new: { text: 'Swap Created', class: 'status-processing' },
-        sent: { text: 'Processing', class: 'status-processing' },
-        pending: { text: 'Processing', class: 'status-processing' },
-        complete: { text: 'Succeed', class: 'status-succeed' },
-        failed: { text: 'Failed', class: 'status-failed' },
-        cancelled: { text: 'Cancelled', class: 'status-processing' },
-        error: { text: 'Error', class: 'status-failed' },
-        statusError: { text: 'Status Error', class: 'status-failed' }
-      };
-
-      if (status[rawStatus]) {
-        return status[rawStatus];
+      if (statusTypes[rawStatus]) {
+        return statusTypes[rawStatus];
       }
-      return status.statusError;
+      return statusTypes.statusError;
+    },
+    errorMessageString(notice) {
+      if (notice.body.errorMessage === INVESTIGATE_FAILURE_KEY) {
+        return this.$t('header.investigate');
+      }
+      return notice.body.errorMessage;
     },
     hashLink(hash) {
       if (this.network.type.blockExplorerTX) {
@@ -316,7 +315,8 @@ export default {
       const url = 'https://cryptorates.mewapi.io/convert/ETH';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      this.ethPrice = new BigNumber(values['USD']);
+      if (!values['DAI']) return 0;
+      this.ethPrice = new BigNumber(values['DAI']);
     },
     convertToGwei(value) {
       if (typeof value === 'undefined' || Number.isNaN(value)) return '';
@@ -328,6 +328,7 @@ export default {
     },
     getFiatValue(value) {
       if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      if (this.ethPrice === 0) return '';
       return new BigNumber(this.convertToEth(value))
         .multipliedBy(new BigNumber(this.ethPrice))
         .decimalPlaces(2)

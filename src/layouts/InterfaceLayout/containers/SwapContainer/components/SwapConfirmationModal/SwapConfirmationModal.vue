@@ -149,12 +149,11 @@ export default {
       ) {
         if (Array.isArray(this.preparedSwap)) {
           if (this.preparedSwap.length > 1) {
-            const promises = this.web3.mew
+            this.web3.mew
               .sendBatchTransactions(this.preparedSwap)
               .then(_result => {
-                console.log(_result); // todo remove dev item
-                _result[0].catch(() => {
-                  console.log('swap error1'); // todo remove dev item
+                _result[0].catch(err => {
+                  console.error(err);
                 });
                 _result[_result.length - 1]
                   .once('transactionHash', hash => {
@@ -176,7 +175,6 @@ export default {
                     ]);
                   })
                   .on('error', err => {
-                    console.log('swap error2.1'); // todo remove dev item
                     this.$store.dispatch('addSwapNotification', [
                       'Swap_Error',
                       this.currentAddress,
@@ -185,53 +183,8 @@ export default {
                       err
                     ]);
                   })
-                  .catch(err => {
-                    console.log('swap error2.2'); // todo remove dev item
-                    // this.$store.dispatch('addSwapNotification', [
-                    //   'Swap_Error',
-                    //   this.currentAddress,
-                    //   this.swapDetails,
-                    //   this.preparedSwap[this.preparedSwap.length - 1],
-                    //   err
-                    // ]);
-                  });
+                  .catch(() => {});
               });
-
-            console.log(promises); // todo remove dev item
-            // const promises = await this.web3.mew.sendBatchTransactions(
-            //   this.preparedSwap
-            // );
-            // console.log(promises); // todo remove dev item
-            /*            try {
-              const results = await Promise.all(
-                this.web3.mew.sendBatchTransactions(this.preparedSwap)
-              );
-              this.$store.dispatch('addSwapNotification', [
-                'Dex_Swap',
-                this.currentAddress,
-                this.swapDetails,
-                results[results.length - 1]
-              ]);
-            } catch (e) {
-              console.error(e);
-            }*/
-            // promises[promises.length - 1]
-            //   .then(hash => {
-            //     this.$store.dispatch('addSwapNotification', [
-            //       'Dex_Swap',
-            //       this.currentAddress,
-            //       this.swapDetails,
-            //       hash
-            //     ]);
-            //   })
-            //   .catch(err => {
-            //     this.$store.dispatch('addSwapNotification', [
-            //       'Swap_Error',
-            //       this.currentAddress,
-            //       this.swapDetails,
-            //       err
-            //     ]);
-            //   });
           } else {
             this.web3.eth
               .sendTransaction(this.preparedSwap[0])

@@ -111,7 +111,7 @@
               ]"
               @click="sendBatchTransactions"
             >
-              {{ $t('common.confirmAndSend') }}
+              {{ buttonText }}
             </div>
             <div
               v-show="sending"
@@ -171,6 +171,10 @@ export default {
     sending: {
       type: Boolean,
       default: false
+    },
+    isHardwareWallet: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -179,6 +183,12 @@ export default {
       network: 'network',
       wallet: 'wallet'
     }),
+    buttonText() {
+      if (!this.allSigned && this.isHardwareWallet) {
+        return this.$t('confirmation.approveOnDevice');
+      }
+      return this.$t('common.confirmAndSend');
+    },
     allSigned() {
       if (this.signedArray.length === 0) return false;
       for (let i = 0; i < this.signedArray.length; i++) {

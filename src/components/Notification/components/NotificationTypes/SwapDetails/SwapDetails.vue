@@ -1,63 +1,115 @@
 <template lang="html">
   <div>
-    <div class="notification-header" @click="expand()">
-      <div class="notification-type-status">
-        <p class="type">Swap</p>
-        <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
-      </div>
-      <div class="time-date">
-        <p>{{ timeString(notice) }}</p>
-        <p>{{ dateString(notice) }}</p>
-        <div class="expender-icon">
-          <i aria-hidden="true" class="fa fa-angle-down"></i>
-          <i aria-hidden="true" class="fa fa-angle-up"></i>
-        </div>
-      </div>
-    </div>
-    <div
-      :class="[
-        notice.expanded ? '' : 'unexpanded',
-        'notification-body',
-        'notification-content'
-      ]"
-    >
+    <div class="notification-header">{{ $t('header.swapDetail') }}</div>
+    <div class="notification-content">
       <ul>
-        <li class="swap-details">
+        <li>
           <ul>
             <li>
               <p class="icon from-swap-icon">
-                <i :class="['cc', notice.body.fromCurrency, 'cc-icon']"></i>
+                <i :class="['cc', details.fromCurrency, 'cc-icon']"></i>
               </p>
             </li>
             <li>
               <p class="from-swap-text">
-                {{ notice.body.fromValue }} {{ notice.body.fromCurrency }}
+                {{ details.fromValue }} {{ details.fromCurrency }}
               </p>
-              <p class="address">{{ notice.body.from | concatAddress }}</p>
+              <p class="address">{{ details.from | concatAddress }}</p>
             </li>
             <li>
               <p class="swap-right-arrow"><img :src="arrowImage" /></p>
             </li>
             <li>
               <p class="icon to-swap-icon">
-                <i :class="['cc', notice.body.toCurrency, 'cc-icon']"></i>
+                <i :class="['cc', details.toCurrency, 'cc-icon']"></i>
               </p>
             </li>
             <li>
               <p class="to-swap-text">
-                {{ notice.body.toValue }} {{ notice.body.toCurrency }}
+                {{ details.toValue }} {{ details.toCurrency }}
               </p>
-              <p class="address">{{ notice.body.from | concatAddress }}</p>
+              <p class="address">{{ details.from | concatAddress }}</p>
             </li>
           </ul>
         </li>
-        <li class="tx-hash"><p>Transaction Hash:</p></li>
-        <li v-if="notice.hash" class="tx-hash">
-          <a :href="hashLink(notice.hash)" target="_blank">
-            {{ notice.hash }}
-          </a>
+
+        <li>
+          <p>{{ $t('header.time') }}:</p>
+          <div class="time-date">
+            <p>{{ timeString(notice) }}</p>
+            <p>{{ dateString(notice) }}</p>
+          </div>
         </li>
-        <li><p @click="emitShowDetails">More</p></li>
+        <li>
+          <p>{{ $t('header.timeRemaining') }}:</p>
+          <div class="detail-data">
+            <p>{{ parseTimeRemaining }}</p>
+          </div>
+        </li>
+        <li class="notification-type-status">
+          <p>{{ $t('header.status') }}:</p>
+          <div class="detail-data">
+            <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+          </div>
+        </li>
+        <li>
+          <p>{{ $t('common.toAddress') }}:</p>
+          <div class="detail-data">
+            <p>
+              <a :href="addressLink(details.to)" target="_blank">
+                {{ details.to }}
+              </a>
+            </p>
+          </div>
+        </li>
+        <li v-if="notice.body.gasUsed">
+          <p>{{ $t('common.txFee') }}:</p>
+          <div class="detail-data">
+            <p>
+              {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+                getFiatValue(details.gasPrice * details.gasUsed)
+              }})
+            </p>
+          </div>
+        </li>
+        <li>
+          <p>{{ $t('header.maxTxFee') }}:</p>
+          <div class="detail-data">
+            <p>
+              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+                getFiatValue(details.gasPrice * details.gasLimit)
+              }})
+            </p>
+          </div>
+        </li>
+        <li>
+          <p>{{ $t('common.gasPrice') }}:</p>
+          <div class="detail-data">
+            <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+          </div>
+        </li>
+        <li>
+          <p>{{ $t('common.gasLimit') }}:</p>
+          <div class="detail-data">
+            <p>{{ details.gasLimit }}</p>
+          </div>
+        </li>
+        <li v-if="notice.hash">
+          <p>{{ $t('header.transactionHash') }}:</p>
+          <div class="detail-data">
+            <p>
+              <a :href="hashLink(notice.hash)" target="_blank">
+                {{ notice.hash }}
+              </a>
+            </p>
+          </div>
+        </li>
+        <li v-if="isError">
+          <p>{{ $t('header.errorMessage') }}:</p>
+          <div class="detail-data">
+            <p>{{ errorMessage }}</p>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
@@ -70,7 +122,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap, providerNames } from '@/partners';
+import { providerMap } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -88,14 +140,6 @@ export default {
     shown: {
       type: Boolean,
       default: false
-    },
-    expand: {
-      type: Function,
-      default: function() {}
-    },
-    index: {
-      type: Number,
-      default: 0
     },
     notice: {
       type: Object,
@@ -123,6 +167,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    errorMessageString: {
+      type: Function,
+      default: function() {}
+    },
     hashLink: {
       type: Function,
       default: function() {}
@@ -142,15 +190,11 @@ export default {
   },
   data() {
     return {
-      arrowImage: Arrow,
-      unreadCount: 0,
-      currentStatus: '',
-      swapStatus: '',
-      timeRemaining: this.notice.body.timeRemaining,
-      providers: providerMap,
-      provider: {},
       timerInterval: null,
-      statusInterval: null
+      statusInterval: null,
+      arrowImage: Arrow,
+      timeRemaining: 0,
+      unreadCount: 0
     };
   },
   computed: {
@@ -158,8 +202,18 @@ export default {
       web3: 'web3',
       network: 'network',
       notifications: 'notifications',
-      wallet: 'wallet'
+      wallet: 'wallet',
+      gasPrice: 'gasPrice'
     }),
+    errorMessage() {
+      return this.errorMessageString(this.notice);
+    },
+    isError() {
+      return this.notice.body.error;
+    },
+    details() {
+      return this.notice.body;
+    },
     txStatus() {
       return this.processStatus(this.notice.swapStatus);
     },
@@ -167,56 +221,27 @@ export default {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
-    },
-    timeRemains() {
-      return this.timeRemaining > 0;
-    }
-  },
-  watch: {
-    shown(val) {
-      if (val) {
-        this.startPolling();
-      } else {
-        this.stopPolling();
-      }
-    }
-  },
-  activated() {
-    if (this.shown) {
-      this.startPolling();
     }
   },
   beforeDestroy() {
-    this.stopPolling();
+    if (this.timerInterval !== null) {
+      clearInterval(this.timerInterval);
+    }
+
+    if (this.statusInterval !== null) {
+      clearInterval(this.statusInterval);
+    }
+  },
+  mounted() {
+    this.timeRemaining = this.notice.body.timeRemaining;
+    this.provider = providerMap.get(this.notice.body.provider);
+    this.currentStatus = this.notice.swapStatus;
+    this.timeUpdater();
+    this.statusUpdater();
   },
   methods: {
     emitShowDetails() {
-      this.$emit('showDetails', ['swap', this.notice, this.index]);
-    },
-    startPolling() {
-      if (this.notice.body.provider === providerNames.kyber) return;
-
-      this.provider = providerMap.get(this.notice.body.provider);
-      this.currentStatus = this.notice.status;
-
-      if (this.timerInterval === null) {
-        this.timeUpdater();
-      }
-
-      if (this.statusInterval === null) {
-        this.statusUpdater();
-      }
-    },
-    stopPolling() {
-      if (this.timerInterval !== null) {
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-      }
-
-      if (this.statusInterval !== null) {
-        clearInterval(this.statusInterval);
-        this.statusInterval = null;
-      }
+      this.$emit('showDetails', ['swap', this.notice]);
     },
     shouldCheckStatus() {
       return [
@@ -307,5 +332,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './SwapNotification.scss';
+@import 'SwapDetails';
 </style>
