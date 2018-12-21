@@ -12,7 +12,7 @@
     "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
-    "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
+    "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "start": "npm run update && npm run dev",
     "test:unit": "vue-cli-service test:unit",
@@ -24,7 +24,9 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
+    "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
     "vue": "2.5.21",
     "vue-mq": "1.0.1",

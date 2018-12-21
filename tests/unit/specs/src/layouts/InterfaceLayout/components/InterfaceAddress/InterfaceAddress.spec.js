@@ -6,6 +6,12 @@ import { Tooling } from '@@/helpers';
 describe('InterfaceAddress.vue', () => {
   let localVue, i18n, wrapper, store;
   const address = 'InterfaceAddress address';
+  const triggerAlert = () => {
+    console.log('I got clicked');
+  };
+  const print = () => {
+    console.log('I got clicked');
+  };
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -20,7 +26,9 @@ describe('InterfaceAddress.vue', () => {
       store,
       attachToDocument: true,
       propsData: {
-        address: address
+        address: address,
+        triggerAlert: triggerAlert,
+        print: print
       }
     });
   });
