@@ -17,6 +17,7 @@
     <confirm-collection-modal
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
+      :is-hardware-wallet="isHardwareWallet"
       :signed-array="signedArray"
       :un-signed-array="unSignedArray"
       :sending="sending"
@@ -60,6 +61,7 @@
 <script>
 import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import * as ethTx from 'ethereumjs-tx';
 import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
@@ -137,7 +139,6 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
-      console.log('web3WalletHash', newVal); // todo remove dev item
       this.$store.dispatch('addNotification', [
         'Hash',
         this.fromAddress,
@@ -226,6 +227,7 @@ export default {
     this.$eventHub.$on(
       'showTxCollectionConfirmModal',
       async (tx, signCallback, isHardware) => {
+        this.isHardwareWallet = isHardware;
         this.unSignedArray = [];
         this.unSignedArray = tx;
         const signed = [];
@@ -327,13 +329,11 @@ export default {
       const batch = new web3.eth.BatchRequest();
       const promises = this.signedArray.map(tx => {
         const promiEvent = new Web3PromiEvent();
-        // return new Promise((res, rej) => {
         try {
           const _tx = tx.tx;
           const req = web3.eth.sendSignedTransaction.request(
             tx.rawTransaction,
             (err, data) => {
-              console.log(err, data); // todo remove dev item
               // was falling through on success
               if (err !== null) {
                 promiEvent.eventEmitter.emit('error', err);
@@ -347,13 +347,10 @@ export default {
                   err
                 ]);
                 this.showErrorModal('Transaction Error!', 'Return');
-                // rej(err);
               }
 
               // was falling through on error
               if (err === null) {
-                console.log('NO ERROR'); // todo remove dev item
-
                 promiEvent.eventEmitter.emit('transactionHash', data);
                 this.$store
                   .dispatch('addNotification', [
@@ -387,7 +384,6 @@ export default {
                     }
                   });
                 }, 500);
-                // res(data);
               }
             }
           );

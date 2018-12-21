@@ -44,6 +44,16 @@
 
   > ul {
     > li {
+      &:first-child {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        > p {
+          cursor: pointer;
+          display: flex;
+          margin-right: 10px;
+        }
+      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
