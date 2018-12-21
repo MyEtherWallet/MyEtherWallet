@@ -1,15 +1,27 @@
 @import '~@/scss/GlobalVariables';
 
+// *********************************************************************
+// .wrap
+// *********************************************************************
 .wrap {
-
+  margin: 0;
+  padding: 0;
+  padding-bottom: 10px;
 }
 
+
+// *********************************************************************
+// .menu-title
+// *********************************************************************
 .menu-title {
   padding: 10px;
   background-color: $dark-blue-12;
   display: flex;
   align-items: center;
-  >div {
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 5px;
+  > div {
     color: $white;
   }
 
@@ -19,15 +31,34 @@
     display: flex;
     align-items: center;
     text-align: center;
+    margin-right: 10px;
 
-    $title-number-size: 30px;
+    $title-number-size: 22px;
     height: $title-number-size;
     width: $title-number-size;
+
+    >* {
+      width: 100%;
+      font-weight: 600;
+      font-size: 14px;
+    }
   }
 }
 
 
-p {}
+// *********************************************************************
+// .content-container
+// *********************************************************************
+.content-container {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.2s linear;
 
+  .padding-block {
+    padding: 30px 10px;
+  }
 
-
+  &.opened {
+    max-height: 600px;
+  }
+}
