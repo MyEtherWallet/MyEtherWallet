@@ -1,6 +1,11 @@
 <template>
   <div class="standard-dropdown">
-    <div>{{ chosenValue }}</div>
+    <div class="wrap">
+      <div class="dropdown-button">
+        <p>{{ chosenValue }}</p>
+        <i aria-hidden="true" class="fa fa-angle-down"></i>
+      </div>
+    </div>
   </div>
 </template>
 

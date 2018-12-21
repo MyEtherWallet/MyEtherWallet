@@ -42,11 +42,10 @@
                   <standard-input :options="inputAddress1" class="address1" />
                   <standard-input :options="inputAddress2" class="address2" />
                   <standard-input :options="inputCity" class="city" />
-                  <standard-input :options="inputState" class="state" />
+                  <standard-dropdown class="state" />
                   <standard-input :options="inputZip" class="zip" />
                   <standard-input :options="inputCountry" class="country" />
                 </div>
-                <standard-dropdown />
               </li>
             </ul>
           </accordion-menu>
