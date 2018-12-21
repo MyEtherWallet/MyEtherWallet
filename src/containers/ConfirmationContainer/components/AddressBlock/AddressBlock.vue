@@ -1,19 +1,22 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" >
+      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
       <p>
         <span class="currency-amt">
-          {{ direction === 'from'? '-': '+' }} {{ tokenTransferVal !== '' ? tokenTransferVal:converter(value) }}
+          {{ direction === 'from' ? '-' : '+' }}
+          {{ tokenTransferVal !== '' ? tokenTransferVal : converter(value) }}
         </span>
-        <span class="currency-type">{{ tokenSymbol !== '' ? tokenSymbol:currency.toUpperCase() }} </span>
+        <span class="currency-type"
+          >{{ tokenSymbol !== '' ? tokenSymbol : currency.toUpperCase() }}
+        </span>
       </p>
     </div>
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
     <div class="address">
-      {{ tokenTransferTo !== '' ? tokenTransferTo:address }}
+      {{ tokenTransferTo !== '' ? tokenTransferTo : address }}
     </div>
   </div>
 </template>

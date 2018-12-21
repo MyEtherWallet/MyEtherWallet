@@ -1,6 +1,6 @@
 <template>
   <div class="transaction-tokens">
-    <interface-tokens-modal :add-token="addToken"/>
+    <interface-tokens-modal ref="tokenModal" :add-token="addToken" />
     <div class="wrap">
       <div class="tokens-container">
         <div class="token-search">
@@ -9,67 +9,72 @@
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
-            <input
-              v-model="search"
-              placeholder="Search"
-              autocomplete="off">
-            <i
-              class="fa fa-search"
-              aria-hidden="true"/>
+            <input v-model="search" placeholder="Search" autocomplete="off" />
+            <i class="fa fa-search" aria-hidden="true" />
           </div>
         </div>
-        <div
-          ref="tokenTableContainer"
-          class="token-table-container">
+        <div ref="tokenTableContainer" class="token-table-container">
           <table v-show="customTokens.length > 0">
             <tr
               v-for="(token, index) in customTokens"
-              :key="token.name + index">
+              :key="token.name + index"
+            >
               <td>{{ token.name }}</td>
-              <td>{{ token.balance }} <i
-                class="fa fa-times-circle clickable"
-                @click="removeToken(index)"/></td>
+              <td>
+                {{ token.balance }}
+                <i
+                  class="fa fa-times-circle clickable"
+                  @click="removeToken(index)"
+                />
+              </td>
             </tr>
           </table>
+
           <table v-show="localTokens.length > 0">
-            <tr
-              v-for="(token, index) in localTokens"
-              :key="token.name + index">
+            <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
-              <td>{{ token.balance }}</td>
+              <td
+                v-if="token.balance === 'Load'"
+                @click="getSpecificTokenBalance(token, index)"
+              >
+                {{ token.balance }}
+              </td>
+              <td v-else>{{ token.balance }}</td>
             </tr>
           </table>
+
           <div
             v-show="search === '' && localTokens.length === 0 && receivedTokens"
-            class="spinner-container">
-            <i class="fa fa-spinner fa-spin"/>
+            class="spinner-container"
+          >
+            <i class="fa fa-spinner fa-spin" />
           </div>
           <div
-            v-show="localTokens.length === 0 && customTokens.length === 0 && !receivedTokens"
-            class="spinner-container">
+            v-show="
+              localTokens.length === 0 &&
+                customTokens.length === 0 &&
+                !receivedTokens
+            "
+            class="spinner-container"
+          >
             No tokens found :(
           </div>
         </div>
         <div
-          v-if="(customTokens.length + localTokens.length) > 15"
+          v-if="customTokens.length + localTokens.length > 15"
           class="expend-bar"
-          @click="tokenListExpend">
-          <p
-            ref="expendDown"
-            class="down"><i
-              class="fa fa-angle-double-down"
-              aria-hidden="true"/></p>
-          <p
-            ref="expendUp"
-            class="up hidden"><i
-              class="fa fa-angle-double-up"
-              aria-hidden="true"/></p>
+          @click="tokenListExpend"
+        >
+          <p ref="expendDown" class="down">
+            <i class="fa fa-angle-double-down" aria-hidden="true" />
+          </p>
+          <p ref="expendUp" class="up hidden">
+            <i class="fa fa-angle-double-up" aria-hidden="true" />
+          </p>
         </div>
       </div>
       <div class="bottom-image-container">
-        <img
-          class="icon"
-          src="~@/assets/images/etc/mewconnectad.png">
+        <img class="icon" src="~@/assets/images/etc/mewconnectad.png" />
       </div>
     </div>
   </div>
@@ -79,6 +84,8 @@
 import store from 'store';
 import { mapGetters } from 'vuex';
 import InterfaceTokensModal from '../InterfaceTokensModal';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -104,7 +111,8 @@ export default {
     return {
       search: '',
       localTokens: [],
-      customTokens: []
+      customTokens: [],
+      util: utils
     };
   },
   computed: {
@@ -137,8 +145,12 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    async getSpecificTokenBalance(token, idx) {
+      this.tokens[idx].balance = await this.getTokenBalance(token);
+      this.tokens.sort(sortByBalance);
+    },
     addTokenModal() {
-      this.$children[0].$refs.token.show();
+      this.$refs.tokenModal.$refs.token.show();
     },
     removeToken(idx) {
       const storedTokens = store.get('customTokens');
@@ -172,7 +184,7 @@ export default {
       localStorageName[this.network.type.name] = this.customTokens;
 
       store.set('customTokens', localStorageName);
-      this.$children[0].$refs.token.hide();
+      this.$refs.tokenModal.$refs.token.hide();
     },
     tokenListExpend() {
       this.$refs.tokenTableContainer.classList.toggle('expanded');
@@ -182,16 +194,20 @@ export default {
     async assignTokens(arr, query) {
       const oldArray = this.customTokens.slice();
       if (query !== '') {
-        this.customTokens = oldArray.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
-        this.localTokens = this.tokens.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
+        this.customTokens = oldArray
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
+        this.localTokens = this.tokens
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
       } else {
         this.localTokens = arr;
         if (

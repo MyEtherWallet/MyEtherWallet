@@ -10,12 +10,30 @@
   position: relative;
 }
 
-.helper {
-  position: absolute;
-  right: 60px;
-  top: 5px;
+.network-type {
+  border: 4px solid white;
+  border-radius: 100%;
+  margin-right: 25px !important;
 
-  .popover-container button {
-    background: transparent !important;
+  $network-image-size: 60px !important;
+
+  height: $network-image-size;
+  width: $network-image-size;
+
+  .icon-block {
+    display: flex;
+    justify-content: center;
+    .icon {
+      height: 45px !important;
+    }
+  }
+}
+
+.title-and-helper {
+  display: flex;
+  align-items: center;
+
+  h2 {
+    margin-right: 7px;
   }
 }

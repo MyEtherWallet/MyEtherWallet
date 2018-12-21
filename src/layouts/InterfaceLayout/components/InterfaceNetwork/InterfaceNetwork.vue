@@ -1,29 +1,29 @@
 <template>
-  <div>
-    <interface-network-modal/>
-    <div @click="networkModalOpen">
-      <div class="info-block network">
-        <div class="block-image">
-          <img
-            :src="$store.state.network.type.icon"
-            class="icon">
+  <div class="info-block-container">
+    <interface-network-modal ref="network" />
+    <div class="info-block network" @click="networkModalOpen">
+      <div class="block-image network-type">
+        <div class="icon-block">
+          <img :src="network.type.icon" class="icon" />
         </div>
-        <div class="block-content">
-          <div class="helper">
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'" />
+      </div>
+      <div class="block-content">
+        <div class="information-container">
+          <div class="title-and-helper">
+            <h2>{{ $t('interface.network') }}</h2>
           </div>
-          <div class="information-container">
-            <h2>{{ $t("interface.txNetworkTitle") }}</h2>
-            <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
-            <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
-              v-show="parsedNetwork === ''"
-              class="fa fa-spinner fa-spin"/> </p>
-          </div>
-          <div class="icon-container">
-            <img src="~@/assets/images/icons/change.svg">
-          </div>
+          <p v-if="wallet.identifier !== 'web3_wallet'">
+            {{ network.service + '(' + network.type.name + ')' }}
+          </p>
+          <p v-else>{{ 'Web3 Provider' + '(' + network.type.name + ')' }}</p>
+          <p>
+            {{ $t('interface.lastBlock') }}: #
+            <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
+            <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+          </p>
+        </div>
+        <div class="icon-container">
+          <img src="~@/assets/images/icons/change.svg" />
         </div>
       </div>
     </div>
@@ -32,6 +32,7 @@
 
 <script>
 import InterfaceNetworkModal from '../InterfaceNetworkModal';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -48,6 +49,13 @@ export default {
       parsedNetwork: 0
     };
   },
+  computed: {
+    ...mapGetters({
+      network: 'network',
+      wallet: 'wallet',
+      web3: 'web3'
+    })
+  },
   watch: {
     blockNumber(newVal) {
       this.parsedNetwork = parseInt(newVal);
@@ -60,7 +68,9 @@ export default {
   },
   methods: {
     networkModalOpen() {
-      this.$children[0].$refs.network.show();
+      if (this.wallet.identifier !== 'web3_wallet') {
+        this.$refs.network.$refs.network.show();
+      }
     }
   }
 };

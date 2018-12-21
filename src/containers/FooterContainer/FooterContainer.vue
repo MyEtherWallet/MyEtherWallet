@@ -1,98 +1,121 @@
 <template>
   <div class="footer">
+    <!-- Modal -->
+    <feedback-modal />
+    <!-- <confirmation-modal /> -->
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
+            :ref="item.class"
             :class="item.class"
-            :key="item.title + index">
-            <div class="content-title">
+            :key="item.title + index"
+          >
+            <div class="content-title" @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
-              <p
-                class="open"
-                @click="openContent(item.class)">
-                <i
-                  class="fa fa-plus"
-                  aria-hidden="true"/>
+              <p class="open" @click="openContent(item.class)">
+                <i class="fa fa-plus" aria-hidden="true" />
               </p>
-              <p
-                class="close"
-                @click="closeContent(item.class)">
-                <i
-                  class="fa fa-minus"
-                  aria-hidden="true"/>
+              <p class="close" @click="closeContent(item.class)">
+                <i class="fa fa-minus" aria-hidden="true" />
               </p>
             </div>
-            <div class="content-links mobile-hide">
+            <div class="content-links">
               <div
                 v-for="(content, index) in item.contents"
-                :key="content.text+index">
-                <router-link
-                  v-if="content.to !== undefined"
-                  :to="content.to"><p>{{ content.text }}</p></router-link>
+                :key="content.text + index"
+              >
+                <router-link v-if="content.to !== undefined" :to="content.to">
+                  <p>{{ content.text }}</p>
+                </router-link>
                 <a
                   v-if="content.to === undefined"
                   :href="content.href"
-                  target="_blank"><p>{{ content.text }}</p></a>
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p>{{ content.text }}</p>
+                </a>
               </div>
             </div>
           </div>
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                {{ $t("footer.love") }}
-                <img src="~@/assets/images/icons/heart.svg">
-                {{ $t("footer.donate") }}
+                {{ $t('footer.love') }}
+                <img src="~@/assets/images/icons/heart.svg" />
+                {{ $t('footer.donate') }}
               </h3>
             </div>
-            <div class="content-links">
-              <p>{{ $t("footer.welcomeDes") }}</p>
+            <div class>
+              <p>{{ $t('footer.welcomeDes') }}</p>
 
               <a
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
-                target="_blank">
-                <p
-                  class="crypto-link"
-                  data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
-                  <img src="~@/assets/images/icons/eth.svg">
-                  &nbsp;Ethereum Donation
+                :href="'https://etherscan.io/address/' + ethDonationAddress"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p :data-eth="ethDonationAddress" class="crypto-link">
+                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
+                  Donation
                 </p>
               </a>
 
               <a
                 href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <p
                   class="crypto-link"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
-                  <img src="~@/assets/images/icons/btc.svg">
-                  &nbsp;Bitcoin Donation
+                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                >
+                  <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
+                  Donation
                 </p>
               </a>
-
             </div>
           </div>
         </div>
         <div class="flex-space-between foot-note">
           <div class="links">
-            <router-link
-              v-for="(link, index) in lowerLinks"
-              :key="link.title + index"
-              :to="link.to"><span>{{ link.title }}</span></router-link>
+            <div v-for="(link, index) in lowerLinks" :key="link.title + index">
+              <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                <span>{{ link.title }}</span>
+              </router-link>
+              <a
+                v-else
+                :href="link.href"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{{ link.title }}</span>
+              </a>
+            </div>
           </div>
           <div class="copyright">
             <p>
-              Pricing taken from <span>CoinMarketCap</span> <br>
-              {{ $t("footer.copyright") }}
+              {{ $t('footer.pricingP') }}
+              <a
+                href="https://coinmarketcap.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >CoinMarketCap</a
+              >
+              <br />
+              {{ $t('footer.copyright') }}
             </p>
           </div>
           <div class="social">
             <a
               v-for="link in links"
               :href="link.to"
-              :key="link.class">
-              <i :class="'fa '+ link.class"/>
+              :key="link.class"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <i :class="'fa ' + link.class" />
             </a>
           </div>
         </div>
@@ -102,13 +125,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import FeedbackModal from '@/components/FeedbackModal';
+
 export default {
+  components: {
+    'feedback-modal': FeedbackModal
+  },
   data() {
     return {
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
-          to: '/'
+          href: 'https://github.com/MyEtherWallet/MyEtherWallet/issues'
         },
         {
           title: this.$t('footer.privacy'),
@@ -128,21 +157,14 @@ export default {
               text: this.$t('footer.units'),
               to: '/convert-units'
             },
-            {
-              text: this.$t('footer.txStat'),
-              to: '/'
-            },
-            {
-              text: this.$t('footer.debugs'),
-              to: '/'
-            },
+            // {
+            //   text: this.$t('footer.advanced'),
+            //   to: '/advanced-tools'
+            // },
             {
               text: this.$t('footer.extension'),
-              to: '/'
-            },
-            {
-              text: this.$t('footer.others'),
-              to: '/'
+              href:
+                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             }
           ]
         },
@@ -192,11 +214,11 @@ export default {
             },
             {
               text: this.$t('common.customerSupport'),
-              to: '/'
+              href: 'mailto:support@myetherwallet.com'
             },
             {
               text: 'Help Center',
-              to: '/help-center'
+              href: 'https://kb.myetherwallet.com'
             }
           ]
         }
@@ -233,7 +255,15 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters({
+      ethDonationAddress: 'ethDonationAddress'
+    })
+  },
   methods: {
+    openFeedbackModal() {
+      this.$children[0].$refs.feedback.show();
+    },
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
       const closeButton = document.querySelector('.' + element + ' .close');
@@ -249,11 +279,17 @@ export default {
       openButton.style.display = 'block';
       closeButton.style.display = 'none';
       content.classList.add('mobile-hide');
+    },
+    toggler(ref) {
+      const el = this.$refs[ref][0];
+      el.classList.toggle('content-open');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'FooterContainer.scss';
+@import 'FooterContainer-desktop.scss';
+@import 'FooterContainer-tablet.scss';
+@import 'FooterContainer-mobile.scss';
 </style>

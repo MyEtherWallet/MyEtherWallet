@@ -1,0 +1,72 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .button-container {
+    a {
+      width: 100%;
+    }
+    button {
+      display: inline-block;
+      width: 100%;
+    }
+  }
+
+  .contents {
+    margin-bottom: 60px;
+
+    .instruction {
+      margin-bottom: 40px;
+    }
+
+    .tools {
+      align-items: center;
+      display: flex;
+      margin-bottom: 10px;
+
+      .value-switch {
+        align-items: center;
+        display: flex;
+
+        .switch-label {
+          color: $text-color-4;
+          font-size: 14px;
+          margin-left: 10px;
+        }
+      }
+
+      .random-button {
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: auto;
+
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .phrases {
+      ul {
+        display: grid;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-bottom: 20px;
+
+        li {
+          border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
+          color: $text--mnemonic-phrase-index-color;
+          font-size: 14px;
+          padding: 10px 0;
+
+          input {
+            display: inline-block;
+            color: $text--mnemonic-phrase-key-color;
+            margin-left: 10px;
+            border: 0;
+            width: calc(100% - 26px);
+          }
+        } // li
+      } // ul
+    } // .phrases
+  } // .contents
+} // @media all and (max-width: $mobile-width)

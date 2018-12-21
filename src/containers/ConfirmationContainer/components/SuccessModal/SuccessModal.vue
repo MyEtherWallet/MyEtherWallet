@@ -4,19 +4,19 @@
     centered
     hide-footer
     hide-header
-    class="bootstrap-modal">
+    class="bootstrap-modal"
+  >
     <div class="d-block text-center">
-      <i
-        class="check-icon fa fa-check"
-        aria-hidden="true"/>
-      <h2 class="title">Success</h2>
+      <i class="check-icon fa fa-check" aria-hidden="true" />
+      <h2 class="title">{{ $t('confirmation.success') }}</h2>
       <p>{{ message }}</p>
     </div>
     <div class="button-container">
       <b-btn
         class="mid-round-button-green-filled close-button"
-        @click="hideModal">
-        {{ linkMessage }}
+        @click="hideModal"
+      >
+        {{ linkMessage === '' ? 'Ok' : linkMessage }}
       </b-btn>
     </div>
   </b-modal>

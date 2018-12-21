@@ -5,4 +5,11 @@
   cursor: pointer;
   position: fixed;
   right: 4vw;
+  z-index: 999;
+
+  .button-block {
+    img {
+      cursor: pointer;
+    }
+  }
 }

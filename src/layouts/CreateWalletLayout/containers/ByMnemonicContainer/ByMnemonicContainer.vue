@@ -1,74 +1,70 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal/>
+    <finish-modal ref="finish" :unlock="unlockWallet" />
     <verification-modal
+      ref="verification"
       :mnemonic-values="mnemonicValues"
-      :mnemonic-done-modal-open="mnemonicDoneModalOpen"/>
+      :mnemonic-done-modal-open="mnemonicDoneModalOpen"
+    />
     <div class="wrap">
-      <div class="page-container">
-        <div class="nav-tab-user-input-box">
-          <b-tabs>
-            <div class="progress-bar"/>
-            <b-tab
-              title="By Mnemonic Phrase"
-              active>
-              <div class="title-popover">
-                <h3>{{ $t("createWallet.byMnemonicWriteDown") }}</h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')" />
-              </div>
-              <div class="contents">
-                <div class="tools">
-                  <div class="value-switch noselect">
-                    <div class="sliding-switch">
-                      <label class="switch">
-                        <input type="checkbox" >
-                        <span
-                          class="slider round"
-                          @click="mnemonicValueBitSizeChange"/>
-                      </label>
-                      <div class="labels">
-                        <span class="label-left white">12</span>
-                        <span class="label-right">24</span>
-                      </div>
+      <div class="nav-tab-user-input-box">
+        <b-tabs>
+          <div class="progress-bar" />
+          <b-tab title="By Mnemonic Phrase" active>
+            <div class="title-popover">
+              <h3>{{ $t('createWallet.byMnemonicWriteDown') }}</h3>
+            </div>
+            <div class="contents">
+              <div class="tools">
+                <div class="value-switch noselect">
+                  <div class="sliding-switch">
+                    <label class="switch">
+                      <input type="checkbox" />
+                      <span
+                        class="slider round"
+                        @click="mnemonicValueBitSizeChange"
+                      />
+                    </label>
+                    <div class="labels">
+                      <span class="label-left white">12</span>
+                      <span class="label-right">24</span>
                     </div>
-                    <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
                   </div>
+                  <span class="text__base link switch-label">{{
+                    $t('createWallet.byMnemonicValue')
+                  }}</span>
+                </div>
 
-                  <div
-                    class="random-button color-green noselect"
-                    @click="mnemonicValueRefresh">
-                    <i
-                      class="fa fa-refresh"
-                      aria-hidden="true"/>
-                    <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
-                  </div>
-                </div>
-                <div class="phrases">
-                  <ul>
-                    <li
-                      v-for="(value, index) in mnemonicValues"
-                      :key="index">
-                      {{ index + 1 }}.<span>{{ value }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="user-input">
                 <div
-                  class="next-button large-round-button-green-filled clickable"
-                  @click="mnemonicVerificationModalOpen">
-                  {{ $t("createWallet.byMnemonicAlreadyWritten") }}
+                  class="random-button color-green noselect"
+                  @click="mnemonicValueRefresh"
+                >
+                  <i class="fa fa-refresh" aria-hidden="true" />
+                  <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
                 </div>
-                <router-link to="/">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/printer.svg">
-                </router-link>
               </div>
-              <input-footer />
-            </b-tab>
-          </b-tabs>
-        </div>
+              <div class="phrases">
+                <ul>
+                  <li v-for="(value, index) in mnemonicValues" :key="index">
+                    {{ index + 1 }}.<span>{{ value }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="user-input">
+              <div
+                class="next-button large-round-button-green-filled clickable"
+                @click="mnemonicVerificationModalOpen"
+              >
+                {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+              </div>
+              <router-link to="/">
+                <img class="icon" src="~@/assets/images/icons/printer.svg" />
+              </router-link>
+            </div>
+            <input-footer />
+          </b-tab>
+        </b-tabs>
       </div>
     </div>
   </div>
@@ -99,6 +95,9 @@ export default {
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
+    unlockWallet() {
+      this.$router.push('/access-my-wallet');
+    },
     mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {
         this.mnemonicValues = bip39.generateMnemonic(256).split(' ');
@@ -145,7 +144,7 @@ export default {
       });
 
       if (valid === true) {
-        this.$children[0].$refs.done.show();
+        this.$refs.finish.$refs.done.show();
       }
     },
     mnemonicVerificationModalOpen() {
@@ -211,12 +210,14 @@ export default {
           .classList.remove('hidden');
       }
 
-      this.$children[1].$refs.verification.show();
+      this.$refs.verification.$refs.verification.show();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'ByMnemonicContainer.scss';
+@import 'ByMnemonicContainer-desktop.scss';
+@import 'ByMnemonicContainer-tablet.scss';
+@import 'ByMnemonicContainer-mobile.scss';
 </style>

@@ -1,0 +1,8 @@
+{
+  "txTotal": "Transaction Total",
+  "scanQrCode": "Scan QR code to send/swap instantly",
+  "signingAddr": "Signing Address",
+  "confirmSigning": "Confirm Signing",
+  "success": "Success",
+  "error": "Error"
+}

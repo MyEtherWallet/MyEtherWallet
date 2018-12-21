@@ -1,70 +1,66 @@
 <template>
   <div class="deploy-contract-container">
-    <!--<success-modal message="" linkMessage="Ok"></success-modal>-->
-    <interface-container-title :title="$t('common.depContract')"/>
+    <interface-container-title :title="$t('common.depContract')" />
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Byte Code</h4>
+          <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">Clear</span>
-            <span @click="copyToClipboard('bytecode')">Copy</span>
+            <span @click="deleteInput('bytecode')">{{
+              $t('common.clear')
+            }}</span>
+            <span @click="copyToClipboard('bytecode')">{{
+              $t('common.copy')
+            }}</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="bytecode"
-          v-model="bytecode"
-          class="custom-textarea-1"/>
+        <textarea ref="bytecode" v-model="bytecode" class="custom-textarea-1" />
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>ABI/JSON Interface</h4>
+          <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi')">Clear</span>
-            <span @click="copyToClipboard('abi')">Copy</span>
+            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="abi"
-          v-model="abi"
-          class="custom-textarea-1"/>
+        <textarea ref="abi" v-model="abi" class="custom-textarea-1" />
         <i
-          :class="[validAbi && validAbi !== ''? '': 'not-good' ,'fa fa-check-circle good-button']"
-          aria-hidden="true"/>
+          :class="[
+            validAbi && validAbi !== '' ? '' : 'not-good',
+            'fa fa-check-circle good-button'
+          ]"
+          aria-hidden="true"
+        />
       </div>
     </div>
 
-    <div
-      v-if="constructors.length !== 0"
-      class="send-form">
+    <div v-if="constructors.length !== 0" class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Constructor {{ constructors.length > 1 ? 'Inputs': 'Input' }}: </h4>
+          <h4>
+            {{ $t('interface.constructor') }}
+            {{ constructors.length > 1 ? 'Inputs' : 'Input' }}:
+          </h4>
         </div>
       </div>
-      <div
-        v-for="(construct, idx) in constructors"
-        :key="construct.type+idx">
-        <div
-          v-for="(input, idx) in construct.inputs"
-          :key="input.name + idx">
+      <div v-for="(construct, idx) in constructors" :key="construct.type + idx">
+        <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
           <div class="title-container">
             <div class="title">
-              <h5>{{ input.name | capitalize }}: </h5>
+              <h5>{{ input.name | capitalize }}:</h5>
             </div>
           </div>
           <div class="the-form domain-name">
-            <input
-              ref="contractName"
-              v-model="inputs[input.name]">
+            <input ref="contractName" v-model="inputs[input.name]" />
           </div>
         </div>
       </div>
@@ -73,14 +69,15 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Contract Name</h4>
+          <h4>{{ $t('interface.contractName') }}</h4>
         </div>
       </div>
       <div class="the-form domain-name">
         <input
           ref="contractName"
           v-model="contractName"
-          :placeholder="contractNamePlaceholder">
+          :placeholder="contractNamePlaceholder"
+        />
       </div>
     </div>
 
@@ -88,25 +85,37 @@
       <div class="title-container">
         <div class="title">
           <div class="title-and-popover">
-            <h4>{{ $t("common.speedTx") }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTransactionContent')"/>
+            <h4>{{ $t('common.speedTx') }}</h4>
+            <popover :popcontent="$t('popover.txSpeed')" />
           </div>
-          <p>{{ $t("common.txFee") }}: {{ transactionFee }} ETH </p>
+          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
         </div>
         <div class="buttons">
           <div
-            :class="[$store.state.gasPrice === 5 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(5)">
+            :class="[
+              gasPrice === 5 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(5)"
+          >
             {{ $t('common.slow') }}
           </div>
           <div
-            :class="[$store.state.gasPrice === 45 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(45)">
+            :class="[
+              gasPrice === 45 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(45)"
+          >
             {{ $t('common.regular') }}
           </div>
           <div
-            :class="[$store.state.gasPrice === 75 ? 'active': '', 'small-circle-button-green-border']"
-            @click="changeGas(75)">
+            :class="[
+              gasPrice === 75 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="changeGas(75)"
+          >
             {{ $t('common.fast') }}
           </div>
         </div>
@@ -115,14 +124,16 @@
       <div class="the-form gas-amount">
         <input
           v-model="gasLimit"
+          :placeholder="$t('common.gasLimit')"
           type="number"
           name=""
-          placeholder="Gas Limit">
+        />
         <div class="good-button-container">
           <p>Gwei</p>
           <i
             class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"/>
+            aria-hidden="true"
+          />
         </div>
       </div>
     </div>
@@ -130,15 +141,20 @@
     <div class="submit-button-container">
       <div class="buttons">
         <div
-          :class="[abi === '' || bytecode === '' || !validAbi ? 'disabled': '', 'submit-button large-round-button-green-filled clickable']"
-          @click="confirmationModalOpen">
-          Sign Transaction
+          :class="[
+            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="confirmationModalOpen"
+        >
+          {{ $t('common.signTx') }}
         </div>
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="https://kb.myetherwallet.com"
+      />
     </div>
   </div>
 </template>
@@ -146,18 +162,16 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-// import SuccessModal from '@/components/SuccessModal'
 import { Misc } from '@/helpers';
-
 import store from 'store';
-
 import * as unit from 'ethjs-unit';
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'DeployContract',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle
-    // 'success-modal': SuccessModal
   },
   data() {
     return {
@@ -169,12 +183,20 @@ export default {
       contractNamePlaceholder: '',
       raw: {},
       transactionFee: 0,
-      gasAmount: this.$store.state.gasPrice,
+      gasAmount: this.gasPrice,
       gasLimit: 21000,
       data: '',
       nonce: 0,
       validAbi: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      gasPrice: 'gasPrice',
+      web3: 'web3',
+      wallet: 'wallet',
+      network: 'network'
+    })
   },
   watch: {
     abi(newVal) {
@@ -216,7 +238,7 @@ export default {
   methods: {
     async signTransaction() {
       try {
-        const web3 = this.$store.state.web3;
+        const web3 = this.web3;
         const contract = new web3.eth.Contract(JSON.parse(this.abi));
         const deployArgs = Object.keys(this.inputs).map(key => {
           return this.inputs[key];
@@ -225,27 +247,25 @@ export default {
           .deploy({ data: this.bytecode, arguments: deployArgs })
           .encodeABI();
         this.nonce = await web3.eth.getTransactionCount(
-          this.$store.state.wallet.getAddressString()
+          this.wallet.getAddressString()
         );
 
         this.raw = {
-          from: this.$store.state.wallet.getAddressString(),
+          from: this.wallet.getAddressString(),
           nonce: this.nonce,
-          gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
           data: this.data.replace(/\s/g, '')
         };
 
-        const transactionFee = await this.$store.state.web3.eth.estimateGas(
-          this.raw
-        );
+        const transactionFee = await this.web3.eth.estimateGas(this.raw);
 
         this.raw.gas = transactionFee;
         this.transactionFee = await unit.fromWei(
-          unit.toWei(this.$store.state.gasPrice, 'gwei') * transactionFee,
+          unit.toWei(this.gasPrice, 'gwei') * transactionFee,
           'ether'
         );
         // estimateGas was failing if chainId in present
-        this.raw.chainId = this.$store.state.network.type.chainID || 1;
+        this.raw.chainId = this.network.type.chainID || 1;
 
         await web3.eth.sendTransaction(this.raw);
       } catch (e) {
@@ -265,11 +285,11 @@ export default {
         const newRaw = this.raw;
         delete newRaw['gas'];
         delete newRaw['nonce'];
-        this.$store.state.web3.eth
+        this.web3.eth
           .estimateGas(newRaw)
           .then(res => {
             this.transactionFee = unit.fromWei(
-              unit.toWei(this.$store.state.gasPrice, 'gwei') * res,
+              unit.toWei(this.gasPrice, 'gwei') * res,
               'ether'
             );
             this.gasLimit = res;
