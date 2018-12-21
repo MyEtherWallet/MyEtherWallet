@@ -183,10 +183,16 @@ export default {
       gasPriceInputs: {
         slow: {
           gwei: new BigNumber(
-            utils.fromWei(`${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`, 'gwei')
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              'gwei'
+            )
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(`${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`, 'ether')
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              'ether'
+            )
           ).toFixed()
         },
         regular: {
@@ -199,10 +205,16 @@ export default {
         },
         fast: {
           gwei: new BigNumber(
-            utils.fromWei(`${new BigNumber(this.gasPrice).times(1.25)}`, 'gwei')
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              'gwei'
+            )
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(`${new BigNumber(this.gasPrice).times(1.25)}`, 'ether')
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              'ether'
+            )
           ).toFixed()
         }
       },
