@@ -1,5 +1,5 @@
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
-import { getRates, openOrder, getStatus } from './bity-calls';
+import { getRates, openOrder, getStatus, getExitRates } from './bity-calls';
 import {
   bityStatuses,
   BityCurrencies,
@@ -16,6 +16,11 @@ function disabledPairing(currencyList, symbol, invalid, side) {
     if (side === 'from') {
       if (currencyList[symbol].invalidFrom) {
         return !currencyList[symbol].invalidFrom.includes(invalid);
+      }
+      return true;
+    } else if (side === 'to') {
+      if (currencyList[symbol].invalidTo) {
+        return !currencyList[symbol].invalidTo.includes(invalid);
       }
       return true;
     }
@@ -62,8 +67,20 @@ export default class BitySwap {
   async retrieveRates() {
     try {
       if (!this.isValidNetwork) return;
+      const exitRates = await getExitRates();
+      const exitData = exitRates.pairs;
       const rates = await getRates();
       const data = rates.objects;
+
+      exitData.forEach(entry => {
+        if (this.fiatCurrencies.includes(entry.output)) {
+          this.rates.set(
+            `${entry.input}/${entry.output}`,
+            parseFloat(entry.price)
+          );
+        }
+      });
+
       data.forEach(pair => {
         if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
           if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
@@ -145,15 +162,18 @@ export default class BitySwap {
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
-      if (this.currencies[prop])
+      if (this.currencies[prop]) {
         collectMapTo.set(prop, {
           symbol: prop,
           name: this.currencies[prop].name
         });
-      collectMapFrom.set(prop, {
-        symbol: prop,
-        name: this.currencies[prop].name
-      });
+        if (!this.fiatCurrencies.includes(prop)) {
+          collectMapFrom.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        }
+      }
     }
   }
 
@@ -163,6 +183,24 @@ export default class BitySwap {
         if (
           prop !== value.symbol &&
           disabledPairing(this.currencies, value.symbol, prop, 'from')
+        ) {
+          if (this.currencies[prop] && !this.fiatCurrencies.includes(prop)) {
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+          }
+        }
+      }
+    }
+  }
+
+  getUpdatedToCurrencyEntries(value, collectMap) {
+    if (this.currencies[value.symbol]) {
+      for (const prop in this.currencies) {
+        if (
+          prop !== value.symbol &&
+          disabledPairing(this.currencies, value.symbol, prop, 'to')
         ) {
           if (this.currencies[prop])
             collectMap.set(prop, {
@@ -174,33 +212,26 @@ export default class BitySwap {
     }
   }
 
-  getUpdatedToCurrencyEntries(value, collectMap) {
-    if (this.currencies[value.symbol]) {
-      for (const prop in this.currencies) {
-        if (prop !== value.symbol) {
-          if (this.currencies[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies[prop].name
-            });
-        }
-      }
-    }
-  }
-
   async startSwap(swapDetails) {
-    swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency === BASE_CURRENCY,
-      swapDetails
-    );
-    swapDetails.providerReceives =
-      swapDetails.dataForInitialization.input.amount;
-    swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
-    swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
-    swapDetails.providerAddress =
-      swapDetails.dataForInitialization.payment_address;
-    swapDetails.isDex = BitySwap.isDex();
-    return swapDetails;
+    if (this.fiatCurrencies.includes(swapDetails.toCurrency)) {
+      throw Error('Exit to Fiat not yet implemented');
+    } else {
+      swapDetails.dataForInitialization = await this.buildOrder(
+        swapDetails.fromCurrency === BASE_CURRENCY,
+        swapDetails
+      );
+      swapDetails.providerReceives =
+        swapDetails.dataForInitialization.input.amount;
+      swapDetails.providerSends =
+        swapDetails.dataForInitialization.output.amount;
+      swapDetails.parsed = BitySwap.parseOrder(
+        swapDetails.dataForInitialization
+      );
+      swapDetails.providerAddress =
+        swapDetails.dataForInitialization.payment_address;
+      swapDetails.isDex = BitySwap.isDex();
+      return swapDetails;
+    }
   }
 
   async buildOrder(
