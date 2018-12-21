@@ -9,7 +9,6 @@
   padding-bottom: 10px;
 }
 
-
 // *********************************************************************
 // .menu-title
 // *********************************************************************
@@ -34,10 +33,11 @@
     margin-right: 10px;
 
     $title-number-size: 22px;
+
     height: $title-number-size;
     width: $title-number-size;
 
-    >* {
+    > * {
       width: 100%;
       font-weight: 600;
       font-size: 14px;
@@ -45,12 +45,11 @@
   }
 }
 
-
 // *********************************************************************
 // .content-container
 // *********************************************************************
 .content-container {
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
   transition: all 0.2s linear;
 

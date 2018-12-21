@@ -30,15 +30,12 @@ ul {
   }
 }
 
-
-
 // *********************************************************************
 // .content-container
 // *********************************************************************
 .button-container {
   text-align: center;
 }
-
 
 // *********************************************************************
 // Grid
@@ -47,10 +44,11 @@ ul {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;
-  grid-template-areas:  "address1 address1 address1 address1 address1 address1"
-                        "address2 address2 address2 address2 address2 address2"
-                        "city city state state zip zip"
-                        "country country country country country country"
+  grid-template-areas:
+    'address1 address1 address1 address1 address1 address1'
+    'address2 address2 address2 address2 address2 address2'
+    'city city state state zip zip'
+    'country country country country country country';
 }
 
 .address1 {
@@ -76,4 +74,3 @@ ul {
 .country {
   grid-area: country;
 }
-
