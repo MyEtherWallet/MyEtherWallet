@@ -1,10 +1,11 @@
 <template lang="html">
   <div class="name-forbidden-container">
-    <h3>{{ domainName }}.eth is not available yet!</h3>
+    <h3>{{ domainName }}.eth {{ $t('dapps.ensNotAvailable') }}!</h3>
     <interface-bottom-text
-      :link-text="$t('interface.learnMore')"
+      :link-text="$t('interface.helpCenter')"
       :question="$t('interface.haveIssues')"
-      link="/"/>
+      link="https://kb.myetherwallet.com"
+    />
   </div>
 </template>
 
@@ -18,6 +19,11 @@ export default {
     domainName: {
       type: String,
       default: ''
+    }
+  },
+  mounted() {
+    if (this.domainName === '') {
+      this.$router.push('/interface/dapps/register-domain');
     }
   }
 };

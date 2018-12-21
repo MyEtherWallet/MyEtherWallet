@@ -1,7 +1,7 @@
 <template>
   <router-link :to="param">
-    <div :class="['dapps-button', active ? '': 'disabled']">
-      <img :src="icon">
+    <div :class="['dapps-button', active ? '' : 'disabled']">
+      <img :src="icon" />
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>
     </div>

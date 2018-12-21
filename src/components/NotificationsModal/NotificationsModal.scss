@@ -1,0 +1,83 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// DEVELOPMENT USE ONLY "Modal open button"
+//***************************************************
+.modal-open-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999999999999;
+  background-color: #00e5ff;
+  padding: 3px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  user-select: none;
+
+  h5 {
+    color: white;
+    font-weight: 700;
+    font-size: 10px;
+    margin: 0;
+  }
+
+  p {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0;
+    line-height: 14px;
+  }
+}
+
+.modal-container {
+  position: relative;
+}
+
+//***************************************************
+// Title notification count
+//***************************************************
+.title-notification-count {
+  $notification-counter-size: 32px;
+
+  position: absolute;
+  top: -45px;
+  left: 167px;
+  z-index: 999;
+  background-color: red;
+  height: $notification-counter-size;
+  width: $notification-counter-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+
+  p {
+    font-weight: 600;
+    color: white;
+  }
+}
+
+//***************************************************
+// Modal contents
+//***************************************************
+.modal-contents {
+  > *:nth-child(odd) {
+    background-color: $light-grey-1;
+  }
+}
+
+//***************************************************
+// TX success
+//***************************************************
+.tx-success {
+  span {
+    color: black;
+    font-weight: 500;
+  }
+
+  p {
+    color: #a0a0a0;
+    font-weight: 500;
+  }
+}

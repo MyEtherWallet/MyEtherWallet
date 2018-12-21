@@ -1,54 +1,58 @@
 <template>
   <b-modal
     ref="mewConnect"
+    :title="$t('accessWallet.mewConnectTitle')"
     hide-footer
     class="bootstrap-modal modal-mew-connect"
-    title="Access by MEW Connect"
-    centered>
+    centered
+  >
     <div class="modal-icon">
-      <qrcode
-        :value="QrCode"
-        :options="{ size: 200 }"/>
+      <qrcode :value="QrCode" :options="{ size: 200 }" />
     </div>
     <div class="d-block content-container text-center">
-      <h3 class="modal-large-text">Please use MEWconnect App to scan the QR code above</h3>
+      <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
     <div class="appstore-button-container">
-      <img src="~@/assets/images/icons/appstore.png">
-      <p>Do not have our App? Download now.</p>
+      <a
+        href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="~@/assets/images/icons/appstore.png" />
+      </a>
+      <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
-    <customer-support/>
+    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     'customer-support': CustomerSupport
-  },
-  props: {
-    networkAndAddressOpen: {
-      type: Function,
-      default: function() {}
-    }
   },
   data() {
     return {
       QrCode: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
+  },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
-      const wallet = new MewConnectWallet();
-      this.setup(wallet);
-      wallet
-        .signalerConnect()
-        .then(() => {
-          this.$store.dispatch('decryptWallet', wallet);
-          this.$router.push({ path: 'interface' });
+      new MewConnectWallet(this.codeDisplay)
+        .then(wallet => {
+          this.$store.dispatch('decryptWallet', [wallet]);
+          this.$router.push({
+            path: 'interface'
+          });
         })
         .catch(_error => {
           // eslint-disable-next-line
@@ -60,26 +64,15 @@ export default {
     });
   },
   methods: {
-    setup(wallet) {
-      wallet.registerListener('codeDisplay', this.codeDisplay);
-      wallet.registerListener('RtcConnectedEvent', this.rtcConnected);
-      wallet.registerListener('RtcClosedEvent', this.rtcClosed);
-    },
     codeDisplay(qrCode) {
       this.QrCode = qrCode;
-    },
-    rtcConnected() {
-      // eslint-disable-next-line
-      console.log('RTC Connected: replace with notification for user');
-    },
-    rtcClosed() {
-      // eslint-disable-next-line
-      console.log('RTC Closed: replace with notification for user');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'MewConnectModal.scss';
+@import 'MewConnectModal-desktop.scss';
+@import 'MewConnectModal-tablet.scss';
+@import 'MewConnectModal-mobile.scss';
 </style>

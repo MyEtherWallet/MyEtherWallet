@@ -1,51 +1,37 @@
 <template>
   <div class="deploy-contract-container">
-    <success-modal
-      message=""
-      link-message="Ok"/>
-    <interface-container-title :title="$t('common.signMessage')"/>
+    <interface-container-title :title="$t('common.signMessage')" />
     <div class="send-form">
-      <p>
-        Include your nickname and where
-        you use the nickname so someone
-        else cannot use it.
-        Include a specific reason
-        for the message so it cannot be
-        reused for a different purpose.
-      </p>
-
+      <p>{{ $t('interface.signMessageDesc') }}</p>
       <div class="title-container">
         <div class="title">
-          <h4>Message</h4>
-          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+          <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
         </div>
       </div>
 
       <div class="the-form">
-        <textarea
-          ref="message"
-          class="custom-textarea-1"/>
+        <textarea ref="message" class="custom-textarea-1" />
       </div>
     </div>
 
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Signature</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
+          <h4>{{ $t('common.signature') }}</h4>
+          <popover :popcontent="$t('popover.signature')" />
 
           <div class="copy-buttons">
-            <span @click="deleteInputText('signature')">Clear</span>
-            <span @click="copyToClipboard('signature')">Copy</span>
+            <span @click="deleteInputText('signature')">{{
+              $t('common.clear')
+            }}</span>
+            <span @click="copyToClipboard('signature')">{{
+              $t('common.copy')
+            }}</span>
           </div>
-
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea
-          ref="signature"
-          class="custom-textarea-1"
-          name=""/>
+        <textarea ref="signature" class="custom-textarea-1" name="" />
       </div>
     </div>
 
@@ -53,16 +39,17 @@
       <div class="buttons">
         <div
           class="submit-button large-round-button-green-filled clickable"
-          @click="signMessage">
-          {{ $t('Sign') }}
+          @click="signMessage"
+        >
+          {{ $t('common.sign') }}
         </div>
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="/"/>
+        link="https://kb.myetherwallet.com"
+      />
     </div>
-
   </div>
 </template>
 
@@ -84,21 +71,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      wallet: 'wallet',
+      web3: 'web3'
     })
   },
   methods: {
     signMessage() {
-      this.$store.state.web3.eth
-        .sign(this.$refs.message.value)
+      this.web3.eth
+        .sign(this.$refs.message.value, this.wallet.getAddressString())
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
-              address: this.wallet.getAddressString(),
+              address: this.wallet.getChecksumAddressString(),
               msg: this.$refs.message.value,
               sig: _signedMessage,
               version: '3',
-              signer: this.wallet.brand ? this.wallet.brand : 'MEW'
+              signer: this.wallet.isHardware ? this.wallet.identifier : 'MEW'
             },
             null,
             2
@@ -106,9 +94,6 @@ export default {
         })
         // eslint-disable-next-line
         .catch(console.error);
-    },
-    successModalOpen() {
-      this.$children[0].$refs.success.show();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

@@ -1,0 +1,8 @@
+{
+  "signature": "So what is Signature??? More info needed...",
+  "txSpeed": "So.... What is Speed of Transaction?",
+  "print": "Print",
+  "copy": "Copy",
+  "switchAddress": "Switch Address",
+  "password": "This password encrypts your private key. This does not act as a seed to generate your keys."
+}
