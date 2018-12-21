@@ -99,6 +99,14 @@ const ledgerLiveEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic - Ledger Live'
 };
+const rskMainnet = {
+  path: "m/44'/137'/0'/0",
+  label: 'RSK Mainnet'
+};
+const rskTestnet = {
+  path: "m/44'/37310'/0'/0",
+  label: 'RSK Testnet'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -124,5 +132,7 @@ export {
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite
+  iolite,
+  rskMainnet,
+  rskTestnet
 };
