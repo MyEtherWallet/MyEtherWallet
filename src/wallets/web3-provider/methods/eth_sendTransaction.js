@@ -45,7 +45,7 @@ export default async (
     .then(_tx => {
       if (store.state.wallet.identifier === WEB3_WALLET) {
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.web3.eth.sendSignedTransaction(
+          const _promiObj = ethCalls.sendSignedTransaction(
             _response.rawTransaction
           );
           _promiObj
@@ -71,7 +71,7 @@ export default async (
         });
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.web3.eth.sendSignedTransaction(
+          const _promiObj = ethCalls.sendSignedTransaction(
             _response.rawTransaction
           );
           _promiObj
