@@ -327,7 +327,7 @@ export default {
       if (this.verifyAddr()) {
         this.estimateGas();
       }
-    }, 500),
+    }, 501),
     debounceInput: utils._.debounce(function(e) {
       this.address = normalise(e.target.value);
     }, 110),
