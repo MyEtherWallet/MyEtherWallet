@@ -11,21 +11,12 @@
         <div class="buttons">
           <div
             :class="[
-              gasPrice === locHighestGas / 4 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="setSpeed(locHighestGas / 4)"
-          >
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[
               gasPrice === locHighestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
             @click="setSpeed(locHighestGas / 2)"
           >
-            {{ $t('common.regular') }}
+            {{ $t('common.slow') }}
           </div>
           <div
             :class="[
@@ -33,6 +24,15 @@
               'small-circle-button-green-border'
             ]"
             @click="setSpeed(locHighestGas)"
+          >
+            {{ $t('common.regular') }}
+          </div>
+          <div
+            :class="[
+              gasPrice === locHighestGas * 1.25 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="setSpeed(locHighestGas * 1.25)"
           >
             {{ $t('common.fast') }}
           </div>

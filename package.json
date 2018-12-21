@@ -69,7 +69,7 @@
     "imagemin-webpack-plugin": "2.3.0",
     "jest-skipped-reporter": "0.0.4",
     "jspdf": "1.4.1",
-    "keccak": "1.4.0",
+    "keccak": "2.0.0",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
     "package-json": "5.0.0",
