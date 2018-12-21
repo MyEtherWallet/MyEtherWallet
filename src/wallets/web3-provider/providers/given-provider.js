@@ -4,13 +4,11 @@ import {
   ethSendTransaction,
   ethSign,
   ethSignTransaction,
-  ethGetTransactionCount,
-  ethGetTransactionReceipt
+  ethGetTransactionCount
 } from '../methods';
 class GivenProvider {
   constructor(host, options, store, eventHub) {
     this.givenProvider = Object.assign({}, host);
-    const requestManager = new Web3RequestManager(host);
     options = options ? options : null;
     if (this.givenProvider.sendAsync) {
       this.givenProvider.send = this.givenProvider.sendAsync;
@@ -22,14 +20,13 @@ class GivenProvider {
       const req = {
         payload,
         store,
-        requestManager,
+        requestManager: new Web3RequestManager(host),
         eventHub
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
       middleware.use(ethSignTransaction);
       middleware.use(ethGetTransactionCount);
-      middleware.use(ethGetTransactionReceipt);
       middleware.use(ethSign);
       middleware.run(req, callback).then(() => {
         this.givenProvider.send_(payload, callback);

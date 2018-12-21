@@ -12,16 +12,13 @@
     "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
-    "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
+    "lint:styles": "prettier --write 'src/**/*.scss' && stylelint 'src/**/*.scss' --fix",
     "lint:tests": "eslint --fix tests/",
     "start": "npm run update && npm run dev",
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
     "update:lists": "node fetchEthListData.js",
     "update": "npm run update:packages && npm run update:lists"
-  },
-  "gitHooks": {
-    "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
     "html2canvas": "1.0.0-alpha.12",

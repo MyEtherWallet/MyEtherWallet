@@ -180,7 +180,6 @@ import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
-
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -284,7 +283,6 @@ export default {
       this.nonce = await this.web3.eth.getTransactionCount(
         this.wallet.getAddressString()
       );
-
       this.raw = {
         from: this.wallet.getAddressString(),
         gas: this.gasLimit,
@@ -303,7 +301,6 @@ export default {
         data: this.data,
         chainId: this.network.type.chainID || 1
       };
-
       if (this.address === '') {
         delete this.raw['to'];
       }

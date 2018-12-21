@@ -1,11 +1,24 @@
-@import '../InterfaceContainer';
+@import './InterfaceContainer';
 
-.send-currency-container {
+.send-currency-container-safe-send {
   @extend %interface-container;
+
+  .protection-fee-text{
+    color: #506175;
+    line-height: 21px;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+  .minimum-amount-text {
+    padding-left: 8px;
+  }
 
   .send-form {
     @extend %send-form-base;
 
+    .title {
+      margin-bottom: 12px;
+    }
     .title-container {
       .title {
         display: flex;
@@ -24,21 +37,13 @@
 
         .title-helper {
           display: flex;
-          align-items: center;
           margin-bottom: 2px;
-          h4 {
-            margin-right: 5px;
-          }
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
-
-        > div {
-          margin-left: 5px;
-        }
       }
     }
 
@@ -47,21 +52,13 @@
     }
 
     .amount-to-address {
-      /*
       display: grid;
       grid-column-gap: 5px;
-      grid-template-columns: 2fr 3fr;
-      */
-      display: block;
-
-      @media all and (max-width: $mobile-width) {
-        display: block;
-      }
+      grid-template-columns: 1fr 2fr;
 
       .title {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 13px;
         padding: 0 8px;
 
         .title-button {
@@ -76,14 +73,6 @@
       }
 
       .amount {
-        display: grid;
-        grid-column-gap: 7px;
-        grid-template-columns: 2fr 3fr;
-
-        @media all and (max-width: $tablet-width) {
-          display: block;
-        }
-
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -107,7 +96,7 @@
           input {
             background-color: transparent;
             border: 0;
-            padding: 13px 45px 13px 15px;
+            padding: 13px 15px;
             width: 100%;
           }
 
@@ -154,6 +143,7 @@
         }
 
         .address-block {
+          height: 47px;
           position: relative;
 
           i {
@@ -162,10 +152,11 @@
             right: 13px;
           }
 
-          input {
+          textarea {
             background-color: transparent;
             border: 0;
-            padding: 13px 45px 13px 15px;
+            height: 100%;
+            padding: 13px 15px;
             resize: none;
             width: 100%;
           }
@@ -174,6 +165,7 @@
     }
 
     .gas-amount,
+    .fee-amount,
     .user-input {
       position: relative;
 
@@ -240,17 +232,8 @@
       } // .toggle-button-container
 
       .input-container {
-        max-height: 0;
-        transition: max-height 0.3s ease;
-        overflow: hidden;
-
-        &.input-container-open {
-          max-height: 400px;
-        }
-
-        .margin-container {
-          margin-top: 20px;
-        }
+        margin-top: 20px;
+        margin-bottom: -15px;
 
         .user-input {
           margin-bottom: 5px;
@@ -260,7 +243,7 @@
   }
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 20px 0;
     text-align: center;
 
     .bottom-text {
@@ -270,7 +253,7 @@
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      //width: 200px;
+      width: 300px;
     }
 
     p {
@@ -280,13 +263,5 @@
 
   .tokens {
     border-radius: 5px;
-  }
-}
-
-.single-input-block {
-  margin-bottom: 30px;
-
-  &:last-child {
-    // margin-bottom: 0;
   }
 }

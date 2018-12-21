@@ -9,18 +9,14 @@ import {
   ethAccounts,
   ethCoinbase,
   ethGetTransactionCount,
-  ethGetTransactionReceipt,
   netVersion
 } from '../methods';
 class HttpProvider {
   constructor(host, options, store, eventHub) {
     this.httpProvider = new Web3HttpProvider(host, options);
-    const _this = this.httpProvider;
-    const requestManager = new Web3RequestManager(
-      new Web3HttpProvider(host, options)
-    );
     delete this.httpProvider['send'];
     this.httpProvider.send = (payload, callback) => {
+      const _this = this.httpProvider;
       const request = _this._prepareRequest();
       request.onreadystatechange = function() {
         if (request.readyState === 4 && request.timeout !== 1) {
@@ -44,14 +40,15 @@ class HttpProvider {
       const req = {
         payload,
         store,
-        requestManager,
+        requestManager: new Web3RequestManager(
+          new Web3HttpProvider(host, options)
+        ),
         eventHub
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
       middleware.use(ethSignTransaction);
       middleware.use(ethGetTransactionCount);
-      middleware.use(ethGetTransactionReceipt);
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethCoinbase);

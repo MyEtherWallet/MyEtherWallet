@@ -1,0 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
+%interface-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+
+  > div {
+    background: $background-color-white;
+  }
+}
+
+%send-form-base {
+  padding: 40px 60px 0;
+
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 5px;
+  }
+}
+
+%form-block-base {
+  border-radius: 5px;
+
+  .the-form {
+    background-color: $background-color-1;
+    border-radius: 5px;
+  }
+}
+
+.select-contract .dropdown-toggle {
+  border: 0;
+  display: none;
+}
