@@ -23,7 +23,7 @@
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
 - Add support for Ledger live paths. [#216](https://github.com/MyEtherWallet/MyEtherWallet/pull/216)
 - Implement Swap [#127](https://github.com/MyEtherWallet/MyEtherWallet/pull/127)
-- Implement SafeSend Dapp [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
+- Implement SafeSend Dapp [#299](https://github.com/MyEtherWallet/MyEtherWallet/pull/299)
 
 ### Devop
 
