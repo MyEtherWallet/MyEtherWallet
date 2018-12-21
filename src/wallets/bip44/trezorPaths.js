@@ -19,7 +19,9 @@ import {
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite
+  iolite,
+  rskMainnet,
+  rskTestnet
 } from './paths';
 export default [
   ethereum,
@@ -42,5 +44,7 @@ export default [
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite
+  iolite,
+  rskMainnet,
+  rskTestnet
 ];
