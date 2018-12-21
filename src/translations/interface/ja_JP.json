@@ -60,10 +60,10 @@
   "pleaseTryAgain": "もう一度しようとをお待ちください。",
   "articleTo": "宛先",
   "send": "送る",
-  "addr": "Address",
-  "search": "Search",
-  "timeRemaining": "Time Remaining",
-  "sendTxType": "Type",
-  "belowMin": "Below minimun swap value of",
-  "notValidAddr": "Not a valid address for destination chain"
+  "addr": "アドレス",
+  "search": "検索",
+  "timeRemaining": "充電完了まで",
+  "sendTxType": "タイプ",
+  "belowMin": "最小のスワップ値以下",
+  "notValidAddr": "先チェーンの有効なアドレスではなく"
 }
