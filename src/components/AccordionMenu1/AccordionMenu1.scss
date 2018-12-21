@@ -1,0 +1,33 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+
+}
+
+.menu-title {
+  padding: 10px;
+  background-color: $dark-blue-12;
+  display: flex;
+  align-items: center;
+  >div {
+    color: $white;
+  }
+
+  .title-number {
+    border: 1px solid $white;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    $title-number-size: 30px;
+    height: $title-number-size;
+    width: $title-number-size;
+  }
+}
+
+
+p {}
+
+
+
