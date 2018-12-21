@@ -10,7 +10,7 @@
   "customerSupport": "Customer Support",
   "address": "Address",
   "balance": "Balance",
-  "terms": "Terms",
+  "terms": "Terms and Conditions",
   "continue": "Continue",
   "jsonF": "JSON File",
   "mnemonicP": "Mnemonic Phrase",
@@ -46,11 +46,13 @@
   "signTx": "Sign Transaction",
   "verifyMessage": "Verify Message",
   "signature": "Signature",
+  "sign": "Sign",
   "toAddress": "To Address",
   "cancel": "Cancel",
   "value": "Value",
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
-  "confirmAndSend": "Confirm and Send"
+  "confirmAndSend": "Confirm and Send",
+  "waitingForHash": "Waiting for Transaction Hash"
 }
