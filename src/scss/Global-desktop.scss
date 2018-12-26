@@ -1264,3 +1264,11 @@
   padding: 10px;
   text-align: center;
 }
+
+// *********************************************************************
+// Temprary fix for Network and Address dropdown menu size
+// *********************************************************************
+.dropdown-button-2 .dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
+}
