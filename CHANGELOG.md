@@ -27,7 +27,7 @@
 
 ### Devop
 
-- Remove ETC epool []()
+- Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
 - Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
 - Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)
 - Prevent excessive polling of eth_getTransactionReceipt [#266](https://github.com/MyEtherWallet/MyEtherWallet/pull/266)
