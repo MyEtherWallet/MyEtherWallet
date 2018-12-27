@@ -102,6 +102,9 @@
               aria-hidden="true"
             />
           </div>
+          <p class="to-address-error-message">
+            ENS name is invalid or not found
+          </p>
         </div>
       </div>
     </div>
