@@ -1,9 +1,18 @@
 <template>
   <div class="standard-dropdown">
     <div class="wrap">
-      <div class="dropdown-button">
+      <div class="dropdown-button" @click="dropdownOpen = !dropdownOpen">
         <p>{{ chosenValue }}</p>
         <i aria-hidden="true" class="fa fa-angle-down"></i>
+      </div>
+      <div v-if="dropdownOpen" class="dropdown-list">
+        <ul>
+          <li value="CA" @click="listClicked($event)">CA</li>
+          <li>CA</li>
+          <li>CA</li>
+          <li>CA</li>
+          <li>CA</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -21,11 +30,16 @@ export default {
   },
   data() {
     return {
-      chosenValue: 'CA'
+      chosenValue: 'CA',
+      dropdownOpen: false
     };
   },
   computed: {},
-  methods: {}
+  methods: {
+    listClicked(e) {
+      console.log(e);
+    }
+  }
 };
 </script>
 

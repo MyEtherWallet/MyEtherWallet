@@ -2,7 +2,7 @@
   <div class="swap-send-form">
     <div class="wrap">
       <interface-container-title :isbackbutton="true" />
-      <div class="content-container">
+      <div class="form-content-container">
         <div class="accordion-menu-container">
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
@@ -135,7 +135,7 @@ export default {
         placeHolder: 'Address 1'
       },
       inputAddress2: {
-        placeHolder: 'Address 2'
+        placeHolder: 'Address 2 (Optional)'
       },
       inputCity: {
         placeHolder: 'City'
