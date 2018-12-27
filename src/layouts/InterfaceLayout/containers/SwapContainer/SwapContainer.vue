@@ -68,42 +68,7 @@
       <providers-radio-selector />
     </div>
 
-    <div v-if="false" class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-and-popover">
-            <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.txSpeed')" />
-          </div>
-          <p>{{ $t('common.txFee') }}: 0.000013 ETH ($1.234)</p>
-        </div>
-        <div class="buttons">
-          <div class="small-circle-button-green-border">
-            {{ $t('common.slow') }}
-          </div>
-          <div class="small-circle-button-green-border active">
-            {{ $t('common.regular') }}
-          </div>
-          <div class="small-circle-button-green-border">
-            {{ $t('common.fast') }}
-          </div>
-        </div>
-      </div>
-
-      <div class="the-form gas-amount">
-        <input type="number" name="" value="" placeholder="Gas Amount" />
-        <div class="good-button-container">
-          <p>Gwei</p>
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-    </div>
-
     <div class="submit-button-container">
-      <h4 v-if="false">1 ETH = 0.000231 BTC</h4>
       <div
         class="submit-button large-round-button-green-filled clickable"
         @click="swapConfirmationModalOpen"

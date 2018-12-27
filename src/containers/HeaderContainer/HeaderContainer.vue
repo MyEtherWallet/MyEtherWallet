@@ -42,11 +42,6 @@
               $t('common.faqs')
             }}</a>
           </li>
-          <li v-if="false">
-            <a href="/#news" @click="isMobileMenuOpen = false">{{
-              $t('common.news')
-            }}</a>
-          </li>
           <li>
             <div class="mobile-language-menu-container">
               <b-nav-item-dropdown

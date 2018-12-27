@@ -141,8 +141,7 @@ export default {
           contents: [
             {
               text: this.$t('footer.units'),
-              //to: '/convert-units'
-              href: '/convert-units'
+              to: '/convert-units'
             },
             // {
             //   text: this.$t('footer.advanced'),
