@@ -47,6 +47,16 @@ describe('kyber.js', () => {
     const baseValue = kyber.convertToTokenWei('GTO', 1);
     expect(baseValue).toBe('100000');
   });
+  // eslint-disable-next-line no-undef
+  if (WITH_NETWORK) {
+    // requires network to function
+    it('should return data for kyber approval tx', async () => {
+      const dataValue = {
+        data:
+          '0x095ea7b3000000000000000000000000818e6fecd516ecc3849daf6845e3ec868087b75500000000000000000000000000000000000000000000000000000000000186a0',
+        to: '0xC5bBaE50781Be1669306b9e001EFF57a2957b09d',
+        value: 0
+      };
 
   // eslint-disable-next-line no-undef
   if (WITH_NETWORK) {

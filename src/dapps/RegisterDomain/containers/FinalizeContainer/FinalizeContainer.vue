@@ -7,9 +7,9 @@
       </button>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.learnMore')"
+      :link-text="$t('interface.helpCenter')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"
+      link="https://kb.myetherwallet.com"
     />
   </div>
 </template>

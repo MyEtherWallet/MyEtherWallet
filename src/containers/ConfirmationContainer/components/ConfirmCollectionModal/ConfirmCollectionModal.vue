@@ -120,6 +120,13 @@
               {{ $t('common.waitingForHash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
+            <div
+              v-show="sending"
+              class="submit-button large-round-button-green-filled clickable disabled"
+            >
+              {{ $t('common.waitingForHash') }}
+              <i class="fa fa-spinner fa-spin" />
+            </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
                 <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
@@ -142,7 +149,16 @@
             </div>
           </div>
         </div>
-        <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+        <p class="learn-more">
+          Have any issues?
+          <a
+            href="https:/kb.myetherwallet.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn more
+          </a>
+        </p>
       </div>
     </b-modal>
   </div>
