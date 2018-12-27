@@ -27,7 +27,7 @@
 
 ### Devop
 
-- Replace temporary notice to check if hardware wallet is attached to a final version []()
+- Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
 - Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
 - Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
 - Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)
