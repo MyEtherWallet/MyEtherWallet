@@ -10,7 +10,7 @@
     <p>
       <img
         src="https://s3.amazonaws.com/groovehq/uploaded/3ixnwrg3w8ko1uki8tu5tg4mjpurb4sn2xgfr1lx21w8rnfdzi?1494563756"
-        alt=""
+        alt
       />
     </p>
 
@@ -33,6 +33,8 @@
       <li>
         <a
           href="https://www.reddit.com/r/ethereum/comments/5psp13/ethereum_account_generation_on_airgapped_computer/"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           Here's a really long comment about how window.crypto generates
           entropy.
@@ -42,6 +44,8 @@
         Here's a
         <a
           href="https://www.reddit.com/r/ethereum/comments/2bilqg/note_there_is_a_paranoid_highsecurity_way_to/cj5sgrm"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           conversation between an angry redditor and Vitalik regarding mouse
           movements v. window.crypto
@@ -50,6 +54,8 @@
       <li>
         <a
           href="https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-GlobalCrypto"
+          target="_blank"
+          rel="noopener noreferrer"
           >The window.crypto spec itself</a
         >
       </li>

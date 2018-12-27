@@ -8,54 +8,55 @@
       title="Confirmation"
     >
       <div class="time-remaining">
-        <h1>09:25</h1>
-        <p>Time Remaining</p>
+        <h1>{{ timeRemaining }}</h1>
+        <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
-          <div class="icon"><img :src="fromAddress.image" /></div>
+          <div class="icon">
+            <i :class="['cc', fromAddress.name, 'cc-icon']" />
+          </div>
           <p class="value">
             {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
           </p>
-          <p v-show="fromAddress.address !== ''" class="block-title">
-            From Address
+          <p
+            v-show="fromAddress.address !== '' && !isFromFiat"
+            class="block-title"
+          >
+            {{ $t('interface.fromAddr') }}
           </p>
-          <p v-show="fromAddress.address !== ''" class="address">
+          <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
             {{ fromAddress.address }}
           </p>
         </div>
         <div class="right-arrow"><img :src="arrowImage" /></div>
         <div class="to-address">
-          <div class="icon"><img :src="toAddress.image" /></div>
+          <div class="icon">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          </div>
           <p class="value">
             {{ toAddress.value }} <span>{{ toAddress.name }}</span>
           </p>
           <p v-show="toAddress.address !== ''" class="block-title">
-            To Address
+            {{ $t('interface.sendTxToAddr') }}
           </p>
           <p v-show="toAddress.address !== ''" class="address">
             {{ toAddress.address }}
           </p>
         </div>
-        <div v-show="!fromFiat" class="confirm-send-button">
+        <div v-show="!isFromFiat" class="confirm-send-button">
           <h4>
-            Send {{ fromAddress.value }} {{ fromAddress.name }} to
+            {{ $t('interface.send') }} {{ fromAddress.value }}
+            {{ fromAddress.name }} {{ $t('interface.articleTo') }}
             <span class="address">{{ qrcode }}</span>
           </h4>
           <qrcode :value="qrcode" :options="{ size: 200 }" />
         </div>
         <simplex-checkout-form
-          v-if="fromFiat && swapProvider === 'simplex'"
+          v-if="isFromFiat && swapProvider === 'simplex'"
           :form-data="swapDetails.dataForInitialization"
           :continue-action="redirectToPartner"
         />
-
-        <!-- <div -->
-        <!-- v-show="fromFiat"> -->
-        <!-- <button-with-qrcode -->
-        <!-- :qrcode="qrcode" -->
-        <!-- buttonname="Confirm and Send"/> -->
-        <!-- </div> -->
       </div>
 
       <help-center-button />
@@ -65,13 +66,11 @@
 
 <script>
 import Arrow from '@/assets/images/etc/single-arrow.svg';
-import iconBtc from '@/assets/images/currency/btc.svg';
-import iconEth from '@/assets/images/currency/eth.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
 
-import { fiat } from '@/partners';
+import { fiat, utils } from '@/partners';
 
 export default {
   components: {
@@ -85,75 +84,57 @@ export default {
       default: function() {
         return {};
       }
+    },
+    currentAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      currencyIcons: {
-        BTC: iconBtc,
-        ETH: iconEth
-      },
+      rawSwapDetails: {},
+      timerInterval: {},
+      timeRemaining: 0,
       fiatCurrencies: fiat.map(entry => entry.symbol),
-      fromFiat: false,
       qrcode: '',
       arrowImage: Arrow,
-      fromAddress: {
-        image: iconEth,
-        value: '1.0000000000',
-        name: 'ETH',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      },
-      toAddress: {
-        image: iconBtc,
-        value: '0.0034523',
-        name: 'BTC',
-        address: '0xF54F78F67feCDd37e0C009aB4cCD6549A69540D4'
-      }
+      fromAddress: {},
+      toAddress: {}
     };
   },
   computed: {
     swapProvider() {
       return this.swapDetails.provider;
+    },
+    isFromFiat() {
+      return this.fiatCurrencies.includes(this.rawSwapDetails.fromCurrency);
     }
   },
   watch: {
     swapDetails(newValue) {
-      if (this.fiatCurrencies.includes(newValue.fromCurrency)) {
-        this.fromFiat = true;
+      this.rawSwapDetails = newValue;
+      this.timeUpdater(newValue);
+      if (
+        this.fiatCurrencies.includes(newValue.toCurrency) ||
+        this.fiatCurrencies.includes(newValue.fromCurrency)
+      ) {
         this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
-          value: newValue.fromValue,
-          name: newValue.fromCurrency,
-          address: ''
-        };
-        this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
-          value: newValue.toValue,
-          name: newValue.toCurrency,
-          address: newValue.toAddress
-        };
-      } else if (this.fiatCurrencies.includes(newValue.toCurrency)) {
-        this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
           value: newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
           value: newValue.toValue,
           name: newValue.toCurrency,
-          address: ''
+          address: newValue.toAddress ? newValue.toAddress : ''
         };
       } else {
         this.fromAddress = {
-          image: this.currencyIcons[newValue.fromCurrency],
           value: newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
-          image: this.currencyIcons[newValue.toCurrency],
           value: newValue.toValue,
           name: newValue.toCurrency,
           address: newValue.toAddress
@@ -162,11 +143,24 @@ export default {
     }
   },
   methods: {
+    timeUpdater(swapDetails) {
+      clearInterval(this.timerInterval);
+      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timerInterval = setInterval(() => {
+        this.timeRemaining = utils.getTimeRemainingString(
+          swapDetails.timestamp
+        );
+        if (this.timeRemaining === 'expired') {
+          clearInterval(this.timerInterval);
+        }
+      }, 1000);
+    },
     redirectToPartner() {
       this.swapStarted(this.swapDetails);
       this.$refs.swapconfirmation.hide();
     },
     swapStarted(swapDetails) {
+      this.timeUpdater(swapDetails);
       if (swapDetails.dataForInitialization) {
         switch (swapDetails.provider) {
           case 'changelly':
@@ -180,13 +174,18 @@ export default {
         throw Error('Invalid details from swap provider');
       }
     },
+    buildQrCodeContent(swapDetails) {
+      if (swapDetails.fromCurrency === 'BTC') {
+        this.qrcode = `bitcoin:${swapDetails.providerAddress}`;
+      } else {
+        this.qrcode = swapDetails.providerAddress;
+      }
+    },
     bitySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress;
-      // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
+      this.buildQrCodeContent(swapDetails);
     },
     changellySwap(swapDetails) {
-      this.qrcode = swapDetails.providerAddress;
-      // this.$store.dispatch('addSwapTransaction', [this.currentAddress, value]);
+      this.buildQrCodeContent(swapDetails);
     }
   }
 };

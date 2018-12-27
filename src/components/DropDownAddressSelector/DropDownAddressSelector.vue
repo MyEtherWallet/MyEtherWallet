@@ -122,6 +122,7 @@ export default {
   },
   methods: {
     clickEvent: function(event) {
+      if (!event.path) return;
       for (let count = 0; count < event.path.length; count++) {
         if (event.path[count].className === 'address-dropdown-input-box') {
           return;

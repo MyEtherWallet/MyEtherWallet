@@ -13,11 +13,14 @@ import {
 class WSProvider {
   constructor(host, options, store, eventHub) {
     this.wsProvider = new Web3WSProvider(host, options);
+    const _this = this.wsProvider;
+    const requestManager = new Web3RequestManager(
+      new Web3WSProvider(host, options)
+    );
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {
-      const _this = this.wsProvider;
       if (_this.connection.readyState === _this.connection.CONNECTING) {
-        setTimeout(function() {
+        setTimeout(() => {
           this.wsProvider.send(payload, callback);
         }, 10);
         return;
@@ -32,9 +35,7 @@ class WSProvider {
       const req = {
         payload,
         store,
-        requestManager: new Web3RequestManager(
-          new Web3WSProvider(host, options)
-        ),
+        requestManager,
         eventHub
       };
       const middleware = new MiddleWare();
