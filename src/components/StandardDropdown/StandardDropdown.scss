@@ -42,12 +42,12 @@
   z-index: 1;
   border-radius: 4px;
   width: 100%;
-  max-height: 180px;
+  max-height: 80px;
   overflow: auto;
   background-color: $light-grey-1;
   ul {
     li {
-      padding: 12px 20px;
+      padding: 10px 20px;
       cursor: pointer;
 
       &:nth-child(odd) {
