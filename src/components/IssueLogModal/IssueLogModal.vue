@@ -1,8 +1,5 @@
 <template>
   <div class="wrap">
-    <div v-if="false" class="dev-only-button" @click="$refs.issuelog.show()">
-      Open Issue Log Modal
-    </div>
     <div class="modal-container">
       <b-modal
         ref="issuelog"
