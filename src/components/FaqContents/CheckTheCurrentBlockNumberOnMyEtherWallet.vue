@@ -2,7 +2,7 @@
   <div>
     <p>
       If you are on
-      <a href="https://www.myetherwallet.com/"
+      <a href="https://www.myetherwallet.com/" rel="noopener noreferrer"
         >https://www.myetherwallet.com/</a
       >
       and connected to a node that supports it, you can see the current block

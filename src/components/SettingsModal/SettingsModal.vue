@@ -9,51 +9,66 @@
     >
       <div class="modal-contents">
         <full-width-dropdown
+          ref="gasDropdown"
           title="Transaction Speed"
-          popup="What is TX speed"
           class="tx-speed"
         >
           <div class="radio-buttons">
             <ul>
-              <li class="selected">
+              <li
+                v-for="(val, key) in gasPriceInputs"
+                :key="key"
+                :class="selectedGasType === key ? 'selected' : ''"
+              >
                 <div>
                   <input
-                    id="aaa"
+                    :id="key"
+                    :value="key"
+                    :checked="selectedGasType === key"
+                    name="speedRadioInputs"
                     type="radio"
-                    name="gender"
-                    value="male"
-                    checked="checked"
+                    @change="selectGasType(key)"
                   />
-                  <label for="aaa">Slow (2000 Gwei)</label>
+                  <label :for="key"
+                    >{{ key | capitalize }} ({{
+                      gasPriceInputs[key].gwei
+                    }}
+                    Gwei)</label
+                  >
                 </div>
-                <p>0.000013 ETH ($1.34)</p>
+                <p>
+                  {{ gasPriceInputs[key].eth }} ETH
+                  <span v-if="ethPrice !== 0">
+                    ($ {{ convert(gasPriceInputs[key].eth) | concatAddr }})
+                  </span>
+                </p>
               </li>
-              <li>
+              <li :class="selectedGasType === 'other' ? 'selected' : ''">
                 <div>
-                  <input id="bbb" type="radio" name="gender" value="female" />
-                  <label for="bbb">Regular (8000 Gwei)</label>
-                </div>
-                <p>0.000023ETH ($3.23)</p>
-              </li>
-              <li>
-                <div>
-                  <input id="ccc" type="radio" name="gender" value="other" />
-                  <label for="ccc">Fast (12000 Gwei)</label>
-                </div>
-                <p>0.000063ETH ($5.16)</p>
-              </li>
-              <li>
-                <div>
-                  <input id="ccc" type="radio" name="gender" value="other" />
-                  <input type="text" name="" />
+                  <input
+                    id="ccc"
+                    type="radio"
+                    name="speedRadioInputs"
+                    value="other"
+                    @change="selectGasType('other')"
+                  />
+                  <input v-model="customGas" type="number" />
                   <p class="gwei">Gwei</p>
                 </div>
-                <p>0.000063ETH ($5.16)</p>
+                <p>
+                  {{ customGasEth }} ETH
+                  <span v-if="ethPrice !== 0 && customGasEth !== 0">
+                    ($ {{ convert(customGasEth) | concatAddr }})
+                  </span>
+                </p>
               </li>
             </ul>
           </div>
           <div class="button-block">
-            <standard-button :options="buttonSave" />
+            <standard-button
+              :options="buttonSave"
+              @click.native="saveGasChanges"
+            />
           </div>
         </full-width-dropdown>
 
@@ -61,16 +76,32 @@
           title="Import Configurations"
           class="import-config"
         >
+          <b-alert :show="popup" fade variant="info">
+            Imported file successfully!
+          </b-alert>
           <p>
             Please click the button below to open and import you configuration
             file from your local computer.
           </p>
           <div class="import-button-block">
             <standard-input :options="inputFileName" />
-            <standard-button :options="buttonUploadFile" />
+            <input
+              ref="uploadInput"
+              type="file"
+              name="file"
+              style="display: none"
+              @change="receiveUploadedFile"
+            />
+            <standard-button
+              :options="buttonUploadFile"
+              @click.native="uploadFile"
+            />
           </div>
           <div class="button-block">
-            <standard-button :options="buttonImport" />
+            <standard-button
+              :options="buttonImport"
+              @click.native="setDataFromImportedFile"
+            />
           </div>
         </full-width-dropdown>
 
@@ -83,7 +114,10 @@
             into your local computer.
           </p>
           <div class="button-block">
-            <standard-button :options="buttonExport" />
+            <a :href="file" :download="fileName" class="export-button">
+              Export
+            </a>
+            <!-- <standard-button :options="buttonExport" @click.native="exportConfig"/> -->
           </div>
         </full-width-dropdown>
       </div>
@@ -93,11 +127,20 @@
 
 <script>
 import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
+import BigNumber from 'bignumber.js';
+import utils from 'web3-utils';
+import store from 'store';
 
 export default {
   name: 'Settings',
   components: {
     'full-width-dropdown': FullWidthDropdownMenu
+  },
+  props: {
+    gasPrice: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {
@@ -124,14 +167,6 @@ export default {
         fullWidth: false,
         noMinWidth: false
       },
-      buttonExport: {
-        title: 'Export',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: false,
-        noMinWidth: false
-      },
       inputFileName: {
         title: '',
         value: '',
@@ -143,13 +178,196 @@ export default {
         popover: '',
         placeHolder: '',
         rightInputText: ''
-      }
+      },
+      selectedGasType: 'regular',
+      gasPriceInputs: {
+        slow: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              'ether'
+            )
+          ).toFixed()
+        },
+        regular: {
+          gwei: new BigNumber(
+            utils.fromWei(`${this.gasPrice}`, 'gwei')
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(`${this.gasPrice}`, 'ether')
+          ).toFixed()
+        },
+        fast: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              'ether'
+            )
+          ).toFixed()
+        }
+      },
+      customGas: 0,
+      customGasEth: 0,
+      ethPrice: 0,
+      fileName: '',
+      file: '',
+      importedFile: '',
+      popup: false
     };
   },
-  mounted() {},
+  watch: {
+    customGas(newVal) {
+      if (newVal !== '') {
+        const toGwei = new BigNumber(
+          utils.toWei(`${newVal}`, 'gwei')
+        ).toFixed();
+        this.customGasEth = new BigNumber(
+          `${utils.fromWei(toGwei, 'ether')}`
+        ).toFixed();
+      } else {
+        this.customGas = 0;
+        this.customGasEth = 0;
+      }
+    }
+  },
+  mounted() {
+    this.getEthPrice();
+    this.exportConfig();
+  },
   methods: {
-    modalOpen() {
-      this.$refs.settings.show();
+    setDataFromImportedFile() {
+      const reader = new FileReader();
+      reader.onloadend = evt => {
+        const notifications = store.get('notifications');
+        const file = JSON.parse(evt.target.result);
+        file.notifications.forEach(objAddr => {
+          const addr = Object.keys(objAddr)[0];
+          notifications[addr] = objAddr[addr];
+        });
+        store.set('notifications', notifications);
+        store.set('skipTutorial', file.main.skipTutorial);
+        store.set('customTokens', file.main.customTokens);
+        store.set('customTokens', file.main.customTokens);
+        store.set('customNetworks', file.main.customNetworks);
+        store.set('customNetworks', file.main.customNetworks);
+        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
+        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
+        store.set('gas', file.main.gas);
+
+        this.popup = true;
+
+        setTimeout(() => {
+          this.popup = false;
+        }, 1500);
+      };
+      reader.readAsBinaryString(this.importedFile);
+    },
+    receiveUploadedFile(e) {
+      this.inputFileName = {
+        value: e.target.value,
+        type: 'text',
+        buttonCopy: false,
+        buttonClear: false,
+        buttonCustom: '',
+        topTextInfo: '',
+        popover: '',
+        placeHolder: '',
+        rightInputText: ''
+      };
+
+      this.importedFile = e.target.files[0];
+    },
+    uploadFile() {
+      const uploadInput = this.$refs.uploadInput;
+      uploadInput.value = '';
+      uploadInput.click();
+    },
+    saveGasChanges() {
+      if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
+        this.$store.dispatch(
+          'setGasPrice',
+          Number(this.gasPriceInputs[this.selectedGasType].gwei)
+        );
+      } else {
+        this.$store.dispatch('setGasPrice', Number(this.customGas));
+      }
+      this.$refs.gasDropdown.dropdownOpen = false;
+    },
+    selectGasType(type) {
+      this.selectedGasType = type;
+    },
+    exportConfig() {
+      const time = new Date().toISOString();
+      const notifications = [];
+      const storedNotifs = store.get('notifications');
+      Object.keys(storedNotifs).forEach(item => {
+        if (storedNotifs[item].length > 0) {
+          const obj = {};
+          obj[item] = storedNotifs[item];
+          notifications.push(obj);
+        }
+      });
+      const gas = {};
+      if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
+        gas['speed'] = this.selectedGasType;
+      } else {
+        gas['price'] = this.customGas;
+      }
+
+      const exportableObject = {
+        timestamp: time,
+        main: {
+          customNetworks:
+            store.get('customNetworks') !== undefined
+              ? store.get('customNetworks')
+              : [],
+          customTokens:
+            store.get('customTokens') !== undefined
+              ? store.get('customTokens')
+              : [],
+          customDeriviationPaths:
+            store.get('customDeriviationPaths') !== undefined
+              ? store.get('customDeriviationPaths')
+              : [],
+          gas: gas,
+          skipTutorial: true
+        },
+        notifications: notifications
+      };
+
+      this.fileName = `mew-export-${time}.json`;
+
+      const file = new Blob([JSON.stringify(exportableObject)], {
+        type: 'application/json'
+      });
+      this.file = window.URL.createObjectURL(file);
+    },
+    convert(price) {
+      return new BigNumber(price * this.ethPrice).toFixed();
+    },
+    async getEthPrice() {
+      const rates = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(err => {
+          return err;
+        });
+      this.ethPrice = rates.data[1027].quotes.USD.price;
     }
   }
 };

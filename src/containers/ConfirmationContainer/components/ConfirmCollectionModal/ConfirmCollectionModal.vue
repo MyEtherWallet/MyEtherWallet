@@ -78,21 +78,21 @@
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
-                <span
-                  >{{
+                <span>
+                  {{
                     web3.utils.hexToNumberString(
                       web3.utils.fromWei(item.tx.gasPrice, 'gwei')
                     )
                   }}
-                  Gwei</span
-                >
+                  Gwei
+                </span>
               </div>
               <div class="body-item">
-                <span class="item-title">Nonce </span>
+                <span class="item-title">Nonce</span>
                 <span>{{ web3.utils.hexToNumberString(item.tx.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.data') }} </span>
+                <span class="item-title">{{ $t('common.data') }}</span>
                 <span class="data-string">{{ item.tx.input }}</span>
               </div>
             </b-collapse>
@@ -103,6 +103,7 @@
         <div class="flex-center-align">
           <div class="button-with-helper">
             <div
+              v-show="!sending"
               ref="ConfirmAndSendButton"
               :class="[
                 allSigned ? '' : 'disabled',
@@ -111,6 +112,13 @@
               @click="sendBatchTransactions"
             >
               {{ $t('common.confirmAndSend') }}
+            </div>
+            <div
+              v-show="sending"
+              class="submit-button large-round-button-green-filled clickable disabled"
+            >
+              {{ $t('common.waitingForHash') }}
+              <i class="fa fa-spinner fa-spin" />
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
@@ -134,7 +142,16 @@
             </div>
           </div>
         </div>
-        <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+        <p class="learn-more">
+          Have any issues?
+          <a
+            href="https:/kb.myetherwallet.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn more
+          </a>
+        </p>
       </div>
     </b-modal>
   </div>
@@ -155,6 +172,10 @@ export default {
     sendBatchTransactions: {
       type: Function,
       default: () => {}
+    },
+    sending: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
