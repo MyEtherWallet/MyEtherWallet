@@ -1,6 +1,10 @@
 <template>
   <div class="header">
-    <settings-modal ref="settings" />
+    <settings-modal
+      v-if="wallet !== null"
+      ref="settings"
+      :gas-price="gasPrice"
+    />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <div
@@ -219,6 +223,7 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -260,13 +265,15 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: true,
+      gasPrice: 0
     };
   },
   computed: {
     ...mapGetters({
       wallet: 'wallet',
-      online: 'online'
+      online: 'online',
+      web3: 'web3'
     })
   },
   watch: {
@@ -276,6 +283,17 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    wallet() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toNumber();
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        });
     }
   },
   mounted() {

@@ -7,7 +7,8 @@ import {
   ethSign,
   ethAccounts,
   ethCoinbase,
-  netVersion
+  netVersion,
+  ethGetTransactionReceipt
 } from '../methods';
 import EtherscanProxy from '../etherscan-proxy';
 class EtherscanProvider {
@@ -17,24 +18,26 @@ class EtherscanProvider {
     this.store = store;
     this.eventHub = eventHub;
     this.proxy = new EtherscanProxy(this.host, this.apikey);
+    this.requestManager_ = new Web3RequestManager(
+      new EtherscanProvider(
+        this.host,
+        { apikey: this.apikey },
+        this.store,
+        this.eventHub
+      )
+    );
   }
   send(payload, callback) {
     const req = {
       payload,
       store: this.store,
-      requestManager: new Web3RequestManager(
-        new EtherscanProvider(
-          this.host,
-          { apikey: this.apikey },
-          this.store,
-          this.eventHub
-        )
-      ),
+      requestManager: this.requestManager_,
       eventHub: this.eventHub
     };
     const middleware = new MiddleWare();
     middleware.use(ethSendTransaction);
     middleware.use(ethSignTransaction);
+    middleware.use(ethGetTransactionReceipt);
     middleware.use(ethSign);
     middleware.use(ethAccounts);
     middleware.use(ethGetTransactionCount);
