@@ -7,7 +7,7 @@
         </div>
         <div>{{ title }}</div>
       </div>
-      <div :class="isopen && 'opened'" class="content-container">
+      <div :class="isopen && 'opened'" class="menu-content-container">
         <div class="padding-block"><slot></slot></div>
       </div>
     </div>

@@ -113,8 +113,8 @@ export default {
   data() {
     return {
       step1: true,
-      step2: true,
-      step3: true,
+      step2: false,
+      step3: false,
       inputPhoneNumber: {
         title: 'Phone Number',
         placeHolder: '000-000-0000'
