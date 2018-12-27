@@ -92,8 +92,8 @@
           outline: none;
 
           &.active {
-            color: $text-black;
-            font-weight: 500;
+            //color: $text-black;
+            //font-weight: 500;
           }
         }
       }
@@ -137,6 +137,9 @@
           margin-left: 26px;
           padding: 13px 0;
 
+          &.get-free-wallet {
+            margin-left: 0;
+          }
           &.nopadding {
             padding: 0;
           }
@@ -213,6 +216,18 @@
 }
 
 //********************************************************
+// .notification-menu-container
+//********************************************************
+.notification-menu-container {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
+  }
+}
+
+//********************************************************
 // .mobile-menu-content
 //********************************************************
 
@@ -282,9 +297,13 @@
 
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.5s ease-out;
-  animation-fill-mode: forwards;
-  opacity: 1;
+  //animation: fadeOutFromBlock 0.5s ease-out;
+  //animation-fill-mode: forwards;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  margin-left: 0;
+  overflow: hidden;
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -303,8 +322,8 @@
     }
   }
 
-  &.noshow {
-    animation: fadeOutFromBlock 0.5s ease-out;
+  &.show {
+    animation: fadeInFromNone 0.5s ease-out;
     animation-fill-mode: forwards;
   }
 
@@ -354,3 +373,17 @@
     }
   }
 } // .get-free-wallet
+
+//********************************************************
+// .settings-container
+//********************************************************
+.settings-container {
+  display: flex;
+  align-items: center;
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
+}

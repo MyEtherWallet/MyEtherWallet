@@ -7,6 +7,8 @@
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
+    <issue-log-modal ref="issuelog" />
+
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -42,11 +44,6 @@
           <li>
             <a href="/#faqs" @click="isMobileMenuOpen = false">{{
               $t('common.faqs')
-            }}</a>
-          </li>
-          <li v-if="false">
-            <a href="/#news" @click="isMobileMenuOpen = false">{{
-              $t('common.news')
             }}</a>
           </li>
           <li>
@@ -86,7 +83,7 @@
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->
-    <div class="wrap">
+    <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
         :class="[
@@ -158,10 +155,17 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null" ref="notification" />
+                <div v-if="wallet !== null" class="notification-menu-container">
+                  <notification ref="notification" />
+                </div>
                 <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop && 'noshow'"
+                  v-if="
+                    wallet === null &&
+                      ($route.fullPath === '/' ||
+                        $route.fullPath === '/#about-mew' ||
+                        $route.fullPath === '/#faqs')
+                  "
+                  :class="showGetFreeWallet && 'show'"
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
@@ -174,11 +178,14 @@
                   extra-toggle-classes="identicon-dropdown"
                 >
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"
-                    />
+                    <div class="settings-container">
+                      <blockie
+                        :address="wallet.getAddressString()"
+                        width="35px"
+                        height="35px"
+                      />
+                      <i class="fa fa-angle-down" aria-hidden="true" />
+                    </div>
                   </template>
                   <b-dropdown-item @click="openSettings">
                     Settings
@@ -221,6 +228,7 @@ import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
+import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 
 export default {
@@ -231,6 +239,7 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal
+    'issue-log-modal': IssueLogModal
   },
   data() {
     return {
@@ -263,6 +272,7 @@ export default {
       isPageOnTop: true,
       isMobileMenuOpen: false,
       isHomePage: true,
+      showGetFreeWallet: false,
       gasPrice: 0
     };
   },
@@ -354,6 +364,9 @@ export default {
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
+      if (topPos < -150) {
+        this.showGetFreeWallet = true;
+      }
     }
   }
 };
