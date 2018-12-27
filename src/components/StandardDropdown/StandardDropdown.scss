@@ -7,6 +7,7 @@
 .wrap {
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 
@@ -15,8 +16,8 @@
 // *********************************************************************
 .dropdown-button {
   padding: 17px 20px;
-  border: 1px solid #f9f9f9;
-  background-color: #f9f9f9;
+  border: 1px solid $light-grey-1;
+  background-color: $light-grey-1;
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
@@ -34,5 +35,29 @@
   }
 }
 
+.dropdown-list {
+  position: absolute;
+  top: 63px;
+  left: 0;
+  z-index: 1;
+  border-radius: 4px;
+  width: 100%;
+  max-height: 180px;
+  overflow: auto;
+  background-color: $light-grey-1;
+  ul {
+    li {
+      padding: 12px 20px;
+      cursor: pointer;
 
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+
+      &:hover {
+        background-color: $light-grey-7;
+      }
+    }
+  }
+}
 
