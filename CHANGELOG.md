@@ -16,6 +16,7 @@
 
 ### Feature
 
+- implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
 - implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
@@ -26,10 +27,15 @@
 
 ### Devop
 
+- Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
+- Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
+- Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)
+- Prevent excessive polling of eth_getTransactionReceipt [#266](https://github.com/MyEtherWallet/MyEtherWallet/pull/266)
 - Check and verify npm package versions [#233](https://github.com/MyEtherWallet/MyEtherWallet/pull/233)
 - Setup automated travis builds and release [#280](https://github.com/MyEtherWallet/MyEtherWallet/pull/280)
 - Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
 - Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
+- Fixes #237, #238, #236, #260, #253, #283, #284, #286 [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)
 - Lazy loading components for faster loading [#181](https://github.com/MyEtherWallet/MyEtherWallet/pull/181)
 - ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
 - Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)

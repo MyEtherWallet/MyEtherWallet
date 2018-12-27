@@ -1,5 +1,30 @@
 <template>
   <div class="send-eth-and-tokens">
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+    />
+
+    <mnemonic-password-modal
+      ref="mnemonicPhrasePassword"
+      :hardware-wallet-open="toggleNetworkAddrModal"
+      :phrase="phrase"
+    />
+    <network-and-address-modal
+      ref="networkAddress"
+      :hardware-wallet="hwInstance"
+    />
+    <hardware-password-modal
+      ref="hardwareModal"
+      :wallet-constructor="walletConstructor"
+      :hardware-brand="hardwareBrand"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
+    <print-modal
+      ref="printModal"
+      :priv-key="wallet.privateKey"
+      :address="wallet.getChecksumAddressString()"
+    />
     <div class="wrap">
       <div>
         <div
@@ -12,9 +37,22 @@
         </div>
       </div>
       <div class="contents">
+        <b-alert
+          :show="alert.show"
+          fade
+          variant="info"
+          @click.native="triggerAlert(null)"
+        >
+          {{ alert.msg }}
+        </b-alert>
         <div class="tx-contents">
           <div class="mobile-hide">
-            <interface-address :address="address" />
+            <interface-address
+              :address="address"
+              :trigger-alert="triggerAlert"
+              :print="print"
+              :switch-addr="switchAddress"
+            />
           </div>
           <div class="mobile-hide">
             <interface-balance :balance="balance" />
@@ -44,18 +82,28 @@
 <script>
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
-
+import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
+import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
+import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
+import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  BitBoxWallet,
+  SecalotWallet
+} from '@/wallets';
 
 export default {
   components: {
@@ -63,7 +111,12 @@ export default {
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
-    'interface-tokens': InterfaceTokens
+    'interface-tokens': InterfaceTokens,
+    'print-modal': PrintModal,
+    'network-and-address-modal': NetworkAndAddressModal,
+    'hardware-password-modal': HardwarePasswordModal,
+    'mnemonic-modal': MnemonicModal,
+    'mnemonic-password-modal': MnemonicPasswordModal
   },
   data() {
     return {
@@ -75,7 +128,21 @@ export default {
       pollNetwork: () => {},
       pollBlock: () => {},
       pollAddress: () => {},
-      highestGas: 0
+      highestGas: 0,
+      alert: {
+        show: false,
+        msg: ''
+      },
+      hws: {
+        ledger: LedgerWallet,
+        trezor: TrezorWallet,
+        bitbox: BitBoxWallet,
+        secalot: SecalotWallet
+      },
+      hwInstance: {},
+      walletConstructor: () => {},
+      hardwareBrand: '',
+      phrase: ''
     };
   },
   computed: {
@@ -111,6 +178,74 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    mnemonicphrasePasswordModalOpen(phrase) {
+      this.phrase = phrase;
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    },
+    toggleNetworkAddrModal(walletInstance) {
+      this.$refs.hardwareModal.$refs.password.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      this.hwInstance = walletInstance;
+      this.$refs.networkAddress.$refs.networkAndAddress.show();
+    },
+    togglePasswordModal(construct, brand) {
+      this.walletConstructor = construct;
+      this.hardwareBrand = brand;
+      this.$refs.hardwareModal.$refs.password.show();
+    },
+
+    switchAddress() {
+      switch (this.wallet.identifier) {
+        case 'ledger':
+          LedgerWallet().then(_newWallet => {
+            this.toggleNetworkAddrModal(_newWallet);
+          });
+          break;
+        case 'trezor':
+          TrezorWallet().then(_newWallet => {
+            this.toggleNetworkAddrModal(_newWallet);
+          });
+          break;
+        case 'bitbox':
+          this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
+          break;
+        case 'secalot':
+          this.togglePasswordModal(SecalotWallet, 'Secalot');
+          break;
+        case 'mnemonic':
+          this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
+          break;
+        default:
+          // eslint-disable-next-line
+          console.error('something not right'); // todo remove dev item
+          break;
+      }
+    },
+    print() {
+      this.$refs.printModal.$refs.print.show();
+    },
+    triggerAlert(msg) {
+      let timeout;
+      if (msg !== null) {
+        this.alert = {
+          show: true,
+          msg: msg
+        };
+        timeout = setTimeout(() => {
+          this.alert = {
+            show: false,
+            msg: ''
+          };
+        }, 3000);
+      } else {
+        clearTimeout(timeout);
+        this.alert = {
+          show: false,
+          msg: ''
+        };
+      }
+    },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
