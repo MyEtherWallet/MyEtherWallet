@@ -20,7 +20,11 @@
           Clear
         </div>
 
-        <div v-if="options.buttonCopy == true" class="the-button copy">
+        <div
+          v-if="options.buttonCopy == true"
+          class="the-button copy"
+          @click="copyToClipboard"
+        >
           Copy
         </div>
 
@@ -40,6 +44,7 @@
     >
       <input
         v-if="!options.isTextarea"
+        ref="inputdata"
         :value="options.value"
         :class="[
           options.rightInputText ? 'right-padding' : '',
@@ -53,6 +58,7 @@
 
       <textarea
         v-if="options.isTextarea"
+        ref="textareadata"
         v-model="inputValue"
         :placeholder="options.placeHolder"
         :disabled="options.inputDisabled"
@@ -108,6 +114,16 @@ export default {
           return 'border-green';
         default:
       }
+    }
+  },
+  methods: {
+    copyToClipboard() {
+      if (this.options.isTextarea) {
+        this.$refs['textareadata'].select();
+      } else {
+        this.$refs['inputdata'].select();
+      }
+      document.execCommand('copy');
     }
   }
 };

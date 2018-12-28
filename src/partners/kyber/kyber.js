@@ -338,7 +338,7 @@ export default class Kyber {
   }
 
   async getTradeData(
-    { fromCurrency, toCurrency, fromValueWei, fromAddress },
+    { fromCurrency, toCurrency, fromValueWei, toAddress },
     minRateWei
   ) {
     const data = this.getKyberContractObject()
@@ -346,7 +346,7 @@ export default class Kyber {
         await this.getTokenAddress(fromCurrency),
         fromValueWei,
         await this.getTokenAddress(toCurrency),
-        fromAddress,
+        toAddress,
         MAX_DEST_AMOUNT,
         minRateWei,
         walletDepositeAddress
@@ -368,7 +368,8 @@ export default class Kyber {
     toCurrency,
     fromValue,
     toValue,
-    fromAddress
+    fromAddress,
+    toAddress
   }) {
     try {
       const fromValueWei = this.convertToTokenWei(fromCurrency, fromValue);
@@ -377,6 +378,7 @@ export default class Kyber {
         fromCurrency,
         toCurrency,
         fromAddress,
+        toAddress,
         fromValueWei,
         toValueWei
       };

@@ -1,12 +1,20 @@
 <template>
   <div class="header">
-    <settings-modal ref="settings" />
+    <settings-modal
+      v-if="wallet !== null"
+      ref="settings"
+      :gas-price="gasPrice"
+    />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
+    <issue-log-modal ref="issuelog" />
+    <logout-warning-modal ref="logoutwarning" />
+
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
+      <router-link to="/getting-started"><user-reminder-button /></router-link>
       <scroll-up-button />
     </div>
     <div
@@ -38,11 +46,6 @@
           <li>
             <a href="/#faqs" @click="isMobileMenuOpen = false">{{
               $t('common.faqs')
-            }}</a>
-          </li>
-          <li v-if="false">
-            <a href="/#news" @click="isMobileMenuOpen = false">{{
-              $t('common.news')
             }}</a>
           </li>
           <li>
@@ -82,7 +85,7 @@
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->
-    <div class="wrap">
+    <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
         :class="[
@@ -154,10 +157,17 @@
                     </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null" ref="notification" />
+                <div v-if="wallet !== null" class="notification-menu-container">
+                  <notification ref="notification" />
+                </div>
                 <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop && 'noshow'"
+                  v-if="
+                    wallet === null &&
+                      ($route.fullPath === '/' ||
+                        $route.fullPath === '/#about-mew' ||
+                        $route.fullPath === '/#faqs')
+                  "
+                  :class="showGetFreeWallet && 'show'"
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
@@ -170,11 +180,14 @@
                   extra-toggle-classes="identicon-dropdown"
                 >
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"
-                    />
+                    <div class="settings-container">
+                      <blockie
+                        :address="wallet.getAddressString()"
+                        width="35px"
+                        height="35px"
+                      />
+                      <i class="fa fa-angle-down" aria-hidden="true" />
+                    </div>
                   </template>
                   <b-dropdown-item @click="openSettings">
                     Settings
@@ -214,10 +227,13 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import LogoutWarningModal from '@/components/LogoutWarningModal';
+import IssueLogModal from '@/components/IssueLogModal';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -226,8 +242,10 @@ export default {
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    txpoppup: TxTopMenuPopup,
-    'logout-modal': LogoutModal
+    'logout-modal': LogoutModal,
+    'logout-warning-modal': LogoutWarningModal,
+    'issue-log-modal': IssueLogModal,
+    'user-reminder-button': UserReminderButton
   },
   data() {
     return {
@@ -259,13 +277,16 @@ export default {
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: true,
+      showGetFreeWallet: false,
+      gasPrice: 0
     };
   },
   computed: {
     ...mapGetters({
       wallet: 'wallet',
-      online: 'online'
+      online: 'online',
+      web3: 'web3'
     })
   },
   watch: {
@@ -275,6 +296,17 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    wallet() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toNumber();
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        });
     }
   },
   mounted() {
@@ -310,7 +342,29 @@ export default {
       this.onPageScroll();
     };
   },
+  created() {
+    const _this = this;
+    // Logout Warning modal
+    function dummyErrorHandler() {}
+
+    try {
+      window.addEventListener(
+        'popstate',
+        function(event) {
+          if (event.target.location.hash === '#/') {
+            _this.$refs.logoutwarning.$refs.logoutwarning.show();
+          }
+        },
+        false
+      );
+    } catch (err) {
+      dummyErrorHandler(err);
+    }
+  },
   methods: {
+    logoutWarning() {
+      alert('logoutWarning');
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
@@ -338,6 +392,9 @@ export default {
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
+      if (topPos < -150) {
+        this.showGetFreeWallet = true;
+      }
     }
   }
 };

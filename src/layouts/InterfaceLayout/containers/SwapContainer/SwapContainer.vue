@@ -410,12 +410,6 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      if (!this.haveProviderRates) {
-        this.issueRecievingRates = true;
-        this.ratesRetrived = true;
-      }
-    }, 3000);
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
@@ -611,7 +605,7 @@ export default {
             providerDetails: providerDetails,
             fromValue: this.fromValue,
             toValue: this.toValue,
-            toAddress: this.toAddress,
+            toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
             refundAddress: this.swap.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
