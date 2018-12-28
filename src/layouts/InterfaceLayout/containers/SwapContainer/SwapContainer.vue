@@ -605,7 +605,7 @@ export default {
             providerDetails: providerDetails,
             fromValue: this.fromValue,
             toValue: this.toValue,
-            toAddress: this.toAddress,
+            toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
             refundAddress: this.swap.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
