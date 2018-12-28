@@ -738,7 +738,7 @@
 
   .modal-body {
     background-color: $background-color-white;
-    padding: 60px 70px 50px;
+    // padding: 60px 70px 50px;
 
     .title {
       color: $text-color-6;
@@ -1280,4 +1280,10 @@
   padding: 10px 0 0 15px;
   line-height: 15px;
   font-size: 13px;
+}
+// Temprary fix for Network and Address dropdown menu size
+// *********************************************************************
+.dropdown-button-2 .dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
 }

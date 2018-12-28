@@ -165,9 +165,9 @@
         {{ $t('interface.sendTx') }}
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"
+        link="https://kb.myetherwallet.com"
       />
     </div>
   </div>
@@ -383,7 +383,7 @@ export default {
             unit.toWei(this.gasPrice, 'gwei') * res,
             'ether'
           );
-          this.gasLimit = res;
+          this.gasLimit = res ? res : this.gasLimit;
         })
         .catch(err => {
           // eslint-disable-next-line no-console
