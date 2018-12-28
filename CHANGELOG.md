@@ -2,6 +2,9 @@
 
 ### Bug
 
+- Fix header settings modal styles [287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
+- Fix fixed buttons, scroll-up, security [282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
+- Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
 - Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
 - Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
 - Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
@@ -27,6 +30,10 @@
 
 ### Devop
 
+- Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
+- Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
+- Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
+- Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
 - Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
 - Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
 - Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)

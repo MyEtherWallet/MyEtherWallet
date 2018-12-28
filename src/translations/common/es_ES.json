@@ -10,7 +10,7 @@
   "customerSupport": "Atención al cliente",
   "address": "Dirección",
   "balance": "Saldo",
-  "terms": "Condiciones del servicio",
+  "terms": "Terms",
   "continue": "Continuar",
   "jsonF": "Archivo JSON",
   "mnemonicP": "Frase mnemotécnica",
@@ -54,5 +54,9 @@
   "gasPrice": "Precio del gas",
   "data": "Datos",
   "confirmAndSend": "Confirmar e imprimir",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "Esperando transacción"
 }
