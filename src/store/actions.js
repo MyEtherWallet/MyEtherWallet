@@ -78,6 +78,8 @@ const setState = function({ commit }, stateObj) {
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
   const options = {};
+  // eslint-disable-next-line
+  const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${state.network.port ? ':' + state.network.port : ''}${hostUrl.pathname}`;
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
         authorization: `Basic: ${btoa(
@@ -87,11 +89,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     : {};
   const web3Instance = new web3(
     new MEWProvider(
-      provider
-        ? provider
-        : `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-            hostUrl.pathname
-          }`,
+      provider ? provider : parsedUrl,
       options,
       {
         state,
@@ -107,17 +105,18 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         to: arr[i].to,
         data: arr[i].data,
         from: arr[i].from,
-        value: arr[i].value
+        value: arr[i].value,
+        gasPrice: arr[i].gasPrice
       };
       arr[i].nonce = await (arr[i].nonce === undefined
         ? web3Instance.eth.getTransactionCount(
             state.wallet.getChecksumAddressString()
           )
         : arr[i].nonce);
-      arr[i].nonce += i;
+      arr[i].nonce = +arr[i].nonce + i;
       arr[i].gas = await (arr[i].gas === undefined
         ? web3Instance.eth.estimateGas(localTx)
-        : arr.gas);
+        : arr[i].gas);
       arr[i].chainId = !arr[i].chainId
         ? state.network.type.chainID
         : arr[i].chainId;
@@ -166,7 +165,11 @@ const updateTransaction = function({ commit, state }, val) {
     newNotif[item] = state.transactions[item];
   });
 
-  newNotif[address][val[1]] = val[2];
+  const entryIndex = newNotif[address].findIndex(entry => {
+    return entry.orderId === val[1];
+  });
+
+  newNotif[address][entryIndex].status = val[2];
   commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 

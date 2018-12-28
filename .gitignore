@@ -17,3 +17,4 @@ selenium-debug.log
 .npm
 .config
 /tests/unit/coverage/
+release
