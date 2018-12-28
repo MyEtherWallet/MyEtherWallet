@@ -31,13 +31,13 @@
           </div>
           <p class="listed-address">
             {{ addr.address }}
-            <span v-if="addr.address === currentAddress" class="address-note"
-              >Your Address</span
-            >
+            <span v-if="addr.address === currentAddress" class="address-note">{{
+              $t('interface.yourAddr')
+            }}</span>
             <span
               v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
               class="address-note"
-              >{{ addr.currency }} Address</span
+              >{{ addr.currency }} {{ $t('interface.addr') }}</span
             >
           </p>
         </li>
@@ -49,10 +49,9 @@
 <script>
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
-import web3 from 'web3';
 import Blockie from '@/components/Blockie';
+import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 
-const logger = debugLogger('v5:swapAddressSelector');
 const errorLogger = debugLogger('v5:error');
 
 export default {
@@ -74,29 +73,7 @@ export default {
       selectedAddress: '',
       validAddress: false,
       dropdownOpen: false,
-      addresses: [
-        { address: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9', currency: 'BTC' },
-        {
-          address: '0x7545566a4339daf3fad6979208b2042f06e8c881',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545196a7339daf3fad6979208b2042f06e8c882',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545193a4339daf3fad6979208b2042f06e8c883',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7515196a4339daf3fad6979208b2042f06e8c884',
-          currency: 'ETH'
-        },
-        {
-          address: '0x7545296a4339daf3fad6979208b2042f06e8c885',
-          currency: 'ETH'
-        }
-      ]
+      addresses: []
     };
   },
   watch: {
@@ -105,7 +82,7 @@ export default {
         this.addresses = [
           {
             address: address,
-            currency: 'ETH'
+            currency: BASE_CURRENCY
           },
           ...this.addresses
         ];
@@ -126,22 +103,30 @@ export default {
     validateAddress(addr) {
       if (this.selectedAddress !== '') {
         const checkAddress = addr.address ? addr.address : addr;
-        try {
-          this.validAddress = WAValidator.validate(checkAddress, this.currency);
-        } catch (e) {
-          logger(
-            'validateAddress initial validation faild. could be a token. tying to validate as eth address'
-          );
-          errorLogger(e);
-          this.validAddress = web3.utils.isAddress(checkAddress);
+        if (EthereumTokens[this.currency]) {
+          this.validAddress = WAValidator.validate(checkAddress, 'ETH');
+        } else {
+          try {
+            this.validAddress = WAValidator.validate(
+              checkAddress,
+              this.currency
+            );
+          } catch (e) {
+            errorLogger(e);
+            this.validAddress = false;
+          }
         }
+
         if (this.validAddress) {
           this.$emit('toAddress', checkAddress);
+          this.$emit('validAddress', true);
         } else {
           this.$emit('toAddress', '');
+          this.$emit('validAddress', false);
         }
       } else {
         this.validAddress = false;
+        this.$emit('validAddress', false);
       }
     }
   }

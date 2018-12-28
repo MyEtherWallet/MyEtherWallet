@@ -13,10 +13,14 @@
 
           <p>
             {{ $t('gettingStarted.congratulationsDesc') }}
-            <a href="https://kb.myetherwallet.com">{{
-              $t('gettingStarted.congratulationsLink')
-            }}</a
-            >{{ $t('gettingStarted.congratulationsDescCont') }}
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://kb.myetherwallet.com"
+            >
+              {{ $t('gettingStarted.congratulationsLink') }}
+            </a>
+            {{ $t('gettingStarted.congratulationsDescCont') }}
           </p>
 
           <div class="mid-round-button-green-filled-green-border" @click="done">

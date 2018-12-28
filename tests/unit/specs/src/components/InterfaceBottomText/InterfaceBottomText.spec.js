@@ -30,9 +30,12 @@ describe('InterfaceBottomText.vue', () => {
   });
 
   it('should render correct link, linkText, question', () => {
-    expect(wrapper.vm.$el.querySelector('div p').textContent.trim()).toEqual(
-      question + ' ' + linkText
-    );
+    expect(
+      wrapper.vm.$el
+        .querySelector('div p')
+        .textContent.match(/\b(\w+)\b/g)
+        .join(' ')
+    ).toEqual(question + ' ' + linkText);
     expect(wrapper.vm.$el.querySelector('div p a').textContent.trim()).toEqual(
       linkText
     );
