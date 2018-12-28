@@ -32,8 +32,7 @@ class Web3Calls {
         name: 'getTransactionReceipt',
         call: 'eth_getTransactionReceipt',
         params: 1,
-        inputFormatter: [null],
-        outputFormatter: formatters.outputTransactionReceiptFormatter
+        inputFormatter: [null]
       }),
       new Method({
         name: 'getTransactionCount',
