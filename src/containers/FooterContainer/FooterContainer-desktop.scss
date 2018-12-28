@@ -1,5 +1,5 @@
 @import '~@/scss/GlobalVariables';
-@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+@media all and (min-width: calc(#{$tablet-width} - 200px)) {
   a,
   a:link,
   a:visited,
@@ -16,23 +16,10 @@
     background-color: $footer-background-color;
     color: $text-color-1;
     padding: 70px 0 20px;
-
-    @media all and (max-width: $tablet-width) {
-      padding: 30px 0;
-    }
   }
 
   .footer-contents {
-    @media all and (max-width: $tablet-width) {
-      display: block;
-    }
-
     > div {
-      @media all and (max-width: $tablet-width) {
-        border-bottom: 1px solid $dark-blue-1;
-        padding: 25px 0;
-      }
-
       display: flex;
       flex-direction: column;
 
@@ -44,23 +31,9 @@
           font-size: 19px;
         }
 
-        p {
-          @media all and (min-width: $tablet-width + 1) {
-            display: none;
-          }
-
-          @media all and (max-width: $tablet-width) {
-            cursor: pointer;
-            display: block;
-            font-size: 20px;
-            font-weight: 400;
-            margin-left: auto;
-            text-align: center;
-
-            .close {
-              display: none;
-            }
-          }
+        .open,
+        .close {
+          display: none;
         }
       }
 
@@ -69,13 +42,6 @@
         max-height: 600px;
         overflow: hidden;
         transition: all 0.3s ease;
-
-        @media all and (max-width: $tablet-width) {
-          .mobile-hide {
-            margin-top: 0;
-            max-height: 0;
-          }
-        }
 
         .sub-title {
           color: $text-color-1;
@@ -130,32 +96,6 @@
     margin-top: 40px;
     padding-top: 40px;
 
-    @media all and (max-width: $tablet-width) {
-      border-top: 0;
-      flex-direction: column;
-      margin-top: 0;
-
-      .links {
-        order: 1;
-        text-align: center;
-
-        a:last-child {
-          span {
-            margin-right: 0;
-            padding-right: 0;
-          }
-        }
-      }
-
-      .social {
-        order: 2;
-      }
-
-      .copyright {
-        order: 3;
-      }
-    }
-
     > div {
       //margin: 0 auto;
       margin-bottom: 20px;
@@ -191,19 +131,10 @@
     }
 
     .social {
-      @media all and (max-width: $tablet-width) {
-        text-align: center;
-      }
-
       i {
         color: $text--footer-link-color;
         font-size: 19px;
         margin-left: 15px;
-
-        @media all and (max-width: $tablet-width) {
-          font-size: 24px;
-          line-height: 40px;
-        }
       }
 
       a:first-child i {

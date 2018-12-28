@@ -5,7 +5,6 @@ import egem from './egem';
 import ella from './ella';
 import eosc from './eosc';
 import esn from './esn';
-import etcetccoop from './etc-etccoop';
 import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
 import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
 import etcgastracker from './etc-gastracker';
@@ -26,6 +25,8 @@ import ropinfura from './rop-infura';
 import rininfuraws from './rin-infura-ws';
 import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
+import rskpublic from './rsk-public';
+import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
 export {
@@ -36,7 +37,6 @@ export {
   ella,
   eosc,
   esn,
-  etcetccoop,
   etcethereumcommonwealthgeth,
   etcethereumcommonwealthparity,
   etcgastracker,
@@ -57,6 +57,8 @@ export {
   rininfuraws,
   ropinfuraws,
   ropmew,
+  rskpublic,
+  rsktestpublic,
   tomo,
   ubq
 };

@@ -137,30 +137,6 @@
   // Custom Scrollbar
   // *********************************************************************
 
-  // width
-  ::-webkit-scrollbar {
-    border-radius: 10px;
-    width: 5px;
-  }
-
-  // Track
-  ::-webkit-scrollbar-track {
-    background: $light-grey-9;
-    border-radius: 10px;
-  }
-
-  // Handle
-  ::-webkit-scrollbar-thumb {
-    background: $dark-grey-8;
-    border-radius: 10px;
-  }
-
-  // Handle on hover
-  ::-webkit-scrollbar-thumb:hover {
-    background: $dark-grey-9;
-    border-radius: 10px;
-  }
-
   .no-border {
     .dropdown .dropdown-toggle {
       border: 0 !important;
@@ -732,7 +708,7 @@
 
   .bootstrap-modal {
     .modal-dialog {
-      max-width: 530px;
+      //max-width: 530px;
     }
   }
 

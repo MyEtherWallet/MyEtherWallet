@@ -10,7 +10,7 @@
   "customerSupport": "カスタマーサポート",
   "address": "アドレス",
   "balance": "保有数",
-  "terms": "利用規約",
+  "terms": "Terms",
   "continue": "続ける",
   "jsonF": "JSONファイル",
   "mnemonicP": "暗号化フレーズ",
@@ -54,5 +54,9 @@
   "gasPrice": "ガソリン価格",
   "data": "データ",
   "confirmAndSend": "確認し、送信",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "トランザクション ハッシュを待っています。"
 }

@@ -10,7 +10,7 @@
   "customerSupport": "Служба поддержки",
   "address": "Адрес",
   "balance": "Баланс",
-  "terms": "Terms and Conditions",
+  "terms": "Terms",
   "continue": "Продолжить",
   "jsonF": "JSON-файл",
   "mnemonicP": "Мнемоническая фраза",
@@ -54,5 +54,9 @@
   "gasPrice": "Gas Price",
   "data": "Data",
   "confirmAndSend": "Confirm and Send",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "Waiting for Transaction Hash"
 }
