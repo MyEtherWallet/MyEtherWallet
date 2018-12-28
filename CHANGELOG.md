@@ -28,6 +28,7 @@
 
 ### Devop
 
+- Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
 - Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
 - Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
 - Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
