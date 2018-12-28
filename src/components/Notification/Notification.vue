@@ -3,7 +3,6 @@
     <div class="notification-logo" @click="showNotifications">
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
       <div v-show="unreadCount > 0" class="notification-dot" />
-      <i class="fa fa-angle-down" aria-hidden="true" />
     </div>
     <b-modal
       ref="notification"
