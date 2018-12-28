@@ -31,8 +31,6 @@ describe('Social.vue', () => {
       .getElementsByTagName('a');
     const imgElements = wrapper.vm.$el.getElementsByTagName('img');
     // for(var i=0; i<imgElements.length; i++) {
-    // 	console.log(imgElements[i].src)
-    // 	console.log(imgElements[i].parentElement.className)
     // }
 
     for (let i = 0; i < wrapper.vm.$data.links.length; i++) {

@@ -9,14 +9,6 @@
               <div class="text-content">
                 <h2>{{ $t('home.aboutTitle') }}</h2>
                 <p class="color-white">{{ $t('home.aboutSubheading') }}</p>
-                <div class="watch-video">
-                  <router-link to="/">
-                    <p>
-                      {{ $t('home.aboutWatchVideo') }}
-                      <i class="fa fa-caret-right" aria-hidden="true" />
-                    </p>
-                  </router-link>
-                </div>
               </div>
               <div class="image-content">
                 <img

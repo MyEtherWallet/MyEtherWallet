@@ -11,16 +11,25 @@
     </p>
 
     <p>
-      You can use <a href="https://bity.com/">Bity.com</a> or
-      <a href="http://shapeshift.io/">Shapeshift.io</a> or another exchange to
-      swap / convert / exchange your other coins into ETH or Ethereum Tokens.
-      However, you do not send those other coins directly to your Ethereum
-      address.
+      You can use
+      <a href="https://bity.com/" target="_blank" rel="noopener noreferrer"
+        >Bity.com</a
+      >
+      or
+      <a href="http://shapeshift.io/" target="_blank" rel="noopener noreferrer"
+        >Shapeshift.io</a
+      >
+      or another exchange to swap / convert / exchange your other coins into ETH
+      or Ethereum Tokens. However, you do not send those other coins directly to
+      your Ethereum address.
     </p>
 
     <p>
-      We recommend <a href="https://www.exodus.io/">Exodus.io</a> as a
-      client-side, mutli-coin solution.
+      We recommend
+      <a href="https://www.exodus.io/" target="_blank" rel="noopener noreferrer"
+        >Exodus.io</a
+      >
+      as a client-side, mutli-coin solution.
     </p>
 
     <p>
@@ -28,6 +37,8 @@
       2017). However,
       <a
         href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         any ERC-20 token can be added to your local interface by following these
         instructions.
@@ -39,13 +50,16 @@
       <li>
         <a
           href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >How can I add a non-default token to MEW?</a
         >
-          How can I add a non-default token to MEW?
-        </a>
       </li>
       <li>
         <a
           href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           I am throwing a #FOMOFest (aka a token sale, token creation period,
           ICO) and want to add my token to MEW for all my investors. What do I

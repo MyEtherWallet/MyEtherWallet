@@ -41,7 +41,7 @@ $mobile-width: 530px;
             margin-right: 10px;
           }
 
-          input[type='text'] {
+          input[type='number'] {
             padding: 12px;
             position: absolute;
             left: 25px;
@@ -125,5 +125,24 @@ $mobile-width: 530px;
   .button-block {
     text-align: center;
     margin-top: 40px;
+  }
+
+  .export-button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 18px 45px;
+    position: relative;
+    width: 250px;
+
+    &:hover {
+      transition: opacity 0.3s ease;
+      text-decoration: none;
+    }
   }
 }

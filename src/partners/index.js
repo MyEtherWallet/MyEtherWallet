@@ -1,24 +1,64 @@
-import { BitySwap, BityCurrencies } from './bity';
-import { KyberCurrencies, KyberSwap } from './kyber';
-import { ChangellyCurrencies, ChangellySwap } from './changelly';
-import { Simplex, SimplexCurrencies } from './simplex';
+import { BitySwap, BityCurrencies, PROVIDER_NAME as bity } from './bity';
 import {
+  KyberCurrencies,
+  KyberSwap,
+  PROVIDER_NAME as kybernetwork
+} from './kyber';
+import {
+  ChangellyCurrencies,
+  ChangellySwap,
+  PROVIDER_NAME as changelly
+} from './changelly';
+import {
+  Simplex,
+  SimplexCurrencies,
+  PROVIDER_NAME as simplex
+} from './simplex';
+import Swap from './partners';
+import {
+  ERC20,
   networkSymbols,
   chainCurrencies,
   fiat,
-  supportedProviders
-} from './config';
+  EthereumTokens,
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT
+} from './partnersConfig';
 import {
+  utils,
   bestRateForQuantity,
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
   dynamicSortMultiple
-} from './helpers/sortAndIdentify';
-import { CurrencyOptionBuilder } from './helpers/currencyOptionBuilder';
+} from './helpers';
+
+// Array of currently supported providers
+const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+
+const providerMap = providers.reduce(
+  (accumulator, currentValue) =>
+    accumulator.set(currentValue.getName(), currentValue),
+  new Map()
+);
+
+const providerNames = {
+  simplex: simplex,
+  kyber: kybernetwork,
+  changelly: changelly,
+  bity: bity
+};
+
+const supportedProviders = Object.values(providerNames);
 
 export {
+  Swap,
+  providers,
+  providerMap,
   supportedProviders,
+  providerNames,
+  BASE_CURRENCY,
+  MIN_SWAP_AMOUNT,
   BitySwap,
   BityCurrencies,
   KyberSwap,
@@ -30,7 +70,9 @@ export {
   networkSymbols,
   chainCurrencies,
   fiat,
-  CurrencyOptionBuilder,
+  EthereumTokens,
+  ERC20,
+  utils,
   bestRateForQuantity,
   bestProviderForQuantity,
   isValidEntry,
