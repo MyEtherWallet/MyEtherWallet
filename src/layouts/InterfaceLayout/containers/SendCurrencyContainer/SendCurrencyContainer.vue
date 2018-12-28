@@ -102,6 +102,9 @@
               aria-hidden="true"
             />
           </div>
+          <p class="to-address-error-message">
+            ENS name is invalid or not found
+          </p>
         </div>
       </div>
     </div>
@@ -380,7 +383,7 @@ export default {
             unit.toWei(this.gasPrice, 'gwei') * res,
             'ether'
           );
-          this.gasLimit = res;
+          this.gasLimit = res ? res : this.gasLimit;
         })
         .catch(err => {
           // eslint-disable-next-line no-console
