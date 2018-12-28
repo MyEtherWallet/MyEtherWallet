@@ -29,6 +29,11 @@ $white-border-button-border--hover: #fff;
 $white-border-button-border--click: #fff;
 $white-border-button-background--click: transparent;
 
+// Red Filled Button Colors
+$red-filled-button-background: #ff436d;
+$red-filled-button-background--hover: #ff7795;
+$red-filled-button-background--click: #ff5a7f;
+
 // Green Filled Button Colors
 $green-filled-button-background: #3bc1aa;
 $green-filled-button-background--hover: #3ed7bc;
@@ -215,7 +220,7 @@ $blue-border-button-background--click: #f2f4fd;
       border: 1px solid $white-filled-button-background--click;
     }
   }
-} // .standard-button__green
+}
 
 .standard-button__white-border {
   @include btn-mixin-1();
@@ -225,7 +230,27 @@ $blue-border-button-background--click: #f2f4fd;
     border: 1px solid $white-border-button-border;
     color: $white-border-button-border;
   }
-} // .standard-button__green-border
+}
+
+.standard-button__red {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $red-filled-button-background;
+    border: 1px solid $red-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $red-filled-button-background--hover;
+      border: 1px solid $red-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $red-filled-button-background--click;
+      border: 1px solid $red-filled-button-background--click;
+    }
+  }
+} // .standard-button__red
 
 .standard-button__green {
   @include btn-mixin-1();
