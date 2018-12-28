@@ -148,7 +148,6 @@ const formatTransactionErrorUpdate = (entry, val) => {
 };
 
 const formatSwap = (val, network) => {
-  console.log(val[swapIndexes.label]); // todo remove dev item
   const isEthereum = val[swapIndexes.label] !== type.SWAP_ORDER;
   const initialState = isEthereum
     ? swapOnlyStatuses.SENT
