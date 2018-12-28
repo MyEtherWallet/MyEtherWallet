@@ -8,11 +8,13 @@
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal ref="issuelog" />
+    <logout-warning-modal ref="logoutwarning" />
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
+      <router-link to="/getting-started"><user-reminder-button /></router-link>
       <scroll-up-button />
     </div>
     <div
@@ -123,7 +125,6 @@
                   $t('header.about')
                 }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -226,10 +227,11 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 
@@ -240,9 +242,10 @@ export default {
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    txpoppup: TxTopMenuPopup,
     'logout-modal': LogoutModal,
-    'issue-log-modal': IssueLogModal
+    'logout-warning-modal': LogoutWarningModal,
+    'issue-log-modal': IssueLogModal,
+    'user-reminder-button': UserReminderButton
   },
   data() {
     return {
@@ -339,7 +342,29 @@ export default {
       this.onPageScroll();
     };
   },
+  created() {
+    const _this = this;
+    // Logout Warning modal
+    function dummyErrorHandler() {}
+
+    try {
+      window.addEventListener(
+        'popstate',
+        function(event) {
+          if (event.target.location.hash === '#/') {
+            _this.$refs.logoutwarning.$refs.logoutwarning.show();
+          }
+        },
+        false
+      );
+    } catch (err) {
+      dummyErrorHandler(err);
+    }
+  },
   methods: {
+    logoutWarning() {
+      alert('logoutWarning');
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },

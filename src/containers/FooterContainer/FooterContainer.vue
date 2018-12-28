@@ -2,7 +2,6 @@
   <div class="footer">
     <!-- Modal -->
     <feedback-modal />
-    <!-- <confirmation-modal /> -->
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">

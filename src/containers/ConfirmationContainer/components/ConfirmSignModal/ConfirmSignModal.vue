@@ -101,6 +101,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    }),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;
@@ -108,10 +111,7 @@ export default {
         return 'Please Approve on Hardware Wallet';
       }
       return '';
-    },
-    ...mapGetters({
-      wallet: 'wallet'
-    })
+    }
   },
   methods: {
     signMessage() {

@@ -6,7 +6,6 @@
       <div class="title-container">
         <div class="title">
           <h4>Signature:</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')" />
           <div class="copy-buttons">
             <span @click="deleteInput">{{ $t('common.clear') }}</span>
             <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
