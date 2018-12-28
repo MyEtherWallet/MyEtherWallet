@@ -172,7 +172,6 @@ const setENS = function({ commit }, ens) {
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
-  console.log('updateNotification', val); // todo remove dev item
   const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -185,7 +184,6 @@ const updateNotification = function({ commit, state }, val) {
 
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
-  console.log('updateTransaction', val); // todo remove dev item
 
   const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};

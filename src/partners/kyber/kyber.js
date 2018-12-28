@@ -382,7 +382,6 @@ export default class Kyber {
         fromValueWei,
         toValueWei
       };
-      console.log(kyberSwapDetails); // todo remove dev item
       const finalRate = await this.getExpectedRate(
         fromCurrency,
         toCurrency,
