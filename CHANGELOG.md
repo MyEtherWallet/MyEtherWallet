@@ -28,6 +28,8 @@
 
 ### Devop
 
+- Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
+- Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
 - Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
 - Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
 - Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
