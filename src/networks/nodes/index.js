@@ -26,6 +26,8 @@ import ropinfura from './rop-infura';
 import rininfuraws from './rin-infura-ws';
 import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
+import rskpublic from './rsk-public';
+import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
 export {
@@ -57,6 +59,8 @@ export {
   rininfuraws,
   ropinfuraws,
   ropmew,
+  rskpublic,
+  rsktestpublic,
   tomo,
   ubq
 };
