@@ -1,6 +1,7 @@
 {
-  "getAFreeWallet": "Get a Free wallet",
+  "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "Access My Wallet",
+  "accessWallet": "Access Wallet",
   "faqs": "FAQs",
   "sendTx": "Send ETH & Tokens",
   "swap": "Swap",
@@ -56,5 +57,6 @@
   "oops": "Oops!",
   "logOutWallet": "Log Out Wallet",
   "goBack": "Go back",
-  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet."
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
+  "waitingForHash" : "Waiting for Transaction Hash"
 }

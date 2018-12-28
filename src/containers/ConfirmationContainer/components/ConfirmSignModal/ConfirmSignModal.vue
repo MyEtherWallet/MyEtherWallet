@@ -15,7 +15,11 @@
                 {{ $t('confirmation.signingAddr') }}
               </p>
               <div class="from-address">
-                <blockie :address="addr" width="30px" height="30px" />
+                <blockie
+                  :address="wallet.getChecksumAddressString()"
+                  width="30px"
+                  height="30px"
+                />
                 <span>{{ from }}</span>
               </div>
             </div>
@@ -44,7 +48,16 @@
               </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </b-modal>
@@ -53,6 +66,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -82,7 +96,6 @@ export default {
   },
   data() {
     return {
-      addr: '0x7545566a4339daf3fad6979208b2042f06e8c881',
       modalDetailInformation: false,
       transactionSigned: false
     };
@@ -95,7 +108,10 @@ export default {
         return 'Please Approve on Hardware Wallet';
       }
       return '';
-    }
+    },
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   },
   methods: {
     signMessage() {

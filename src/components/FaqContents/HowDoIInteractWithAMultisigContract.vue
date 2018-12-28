@@ -4,7 +4,10 @@
     <ol>
       <li>
         Go to the
-        <a href="https://www.myetherwallet.com/#contracts"
+        <a
+          href="https://www.myetherwallet.com/#contracts"
+          target="_blank"
+          rel="noopener noreferrer"
           >Contract tab on MyEtherWallet.com</a
         >.
       </li>
@@ -59,15 +62,18 @@
             You should have a page like this open:
             <a
               href="https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3</a
             >
-              https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3
-            </a>
           </li>
           <li>Click the <abbr>Event Logs</abbr>tab.</li>
           <li>
             On the above link (
             <a
               href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog"
+              target="_blank"
+              rel="noopener noreferrer"
               >https://etherscan.io/tx/0x47e4cc87...#eventlog</a
             >
             - not YOUR link), the <abbr>_h</abbr> field would be
@@ -100,9 +106,10 @@
         See another approval for my previous example here:
         <a
           href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog</a
         >
-          https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog
-        </a>
       </li>
       <li>You can then repeat this process whenever you want to send ETH.</li>
     </ol>
@@ -116,9 +123,10 @@
     <p>
       <a
         href="https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/</a
       >
-        https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/
-      </a>
     </p>
   </div>
 </template>

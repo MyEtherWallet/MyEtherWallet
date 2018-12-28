@@ -129,16 +129,6 @@ export default {
       );
     },
     async transferDomain(toAddress) {
-      // const domain = this.domainName + ETH_TLD;
-      // try {
-      //   const txHash = this.ens
-      //     .setOwner(domain, newResolverAddr)
-      //     .then(res => res);
-      //   console.log(txHash);
-      // } catch (e) {
-      //   console.error(e);
-      // }
-
       const data = await this.ensRegistryContract.methods
         .setOwner(this.nameHash, toAddress)
         .encodeABI();
@@ -151,15 +141,6 @@ export default {
       this.web3.eth.sendTransaction(raw);
     },
     async updateResolver(newResolverAddr) {
-      // const domain = this.domainName + ETH_TLD;
-      // try {
-      //   const txHash = this.ens
-      //     .setResolver(domain, newResolverAddr)
-      //     .then(res => res);
-      //   console.log(txHash);
-      // } catch (e) {
-      //   console.error(e);
-      // }
       const web3 = this.web3;
       const from = this.wallet.getAddressString();
 

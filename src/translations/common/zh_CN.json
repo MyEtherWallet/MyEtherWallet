@@ -1,6 +1,7 @@
 {
-  "getAFreeWallet": "免费获取钱包",
+  "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "访问我的钱包",
+  "accessWallet": "Access Wallet",
   "faqs": "常见问题",
   "sendTx": "发送以太币和代币",
   "swap": "货币交换",
@@ -9,7 +10,7 @@
   "customerSupport": "客户服务",
   "address": "地址",
   "balance": "余额",
-  "terms": "条款",
+  "terms": "Terms and Conditions",
   "continue": "继续",
   "jsonF": "JSON 文档",
   "mnemonicP": "助记短语",
@@ -45,11 +46,17 @@
   "signTx": "Sign Transaction",
   "verifyMessage": "验证消息",
   "signature": "签字",
+  "sign": "Sign",
   "toAddress": "目的地址",
   "cancel": "Cancel",
   "value": "Value",
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
-  "confirmAndSend": "Confirm and Send"
+  "confirmAndSend": "Confirm and Send",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
+  "waitingForHash": "Waiting for Transaction Hash"
 }

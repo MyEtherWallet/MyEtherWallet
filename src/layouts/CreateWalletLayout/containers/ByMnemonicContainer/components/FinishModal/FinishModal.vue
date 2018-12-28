@@ -14,7 +14,7 @@
       </p>
     </div>
     <div class="button-container">
-      <b-btn class="mid-round-button-green-filled close-button">
+      <b-btn class="mid-round-button-green-filled close-button" @click="unlock">
         {{ $t('common.unlockWallet') }}
       </b-btn>
     </div>
@@ -23,8 +23,11 @@
 
 <script>
 export default {
-  data() {
-    return {};
+  props: {
+    unlock: {
+      type: Function,
+      default: function() {}
+    }
   }
 };
 </script>
