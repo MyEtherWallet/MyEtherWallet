@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import nodeList from '@/networks';
@@ -17,13 +17,15 @@ const TimerStub = {
 };
 
 const showModal = jest.fn();
+const hideModal = jest.fn();
 
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
   props: ['to'],
   methods: {
-    show: showModal
+    show: showModal,
+    hide: hideModal
   }
 };
 
@@ -46,7 +48,7 @@ describe('EnsBidContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][2];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(
@@ -63,7 +65,7 @@ describe('EnsBidContainer.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(EnsBidContainer, {
+    wrapper = mount(EnsBidContainer, {
       localVue,
       i18n,
       store,
@@ -256,7 +258,7 @@ describe('EnsBidContainer.vue', () => {
     expect(wrapper.find('.erroredMsg').isVisible()).toBe(true);
   });
   describe('EnsBidContainer.vue Methods', () => {
-    xit('[Problem] should update json when submit button clicked', () => {
+    xit('[FAILING] should update json when submit button clicked', () => {
       const raw = {
         bidAmount: 0.222,
         bidMask: 0.111,
@@ -282,9 +284,9 @@ describe('EnsBidContainer.vue', () => {
       expect(wrapper.vm.$data.localStep).toBe(1);
     });
 
-    xit('[Problem] should trigger openJsonModal method when button clicked', () => {
+    xit('[FAILING] should trigger openJsonModal method when button clicked', () => {
       mockRoute.fullPath = 'revealBid';
-      wrapper = shallowMount(EnsBidContainer, {
+      wrapper = mount(EnsBidContainer, {
         localVue,
         i18n,
         store,

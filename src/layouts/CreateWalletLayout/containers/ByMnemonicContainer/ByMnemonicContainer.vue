@@ -1,6 +1,6 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal ref="finish" />
+    <finish-modal ref="finish" :unlock="unlockWallet" />
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
@@ -95,6 +95,9 @@ export default {
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
+    unlockWallet() {
+      this.$router.push('/access-my-wallet');
+    },
     mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {
         this.mnemonicValues = bip39.generateMnemonic(256).split(' ');

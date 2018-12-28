@@ -61,7 +61,7 @@
                 <li>
                   <p>To Address:</p>
                   <p>
-                    <a href="/" target="_blank">
+                    <a href="/" target="_blank" rel="noopener noreferrer">
                       0xbfe394bf28b7cbf72e7656e0e6740b196521b074
                     </a>
                   </p>
