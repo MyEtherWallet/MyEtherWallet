@@ -1,34 +1,21 @@
 @import '~@/scss/GlobalVariables';
 
+$mobile-width: 530px;
+
 //***************************************************
 // DEVELOPMENT USE ONLY "Modal open button"
 //***************************************************
-.modal-open-button {
+.div-only-button {
   position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 9999999999999;
-  background-color: #00e5ff;
-  padding: 3px 10px;
-  cursor: pointer;
-  border-radius: 3px;
+  bottom: 15px;
+  left: 15px;
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  z-index: 9999999;
   user-select: none;
-
-  h5 {
-    color: white;
-    font-weight: 700;
-    font-size: 10px;
-    margin: 0;
-    text-transform: uppercase;
-  }
-
-  p {
-    color: white;
-    font-weight: 700;
-    font-size: 12px;
-    margin: 0;
-    line-height: 14px;
-  }
 }
 
 //***************************************************
@@ -41,6 +28,9 @@
         margin-bottom: 20px;
         display: flex;
         align-items: center;
+        @media all and (max-width: $mobile-width) {
+          display: block;
+        }
 
         div {
           position: relative;
@@ -55,20 +45,32 @@
             padding: 12px;
             position: absolute;
             left: 25px;
-            top: -10px;
+            top: -12px;
             border: 0;
             background-color: $light-grey-1;
             display: block;
             width: 150px;
+            @media all and (max-width: $mobile-width) {
+              top: -1px;
+              padding: 4px;
+            }
           }
 
           .gwei {
             margin-left: 170px;
+            @media all and (max-width: $mobile-width) {
+              margin-left: 160px;
+            }
           }
         }
 
         p {
           margin-left: auto;
+          @media all and (max-width: $mobile-width) {
+            margin-top: 4px;
+            margin-left: 24px;
+            font-size: 13px;
+          }
         }
       }
 
@@ -94,11 +96,25 @@
     align-items: center;
     grid-gap: 10px;
     grid-template-columns: 1fr 183px;
+
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+      text-align: center;
+
+      .upload-file-button {
+        margin-top: 10px;
+      }
+    }
   }
 
   .button-block {
     text-align: center;
     margin-top: 40px;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+    }
   }
 }
 
