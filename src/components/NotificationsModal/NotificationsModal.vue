@@ -1,10 +1,5 @@
 <template>
   <div class="modal-container">
-    <div v-if="false" class="modal-open-button" @click="modalOpen">
-      <h5>Open Notifications</h5>
-      <p>Open</p>
-    </div>
-
     <b-modal
       ref="notifications"
       title="Notifications"

@@ -184,6 +184,7 @@ const updateNotification = function({ commit, state }, val) {
 
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
+
   const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
