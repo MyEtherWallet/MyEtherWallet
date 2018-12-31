@@ -127,7 +127,6 @@ export default {
       document.execCommand('copy');
     },
     emitValue(evt) {
-      console.log(evt); // todo remove dev item
       this.$emit('changedValue', evt.srcElement.value);
     }
   }

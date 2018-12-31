@@ -48,9 +48,12 @@ const txIndexes = {
   response: 3
 };
 
+const fiatCurrencies = ['CHF', 'USD', 'EUR'];
+
 const INVESTIGATE_FAILURE_KEY = 'Investigate';
 
 export {
+  fiatCurrencies,
   INVESTIGATE_FAILURE_KEY,
   type,
   notificationType,

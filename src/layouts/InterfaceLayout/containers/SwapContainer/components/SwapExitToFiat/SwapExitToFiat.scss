@@ -40,6 +40,21 @@ ul {
 // *********************************************************************
 // Grid
 // *********************************************************************
+.grid-phone-number {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-template-areas: 'countryCode  countryCode phoneNumber phoneNumber phoneNumber phoneNumber';
+}
+
+.country-code {
+  grid-area: countryCode;
+}
+
+.phone-number {
+  grid-area: phoneNumber;
+}
+
 .grid-billing-address {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

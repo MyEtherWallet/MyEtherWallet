@@ -50,7 +50,8 @@ const bityMethods = {
   status: 'getStatus',
   logInWithPhoneNumber: 'logInWithPhoneNumber',
   sendReceivedSmsCode: 'sendReceivedSmsCode',
-  buildCyptoToFiatOrderData: 'buildCyptoToFiatOrderData'
+  buildCyptoToFiatOrderData: 'createExitToFiatTransaction',
+  statusFiat: 'getStatusFiat'
 };
 
 const BITY_URL = 'https://bity.com';
