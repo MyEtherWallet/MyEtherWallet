@@ -7,7 +7,7 @@
       </div>
     </div>
     <div v-if="isbackbutton" class="content-title content-title-backbutton">
-      <div class="backbutton-block">
+      <div class="backbutton-block" @click="backButtonAction">
         <img src="@/assets/images/icons/back.png" />
         <h2>{{ backbuttonTitle }}</h2>
       </div>
@@ -38,6 +38,9 @@ export default {
     };
   },
   methods: {
+    backButtonAction() {
+      this.$emit('backButtonClick');
+    },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
     }

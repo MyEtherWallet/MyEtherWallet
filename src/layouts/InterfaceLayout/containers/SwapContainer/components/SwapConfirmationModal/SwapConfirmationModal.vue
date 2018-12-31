@@ -252,6 +252,7 @@ export default {
       }
     },
     async swapStarted(swapDetails) {
+      if (swapDetails.isExitToFiat) return;
       this.timeUpdater(swapDetails);
       this.swapReady = false;
       this.preparedSwap = {};
