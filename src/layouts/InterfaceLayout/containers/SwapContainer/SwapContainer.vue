@@ -206,8 +206,8 @@
     </div>
     <swap-exit-to-fiat
       v-if="bityExitToFiat"
-      @backButtonClick="exitToFiatAbort"
       :swap-details="swapDetails"
+      @backButtonClick="exitToFiatAbort"
     ></swap-exit-to-fiat>
   </div>
 </template>
@@ -228,6 +228,7 @@ import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 import SwapCurrencyPicker from './components/SwapCurrencyPicker';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
 import SwapExitToFiat from './components/SwapExitToFiat';
+import SwapSendToModal from './components/SwapSendToModal';
 
 import {
   Swap,
@@ -254,7 +255,8 @@ export default {
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-form': SwapSendForm
+    'swap-send-form': SwapSendForm,
+    'swap-send-to-modal': SwapSendToModal
   },
   data() {
     return {

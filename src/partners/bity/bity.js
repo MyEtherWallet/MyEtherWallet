@@ -6,7 +6,8 @@ import {
   getExitRates,
   loginWithPhone,
   sendReceivedSmsCode,
-  buildCyptoToFiatOrderData
+  buildCyptoToFiatOrderData,
+  getStatusFiat
 } from './bity-calls';
 import {
   bityStatuses,
@@ -220,19 +221,28 @@ export default class BitySwap {
     }
   }
 
+  checkIfExit(swapDetails) {
+    return this.fiatCurrencies.includes(swapDetails.toCurrency);
+  }
+
   async startSwap(swapDetails) {
-    if (this.fiatCurrencies.includes(swapDetails.toCurrency)) {
+    if (this.checkIfExit(swapDetails) && !swapDetails.bypass) {
       if (swapDetails.exitFromAddress === '') return {};
       swapDetails.dataForInitialization = false;
       swapDetails.isExitToFiat = true;
       return swapDetails;
       // throw Error('Exit to Fiat not yet implemented');
+    } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
+      swapDetails.dataForInitialization = await this.buildExitOrder(
+        swapDetails
+      );
+    } else {
+      swapDetails.dataForInitialization = await this.buildOrder(
+        swapDetails.fromCurrency === BASE_CURRENCY,
+        swapDetails
+      );
     }
 
-    swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency === BASE_CURRENCY,
-      swapDetails
-    );
     swapDetails.providerReceives =
       swapDetails.dataForInitialization.input.amount;
     swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
@@ -268,16 +278,34 @@ export default class BitySwap {
   }
 
   async initializeUser(initData) {
-    return loginWithPhone(initData.phone);
+    const initializeData = {
+      pair: initData.fromCurrency + initData.toCurrency,
+      phoneNumber: initData.phoneNumber
+    };
+    const result = await loginWithPhone(initializeData);
+    this.phoneToken = result.phone_token;
   }
 
   async verifyUser(verifyData) {
-    return sendReceivedSmsCode(verifyData.code);
+    const verificationData = {
+      pair: verifyData.fromCurrency + verifyData.toCurrency,
+      phoneToken: this.phoneToken,
+      tan: verifyData.tan
+    };
+    // returns {success: true} if successful
+    return sendReceivedSmsCode(verificationData);
   }
 
-  async setupUser(setupData) {
-    return buildCyptoToFiatOrderData(setupData);
+  async buildExitOrder(fromCurrency, toCurrency, orderDetails) {
+    const orderData = {
+      pair: fromCurrency + toCurrency,
+      phoneToken: this.phoneToken,
+      orderDetails: orderDetails
+    };
+    return buildCyptoToFiatOrderData(orderData);
   }
+
+  async startSpecial() {}
 
   static parseOrder(order) {
     return {
@@ -293,7 +321,12 @@ export default class BitySwap {
   }
 
   static async getOrderStatus(noticeDetails) {
-    const data = await getStatus({ orderid: noticeDetails.statusId });
+    let data;
+    if (Object.keys(bityFiatCurrencies).includes(noticeDetails.toCurrency)) {
+      data = await getStatusFiat({ orderid: noticeDetails.statusId });
+    } else {
+      data = await getStatus({ orderid: noticeDetails.statusId });
+    }
     switch (data.status) {
       case bityStatuses.OPEN:
         return 'new';

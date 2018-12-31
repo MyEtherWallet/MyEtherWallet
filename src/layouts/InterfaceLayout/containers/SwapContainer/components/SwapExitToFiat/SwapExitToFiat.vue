@@ -10,18 +10,46 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
-          <accordion-menu :isopen="step1" title="Verification" number="1">
+          <accordion-menu :isopen="step1" title="Phone Number" number="1">
             <ul>
               <li>
                 <p>
-                  You will receive a 6 digits PIN number through your phone
-                  number. To continue, enter the PIN number below.
+                  You will receive a 6 digit verification code through your
+                  phone number. Click 'Send' to continue.
                 </p>
               </li>
               <li>
+                <div class="grid-phone-number">
+                  <standard-input
+                    :options="inputCountryCode"
+                    class="country-code"
+                    @changedValue="setCountryCode"
+                  />
+                  <standard-input
+                    :options="inputPhoneNumber"
+                    class="phone-number"
+                    @changedValue="setPhone"
+                  />
+                </div>
+              </li>
+            </ul>
+          </accordion-menu>
+          <!-- accordion-menu ******************************** -->
+          <!-- accordion-menu ******************************** -->
+          <!-- accordion-menu ******************************** -->
+          <accordion-menu
+            :isopen="verifyStep"
+            title="Enter Verification"
+            number="2"
+          >
+            <ul>
+              <li>
+                <p>Enter the 6 digit verification code you received below.</p>
+              </li>
+              <li>
                 <standard-input
-                  :options="inputPhoneNumber"
-                  @changedValue="setPhone"
+                  :options="inputVerification"
+                  @changedValue="setTan"
                 />
               </li>
             </ul>
@@ -29,7 +57,7 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
-          <accordion-menu :isopen="step2" title="Bank Information" number="2">
+          <accordion-menu :isopen="step2" title="Bank Information" number="3">
             <ul>
               <li>
                 <standard-input
@@ -57,7 +85,7 @@
           <accordion-menu
             :isopen="step3"
             title="Personal Information"
-            number="3"
+            number="4"
           >
             <ul>
               <li>
@@ -67,34 +95,34 @@
                 <div class="grid-billing-address">
                   <standard-input
                     :options="inputAddress1"
-                    @changedValue="setAddress1"
                     class="address1"
+                    @changedValue="setAddress1"
                   />
                   <standard-input
                     :options="inputAddress2"
-                    @changedValue="setAddress2"
                     class="address2"
+                    @changedValue="setAddress2"
                   />
                   <standard-input
                     :options="inputCity"
-                    @changedValue="setCity"
                     class="city"
+                    @changedValue="setCity"
                   />
                   <!--<standard-dropdown class="state" />-->
                   <standard-input
                     :options="inputState"
-                    @changedValue="setState"
                     class="state"
+                    @changedValue="setState"
                   />
                   <standard-input
                     :options="inputZip"
-                    @changedValue="setZip"
                     class="zip"
+                    @changedValue="setZip"
                   />
                   <standard-input
                     :options="inputCountry"
-                    @changedValue="setCountry"
                     class="country"
+                    @changedValue="setCountry"
                   />
                 </div>
               </li>
@@ -108,8 +136,15 @@
             :options="button1"
             @click.native="
               step1 = false;
-              step2 = true;
+              step2 = false;
+              verifyStep = true;
+              registerPhone();
             "
+          />
+          <standard-button
+            v-if="verifyStep"
+            :options="verifyButton"
+            @click.native="verifyUser()"
           />
           <standard-button
             v-if="step2"
@@ -178,11 +213,20 @@ export default {
   data() {
     return {
       step1: true,
+      verifyStep: false,
       step2: false,
       step3: false,
+      inputCountryCode: {
+        title: 'Country Code',
+        placeHolder: '000'
+      },
       inputPhoneNumber: {
         title: 'Phone Number',
         placeHolder: '000-000-0000'
+      },
+      inputVerification: {
+        title: 'Verification Code',
+        placeHolder: '000000'
       },
       inputBicSwift: {
         title: 'BIC_Swift',
@@ -233,6 +277,11 @@ export default {
         buttonStyle: 'green',
         value: ''
       },
+      verifyButton: {
+        title: 'Verify',
+        buttonStyle: 'green',
+        value: ''
+      },
       button2: {
         title: 'Continue',
         buttonStyle: 'green',
@@ -244,7 +293,9 @@ export default {
         value: ''
       },
       provider: {},
-      phoneData: '',
+      countryCode: '',
+      phonenumber: '',
+      tan: '',
       orderDetails: {
         currency: this.swapDetails.toCurrency,
         type: 'bank_account',
@@ -271,8 +322,14 @@ export default {
     console.log(this.provider); // todo remove dev item
   },
   methods: {
-    setPhone(phone) {
-      console.log(phone); // todo remove dev item
+    setCountryCode(val) {
+      this.countryCode = val;
+    },
+    setPhone(val) {
+      this.phoneNumber = val;
+    },
+    setTan(val) {
+      this.tan = val;
     },
     setIban(val) {
       this.orderDetails.iban = val;
@@ -310,8 +367,26 @@ export default {
     backButtonAction() {
       this.$emit('backButtonClick');
     },
-    registerPhone() {},
-    verifyUser() {},
+    registerPhone() {
+      if (this.phoneNumber === '') throw Error('Phone Number Required');
+      if (this.countryCode === '') throw Error('Country Code Required');
+      const initData = {
+        phoneNumber: this.countryCode + this.phoneNumber,
+        ...this.swapDetails
+      };
+      this.provider.initializeUser(initData);
+    },
+    async verifyUser() {
+      const verifyData = {
+        tan: this.tan,
+        ...this.swapDetails
+      };
+      const verified = await this.provider.verifyUser(verifyData);
+      if (verified.success) {
+        this.verifyStep = false;
+        this.step2 = true;
+      }
+    },
     createExitOrder() {
       const details = {
         input: {
@@ -322,21 +397,9 @@ export default {
         },
         output: this.orderDetails
       };
-      //
-      // if (this.inputIbanNumber) {
-      //   details.output.iban = this.inputIbanNumber;
-      // }
-      // if (this.inputAbaNumber) {
-      //   details.output.aba_number = this.inputAbaNumber;
-      // }
-      // if (this.inputBicSwift) {
-      //   details.output.bic_swift = this.inputBicSwift;
-      // }
       console.log(details); // todo remove dev item
-      // iban: body.params.iban,
-      //   bic_swift: body.params.bic_swift,
-      //   aba_number: body.params.aba_number,
-      //   sort_code: body.params.sort_code,
+
+      this.provider.startSwap({ bypass: true, orderDetails: details });
     }
   }
 };

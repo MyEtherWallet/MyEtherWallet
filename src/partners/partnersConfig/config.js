@@ -9,7 +9,8 @@ const MIN_SWAP_AMOUNT = 0.000001;
 const TIME_SWAP_VALID_DEFAULT = 600;
 
 const swapApiEndpoints = {
-  base: 'https://swap.mewapi.io',
+  // base: 'https://swap.mewapi.io',
+  base: 'https://6y37xarr8i.execute-api.us-east-1.amazonaws.com/latest',
   changelly: '/changelly',
   bity: '/bity'
 };

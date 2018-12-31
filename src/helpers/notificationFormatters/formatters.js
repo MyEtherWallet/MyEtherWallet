@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import {
+  fiatCurrencies,
   INVESTIGATE_FAILURE_KEY,
   type,
   notificationStatuses,
@@ -8,14 +9,6 @@ import {
   swapIndexes,
   txIndexes
 } from './config';
-
-/*
-ERROR EXAMPLES:
-
-Returned error: known transaction: 4e6c0d9a75b6c826ad7ed3a657a6c3bf2621620bf8879b9a83597865acef2a5b
-Returned error: nonce too low
-
- */
 
 const identifyErrors = errObj => {
   const errorInfo = {};
@@ -147,6 +140,16 @@ const formatTransactionErrorUpdate = (entry, val) => {
   return entry;
 };
 
+const formatSwapSpecial = details => {
+  if (
+    details.provider === 'bity' &&
+    fiatCurrencies.includes(details.toCurrency)
+  ) {
+    return { phoneToken: details.phoneToken };
+  }
+  return {};
+};
+
 const formatSwap = (val, network) => {
   const isEthereum = val[swapIndexes.label] !== type.SWAP_ORDER;
   const initialState = isEthereum
@@ -188,6 +191,7 @@ const formatSwap = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: formatSwapSpecial(val[swapIndexes.details]),
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
@@ -274,6 +278,7 @@ const formatSwapError = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: formatSwapSpecial(val[swapIndexes.details]),
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
