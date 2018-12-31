@@ -2,8 +2,9 @@
 
 ### Bug
 
-- Fix header settings modal styles [287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
-- Fix fixed buttons, scroll-up, security [282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
+- Fix ENS resolver/error placement [](<>)
+- Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
+- Fix fixed buttons, scroll-up, security [#282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
 - Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
 - Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
 - Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
