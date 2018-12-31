@@ -218,9 +218,8 @@ export default {
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
-    'swap-send-to-modal': SwapSendToModal
+    'swap-send-to-modal': SwapSendToModal,
     'swap-send-form': SwapSendForm
-    //'confirmation-modal': ConfirmationModal
   },
   data() {
     return {
