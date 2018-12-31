@@ -68,6 +68,7 @@
     "hdkey": "1.1.0",
     "imagemin-webpack-plugin": "2.3.0",
     "jest-skipped-reporter": "0.0.4",
+    "jspdf": "1.4.1",
     "keccak": "2.0.0",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
