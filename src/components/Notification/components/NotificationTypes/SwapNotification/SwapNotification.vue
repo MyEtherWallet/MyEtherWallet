@@ -276,7 +276,7 @@ export default {
           if (!this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
           }
-        }, 2500);
+        }, 10000);
       }
     },
     timeUpdater() {
