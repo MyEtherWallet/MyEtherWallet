@@ -46,9 +46,9 @@
           {{ $t('interface.sendTx') }}
         </div>
         <interface-bottom-text
-          :link="'/'"
-          :link-text="'Learn more'"
-          :question="'Have any issues?'"
+          link="https://kb.myetherwallet.com"
+          question="Have issues?"
+          link-text="Help Center"
         />
       </div>
     </div>
@@ -77,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' }),
+    ...mapGetters({ web3: 'web3', wallet: 'wallet' }),
     signedTx() {
       return this.readTx.hasOwnProperty('rawTransaction')
         ? this.readTx.rawTransaction
@@ -113,23 +113,26 @@ export default {
         .sendSignedTransaction(signedTx.rawTransaction)
         .once('transactionHash', hash => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            hash,
-            'Transaction Hash'
+            'Hash',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            hash
           ]);
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            res,
-            'Transaction Receipt'
+            'Receipt',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            res
           ]);
         })
         .on('error', err => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            err,
-            'Transaction Error'
+            'Error',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            err
           ]);
         });
     },

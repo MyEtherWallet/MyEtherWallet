@@ -5,6 +5,9 @@
 - Fix header settings modal styles [287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
 - Fix fixed buttons, scroll-up, security [282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
 - Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
+- Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
+- Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
+- Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
 - Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
 - Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
 - Fix network and address modal dropdown issue [#234](https://github.com/MyEtherWallet/MyEtherWallet/pull/234)
@@ -16,15 +19,30 @@
 
 ### Feature
 
+- implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
 - implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
 - Add support for Ledger live paths. [#216](https://github.com/MyEtherWallet/MyEtherWallet/pull/216)
+- Implement Swap [#127](https://github.com/MyEtherWallet/MyEtherWallet/pull/127)
 
 ### Devop
 
+- Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
+- Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
+- Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
+- Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
+- Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
+- Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
+- Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)
+- Prevent excessive polling of eth_getTransactionReceipt [#266](https://github.com/MyEtherWallet/MyEtherWallet/pull/266)
+- Check and verify npm package versions [#233](https://github.com/MyEtherWallet/MyEtherWallet/pull/233)
+- Setup automated travis builds and release [#280](https://github.com/MyEtherWallet/MyEtherWallet/pull/280)
+- Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
+- Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
+- Fixes #237, #238, #236, #260, #253, #283, #284, #286 [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)
 - Lazy loading components for faster loading [#181](https://github.com/MyEtherWallet/MyEtherWallet/pull/181)
 - ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
 - Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)

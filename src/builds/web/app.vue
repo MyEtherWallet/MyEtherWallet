@@ -3,7 +3,7 @@
     <header-container />
     <router-view />
     <footer-container />
-    <confirmation-container />
+    <confirmation-container v-if="wallet !== null" />
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'App',
@@ -18,6 +19,11 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer
+  },
+  computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    })
   },
   mounted() {
     this.$store.dispatch('checkIfOnline');

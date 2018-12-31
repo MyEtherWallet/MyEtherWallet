@@ -3,5 +3,7 @@
   "scanQrCode": "Scan QR code to send/swap instantly",
   "signingAddr": "Signing Address",
   "confirmSigning": "Confirm Signing",
-  "success": "Success"
+  "approveOnDevice":"Please Approve on Hardware Wallet",
+  "success": "Success",
+  "error": "Error"
 }

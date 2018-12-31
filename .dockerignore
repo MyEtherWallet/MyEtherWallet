@@ -9,3 +9,4 @@ Makefile
 docker-compose.yml
 docs
 dist
+release

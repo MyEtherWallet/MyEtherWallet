@@ -154,7 +154,11 @@
                   operations by Russia to more serious computer-based attacks on
                   US information systems and infrastructure.
                 </p>
-                <div class="link-block"><a href="">Learn more</a></div>
+                <div class="link-block">
+                  <a href="https:/kb.myetherwallet.com" target="_blank">
+                    >Learn more</a
+                  >
+                </div>
               </div>
             </div>
             <div
@@ -208,7 +212,9 @@
                   US information systems and infrastructure.
                 </p>
                 <div class="link-block">
-                  <a href="">Yooo... sha3 !== Keccak-256?!</a>
+                  <a href="#" rel="noopener noreferrer" target="_blank"
+                    >Yooo... sha3 !== Keccak-256?!</a
+                  >
                 </div>
               </div>
             </div>

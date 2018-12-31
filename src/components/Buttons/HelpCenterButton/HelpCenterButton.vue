@@ -2,7 +2,12 @@
   <div class="helpcenter-button">
     <div class="wrap">
       Having issues?
-      <a href="https://kb.myetherwallet.com" target="_blank">Help Center</a>
+      <a
+        href="https://kb.myetherwallet.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Help Center</a
+      >
     </div>
   </div>
 </template>
