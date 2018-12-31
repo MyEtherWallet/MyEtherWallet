@@ -1,5 +1,13 @@
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
-import { getRates, openOrder, getStatus, getExitRates } from './bity-calls';
+import {
+  getRates,
+  openOrder,
+  getStatus,
+  getExitRates,
+  loginWithPhone,
+  sendReceivedSmsCode,
+  buildCyptoToFiatOrderData
+} from './bity-calls';
 import {
   bityStatuses,
   BityCurrencies,
@@ -214,24 +222,25 @@ export default class BitySwap {
 
   async startSwap(swapDetails) {
     if (this.fiatCurrencies.includes(swapDetails.toCurrency)) {
-      throw Error('Exit to Fiat not yet implemented');
-    } else {
-      swapDetails.dataForInitialization = await this.buildOrder(
-        swapDetails.fromCurrency === BASE_CURRENCY,
-        swapDetails
-      );
-      swapDetails.providerReceives =
-        swapDetails.dataForInitialization.input.amount;
-      swapDetails.providerSends =
-        swapDetails.dataForInitialization.output.amount;
-      swapDetails.parsed = BitySwap.parseOrder(
-        swapDetails.dataForInitialization
-      );
-      swapDetails.providerAddress =
-        swapDetails.dataForInitialization.payment_address;
-      swapDetails.isDex = BitySwap.isDex();
+      if (swapDetails.exitFromAddress === '') return {};
+      swapDetails.dataForInitialization = false;
+      swapDetails.isExitToFiat = true;
       return swapDetails;
+      // throw Error('Exit to Fiat not yet implemented');
     }
+
+    swapDetails.dataForInitialization = await this.buildOrder(
+      swapDetails.fromCurrency === BASE_CURRENCY,
+      swapDetails
+    );
+    swapDetails.providerReceives =
+      swapDetails.dataForInitialization.input.amount;
+    swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
+    swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
+    swapDetails.providerAddress =
+      swapDetails.dataForInitialization.payment_address;
+    swapDetails.isDex = BitySwap.isDex();
+    return swapDetails;
   }
 
   async buildOrder(
@@ -256,6 +265,18 @@ export default class BitySwap {
       }
       throw Error('error creating bity order');
     }
+  }
+
+  async initializeUser(initData) {
+    return loginWithPhone(initData.phone);
+  }
+
+  async verifyUser(verifyData) {
+    return sendReceivedSmsCode(verifyData.code);
+  }
+
+  async setupUser(setupData) {
+    return buildCyptoToFiatOrderData(setupData);
   }
 
   static parseOrder(order) {
