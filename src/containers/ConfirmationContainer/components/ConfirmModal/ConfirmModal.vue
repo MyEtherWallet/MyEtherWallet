@@ -101,7 +101,16 @@
               </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </b-modal>
@@ -181,7 +190,7 @@ export default {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
     }

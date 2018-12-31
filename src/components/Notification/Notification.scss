@@ -32,6 +32,11 @@
   margin-left: 30px;
 }
 
+.modal-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
 .notification-item-container {
   background-color: $white;
   height: 300px;
@@ -39,6 +44,16 @@
 
   > ul {
     > li {
+      &:first-child {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        > p {
+          cursor: pointer;
+          display: flex;
+          margin-right: 10px;
+        }
+      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }

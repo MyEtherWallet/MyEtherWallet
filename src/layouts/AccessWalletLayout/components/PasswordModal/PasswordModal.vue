@@ -36,7 +36,7 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('accessWallet.unlock') }}
+        {{ $t('common.accessWallet') }}
       </button>
     </form>
   </b-modal>

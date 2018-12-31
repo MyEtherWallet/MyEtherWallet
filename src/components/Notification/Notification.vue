@@ -3,7 +3,6 @@
     <div class="notification-logo" @click="showNotifications">
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
       <div v-show="unreadCount > 0" class="notification-dot" />
-      <i class="fa fa-angle-down" aria-hidden="true" />
     </div>
     <b-modal
       ref="notification"
@@ -14,114 +13,84 @@
       @show="countUnread"
     >
       <template slot="modal-title">
-        {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
-        <div v-show="unreadCount >= 0" class="notification-count">
-          <span>{{ unreadCount }}</span>
+        <div>
+          <div v-if="!detailsShown" class="modal-title">
+            {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
+            <div v-show="unreadCount >= 0" class="notification-count">
+              <span>{{ unreadCount }}</span>
+            </div>
+          </div>
+          <div v-else class="modal-title" @click="hideDetails">
+            <i class="fa fa-long-arrow-left" aria-hidden="true" /> Back
+          </div>
         </div>
       </template>
-      <div class="notification-item-container">
-        <ul>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Transaction</p>
-                <p class="status status-succeed">(Succeed)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Swap</p>
-                <p class="status status-processing">(Processing)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-            <div class="notification-content">
-              <ul>
-                <li>
-                  <p>Amount:</p>
-                  <p>2.100000 ETH</p>
-                </li>
-                <li>
-                  <p>To Address:</p>
-                  <p>
-                    <a href="/" target="_blank">
-                      0xbfe394bf28b7cbf72e7656e0e6740b196521b074
-                    </a>
-                  </p>
-                </li>
-                <li>
-                  <p>TX Fee:</p>
-                  <p>0.100000346482 ETH ($0.09)</p>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li>
-            <div class="notification-header">
-              <div class="notification-type-status">
-                <p class="type">Transaction</p>
-                <p class="status status-failed">(Failed)</p>
-              </div>
-              <div class="time-date">
-                <p>13:20:23</p>
-                <p>04/05/2018</p>
-                <div class="expender-icon">
-                  <i aria-hidden="true" class="fa fa-angle-down"></i>
-                  <i aria-hidden="true" class="fa fa-angle-up"></i>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <div
+      <div v-if="!detailsShown" class="notification-item-container">
+        <ul
           v-if="
             sortedNotifications !== undefined && sortedNotifications.length > 0
           "
         >
-          <div
+          <li>
+            <p @click="expandAll">
+              <i aria-hidden="true" class="fa fa-2x fa-angle-down"></i>
+            </p>
+            <p @click="CallapseAll">
+              <i aria-hidden="true" class="fa fa-2x fa-angle-up"></i>
+            </p>
+          </li>
+          <li
             v-for="(notification, idx) in sortedNotifications"
             :key="notification.title + notification.timestamp + idx"
             class="notification-item"
           >
-            <div
-              class="notification-header"
-              @click="expand(idx, notification, $event)"
+            <keep-alive
+              :max="10"
+              :exclude="['transaction-notification', 'transaction-error']"
             >
-              <p :class="[notification.read ? '' : 'unread']">
-                {{ notification.title }}
-              </p>
-              <p :class="[notification.read ? '' : 'unread']">
-                {{ notification.timestamp }}
-              </p>
-            </div>
-            <div
-              :class="[
-                notification.expanded ? '' : 'unexpanded',
-                'notification-body'
-              ]"
-            >
-              {{ notification.body }}
-            </div>
-          </div>
-        </div>
+              <component
+                :is="useComponent(notification.type)"
+                :expand="expand(idx, notification)"
+                :shown="shown"
+                :notice="notification"
+                :convert-to-gwei="convertToGwei"
+                :convert-to-eth="convertToEth"
+                :get-fiat-value="getFiatValue"
+                :date-string="dateString"
+                :time-string="timeString"
+                :hash-link="hashLink"
+                :address-link="addressLink"
+                :process-status="processStatus"
+                :error-message-string="errorMessageString"
+                :index="idx"
+                :child-update-notification="childUpdateNotification(idx)"
+                @showDetails="showDetails"
+              >
+              </component>
+            </keep-alive>
+          </li>
+        </ul>
         <div v-else class="notification-no-item">No notifications found :(</div>
+      </div>
+      <div v-if="detailsShown" class="notification-item-container">
+        <component
+          :is="useDetailComponent(detailType)"
+          :shown="shown"
+          :notice="notificationDetails"
+          :convert-to-gwei="convertToGwei"
+          :convert-to-eth="convertToEth"
+          :get-fiat-value="getFiatValue"
+          :date-string="dateString"
+          :time-string="timeString"
+          :hash-link="hashLink"
+          :address-link="addressLink"
+          :process-status="processStatus"
+          :error-message-string="errorMessageString"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
+        >
+        </component>
       </div>
     </b-modal>
   </div>
@@ -130,15 +99,43 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
+import unit from 'ethjs-unit';
+import BigNumber from 'bignumber.js';
+
+import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
+import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
+import TransactionDetails from './components/NotificationTypes/NotificationDetails';
+import SwapDetails from './components/NotificationTypes/SwapDetails';
+
+import {
+  statusTypes,
+  listComponentMapping,
+  detailComponentMapping
+} from './components/config';
+
+import { INVESTIGATE_FAILURE_KEY } from '@/helpers/notificationFormatters';
 
 export default {
+  components: {
+    'swap-notification': SwapNotification,
+    'transaction-notification': TransactionNotification,
+    'transaction-details': TransactionDetails,
+    'swap-details': SwapDetails
+  },
   data() {
     return {
-      unreadCount: 0
+      shown: false,
+      unreadCount: 0,
+      ethPrice: new BigNumber(0),
+      detailsShown: false,
+      detailType: '',
+      notificationDetails: {}
     };
   },
   computed: {
     ...mapGetters({
+      web3: 'web3',
+      network: 'network',
       notifications: 'notifications',
       wallet: 'wallet'
     }),
@@ -147,14 +144,14 @@ export default {
       if (!this.notifications[this.wallet.getChecksumAddressString()])
         return [];
       // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()].sort(
-        (a, b) => {
-          a = new Date(a.timestamp);
-          b = new Date(b.timestamp);
+      return this.notifications[this.wallet.getChecksumAddressString()]
+        .sort((a, b) => {
+          a = a.timestamp;
+          b = b.timestamp;
 
           return a > b ? -1 : a < b ? 1 : 0;
-        }
-      );
+        })
+        .filter(entry => entry.network === this.network.type.name);
     }
   },
   watch: {
@@ -170,8 +167,42 @@ export default {
       store.set('notifications', this.notifications);
     }
     this.countUnread();
+    this.fetchBalanceData();
+    this.$refs.notification.$on('hide', () => {
+      this.shown = false;
+      this.hideDetails();
+    });
   },
   methods: {
+    showNotifications() {
+      this.shown = true;
+      this.$refs.notification.show();
+    },
+    showDetails(details) {
+      this.detailsShown = true;
+      this.detailType = details[0];
+      this.notificationDetails = details[1];
+      if (details.length === 3) {
+        this.notificationDetails.index = details[2];
+      }
+    },
+    hideDetails() {
+      this.detailsShown = false;
+      this.notificationDetails = {};
+      this.detailType = '';
+    },
+    useComponent(type) {
+      if (listComponentMapping[type]) {
+        return listComponentMapping[type];
+      }
+      return 'transaction-notification';
+    },
+    useDetailComponent(type) {
+      if (detailComponentMapping[type]) {
+        return detailComponentMapping[type];
+      }
+      return 'transaction-details';
+    },
     countUnread() {
       const self = this;
       self.unreadCount = 0;
@@ -187,22 +218,121 @@ export default {
         });
       }
     },
-    showNotifications() {
-      this.$refs.notification.show();
-    },
     expand(idx, notif) {
-      const updatedNotif = notif;
-      if (notif.expanded !== true) {
-        updatedNotif.read = true;
-        updatedNotif.expanded = true;
-      } else {
-        updatedNotif.expanded = false;
+      return () => {
+        const updatedNotif = notif;
+        if (notif.expanded !== true) {
+          updatedNotif.read = true;
+          updatedNotif.expanded = true;
+        } else {
+          updatedNotif.expanded = false;
+        }
+        this.$store.dispatch('updateNotification', [
+          this.wallet.getChecksumAddressString(),
+          idx,
+          updatedNotif
+        ]);
+      };
+    },
+    expandAll() {
+      this.notifications[this.wallet.getChecksumAddressString()].forEach(
+        (notice, idx) => {
+          const updatedNotif = notice;
+          if (notice.expanded !== true) {
+            updatedNotif.read = true;
+            updatedNotif.expanded = true;
+          }
+          this.$store.dispatch('updateNotification', [
+            this.wallet.getChecksumAddressString(),
+            idx,
+            updatedNotif
+          ]);
+        }
+      );
+    },
+    CallapseAll() {
+      this.notifications[this.wallet.getChecksumAddressString()].forEach(
+        (notice, idx) => {
+          const updatedNotif = notice;
+          updatedNotif.expanded = false;
+          this.$store.dispatch('updateNotification', [
+            this.wallet.getChecksumAddressString(),
+            idx,
+            updatedNotif
+          ]);
+        }
+      );
+    },
+    childUpdateNotification(idx) {
+      if (typeof idx === 'undefined') return () => {};
+      return updatedNotif => {
+        this.$store.dispatch('updateNotification', [
+          this.wallet.getChecksumAddressString(),
+          idx,
+          updatedNotif
+        ]);
+      };
+    },
+    processStatus(rawStatus) {
+      if (statusTypes[rawStatus]) {
+        return statusTypes[rawStatus];
       }
-      this.$store.dispatch('updateNotification', [
-        this.wallet.getChecksumAddressString(),
-        idx,
-        updatedNotif
-      ]);
+      return statusTypes.statusError;
+    },
+    errorMessageString(notice) {
+      if (notice.body.errorMessage === INVESTIGATE_FAILURE_KEY) {
+        return this.$t('header.investigate');
+      }
+      return notice.body.errorMessage;
+    },
+    hashLink(hash) {
+      if (this.network.type.blockExplorerTX) {
+        return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
+      }
+    },
+    addressLink(addr) {
+      if (this.network.type.blockExplorerAddr) {
+        return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+      }
+    },
+    dateString(notice) {
+      if (notice !== {}) {
+        return new Date(notice.timestamp).toLocaleDateString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
+    },
+    timeString(notice) {
+      if (notice !== {}) {
+        return new Date(notice.timestamp).toLocaleTimeString(
+          this._i18n.locale.replace('_', '-')
+        );
+      }
+      return '';
+    },
+    async fetchBalanceData() {
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      if (!values['DAI']) return 0;
+      this.ethPrice = new BigNumber(values['DAI']);
+    },
+    convertToGwei(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      return unit.fromWei(value, 'Gwei');
+    },
+    convertToEth(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      return unit.fromWei(value, 'ether');
+    },
+    getFiatValue(value) {
+      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      if (this.ethPrice === 0) return '';
+      return new BigNumber(this.convertToEth(value))
+        .multipliedBy(new BigNumber(this.ethPrice))
+        .decimalPlaces(2)
+        .toFixed();
     }
   }
 };

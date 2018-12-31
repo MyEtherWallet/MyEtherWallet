@@ -5,6 +5,8 @@
   "doNotForgetDesc": "to save your password. You will need this",
   "keyPass": "Password + Keystore",
   "keyPassDesc": "File to unlock your wallet.",
+  "passMnem": "Password + Mnemonic Phrase",
+  "passMnemDesc": "to unlock your wallet.",
   "byMnemonic": "By Mnemonic Phrase",
   "byMnemonicSuccess": "Success",
   "byMnemonicSuccessfullyCreated": "Your have created your wallet successfully.",
