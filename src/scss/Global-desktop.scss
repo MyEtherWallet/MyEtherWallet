@@ -821,7 +821,7 @@
       border-radius: 0;
       font-size: 14px;
       padding: 20px 0;
-      color: #999999;
+      color: #999;
 
       &.active {
         background-color: $nav-tab--button--active--background-color;
@@ -1297,4 +1297,14 @@
 .dropdown-button-2 .dropdown-menu {
   max-height: 300px;
   overflow: auto;
+}
+
+// *********************************************************************
+// Global disabled button style
+// *********************************************************************
+.btn-secondary.disabled {
+  color: $white;
+  background-color: $dark-grey-11;
+  border-color: $dark-grey-11;
+  opacity: 1;
 }
