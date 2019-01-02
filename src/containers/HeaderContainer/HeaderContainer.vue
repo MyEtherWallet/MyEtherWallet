@@ -171,7 +171,10 @@
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">Get a Free Wallet</div>
+                  <div class="flex-block">
+                    <div class="get-free-wallet-button">New Wallet</div>
+                    <div class="access-button">Access</div>
+                  </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"
