@@ -16,10 +16,6 @@
       background-repeat: no-repeat;
       background-size: 55%;
 
-      @media all and (max-width: $tablet-width) {
-        background-position: center 300px;
-        background-size: 140%;
-      }
     }
 
     .content {
