@@ -6,6 +6,9 @@
     class="bootstrap-modal modal-mew-connect"
     centered
   >
+    <div class="modal-icon">
+      <qrcode :value="QrCode" :options="{ size: 200 }" />
+    </div>
     <div class="d-block content-container text-center">
       <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
     </div>
