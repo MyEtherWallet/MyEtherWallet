@@ -836,6 +836,11 @@
         flex: 1;
         text-align: center;
       }
+      
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
+      }
     }
   }
 
