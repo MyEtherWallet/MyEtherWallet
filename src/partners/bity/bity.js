@@ -236,7 +236,8 @@ export default class BitySwap {
       swapDetails.dataForInitialization = await this.buildExitOrder(
         swapDetails
       );
-      // receiving: {"jsonrpc":"2.0","error":{"code":-12345,"message":"{\"errors\":[{\"code\":\"invalid_order\",\"message\":\"Your order can not be placed at this moment, please try again later.\"}]}","data":null},"id":""}
+      // receiving:
+      // {"jsonrpc":"2.0","error":{"code":-12345,"message":"{\"errors\":[{\"code\":\"invalid_order\",\"message\":\"Your order can not be placed at this moment, please try again later.\"}]}","data":null},"id":""}
       console.log(swapDetails); // todo remove dev item
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(
