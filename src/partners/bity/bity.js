@@ -236,20 +236,25 @@ export default class BitySwap {
       swapDetails.dataForInitialization = await this.buildExitOrder(
         swapDetails
       );
-    } else {
+      // receiving: {"jsonrpc":"2.0","error":{"code":-12345,"message":"{\"errors\":[{\"code\":\"invalid_order\",\"message\":\"Your order can not be placed at this moment, please try again later.\"}]}","data":null},"id":""}
+      console.log(swapDetails); // todo remove dev item
+    } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(
         swapDetails.fromCurrency === BASE_CURRENCY,
         swapDetails
       );
+      swapDetails.providerReceives =
+        swapDetails.dataForInitialization.input.amount;
+      swapDetails.providerSends =
+        swapDetails.dataForInitialization.output.amount;
+      swapDetails.parsed = BitySwap.parseOrder(
+        swapDetails.dataForInitialization
+      );
+      swapDetails.providerAddress =
+        swapDetails.dataForInitialization.payment_address;
+      swapDetails.isDex = BitySwap.isDex();
     }
 
-    swapDetails.providerReceives =
-      swapDetails.dataForInitialization.input.amount;
-    swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
-    swapDetails.parsed = BitySwap.parseOrder(swapDetails.dataForInitialization);
-    swapDetails.providerAddress =
-      swapDetails.dataForInitialization.payment_address;
-    swapDetails.isDex = BitySwap.isDex();
     return swapDetails;
   }
 
@@ -296,12 +301,13 @@ export default class BitySwap {
     return sendReceivedSmsCode(verificationData);
   }
 
-  async buildExitOrder(fromCurrency, toCurrency, orderDetails) {
+  async buildExitOrder({ fromCurrency, toCurrency, orderDetails }) {
     const orderData = {
       pair: fromCurrency + toCurrency,
       phoneToken: this.phoneToken,
       orderDetails: orderDetails
     };
+    console.log(orderData); // todo remove dev item
     return buildCyptoToFiatOrderData(orderData);
   }
 

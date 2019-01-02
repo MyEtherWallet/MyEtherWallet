@@ -359,10 +359,12 @@ export default {
       this.orderDetails.owner.state = val;
     },
     setCountry(val) {
-      this.orderDetails.owner.name = val;
+      this.orderDetails.owner.country = val;
+      console.log(this.orderDetails); // todo remove dev item
     },
     openMenu(val) {
-      this.orderDetails.owner.country = val;
+      console.log(val);
+      // this.orderDetails.owner.country = val;
     },
     backButtonAction() {
       this.$emit('backButtonClick');
@@ -399,7 +401,11 @@ export default {
       };
       console.log(details); // todo remove dev item
 
-      this.provider.startSwap({ bypass: true, orderDetails: details });
+      this.provider.startSwap({
+        ...this.swapDetails,
+        bypass: true,
+        orderDetails: details
+      });
     }
   }
 };
