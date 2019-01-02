@@ -32,7 +32,7 @@
 
 ### Devop
 
-- Left align pricebar contents []()
+- Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
 - Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
 - Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
 - Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
