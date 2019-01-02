@@ -24,13 +24,12 @@
   }
 
   .percent-container {
-    align-items: center;
-    justify-content: space-around;
-    display: flex;
-    flex-direction: row;
-
     span {
       font-size: 10px;
+    }
+
+    i {
+      margin-left: 5px;
     }
   }
 }
