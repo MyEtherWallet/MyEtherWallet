@@ -12,14 +12,10 @@
 
     .star-background {
       background-image: url('~@/assets/images/home/stars.svg');
-      background-position: right top;
+      background-position: center;
       background-repeat: no-repeat;
-      background-size: 55%;
+      background-size: 100%;
 
-      @media all and (max-width: $tablet-width) {
-        background-position: center 300px;
-        background-size: 140%;
-      }
     }
 
     .content {
