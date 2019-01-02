@@ -35,7 +35,9 @@
     </div>
     <!-- === MEW custom form ======================================== -->
     <button
-      :disabled="value.length === 0 && value.length < 9 && strength === ''"
+      :disabled="
+        value.length === 0 || value.length < 9 || strengthClass !== 'strong'
+      "
       class="next-button large-round-button-green-filled"
       type="submit"
       @click.prevent="switcher(param)"
@@ -87,8 +89,8 @@ export default {
           this.strengthClass = 'weak';
           break;
         case 3:
-          this.strength = 'Weak';
-          this.strengthClass = 'weak';
+          this.strength = 'Good';
+          this.strengthClass = 'strong';
           break;
         case 4:
           this.strength = 'Strong';
@@ -98,6 +100,8 @@ export default {
           this.strength = 'Very Weak';
           this.strengthClass = 'very-weak';
       }
+
+      console.log(this.strengthClass);
     }
   }
 };
