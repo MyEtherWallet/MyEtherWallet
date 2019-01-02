@@ -305,6 +305,30 @@
   margin-left: 0;
   overflow: hidden;
 
+  .flex-block {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .access-button {
+    margin-left: 8px;
+    border: 1px solid $border-green;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    padding: 10px 20px;
+    position: relative;
+    overflow: hidden;
+    background-color: $text-color-green;
+    color: $text-white;
+
+    &:hover {
+      color: $text-color-green;
+      background-color: $white;
+    }
+  }
+
   .get-free-wallet-button {
     border: 1px solid $border-green;
     border-radius: 4px;
@@ -327,6 +351,8 @@
     animation-fill-mode: forwards;
   }
 
+  $get-free-wallet-button-width: 240px;
+
   @keyframes fadeInFromNone {
     0% {
       width: 0;
@@ -336,14 +362,14 @@
     }
 
     50% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 0;
       margin-left: 20px;
     }
 
     100% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 1;
       margin-left: 20px;
@@ -352,14 +378,14 @@
 
   @keyframes fadeOutFromBlock {
     0% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 1;
       margin-left: 20px;
     }
 
     50% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 0;
       margin-left: 20px;
