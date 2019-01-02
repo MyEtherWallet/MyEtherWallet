@@ -3,6 +3,7 @@
 ### Bug
 
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
+- Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
 - Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
 - Fix fixed buttons, scroll-up, security [#282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
 - Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
