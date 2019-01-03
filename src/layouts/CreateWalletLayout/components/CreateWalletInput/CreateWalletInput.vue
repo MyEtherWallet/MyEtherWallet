@@ -100,8 +100,6 @@ export default {
           this.strength = 'Very Weak';
           this.strengthClass = 'very-weak';
       }
-
-      console.log(this.strengthClass);
     }
   }
 };

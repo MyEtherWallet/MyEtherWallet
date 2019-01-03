@@ -42,4 +42,21 @@ function formatDate(date) {
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
 }
 
-export default { isJson, doesExist, padLeftEven, formatDate };
+function scrollToTop(scrollDuration) {
+  const scrollHeight = window.scrollY,
+    scrollStep = Math.PI / (scrollDuration / 15),
+    cosParameter = scrollHeight / 2;
+
+  let scrollCount = 0;
+  let scrollMargin;
+  const scrollInterval = setInterval(function() {
+    if (window.scrollY != 0) {
+      scrollCount = scrollCount + 1;
+      scrollMargin =
+        cosParameter - cosParameter * Math.cos(scrollCount * scrollStep);
+      window.scrollTo(0, scrollHeight - scrollMargin);
+    } else clearInterval(scrollInterval);
+  }, 15);
+}
+
+export default { isJson, doesExist, padLeftEven, formatDate, scrollToTop };
