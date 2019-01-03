@@ -336,7 +336,13 @@
   // Standard buttons
   // *********************************************************************
 
+  .large-round-button {
+    padding: 21px 15px;
+  }
+
   .large-round-button-green-filled {
+    @extend .large-round-button;
+
     background-color: $button--background-color-1;
     border: 1px solid $button--border-color-1;
     border-radius: 6px;
@@ -344,13 +350,14 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
     display: inline-block;
     text-align: center;
   }
 
   .large-round-button-green-border {
+    @extend .large-round-button;
+
     background-color: $background-color-white;
     border: 1px solid $button--border-color-2;
     border-radius: 6px;
@@ -358,22 +365,24 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-filled {
+    @extend .large-round-button;
+
     background-color: $button--background-color-2;
     border: 1px solid $button--border-color-1;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-filled__body-text-color {
+    @extend .large-round-button;
+
     color: $text-base-color;
     background-color: $button--background-color-2;
     border: 1px solid $button--border-color-1;
@@ -381,18 +390,18 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-border {
+    @extend .large-round-button;
+
     border: 1px solid $button--border-color-1;
     border-radius: 5px;
     color: $button--text-color-1;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
