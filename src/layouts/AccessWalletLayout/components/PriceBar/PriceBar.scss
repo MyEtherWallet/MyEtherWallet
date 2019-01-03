@@ -46,12 +46,24 @@
   }
 }
 
-.first-set-enter-to {
-  opacity: 1;
-  transition: opacity 0.5s ease-out;
+.first-set-enter-active,
+.second-set-enter-active {
+  transition: all .5s ease-in;
 }
 
-.first-set-leave-to {
+.first-set-enter,
+.second-set-enter {
+  transform: translateY(20px);
+  opacity: 1;
+}
+
+.first-set-leave,
+.second-set-leave {
+  transform: translateY(-20px);
+  opacity: 1;
+}
+
+.first-set-leave-to,
+.second-set-leave-to {
   opacity: 0;
-  transition: opacity 0.5s ease-in;
 }
