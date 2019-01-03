@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
 - Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
