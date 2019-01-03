@@ -17,32 +17,6 @@ Returned error: nonce too low
 
  */
 
-const identifyErrors = errObj => {
-  const errorInfo = {};
-  try {
-    if (errObj.hasOwnProperty('message')) {
-      const errorMessage = errObj.message.toString();
-      const regex0 = RegExp('(?<=:).*(?=:)');
-      const regex1 = RegExp('(?<=:).*');
-      const regEx1Matches = regex1.exec(errorMessage);
-      const regEx0Matches = regex0.exec(errorMessage);
-      if (regEx1Matches !== null) {
-        errorInfo.type = regEx1Matches[0];
-        errorInfo.message = regEx0Matches[0];
-        const regex2 = RegExp(`(?<=${errorInfo.type}:).*`);
-        const regEx2Matches = regex2.exec(errorMessage);
-        if (regEx2Matches !== null) {
-          errorInfo.details = regEx2Matches[0];
-          return errorInfo;
-        }
-        return errorInfo;
-      }
-    }
-    return false;
-  } catch (e) {
-    return false;
-  }
-};
 
 const extractErrorMessage = errObj => {
   try {
@@ -277,6 +251,5 @@ export {
   formatSwap,
   formatSwapReciept,
   formatSwapError,
-  formatSwapErrorUpdate,
-  identifyErrors
+  formatSwapErrorUpdate
 };

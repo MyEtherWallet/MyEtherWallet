@@ -16,8 +16,7 @@ import {
   formatTransactionError,
   formatTransactionErrorUpdate,
   formatTransactionHash,
-  formatTransactionReciept,
-  identifyErrors
+  formatTransactionReciept
 } from './formatters';
 import {
   getNotificationIndex,
@@ -71,7 +70,7 @@ const swapOrder = (notifArray, val, network) => {
 
 const swapError = (notifArray, val, network) => {
   const idx = notifArray.findIndex(entry => getSwapEntryIndex(entry, val));
-  identifyErrors(val[swapIndexes.response]);
+
   if (!/known transaction/.test(val[swapIndexes.response]).message) {
     if (idx >= 0) {
       notifArray[idx] = formatSwapErrorUpdate(notifArray[idx]);

@@ -62,7 +62,7 @@
             </p>
           </div>
         </li>
-        <li v-if="notice.body.gasUsed">
+        <li v-if="notice.body.gasUsed && isEthereum">
           <p>{{ $t('common.txFee') }}:</p>
           <div class="detail-data">
             <p>
@@ -72,7 +72,7 @@
             </p>
           </div>
         </li>
-        <li>
+        <li v-if="isEthereum">
           <p>{{ $t('header.maxTxFee') }}:</p>
           <div class="detail-data">
             <p>
@@ -82,13 +82,13 @@
             </p>
           </div>
         </li>
-        <li>
+        <li v-if="isEthereum">
           <p>{{ $t('common.gasPrice') }}:</p>
           <div class="detail-data">
             <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
           </div>
         </li>
-        <li>
+        <li v-if="isEthereum">
           <p>{{ $t('common.gasLimit') }}:</p>
           <div class="detail-data">
             <p>{{ details.gasLimit }}</p>
@@ -122,7 +122,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap } from '@/partners';
+import { providerMap, fiat, EthereumTokens } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -194,7 +194,8 @@ export default {
       statusInterval: null,
       arrowImage: Arrow,
       timeRemaining: 0,
-      unreadCount: 0
+      unreadCount: 0,
+      fiatCurrencies: fiat.map(entry => entry.symbol)
     };
   },
   computed: {
@@ -221,6 +222,12 @@ export default {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
       return seconds >= 10 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
+    },
+    isEthereum() {
+      return EthereumTokens[this.notice.body.fromCurrency] !== undefined;
+    },
+    isFromFiat() {
+      return this.fiatCurrencies.includes(this.notice.body.fromCurrency);
     }
   },
   beforeDestroy() {
