@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Hide header on getting start []()
+- Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
 - Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
