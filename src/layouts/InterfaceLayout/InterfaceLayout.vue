@@ -55,7 +55,7 @@
             />
           </div>
           <div class="mobile-hide">
-            <interface-balance :balance="balance" />
+            <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
           <div class="mobile-hide">
             <interface-network :block-number="blockNumber" />
@@ -68,6 +68,7 @@
           />
           <div v-if="online" class="tokens">
             <interface-tokens
+              :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
@@ -325,6 +326,7 @@ export default {
     },
     async setTokens() {
       this.receivedTokens = false;
+      this.tokens = [];
       const tokens = await this.fetchTokens();
       tokens
         .sort((a, b) => {
