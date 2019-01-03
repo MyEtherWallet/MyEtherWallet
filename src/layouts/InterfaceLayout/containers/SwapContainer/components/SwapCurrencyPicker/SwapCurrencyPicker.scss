@@ -20,6 +20,16 @@
   display: flex;
   position: relative;
 
+  .currency-symbol {
+    width: 40px;
+    margin-right: 0px;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+
   &.open {
     @extend %open;
 
@@ -109,7 +119,16 @@
   .item {
     border-bottom: 1px solid $light-grey-6;
     cursor: pointer;
-    padding: 10px 8px;
+    padding: 10px 15px;
+
+    p {
+      display: flex;
+      align-items: center;
+
+      i {
+        width: 40px;
+      }
+    }
 
     &:last-child {
       border-bottom: 0;

@@ -17,6 +17,7 @@
               'alt-' + selectedCurrency.symbol,
               'cc-icon'
             ]"
+            class="currency-symbol"
           />
           {{ selectedCurrency.symbol }}
           <span class="subname">- {{ selectedCurrency.name }}</span>
