@@ -153,6 +153,7 @@ export default {
               .sendBatchTransactions(this.preparedSwap)
               .then(_result => {
                 _result[0].catch(err => {
+                  // eslint-disable-next-line no-console
                   console.error(err);
                 });
                 _result[_result.length - 1]

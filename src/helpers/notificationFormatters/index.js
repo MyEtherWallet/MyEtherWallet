@@ -19,7 +19,11 @@ import {
   formatTransactionReciept,
   identifyErrors
 } from './formatters';
-import { getNotificationIndex, getSwapEntryIndex } from './utils';
+import {
+  getNotificationIndex,
+  getSwapEntryIndex,
+  getSwapEntryIndexForTxReceipt
+} from './utils';
 
 const transactionHash = (notifArray, val, network) => {
   notifArray.push(formatTransactionHash(val, network));
@@ -29,6 +33,12 @@ const transactionHash = (notifArray, val, network) => {
 const transactionReceipt = (notifArray, val, network) => {
   const idx = notifArray.findIndex(entry => getNotificationIndex(entry, val));
   notifArray[idx] = formatTransactionReciept(notifArray[idx], val, network);
+  const swapIdx = notifArray.findIndex(entry =>
+    getSwapEntryIndexForTxReceipt(entry, val)
+  );
+  if (swapIdx >= 0) {
+    notifArray[swapIdx] = formatTransactionReciept(notifArray[swapIdx], val);
+  }
   return notifArray;
 };
 

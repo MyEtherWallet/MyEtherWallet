@@ -57,6 +57,7 @@ const extractErrorMessage = errObj => {
     }
     return errObj;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     return errObj;
   }
@@ -207,24 +208,12 @@ const formatSwap = (val, network) => {
 };
 
 const formatSwapReciept = (entry, val) => {
-  entry.status = updateStatusBasedOnReciept(val[swapIndexes.response].status);
-  entry.body.error = !val[swapIndexes.response].status;
-  entry.body.errorMessage = val[swapIndexes.response].status
-    ? ''
-    : INVESTIGATE_FAILURE_KEY;
   if (entry.body.isDex) {
     entry.swapStatus = val[swapIndexes.response].status
       ? notificationStatuses.COMPLETE
       : notificationStatuses.FAILED;
     entry.body.timeRemaining = -1;
   }
-  entry.body.gasUsed = new BigNumber(
-    val[swapIndexes.response].gasUsed
-  ).toString();
-  entry.body.blockNumber = new BigNumber(
-    val[swapIndexes.response].blockNumber
-  ).toString();
-
   return entry;
 };
 
