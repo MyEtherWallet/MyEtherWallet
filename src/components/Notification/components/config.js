@@ -30,9 +30,17 @@ const detailComponentMapping = {
   transaction: 'transaction-details'
 };
 
+const noticeStatusFields = {
+  swap: 'swapStatus',
+  swapError: 'swapStatus',
+  transactionError: 'status',
+  transaction: 'status'
+};
+
 export {
   statusTypes,
   notificationHeaderLabels,
   listComponentMapping,
-  detailComponentMapping
+  detailComponentMapping,
+  noticeStatusFields
 };
