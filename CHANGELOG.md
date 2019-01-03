@@ -2,8 +2,10 @@
 
 ### Bug
 
-- Fix header settings modal styles [287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
-- Fix fixed buttons, scroll-up, security [282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
+- Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
+- Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
+- Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
+- Fix fixed buttons, scroll-up, security [#282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
 - Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
 - Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
 - Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
@@ -30,6 +32,7 @@
 
 ### Devop
 
+- Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
 - Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
 - Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
 - Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
