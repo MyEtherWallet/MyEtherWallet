@@ -28,6 +28,7 @@
     "idna-uts46": "1.1.0",
     "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
+    "vee-validate": "^2.1.5",
     "vue": "2.5.21",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
