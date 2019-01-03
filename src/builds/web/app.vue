@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-container />
+    <header-container v-show="$route.fullPath !== '/getting-started'" />
     <router-view />
     <footer-container />
     <confirmation-container v-if="wallet !== null" />
