@@ -310,8 +310,6 @@ export default {
     }
   },
   mounted() {
-    console.info('App this router:', this.$router);
-    console.info('App currentRoute:', this.$router.currentRoute);
     if (Misc.doesExist(store.get('locale'))) {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === store.get('locale');

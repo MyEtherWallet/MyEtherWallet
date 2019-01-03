@@ -106,6 +106,7 @@ import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
 import store from 'store';
+import Misc from '@/helpers/misc';
 
 export default {
   components: {
@@ -137,6 +138,7 @@ export default {
   },
   methods: {
     switcher(by) {
+      Misc.scrollToTop(1000);
       if (by === 'Json') {
         this.byJson = true;
         this.byMnemonic = false;
