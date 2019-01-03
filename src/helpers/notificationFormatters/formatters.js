@@ -17,7 +17,6 @@ Returned error: nonce too low
 
  */
 
-
 const extractErrorMessage = errObj => {
   try {
     if (errObj.hasOwnProperty('message')) {
