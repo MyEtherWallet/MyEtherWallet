@@ -18,28 +18,20 @@
 
     <div class="title-block">
       <interface-container-title :title="$t('common.swap')" />
-      <div class="buy-eth">
-        <a href="https://ccswap.myetherwallet.com" target="_blank">
-          <span>{{ $t('interface.buyEth') }}</span>
-          <img :src="images.visaMaster" />
-        </a>
-      </div>
     </div>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
-          <div class="title-container">
-            <div class="title title-and-copy">
-              <h4>{{ $t('common.from') }}</h4>
-              <p
-                v-if="tokenBalances[fromCurrency] > 0"
-                class="all-button prevent-user-select"
-                @click="swapAll"
-              >
-                {{ $t('common.totalBalance') }}
-              </p>
-            </div>
+          <div class="title title-and-copy">
+            <h4>{{ $t('common.from') }}</h4>
+            <p
+              v-if="tokenBalances[fromCurrency] > 0"
+              class="all-button prevent-user-select"
+              @click="swapAll"
+            >
+              {{ $t('common.totalBalance') }}
+            </p>
           </div>
           <swap-currency-picker
             :currencies="fromArray"
@@ -62,9 +54,7 @@
             <p v-if="notEnough && !fromBelowMinAllowed">
               {{ $t('common.dontHaveEnough') }}
             </p>
-            <p v-if="!fromBelowMinAllowed">&nbsp;</p>
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
-            <p v-else>&nbsp;</p>
           </div>
         </div>
         <div class="exchange-icon"><img :src="images.swap" /></div>
@@ -90,12 +80,11 @@
           </div>
           <div class="error-message-container">
             <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-            <p v-else>&nbsp;</p>
             <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
-            <p v-else>&nbsp;</p>
           </div>
         </div>
       </div>
+      <!-- form-block amount-to-address -->
     </div>
 
     <div class="send-form">

@@ -1,5 +1,7 @@
 @import '../InterfaceContainer';
 
+$swap-custom-mobile-colleps-width: 700px;
+
 .swap-container {
   @extend %interface-container;
 
@@ -54,10 +56,6 @@
           display: flex;
           align-items: center;
         }
-
-        h4 {
-          margin-bottom: 2px;
-        }
       }
 
       .buttons {
@@ -75,6 +73,10 @@
       grid-column-gap: 5px;
       grid-template-columns: 1fr 70px 1fr;
 
+      @media all and (max-width: $swap-custom-mobile-colleps-width) {
+        grid-template-columns: 1fr;
+      }
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
@@ -85,6 +87,10 @@
         font-size: 30px;
         padding-top: 62px;
         text-align: center;
+        @media all and (max-width: $swap-custom-mobile-colleps-width) {
+          padding: 10px 0;
+          transform: rotate(90deg);
+        }
       }
 
       .amount {
