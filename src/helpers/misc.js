@@ -1,5 +1,7 @@
+import normalise from '@/helpers/normalise';
+import web3 from 'web3';
 /* Accepts string, returns boolean */
-function isJson(str) {
+const isJson = str => {
   try {
     JSON.parse(str);
   } catch (e) {
@@ -7,18 +9,16 @@ function isJson(str) {
   }
 
   return true;
-}
+};
 
-function doesExist(val) {
-  return val !== undefined && val !== null;
-}
+const doesExist = val => val !== undefined && val !== null;
 
-function padLeftEven(hex) {
+const padLeftEven = hex => {
   hex = hex.length % 2 !== 0 ? '0' + hex : hex;
   return hex;
-}
+};
 
-function formatDate(date) {
+const formatDate = date => {
   const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const day = days[new Date(date).getDay()];
   const dateString = new Date(date).toLocaleDateString();
@@ -40,6 +40,33 @@ function formatDate(date) {
     minute: '2-digit'
   });
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
-}
-
-export default { isJson, doesExist, padLeftEven, formatDate };
+};
+const isValidETHAddress = address => {
+  return web3.utils.isAddress(address);
+};
+const isValidENSorEtherAddress = address => {
+  return isValidETHAddress(address) || isValidENSAddress(address);
+};
+const isValidENSAddress = function(address) {
+  try {
+    address = normalise(address);
+  } catch (e) {
+    return false;
+  }
+  return address.lastIndexOf('.') != -1;
+};
+const sanitizeHex = hex => {
+  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
+  if (hex == '') return '0x';
+  return '0x' + padLeftEven(hex);
+};
+export default {
+  isJson,
+  doesExist,
+  padLeftEven,
+  formatDate,
+  isValidENSorEtherAddress,
+  isValidENSAddress,
+  isValidETHAddress,
+  sanitizeHex
+};
