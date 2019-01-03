@@ -3,7 +3,7 @@
     <div class="wrap" style="overflow: hidden;">
       <div class="page-container">
         <div class="slider-container">
-          <transition :duration="{ enter: 800, leave: 800 }" name="first-set">
+          <transition name="first-set">
             <div v-if="!hidden">
               <div
                 v-for="token in token1"
@@ -25,7 +25,9 @@
                 </p>
               </div>
             </div>
-            <div v-else>
+          </transition>
+          <transition name="second-set">
+            <div v-if="hidden">
               <div
                 v-for="token in token2"
                 :key="token.symbol"
