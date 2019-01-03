@@ -15,9 +15,7 @@
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
-    <div class="address">
-      {{ tokenTransferTo !== '' ? tokenTransferTo : address }}
-    </div>
+    <div class="address">{{ checksumAddress }}</div>
   </div>
 </template>
 
@@ -52,6 +50,15 @@ export default {
     tokenSymbol: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    checksumAddress() {
+      if (web3.utils.isAddress(this.tokenTransferTo))
+        return web3.utils.toChecksumAddress(this.tokenTransferTo);
+      if (web3.utils.isAddress(this.address))
+        return web3.utils.toChecksumAddress(this.address);
+      return '';
     }
   },
   methods: {
