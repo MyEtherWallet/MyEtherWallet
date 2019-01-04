@@ -7,9 +7,9 @@
     centered
   >
     <div class="d-block text-center">
-      <b-alert :show="mayNotBeAttached" fade variant="warning">
-        Please make sure your device is connected
-      </b-alert>
+      <b-alert :show="mayNotBeAttached" fade variant="warning"
+        >Please make sure your device is connected</b-alert
+      >
       <ul ref="hardwareList" class="button-options hardware-button-options">
         <li
           :class="selected === 'ledger' ? 'active' : ''"
@@ -55,6 +55,17 @@
           />
           <span>Secalot</span>
         </li>
+        <li
+          :class="selected === 'keepkey' ? 'active' : ''"
+          @click="select('keepkey')"
+        >
+          <img class="icon" src="~@/assets/images/icons/button-secalot.png" />
+          <img
+            class="icon-hover"
+            src="~@/assets/images/icons/button-secalot-hover.png"
+          />
+          <span>KeepKey</span>
+        </li>
       </ul>
     </div>
     <div class="button-container">
@@ -76,6 +87,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import {
   LedgerWallet,
+  KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet
@@ -133,6 +145,11 @@ export default {
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: SecalotWallet,
             hardwareBrand: 'Secalot'
+          });
+          break;
+        case 'keepkey':
+          KeepkeyWallet().then(_newWallet => {
+            this.$emit('hardwareWalletOpen', _newWallet);
           });
           break;
         default:
