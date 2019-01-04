@@ -17,9 +17,9 @@ const languages = {
 function createLocalVueInstance() {
   const localVue = createLocalVue();
   localVue.use(VueI18n);
-  localVue.use(VeeValidate);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
+  localVue.use(VeeValidate);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
   localVue.component(VueQrcode.name, VueQrcode);
