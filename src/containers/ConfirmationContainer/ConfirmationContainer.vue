@@ -126,6 +126,7 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
+      if (!newVal) return;
       this.$store.dispatch('addNotification', [
         this.fromAddress,
         newVal,
@@ -201,7 +202,7 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.wallet.signTransaction(tx).then(_response => {
-        this.web3WalletHash = _response;
+        this.web3WalletHash = _response.transactionHash;
       });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
