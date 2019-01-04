@@ -1,7 +1,28 @@
 @import '~@/scss/GlobalVariables';
 
+$swap-custom-mobile-colleps-width: 700px;
+
+.show-desktop {
+  display: block;
+  @media all and (max-width: $swap-custom-mobile-colleps-width) {
+    display: none;
+  }
+}
+
+.show-mobile {
+  display: none;
+  @media all and (max-width: $swap-custom-mobile-colleps-width) {
+    display: block;
+  }
+}
+
+
 .invalid-min-max {
   text-decoration: line-through solid red;
+}
+
+.mew-custom-form__radio-button {
+  padding-top: 8px;
 }
 
 .providers-radio-selector {
@@ -21,6 +42,9 @@
       display: grid;
       grid-template-columns: 50px 2fr 3fr 3fr;
       align-items: center;
+      @media all and (max-width: $swap-custom-mobile-colleps-width) {
+        grid-template-columns: 30px 1fr 3fr;
+      }
 
       &:last-child {
         border-bottom: 0;
@@ -36,6 +60,9 @@
 .provider-image {
   img {
     height: 30px;
+    @media all and (max-width: 550px) {
+      height: 20px;
+    }
   }
 }
 
