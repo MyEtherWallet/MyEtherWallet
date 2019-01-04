@@ -6,6 +6,8 @@
         <li
           v-for="(provider, idx) in providerData"
           :key="provider.provider + idx"
+          :class="provider.provider"
+          class="providers"
         >
           <div class="mew-custom-form__radio-button">
             <input
@@ -207,6 +209,12 @@ export default {
       return +this.fromValue > details.maxValue && details.maxValue > 0;
     },
     setSelectedProvider(provider) {
+      const providerEls = document.getElementsByClassName('providers');
+      Array.prototype.forEach.call(providerEls, function(el) {
+        el.classList.remove('radio-selected');
+      });
+      const clickedEl = document.getElementsByClassName(provider)[0];
+      clickedEl.classList.add('radio-selected');
       this.$emit('selectedProvider', provider);
     },
     providerLogo(name) {
@@ -216,20 +224,20 @@ export default {
       if (details.minValue > 0) {
         if (details.provider === providerNames.bity) {
           return [
-            `From Min.: ${details.minValue} ${details.fromCurrency}`,
-            `To Min.: ${details.minValue} ${details.toCurrency}`
+            `${details.minValue} ${details.fromCurrency} (From Min.)`,
+            `${details.minValue} ${details.toCurrency} (To Min.)`
           ];
         }
-        return [`Minimum: ${details.minValue} ${details.fromCurrency}`];
+        return [`${details.minValue} ${details.fromCurrency} (Max.)`];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
         if (details.provider === providerNames.bity) {
-          return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
+          return `${details.maxValue} ${details.fromCurrency} (Max.)`;
         }
-        return `Maximum: ${details.maxValue} ${details.fromCurrency}`;
+        return `${details.maxValue} ${details.fromCurrency} (Max.)`;
       }
       return '';
     },
