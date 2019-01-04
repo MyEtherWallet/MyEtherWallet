@@ -5,7 +5,14 @@
         <div class="title">
           <div class="title-helper">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.txSpeed')" />
+            <popover
+              :popcontent="
+                $t('popover.txSpeed').replace(
+                  /\{0\}/gi,
+                  network.type.symbol == null ? 'ETH' : network.type.symbol
+                )
+              "
+            />
           </div>
         </div>
         <div class="buttons">
@@ -99,7 +106,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      gasPrice: 'gasPrice'
+      gasPrice: 'gasPrice',
+      network: 'network'
     })
   },
   watch: {

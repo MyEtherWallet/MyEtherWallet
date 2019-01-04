@@ -86,9 +86,19 @@
         <div class="title">
           <div class="title-and-popover">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.txSpeed')" />
+            <popover
+              :popcontent="
+                $t('popover.txSpeed').replace(
+                  /\{0\}/gi,
+                  network.type.symbol == null ? 'ETH' : network.type.symbol
+                )
+              "
+            />
           </div>
-          <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
+          <p>
+            {{ $t('common.txFee') }}: {{ transactionFee }}
+            {{ network.type.symbol == null ? 'ETH' : network.type.symbol }}
+          </p>
         </div>
         <div class="buttons">
           <div

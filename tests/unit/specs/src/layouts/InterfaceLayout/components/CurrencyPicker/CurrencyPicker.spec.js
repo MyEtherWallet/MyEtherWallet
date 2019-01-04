@@ -19,6 +19,15 @@ describe('CurrencyPicker.vue', () => {
   });
 
   beforeEach(() => {
+    store.replaceState({
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH'
+        }
+      }
+    });
+
     wrapper = shallowMount(CurrencyPicker, {
       localVue,
       i18n,

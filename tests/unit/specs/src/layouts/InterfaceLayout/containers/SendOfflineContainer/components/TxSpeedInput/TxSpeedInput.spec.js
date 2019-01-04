@@ -15,6 +15,24 @@ describe('TxSpeedInput.vue', () => {
   });
 
   beforeEach(() => {
+    store.replaceState({
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH'
+        }
+      }
+    });
+
+    store.getters = {
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH'
+        }
+      }
+    };
+
     wrapper = shallowMount(TxSpeedInput, {
       localVue,
       i18n,

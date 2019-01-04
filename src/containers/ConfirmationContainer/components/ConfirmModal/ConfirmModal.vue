@@ -14,6 +14,7 @@
             :value="value"
             :token-transfer-val="tokenTransferVal"
             :token-symbol="tokenSymbol"
+            :currency-symbol="currencySymbol"
             direction="from"
           />
           <div v-show="to !== '' && to !== undefined" class="direction">
@@ -26,6 +27,7 @@
             :token-transfer-val="tokenTransferVal"
             :token-symbol="tokenSymbol"
             :value="value"
+            :currency-symbol="currencySymbol"
             direction="to"
           />
         </div>
@@ -61,7 +63,12 @@
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.txFee') }}</p>
-                <p>{{ fee }} ETH</p>
+                <p>
+                  {{ fee }}
+                  {{
+                    network.type.symbol == null ? 'ETH' : network.type.symbol
+                  }}
+                </p>
               </div>
               <div class="grid-block">
                 <p>Nonce</p>
@@ -178,7 +185,8 @@ export default {
       transactionSigned: false,
       tokenTransferTo: '',
       tokenTransferVal: '',
-      tokenSymbol: ''
+      tokenSymbol: '',
+      currencySymbol: ''
     };
   },
   computed: {
@@ -201,6 +209,9 @@ export default {
     }
   },
   mounted() {
+    this.currencySymbol =
+      this.network.type.symbol == null ? 'ETH' : this.network.type.symbol;
+
     if (this.data !== '0x') {
       this.parseData(this.data);
     }

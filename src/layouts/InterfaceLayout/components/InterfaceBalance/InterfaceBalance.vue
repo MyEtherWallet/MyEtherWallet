@@ -11,7 +11,13 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp; {{ network.type.name }}</p>
+              <p>
+                &nbsp;{{
+                  this.$store.state.network.type.symbol == null
+                    ? 'ETH'
+                    : this.$store.state.network.type.symbol
+                }}
+              </p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>

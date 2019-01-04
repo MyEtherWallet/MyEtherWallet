@@ -89,7 +89,10 @@ export default {
     networkToken() {
       return {
         name: this.network.type.name_long,
-        symbol: this.network.type.name
+        symbol:
+          this.network.type.symbol == null
+            ? this.network.type.name
+            : this.network.type.symbol
       };
     }
   },

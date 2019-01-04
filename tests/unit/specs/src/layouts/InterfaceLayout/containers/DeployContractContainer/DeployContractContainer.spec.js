@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer/DeployContractContainer.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
 
@@ -20,33 +18,40 @@ describe('DeployContractContainer.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
     Vue.config.errorHandler = () => {};
+  });
 
+  beforeEach(() => {
     const actions = {
       setGasPrice: jest.fn()
     };
 
-    const network = nodeList['ETH'][2];
-    const hostUrl = url.parse(network.url);
+    const hostUrl = url.parse('http://localhost');
 
     const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
+      `${hostUrl.protocol}//${hostUrl.hostname}:8080${hostUrl.pathname}`
     );
 
-    store = new Vuex.Store({
-      actions,
-      state: {
-        web3: newWeb3,
-        network: network
+    store.replaceState({
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH'
+        }
       },
-      getters: {
-        gasPrice: () => 42
-      }
+      web3: newWeb3
     });
-  });
 
-  beforeEach(() => {
+    store.actions = actions;
+    store.getters = {
+      gasPrice: () => 42,
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH'
+        }
+      }
+    };
+
     wrapper = shallowMount(DeployContractContainer, {
       localVue,
       i18n,

@@ -38,7 +38,8 @@
               />
               <i
                 :class="[
-                  selectedCurrency.symbol === network.type.name
+                  selectedCurrency.symbol === network.type.name ||
+                  selectedCurrency.symbol === network.type.symbol
                     ? parsedBalance.lt(amount)
                       ? 'not-good'
                       : ''
@@ -53,7 +54,8 @@
           </div>
           <div
             v-if="
-              selectedCurrency.symbol === network.type.name
+              selectedCurrency.symbol === network.type.name ||
+              selectedCurrency.symbol === network.type.symbol
                 ? parsedBalance.lt(amount)
                 : selectedCurrency.balance < amount
             "
@@ -129,7 +131,10 @@
         >
           <div class="margin-container">
             <div
-              v-show="selectedCurrency.symbol === network.type.name"
+              v-show="
+                selectedCurrency.symbol === network.type.name ||
+                  selectedCurrency.symbol === network.type.symbol
+              "
               class="the-form user-input"
             >
               <p>Add Data</p>
@@ -263,7 +268,8 @@ export default {
     validateHexString: Misc.validateHexString,
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.symbol === this.network.type.name
+        this.selectedCurrency.symbol === this.network.type.name ||
+        this.selectedCurrency.symbol === this.network.type.symbol
           ? 18
           : this.selectedCurrency.decimals;
       this.amount =
@@ -297,7 +303,8 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      const isEth = this.selectedCurrency.symbol === this.network.type.name;
+      const isEth = this.selectedCurrency.symbol === this.network.type.name ||
+                    this.selectedCurrency.symbol === this.network.type.symbol;
       const coinbase = await this.web3.eth.getCoinbase();
       this.nonce = await this.web3.eth.getTransactionCount(coinbase);
 
@@ -325,7 +332,10 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      if (this.selectedCurrency.symbol === this.network.type.name) {
+      if (
+        this.selectedCurrency.symbol === this.network.type.name ||
+        this.selectedCurrency.symbol === this.network.type.symbol
+      ) {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
           .toString();
@@ -379,7 +389,8 @@ export default {
     },
     async estimateGas() {
       if (this.hexAddress !== '') {
-        const isEth = this.selectedCurrency.symbol === this.network.type.name;
+        const isEth = this.selectedCurrency.symbol === this.network.type.name ||
+                      this.selectedCurrency.symbol === this.network.type.symbol;
         const bnAmount = new BigNumber(this.amount);
         const coinbase = await this.web3.eth.getCoinbase();
         if (!isEth) {

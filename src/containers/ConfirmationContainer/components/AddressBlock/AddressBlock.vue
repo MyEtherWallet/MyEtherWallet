@@ -1,14 +1,18 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <img
+        :src="
+          require(`@/assets/images/currency/${currencySymbol.toLowerCase()}.svg`)
+        "
+      />
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
           {{ tokenTransferVal !== '' ? tokenTransferVal : converter(value) }}
         </span>
-        <span class="currency-type"
-          >{{ tokenSymbol !== '' ? tokenSymbol : currency.toUpperCase() }}
+        <span class="currency-type">
+          {{ tokenSymbol !== '' ? tokenSymbol : currencySymbol.toUpperCase() }}
         </span>
       </p>
     </div>
@@ -36,10 +40,6 @@ export default {
       type: Number,
       default: 0
     },
-    currency: {
-      type: String,
-      default: 'eth'
-    },
     tokenTransferTo: {
       type: String,
       default: ''
@@ -49,6 +49,10 @@ export default {
       default: ''
     },
     tokenSymbol: {
+      type: String,
+      default: ''
+    },
+    currencySymbol: {
       type: String,
       default: ''
     }

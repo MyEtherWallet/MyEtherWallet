@@ -19,6 +19,7 @@ describe('AddressBlock.vue', () => {
   const tokenSymbol = 'tokenSymbol';
   const tokenTransferVal = '100';
   const value = '1000000000000';
+  const currencySymbol = 'ETH';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -41,7 +42,8 @@ describe('AddressBlock.vue', () => {
         tokenTransferTo,
         tokenSymbol,
         tokenTransferVal,
-        value
+        value,
+        currencySymbol
       }
     });
   });
