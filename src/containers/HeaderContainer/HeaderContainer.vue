@@ -52,9 +52,13 @@
             }}</a>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
-              $t('common.faqs')
-            }}</a>
+            <a
+              href="https://kb.myetherwallet.com"
+              target="_blank"
+              @click="isMobileMenuOpen = false"
+            >
+              Help Center
+            </a>
           </li>
           <li>
             <div class="mobile-language-menu-container">
