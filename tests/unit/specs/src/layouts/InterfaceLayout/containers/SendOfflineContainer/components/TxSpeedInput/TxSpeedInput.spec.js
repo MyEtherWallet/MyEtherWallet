@@ -30,7 +30,8 @@ describe('TxSpeedInput.vue', () => {
           name: 'ETH',
           symbol: 'ETH'
         }
-      }
+      },
+      gasPrice: () => 42
     };
 
     wrapper = shallowMount(TxSpeedInput, {
