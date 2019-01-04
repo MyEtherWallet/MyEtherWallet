@@ -83,7 +83,7 @@
           </div>
           <div class="the-form address-block">
             <input
-              v-ens-resolver-new="'address'"
+              v-ens-resolver="'address'"
               ref="address"
               type="text"
               name="name"
