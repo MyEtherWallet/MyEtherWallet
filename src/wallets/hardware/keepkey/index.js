@@ -54,7 +54,7 @@ class KeepkeyWallet {
       requestMsg => {
         console.log('passphrase request', requestMsg); // eslint-disable-line
         window.setPass = pin => {
-          this.keepkey.acknowledgeWithPassphrase(pin).then(console.log);
+          this.keepkey.acknowledgeWithPassphrase(pin);
         };
       }
     );
