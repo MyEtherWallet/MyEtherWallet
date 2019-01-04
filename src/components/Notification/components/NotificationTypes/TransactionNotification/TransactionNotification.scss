@@ -32,11 +32,6 @@
   margin-left: 30px;
 }
 
-.modal-title {
-  font-size: 20px;
-  font-weight: 500;
-}
-
 .notification-item-container {
   background-color: $white;
   height: 300px;
@@ -44,16 +39,6 @@
 
   > ul {
     > li {
-      &:first-child {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        > p {
-          cursor: pointer;
-          display: flex;
-          margin-right: 10px;
-        }
-      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
@@ -100,14 +85,6 @@
 .notification-logo {
   cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-
-  i {
-    color: $dark-blue-1;
-    font-size: 18px;
-    margin-left: 0;
-  }
 
   .notification-dot {
     background-color: $notification-dot-background-color;
@@ -135,11 +112,22 @@
 
   .type {
     margin-right: 10px;
-    font-weight: 600;
+    &.read {
+      font-weight: 400;
+    }
+    &.un-read {
+      font-weight: 600;
+    }
   }
 
   .status {
-    font-weight: 600;
+    //font-weight: 600;
+    &.read {
+      font-weight: 400;
+    }
+    &.un-read {
+      font-weight: 600;
+    }
 
     &.status-succeed {
       color: $mew-green;
@@ -213,6 +201,39 @@
           color: $light-blue-1;
         }
       }
+
+      &:last-child {
+        color: #455061;
+        font-weight: 600;
+        justify-content: flex-end;
+      }
     }
   }
+}
+
+//*******************************************************
+// Swap Notification
+//*******************************************************
+.cc-icon {
+  font-size: 36px;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.swap-from-address,
+.swap-to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.swap-right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
