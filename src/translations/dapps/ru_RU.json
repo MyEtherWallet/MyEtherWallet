@@ -29,7 +29,7 @@
   "bidMaskDesc": "We recommend having your Bid mask higher than your Bid amount.",
   "secretPhrase": "Secret Phrase",
   "random": "Random",
-  "details": "Details",
+  "txDetails": "Details",
   "detailWarning": "You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.",
   "revealDate": "Reveal Date",
   "auctionEnd": "Auction Ends",
