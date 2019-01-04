@@ -24,11 +24,16 @@
 
         <div class="the-form gas-amount">
           <textarea
+            v-validate="'required'"
             ref="txHex"
             v-model="signedTx"
-            name=""
+            name="signedTrans"
             placeholder="Enter TX Hex"
           />
+          <p v-show="errors.has('signedTrans')">
+            {{ errors.first('signedTrans') }}
+          </p>
+          <p v-show="error.length !== 0">{{ error }}</p>
           <input
             ref="jsonInput"
             type="file"
@@ -40,7 +45,12 @@
       </div>
       <div class="submit-button-container">
         <div
-          class="submit-button large-round-button-green-filled clickable"
+          :class="[
+            errors.has('signedTrans') || signedTx.length === 0
+              ? 'disabled'
+              : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
           @click="sendTx"
         >
           {{ $t('interface.sendTx') }}
@@ -59,6 +69,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import { mapGetters } from 'vuex';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -73,18 +84,13 @@ export default {
   },
   data() {
     return {
-      readTx: {}
+      readTx: {},
+      signedTx: '',
+      error: ''
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' }),
-    signedTx() {
-      return this.readTx.hasOwnProperty('rawTransaction')
-        ? this.readTx.rawTransaction
-        : this.rawTx.hasOwnProperty('rawTransaction')
-        ? JSON.parse(this.rawTx).rawTransaction
-        : '';
-    }
+    ...mapGetters({ web3: 'web3' })
   },
   watch: {
     rawTx(newVal) {
@@ -92,9 +98,18 @@ export default {
     },
     readTx(newVal) {
       this.signedTx = newVal.rawTransaction;
+    },
+    signedTx(newVal) {
+      if (this.validateHexString(newVal)) {
+        this.signedTx = newVal;
+        this.error = '';
+      } else {
+        this.error = 'Invalid hex string';
+      }
     }
   },
   methods: {
+    validateHexString: Misc.validateHexString,
     uploadJson() {
       const jsonInput = this.$refs.jsonInput;
       jsonInput.value = '';

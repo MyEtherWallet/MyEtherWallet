@@ -60,6 +60,16 @@ const sanitizeHex = hex => {
   if (hex == '') return '0x';
   return '0x' + padLeftEven(hex);
 };
+
+const validateHexString = str => {
+  if (str == '') return true;
+  str =
+    str.substring(0, 2) == '0x'
+      ? str.substring(2).toUpperCase()
+      : str.toUpperCase();
+  const re = /^[0-9A-F]+$/g;
+  return re.test(str);
+}
 export default {
   isJson,
   doesExist,
@@ -68,5 +78,6 @@ export default {
   isValidENSorEtherAddress,
   isValidENSAddress,
   isValidETHAddress,
-  sanitizeHex
+  sanitizeHex,
+  validateHexString
 };

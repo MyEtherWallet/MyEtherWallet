@@ -70,12 +70,14 @@
           <input
             v-model="toData"
             type="string"
-            name=""
             placeholder="e.g. 0x65746865726d696e652d657531"
           />
           <div class="good-button-container">
             <i
-              class="fa fa-check-circle good-button not-good"
+              :class="[
+                toData !== '' ? 'good-button' : 'not-good',
+                'fa fa-check-circle'
+              ]"
               aria-hidden="true"
             />
           </div>
@@ -95,7 +97,12 @@
       <div class="submit-button-container">
         <div
           :class="[
-            !validAddress ? 'disabled' : '',
+            toData.length >= 2 &&
+            address.length > 0 &&
+            validAddress &&
+            toAmt >= 0
+              ? ''
+              : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
           @click="generateTx"
@@ -129,6 +136,7 @@ const EthTx = require('ethereumjs-tx');
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
+import { Misc } from '@/helpers';
 import utils from 'web3-utils';
 
 export default {
@@ -182,6 +190,13 @@ export default {
     })
   },
   watch: {
+    toData(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.toData = newVal;
+      } else {
+        this.toData = '0x';
+      }
+    },
     gasLimit(newVal) {
       this.localGas = newVal;
     },
@@ -189,7 +204,12 @@ export default {
       this.createDataHex(newVal, null, null);
     },
     address(newVal) {
-      this.createDataHex(null, newVal, null);
+      if (this.web3.utils.isAddress(newVal)) {
+        this.validAddress = true;
+        this.createDataHex(null, newVal, null);
+      } else {
+        this.validAddress = false;
+      }
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
