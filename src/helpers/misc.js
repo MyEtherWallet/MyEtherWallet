@@ -69,7 +69,7 @@ const validateHexString = str => {
       : str.toUpperCase();
   const re = /^[0-9A-F]+$/g;
   return re.test(str);
-}
+};
 export default {
   isJson,
   doesExist,
