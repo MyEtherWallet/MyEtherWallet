@@ -39,8 +39,8 @@
       <div class="contents">
         <b-alert
           :show="alert.show"
+          :variant="alert.type"
           fade
-          variant="info"
           @click.native="triggerAlert(null)"
         >
           {{ alert.msg }}
@@ -71,6 +71,7 @@
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
+              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -225,17 +226,19 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    triggerAlert(msg) {
+    triggerAlert(msg, type) {
       let timeout;
       if (msg !== null) {
         this.alert = {
           show: true,
-          msg: msg
+          msg: msg,
+          type: type ? type : 'info'
         };
         timeout = setTimeout(() => {
           this.alert = {
             show: false,
-            msg: ''
+            msg: '',
+            type: type ? type : 'info'
           };
         }, 3000);
       } else {
