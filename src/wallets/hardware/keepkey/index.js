@@ -37,22 +37,22 @@ class KeepkeyWallet {
     this.keepkey.device.events.on(
       String(MESSAGETYPE_BUTTONREQUEST),
       requestMsg => {
-        console.log('button request', requestMsg);
+        console.log('button request', requestMsg); // eslint-disable-line
       }
     );
     this.keepkey.device.events.on(
       String(MESSAGETYPE_PINMATRIXREQUEST),
       requestMsg => {
-        console.log('pin request', requestMsg);
+        console.log('pin request', requestMsg); // eslint-disable-line
         window.setPin = pin => {
-          this.keepkey.acknowledgeWithPin(pin).then(console.log);
+          this.keepkey.acknowledgeWithPin(pin);
         };
       }
     );
     this.keepkey.device.events.on(
       String(MESSAGETYPE_PASSPHRASEREQUEST),
       requestMsg => {
-        console.log('passphrase request', requestMsg);
+        console.log('passphrase request', requestMsg); // eslint-disable-line
         window.setPass = pin => {
           this.keepkey.acknowledgeWithPassphrase(pin).then(console.log);
         };
