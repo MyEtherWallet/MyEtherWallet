@@ -43,6 +43,7 @@
           </div>
           <swap-currency-picker
             :currencies="fromArray"
+            :override-currency="overrideFrom"
             :from-source="true"
             page="SwapContainerFrom"
             @selectedCurrency="setFromCurrency"
@@ -67,13 +68,16 @@
             <p v-else>&nbsp;</p>
           </div>
         </div>
-        <div class="exchange-icon"><img :src="images.swap" /></div>
+        <div class="exchange-icon" @click="flipCurrencies">
+          <img :src="images.swap" />
+        </div>
         <div class="amount">
           <div class="title">
             <h4>{{ $t('common.to') }}</h4>
           </div>
           <swap-currency-picker
             :currencies="toArray"
+            :override-currency="overrideTo"
             :from-source="false"
             page="SwapContainerTo"
             @selectedCurrency="setToCurrency"
@@ -149,6 +153,7 @@
         :no-providers-pair="noProvidersPair"
         :loading-data="loadingData"
         :providers-found="providersFound"
+        :provider-selected="selectedProvider"
         @selectedProvider="setSelectedProvider"
       />
     </div>
@@ -235,7 +240,8 @@ export default {
       validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3
+        web3: this.$store.state.web3,
+        getRateForUnit: true
       }),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -256,7 +262,9 @@ export default {
       providersFound: [],
       tempStatuses: [],
       haveProviderRates: false,
-      loadingError: false
+      loadingError: false,
+      overrideFrom: '',
+      overrideTo: ''
     };
   },
   computed: {
@@ -416,6 +424,32 @@ export default {
     this.currentAddress = this.wallet.getChecksumAddressString();
   },
   methods: {
+    flipCurrencies() {
+      const origFrom = this.fromValue;
+      const origTo = this.toValue;
+      this.overrideFrom = this.toCurrency;
+      this.overrideTo = this.fromCurrency;
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        this.fromValue,
+        'from'
+      );
+      let checkCounts = 0;
+      const waitForRates = setInterval(() => {
+        checkCounts++;
+        if (this.bestRate) {
+          clearInterval(waitForRates);
+          this.fromValue = origTo;
+          this.toValue = origFrom;
+          this.updateEstimate('from');
+        }
+        if (checkCounts > 100) {
+          clearInterval(waitForRates);
+          this.updateEstimate('from');
+        }
+      }, 100);
+    },
     setSelectedProvider(provider) {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
@@ -580,11 +614,17 @@ export default {
                 return {
                   provider: entry.provider,
                   fromCurrency,
-                  fromValue: this.fromValue, // todo uncomment after dev
+                  fromValue: this.fromValue,
                   toCurrency,
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
-                  maxValue: entry.maxValue || 0
+                  maxValue: entry.maxValue || 0,
+                  computeConversion: function(_fromValue) {
+                    return new BigNumber(_fromValue)
+                      .times(this.rate)
+                      .toFixed(6)
+                      .toString(10);
+                  }
                 };
               }
             }),

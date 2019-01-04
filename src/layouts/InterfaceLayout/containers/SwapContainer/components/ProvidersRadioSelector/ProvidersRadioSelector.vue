@@ -11,10 +11,12 @@
               v-show="providerData.length > 0"
               :id="provider.provider"
               :value="provider.provider"
+              :checked="withDefaultSelectedProvider(provider, idx)"
               type="radio"
               name="provider"
               @input="setSelectedProvider(provider.provider)"
             />
+
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
@@ -25,7 +27,14 @@
               minCheck(provider) || maxCheck(provider) ? 'invalid-min-max' : ''
             ]"
           >
-            {{ normalizedRateDisplay(provider) }}
+            {{
+              formatRateDisplay(
+                fromValue,
+                provider.fromCurrency,
+                provider.computeConversion(fromValue),
+                provider.toCurrency
+              )
+            }}
           </div>
           <div>
             <p :class="[minCheck(provider) ? 'error-message-container' : '']">
@@ -149,6 +158,12 @@ export default {
         return [];
       }
     },
+    providerSelected: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
     fromValue: {
       type: Number,
       default: 0
@@ -177,6 +192,11 @@ export default {
       );
     }
   },
+  // watch:{
+  //   loadingData(newVal){
+  //     if()
+  //   }
+  // },
   methods: {
     minCheck(details) {
       return details.minValue > +this.fromValue;
@@ -210,8 +230,11 @@ export default {
       }
       return '';
     },
+    formatRateDisplay(fromValue, fromCurrency, toValue, toCurrency) {
+      return `${fromValue} ${fromCurrency} = ${toValue} ${toCurrency}`;
+    },
     normalizedRateDisplay(source) {
-      const toValue = this.valueForRate(source.fromValue, source.rate);
+      const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${
         source.toCurrency
       }`;
@@ -221,6 +244,14 @@ export default {
         .times(rate)
         .toFixed(6)
         .toString(10);
+    },
+    withDefaultSelectedProvider(provider, idx) {
+      return (
+        provider.provider === this.providerSelected.provider ||
+        (!this.providerSelected.provider && idx === 0)
+      );
+      // if (this.providerSelected === '' && idx === 0) {
+      // }
     }
   }
 };

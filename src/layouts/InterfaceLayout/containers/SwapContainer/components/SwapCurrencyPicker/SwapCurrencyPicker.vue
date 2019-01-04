@@ -88,6 +88,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    overrideCurrency: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -101,6 +105,11 @@ export default {
     };
   },
   watch: {
+    overrideCurrency(newVal) {
+      this.selectedCurrency = this.currencies.find(
+        curr => curr.symbol === newVal
+      );
+    },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
     },
