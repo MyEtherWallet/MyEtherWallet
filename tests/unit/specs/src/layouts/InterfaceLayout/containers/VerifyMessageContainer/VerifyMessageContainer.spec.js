@@ -45,7 +45,7 @@ describe('VerifyMessageContainer.vue', () => {
     const message = 'message';
     wrapper.setData({ message });
     expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(
-      message
+      ''
     );
   });
 
