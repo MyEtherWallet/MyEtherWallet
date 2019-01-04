@@ -32,7 +32,6 @@
       border-radius: 4px;
       height: 52px;
       padding-left: 24px;
-      min-width: 485px;
       width: 100%;
     }
 
@@ -56,7 +55,7 @@
       color: $dark-blue-1;
       display: flex;
       justify-content: space-between;
-      padding: 14px 0;
+      padding: 14px;
     }
 
     .result-item.disabled {
