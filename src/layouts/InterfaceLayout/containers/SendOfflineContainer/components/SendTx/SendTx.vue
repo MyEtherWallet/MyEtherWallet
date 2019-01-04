@@ -108,9 +108,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.rawTx);
-  },
   methods: {
     validateHexString: Misc.validateHexString,
     uploadJson() {
