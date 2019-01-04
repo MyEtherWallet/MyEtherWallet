@@ -19,6 +19,7 @@ export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
+    this.getRateForUnit = typeof props.getRateForUnit === 'boolean' ?  props.getRateForUnit : false;
     this.hasRates = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.tokenDetails = {};
@@ -72,7 +73,10 @@ export default class Changelly {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
-    if (this.rateDetails[`${fromCurrency}/${toCurrency}`]) {
+    if (
+      this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
+      this.getRateForUnit
+    ) {
       return {
         fromCurrency,
         toCurrency,
@@ -84,7 +88,12 @@ export default class Changelly {
 
     const changellyDetails = await Promise.all([
       changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
-      changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
+      changellyCalls.getRate(
+        fromCurrency,
+        toCurrency,
+        this.getRateForUnit ? 1 : fromValue,
+        this.network
+      )
     ]);
 
     const minAmount = new BigNumber(changellyDetails[0])
@@ -123,13 +132,13 @@ export default class Changelly {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (prop !== value.symbol) {
-          if (this.currencies[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        // }
       }
     }
   }
@@ -137,13 +146,13 @@ export default class Changelly {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (prop !== value.symbol) {
-          if (this.currencies[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        // }
       }
     }
   }
