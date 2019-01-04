@@ -271,7 +271,7 @@ export default {
     validateHexString: Misc.validateHexString,
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.symbol === network.type.name
+        this.selectedCurrency.symbol === this.network.type.name
           ? 18
           : this.selectedCurrency.decimals;
       this.amount =
@@ -305,7 +305,7 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      const isEth = this.selectedCurrency.symbol === network.type.name;
+      const isEth = this.selectedCurrency.symbol === this.network.type.name;
       const coinbase = await this.web3.eth.getCoinbase();
       this.nonce = await this.web3.eth.getTransactionCount(coinbase);
 
@@ -333,7 +333,7 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      if (this.selectedCurrency.symbol === network.type.name) {
+      if (this.selectedCurrency.symbol === this.network.type.name) {
         this.amount = this.parsedBalance - this.transactionFee;
       } else {
         this.amount = this.selectedCurrency.balance;
@@ -382,7 +382,7 @@ export default {
     },
     async estimateGas() {
       if (this.hexAddress !== '') {
-        const isEth = this.selectedCurrency.symbol === network.type.name;
+        const isEth = this.selectedCurrency.symbol === this.network.type.name;
         const bnAmount = new BigNumber(this.amount);
         const coinbase = await this.web3.eth.getCoinbase();
         if (!isEth) {
