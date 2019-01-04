@@ -16,6 +16,7 @@ export default async ({ payload, requestManager }, res, next) => {
       timestamp: new Date().getTime(),
       receipt
     };
+    console.log(payload); // todo remove dev item
     res(null, toPayload(payload.id, receipt));
   } else {
     res(null, toPayload(payload.id, memcache[txHash].receipt || null));

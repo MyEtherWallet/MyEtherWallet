@@ -1,0 +1,70 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script>
+  window.addEventListener('load', async () => {
+// Modern dapp browsers...
+    if (window.ethereum) {
+      window.web3 = new Web3(ethereum);
+      try {
+// Request account access if needed
+        await ethereum.enable();
+// Acccounts now exposed
+        web3.eth.sendTransaction({/* ... */});
+      } catch (error) {
+// User denied account access...
+      }
+    }
+// Legacy dapp browsers...
+    else if (window.web3) {
+      window.web3 = new Web3(web3.currentProvider);
+// Acccounts always exposed
+      web3.eth.sendTransaction({/* ... */});
+    }
+// Non-dapp browsers...
+    else {
+      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+  });
+  window.ethereum.enable().then(() => {
+    const transactionParameters = {
+      // nonce: '0x00', // ignored by MetaMask
+      gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation.
+      gasLimit: '0x2710',  // customizable by user during MetaMask confirmation.
+      to: '0xc3982F1DbAB6DA9d95F579B9A5f9c5CAb13F8cfC', // Required except during contract publications.
+      from: '0xc3982F1DbAB6DA9d95F579B9A5f9c5CAb13F8cfC',
+      value: '0x00', // Only required to send ether to the recipient from the initiating external account.
+      data: '0x', // Optional, but used for defining smart contract creation and interaction.
+      chainId: 3 // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+    }
+
+    window.ethereum.sendTransaction(transactionParameters, (err, result) => {
+      console.log(err); // todo remove dev item
+      console.log(result); // todo remove dev item
+
+      setInterval(() => {
+        window.ethereum.sendAsync({
+          method: 'eth_getTransactionReceipt',
+          params: [result.result],
+
+        }, (err, _result) => {
+          if(_result.result !== null){
+            console.log(err); // todo remove dev item
+            console.log(_result); // todo remove dev item
+          }
+
+        })
+      })
+    })
+  })
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>
