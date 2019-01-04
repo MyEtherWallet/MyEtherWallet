@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
 - Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
 - Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
@@ -34,6 +35,7 @@
 
 ### Devop
 
+- Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
 - Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
 - Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)

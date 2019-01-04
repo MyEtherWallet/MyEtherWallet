@@ -7,6 +7,12 @@
   }
 }
 
+.page-container {
+  @media all and (max-width: $tablet-width) {
+    padding: 0;
+  }
+}
+
 .scrollup-container {
   opacity: 0;
   pointer-events: none;
