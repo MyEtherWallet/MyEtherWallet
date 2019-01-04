@@ -1,6 +1,7 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
+import VeeValidate from 'vee-validate';
 import VueX from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
@@ -16,6 +17,7 @@ const languages = {
 function createLocalVueInstance() {
   const localVue = createLocalVue();
   localVue.use(VueI18n);
+  localVue.use(VeeValidate);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
   localVue.directive('click-outside', ClickOutside);

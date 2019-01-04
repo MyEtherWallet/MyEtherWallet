@@ -1,6 +1,6 @@
 <template>
   <div class="generate-info">
-    <success-modal ref="successModal" :link-message="'Ok'" message="Success" />
+    <success-modal ref="successModal" :link-message="'Ok'" message="Success"/>
     <div class="wrap">
       <div class="send-form">
         <div class="title-container">
@@ -9,42 +9,36 @@
               <h4>{{ $t('interface.signedTx') }}</h4>
             </div>
             <div class="form-controller">
-              <p class="linker-1 prevent-user-select" @click="uploadJson">
-                Upload JSON
-              </p>
-              <p class="linker-1 prevent-user-select" @click="deleteTxHex">
-                {{ $t('common.clear') }}
-              </p>
-              <p class="linker-1 prevent-user-select" @click="copyTxHex">
-                {{ $t('common.copy') }}
-              </p>
+              <p class="linker-1 prevent-user-select" @click="uploadJson">Upload JSON</p>
+              <p class="linker-1 prevent-user-select" @click="deleteTxHex">{{ $t('common.clear') }}</p>
+              <p class="linker-1 prevent-user-select" @click="copyTxHex">{{ $t('common.copy') }}</p>
             </div>
           </div>
         </div>
 
         <div class="the-form gas-amount">
           <textarea
+            v-validate="'required'"
             ref="txHex"
             v-model="signedTx"
-            name
+            name="signedTrans"
             placeholder="Enter TX Hex"
           />
-          <input
-            ref="jsonInput"
-            type="file"
-            name="file"
-            style="display: none"
-            @change="uploadFile"
-          />
+          <p v-show="errors.has('signedTrans')">{{ errors.first('signedTrans') }}</p>
+          <p v-show="error.length !== 0">{{ error }}</p>
+          <input ref="jsonInput" type="file" name="file" style="display: none" @change="uploadFile">
         </div>
       </div>
       <div class="submit-button-container">
         <div
-          class="submit-button large-round-button-green-filled clickable"
+          :class="[
+            errors.has('signedTrans') || signedTx.length === 0
+              ? 'disabled'
+              : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
           @click="sendTx"
-        >
-          {{ $t('interface.sendTx') }}
-        </div>
+        >{{ $t('interface.sendTx') }}</div>
         <interface-bottom-text
           link="https://kb.myetherwallet.com"
           question="Have issues?"
@@ -59,6 +53,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import { mapGetters } from 'vuex';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -74,7 +69,12 @@ export default {
   data() {
     return {
       readTx: {},
+<<<<<<< HEAD
       signedTx: this.rawTx ? JSON.parse(this.rawTx).rawTransaction : ''
+=======
+      signedTx: '',
+      error: ''
+>>>>>>> 062d1ff367084715808c08de2878b93330ba1897
     };
   },
   computed: {
@@ -86,12 +86,21 @@ export default {
     },
     readTx(newVal) {
       this.signedTx = newVal.rawTransaction;
+    },
+    signedTx(newVal) {
+      if (this.validateHexString(newVal)) {
+        this.signedTx = newVal;
+        this.error = '';
+      } else {
+        this.error = 'Invalid hex string';
+      }
     }
   },
   mounted() {
     console.log(this.rawTx);
   },
   methods: {
+    validateHexString: Misc.validateHexString,
     uploadJson() {
       const jsonInput = this.$refs.jsonInput;
       jsonInput.value = '';
