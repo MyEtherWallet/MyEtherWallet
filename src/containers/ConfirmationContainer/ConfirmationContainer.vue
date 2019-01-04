@@ -133,13 +133,19 @@ export default {
         'Transaction Hash'
       ]);
       const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(newVal).then(res => {
-          if (res !== null) {
-            this.web3WalletRes = res;
-            this.showSuccessModal('Transaction sent!', 'Okay');
+        this.web3.eth
+          .getTransactionReceipt(newVal)
+          .then(res => {
+            if (res !== null) {
+              this.web3WalletRes = res;
+              this.showSuccessModal('Transaction sent!', 'Okay');
+              clearInterval(pollReceipt);
+            }
+          })
+          .catch(e => {
+            console.log(e);
             clearInterval(pollReceipt);
-          }
-        });
+          });
       }, 500);
     },
     web3WalletRes(newVal) {
