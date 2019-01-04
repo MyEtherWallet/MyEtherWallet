@@ -3,6 +3,7 @@
 ### Bug
 
 - Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
+- Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
 - Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
@@ -33,6 +34,8 @@
 
 ### Devop
 
+- Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
+- Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
 - Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
 - Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
 - Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
