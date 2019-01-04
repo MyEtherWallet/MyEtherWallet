@@ -128,23 +128,26 @@ export default {
         .sendSignedTransaction(signedTx.rawTransaction)
         .once('transactionHash', hash => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            hash,
-            'Transaction Hash'
+            'Hash',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            hash
           ]);
         })
         .on('receipt', res => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            res,
-            'Transaction Receipt'
+            'Receipt',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            res
           ]);
         })
         .on('error', err => {
           this.$store.dispatch('addNotification', [
-            signedTx.tx.from,
-            err,
-            'Transaction Error'
+            'Error',
+            this.wallet.getChecksumAddressString(),
+            signedTx.tx,
+            err
           ]);
         });
     },

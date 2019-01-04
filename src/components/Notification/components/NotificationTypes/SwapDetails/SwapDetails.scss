@@ -32,28 +32,13 @@
   margin-left: 30px;
 }
 
-.modal-title {
-  font-size: 20px;
-  font-weight: 500;
-}
-
 .notification-item-container {
   background-color: $white;
-  height: 300px;
+  height: 450px !important;
   overflow-y: scroll;
 
   > ul {
     > li {
-      &:first-child {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        > p {
-          cursor: pointer;
-          display: flex;
-          margin-right: 10px;
-        }
-      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
@@ -100,14 +85,6 @@
 .notification-logo {
   cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-
-  i {
-    color: $dark-blue-1;
-    font-size: 18px;
-    margin-left: 0;
-  }
 
   .notification-dot {
     background-color: $notification-dot-background-color;
@@ -127,6 +104,14 @@
   display: flex;
   align-items: center;
   padding: 10px 20px;
+  font-family: AvenirNext, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #0b2840;
 }
 
 .notification-type-status {
@@ -172,6 +157,22 @@
   }
 }
 
+.detail-data {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  > p {
+    margin-left: 10px;
+  }
+
+  .expender-icon {
+    cursor: pointer;
+    padding: 0 5px;
+    margin-left: 15px;
+    color: $dark-blue-1;
+  }
+}
 //*******************************************************
 // Notification content
 //*******************************************************
@@ -200,18 +201,40 @@
     > li {
       display: flex;
       align-items: center;
+      justify-content: center;
 
-      p:nth-child(1) {
-        min-width: 100px;
-      }
+      > ul {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
 
-      p:nth-child(2) {
-        margin-left: auto;
-        word-break: break-all;
+        > li {
+          padding-top: 10px;
+          .from-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
+          .from-swap-text {
+            padding-right: 20px;
+            //min-width: 300px;
+          }
 
-        a {
-          color: $light-blue-1;
+          .swap-right-arrow {
+            padding-right: 20px;
+            padding-left: 20px;
+          }
+
+          .to-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
         }
+      }
+      .cc-icon {
+        font-size: 36px;
       }
     }
   }
