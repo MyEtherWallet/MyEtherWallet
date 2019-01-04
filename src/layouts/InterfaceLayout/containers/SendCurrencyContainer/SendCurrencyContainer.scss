@@ -279,8 +279,12 @@
 
 .single-input-block {
   margin-bottom: 30px;
+}
 
-  &:last-child {
-    // margin-bottom: 0;
+.user-input {
+  i {
+    right: 12px;
+    position: absolute;
+    top: 16px;
   }
 }

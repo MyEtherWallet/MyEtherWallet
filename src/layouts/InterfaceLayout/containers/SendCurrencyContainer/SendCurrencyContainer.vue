@@ -125,13 +125,23 @@
           class="input-container"
         >
           <div class="margin-container">
-            <div class="the-form user-input">
+            <div
+              v-show="selectedCurrency.name === 'Ether'"
+              class="the-form user-input"
+            >
               <input
+                :value="data"
                 type="text"
-                name
                 placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
                 @input="debounceData"
+              />
+              <i
+                :class="[
+                  data.length !== 0 ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
               />
             </div>
             <div class="the-form user-input">
@@ -150,7 +160,12 @@
     <div class="submit-button-container">
       <div
         :class="[
-          isValidAddress && address.length !== 0 ? '' : 'disabled',
+          isValidAddress &&
+          address.length !== 0 &&
+          isValidAmount &&
+          data.length !== 0
+            ? ''
+            : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
         @click="confirmationModalOpen"
@@ -179,15 +194,6 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
 
-const validateHexString = str => {
-  if (str == '') return true;
-  str =
-    str.substring(0, 2) == '0x'
-      ? str.substring(2).toUpperCase()
-      : str.toUpperCase();
-  const re = /^[0-9A-F]+$/g;
-  return re.test(str);
-};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -215,14 +221,14 @@ export default {
     return {
       advancedExpend: false,
       amount: 0,
-      amountValid: true,
+      isValidAmount: true,
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
       gasAmount: 0,
       parsedBalance: 0,
       transactionFee: 0,
-      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
+      selectedCurrency: { symbol: 'ETH', name: 'Ether' },
       raw: {},
       signedTx: '',
       address: '',
@@ -262,9 +268,18 @@ export default {
     this.gasAmount = this.gasPrice;
   },
   methods: {
+    validateHexString(str) {
+      if (str == '') return true;
+      str =
+        str.substring(0, 2) == '0x'
+          ? str.substring(2).toUpperCase()
+          : str.toUpperCase();
+      const re = /^[0-9A-F]+$/g;
+      return re.test(str);
+    },
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.name === 'Ethereum'
+        this.selectedCurrency.name === 'Ether'
           ? 18
           : this.selectedCurrency.decimals;
       this.amount =
@@ -272,25 +287,33 @@ export default {
           ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
           : e.target.value;
       e.target.value = this.amount;
+      if (this.amount < 0) {
+        this.isValidAmount = false;
+      } else {
+        this.isValidAmount = true;
+      }
       if (this.verifyAddr()) {
         this.estimateGas();
       }
     }, 300),
     debounceInput: utils._.debounce(function(e) {
       this.address = e.target.value;
+      if (this.verifyAddr()) this.estimateGas();
     }, 500),
     debounceData: utils._.debounce(function(e) {
-      if (validateHexString(e.target.value)) {
+      if (this.validateHexString(e.target.value)) {
         this.data = e.target.value;
         if (this.verifyAddr()) this.estimateGas();
-      } else this.data = '0x';
+      } else {
+        this.data = '0x'
+      };
     }, 500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
     },
     async createTx() {
-      const isEth = this.selectedCurrency.name === 'Ethereum';
+      const isEth = this.selectedCurrency.name === 'Ether';
       const coinbase = await this.web3.eth.getCoinbase();
       this.nonce = await this.web3.eth.getTransactionCount(coinbase);
 
@@ -318,16 +341,16 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      if (this.selectedCurrency.name === 'Ethereum') {
+      if (this.selectedCurrency.name === 'Ether') {
         this.amount = this.parsedBalance - this.transactionFee;
       } else {
         this.amount = this.selectedCurrency.balance;
       }
     },
-    createDataHex() {
+    async createDataHex() {
       let amount;
-      if (this.selectedCurrency.name !== 'Ethereum' && this.hexAddress !== '') {
-        if (this.amount !== 0) {
+      if (this.selectedCurrency.name !== 'Ether') {
+        if (this.amount !== 0 && this.amount !== '') {
           amount = this.amount;
         } else {
           amount = 0;
@@ -350,7 +373,7 @@ export default {
           jsonInterface,
           this.selectedCurrency.addr
         );
-        this.data = contract.methods
+        this.data = await contract.methods
           .transfer(
             this.hexAddress,
             new BigNumber(amount)
@@ -359,18 +382,21 @@ export default {
           )
           .encodeABI();
       } else {
-        this.data = '0x';
+        this.data = this.data !== '0x' ? this.data : '0x';
       }
     },
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
     },
     async estimateGas() {
-      const isEth = this.selectedCurrency.name === 'Ethereum';
-      const bnAmount = new BigNumber(this.amount);
-      const coinbase = await this.web3.eth.getCoinbase();
-      this.web3.eth
-        .estimateGas({
+      if (this.hexAddress !== '') {
+        const isEth = this.selectedCurrency.name === 'Ether';
+        const bnAmount = new BigNumber(this.amount);
+        const coinbase = await this.web3.eth.getCoinbase();
+        if (!isEth) {
+          await this.createDataHex();
+        }
+        const params = {
           from: coinbase,
           value: isEth
             ? this.amount === ''
@@ -379,17 +405,21 @@ export default {
             : 0,
           to: isEth ? this.hexAddress : this.selectedCurrency.addr,
           data: Misc.sanitizeHex(this.data)
-        })
-        .then(res => {
-          const resBN = new BigNumber(res);
-          const txFee = resBN.times(unit.toWei(this.gasPrice, 'gwei'));
-          this.transactionFee = txFee.toString();
-          this.gasLimit = res ? res : this.gasLimit;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
+        };
+
+        this.web3.eth
+          .estimateGas(params)
+          .then(res => {
+            const resBN = new BigNumber(res);
+            const txFee = resBN.times(unit.toWei(this.gasPrice, 'gwei'));
+            this.transactionFee = txFee.toString();
+            this.gasLimit = res ? res : this.gasLimit;
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      }
     },
     changeGas(val) {
       this.gasAmount = val;
@@ -397,9 +427,12 @@ export default {
       this.$store.dispatch('setGasPrice', Number(val));
     },
     verifyAddr() {
-      if (this.hexAddress.length !== 0 && this.hexAddress !== '') {
-        return this.web3.utils.isAddress(this.hexAddress);
-      }
+      const actualAddr = this.hexAddress.length !== 0
+        ? this.hexAddress
+        : this.address.length !== 0
+          ? this.address
+          : ''
+      return this.web3.utils.isAddress(actualAddr);
     }
   }
 };
