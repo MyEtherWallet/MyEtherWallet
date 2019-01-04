@@ -156,8 +156,7 @@ export default {
               clearInterval(pollReceipt);
             }
           })
-          .catch(e => {
-            console.log(e);
+          .catch(() => {
             clearInterval(pollReceipt);
           });
       }, 500);
