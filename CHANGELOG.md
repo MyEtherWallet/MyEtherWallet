@@ -22,6 +22,7 @@
 
 ### Feature
 
+- Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
 - Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
 - implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
@@ -35,6 +36,7 @@
 ### Devop
 
 - Refactors and validations [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
+- Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
 - Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
