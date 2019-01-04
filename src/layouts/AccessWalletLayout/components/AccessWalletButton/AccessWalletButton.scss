@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .button-block {
+  user-select: none;
   background-color: $background-color-white;
   border-radius: 5px;
   cursor: pointer;
@@ -8,6 +9,7 @@
   position: relative;
   top: 0;
   transition: all 0.3s ease;
+  border: 0;
 
   .button-image {
     font-size: 90px;
@@ -44,7 +46,7 @@
     }
   }
 
-  &:hover {
+  &:active {
     background-color: $background-color-2;
     box-shadow: 0 5px 20px $box-shadow-color-1;
     color: $text-white;
