@@ -5,7 +5,10 @@
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
-            <h4>{{ $t('interface.tokens') }}</h4>
+            <h4>
+              {{ $t('interface.tokens') }}
+              <i class="fa fa-lg fa-refresh" @click="fetchTokens" />
+            </h4>
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
@@ -107,6 +110,10 @@ export default {
       default: function() {}
     },
     triggerAlert: {
+      type: Function,
+      default: function() {}
+    },
+    fetchTokens: {
       type: Function,
       default: function() {}
     }
