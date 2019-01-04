@@ -26,7 +26,7 @@
           <textarea
             ref="txHex"
             v-model="signedTx"
-            name=""
+            name
             placeholder="Enter TX Hex"
           />
           <input
@@ -68,23 +68,17 @@ export default {
   props: {
     rawTx: {
       type: String,
-      default: "{'rawTransaction': '0xasdfasdfasdfasdfasasdfasdf'}"
+      default: ''
     }
   },
   data() {
     return {
-      readTx: {}
+      readTx: {},
+      signedTx: this.rawTx ? JSON.parse(this.rawTx).rawTransaction : ''
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' }),
-    signedTx() {
-      return this.readTx.hasOwnProperty('rawTransaction')
-        ? this.readTx.rawTransaction
-        : this.rawTx.hasOwnProperty('rawTransaction')
-        ? JSON.parse(this.rawTx).rawTransaction
-        : '';
-    }
+    ...mapGetters({ web3: 'web3' })
   },
   watch: {
     rawTx(newVal) {
@@ -93,6 +87,9 @@ export default {
     readTx(newVal) {
       this.signedTx = newVal.rawTransaction;
     }
+  },
+  mounted() {
+    console.log(this.rawTx);
   },
   methods: {
     uploadJson() {
