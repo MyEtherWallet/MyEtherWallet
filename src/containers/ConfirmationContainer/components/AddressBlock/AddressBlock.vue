@@ -21,6 +21,7 @@
 
 <script>
 import web3 from 'web3';
+// import BigNumber from 'bignumber.js';
 export default {
   props: {
     address: {
