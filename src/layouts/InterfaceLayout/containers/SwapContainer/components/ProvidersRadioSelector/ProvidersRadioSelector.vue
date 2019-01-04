@@ -1,5 +1,6 @@
 <template>
   <div class="providers-radio-selector">
+    <!-- =========================================================================== -->
     <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
         <li
@@ -26,10 +27,26 @@
             ]"
           >
             {{ normalizedRateDisplay(provider) }}
+            <div class="show-mobile">
+              <p
+                v-for="note in minNote(provider)"
+                :key="note.key"
+                :class="[minCheck(provider) ? 'error-message-container' : '']"
+              >
+                {{ note }}
+              </p>
+              <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
+                {{ maxNote(provider) }}
+              </p>
+            </div>
           </div>
-          <div>
-            <p :class="[minCheck(provider) ? 'error-message-container' : '']">
-              {{ minNote(provider) }}
+          <div class="show-desktop">
+            <p
+              v-for="note in minNote(provider)"
+              :key="note.key"
+              :class="[minCheck(provider) ? 'error-message-container' : '']"
+            >
+              {{ note }}
             </p>
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
@@ -38,6 +55,7 @@
         </li>
       </ul>
     </div>
+    <!-- =========================================================================== -->
     <div
       v-show="loadingData"
       class="radio-button-container animated-background"
@@ -55,6 +73,7 @@
       </ul>
     </div>
     <!-- Animation while retrieving the supporting providers rates -->
+    <!-- =========================================================================== -->
     <div
       v-show="loadingProviderRates"
       class="radio-button-container animated-background"
@@ -71,6 +90,7 @@
       </ul>
     </div>
     <!-- Message When Error Seems to have occured while retrieving rate -->
+    <!-- =========================================================================== -->
     <div
       v-show="loadingProviderError && !noAvaliableProviders"
       class="radio-button-container animated-background"
@@ -91,6 +111,7 @@
       </ul>
     </div>
     <!-- Message when no valid provider is found for the selected pair -->
+    <!-- =========================================================================== -->
     <div v-show="noAvaliableProviders" class="radio-button-container">
       <ul>
         <li>
@@ -105,6 +126,7 @@
         </li>
       </ul>
     </div>
+    <!-- =========================================================================== -->
   </div>
 </template>
 
@@ -193,11 +215,12 @@ export default {
     minNote(details) {
       if (details.minValue > 0) {
         if (details.provider === providerNames.bity) {
-          return `From Min.: ${details.minValue} ${
-            details.fromCurrency
-          } & To Min.: ${details.minValue} ${details.toCurrency}`;
+          return [
+            `From Min.: ${details.minValue} ${details.fromCurrency}`,
+            `To Min.: ${details.minValue} ${details.toCurrency}`
+          ];
         }
-        return `Minimum: ${details.minValue} ${details.fromCurrency}`;
+        return [`Minimum: ${details.minValue} ${details.fromCurrency}`];
       }
       return '';
     },
