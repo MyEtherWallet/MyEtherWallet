@@ -34,6 +34,7 @@
 
 ### Devop
 
+- Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
 - Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
