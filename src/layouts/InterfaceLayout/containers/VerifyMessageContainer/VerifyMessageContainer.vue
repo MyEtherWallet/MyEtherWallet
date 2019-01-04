@@ -86,7 +86,8 @@ export default {
     })
   },
   watch: {
-    message() {
+    message(newVal) {
+      this.message = newVal;
       this.error = {
         show: false,
         msg: ''
