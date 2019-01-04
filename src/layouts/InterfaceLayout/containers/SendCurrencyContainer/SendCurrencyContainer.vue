@@ -268,15 +268,7 @@ export default {
     this.gasAmount = this.gasPrice;
   },
   methods: {
-    validateHexString(str) {
-      if (str == '') return true;
-      str =
-        str.substring(0, 2) == '0x'
-          ? str.substring(2).toUpperCase()
-          : str.toUpperCase();
-      const re = /^[0-9A-F]+$/g;
-      return re.test(str);
-    },
+    validateHexString: Misc.validateHexString,
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
         this.selectedCurrency.name === 'Ether'
