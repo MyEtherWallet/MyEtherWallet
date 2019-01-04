@@ -26,10 +26,3 @@
 .next-button {
   @extend %next-button-main;
 }
-
-.disabled {
-  @extend %next-button-main;
-
-  background-color: $disabled !important;
-  pointer-events: none;
-}
