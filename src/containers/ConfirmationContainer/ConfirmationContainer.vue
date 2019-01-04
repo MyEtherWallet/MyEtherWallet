@@ -69,6 +69,7 @@ import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
+import { type as noticeTypes } from '@/helpers/notificationFormatters';
 
 export default {
   components: {
@@ -140,7 +141,7 @@ export default {
   watch: {
     web3WalletHash(newVal) {
       this.$store.dispatch('addNotification', [
-        'Hash',
+        noticeTypes.TRANSACTION_HASH,
         this.fromAddress,
         this.raw,
         newVal
@@ -157,7 +158,7 @@ export default {
     },
     web3WalletRes(newVal) {
       this.$store.dispatch('addNotification', [
-        'Receipt',
+        noticeTypes.TRANSACTION_RECEIPT,
         this.fromAddress,
         this.raw,
         newVal
@@ -168,6 +169,11 @@ export default {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null;
       this.showSuccessModal(message, linkMessage);
+    });
+
+    this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
+      if (!message) message = null;
+      this.showErrorModal(message, linkMessage);
     });
 
     this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
@@ -339,7 +345,7 @@ export default {
                 promiEvent.eventEmitter.emit('error', err);
                 promiEvent.reject(err);
                 this.$store.dispatch('addNotification', [
-                  'Error',
+                  noticeTypes.TRANSACTION_ERROR,
                   this.fromAddress,
                   this.unSignedArray.find(
                     entry => +_tx.nonce === +entry.nonce
@@ -354,7 +360,7 @@ export default {
                 promiEvent.eventEmitter.emit('transactionHash', data);
                 this.$store
                   .dispatch('addNotification', [
-                    'Hash',
+                    noticeTypes.TRANSACTION_HASH,
                     this.fromAddress,
                     this.unSignedArray.find(
                       entry => +_tx.nonce === +entry.nonce
@@ -373,7 +379,7 @@ export default {
                       promiEvent.eventEmitter.emit('receipt', res);
                       promiEvent.resolve(res);
                       this.$store.dispatch('addNotification', [
-                        'Receipt',
+                        noticeTypes.TRANSACTION_RECEIPT,
                         this.fromAddress,
                         this.unSignedArray.find(
                           entry => +_tx.nonce === +entry.nonce
@@ -393,7 +399,6 @@ export default {
           console.error(e);
         }
         return promiEvent.eventEmitter;
-        // });
       });
 
       this.signCallback(promises);

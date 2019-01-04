@@ -58,7 +58,9 @@ const swapHash = (notifArray, val, network) => {
 
 const swapReceipt = async (notifArray, val) => {
   const idx = notifArray.findIndex(entry => getSwapEntryIndex(entry, val));
-  notifArray[idx] = formatSwapReciept(notifArray[idx], val);
+  if (idx >= 0) {
+    notifArray[idx] = await formatSwapReciept(notifArray[idx], val);
+  }
   return notifArray;
 };
 
