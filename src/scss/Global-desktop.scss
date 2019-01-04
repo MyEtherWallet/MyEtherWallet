@@ -1301,7 +1301,8 @@
 // *********************************************************************
 // Bootstrap modal close button color fix
 // *********************************************************************
-.close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
+.close:not(:disabled):not(.disabled):hover,
+.close:not(:disabled):not(.disabled):focus {
   color: $white;
   opacity: 1;
 }

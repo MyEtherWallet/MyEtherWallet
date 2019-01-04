@@ -32,7 +32,7 @@
               aria-hidden="true"
             />
           </div>
-          <ul v-show="isTabActive(tab.routes)" v-if="tab.children.length">
+          <ul v-if="tab.children.length" :class="tab.name" class="child-tab">
             <li
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
@@ -64,7 +64,25 @@ export default {
       return routes.includes(this.$route.path);
     },
     tabAction(tab) {
-      this.$router.push({ path: tab.routes[0] });
+      if (typeof tab.children === 'undefined' || tab.children.length === 0) {
+        // ==============================
+        // If this is real menu link
+        // ==============================
+        this.toggleSideMenu();
+        this.$router.push({ path: tab.routes[0] });
+      } else {
+        // ==============================
+        // If child tabs exist
+        // ==============================
+        // Close all open child tabs
+        const elToHide = document.getElementsByClassName('child-tab');
+        Array.prototype.forEach.call(elToHide, function(el) {
+          el.classList.remove('show-child');
+        });
+        // Show child tab
+        const el = document.getElementsByClassName(tab.name)[0];
+        el.classList.add('show-child');
+      }
     }
   }
 };
