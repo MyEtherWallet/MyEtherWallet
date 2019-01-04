@@ -14,7 +14,15 @@
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
-      <router-link to="/getting-started"><user-reminder-button /></router-link>
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet'
+        "
+        to="/getting-started"
+      >
+        <user-reminder-button />
+      </router-link>
       <scroll-up-button />
     </div>
     <div
