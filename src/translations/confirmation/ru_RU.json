@@ -1,8 +1,8 @@
 {
-  "txTotal": "Transaction Total",
-  "scanQrCode": "Scan QR code to send/swap instantly",
+  "txTotal": "Общая сумма транзакции",
+  "scanQrCode": "Сканировать QR-код, чтобы отправить/обменять мгновенно",
   "signingAddr": "Signing Address",
-  "confirmSigning": "Confirm Signing",
-  "success": "Success",
-  "error": "Error"
+  "confirmSigning": "Подтвердить подписание",
+  "success": "Успех",
+  "error": "Ошибка"
 }
