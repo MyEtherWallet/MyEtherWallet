@@ -65,5 +65,6 @@
   "timeRemaining": "Time Remaining",
   "sendTxType": "Type",
   "belowMin":"Below minimun swap value of",
-  "notValidAddr":"Not a valid address for destination chain"
+  "notValidAddr":"Not a valid address for destination chain",
+  "sentCoins": "I sent my coins"
 }

@@ -49,6 +49,7 @@ describe('kyber.js', () => {
   // });
   // eslint-disable-next-line no-undef
   if (WITH_NETWORK) {
+    // eslint-disable-next-line no-undef
     // requires network to function
     it('should return data for kyber approval tx', async () => {
       const dataValue = {

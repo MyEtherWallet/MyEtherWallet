@@ -32,11 +32,6 @@
   margin-left: 30px;
 }
 
-.modal-title {
-  font-size: 20px;
-  font-weight: 500;
-}
-
 .notification-item-container {
   background-color: $white;
   height: 300px;
@@ -44,16 +39,6 @@
 
   > ul {
     > li {
-      &:first-child {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        > p {
-          cursor: pointer;
-          display: flex;
-          margin-right: 10px;
-        }
-      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
@@ -100,14 +85,6 @@
 .notification-logo {
   cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-
-  i {
-    color: $dark-blue-1;
-    font-size: 18px;
-    margin-left: 0;
-  }
 
   .notification-dot {
     background-color: $notification-dot-background-color;
@@ -191,7 +168,7 @@
   }
 
   display: flex;
-  align-items: center;
+  //align-items: center;
   padding: 10px 30px;
 
   > ul {
@@ -200,19 +177,89 @@
     > li {
       display: flex;
       align-items: center;
+      justify-content: center;
 
-      p:nth-child(1) {
-        min-width: 100px;
+      > ul {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+
+        > li {
+          padding-top: 10px;
+          .from-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
+          .from-swap-text {
+            padding-right: 20px;
+            //min-width: 300px;
+          }
+
+          .swap-right-arrow {
+            padding-right: 20px;
+            padding-left: 20px;
+          }
+
+          .to-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
+        }
+      }
+      .cc-icon {
+        font-size: 36px;
       }
 
-      p:nth-child(2) {
-        margin-left: auto;
-        word-break: break-all;
-
-        a {
-          color: $light-blue-1;
-        }
+      &:last-child {
+        justify-content: flex-end;
+        color: #455061;
+        font-weight: 600;
       }
     }
   }
+
+  .tx-hash {
+    p {
+      margin-top: 10px;
+    }
+
+    align-items: self-start;
+    left: 0 !important;
+    justify-content: flex-start;
+  }
+
+  .tx-info {
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+}
+
+//*******************************************************
+// Swap Notification
+//*******************************************************
+.cc-icon {
+  font-size: 36px;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.swap-from-address,
+.swap-to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.swap-right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
