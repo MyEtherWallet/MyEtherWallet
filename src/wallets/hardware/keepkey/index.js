@@ -31,6 +31,7 @@ class KeepkeyWallet {
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+    this.isHardened = this.basePath.split('/').length - 1 === 2;
     const usbDevice = await WebUSBDevice.requestPair();
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
@@ -59,18 +60,34 @@ class KeepkeyWallet {
       }
     );
     await this.keepkey.initialize();
-    const rootPub = await getRootPubKey(this.keepkey, this.basePath);
-    this.hdKey = new HDKey();
-    this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
-    this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+    if (!this.isHardened) {
+      const rootPub = await getRootPubKey(this.keepkey, this.basePath);
+      this.hdKey = new HDKey();
+      this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
+      this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+    }
   }
   async getAccount(idx) {
-    const derivedKey = this.hdKey.derive('m/' + idx);
+    let derivedKey, accountPath;
+    if (this.isHardened) {
+      const rootPub = await getRootPubKey(
+        this.keepkey,
+        this.basePath + '/' + idx + "'"
+      );
+      const hdKey = new HDKey();
+      hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
+      hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+      derivedKey = hdKey.derive('m/0/0');
+      accountPath = this.basePath + '/' + idx + "'" + '/0/0';
+    } else {
+      derivedKey = this.hdKey.derive('m/' + idx);
+      accountPath = this.basePath + '/' + idx;
+    }
     const txSigner = async tx => {
       tx = new ethTx(tx);
       const hexTx = getUint8Tx(tx);
       const networkId = tx._chainId;
-      hexTx.addressNList = nodeVector(this.basePath + '/' + idx);
+      hexTx.addressNList = nodeVector(accountPath);
       const result = await this.keepkey.ethereumSignTx(
         hexTx,
         null,
@@ -94,7 +111,7 @@ class KeepkeyWallet {
     };
     const msgSigner = async msg => {
       const signMessage = new Messages.EthereumSignMessage();
-      signMessage.setAddressNList(nodeVector(this.basePath + '/' + idx));
+      signMessage.setAddressNList(nodeVector(accountPath));
       signMessage.setMessage(new Uint8Array(ethUtil.toBuffer(msg)));
       const [, response] = await this.keepkey.device.exchange(
         Messages.MessageType.MESSAGETYPE_ETHEREUMSIGNMESSAGE,
@@ -103,7 +120,7 @@ class KeepkeyWallet {
       return Buffer.from(response.toObject().signature, 'base64');
     };
     return new HDWalletInterface(
-      this.basePath + '/' + idx,
+      accountPath,
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
@@ -124,10 +141,10 @@ const createWallet = async basePath => {
   return _keepkeyWallet;
 };
 const getRootPubKey = async (_keepkey, _path) => {
-  const getPublicKey = new Messages.GetPublicKey();
-  getPublicKey.setAddressNList(nodeVector(_path));
-  getPublicKey.setShowDisplay(false);
-  const pubObj = await _keepkey.getPublicKey(getPublicKey.toObject());
+  const pubObj = await _keepkey.getPublicKey({
+    addressNList: nodeVector(_path),
+    showDisplay: false
+  });
   const hdkey = HDKey.fromExtendedKey(pubObj[1]);
   return {
     publicKey: hdkey.publicKey.toString('hex'),
