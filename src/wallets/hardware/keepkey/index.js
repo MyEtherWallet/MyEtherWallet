@@ -65,6 +65,8 @@ class KeepkeyWallet {
       this.hdKey = new HDKey();
       this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
       this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
+    } else {
+      await getRootPubKey(this.keepkey, this.basePath + '/0 ');
     }
   }
   async getAccount(idx) {
