@@ -40,7 +40,7 @@
     <!-- === MEW custom form ======================================== -->
     <button
       :class="[
-        param === 'Json' && (errors.has('password') || value.length === 0)
+        param === 'Json' && (errors.has('password') || value.length === 0 || strengthClass !== 'strong')
           ? 'disabled'
           : '',
         'large-round-button-green-filled next-button'
@@ -95,8 +95,8 @@ export default {
           this.strengthClass = 'weak';
           break;
         case 3:
-          this.strength = 'Weak';
-          this.strengthClass = 'weak';
+          this.strength = 'Good';
+          this.strengthClass = 'strong';
           break;
         case 4:
           this.strength = 'Strong';
