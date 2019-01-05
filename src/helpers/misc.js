@@ -61,7 +61,7 @@ const sanitizeHex = hex => {
   return '0x' + padLeftEven(hex);
 };
 
-const scrollToTop = (scrollDuration) => {
+const scrollToTop = scrollDuration => {
   const scrollHeight = window.scrollY,
     scrollStep = Math.PI / (scrollDuration / 15),
     cosParameter = scrollHeight / 2;
@@ -76,7 +76,7 @@ const scrollToTop = (scrollDuration) => {
       window.scrollTo(0, scrollHeight - scrollMargin);
     } else clearInterval(scrollInterval);
   }, 15);
-}
+};
 
 const validateHexString = str => {
   if (str == '') return true;

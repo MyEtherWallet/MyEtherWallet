@@ -40,7 +40,10 @@
     <!-- === MEW custom form ======================================== -->
     <button
       :class="[
-        param === 'Json' && (errors.has('password') || value.length === 0 || strengthClass !== 'strong')
+        param === 'Json' &&
+        (errors.has('password') ||
+          value.length === 0 ||
+          strengthClass !== 'strong')
           ? 'disabled'
           : '',
         'large-round-button-green-filled next-button'
