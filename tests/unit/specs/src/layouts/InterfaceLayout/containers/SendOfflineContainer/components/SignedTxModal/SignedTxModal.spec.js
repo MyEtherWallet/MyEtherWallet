@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SignedTxModal/SignedTxModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
+// import Vue from 'vue';
 
 describe('SignedTxModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -39,11 +40,9 @@ describe('SignedTxModal.vue', () => {
   });
 
   it('should render correct content', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelector('.signed-tx-container code')
-        .textContent.trim()
-    ).toEqual(signedTx);
+    const txContainer = wrapper.find('.signed-tx-container code');
+    expect(txContainer.exists()).toBe(true);
+    expect(txContainer.text()).toEqual(JSON.parse(signedTx).rawTransaction);
     const closeButton = wrapper.find('.close-button');
     closeButton.trigger('click');
     expect(spy.calledOnce).toBe(true);

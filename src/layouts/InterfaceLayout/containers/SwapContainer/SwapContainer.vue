@@ -605,7 +605,7 @@ export default {
             providerDetails: providerDetails,
             fromValue: this.fromValue,
             toValue: this.toValue,
-            toAddress: this.toAddress,
+            toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
             refundAddress: this.swap.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
@@ -634,17 +634,17 @@ export default {
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-console
         console.error(e);
         errorLogger(e);
       }
     },
     resetSwapState() {
-      this.toAddress = '';
+      // this.toAddress = '';
       this.fromCurrency = this.baseCurrency;
-      this.toCurrency = 'BTC';
+      // this.toCurrency = 'BTC';
       this.fromValue = 1;
-      this.toValue = 1;
+      this.toValue = 0;
     }
   }
 };

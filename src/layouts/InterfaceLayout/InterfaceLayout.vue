@@ -39,8 +39,8 @@
       <div class="contents">
         <b-alert
           :show="alert.show"
+          :variant="alert.type"
           fade
-          variant="info"
           @click.native="triggerAlert(null)"
         >
           {{ alert.msg }}
@@ -55,7 +55,7 @@
             />
           </div>
           <div class="mobile-hide">
-            <interface-balance :balance="balance" />
+            <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
           <div class="mobile-hide">
             <interface-network :block-number="blockNumber" />
@@ -68,9 +68,11 @@
           />
           <div v-if="online" class="tokens">
             <interface-tokens
+              :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
+              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -225,17 +227,19 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    triggerAlert(msg) {
+    triggerAlert(msg, type) {
       let timeout;
       if (msg !== null) {
         this.alert = {
           show: true,
-          msg: msg
+          msg: msg,
+          type: type ? type : 'info'
         };
         timeout = setTimeout(() => {
           this.alert = {
             show: false,
-            msg: ''
+            msg: '',
+            type: type ? type : 'info'
           };
         }, 3000);
       } else {
@@ -325,6 +329,7 @@ export default {
     },
     async setTokens() {
       this.receivedTokens = false;
+      this.tokens = [];
       const tokens = await this.fetchTokens();
       tokens
         .sort((a, b) => {
