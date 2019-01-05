@@ -11,7 +11,7 @@
             </div>
             <currency-picker
               :currency="tokensWithBalance"
-              :page="'sendEthAndTokens'"
+              :page="'sendEgasAmountthAndTokens'"
               :token="true"
               @selectedCurrency="setSelectedCurrency"
             />
@@ -36,7 +36,7 @@
               <i
                 :class="[
                   selectedCurrency.symbol === network.type.name
-                    ? parsedBalance < amount
+                    ? parsedBalance.lt(amount)
                       ? 'not-good'
                       : ''
                     : selectedCurrency.balance < amount
@@ -51,7 +51,7 @@
           <div
             v-if="
               selectedCurrency.symbol === network.type.name
-                ? amount > parsedBalance
+                ? parsedBalance.lt(amount)
                 : selectedCurrency.balance < amount
             "
             class="error-message-container"
@@ -225,10 +225,8 @@ export default {
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
-      gasAmount: 0,
-      parsedBalance: 0,
       transactionFee: 0,
-      selectedCurrency: { symbol: 'ETH', name: 'Ether' },
+      selectedCurrency: {},
       raw: {},
       signedTx: '',
       address: '',
@@ -243,29 +241,18 @@ export default {
       web3: 'web3',
       network: 'network',
       ens: 'ens'
-    })
+    }),
+    parsedBalance() {
+      return new BigNumber(unit.fromWei(this.account.balance, 'ether'));
+    }
   },
   watch: {
-    parsedBalance(newVal) {
-      this.parsedBalance = newVal;
-    },
-    gasAmount(newVal) {
-      this.gasAmount = newVal;
-      if (this.verifyAddr()) {
-        this.estimateGas();
-      }
-      this.$store.dispatch('setGasPrice', Number(newVal));
+    gasPrice(newVal) {
+      if (this.verifyAddr()) this.estimateGas();
     },
     selectedCurrency(newVal) {
-      this.selectedCurrency = newVal;
-      this.estimateGas();
+      if (this.verifyAddr()) this.estimateGas();
     }
-  },
-  mounted() {
-    if (this.account.balance) {
-      this.parsedBalance = this.account.balance;
-    }
-    this.gasAmount = this.gasPrice;
   },
   methods: {
     validateHexString: Misc.validateHexString,
@@ -297,8 +284,8 @@ export default {
         this.data = e.target.value;
         if (this.verifyAddr()) this.estimateGas();
       } else {
-        this.data = '0x'
-      };
+        this.data = '0x';
+      }
     }, 500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -334,7 +321,7 @@ export default {
     },
     setBalanceToAmt() {
       if (this.selectedCurrency.symbol === this.network.type.name) {
-        this.amount = this.parsedBalance - this.transactionFee;
+        this.amount = this.parsedBalance.minus(this.transactionFee).toString();
       } else {
         this.amount = this.selectedCurrency.balance;
       }
@@ -413,18 +400,8 @@ export default {
           });
       }
     },
-    changeGas(val) {
-      this.gasAmount = val;
-      this.createDataHex();
-      this.$store.dispatch('setGasPrice', Number(val));
-    },
     verifyAddr() {
-      const actualAddr = this.hexAddress.length !== 0
-        ? this.hexAddress
-        : this.address.length !== 0
-          ? this.address
-          : ''
-      return this.web3.utils.isAddress(actualAddr);
+      return this.web3.utils.isAddress(this.hexAddress);
     }
   }
 };

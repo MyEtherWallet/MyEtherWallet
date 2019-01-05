@@ -81,7 +81,7 @@ const decryptWallet = function({ commit, dispatch }, params) {
 };
 
 const setAccountBalance = function({ commit }, balance) {
-  commit('SET_ACCOUNT_BALANCE', +balance);
+  commit('SET_ACCOUNT_BALANCE', balance);
 };
 
 const setGasPrice = function({ commit }, gasPrice) {
