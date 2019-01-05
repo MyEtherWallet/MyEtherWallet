@@ -154,6 +154,7 @@
         :loading-data="loadingData"
         :providers-found="providersFound"
         :provider-selected="selectedProvider"
+        :switch-currency-order="switchCurrencyOrder"
         @selectedProvider="setSelectedProvider"
       />
     </div>
@@ -264,7 +265,8 @@ export default {
       haveProviderRates: false,
       loadingError: false,
       overrideFrom: '',
-      overrideTo: ''
+      overrideTo: '',
+      switchCurrencyOrder: false
     };
   },
   computed: {
@@ -425,6 +427,7 @@ export default {
   },
   methods: {
     flipCurrencies() {
+      this.switchCurrencyOrder = true;
       const origFrom = this.fromValue;
       const origTo = this.toValue;
       this.overrideFrom = this.toCurrency;
@@ -442,10 +445,12 @@ export default {
           clearInterval(waitForRates);
           this.fromValue = origTo;
           this.toValue = origFrom;
+          this.switchCurrencyOrder = false;
           this.updateEstimate('from');
         }
         if (checkCounts > 100) {
           clearInterval(waitForRates);
+          this.switchCurrencyOrder = false;
           this.updateEstimate('from');
         }
       }, 100);
