@@ -80,9 +80,4 @@ function bestRateForQuantity(providerData, value) {
   return -1;
 }
 
-
-export {
-  bestRateForQuantity,
-  bestProviderForQuantity,
-  dynamicSortMultiple,
-};
+export { bestRateForQuantity, bestProviderForQuantity, dynamicSortMultiple };

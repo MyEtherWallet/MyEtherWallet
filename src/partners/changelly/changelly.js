@@ -19,7 +19,8 @@ export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
     this.network = props.network || networkSymbols.ETH;
-    this.getRateForUnit = typeof props.getRateForUnit === 'boolean' ?  props.getRateForUnit : false;
+    this.getRateForUnit =
+      typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.tokenDetails = {};

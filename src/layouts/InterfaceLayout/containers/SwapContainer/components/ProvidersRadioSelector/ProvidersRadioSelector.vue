@@ -47,6 +47,24 @@
         </li>
       </ul>
     </div>
+    <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
+    <div
+      v-show="switchCurrencyOrder"
+      class="radio-button-container animated-background"
+    >
+      <ul>
+        <li v-for="provider in providersFound" :key="provider">
+          <div class="mew-custom-form__radio-button">
+            <input type="radio" name="provider" /> <label :for="provider" />
+          </div>
+          <div class="provider-image">
+            <img :src="providerLogo(provider)" />
+          </div>
+          <div class="background-masker" />
+        </li>
+      </ul>
+    </div>
+    <!-- Animation while retrieving rates for available providers -->
     <div
       v-show="loadingData"
       class="radio-button-container animated-background"
@@ -171,6 +189,10 @@ export default {
     toValue: {
       type: Number,
       default: 0
+    },
+    switchCurrencyOrder: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -192,11 +214,6 @@ export default {
       );
     }
   },
-  // watch:{
-  //   loadingData(newVal){
-  //     if()
-  //   }
-  // },
   methods: {
     minCheck(details) {
       return details.minValue > +this.fromValue;
