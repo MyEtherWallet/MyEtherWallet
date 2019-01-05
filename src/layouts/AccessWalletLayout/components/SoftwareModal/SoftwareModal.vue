@@ -9,58 +9,26 @@
     <div class="d-block content-container text-center">
       <ul class="button-options">
         <li
-          :class="selected === 'byJson' ? 'selected' : ''"
-          @click="select('byJson')"
+          v-for="(item, idx) in items"
+          :key="item.name + idx"
+          :class="selected === item.name ? 'selected' : ''"
+          @click="select(item.name)"
         >
-          <img
-            :src="
-              selected === 'byJson'
-                ? require('@/assets/images/icons/button-json-hover.svg')
-                : require('@/assets/images/icons/button-json.svg')
-            "
-            class="icon"
+          <div>
+            <img
+              :src="selected === item.name ? item.imgHoverPath : item.imgPath"
+              class="icon"
+            />
+            <img :src="item.imgHoverPath" class="hover-icon" />
+            <span>{{ item.text }}</span>
+          </div>
+          <i
+            :class="[
+              selected === item.name ? '' : 'not-good',
+              'fa fa-check-circle good-button'
+            ]"
+            aria-hidden="true"
           />
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-json-hover.svg"
-          />
-          <span>{{ $t('common.jsonF') }}</span>
-        </li>
-        <li
-          :class="selected === 'byMnem' ? 'selected' : ''"
-          @click="select('byMnem')"
-        >
-          <img
-            :src="
-              selected === 'byMnem'
-                ? require('@/assets/images/icons/button-mnemonic-hover.svg')
-                : require('@/assets/images/icons/button-mnemonic.svg')
-            "
-            class="icon"
-          />
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-mnemonic-hover.svg"
-          />
-          <span>{{ $t('common.mnemonicP') }}</span>
-        </li>
-        <li
-          :class="selected === 'byPriv' ? 'selected' : ''"
-          @click="select('byPriv')"
-        >
-          <img
-            :src="
-              selected === 'byPriv'
-                ? require('@/assets/images/icons/button-key-hover.svg')
-                : require('@/assets/images/icons/button-key.svg')
-            "
-            class="icon"
-          />
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-key-hover.svg"
-          />
-          <span>{{ $t('common.privKey') }}</span>
         </li>
       </ul>
       <input
@@ -88,6 +56,12 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byJsonImg from '@/assets/images/icons/button-json.svg';
+import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
+import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
+import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
+import privKeyImg from '@/assets/images/icons/button-key.svg';
 
 export default {
   components: {
@@ -114,7 +88,27 @@ export default {
   data() {
     return {
       file: '',
-      selected: ''
+      selected: '',
+      items: [
+        {
+          name: 'byJson',
+          imgPath: byJsonImg,
+          imgHoverPath: byJsonImgHov,
+          text: this.$t('common.jsonF')
+        },
+        {
+          name: 'byMnem',
+          imgPath: byMnemImg,
+          imgHoverPath: byMnemImgHov,
+          text: this.$t('common.mnemonicP')
+        },
+        {
+          name: 'byPriv',
+          imgPath: privKeyImg,
+          imgHoverPath: privKeyImgHov,
+          text: this.$t('common.privKey')
+        }
+      ]
     };
   },
   methods: {

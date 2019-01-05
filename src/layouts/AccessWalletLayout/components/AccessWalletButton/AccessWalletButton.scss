@@ -45,7 +45,7 @@
   }
 
   &:hover {
-    background-color: $background-color-2;
+    background-color: $red-7;
     box-shadow: 0 5px 20px $box-shadow-color-1;
     color: $text-white;
     top: -8px;
@@ -57,10 +57,6 @@
     h3,
     p {
       color: $text-white;
-    }
-
-    .small-note {
-      color: $red-7;
     }
 
     .tooltip-box {
