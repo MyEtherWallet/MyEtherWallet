@@ -23,7 +23,11 @@
           </p>
         </div>
         <div class="icon-container">
-          <b-btn id="networkModal" class="custom-tooltip" @click="networkModalOpen">
+          <b-btn
+            id="networkModal"
+            class="custom-tooltip"
+            @click="networkModalOpen"
+          >
             <img src="~@/assets/images/icons/change.svg" />
           </b-btn>
           <b-popover

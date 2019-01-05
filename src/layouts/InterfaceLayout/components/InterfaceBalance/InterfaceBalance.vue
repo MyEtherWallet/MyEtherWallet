@@ -17,16 +17,19 @@
           </div>
         </div>
         <div class="icon-container">
-          <b-btn id="balanceCheck" class="custom-tooltip" @click="balanceModalOpen">
-            <img
-              src="~@/assets/images/icons/more.svg"
-            />
+          <b-btn
+            id="balanceCheck"
+            class="custom-tooltip"
+            @click="balanceModalOpen"
+          >
+            <img src="~@/assets/images/icons/more.svg" />
           </b-btn>
-          <b-btn id="refreshBalance" class="custom-tooltip" @click="fetchBalance">
-            <i
-              v-show="!fetchingBalance"
-              class="fa fa-lg fa-refresh"
-            />
+          <b-btn
+            id="refreshBalance"
+            class="custom-tooltip"
+            @click="fetchBalance"
+          >
+            <i v-show="!fetchingBalance" class="fa fa-lg fa-refresh" />
             <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
           </b-btn>
           <b-popover
