@@ -51,8 +51,8 @@
             <input
               v-model="fromValue"
               type="number"
-              name=""
-              value=""
+              name
+              value
               placeholder="Deposit Amount"
               @input="amountChanged('from')"
             />
@@ -82,8 +82,8 @@
             <input
               v-model="toValue"
               type="number"
-              name=""
-              value=""
+              name
+              value
               placeholder="Received Amount"
               @input="amountChanged('to')"
             />
@@ -376,7 +376,7 @@ export default {
           new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
-        return +this.fromValue >= this.account.balance;
+        return new BigNumber(this.account.balance).lt(this.fromValue);
       }
       return false;
     }

@@ -42,9 +42,8 @@
           :variant="alert.type"
           fade
           @click.native="triggerAlert(null)"
+          >{{ alert.msg }}</b-alert
         >
-          {{ alert.msg }}
-        </b-alert>
         <div class="tx-contents">
           <div class="mobile-hide">
             <interface-address
@@ -392,7 +391,7 @@ export default {
         .getBalance(this.address)
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
-          this.$store.dispatch('setAccountBalance', this.balance);
+          this.$store.dispatch('setAccountBalance', res);
         })
         .catch(err => {
           // eslint-disable-next-line no-console
@@ -443,7 +442,7 @@ export default {
           })
           .catch(e => {
             // eslint-disable-next-line
-            console.error(e)
+            console.error(e);
           });
       }, 500);
     },

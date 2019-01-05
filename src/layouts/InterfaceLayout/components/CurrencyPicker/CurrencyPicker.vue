@@ -94,6 +94,9 @@ export default {
     }
   },
   watch: {
+    networkToken() {
+      if (this.token) this.selectedCurrency = this.networkToken;
+    },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
     },

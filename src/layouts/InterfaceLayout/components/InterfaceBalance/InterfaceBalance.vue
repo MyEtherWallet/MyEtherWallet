@@ -11,7 +11,7 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp;ETH</p>
+              <p>&nbsp; {{ network.type.name }}</p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>
@@ -37,14 +37,14 @@
             target="balanceCheck"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             content="Refresh balance"
             target="refreshBalance"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
         </div>
       </div>
@@ -54,7 +54,7 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-balance-modal': InterfaceBalanceModal
@@ -73,6 +73,11 @@ export default {
     return {
       fetchingBalance: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   },
   watch: {
     balance() {
