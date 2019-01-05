@@ -25,7 +25,8 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('common.accessWallet') }}
+        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -38,7 +39,8 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      privateKey: ''
+      privateKey: '',
+      spinner: false
     };
   },
   computed: {
@@ -48,10 +50,12 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
       ]);
       this.privateKey = '';
+      this.spinner = false;
       this.$router.push({
         path: 'interface'
       });

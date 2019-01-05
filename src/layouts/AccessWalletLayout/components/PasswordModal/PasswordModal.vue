@@ -36,7 +36,8 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('common.accessWallet') }}
+        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -60,7 +61,8 @@ export default {
     return {
       show: false,
       password: '',
-      error: ''
+      error: '',
+      spinner: false
     };
   },
   computed: {
@@ -75,6 +77,7 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       const worker = new Worker();
       const self = this;
       worker.postMessage({
@@ -86,6 +89,7 @@ export default {
         self.$store.dispatch('decryptWallet', [
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
+        self.spinner = false;
         self.$router.push({
           path: 'interface'
         });
