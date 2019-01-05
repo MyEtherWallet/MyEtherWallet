@@ -172,19 +172,6 @@
                 <div v-if="wallet !== null" class="notification-menu-container">
                   <notification ref="notification" />
                 </div>
-                <b-nav-item
-                  v-if="
-                    wallet === null &&
-                      ($route.fullPath === '/' ||
-                        $route.fullPath === '/#about-mew' ||
-                        $route.fullPath === '/#faqs')
-                  "
-                  :class="showGetFreeWallet && 'show'"
-                  class="get-free-wallet nopadding"
-                  to="/create-wallet"
-                >
-                  <div class="get-free-wallet-button">Get a Free Wallet</div>
-                </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"
                   right

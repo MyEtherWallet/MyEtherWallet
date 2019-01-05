@@ -1,7 +1,7 @@
 <template>
   <div class="info-block-container">
     <interface-balance-modal ref="balance" :balance="balance" />
-    <div class="info-block balance" @click="balanceModalOpen">
+    <div class="info-block balance">
       <div class="block-image">
         <img class="icon" src="~@/assets/images/icons/balance.svg" />
       </div>
@@ -17,7 +17,16 @@
           </div>
         </div>
         <div class="icon-container">
-          <img src="~@/assets/images/icons/more.svg" />
+          <img
+            src="~@/assets/images/icons/more.svg"
+            @click="balanceModalOpen"
+          />
+          <i
+            v-show="!fetchingBalance"
+            class="fa fa-lg fa-refresh"
+            @click="fetchBalance"
+          />
+          <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
         </div>
       </div>
     </div>
@@ -35,14 +44,32 @@ export default {
     balance: {
       type: String,
       default: '0'
+    },
+    getBalance: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
-    return {};
+    return {
+      fetchingBalance: false
+    };
+  },
+  watch: {
+    balance() {
+      this.fetchingBalance = false;
+    }
   },
   methods: {
     balanceModalOpen() {
       this.$refs.balance.$refs.balance.show();
+    },
+    fetchBalance() {
+      this.fetchingBalance = true;
+      setTimeout(() => {
+        this.getBalance();
+        this.fetchingBalance = false;
+      }, 1000);
     }
   }
 };

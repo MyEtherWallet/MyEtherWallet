@@ -22,6 +22,7 @@ describe('SendTx.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       propsData: {
         rawTx: rawTx,
         pathUpdate: spy()

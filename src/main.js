@@ -31,6 +31,7 @@ import ConcatAddr from '@/filters/ConcatAddr';
 // etc
 import languages from '@/translations';
 import VueMq from 'vue-mq';
+import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
 
 Vue.use(VueMq, {
@@ -62,6 +63,7 @@ Vue.component('standard-input', StandardInput);
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
+Vue.use(VeeValidate);
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue);

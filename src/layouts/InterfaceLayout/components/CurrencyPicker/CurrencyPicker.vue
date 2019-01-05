@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     currency: {
@@ -73,19 +74,24 @@ export default {
   },
   data() {
     return {
-      localCurrency:
-        this.token === true
-          ? [{ name: 'Ether', symbol: 'ETH' }]
-          : [{ name: 'Select an item', abi: '', address: '' }],
-      selectedCurrency:
-        this.token === true
-          ? { name: 'Ether', symbol: 'ETH' }
-          : { name: 'Select an item', abi: '', address: '' },
+      localCurrency: [],
+      selectedCurrency: [],
       open: false,
       search: '',
       abi: '',
       address: ''
     };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    }),
+    networkToken() {
+      return {
+        name: this.network.type.name_long,
+        symbol: this.network.type.name
+      };
+    }
   },
   watch: {
     selectedCurrency(newVal) {
@@ -93,7 +99,7 @@ export default {
     },
     currency(newVal) {
       if (this.token) {
-        this.localCurrency = [{ name: 'Ether', symbol: 'ETH' }];
+        this.localCurrency = [this.networkToken];
       } else {
         this.localCurrency = [{ name: 'Select an item' }];
       }
@@ -108,7 +114,7 @@ export default {
         });
       } else {
         if (this.token) {
-          this.localCurrency = [{ name: 'Ether', symbol: 'ETH' }];
+          this.localCurrency = [this.networkToken];
         } else {
           this.localCurrency = [
             { name: 'Select an item', abi: '', address: '' }
@@ -119,6 +125,14 @@ export default {
     }
   },
   mounted() {
+    this.localCurrency =
+      this.token === true
+        ? [this.networkToken]
+        : [{ name: 'Select an item', abi: '', address: '' }];
+    this.selectedCurrency =
+      this.token === true
+        ? this.networkToken
+        : { name: 'Select an item', abi: '', address: '' };
     if (this.currency) {
       this.currency.forEach(curr => this.localCurrency.push(curr));
     }
