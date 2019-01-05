@@ -1,6 +1,6 @@
 import {
-  ethereum,
-  ethereumClassic,
+  keepkeyEthereum,
+  keepkeyEthereumClassic,
   ropsten,
   singularDTV,
   expanse,
@@ -22,8 +22,8 @@ import {
   iolite
 } from './paths';
 export default [
-  ethereum,
-  ethereumClassic,
+  keepkeyEthereum,
+  keepkeyEthereumClassic,
   ropsten,
   singularDTV,
   expanse,
