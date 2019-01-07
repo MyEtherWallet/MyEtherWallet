@@ -108,9 +108,6 @@ export default {
     };
   },
   mounted() {
-    // Scroll to top of page
-    window.scrollTo(0, 0);
-
     const worker = new Worker();
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = e => {
