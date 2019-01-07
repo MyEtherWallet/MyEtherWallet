@@ -8,8 +8,13 @@
       <div class="page-container">
         <div v-show="!byJson && !byMnemonic" class="nav-tab-user-input-box">
           <b-tabs class="x100">
-            <div class="progress-bar" />
-            <b-tab class="mew-connect-block" title="MEWconnect" active>
+            <div v-if="showProgressBar" class="progress-bar" />
+            <b-tab
+              class="mew-connect-block"
+              title="MEWconnect"
+              active
+              @click="showProgressBar = false"
+            >
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
@@ -40,7 +45,10 @@
                 <img src="@/assets/images/etc/phones.png" />
               </div>
             </b-tab>
-            <b-tab :title="$t('createWallet.byJsonFile')">
+            <b-tab
+              :title="$t('createWallet.byJsonFile')"
+              @click="showProgressBar = true"
+            >
               <div class="title-block">
                 <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
@@ -61,7 +69,10 @@
                 :desc="$t('createWallet.keyPassDesc')"
               />
             </b-tab>
-            <b-tab :title="$t('createWallet.byMnemonic')">
+            <b-tab
+              :title="$t('createWallet.byMnemonic')"
+              @click="showProgressBar = true"
+            >
               <div class="title-block">
                 <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
@@ -122,7 +133,8 @@ export default {
     return {
       byJson: false,
       byMnemonic: false,
-      password: ''
+      password: '',
+      showProgressBar: false
     };
   },
   mounted() {
