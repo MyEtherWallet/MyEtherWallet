@@ -56,6 +56,11 @@ export default {
       tabData: tabsConfig.tabs
     };
   },
+  mounted() {
+    // Open First side menu when this component is loaded
+    const firstMenuItem = document.getElementsByClassName('child-tab')[0];
+    firstMenuItem.classList.add('show-child');
+  },
   methods: {
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
