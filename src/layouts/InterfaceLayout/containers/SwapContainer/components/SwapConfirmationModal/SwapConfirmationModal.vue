@@ -142,15 +142,111 @@ export default {
     },
     async sendTransaction() {
       if (!this.swapReady) return;
-      if (Array.isArray(this.preparedSwap)) {
-        if (this.preparedSwap.length > 1) {
-          this.web3.mew.sendBatchTransactions(this.preparedSwap);
+
+      if (
+        Array.isArray(this.preparedSwap) ||
+        Object.keys(this.preparedSwap).length > 0
+      ) {
+        if (Array.isArray(this.preparedSwap)) {
+          if (this.preparedSwap.length > 1) {
+            this.web3.mew
+              .sendBatchTransactions(this.preparedSwap)
+              .then(_result => {
+                _result[0].catch(err => {
+                  // eslint-disable-next-line no-console
+                  console.error(err);
+                });
+                _result[_result.length - 1]
+                  .once('transactionHash', hash => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Hash',
+                      this.currentAddress,
+                      this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
+                      hash
+                    ]);
+                  })
+                  .once('receipt', res => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Receipt',
+                      this.currentAddress,
+                      this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
+                      res
+                    ]);
+                  })
+                  .on('error', err => {
+                    this.$store.dispatch('addSwapNotification', [
+                      'Swap_Error',
+                      this.currentAddress,
+                      this.swapDetails,
+                      this.preparedSwap[this.preparedSwap.length - 1],
+                      err
+                    ]);
+                  })
+                  .catch(() => {});
+              });
+          } else {
+            this.web3.eth
+              .sendTransaction(this.preparedSwap[0])
+              .once('transactionHash', hash => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Hash',
+                  this.currentAddress,
+                  this.swapDetails,
+                  this.preparedSwap[0],
+                  hash
+                ]);
+              })
+              .once('receipt', res => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Receipt',
+                  this.currentAddress,
+                  this.swapDetails,
+                  this.preparedSwap[0],
+                  res
+                ]);
+              })
+              .on('error', err => {
+                this.$store.dispatch('addSwapNotification', [
+                  'Swap_Error',
+                  this.currentAddress,
+                  this.swapDetails,
+                  this.preparedSwap[0],
+                  err
+                ]);
+              });
+          }
         } else {
-          this.web3.eth.sendTransaction(this.preparedSwap[0]);
-        }
-      } else {
-        if (Object.keys(this.preparedSwap).length > 0) {
-          this.web3.eth.sendTransaction(this.preparedSwap);
+          this.web3.eth
+            .sendTransaction(this.preparedSwap)
+            .once('transactionHash', hash => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Hash',
+                this.currentAddress,
+                this.swapDetails,
+                this.preparedSwap,
+                hash
+              ]);
+            })
+            .once('receipt', res => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Receipt',
+                this.currentAddress,
+                this.swapDetails,
+                this.preparedSwap,
+                res
+              ]);
+            })
+            .on('error', err => {
+              this.$store.dispatch('addSwapNotification', [
+                'Swap_Error',
+                this.currentAddress,
+                this.swapDetails,
+                this.preparedSwap,
+                err
+              ]);
+            });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);
         this.$refs.swapconfirmation.hide();
@@ -170,7 +266,6 @@ export default {
         ) {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
-
           this.preparedSwap = {
             from: this.wallet.getChecksumAddressString(),
             to: tokenInfo.contractAddress,

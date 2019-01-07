@@ -190,7 +190,7 @@ export default {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
     }
