@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
 - Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
@@ -22,6 +23,7 @@
 ### Feature
 
 - Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
+- Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
 - implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
 - implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
@@ -33,6 +35,10 @@
 
 ### Devop
 
+- Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
+- Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
+- Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
+- Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
 - Enable metamask compatibility with mew.sendBatchTransaction fixes #351 [#352](https://github.com/MyEtherWallet/MyEtherWallet/pull/352)
 - Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
 - Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
