@@ -91,9 +91,6 @@ export default {
     };
   },
   mounted() {
-    // Scroll to top of page
-    window.scrollTo(0, 0);
-
     // Generate a random mnemonic
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
