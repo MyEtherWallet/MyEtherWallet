@@ -30,5 +30,6 @@
   "invalidPathDescCont": "no es válido para este dispositivo",
   "mewConnectTitle": "Acceso por MEWconnect",
   "mewConnectDesc1": "Utilice MEWconnect App para escanear el código QR",
-  "mewConnectDesc2": "¿No tiene la aplicación? Descargar ahora."
+  "mewConnectDesc2": "¿No tiene la aplicación? Descargar ahora.",
+  "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
 }
