@@ -1,6 +1,6 @@
 <template>
-  <div class="team">
-    <div class="wrap">
+  <div>
+    <div>
       <div class="page-container">
         <title-text-contents :options="titleAndTextContents" />
 

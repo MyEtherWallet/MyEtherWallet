@@ -41,7 +41,6 @@
             </div>
             <div class="the-form address-block">
               <textarea
-                v-ens-resolver="address"
                 ref="toaddress"
                 v-model="address"
                 name="name"

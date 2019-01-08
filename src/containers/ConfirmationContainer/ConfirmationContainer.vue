@@ -389,6 +389,7 @@ export default {
           );
           batch.add(req);
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error(e);
         }
         return promiEvent.eventEmitter;

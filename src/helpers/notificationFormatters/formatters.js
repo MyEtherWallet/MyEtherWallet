@@ -10,32 +10,13 @@ import {
   txIndexes
 } from './config';
 
-const identifyErrors = errObj => {
-  const errorInfo = {};
-  try {
-    if (errObj.hasOwnProperty('message')) {
-      const errorMessage = errObj.message.toString();
-      const regex0 = RegExp('(?<=:).*(?=:)');
-      const regex1 = RegExp('(?<=:).*');
-      const regEx1Matches = regex1.exec(errorMessage);
-      const regEx0Matches = regex0.exec(errorMessage);
-      if (regEx1Matches !== null) {
-        errorInfo.type = regEx1Matches[0];
-        errorInfo.message = regEx0Matches[0];
-        const regex2 = RegExp(`(?<=${errorInfo.type}:).*`);
-        const regEx2Matches = regex2.exec(errorMessage);
-        if (regEx2Matches !== null) {
-          errorInfo.details = regEx2Matches[0];
-          return errorInfo;
-        }
-        return errorInfo;
-      }
-    }
-    return false;
-  } catch (e) {
-    return false;
-  }
-};
+/*
+ERROR EXAMPLES:
+
+Returned error: known transaction: 4e6c0d9a75b6c826ad7ed3a657a6c3bf2621620bf8879b9a83597865acef2a5b
+Returned error: nonce too low
+
+ */
 
 const extractErrorMessage = errObj => {
   try {
@@ -50,6 +31,7 @@ const extractErrorMessage = errObj => {
     }
     return errObj;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     return errObj;
   }
@@ -211,24 +193,12 @@ const formatSwap = (val, network) => {
 };
 
 const formatSwapReciept = (entry, val) => {
-  entry.status = updateStatusBasedOnReciept(val[swapIndexes.response].status);
-  entry.body.error = !val[swapIndexes.response].status;
-  entry.body.errorMessage = val[swapIndexes.response].status
-    ? ''
-    : INVESTIGATE_FAILURE_KEY;
   if (entry.body.isDex) {
     entry.swapStatus = val[swapIndexes.response].status
       ? notificationStatuses.COMPLETE
       : notificationStatuses.FAILED;
     entry.body.timeRemaining = -1;
   }
-  entry.body.gasUsed = new BigNumber(
-    val[swapIndexes.response].gasUsed
-  ).toString();
-  entry.body.blockNumber = new BigNumber(
-    val[swapIndexes.response].blockNumber
-  ).toString();
-
   return entry;
 };
 
@@ -293,6 +263,5 @@ export {
   formatSwap,
   formatSwapReciept,
   formatSwapError,
-  formatSwapErrorUpdate,
-  identifyErrors
+  formatSwapErrorUpdate
 };
