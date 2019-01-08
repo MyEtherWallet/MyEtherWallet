@@ -1,10 +1,6 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .modal-software {
-    .modal-body {
-      padding: 20px;
-    }
-
     .button-options {
       display: grid;
       grid-gap: 10px;
@@ -12,6 +8,7 @@
       margin-bottom: 40px;
 
       li {
+        border: 1px solid $white;
         user-select: none;
         align-items: center;
         color: $light-grey-11;
@@ -33,7 +30,7 @@
             display: none;
           }
           .hover-icon {
-            display: block;
+            display: inline-block;
           }
 
           span {
@@ -48,7 +45,7 @@
         }
 
         &.selected {
-          box-shadow: 0 3px 15px $box-shadow-color-1;
+          border: 1px solid $mew-green;
           color: $text-black;
           font-weight: 500;
         }
@@ -57,10 +54,6 @@
           margin-right: 8px;
           width: 50px;
         }
-
-        // .icon-hover {
-        //   display: none;
-        // }
       }
     }
   }

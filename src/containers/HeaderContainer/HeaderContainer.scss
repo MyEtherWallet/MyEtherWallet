@@ -7,6 +7,12 @@
   }
 }
 
+.page-container {
+  @media all and (max-width: $tablet-width) {
+    padding: 0;
+  }
+}
+
 .scrollup-container {
   opacity: 0;
   pointer-events: none;
@@ -37,7 +43,7 @@
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
 
     .header-container {
-      padding: 5px 0;
+      padding: 2.5px 0;
     }
   }
 
