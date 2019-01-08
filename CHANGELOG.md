@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix New wallet, Access buttons [#326](https://github.com/MyEtherWallet/MyEtherWallet/pull/326)
 - Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
 - Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
 - Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
