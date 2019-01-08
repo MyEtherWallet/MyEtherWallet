@@ -3,6 +3,7 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import BigNumber from 'bignumber.js';
 
 import {
   type as noticeTypes,
@@ -160,70 +161,61 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         // see: https://github.com/MetaMask/metamask-extension/issues/5817
         const revArr = arr.reverse();
         const promises = revArr.map(tx => {
-          const promiEvent = new Web3PromiEvent();
-          try {
-            const _tx = tx;
-            const req = web3Instance.eth.sendTransaction.request(
-              tx,
-              (err, data) => {
-                // was falling through on success
-                if (err !== null) {
-                  promiEvent.eventEmitter.emit('error', err);
-                  promiEvent.reject(err);
-                  dispatch('addNotification', [
-                    noticeTypes.TRANSACTION_ERROR,
-                    tx.from,
-                    arr.find(entry => +_tx.nonce === +entry.nonce) || _tx,
-                    err
-                  ]);
-                  this._vm.$eventHub.$emit(
-                    'showErrorModal',
-                    'Transaction Error!',
-                    'Return'
-                  );
-                }
-
-                // was falling through on error
-                if (err === null) {
-                  promiEvent.eventEmitter.emit('transactionHash', data);
-                  dispatch('addNotification', [
-                    noticeTypes.TRANSACTION_HASH,
-                    tx.from,
-                    arr.find(entry => +_tx.nonce === +entry.nonce),
-                    data
-                  ]).then(() => {
-                    this._vm.$eventHub.$emit(
-                      'showSuccessModal',
-                      'Transaction sent!',
-                      'Okay'
-                    );
-                  });
-
-                  const pollReceipt = setInterval(() => {
-                    if (data === undefined || data === null)
-                      clearInterval(pollReceipt);
-                    web3Instance.eth.getTransactionReceipt(data).then(res => {
-                      if (res !== null) {
-                        promiEvent.eventEmitter.emit('receipt', res);
-                        promiEvent.resolve(res);
-                        dispatch('addNotification', [
-                          noticeTypes.TRANSACTION_RECEIPT,
-                          tx.from,
-                          arr.find(entry => +_tx.nonce === +entry.nonce),
-                          res
-                        ]);
-                        clearInterval(pollReceipt);
-                      }
-                    });
-                  }, 500);
-                }
+          const promiEvent = new Web3PromiEvent(false);
+          const req = web3Instance.eth.sendTransaction.request(
+            tx,
+            (err, data) => {
+              if (err !== null) {
+                promiEvent.eventEmitter.emit('error', err);
+                promiEvent.reject(err);
               }
+              if (err === null) {
+                promiEvent.eventEmitter.emit('transactionHash', data);
+              }
+            }
+          );
+          promiEvent.eventEmitter.on('error', err => {
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_ERROR,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)) || tx,
+              err
+            ]);
+            this._vm.$eventHub.$emit(
+              'showErrorModal',
+              'Transaction Error!',
+              'Return'
             );
-            batch.add(req);
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(e);
-          }
+          });
+          promiEvent.eventEmitter.once('transactionHash', hash => {
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_HASH,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
+              hash
+            ]).then(() => {
+              web3Instance.eth.sendTransaction.method._confirmTransaction(
+                promiEvent,
+                hash,
+                req
+              );
+              this._vm.$eventHub.$emit(
+                'showSuccessModal',
+                'Transaction sent!',
+                'Okay'
+              );
+            });
+          });
+          promiEvent.eventEmitter.once('receipt', receipt => {
+            promiEvent.resolve(receipt);
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_RECEIPT,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
+              receipt
+            ]);
+          });
+          batch.add(req);
           return promiEvent.eventEmitter;
         });
         batchSignCallback(promises);
