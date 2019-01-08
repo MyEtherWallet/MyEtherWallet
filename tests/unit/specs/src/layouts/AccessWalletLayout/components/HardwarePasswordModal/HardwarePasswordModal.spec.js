@@ -18,7 +18,8 @@ describe('HardwarePasswordModal.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
+      sync: false
     });
   });
 

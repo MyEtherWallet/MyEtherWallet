@@ -130,8 +130,10 @@ describe('CurrencyPicker.vue', () => {
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
       wrapper.find('.dropdown-container').trigger('click');
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(true);
       wrapper.find('.dropdown-container').trigger('click');
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(false);
     });
 

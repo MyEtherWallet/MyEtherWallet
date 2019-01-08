@@ -39,12 +39,11 @@
       <div class="contents">
         <b-alert
           :show="alert.show"
+          :variant="alert.type"
           fade
-          variant="info"
           @click.native="triggerAlert(null)"
+          >{{ alert.msg }}</b-alert
         >
-          {{ alert.msg }}
-        </b-alert>
         <div class="tx-contents">
           <div class="mobile-hide">
             <interface-address
@@ -55,7 +54,7 @@
             />
           </div>
           <div class="mobile-hide">
-            <interface-balance :balance="balance" />
+            <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
           <div class="mobile-hide">
             <interface-network :block-number="blockNumber" />
@@ -68,9 +67,11 @@
           />
           <div v-if="online" class="tokens">
             <interface-tokens
+              :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
+              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -225,17 +226,19 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    triggerAlert(msg) {
+    triggerAlert(msg, type) {
       let timeout;
       if (msg !== null) {
         this.alert = {
           show: true,
-          msg: msg
+          msg: msg,
+          type: type ? type : 'info'
         };
         timeout = setTimeout(() => {
           this.alert = {
             show: false,
-            msg: ''
+            msg: '',
+            type: type ? type : 'info'
           };
         }, 3000);
       } else {
@@ -325,6 +328,7 @@ export default {
     },
     async setTokens() {
       this.receivedTokens = false;
+      this.tokens = [];
       const tokens = await this.fetchTokens();
       tokens
         .sort((a, b) => {
@@ -387,7 +391,7 @@ export default {
         .getBalance(this.address)
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
-          this.$store.dispatch('setAccountBalance', this.balance);
+          this.$store.dispatch('setAccountBalance', res);
         })
         .catch(err => {
           // eslint-disable-next-line no-console
@@ -438,7 +442,7 @@ export default {
           })
           .catch(e => {
             // eslint-disable-next-line
-            console.error(e)
+            console.error(e);
           });
       }, 500);
     },

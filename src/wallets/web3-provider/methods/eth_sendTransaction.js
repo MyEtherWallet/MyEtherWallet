@@ -11,13 +11,13 @@ import BigNumber from 'bignumber.js';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
-      dispatch('addNotification', [tx.from, hash, 'Transaction Hash']);
+      dispatch('addNotification', ['Hash', tx.from, tx, hash]);
     })
-    .on('receipt', res => {
-      dispatch('addNotification', [tx.from, res, 'Transaction Receipt']);
+    .once('receipt', res => {
+      dispatch('addNotification', ['Receipt', tx.from, tx, res]);
     })
     .on('error', err => {
-      dispatch('addNotification', [tx.from, err, 'Transaction Error']);
+      dispatch('addNotification', ['Error', tx.from, tx, err]);
     });
 };
 export default async (
