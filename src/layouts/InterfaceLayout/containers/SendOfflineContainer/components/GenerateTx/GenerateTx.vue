@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="send-form">
+      <div class="send-form nopadding">
         <div class="title-container">
           <div class="title">
             <div class="title-helper">

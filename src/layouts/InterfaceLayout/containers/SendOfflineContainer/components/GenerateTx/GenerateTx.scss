@@ -1,8 +1,23 @@
 @import '~@/scss/GlobalVariables';
 
+$mobile-collepse-width: 700px;
+
+.generate-info {
+  border-radius: 0 0 5px 5px;
+}
+
 .wrap {
+  //margin-bottom: 10px;
+  padding: 40px 60px;
+  @media all and (max-width: $mobile-collepse-width) {
+    padding: 30px 10px;
+  }  
   .send-form {
-    padding: 40px 60px 0;
+    margin-bottom: 30px;
+
+    &.nopadding {
+      margin-bottom: 0;
+    }
 
     .title-container {
       align-items: flex-end;
@@ -38,12 +53,19 @@
       grid-column-gap: 5px;
       grid-template-columns: 2fr 3fr;
 
+      @media all and (max-width: $mobile-collepse-width) {
+        display: block;
+      }
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
       }
 
       .amount {
+        @media all and (max-width: $mobile-collepse-width) {
+          margin-bottom: 30px;
+        }
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -172,13 +194,13 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 60px 0 0 0;
     text-align: center;
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      width: 300px;
+      //width: 300px;
     }
 
     p {
