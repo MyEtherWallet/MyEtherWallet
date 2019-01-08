@@ -138,18 +138,23 @@
               step1 = false;
               step2 = false;
               verifyStep = true;
+              updateStage('phone');
               registerPhone();
             "
           />
           <standard-button
             v-if="verifyStep"
             :options="verifyButton"
-            @click.native="verifyUser()"
+            @click.native="
+              updateStage('verify');
+              confirmUser();
+            "
           />
           <standard-button
             v-if="step2"
             :options="button2"
             @click.native="
+              updateStage('account');
               step2 = false;
               step3 = true;
             "
@@ -161,6 +166,7 @@
               step3 = false;
               step2 = false;
               step1 = true;
+              updateStage('accountHolder');
               createExitOrder();
             "
           />
@@ -175,6 +181,7 @@
 </template>
 
 <script>
+import store from 'store';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import AccordionMenu1 from '@/components/AccordionMenu1';
 import StandardInput from '@/components/StandardInput';
@@ -212,6 +219,12 @@ export default {
   },
   data() {
     return {
+      status: {
+        phone: false,
+        verify: false,
+        account: false,
+        accountHolder: false
+      },
       step1: true,
       verifyStep: false,
       step2: false,
@@ -320,9 +333,24 @@ export default {
     const providerConstructor = providerMap.get(this.swapDetails.provider);
     this.provider = new providerConstructor();
     console.log(this.provider); // todo remove dev item
+    const haveCred = store.get('exit_to_fiat')
+    if (haveCred !== null && haveCred !== undefined) {
+      const userDetails = store.get('exit_to_fiat');
+      if (userDetails.phone_token && userDetails.verified) {
+        this.step1 = false;
+        this.verifyStep = false;
+        this.step2 = true;
+        this.step3 = false;
+      }
+      if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
+    }
   },
   methods: {
+    updateStage(stage) {
+      this.status[stage] = true;
+    },
     setCountryCode(val) {
+      console.log(val); // todo remove dev item
       this.countryCode = val;
     },
     setPhone(val) {
@@ -376,14 +404,15 @@ export default {
         phoneNumber: this.countryCode + this.phoneNumber,
         ...this.swapDetails
       };
-      this.provider.initializeUser(initData);
+      this.provider.verifyUser(initData);
     },
-    async verifyUser() {
+    async confirmUser() {
       const verifyData = {
         tan: this.tan,
         ...this.swapDetails
       };
-      const verified = await this.provider.verifyUser(verifyData);
+      const verified = await this.provider.confirmUser(verifyData);
+      console.log(verified); // todo remove dev item
       if (verified.success) {
         this.verifyStep = false;
         this.step2 = true;

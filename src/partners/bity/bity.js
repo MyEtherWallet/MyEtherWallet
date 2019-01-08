@@ -1,3 +1,4 @@
+import store from 'store';
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
 import {
   getRates,
@@ -283,23 +284,43 @@ export default class BitySwap {
     }
   }
 
-  async initializeUser(initData) {
+  getIfStoredCredentials() {
+    let userDetails = {};
+    const haveCred = store.get('exit_to_fiat');
+    if (haveCred !== null && haveCred !== undefined) {
+      userDetails = store.get('exit_to_fiat');
+      if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
+    }
+    return userDetails;
+  }
+
+  async verifyUser(initData) {
     const initializeData = {
       pair: initData.fromCurrency + initData.toCurrency,
       phoneNumber: initData.phoneNumber
     };
     const result = await loginWithPhone(initializeData);
     this.phoneToken = result.phone_token;
+    store.set('exit_to_fiat', {
+      phone_token: result.phone_token,
+      verified: false
+    });
   }
 
-  async verifyUser(verifyData) {
+  async confirmUser(verifyData) {
+    const userDetails = this.getIfStoredCredentials();
     const verificationData = {
       pair: verifyData.fromCurrency + verifyData.toCurrency,
-      phoneToken: this.phoneToken,
+      phoneToken: userDetails.phone_token || this.phoneToken,
       tan: verifyData.tan
     };
     // returns {success: true} if successful
-    return sendReceivedSmsCode(verificationData);
+    const result = await sendReceivedSmsCode(verificationData);
+    store.set('exit_to_fiat', {
+      phone_token: verificationData.phoneToken,
+      verified: true
+    });
+    return result;
   }
 
   async buildExitOrder({ fromCurrency, toCurrency, orderDetails }) {
