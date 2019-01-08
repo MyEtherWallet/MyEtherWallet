@@ -15,6 +15,7 @@
           v-model="password"
           name="Password"
           autocomplete="off"
+          placeholder="Enter password"
         />
         <img
           v-if="show"
@@ -28,6 +29,9 @@
         />
       </div>
       <p v-show="error !== ''" class="error">{{ error }}</p>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
       <button
         :disabled="
           password === '' && password.length === 0 && password.length < 9

@@ -6,63 +6,6 @@
       grid-gap: 10px;
       grid-template-columns: 1fr;
       margin-bottom: 40px;
-
-      li {
-        border: 1px solid $white;
-        user-select: none;
-        align-items: center;
-        color: $light-grey-11;
-        cursor: pointer;
-        display: flex;
-        padding: 20px;
-        text-align: left;
-
-        .hover-icon {
-          display: none;
-          height: 50px;
-          width: 50px;
-          margin-right: 8px;
-        }
-
-        &:hover,
-        &.selected {
-          .icon {
-            display: none;
-          }
-          .hover-icon {
-            display: inline-block;
-          }
-
-          span {
-            font-weight: 500;
-            color: black;
-          }
-        }
-
-        span {
-          font-weight: 500;
-          line-height: 16px;
-        }
-
-        &.selected {
-          border: 1px solid $mew-green;
-          color: $text-black;
-          font-weight: 500;
-        }
-
-        .icon {
-          margin-right: 8px;
-          width: 50px;
-        }
-      }
-    }
-  }
-
-  .button-container {
-    width: 100%;
-
-    button {
-      width: inherit;
     }
   }
 }

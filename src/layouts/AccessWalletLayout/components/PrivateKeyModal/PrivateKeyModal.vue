@@ -15,7 +15,11 @@
           type="text"
           name="PrivateKey"
           autocomplete="off"
+          placeholder="Enter Private Key"
         />
+      </div>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
       </div>
       <button
         :disabled="
