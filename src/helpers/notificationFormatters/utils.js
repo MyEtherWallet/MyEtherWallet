@@ -12,6 +12,25 @@ const getSwapEntryIndex = (entry, val) => {
     }
     return false;
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+    return false;
+  }
+};
+
+const getSwapEntryIndexForTxReceipt = (entry, val) => {
+  try {
+    if (entry.body.providerAddress) {
+      return (
+        entry.hash === val[txIndexes.response].transactionHash &&
+        entry.type === notificationType.SWAP &&
+        entry.body.providerAddress.toLowerCase() ===
+          val[txIndexes.txDetails].to.toLowerCase()
+      );
+    }
+    return false;
+  } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     return false;
   }
@@ -24,4 +43,8 @@ const getNotificationIndex = (entry, val) => {
   );
 };
 
-export { getSwapEntryIndex, getNotificationIndex };
+export {
+  getSwapEntryIndex,
+  getSwapEntryIndexForTxReceipt,
+  getNotificationIndex
+};

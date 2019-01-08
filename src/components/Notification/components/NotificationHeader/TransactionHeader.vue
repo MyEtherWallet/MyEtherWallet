@@ -17,7 +17,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { notificationHeaderLabels } from '../config';
+import { notificationHeaderLabels, noticeStatusFields } from '../config';
 
 export default {
   props: {
@@ -66,7 +66,9 @@ export default {
       return this.notice.body;
     },
     txStatus() {
-      return this.processStatus(this.notice.status);
+      return this.processStatus(
+        this.notice[noticeStatusFields[this.notice.type]]
+      );
     }
   },
   methods: {

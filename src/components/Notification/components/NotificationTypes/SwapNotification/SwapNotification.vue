@@ -213,7 +213,7 @@ export default {
       if (this.notice.body.provider === providerNames.kyber) return;
 
       this.provider = providerMap.get(this.notice.body.provider);
-      this.currentStatus = this.notice.status;
+      this.currentStatus = this.notice.swapStatus;
 
       if (this.timerInterval === null) {
         this.timeUpdater();

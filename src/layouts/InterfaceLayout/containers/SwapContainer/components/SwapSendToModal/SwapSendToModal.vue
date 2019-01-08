@@ -44,14 +44,26 @@
             {{ toAddress.address }}
           </p>
         </div>
-        <div v-show="!isFromFiat" class="confirm-send-button">
-          <h4>
-            {{ $t('interface.send') }} {{ fromAddress.value }}
-            {{ fromAddress.name }} {{ $t('interface.articleTo') }}
-            <span class="address">{{ qrcode }}</span>
-          </h4>
-          <qrcode :value="qrcode" :options="{ size: 200 }" />
-        </div>
+        <ul v-show="!isFromFiat" class="confirm-send-button">
+          <li>
+            <div>
+              <h4>
+                {{ $t('interface.send') }} {{ fromAddress.value }}
+                {{ fromAddress.name }} {{ $t('interface.articleTo') }}
+                <span class="address">{{ qrcode }}</span>
+              </h4>
+              <qrcode :value="qrcode" :options="{ size: 200 }" />
+            </div>
+          </li>
+          <li>
+            <div @click="sentTransaction">
+              <button-with-qrcode
+                :qrcode="qrcode"
+                :buttonname="$t('interface.sentCoins')"
+              />
+            </div>
+          </li>
+        </ul>
         <simplex-checkout-form
           v-if="isFromFiat && swapProvider === 'simplex'"
           :form-data="swapDetails.dataForInitialization"
@@ -193,6 +205,17 @@ export default {
     },
     changellySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
+    },
+    sentTransaction() {
+      this.$store
+        .dispatch('addSwapNotification', [
+          `Swap_Order`,
+          this.currentAddress,
+          this.swapDetails
+        ])
+        .then(() => {
+          this.$refs.swapconfirmation.hide();
+        });
     }
   }
 };
