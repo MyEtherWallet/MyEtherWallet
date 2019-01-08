@@ -11,7 +11,6 @@
               v-show="providerData.length > 0"
               :id="provider.provider"
               :value="provider.provider"
-              :checked="withDefaultSelectedProvider(provider, idx)"
               type="radio"
               name="provider"
               @input="setSelectedProvider(provider.provider)"
