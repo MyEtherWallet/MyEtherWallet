@@ -53,11 +53,7 @@
             <i class="fa fa-spinner fa-spin" />
           </div>
           <div
-            v-show="
-              localTokens.length === 0 &&
-                customTokens.length === 0 &&
-                !receivedTokens
-            "
+            v-show="localTokens.length === 0 && customTokens.length === 0"
             class="spinner-container"
           >
             No tokens found :(
