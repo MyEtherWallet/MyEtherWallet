@@ -1,4 +1,4 @@
-import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
+import EtherScanRequestManger from './etherscan-request-manager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
@@ -18,14 +18,7 @@ class EtherscanProvider {
     this.store = store;
     this.eventHub = eventHub;
     this.proxy = new EtherscanProxy(this.host, this.apikey);
-    this.requestManager_ = new Web3RequestManager(
-      new EtherscanProvider(
-        this.host,
-        { apikey: this.apikey },
-        this.store,
-        this.eventHub
-      )
-    );
+    this.requestManager_ = new EtherScanRequestManger(host, options);
   }
   send(payload, callback) {
     const req = {

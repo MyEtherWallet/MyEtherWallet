@@ -1,75 +1,71 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .modal-software {
-    .modal-body {
-      padding: 20px;
-    }
-
     .button-options {
       display: grid;
-      grid-gap: 10px;
-      grid-template-columns: 1fr 1fr;
-      margin-bottom: 40px;
+      grid-row-gap: 9px;
+    }
+  }
+}
 
-      li {
-        user-select: none;
-        align-items: center;
-        color: $light-grey-11;
-        cursor: pointer;
-        display: flex;
-        padding: 20px;
-        text-align: left;
+.modal-software {
+  .button-options {
+    li {
+      align-items: center;
+      border: 1px solid $light-grey-14;
+      border-radius: 5px;
+      color: $light-grey-14;
+      cursor: pointer;
+      justify-content: space-between;
+      display: flex;
+      padding: 5px 20px;
+      text-align: left;
+      user-select: none;
 
-        .hover-icon {
+      .hover-icon {
+        display: none;
+        width: 50px;
+        margin-right: 8px;
+      }
+
+      &:hover,
+      &.selected {
+        .icon {
           display: none;
-          height: 50px;
-          width: 50px;
-          margin-right: 8px;
         }
-
-        &:hover,
-        &.selected {
-          .icon {
-            display: none;
-          }
-          .hover-icon {
-            display: block;
-          }
-
-          span {
-            font-weight: 500;
-            color: black;
-          }
+        .hover-icon {
+          display: inline-block;
         }
 
         span {
           font-weight: 500;
-          line-height: 16px;
+          color: black;
         }
+      }
 
-        &.selected {
-          box-shadow: 0 3px 15px $box-shadow-color-1;
-          color: $text-black;
-          font-weight: 500;
-        }
+      span {
+        font-weight: 500;
+        line-height: 16px;
+      }
 
-        .icon {
-          margin-right: 8px;
-          width: 50px;
-        }
+      &.selected {
+        border: 1px solid $mew-green;
+        color: $text-black;
+        font-weight: 500;
+      }
 
-        // .icon-hover {
-        //   display: none;
-        // }
+      .icon {
+        margin-right: 8px;
+        width: 50px;
       }
     }
   }
+}
 
-  .button-container {
-    width: 100%;
+.button-container {
+  width: 100%;
 
-    button {
-      width: inherit;
-    }
+  button {
+    width: inherit;
   }
 }
