@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix small bugs [383](https://github.com/MyEtherWallet/MyEtherWallet/pull/383)
 - Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
