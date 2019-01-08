@@ -9,7 +9,7 @@
     <div class="qr-divider">
       <div class="ios">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png" />
+          <img src="@/assets/images/etc/qr-code-apple.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
@@ -19,7 +19,7 @@
         </div>
         <p>{{ $t('createWallet.iosVersions') }}</p>
       </div>
-      <div class="android">
+      <!-- <div class="android">
         <div class="qr-image">
           <img src="@/assets/images/etc/qr-code.png" />
         </div>
@@ -30,7 +30,7 @@
           </div>
         </div>
         <p>{{ $t('createWallet.androidVersions') }}</p>
-      </div>
+      </div> -->
     </div>
   </b-modal>
 </template>

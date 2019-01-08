@@ -10,6 +10,7 @@
     <form class="password-form">
       <div class="input-container">
         <input
+          v-validate="'required'"
           ref="passwordInput"
           :type="show ? 'text' : 'password'"
           v-model="password"
@@ -28,8 +29,14 @@
         />
       </div>
       <p v-show="error !== ''" class="error">{{ error }}</p>
+      <p v-show="errors.has('password')" class="error">
+        {{ errors.first('password') }}
+      </p>
       <button
-        class="submit-button large-round-button-green-filled"
+        :class="[
+          errors.has('password') || password.length === 0 ? 'disabled' : '',
+          'submit-button large-round-button-green-filled'
+        ]"
         type="submit"
         @click.prevent="unlockWallet"
       >

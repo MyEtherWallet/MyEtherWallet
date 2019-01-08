@@ -20,8 +20,14 @@
 
               <div class="appstores">
                 <div class="icons">
-                  <img src="@/assets/images/icons/appstore.png" />
-                  <img src="@/assets/images/icons/playstore.png" />
+                  <a
+                    href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src="~@/assets/images/icons/appstore.png" />
+                  </a>
+                  <!-- <img src="@/assets/images/icons/playstore.png" /> -->
                 </div>
                 <div class="download">
                   <p @click="scanToDownloadModalOpen">
@@ -100,6 +106,7 @@ import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
 import store from 'store';
+import Misc from '@/helpers/misc';
 
 export default {
   components: {
@@ -131,6 +138,7 @@ export default {
   },
   methods: {
     switcher(by) {
+      Misc.scrollToTop(1000);
       if (by === 'Json') {
         this.byJson = true;
         this.byMnemonic = false;

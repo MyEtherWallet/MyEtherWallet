@@ -569,9 +569,9 @@
     z-index: 9999;
   }
 
-  .modal-backdrop {
-    z-index: $z-bootstrap-modal-backdrop;
-  }
+  // .modal-backdrop {
+  //   z-index: $z-bootstrap-modal-backdrop;
+  // }
 
   .language-menu-container {
     position: relative;
@@ -796,7 +796,7 @@
     }
 
     .modal-body {
-      padding: 20px;
+      padding: 20px 43px;
     }
   }
 
@@ -836,6 +836,11 @@
       .nav-item {
         flex: 1;
         text-align: center;
+      }
+
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
       }
     }
   }
@@ -1297,6 +1302,10 @@
 .dropdown-button-2 .dropdown-menu {
   max-height: 300px;
   overflow: auto;
+}
+
+.modal-content {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
 }
 
 // *********************************************************************

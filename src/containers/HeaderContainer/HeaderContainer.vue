@@ -14,7 +14,15 @@
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
-      <router-link to="/getting-started"><user-reminder-button /></router-link>
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet'
+        "
+        to="/getting-started"
+      >
+        <user-reminder-button />
+      </router-link>
       <scroll-up-button />
     </div>
     <div
@@ -44,9 +52,13 @@
             }}</a>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
-              $t('common.faqs')
-            }}</a>
+            <a
+              href="https://kb.myetherwallet.com"
+              target="_blank"
+              @click="isMobileMenuOpen = false"
+            >
+              Help Center
+            </a>
           </li>
           <li>
             <div class="mobile-language-menu-container">
