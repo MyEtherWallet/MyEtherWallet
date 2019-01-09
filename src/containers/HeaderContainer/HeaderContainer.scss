@@ -329,11 +329,13 @@
 
   .access-button {
     @extend %button-templates;
+
     background-color: $text-color-green;
   }
 
   .get-free-wallet-button {
     @extend %button-templates;
+
     color: $text-color-green;
 
     &:hover {
