@@ -54,7 +54,7 @@ export default {
     };
   },
   mounted() {
-    //this.$refs.enterpin.show();
+    this.$refs.enterpin.show();
   },
   methods: {}
 };
