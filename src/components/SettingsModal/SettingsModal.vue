@@ -49,12 +49,18 @@
                   <div>
                     <input
                       id="ccc"
+                      :checked="selectedGasType === 'other'"
                       type="radio"
                       name="speedRadioInputs"
                       value="other"
                       @change="selectGasType('other')"
                     />
-                    <input v-model="customGas" type="number" />
+                    <input
+                      ref="customInput"
+                      v-model="customGas"
+                      type="number"
+                      @focus="selectedGasType = 'other'"
+                    />
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
@@ -248,9 +254,6 @@ export default {
         this.customGasEth = new BigNumber(
           `${utils.fromWei(toGwei, 'ether')}`
         ).toFixed();
-      } else {
-        this.customGas = 0;
-        this.customGasEth = 0;
       }
     }
   },
@@ -324,6 +327,9 @@ export default {
     },
     selectGasType(type) {
       this.selectedGasType = type;
+      if (type === 'other') {
+        this.$refs.customInput.focus();
+      }
     },
     exportConfig() {
       const time = new Date().toISOString();
