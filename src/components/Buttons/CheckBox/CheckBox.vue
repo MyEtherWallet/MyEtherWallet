@@ -4,7 +4,7 @@
       <input type="checkbox" @click="checkBoxClicked" /><span
         class="checkmark"
       ></span>
-      <span v-if="terms">
+      <span v-if="terms" class="terms">
         To access my wallet, I accept
         <router-link :to="{ name: 'Terms' }" target="_blank">Terms</router-link>
         .</span
