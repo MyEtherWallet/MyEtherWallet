@@ -108,6 +108,7 @@ export default {
       transactionFee: 0,
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
+      lastRaw: {},
       ens: {},
       signer: {},
       signedTxObject: {},
@@ -144,7 +145,7 @@ export default {
       this.$store.dispatch('addNotification', [
         noticeTypes.TRANSACTION_HASH,
         this.fromAddress,
-        this.raw,
+        this.lastRaw,
         newVal
       ]);
       const pollReceipt = setInterval(() => {
@@ -166,7 +167,7 @@ export default {
       this.$store.dispatch('addNotification', [
         noticeTypes.TRANSACTION_RECEIPT,
         this.fromAddress,
-        this.raw,
+        this.lastRaw,
         newVal
       ]);
     }
@@ -324,6 +325,7 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
       }
+      this.lastRaw = tx;
     },
     messageReturn() {
       this.dismissed = false;
