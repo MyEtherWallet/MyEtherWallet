@@ -106,7 +106,6 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
       lastRaw: {},
       ens: {},
@@ -306,7 +305,7 @@ export default {
       this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toNumber();
       this.transactionFee = Number(
         unit.fromWei(
-          new BigNumber(tx.gasLimit).times(tx.gas).toString(),
+          new BigNumber(tx.gas).times(tx.gasPrice).toString(),
           'ether'
         )
       );
@@ -421,7 +420,6 @@ export default {
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = 0;
-      this.selectedCurrency = { symbol: 'ETH', name: 'Ethereum' };
       this.raw = {};
       this.signedTx = '';
       this.messageToSign = '';
