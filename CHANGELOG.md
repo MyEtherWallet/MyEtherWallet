@@ -40,7 +40,7 @@
 
 ### Devop
 
-- Refactors, validations, and fixes: #362, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
+- Refactors, validations, and fixes: #362, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #388, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
 - Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
