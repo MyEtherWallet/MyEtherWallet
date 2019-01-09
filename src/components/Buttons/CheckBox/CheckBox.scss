@@ -53,19 +53,19 @@ a {
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
+.checkmark::after {
+  content: '';
   position: absolute;
   display: none;
 }
 
 /* Show the checkmark when checked */
-.check-box-container input:checked ~ .checkmark:after {
+.check-box-container input:checked ~ .checkmark::after {
   display: block;
 }
 
 /* Style the checkmark/indicator */
-.check-box-container .checkmark:after {
+.check-box-container .checkmark::after {
   left: 10px;
   top: 7px;
   width: 5px;
@@ -76,4 +76,3 @@ a {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
