@@ -33,7 +33,8 @@
                     :class="[
                       { disable: !downloadable },
                       'next-button',
-                      'large-round-button-green-filled'
+                      'large-round-button-green-filled',
+                      'nopadding'
                     ]"
                     :download="name"
                     @click="downloadDone()"

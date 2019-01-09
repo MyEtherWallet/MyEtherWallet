@@ -52,9 +52,13 @@
             }}</a>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
-              $t('common.faqs')
-            }}</a>
+            <a
+              href="https://kb.myetherwallet.com"
+              target="_blank"
+              @click="isMobileMenuOpen = false"
+            >
+              Help Center
+            </a>
           </li>
           <li>
             <div class="mobile-language-menu-container">
@@ -179,7 +183,10 @@
                   class="get-free-wallet nopadding"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">Get a Free Wallet</div>
+                  <div class="flex-block">
+                    <div class="get-free-wallet-button">New Wallet</div>
+                    <div class="access-button">Access</div>
+                  </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"

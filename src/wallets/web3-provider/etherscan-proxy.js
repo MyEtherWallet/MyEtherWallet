@@ -90,6 +90,11 @@ class EtherscanProxy {
             .catch(reject);
           break;
         case 'eth_call':
+          Object.keys(payload.params[0]).forEach(key =>
+            payload.params[0][key] === undefined
+              ? delete payload.params[0][key]
+              : ''
+          );
           this.etherscanXHR(
             true,
             Object.assign(payload.params[0], {
@@ -146,6 +151,17 @@ class EtherscanProxy {
             tag: payload.params[1],
             module: 'proxy',
             action: 'eth_getTransactionCount'
+          })
+            .then(body => {
+              resolve(toPayload(payload.id, body.result));
+            })
+            .catch(reject);
+          break;
+        case 'eth_gasPrice':
+          this.etherscanXHR(true, {
+            address: payload.params[0],
+            module: 'proxy',
+            action: 'eth_gasPrice'
           })
             .then(body => {
               resolve(toPayload(payload.id, body.result));
