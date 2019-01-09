@@ -51,6 +51,8 @@
 
     <wallet-password-modal />
 
+    <enter-pin-number-modal />
+
     <div class="wrap">
       <div class="page-container">
         <div class="title">
@@ -94,6 +96,7 @@ import SoftwareModal from '../../components/SoftwareModal';
 import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -119,7 +122,8 @@ export default {
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton,
-    'wallet-password-modal': WalletPasswordModal
+    'wallet-password-modal': WalletPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal
   },
   data() {
     return {

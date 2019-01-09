@@ -1,0 +1,78 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+}
+
+.pin-input-block {
+  margin-bottom: 30px;
+}
+
+p {
+  color: $dark-blue-6;
+}
+
+.main-title {
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.sub-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.button-matrix-block {
+  $button-element-size: 70px;
+  $grid-width-size: $button-element-size + 2px;
+
+  margin-top: 30px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  grid-gap: 10px;
+  grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  button {
+    cursor: pointer;
+    background: $light-grey-1;
+    border: 1px solid $mew-green;
+    height: $button-element-size;
+    width: $button-element-size;
+    border-radius: 5px;
+    position: relative;
+
+    &:active {
+      background-color: $light-grey-3;
+    }
+
+    &::after {
+      height: 8px;
+      width: 8px;
+      background-color: $mew-green;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      border-radius: 100%;
+    }
+  }
+}
+
+.button-block {
+  text-align: center;
+}
+
+.access-wallet-button {
+  margin: 40px 0 0 0;
+}
