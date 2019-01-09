@@ -25,6 +25,7 @@
 
 ### Feature
 
+- Remove print in creating a json wallet, create mnemonic paper, enhance paper wallet []()
 - Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
 - Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
 - implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)

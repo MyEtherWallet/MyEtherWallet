@@ -30,6 +30,8 @@
 
       &:hover,
       &.selected {
+        border: 1px solid $mew-green;
+
         .icon {
           display: none;
         }
@@ -49,7 +51,6 @@
       }
 
       &.selected {
-        border: 1px solid $mew-green;
         color: $text-black;
         font-weight: 500;
       }
