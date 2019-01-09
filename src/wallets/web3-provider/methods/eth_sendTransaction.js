@@ -44,7 +44,6 @@ export default async (
   getSanitizedTx(tx)
     .then(_tx => {
       if (store.state.wallet.identifier === WEB3_WALLET) {
-        console.log(_tx);
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx);
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
