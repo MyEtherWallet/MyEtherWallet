@@ -2,10 +2,7 @@
   <div class="transactions-side-menu">
     <div class="side-menu-header">
       <img src="~@/assets/images/logo.png" />
-      <div class="side-menu-close-button" @click="toggleSideMenu">
-        <div></div>
-        <div></div>
-      </div>
+      <div @click="toggleSideMenu"><i class="fa fa-lg fa-times"></i></div>
     </div>
     <div class="side-menu">
       <ul>

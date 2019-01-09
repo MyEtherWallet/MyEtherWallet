@@ -35,6 +35,7 @@
           </div>
           <swap-currency-picker
             :currencies="fromArray"
+            :override-currency="overrideFrom"
             :from-source="true"
             page="SwapContainerFrom"
             @selectedCurrency="setFromCurrency"
@@ -57,13 +58,16 @@
             <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
           </div>
         </div>
-        <div class="exchange-icon"><img :src="images.swap" /></div>
+        <div class="exchange-icon" @click="flipCurrencies">
+          <img :src="images.swap" />
+        </div>
         <div class="amount">
           <div class="title">
             <h4>{{ $t('common.to') }}</h4>
           </div>
           <swap-currency-picker
             :currencies="toArray"
+            :override-currency="overrideTo"
             :from-source="false"
             page="SwapContainerTo"
             @selectedCurrency="setToCurrency"
@@ -138,6 +142,8 @@
         :no-providers-pair="noProvidersPair"
         :loading-data="loadingData"
         :providers-found="providersFound"
+        :provider-selected="selectedProvider"
+        :switch-currency-order="switchCurrencyOrder"
         @selectedProvider="setSelectedProvider"
       />
     </div>
@@ -224,7 +230,8 @@ export default {
       validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3
+        web3: this.$store.state.web3,
+        getRateForUnit: true
       }),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -245,7 +252,10 @@ export default {
       providersFound: [],
       tempStatuses: [],
       haveProviderRates: false,
-      loadingError: false
+      loadingError: false,
+      overrideFrom: {},
+      overrideTo: {},
+      switchCurrencyOrder: false
     };
   },
   computed: {
@@ -405,6 +415,21 @@ export default {
     this.currentAddress = this.wallet.getChecksumAddressString();
   },
   methods: {
+    flipCurrencies() {
+      this.switchCurrencyOrder = true;
+      const origTo = this.toValue;
+      this.fromCurrency = this.currencyDetails.to.symbol;
+      this.toCurrency = this.currencyDetails.from.symbol;
+      this.overrideFrom = this.currencyDetails.to;
+      this.overrideTo = this.currencyDetails.from;
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        origTo,
+        'from'
+      );
+      this.switchCurrencyOrder = false;
+    },
     setSelectedProvider(provider) {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
@@ -569,11 +594,17 @@ export default {
                 return {
                   provider: entry.provider,
                   fromCurrency,
-                  fromValue: this.fromValue, // todo uncomment after dev
+                  fromValue: this.fromValue,
                   toCurrency,
                   rate: +entry.rate,
                   minValue: entry.minValue || 0,
-                  maxValue: entry.maxValue || 0
+                  maxValue: entry.maxValue || 0,
+                  computeConversion: function(_fromValue) {
+                    return new BigNumber(_fromValue)
+                      .times(this.rate)
+                      .toFixed(6)
+                      .toString(10);
+                  }
                 };
               }
             }),

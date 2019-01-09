@@ -26,6 +26,7 @@
 
 ### Feature
 
+- Remove print in creating a json wallet, create mnemonic paper, enhance paper wallet, fix #371 [#387](https://github.com/MyEtherWallet/MyEtherWallet/pull/387)
 - Update Getting Started page contents [#386](https://github.com/MyEtherWallet/MyEtherWallet/pull/386)
 - Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
 - Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
@@ -40,11 +41,13 @@
 
 ### Devop
 
-- Refactors, validations, and fixes: #362, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
+- Refactors, validations, and fixes: #362, #389, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #388, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
 - Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
 - Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
+- Show rates based on from amount, Add switch order of selected currencies [#372](https://github.com/MyEtherWallet/MyEtherWallet/pull/372)
+- Enable metamask compatibility with mew.sendBatchTransaction fixes #351 [#352](https://github.com/MyEtherWallet/MyEtherWallet/pull/352)
 - Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
 - Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
 - Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)

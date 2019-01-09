@@ -40,7 +40,11 @@
             <p>{{ dateString(notice) }}</p>
           </div>
         </li>
-        <li>
+        <li
+          v-if="
+            notice.type === notificationType.SWAP_ORDER && timeRemaining > 0
+          "
+        >
           <p>{{ $t('header.timeRemaining') }}:</p>
           <div class="detail-data">
             <p>{{ parseTimeRemaining }}</p>
@@ -126,7 +130,8 @@ import { providerMap, fiat, EthereumTokens } from '@/partners';
 
 import {
   swapOnlyStatuses,
-  notificationStatuses
+  notificationStatuses,
+  type as notificationType
 } from '@/helpers/notificationFormatters';
 
 export default {
@@ -195,7 +200,8 @@ export default {
       arrowImage: Arrow,
       timeRemaining: 0,
       unreadCount: 0,
-      fiatCurrencies: fiat.map(entry => entry.symbol)
+      fiatCurrencies: fiat.map(entry => entry.symbol),
+      notificationType: notificationType
     };
   },
   computed: {

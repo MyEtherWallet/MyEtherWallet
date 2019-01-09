@@ -18,6 +18,7 @@
               name="provider"
               @input="setSelectedProvider(provider.provider)"
             />
+
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
@@ -28,7 +29,14 @@
               minCheck(provider) || maxCheck(provider) ? 'invalid-min-max' : ''
             ]"
           >
-            {{ normalizedRateDisplay(provider) }}
+            {{
+              formatRateDisplay(
+                fromValue,
+                provider.fromCurrency,
+                provider.computeConversion(fromValue),
+                provider.toCurrency
+              )
+            }}
             <div class="show-mobile">
               <p
                 v-for="note in minNote(provider)"
@@ -57,7 +65,24 @@
         </li>
       </ul>
     </div>
-    <!-- =========================================================================== -->
+    <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
+    <div
+      v-show="switchCurrencyOrder"
+      class="radio-button-container animated-background"
+    >
+      <ul>
+        <li v-for="provider in providersFound" :key="provider">
+          <div class="mew-custom-form__radio-button">
+            <input type="radio" name="provider" /> <label :for="provider" />
+          </div>
+          <div class="provider-image">
+            <img :src="providerLogo(provider)" />
+          </div>
+          <div class="background-masker" />
+        </li>
+      </ul>
+    </div>
+    <!-- Animation while retrieving rates for available providers -->
     <div
       v-show="loadingData"
       class="radio-button-container animated-background"
@@ -173,6 +198,12 @@ export default {
         return [];
       }
     },
+    providerSelected: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
     fromValue: {
       type: Number,
       default: 0
@@ -180,6 +211,10 @@ export default {
     toValue: {
       type: Number,
       default: 0
+    },
+    switchCurrencyOrder: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -241,8 +276,11 @@ export default {
       }
       return '';
     },
+    formatRateDisplay(fromValue, fromCurrency, toValue, toCurrency) {
+      return `${fromValue} ${fromCurrency} = ${toValue} ${toCurrency}`;
+    },
     normalizedRateDisplay(source) {
-      const toValue = this.valueForRate(source.fromValue, source.rate);
+      const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${
         source.toCurrency
       }`;
@@ -252,6 +290,14 @@ export default {
         .times(rate)
         .toFixed(6)
         .toString(10);
+    },
+    withDefaultSelectedProvider(provider, idx) {
+      return (
+        provider.provider === this.providerSelected.provider ||
+        (!this.providerSelected.provider && idx === 0)
+      );
+      // if (this.providerSelected === '' && idx === 0) {
+      // }
     }
   }
 };

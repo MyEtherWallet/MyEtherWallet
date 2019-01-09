@@ -4,9 +4,6 @@
     <div class="notification-content">
       <ul>
         <li>
-          <p>{{ $t('header.detailInfo') }}</p>
-        </li>
-        <li>
           <p>{{ $t('header.time') }}:</p>
           <div class="time-date">
             <p>{{ timeString(notice) }}</p>
