@@ -301,6 +301,23 @@
   padding: 0 !important;
 }
 
+%button-templates {
+  border: 1px solid $border-green;
+  border-radius: 4px;
+  color: $text-white;
+  cursor: pointer;
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 10px 20px;
+  position: relative;
+
+  &:hover {
+    background-color: $white;
+    color: $text-color-green;
+  }
+}
+
 .get-free-wallet {
   position: relative;
   cursor: pointer;
@@ -311,34 +328,13 @@
   overflow: hidden;
 
   .access-button {
-    margin-left: 8px;
-    border: 1px solid $border-green;
-    border-radius: 4px;
-    cursor: pointer;
-    display: block;
-    font-size: 12px;
-    padding: 10px 20px;
-    position: relative;
-    overflow: hidden;
+    @extend %button-templates;
     background-color: $text-color-green;
-    color: $text-white;
-
-    &:hover {
-      color: $text-color-green;
-      background-color: $white;
-    }
   }
 
   .get-free-wallet-button {
-    border: 1px solid $border-green;
-    border-radius: 4px;
+    @extend %button-templates;
     color: $text-color-green;
-    cursor: pointer;
-    display: block;
-    font-size: 12px;
-    padding: 10px 20px;
-    position: relative;
-    overflow: hidden;
 
     &:hover {
       background-color: $text-color-green;
