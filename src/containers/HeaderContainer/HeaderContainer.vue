@@ -47,9 +47,9 @@
             </div>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false">{{
-              $t('header.about')
-            }}</a>
+            <a href="/#about-mew" @click="isMobileMenuOpen = false">
+              {{ $t('header.about') }}
+            </a>
           </li>
           <li>
             <a
@@ -135,9 +135,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
