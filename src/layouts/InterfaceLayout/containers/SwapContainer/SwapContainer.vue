@@ -264,8 +264,8 @@ export default {
       tempStatuses: [],
       haveProviderRates: false,
       loadingError: false,
-      overrideFrom: '',
-      overrideTo: '',
+      overrideFrom: {},
+      overrideTo: {},
       switchCurrencyOrder: false
     };
   },
@@ -428,32 +428,18 @@ export default {
   methods: {
     flipCurrencies() {
       this.switchCurrencyOrder = true;
-      const origFrom = this.fromValue;
       const origTo = this.toValue;
-      this.overrideFrom = this.toCurrency;
-      this.overrideTo = this.fromCurrency;
+      this.fromCurrency = this.currencyDetails.to.symbol;
+      this.toCurrency = this.currencyDetails.from.symbol;
+      this.overrideFrom = this.currencyDetails.to;
+      this.overrideTo = this.currencyDetails.from;
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
-        this.fromValue,
+        origTo,
         'from'
       );
-      let checkCounts = 0;
-      const waitForRates = setInterval(() => {
-        checkCounts++;
-        if (this.bestRate) {
-          clearInterval(waitForRates);
-          this.fromValue = origTo;
-          this.toValue = origFrom;
-          this.switchCurrencyOrder = false;
-          this.updateEstimate('from');
-        }
-        if (checkCounts > 100) {
-          clearInterval(waitForRates);
-          this.switchCurrencyOrder = false;
-          this.updateEstimate('from');
-        }
-      }, 100);
+      this.switchCurrencyOrder = false;
     },
     setSelectedProvider(provider) {
       this.selectedProvider = this.providerList.find(entry => {
