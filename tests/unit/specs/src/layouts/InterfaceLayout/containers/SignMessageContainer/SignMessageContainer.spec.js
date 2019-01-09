@@ -19,6 +19,7 @@ describe('SignMessageContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
         popover: PopOver
       }
