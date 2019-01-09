@@ -3,7 +3,6 @@ module.exports = {
   "globals": {
     "WITH_NETWORK": false
   },
-  collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],

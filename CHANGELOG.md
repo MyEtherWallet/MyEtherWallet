@@ -2,6 +2,9 @@
 
 ### Bug
 
+- Fix New wallet, Access buttons [#326](https://github.com/MyEtherWallet/MyEtherWallet/pull/326)
+- Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
+- Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
 - Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
@@ -22,6 +25,7 @@
 
 ### Feature
 
+- Update Getting Started page contents [#386](https://github.com/MyEtherWallet/MyEtherWallet/pull/386)
 - Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
 - Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
 - implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
@@ -35,6 +39,7 @@
 
 ### Devop
 
+- Refactors, validations, and fixes: #362, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
 - Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)

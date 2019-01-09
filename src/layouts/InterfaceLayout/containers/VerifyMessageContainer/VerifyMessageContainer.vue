@@ -13,7 +13,13 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="signature" v-model="message" class="custom-textarea-1" />
+        <textarea
+          v-validate="'required'"
+          ref="signature"
+          v-model="message"
+          name="verify"
+          class="custom-textarea-1"
+        />
       </div>
       <div>
         <p v-if="message !== '' && showMessage === true">
@@ -24,13 +30,19 @@
           <b>{{ JSON.parse(message).msg }}</b>
         </p>
         <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
+        <p v-if="errors.has('verify')">{{ errors.first('verify') }}</p>
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
         <div
-          class="submit-button large-round-button-green-filled clickable"
+          :class="[
+            errors.has('verify') || error.show === true || message === ''
+              ? 'disabled'
+              : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
           @click="verifyMessage"
         >
           {{ $t('common.verifyMessage') }}
@@ -74,7 +86,8 @@ export default {
     })
   },
   watch: {
-    message() {
+    message(newVal) {
+      this.message = newVal;
       this.error = {
         show: false,
         msg: ''

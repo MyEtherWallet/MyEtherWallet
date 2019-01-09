@@ -142,7 +142,9 @@
       <div class="buttons">
         <div
           :class="[
-            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            abi === '' || bytecode === '' || validByte || !validAbi
+              ? 'disabled'
+              : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
           @click="confirmationModalOpen"
@@ -187,7 +189,8 @@ export default {
       gasLimit: 21000,
       data: '',
       nonce: 0,
-      validAbi: false
+      validAbi: true,
+      validByte: true
     };
   },
   computed: {
@@ -211,8 +214,13 @@ export default {
       }
       this.estimateGas();
     },
-    bytecode() {
-      this.estimateGas();
+    bytecode(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.validByte = true;
+        this.estimateGas();
+      } else {
+        this.validByte = false;
+      }
     },
     gasAmount() {
       this.estimateGas();

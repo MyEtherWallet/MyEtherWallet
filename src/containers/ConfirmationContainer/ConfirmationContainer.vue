@@ -140,6 +140,7 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
+      if (!newVal) return;
       this.$store.dispatch('addNotification', [
         noticeTypes.TRANSACTION_HASH,
         this.fromAddress,
@@ -147,13 +148,18 @@ export default {
         newVal
       ]);
       const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(newVal).then(res => {
-          if (res !== null) {
-            this.web3WalletRes = res;
-            this.showSuccessModal('Transaction sent!', 'Okay');
+        this.web3.eth
+          .getTransactionReceipt(newVal)
+          .then(res => {
+            if (res !== null) {
+              this.web3WalletRes = res;
+              this.showSuccessModal('Transaction sent!', 'Okay');
+              clearInterval(pollReceipt);
+            }
+          })
+          .catch(() => {
             clearInterval(pollReceipt);
-          }
-        });
+          });
       }, 500);
     },
     web3WalletRes(newVal) {
@@ -222,7 +228,7 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.wallet.signTransaction(tx).then(_response => {
-        this.web3WalletHash = _response;
+        this.web3WalletHash = _response.transactionHash;
       });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
