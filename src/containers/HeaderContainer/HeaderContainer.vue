@@ -8,7 +8,7 @@
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal ref="issuelog" />
-    <logout-warning-modal ref="logoutwarning" />
+    <logout-warning-modal ref="logoutWarningModal" />
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
@@ -174,7 +174,7 @@
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
-                  v-show="showButtons()"
+                  v-if="showButtons()"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -184,7 +184,7 @@
                   <div class="get-free-wallet-button">New Wallet</div>
                 </b-nav-item>
                 <b-nav-item
-                  v-show="showButtons()"
+                  v-if="showButtons()"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -363,17 +363,14 @@ export default {
     };
   },
   created() {
-    const _this = this;
-    // Logout Warning modal
     function dummyErrorHandler() {}
 
     try {
       window.addEventListener(
         'popstate',
-        function(event) {
-          if (event.target.location.hash === '#/') {
-            _this.$refs.logoutwarning.$refs.logoutwarning.show();
-          }
+        () => {
+          if (this.wallet !== null)
+            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
         },
         false
       );
@@ -395,15 +392,9 @@ export default {
       }
       return false;
     },
-    logoutWarning() {
-      alert('logoutWarning');
-    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
-    // openNotifications() {
-    //   this.$children[1].$refs.notifications.show();
-    // },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
       const flag = e.target.getAttribute('data-flag-name');
