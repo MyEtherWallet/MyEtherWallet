@@ -50,22 +50,22 @@ export default {
       },
       members: [
         {
-          name: 'Kosala Hemachandra',
+          name: 'Kosala',
           position: 'Founder/CEO',
           img: kosala
         },
         {
-          name: 'Brian Norton',
+          name: 'Brian',
           position: 'COO',
           img: brian
         },
         {
-          name: 'Olchik Kupchevskaya',
+          name: 'Olchik',
           position: 'VP',
           img: olchik
         },
         {
-          name: 'Stephen Wooldridge II',
+          name: 'Stephen',
           position: 'Customer Support',
           otherInfo: '#MEWForce',
           img: stephen
@@ -77,28 +77,28 @@ export default {
           img: richie
         },
         {
-          name: 'Brittany Evans',
+          name: 'Brittany',
           position: 'Blockchain Specialist',
           otherInfo: '#MEWForce',
           img: brittany
         },
         {
-          name: 'Yel Padill',
+          name: 'Yel',
           position: 'Full-Stack Developer',
           img: yel
         },
         {
-          name: 'Steve Mieskoski',
+          name: 'Steve',
           position: 'Full-Stack Developer',
           img: steve
         },
         {
-          name: 'Jack Huang',
+          name: 'Jack',
           position: 'UI/UX Designer',
           img: jack
         },
         {
-          name: 'David Hong',
+          name: 'David',
           position: 'Front-End Developer',
           img: david
         },
