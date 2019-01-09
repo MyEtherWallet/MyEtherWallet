@@ -333,7 +333,7 @@ export default {
     const providerConstructor = providerMap.get(this.swapDetails.provider);
     this.provider = new providerConstructor();
     console.log(this.provider); // todo remove dev item
-    const haveCred = store.get('exit_to_fiat')
+    const haveCred = store.get('exit_to_fiat');
     if (haveCred !== null && haveCred !== undefined) {
       const userDetails = store.get('exit_to_fiat');
       if (userDetails.phone_token && userDetails.verified) {

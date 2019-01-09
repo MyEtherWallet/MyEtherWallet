@@ -320,20 +320,25 @@ export default {
       this.ethPrice = new BigNumber(values['DAI']);
     },
     convertToGwei(value) {
-      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      if (this.notValidNumber(value)) return '';
       return unit.fromWei(value, 'Gwei');
     },
     convertToEth(value) {
-      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      if (this.notValidNumber(value)) return '';
       return unit.fromWei(value, 'ether');
     },
     getFiatValue(value) {
-      if (typeof value === 'undefined' || Number.isNaN(value)) return '';
+      if (this.notValidNumber(value)) return '';
       if (this.ethPrice === 0) return '';
       return new BigNumber(this.convertToEth(value))
         .multipliedBy(new BigNumber(this.ethPrice))
         .decimalPlaces(2)
         .toFixed();
+    },
+    notValidNumber(value) {
+      return (
+        typeof value === 'undefined' || Number.isNaN(value) || value === 'NaN'
+      );
     }
   }
 };

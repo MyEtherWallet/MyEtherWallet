@@ -10,7 +10,6 @@
     >
       <div id="printContainer" class="print-modal">
         <div class="top-container">
-          <!-- <img src="~@/assets/images/background/404bg.jpg" width="100%" class="floating-img"/> -->
           <div class="left-section">
             <div class="blockie-contianer">
               <div>
@@ -66,8 +65,17 @@
                 </span>
               </div>
             </div>
-            <div></div>
           </div>
+          <img
+            src="~@/assets/images/background/404bg.jpg"
+            width="100%"
+            class="floating-img"
+          />
+          <img
+            src="~@/assets/images/etc/spaceman.png"
+            width="100%"
+            class="floating-spaceman"
+          />
         </div>
         <div class="between">
           <div class="text">

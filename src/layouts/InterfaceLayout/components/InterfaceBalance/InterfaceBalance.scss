@@ -2,7 +2,6 @@
 
 .balance {
   background-color: $transaction-block-balance;
-  cursor: pointer;
 
   .balance-text-container {
     display: inline-block;
@@ -22,17 +21,5 @@
     p:first-child {
       max-width: 150px;
     }
-  }
-}
-
-.icon-container {
-  i {
-    cursor: pointer;
-    margin-left: 12px;
-    padding-top: 3px;
-  }
-
-  img {
-    cursor: pointer;
   }
 }

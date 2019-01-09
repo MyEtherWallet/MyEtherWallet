@@ -11,22 +11,41 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp;ETH</p>
+              <p>&nbsp; {{ network.type.name }}</p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>
         </div>
         <div class="icon-container">
-          <img
-            src="~@/assets/images/icons/more.svg"
+          <b-btn
+            id="balanceCheck"
+            class="custom-tooltip"
             @click="balanceModalOpen"
-          />
-          <i
-            v-show="!fetchingBalance"
-            class="fa fa-lg fa-refresh"
+          >
+            <img src="~@/assets/images/icons/more.svg" />
+          </b-btn>
+          <b-btn
+            id="refreshBalance"
+            class="custom-tooltip"
             @click="fetchBalance"
+          >
+            <i v-show="!fetchingBalance" class="fa fa-lg fa-refresh" />
+            <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
+          </b-btn>
+          <b-popover
+            content="Check Balance"
+            target="balanceCheck"
+            placement="top"
+            triggers="hover"
+            title
           />
-          <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
+          <b-popover
+            content="Refresh balance"
+            target="refreshBalance"
+            placement="top"
+            triggers="hover"
+            title
+          />
         </div>
       </div>
     </div>
@@ -35,7 +54,7 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-balance-modal': InterfaceBalanceModal
@@ -54,6 +73,11 @@ export default {
     return {
       fetchingBalance: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
   },
   watch: {
     balance() {

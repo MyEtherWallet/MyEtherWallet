@@ -23,6 +23,7 @@ describe('ByJsonBlock.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       propsData: { img, title, desc }
     });
   });

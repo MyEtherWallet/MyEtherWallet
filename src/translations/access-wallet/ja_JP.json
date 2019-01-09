@@ -30,5 +30,6 @@
   "invalidPathDescCont": "このデバイスに対して無効です。",
   "mewConnectTitle": "MEWconnect によるアクセス",
   "mewConnectDesc1": "上記の QR コードをスキャンするのに MEWconnect アプリを使用してください。",
-  "mewConnectDesc2": "アプリを持っていないか。今すぐダウンロードします。"
+  "mewConnectDesc2": "アプリを持っていないか。今すぐダウンロードします。",
+  "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
 }

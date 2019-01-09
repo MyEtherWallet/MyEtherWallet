@@ -191,7 +191,7 @@ export default class BitySwap {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
         if (
-          prop !== value.symbol &&
+          /*prop !== value.symbol &&*/
           disabledPairing(this.currencies, value.symbol, prop, 'from')
         ) {
           if (this.currencies[prop] && !this.fiatCurrencies.includes(prop)) {
@@ -208,16 +208,13 @@ export default class BitySwap {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (
-          prop !== value.symbol &&
-          disabledPairing(this.currencies, value.symbol, prop, 'to')
-        ) {
-          if (this.currencies[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        // }
       }
     }
   }

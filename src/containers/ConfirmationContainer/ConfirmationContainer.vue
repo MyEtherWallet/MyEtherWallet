@@ -69,6 +69,7 @@ import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
+import { type as noticeTypes } from '@/helpers/notificationFormatters';
 
 export default {
   components: {
@@ -139,25 +140,31 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
+      if (!newVal) return;
       this.$store.dispatch('addNotification', [
-        'Hash',
+        noticeTypes.TRANSACTION_HASH,
         this.fromAddress,
         this.raw,
         newVal
       ]);
       const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(newVal).then(res => {
-          if (res !== null) {
-            this.web3WalletRes = res;
-            this.showSuccessModal('Transaction sent!', 'Okay');
+        this.web3.eth
+          .getTransactionReceipt(newVal)
+          .then(res => {
+            if (res !== null) {
+              this.web3WalletRes = res;
+              this.showSuccessModal('Transaction sent!', 'Okay');
+              clearInterval(pollReceipt);
+            }
+          })
+          .catch(() => {
             clearInterval(pollReceipt);
-          }
-        });
+          });
       }, 500);
     },
     web3WalletRes(newVal) {
       this.$store.dispatch('addNotification', [
-        'Receipt',
+        noticeTypes.TRANSACTION_RECEIPT,
         this.fromAddress,
         this.raw,
         newVal
@@ -168,6 +175,11 @@ export default {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null;
       this.showSuccessModal(message, linkMessage);
+    });
+
+    this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
+      if (!message) message = null;
+      this.showErrorModal(message, linkMessage);
     });
 
     this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
@@ -216,7 +228,7 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.wallet.signTransaction(tx).then(_response => {
-        this.web3WalletHash = _response;
+        this.web3WalletHash = _response.transactionHash;
       });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -339,7 +351,7 @@ export default {
                 promiEvent.eventEmitter.emit('error', err);
                 promiEvent.reject(err);
                 this.$store.dispatch('addNotification', [
-                  'Error',
+                  noticeTypes.TRANSACTION_ERROR,
                   this.fromAddress,
                   this.unSignedArray.find(
                     entry => +_tx.nonce === +entry.nonce
@@ -354,7 +366,7 @@ export default {
                 promiEvent.eventEmitter.emit('transactionHash', data);
                 this.$store
                   .dispatch('addNotification', [
-                    'Hash',
+                    noticeTypes.TRANSACTION_HASH,
                     this.fromAddress,
                     this.unSignedArray.find(
                       entry => +_tx.nonce === +entry.nonce
@@ -373,7 +385,7 @@ export default {
                       promiEvent.eventEmitter.emit('receipt', res);
                       promiEvent.resolve(res);
                       this.$store.dispatch('addNotification', [
-                        'Receipt',
+                        noticeTypes.TRANSACTION_RECEIPT,
                         this.fromAddress,
                         this.unSignedArray.find(
                           entry => +_tx.nonce === +entry.nonce
@@ -393,7 +405,6 @@ export default {
           console.error(e);
         }
         return promiEvent.eventEmitter;
-        // });
       });
 
       this.signCallback(promises);
