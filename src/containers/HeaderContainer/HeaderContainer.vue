@@ -185,7 +185,7 @@
                 >
                   <div class="flex-block">
                     <div class="get-free-wallet-button">New Wallet</div>
-                    <div class="access-button">Access</div>
+                    <!--<div class="access-button">Access</div> This should link to access wallet page not create wallet page-->
                   </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
