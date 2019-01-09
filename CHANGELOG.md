@@ -25,6 +25,7 @@
 
 ### Feature
 
+- Update Getting Started page contents [#386](https://github.com/MyEtherWallet/MyEtherWallet/pull/386)
 - Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
 - Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
 - implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)

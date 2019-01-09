@@ -1,28 +1,18 @@
 <template>
-  <div class="what-is-mew">
+  <div class="what-is-upside">
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.aboutSecurity') }}
+          {{ $t('gettingStarted.whatIsUpsideTitle') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t('gettingStarted.lostPasswordTitle') }}</h4>
-          <p>
-            {{ $t('gettingStarted.lostPasswordDescHalf') }}
-            <span>{{ $t('gettingStarted.lostPasswordDescCaps') }}</span
-            >. {{ $t('gettingStarted.lostPasswordDescCont') }}
-          </p>
-
-          <ul>
-            <li>{{ $t('gettingStarted.lostPasswordDescOpt1') }}</li>
-            <li>{{ $t('gettingStarted.lostPasswordDescOpt2') }}</li>
-          </ul>
-          <div class="block-progressbar__warning">
-            {{ $t('gettingStarted.whatIsUpsideWarning') }}
-          </div>
+          <h4>{{ $t('gettingStarted.whatIsUpsideSubTitle') }}</h4>
+          <p>{{ $t('gettingStarted.whatIsUpsideDesc1') }}</p>
+          <p>{{ $t('gettingStarted.whatIsUpsideDesc2') }}</p>
+          <p>{{ $t('gettingStarted.whatIsUpsideDesc3') }}</p>
         </div>
       </dir>
     </div>
@@ -38,7 +28,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      expenderContentShow: false
+    };
   }
 };
 </script>
