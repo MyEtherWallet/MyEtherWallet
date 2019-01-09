@@ -47,14 +47,6 @@
                     </div>
                   </a>
                 </div>
-                <div class="printer-icon">
-                  <router-link to="/">
-                    <img
-                      class="icon"
-                      src="~@/assets/images/icons/printer.svg"
-                    />
-                  </router-link>
-                </div>
               </div>
             </div>
           </b-tab>
