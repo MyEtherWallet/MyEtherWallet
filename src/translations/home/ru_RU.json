@@ -27,7 +27,7 @@
   "howToCreateWalletTitle": "How do I create a new wallet?",
   "howToCreateWalletDesc": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEWconnect, Keystore file, or Mnemonic phrase. For more information, click",
   "whatIsMewConnectTitle": "What is MEWconnect?",
-  "whatIsMewConnectDesc": "MEWconnect is our companion mobile app for MyEtherWallet. We call it a hardware wallet without all the hardware. Now available for all Android and iOS smartphone! Read more",
+  "whatIsMewConnectDesc": "MEWconnect is our companion mobile app for MyEtherWallet. We call it a hardware wallet without all the hardware. Now available for all Android and iOS smartphones! Read more",
   "workingWOtherWalletsTitle": "Can MEW work with other wallets?",
   "workingWOtherWalletsDesc": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more",
   "howToSendTxTitle": "How can I send a transaction?",
