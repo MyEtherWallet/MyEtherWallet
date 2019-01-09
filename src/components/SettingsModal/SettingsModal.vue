@@ -305,10 +305,15 @@ export default {
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
         this.$store.dispatch(
           'setGasPrice',
-          Number(this.gasPriceInputs[this.selectedGasType].gwei)
+          new BigNumber(
+            this.gasPriceInputs[this.selectedGasType].gwei
+          ).toNumber()
         );
       } else {
-        this.$store.dispatch('setGasPrice', Number(this.customGas));
+        this.$store.dispatch(
+          'setGasPrice',
+          new BigNumber(this.customGas).toNumber()
+        );
       }
       this.$refs.gasDropdown.dropdownOpen = false;
     },
