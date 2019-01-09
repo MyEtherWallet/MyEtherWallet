@@ -20,8 +20,9 @@
             <li>{{ $t('gettingStarted.lostPasswordDescOpt1') }}</li>
             <li>{{ $t('gettingStarted.lostPasswordDescOpt2') }}</li>
           </ul>
-
-          <div class="block-progressbar__warning hidden" />
+          <div class="block-progressbar__warning">
+            {{ $t('gettingStarted.whatIsUpsideWarning') }}
+          </div>
         </div>
       </dir>
     </div>

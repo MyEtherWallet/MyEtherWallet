@@ -113,7 +113,7 @@ describe('InterfaceTokens.vue', () => {
         .findAll('.spinner-container')
         .at(1)
         .isVisible()
-    ).toBe(false);
+    ).toBe(true);
     wrapper.setData({ search: 'search' });
     expect(
       wrapper

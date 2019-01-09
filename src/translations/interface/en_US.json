@@ -6,7 +6,7 @@
   "httpBasicAccess": "HTTP Basic Access Athentication",
   "tokens": "Tokens",
   "customToken": "Custom Tokens",
-  "dataGas": "Data & Gas Limited",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "Send Transaction",
   "haveIssues": "Have any issues?",
   "registerEns": "Register ENS",

@@ -11,7 +11,7 @@
             </div>
             <currency-picker
               :currency="tokensWithBalance"
-              :page="'sendEthAndTokens'"
+              :page="'sendEgasAmountthAndTokens'"
               :token="true"
               @selectedCurrency="setSelectedCurrency"
             />
@@ -35,8 +35,8 @@
               />
               <i
                 :class="[
-                  selectedCurrency.name === 'Ether'
-                    ? parsedBalance < amount
+                  selectedCurrency.symbol === network.type.name
+                    ? parsedBalance.lt(amount)
                       ? 'not-good'
                       : ''
                     : selectedCurrency.balance < amount
@@ -50,8 +50,8 @@
           </div>
           <div
             v-if="
-              selectedCurrency.name === 'Ether'
-                ? amount > parsedBalance
+              selectedCurrency.symbol === network.type.name
+                ? parsedBalance.lt(amount)
                 : selectedCurrency.balance < amount
             "
             class="error-message-container"
@@ -64,12 +64,8 @@
             <h4>
               {{ $t('interface.sendTxToAddr') }}
               <blockie
-                v-show="validAddress && address.length !== 0"
-                :address="
-                  resolvedAddress !== ''
-                    ? resolvedAddress.toLowerCase()
-                    : address
-                "
+                v-show="isValidAddress && address.length !== 0"
+                :address="hexAddress"
                 :size="8"
                 :scale="16"
                 width="32px"
@@ -87,7 +83,7 @@
           </div>
           <div class="the-form address-block">
             <input
-              v-ens-resolver="address"
+              v-ens-resolver="'address'"
               ref="address"
               type="text"
               name="name"
@@ -96,7 +92,7 @@
             />
             <i
               :class="[
-                validAddress && address.length !== 0 ? '' : 'not-good',
+                isValidAddress && address.length !== 0 ? '' : 'not-good',
                 'fa fa-check-circle good-button'
               ]"
               aria-hidden="true"
@@ -129,13 +125,23 @@
           class="input-container"
         >
           <div class="margin-container">
-            <div class="the-form user-input">
+            <div
+              v-show="selectedCurrency.symbol === network.type.name"
+              class="the-form user-input"
+            >
               <input
-                v-model="data"
+                :value="data"
                 type="text"
-                name=""
                 placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
+                @input="debounceData"
+              />
+              <i
+                :class="[
+                  data.length !== 0 ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
               />
             </div>
             <div class="the-form user-input">
@@ -143,7 +149,7 @@
                 v-model="gasLimit"
                 :placeholder="$t('common.gasLimit')"
                 type="number"
-                name=""
+                name
               />
             </div>
           </div>
@@ -154,7 +160,12 @@
     <div class="submit-button-container">
       <div
         :class="[
-          validAddress && address.length !== 0 ? '' : 'disabled',
+          isValidAddress &&
+          address.length !== 0 &&
+          isValidAmount &&
+          data.length !== 0
+            ? ''
+            : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
         @click="confirmationModalOpen"
@@ -171,12 +182,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
+import { Misc } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -207,20 +220,18 @@ export default {
   data() {
     return {
       advancedExpend: false,
-      validAddress: true,
       amount: 0,
-      amountValid: true,
+      isValidAmount: true,
       nonce: 0,
       gasLimit: 21000,
       data: '0x',
-      gasAmount: 0,
-      parsedBalance: 0,
-      address: '',
       transactionFee: 0,
-      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
+      selectedCurrency: {},
       raw: {},
       signedTx: '',
-      resolvedAddress: ''
+      address: '',
+      hexAddress: '',
+      isValidAddress: false
     };
   },
   computed: {
@@ -228,83 +239,78 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      wallet: 'wallet',
       network: 'network',
       ens: 'ens'
-    })
+    }),
+    parsedBalance() {
+      return new BigNumber(unit.fromWei(this.account.balance, 'ether'));
+    }
   },
   watch: {
-    address(newVal) {
-      this.address = newVal;
-      if (this.verifyAddr()) {
-        this.validAddress = false;
-      } else {
-        this.estimateGas();
-        this.validAddress = true;
-      }
-    },
-    parsedBalance(newVal) {
-      this.parsedBalance = newVal;
-    },
-    gasAmount(newVal) {
-      this.gasAmount = newVal;
-      if (this.verifyAddr()) {
-        this.estimateGas();
-      }
-      this.$store.dispatch('setGasPrice', Number(newVal));
+    gasPrice(newVal) {
+      if (this.verifyAddr()) this.estimateGas();
     },
     selectedCurrency(newVal) {
-      this.selectedCurrency = newVal;
-      this.estimateGas();
+      if (this.verifyAddr()) this.estimateGas();
     }
-  },
-  mounted() {
-    if (this.account.balance) {
-      this.parsedBalance = this.account.balance;
-    }
-    this.gasAmount = this.gasPrice;
   },
   methods: {
+    validateHexString: Misc.validateHexString,
     debouncedAmount: utils._.debounce(function(e) {
-      this.amount = new BigNumber(e.target.value).decimalPlaces(18).toFixed();
+      const decimals =
+        this.selectedCurrency.symbol === this.network.type.name
+          ? 18
+          : this.selectedCurrency.decimals;
+      this.amount =
+        new BigNumber(e.target.value).decimalPlaces() > decimals
+          ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
+          : e.target.value;
       e.target.value = this.amount;
+      if (this.amount < 0) {
+        this.isValidAmount = false;
+      } else {
+        this.isValidAmount = true;
+      }
       if (this.verifyAddr()) {
         this.estimateGas();
       }
     }, 300),
     debounceInput: utils._.debounce(function(e) {
-      this.address = normalise(e.target.value);
-    }, 1500),
+      this.address = e.target.value;
+      if (this.verifyAddr()) this.estimateGas();
+    }, 500),
+    debounceData: utils._.debounce(function(e) {
+      if (this.validateHexString(e.target.value)) {
+        this.data = e.target.value;
+        if (this.verifyAddr()) this.estimateGas();
+      } else {
+        this.data = '0x';
+      }
+    }, 500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
     },
     async createTx() {
-      const isEth = this.selectedCurrency.name === 'Ethereum';
-      this.nonce = await this.web3.eth.getTransactionCount(
-        this.wallet.getAddressString()
-      );
+      const isEth = this.selectedCurrency.symbol === this.network.type.name;
+      const coinbase = await this.web3.eth.getCoinbase();
+      this.nonce = await this.web3.eth.getTransactionCount(coinbase);
 
       this.raw = {
-        from: this.wallet.getAddressString(),
+        from: coinbase,
         gas: this.gasLimit,
         nonce: this.nonce,
-        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+        gasPrice: unit.toWei(this.gasPrice, 'gwei'),
         value: isEth
           ? this.amount === ''
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth
-          ? this.resolvedAddress !== ''
-            ? this.resolvedAddress
-            : this.address
-          : this.selectedCurrency.addr,
-        data: this.data,
+        to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+        data: Misc.sanitizeHex(this.data),
         chainId: this.network.type.chainID || 1
       };
-
-      if (this.address === '') {
+      if (this.hexAddress === '') {
         delete this.raw['to'];
       }
       this.web3.eth.sendTransaction(this.raw);
@@ -314,16 +320,16 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      if (this.selectedCurrency.name === 'Ethereum') {
-        this.amount = this.parsedBalance - this.transactionFee;
+      if (this.selectedCurrency.symbol === this.network.type.name) {
+        this.amount = this.parsedBalance.minus(this.transactionFee).toString();
       } else {
         this.amount = this.selectedCurrency.balance;
       }
     },
-    createDataHex() {
+    async createDataHex() {
       let amount;
-      if (this.selectedCurrency.name !== 'Ethereum' && this.address !== '') {
-        if (this.amount !== 0) {
+      if (this.selectedCurrency.name !== 'Ether') {
+        if (this.amount !== 0 && this.amount !== '') {
           amount = this.amount;
         } else {
           amount = 0;
@@ -346,60 +352,56 @@ export default {
           jsonInterface,
           this.selectedCurrency.addr
         );
-        this.data = contract.methods
+        this.data = await contract.methods
           .transfer(
-            this.address,
+            this.hexAddress,
             new BigNumber(amount)
               .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
               .toFixed()
           )
           .encodeABI();
       } else {
-        this.data = '0x';
+        this.data = this.data !== '0x' ? this.data : '0x';
       }
     },
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
     },
-    estimateGas() {
-      const isEth = this.selectedCurrency.name === 'Ethereum';
-      const bnAmount = new BigNumber(this.amount);
-      this.web3.eth
-        .estimateGas({
-          from: this.wallet.getAddressString(),
+    async estimateGas() {
+      if (this.hexAddress !== '') {
+        const isEth = this.selectedCurrency.symbol === this.network.type.name;
+        const bnAmount = new BigNumber(this.amount);
+        const coinbase = await this.web3.eth.getCoinbase();
+        if (!isEth) {
+          await this.createDataHex();
+        }
+        const params = {
+          from: coinbase,
           value: isEth
             ? this.amount === ''
               ? 0
               : unit.toWei(bnAmount, 'ether')
             : 0,
-          to: isEth ? this.address : this.selectedCurrency.addr,
-          data: this.data
-        })
-        .then(res => {
-          this.transactionFee = unit.fromWei(
-            unit.toWei(this.gasPrice, 'gwei') * res,
-            'ether'
-          );
-          this.gasLimit = res ? res : this.gasLimit;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
-    },
-    changeGas(val) {
-      this.gasAmount = val;
-      this.createDataHex();
-      this.$store.dispatch('setGasPrice', Number(val));
+          to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+          data: Misc.sanitizeHex(this.data)
+        };
+
+        this.web3.eth
+          .estimateGas(params)
+          .then(res => {
+            const resBN = new BigNumber(res);
+            const txFee = resBN.times(unit.toWei(this.gasPrice, 'gwei'));
+            this.transactionFee = txFee.toString();
+            this.gasLimit = res ? res : this.gasLimit;
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      }
     },
     verifyAddr() {
-      if (this.address.length !== 0 && this.address !== '') {
-        const valid = this.web3.utils.isAddress(this.address);
-        if (!valid) {
-          return true;
-        }
-        return false;
-      }
+      return this.web3.utils.isAddress(this.hexAddress);
     }
   }
 };
@@ -407,7 +409,4 @@ export default {
 
 <style lang="scss" scoped>
 @import 'SendCurrencyContainer.scss';
-//@import 'SendCurrencyContainer-desktop.scss';
-//@import 'SendCurrencyContainer-tablet.scss';
-//@import 'SendCurrencyContainer-mobile.scss';
 </style>

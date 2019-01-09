@@ -79,14 +79,6 @@ export default {
       ]
     };
   },
-  watch: {
-    gasLimit(newVal) {
-      this.gasLimit = newVal;
-    },
-    nonce(newVal) {
-      this.nonce = newVal;
-    }
-  },
   methods: {
     createdRawTx(e) {
       this.rawTx = e;
