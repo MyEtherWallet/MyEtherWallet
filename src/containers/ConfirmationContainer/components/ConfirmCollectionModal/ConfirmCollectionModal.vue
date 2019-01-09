@@ -120,13 +120,6 @@
               {{ $t('common.waitingForHash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
-            <div
-              v-show="sending"
-              class="submit-button large-round-button-green-filled clickable disabled"
-            >
-              {{ $t('common.waitingForHash') }}
-              <i class="fa fa-spinner fa-spin" />
-            </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
                 <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
