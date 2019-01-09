@@ -49,6 +49,8 @@
       :phrase="phrase"
     />
 
+    <wallet-password-modal />
+
     <div class="wrap">
       <div class="page-container">
         <div class="title">
@@ -91,6 +93,7 @@ import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
 import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
+import WalletPasswordModal from '@/components/WalletPasswordModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -115,7 +118,8 @@ export default {
     'private-key-modal': PrivateKeyModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'access-wallet-button': AccessWalletButton
+    'access-wallet-button': AccessWalletButton,
+    'wallet-password-modal': WalletPasswordModal
   },
   data() {
     return {

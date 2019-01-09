@@ -6,8 +6,16 @@
     }"
     class="standard-button"
   >
+    <div class="accept-terms-Check-Box">
+      <check-box
+        :terms="true"
+        class="checkbox"
+        @changeStatus="updateCheckbox($event)"
+      />
+    </div>
     <div :class="buttonClass">
-      <div
+      <button
+        :disabled="buttonDisabled"
         :class="[
           options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
           options.noMinWidth ? 'no-min-width' : ''
@@ -44,13 +52,23 @@
           class="arrow-left"
           src="@/assets/images/icons/arrow-green-left.svg"
         />
-      </div>
+      </button>
+    </div>
+    <div v-if="options.customerSupport" class="customer-support-block">
+      <customer-support />
     </div>
   </div>
 </template>
 
 <script>
+import CheckBox from '@/components/Buttons/CheckBox';
+import CustomerSupport from '@/components/CustomerSupport';
+
 export default {
+  components: {
+    'check-box': CheckBox,
+    'customer-support': CustomerSupport
+  },
   props: {
     options: {
       type: Object,
@@ -61,7 +79,8 @@ export default {
   },
   data() {
     return {
-      onBottomOfPage: false
+      onBottomOfPage: false,
+      buttonDisabled: this.options.acceptTermsCheckBox
     };
   },
   computed: {
@@ -100,6 +119,9 @@ export default {
     window.removeEventListener('scroll', this.onPageScroll);
   },
   methods: {
+    updateCheckbox(event) {
+      this.buttonDisabled = !event;
+    },
     onPageScroll() {
       if (
         window.innerHeight + window.pageYOffset >=
