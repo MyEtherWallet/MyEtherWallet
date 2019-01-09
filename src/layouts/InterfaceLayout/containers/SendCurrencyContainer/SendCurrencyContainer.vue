@@ -129,6 +129,7 @@
               v-show="selectedCurrency.symbol === network.type.name"
               class="the-form user-input"
             >
+              <p>Add Data</p>
               <input
                 :value="data"
                 type="text"
@@ -145,6 +146,7 @@
               />
             </div>
             <div class="the-form user-input">
+              <p>{{ $t('common.gasLimit') | capitalize }}</p>
               <input
                 v-model="gasLimit"
                 :placeholder="$t('common.gasLimit')"
