@@ -1,6 +1,6 @@
 <template>
-  <div class="team">
-    <div class="wrap">
+  <div>
+    <div>
       <div class="page-container">
         <title-text-contents :options="titleAndTextContents" />
 
@@ -33,6 +33,9 @@ import steve from '@/assets/images/team/Steve.jpg';
 import jack from '@/assets/images/team/Jack.jpg';
 import david from '@/assets/images/team/David.jpg';
 import samantha from '@/assets/images/team/Samantha.jpg';
+import alex from '@/assets/images/team/Alex.jpg';
+import misha from '@/assets/images/team/Misha.jpg';
+import katya from '@/assets/images/team/Katya.jpg';
 
 export default {
   components: {
@@ -98,6 +101,21 @@ export default {
           name: 'David Hong',
           position: 'Front-End Developer',
           img: david
+        },
+        {
+          name: 'Alex',
+          position: 'Director of Mobile',
+          img: alex
+        },
+        {
+          name: 'Misha',
+          position: 'Lead Mobile Developer',
+          img: misha
+        },
+        {
+          name: 'Katya',
+          position: 'Community Advocate',
+          img: katya
         },
         {
           name: 'Samantha',

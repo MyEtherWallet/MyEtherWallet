@@ -40,6 +40,11 @@
   font-weight: 500;
 }
 
+.modal-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
 .notification-item-container {
   background-color: $white;
   max-height: 500px;
@@ -47,6 +52,16 @@
 
   > ul {
     > li {
+      &:first-child {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        > p {
+          cursor: pointer;
+          display: flex;
+          margin-right: 10px;
+        }
+      }
       &:nth-child(odd) {
         background-color: $light-grey-2;
       }
@@ -93,6 +108,14 @@
 .notification-logo {
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 0;
+  }
 
   @media all and (max-width: $mobile-width) {
     display: none;
@@ -195,10 +218,6 @@
   display: flex;
   align-items: center;
   padding: 10px 30px;
-
-  @media all and (max-width: $tablet-width) {
-    padding: 10px;
-  }
 
   > ul {
     display: block;

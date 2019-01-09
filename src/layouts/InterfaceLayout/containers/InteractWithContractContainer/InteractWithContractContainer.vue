@@ -26,7 +26,7 @@
 
           <i
             :class="[
-              validAddress && address !== '' ? '' : 'not-good',
+              isValidAddress && address !== '' ? '' : 'not-good',
               'fa fa-check-circle good-button'
             ]"
             aria-hidden="true"
@@ -51,7 +51,7 @@
           <textarea ref="abi" v-model="abi" class="custom-textarea-1" name="" />
           <i
             :class="[
-              validAbi && abi !== '' ? '' : 'not-good',
+              isValidAbi && abi !== '' ? '' : 'not-good',
               'fa fa-check-circle good-button'
             ]"
             aria-hidden="true"
@@ -61,7 +61,7 @@
       <div class="submit-button-container">
         <div
           :class="[
-            validAbi && validAddress && (address !== '' && abi !== '')
+            isValidAbi && isValidAddress && (address !== '' && abi !== '')
               ? ''
               : 'disabled',
             'submit-button large-round-button-green-filled clickable'
@@ -72,9 +72,9 @@
           <img src="~@/assets/images/icons/right-arrow.png" />
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.learnMore')"
+          :link-text="$t('interface.helpCenter')"
           :question="$t('interface.haveIssues')"
-          link="mailto:support@myetherwallet.com"
+          link="https://kb.myetherwallet.com"
         />
       </div>
     </div>
@@ -273,9 +273,9 @@
           </div>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.learnMore')"
+          :link-text="$t('interface.helpCenter')"
           :question="$t('interface.haveIssues')"
-          link="mailto:support@myetherwallet.com"
+          link="https://kb.myetherwallet.com"
         />
       </div>
     </div>
@@ -302,8 +302,8 @@ export default {
       abi: '',
       address: '',
       interact: false,
-      validAbi: false,
-      validAddress: false,
+      isValidAbi: false,
+      isValidAddress: false,
       methods: [],
       selectedMethod: {},
       result: '',
@@ -317,7 +317,7 @@ export default {
       raw: {},
       nonce: 0,
       transactionFee: 0,
-      resolvedAddress: ''
+      hexAddress: ''
     };
   },
   computed: {
@@ -330,7 +330,7 @@ export default {
   },
   watch: {
     abi(newVal) {
-      this.validAbi = Misc.isJson(newVal);
+      this.isValidAbi = Misc.isJson(newVal);
     },
     selectedMethod(newVal) {
       this.writeInputs = {};
@@ -356,8 +356,8 @@ export default {
       this.abi = '';
       this.address = '';
       this.interact = false;
-      this.validAbi = false;
-      this.validAddress = false;
+      this.isValidAbi = false;
+      this.isValidAddress = false;
       this.methods = [];
       this.selectedMethod = {};
       this.result = '';
@@ -474,12 +474,7 @@ export default {
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
           value: this.value,
-          to:
-            this.resolvedAddress !== ''
-              ? this.resolvedAddress
-              : this.address !== ''
-              ? this.address
-              : '',
+          to: this.hexAddress,
           data: this.data
         };
 

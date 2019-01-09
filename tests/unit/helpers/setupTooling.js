@@ -1,11 +1,13 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
+import VeeValidate from 'vee-validate';
 import VueX from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
+import { state, getters } from './mockStore.js';
 
 import en_US from '@/translations/en_US.js';
 const languages = {
@@ -17,6 +19,7 @@ function createLocalVueInstance() {
   localVue.use(VueI18n);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
+  localVue.use(VeeValidate);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
   localVue.component(VueQrcode.name, VueQrcode);
@@ -32,7 +35,10 @@ function createLocalVueInstance() {
     silentTranslationWarn: true
   });
 
-  const store = new VueX.Store();
+  const store = new VueX.Store({
+    state: state,
+    getters: getters
+  });
   return {
     localVue,
     i18n,

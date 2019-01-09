@@ -2,11 +2,11 @@
   "addCustomNode": "Add Custom Network/Node",
   "save": "Save",
   "dontKnow": "Don't know what it is?",
-  "learnMore": "Learn more",
+  "helpCenter": "Help Center",
   "httpBasicAccess": "HTTP Basic Access Athentication",
   "tokens": "Tokens",
   "customToken": "Custom Tokens",
-  "dataGas": "Data & Gas Limited",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "Send Transaction",
   "haveIssues": "Have any issues?",
   "registerEns": "Register ENS",
@@ -64,6 +64,7 @@
   "search": "Search",
   "timeRemaining": "Time Remaining",
   "sendTxType": "Type",
-  "belowMin": "Below minimun swap value of",
-  "notValidAddr": "Not a valid address for destination chain"
+  "belowMin":"Below minimun swap value of",
+  "notValidAddr":"Not a valid address for destination chain",
+  "sentCoins": "I sent my coins"
 }

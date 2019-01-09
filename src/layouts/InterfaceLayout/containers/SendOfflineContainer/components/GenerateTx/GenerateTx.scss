@@ -234,3 +234,9 @@
 .verified-input {
   padding-right: 40px !important;
 }
+
+@media all and (max-width: $tablet-width) {
+  .tx-speed-input {
+    display: none;
+  }
+}

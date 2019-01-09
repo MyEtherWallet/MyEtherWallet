@@ -1,7 +1,7 @@
 <template>
   <div class="info-block-container">
     <interface-balance-modal ref="balance" :balance="balance" />
-    <div class="info-block balance" @click="balanceModalOpen">
+    <div class="info-block balance">
       <div class="block-image">
         <img class="icon" src="~@/assets/images/icons/balance.svg" />
       </div>
@@ -11,13 +11,41 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp;ETH</p>
+              <p>&nbsp; {{ network.type.name }}</p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>
         </div>
         <div class="icon-container">
-          <img src="~@/assets/images/icons/more.svg" />
+          <b-btn
+            id="balanceCheck"
+            class="custom-tooltip"
+            @click="balanceModalOpen"
+          >
+            <img src="~@/assets/images/icons/more.svg" />
+          </b-btn>
+          <b-btn
+            id="refreshBalance"
+            class="custom-tooltip"
+            @click="fetchBalance"
+          >
+            <i v-show="!fetchingBalance" class="fa fa-lg fa-refresh" />
+            <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
+          </b-btn>
+          <b-popover
+            content="Check Balance"
+            target="balanceCheck"
+            placement="top"
+            triggers="hover"
+            title
+          />
+          <b-popover
+            content="Refresh balance"
+            target="refreshBalance"
+            placement="top"
+            triggers="hover"
+            title
+          />
         </div>
       </div>
     </div>
@@ -26,7 +54,7 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-
+import { mapGetters } from 'vuex';
 export default {
   components: {
     'interface-balance-modal': InterfaceBalanceModal
@@ -35,14 +63,37 @@ export default {
     balance: {
       type: String,
       default: '0'
+    },
+    getBalance: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
-    return {};
+    return {
+      fetchingBalance: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
+  },
+  watch: {
+    balance() {
+      this.fetchingBalance = false;
+    }
   },
   methods: {
     balanceModalOpen() {
       this.$refs.balance.$refs.balance.show();
+    },
+    fetchBalance() {
+      this.fetchingBalance = true;
+      setTimeout(() => {
+        this.getBalance();
+        this.fetchingBalance = false;
+      }, 1000);
     }
   }
 };

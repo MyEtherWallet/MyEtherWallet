@@ -153,7 +153,9 @@
       <div class="buttons">
         <div
           :class="[
-            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            abi === '' || bytecode === '' || validByte || !validAbi
+              ? 'disabled'
+              : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
           @click="confirmationModalOpen"
@@ -162,9 +164,9 @@
         </div>
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"
+        link="https://kb.myetherwallet.com"
       />
     </div>
   </div>
@@ -198,7 +200,8 @@ export default {
       gasLimit: 21000,
       data: '',
       nonce: 0,
-      validAbi: false
+      validAbi: true,
+      validByte: true
     };
   },
   computed: {
@@ -222,8 +225,13 @@ export default {
       }
       this.estimateGas();
     },
-    bytecode() {
-      this.estimateGas();
+    bytecode(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.validByte = true;
+        this.estimateGas();
+      } else {
+        this.validByte = false;
+      }
     },
     gasAmount() {
       this.estimateGas();

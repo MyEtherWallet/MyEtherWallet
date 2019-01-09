@@ -10,7 +10,15 @@
       </div>
 
       <div class="the-form">
-        <textarea ref="message" class="custom-textarea-1" />
+        <textarea
+          v-validate="'required'"
+          v-model="message"
+          name="message"
+          class="custom-textarea-1"
+        />
+        <span v-show="errors.has('message')">
+          {{ errors.first('message') }}
+        </span>
       </div>
     </div>
 
@@ -31,23 +39,26 @@
         </div>
       </div>
       <div class="the-form domain-name">
-        <textarea ref="signature" class="custom-textarea-1" name="" />
+        <textarea ref="signature" disabled class="custom-textarea-1" />
       </div>
     </div>
 
     <div class="submit-button-container">
       <div class="buttons">
         <div
-          class="submit-button large-round-button-green-filled clickable"
+          :class="[
+            message.length > 0 ? '' : 'disabled',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
           @click="signMessage"
         >
           {{ $t('common.sign') }}
         </div>
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"
+        link="https://kb.myetherwallet.com"
       />
     </div>
   </div>
@@ -67,7 +78,9 @@ export default {
     'success-modal': SuccessModal
   },
   data() {
-    return {};
+    return {
+      message: ''
+    };
   },
   computed: {
     ...mapGetters({
@@ -78,12 +91,12 @@ export default {
   methods: {
     signMessage() {
       this.web3.eth
-        .sign(this.$refs.message.value, this.wallet.getAddressString())
+        .sign(this.message, this.wallet.getAddressString())
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
               address: this.wallet.getChecksumAddressString(),
-              msg: this.$refs.message.value,
+              msg: this.message,
               sig: _signedMessage,
               version: '3',
               signer: this.wallet.isHardware ? this.wallet.identifier : 'MEW'

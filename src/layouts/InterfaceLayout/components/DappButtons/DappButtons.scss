@@ -1,18 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
 .dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
   border-radius: 5px;
   color: $black;
   cursor: pointer;
+  height: 100%;
   padding: 40px 20px;
   text-align: center;
-  height: 100%;
-  background: $light-green-4;
 
   &:hover {
     border: 1px solid $mew-green;
     background-color: $light-green-6;
-    box-shadow: 2px 10px 20px $light-grey-10;
   }
 
   img {
@@ -25,29 +25,5 @@
 
   p {
     padding: 0 10px;
-  }
-
-  a {
-    color: black;
-  }
-
-  @media all and (max-width: $mobile-width) {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-
-    img {
-      height: 70px;
-      margin: 0;
-      margin-right: 10px;
-    }
-
-    .button-info {
-      text-align: left;
-    }
-
-    p {
-      padding: 0;
-    }
   }
 }

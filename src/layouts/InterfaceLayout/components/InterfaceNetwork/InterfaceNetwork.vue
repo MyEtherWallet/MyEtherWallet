@@ -1,7 +1,7 @@
 <template>
   <div class="info-block-container">
     <interface-network-modal ref="network" />
-    <div class="info-block network" @click="networkModalOpen">
+    <div class="info-block network">
       <div class="block-image network-type">
         <div class="icon-block">
           <img :src="network.type.icon" class="icon" />
@@ -11,10 +11,6 @@
         <div class="information-container">
           <div class="title-and-helper">
             <h2>{{ $t('interface.network') }}</h2>
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'"
-            />
           </div>
           <p v-if="wallet.identifier !== 'web3_wallet'">
             {{ network.service + '(' + network.type.name + ')' }}
@@ -27,7 +23,20 @@
           </p>
         </div>
         <div class="icon-container">
-          <img src="~@/assets/images/icons/change.svg" />
+          <b-btn
+            id="networkModal"
+            class="custom-tooltip"
+            @click="networkModalOpen"
+          >
+            <img src="~@/assets/images/icons/change.svg" />
+          </b-btn>
+          <b-popover
+            content="Open networks"
+            target="networkModal"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
         </div>
       </div>
     </div>

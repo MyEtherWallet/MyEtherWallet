@@ -1,5 +1,8 @@
 <template>
-  <div :class="[!disabled ? 'disabled' : '', 'button-block']" @click="func">
+  <div
+    :class="[!disabled ? 'disabled' : '', 'button-block', classname]"
+    @click="func"
+  >
     <div class="button-image"><img :src="img" class="icon" /></div>
     <h3>{{ title }}</h3>
     <p class="desc">{{ desc }}</p>
@@ -37,6 +40,10 @@ export default {
     disabled: {
       type: Boolean,
       default: true
+    },
+    classname: {
+      type: String,
+      default: ''
     }
   },
   data() {

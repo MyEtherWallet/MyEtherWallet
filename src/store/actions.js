@@ -3,9 +3,27 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import BigNumber from 'bignumber.js';
+
+import {
+  type as noticeTypes,
+  txIndexes,
+  swapIndexes,
+  addUpdateNotification,
+  addUpdateSwapNotification
+} from '@/helpers/notificationFormatters';
+import { WEB3_WALLET } from '../wallets/bip44/walletTypes';
+import Web3PromiEvent from 'web3-core-promievent';
 
 const addNotification = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0]);
+  let address;
+
+  if (val[1] != undefined) {
+    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
+  } else {
+    throw Error('Unable to determine sending address for notification.');
+  }
+
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -13,27 +31,30 @@ const addNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push({
-    title: val[2],
-    read: false,
-    timestamp: new Date(),
-    body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
-    expanded: false
-  });
-
+  newNotif[address] = addUpdateNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
   commit('ADD_NOTIFICATION', newNotif);
 };
 
-const addSwapTransaction = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0]);
+const addSwapNotification = async function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
-  Object.keys(state.transactions).forEach(item => {
-    newNotif[item] = state.transactions[item];
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
   });
+
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push(val[1]); // TODO: reduce the ammount of information stored
-  commit('ADD_SWAP_TRANSACTION', newNotif);
+  newNotif[address] = await addUpdateSwapNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
+
+  commit('ADD_NOTIFICATION', newNotif);
 };
 
 const addCustomPath = function({ commit, state }, val) {
@@ -64,7 +85,7 @@ const decryptWallet = function({ commit, dispatch }, params) {
 };
 
 const setAccountBalance = function({ commit }, balance) {
-  commit('SET_ACCOUNT_BALANCE', +balance);
+  commit('SET_ACCOUNT_BALANCE', balance);
 };
 
 const setGasPrice = function({ commit }, gasPrice) {
@@ -101,41 +122,114 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     )
   );
   web3Instance['mew'] = {};
-  web3Instance['mew'].sendBatchTransactions = async arr => {
-    for (let i = 0; i < arr.length; i++) {
-      const localTx = {
-        to: arr[i].to,
-        data: arr[i].data,
-        from: arr[i].from,
-        value: arr[i].value,
-        gasPrice: arr[i].gasPrice
+  web3Instance['mew'].sendBatchTransactions = arr => {
+    return new Promise(async resolve => {
+      for (let i = 0; i < arr.length; i++) {
+        const localTx = {
+          to: arr[i].to,
+          data: arr[i].data,
+          from: arr[i].from,
+          value: arr[i].value,
+          gasPrice: arr[i].gasPrice
+        };
+        arr[i].nonce = await (arr[i].nonce === undefined
+          ? web3Instance.eth.getTransactionCount(
+              state.wallet.getChecksumAddressString()
+            )
+          : arr[i].nonce);
+        arr[i].nonce = +arr[i].nonce + i;
+        arr[i].gas = await (arr[i].gas === undefined
+          ? web3Instance.eth.estimateGas(localTx)
+          : arr[i].gas);
+        arr[i].chainId = !arr[i].chainId
+          ? state.network.type.chainID
+          : arr[i].chainId;
+        arr[i].gasPrice =
+          arr[i].gasPrice === undefined
+            ? unit.toWei(state.gasPrice, 'gwei')
+            : arr[i].gasPrice;
+        arr[i] = formatters.inputCallFormatter(arr[i]);
+      }
+
+      const batchSignCallback = promises => {
+        resolve(promises);
       };
-      arr[i].nonce = await (arr[i].nonce === undefined
-        ? web3Instance.eth.getTransactionCount(
-            state.wallet.getChecksumAddressString()
-          )
-        : arr[i].nonce);
-      arr[i].nonce = +arr[i].nonce + i;
-      arr[i].gas = await (arr[i].gas === undefined
-        ? web3Instance.eth.estimateGas(localTx)
-        : arr[i].gas);
-      arr[i].chainId = !arr[i].chainId
-        ? state.network.type.chainID
-        : arr[i].chainId;
-      arr[i].gasPrice =
-        arr[i].gasPrice === undefined
-          ? unit.toWei(state.gasPrice, 'gwei')
-          : arr[i].gasPrice;
-      arr[i] = formatters.inputCallFormatter(arr[i]);
-    }
 
-    this._vm.$eventHub.$emit(
-      'showTxCollectionConfirmModal',
-      arr,
-      state.wallet.isHardware
-    );
+      if (state.wallet.identifier === WEB3_WALLET) {
+        const batch = new web3Instance.eth.BatchRequest();
+        // MetaMask reverses the request order
+        // see: https://github.com/MetaMask/metamask-extension/issues/5817
+        const revArr = arr.reverse();
+        const promises = revArr.map(tx => {
+          const promiEvent = new Web3PromiEvent(false);
+          const req = web3Instance.eth.sendTransaction.request(
+            tx,
+            (err, data) => {
+              if (err !== null) {
+                promiEvent.eventEmitter.emit('error', err);
+                promiEvent.reject(err);
+              }
+              if (err === null) {
+                promiEvent.eventEmitter.emit('transactionHash', data);
+              }
+            }
+          );
+          promiEvent.eventEmitter.on('error', err => {
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_ERROR,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)) || tx,
+              err
+            ]);
+            this._vm.$eventHub.$emit(
+              'showErrorModal',
+              'Transaction Error!',
+              'Return'
+            );
+          });
+          promiEvent.eventEmitter.once('transactionHash', hash => {
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_HASH,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
+              hash
+            ]).then(() => {
+              web3Instance.eth.sendTransaction.method._confirmTransaction(
+                promiEvent,
+                hash,
+                req
+              );
+              this._vm.$eventHub.$emit(
+                'showSuccessModal',
+                'Transaction sent!',
+                'Okay'
+              );
+            });
+          });
+          promiEvent.eventEmitter.once('receipt', receipt => {
+            promiEvent.resolve(receipt);
+            dispatch('addNotification', [
+              noticeTypes.TRANSACTION_RECEIPT,
+              tx.from,
+              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
+              receipt
+            ]);
+          });
+          batch.add(req);
+          return promiEvent.eventEmitter;
+        });
+        batchSignCallback(promises);
+        batch.execute();
+      } else {
+        this._vm.$eventHub.$emit(
+          'showTxCollectionConfirmModal',
+          arr,
+          batchSignCallback,
+          state.wallet.isHardware
+        );
+      }
+    });
   };
-
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
@@ -161,6 +255,7 @@ const updateNotification = function({ commit, state }, val) {
 
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
+
   const address = web3.utils.toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
@@ -181,7 +276,7 @@ const setLastPath = function({ commit }, val) {
 
 export default {
   addNotification,
-  addSwapTransaction,
+  addSwapNotification,
   addCustomPath,
   checkIfOnline,
   clearWallet,

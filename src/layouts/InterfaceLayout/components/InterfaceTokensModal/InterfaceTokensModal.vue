@@ -45,9 +45,9 @@
             {{ $t('interface.save') }}
           </button>
           <interface-bottom-text
-            :link-text="$t('interface.learnMore')"
+            :link-text="$t('interface.helpCenter')"
             :question="$t('interface.dontKnow')"
-            link="mailto:support@myetherwallet.com"
+            link="https://kb.myetherwallet.com"
           />
         </div>
       </form>

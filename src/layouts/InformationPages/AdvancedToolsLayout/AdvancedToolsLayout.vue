@@ -155,7 +155,7 @@
                   US information systems and infrastructure.
                 </p>
                 <div class="link-block">
-                  <a href="#" rel="noopener noreferrer" target="_blank"
+                  <a href="https:/kb.myetherwallet.com" target="_blank">
                     >Learn more</a
                   >
                 </div>

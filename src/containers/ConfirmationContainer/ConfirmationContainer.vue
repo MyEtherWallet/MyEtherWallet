@@ -17,7 +17,9 @@
     <confirm-collection-modal
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
+      :is-hardware-wallet="isHardwareWallet"
       :signed-array="signedArray"
+      :un-signed-array="unSignedArray"
       :sending="sending"
     />
     <confirm-modal
@@ -48,24 +50,33 @@
       :message="successMessage"
       :link-message="linkMessage"
     />
+    <error-modal
+      ref="errorModal"
+      :message="successMessage"
+      :link-message="linkMessage"
+    />
   </div>
 </template>
 
 <script>
 import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import * as ethTx from 'ethereumjs-tx';
 import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
+import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
-import ethTx from 'ethereumjs-tx';
+import Web3PromiEvent from 'web3-core-promievent';
+import { type as noticeTypes } from '@/helpers/notificationFormatters';
 
 export default {
   components: {
     'confirm-modal': ConfirmModal,
     'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
+    'error-modal': ErrorModal,
     'confirm-sign-modal': ConfirmSignModal
   },
   props: {
@@ -109,7 +120,10 @@ export default {
       web3WalletHash: '',
       web3WalletRes: '',
       signedArray: [],
-      sending: false
+      txBatch: null,
+      sending: false,
+      unSignedArray: [],
+      signCallback: {}
     };
   },
   computed: {
@@ -126,26 +140,34 @@ export default {
   },
   watch: {
     web3WalletHash(newVal) {
+      if (!newVal) return;
       this.$store.dispatch('addNotification', [
+        noticeTypes.TRANSACTION_HASH,
         this.fromAddress,
-        newVal,
-        'Transaction Hash'
+        this.raw,
+        newVal
       ]);
       const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(newVal).then(res => {
-          if (res !== null) {
-            this.web3WalletRes = res;
-            this.showSuccessModal('Transaction sent!', 'Okay');
+        this.web3.eth
+          .getTransactionReceipt(newVal)
+          .then(res => {
+            if (res !== null) {
+              this.web3WalletRes = res;
+              this.showSuccessModal('Transaction sent!', 'Okay');
+              clearInterval(pollReceipt);
+            }
+          })
+          .catch(() => {
             clearInterval(pollReceipt);
-          }
-        });
+          });
       }, 500);
     },
     web3WalletRes(newVal) {
       this.$store.dispatch('addNotification', [
+        noticeTypes.TRANSACTION_RECEIPT,
         this.fromAddress,
-        newVal,
-        'Transaction Receipt'
+        this.raw,
+        newVal
       ]);
     }
   },
@@ -153,6 +175,11 @@ export default {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null;
       this.showSuccessModal(message, linkMessage);
+    });
+
+    this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
+      if (!message) message = null;
+      this.showErrorModal(message, linkMessage);
     });
 
     this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
@@ -201,7 +228,7 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.wallet.signTransaction(tx).then(_response => {
-        this.web3WalletHash = _response;
+        this.web3WalletHash = _response.transactionHash;
       });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -209,17 +236,26 @@ export default {
       );
     });
 
-    this.$eventHub.$on('showTxCollectionConfirmModal', (tx, isHardware) => {
-      const newArr = [];
-      this.isHardwareWallet = isHardware;
-      for (let i = 0; i < tx.length; i++) {
-        this.wallet.signTransaction(tx[i]).then(_response => {
-          newArr.push(_response);
-        });
+    this.$eventHub.$on(
+      'showTxCollectionConfirmModal',
+      async (tx, signCallback, isHardware) => {
+        this.isHardwareWallet = isHardware;
+        this.unSignedArray = [];
+        this.unSignedArray = tx;
+        const signed = [];
+        if (!signCallback) signCallback = () => {};
+        this.signCallback = signCallback;
+
+        this.confirmationCollectionModalOpen();
+
+        for (let i = 0; i < tx.length; i++) {
+          const _signedTx = await this.wallet.signTransaction(tx[i]);
+          signed.push(_signedTx);
+        }
+
+        this.signedArray = signed;
       }
-      this.signedArray = newArr;
-      this.confirmationCollectionModalOpen();
-    });
+    );
 
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
@@ -265,6 +301,12 @@ export default {
       if (linkMessage !== null) this.linkMessage = linkMessage;
       this.$refs.successModal.$refs.success.show();
     },
+    showErrorModal(message, linkMessage) {
+      this.reset();
+      if (message !== null) this.successMessage = message;
+      if (linkMessage !== null) this.linkMessage = linkMessage;
+      this.$refs.errorModal.$refs.success.show();
+    },
     parseRawTx(tx) {
       this.raw = tx;
       this.nonce = +tx.nonce;
@@ -294,56 +336,90 @@ export default {
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
     },
-    async sendBatchCallback(err, response) {
-      if (err !== null) {
-        this.$store.dispatch('addNotification', [
-          this.fromAddress,
-          err,
-          'Transaction Error'
-        ]);
-        return;
-      }
-
-      this.$store.dispatch('addNotification', [
-        this.fromAddress,
-        response,
-        'Transaction Hash'
-      ]);
-
-      const pollReceipt = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(response).then(res => {
-          if (res !== null) {
-            this.$store.dispatch('addNotification', [
-              this.fromAddress,
-              res,
-              'Transaction Receipt'
-            ]);
-            this.showSuccessModal('Transaction sent!', 'Okay');
-            clearInterval(pollReceipt);
-          }
-        });
-      }, 500);
-    },
-    async sendBatchTransactions() {
-      this.sending = true;
+    async doBatchTransactions() {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
-      for (let i = 0; i < this.signedArray.length; i++) {
-        batch.add(
-          web3.eth.sendSignedTransaction.request(
-            this.signedArray[i].rawTransaction,
-            this.sendBatchCallback
-          )
-        );
-      }
+      const promises = this.signedArray.map(tx => {
+        const promiEvent = new Web3PromiEvent();
+        try {
+          const _tx = tx.tx;
+          const req = web3.eth.sendSignedTransaction.request(
+            tx.rawTransaction,
+            (err, data) => {
+              // was falling through on success
+              if (err !== null) {
+                promiEvent.eventEmitter.emit('error', err);
+                promiEvent.reject(err);
+                this.$store.dispatch('addNotification', [
+                  noticeTypes.TRANSACTION_ERROR,
+                  this.fromAddress,
+                  this.unSignedArray.find(
+                    entry => +_tx.nonce === +entry.nonce
+                  ) || _tx,
+                  err
+                ]);
+                this.showErrorModal('Transaction Error!', 'Return');
+              }
+
+              // was falling through on error
+              if (err === null) {
+                promiEvent.eventEmitter.emit('transactionHash', data);
+                this.$store
+                  .dispatch('addNotification', [
+                    noticeTypes.TRANSACTION_HASH,
+                    this.fromAddress,
+                    this.unSignedArray.find(
+                      entry => +_tx.nonce === +entry.nonce
+                    ),
+                    data
+                  ])
+                  .then(() => {
+                    this.showSuccessModal('Transaction sent!', 'Okay');
+                  });
+
+                const pollReceipt = setInterval(() => {
+                  if (data === undefined || data === null)
+                    clearInterval(pollReceipt);
+                  web3.eth.getTransactionReceipt(data).then(res => {
+                    if (res !== null) {
+                      promiEvent.eventEmitter.emit('receipt', res);
+                      promiEvent.resolve(res);
+                      this.$store.dispatch('addNotification', [
+                        noticeTypes.TRANSACTION_RECEIPT,
+                        this.fromAddress,
+                        this.unSignedArray.find(
+                          entry => +_tx.nonce === +entry.nonce
+                        ),
+                        res
+                      ]);
+                      clearInterval(pollReceipt);
+                    }
+                  });
+                }, 500);
+              }
+            }
+          );
+          batch.add(req);
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+        return promiEvent.eventEmitter;
+      });
+
+      this.signCallback(promises);
       batch.execute();
+      this.sending = true;
+    },
+    sendBatchTransactions() {
+      this.doBatchTransactions();
     },
     sendTx() {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
       if (this.raw.generateOnly) return;
-      this.showSuccessModal();
+      this.showSuccessModal('Transaction sent!', 'Okay');
     },
     reset() {
       this.responseFunction = null;
@@ -367,6 +443,9 @@ export default {
       this.signedArray = [];
       this.web3WalletHash = '';
       this.web3WalletRes = '';
+      this.txBatch = null;
+      this.sending = false;
+      this.signCallback = {};
     }
   }
 };

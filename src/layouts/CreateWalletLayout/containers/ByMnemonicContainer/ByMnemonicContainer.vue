@@ -1,6 +1,11 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal ref="finish" />
+    <finish-modal ref="finish" :unlock="unlockWallet" />
+    <print-modal
+      ref="print"
+      :mnemonic="mnemonicValues"
+      :is-twenty-four="mnemonic24"
+    />
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
@@ -58,9 +63,9 @@
               >
                 {{ $t('createWallet.byMnemonicAlreadyWritten') }}
               </div>
-              <router-link to="/">
+              <div @click="openPrintModal">
                 <img class="icon" src="~@/assets/images/icons/printer.svg" />
-              </router-link>
+              </div>
             </div>
             <input-footer />
           </b-tab>
@@ -73,19 +78,20 @@
 <script>
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import FinishModal from './components/FinishModal';
+import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
-// Mnemonic code for generating deterministic keys
 const bip39 = require('bip39');
 
 export default {
   components: {
     'finish-modal': FinishModal,
     'verification-modal': VerificationModal,
+    'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter
   },
   data() {
     return {
-      varificationValues: [],
+      verificationValues: [],
       mnemonicValues: [],
       mnemonic24: false
     };
@@ -95,6 +101,9 @@ export default {
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
+    unlockWallet() {
+      this.$router.push('/access-my-wallet');
+    },
     mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {
         this.mnemonicValues = bip39.generateMnemonic(256).split(' ');
@@ -123,7 +132,7 @@ export default {
     mnemonicDoneModalOpen() {
       let valid = false;
 
-      this.varificationValues.forEach(function(value) {
+      this.verificationValues.forEach(function(value) {
         const userInputText = document
           .querySelector('.phrases .word[data-index="' + value.no + '"]')
           .querySelector('input').value;
@@ -170,7 +179,7 @@ export default {
       }
 
       let ranNums = [];
-      this.varificationValues = [];
+      this.verificationValues = [];
 
       document.querySelectorAll('.phrases .word').forEach(function(el) {
         el.classList.remove('verification');
@@ -194,7 +203,7 @@ export default {
           .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
           .querySelector('span')
           .classList.add('hidden');
-        this.varificationValues.push({
+        this.verificationValues.push({
           word: document
             .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
             .querySelector('span').textContent,
@@ -208,6 +217,9 @@ export default {
       }
 
       this.$refs.verification.$refs.verification.show();
+    },
+    openPrintModal() {
+      this.$refs.print.$refs.print.show();
     }
   }
 };

@@ -77,10 +77,16 @@
 
   .icon-container {
     display: flex;
-    min-height: 23px;
+    max-height: 19px;
 
     .custom-tooltip {
       margin-right: 13px;
     }
+  }
+
+  .custom-tooltip {
+    background: none;
+    border: 0;
+    padding: 0;
   }
 }

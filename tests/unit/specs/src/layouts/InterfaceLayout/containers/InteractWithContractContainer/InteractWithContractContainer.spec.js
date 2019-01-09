@@ -78,9 +78,9 @@ describe('InteractWithContractContainer.vue', () => {
   it('should render valid abi', () => {
     const abi = { value: 'val' };
     wrapper.setData({ abi: JSON.stringify(abi) });
-    expect(wrapper.vm.$data.validAbi).toBe(true);
+    expect(wrapper.vm.$data.isValidAbi).toBe(true);
     wrapper.setData({ abi });
-    expect(wrapper.vm.$data.validAbi).toBe(false);
+    expect(wrapper.vm.$data.isValidAbi).toBe(false);
   });
 
   xit('[FAILING] should render valid address', () => {

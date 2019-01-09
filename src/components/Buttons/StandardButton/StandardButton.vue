@@ -75,6 +75,8 @@ export default {
           return 'standard-button__grey';
         case 'grey-border':
           return 'standard-button__grey-border';
+        case 'red':
+          return 'standard-button__red';
         case 'green':
           return 'standard-button__green';
         case 'green-border':

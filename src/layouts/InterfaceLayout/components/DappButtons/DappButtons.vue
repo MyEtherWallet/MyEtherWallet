@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="param">
+  <router-link :to="param" tag="div">
     <div :class="['dapps-button', active ? '' : 'disabled']">
       <img :src="icon" />
       <div class="button-info">

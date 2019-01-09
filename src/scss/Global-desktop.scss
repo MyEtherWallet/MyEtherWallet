@@ -217,7 +217,7 @@
   .page-container {
     margin: 0 auto;
     max-width: 1024px;
-    padding: 0;
+    padding: 0 20px;
   }
 
   .page-container2 {
@@ -569,9 +569,9 @@
     z-index: 9999;
   }
 
-  .modal-backdrop {
-    z-index: $z-bootstrap-modal-backdrop;
-  }
+  // .modal-backdrop {
+  //   z-index: $z-bootstrap-modal-backdrop;
+  // }
 
   .language-menu-container {
     position: relative;
@@ -625,7 +625,6 @@
   // *********************************************************************
   // Tooltip
   // *********************************************************************
-
   .popover-button {
     background-color: transparent;
     border: 0;
@@ -739,7 +738,7 @@
 
   .modal-body {
     background-color: $background-color-white;
-    padding: 60px 70px 50px;
+    // padding: 60px 70px 50px;
 
     .title {
       color: $text-color-6;
@@ -797,7 +796,7 @@
     }
 
     .modal-body {
-      padding: 20px;
+      padding: 20px 43px;
     }
   }
 
@@ -822,6 +821,7 @@
       border-radius: 0;
       font-size: 14px;
       padding: 20px 0;
+      color: #999;
 
       &.active {
         background-color: $nav-tab--button--active--background-color;
@@ -836,6 +836,11 @@
       .nav-item {
         flex: 1;
         text-align: center;
+      }
+
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
       }
     }
   }
@@ -1266,6 +1271,13 @@
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
 
+// **********************************************************************************************************
+// Global elements for all sizes (Desktop, Tablet, Mobile)
+// **********************************************************************************************************
+
+// *********************************************************************
+// Not recommended
+// *********************************************************************
 .not-recommended {
   border: 1px solid $red-1;
   background-color: $light-red-1;
@@ -1273,4 +1285,45 @@
   margin-bottom: 25px;
   padding: 10px;
   text-align: center;
+}
+
+// *********************************************************************
+// Input error message
+// *********************************************************************
+.global__input-error-message {
+  color: $red-1;
+  font-weight: 500;
+  padding: 10px 0 0 15px;
+  line-height: 15px;
+  font-size: 13px;
+}
+
+// *********************************************************************
+// [Temporary fix] for Settings modal's expending menu's
+// max-height.
+// *********************************************************************
+.settings-modal .contents-container.opened {
+  max-height: 600px !important;
+}
+
+// *********************************************************************
+// Temprary fix for Network and Address dropdown menu size
+// *********************************************************************
+.dropdown-button-2 .dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.modal-content {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
+}
+
+// *********************************************************************
+// Global disabled button style
+// *********************************************************************
+.btn-secondary.disabled {
+  color: $white;
+  background-color: $dark-grey-11;
+  border-color: $dark-grey-11;
+  opacity: 1;
 }

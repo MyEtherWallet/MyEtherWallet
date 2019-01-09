@@ -107,7 +107,7 @@
             >
               {{ $t('dapps.detailWarning') }}
             </div>
-            <div ref="printableData" class="detail-info">
+            <div id="printableData" class="detail-info">
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.actualBid') }}</span>
                 <span class="detail-value">{{ raw.bidAmount }} ETH</span>
@@ -187,7 +187,7 @@
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
-import * as jsPDF from 'jspdf';
+import printJS from 'print-js';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -333,12 +333,11 @@ export default {
         nonce: this.raw['nonce']
       };
       if (!this.$route.fullPath.includes('reveal')) {
-        const doc = new jsPDF();
-        doc.fromHTML(this.$refs.printableData, 15, 15, {
-          width: 300
+        printJS({
+          printable: 'printableData',
+          type: 'html',
+          header: 'MyEtherWallet - ENS reveal bid'
         });
-
-        doc.save(`${this.raw.name}.eth-bid.pdf`);
       }
       this.web3.eth.sendTransaction(raw);
     }

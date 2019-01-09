@@ -11,6 +11,12 @@
   }
 }
 
+.page-container {
+  @media all and (max-width: $tablet-width) {
+    padding: 0;
+  }
+}
+
 .scrollup-container {
   opacity: 0;
   pointer-events: none;
@@ -31,6 +37,7 @@
   background-color: $background-color-white;
   left: 0;
   position: fixed;
+  padding: 0 25px;
   top: 0;
   width: 100%;
   //z-index: $z-menu + 100;
@@ -40,7 +47,7 @@
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
 
     .header-container {
-      padding: 5px 0;
+      padding: 2.5px 0;
     }
   }
 
@@ -95,8 +102,8 @@
           outline: none;
 
           &.active {
-            color: $text-black;
-            font-weight: 500;
+            //color: $text-black;
+            //font-weight: 500;
           }
         }
       }
@@ -140,6 +147,9 @@
           margin-left: 26px;
           padding: 13px 0;
 
+          &.get-free-wallet {
+            margin-left: 0;
+          }
           &.nopadding {
             padding: 0;
           }
@@ -234,6 +244,18 @@
       display: block;
       color: #506175;
     }
+  }
+}
+
+//********************************************************
+// .notification-menu-container
+//********************************************************
+.notification-menu-container {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
   }
 }
 
@@ -361,9 +383,37 @@
 
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.5s ease-out;
-  animation-fill-mode: forwards;
-  opacity: 1;
+  //animation: fadeOutFromBlock 0.5s ease-out;
+  //animation-fill-mode: forwards;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  margin-left: 0;
+  overflow: hidden;
+
+  .flex-block {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .access-button {
+    margin-left: 8px;
+    border: 1px solid $border-green;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    padding: 10px 20px;
+    position: relative;
+    overflow: hidden;
+    background-color: $text-color-green;
+    color: $text-white;
+
+    &:hover {
+      color: $text-color-green;
+      background-color: $white;
+    }
+  }
 
   .get-free-wallet-button {
     border: 1px solid $border-green;
@@ -382,10 +432,12 @@
     }
   }
 
-  &.noshow {
-    animation: fadeOutFromBlock 0.5s ease-out;
+  &.show {
+    animation: fadeInFromNone 0.5s ease-out;
     animation-fill-mode: forwards;
   }
+
+  $get-free-wallet-button-width: 240px;
 
   @keyframes fadeInFromNone {
     0% {
@@ -396,14 +448,14 @@
     }
 
     50% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 0;
       margin-left: 20px;
     }
 
     100% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 1;
       margin-left: 20px;
@@ -412,14 +464,14 @@
 
   @keyframes fadeOutFromBlock {
     0% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 1;
       margin-left: 20px;
     }
 
     50% {
-      width: 173px;
+      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 0;
       margin-left: 20px;
@@ -435,12 +487,15 @@
 } // .get-free-wallet
 
 //********************************************************
-// .info-block-container for mobile interface menu
+// .settings-container
 //********************************************************
-.info-block-container {
-  //margin-top: 160px;
+.settings-container {
+  display: flex;
+  align-items: center;
 
-  > * {
-    margin-bottom: 5px;
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
   }
 }

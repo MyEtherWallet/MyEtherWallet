@@ -15,6 +15,7 @@
           v-model="password"
           name="Password"
           autocomplete="off"
+          placeholder="Enter password"
         />
         <img
           v-if="show"
@@ -28,6 +29,9 @@
         />
       </div>
       <p v-show="error !== ''" class="error">{{ error }}</p>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
       <button
         :disabled="
           password === '' && password.length === 0 && password.length < 9
@@ -36,7 +40,8 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('accessWallet.unlock') }}
+        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -60,7 +65,8 @@ export default {
     return {
       show: false,
       password: '',
-      error: ''
+      error: '',
+      spinner: false
     };
   },
   computed: {
@@ -75,6 +81,7 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       const worker = new Worker();
       const self = this;
       worker.postMessage({
@@ -86,6 +93,7 @@ export default {
         self.$store.dispatch('decryptWallet', [
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
+        self.spinner = false;
         self.$router.push({
           path: 'interface'
         });
