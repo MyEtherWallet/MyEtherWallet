@@ -37,10 +37,15 @@
         :progress-bar-value="'__80percent'"
         class="cww cww4 positionBottom"
       />
-      <congratulations
+      <what-is-upside
         ref="cww5"
-        :progress-bar-value="'__100percent'"
+        :progress-bar-value="'__90percent'"
         class="cww cww5 positionBottom"
+      />
+      <congratulations
+        ref="cww6"
+        :progress-bar-value="'__100percent'"
+        class="cww cww6 positionBottom"
       />
 
       <div class="create-wallet-warnings__footer-container">
@@ -78,6 +83,7 @@ import WhatIsMyEtherWallet from './components/WhatIsMyEtherWallet';
 import WhereAreMyFundsStored from './components/WhereAreMyFundsStored';
 import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword';
 import SomeHelpfulTips from './components/SomeHelpfulTips';
+import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
 import utils from 'web3-utils';
 
@@ -87,21 +93,22 @@ export default {
     'where-my-funds-stored': WhereAreMyFundsStored,
     'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
     'some-helpful-tips': SomeHelpfulTips,
+    'what-is-upside': WhatIsUpside,
     congratulations: Congratulations
   },
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5'],
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
       scrollListener: function() {}
     };
   },
   mounted: function() {
     this.scrollListener = e => {
-      if (e.deltaY < -5) {
+      if (e.deltaY < -6) {
         this.mouseScrollUp();
       }
-      if (e.deltaY > 5) {
+      if (e.deltaY > 6) {
         this.mouseScrollDown();
       }
     };
