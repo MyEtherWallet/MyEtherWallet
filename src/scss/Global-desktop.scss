@@ -1304,6 +1304,15 @@
   overflow: auto;
 }
 
+// *********************************************************************
+// Bootstrap modal close button color fix
+// *********************************************************************
+.close:not(:disabled):not(.disabled):hover,
+.close:not(:disabled):not(.disabled):focus {
+  color: $white;
+  opacity: 1;
+}
+
 .modal-content {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
 }
