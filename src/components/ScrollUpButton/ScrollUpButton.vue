@@ -7,13 +7,15 @@
 </template>
 
 <script>
+import Misc from '@/helpers/misc';
+
 export default {
   data() {
     return {};
   },
   methods: {
     scrollToTop: function() {
-      window.scrollTo(0, 0);
+      Misc.scrollToTop(500);
     }
   }
 };
