@@ -89,6 +89,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    overrideCurrency: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -102,6 +108,9 @@ export default {
     };
   },
   watch: {
+    overrideCurrency(newVal) {
+      this.selectedCurrency = newVal;
+    },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
     },
