@@ -10,7 +10,7 @@
         <h4 class="block-title">{{ $t('interface.signedTx') }}</h4>
       </div>
       <div class="signed-tx-container">
-        <code> {{ signedTx }} </code>
+        <code>{{ JSON.parse(signedTx).rawTransaction }}</code>
         <input
           ref="signedTxInput"
           :value="signedTx"
@@ -24,8 +24,7 @@
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
             :options="{ size: 200 }"
-          />
-          or <a :href="jsonFile" :download="jsonFileName">Download JSON</a>
+          />or <a :href="jsonFile" :download="jsonFileName">Download JSON</a>
         </div>
       </div>
       <div class="raw">
@@ -39,7 +38,7 @@
           </div>
         </div>
         <div v-if="showRaw" class="raw-tx-container">
-          <code> {{ rawTx }} </code>
+          <code>{{ rawTx }}</code>
         </div>
       </div>
     </div>
@@ -47,9 +46,8 @@
       <b-btn
         class="mid-round-button-green-filled close-button"
         @click="copyAndContinue"
+        >{{ $t('interface.copyAndCont') }}</b-btn
       >
-        {{ $t('interface.copyAndCont') }}
-      </b-btn>
     </div>
   </b-modal>
 </template>

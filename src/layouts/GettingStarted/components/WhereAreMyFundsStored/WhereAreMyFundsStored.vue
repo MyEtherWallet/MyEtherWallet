@@ -29,16 +29,7 @@
             </div>
             <div v-if="expenderContentShow" class="content">
               <p>{{ $t('gettingStarted.whatIsBlockchainDesc1') }}</p>
-
-              <p>
-                {{ $t('gettingStarted.whatIsBlockchainDesc2') }}
-                <a
-                  href="https://kb.myetherwallet.com/getting-started/getting-started-new.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >{{ $t('gettingStarted.whatIsBlockchainDesc2link') }}</a
-                >.
-              </p>
+              <p>{{ $t('gettingStarted.whatIsBlockchainDesc2') }}</p>
             </div>
           </div>
         </div>

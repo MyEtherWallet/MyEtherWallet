@@ -149,7 +149,7 @@ const pwa = {
   }
 };
 module.exports = {
-  baseUrl: process.env.ROUTER_MODE === 'history' ? '/' : './',
+  publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,

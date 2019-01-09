@@ -1,10 +1,9 @@
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer/VerifyMessageContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
-
+import Vue from 'vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 
-import PopOver from '@/components/PopOver/PopOver.vue';
 import { Tooling } from '@@/helpers';
 
 describe('VerifyMessageContainer.vue', () => {
@@ -28,25 +27,28 @@ describe('VerifyMessageContainer.vue', () => {
         getAddressString: function() {}
       }
     });
-    wrapper = shallowMount(VerifyMessageContainer, {
+    wrapper = mount(VerifyMessageContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
         'interface-bottom-text': InterfaceBottomText,
-        'interface-container-title': InterfaceContainerTitle,
-        popover: PopOver
+        'interface-container-title': InterfaceContainerTitle
       }
     });
   });
 
   it('should render correct message to textarea', () => {
     const message = 'message';
-    wrapper.setData({ message });
-    expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(
-      message
-    );
+    wrapper.setData({ message: message });
+    expect(wrapper.vm.message).toBe('message');
+    const textArea = wrapper.find('.domain-name .custom-textarea-1');
+    expect(textArea.exists()).toBe(true);
+    Vue.nextTick(() => {
+      expect(textArea.element.value).toEqual(message);
+    });
   });
 
   xit('[FAILING] should render correct error message to textarea', () => {
@@ -87,13 +89,15 @@ describe('VerifyMessageContainer.vue', () => {
     it('should delete textarea when click button', () => {
       const message = 'message';
       wrapper.setData({ message });
-      expect(
-        wrapper.vm.$el.querySelector('.domain-name textarea').value
-      ).toEqual(message);
-      wrapper.find('.copy-buttons span').trigger('click');
-      expect(
-        wrapper.vm.$el.querySelector('.domain-name textarea').value
-      ).toEqual('');
+      Vue.nextTick(() => {
+        expect(
+          wrapper.vm.$el.querySelector('.domain-name textarea').value
+        ).toEqual(message);
+        wrapper.find('.copy-buttons span').trigger('click');
+        expect(
+          wrapper.vm.$el.querySelector('.domain-name textarea').value
+        ).toEqual('');
+      });
     });
   });
 });

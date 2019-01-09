@@ -65,5 +65,6 @@
   "timeRemaining": "充電完了まで",
   "sendTxType": "タイプ",
   "belowMin": "最小のスワップ値以下",
-  "notValidAddr": "先チェーンの有効なアドレスではなく"
+  "notValidAddr": "先チェーンの有効なアドレスではなく",
+  "sentCoins": "I sent my coins"
 }
