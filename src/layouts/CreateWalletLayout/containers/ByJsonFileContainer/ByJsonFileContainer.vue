@@ -33,7 +33,8 @@
                     :class="[
                       { disable: !downloadable },
                       'next-button',
-                      'large-round-button-green-filled'
+                      'large-round-button-green-filled',
+                      'nopadding'
                     ]"
                     :download="name"
                     @click="downloadDone()"
@@ -45,14 +46,6 @@
                       <i class="fa fa-spinner fa-lg fa-spin" />
                     </div>
                   </a>
-                </div>
-                <div class="printer-icon">
-                  <router-link to="/">
-                    <img
-                      class="icon"
-                      src="~@/assets/images/icons/printer.svg"
-                    />
-                  </router-link>
                 </div>
               </div>
             </div>

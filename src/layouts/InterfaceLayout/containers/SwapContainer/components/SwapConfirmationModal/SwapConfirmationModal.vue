@@ -65,6 +65,8 @@ import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
 import { EthereumTokens, BASE_CURRENCY, ERC20, utils } from '@/partners';
+import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
+import { type as noticeTypes } from '@/helpers/notificationFormatters';
 
 export default {
   components: {
@@ -152,14 +154,25 @@ export default {
             this.web3.mew
               .sendBatchTransactions(this.preparedSwap)
               .then(_result => {
-                _result[0].catch(err => {
-                  // eslint-disable-next-line no-console
-                  console.error(err);
+                let tradeIndex;
+                if (this.wallet.identifier === WEB3_WALLET) {
+                  tradeIndex = 0;
+                } else {
+                  tradeIndex = [_result.length - 1];
+                }
+                _result.map((entry, idx) => {
+                  if (idx !== tradeIndex) {
+                    entry.catch(err => {
+                      // eslint-disable-next-line no-console
+                      console.error(err);
+                    });
+                  }
                 });
-                _result[_result.length - 1]
+
+                _result[tradeIndex]
                   .once('transactionHash', hash => {
                     this.$store.dispatch('addSwapNotification', [
-                      'Swap_Hash',
+                      noticeTypes.SWAP_HASH,
                       this.currentAddress,
                       this.swapDetails,
                       this.preparedSwap[this.preparedSwap.length - 1],
@@ -168,7 +181,7 @@ export default {
                   })
                   .once('receipt', res => {
                     this.$store.dispatch('addSwapNotification', [
-                      'Swap_Receipt',
+                      noticeTypes.SWAP_RECEIPT,
                       this.currentAddress,
                       this.swapDetails,
                       this.preparedSwap[this.preparedSwap.length - 1],
@@ -177,7 +190,7 @@ export default {
                   })
                   .on('error', err => {
                     this.$store.dispatch('addSwapNotification', [
-                      'Swap_Error',
+                      noticeTypes.SWAP_ERROR,
                       this.currentAddress,
                       this.swapDetails,
                       this.preparedSwap[this.preparedSwap.length - 1],
@@ -191,7 +204,7 @@ export default {
               .sendTransaction(this.preparedSwap[0])
               .once('transactionHash', hash => {
                 this.$store.dispatch('addSwapNotification', [
-                  'Swap_Hash',
+                  noticeTypes.SWAP_HASH,
                   this.currentAddress,
                   this.swapDetails,
                   this.preparedSwap[0],
@@ -200,7 +213,7 @@ export default {
               })
               .once('receipt', res => {
                 this.$store.dispatch('addSwapNotification', [
-                  'Swap_Receipt',
+                  noticeTypes.SWAP_RECEIPT,
                   this.currentAddress,
                   this.swapDetails,
                   this.preparedSwap[0],
@@ -209,7 +222,7 @@ export default {
               })
               .on('error', err => {
                 this.$store.dispatch('addSwapNotification', [
-                  'Swap_Error',
+                  noticeTypes.SWAP_ERROR,
                   this.currentAddress,
                   this.swapDetails,
                   this.preparedSwap[0],
@@ -222,7 +235,7 @@ export default {
             .sendTransaction(this.preparedSwap)
             .once('transactionHash', hash => {
               this.$store.dispatch('addSwapNotification', [
-                'Swap_Hash',
+                noticeTypes.SWAP_HASH,
                 this.currentAddress,
                 this.swapDetails,
                 this.preparedSwap,
@@ -231,7 +244,7 @@ export default {
             })
             .once('receipt', res => {
               this.$store.dispatch('addSwapNotification', [
-                'Swap_Receipt',
+                noticeTypes.SWAP_RECEIPT,
                 this.currentAddress,
                 this.swapDetails,
                 this.preparedSwap,
@@ -240,7 +253,7 @@ export default {
             })
             .on('error', err => {
               this.$store.dispatch('addSwapNotification', [
-                'Swap_Error',
+                noticeTypes.SWAP_ERROR,
                 this.currentAddress,
                 this.swapDetails,
                 this.preparedSwap,

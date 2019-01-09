@@ -50,7 +50,9 @@ const formatTransactionHash = (val, network) => {
     status: val[txIndexes.response]
       ? notificationStatuses.PENDING
       : notificationStatuses.FAILED,
-    hash: val[txIndexes.response],
+    hash: val[txIndexes.response].hasOwnProperty('transactionHash')
+      ? val[txIndexes.response].transactionHash
+      : val[txIndexes.response],
     network: network,
     body: {
       error: false,
@@ -78,6 +80,13 @@ const formatTransactionReciept = (entry, val) => {
   entry.body.blockNumber = new BigNumber(
     val[txIndexes.response].blockNumber
   ).toString();
+
+  if (entry.body.isDex) {
+    entry.swapStatus = val[txIndexes.response].status
+      ? notificationStatuses.COMPLETE
+      : notificationStatuses.FAILED;
+    entry.body.timeRemaining = -1;
+  }
 
   return entry;
 };
@@ -192,7 +201,7 @@ const formatSwap = (val, network) => {
   return formatted;
 };
 
-const formatSwapReciept = (entry, val) => {
+const formatSwapReciept = async (entry, val) => {
   if (entry.body.isDex) {
     entry.swapStatus = val[swapIndexes.response].status
       ? notificationStatuses.COMPLETE

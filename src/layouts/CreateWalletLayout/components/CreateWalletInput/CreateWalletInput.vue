@@ -4,6 +4,7 @@
     <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
+          v-validate="param === 'Json' ? 'required|min:9' : ''"
           :class="strengthClass"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
@@ -32,11 +33,21 @@
       <p v-show="value.length > 0" class="passwd-strength">
         Password strength: <span :class="strengthClass">{{ strength }}</span>
       </p>
+      <p v-if="value.length > 0" class="passwd-strength">
+        {{ errors.first('password') }}
+      </p>
     </div>
     <!-- === MEW custom form ======================================== -->
     <button
-      :disabled="value.length === 0 && value.length < 9 && strength === ''"
-      class="next-button large-round-button-green-filled"
+      :class="[
+        param === 'Json' &&
+        (errors.has('password') ||
+          value.length === 0 ||
+          strengthClass !== 'strong')
+          ? 'disabled'
+          : '',
+        'large-round-button-green-filled next-button'
+      ]"
       type="submit"
       @click.prevent="switcher(param)"
     >
@@ -87,8 +98,8 @@ export default {
           this.strengthClass = 'weak';
           break;
         case 3:
-          this.strength = 'Weak';
-          this.strengthClass = 'weak';
+          this.strength = 'Good';
+          this.strengthClass = 'strong';
           break;
         case 4:
           this.strength = 'Strong';
