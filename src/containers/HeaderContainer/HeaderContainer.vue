@@ -174,12 +174,7 @@
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
-                  v-if="
-                    wallet === null &&
-                      ($route.fullPath === '/' ||
-                        $route.fullPath === '/#about-mew' ||
-                        $route.fullPath === '/#faqs')
-                  "
+                  v-show="showButtons()"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -189,12 +184,7 @@
                   <div class="get-free-wallet-button">New Wallet</div>
                 </b-nav-item>
                 <b-nav-item
-                  v-if="
-                    wallet === null &&
-                      ($route.fullPath === '/' ||
-                        $route.fullPath === '/#about-mew' ||
-                        $route.fullPath === '/#faqs')
-                  "
+                  v-show="showButtons()"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -392,6 +382,19 @@ export default {
     }
   },
   methods: {
+    showButtons() {
+      if (
+        this.wallet === null &&
+        (this.$route.fullPath === '/' ||
+          this.$route.fullPath === '/#about-mew' ||
+          this.$route.fullPath === '/#faqs' ||
+          this.$route.fullPath === '/convert-units' ||
+          this.$route.fullPath === '/team')
+      ) {
+        return true;
+      }
+      return false;
+    },
     logoutWarning() {
       alert('logoutWarning');
     },
