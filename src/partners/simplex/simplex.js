@@ -168,13 +168,13 @@ export default class Simplex {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies.digital[value.symbol]) {
       for (const prop in this.currencies.fiat) {
-        if (prop !== value.symbol) {
-          if (this.currencies.fiat[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies.fiat[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies.fiat[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies.fiat[prop].name
+          });
+        // }
       }
     }
   }
@@ -182,13 +182,13 @@ export default class Simplex {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies.fiat[value.symbol]) {
       for (const prop in this.currencies.digital) {
-        if (prop !== value.symbol) {
-          if (this.currencies.digital[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies.digital[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies.digital[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies.digital[prop].name
+          });
+        // }
       }
     }
   }
