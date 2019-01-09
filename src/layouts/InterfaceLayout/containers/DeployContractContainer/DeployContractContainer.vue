@@ -7,12 +7,12 @@
         <div class="title">
           <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">{{
-              $t('common.clear')
-            }}</span>
-            <span @click="copyToClipboard('bytecode')">{{
-              $t('common.copy')
-            }}</span>
+            <span @click="deleteInput('bytecode')">
+              {{ $t('common.clear') }}
+            </span>
+            <span @click="copyToClipboard('bytecode')">
+              {{ $t('common.copy') }}
+            </span>
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@
           v-model="gasLimit"
           :placeholder="$t('common.gasLimit')"
           type="number"
-          name=""
+          name
         />
         <div class="good-button-container">
           <p>Gwei</p>

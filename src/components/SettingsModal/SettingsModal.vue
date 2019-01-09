@@ -30,12 +30,12 @@
                       type="radio"
                       @change="selectGasType(key)"
                     />
-                    <label :for="key"
-                      >{{ key | capitalize }} ({{
+                    <label :for="key">
+                      {{ key | capitalize }} ({{
                         gasPriceInputs[key].gwei
                       }}
-                      Gwei)</label
-                    >
+                      Gwei)
+                    </label>
                   </div>
                   <p>
                     {{ gasPriceInputs[key].eth }} ETH
@@ -58,9 +58,9 @@
                   </div>
                   <p>
                     {{ customGasEth }} ETH
-                    <span v-if="ethPrice !== 0 && customGasEth !== 0">
-                      ($ {{ convert(customGasEth) | concatAddr }})
-                    </span>
+                    <span v-if="ethPrice !== 0 && customGasEth !== 0"
+                      >($ {{ convert(customGasEth) | concatAddr }})</span
+                    >
                   </p>
                 </li>
               </ul>
@@ -77,9 +77,9 @@
             title="Import Configurations"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info">
-              Imported file successfully!
-            </b-alert>
+            <b-alert :show="popup" fade variant="info"
+              >Imported file successfully!</b-alert
+            >
             <p>
               Please click the button below to open and import you configuration
               file from your local computer.
@@ -115,9 +115,9 @@
               into your local computer.
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button">
-                Export
-              </a>
+              <a :href="file" :download="fileName" class="export-button"
+                >Export</a
+              >
             </div>
           </full-width-dropdown>
         </div>
@@ -139,8 +139,8 @@ export default {
   },
   props: {
     gasPrice: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -185,35 +185,41 @@ export default {
         slow: {
           gwei: new BigNumber(
             utils.fromWei(
-              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
               'ether'
             )
           ).toFixed()
         },
         regular: {
           gwei: new BigNumber(
-            utils.fromWei(`${this.gasPrice}`, 'gwei')
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(`${this.gasPrice}`, 'ether')
-          ).toFixed()
-        },
-        fast: {
-          gwei: new BigNumber(
             utils.fromWei(
-              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              'ether'
+            )
+          ).toFixed()
+        },
+        fast: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).times(1.25).toFixed(0),
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(1.25).toFixed(0),
               'ether'
             )
           ).toFixed()
