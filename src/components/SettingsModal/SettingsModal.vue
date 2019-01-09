@@ -39,9 +39,10 @@
                   </div>
                   <p>
                     {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0">
-                      ($ {{ convert(gasPriceInputs[key].eth) | concatAddr }})
-                    </span>
+                    <span v-if="ethPrice !== 0"
+                      >($
+                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})</span
+                    >
                   </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
@@ -181,7 +182,18 @@ export default {
         rightInputText: ''
       },
       selectedGasType: 'regular',
-      gasPriceInputs: {
+      customGas: 0,
+      customGasEth: 0,
+      ethPrice: 0,
+      fileName: '',
+      file: '',
+      importedFile: '',
+      popup: false
+    };
+  },
+  computed: {
+    gasPriceInputs() {
+      return {
         slow: {
           gwei: new BigNumber(
             utils.fromWei(
@@ -224,15 +236,8 @@ export default {
             )
           ).toFixed()
         }
-      },
-      customGas: 0,
-      customGasEth: 0,
-      ethPrice: 0,
-      fileName: '',
-      file: '',
-      importedFile: '',
-      popup: false
-    };
+      };
+    }
   },
   watch: {
     customGas(newVal) {
