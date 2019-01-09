@@ -44,31 +44,8 @@ export default async (
   getSanitizedTx(tx)
     .then(_tx => {
       if (store.state.wallet.identifier === WEB3_WALLET) {
-        eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.web3.eth.sendSignedTransaction(
-            _response.rawTransaction
-          );
-          _promiObj
-            .once('transactionHash', hash => {
-              const localStoredObj = locStore.get(
-                utils.sha3(store.state.wallet.getChecksumAddressString())
-              );
-              locStore.set(
-                utils.sha3(store.state.wallet.getChecksumAddressString()),
-                {
-                  nonce: utils.toHex(
-                    new BigNumber(localStoredObj.nonce).plus(1).toFixed()
-                  ),
-                  timestamp: localStoredObj.timestamp
-                }
-              );
-              res(null, toPayload(payload.id, hash));
-            })
-            .on('error', err => {
-              res(err);
-            });
-          setEvents(_promiObj, _tx, store.dispatch);
-        });
+        console.log(_tx);
+        eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx);
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
           const _promiObj = store.state.web3.eth.sendSignedTransaction(

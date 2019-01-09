@@ -56,9 +56,8 @@
               href="https://kb.myetherwallet.com"
               target="_blank"
               @click="isMobileMenuOpen = false"
+              >Help Center</a
             >
-              Help Center
-            </a>
           </li>
           <li>
             <div class="mobile-language-menu-container">
@@ -83,9 +82,8 @@
                   :data-language-code="language.langCode"
                   :data-flag-name="language.flag"
                   @click="languageItemClicked"
+                  >{{ language.name }}</b-dropdown-item
                 >
-                  {{ language.name }}
-                </b-dropdown-item>
               </b-nav-item-dropdown>
               <div class="arrows">
                 <i class="fa fa-angle-right" aria-hidden="true" />
@@ -130,8 +128,12 @@
             </router-link>
             <div class="top-menu">
               <b-nav>
-                <b-nav-item v-if="isHomePage" to="/" exact @click="scrollTop()">
-                  {{ $t('header.home') }}</b-nav-item
+                <b-nav-item
+                  v-if="isHomePage"
+                  to="/"
+                  exact
+                  @click="scrollTop()"
+                  >{{ $t('header.home') }}</b-nav-item
                 >
                 <b-nav-item v-if="isHomePage" to="/#about-mew">{{
                   $t('header.about')
@@ -164,9 +166,8 @@
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
+                      >{{ language.name }}</b-dropdown-item
                     >
-                      {{ language.name }}
-                    </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
                 <div v-if="wallet !== null" class="notification-menu-container">
@@ -218,10 +219,10 @@
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                   </template>
-                  <b-dropdown-item @click="openSettings">
-                    Settings
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
+                  <b-dropdown-item @click="openSettings"
+                    >Settings</b-dropdown-item
+                  >
+                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -308,7 +309,7 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: 0
+      gasPrice: '0'
     };
   },
   computed: {
@@ -330,7 +331,7 @@ export default {
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.gasPrice = new BigNumber(res).toNumber();
+          this.gasPrice = new BigNumber(res).toString();
         })
         .catch(err => {
           // eslint-disable-next-line no-console
