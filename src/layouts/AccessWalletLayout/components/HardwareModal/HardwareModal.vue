@@ -148,7 +148,7 @@ export default {
           });
           break;
         case 'keepkey':
-          KeepkeyWallet().then(_newWallet => {
+          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
             this.$emit('hardwareWalletOpen', _newWallet);
           });
           break;
