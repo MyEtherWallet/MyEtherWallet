@@ -1,0 +1,41 @@
+@import '~@/scss/GlobalVariables';
+
+.finalize-modal-container {
+  padding: 25px;
+
+  h3 {
+    color: $dark-blue-2;
+    font-size: 20px;
+  }
+
+  %button-template {
+    border-radius: 4px;
+    cursor: pointer;
+    flex: auto;
+    height: 62px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 0 23px;
+
+    .cancel {
+      @extend %button-template;
+
+      border: 1px solid $mew-green;
+      color: $mew-green;
+    }
+
+    .confirm {
+      @extend %button-template;
+
+      background-color: $mew-green;
+      color: $white;
+    }
+  }
+
+  p {
+    text-align: center;
+  }
+}

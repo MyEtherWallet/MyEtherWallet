@@ -97,7 +97,14 @@ SecalotEth.prototype.getAddress = function(path, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-
+SecalotEth.prototype.signTransactionAsync = function(path, eTx) {
+  return new Promise((resolve, reject) => {
+    this.signTransaction(path, eTx, (result, error) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
 SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
@@ -178,7 +185,14 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-
+SecalotEth.prototype.signMessageAsync = function(path, message) {
+  return new Promise((resolve, reject) => {
+    this.signMessage(path, message, (result, error) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
 SecalotEth.prototype.signMessage = function(path, message, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;

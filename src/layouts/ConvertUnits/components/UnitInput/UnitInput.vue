@@ -3,43 +3,35 @@
     <div class="wrap">
       <div class="block-left">
         <div class="select-block">
-          <select v-model="selectedLeft">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
-            </option>
-          </select>
+          <dropdown-unit-selector
+            :options="options"
+            :current-selected="selectedLeft"
+            :left="true"
+            @updateSelected="updateCurrency"
+          />
         </div>
         <div>
-          <input
-            v-model="valueLeft"
-            type="text"
-            placeholder="Amount">
+          <input v-model="valueLeft" type="number" placeholder="Amount" />
         </div>
       </div>
 
       <div class="block-center">
         <div class="convert-icon">
-          <img src="~@/assets/images/icons/swap.svg">
+          <img src="~@/assets/images/icons/swap.svg" />
         </div>
       </div>
 
       <div class="block-right">
         <div class="select-block">
-          <select v-model="selectedRight">
-            <option
-              v-for="(opt, idx) in options"
-              :key="opt + idx"
-              :value="opt">{{ opt | capitalize }}
-            </option>
-          </select>
+          <dropdown-unit-selector
+            :options="options"
+            :current-selected="selectedRight"
+            :left="false"
+            @updateSelected="updateCurrency"
+          />
         </div>
         <div>
-          <input
-            v-model="valueRight"
-            type="text"
-            placeholder="Amount">
+          <input v-model="valueRight" type="number" placeholder="Amount" />
         </div>
       </div>
     </div>
@@ -48,8 +40,14 @@
 
 <script>
 import { BigNumber } from 'bignumber.js';
+import { mapGetters } from 'vuex';
+import DropDownUnitSelector from '../DropDownUnitSelector';
+import utils from 'web3-utils';
 
 export default {
+  components: {
+    'dropdown-unit-selector': DropDownUnitSelector
+  },
   props: {
     options: {
       type: Array,
@@ -65,6 +63,11 @@ export default {
       valueLeft: 1000000000000000000,
       valueRight: 1
     };
+  },
+  computed: {
+    ...mapGetters({
+      web3: 'web3'
+    })
   },
   watch: {
     valueLeft(newVal) {
@@ -98,7 +101,6 @@ export default {
   },
   methods: {
     getValueOfUnit(unit) {
-      const utils = this.$store.state.web3.utils;
       unit = unit ? unit.toLowerCase() : 'ether';
       const unitValue = utils.unitMap[unit];
       return new BigNumber(unitValue, 10);
@@ -108,6 +110,13 @@ export default {
         .times(this.getValueOfUnit(from))
         .div(this.getValueOfUnit(to))
         .toString(10);
+    },
+    updateCurrency(e) {
+      if (e[1] === 'left') {
+        this.selectedLeft = e[0];
+      } else {
+        this.selectedRight = e[0];
+      }
     }
   }
 };

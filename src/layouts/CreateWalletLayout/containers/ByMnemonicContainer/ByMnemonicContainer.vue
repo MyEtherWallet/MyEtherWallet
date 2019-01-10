@@ -1,74 +1,75 @@
 <template>
   <div class="create-wallet-by-mnemonic">
-    <finish-modal/>
+    <finish-modal ref="finish" :unlock="unlockWallet" />
+    <print-modal
+      ref="print"
+      :mnemonic="mnemonicValues"
+      :is-twenty-four="mnemonic24"
+    />
     <verification-modal
+      ref="verification"
       :mnemonic-values="mnemonicValues"
-      :mnemonic-done-modal-open="mnemonicDoneModalOpen"/>
+      :mnemonic-done-modal-open="mnemonicDoneModalOpen"
+    />
     <div class="wrap">
-      <div class="page-container">
-        <div class="nav-tab-user-input-box">
-          <b-tabs>
-            <div class="progress-bar"/>
-            <b-tab
-              title="By Mnemonic Phrase"
-              active>
-              <div class="title-popover">
-                <h3>{{ $t("createWallet.byMnemonicWriteDown") }}</h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')" />
-              </div>
-              <div class="contents">
-                <div class="tools">
-                  <div class="value-switch noselect">
-                    <div class="sliding-switch">
-                      <label class="switch">
-                        <input type="checkbox" >
-                        <span
-                          class="slider round"
-                          @click="mnemonicValueBitSizeChange"/>
-                      </label>
-                      <div class="labels">
-                        <span class="label-left white">12</span>
-                        <span class="label-right">24</span>
-                      </div>
+      <div class="nav-tab-user-input-box">
+        <b-tabs>
+          <div class="progress-bar" />
+          <b-tab title="By Mnemonic Phrase" active>
+            <div class="title-popover">
+              <h3>{{ $t('createWallet.byMnemonicWriteDown') }}</h3>
+            </div>
+            <div class="contents">
+              <div class="tools">
+                <div class="value-switch noselect">
+                  <div class="sliding-switch">
+                    <label class="switch">
+                      <input type="checkbox" />
+                      <span
+                        class="slider round"
+                        @click="mnemonicValueBitSizeChange"
+                      />
+                    </label>
+                    <div class="labels">
+                      <span class="label-left white">12</span>
+                      <span class="label-right">24</span>
                     </div>
-                    <span class="text__base link switch-label">{{ $t("createWallet.byMnemonicValue") }}</span>
                   </div>
+                  <span class="text__base link switch-label">{{
+                    $t('createWallet.byMnemonicValue')
+                  }}</span>
+                </div>
 
-                  <div
-                    class="random-button color-green noselect"
-                    @click="mnemonicValueRefresh">
-                    <i
-                      class="fa fa-refresh"
-                      aria-hidden="true"/>
-                    <span>{{ $t("createWallet.byMnemonicRandom") }}</span>
-                  </div>
-                </div>
-                <div class="phrases">
-                  <ul>
-                    <li
-                      v-for="(value, index) in mnemonicValues"
-                      :key="index">
-                      {{ index + 1 }}.<span>{{ value }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="user-input">
                 <div
-                  class="next-button large-round-button-green-filled clickable"
-                  @click="mnemonicVerificationModalOpen">
-                  {{ $t("createWallet.byMnemonicAlreadyWritten") }}
+                  class="random-button color-green noselect"
+                  @click="mnemonicValueRefresh"
+                >
+                  <i class="fa fa-refresh" aria-hidden="true" />
+                  <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
                 </div>
-                <router-link to="/">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/printer.svg">
-                </router-link>
               </div>
-              <input-footer />
-            </b-tab>
-          </b-tabs>
-        </div>
+              <div class="phrases">
+                <ul>
+                  <li v-for="(value, index) in mnemonicValues" :key="index">
+                    {{ index + 1 }}.<span>{{ value }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="user-input">
+              <div
+                class="next-button large-round-button-green-filled clickable"
+                @click="mnemonicVerificationModalOpen"
+              >
+                {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+              </div>
+              <div @click="openPrintModal">
+                <img class="icon" src="~@/assets/images/icons/printer.svg" />
+              </div>
+            </div>
+            <input-footer />
+          </b-tab>
+        </b-tabs>
       </div>
     </div>
   </div>
@@ -77,19 +78,20 @@
 <script>
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import FinishModal from './components/FinishModal';
+import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
-// Mnemonic code for generating deterministic keys
 const bip39 = require('bip39');
 
 export default {
   components: {
     'finish-modal': FinishModal,
     'verification-modal': VerificationModal,
+    'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter
   },
   data() {
     return {
-      varificationValues: [],
+      verificationValues: [],
       mnemonicValues: [],
       mnemonic24: false
     };
@@ -99,6 +101,9 @@ export default {
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
+    unlockWallet() {
+      this.$router.push('/access-my-wallet');
+    },
     mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {
         this.mnemonicValues = bip39.generateMnemonic(256).split(' ');
@@ -127,7 +132,7 @@ export default {
     mnemonicDoneModalOpen() {
       let valid = false;
 
-      this.varificationValues.forEach(function(value) {
+      this.verificationValues.forEach(function(value) {
         const userInputText = document
           .querySelector('.phrases .word[data-index="' + value.no + '"]')
           .querySelector('input').value;
@@ -145,7 +150,7 @@ export default {
       });
 
       if (valid === true) {
-        this.$children[0].$refs.done.show();
+        this.$refs.finish.$refs.done.show();
       }
     },
     mnemonicVerificationModalOpen() {
@@ -174,7 +179,7 @@ export default {
       }
 
       let ranNums = [];
-      this.varificationValues = [];
+      this.verificationValues = [];
 
       document.querySelectorAll('.phrases .word').forEach(function(el) {
         el.classList.remove('verification');
@@ -198,7 +203,7 @@ export default {
           .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
           .querySelector('span')
           .classList.add('hidden');
-        this.varificationValues.push({
+        this.verificationValues.push({
           word: document
             .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
             .querySelector('span').textContent,
@@ -211,12 +216,17 @@ export default {
           .classList.remove('hidden');
       }
 
-      this.$children[1].$refs.verification.show();
+      this.$refs.verification.$refs.verification.show();
+    },
+    openPrintModal() {
+      this.$refs.print.$refs.print.show();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'ByMnemonicContainer.scss';
+@import 'ByMnemonicContainer-desktop.scss';
+@import 'ByMnemonicContainer-tablet.scss';
+@import 'ByMnemonicContainer-mobile.scss';
 </style>

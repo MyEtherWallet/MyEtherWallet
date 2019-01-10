@@ -5,14 +5,14 @@ const dapps = {
   registerDomain: {
     route: '/interface/dapps/register-domain',
     icon: registerDomain,
-    title: 'interface.registerDom',
-    desc: 'interface.registerDomDesc'
+    title: 'interface.registerEns',
+    desc: 'interface.registerENSDescShort'
   },
   domainSale: {
-    route: '/interface/dapps/domain-sale',
+    route: '/interface/dapps/buy-subdomain',
     icon: domainSale,
-    title: 'interface.domSale',
-    desc: 'interface.domSaleDesc',
+    title: 'interface.subdomains',
+    desc: 'interface.buySubDomains',
     active: true
   }
 };

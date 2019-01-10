@@ -1,7 +1,7 @@
 <template>
   <div class="dapps-container">
     <div>
-      <interface-container-title :title="$t('common.dapps')"/>
+      <interface-container-title :title="$t('common.dapps')" />
       <div class="buttons-container">
         <dapp-buttons
           v-for="dapp in Object.keys(localDapps)"
@@ -10,7 +10,8 @@
           :icon="localDapps[dapp].icon"
           :desc="$t(localDapps[dapp].desc)"
           :active="localDapps[dapp].active"
-          :param="localDapps[dapp].route"/>
+          :param="localDapps[dapp].route"
+        />
       </div>
     </div>
   </div>

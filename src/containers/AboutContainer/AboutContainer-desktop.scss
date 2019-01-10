@@ -1,0 +1,210 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .top-section {
+    background-color: $about-mew-spaceman-background-color;
+    color: $text-color-1;
+    margin-top: 0;
+
+    .circle img {
+      margin-top: -2px;
+      width: 100%;
+    }
+
+    .star-background {
+      background-image: url('~@/assets/images/home/stars.svg');
+      background-position: right top;
+      background-repeat: no-repeat;
+      background-size: 55%;
+    }
+
+    .content {
+      position: relative;
+
+      .text-content {
+        @media all and (max-width: $tablet-width) {
+          left: 0;
+          position: absolute;
+          top: 50px;
+          width: 80%;
+          z-index: 9;
+        }
+
+        p {
+          line-height: 19px;
+          margin-bottom: 30px;
+
+          @media all and (min-width: $tablet-width + 1) {
+            width: 380px;
+          }
+        }
+
+        .watch-video {
+          a {
+            color: $text-color-1;
+          }
+
+          p {
+            color: $text--link-color;
+            display: inline-block;
+            font-size: 15px;
+
+            i {
+              background-color: $background-color-2;
+              border-radius: 150px;
+              color: $text-color-1;
+              font-size: 14px;
+              margin-left: 6px;
+              padding: 3px 7px 4px 9px;
+              text-align: center;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+
+      .image-content {
+        height: 515px;
+        position: relative;
+
+        @media all and (max-width: $mobile-width) {
+          height: 715px;
+        }
+
+        .spaceman {
+          @media all and (max-width: $tablet-width) {
+            height: 200px;
+          }
+
+          animation-duration: 22s;
+          animation-iteration-count: infinite;
+          animation-name: spaceman-fly;
+          height: 220px;
+          position: absolute;
+          z-index: 1;
+
+          @keyframes spaceman-fly {
+            0% {
+              bottom: 89px;
+              right: 75%;
+            }
+
+            25% {
+              bottom: 60px;
+              right: 70%;
+            }
+
+            50% {
+              bottom: 80px;
+            }
+
+            75% {
+              bottom: 40px;
+            }
+
+            100% {
+              bottom: 89px;
+              right: 75%;
+            }
+          }
+
+          @media all and (max-width: $tablet-width) {
+            @keyframes spaceman-fly {
+              0% {
+                bottom: 109px;
+                right: 43%;
+              }
+              25% {
+                bottom: 80px;
+                right: 40%;
+              }
+              50% {
+                bottom: 100px;
+              }
+              75% {
+                bottom: 60px;
+              }
+              100% {
+                bottom: 109px;
+                right: 43%;
+              }
+            }
+          }
+        } // .spaceman
+
+        .mew-icon {
+          @media all and (max-width: $tablet-width) {
+            height: 200px;
+            top: 170px;
+          }
+
+          height: 300px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 1;
+        }
+      } // .image-content
+    } // .content
+  } //. top-section
+
+  .wrap {
+    .bottom-section {
+      background-color: $background-color-1;
+      padding: 85px 0;
+
+      .mew-features {
+        grid-column-gap: 130px;
+        grid-row-gap: 90px;
+
+        @media all and (max-width: $tablet-width) {
+          grid-row-gap: 70px;
+          grid-template-columns: 1fr;
+        }
+
+        .content {
+          align-items: center;
+          display: flex;
+          margin: 0;
+          padding: 0;
+
+          @media all and (max-width: $mobile-width) {
+            flex-direction: column;
+
+            .image {
+              margin: 0 auto;
+              margin-bottom: 20px;
+
+              img {
+                height: 80px;
+                width: auto;
+              }
+            }
+
+            .text {
+              text-align: center;
+            }
+          }
+
+          .image {
+            padding-right: 30px;
+
+            @media all and (max-width: $mobile-width) {
+              padding-right: 0;
+            }
+
+            img {
+              height: auto;
+              width: 80px;
+            }
+          }
+
+          .text {
+            h3 {
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+} //@media all and (min-width: calc(#{$tablet-width} + 1px)) {

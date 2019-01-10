@@ -1,0 +1,21 @@
+{
+  "name": "MyEtherWallet",
+  "version": "5.0.4",
+  "manifest_version": 2,
+  "description": "MyEtherWallet Chrome Extension",
+  "homepage_url": "https://www.myetherwallet.com/",
+  "icons": {
+    "16": "img/icons/icon16.png",
+    "32": "img/icons/icon32.png",
+    "192": "img/icons/icon192.png"
+  },
+  "options_page": "index.html",
+  "browser_action": {
+    "default_icon": "img/icons/icon32.png",
+    "default_title": "MyEtherWallet CX",
+    "default_popup": "index.html#/browser-action"
+  },
+  "background": {},
+  "permissions": ["storage", "tabs"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

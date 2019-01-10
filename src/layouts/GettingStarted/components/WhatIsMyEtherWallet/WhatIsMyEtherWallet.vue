@@ -1,34 +1,23 @@
 <template>
   <div class="what-is-mew">
-
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          About MyEtherWallet
+          {{ $t('gettingStarted.aboutMew') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"/>
+          <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>What is MyEtherWallet?</h4>
-          <p>
-            MyEtherWallet(MEW) is a free, open-source, client-side interface.
-            MEW allows you to interact directly with the blockchain, while
-            remaining in full control of your keys and funds.
-          </p>
-          <p>
-            Did you read that? YOU are the one who is in control. MEW is not
-            a bank or exchange, we are an interface. This means we don't hold
-            your keys or information, but it also means we can't access accounts,
-            recover keys, reset passwords, or reverse transactions.
-          </p>
+          <h4>{{ $t('gettingStarted.whatIsMewTitle') }}</h4>
+          <p>{{ $t('gettingStarted.whatIsMewDesc1') }}</p>
+          <p>{{ $t('gettingStarted.whatIsMewDesc2') }}</p>
           <div class="block-progressbar__warning">
-            WARNING: You And Only You Are Responsible For Your Security.
+            {{ $t('gettingStarted.whatIsMewWarning') }}
           </div>
         </div>
       </dir>
     </div>
-
   </div>
 </template>
 
@@ -47,5 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../BlockWithProgressBar.scss';
+@import '../BlockWithProgressBar-desktop.scss';
+@import '../BlockWithProgressBar-tablet.scss';
+@import '../BlockWithProgressBar-mobile.scss';
 </style>

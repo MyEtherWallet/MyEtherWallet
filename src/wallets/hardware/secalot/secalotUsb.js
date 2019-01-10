@@ -1,5 +1,5 @@
 'use strict';
-import { u2f } from '../utils/u2f-api';
+import u2f from 'u2f-api';
 
 const SecalotUsb = function(timeoutSeconds) {
   this.timeoutSeconds = timeoutSeconds;
@@ -34,19 +34,15 @@ SecalotUsb.prototype.exchange = function(apduHex, callback) {
     'hex'
   );
   const key = {};
+  key['appId'] = location.origin;
+  key['challenge'] = SecalotUsb.webSafe64(challenge.toString('base64'));
   key['version'] = 'U2F_V2';
   key['keyHandle'] = SecalotUsb.webSafe64(apdu.toString('base64'));
   const self = this;
   const localCallback = function(result) {
     self.u2fCallback(result, callback);
   };
-  u2f.sign(
-    location.origin,
-    SecalotUsb.webSafe64(challenge.toString('base64')),
-    [key],
-    localCallback,
-    this.timeoutSeconds
-  );
+  u2f.sign([key], this.timeoutSeconds).then(localCallback);
 };
 
 export default SecalotUsb;

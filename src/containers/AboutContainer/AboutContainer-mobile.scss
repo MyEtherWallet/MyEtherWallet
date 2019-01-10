@@ -1,0 +1,142 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .top-section {
+    background-color: $about-mew-spaceman-background-color;
+    color: $text-color-1;
+    margin-top: 0;
+
+    .circle img {
+      margin-top: -2px;
+      width: 100%;
+    }
+
+    .star-background {
+      background-image: url('~@/assets/images/home/stars.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 100%;
+    }
+
+    .content {
+      position: relative;
+
+      .text-content {
+        left: 0;
+        position: absolute;
+        top: 64px;
+        width: 80%;
+        z-index: 9;
+
+        p {
+          line-height: 19px;
+          margin-bottom: 30px;
+        }
+
+        .watch-video {
+          a {
+            color: $text-color-1;
+          }
+
+          p {
+            color: $text--link-color;
+            display: inline-block;
+            font-size: 15px;
+
+            i {
+              background-color: $background-color-2;
+              border-radius: 150px;
+              color: $text-color-1;
+              font-size: 14px;
+              margin-left: 6px;
+              padding: 3px 7px 4px 9px;
+              text-align: center;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+
+      .image-content {
+        height: 675px;
+        position: relative;
+
+        .spaceman {
+          height: 200px;
+          animation-duration: 22s;
+          animation-iteration-count: infinite;
+          animation-name: spaceman-fly;
+          position: absolute;
+          z-index: 1;
+
+          @keyframes spaceman-fly {
+            0% {
+              bottom: 109px;
+              right: 43%;
+            }
+            25% {
+              bottom: 80px;
+              right: 40%;
+            }
+            50% {
+              bottom: 100px;
+            }
+            75% {
+              bottom: 60px;
+            }
+            100% {
+              bottom: 109px;
+              right: 43%;
+            }
+          }
+        } // .spaceman
+
+        .mew-icon {
+          height: 159px;
+          top: 300px;
+          position: absolute;
+          right: 0;
+          z-index: 1;
+        }
+      } // .image-content
+    } // .content
+  } //. top-section
+
+  .wrap {
+    .bottom-section {
+      background-color: $background-color-1;
+      padding: 50px 0;
+
+      .mew-features {
+        grid-column-gap: 130px;
+        grid-row-gap: 90px;
+        grid-row-gap: 70px;
+        grid-template-columns: 1fr;
+
+        .content {
+          align-items: center;
+          display: flex;
+          margin: 0;
+          padding: 0;
+          flex-direction: column;
+
+          .image {
+            padding-right: 0;
+            margin-bottom: 20px;
+
+            img {
+              height: auto;
+              width: 80px;
+            }
+          }
+
+          .text {
+            text-align: left;
+            h3 {
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+} //@media all and (max-width: $mobile-width) {
