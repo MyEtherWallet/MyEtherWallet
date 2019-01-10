@@ -139,7 +139,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/mewcx/files/img/icons/icon48.png',
           'src/builds/mewcx/files/manifest.json',
           'src/builds/mewcx/index.js',
-          'src/builds/web/storage/index.js',
+          'src/builds/web/storage/index.js'
         ]
       }
     })
@@ -156,6 +156,6 @@ module.exports = {
   configureWebpack: webpackConfig,
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
-  integrity: true,
+  integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   chainWebpack: config => {}
 };
