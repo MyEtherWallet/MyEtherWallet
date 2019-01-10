@@ -4,7 +4,9 @@ export default {
   props: {
     barStyle: {
       type: Object,
-      default: () => { return {} }
+      default: () => {
+        return {};
+      }
     },
     duration: {
       type: String,
