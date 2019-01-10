@@ -258,7 +258,6 @@ export default class BitySwap {
           swapDetails.isDex = BitySwap.isDex();
         }
       }
-
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(
         swapDetails.fromCurrency === BASE_CURRENCY,
@@ -304,14 +303,11 @@ export default class BitySwap {
   }
 
   getStoredCredentials() {
-    let userDetails = {};
-    const haveCred = store.get(LOCAL_STORAGE_KEY);
-    if (haveCred !== null && haveCred !== undefined) {
-      userDetails = store.get('exit_to_fiat');
-      // this.phoneToken = userDetails.phone_token;
+    const userDetails = store.get(LOCAL_STORAGE_KEY);
+    if (userDetails !== null && userDetails !== undefined) {
+      return userDetails;
     }
-    console.log(this.phoneToken); // todo remove dev item
-    return userDetails;
+    return {};
   }
 
   setStoredCredentials(phoneNumber, phoneToken) {
@@ -411,7 +407,7 @@ export default class BitySwap {
       validFor: order.validFor || TIME_SWAP_VALID
     };
   }
-/*
+  /*
 *   return {
     id: encryptor.encrypt(
       detailsUrl.replace('/api/v2/orders/', '')
