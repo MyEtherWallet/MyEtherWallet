@@ -122,7 +122,7 @@
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
-                  src="~@/assets/images/logo.png"
+                  src="~@/assets/images/short-hand-logo.png"
                 />
               </div>
             </router-link>
@@ -174,7 +174,7 @@
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
-                  v-if="showButtons()"
+                  v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -184,7 +184,7 @@
                   <div class="get-free-wallet-button">New Wallet</div>
                 </b-nav-item>
                 <b-nav-item
-                  v-if="showButtons()"
+                  v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -307,7 +307,20 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3'
-    })
+    }),
+    showButtons() {
+      if (
+        this.wallet === null &&
+        (this.$route.fullPath === '/' ||
+          this.$route.fullPath === '/#about-mew' ||
+          this.$route.fullPath === '/#faqs' ||
+          this.$route.fullPath === '/convert-units' ||
+          this.$route.fullPath === '/team')
+      ) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     $route(newVal) {
@@ -382,19 +395,6 @@ export default {
     }
   },
   methods: {
-    showButtons() {
-      if (
-        this.wallet === null &&
-        (this.$route.fullPath === '/' ||
-          this.$route.fullPath === '/#about-mew' ||
-          this.$route.fullPath === '/#faqs' ||
-          this.$route.fullPath === '/convert-units' ||
-          this.$route.fullPath === '/team')
-      ) {
-        return true;
-      }
-      return false;
-    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
