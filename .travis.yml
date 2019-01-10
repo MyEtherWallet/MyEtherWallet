@@ -23,7 +23,7 @@ stages:
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request
   - name: add to mewbuilds staging
-    if: branch = master and type != pull_request
+    if: branch =~ /^v.*$/
   - name: create release
     if: branch =~ /^v.*$/
   - name: deploy to production
