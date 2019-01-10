@@ -23,10 +23,11 @@ const {
 const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
-  constructor() {
+  constructor(eventHub) {
     this.identifier = keepkeyType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
+    this.eventHub = eventHub;
     this.supportedPaths = bip44Paths[keepkeyType];
   }
   async init(basePath) {
@@ -45,9 +46,16 @@ class KeepkeyWallet {
       String(MESSAGETYPE_PINMATRIXREQUEST),
       requestMsg => {
         console.log('pin request', requestMsg); // eslint-disable-line
-        window.setPin = pin => {
-          this.keepkey.acknowledgeWithPin(pin);
-        };
+        this.eventHub.$emit(
+          'showHardwarePinMatrix',
+          { name: this.identifier },
+          pin => {
+            this.keepkey.acknowledgeWithPin(pin);
+          }
+        );
+        // window.setPin = pin => {
+        //   this.keepkey.acknowledgeWithPin(pin);
+        // };
       }
     );
     this.keepkey.device.events.on(
@@ -137,8 +145,8 @@ class KeepkeyWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async basePath => {
-  const _keepkeyWallet = new KeepkeyWallet();
+const createWallet = async (basePath, eventHub) => {
+  const _keepkeyWallet = new KeepkeyWallet(eventHub);
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };
