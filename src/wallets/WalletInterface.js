@@ -6,6 +6,7 @@ import {
 } from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
+import rskUtil from 'rskjs-util';
 class WalletInterface {
   constructor(key, isPub = false, identifier) {
     this.identifier = identifier;
@@ -60,6 +61,15 @@ class WalletInterface {
   getChecksumAddressString() {
     return ethUtil.toChecksumAddress(this.getAddressString());
   }
+
+  getChecksumAddressByChainId(chainId) {
+    if (chainId === 30 || chainId === 31) {
+      return rskUtil.toChecksumAddress(this.getAddressString(), chainId);
+    }
+
+    return this.getChecksumAddressString();
+  }
+
   signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');

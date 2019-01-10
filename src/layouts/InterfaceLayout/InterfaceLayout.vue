@@ -23,7 +23,7 @@
     <print-modal
       ref="printModal"
       :priv-key="wallet.privateKey"
-      :address="wallet.getChecksumAddressString()"
+      :address="wallet.getChecksumAddressByChainId(network.type.chainID)"
     />
     <div class="wrap">
       <div>
@@ -152,7 +152,9 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.wallet.getChecksumAddressString();
+        return this.wallet.getChecksumAddressByChainId(
+          this.network.type.chainID
+        );
       }
     },
     ...mapGetters({
@@ -387,7 +389,7 @@ export default {
     getBalance() {
       const web3 = this.web3;
       web3.eth
-        .getBalance(this.address)
+        .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
@@ -413,9 +415,10 @@ export default {
           const address = accounts[0];
           if (
             this.wallet !== null &&
-            address !== this.wallet.getAddressString()
+            address.toLowerCase() !==
+              this.wallet.getAddressString().toLowerCase()
           ) {
-            const wallet = new Web3Wallet(address);
+            const wallet = new Web3Wallet(address.toLowerCase());
             this.$store.dispatch('decryptWallet', [
               wallet,
               window.web3.currentProvider

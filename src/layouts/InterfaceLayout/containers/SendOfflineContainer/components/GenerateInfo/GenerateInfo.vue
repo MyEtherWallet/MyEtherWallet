@@ -31,7 +31,7 @@
           <div class="good-button-container">
             <i
               :class="[
-                !isValidAddress ? 'not-good' : '',
+                !checkAddress() ? 'not-good' : '',
                 'fa fa-check-circle good-button'
               ]"
               aria-hidden="true"
@@ -80,6 +80,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
+import isValidAddress from '@/helpers/validators';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -102,7 +103,11 @@ export default {
   data() {
     return {
       moreInfoGenerated: false,
-      hexAddress: ''
+      hexAddress: '',
+      isValid: true,
+      fromaddress: this.$store.state.wallet.getChecksumAddressByChainId(
+        this.$store.state.network.type.chainID
+      )
     };
   },
   computed: {
@@ -145,6 +150,15 @@ export default {
     },
     nonceUpdated(e) {
       this.$emit('nonceUpdate', e);
+    },
+    checkAddress() {
+      return isValidAddress(
+        this.fromaddress,
+        this.$store.state.network.type.chainID
+      );
+    },
+    mounted() {
+      this.isValid = this.checkAddress();
     }
   }
 };

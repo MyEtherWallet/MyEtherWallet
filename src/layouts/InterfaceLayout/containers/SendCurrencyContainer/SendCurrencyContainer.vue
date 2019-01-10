@@ -67,7 +67,7 @@
             <h4>
               {{ $t('interface.sendTxToAddr') }}
               <blockie
-                v-show="isValidAddress && address.length !== 0"
+                v-show="!verifyAddr() && address.length !== 0"
                 :address="hexAddress"
                 :size="8"
                 :scale="16"
@@ -95,7 +95,7 @@
             />
             <i
               :class="[
-                isValidAddress && address.length !== 0 ? '' : 'not-good',
+                !verifyAddr() && address.length !== 0 ? '' : 'not-good',
                 'fa fa-check-circle good-button'
               ]"
               aria-hidden="true"
@@ -165,7 +165,7 @@
     <div class="submit-button-container">
       <div
         :class="[
-          isValidAddress &&
+          !verifyAddr() &&
           address.length !== 0 &&
           isValidAmount &&
           data.length !== 0
@@ -198,6 +198,7 @@ import { Misc } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
+import isValidAddress from '@/helpers/validators';
 
 export default {
   components: {
@@ -236,7 +237,9 @@ export default {
       signedTx: '',
       address: '',
       hexAddress: '',
-      isValidAddress: false
+      isValidAddress: false,
+      resolvedAddress: '',
+      checksummedAddress: ''
     };
   },
   computed: {
@@ -291,6 +294,7 @@ export default {
       } else {
         this.data = '0x';
       }
+      this.checksummedAddress = e.target.value;
     }, 500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -411,7 +415,19 @@ export default {
       }
     },
     verifyAddr() {
-      return this.web3.utils.isAddress(this.hexAddress);
+      if (
+        this.checksummedAddress.length !== 0 &&
+        this.checksummedAddress !== ''
+      ) {
+        const valid = isValidAddress(
+          this.checksummedAddress,
+          this.$store.state.network.type.chainID
+        );
+        if (!valid) {
+          return true;
+        }
+        return false;
+      }
     }
   }
 };

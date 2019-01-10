@@ -26,7 +26,7 @@
 
           <i
             :class="[
-              isValidAddress && address !== '' ? '' : 'not-good',
+              checkAddress() && address !== '' ? '' : 'not-good',
               'fa fa-check-circle good-button'
             ]"
             aria-hidden="true"
@@ -61,7 +61,7 @@
       <div class="submit-button-container">
         <div
           :class="[
-            isValidAbi && isValidAddress && (address !== '' && abi !== '')
+            isValidAbi && checkAddress() && (address !== '' && abi !== '')
               ? ''
               : 'disabled',
             'submit-button large-round-button-green-filled clickable'
@@ -287,6 +287,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
+import isValidAddress from '@/helpers/validators';
 
 import * as unit from 'ethjs-unit';
 
@@ -385,7 +386,10 @@ export default {
       return 'number';
     },
     selectFunction(method) {
-      const contract = new this.web3.eth.Contract([method], this.address);
+      const contract = new this.web3.eth.Contract(
+        [method],
+        this.address.toLowerCase()
+      );
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
           .call({ from: this.wallet.getAddressString() })
@@ -425,7 +429,7 @@ export default {
       const web3 = this.web3;
       const contract = new web3.eth.Contract(
         [this.selectedMethod],
-        this.address
+        this.address.toLowerCase()
       );
       const params = Object.keys(this.writeInputs).map(input =>
         web3.utils.toHex(this.writeInputs[input])
@@ -472,7 +476,7 @@ export default {
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
           value: this.value,
-          to: this.hexAddress,
+          to: this.hexAddress.toLowerCase(),
           data: this.data
         };
 
@@ -488,6 +492,12 @@ export default {
         }
         this.inputsFilled = true;
       }
+    },
+    checkAddress() {
+      return isValidAddress(
+        this.address,
+        this.$store.state.network.type.chainID
+      );
     }
   }
 };

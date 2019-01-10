@@ -164,7 +164,13 @@
               @click="setAccount(account)"
             >
               <li>{{ account.index }}.</li>
-              <li>{{ account.account.getChecksumAddressString() }}</li>
+              <li>
+                {{
+                  account.account.getChecksumAddressByChainId(
+                    selectedNetwork.type.chainID
+                  )
+                }}
+              </li>
               <li v-if="!!wallet">{{ account.balance }}</li>
               <li class="user-input-checkbox">
                 <label class="checkbox-container checkbox-container-small">

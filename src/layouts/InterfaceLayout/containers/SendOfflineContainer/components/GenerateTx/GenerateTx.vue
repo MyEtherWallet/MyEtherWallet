@@ -27,7 +27,7 @@
             <div class="title">
               <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
               <blockie
-                v-show="address !== '' && validAddress"
+                v-show="address !== '' && checkAddress()"
                 :address="address"
                 width="22px"
                 height="22px"
@@ -48,7 +48,7 @@
               />
               <i
                 :class="[
-                  validAddress ? '' : 'not-good',
+                  checkAddress() ? '' : 'not-good',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
@@ -123,7 +123,7 @@
           :class="[
             toData.length >= 2 &&
             address.length > 0 &&
-            validAddress &&
+            checkAddress() &&
             toAmt >= 0
               ? ''
               : 'disabled',
@@ -160,6 +160,7 @@ import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 import { Misc } from '@/helpers';
 import utils from 'web3-utils';
+import isValidAddress from '@/helpers/validators';
 
 export default {
   components: {
@@ -304,8 +305,8 @@ export default {
         gasPrice: unit.toWei(this.gasPrice, 'gwei'),
         to:
           this.selectedCoinType.symbol !== this.network.type.name
-            ? this.selectedCoinType.address
-            : this.address,
+            ? this.selectedCoinType.address.toLowerCase()
+            : this.address.toLowerCase(),
         chainId: this.network.type.chainID,
         generateOnly: true
       };
@@ -328,6 +329,12 @@ export default {
     },
     setSelectedCurrency(e) {
       this.selectedCoinType = e;
+    },
+    checkAddress() {
+      return isValidAddress(
+        this.address,
+        this.$store.state.network.type.chainID
+      );
     }
   }
 };

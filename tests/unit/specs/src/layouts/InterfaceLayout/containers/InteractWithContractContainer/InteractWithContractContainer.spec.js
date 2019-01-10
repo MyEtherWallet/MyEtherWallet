@@ -22,29 +22,15 @@ describe('InteractWithContractContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][2];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    getters = {
-      network: () => {
-        return network;
-      }
-    };
-
     store = new VueX.Store({
       getters,
       state: {
         gasPrice: '',
-        web3: newWeb3,
+        //web3: newWeb3,
         Networks: nodeList,
         wallet: {
-          getAddressString: jest.fn(() => 0)
+          getAddressString: jest.fn(() => 0),
+          getChecksumAddressByChainId: jest.fn(() => 0)
         }
       }
     });
@@ -53,6 +39,34 @@ describe('InteractWithContractContainer.vue', () => {
   });
 
   beforeEach(() => {
+
+    const hostUrl = url.parse('http://localhost');
+
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.hostname}:8080${hostUrl.pathname}`
+    );
+
+    store.replaceState({
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH',
+          chainID: 1
+        }
+      },
+      web3: newWeb3
+    });
+
+    store.getters = {
+      network: {
+        type: {
+          name: 'ETH',
+          symbol: 'ETH',
+          chainID: 1
+        }
+      }
+    };
+
     wrapper = shallowMount(InteractWithContractContainer, {
       localVue,
       i18n,
