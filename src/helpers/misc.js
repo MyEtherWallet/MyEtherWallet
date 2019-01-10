@@ -1,5 +1,6 @@
 import normalise from '@/helpers/normalise';
 import web3 from 'web3';
+import nodeList from '@/networks';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -88,17 +89,17 @@ const validateHexString = str => {
   return re.test(str);
 };
 
-const reorderNetworks = obj => {
-  const oldObject = Object.assign({}, obj);
+const reorderNetworks = () => {
+  const oldObject = Object.assign({}, nodeList);
   delete oldObject['ETH'];
   delete oldObject['RIN'];
   delete oldObject['ROP'];
   return Object.assign(
     {},
     {
-      ETH: obj['ETH'],
-      ROP: obj['ROP'],
-      RIN: obj['RIN'],
+      ETH: nodeList['ETH'],
+      ROP: nodeList['ROP'],
+      RIN: nodeList['RIN'],
       ...oldObject
     }
   );

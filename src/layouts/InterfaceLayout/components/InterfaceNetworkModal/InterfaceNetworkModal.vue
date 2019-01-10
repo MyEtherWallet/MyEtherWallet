@@ -27,7 +27,7 @@
       </div>
       <div ref="networkList" class="network-list">
         <div
-          v-for="(key, index) in Object.keys(Networks)"
+          v-for="(key, index) in Object.keys(reorderedNetworks)"
           :key="key + index"
           class="content-block"
         >
@@ -261,6 +261,7 @@
 import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import * as networkTypes from '@/networks/types';
 import Misc from '@/helpers/misc';
 
 import { mapGetters } from 'vuex';
@@ -271,6 +272,7 @@ export default {
   },
   data() {
     return {
+      types: networkTypes,
       selectedNetwork: {},
       chainID: '',
       port: 443,
@@ -288,19 +290,8 @@ export default {
       network: 'network',
       Networks: 'Networks'
     }),
-    types() {
-      const networks = Misc.reorderNetworks(this.Networks);
-      networks['custom'] = {
-        name: 'CUS',
-        name_long: 'CUSTOM',
-        homePage: '',
-        blockExplorerTX: '',
-        blockExplorerAddr: '',
-        chainID: '',
-        tokens: [],
-        contracts: [],
-        ensResolver: ''
-      };
+    reorderedNetworks() {
+      const networks = Misc.reorderNetworks();
       return networks;
     }
   },
@@ -313,6 +304,17 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
+    this.types['custom'] = {
+      name: 'CUS',
+      name_long: 'CUSTOM',
+      homePage: '',
+      blockExplorerTX: '',
+      blockExplorerAddr: '',
+      chainID: '',
+      tokens: [],
+      contracts: [],
+      ensResolver: ''
+    };
   },
   methods: {
     networkModalOpen() {
