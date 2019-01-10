@@ -51,6 +51,7 @@ const bityMethods = {
   logInWithPhoneNumber: 'logInWithPhoneNumber',
   sendReceivedSmsCode: 'sendReceivedSmsCode',
   buildCyptoToFiatOrderData: 'createExitToFiatTransaction',
+  getExitOrderDetails: 'getExitOrderDetails',
   statusFiat: 'getStatusFiat'
 };
 
@@ -60,6 +61,8 @@ const BITY_EXIT_RATES =
   '/api/v2/pairs?input_tags=crypto&output_tags=fiat&prices=1';
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
 
+
+const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;
 const BITY_MIN = 0.01;
 const BITY_MAX = 3;
@@ -70,6 +73,7 @@ export {
   bityStatuses,
   BityCurrencies,
   bityRateEndpoint,
+  LOCAL_STORAGE_KEY,
   BITY_URL,
   BITY_SWAP_RATES,
   BITY_EXIT_RATES,

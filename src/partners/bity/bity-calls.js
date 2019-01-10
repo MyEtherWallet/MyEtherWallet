@@ -70,9 +70,19 @@ const sendReceivedSmsCode = async exitData => {
 };
 
 const buildCyptoToFiatOrderData = async orderData => {
+  console.log('buildCyptoToFiatOrderData', orderData); // todo remove dev item
   const results = await post(
     buildPath(),
     utils.buildPayload(bityMethods.buildCyptoToFiatOrderData, orderData)
+  );
+  return results.result;
+};
+
+const getCyptoToFiatOrderDetails = async detailsData => {
+  console.log(detailsData); // todo remove dev item
+  const results = await post(
+    buildPath(),
+    utils.buildPayload(bityMethods.getExitOrderDetails, detailsData)
   );
   return results.result;
 };
@@ -96,5 +106,6 @@ export {
   loginWithPhone,
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
+  getCyptoToFiatOrderDetails,
   getStatusFiat
 };
