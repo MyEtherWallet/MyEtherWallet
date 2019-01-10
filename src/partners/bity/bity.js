@@ -1,4 +1,5 @@
 import store from 'store';
+import utils from 'web3-utils';
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
 import {
   getRates,
@@ -8,6 +9,7 @@ import {
   loginWithPhone,
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
+  getCyptoToFiatOrderDetails,
   getStatusFiat
 } from './bity-calls';
 import {
@@ -18,7 +20,8 @@ import {
   TIME_SWAP_VALID,
   BITY_MAX,
   BITY_MIN,
-  BITY_DECIMALS
+  BITY_DECIMALS,
+  LOCAL_STORAGE_KEY
 } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
@@ -52,6 +55,9 @@ export default class BitySwap {
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
 
+    this.userDetails = this.getStoredCredentials();
+    this.phoneToken =
+      'OPWip5M2mbpidCtoYZZPJ1zxrDnOinWHok9TLyVfE1mQDOIp0dU6orrP+Gxm3Qrm';
     this.retrieveRates();
   }
 
@@ -231,12 +237,28 @@ export default class BitySwap {
       return swapDetails;
       // throw Error('Exit to Fiat not yet implemented');
     } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
-      swapDetails.dataForInitialization = await this.buildExitOrder(
-        swapDetails
-      );
-      // receiving:
-      // {"jsonrpc":"2.0","error":{"code":-12345,"message":"{\"errors\":[{\"code\":\"invalid_order\",\"message\":\"Your order can not be placed at this moment, please try again later.\"}]}","data":null},"id":""}
-      console.log(swapDetails); // todo remove dev item
+      const preOrder = await this.buildExitOrder(swapDetails);
+      console.log(preOrder); // todo remove dev item
+      if (preOrder.created) {
+        swapDetails.dataForInitialization = await getCyptoToFiatOrderDetails({
+          pair: swapDetails.fromCurrency + swapDetails.toCurrency,
+          detailsUrl: preOrder.status_address,
+          phoneToken: this.phoneToken
+        });
+        if (swapDetails.dataForInitialization) {
+          swapDetails.providerReceives =
+            swapDetails.dataForInitialization.input.amount;
+          swapDetails.providerSends =
+            swapDetails.dataForInitialization.output.amount;
+          swapDetails.parsed = BitySwap.parseExitOrder(
+            swapDetails.dataForInitialization
+          );
+          swapDetails.providerAddress =
+            swapDetails.dataForInitialization.payment_address;
+          swapDetails.isDex = BitySwap.isDex();
+        }
+      }
+
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(
         swapDetails.fromCurrency === BASE_CURRENCY,
@@ -281,13 +303,29 @@ export default class BitySwap {
     }
   }
 
-  getIfStoredCredentials() {
+  getStoredCredentials() {
     let userDetails = {};
-    const haveCred = store.get('exit_to_fiat');
+    const haveCred = store.get(LOCAL_STORAGE_KEY);
     if (haveCred !== null && haveCred !== undefined) {
       userDetails = store.get('exit_to_fiat');
-      if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
+      // this.phoneToken = userDetails.phone_token;
     }
+    console.log(this.phoneToken); // todo remove dev item
+    return userDetails;
+  }
+
+  setStoredCredentials(phoneNumber, phoneToken) {
+    const userDetails = store.get(LOCAL_STORAGE_KEY);
+    if (userDetails !== null && userDetails !== undefined) {
+      const phoneSha = utils.sha3(phoneNumber);
+      userDetails[phoneSha] = {
+        phone_token: phoneToken,
+        verified: false
+      };
+      store.set(LOCAL_STORAGE_KEY, userDetails);
+      // this.phoneToken = userDetails.phone_token;
+    }
+    console.log(this.phoneToken); // todo remove dev item
     return userDetails;
   }
 
@@ -321,13 +359,42 @@ export default class BitySwap {
   }
 
   async buildExitOrder({ fromCurrency, toCurrency, orderDetails }) {
+    const details = {
+      input: {
+        amount: '0.2',
+        currency: 'ETH',
+        type: 'crypto_address',
+        crypto_address: '0xe51dDAa1B650c26B62fCA2520cdC2c60cE205F75'
+      },
+      output: {
+        currency: 'CHF',
+        type: 'bank_account',
+        iban: 'CH980000MEW0000000009',
+        bic_swift: 'TESTCHBEXXX',
+        aba_number: '',
+        sort_code: '',
+        owner: {
+          name: 'FirstName LastName',
+          address: 'Test address',
+          address_complement: '',
+          zip: '2000',
+          city: 'Neuchatel',
+          state: '',
+          country: 'Switzerland'
+        }
+      }
+    };
     const orderData = {
       pair: fromCurrency + toCurrency,
       phoneToken: this.phoneToken,
-      orderDetails: orderDetails
+      orderDetails: details //{ ...orderDetails }
     };
-    console.log(orderData); // todo remove dev item
+    console.log(orderDetails); // todo remove dev item
     return buildCyptoToFiatOrderData(orderData);
+  }
+
+  async getExitOrderDetails(detailsUrl) {
+    return getCyptoToFiatOrderDetails(detailsUrl);
   }
 
   async startSpecial() {}
@@ -339,6 +406,42 @@ export default class BitySwap {
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
       sendValue: order.input.amount,
+      status: order.status,
+      timestamp: order.timestamp_created,
+      validFor: order.validFor || TIME_SWAP_VALID
+    };
+  }
+/*
+*   return {
+    id: encryptor.encrypt(
+      detailsUrl.replace('/api/v2/orders/', '')
+    ),
+    amount: orderJson.output.amount,
+    payment_address: orderJson.payment_details.crypto_address,
+    payment_amount: orderJson.input.amount,
+    // reference: orderJson.reference,
+    status: orderJson.legacy_status,
+    validFor: 600,
+    timestamp_created: orderJson.timestamp_created + "Z",
+    input: {
+      amount: orderJson.input.amount,
+      currency: orderJson.input.currency
+    },
+    output: {
+      amount: orderJson.output.amount,
+      currency: orderJson.output.currency
+    }
+  };
+*
+* */
+  static parseExitOrder(order) {
+    console.log('parseExitOrder', order); // todo remove dev item
+    return {
+      orderId: order.id,
+      statusId: order.id,
+      sendToAddress: order.payment_address,
+      recValue: order.amount,
+      sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
       validFor: order.validFor || TIME_SWAP_VALID

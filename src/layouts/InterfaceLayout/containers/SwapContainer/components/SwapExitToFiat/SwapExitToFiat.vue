@@ -215,6 +215,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    exitToFiatCallback: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -315,6 +319,7 @@ export default {
         iban: '',
         bic_swift: '',
         aba_number: '',
+        sort_code: '',
         owner: {
           name: '',
           address: '',
@@ -332,7 +337,6 @@ export default {
     this.openMenu();
     const providerConstructor = providerMap.get(this.swapDetails.provider);
     this.provider = new providerConstructor();
-    console.log(this.provider); // todo remove dev item
     const haveCred = store.get('exit_to_fiat');
     if (haveCred !== null && haveCred !== undefined) {
       const userDetails = store.get('exit_to_fiat');
@@ -350,7 +354,6 @@ export default {
       this.status[stage] = true;
     },
     setCountryCode(val) {
-      console.log(val); // todo remove dev item
       this.countryCode = val;
     },
     setPhone(val) {
@@ -388,7 +391,6 @@ export default {
     },
     setCountry(val) {
       this.orderDetails.owner.country = val;
-      console.log(this.orderDetails); // todo remove dev item
     },
     openMenu(val) {
       console.log(val);
@@ -412,13 +414,12 @@ export default {
         ...this.swapDetails
       };
       const verified = await this.provider.confirmUser(verifyData);
-      console.log(verified); // todo remove dev item
       if (verified.success) {
         this.verifyStep = false;
         this.step2 = true;
       }
     },
-    createExitOrder() {
+    async createExitOrder() {
       const details = {
         input: {
           amount: this.swapDetails.fromValue,
@@ -428,13 +429,13 @@ export default {
         },
         output: this.orderDetails
       };
-      console.log(details); // todo remove dev item
 
-      this.provider.startSwap({
+      const swapDetails = await this.provider.startSwap({
         ...this.swapDetails,
         bypass: true,
         orderDetails: details
       });
+      this.exitToFiatCallback(swapDetails);
     }
   }
 };

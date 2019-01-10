@@ -64,7 +64,7 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, BASE_CURRENCY, ERC20, utils } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 
@@ -99,7 +99,8 @@ export default {
       qrcode: '',
       arrowImage: Arrow,
       fromAddress: {},
-      toAddress: {}
+      toAddress: {},
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
     };
   },
   computed: {
@@ -266,7 +267,7 @@ export default {
       }
     },
     async swapStarted(swapDetails) {
-      if (swapDetails.isExitToFiat) return;
+      if (swapDetails.isExitToFiat && !swapDetails.bypass) return;
       this.timeUpdater(swapDetails);
       this.swapReady = false;
       this.preparedSwap = {};
@@ -299,6 +300,15 @@ export default {
         } else if (
           swapDetails.maybeToken &&
           swapDetails.fromCurrency === BASE_CURRENCY
+        ) {
+          this.preparedSwap = {
+            from: this.wallet.getChecksumAddressString(),
+            to: swapDetails.providerAddress,
+            value: unit.toWei(swapDetails.providerReceives, 'ether')
+          };
+        } else if (
+          swapDetails.maybeToken &&
+          this.fiatCurrenciesArray.includes(swapDetails.toCurrency)
         ) {
           this.preparedSwap = {
             from: this.wallet.getChecksumAddressString(),

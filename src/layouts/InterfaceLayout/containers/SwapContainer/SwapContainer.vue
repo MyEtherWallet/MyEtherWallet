@@ -213,6 +213,7 @@
     <swap-exit-to-fiat
       v-if="bityExitToFiat"
       :swap-details="swapDetails"
+      :exit-to-fiat-callback="exitToFiatCallback"
       @backButtonClick="exitToFiatAbort"
     ></swap-exit-to-fiat>
   </div>
@@ -310,6 +311,7 @@ export default {
       overrideTo: {},
       switchCurrencyOrder: false,
       bityExitToFiat: false,
+      exitToFiatCallback: () => {},
       fiatCurrenciesArray: fiat.map(entry => entry.symbol)
     };
   },
@@ -704,22 +706,16 @@ export default {
           };
           this.swapDetails = await this.swap.startSwap(swapDetails);
           this.finalizingSwap = false;
-          if (
-            this.swapDetails.dataForInitialization &&
-            this.swapDetails.maybeToken
-          ) {
-            this.$refs.swapConfirmation.$refs.swapconfirmation.show();
-          } else if (
-            this.swapDetails.dataForInitialization &&
-            !this.swapDetails.maybeToken
-          ) {
-            this.$refs.swapSendTo.$refs.swapconfirmation.show();
-          } else if (this.swapDetails.isExitToFiat) {
+
+          if (this.swapDetails.isExitToFiat) {
             this.bityExitToFiat = true;
+            this.exitToFiatCallback = swapDetailsExit => {
+              this.bityExitToFiat = false;
+              this.swapDetails = swapDetailsExit;
+              this.openConfirmModal(this.swapDetails);
+            };
           } else {
-            throw Error(
-              'Error while requesting finalized details from provider'
-            );
+            this.openConfirmModal(this.swapDetails);
           }
         }
       } catch (e) {
@@ -731,10 +727,20 @@ export default {
         errorLogger(e);
       }
     },
+    openConfirmModal(swapDetails) {
+      if (swapDetails.dataForInitialization && swapDetails.maybeToken) {
+        this.$refs.swapConfirmation.$refs.swapconfirmation.show();
+      } else if (swapDetails.dataForInitialization && !swapDetails.maybeToken) {
+        this.$refs.swapSendTo.$refs.swapconfirmation.show();
+      } else {
+        throw Error('Error while requesting finalized details from provider');
+      }
+    },
     exitToFiatAbort() {
       // get any component state values to temporarily persist, and reset swap state to state before exit to fiat selected.
       this.bityExitToFiat = !this.bityExitToFiat;
     },
+    async swapConfirmationModalOpenExitToFiat() {},
     resetSwapState() {
       // this.toAddress = '';
       this.fromCurrency = this.baseCurrency;
