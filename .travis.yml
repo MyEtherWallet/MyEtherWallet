@@ -23,11 +23,11 @@ stages:
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request
   - name: add to mewbuilds staging
-    if: branch = master and type != pull_request
+    if: branch = master
   - name: create release
-    if: branch = master and type != pull_request
+    if: branch = master
   - name: deploy to production
-    if: branch = master and type != pull_request
+    if: branch = master
 jobs:
   fast_finish: true
   include:
