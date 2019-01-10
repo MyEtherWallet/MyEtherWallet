@@ -127,6 +127,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
+const version = VERSION;
 
 export default {
   components: {
@@ -134,6 +135,7 @@ export default {
   },
   data() {
     return {
+      version: version,
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
@@ -146,6 +148,10 @@ export default {
         {
           title: this.$t('common.terms'),
           to: '/terms-and-conditions'
+        },
+        {
+          title: `v${version}`,
+          href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
         }
       ],
       footerContent: [
