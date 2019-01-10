@@ -17,17 +17,17 @@ stages:
   - name: run on pull requests
     if: type = pull_request and fork = true
   - name: add to mewbuilds
-    if: type != pull_request
+    if: type != pull_request and branch !=~ /^v.*$/
   - name: add to codecov
-    if: type != pull_request
+    if: type != pull_request and branch !=~ /^v.*$/
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request
   - name: add to mewbuilds staging
     if: branch = master and type != pull_request
   - name: create release
-    if: branch = master and type != pull_request
+    if: branch =~ /^v.*$/
   - name: deploy to production
-    if: branch = master and type != pull_request
+    if: branch =~ /^v.*$/
 jobs:
   fast_finish: true
   include:
@@ -90,6 +90,7 @@ jobs:
         on:
           tags: true
           branch: master
+          repo: myetherwallet/myetherwallet
     - stage: deploy to production
       script: skip
       before_deploy:
@@ -104,4 +105,5 @@ jobs:
         on:
           branch: master
           tags: true
+          repo: myetherwallet/myetherwallet
         target-branch: gh-pages
