@@ -27,7 +27,10 @@
         class="mt-2 collapse-content"
       >
         <ul class="networks">
-          <li v-for="(key, index) in Object.keys(Networks)" :key="key + index">
+          <li
+            v-for="(key, index) in Object.keys(reorderedList)"
+            :key="key + index"
+          >
             <div class="network-title">
               <img :src="Networks[key][0].type.icon" />
               <p>{{ key }}</p>
@@ -79,7 +82,6 @@
               >
                 <b-dropdown-item
                   v-for="(val, key) in availablePaths"
-                  v-if="key !== 'default'"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
                   @click="changePath(key)"
@@ -211,7 +213,6 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import ethIcon from '@/assets/images/icons/ethereum-icon.png';
-
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -249,7 +250,18 @@ export default {
       Networks: 'Networks',
       customPaths: 'customPaths',
       path: 'path'
-    })
+    }),
+    reorderedList() {
+      return Object.assign(
+        {},
+        {
+          ETH: this.Networks['ETH'],
+          RIN: this.Networks['RIN'],
+          ROP: this.Networks['ROP'],
+          ...this.Networks
+        }
+      );
+    }
   },
   watch: {
     hardwareWallet() {

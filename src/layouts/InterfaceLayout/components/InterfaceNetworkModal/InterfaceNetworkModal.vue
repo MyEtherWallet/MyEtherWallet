@@ -263,6 +263,16 @@ import store from 'store';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
 
+const reorderedList = Object.assign(
+  {},
+  {
+    ETH: networkTypes['ETH'],
+    RIN: networkTypes['RIN'],
+    ROP: networkTypes['ROP'],
+    ...networkTypes
+  }
+);
+
 import { mapGetters } from 'vuex';
 
 export default {
@@ -271,7 +281,7 @@ export default {
   },
   data() {
     return {
-      types: networkTypes,
+      types: reorderedList,
       selectedNetwork: {},
       chainID: '',
       port: 443,
