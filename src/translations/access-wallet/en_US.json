@@ -12,7 +12,7 @@
   "accessByPrivateKey": "Access by Private Key",
   "networkAndAddress": "Network and Address",
   "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
-  "accessDeviceAddresses": "Connect With Your Device",
+  "accessDeviceAddresses": "Choose a Hardware",
   "password": "Password",
   "mewConnectDesc": "Use MEWconnect to access my wallet",
   "metaMaskDesc": "Use the MetaMask extension to access my wallet",
