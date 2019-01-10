@@ -96,11 +96,6 @@
         .nav-item a span {
           color: $text-base-color;
           outline: none;
-
-          &.active {
-            //color: $text-black;
-            //font-weight: 500;
-          }
         }
       }
 
@@ -349,6 +344,10 @@
     animation-fill-mode: forwards;
   }
 
+  &.hide {
+    display: none !important;
+  }
+
   @keyframes fadeInFromNone {
     0% {
       height: 0;
@@ -363,6 +362,7 @@
     }
 
     100% {
+      display: inline-block;
       height: 54px;
       opacity: 1;
     }
