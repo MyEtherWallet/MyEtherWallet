@@ -260,10 +260,10 @@ export default {
         if (details.provider === providerNames.bity) {
           return [
             `${details.minValue} ${details.fromCurrency} (From Min.)`,
-            `${details.minValue} ${details.toCurrency} (To Min.)`
+            `${details.minValue} ${details.toCurrency} (From Min.)`
           ];
         }
-        return [`${details.minValue} ${details.fromCurrency} (Max.)`];
+        return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
       }
       return '';
     },
