@@ -1,0 +1,114 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 0;
+
+    .nav-tab-user-input-box {
+      margin: 0 auto;
+      max-width: 550px;
+
+      .progress-bar {
+        animation-name: progressGrow;
+        width: 66.66%;
+      }
+
+      @keyframes progressGrow {
+        from {
+          width: 33.33%;
+        }
+        to {
+          width: 66.66%;
+        }
+      }
+
+      .tab-pane {
+        min-height: 500px;
+        padding: 25px;
+
+        .title-popover {
+          display: flex;
+          margin-bottom: 40px;
+
+          h3 {
+            max-width: 250px;
+          }
+
+          .popover-container {
+            margin-top: 3px;
+          }
+        } // .title-popover
+
+        .contents {
+          margin-bottom: 60px;
+
+          .tools {
+            align-items: center;
+            display: flex;
+            margin-bottom: 10px;
+
+            .value-switch {
+              align-items: center;
+              display: flex;
+
+              .switch-label {
+                color: $text-color-4;
+                font-size: 14px;
+                margin-left: 10px;
+              }
+            }
+
+            .random-button {
+              cursor: pointer;
+              font-size: 14px;
+              margin-left: auto;
+
+              i {
+                margin-right: 5px;
+              }
+            }
+          }
+
+          .phrases {
+            ul {
+              display: grid;
+              grid-column-gap: 20px;
+              grid-row-gap: 20px;
+              grid-template-columns: 1fr 1fr;
+              margin-bottom: 20px;
+
+              li {
+                border-bottom: 1px solid
+                  $border-bottom--mnemonic-phrase-key-color;
+                color: $text--mnemonic-phrase-index-color;
+                font-size: 14px;
+                padding: 10px 0;
+
+                span {
+                  color: $text--mnemonic-phrase-key-color;
+                  margin-left: 10px;
+                }
+              } // li
+            } // ul
+          } // .phrases
+        } // .contents
+
+        .user-input {
+          margin-bottom: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .next-button {
+            padding: 21px 20px;
+          }
+
+          .icon {
+            height: 30px;
+            margin-left: 20px;
+          }
+        } // .user-input
+      } // .tab-pane
+    } // .nav-tab-user-input-box
+  } // .wrap
+} //  @media all and (max-width: $mobile-width)

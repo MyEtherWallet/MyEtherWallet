@@ -1,8 +1,8 @@
 import registerDomainRoutes from './RegisterDomain/routes';
-import domainSaleRoutes from './DomainSaleContainer/routes';
+import buySubDomainRoutes from './BuySubdomain/routes';
 const routes = {
   registerDomain: registerDomainRoutes,
-  domainSale: domainSaleRoutes
+  buySubDomain: buySubDomainRoutes
 };
 
 export default routes;

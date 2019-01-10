@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .buttons-container {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: 0 auto;
+    max-width: 900px;
+    position: relative;
+    text-align: center;
+  }
+}
+
+.wrap {
+  background-color: $background-color-1;
+  padding: 80px 0;
+}
+
+.title {
+  margin-bottom: 50px;
+  text-align: center;
+}

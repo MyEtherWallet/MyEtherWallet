@@ -1,0 +1,149 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} - 200px)) {
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+
+    * {
+      text-decoration: none;
+    }
+  }
+
+  .wrap {
+    background-color: $footer-background-color;
+    color: $text-color-1;
+    padding: 70px 0 20px;
+  }
+
+  .footer-contents {
+    > div {
+      display: flex;
+      flex-direction: column;
+
+      .content-title {
+        align-items: center;
+        display: flex;
+
+        h3 {
+          font-size: 19px;
+        }
+
+        .open,
+        .close {
+          display: none;
+        }
+      }
+
+      .content-links {
+        margin-top: 20px;
+        max-height: 600px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+
+        .sub-title {
+          color: $text-color-1;
+        }
+
+        p {
+          color: $text--footer-link-color;
+          margin-bottom: 15px;
+        }
+
+        .no-margin {
+          margin-bottom: 3px;
+        }
+      }
+    }
+
+    .donate-us {
+      .content-title {
+        margin-bottom: 20px;
+      }
+
+      .crypto-link {
+        color: $link-text-color-2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        color: $text--footer-link-color;
+        margin-bottom: 15px;
+      }
+
+      i {
+        border: 1px solid $text--footer-link-color;
+        border-radius: 100px;
+      }
+
+      h3 {
+        img {
+          height: 30px;
+          margin-top: -8px;
+          vertical-align: top;
+          margin-left: -9px;
+        }
+      }
+    }
+  } // .footer-contents
+
+  .foot-note {
+    align-items: center;
+    border-top: 1px solid $dark-blue-1;
+    margin-top: 40px;
+    padding-top: 40px;
+
+    > div {
+      //margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .links {
+      display: flex;
+
+      div {
+        border-right: 1px solid $border-color-2;
+        padding: 0 15px;
+      }
+
+      span {
+        color: $text-color-1;
+      }
+
+      div:last-child {
+        border-right: 0;
+      }
+    }
+
+    .copyright {
+      text-align: center;
+
+      p {
+        color: $text--footer-link-color;
+      }
+
+      a {
+        color: $white;
+      }
+    }
+
+    .social {
+      i {
+        color: $text--footer-link-color;
+        font-size: 19px;
+        margin-left: 15px;
+      }
+
+      a:first-child i {
+        margin-left: 0;
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.version {
+  padding-left: 50px;
+}

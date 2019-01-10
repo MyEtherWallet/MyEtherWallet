@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 80px 0 40px;
+
+    .page-title {
+      text-align: center;
+    }
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px)) {

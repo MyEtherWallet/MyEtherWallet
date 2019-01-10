@@ -1,5 +1,7 @@
 @import '../InterfaceContainer';
 
+$swap-custom-mobile-colleps-width: 700px;
+
 .swap-container {
   @extend %interface-container;
 
@@ -34,6 +36,13 @@
       color: $mew-green;
       cursor: pointer;
     }
+
+    .all-button {
+      margin-left: auto;
+      color: $mew-green;
+      cursor: pointer;
+      font-size: 12px;
+    }
   }
 
   .send-form {
@@ -46,10 +55,6 @@
         .title-and-popover {
           display: flex;
           align-items: center;
-        }
-
-        h4 {
-          margin-bottom: 2px;
         }
       }
 
@@ -68,6 +73,10 @@
       grid-column-gap: 5px;
       grid-template-columns: 1fr 70px 1fr;
 
+      @media all and (max-width: $swap-custom-mobile-colleps-width) {
+        grid-template-columns: 1fr;
+      }
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
@@ -78,6 +87,10 @@
         font-size: 30px;
         padding-top: 62px;
         text-align: center;
+        @media all and (max-width: $swap-custom-mobile-colleps-width) {
+          padding: 15px 0 0 0;
+          transform: rotate(90deg);
+        }
       }
 
       .amount {

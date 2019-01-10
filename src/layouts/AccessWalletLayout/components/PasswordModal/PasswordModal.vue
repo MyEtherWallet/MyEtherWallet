@@ -4,40 +4,54 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered
+    @shown="focusInput"
+  >
     <form class="password-form">
       <div class="input-container">
         <input
-          :type="show ? 'text': 'password'"
+          ref="passwordInput"
+          :type="show ? 'text' : 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off"
+          placeholder="Enter password"
+        />
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
         <img
           v-if="!show"
           src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
       </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
+      <p v-show="error !== ''" class="error">{{ error }}</p>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
       <button
-        :disabled=" password === '' && password.length === 0 && password.length < 9"
+        :disabled="
+          password === '' && password.length === 0 && password.length < 9
+        "
         class="submit-button large-round-button-green-filled"
         type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlock") }}
+        @click.prevent="unlockWallet"
+      >
+        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
 </template>
 
 <script>
-import { BasicWallet } from '@/wallets';
-import Worker from 'worker-loader!@/workers/unlockWallet.worker.js';
+import { WalletInterface } from '@/wallets';
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import { mapGetters } from 'vuex';
 export default {
   props: {
     file: {
@@ -51,8 +65,14 @@ export default {
     return {
       show: false,
       password: '',
-      error: ''
+      error: '',
+      spinner: false
     };
+  },
+  computed: {
+    ...mapGetters({
+      path: 'path'
+    })
   },
   watch: {
     password() {
@@ -61,6 +81,7 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       const worker = new Worker();
       const self = this;
       worker.postMessage({
@@ -69,14 +90,13 @@ export default {
       });
       worker.onmessage = function(e) {
         // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
-        self.$store.dispatch(
-          'decryptWallet',
-          BasicWallet.unlock({
-            type: 'manualPrivateKey',
-            manualPrivateKey: Buffer.from(e.data._privKey).toString('hex')
-          })
-        );
-        self.$router.push({ path: 'interface' });
+        self.$store.dispatch('decryptWallet', [
+          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
+        ]);
+        self.spinner = false;
+        self.$router.push({
+          path: 'interface'
+        });
       };
       worker.onerror = function(e) {
         self.error = e.message;
@@ -84,6 +104,9 @@ export default {
     },
     switchViewPassword() {
       this.show = !this.show;
+    },
+    focusInput() {
+      this.$refs.passwordInput.focus();
     }
   }
 };

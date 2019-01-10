@@ -1,0 +1,13 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .buttons-container {
+    user-select: none;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-template-columns: repeat(4, 180px);
+    margin: 0 auto;
+    overflow-y: auto;
+    position: relative;
+    text-align: center;
+  }
+}

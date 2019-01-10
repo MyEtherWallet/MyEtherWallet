@@ -1,0 +1,33 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .content-block {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    border-radius: 4px;
+    background-color: $background-color-1;
+
+    .icon-block {
+      .icon {
+        display: block;
+        height: 80px;
+        margin: 0 auto;
+        margin-right: 15px;
+      }
+    }
+
+    .text-block {
+      h6 {
+        margin-bottom: 5px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+} // @media all and (max-width: $mobile-width)

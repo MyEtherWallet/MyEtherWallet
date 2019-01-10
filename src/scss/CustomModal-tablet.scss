@@ -1,0 +1,76 @@
+@import 'GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .appstore-button-container {
+    border-radius: 4px;
+    margin-bottom: 30px;
+    padding: 30px;
+    text-align: center;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .bootstrap-modal {
+    .modal-icon {
+      display: flex;
+      margin-bottom: 35px;
+      margin-top: 10px;
+
+      img {
+        margin: 0 auto;
+      }
+    }
+
+    .content-container {
+      margin-bottom: 20px;
+    }
+
+    .accept-terms {
+      margin-bottom: 20px;
+      text-align: center;
+
+      .container {
+        display: inline;
+      }
+    }
+
+    .button-container {
+      margin-bottom: 25px;
+
+      .connection-button {
+        cursor: initial;
+        text-align: center;
+        width: 100%;
+      }
+
+      .waiting-for-connection {
+        background-color: $button--background-color-3;
+      }
+    }
+  }
+
+  .support {
+    display: flex;
+
+    a {
+      margin: 0 auto;
+    }
+
+    .support-content {
+      align-items: center;
+      display: flex;
+      margin: 0 auto;
+
+      .support-icon img {
+        height: 25px;
+        margin-right: 10px;
+      }
+
+      .support-label h5 {
+        color: $link-text-color-2;
+        font-size: 14px;
+      }
+    }
+  }
+}

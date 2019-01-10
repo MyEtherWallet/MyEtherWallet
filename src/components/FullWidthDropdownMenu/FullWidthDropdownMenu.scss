@@ -1,0 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  border-bottom: 1px solid $light-grey-2;
+}
+
+.title-container {
+  padding: 20px 30px;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  .menu-title-component {
+    margin-right: 10px;
+  }
+
+  i {
+    margin-left: auto;
+  }
+}
+
+.contents-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: all 0.3s ease;
+
+  .padding-block {
+    padding: 0 30px 20px 30px;
+  }
+
+  &.opened {
+    max-height: 300px;
+  }
+}

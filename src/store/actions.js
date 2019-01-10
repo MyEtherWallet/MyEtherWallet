@@ -1,9 +1,25 @@
-import { override, WalletWrapper } from '@/wallets';
 import url from 'url';
 import web3 from 'web3';
+import MEWProvider from '@/wallets/web3-provider';
+import * as unit from 'ethjs-unit';
+import { formatters } from 'web3-core-helpers';
+
+import {
+  txIndexes,
+  swapIndexes,
+  addUpdateNotification,
+  addUpdateSwapNotification
+} from '@/helpers/notificationFormatters';
 
 const addNotification = function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[0]);
+  let address;
+
+  if (val[1] != undefined) {
+    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
+  } else {
+    throw Error('Unable to determine sending address for notification.');
+  }
+
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -11,13 +27,28 @@ const addNotification = function({ commit, state }, val) {
 
   if (!Array.isArray(newNotif[address])) newNotif[address] = [];
 
-  newNotif[address].push({
-    title: val[2],
-    read: false,
-    timestamp: new Date(),
-    body: val[1].hasOwnProperty('message') ? val[1].message : val[1],
-    expanded: false
+  newNotif[address] = addUpdateNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
+  commit('ADD_NOTIFICATION', newNotif);
+};
+
+const addSwapNotification = async function({ commit, state }, val) {
+  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
+  const newNotif = {};
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
   });
+
+  if (!Array.isArray(newNotif[address])) newNotif[address] = [];
+
+  newNotif[address] = await addUpdateSwapNotification(
+    newNotif[address],
+    val,
+    state.network.type.name
+  );
 
   commit('ADD_NOTIFICATION', newNotif);
 };
@@ -43,24 +74,18 @@ const createAndSignTx = function({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, state, dispatch }, wallet) {
-  const wrappedWallet = new WalletWrapper(wallet);
-  const _web3 = state.web3;
-  override(_web3, wrappedWallet, this._vm.$eventHub, { state, dispatch });
-  commit('DECRYPT_WALLET', wrappedWallet);
-  commit('SET_WEB3_INSTANCE', _web3);
+const decryptWallet = function({ commit, dispatch }, params) {
+  // params[0] = wallet, params[1] = provider
+  commit('DECRYPT_WALLET', params[0]);
+  dispatch('setWeb3Instance', params[1]);
 };
 
 const setAccountBalance = function({ commit }, balance) {
-  commit('SET_ACCOUNT_BALANCE', +balance);
+  commit('SET_ACCOUNT_BALANCE', balance);
 };
 
 const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
-};
-
-const setWeb3Wallet = function({ commit }, wallet) {
-  commit('SET_WEB3_PROVIDER_WALLET', wallet);
 };
 
 const setState = function({ commit }, stateObj) {
@@ -68,32 +93,72 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  if (provider && provider.currentProvider) {
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(
-        new web3(provider.currentProvider),
-        state.wallet,
-        this._vm.$eventHub,
-        { state, dispatch }
-      )
-    );
-  } else {
-    const hostUrl = url.parse(state.network.url);
-    const web3Instance = new web3(
-      `${hostUrl.protocol}//${hostUrl.host}:${state.network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    commit(
-      'SET_WEB3_INSTANCE',
-      override(web3Instance, state.wallet, this._vm.$eventHub, {
+  const hostUrl = url.parse(state.network.url);
+  const options = {};
+  // eslint-disable-next-line
+  const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
+    state.network.port ? ':' + state.network.port : ''
+  }${hostUrl.pathname}`;
+  state.network.username !== '' && state.network.password !== ''
+    ? (options['headers'] = {
+        authorization: `Basic: ${btoa(
+          state.network.username + ':' + state.network.password
+        )}`
+      })
+    : {};
+  const web3Instance = new web3(
+    new MEWProvider(
+      provider ? provider : parsedUrl,
+      options,
+      {
         state,
         dispatch
-      })
-    );
-  }
+      },
+      this._vm.$eventHub
+    )
+  );
+  web3Instance['mew'] = {};
+  web3Instance['mew'].sendBatchTransactions = arr => {
+    return new Promise(async resolve => {
+      for (let i = 0; i < arr.length; i++) {
+        const localTx = {
+          to: arr[i].to,
+          data: arr[i].data,
+          from: arr[i].from,
+          value: arr[i].value,
+          gasPrice: arr[i].gasPrice
+        };
+        arr[i].nonce = await (arr[i].nonce === undefined
+          ? web3Instance.eth.getTransactionCount(
+              state.wallet.getChecksumAddressString()
+            )
+          : arr[i].nonce);
+        arr[i].nonce = +arr[i].nonce + i;
+        arr[i].gas = await (arr[i].gas === undefined
+          ? web3Instance.eth.estimateGas(localTx)
+          : arr[i].gas);
+        arr[i].chainId = !arr[i].chainId
+          ? state.network.type.chainID
+          : arr[i].chainId;
+        arr[i].gasPrice =
+          arr[i].gasPrice === undefined
+            ? unit.toWei(state.gasPrice, 'gwei')
+            : arr[i].gasPrice;
+        arr[i] = formatters.inputCallFormatter(arr[i]);
+      }
+
+      const batchSignCallback = promises => {
+        resolve(promises);
+      };
+      this._vm.$eventHub.$emit(
+        'showTxCollectionConfirmModal',
+        arr,
+        batchSignCallback,
+        state.wallet.isHardware
+      );
+    });
+  };
+  commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
 const switchNetwork = function({ commit }, networkObj) {
@@ -116,8 +181,30 @@ const updateNotification = function({ commit, state }, val) {
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
+const updateTransaction = function({ commit, state }, val) {
+  // address, index, object
+
+  const address = web3.utils.toChecksumAddress(val[0]);
+  const newNotif = {};
+  Object.keys(state.transactions).forEach(item => {
+    newNotif[item] = state.transactions[item];
+  });
+
+  const entryIndex = newNotif[address].findIndex(entry => {
+    return entry.orderId === val[1];
+  });
+
+  newNotif[address][entryIndex].status = val[2];
+  commit('UPDATE_SWAP_TRANSACTION', newNotif);
+};
+
+const setLastPath = function({ commit }, val) {
+  commit('SET_LAST_PATH', val);
+};
+
 export default {
   addNotification,
+  addSwapNotification,
   addCustomPath,
   checkIfOnline,
   clearWallet,
@@ -125,10 +212,11 @@ export default {
   decryptWallet,
   setAccountBalance,
   setGasPrice,
-  setWeb3Wallet,
   setState,
   setENS,
+  setLastPath,
   setWeb3Instance,
   switchNetwork,
-  updateNotification
+  updateNotification,
+  updateTransaction
 };

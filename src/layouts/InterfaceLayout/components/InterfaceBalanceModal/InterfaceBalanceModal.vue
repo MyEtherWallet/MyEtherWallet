@@ -5,7 +5,8 @@
       :title="$t('interface.balance')"
       hide-footer
       centered
-      class="bootstrap-modal balance nopadding">
+      class="bootstrap-modal balance nopadding"
+    >
       <div class="content-block total-balance">
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
@@ -16,12 +17,16 @@
       </div>
 
       <div class="content-block">
-        <h4 class="equivalent-values-title">{{ $t('interface.equivalentValues') }}</h4>
+        <h4 class="equivalent-values-title">
+          {{ $t('interface.equivalentValues') }}
+        </h4>
         <ul class="equivalent-values">
-          <li
-            v-for="ev in equivalentValues"
-            :key="ev.key">
-            <img :src="ev.image">
+          <li v-for="ev in equivalentValues" :key="ev.key">
+            <img
+              :src="
+                require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
+              "
+            />
             <p>{{ ev.name }}</p>
             <p class="ev-value">{{ ev.value }}</p>
           </li>
@@ -32,13 +37,7 @@
 </template>
 
 <script>
-import iconBtc from '@/assets/images/currency/btc.svg';
-import iconRep from '@/assets/images/currency/rep.svg';
-import iconEur from '@/assets/images/currency/eur.svg';
-import iconChf from '@/assets/images/currency/chf.svg';
-import iconGbp from '@/assets/images/currency/gbp.svg';
-import iconUsd from '@/assets/images/currency/usd.svg';
-
+import BigNumber from 'bignumber.js';
 export default {
   props: {
     balance: {
@@ -50,37 +49,64 @@ export default {
     return {
       equivalentValues: [
         {
-          image: iconBtc,
           name: 'BTC',
           value: '102.22453'
         },
         {
-          image: iconRep,
           name: 'REP',
           value: '5656.22'
         },
         {
-          image: iconChf,
           name: 'CHF',
           value: '12410004.22453'
         },
         {
-          image: iconUsd,
-          name: 'USD',
-          value: '312004.53'
+          name: 'USD'
         },
         {
-          image: iconEur,
           name: 'EUR',
           value: '12410.22'
         },
         {
-          image: iconGbp,
           name: 'GBP',
           value: '687867.53'
         }
       ]
     };
+  },
+  watch: {
+    balance() {
+      this.fetchBalanceData();
+    }
+  },
+  mounted() {
+    this.fetchBalanceData();
+  },
+  methods: {
+    async fetchBalanceData() {
+      const newArr = [];
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      delete values['lastCalled'];
+      Object.keys(values).forEach(item => {
+        if (
+          this.equivalentValues.find(curr => {
+            return curr.name === item;
+          })
+        ) {
+          const objectRes = {
+            name: item,
+            value: new BigNumber(this.balance)
+              .multipliedBy(new BigNumber(values[item]))
+              .decimalPlaces(18)
+              .toFixed()
+          };
+          newArr.push(objectRes);
+        }
+      });
+      this.equivalentValues = newArr;
+    }
   }
 };
 </script>

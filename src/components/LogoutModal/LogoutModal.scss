@@ -1,0 +1,20 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+}
+
+h2 {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+}
