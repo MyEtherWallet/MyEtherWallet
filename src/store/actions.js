@@ -3,17 +3,13 @@ import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-import BigNumber from 'bignumber.js';
 
 import {
-  type as noticeTypes,
   txIndexes,
   swapIndexes,
   addUpdateNotification,
   addUpdateSwapNotification
 } from '@/helpers/notificationFormatters';
-import { WEB3_WALLET } from '../wallets/bip44/walletTypes';
-import Web3PromiEvent from 'web3-core-promievent';
 
 const addNotification = function({ commit, state }, val) {
   let address;
@@ -85,7 +81,7 @@ const decryptWallet = function({ commit, dispatch }, params) {
 };
 
 const setAccountBalance = function({ commit }, balance) {
-  commit('SET_ACCOUNT_BALANCE', +balance);
+  commit('SET_ACCOUNT_BALANCE', balance);
 };
 
 const setGasPrice = function({ commit }, gasPrice) {
@@ -154,80 +150,12 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       const batchSignCallback = promises => {
         resolve(promises);
       };
-
-      if (state.wallet.identifier === WEB3_WALLET) {
-        const batch = new web3Instance.eth.BatchRequest();
-        // MetaMask reverses the request order
-        // see: https://github.com/MetaMask/metamask-extension/issues/5817
-        const revArr = arr.reverse();
-        const promises = revArr.map(tx => {
-          const promiEvent = new Web3PromiEvent(false);
-          const req = web3Instance.eth.sendTransaction.request(
-            tx,
-            (err, data) => {
-              if (err !== null) {
-                promiEvent.eventEmitter.emit('error', err);
-                promiEvent.reject(err);
-              }
-              if (err === null) {
-                promiEvent.eventEmitter.emit('transactionHash', data);
-              }
-            }
-          );
-          promiEvent.eventEmitter.on('error', err => {
-            dispatch('addNotification', [
-              noticeTypes.TRANSACTION_ERROR,
-              tx.from,
-              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)) || tx,
-              err
-            ]);
-            this._vm.$eventHub.$emit(
-              'showErrorModal',
-              'Transaction Error!',
-              'Return'
-            );
-          });
-          promiEvent.eventEmitter.once('transactionHash', hash => {
-            dispatch('addNotification', [
-              noticeTypes.TRANSACTION_HASH,
-              tx.from,
-              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
-              hash
-            ]).then(() => {
-              web3Instance.eth.sendTransaction.method._confirmTransaction(
-                promiEvent,
-                hash,
-                req
-              );
-              this._vm.$eventHub.$emit(
-                'showSuccessModal',
-                'Transaction sent!',
-                'Okay'
-              );
-            });
-          });
-          promiEvent.eventEmitter.once('receipt', receipt => {
-            promiEvent.resolve(receipt);
-            dispatch('addNotification', [
-              noticeTypes.TRANSACTION_RECEIPT,
-              tx.from,
-              arr.find(entry => new BigNumber(tx.nonce).eq(entry.nonce)),
-              receipt
-            ]);
-          });
-          batch.add(req);
-          return promiEvent.eventEmitter;
-        });
-        batchSignCallback(promises);
-        batch.execute();
-      } else {
-        this._vm.$eventHub.$emit(
-          'showTxCollectionConfirmModal',
-          arr,
-          batchSignCallback,
-          state.wallet.isHardware
-        );
-      }
+      this._vm.$eventHub.$emit(
+        'showTxCollectionConfirmModal',
+        arr,
+        batchSignCallback,
+        state.wallet.isHardware
+      );
     });
   };
   commit('SET_WEB3_INSTANCE', web3Instance);

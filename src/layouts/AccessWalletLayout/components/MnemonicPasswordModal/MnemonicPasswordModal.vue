@@ -15,6 +15,7 @@
           v-model="password"
           name="Password"
           autocomplete="off"
+          placeholder="Enter password"
         />
         <img
           v-if="show"
@@ -28,12 +29,16 @@
         />
       </div>
       <p v-show="error !== ''" class="error">{{ error }}</p>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
       <button
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('common.continue') }}
+        <span v-show="!spinner"> {{ $t('common.continue') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -56,7 +61,8 @@ export default {
     return {
       show: false,
       password: '',
-      error: ''
+      error: '',
+      spinner: false
     };
   },
   watch: {
@@ -66,10 +72,12 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       MnemonicWallet(this.phrase, this.password)
         .then(wallet => {
           // this.$refs.password.hide();  // TODO: confirm moving this to parent still functions as expected
           this.password = '';
+          this.spinner = false;
           this.hardwareWalletOpen(wallet);
         })
         .catch(_error => {

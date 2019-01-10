@@ -33,6 +33,9 @@ import steve from '@/assets/images/team/Steve.jpg';
 import jack from '@/assets/images/team/Jack.jpg';
 import david from '@/assets/images/team/David.jpg';
 import samantha from '@/assets/images/team/Samantha.jpg';
+import alex from '@/assets/images/team/Alex.jpg';
+import misha from '@/assets/images/team/Misha.jpg';
+import katya from '@/assets/images/team/Katya.jpg';
 
 export default {
   components: {
@@ -47,22 +50,22 @@ export default {
       },
       members: [
         {
-          name: 'Kosala Hemachandra',
+          name: 'Kosala',
           position: 'Founder/CEO',
           img: kosala
         },
         {
-          name: 'Brian Norton',
+          name: 'Brian',
           position: 'COO',
           img: brian
         },
         {
-          name: 'Olchik Kupchevskaya',
+          name: 'Olchik',
           position: 'VP',
           img: olchik
         },
         {
-          name: 'Stephen Wooldridge II',
+          name: 'Stephen',
           position: 'Customer Support',
           otherInfo: '#MEWForce',
           img: stephen
@@ -74,30 +77,45 @@ export default {
           img: richie
         },
         {
-          name: 'Brittany Evans',
+          name: 'Brittany',
           position: 'Blockchain Specialist',
           otherInfo: '#MEWForce',
           img: brittany
         },
         {
-          name: 'Yel Padill',
+          name: 'Yel',
           position: 'Full-Stack Developer',
           img: yel
         },
         {
-          name: 'Steve Mieskoski',
+          name: 'Steve',
           position: 'Full-Stack Developer',
           img: steve
         },
         {
-          name: 'Jack Huang',
+          name: 'Jack',
           position: 'UI/UX Designer',
           img: jack
         },
         {
-          name: 'David Hong',
+          name: 'David',
           position: 'Front-End Developer',
           img: david
+        },
+        {
+          name: 'Alex',
+          position: 'Director of Mobile',
+          img: alex
+        },
+        {
+          name: 'Misha',
+          position: 'Lead Mobile Developer',
+          img: misha
+        },
+        {
+          name: 'Katya',
+          position: 'Community Advocate',
+          img: katya
         },
         {
           name: 'Samantha',

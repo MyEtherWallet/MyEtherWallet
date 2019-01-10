@@ -19,9 +19,9 @@
         </div>
         <p>{{ $t('createWallet.iosVersions') }}</p>
       </div>
-      <!-- <div class="android">
+      <div class="android">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png" />
+          <img src="@/assets/images/etc/qr-code-android.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
@@ -30,7 +30,7 @@
           </div>
         </div>
         <p>{{ $t('createWallet.androidVersions') }}</p>
-      </div> -->
+      </div>
     </div>
   </b-modal>
 </template>
