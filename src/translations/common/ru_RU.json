@@ -12,7 +12,7 @@
   "balance": "Баланс",
   "terms": "Условия",
   "continue": "Продолжить",
-  "jsonF": "JSON-файл",
+  "jsonF": "Keystore-файл",
   "mnemonicP": "Мнемоническая фраза",
   "privKey": "Закрытый ключ",
   "mewConnect": "MEWconnect",
