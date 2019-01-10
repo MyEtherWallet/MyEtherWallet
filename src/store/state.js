@@ -15,7 +15,7 @@ const gasPrice =
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const ens = network.type.ensResolver == null;
-store.set('network', network)
+store.set('network', network);
 const state = {
   account: {
     balance: 0
