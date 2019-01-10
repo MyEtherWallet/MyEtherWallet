@@ -28,7 +28,7 @@
       >
         <ul class="networks">
           <li
-            v-for="(key, index) in Object.keys(reorderedList)"
+            v-for="(key, index) in Object.keys(reorderNetworkList)"
             :key="key + index"
           >
             <div class="network-title">
@@ -212,7 +212,9 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
+import Misc from '@/helpers/misc';
 import ethIcon from '@/assets/images/icons/ethereum-icon.png';
+
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -251,16 +253,8 @@ export default {
       customPaths: 'customPaths',
       path: 'path'
     }),
-    reorderedList() {
-      return Object.assign(
-        {},
-        {
-          ETH: this.Networks['ETH'],
-          RIN: this.Networks['RIN'],
-          ROP: this.Networks['ROP'],
-          ...this.Networks
-        }
-      );
+    reorderNetworkList() {
+      return Misc.reorderNetworks(this.Networks);
     }
   },
   watch: {
