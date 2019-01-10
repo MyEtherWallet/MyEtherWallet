@@ -29,7 +29,7 @@
         <ul class="networks">
           <li
             v-for="(key, index) in Object.keys(reorderNetworkList)"
-            :key="key + index"
+            :key="$router.path + key + index"
           >
             <div class="network-title">
               <img :src="Networks[key][0].type.icon" />
@@ -254,7 +254,7 @@ export default {
       path: 'path'
     }),
     reorderNetworkList() {
-      return Misc.reorderNetworks(this.Networks);
+      return Misc.reorderNetworks();
     }
   },
   watch: {
