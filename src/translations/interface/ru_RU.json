@@ -6,7 +6,7 @@
   "httpBasicAccess": "Базовая аутентификация HTTP",
   "tokens": "Токены",
   "customToken": "Произвольные токены",
-  "dataGas": "Ограничение данных и газа",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "Отправить транзакцию",
   "haveIssues": "Возникли проблемы?",
   "registerEns": "Register ENS",
