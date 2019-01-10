@@ -6,7 +6,7 @@
   "httpBasicAccess": "HTTPベーシックアクセス認証",
   "tokens": "トークン",
   "customToken": "カスタムトークン",
-  "dataGas": "データとGAS制限",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "トランザクションを送る",
   "haveIssues": "問題がありますか？",
   "registerEns": "Register ENS",
