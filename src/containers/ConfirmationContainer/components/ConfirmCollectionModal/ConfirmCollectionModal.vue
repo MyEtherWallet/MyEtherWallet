@@ -78,22 +78,22 @@
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
-                <span
-                  >{{
+                <span>
+                  {{
                     web3.utils.hexToNumberString(
                       web3.utils.fromWei(item.gasPrice, 'gwei')
                     )
                   }}
-                  Gwei</span
-                >
+                  Gwei
+                </span>
               </div>
               <div class="body-item">
-                <span class="item-title">Nonce </span>
+                <span class="item-title">Nonce</span>
                 <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.data') }} </span>
-                <span class="data-string">{{ item.input }}</span>
+                <span class="item-title">{{ $t('common.data') }}</span>
+                <span class="data-string">{{ item.input || item.data }}</span>
               </div>
             </b-collapse>
           </div>
@@ -148,9 +148,8 @@
             href="https:/kb.myetherwallet.com"
             target="_blank"
             rel="noopener noreferrer"
+            >Learn more</a
           >
-            Learn more
-          </a>
         </p>
       </div>
     </b-modal>

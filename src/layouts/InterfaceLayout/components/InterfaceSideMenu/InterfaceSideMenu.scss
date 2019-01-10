@@ -71,34 +71,22 @@
   @media all and (max-width: $interface--mobile-side-menu--width) {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   img {
     height: 33px;
   }
+
+  i {
+    cursor: pointer;
+  }
 }
 
-.side-menu-close-button {
-  margin-left: auto;
-  position: relative;
-  margin-right: 30px;
-  > div {
-    height: 3px;
-    width: 30px;
-    background-color: black;
-  }
+.child-tab {
+  display: none;
+}
 
-  > div:nth-child(1) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: rotate(45deg);
-  }
-
-  > div:nth-child(2) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: rotate(-45deg);
-  }
+.show-child {
+  display: block;
 }

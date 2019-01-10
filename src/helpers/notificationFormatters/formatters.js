@@ -36,8 +36,14 @@ const extractErrorMessage = errObj => {
   }
 };
 
+const parseStatus = status => {
+  return new BigNumber(status).toString(10);
+};
+
 const updateStatusBasedOnReciept = status => {
-  return status ? notificationStatuses.COMPLETE : notificationStatuses.FAILED;
+  return parseStatus(status)
+    ? notificationStatuses.COMPLETE
+    : notificationStatuses.FAILED;
 };
 
 const formatTransactionHash = (val, network) => {
