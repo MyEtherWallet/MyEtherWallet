@@ -261,17 +261,7 @@
 import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import * as networkTypes from '@/networks/types';
-
-const reorderedList = Object.assign(
-  {},
-  {
-    ETH: networkTypes['ETH'],
-    RIN: networkTypes['RIN'],
-    ROP: networkTypes['ROP'],
-    ...networkTypes
-  }
-);
+import Misc from '@/helpers/misc';
 
 import { mapGetters } from 'vuex';
 
@@ -281,7 +271,6 @@ export default {
   },
   data() {
     return {
-      types: reorderedList,
       selectedNetwork: {},
       chainID: '',
       port: 443,
@@ -298,7 +287,22 @@ export default {
     ...mapGetters({
       network: 'network',
       Networks: 'Networks'
-    })
+    }),
+    types() {
+      const networks = Misc.reorderNetworks(this.Networks);
+      networks['custom'] = {
+        name: 'CUS',
+        name_long: 'CUSTOM',
+        homePage: '',
+        blockExplorerTX: '',
+        blockExplorerAddr: '',
+        chainID: '',
+        tokens: [],
+        contracts: [],
+        ensResolver: ''
+      };
+      return networks;
+    }
   },
   watch: {
     selectedNetwork(newVal) {
@@ -309,17 +313,6 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
-    this.types['custom'] = {
-      name: 'CUS',
-      name_long: 'CUSTOM',
-      homePage: '',
-      blockExplorerTX: '',
-      blockExplorerAddr: '',
-      chainID: '',
-      tokens: [],
-      contracts: [],
-      ensResolver: ''
-    };
   },
   methods: {
     networkModalOpen() {

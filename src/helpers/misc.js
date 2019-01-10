@@ -87,6 +87,23 @@ const validateHexString = str => {
   const re = /^[0-9A-F]+$/g;
   return re.test(str);
 };
+
+const reorderNetworks = obj => {
+  const oldObject = Object.assign({}, obj);
+  delete oldObject['ETH'];
+  delete oldObject['RIN'];
+  delete oldObject['ROP'];
+  return Object.assign(
+    {},
+    {
+      ETH: obj['ETH'],
+      ROP: obj['ROP'],
+      RIN: obj['RIN'],
+      ...oldObject
+    }
+  );
+};
+
 export default {
   isJson,
   doesExist,
@@ -97,5 +114,6 @@ export default {
   isValidETHAddress,
   sanitizeHex,
   validateHexString,
-  scrollToTop
+  scrollToTop,
+  reorderNetworks
 };
