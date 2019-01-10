@@ -3,10 +3,10 @@
   "version": "5.0.0-beta.0",
   "description": "Client side ethereum wallet",
   "scripts": {
-    "build:ghpages": "WEBPACK_INTEGRITY=false  npm run build:hash",
+    "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
-    "build:mewcx": "BUILD_TYPE=mewcx npm run build",
+    "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "build": "npm run update && vue-cli-service build",
     "test": "jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
