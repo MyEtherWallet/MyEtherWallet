@@ -368,8 +368,11 @@ export default {
     try {
       window.addEventListener(
         'popstate',
-        () => {
-          if (this.wallet !== null)
+        event => {
+          if (
+            this.wallet !== null &&
+            !event.target.location.hash.includes('interface')
+          )
             this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
         },
         false
