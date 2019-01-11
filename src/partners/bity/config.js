@@ -15,13 +15,13 @@ const BityCurrencies = {
   CHF: {
     symbol: 'CHF',
     name: 'Swiss Franc',
-    invalidFrom: ['EUR'],
+    invalidFrom: ['EUR', 'REP'],
     invalidTo: ['BTC', 'ETH', 'REP']
   },
   EUR: {
     symbol: 'EUR',
     name: 'Euro',
-    invalidFrom: ['CHF'],
+    invalidFrom: ['CHF', 'REP'],
     invalidTo: ['CHF', 'BTC', 'ETH', 'REP']
   }
 };
