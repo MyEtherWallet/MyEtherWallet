@@ -79,14 +79,6 @@ export default {
       ]
     };
   },
-  watch: {
-    gasLimit(newVal) {
-      this.gasLimit = newVal;
-    },
-    nonce(newVal) {
-      this.nonce = newVal;
-    }
-  },
   methods: {
     createdRawTx(e) {
       this.rawTx = e;
@@ -107,6 +99,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped file="SendOfflineContainer.scss">
 @import 'SendOfflineContainer.scss';
 </style>

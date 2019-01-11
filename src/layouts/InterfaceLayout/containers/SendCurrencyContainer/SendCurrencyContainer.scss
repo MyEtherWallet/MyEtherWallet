@@ -279,8 +279,23 @@
 
 .single-input-block {
   margin-bottom: 30px;
+}
 
-  &:last-child {
-    // margin-bottom: 0;
+.user-input {
+  align-items: center;
+  display: flex;
+
+  p {
+    color: $dark-blue-2;
+    flex: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 8px;
+  }
+
+  i {
+    right: 12px;
+    position: absolute;
+    top: 16px;
   }
 }

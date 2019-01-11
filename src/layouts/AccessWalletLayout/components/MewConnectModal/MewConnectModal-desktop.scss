@@ -6,16 +6,6 @@
     display: inline-block;
   }
 
-  .appstore-button-container {
-    margin-bottom: 20px;
-
-    img {
-      cursor: pointer;
-      margin: 0 5px 20px;
-      width: 160px;
-    }
-  }
-
   .bootstrap-modal .content-container {
     margin-bottom: 0;
   }
@@ -98,4 +88,12 @@
 .modal-icon {
   display: flex;
   justify-content: center;
+}
+
+.appstore-button-container {
+  img {
+    &:last-child {
+      padding-left: 10px;
+    }
+  }
 }

@@ -1,13 +1,10 @@
-<!--
-  Taken from: https://github.com/biigpongsatorn/vue-infinite-slide-bar
--->
 <script>
 export default {
   name: 'VueInfiniteSlideBar',
   props: {
     barStyle: {
       type: Object,
-      default: function() {
+      default: () => {
         return {};
       }
     },
@@ -59,15 +56,13 @@ export default {
   transform: translate3d(0, 0, 0); /* Hey browser, please use my GPU */
   position: relative;
   overflow: hidden;
-  width: calc(80vw * 3);
+  width: 200%;
   animation-name: moveSlideshow;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   display: flex;
 }
-
 .vifnslb-bar {
   display: flex;
-  flex: 100;
 }
 </style>

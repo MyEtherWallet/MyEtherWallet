@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
   "software": "Software",
-  "softwareDesc": "JSON file, Private key, Mnemonic phrase",
+  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "Not recommended",
   "unlock": "Unlock wallet",
   "installMetamask": "Install MetaMask",
@@ -30,5 +30,6 @@
   "invalidPathDescCont": "is not valid for this device",
   "mewConnectTitle": "Access by MEWconnect",
   "mewConnectDesc1": "Please use MEWconnect App to scan the QR code above",
-  "mewConnectDesc2": "Don't have the App? Download now."
+  "mewConnectDesc2": "Don't have the App? Download now.",
+  "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
 }

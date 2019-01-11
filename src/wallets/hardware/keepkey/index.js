@@ -15,7 +15,6 @@ import ethTx from 'ethereumjs-tx';
 
 const { MessageType } = Messages;
 const {
-  MESSAGETYPE_BUTTONREQUEST,
   MESSAGETYPE_PINMATRIXREQUEST,
   MESSAGETYPE_PASSPHRASEREQUEST
 } = MessageType;
@@ -36,37 +35,24 @@ class KeepkeyWallet {
     const usbDevice = await WebUSBDevice.requestPair();
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
-    this.keepkey.device.events.on(
-      String(MESSAGETYPE_BUTTONREQUEST),
-      requestMsg => {
-        console.log('button request', requestMsg); // eslint-disable-line
-      }
-    );
-    this.keepkey.device.events.on(
-      String(MESSAGETYPE_PINMATRIXREQUEST),
-      requestMsg => {
-        console.log('pin request', requestMsg); // eslint-disable-line
-        this.eventHub.$emit(
-          'showHardwarePinMatrix',
-          { name: this.identifier },
-          pin => {
-            this.keepkey.acknowledgeWithPin(pin);
-          }
-        );
-        // window.setPin = pin => {
-        //   this.keepkey.acknowledgeWithPin(pin);
-        // };
-      }
-    );
-    this.keepkey.device.events.on(
-      String(MESSAGETYPE_PASSPHRASEREQUEST),
-      requestMsg => {
-        console.log('passphrase request', requestMsg); // eslint-disable-line
-        window.setPass = pin => {
-          this.keepkey.acknowledgeWithPassphrase(pin);
-        };
-      }
-    );
+    this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
+      this.eventHub.$emit(
+        'showHardwarePinMatrix',
+        { name: this.identifier },
+        pin => {
+          this.keepkey.acknowledgeWithPin(pin);
+        }
+      );
+    });
+    this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
+      this.eventHub.$emit(
+        'showHardwarePassword',
+        { name: this.identifier },
+        passPhrase => {
+          this.keepkey.acknowledgeWithPassphrase(passPhrase);
+        }
+      );
+    });
     await this.keepkey.initialize();
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.keepkey, this.basePath);

@@ -1,6 +1,7 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
+import VeeValidate from 'vee-validate';
 import VueX from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 
@@ -18,6 +19,7 @@ function createLocalVueInstance() {
   localVue.use(VueI18n);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
+  localVue.use(VeeValidate);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
   localVue.component(VueQrcode.name, VueQrcode);
