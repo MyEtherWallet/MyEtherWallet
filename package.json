@@ -39,7 +39,7 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.0.3",
+    "@keepkey/keepkey.js": "1.0.5",
     "@ledgerhq/hw-app-eth": "4.32.0",
     "@ledgerhq/hw-transport-u2f": "4.32.0",
     "@myetherwallet/eth-token-balance": "0.1.3",
