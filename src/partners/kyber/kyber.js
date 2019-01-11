@@ -247,8 +247,7 @@ export default class Kyber {
       ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
       try {
         transferGasEst = await methodObject.estimateGas();
-      } catch (ee) {
-        console.error(ee); // todo remove dev item
+      } catch (e) {
         transferGasEst = undefined;
       }
 
