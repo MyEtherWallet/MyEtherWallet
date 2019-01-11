@@ -23,7 +23,7 @@
     <print-modal
       ref="printModal"
       :priv-key="wallet.privateKey"
-      :address="wallet.getChecksumAddressByChainId(network.type.chainID)"
+      :address="wallet.getChecksumAddressStringByChainId(network.type.chainID)"
     />
     <div class="wrap">
       <div>
@@ -152,7 +152,7 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.wallet.getChecksumAddressByChainId(
+        return this.wallet.getChecksumAddressStringByChainId(
           this.network.type.chainID
         );
       }

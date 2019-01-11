@@ -210,7 +210,7 @@ export default {
       gasPrice: 'gasPrice'
     }),
     validAddress() {
-      return this.web3.utils.isAddress(this.address);
+      return isValidAddress(this.address, this.network.type.chainID);
     }
   },
   watch: {

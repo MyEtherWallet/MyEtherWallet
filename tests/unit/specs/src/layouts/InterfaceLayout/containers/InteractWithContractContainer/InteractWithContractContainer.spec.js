@@ -39,7 +39,6 @@ describe('InteractWithContractContainer.vue', () => {
   });
 
   beforeEach(() => {
-
     const hostUrl = url.parse('http://localhost');
 
     const newWeb3 = new Web3(

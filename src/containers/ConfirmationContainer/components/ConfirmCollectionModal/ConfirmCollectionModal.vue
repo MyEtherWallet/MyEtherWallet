@@ -40,8 +40,9 @@
                   <div>
                     <span>{{ $t('common.from') }}</span>
                     {{
-                      wallet.getChecksumAddressByChainId(network.type.chainID)
-                        | concatAddr
+                      wallet.getChecksumAddressStringByChainId(
+                        network.type.chainID
+                      ) | concatAddr
                     }}
                   </div>
                 </div>

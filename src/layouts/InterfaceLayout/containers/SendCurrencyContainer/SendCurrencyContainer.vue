@@ -68,7 +68,7 @@
               {{ $t('interface.sendTxToAddr') }}
               <blockie
                 v-show="!verifyAddr() && address.length !== 0"
-                :address="hexAddress"
+                :address="hexAddress.toLowerCase()"
                 :size="8"
                 :scale="16"
                 width="32px"
@@ -238,7 +238,6 @@ export default {
       address: '',
       hexAddress: '',
       isValidAddress: false,
-      resolvedAddress: '',
       checksummedAddress: ''
     };
   },
@@ -284,7 +283,8 @@ export default {
       }
     }, 300),
     debounceInput: utils._.debounce(function(e) {
-      this.address = e.target.value;
+      this.address = e.target.value.toLowerCase();
+      this.checksummedAddress = e.target.value;
       if (this.verifyAddr()) this.estimateGas();
     }, 500),
     debounceData: utils._.debounce(function(e) {
@@ -294,7 +294,6 @@ export default {
       } else {
         this.data = '0x';
       }
-      this.checksummedAddress = e.target.value;
     }, 500),
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -315,7 +314,7 @@ export default {
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+        to: isEth ? this.hexAddress.toLowerCase() : this.selectedCurrency.addr.toLowerCase(),
         data: Misc.sanitizeHex(this.data),
         chainId: this.network.type.chainID || 1
       };
@@ -368,7 +367,7 @@ export default {
         );
         this.data = await contract.methods
           .transfer(
-            this.hexAddress,
+            this.hexAddress.toLowerCase(),
             new BigNumber(amount)
               .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
               .toFixed()
@@ -396,7 +395,7 @@ export default {
               ? 0
               : unit.toWei(bnAmount, 'ether')
             : 0,
-          to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+          to: isEth ? this.hexAddress.toLowerCase() : this.selectedCurrency.addr.toLowerCase(),
           data: Misc.sanitizeHex(this.data)
         };
 

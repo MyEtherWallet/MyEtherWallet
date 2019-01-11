@@ -16,7 +16,7 @@
               </p>
               <div class="from-address">
                 <blockie
-                  :address="wallet.getChecksumAddressString()"
+                  :address="wallet.getChecksumAddressString().toLowerCase()"
                   width="30px"
                   height="30px"
                 />

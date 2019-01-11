@@ -15,12 +15,13 @@
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
-    <div class="address">{{ checksumAddress }}</div>
+    <div class="address">{{ resolvedAddress.toLowerCase() }}</div>
   </div>
 </template>
 
 <script>
 import web3 from 'web3';
+import isValidAddress from '@/helpers/validators';
 // import BigNumber from 'bignumber.js';
 export default {
   props: {
@@ -54,12 +55,17 @@ export default {
     }
   },
   computed: {
-    checksumAddress() {
-      if (web3.utils.isAddress(this.tokenTransferTo))
-        return web3.utils.toChecksumAddress(this.tokenTransferTo);
-      if (web3.utils.isAddress(this.address))
-        return web3.utils.toChecksumAddress(this.address);
-      return '';
+    resolvedAddress() {
+      if (
+        isValidAddress(
+          this.tokenTransferTo,
+          this.$store.state.network.type.chainID
+        )
+      )
+        return this.tokenTransferTo;
+      if (isValidAddress(this.address, this.$store.state.network.type.chainID))
+        return this.address;
+      return this.address.toLowerCase();
     }
   },
   methods: {

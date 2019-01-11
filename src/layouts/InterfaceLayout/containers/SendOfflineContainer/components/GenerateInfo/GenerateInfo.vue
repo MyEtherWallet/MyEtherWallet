@@ -50,7 +50,7 @@
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div
           :class="[
-            isValidAddress ? 'clickable' : 'disabled',
+            isValidAddr ? 'clickable' : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
           @click="generateInfo"
@@ -81,6 +81,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
 import isValidAddress from '@/helpers/validators';
+import getChecksumAddressByChainId from '@/helpers/checksum';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -103,9 +104,8 @@ export default {
   data() {
     return {
       moreInfoGenerated: false,
-      hexAddress: '',
       isValid: true,
-      fromaddress: this.$store.state.wallet.getChecksumAddressByChainId(
+      hexAddress: this.$store.state.wallet.getChecksumAddressStringByChainId(
         this.$store.state.network.type.chainID
       )
     };
@@ -114,8 +114,11 @@ export default {
     ...mapGetters({
       web3: 'web3'
     }),
-    isValidAddress() {
-      return this.web3.utils.isAddress(this.hexAddress);
+    isValidAddr() {
+      return isValidAddress(
+        this.hexAddress,
+        this.$store.state.network.type.chainID
+      );
     }
   },
   watch: {
@@ -124,14 +127,15 @@ export default {
     }
   },
   async mounted() {
-    this.hexAddress = this.web3.utils.toChecksumAddress(
-      await this.web3.eth.getCoinbase()
+    this.hexAddress = getChecksumAddressByChainId(
+      (await this.web3.eth.getCoinbase()).toLowerCase(),
+      this.$store.state.network.type.chainID
     );
   },
   methods: {
     async generateInfo() {
       this.nonceUpdated(
-        await this.web3.eth.getTransactionCount(this.hexAddress)
+        await this.web3.eth.getTransactionCount(this.hexAddress.toLowerCase())
       );
       this.moreInfoGenerated = true;
     },
@@ -153,7 +157,7 @@ export default {
     },
     checkAddress() {
       return isValidAddress(
-        this.fromaddress,
+        this.hexAddress,
         this.$store.state.network.type.chainID
       );
     },

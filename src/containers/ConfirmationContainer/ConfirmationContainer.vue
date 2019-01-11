@@ -132,7 +132,9 @@ export default {
     }),
     fromAddress() {
       if (this.wallet) {
-        return this.wallet.getChecksumAddressString();
+        return this.wallet.getChecksumAddressStringByChainId(
+          this.$store.state.network.type.chainID
+        );
       }
     }
   },

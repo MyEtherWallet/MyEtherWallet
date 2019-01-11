@@ -6,7 +6,8 @@ import {
 } from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
-import rskUtil from 'rskjs-util';
+import getChecksumAddressByChainId from '@/helpers/checksum';
+
 class WalletInterface {
   constructor(key, isPub = false, identifier) {
     this.identifier = identifier;
@@ -62,12 +63,8 @@ class WalletInterface {
     return ethUtil.toChecksumAddress(this.getAddressString());
   }
 
-  getChecksumAddressByChainId(chainId) {
-    if (chainId === 30 || chainId === 31) {
-      return rskUtil.toChecksumAddress(this.getAddressString(), chainId);
-    }
-
-    return this.getChecksumAddressString();
+  getChecksumAddressStringByChainId(chainId) {
+    return getChecksumAddressByChainId(this.getAddressString(), chainId);
   }
 
   signTransaction(txParams, signer) {
