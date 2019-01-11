@@ -2,19 +2,25 @@
   <div class="wallet-password-modal">
     <b-modal
       ref="walletpassword"
-      title="Password"
+      title="Passphrase"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
     >
       <div class="modal-contents">
-        <standard-input :options="passwordInputOptions" />
-
+        <div class="passphrase-container">
+          <div class="input-container">
+            <div class="input-headers">
+              <p>Passphrase</p>
+              <span @click="clear">Clear</span>
+            </div>
+            <input v-model="passphrase" type="password" />
+          </div>
+        </div>
         <div class="button-block">
-          <standard-button
-            :options="accessWalletButton"
-            class="access-wallet-button"
-          />
+          <button :disabled="!acknowledgedTerms" @click="submitPassword">
+            Access My Wallet
+          </button>
         </div>
       </div>
     </b-modal>
@@ -33,22 +39,28 @@ export default {
   },
   data() {
     return {
-      passwordInputOptions: {
-        type: 'password'
-      },
-      accessWalletButton: {
-        title: 'Access My Wallet',
-        buttonStyle: 'green',
-        fullWidth: true,
-        acceptTermsCheckBox: true,
-        customerSupport: true
-      }
+      passphrase: '',
+      callback: () => {},
+      identifier: {},
+      acknowledgedTerms: false
     };
   },
-  mounted() {
-    //this.$refs.walletpassword.show();
+  created() {
+    this.$eventHub.$on('showHardwarePassword', (identifier, callback) => {
+      this.$refs.walletpassword.show();
+      this.callback = callback;
+      this.identifier = identifier;
+    });
   },
-  methods: {}
+  methods: {
+    submitPassword() {
+      this.callback(this.passphrase);
+    },
+    clear() {
+      this.passphrase = '';
+      this.acknowledgedTerms = false;
+    }
+  }
 };
 </script>
 

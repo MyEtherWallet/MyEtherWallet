@@ -13,24 +13,39 @@
           <p class="sub-title">
             The PIN layout is displayed on your Hardware wallet
           </p>
-          <standard-input :options="passwordInputOptions" />
+          <div class="input-container">
+            <div class="input-headers">
+              <p>PIN</p>
+              <span @click="clear">Clear</span>
+            </div>
+            <input v-model="pin" type="password" readonly="true" />
+          </div>
         </div>
         <div class="button-matrix-block">
-          <button @click="passwordInputOptions.value += '7'"></button>
-          <button @click="passwordInputOptions.value += '8'"></button>
-          <button @click="passwordInputOptions.value += '9'"></button>
-          <button @click="passwordInputOptions.value += '4'"></button>
-          <button @click="passwordInputOptions.value += '5'"></button>
-          <button @click="passwordInputOptions.value += '6'"></button>
-          <button @click="passwordInputOptions.value += '1'"></button>
-          <button @click="passwordInputOptions.value += '2'"></button>
-          <button @click="passwordInputOptions.value += '3'"></button>
+          <button
+            v-for="(pos, idx) in positions"
+            :key="pos + idx"
+            @click="pin += pos"
+          ></button>
         </div>
         <div class="button-block">
-          <standard-button
-            :options="accessWalletButton"
-            class="access-wallet-button"
-          />
+          <div class="checkbox-container">
+            <label for="terms" @click="acknowledgedTerms = !acknowledgedTerms">
+              <span
+                :class="[acknowledgedTerms ? 'enable' : '', 'custom-marker']"
+              >
+                <i v-if="acknowledgedTerms" class="fa fa-check" />
+              </span>
+              <input name="terms" type="checkbox" /> To access my wallet,
+              <br />I accept the
+              <router-link to="/terms-and-conditions">
+                Terms and Conditions
+              </router-link>
+            </label>
+          </div>
+          <button :disabled="!acknowledgedTerms" @click="actualClick">
+            Access My Wallet
+          </button>
         </div>
       </div>
     </b-modal>
@@ -49,38 +64,33 @@ export default {
   },
   data() {
     return {
-      passwordInputOptions: {
-        readOnly: true,
-        type: 'password',
-        value: '',
-        buttonClear: true,
-        title: 'PIN'
-      },
-      accessWalletButton: {
-        title: 'Access My Wallet',
-        buttonStyle: 'green',
-        fullWidth: true,
-        acceptTermsCheckBox: true,
-        customerSupport: true,
-        onClick: () => {}
-      },
-      deviceInfo: {}
+      deviceInfo: {},
+      pin: '',
+      acknowledgedTerms: false,
+      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
+      callback: () => {}
     };
   },
   watch: {},
   created() {
     this.$eventHub.$on('showHardwarePinMatrix', (deviceInfo, callback) => {
-      this.deviceInfo = deviceInfo;
-      this.accessWalletButton.onClick = () => {
-        callback(this.passwordInputOptions.value);
-      };
       this.$refs.enterpin.show();
+      this.deviceInfo = deviceInfo;
+      this.callback = callback;
     });
   },
-  mounted() {
-    this.passwordInputOptions.pin = '';
-  },
-  methods: {}
+  methods: {
+    clear() {
+      this.pin = '';
+      this.acknowledgedTerms = false;
+    },
+    actualClick() {
+      this.callback(this.pin);
+      this.$refs.enterpin.hide();
+      this.pin = '';
+      this.acknowledgedTerms = false;
+    }
+  }
 };
 </script>
 

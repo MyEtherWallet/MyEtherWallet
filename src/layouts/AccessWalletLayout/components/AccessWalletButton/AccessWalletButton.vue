@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :class="[!disabled ? 'disabled' : '', 'button-block', classname]"
     @click="func"
   >
@@ -7,7 +7,7 @@
     <h3>{{ title }}</h3>
     <p class="desc">{{ desc }}</p>
     <p :v-if="recommend !== ''" class="small-note">{{ recommend }}</p>
-  </div>
+  </button>
 </template>
 
 <script>

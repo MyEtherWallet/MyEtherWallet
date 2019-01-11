@@ -18,7 +18,14 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img src="~@/assets/images/icons/appstore.png" />
+        <img src="~@/assets/images/icons/appstore.svg" height="35" />
+      </a>
+      <a
+        href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="~@/assets/images/icons/google-play.svg" height="35" />
       </a>
       <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>

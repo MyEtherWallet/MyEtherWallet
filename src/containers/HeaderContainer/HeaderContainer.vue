@@ -8,13 +8,21 @@
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal ref="issuelog" />
-    <logout-warning-modal ref="logoutwarning" />
+    <logout-warning-modal ref="logoutWarningModal" />
 
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
-      <router-link to="/getting-started"><user-reminder-button /></router-link>
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet'
+        "
+        to="/getting-started"
+      >
+        <user-reminder-button />
+      </router-link>
       <scroll-up-button />
     </div>
     <div
@@ -39,14 +47,17 @@
             </div>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false">{{
-              $t('header.about')
-            }}</a>
+            <a href="/#about-mew" @click="isMobileMenuOpen = false">
+              {{ $t('header.about') }}
+            </a>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
-              $t('common.faqs')
-            }}</a>
+            <a
+              href="https://kb.myetherwallet.com"
+              target="_blank"
+              @click="isMobileMenuOpen = false"
+              >Help Center</a
+            >
           </li>
           <li>
             <div class="mobile-language-menu-container">
@@ -71,9 +82,8 @@
                   :data-language-code="language.langCode"
                   :data-flag-name="language.flag"
                   @click="languageItemClicked"
+                  >{{ language.name }}</b-dropdown-item
                 >
-                  {{ language.name }}
-                </b-dropdown-item>
               </b-nav-item-dropdown>
               <div class="arrows">
                 <i class="fa fa-angle-right" aria-hidden="true" />
@@ -112,18 +122,22 @@
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
-                  src="~@/assets/images/logo.png"
+                  src="~@/assets/images/short-hand-logo.png"
                 />
               </div>
             </router-link>
             <div class="top-menu">
               <b-nav>
-                <b-nav-item v-if="isHomePage" to="/" exact @click="scrollTop()">
-                  {{ $t('header.home') }}</b-nav-item
+                <b-nav-item
+                  v-if="isHomePage"
+                  to="/"
+                  exact
+                  @click="scrollTop()"
+                  >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -152,26 +166,32 @@
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
+                      >{{ language.name }}</b-dropdown-item
                     >
-                      {{ language.name }}
-                    </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
                 <div v-if="wallet !== null" class="notification-menu-container">
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
-                  v-if="
-                    wallet === null &&
-                      ($route.fullPath === '/' ||
-                        $route.fullPath === '/#about-mew' ||
-                        $route.fullPath === '/#faqs')
-                  "
-                  :class="showGetFreeWallet && 'show'"
-                  class="get-free-wallet nopadding"
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet nopadding'
+                  ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">Get a Free Wallet</div>
+                  <div class="get-free-wallet-button">New Wallet</div>
+                </b-nav-item>
+                <b-nav-item
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet nopadding'
+                  ]"
+                  to="/access-my-wallet"
+                >
+                  <div class="access-button">Access</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"
@@ -189,10 +209,10 @@
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                   </template>
-                  <b-dropdown-item @click="openSettings">
-                    Settings
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
+                  <b-dropdown-item @click="openSettings"
+                    >Settings</b-dropdown-item
+                  >
+                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -279,7 +299,7 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: 0
+      gasPrice: '0'
     };
   },
   computed: {
@@ -287,7 +307,20 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3'
-    })
+    }),
+    showButtons() {
+      if (
+        this.wallet === null &&
+        (this.$route.fullPath === '/' ||
+          this.$route.fullPath === '/#about-mew' ||
+          this.$route.fullPath === '/#faqs' ||
+          this.$route.fullPath === '/convert-units' ||
+          this.$route.fullPath === '/team')
+      ) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     $route(newVal) {
@@ -301,7 +334,7 @@ export default {
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.gasPrice = new BigNumber(res).toNumber();
+          this.gasPrice = new BigNumber(res).toString();
         })
         .catch(err => {
           // eslint-disable-next-line no-console
@@ -343,17 +376,17 @@ export default {
     };
   },
   created() {
-    const _this = this;
-    // Logout Warning modal
     function dummyErrorHandler() {}
 
     try {
       window.addEventListener(
         'popstate',
-        function(event) {
-          if (event.target.location.hash === '#/') {
-            _this.$refs.logoutwarning.$refs.logoutwarning.show();
-          }
+        event => {
+          if (
+            this.wallet !== null &&
+            !event.target.location.hash.includes('interface')
+          )
+            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
         },
         false
       );
@@ -362,15 +395,9 @@ export default {
     }
   },
   methods: {
-    logoutWarning() {
-      alert('logoutWarning');
-    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
-    // openNotifications() {
-    //   this.$children[1].$refs.notifications.show();
-    // },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
       const flag = e.target.getAttribute('data-flag-name');

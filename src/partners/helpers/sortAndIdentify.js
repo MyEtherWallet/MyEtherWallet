@@ -80,29 +80,4 @@ function bestRateForQuantity(providerData, value) {
   return -1;
 }
 
-function isValidEntry(value) {
-  return (
-    value !== '' && value !== null && +value > 0 && Number.isFinite(+value)
-  );
-}
-
-function checkInvalidOrMissingValue(value, to) {
-  if (to) {
-    if (!isValidEntry(value)) {
-      return 0;
-    }
-    return value;
-  }
-  if (!isValidEntry(value)) {
-    return 1;
-  }
-  return value;
-}
-
-export {
-  bestRateForQuantity,
-  bestProviderForQuantity,
-  isValidEntry,
-  dynamicSortMultiple,
-  checkInvalidOrMissingValue
-};
+export { bestRateForQuantity, bestProviderForQuantity, dynamicSortMultiple };

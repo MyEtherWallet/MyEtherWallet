@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "연결을 위해서 보안성이 높은 연결(SSL/HTTPS)에서 MyEtherWallet을 이용해 주세요.",
   "software": "소프트웨어",
-  "softwareDesc": "JSON 파일, 비밀 키, 연상기호 어구",
+  "softwareDesc": "Keystore 파일, 비밀 키, 연상기호 어구",
   "notRecommended": "추천하지 않음 ",
   "unlock": "Unlock wallet",
   "installMetamask": "MetaMask 설치 ",
@@ -30,5 +30,6 @@
   "invalidPathDescCont": "is not valid for this device",
   "mewConnectTitle": "Access by MEWconnect",
   "mewConnectDesc1": "Please use MEWconnect App to scan the QR code above",
-  "mewConnectDesc2": "Don't have the App? Download now."
+  "mewConnectDesc2": "Don't have the App? Download now.",
+  "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
 }

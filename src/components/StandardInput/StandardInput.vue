@@ -54,7 +54,6 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
-        name=""
       />
 
       <textarea

@@ -30,37 +30,44 @@
                       type="radio"
                       @change="selectGasType(key)"
                     />
-                    <label :for="key"
-                      >{{ key | capitalize }} ({{
+                    <label :for="key">
+                      {{ key | capitalize }} ({{
                         gasPriceInputs[key].gwei
                       }}
-                      Gwei)</label
-                    >
+                      Gwei)
+                    </label>
                   </div>
                   <p>
                     {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0">
-                      ($ {{ convert(gasPriceInputs[key].eth) | concatAddr }})
-                    </span>
+                    <span v-if="ethPrice !== 0"
+                      >($
+                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})</span
+                    >
                   </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
                   <div>
                     <input
                       id="ccc"
+                      :checked="selectedGasType === 'other'"
                       type="radio"
                       name="speedRadioInputs"
                       value="other"
                       @change="selectGasType('other')"
                     />
-                    <input v-model="customGas" type="number" />
+                    <input
+                      ref="customInput"
+                      v-model="customGas"
+                      type="number"
+                      @focus="selectedGasType = 'other'"
+                    />
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
                     {{ customGasEth }} ETH
-                    <span v-if="ethPrice !== 0 && customGasEth !== 0">
-                      ($ {{ convert(customGasEth) | concatAddr }})
-                    </span>
+                    <span v-if="ethPrice !== 0 && customGasEth !== 0"
+                      >($ {{ convert(customGasEth) | concatAddr }})</span
+                    >
                   </p>
                 </li>
               </ul>
@@ -77,9 +84,9 @@
             title="Import Configurations"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info">
-              Imported file successfully!
-            </b-alert>
+            <b-alert :show="popup" fade variant="info"
+              >Imported file successfully!</b-alert
+            >
             <p>
               Please click the button below to open and import you configuration
               file from your local computer.
@@ -115,9 +122,9 @@
               into your local computer.
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button">
-                Export
-              </a>
+              <a :href="file" :download="fileName" class="export-button"
+                >Export</a
+              >
             </div>
           </full-width-dropdown>
         </div>
@@ -139,8 +146,8 @@ export default {
   },
   props: {
     gasPrice: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -181,44 +188,6 @@ export default {
         rightInputText: ''
       },
       selectedGasType: 'regular',
-      gasPriceInputs: {
-        slow: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              `${new BigNumber(this.gasPrice).dividedBy(2).toFixed()}`,
-              'ether'
-            )
-          ).toFixed()
-        },
-        regular: {
-          gwei: new BigNumber(
-            utils.fromWei(`${this.gasPrice}`, 'gwei')
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(`${this.gasPrice}`, 'ether')
-          ).toFixed()
-        },
-        fast: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              `${new BigNumber(this.gasPrice).times(1.25).toFixed()}`,
-              'ether'
-            )
-          ).toFixed()
-        }
-      },
       customGas: 0,
       customGasEth: 0,
       ethPrice: 0,
@@ -227,6 +196,54 @@ export default {
       importedFile: '',
       popup: false
     };
+  },
+  computed: {
+    gasPriceInputs() {
+      return {
+        slow: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              'ether'
+            )
+          ).toFixed()
+        },
+        regular: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              'ether'
+            )
+          ).toFixed()
+        },
+        fast: {
+          gwei: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).times(1.25).toFixed(0),
+              'gwei'
+            )
+          ).toFixed(),
+          eth: new BigNumber(
+            utils.fromWei(
+              new BigNumber(this.gasPrice).div(1.25).toFixed(0),
+              'ether'
+            )
+          ).toFixed()
+        }
+      };
+    }
   },
   watch: {
     customGas(newVal) {
@@ -237,9 +254,6 @@ export default {
         this.customGasEth = new BigNumber(
           `${utils.fromWei(toGwei, 'ether')}`
         ).toFixed();
-      } else {
-        this.customGas = 0;
-        this.customGasEth = 0;
       }
     }
   },
@@ -299,15 +313,23 @@ export default {
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
         this.$store.dispatch(
           'setGasPrice',
-          Number(this.gasPriceInputs[this.selectedGasType].gwei)
+          new BigNumber(
+            this.gasPriceInputs[this.selectedGasType].gwei
+          ).toNumber()
         );
       } else {
-        this.$store.dispatch('setGasPrice', Number(this.customGas));
+        this.$store.dispatch(
+          'setGasPrice',
+          new BigNumber(this.customGas).toNumber()
+        );
       }
       this.$refs.gasDropdown.dropdownOpen = false;
     },
     selectGasType(type) {
       this.selectedGasType = type;
+      if (type === 'other') {
+        this.$refs.customInput.focus();
+      }
     },
     exportConfig() {
       const time = new Date().toISOString();

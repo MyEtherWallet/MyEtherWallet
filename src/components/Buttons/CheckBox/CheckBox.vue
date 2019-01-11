@@ -6,7 +6,9 @@
       ></span>
       <span v-if="terms" class="terms">
         To access my wallet, I accept
-        <router-link :to="{ name: 'Terms' }" target="_blank">Terms</router-link>
+        <router-link :to="{ name: 'TermsAndConditionsLayout' }" target="_blank">
+          Terms
+        </router-link>
         .</span
       >
     </label>

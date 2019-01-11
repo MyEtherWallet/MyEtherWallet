@@ -162,7 +162,7 @@ export default {
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? metamaskImg : metamaskDisabledImg,
           disabled: !this.online,
-          classname: 'button-metamask'
+          classname: window.web3 ? 'button-metamask' : 'hide'
         },
         {
           func: this.softwareModalOpen,

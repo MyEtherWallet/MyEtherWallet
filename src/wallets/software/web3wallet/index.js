@@ -13,12 +13,7 @@ class Web3Wallet extends WalletInterface {
   }
   signTransaction(tx) {
     tx.from = this.getAddressString();
-    return new Promise((resolve, reject) => {
-      this.web3.eth
-        .sendTransaction(tx)
-        .then(resolve)
-        .catch(reject);
-    });
+    return this.web3.eth.sendTransaction(tx);
   }
   signMessage(msg) {
     return new Promise((resolve, reject) => {

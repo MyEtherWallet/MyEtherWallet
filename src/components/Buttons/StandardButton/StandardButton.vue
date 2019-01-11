@@ -21,7 +21,6 @@
           options.noMinWidth ? 'no-min-width' : ''
         ]"
         class="the-button-box"
-        @click="options.onClick"
       >
         {{ options.title }}
         <img

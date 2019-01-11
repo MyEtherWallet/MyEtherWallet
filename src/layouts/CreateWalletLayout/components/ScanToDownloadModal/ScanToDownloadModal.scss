@@ -1,9 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .qr-divider {
-  // reenable when android is available
-  // display: grid;
-  // grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding: 25px 0;
 
   > div {
