@@ -31,7 +31,7 @@
             <img src="~@/assets/images/icons/change.svg" />
           </b-btn>
           <b-popover
-            content="Open networks"
+            content="Open Networks"
             target="networkModal"
             placement="top"
             triggers="hover"

@@ -68,6 +68,12 @@
       .logo-small {
         height: 28px;
       }
+
+      .beta-tag {
+        color: white;
+        margin-left: 5px;
+        height: 17px;
+      }
     }
 
     .top-menu {
@@ -345,7 +351,8 @@
   }
 
   &.hide {
-    display: none !important;
+    animation: fadeOutFromBlock 0.5s ease-out;
+    animation-fill-mode: forwards;
   }
 
   @keyframes fadeInFromNone {
@@ -375,11 +382,13 @@
     }
 
     50% {
+      display: none;
       height: 54px;
-      opacity: 0;
+      opacity: 0.5;
     }
 
     100% {
+      display: none;
       height: 0;
       opacity: 0;
       margin-left: 0;

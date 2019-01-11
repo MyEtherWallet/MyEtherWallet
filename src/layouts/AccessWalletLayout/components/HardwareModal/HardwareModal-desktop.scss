@@ -35,10 +35,9 @@
         }
 
         &.active {
-          //box-shadow: 0 3px 15px $box-shadow-color-1;
+          border: 1px solid $mew-green;
           color: $text-black;
           font-weight: 500;
-          background-color: $light-grey-4;
 
           .icon {
             display: none;
