@@ -1246,15 +1246,6 @@
   // Custom Links
   // *********************************************************************
 
-  .linker-1 {
-    color: $link-text-color-3;
-    cursor: pointer;
-  }
-
-  .linker-1:hover {
-    color: $link-text-color-1;
-  }
-
   .disabled {
     background-color: $light-grey-12;
     pointer-events: none;
@@ -1325,4 +1316,26 @@
   background-color: $dark-grey-11;
   border-color: $dark-grey-11;
   opacity: 1;
+}
+
+// *********************************************************************
+// Interface: buttons next to title
+// *********************************************************************
+.title-button {
+  color: $grey-1;
+  cursor: pointer;
+  margin-left: auto;
+  background-color: $background-color-white;
+  border: 0;
+
+  &:hover {
+    // Desktop
+    @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+      color: $text--link-color;
+    }
+  }
+
+  &:active {
+    color: $text--link-color;
+  }
 }

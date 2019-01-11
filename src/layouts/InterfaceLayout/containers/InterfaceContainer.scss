@@ -1,24 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-.title-button {
-  color: $grey-1;
-  cursor: pointer;
-  margin-left: auto;
-  background-color: $background-color-white;
-  border: 0;
-
-  &:hover {
-    // Desktop
-    @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-      color: $text--link-color;
-    }
-  }
-
-  &:active {
-    color: $text--link-color;
-  }
-}
-
 .form-content-container {
   // Desktop
   @media all and (min-width: calc(#{$tablet-width} + 1px)) {

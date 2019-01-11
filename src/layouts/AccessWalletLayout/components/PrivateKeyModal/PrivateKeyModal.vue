@@ -43,7 +43,8 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      privateKey: '',
+      privateKey:
+        '4023017f04511319a2af2b3e151ccb577a09f82b92e0f87e53c94df134d9d905',
       spinner: false
     };
   },
