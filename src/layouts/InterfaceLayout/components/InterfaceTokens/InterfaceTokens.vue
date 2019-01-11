@@ -7,7 +7,10 @@
           <div class="block-title">
             <div class="title-container">
               <h4>{{ $t('interface.tokens') }}</h4>
-              <img src="~@/assets/images/icons/change.svg" />
+              <img
+                src="~@/assets/images/icons/change.svg"
+                @click="fetchTokens"
+              />
             </div>
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
