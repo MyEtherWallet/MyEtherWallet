@@ -47,6 +47,7 @@ const bityStatuses = {
 };
 
 const bityMethods = {
+  getEstimate: 'getEstimate',
   createTransaction: 'createTransaction',
   status: 'getStatus',
   logInWithPhoneNumber: 'logInWithPhoneNumber',
@@ -61,7 +62,6 @@ const BITY_SWAP_RATES = '/api/v1/rate2/';
 const BITY_EXIT_RATES =
   '/api/v2/pairs?input_tags=crypto&output_tags=fiat&prices=1';
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
-
 
 const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;

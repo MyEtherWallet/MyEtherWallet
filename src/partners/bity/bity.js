@@ -427,7 +427,7 @@ export default class BitySwap {
   static async getOrderStatus(noticeDetails) {
     let data;
     if (Object.keys(bityFiatCurrencies).includes(noticeDetails.toCurrency)) {
-      data = await getStatusFiat({ orderid: noticeDetails.statusId });
+      data = await getStatusFiat(noticeDetails.statusId, noticeDetails.special);
     } else {
       data = await getStatus(noticeDetails.statusId);
     }
