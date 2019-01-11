@@ -3,8 +3,6 @@ const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const webpackConfig = {
@@ -61,18 +59,20 @@ if (process.env.BUILD_TYPE === 'mewcx') {
   );
 }
 if (process.env.NODE_ENV === 'production') {
-  webpackConfig.plugins.push(
-    new BrotliPlugin({
-      asset: '[path].br[query]',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
+  if (process.env.BROTLI !== 'false') {
+    webpackConfig.plugins.push(
+      new BrotliPlugin({
+        asset: '[path].br[query]',
+        test: /\.(js|css|html|svg)$/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+  }
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: false,
+      failOnUnused: true,
       globOptions: {
         ignore: [
           // Unknown
