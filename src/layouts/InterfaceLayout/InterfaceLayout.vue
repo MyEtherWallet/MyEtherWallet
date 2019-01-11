@@ -329,8 +329,8 @@ export default {
     async setTokens() {
       this.receivedTokens = false;
       this.tokens = [];
-      const tokens = await this.fetchTokens();
-      tokens
+      let tokens = await this.fetchTokens();
+      tokens = tokens
         .sort((a, b) => {
           if (a.name.toUpperCase() < b.name.toUpperCase()) {
             return -1;
@@ -357,7 +357,6 @@ export default {
         });
 
       this.tokens = tokens.sort(sortByBalance);
-
       let customTokens = [];
       if (
         store.get('customTokens') !== undefined &&

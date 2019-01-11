@@ -200,7 +200,7 @@ export default {
   computed: {
     gasPriceInputs() {
       return {
-        slow: {
+        economy: {
           gwei: new BigNumber(
             utils.fromWei(
               new BigNumber(this.gasPrice).div(2).toFixed(0),

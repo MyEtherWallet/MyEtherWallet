@@ -34,7 +34,7 @@ describe('TxSpeedInput.vue', () => {
     const speedButtons = wrapper.vm.$el.querySelectorAll(
       '.send-form .buttons div'
     );
-    expect(speedButtons[0].textContent.trim()).toEqual('Slow');
+    expect(speedButtons[0].textContent.trim()).toEqual('Economy');
     expect(speedButtons[1].textContent.trim()).toEqual('Regular');
     expect(speedButtons[2].textContent.trim()).toEqual('Fast');
     expect(wrapper.vm.nonce).toEqual(0);

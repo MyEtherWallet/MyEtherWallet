@@ -16,7 +16,7 @@
             ]"
             @click="setSpeed(locHighestGas / 2)"
           >
-            {{ $t('common.slow') }}
+            {{ $t('common.economy') }}
           </div>
           <div
             :class="[

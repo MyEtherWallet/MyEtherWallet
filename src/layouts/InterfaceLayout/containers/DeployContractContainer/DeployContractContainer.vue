@@ -98,7 +98,7 @@
             ]"
             @click="changeGas(5)"
           >
-            {{ $t('common.slow') }}
+            {{ $t('common.economy') }}
           </div>
           <div
             :class="[
