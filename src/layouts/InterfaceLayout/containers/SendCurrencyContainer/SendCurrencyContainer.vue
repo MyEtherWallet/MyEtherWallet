@@ -322,7 +322,6 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      console.log(this.selectedCurrency.symbol, this.network.type.name);
       if (this.selectedCurrency.symbol === this.network.type.name) {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
