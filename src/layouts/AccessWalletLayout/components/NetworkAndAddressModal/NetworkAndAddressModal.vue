@@ -142,24 +142,31 @@
               <h4>{{ $t('accessWallet.interactAddr') }}</h4>
             </div>
 
-            <ul class="address-block table-header">
+            <ul
+              :class="[
+                wallet !== null ? 'fours' : 'threes',
+                'address-block table-header'
+              ]"
+            >
               <li>{{ $t('accessWallet.id') }}</li>
               <li>{{ $t('common.address') }}</li>
-              <li />
+              <li v-if="wallet !== null">{{ $t('common.balance') }}</li>
             </ul>
 
             <ul
               v-for="account in HDAccounts"
               :data-address="'address' + account.index"
               :key="account.index"
-              :class="
-                selectedId === 'address' + account.index ? 'selected' : ''
-              "
-              class="address-block address-data"
+              :class="[
+                selectedId === 'address' + account.index ? 'selected' : '',
+                wallet !== null ? 'fours' : 'threes',
+                'address-block address-data'
+              ]"
               @click="setAccount(account)"
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
+              <li v-if="!!wallet">{{ account.balance }}</li>
               <li class="user-input-checkbox">
                 <label class="checkbox-container checkbox-container-small">
                   <input
@@ -251,7 +258,9 @@ export default {
       network: 'network',
       Networks: 'Networks',
       customPaths: 'customPaths',
-      path: 'path'
+      path: 'path',
+      web3: 'web3',
+      wallet: 'wallet'
     }),
     reorderNetworkList() {
       return Misc.reorderNetworks();
@@ -261,6 +270,9 @@ export default {
     hardwareWallet() {
       this.getPaths();
       this.setHDAccounts();
+    },
+    $route(newVal) {
+      console.log(newVal);
     }
   },
   mounted() {
@@ -327,9 +339,11 @@ export default {
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      this.$router.push({
-        path: 'interface'
-      });
+      if (!this.wallet !== null) {
+        this.$router.push({
+          path: 'interface'
+        });
+      }
 
       this.$refs.networkAndAddress.hide();
     },
@@ -340,10 +354,21 @@ export default {
         i < this.currentIndex + MAX_ADDRESSES;
         i++
       ) {
-        this.HDAccounts.push({
-          index: i,
-          account: await this.hardwareWallet.getAccount(i)
-        });
+        const account = await this.hardwareWallet.getAccount(i);
+        if (!this.wallet) {
+          this.HDAccounts.push({
+            index: i,
+            account: account
+          });
+        } else {
+          this.HDAccounts.push({
+            index: i,
+            account: account,
+            balance: await this.web3.eth.getBalance(
+              account.getChecksumAddressString()
+            )
+          });
+        }
       }
       this.currentIndex += MAX_ADDRESSES;
     },
