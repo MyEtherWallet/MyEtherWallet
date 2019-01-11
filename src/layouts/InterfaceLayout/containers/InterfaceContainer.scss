@@ -5,7 +5,7 @@
   grid-area: main;
   overflow: hidden;
 
-  @media all and (max-width: $mobile-width) {
+  @media all and (max-width: $tablet-width) {
     margin-bottom: 10px;
   }
 

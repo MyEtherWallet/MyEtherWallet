@@ -1,13 +1,16 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.0-alpha.4",
+  "version": "5.0.0-beta.0",
   "description": "Client side ethereum wallet",
   "scripts": {
+    "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
+    "build:hash": "ROUTER_MODE=hash npm run build",
+    "build:history": "ROUTER_MODE=history npm run build",
+    "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "build": "npm run update && vue-cli-service build",
     "test": "jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "deploy": "gh-pages -d dist -b gh-pages",
-    "build:mewcx": "npm run update && BUILD_TYPE=mewcx vue-cli-service build",
     "codecov": "npm run test:unit && codecov",
     "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",

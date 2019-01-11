@@ -143,6 +143,14 @@
           grid-template-columns: 35px 1fr 35px;
           padding: 8px 25px;
 
+          &.threes {
+            grid-template-columns: 35px 1fr 35px;
+          }
+
+          &.fours {
+            grid-template-columns: 35px 1fr 75px 20px !important;
+          }
+
           &.table-header {
             background-color: $background-color-4;
             color: $text-base-color;

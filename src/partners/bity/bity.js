@@ -296,12 +296,7 @@ export default class BitySwap {
         destAddress: toAddress
       };
 
-      const bityOrder = await openOrder(order);
-
-      if (!bityOrder.error) {
-        return bityOrder.data;
-      }
-      throw Error('error creating bity order');
+      return await openOrder(order);
     }
   }
 
@@ -386,7 +381,7 @@ export default class BitySwap {
       statusId: order.reference,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
-      sendValue: order.input.amount,
+      sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
       validFor: order.validFor || TIME_SWAP_VALID
@@ -434,18 +429,30 @@ export default class BitySwap {
     if (Object.keys(bityFiatCurrencies).includes(noticeDetails.toCurrency)) {
       data = await getStatusFiat({ orderid: noticeDetails.statusId });
     } else {
-      data = await getStatus({ orderid: noticeDetails.statusId });
+      data = await getStatus(noticeDetails.statusId);
     }
-    switch (data.status) {
-      case bityStatuses.OPEN:
-        return 'new';
-      case bityStatuses.RCVE:
-      case bityStatuses.CONF:
-        return 'pending';
-      case bityStatuses.FILL:
-        return 'complete';
-      case bityStatuses.CANC:
-        return 'cancelled';
+    if (data.status === bityStatuses.EXEC) {
+      return 'complete';
+    }
+    if (data.input.status !== bityStatuses.FILL) {
+      switch (data.input.status) {
+        case bityStatuses.OPEN:
+          return 'new';
+        case bityStatuses.RCVE:
+        case bityStatuses.CONF:
+          return 'pending';
+        case bityStatuses.CANC:
+          return 'cancelled';
+      }
+    } else {
+      switch (data.output.status) {
+        case bityStatuses.FILL:
+          return 'complete';
+        case bityStatuses.CANC:
+          return 'cancelled';
+        default:
+          return 'pending';
+      }
     }
   }
 }

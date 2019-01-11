@@ -109,6 +109,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/DropDownBidCurrencySelector/DropDownBidCurrencySelector.vue',
           'src/components/DropDownBidCurrencySelector/index.js',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.vue',
+          'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
+          'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
           'src/assets/images/background/bg-left.png',
           'src/assets/images/background/bg-right.png',
@@ -127,6 +129,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/networks/esn.svg',
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
+          'src/assets/images/icons/up.svg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/files/img/icons/icon128.png',
@@ -136,7 +139,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/mewcx/files/img/icons/icon48.png',
           'src/builds/mewcx/files/manifest.json',
           'src/builds/mewcx/index.js',
-          'src/builds/web/storage/index.js',
+          'src/builds/web/storage/index.js'
         ]
       }
     })
@@ -153,6 +156,6 @@ module.exports = {
   configureWebpack: webpackConfig,
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
-  integrity: true,
+  integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   chainWebpack: config => {}
 };

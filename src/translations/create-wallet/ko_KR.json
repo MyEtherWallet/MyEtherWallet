@@ -14,7 +14,7 @@
   "byMnemonicRandom": "무작위",
   "byMnemonicWriteDown": "연상기호 어구 키를 받아적으세요",
   "byMnemonicAlreadyWritten": "I Wrote Down My Mnemonic Phrase",
-  "byJsonFile": "By JSON File",
+  "byJsonFile": "By Keystore File",
   "byJsonFileSaveKeystore": "내 키 저장소 파일 저장 ",
   "byJsonFileDontLoseTitle": "잃어버리지 마세요.",
   "byJsonFileDontLoseDesc": "Be careful, it can not be recovered if you lose it.",

@@ -68,6 +68,12 @@
       .logo-small {
         height: 28px;
       }
+
+      .beta-tag {
+        color: white;
+        margin-left: 5px;
+        height: 17px;
+      }
     }
 
     .top-menu {
@@ -96,11 +102,6 @@
         .nav-item a span {
           color: $text-base-color;
           outline: none;
-
-          &.active {
-            //color: $text-black;
-            //font-weight: 500;
-          }
         }
       }
 
@@ -301,50 +302,42 @@
   padding: 0 !important;
 }
 
+%button-templates {
+  border: 1px solid $border-green;
+  border-radius: 4px;
+  color: $text-white;
+  cursor: pointer;
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 10px 20px;
+  position: relative;
+
+  &:hover {
+    background-color: $white;
+    color: $text-color-green;
+  }
+}
+
 .get-free-wallet {
   position: relative;
+  cursor: pointer;
   //animation: fadeOutFromBlock 0.5s ease-out;
   //animation-fill-mode: forwards;
-  width: 0;
-  height: 0;
+  display: none;
   opacity: 0;
-  margin-left: 0;
   overflow: hidden;
 
-  .flex-block {
-    display: flex;
-    justify-content: flex-end;
-  }
-
   .access-button {
-    margin-left: 8px;
-    border: 1px solid $border-green;
-    border-radius: 4px;
-    cursor: pointer;
-    display: block;
-    font-size: 12px;
-    padding: 10px 20px;
-    position: relative;
-    overflow: hidden;
-    background-color: $text-color-green;
-    color: $text-white;
+    @extend %button-templates;
 
-    &:hover {
-      color: $text-color-green;
-      background-color: $white;
-    }
+    background-color: $text-color-green;
   }
 
   .get-free-wallet-button {
-    border: 1px solid $border-green;
-    border-radius: 4px;
+    @extend %button-templates;
+
     color: $text-color-green;
-    cursor: pointer;
-    display: block;
-    font-size: 12px;
-    padding: 10px 20px;
-    position: relative;
-    overflow: hidden;
 
     &:hover {
       background-color: $text-color-green;
@@ -357,48 +350,42 @@
     animation-fill-mode: forwards;
   }
 
-  $get-free-wallet-button-width: 240px;
+  &.hide {
+    display: none !important;
+  }
 
   @keyframes fadeInFromNone {
     0% {
-      width: 0;
       height: 0;
       opacity: 0;
       margin-left: 0;
     }
 
     50% {
-      width: $get-free-wallet-button-width;
+      display: inline-block;
       height: 54px;
-      opacity: 0;
-      margin-left: 20px;
+      opacity: 0.5;
     }
 
     100% {
-      width: $get-free-wallet-button-width;
+      display: inline-block;
       height: 54px;
       opacity: 1;
-      margin-left: 20px;
     }
   }
 
   @keyframes fadeOutFromBlock {
     0% {
-      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 1;
-      margin-left: 20px;
     }
 
     50% {
-      width: $get-free-wallet-button-width;
       height: 54px;
       opacity: 0;
-      margin-left: 20px;
     }
 
     100% {
-      width: 0;
       height: 0;
       opacity: 0;
       margin-left: 0;
