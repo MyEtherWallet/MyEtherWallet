@@ -33,7 +33,7 @@ function disabledPairing(currencyList, symbol, invalid, side) {
       return true;
     } else if (side === 'to') {
       if (currencyList[symbol].invalidTo) {
-        return !currencyList[symbol].invalidTo.includes(invalid);
+        return currencyList[symbol].invalidTo.includes(invalid);
       }
       return true;
     }
@@ -55,9 +55,10 @@ export default class BitySwap {
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
 
-    this.userDetails = this.getStoredCredentials();
-    this.phoneToken =
-      'OPWip5M2mbpidCtoYZZPJ1zxrDnOinWHok9TLyVfE1mQDOIp0dU6orrP+Gxm3Qrm';
+    this.phoneSha = undefined;
+    this.userDetails = this.loadStoredCredentials();
+    // this.phoneToken =
+    //   'OPWip5M2mbpidCtoYZZPJ1zxrDnOinWHok9TLyVfE1mQDOIp0dU6orrP+Gxm3Qrm';
     this.retrieveRates();
   }
 
@@ -67,6 +68,10 @@ export default class BitySwap {
 
   static isDex() {
     return false;
+  }
+
+  get phoneToken() {
+    return this.userDetails[this.phoneSha].phone_token;
   }
 
   get isValidNetwork() {
@@ -87,13 +92,16 @@ export default class BitySwap {
       const exitData = exitRates.pairs;
       const rates = await getRates();
       const data = rates.objects;
-
       exitData.forEach(entry => {
-        if (this.fiatCurrencies.includes(entry.output)) {
-          this.rates.set(
-            `${entry.input}/${entry.output}`,
-            parseFloat(entry.price)
-          );
+        if (entry.enabled) {
+          data.forEach(rateEntry => {
+            if (rateEntry.pair === entry.input + entry.output) {
+              this.rates.set(
+                `${entry.input}/${entry.output}`,
+                parseFloat(rateEntry.rate_we_buy)
+              );
+            }
+          });
         }
       });
 
@@ -196,10 +204,7 @@ export default class BitySwap {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (
-          /*prop !== value.symbol &&*/
-          disabledPairing(this.currencies, value.symbol, prop, 'from')
-        ) {
+        if (disabledPairing(this.currencies, value.symbol, prop, 'from')) {
           if (this.currencies[prop] && !this.fiatCurrencies.includes(prop)) {
             collectMap.set(prop, {
               symbol: prop,
@@ -214,13 +219,11 @@ export default class BitySwap {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -302,7 +305,7 @@ export default class BitySwap {
     }
   }
 
-  getStoredCredentials() {
+  loadStoredCredentials() {
     const userDetails = store.get(LOCAL_STORAGE_KEY);
     if (userDetails !== null && userDetails !== undefined) {
       return userDetails;
@@ -310,83 +313,65 @@ export default class BitySwap {
     return {};
   }
 
-  setStoredCredentials(phoneNumber, phoneToken) {
-    const userDetails = store.get(LOCAL_STORAGE_KEY);
-    if (userDetails !== null && userDetails !== undefined) {
-      const phoneSha = utils.sha3(phoneNumber);
-      userDetails[phoneSha] = {
-        phone_token: phoneToken,
-        verified: false
-      };
-      store.set(LOCAL_STORAGE_KEY, userDetails);
-      // this.phoneToken = userDetails.phone_token;
+  setStoredCredentials(phoneSha, phoneToken, verified = false) {
+    let userDetails = store.get(LOCAL_STORAGE_KEY);
+    if (userDetails === null || userDetails === undefined) {
+      userDetails = {};
     }
-    console.log(this.phoneToken); // todo remove dev item
+    userDetails[phoneSha] = {
+      phone_token: phoneToken,
+      verified: verified
+    };
+    store.set(LOCAL_STORAGE_KEY, userDetails);
+    this.userDetails = userDetails;
     return userDetails;
   }
 
-  async verifyUser(initData) {
+  async registerUser(initData) {
+    this.phoneSha = utils.sha3(initData.phoneNumber);
+    if (this.userDetails[this.phoneSha] === undefined) {
+      await this.getPhoneToken(initData);
+      return false;
+    } else if (!this.userDetails[this.phoneSha].verified) {
+      await this.getPhoneToken(initData);
+      return false;
+    }
+    return true;
+  }
+
+  async getPhoneToken(initData) {
     const initializeData = {
       pair: initData.fromCurrency + initData.toCurrency,
       phoneNumber: initData.phoneNumber
     };
     const result = await loginWithPhone(initializeData);
-    this.phoneToken = result.phone_token;
-    store.set('exit_to_fiat', {
-      phone_token: result.phone_token,
-      verified: false
-    });
+    this.setStoredCredentials(this.phoneSha, result.phone_token);
   }
 
-  async confirmUser(verifyData) {
-    const userDetails = this.getIfStoredCredentials();
+  async verifyUser(verifyData) {
     const verificationData = {
       pair: verifyData.fromCurrency + verifyData.toCurrency,
-      phoneToken: userDetails.phone_token || this.phoneToken,
+      phoneToken: this.phoneToken,
       tan: verifyData.tan
     };
     // returns {success: true} if successful
     const result = await sendReceivedSmsCode(verificationData);
-    store.set('exit_to_fiat', {
-      phone_token: verificationData.phoneToken,
-      verified: true
-    });
+    this.setStoredCredentials(this.phoneSha, this.phoneToken, result.success);
     return result;
   }
 
   async buildExitOrder({ fromCurrency, toCurrency, orderDetails }) {
-    const details = {
-      input: {
-        amount: '0.2',
-        currency: 'ETH',
-        type: 'crypto_address',
-        crypto_address: '0xe51dDAa1B650c26B62fCA2520cdC2c60cE205F75'
-      },
-      output: {
-        currency: 'CHF',
-        type: 'bank_account',
-        iban: 'CH980000MEW0000000009',
-        bic_swift: 'TESTCHBEXXX',
-        aba_number: '',
-        sort_code: '',
-        owner: {
-          name: 'FirstName LastName',
-          address: 'Test address',
-          address_complement: '',
-          zip: '2000',
-          city: 'Neuchatel',
-          state: '',
-          country: 'Switzerland'
-        }
-      }
-    };
-    const orderData = {
-      pair: fromCurrency + toCurrency,
-      phoneToken: this.phoneToken,
-      orderDetails: details //{ ...orderDetails }
-    };
-    console.log(orderDetails); // todo remove dev item
-    return buildCyptoToFiatOrderData(orderData);
+    try {
+      const orderData = {
+        pair: fromCurrency + toCurrency,
+        phoneToken: this.phoneToken,
+        orderDetails: { ...orderDetails } // details //{ ...orderDetails }
+      };
+      console.log(orderDetails); // todo remove dev item
+      return buildCyptoToFiatOrderData(orderData);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async getExitOrderDetails(detailsUrl) {

@@ -399,21 +399,30 @@ export default {
     backButtonAction() {
       this.$emit('backButtonClick');
     },
-    registerPhone() {
+    async registerPhone() {
       if (this.phoneNumber === '') throw Error('Phone Number Required');
       if (this.countryCode === '') throw Error('Country Code Required');
       const initData = {
         phoneNumber: this.countryCode + this.phoneNumber,
         ...this.swapDetails
       };
-      this.provider.verifyUser(initData);
+      const existing = await this.provider.registerUser(initData);
+      console.log(existing); // todo remove dev item
+      if (existing) {
+        this.step1 = false;
+        this.verifyStep = false;
+        this.step2 = true;
+      } else {
+        this.step1 = false;
+        this.verifyStep = true;
+      }
     },
     async confirmUser() {
       const verifyData = {
         tan: this.tan,
         ...this.swapDetails
       };
-      const verified = await this.provider.confirmUser(verifyData);
+      const verified = await this.provider.verifyUser(verifyData);
       if (verified.success) {
         this.verifyStep = false;
         this.step2 = true;
@@ -433,7 +442,8 @@ export default {
       const swapDetails = await this.provider.startSwap({
         ...this.swapDetails,
         bypass: true,
-        orderDetails: details
+        orderDetails: details,
+        phoneToken: this.provider.phoneToken
       });
       this.exitToFiatCallback(swapDetails);
     }

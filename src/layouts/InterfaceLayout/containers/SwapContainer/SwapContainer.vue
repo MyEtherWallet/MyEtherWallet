@@ -641,13 +641,13 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-
+console.log(providersFound); // todo remove dev item
         const results = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
-
+console.log(results); // todo remove dev item
         this.loadingData = false;
         if (
           results.every(

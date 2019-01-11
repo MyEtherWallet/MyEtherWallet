@@ -38,6 +38,9 @@ const openOrder = async orderInfo => {
     buildPath(),
     utils.buildPayload(bityMethods.createTransaction, orderInfo)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -46,6 +49,9 @@ const getStatus = async orderInfo => {
     buildPath(),
     utils.buildPayload(bityMethods.status, orderInfo)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -58,6 +64,9 @@ const loginWithPhone = async exitData => {
     buildPath(),
     utils.buildPayload(bityMethods.logInWithPhoneNumber, exitData)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -66,6 +75,9 @@ const sendReceivedSmsCode = async exitData => {
     buildPath(),
     utils.buildPayload(bityMethods.sendReceivedSmsCode, exitData)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -75,6 +87,9 @@ const buildCyptoToFiatOrderData = async orderData => {
     buildPath(),
     utils.buildPayload(bityMethods.buildCyptoToFiatOrderData, orderData)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -84,6 +99,9 @@ const getCyptoToFiatOrderDetails = async detailsData => {
     buildPath(),
     utils.buildPayload(bityMethods.getExitOrderDetails, detailsData)
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
@@ -95,6 +113,9 @@ const getStatusFiat = async (orderInfo, phoneToken) => {
       phoneToken: phoneToken
     })
   );
+  if (results.error) {
+    throw Error(results.error.message);
+  }
   return results.result;
 };
 
