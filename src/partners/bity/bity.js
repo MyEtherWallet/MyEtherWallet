@@ -1,6 +1,7 @@
 import store from 'store';
-import utils from 'web3-utils';
+import web3Utils from 'web3-utils';
 import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
+import { utils } from '../helpers';
 import {
   getRates,
   openOrder,
@@ -323,7 +324,7 @@ export default class BitySwap {
   }
 
   async registerUser(initData) {
-    this.phoneSha = utils.sha3(initData.phoneNumber);
+    this.phoneSha = web3Utils.sha3(initData.phoneNumber);
     if (this.userDetails[this.phoneSha] === undefined) {
       await this.getPhoneToken(initData);
       return false;
@@ -425,34 +426,67 @@ export default class BitySwap {
   }
 
   static async getOrderStatus(noticeDetails) {
-    let data;
     if (Object.keys(bityFiatCurrencies).includes(noticeDetails.toCurrency)) {
-      data = await getStatusFiat(noticeDetails.statusId, noticeDetails.special);
-    } else {
-      data = await getStatus(noticeDetails.statusId);
+      return BitySwap.getOrderStatusFiat(noticeDetails);
     }
-    if (data.status === bityStatuses.EXEC) {
-      return 'complete';
+    return BitySwap.getOrderStatusCrypto(noticeDetails);
+  }
+
+  static async getOrderStatusCrypto(noticeDetails) {
+    try {
+      const data = await getStatus(noticeDetails.statusId);
+      if (data.status === bityStatuses.EXEC) {
+        return 'complete';
+      }
+      if (data.input.status !== bityStatuses.FILL) {
+        switch (data.input.status) {
+          case bityStatuses.OPEN:
+            return 'new';
+          case bityStatuses.RCVE:
+          case bityStatuses.CONF:
+            return 'pending';
+          case bityStatuses.CANC:
+            return 'cancelled';
+        }
+      } else {
+        switch (data.output.status) {
+          case bityStatuses.FILL:
+            return 'complete';
+          case bityStatuses.CANC:
+            return 'cancelled';
+          default:
+            return 'pending';
+        }
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      return 'pending';
     }
-    if (data.input.status !== bityStatuses.FILL) {
-      switch (data.input.status) {
+  }
+
+  static async getOrderStatusFiat(noticeDetails) {
+    try {
+      const data = await getStatusFiat(
+        noticeDetails.statusId,
+        noticeDetails.special
+      );
+      if (!utils.isJson(data)) return 'pending';
+      switch (data.status) {
         case bityStatuses.OPEN:
           return 'new';
         case bityStatuses.RCVE:
         case bityStatuses.CONF:
           return 'pending';
-        case bityStatuses.CANC:
-          return 'cancelled';
-      }
-    } else {
-      switch (data.output.status) {
         case bityStatuses.FILL:
           return 'complete';
         case bityStatuses.CANC:
           return 'cancelled';
-        default:
-          return 'pending';
       }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      return 'pending';
     }
   }
 }
