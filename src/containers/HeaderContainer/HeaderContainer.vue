@@ -37,19 +37,23 @@
       <div class="page-container">
         <ul>
           <li>
-            <div
-              @click="
+            <router-link
+              to="/"
+              @click.native="
                 scrollTop();
                 isMobileMenuOpen = false;
               "
             >
               {{ $t('header.home') }}
-            </div>
+            </router-link>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false">
+            <router-link
+              to="/#about-mew"
+              @click.native="isMobileMenuOpen = false"
+            >
               {{ $t('header.about') }}
-            </a>
+            </router-link>
           </li>
           <li>
             <a
@@ -278,15 +282,15 @@ export default {
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
         // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
         { name: 'English', flag: 'en', langCode: 'en_US' },
-        // { name: 'Español', flag: 'es', langCode: 'es_ES' },
+        { name: 'Español', flag: 'es', langCode: 'es_ES' },
         // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
         // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
         // { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
         // { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
         // { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
         // { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
-        // { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
-        // { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
+        { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
+        { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
         // { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
         // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
         // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
@@ -295,7 +299,7 @@ export default {
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' },
+        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' }
         { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',

@@ -1,6 +1,9 @@
 language: minimal
 sudo: required
 dist: trusty
+cache:
+  directories:
+    - node_modules
 install: docker build -t mew-build-container .
 env:
   global:
