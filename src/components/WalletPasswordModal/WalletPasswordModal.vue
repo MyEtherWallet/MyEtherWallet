@@ -18,9 +18,7 @@
           </div>
         </div>
         <div class="button-block">
-          <button :disabled="!acknowledgedTerms" @click="submitPassword">
-            Access My Wallet
-          </button>
+          <button @click="submitPassword">Access My Wallet</button>
         </div>
       </div>
     </b-modal>
@@ -41,8 +39,7 @@ export default {
     return {
       passphrase: '',
       callback: () => {},
-      identifier: {},
-      acknowledgedTerms: false
+      identifier: {}
     };
   },
   created() {
@@ -58,7 +55,6 @@ export default {
     },
     clear() {
       this.passphrase = '';
-      this.acknowledgedTerms = false;
     }
   }
 };
