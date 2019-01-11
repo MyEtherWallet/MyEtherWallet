@@ -22,20 +22,20 @@
 <script>
 import TitleTextContentsLayout from '../InformationPages/Components/TitleTextContentsLayout';
 
-import kosala from '@/assets/images/team/Kosala.jpg';
-import brian from '@/assets/images/team/Brian.jpg';
-import olchik from '@/assets/images/team/Olga.jpg';
-import stephen from '@/assets/images/team/Stephen.jpg';
-import richie from '@/assets/images/team/Richie.jpg';
-import brittany from '@/assets/images/team/Brittany.jpg';
-import yel from '@/assets/images/team/Gamaliel.jpg';
-import steve from '@/assets/images/team/Steve.jpg';
-import jack from '@/assets/images/team/Jack.jpg';
-import david from '@/assets/images/team/David.jpg';
-import samantha from '@/assets/images/team/Samantha.jpg';
-import alex from '@/assets/images/team/Alex.jpg';
-import misha from '@/assets/images/team/Misha.jpg';
-import katya from '@/assets/images/team/Katya.jpg';
+import kosala from '@/assets/images/team/Kosala.png';
+import brian from '@/assets/images/team/Brian.png';
+import olchik from '@/assets/images/team/Olga.png';
+import stephen from '@/assets/images/team/Stephen.png';
+import richie from '@/assets/images/team/Richie.png';
+import brittany from '@/assets/images/team/Brittany.png';
+import yel from '@/assets/images/team/Gamaliel.png';
+import steve from '@/assets/images/team/Steve.png';
+import jack from '@/assets/images/team/Jack.png';
+import david from '@/assets/images/team/David.png';
+import samantha from '@/assets/images/team/Samantha.png';
+import alex from '@/assets/images/team/Alex.png';
+import misha from '@/assets/images/team/Misha.png';
+import katya from '@/assets/images/team/Katya.png';
 
 export default {
   components: {

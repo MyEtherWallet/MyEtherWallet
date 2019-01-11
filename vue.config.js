@@ -18,11 +18,8 @@ const webpackConfig = {
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
-      test: /\.(jpe?g|png|gif|svg)$/i,
-      disable: process.env.NODE_ENV !== 'production',
-      pngquant: {
-        quality: '95-100'
-      }
+      test: /\.(jpe?g|gif|svg)$/i,
+      disable: process.env.NODE_ENV !== 'production'
     })
   ],
   optimization: {
