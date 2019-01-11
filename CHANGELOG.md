@@ -3,7 +3,7 @@
 ### Devop
 
 - Add node_modules cache to TravisCI for faster builds, and remove Brotli compression from offline [#435](https://github.com/MyEtherWallet/MyEtherWallet/pull/435)
-- Prep release and multiple fixes: #412, #409, #408, #433, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
+- Prep release and multiple fixes: #412, #409, #408, #413, #433, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
 
 ### Release v5.0.0-beta.0
 
