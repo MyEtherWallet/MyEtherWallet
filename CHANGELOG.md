@@ -1,3 +1,9 @@
+### Release v5.0.0-beta.1
+
+### Devop
+- Add node_modules cache to TravisCI for faster builds, and remove Brotli compression from offline [#435](https://github.com/MyEtherWallet/MyEtherWallet/pull/435)
+- Prep release and multiple fixes: #412, #409, #408, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
+
 ### Release v5.0.0-beta.0
 
 ### Bug
@@ -42,7 +48,6 @@
 
 ### Devop
 
-- Add node_modules cache to TravisCI for faster builds, and remove Brotli compression from offline #435
 - Refactors, validations, and fixes: #311, #362, #389, #359, #366, #369, #368, #367, #370, #361, #344, #341, #375, #377, #364, #347, #346, #380, #394, #388, #391, #392, #382, #393, #399, #398, #376, #356, #401, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
 - Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
