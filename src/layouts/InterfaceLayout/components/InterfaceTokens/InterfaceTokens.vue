@@ -5,10 +5,13 @@
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
-            <h4>
-              {{ $t('interface.tokens') }}
-              <i class="fa fa-lg fa-refresh" @click="fetchTokens" />
-            </h4>
+            <div class="title-container">
+              <h4>{{ $t('interface.tokens') }}</h4>
+              <img
+                src="~@/assets/images/icons/change.svg"
+                @click="fetchTokens"
+              />
+            </div>
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
@@ -53,7 +56,11 @@
             <i class="fa fa-spinner fa-spin" />
           </div>
           <div
-            v-show="localTokens.length === 0 && customTokens.length === 0"
+            v-show="
+              search !== '' &&
+                localTokens.length === 0 &&
+                customTokens.length === 0
+            "
             class="spinner-container"
           >
             No tokens found :(

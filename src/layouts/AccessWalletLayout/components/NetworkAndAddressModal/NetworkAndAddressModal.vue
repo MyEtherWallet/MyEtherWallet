@@ -273,7 +273,6 @@ export default {
     }
   },
   mounted() {
-    //this.$refs.networkAndAddress.show();
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;

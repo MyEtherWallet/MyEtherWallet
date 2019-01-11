@@ -29,7 +29,10 @@
             class="custom-tooltip"
             @click="fetchBalance"
           >
-            <i v-show="!fetchingBalance" class="fa fa-lg fa-refresh" />
+            <img
+              v-show="!fetchingBalance"
+              src="~@/assets/images/icons/change.svg"
+            />
             <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
           </b-btn>
           <b-popover
@@ -40,7 +43,7 @@
             title
           />
           <b-popover
-            content="Refresh balance"
+            content="Refresh Balance"
             target="refreshBalance"
             placement="top"
             triggers="hover"
