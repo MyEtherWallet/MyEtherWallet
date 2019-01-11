@@ -78,11 +78,11 @@
           </transition>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 <script>
-import SliderBar from '@/components/SliderBar/SliderBar.vue';
+import SliderBar from '@/components/SliderBar';
 export default {
   components: {
     'slider-bar': SliderBar

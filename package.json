@@ -3,7 +3,7 @@
   "version": "5.0.0-beta.0",
   "description": "Client side ethereum wallet",
   "scripts": {
-    "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
+    "build:offline": "WEBPACK_INTEGRITY=false BROTLI=false npm run build:hash",
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
