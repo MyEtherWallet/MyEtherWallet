@@ -30,7 +30,8 @@ import {
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
-  dynamicSortMultiple
+  dynamicSortMultiple,
+  qrcodeBuilder
 } from './helpers';
 
 // Array of currently supported providers
@@ -77,5 +78,6 @@ export {
   bestProviderForQuantity,
   isValidEntry,
   dynamicSortMultiple,
-  checkInvalidOrMissingValue
+  checkInvalidOrMissingValue,
+  qrcodeBuilder
 };
