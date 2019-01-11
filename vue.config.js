@@ -1,3 +1,4 @@
+const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
@@ -18,8 +19,17 @@ const webpackConfig = {
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
-      test: /\.(jpe?g|gif|svg)$/i,
-      disable: process.env.NODE_ENV !== 'production'
+      disable: process.env.NODE_ENV !== 'production',
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      pngquant: {
+        quality: '100'
+      },
+      plugins: [
+        imageminMozjpeg({
+          quality: 100,
+          progressive: true
+        })
+      ]
     })
   ],
   optimization: {
