@@ -37,19 +37,23 @@
       <div class="page-container">
         <ul>
           <li>
-            <div
-              @click="
+            <router-link
+              to="/"
+              @click.native="
                 scrollTop();
                 isMobileMenuOpen = false;
               "
             >
               {{ $t('header.home') }}
-            </div>
+            </router-link>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false">
+            <router-link
+              to="/#about-mew"
+              @click.native="isMobileMenuOpen = false"
+            >
               {{ $t('header.about') }}
-            </a>
+            </router-link>
           </li>
           <li>
             <a
