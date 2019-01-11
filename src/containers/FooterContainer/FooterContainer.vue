@@ -148,10 +148,6 @@ export default {
         {
           title: this.$t('common.terms'),
           to: '/terms-and-conditions'
-        },
-        {
-          title: `v${version}`,
-          href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
         }
       ],
       footerContent: [
@@ -171,6 +167,10 @@ export default {
               text: this.$t('footer.extension'),
               href:
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            },
+            {
+              text: `v${version}`,
+              href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
             }
           ]
         },
