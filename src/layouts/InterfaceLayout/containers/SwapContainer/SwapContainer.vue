@@ -17,86 +17,86 @@
         @swapStarted="resetSwapState"
       />
 
-    <div class="title-block">
-      <interface-container-title :title="$t('common.swap')" />
-      <div class="buy-eth">
-        <a href="https://ccswap.myetherwallet.com" target="_blank">
-          <span>{{ $t('interface.buyEth') }}</span>
-          <img :src="images.visaMaster" />
-        </a>
+      <div class="title-block">
+        <interface-container-title :title="$t('common.swap')" />
+<!--        <div class="buy-eth">
+          <a href="https://ccswap.myetherwallet.com" target="_blank">
+            <span>{{ $t('interface.buyEth') }}</span>
+            <img :src="images.visaMaster" />
+          </a>
+        </div>-->
       </div>
-    </div>
 
-    <div class="send-form">
-      <div class="form-block amount-to-address">
-        <div class="amount">
-          <div class="title title-and-copy">
-            <h4>{{ $t('common.from') }}</h4>
-            <p
-              v-if="tokenBalances[fromCurrency] > 0"
-              class="all-button prevent-user-select"
-              @click="swapAll"
-            >
-              {{ $t('common.totalBalance') }}
-            </p>
-          </div>
-          <swap-currency-picker
-            :currencies="fromArray"
-            :override-currency="overrideFrom"
-            :from-source="true"
-            page="SwapContainerFrom"
-            @selectedCurrency="setFromCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              v-model="fromValue"
-              type="number"
-              name
-              value
-              placeholder="Deposit Amount"
-              @input="amountChanged('from')"
+      <div class="send-form">
+        <div class="form-block amount-to-address">
+          <div class="amount">
+            <div class="title title-and-copy">
+              <h4>{{ $t('common.from') }}</h4>
+              <p
+                v-if="tokenBalances[fromCurrency] > 0"
+                class="all-button prevent-user-select"
+                @click="swapAll"
+              >
+                {{ $t('common.totalBalance') }}
+              </p>
+            </div>
+            <swap-currency-picker
+              :currencies="fromArray"
+              :override-currency="overrideFrom"
+              :from-source="true"
+              page="SwapContainerFrom"
+              @selectedCurrency="setFromCurrency"
             />
+            <div class="the-form amount-number">
+              <input
+                v-model="fromValue"
+                type="number"
+                name
+                value
+                placeholder="Deposit Amount"
+                @input="amountChanged('from')"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
+              <p v-if="notEnough && !fromBelowMinAllowed">
+                {{ $t('common.dontHaveEnough') }}
+              </p>
+              <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+            </div>
           </div>
-          <div class="error-message-container">
-            <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="notEnough && !fromBelowMinAllowed">
-              {{ $t('common.dontHaveEnough') }}
-            </p>
-            <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+          <div class="exchange-icon" @click="flipCurrencies">
+            <img :src="images.swap" />
           </div>
-        </div>
-        <div class="exchange-icon" @click="flipCurrencies">
-          <img :src="images.swap" />
-        </div>
-        <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.to') }}</h4>
-          </div>
-          <swap-currency-picker
-            :currencies="toArray"
-            :override-currency="overrideTo"
-            :from-source="false"
-            page="SwapContainerTo"
-            @selectedCurrency="setToCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              v-model="toValue"
-              type="number"
-              name
-              value
-              placeholder="Received Amount"
-              @input="amountChanged('to')"
+          <div class="amount">
+            <div class="title">
+              <h4>{{ $t('common.to') }}</h4>
+            </div>
+            <swap-currency-picker
+              :currencies="toArray"
+              :override-currency="overrideTo"
+              :from-source="false"
+              page="SwapContainerTo"
+              @selectedCurrency="setToCurrency"
             />
-          </div>
-          <div class="error-message-container">
-            <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-            <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+            <div class="the-form amount-number">
+              <input
+                v-model="toValue"
+                type="number"
+                name
+                value
+                placeholder="Received Amount"
+                @input="amountChanged('to')"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
+              <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+            </div>
           </div>
         </div>
+        <!-- form-block amount-to-address -->
       </div>
-      <!-- form-block amount-to-address -->
-    </div>
 
       <div v-show="!isExitToFiat" class="send-form">
         <div class="title-container">
@@ -636,13 +636,13 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-console.log(providersFound); // todo remove dev item
+        console.log(providersFound); // todo remove dev item
         const results = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
-console.log(results); // todo remove dev item
+        console.log(results); // todo remove dev item
         this.loadingData = false;
         if (
           results.every(

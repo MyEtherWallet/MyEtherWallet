@@ -429,6 +429,24 @@ export default {
       }
     },
     async createExitOrder() {
+      const staticDetails = {
+        currency: 'CHF',
+        type: 'bank_account',
+        iban: 'CH980000MEW0000000009',
+        bic_swift: 'TESTCHBEXXX',
+        aba_number: '',
+        sort_code: '',
+        owner: {
+          name: 'FirstName LastName',
+          address: 'Test address',
+          address_complement: '',
+          zip: '2000',
+          city: 'Neuchatel',
+          state: '',
+          country: 'Switzerland'
+        }
+      };
+
       const details = {
         input: {
           amount: this.swapDetails.fromValue,
@@ -436,7 +454,7 @@ export default {
           type: 'crypto_address',
           crypto_address: this.swapDetails.fromAddress
         },
-        output: this.orderDetails
+        output: staticDetails //this.orderDetails
       };
 
       const swapDetails = await this.provider.startSwap({
