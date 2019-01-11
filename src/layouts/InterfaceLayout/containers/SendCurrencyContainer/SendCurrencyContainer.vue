@@ -28,9 +28,12 @@
             </div>
             <div class="the-form amount-number">
               <input
+                v-validate="'min_value:10'"
                 :value="amount"
                 type="number"
                 placeholder="Amount"
+                min="0"
+                name="amount"
                 @input="debouncedAmount"
               />
               <i
@@ -39,7 +42,7 @@
                     ? parsedBalance.lt(amount)
                       ? 'not-good'
                       : ''
-                    : selectedCurrency.balance < amount
+                    : errors.has('amount')
                     ? 'not-good'
                     : '',
                   'fa fa-check-circle good-button'
@@ -266,13 +269,13 @@ export default {
       this.amount =
         new BigNumber(e.target.value).decimalPlaces() > decimals
           ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
-          : e.target.value;
-      e.target.value = this.amount;
+          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0) ? e.target.value : 0;
       if (this.amount < 0) {
         this.isValidAmount = false;
       } else {
         this.isValidAmount = true;
       }
+      e.target.value = this.amount;
       if (this.verifyAddr()) {
         this.estimateGas();
       }
@@ -326,9 +329,9 @@ export default {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
           .toString();
-        this.amount = this.parsedBalance
+        this.amount = this.amount > 0 ? this.parsedBalance
           .minus(unit.fromWei(txFee, 'ether'))
-          .toString();
+          .toString() : 0;
       } else {
         this.amount = this.selectedCurrency.balance;
       }
