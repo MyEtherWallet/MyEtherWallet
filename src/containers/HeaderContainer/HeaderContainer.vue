@@ -281,7 +281,7 @@ export default {
       supportedLanguages: [
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
         // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
-        { name: 'English', flag: 'en', langCode: 'en_US' },
+        { name: 'English', flag: 'en', langCode: 'en_US' }
         // { name: 'Español', flag: 'es', langCode: 'es_ES' },
         // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
         // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
@@ -295,12 +295,12 @@ export default {
         // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
         // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
         // { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
-        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
+        // { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
         // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' },
-        { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
+        // { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',
       currentFlag: 'en',
