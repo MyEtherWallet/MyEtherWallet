@@ -15,9 +15,10 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span>
-            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
-          </span>
+          <span
+            >({{ selectedNetwork.type.name }} -
+            {{ selectedNetwork.service }})</span
+          >
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -85,24 +86,22 @@
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
                   @click="changePath(key)"
+                  >{{ val.label }}</b-dropdown-item
                 >
-                  {{ val.label }}
-                </b-dropdown-item>
                 <b-dropdown-divider />
-                <b-dropdown-item>
-                  {{ $t('accessWallet.customPaths') }}
-                </b-dropdown-item>
+                <b-dropdown-item>{{
+                  $t('accessWallet.customPaths')
+                }}</b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
                   @click="changePath(key)"
+                  >{{ val.dpath }}</b-dropdown-item
                 >
-                  {{ val.dpath }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="showCustomPathInput">
-                  {{ $t('accessWallet.addCustomPath') }}
-                </b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">{{
+                  $t('accessWallet.addCustomPath')
+                }}</b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -191,8 +190,9 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
+            <router-link to="/terms-and-conditions">{{
+              $t('common.terms')
+            }}</router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -270,13 +270,9 @@ export default {
     hardwareWallet() {
       this.getPaths();
       this.setHDAccounts();
-    },
-    $route(newVal) {
-      console.log(newVal);
     }
   },
   mounted() {
-    //this.$refs.networkAndAddress.show();
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
