@@ -15,9 +15,10 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span>
-            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
-          </span>
+          <span
+            >({{ selectedNetwork.type.name }} -
+            {{ selectedNetwork.service }})</span
+          >
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -27,7 +28,10 @@
         class="mt-2 collapse-content"
       >
         <ul class="networks">
-          <li v-for="(key, index) in Object.keys(Networks)" :key="key + index">
+          <li
+            v-for="(key, index) in Object.keys(reorderNetworkList)"
+            :key="$router.path + key + index"
+          >
             <div class="network-title">
               <img :src="Networks[key][0].type.icon" />
               <p>{{ key }}</p>
@@ -79,28 +83,25 @@
               >
                 <b-dropdown-item
                   v-for="(val, key) in availablePaths"
-                  v-if="key !== 'default'"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="'base' + key"
                   @click="changePath(key)"
+                  >{{ val.label }}</b-dropdown-item
                 >
-                  {{ val.label }}
-                </b-dropdown-item>
                 <b-dropdown-divider />
-                <b-dropdown-item>
-                  {{ $t('accessWallet.customPaths') }}
-                </b-dropdown-item>
+                <b-dropdown-item>{{
+                  $t('accessWallet.customPaths')
+                }}</b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
                   :key="key"
                   @click="changePath(key)"
+                  >{{ val.dpath }}</b-dropdown-item
                 >
-                  {{ val.dpath }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="showCustomPathInput">
-                  {{ $t('accessWallet.addCustomPath') }}
-                </b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">{{
+                  $t('accessWallet.addCustomPath')
+                }}</b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -140,24 +141,31 @@
               <h4>{{ $t('accessWallet.interactAddr') }}</h4>
             </div>
 
-            <ul class="address-block table-header">
+            <ul
+              :class="[
+                wallet !== null ? 'fours' : 'threes',
+                'address-block table-header'
+              ]"
+            >
               <li>{{ $t('accessWallet.id') }}</li>
               <li>{{ $t('common.address') }}</li>
-              <li />
+              <li v-if="wallet !== null">{{ $t('common.balance') }}</li>
             </ul>
 
             <ul
               v-for="account in HDAccounts"
               :data-address="'address' + account.index"
               :key="account.index"
-              :class="
-                selectedId === 'address' + account.index ? 'selected' : ''
-              "
-              class="address-block address-data"
+              :class="[
+                selectedId === 'address' + account.index ? 'selected' : '',
+                wallet !== null ? 'fours' : 'threes',
+                'address-block address-data'
+              ]"
               @click="setAccount(account)"
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
+              <li v-if="!!wallet">{{ account.balance }}</li>
               <li class="user-input-checkbox">
                 <label class="checkbox-container checkbox-container-small">
                   <input
@@ -182,8 +190,9 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
+            <router-link to="/terms-and-conditions">{{
+              $t('common.terms')
+            }}</router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -210,6 +219,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
+import Misc from '@/helpers/misc';
 import ethIcon from '@/assets/images/icons/ethereum-icon.png';
 
 const MAX_ADDRESSES = 5;
@@ -248,8 +258,13 @@ export default {
       network: 'network',
       Networks: 'Networks',
       customPaths: 'customPaths',
-      path: 'path'
-    })
+      path: 'path',
+      web3: 'web3',
+      wallet: 'wallet'
+    }),
+    reorderNetworkList() {
+      return Misc.reorderNetworks();
+    }
   },
   watch: {
     hardwareWallet() {
@@ -258,7 +273,6 @@ export default {
     }
   },
   mounted() {
-    //this.$refs.networkAndAddress.show();
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
@@ -321,9 +335,11 @@ export default {
     },
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      this.$router.push({
-        path: 'interface'
-      });
+      if (!this.wallet !== null) {
+        this.$router.push({
+          path: 'interface'
+        });
+      }
 
       this.$refs.networkAndAddress.hide();
     },
@@ -334,10 +350,21 @@ export default {
         i < this.currentIndex + MAX_ADDRESSES;
         i++
       ) {
-        this.HDAccounts.push({
-          index: i,
-          account: await this.hardwareWallet.getAccount(i)
-        });
+        const account = await this.hardwareWallet.getAccount(i);
+        if (!this.wallet) {
+          this.HDAccounts.push({
+            index: i,
+            account: account
+          });
+        } else {
+          this.HDAccounts.push({
+            index: i,
+            account: account,
+            balance: await this.web3.eth.getBalance(
+              account.getChecksumAddressString()
+            )
+          });
+        }
       }
       this.currentIndex += MAX_ADDRESSES;
     },
