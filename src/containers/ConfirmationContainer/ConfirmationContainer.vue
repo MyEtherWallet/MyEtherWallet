@@ -70,7 +70,7 @@ import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-
+import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -106,8 +106,8 @@ export default {
       parsedBalance: 0,
       toAddress: '',
       transactionFee: 0,
-      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       raw: {},
+      lastRaw: {},
       ens: {},
       signer: {},
       signedTxObject: {},
@@ -117,8 +117,6 @@ export default {
       successMessage: 'Success',
       linkMessage: 'OK',
       dismissed: true,
-      web3WalletHash: '',
-      web3WalletRes: '',
       signedArray: [],
       txBatch: null,
       sending: false,
@@ -136,39 +134,6 @@ export default {
       if (this.wallet) {
         return this.wallet.getChecksumAddressString();
       }
-    }
-  },
-  watch: {
-    web3WalletHash(newVal) {
-      if (!newVal) return;
-      this.$store.dispatch('addNotification', [
-        noticeTypes.TRANSACTION_HASH,
-        this.fromAddress,
-        this.raw,
-        newVal
-      ]);
-      const pollReceipt = setInterval(() => {
-        this.web3.eth
-          .getTransactionReceipt(newVal)
-          .then(res => {
-            if (res !== null) {
-              this.web3WalletRes = res;
-              this.showSuccessModal('Transaction sent!', 'Okay');
-              clearInterval(pollReceipt);
-            }
-          })
-          .catch(() => {
-            clearInterval(pollReceipt);
-          });
-      }, 500);
-    },
-    web3WalletRes(newVal) {
-      this.$store.dispatch('addNotification', [
-        noticeTypes.TRANSACTION_RECEIPT,
-        this.fromAddress,
-        this.raw,
-        newVal
-      ]);
     }
   },
   created() {
@@ -219,6 +184,7 @@ export default {
           s: `0x${newTx.s.toString('hex')}`
         }
       };
+      this.parseRawTx(this.signedTxObject.tx);
       this.signedTx = this.signedTxObject.rawTransaction;
       this.confirmationModalOpen();
     });
@@ -227,9 +193,28 @@ export default {
       this.parseRawTx(tx);
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet.signTransaction(tx).then(_response => {
-        this.web3WalletHash = _response.transactionHash;
-      });
+      this.wallet
+        .signTransaction(tx)
+        .once('transactionHash', hash => {
+          this.$store
+            .dispatch('addNotification', [
+              noticeTypes.TRANSACTION_HASH,
+              this.fromAddress,
+              this.lastRaw,
+              hash
+            ])
+            .then(() => {
+              this.showSuccessModal('Transaction sent!', 'Okay');
+            });
+        })
+        .then(receipt => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_RECEIPT,
+            this.fromAddress,
+            this.lastRaw,
+            receipt
+          ]);
+        });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'
@@ -247,13 +232,17 @@ export default {
         this.signCallback = signCallback;
 
         this.confirmationCollectionModalOpen();
-
-        for (let i = 0; i < tx.length; i++) {
-          const _signedTx = await this.wallet.signTransaction(tx[i]);
-          signed.push(_signedTx);
+        if (this.wallet.identifier !== WEB3_WALLET) {
+          for (let i = 0; i < tx.length; i++) {
+            const _signedTx = await this.wallet.signTransaction(tx[i]);
+            signed.push(_signedTx);
+          }
+          this.signedArray = signed;
+        } else {
+          this.signedArray = this.unSignedArray.map(_tx => {
+            return { tx: _tx, rawTransaction: _tx };
+          });
         }
-
-        this.signedArray = signed;
       }
     );
 
@@ -309,14 +298,14 @@ export default {
     },
     parseRawTx(tx) {
       this.raw = tx;
-      this.nonce = +tx.nonce;
+      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toNumber();
       this.data = tx.data;
-      this.gasLimit = +tx.gas;
+      this.gasLimit = new BigNumber(tx.gas).toNumber();
       this.toAddress = tx.to;
-      this.amount = +tx.value;
+      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toNumber();
       this.transactionFee = Number(
         unit.fromWei(
-          new BigNumber(tx.gasPrice).times(tx.gas).toString(),
+          new BigNumber(tx.gas).times(tx.gasPrice).toString(),
           'ether'
         )
       );
@@ -324,6 +313,7 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
       }
+      this.lastRaw = tx;
     },
     messageReturn() {
       this.dismissed = false;
@@ -339,71 +329,67 @@ export default {
     async doBatchTransactions() {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
-      const promises = this.signedArray.map(tx => {
-        const promiEvent = new Web3PromiEvent();
-        try {
-          const _tx = tx.tx;
-          const req = web3.eth.sendSignedTransaction.request(
-            tx.rawTransaction,
-            (err, data) => {
-              // was falling through on success
-              if (err !== null) {
-                promiEvent.eventEmitter.emit('error', err);
-                promiEvent.reject(err);
-                this.$store.dispatch('addNotification', [
-                  noticeTypes.TRANSACTION_ERROR,
-                  this.fromAddress,
-                  this.unSignedArray.find(
-                    entry => +_tx.nonce === +entry.nonce
-                  ) || _tx,
-                  err
-                ]);
-                this.showErrorModal('Transaction Error!', 'Return');
-              }
-
-              // was falling through on error
-              if (err === null) {
-                promiEvent.eventEmitter.emit('transactionHash', data);
-                this.$store
-                  .dispatch('addNotification', [
-                    noticeTypes.TRANSACTION_HASH,
-                    this.fromAddress,
-                    this.unSignedArray.find(
-                      entry => +_tx.nonce === +entry.nonce
-                    ),
-                    data
-                  ])
-                  .then(() => {
-                    this.showSuccessModal('Transaction sent!', 'Okay');
-                  });
-
-                const pollReceipt = setInterval(() => {
-                  if (data === undefined || data === null)
-                    clearInterval(pollReceipt);
-                  web3.eth.getTransactionReceipt(data).then(res => {
-                    if (res !== null) {
-                      promiEvent.eventEmitter.emit('receipt', res);
-                      promiEvent.resolve(res);
-                      this.$store.dispatch('addNotification', [
-                        noticeTypes.TRANSACTION_RECEIPT,
-                        this.fromAddress,
-                        this.unSignedArray.find(
-                          entry => +_tx.nonce === +entry.nonce
-                        ),
-                        res
-                      ]);
-                      clearInterval(pollReceipt);
-                    }
-                  });
-                }, 500);
-              }
-            }
-          );
-          batch.add(req);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
+      const _method =
+        this.wallet.identifier === WEB3_WALLET
+          ? 'sendTransaction'
+          : 'sendSignedTransaction';
+      const _arr = this.signedArray;
+      const promises = _arr.map(tx => {
+        const promiEvent = new Web3PromiEvent(false);
+        const _tx = tx.tx;
+        _tx.from = this.wallet.getAddressString();
+        const _rawTx = tx.rawTransaction;
+        const req = web3.eth[_method].request(_rawTx, (err, data) => {
+          if (err !== null) {
+            promiEvent.eventEmitter.emit('error', err);
+            promiEvent.reject(err);
+          }
+          if (err === null) {
+            promiEvent.eventEmitter.emit('transactionHash', data);
+          }
+        });
+        promiEvent.eventEmitter.on('error', err => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_ERROR,
+            _tx.from,
+            this.unSignedArray.find(entry =>
+              new BigNumber(_tx.nonce).eq(entry.nonce)
+            ) || _tx,
+            err
+          ]);
+          this.showErrorModal('Transaction Error!', 'Return');
+        });
+        promiEvent.eventEmitter.once('transactionHash', hash => {
+          this.$store
+            .dispatch('addNotification', [
+              noticeTypes.TRANSACTION_HASH,
+              _tx.from,
+              this.unSignedArray.find(entry =>
+                new BigNumber(_tx.nonce).eq(entry.nonce)
+              ),
+              hash
+            ])
+            .then(() => {
+              web3.eth.sendTransaction.method._confirmTransaction(
+                promiEvent,
+                hash,
+                req
+              );
+              this.showSuccessModal('Transaction sent!', 'Okay');
+            });
+        });
+        promiEvent.eventEmitter.once('receipt', receipt => {
+          promiEvent.resolve(receipt);
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_RECEIPT,
+            _tx.from,
+            this.unSignedArray.find(entry =>
+              new BigNumber(_tx.nonce).eq(entry.nonce)
+            ),
+            receipt
+          ]);
+        });
+        batch.add(req);
         return promiEvent.eventEmitter;
       });
 
@@ -434,15 +420,12 @@ export default {
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = 0;
-      this.selectedCurrency = { symbol: 'ETH', name: 'Ethereum' };
       this.raw = {};
       this.signedTx = '';
       this.messageToSign = '';
       this.signedMessage = '';
       this.messageToSign = '';
       this.signedArray = [];
-      this.web3WalletHash = '';
-      this.web3WalletRes = '';
       this.txBatch = null;
       this.sending = false;
       this.signCallback = {};
@@ -450,5 +433,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

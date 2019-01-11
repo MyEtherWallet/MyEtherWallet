@@ -14,7 +14,7 @@
   "byMnemonicRandom": "随机",
   "byMnemonicWriteDown": "写下助记短语键",
   "byMnemonicAlreadyWritten": "I Wrote Down My Mnemonic Phrase",
-  "byJsonFile": "By JSON File",
+  "byJsonFile": "By Keystore File",
   "byJsonFileSaveKeystore": "保存我的密钥库文档",
   "byJsonFileDontLoseTitle": "不要丢失",
   "byJsonFileDontLoseDesc": "Be careful, it can not be recovered if you lose it.",

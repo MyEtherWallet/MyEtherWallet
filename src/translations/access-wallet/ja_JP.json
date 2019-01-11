@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "ウォレットにアクセスできません! Metamask 拡張機能によってあなたの財布のロックを解除してください。",
   "metaMaskModalDesc": "MyEtherWallethへの接続には安全なコネクション(SSL/HTTPS) を使用してください",
   "software": "ソフトウェア",
-  "softwareDesc": "JSONファイル，秘密鍵，暗号化フレーズ",
+  "softwareDesc": "Keystoreファイル，秘密鍵，暗号化フレーズ",
   "notRecommended": "非推奨",
   "unlock": "ウォレットをアンロックする。",
   "installMetamask": "MetaMaskをインストール",

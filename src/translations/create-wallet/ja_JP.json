@@ -14,7 +14,7 @@
   "byMnemonicRandom": "ランダム",
   "byMnemonicWriteDown": "暗号化フレーズを書き留めてください",
   "byMnemonicAlreadyWritten": "私の記憶の言葉を書き留めた",
-  "byJsonFile": "JSONファイル",
+  "byJsonFile": "Keystoreファイル",
   "byJsonFileSaveKeystore": "キーストアファイルを保存",
   "byJsonFileDontLoseTitle": "なくさないでください",
   "byJsonFileDontLoseDesc": "なくすと復元できないので注意してください",

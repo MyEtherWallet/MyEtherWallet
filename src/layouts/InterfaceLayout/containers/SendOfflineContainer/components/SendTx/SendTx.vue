@@ -90,7 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ web3: 'web3' })
+    ...mapGetters({ web3: 'web3', wallet: 'wallet' })
   },
   watch: {
     rawTx(newVal) {

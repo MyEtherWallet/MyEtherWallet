@@ -1,10 +1,12 @@
-### Release v5.0.0.alpha.5
+### Release v5.0.0-beta.0
 
 ### Bug
 
+- Fix slide on mobile, fix network default, json -> keystore instance [#410](https://github.com/MyEtherWallet/MyEtherWallet/pull/410)
 - Fix New wallet, Access buttons [#326](https://github.com/MyEtherWallet/MyEtherWallet/pull/326)
 - Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
 - Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
+- Fix small bugs [#383](https://github.com/MyEtherWallet/MyEtherWallet/pull/383)
 - Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
 - Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
 - Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
@@ -40,7 +42,7 @@
 
 ### Devop
 
-- Refactors, validations, and fixes: #362, #359, #366, #369, #369, #367, #361, #344, #341, #375, #377, #364, #347, #346, #380, #356, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
+- Refactors, validations, and fixes: #311, #362, #389, #359, #366, #369, #368, #367, #370, #361, #344, #341, #375, #377, #364, #347, #346, #380, #394, #388, #391, #392, #382, #393, #399, #398, #376, #356, #401, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
 - Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
 - Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
 - Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)

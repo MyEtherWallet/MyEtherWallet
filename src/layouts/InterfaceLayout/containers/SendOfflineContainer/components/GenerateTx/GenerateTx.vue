@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="send-form">
+      <div class="send-form nopadding">
         <div class="title-container">
           <div class="title">
             <div class="title-helper">
@@ -193,11 +193,11 @@ export default {
     return {
       toAmt: '0',
       address: '',
-      toData: '',
+      toData: '0x',
       localGas: this.gasLimit,
       selectedCoinType: {},
       raw: {},
-      signed: '',
+      signed: '{}',
       locNonce: this.nonce
     };
   },
@@ -227,11 +227,8 @@ export default {
       this.createDataHex(newVal, null, null);
     },
     address(newVal) {
-      if (this.web3.utils.isAddress(newVal)) {
-        this.validAddress = true;
+      if (this.validAddress) {
         this.createDataHex(null, newVal, null);
-      } else {
-        this.validAddress = false;
       }
     },
     selectedCoinType(newVal) {
@@ -240,7 +237,13 @@ export default {
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
-      this.toAmt = new BigNumber(e.target.value).decimalPlaces(18).toFixed();
+      const decimals =
+        this.selectedCurrency.symbol === this.network.type.name
+          ? 18
+          : this.selectedCurrency.decimals;
+      this.toAmt = new BigNumber(e.target.value)
+        .decimalPlaces(decimals)
+        .toFixed();
       e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
@@ -272,7 +275,7 @@ export default {
           type: 'function'
         }
       ];
-      if (locCurrency.symbol !== 'ETH' && locAddress !== '') {
+      if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
         const convertedAmount = new BigNumber(locVal).exponentiatedBy(
@@ -293,21 +296,21 @@ export default {
         from: this.wallet.getAddressString(),
         gas: this.localGas,
         value:
-          this.selectedCoinType.symbol !== 'ETH'
+          this.selectedCoinType.symbol !== this.network.type.name
             ? 0
             : unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
         nonce: this.locNonce,
         gasPrice: unit.toWei(this.gasPrice, 'gwei'),
         to:
-          this.selectedCoinType.symbol !== 'ETH'
+          this.selectedCoinType.symbol !== this.network.type.name
             ? this.selectedCoinType.address
             : this.address,
         chainId: this.network.type.chainID,
         generateOnly: true
       };
       this.raw = raw;
-      const signed = await this.web3.eth.signTransaction(this.raw);
+      const signed = await this.wallet.signTransaction(this.raw);
       this.signed = JSON.stringify(signed);
       this.$emit('createdRawTx', this.signed);
       this.$refs.signedTxModal.$refs.signedTx.show();

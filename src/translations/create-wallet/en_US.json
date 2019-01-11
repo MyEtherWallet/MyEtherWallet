@@ -14,7 +14,7 @@
   "byMnemonicRandom": "Random",
   "byMnemonicWriteDown": "Write Down Mnemonic Phrase Key",
   "byMnemonicAlreadyWritten": "I Wrote Down My Mnemonic Phrase",
-  "byJsonFile": "By JSON File",
+  "byJsonFile": "By Keystore File",
   "byJsonFileSaveKeystore": "Save My Keystore File",
   "byJsonFileDontLoseTitle": "Don't Lose It",
   "byJsonFileDontLoseDesc": "Be careful, it can not be recovered if you lose it.",

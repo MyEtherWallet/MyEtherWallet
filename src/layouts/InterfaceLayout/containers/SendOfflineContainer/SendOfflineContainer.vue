@@ -99,6 +99,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped file="SendOfflineContainer.scss">
 @import 'SendOfflineContainer.scss';
 </style>

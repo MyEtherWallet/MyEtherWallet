@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .button-block {
+  user-select: none;
   background-color: $background-color-white;
   border-radius: 5px;
   cursor: pointer;
@@ -8,6 +9,7 @@
   position: relative;
   top: 0;
   transition: all 0.3s ease;
+  border: 0;
 
   .button-image {
     font-size: 90px;
@@ -82,7 +84,7 @@
 }
 
 @media all and (max-width: $tablet-width) {
-  .button-metamask {
+  .hide {
     display: none;
   }
 }

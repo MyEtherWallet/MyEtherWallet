@@ -1,7 +1,8 @@
 module.exports = {
   collectCoverage: process.env.NODE_ENV === 'production'? true:false,
   "globals": {
-    "WITH_NETWORK": false
+    "WITH_NETWORK": false,
+    "VERSION": "test"
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',

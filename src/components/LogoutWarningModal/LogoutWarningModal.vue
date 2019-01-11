@@ -3,12 +3,12 @@
     <div
       v-if="false"
       class="dev-only-button"
-      @click="$refs.logoutwarning.show()"
+      @click="$refs.logoutWarningModal.show()"
     >
       Open Logout Warning Modal
     </div>
     <b-modal
-      ref="logoutwarning"
+      ref="logoutWarningModal"
       hide-footer
       hide-header
       centered
@@ -52,11 +52,11 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('clearWallet');
-      this.$refs.logout.hide();
+      this.$refs.logoutWarningModal.hide();
       this.$router.push('/');
     },
     cancel() {
-      this.$refs.logoutwarning.hide();
+      this.$refs.logoutWarningModal.hide();
     }
   }
 };
