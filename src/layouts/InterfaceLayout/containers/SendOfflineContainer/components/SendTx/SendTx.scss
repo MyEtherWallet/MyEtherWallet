@@ -26,10 +26,6 @@
 }
 
 .wrap {
-  padding: 40px 60px;
-  @media all and (max-width: $mobile-width) {
-    padding: 30px 10px;
-  }
   .send-form {
     .title-container {
       align-items: flex-end;
@@ -73,13 +69,19 @@
   } // .send-form
 
   .submit-button-container {
-    padding: 60px 0 0 0;
+    margin-top: 60px;
     text-align: center;
-
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      //width: 300px;
+
+      // Mobile
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     p {
