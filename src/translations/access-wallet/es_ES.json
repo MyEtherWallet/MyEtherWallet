@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "¡No puede acceder a la cartera! Por favor abra su cartera a través de la extensión Metamask",
   "metaMaskModalDesc": "Utiliza MyEtherWallet en una conexión segura (SSL/HTTPS) para conectarte.",
   "software": "Software",
-  "softwareDesc": "Archivo JSON, clave privada, frase mnemotécnica",
+  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "No recomendado",
   "unlock": "Desbloquear cartera",
   "installMetamask": "Instalar MetaMask",
