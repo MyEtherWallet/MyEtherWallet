@@ -45,7 +45,6 @@ textarea {
     }
 
     .amount-to-address {
-
       @media all and (max-width: $mobile-collepse-width) {
         display: block;
       }
@@ -67,7 +66,7 @@ textarea {
             margin-bottom: 30px;
           }
         }
-        
+
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
