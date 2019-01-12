@@ -45,6 +45,16 @@ const parseStatus = status => {
   // return new BigNumber(status).toString(10);
 };
 
+// const formatSwapSpecial = details => {
+//   if (
+//     details.provider === 'bity' &&
+//     fiatCurrencies.includes(details.toCurrency)
+//   ) {
+//     return { phoneToken: details.phoneToken };
+//   }
+//   return {};
+// };
+
 const updateStatusBasedOnReciept = status => {
   return parseStatus(status)
     ? notificationStatuses.COMPLETE
@@ -141,16 +151,6 @@ const formatTransactionErrorUpdate = (entry, val) => {
   return entry;
 };
 
-const formatSwapSpecial = details => {
-  if (
-    details.provider === 'bity' &&
-    fiatCurrencies.includes(details.toCurrency)
-  ) {
-    return { phoneToken: details.phoneToken };
-  }
-  return {};
-};
-
 const formatSwap = (val, network) => {
   const isEthereum = val[swapIndexes.label] !== type.SWAP_ORDER;
   const initialState = isEthereum
@@ -192,7 +192,7 @@ const formatSwap = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
-      special: formatSwapSpecial(val[swapIndexes.details]),
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
@@ -267,7 +267,7 @@ const formatSwapError = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
-      special: formatSwapSpecial(val[swapIndexes.details]),
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
