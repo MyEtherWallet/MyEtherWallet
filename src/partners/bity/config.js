@@ -30,6 +30,7 @@ const bityStatuses = {
   RCVE: 'RCVE',
   CONF: 'CONF',
   FILL: 'FILL',
+  EXEC: 'EXEC',
   CANC: 'CANC'
 };
 

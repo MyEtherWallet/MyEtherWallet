@@ -27,7 +27,7 @@
       </div>
       <div ref="networkList" class="network-list">
         <div
-          v-for="(key, index) in Object.keys(Networks)"
+          v-for="(key, index) in Object.keys(reorderedNetworks)"
           :key="key + index"
           class="content-block"
         >
@@ -262,6 +262,7 @@ import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
+import Misc from '@/helpers/misc';
 
 import { mapGetters } from 'vuex';
 
@@ -288,7 +289,11 @@ export default {
     ...mapGetters({
       network: 'network',
       Networks: 'Networks'
-    })
+    }),
+    reorderedNetworks() {
+      const networks = Misc.reorderNetworks();
+      return networks;
+    }
   },
   watch: {
     selectedNetwork(newVal) {
