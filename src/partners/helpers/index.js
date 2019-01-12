@@ -4,6 +4,7 @@ import {
   dynamicSortMultiple
 } from './sortAndIdentify';
 import * as utils from './utils';
+import qrcodeBuilder from './qrCodeBuilder';
 
 const isValidEntry = utils.isValidEntry;
 const checkInvalidOrMissingValue = utils.checkInvalidOrMissingValue;
@@ -14,5 +15,6 @@ export {
   bestProviderForQuantity,
   isValidEntry,
   checkInvalidOrMissingValue,
-  dynamicSortMultiple
+  dynamicSortMultiple,
+  qrcodeBuilder
 };
