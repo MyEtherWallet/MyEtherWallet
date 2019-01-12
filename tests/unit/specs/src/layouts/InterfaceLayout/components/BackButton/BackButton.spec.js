@@ -8,39 +8,39 @@ import {
 
 
 describe('BackButton.vue', () => {
-    let localVue, i18n, wrapper, store;
-    let spy = sinon.stub()
-    const mockRoute = {
-      go: spy
-    };
+  let localVue, i18n, wrapper, store;
+  let spy = sinon.stub()
+  const mockRoute = {
+    go: spy
+  };
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(BackButton, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          mocks: {
-            $router: mockRoute,
-          }
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(BackButton, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      mocks: {
+        $router: mockRoute,
+      }
     });
+  });
 
-    it('should render correct content', () => {
-       
-    });
+  it('should render correct content', () => {
+
+  });
 
   describe('BackButton.vue Methods', () => {
     it('should go back when button clicked', () => {
-        wrapper.find('.back-container').trigger('click')
-        expect(spy.calledWith(-1)).toBe(true)
+      wrapper.find('.back-container').trigger('click')
+      expect(spy.calledWith(-1)).toBe(true)
     });
   });
 });

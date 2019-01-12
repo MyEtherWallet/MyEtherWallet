@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
 
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 
@@ -20,22 +20,20 @@ describe('TeamLayout.vue', () => {
 
     beforeEach(() => {
         wrapper = shallowMount(TeamLayout, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true
+            localVue,
+            i18n,
+            store,
+            attachToDocument: true
         });
     });
 
     it('should render correct team members', () => {
-       const memberElements = wrapper.vm.$el.getElementsByClassName('member')
-       for(var i=0; i<memberElements.length; i++) {
-        const memberElement = memberElements[i];
-        
-        const member = wrapper.vm.$data.members[i]
-        expect(member.name).toEqual(memberElement.querySelector('h4').textContent.trim())
-        expect(member.position).toEqual(memberElement.querySelector('h6').textContent.trim())
-        // expect(member.img).toEqual(memberElement.querySelector('img').getAttribute('src'))
-       }
+        const memberElements = wrapper.vm.$el.getElementsByClassName('member')
+        for (var i = 0; i < memberElements.length; i++) {
+            const memberElement = memberElements[i];
+            const member = wrapper.vm.$data.members[i]
+            expect(member.name).toEqual(memberElement.querySelector('h4').textContent.trim());
+            expect(member.position).toEqual(memberElement.querySelector('h6').textContent.trim());
+        }
     });
 });

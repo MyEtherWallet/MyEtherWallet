@@ -10,28 +10,28 @@ import {
 const title = 'InterfaceContainerTitle title';
 
 describe('InterfaceContainerTitle.vue', () => {
-	 let localVue, i18n, wrapper, store;
+  let localVue, i18n, wrapper, store;
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
+
+  beforeEach(() => {
+    wrapper = shallowMount(InterfaceContainerTitle, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      propsData: { title }
     });
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(InterfaceContainerTitle, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: { title }
-        });
-    });
-
-  it('should render correct contents', () => {
+  it('should render correct title', () => {
     expect(wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()).toEqual(title);
   });
 
-  describe('InterfaceContainerTitle.vue Methods', () => {});
+  describe('InterfaceContainerTitle.vue Methods', () => { });
 });

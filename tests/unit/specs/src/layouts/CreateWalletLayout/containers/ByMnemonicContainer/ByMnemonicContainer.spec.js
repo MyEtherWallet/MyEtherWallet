@@ -11,47 +11,47 @@ import {
 } from '@@/helpers';
 
 const RouterLinkStub = {
-  name:'router-link',
-  template:'<div class="routerlink"><slot> </slot></div>',
-  props:['to']  
+  name: 'router-link',
+  template: '<div class="routerlink"><slot> </slot></div>',
+  props: ['to']
 }
 
 describe('ByMnemonicContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-    beforeAll(() => {
-            const baseSetup = Tooling.createLocalVueInstance();
-            localVue = baseSetup.localVue;
-            i18n = baseSetup.i18n;
-            store = baseSetup.store;
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(ByMnemonicContainer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {
-              'finish-modal': FinishModal,
-              'verification-modal': VerificationModal,
-              'input-footer': CreateWalletInputFooter,
-              'popover':PopOver,
-              'router-link':RouterLinkStub
-          }
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(ByMnemonicContainer, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      stubs: {
+        'finish-modal': FinishModal,
+        'verification-modal': VerificationModal,
+        'input-footer': CreateWalletInputFooter,
+        'popover': PopOver,
+        'router-link': RouterLinkStub
+      }
     });
+  });
 
   describe('ByMnemonicContainer.vue Methods', () => {
     it('should render correct mnemonicValueRefresh method', () => {
-        wrapper.setData({mnemonicValues:[]})
-        wrapper.find('.random-button').trigger('click');
-        expect(wrapper.vm.$data.mnemonicValues.length).toBeGreaterThan(0);
+      wrapper.setData({ mnemonicValues: [] })
+      wrapper.find('.random-button').trigger('click');
+      expect(wrapper.vm.$data.mnemonicValues.length).toBeGreaterThan(0);
     });
 
     it('should refresh mnemonicValues when button clicked', () => {
-        wrapper.setData({mnemonicValues:[]})
-        wrapper.vm.mnemonicValueRefresh();
-        expect(wrapper.vm.$data.mnemonicValues.length).toBeGreaterThan(0);
+      wrapper.setData({ mnemonicValues: [] })
+      wrapper.vm.mnemonicValueRefresh();
+      expect(wrapper.vm.$data.mnemonicValues.length).toBeGreaterThan(0);
     });
 
     it('should render correct mnemonicValueBitSizeChange method', () => {

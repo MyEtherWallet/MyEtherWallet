@@ -28,7 +28,7 @@ describe('MnemonicModal.vue', () => {
         i18n,
         attachToDocument: true,
         propsData: {
-          mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
+          mnemonicPhrasePasswordModalOpen: function (MnemonicPhrase) {
             expect(MnemonicPhrase).toEqual(longMnemonic);
           }
         }
@@ -96,7 +96,7 @@ describe('MnemonicModal.vue', () => {
         i18n,
         attachToDocument: true,
         propsData: {
-          mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
+          mnemonicPhrasePasswordModalOpen: function (MnemonicPhrase) {
             expect(MnemonicPhrase).toEqual(longMnemonic);
           }
         }
@@ -110,7 +110,7 @@ describe('MnemonicModal.vue', () => {
 
     it('should populate and submit a 12 word mnemonic phrase', (done) => {
       wrapper.setProps({
-        mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
+        mnemonicPhrasePasswordModalOpen: function (MnemonicPhrase) {
           // expect(MnemonicPhrase).toEqual(shortMnemonic);
           done();
         }
@@ -118,7 +118,7 @@ describe('MnemonicModal.vue', () => {
       // wrapper.setData({ mnemonicSize: 12, mnemonic24: false, mnemonicPhrase: [].fill(' ', 0, 11) });
       const phrase = shortMnemonic.split(' ');
       for (let i = 0; i < 12; i++) {
-         const textInput = wrapper.findAll('.phrases input').at(i);
+        const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(12);
@@ -142,7 +142,7 @@ describe('MnemonicModal.vue', () => {
     // Indicates the array length change mechanism is functioning properly
     it('should populate a 24 word mnemonic phrase and truncate it to 12 words', (done) => {
       wrapper.setProps({
-        mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
+        mnemonicPhrasePasswordModalOpen: function (MnemonicPhrase) {
           // expect(MnemonicPhrase).toEqual(shortMnemonic);
           done();
         }
@@ -151,7 +151,7 @@ describe('MnemonicModal.vue', () => {
       const doubleLengthPhrase = shortMnemonic + ' ' + shortMnemonic;
       const phrase = doubleLengthPhrase.split(' ');
       for (let i = 0; i < 24; i++) {
-         const textInput = wrapper.findAll('.phrases input').at(i);
+        const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(24);

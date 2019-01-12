@@ -8,7 +8,7 @@ import url from 'url';
 import Web3 from 'web3';
 
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 
@@ -33,72 +33,72 @@ describe('RegisterDomain.vue', () => {
         localVue = baseSetup.localVue;
         i18n = baseSetup.i18n;
         store = baseSetup.store;
-        Vue.config.warnHandler = ()=>{};
-        Vue.config.errorHandler = ()=>{};
+        Vue.config.warnHandler = () => { };
+        Vue.config.errorHandler = () => { };
 
         const network = nodeList['ETH'][3];
         const hostUrl = url.parse(network.url);
-        
+
         const newWeb3 = new Web3(
-          `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+            `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
             hostUrl.pathname
-          }`
+            }`
         );
 
         let getters = {
-          Networks: () =>  {
-              return nodeList
+            Networks: () => {
+                return nodeList
             },
-          network: () => {
-            return network
-          },
-          web3: () => {
-            return newWeb3
-          }, 
-          ens: () => {
+            network: () => {
+                return network
+            },
+            web3: () => {
+                return newWeb3
+            },
+            ens: () => {
 
-          }
+            }
         };
 
         store = new Vuex.Store({
-          getters
+            getters
         });
     });
 
     beforeEach(() => {
         wrapper = shallowMount(RegisterDomain, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {
-            'back-button': BackButton,
-          }
+            localVue,
+            i18n,
+            store,
+            attachToDocument: true,
+            stubs: {
+                'back-button': BackButton,
+            }
         });
     });
 
     it('should render correct domain name data', () => {
-        wrapper.setData({domainName});
+        wrapper.setData({ domainName });
         expect(wrapper.find('router-view').attributes('domain-name')).toEqual(domainName);
     });
 
     it('should render correct bidAmount data', () => {
-        wrapper.setData({bidAmount});
+        wrapper.setData({ bidAmount });
         expect(wrapper.find('router-view').attributes('bid-amount')).toEqual(String(bidAmount));
     });
 
     it('should render correct bidMask data', () => {
-        wrapper.setData({bidMask});
+        wrapper.setData({ bidMask });
         expect(wrapper.find('router-view').attributes('bid-mask')).toEqual(String(bidMask));
     });
 
     it('should render correct nameHash data', () => {
-        wrapper.setData({nameHash});
+        wrapper.setData({ nameHash });
         expect(wrapper.find('router-view').attributes('name-hash')).toEqual(nameHash);
     });
 
     it('should render correct labelHash data', () => {
-        wrapper.setData({labelHash});
+        wrapper.setData({ labelHash });
         expect(wrapper.find('router-view').attributes('label-hash')).toEqual(labelHash);
     });
 
@@ -128,17 +128,17 @@ describe('RegisterDomain.vue', () => {
     });
 
     it('should render correct highestBidder data', () => {
-      wrapper.setData({ highestBid });
-      expect(wrapper.find('router-view').attributes('highest-bidder')).toEqual(highestBid);
+        wrapper.setData({ highestBid });
+        expect(wrapper.find('router-view').attributes('highest-bidder')).toEqual(highestBid);
     });
 
     it('should render correct contractInitiated data', () => {
-      wrapper.setData({ contractInitiated });
-      expect(wrapper.find('router-view').attributes('contract-initiated')).toEqual(String(contractInitiated));
+        wrapper.setData({ contractInitiated });
+        expect(wrapper.find('router-view').attributes('contract-initiated')).toEqual(String(contractInitiated));
     });
 
     it('should render correct step data', () => {
-      wrapper.setData({ step });
-      expect(wrapper.find('router-view').attributes('step')).toEqual(String(step));
+        wrapper.setData({ step });
+        expect(wrapper.find('router-view').attributes('step')).toEqual(String(step));
     });
 });

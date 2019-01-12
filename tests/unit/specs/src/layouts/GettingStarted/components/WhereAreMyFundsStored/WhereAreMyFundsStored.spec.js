@@ -13,20 +13,20 @@ describe('WhereAreMyFundsStored.vue', () => {
   const progressBarValue = 'Congratulations progressBarValue';
 
   beforeAll(() => {
-      const baseSetup = Tooling.createLocalVueInstance();
-      localVue = baseSetup.localVue;
-      i18n = baseSetup.i18n;
-      store = baseSetup.store;
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
   });
 
   beforeEach(() => {
-      wrapper = shallowMount(WhereAreMyFundsStored, {
-        localVue,
-        i18n,
-        store,
-        attachToDocument: true,
-        propsData: { progressBarValue }
-      });
+    wrapper = shallowMount(WhereAreMyFundsStored, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      propsData: { progressBarValue }
+    });
   });
 
   it('should render correct contents', () => {
@@ -40,6 +40,6 @@ describe('WhereAreMyFundsStored.vue', () => {
     dropdownOpen.trigger('click');
     expect(wrapper.vm.$el.querySelector('.block-progressbar__sliding-switch-expender').getElementsByClassName('content').length).toEqual(0);
   });
-  describe('WhereAreMyFundsStored.vue Methods', () => {});
+  describe('WhereAreMyFundsStored.vue Methods', () => { });
 });
 
