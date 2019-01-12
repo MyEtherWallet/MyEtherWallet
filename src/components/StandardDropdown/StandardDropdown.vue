@@ -1,17 +1,23 @@
 <template>
   <div class="standard-dropdown">
     <div class="wrap">
-      <div class="dropdown-button" @click="dropdownOpen = !dropdownOpen">
+      <div class="dropdown-button" @click="dropdownOpen">
         <p>{{ chosenValue }}</p>
         <i aria-hidden="true" class="fa fa-angle-down"></i>
       </div>
-      <div v-if="dropdownOpen" class="dropdown-list">
-        <ul>
-          <li value="CA" @click="listClicked($event)">CA</li>
-          <li>CA</li>
-          <li>CA</li>
-          <li>CA</li>
-          <li>CA</li>
+      <div v-if="open">
+        <div class="dropdown-search-container">
+          <input v-model="search" :placeholder="$t('interface.search')" />
+          <i class="fa fa-search" />
+        </div>
+        <ul class="dropdown-list">
+          <li
+            v-for="(entry, idx) in localOptions"
+            :key="idx"
+            @click="setSelected(entry)"
+          >
+            {{ displayName(entry) }}
+          </li>
         </ul>
       </div>
     </div>
@@ -22,22 +28,61 @@
 export default {
   props: {
     options: {
-      type: Object,
+      type: Array,
       default: function() {
-        return {};
+        return [];
       }
+    },
+    optionDisplayKey: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       chosenValue: 'CA',
-      dropdownOpen: false
+      open: false,
+      search: '',
+      localOptions: this.options
     };
   },
   computed: {},
+  watch: {
+    search(newVal) {
+      if (newVal !== '') {
+        this.localOptions = this.options.filter(curr => {
+          if (
+            this.displayName(curr)
+              .toLowerCase()
+              .includes(newVal.toLowerCase()) ||
+            this.displayName(curr)
+              .toLowerCase()
+              .includes(newVal.toLowerCase())
+          ) {
+            return curr;
+          }
+        });
+      } else {
+        this.localOptions = [];
+        this.options.forEach(curr => this.localOptions.push(curr));
+      }
+    }
+  },
   methods: {
-    listClicked(e) {
-      console.log(e);
+    dropdownOpen() {
+      this.open = !this.open;
+      this.$emit('opened', this.open);
+    },
+    setSelected(val) {
+      this.chosenValue = this.displayName(val);
+      this.$emit('selection', val);
+      this.dropdownOpen();
+    },
+    displayName(val) {
+      if (this.optionDisplayKey !== '') {
+        return val[this.optionDisplayKey];
+      }
+      return val;
     }
   }
 };

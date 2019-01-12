@@ -119,11 +119,19 @@
                     class="zip"
                     @changedValue="setZip"
                   />
-                  <standard-input
-                    :options="inputCountry"
+                  <standard-dropdown
+                    :options="countryOptions"
+                    :option-display-key="'1'"
                     class="country"
                     @changedValue="setCountry"
+                    @opened="roomForDropDown"
                   />
+                  <div v-if="addSpace" class="extraSpace"></div>
+                  <!--<standard-input-->
+                  <!--:options="inputCountry"-->
+                  <!--class="country"-->
+                  <!--@changedValue="setCountry"-->
+                  <!--/>-->
                 </div>
               </li>
             </ul>
@@ -182,6 +190,8 @@
 
 <script>
 import store from 'store';
+import { getNames, registerLocale } from 'i18n-iso-countries';
+import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import AccordionMenu1 from '@/components/AccordionMenu1';
 import StandardInput from '@/components/StandardInput';
@@ -200,6 +210,8 @@ import {
   // MIN_SWAP_AMOUNT,
   // ERC20
 } from '@/partners';
+
+registerLocale(names);
 
 export default {
   components: {
@@ -223,6 +235,8 @@ export default {
   },
   data() {
     return {
+      addSpace: false,
+      countryList: Object.entries(getNames('en')),
       status: {
         phone: false,
         verify: false,
@@ -332,7 +346,11 @@ export default {
       }
     };
   },
-  computed: {},
+  computed: {
+    countryOptions() {
+      return this.countryList;
+    }
+  },
   mounted() {
     this.openMenu();
     const providerConstructor = providerMap.get(this.swapDetails.provider);
@@ -350,6 +368,9 @@ export default {
     }
   },
   methods: {
+    roomForDropDown(val) {
+      this.addSpace = val;
+    },
     updateStage(stage) {
       this.status[stage] = true;
     },
@@ -390,6 +411,8 @@ export default {
       this.orderDetails.owner.state = val;
     },
     setCountry(val) {
+      const code = countries.getAlpha2Code(val, 'en');
+      console.log(code); // todo remove dev item
       this.orderDetails.owner.country = val;
     },
     openMenu(val) {
@@ -461,7 +484,7 @@ export default {
         ...this.swapDetails,
         bypass: true,
         orderDetails: details,
-        phoneToken: this.provider.phoneToken
+        special: { phoneToken: this.provider.phoneToken }
       });
       this.exitToFiatCallback(swapDetails);
     }
