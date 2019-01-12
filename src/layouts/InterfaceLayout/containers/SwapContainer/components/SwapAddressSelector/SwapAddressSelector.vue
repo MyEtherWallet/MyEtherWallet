@@ -2,7 +2,10 @@
   <div class="drop-down-address-selector">
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
-      <button class="title-button prevent-user-select">
+      <button
+        class="title-button prevent-user-select"
+        @click="copyToClipboard($refs.addressInput)"
+      >
         {{ $t('common.copy') }}
       </button>
     </div>
@@ -40,6 +43,7 @@
           >
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
+              <img src="@/assets/images/currency/eth.svg" />
             </div>
             <div class="address-block">
               <p class="address-label">Ethereum</p>
@@ -125,6 +129,10 @@ export default {
     }
   },
   methods: {
+    copyToClipboard(ref) {
+      ref.select();
+      document.execCommand('copy');
+    },
     listedAddressClick(address) {
       this.toAddressCheckMark = true;
       this.dropdownOpen = !this.dropdownOpen;
