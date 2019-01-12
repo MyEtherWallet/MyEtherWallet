@@ -1,5 +1,12 @@
 @import '~@/scss/GlobalVariables';
 
+.dropdown--title {
+  margin-bottom: 13px;
+  padding: 0 8px;
+  display: flex;
+  
+}
+
 .drop-down-address-selector {
   position: relative;
 }
@@ -76,7 +83,8 @@
       cursor: pointer;
       padding: 10px 15px;
       position: relative;
-      display: flex;
+      display: grid;
+      grid-template-columns: 40px 1fr 70px 25px;
       align-items: center;
 
       &:nth-child(odd) {
@@ -88,12 +96,38 @@
       }
 
       .list-blockie {
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
-      .address-note {
-        margin-left: 100px;
-      }
     }
   }
+}
+
+.address-block {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .address-label {
+    line-height: 10px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+}
+
+.listed-address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.address-note {
+  font-size: 10px;
+  font-weight: 700;
+  text-align: right;
+  color: $mew-green;
+}
+
+.good-button {
+  text-align: right;
 }
