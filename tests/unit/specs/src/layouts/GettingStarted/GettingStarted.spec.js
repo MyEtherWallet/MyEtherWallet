@@ -12,61 +12,61 @@ import {
   Tooling
 } from '@@/helpers';
 const RouterLinkStub = {
-  name:'router-link',
-  template:'<div><slot> </slot></div>',
-  props:['to']  
+  name: 'router-link',
+  template: '<div><slot> </slot></div>',
+  props: ['to']
 }
 
 
-describe('GettingStarted.vue', () => { 
+describe('GettingStarted.vue', () => {
   let localVue, i18n, wrapper, store;
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(GettingStarted, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {
-            'router-link':RouterLinkStub,
-            'what-is-mew': WhatIsMyEtherWallet,
-            'where-my-funds-stored': WhereAreMyFundsStored,
-            'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
-            'some-helpful-tips': SomeHelpfulTips,
-            'congratulations': Congratulations
-          }
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(GettingStarted, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      stubs: {
+        'router-link': RouterLinkStub,
+        'what-is-mew': WhatIsMyEtherWallet,
+        'where-my-funds-stored': WhereAreMyFundsStored,
+        'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
+        'some-helpful-tips': SomeHelpfulTips,
+        'congratulations': Congratulations
+      }
     });
+  });
 
-    it('should render correct cwwCurrent data', () => {
-      expect(wrapper.findAll('ul li').at(0).classes().indexOf('active')).toBeGreaterThan(-1);
-      wrapper.setData({cwwCurrent:1});
-      expect(wrapper.findAll('ul li').at(1).classes().indexOf('active')).toBeGreaterThan(-1);
-      wrapper.setData({cwwCurrent:2});
-      expect(wrapper.findAll('ul li').at(2).classes().indexOf('active')).toBeGreaterThan(-1);
-      wrapper.setData({cwwCurrent:3});
-      expect(wrapper.findAll('ul li').at(3).classes().indexOf('active')).toBeGreaterThan(-1);
-      wrapper.setData({cwwCurrent:4});
-      expect(wrapper.findAll('ul li').at(4).classes().indexOf('active')).toBeGreaterThan(-1);
-    });
+  it('should render correct cwwCurrent data', () => {
+    expect(wrapper.findAll('ul li').at(0).classes().indexOf('active')).toBeGreaterThan(-1);
+    wrapper.setData({ cwwCurrent: 1 });
+    expect(wrapper.findAll('ul li').at(1).classes().indexOf('active')).toBeGreaterThan(-1);
+    wrapper.setData({ cwwCurrent: 2 });
+    expect(wrapper.findAll('ul li').at(2).classes().indexOf('active')).toBeGreaterThan(-1);
+    wrapper.setData({ cwwCurrent: 3 });
+    expect(wrapper.findAll('ul li').at(3).classes().indexOf('active')).toBeGreaterThan(-1);
+    wrapper.setData({ cwwCurrent: 4 });
+    expect(wrapper.findAll('ul li').at(4).classes().indexOf('active')).toBeGreaterThan(-1);
+  });
 
-    it('should update cwwCurrent data when mouse wheel down', () => {
-      wrapper.trigger('wheel', {deltaY:100});
-      expect(wrapper.vm.$data.cwwCurrent).toBe(1);
-    });
+  it('should update cwwCurrent data when mouse wheel down', () => {
+    wrapper.trigger('wheel', { deltaY: 100 });
+    expect(wrapper.vm.$data.cwwCurrent).toBe(1);
+  });
 
-     it('should update cwwCurrent data when mouse wheel up', () => {
-      wrapper.setData({cwwCurrent:1});
-      wrapper.trigger('wheel', {deltaY:-100});
-      expect(wrapper.vm.$data.cwwCurrent).toBe(0);
-    });
+  it('should update cwwCurrent data when mouse wheel up', () => {
+    wrapper.setData({ cwwCurrent: 1 });
+    wrapper.trigger('wheel', { deltaY: -100 });
+    expect(wrapper.vm.$data.cwwCurrent).toBe(0);
+  });
 
 
   describe('GettingStarted.vue Methods', () => {
@@ -83,7 +83,7 @@ describe('GettingStarted.vue', () => {
     });
 
     it('should render correct mouseScrollUp method', () => {
-      wrapper.setData({cwwCurrent:1});
+      wrapper.setData({ cwwCurrent: 1 });
       wrapper.vm.mouseScrollUp();
       expect(wrapper.vm.$data.cwwCurrent).toBe(0);
     });

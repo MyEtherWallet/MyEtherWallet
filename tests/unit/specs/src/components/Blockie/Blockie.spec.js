@@ -1,9 +1,8 @@
-import Vue from 'vue';
 import Blockie from '@/components/Blockie';
 import { shallowMount } from '@vue/test-utils';
 
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 
@@ -25,12 +24,12 @@ describe('Blockie.vue', () => {
             store,
             attachToDocument: true,
             propsData: {
-             address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-            }  
+                address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            }
         });
     });
 
-  it('should render correct contents', () => {
+    it('should render correct contents', () => {
 
-  });
+    });
 });

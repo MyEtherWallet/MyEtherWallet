@@ -8,31 +8,31 @@ import {
 } from '@@/helpers';
 
 describe('VerificationModal.vue', () => {
-    let localVue, i18n, wrapper, store;
-    beforeAll(() => {
-            const baseSetup = Tooling.createLocalVueInstance();
-            localVue = baseSetup.localVue;
-            i18n = baseSetup.i18n;
-            store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-        beforeEach(() => {
-            wrapper = shallowMount(VerificationModal, {
-              localVue,
-              i18n,
-              store,
-              attachToDocument: true,
-            });
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(VerificationModal, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+    });
+  });
 
   it('should render correct contents', () => {
     const mnemonicValues = [];
     mnemonicValues.push('values1');
     mnemonicValues.push('values2');
     mnemonicValues.push('values3');
-    wrapper.setProps({mnemonicValues});
+    wrapper.setProps({ mnemonicValues });
     const liElements = wrapper.vm.$el.querySelectorAll('li');
-    for(var i =0 ; i<liElements.length; i++) {
+    for (var i = 0; i < liElements.length; i++) {
       let liElement = liElements[i];
       expect(liElement.querySelector('span').textContent.trim()).toEqual(mnemonicValues[i])
     }
@@ -41,7 +41,7 @@ describe('VerificationModal.vue', () => {
   describe('VerificationModal.vue Methods', () => {
     it('should verify-button', () => {
       const mnemonicDoneModalOpen = sinon.stub();
-      wrapper.setProps({mnemonicDoneModalOpen});
+      wrapper.setProps({ mnemonicDoneModalOpen });
       wrapper.find('.verify-button').trigger('click');
       expect(mnemonicDoneModalOpen.called).toBe(true);
     })

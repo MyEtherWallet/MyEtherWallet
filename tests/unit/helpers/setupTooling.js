@@ -1,11 +1,12 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from "bootstrap-vue";
-import languages from '@/translations';
+// import languages from '@/translations';
 import VueX from 'vuex'
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
+import en_US from '@/translations/en_US';
 
 
 function createLocalVueInstance(){
@@ -23,7 +24,7 @@ function createLocalVueInstance(){
   const i18n = new VueI18n({
     locale: 'en_US',
     fallbackLocale: 'en_US',
-    messages: languages,
+    messages: {en_US: en_US},
     silentTranslationWarn: true
   });
 

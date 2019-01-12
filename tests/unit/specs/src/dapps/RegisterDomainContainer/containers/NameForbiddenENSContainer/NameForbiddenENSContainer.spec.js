@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils'
 import NameForbiddenENSContainer from '@/dapps/RegisterDomain/containers/NameForbiddenENSContainer/NameForbiddenENSContainer.vue';
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 describe('NameForbiddenENSContainer.vue', () => {
@@ -17,11 +17,11 @@ describe('NameForbiddenENSContainer.vue', () => {
 
     beforeEach(() => {
         wrapper = shallowMount(NameForbiddenENSContainer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: {domainName}
+            localVue,
+            i18n,
+            store,
+            attachToDocument: true,
+            propsData: { domainName }
         });
     });
 

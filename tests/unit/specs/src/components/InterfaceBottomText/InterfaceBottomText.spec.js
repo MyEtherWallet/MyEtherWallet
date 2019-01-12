@@ -1,5 +1,4 @@
 
-import Vue from 'vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import { shallowMount } from '@vue/test-utils'
 
@@ -8,31 +7,31 @@ import {
 } from '@@/helpers';
 
 describe('InterfaceBottomText.vue', () => {
-    let localVue, i18n, wrapper, store;
-    const link = 'link'
-    const linkText = 'linkText'
-    const question = 'question'
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
+  const link = 'link'
+  const linkText = 'linkText'
+  const question = 'question'
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(InterfaceBottomText, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: {link,linkText,question}
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(InterfaceBottomText, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      propsData: { link, linkText, question }
     });
+  });
 
   it('should render correct question', () => {
-    expect(wrapper.vm.$el.querySelector('div p').textContent.trim()).toEqual(
-      question + " " + linkText 
-    );
+    var divText = wrapper.vm.$el.querySelector('div p').textContent.trim();
+    expect(divText.indexOf(question)).toBeGreaterThan(-1);
+    expect(divText.indexOf(linkText)).toBeGreaterThan(-1);
   });
 
   it('should render correct linkText', () => {
@@ -47,7 +46,7 @@ describe('InterfaceBottomText.vue', () => {
     );
   });
 
-  describe('InterfaceBottomText.vue Methods', () => {});
+  describe('InterfaceBottomText.vue Methods', () => { });
 
 });
 

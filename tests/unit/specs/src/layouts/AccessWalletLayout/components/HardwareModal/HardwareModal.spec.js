@@ -6,31 +6,31 @@ import {
 } from '@@/helpers';
 
 const RouterLinkStub = {
-  name:'router-link',
-  template:'<div class="routerlink"><slot> </slot></div>',
-  props:['to']  
+  name: 'router-link',
+  template: '<div class="routerlink"><slot> </slot></div>',
+  props: ['to']
 }
 
 
 describe('HardwareModal.vue', () => {
-    let localVue, i18n, wrapper, store;
-  
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
 
-    beforeEach(() => {
-        wrapper = shallowMount(HardwareModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {'router-link':RouterLinkStub }
-        });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
+
+  beforeEach(() => {
+    wrapper = shallowMount(HardwareModal, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      stubs: { 'router-link': RouterLinkStub }
     });
+  });
 
   it('should render correct contents', () => {
     const liElements = wrapper.findAll('li')
@@ -56,5 +56,5 @@ describe('HardwareModal.vue', () => {
     expect(wrapper.vm.$data.mayNotBeAttached).toBe(false)
   });
 
-  describe('HardwareModal.vue Methods', () => {});
+  describe('HardwareModal.vue Methods', () => { });
 });

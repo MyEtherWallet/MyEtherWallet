@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
-import  sinon from 'sinon' 
+import sinon from 'sinon'
 import {
   Mnemonic,
   Tooling
@@ -16,19 +16,19 @@ describe('PrivateKeyModal.vue', () => {
     let localVue, i18n, wrapper, store;
 
     beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+      const baseSetup = Tooling.createLocalVueInstance();
+      localVue = baseSetup.localVue;
+      i18n = baseSetup.i18n;
+      store = baseSetup.store;
     });
 
     beforeEach(() => {
-        wrapper = shallowMount(PrivateKeyModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true
-        });
+      wrapper = shallowMount(PrivateKeyModal, {
+        localVue,
+        i18n,
+        store,
+        attachToDocument: true
+      });
     });
 
     it('should reset the privateKey via input element', () => {
@@ -37,7 +37,7 @@ describe('PrivateKeyModal.vue', () => {
       textInput.setValue(privateKey);
       expect(wrapper.vm.$data.privateKey).toBe(privateKey);
     });
-    
+
   });
 
   describe('PrivateKeyModal.vue Methods', () => {
@@ -48,37 +48,37 @@ describe('PrivateKeyModal.vue', () => {
     };
 
     beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+      const baseSetup = Tooling.createLocalVueInstance();
+      localVue = baseSetup.localVue;
+      i18n = baseSetup.i18n;
+      store = baseSetup.store;
 
-        let actions = {
-          decryptWallet: jest.fn()
-        };
+      let actions = {
+        decryptWallet: jest.fn()
+      };
 
-        store = new Vuex.Store({
-          actions
-        });
+      store = new Vuex.Store({
+        actions
+      });
 
     });
 
     beforeEach(() => {
-        wrapper = shallowMount(PrivateKeyModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          mocks: {
-            $router: mockRoute,
-          }
-        });
+      wrapper = shallowMount(PrivateKeyModal, {
+        localVue,
+        i18n,
+        store,
+        attachToDocument: true,
+        mocks: {
+          $router: mockRoute,
+        }
+      });
     });
 
     it('should reset the privateKey directly', () => {
       const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const button = wrapper.find('button');
-      wrapper.setData({privateKey});
+      wrapper.setData({ privateKey });
       button.trigger('click');
       expect(wrapper.vm.$data.privateKey).toBe('')
     });
@@ -86,7 +86,7 @@ describe('PrivateKeyModal.vue', () => {
     it('should navigate to interface page', () => {
       const privateKey = 'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const button = wrapper.find('button');
-      wrapper.setData({privateKey});
+      wrapper.setData({ privateKey });
       button.trigger('click');
       expect(wrapper.vm.$data.privateKey).toBe('')
       button.trigger('click')

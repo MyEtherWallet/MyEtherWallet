@@ -10,30 +10,30 @@ import {
   Tooling
 } from '@@/helpers';
 
-describe('SignMessageContainer.vue', () => {
-   let localVue, i18n, wrapper, store;
+xdescribe('SignMessageContainer.vue', () => {
+  let localVue, i18n, wrapper, store;
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(SignMessageContainer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {
-            'interface-bottom-text': InterfaceBottomText,
-            'interface-container-title':InterfaceContainerTitle,
-            'popover':PopOver,
-            'success-modal': SuccessModal
-          }
-        });
+  beforeEach(() => {
+    wrapper = shallowMount(SignMessageContainer, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      stubs: {
+        'interface-bottom-text': InterfaceBottomText,
+        'interface-container-title': InterfaceContainerTitle,
+        'popover': PopOver,
+        'success-modal': SuccessModal
+      }
     });
+  });
 
 
   describe('SignMessageContainer.vue Methods', () => {

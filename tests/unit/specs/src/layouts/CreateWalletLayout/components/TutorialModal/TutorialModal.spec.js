@@ -3,13 +3,13 @@ import { shallowMount } from '@vue/test-utils'
 import TutorialModal from '@/layouts/CreateWalletLayout/components/TutorialModal/TutorialModal.vue';
 
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 const RouterLinkStub = {
-  name:'router-link',
-  template:'<div><slot></slot></div>',
-  props:['to']  
+    name: 'router-link',
+    template: '<div><slot></slot></div>',
+    props: ['to']
 }
 
 describe('TutorialModal.vue', () => {
@@ -23,19 +23,19 @@ describe('TutorialModal.vue', () => {
 
     beforeEach(() => {
         wrapper = shallowMount(TutorialModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          stubs: {'router-link':RouterLinkStub }
+            localVue,
+            i18n,
+            store,
+            attachToDocument: true,
+            stubs: { 'router-link': RouterLinkStub }
         });
     });
 
     it('should call skip function when trigger click skip', () => {
         const skip = jest.fn()
-        wrapper.setProps({skip:skip})
+        wrapper.setProps({ skip: skip })
         const spanElement = wrapper.find('.content span');
         spanElement.trigger('click')
-        expect( skip ).toHaveBeenCalled()
+        expect(skip).toHaveBeenCalled()
     });
 });

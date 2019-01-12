@@ -8,25 +8,25 @@ import {
 
 
 describe('HelpCenterLayout.vue', () => {
-    let localVue, i18n, wrapper, store;
+  let localVue, i18n, wrapper, store;
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
+
+  beforeEach(() => {
+    wrapper = shallowMount(HelpCenterLayout, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true
     });
+  });
 
-    beforeEach(() => {
-        wrapper = shallowMount(HelpCenterLayout, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true
-        });
-    });
-
-  it('should render correct contents', () => {    
+  it('should render correct contents', () => {
     var activeSpan = wrapper.findAll('.switcher span').at(1);
     activeSpan.trigger('click');
 
@@ -41,5 +41,5 @@ describe('HelpCenterLayout.vue', () => {
 
   });
 
-  describe('HelpCenterLayout.vue Methods', () => {});
+  describe('HelpCenterLayout.vue Methods', () => { });
 });

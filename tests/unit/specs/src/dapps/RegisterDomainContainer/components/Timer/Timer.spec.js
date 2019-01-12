@@ -7,50 +7,50 @@ import {
 import { Misc } from '@/helpers';
 
 describe('Timer.vue', () => {
-    let localVue, i18n, wrapper, store;
-   
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
-    });
+  let localVue, i18n, wrapper, store;
 
-    beforeEach(() => {
-        wrapper = shallowMount(Timer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-        });
-    });
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
 
-    it('should render correct dateType', () => {
-      var dateType = 'reveal';
-      wrapper.setProps({dateType});
-      expect(wrapper.findAll('.actual-timer span').at(0).isVisible()).toBe(true);
-      expect(wrapper.findAll('.actual-timer span').at(1).isVisible()).toBe(false);
-      var dateType = 'auction';
-      wrapper.setProps({dateType});
-      expect(wrapper.findAll('.actual-timer span').at(0).isVisible()).toBe(false);
-      expect(wrapper.findAll('.actual-timer span').at(1).isVisible()).toBe(true);
+  beforeEach(() => {
+    wrapper = shallowMount(Timer, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
     });
+  });
 
-    it('should render correct dateNumber', () => {
-      var dateType = 'reveal';
-      wrapper.setProps({dateType});
-      var currentTime = Date.now();
-      wrapper.setProps({dateNumber:currentTime})
-    
-      const auctionCloses = new Date(currentTime);
-      const revealDate = auctionCloses.setDate(auctionCloses.getDate() - 2);
-      var strDate = dateType === 'reveal'
-        ? Misc.formatDate(revealDate)
-        : Misc.formatDate(currentTime);
-      
-      expect(wrapper.vm.$el.querySelector('.deadline').textContent.trim()).toEqual(strDate);
-    })
-    describe('Timer.vue Methods', () => {
-     
-    });
+  it('should render correct dateType', () => {
+    var dateType = 'reveal';
+    wrapper.setProps({ dateType });
+    expect(wrapper.findAll('.actual-timer span').at(0).isVisible()).toBe(true);
+    expect(wrapper.findAll('.actual-timer span').at(1).isVisible()).toBe(false);
+    var dateType = 'auction';
+    wrapper.setProps({ dateType });
+    expect(wrapper.findAll('.actual-timer span').at(0).isVisible()).toBe(false);
+    expect(wrapper.findAll('.actual-timer span').at(1).isVisible()).toBe(true);
+  });
+
+  it('should render correct dateNumber', () => {
+    var dateType = 'reveal';
+    wrapper.setProps({ dateType });
+    var currentTime = Date.now();
+    wrapper.setProps({ dateNumber: currentTime })
+
+    const auctionCloses = new Date(currentTime);
+    const revealDate = auctionCloses.setDate(auctionCloses.getDate() - 2);
+    var strDate = dateType === 'reveal'
+      ? Misc.formatDate(revealDate)
+      : Misc.formatDate(currentTime);
+
+    expect(wrapper.vm.$el.querySelector('.deadline').textContent.trim()).toEqual(strDate);
+  })
+  describe('Timer.vue Methods', () => {
+
+  });
 });

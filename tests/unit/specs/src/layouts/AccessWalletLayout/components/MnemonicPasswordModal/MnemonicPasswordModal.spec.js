@@ -13,12 +13,12 @@ const shortMnemonic = Mnemonic.short;
 const hideModal = sinon.stub();
 
 const BModalStub = {
-  name:'b-modal',
-  template:'<div><slot></slot></div>',
-  props:['to'],
+  name: 'b-modal',
+  template: '<div><slot></slot></div>',
+  props: ['to'],
   methods: {
     hide: hideModal
-  }  
+  }
 }
 
 describe('MnemonicPasswordModal.vue', () => {
@@ -37,14 +37,14 @@ describe('MnemonicPasswordModal.vue', () => {
         i18n,
         attachToDocument: true,
         stubs: {
-          'b-modal':BModalStub
+          'b-modal': BModalStub
         }
       });
     });
 
     xit('should supply the mnemonic password directly', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
           expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.longAddresses[0].toLowerCase());
           done();
@@ -59,7 +59,7 @@ describe('MnemonicPasswordModal.vue', () => {
 
     xit('should supply the mnemonic password via the v-model on the input element', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
           expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.shortAddresses[0].toLowerCase());
           done();
@@ -76,7 +76,7 @@ describe('MnemonicPasswordModal.vue', () => {
 
     xit('should accept an empty password to create an instance of MnemonicWallet and pass it to the hardwareWalletOpen prop function', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
           expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.noPasswordShortAddresses[0].toLowerCase());
           done();

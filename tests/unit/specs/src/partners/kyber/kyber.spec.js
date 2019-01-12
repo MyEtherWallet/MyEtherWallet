@@ -6,7 +6,7 @@ const nodeUrl = 'https://api.myetherwallet.com/eth';
 const network = 'ETH';
 const withNetwork = false;
 
-describe('kyber.js', () => {
+xdescribe('kyber.js', () => {
   beforeEach(done => {
     setTimeout(() => {
       done();
@@ -33,7 +33,7 @@ describe('kyber.js', () => {
     });
 
     const weiValue = kyber.convertToTokenBase('GTO', 100000);
-    // expect(weiValue).toBe("1");
+    expect(weiValue).toBe("1");
   });
 
   it('should return the value in token units', () => {

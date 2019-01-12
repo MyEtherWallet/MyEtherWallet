@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import nodeList from '@/networks';
 import { shallowMount } from '@vue/test-utils'
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
-import  sinon from 'sinon' 
+import sinon from 'sinon';
 import {
   Tooling
 } from '@@/helpers';
@@ -13,47 +14,71 @@ import {
   SecalotWallet
 } from '@/wallets';
 
+const showModal = sinon.stub();
+const hideModal = sinon.stub();
+
+const BModalStub = {
+  name: 'b-modal',
+  template: '<div><slot></slot></div>',
+  props: ['to'],
+  methods: {
+    show: showModal,
+    hide: hideModal
+  }
+}
+
 describe('NetworkAndAddressModal.vue', () => {
-     let localVue, i18n, wrapper, store, spy;
-    spy = sinon.stub()
-    const mockRoute = {
-      push: spy
+  let localVue, i18n, wrapper, store, spy;
+  spy = sinon.stub()
+  const mockRoute = {
+    push: spy
+  };
+
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+
+    let actions = {
+      decryptWallet: jest.fn()
     };
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+    const network = nodeList['ETH'][3];
 
-        let actions = {
-          decryptWallet: jest.fn()
-        };
+    let getters = {
+      customPaths: () => { },
+      network: () => { return network },
+      Networks: () => { return nodeList },
+      path: () => {}
+    };
 
-        let getters = {
-          customPaths:() => {}
-        };
-
-        store = new Vuex.Store({
-          actions,
-          getters
-        });
-
-        Vue.config.errorHandler = () => {};
-        Vue.config.warnHandler = () => {};
+    store = new Vuex.Store({
+      actions,
+      getters,
+       state: {
+        network: network
+      }
     });
 
-    beforeEach(() => {
-        wrapper = shallowMount(NetworkAndAddressModal, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          mocks: {
-            $router: mockRoute,
-          }
-        });
+    Vue.config.errorHandler = () => { };
+    Vue.config.warnHandler = () => { };
+  });
+
+  beforeEach(() => {
+    wrapper = shallowMount(NetworkAndAddressModal, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      mocks: {
+        $router: mockRoute,
+      },
+      stubs: {
+        'b-modal': BModalStub
+      }
     });
+  });
 
   describe('NetworkAndAddressModal.vue Methods', () => {
     it('should reset the privateKey via input element', () => {
@@ -70,7 +95,7 @@ describe('NetworkAndAddressModal.vue', () => {
 
     it('should render correct showCustomPathInput method', () => {
       let customPath = { label: 'label', dpath: 'dpath' };
-      wrapper.setData({customPath});
+      wrapper.setData({ customPath });
       wrapper.vm.showCustomPathInput();
       expect(wrapper.vm.$data.customPathInput).toBe(true);
       customPath = { label: '', dpath: '' };

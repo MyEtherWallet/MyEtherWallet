@@ -3,23 +3,24 @@ import { shallowMount } from '@vue/test-utils'
 import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer/DappsContainer.vue';
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
 import languages from '@/translations';
+ import PopOver from '@/components/PopOver/PopOver.vue';
 import {
-  Tooling
+    Tooling
 } from '@@/helpers';
 
 const RouterLinkStub = {
-  name:'router-link',
-  template:'<div class="routerlink"><slot> </slot><p class="param">{{to}}</p></div>',
-  props:['to']  
+    name: 'router-link',
+    template: '<div class="routerlink"><slot> </slot><p class="param">{{to}}</p></div>',
+    props: ['to']
 }
 
 function translate(lang) {
-  const arrLang = lang.split('.');
-  var langObj = languages.en_US;
-  for(var i=0; i<arrLang.length; i++) {
-    langObj = langObj[arrLang[i]]
-  }
-  return langObj;
+    const arrLang = lang.split('.');
+    var langObj = languages.en_US;
+    for (var i = 0; i < arrLang.length; i++) {
+        langObj = langObj[arrLang[i]]
+    }
+    return langObj;
 }
 
 describe('DappsContainer.vue', () => {
@@ -31,22 +32,22 @@ describe('DappsContainer.vue', () => {
         i18n = baseSetup.i18n;
         store = baseSetup.store;
 
-        Vue.config.warnHandler = ()=>{};
+        Vue.config.warnHandler = () => { };
     });
 
     beforeEach(() => {
         wrapper = shallowMount(DappsContainer, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: {
-            address:address
-          },
-          stubs: {
-            'dapp-buttons':DappButtons,
-            'router-link':RouterLinkStub
-          }
+            localVue,
+            i18n,
+            store,
+            attachToDocument: true,
+            propsData: {
+                address: address
+            },
+            stubs: {
+                'dapp-buttons': DappButtons,
+                'router-link': RouterLinkStub
+            }
         });
     });
 

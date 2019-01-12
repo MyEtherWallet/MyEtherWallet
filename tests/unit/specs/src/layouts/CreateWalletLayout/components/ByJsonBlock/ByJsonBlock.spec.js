@@ -8,28 +8,28 @@ import {
 
 
 describe('ByJsonBlock.vue', () => {
-    let localVue, i18n, wrapper, store;
-    const img = 'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';
-    const title = 'ByJsonBlock title';
-    const desc = 'ByJsonBlock desc';
+  let localVue, i18n, wrapper, store;
+  const img = 'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';
+  const title = 'ByJsonBlock title';
+  const desc = 'ByJsonBlock desc';
 
 
-    beforeAll(() => {
-        const baseSetup = Tooling.createLocalVueInstance();
-        localVue = baseSetup.localVue;
-        i18n = baseSetup.i18n;
-        store = baseSetup.store;
+  beforeAll(() => {
+    const baseSetup = Tooling.createLocalVueInstance();
+    localVue = baseSetup.localVue;
+    i18n = baseSetup.i18n;
+    store = baseSetup.store;
+  });
+
+  beforeEach(() => {
+    wrapper = shallowMount(ByJsonBlock, {
+      localVue,
+      i18n,
+      store,
+      attachToDocument: true,
+      propsData: { img, title, desc }
     });
-
-    beforeEach(() => {
-        wrapper = shallowMount(ByJsonBlock, {
-          localVue,
-          i18n,
-          store,
-          attachToDocument: true,
-          propsData: { img, title, desc }
-        });
-    });
+  });
 
 
   it('should render correct title', () => {
@@ -41,7 +41,7 @@ describe('ByJsonBlock.vue', () => {
   });
 
   it('should render correct image', () => {
-      expect(wrapper.vm.$el.querySelector('.icon-block img').src.trim()).toEqual(img);
+    expect(wrapper.vm.$el.querySelector('.icon-block img').src.trim()).toEqual(img);
   });
 
   describe('ByJsonBlock.vue Methods', () => { });
