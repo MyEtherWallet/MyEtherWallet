@@ -46,8 +46,7 @@ $swap-custom-mobile-colleps-width: 700px;
   }
 
   .send-form {
-    @extend %send-form-base;
-
+    margin-bottom: 30px;
     .title-container {
       .title {
         padding: 0 8px;
@@ -74,7 +73,7 @@ $swap-custom-mobile-colleps-width: 700px;
       grid-template-columns: 1fr 70px 1fr;
 
       @media all and (max-width: $swap-custom-mobile-colleps-width) {
-        grid-template-columns: 1fr;
+        display: block;
       }
 
       .title {
@@ -88,8 +87,11 @@ $swap-custom-mobile-colleps-width: 700px;
         padding-top: 62px;
         text-align: center;
         @media all and (max-width: $swap-custom-mobile-colleps-width) {
-          padding: 15px 0 0 0;
-          transform: rotate(90deg);
+          padding: 0px;
+          margin: 10px auto -20px auto;
+          img {
+            transform: rotate(90deg);
+          }
         }
       }
 
@@ -224,7 +226,7 @@ $swap-custom-mobile-colleps-width: 700px;
   } // .advanced
 
   .submit-button-container {
-    padding: 40px 0;
+    margin-top: 60px;
     text-align: center;
 
     h4 {

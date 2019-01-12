@@ -34,6 +34,11 @@ $swap-custom-mobile-colleps-width: 700px;
   border-radius: 4px;
   overflow: hidden;
 
+  .no-provider-message {
+    text-align: center;
+    padding: 30px;
+  }
+
   ul {
     li {
       padding: 15px 0;

@@ -140,7 +140,10 @@
     <!-- Message when no valid provider is found for the selected pair -->
     <!-- =========================================================================== -->
     <div v-show="noAvaliableProviders" class="radio-button-container">
-      <ul>
+      <div class="no-provider-message">
+        {{ $t('interface.noProviderFound') }}
+      </div>
+      <ul v-if="false">
         <li>
           <div class="mew-custom-form__radio-button" />
           <div class="provider-image" />

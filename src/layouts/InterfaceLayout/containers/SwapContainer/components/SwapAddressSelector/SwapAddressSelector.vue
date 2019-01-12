@@ -1,48 +1,72 @@
 <template>
   <div class="drop-down-address-selector">
-    <div
-      :class="dropdownOpen ? 'dropdown-open' : ''"
-      class="dropdown-input-box"
-    >
-      <input
-        v-model="selectedAddress"
-        type="text"
-        placeholder="Please enter the address"
-        @focus="dropdownOpen = false"
-      />
-      <div v-if="!validAddress" class="blockie-place-holder-image" />
-      <div v-if="validAddress" class="selected-address-blockie">
-        <blockie :address="selectedAddress" width="30px" height="30px" />
+    <div class="dropdown--title">
+      <h4>{{ title }}</h4>
+      <button class="title-button prevent-user-select">
+        {{ $t('common.copy') }}
+      </button>
+    </div>
+    <div class="dropdown--content">
+      <div
+        :class="dropdownOpen ? 'dropdown-open' : ''"
+        class="dropdown-input-box"
+      >
+        <input
+          ref="addressInput"
+          v-model="selectedAddress"
+          type="text"
+          placeholder="Please enter the address"
+          @focus="dropdownOpen = false"
+        />
+        <div v-if="!validAddress" class="blockie-place-holder-image" />
+        <div v-if="validAddress" class="selected-address-blockie">
+          <blockie :address="selectedAddress" width="30px" height="30px" />
+        </div>
+        <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
+          <i
+            v-if="!dropdownOpen"
+            class="fa fa-chevron-down"
+            aria-hidden="true"
+          />
+          <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
+        </div>
       </div>
-      <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
-        <i v-if="!dropdownOpen" class="fa fa-chevron-down" aria-hidden="true" />
-        <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
+      <div v-if="dropdownOpen" class="dropdown-list-box">
+        <ul>
+          <li
+            v-for="addr in addresses"
+            :key="addr.key"
+            @click="listedAddressClick(addr.address)"
+          >
+            <div class="list-blockie">
+              <blockie :address="addr.address" width="30px" height="30px" />
+            </div>
+            <div class="address-block">
+              <p class="address-label">Ethereum</p>
+              <p class="listed-address">
+                {{ addr.address }}
+                <!-- Address book feature
+                <span
+                  v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
+                  class="address-note"
+                  >{{ addr.currency }} {{ $t('interface.addr') }}</span
+                >
+                -->
+              </p>
+            </div>
+            <p v-if="addr.address === currentAddress" class="address-note">
+              {{ $t('interface.myAddr') }}
+            </p>
+            <i
+              v-if="toAddressCheckMark"
+              aria-hidden="true"
+              class="fa fa-check-circle good-button"
+            />
+          </li>
+        </ul>
       </div>
     </div>
-    <div v-if="dropdownOpen" class="dropdown-list-box">
-      <ul>
-        <li
-          v-for="addr in addresses"
-          :key="addr.key"
-          @click="listedAddressClick(addr.address)"
-        >
-          <div class="list-blockie">
-            <blockie :address="addr.address" width="30px" height="30px" />
-          </div>
-          <p class="listed-address">
-            {{ addr.address }}
-            <span v-if="addr.address === currentAddress" class="address-note">{{
-              $t('interface.yourAddr')
-            }}</span>
-            <span
-              v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
-              class="address-note"
-              >{{ addr.currency }} {{ $t('interface.addr') }}</span
-            >
-          </p>
-        </li>
-      </ul>
-    </div>
+    <!-- .dropdown--content -->
   </div>
 </template>
 
@@ -59,6 +83,10 @@ export default {
     blockie: Blockie
   },
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     currentAddress: {
       type: String,
       default: ''
@@ -73,7 +101,8 @@ export default {
       selectedAddress: '',
       validAddress: false,
       dropdownOpen: false,
-      addresses: []
+      addresses: [],
+      toAddressCheckMark: false
     };
   },
   watch: {
@@ -97,6 +126,7 @@ export default {
   },
   methods: {
     listedAddressClick(address) {
+      this.toAddressCheckMark = true;
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
     },
