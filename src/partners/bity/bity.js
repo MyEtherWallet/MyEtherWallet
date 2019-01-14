@@ -202,10 +202,7 @@ export default class BitySwap {
   }
 
   async startSwap(swapDetails) {
-    swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency === BASE_CURRENCY,
-      swapDetails
-    );
+    swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
     swapDetails.providerReceives =
       swapDetails.dataForInitialization.input.amount;
     swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
@@ -216,17 +213,20 @@ export default class BitySwap {
     return swapDetails;
   }
 
-  async buildOrder(
-    isFrom,
-    { fromCurrency, toCurrency, fromValue, toValue, toAddress }
-  ) {
+  async buildOrder({
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue,
+    toAddress
+  }) {
     if (
       this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
       this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
     ) {
       const order = {
         amount: fromValue,
-        mode: isFrom ? 0 : 1, // check how I should handle this now
+        mode: 0,
         pair: fromCurrency + toCurrency,
         destAddress: toAddress
       };
