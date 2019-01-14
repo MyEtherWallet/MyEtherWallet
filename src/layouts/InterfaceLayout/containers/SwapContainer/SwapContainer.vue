@@ -19,7 +19,7 @@
 
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
-<!--        <div class="buy-eth">
+        <!--        <div class="buy-eth">
           <a href="https://ccswap.myetherwallet.com" target="_blank">
             <span>{{ $t('interface.buyEth') }}</span>
             <img :src="images.visaMaster" />
@@ -208,6 +208,7 @@
     <swap-exit-to-fiat
       v-if="bityExitToFiat"
       :swap-details="swapDetails"
+      :exit-from-address="exitSourceAddress"
       :exit-to-fiat-callback="exitToFiatCallback"
       @backButtonClick="exitToFiatAbort"
     ></swap-exit-to-fiat>
@@ -438,6 +439,11 @@ export default {
         return new BigNumber(this.account.balance).lt(this.fromValue);
       }
       return false;
+    },
+    exitSourceAddress() {
+      return this.isExitToFiat && this.fromCurrency === this.baseCurrency
+        ? this.currentAddress
+        : this.exitFromAddress;
     }
   },
   watch: {
@@ -636,13 +642,11 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-        console.log(providersFound); // todo remove dev item
         const results = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
-        console.log(results); // todo remove dev item
         this.loadingData = false;
         if (
           results.every(
@@ -684,7 +688,6 @@ export default {
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
           });
-
           const swapDetails = {
             providerDetails: providerDetails,
             fromValue: this.fromValue,

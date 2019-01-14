@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import {
-  fiatCurrencies,
   INVESTIGATE_FAILURE_KEY,
   type,
   notificationStatuses,

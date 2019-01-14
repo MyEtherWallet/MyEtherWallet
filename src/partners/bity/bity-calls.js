@@ -8,9 +8,8 @@ import {
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
-
-function makeError(msg){
-  console.log(msg); // todo remove dev item
+function makeError(msg) {
+  // console.log(msg); // todo remove dev item
   return Error(msg);
 }
 
@@ -99,7 +98,6 @@ const sendReceivedSmsCode = async exitData => {
 };
 
 const buildCyptoToFiatOrderData = async orderData => {
-  console.log('buildCyptoToFiatOrderData', orderData); // todo remove dev item
   const results = await post(
     buildPath(),
     utils.buildPayload(bityMethods.buildCyptoToFiatOrderData, orderData)
@@ -111,7 +109,6 @@ const buildCyptoToFiatOrderData = async orderData => {
 };
 
 const getCyptoToFiatOrderDetails = async detailsData => {
-  console.log(detailsData); // todo remove dev item
   const results = await post(
     buildPath(),
     utils.buildPayload(bityMethods.getExitOrderDetails, detailsData)

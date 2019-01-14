@@ -30,7 +30,7 @@
           </p>
         </div>
         <div class="right-arrow"><img :src="arrowImage" /></div>
-        <div class="to-address">
+        <div v-if="!toFiat" class="to-address">
           <div class="icon">
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
@@ -43,6 +43,16 @@
           <p v-show="toAddress.address !== ''" class="address">
             {{ toAddress.address }}
           </p>
+        </div>
+        <div v-else class="to-address">
+          <div class="icon">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          </div>
+          <p class="value">
+            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+          </p>
+          <p class="block-title">{{ $t('common.to') }}</p>
+          <p class="address">{{ fiatDest }}</p>
         </div>
         <ul v-show="!isFromFiat" class="confirm-send-button">
           <li>
@@ -120,6 +130,15 @@ export default {
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.rawSwapDetails.fromCurrency);
+    },
+    toFiat() {
+      return this.fiatCurrencies.includes(this.rawSwapDetails.toCurrency);
+    },
+    fiatDest() {
+      if (this.swapDetails.orderDetails) {
+        return this.swapDetails.orderDetails.output.owner.name;
+      }
+      return '';
     }
   },
   watch: {
