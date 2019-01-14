@@ -44,6 +44,14 @@
     position: absolute;
     top: 10px;
     left: 15px;
+    .currency-icon {
+      position: absolute;
+      bottom: -3px;
+      right: -4px;
+      height: 16px;
+      border: 1px solid $white;
+      border-radius: 100%;
+    }
   }
 
   .dropdown-open-button {
@@ -96,6 +104,15 @@
 
       .list-blockie {
         margin-right: 0;
+        position: relative;
+        .currency-icon {
+          position: absolute;
+          bottom: -3px;
+          right: 5px;
+          height: 16px;
+          border: 1px solid $white;
+          border-radius: 100%;
+        }
       }
     }
   }
@@ -106,11 +123,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  .address-label {
-    line-height: 10px;
-    font-size: 10px;
-    font-weight: 700;
-  }
 }
 
 .listed-address {

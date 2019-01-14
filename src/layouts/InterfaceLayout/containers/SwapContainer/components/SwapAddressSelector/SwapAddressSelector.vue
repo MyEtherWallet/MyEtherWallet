@@ -24,6 +24,7 @@
         <div v-if="!validAddress" class="blockie-place-holder-image" />
         <div v-if="validAddress" class="selected-address-blockie">
           <blockie :address="selectedAddress" width="30px" height="30px" />
+          <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
         </div>
         <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
           <i
@@ -43,10 +44,12 @@
           >
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
-              <img src="@/assets/images/currency/eth.svg" />
+              <img
+                class="currency-icon"
+                src="@/assets/images/currency/eth.svg"
+              />
             </div>
             <div class="address-block">
-              <p class="address-label">Ethereum</p>
               <p class="listed-address">
                 {{ addr.address }}
                 <!-- Address book feature

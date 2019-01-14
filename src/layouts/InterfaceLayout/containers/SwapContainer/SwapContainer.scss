@@ -228,6 +228,10 @@ $swap-custom-mobile-colleps-width: 700px;
   .submit-button-container {
     margin-top: 60px;
     text-align: center;
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 20px;
+    }
 
     h4 {
       margin-bottom: 20px;
@@ -238,6 +242,9 @@ $swap-custom-mobile-colleps-width: 700px;
       text-align: center;
       width: 300px;
       position: relative;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
 
       i {
         position: absolute;
