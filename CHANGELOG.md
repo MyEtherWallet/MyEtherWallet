@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix UI Interface -> Swap [#457](https://github.com/MyEtherWallet/MyEtherWallet/pull/457)
 - Fix UI Interface -> Send Offline [#444](https://github.com/MyEtherWallet/MyEtherWallet/pull/444)
 - Fix New wallet, Access buttons [#326](https://github.com/MyEtherWallet/MyEtherWallet/pull/326)
 - Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
