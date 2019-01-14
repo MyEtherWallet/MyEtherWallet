@@ -1,7 +1,7 @@
 <template>
   <div class="accordion-menu-1">
     <div class="wrap">
-      <div class="menu-title">
+      <div class="menu-title" @click="titleClicked">
         <div class="title-number">
           <span>{{ number }}</span>
         </div>
@@ -34,7 +34,11 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    titleClicked() {
+      this.$emit('titleClicked');
+    }
+  }
 };
 </script>
 

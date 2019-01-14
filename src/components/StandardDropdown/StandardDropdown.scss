@@ -5,13 +5,12 @@
   border: 1px solid $mew-green;
 }
 
-
 .wrap {
   margin: 0;
   padding: 0;
   position: relative;
 
-  .standard-dropdown{
+  .standard-dropdown {
     background-color: $white;
     position: relative;
     //position: absolute;
@@ -20,6 +19,7 @@
 
     &.open {
       @extend %open;
+
       min-height: 200px;
       position: relative;
       border-radius: 4px;
@@ -86,7 +86,6 @@
     border-bottom: 1px solid $mew-green;
   }
 }
-
 
 .dropdown-item-container {
   background-color: $white;
@@ -174,7 +173,6 @@
       padding: 10px 20px;
       cursor: pointer;
       border-bottom: 1px solid $light-grey-6;
-
 
       &:nth-child(odd) {
         background-color: $light-grey-2;

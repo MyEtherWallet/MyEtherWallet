@@ -36,6 +36,10 @@ export default {
     optionDisplayKey: {
       type: String,
       default: ''
+    },
+    optionValueKey: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -75,12 +79,18 @@ export default {
     },
     setSelected(val) {
       this.chosenValue = this.displayName(val);
-      this.$emit('selection', val);
+      this.$emit('selection', this.optionValue(val));
       this.dropdownOpen();
     },
     displayName(val) {
       if (this.optionDisplayKey !== '') {
         return val[this.optionDisplayKey];
+      }
+      return val;
+    },
+    optionValue(val) {
+      if (this.optionValueKey !== '') {
+        return val[this.optionValueKey];
       }
       return val;
     }

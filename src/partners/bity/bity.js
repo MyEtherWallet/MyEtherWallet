@@ -1,6 +1,10 @@
 import store from 'store';
 import web3Utils from 'web3-utils';
-import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
+import {
+  networkSymbols,
+  BASE_CURRENCY,
+  swapNotificationStatuses
+} from '../partnersConfig';
 import { utils } from '../helpers';
 import {
   getRates,
@@ -242,7 +246,6 @@ export default class BitySwap {
       // throw Error('Exit to Fiat not yet implemented');
     } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
       const preOrder = await this.buildExitOrder(swapDetails);
-      console.log(preOrder); // todo remove dev item
       if (preOrder.created) {
         swapDetails.dataForInitialization = await getCyptoToFiatOrderDetails({
           pair: swapDetails.fromCurrency + swapDetails.toCurrency,
@@ -363,7 +366,6 @@ export default class BitySwap {
         phoneToken: this.phoneToken,
         orderDetails: { ...orderDetails } // details //{ ...orderDetails }
       };
-      console.log(orderDetails); // todo remove dev item
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
       console.error(e);
@@ -388,31 +390,8 @@ export default class BitySwap {
       validFor: order.validFor || TIME_SWAP_VALID
     };
   }
-  /*
-*   return {
-    id: encryptor.encrypt(
-      detailsUrl.replace('/api/v2/orders/', '')
-    ),
-    amount: orderJson.output.amount,
-    payment_address: orderJson.payment_details.crypto_address,
-    payment_amount: orderJson.input.amount,
-    // reference: orderJson.reference,
-    status: orderJson.legacy_status,
-    validFor: 600,
-    timestamp_created: orderJson.timestamp_created + "Z",
-    input: {
-      amount: orderJson.input.amount,
-      currency: orderJson.input.currency
-    },
-    output: {
-      amount: orderJson.output.amount,
-      currency: orderJson.output.currency
-    }
-  };
-*
-* */
+
   static parseExitOrder(order) {
-    console.log('parseExitOrder', order); // todo remove dev item
     return {
       orderId: order.id,
       statusId: order.id,
@@ -436,34 +415,51 @@ export default class BitySwap {
     try {
       const data = await getStatus(noticeDetails.statusId);
       if (data.status === bityStatuses.EXEC) {
-        return 'complete';
+        return swapNotificationStatuses.COMPLETE;
       }
       if (data.input.status !== bityStatuses.FILL) {
         switch (data.input.status) {
           case bityStatuses.OPEN:
-            return 'new';
+            return swapNotificationStatuses.NEW;
           case bityStatuses.RCVE:
           case bityStatuses.CONF:
-            return 'pending';
+            return swapNotificationStatuses.PENDING;
           case bityStatuses.CANC:
-            return 'cancelled';
+            return swapNotificationStatuses.CANCELLED;
         }
       } else {
         switch (data.output.status) {
           case bityStatuses.FILL:
-            return 'complete';
+            return swapNotificationStatuses.COMPLETE;
           case bityStatuses.CANC:
-            return 'cancelled';
+            return swapNotificationStatuses.CANCELLED;
           default:
-            return 'pending';
+            return swapNotificationStatuses.PENDING;
         }
       }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      return 'pending';
+      return swapNotificationStatuses.PENDING;
     }
   }
+
+  /*
+  *
+  *     status: response.legacy_status,
+    timestamp_created: response.timestamp_created + "Z",
+    fromAddress: response.input.crypto_address,
+    payment_address: response.payment_details.crypto_address,
+    payment_amount: response.input.amount,
+    input: {
+      amount: response.input.amount,
+      currency: response.input.currency
+    },
+    output: {
+      amount: response.output.amount,
+      currency: response.output.currency
+    }
+  * */
 
   static async getOrderStatusFiat(noticeDetails) {
     try {
@@ -471,22 +467,37 @@ export default class BitySwap {
         noticeDetails.statusId,
         noticeDetails.special
       );
-      if (!utils.isJson(data)) return 'pending';
+      if (!utils.isJson(data)) return swapNotificationStatuses.PENDING;
+
+      // Since the status cannot be relied upon, we are going to assume the order went through after 10 min, if their was no error with the eth transaction.
+      // Cannot make the same assumption with regards to chains other than ethereum.
+      const timeSinceOrder =
+        (new Date().getTime() - new Date(data.timestamp_created).getTime()) /
+        1000;
+      if (
+        timeSinceOrder > 600 &&
+        data.status === bityStatuses.OPEN &&
+        data.input.currency === 'ETH'
+      ) {
+        return swapNotificationStatuses.COMPLETE;
+      }
       switch (data.status) {
+        // The endPoint does not seem to be updating the order.
+        //case bityStatuses.OPEN:
+        // return 'new';
         case bityStatuses.OPEN:
-          return 'new';
         case bityStatuses.RCVE:
         case bityStatuses.CONF:
-          return 'pending';
+          return swapNotificationStatuses.PENDING;
         case bityStatuses.FILL:
-          return 'complete';
+          return swapNotificationStatuses.COMPLETE;
         case bityStatuses.CANC:
-          return 'cancelled';
+          return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      return 'pending';
+      return swapNotificationStatuses.PENDING;
     }
   }
 }

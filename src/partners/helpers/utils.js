@@ -67,11 +67,17 @@ function stringEqual(strA, strB) {
 const isJson = str => {
   try {
     JSON.parse(str);
+    return true;
   } catch (e) {
-    return false;
+    try {
+      const asStr = JSON.stringify(str);
+      JSON.parse(asStr);
+      return true;
+    } catch (e) {
+      return false;
+    }
+    // return false;
   }
-
-  return true;
 };
 
 export {

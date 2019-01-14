@@ -269,7 +269,9 @@ export default {
       this.amount =
         new BigNumber(e.target.value).decimalPlaces() > decimals
           ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
-          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0) ? e.target.value : 0;
+          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0)
+          ? e.target.value
+          : 0;
       if (this.amount < 0) {
         this.isValidAmount = false;
       } else {
@@ -329,9 +331,10 @@ export default {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
           .toString();
-        this.amount = this.amount > 0 ? this.parsedBalance
-          .minus(unit.fromWei(txFee, 'ether'))
-          .toString() : 0;
+        this.amount =
+          this.amount > 0
+            ? this.parsedBalance.minus(unit.fromWei(txFee, 'ether')).toString()
+            : 0;
       } else {
         this.amount = this.selectedCurrency.balance;
       }

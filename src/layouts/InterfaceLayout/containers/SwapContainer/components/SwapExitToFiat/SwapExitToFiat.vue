@@ -57,7 +57,12 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
-          <accordion-menu :isopen="step2" title="Bank Information" number="3">
+          <accordion-menu
+            :isopen="step2"
+            title="Bank Information"
+            number="3"
+            @titleClicked="reOpenBankInformation"
+          >
             <ul>
               <li>
                 <standard-input
@@ -122,16 +127,12 @@
                   <standard-dropdown
                     :options="countryOptions"
                     :option-display-key="'1'"
+                    :option-value-key="'0'"
                     class="country"
-                    @changedValue="setCountry"
+                    @selection="setCountry"
                     @opened="roomForDropDown"
                   />
                   <div v-if="addSpace" class="extraSpace"></div>
-                  <!--<standard-input-->
-                  <!--:options="inputCountry"-->
-                  <!--class="country"-->
-                  <!--@changedValue="setCountry"-->
-                  <!--/>-->
                 </div>
               </li>
             </ul>
@@ -198,18 +199,7 @@ import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
 
-import {
-  providerMap
-  // providers,
-  // bestProviderForQuantity,
-  // bestRateForQuantity,
-  // isValidEntry,
-  // providerNames,
-  // BASE_CURRENCY,
-  // fiat,
-  // MIN_SWAP_AMOUNT,
-  // ERC20
-} from '@/partners';
+import { providerMap } from '@/partners';
 
 registerLocale(names);
 
@@ -227,6 +217,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    exitFromAddress: {
+      type: String,
+      default: ''
     },
     exitToFiatCallback: {
       type: Function,
@@ -368,6 +362,10 @@ export default {
     }
   },
   methods: {
+    reOpenBankInformation() {
+      this.step2 = true;
+      this.step3 = false;
+    },
     roomForDropDown(val) {
       this.addSpace = val;
     },
@@ -411,12 +409,11 @@ export default {
       this.orderDetails.owner.state = val;
     },
     setCountry(val) {
-      const code = countries.getAlpha2Code(val, 'en');
-      console.log(code); // todo remove dev item
       this.orderDetails.owner.country = val;
     },
     openMenu(val) {
-      console.log(val);
+      return val;
+      // console.log(val);
       // this.orderDetails.owner.country = val;
     },
     backButtonAction() {
@@ -430,7 +427,6 @@ export default {
         ...this.swapDetails
       };
       const existing = await this.provider.registerUser(initData);
-      console.log(existing); // todo remove dev item
       if (existing) {
         this.step1 = false;
         this.verifyStep = false;
@@ -452,32 +448,14 @@ export default {
       }
     },
     async createExitOrder() {
-      const staticDetails = {
-        currency: 'CHF',
-        type: 'bank_account',
-        iban: 'CH980000MEW0000000009',
-        bic_swift: 'TESTCHBEXXX',
-        aba_number: '',
-        sort_code: '',
-        owner: {
-          name: 'FirstName LastName',
-          address: 'Test address',
-          address_complement: '',
-          zip: '2000',
-          city: 'Neuchatel',
-          state: '',
-          country: 'Switzerland'
-        }
-      };
-
       const details = {
         input: {
           amount: this.swapDetails.fromValue,
           currency: this.swapDetails.fromCurrency,
           type: 'crypto_address',
-          crypto_address: this.swapDetails.fromAddress
+          crypto_address: this.exitFromAddress
         },
-        output: staticDetails //this.orderDetails
+        output: this.orderDetails
       };
 
       const swapDetails = await this.provider.startSwap({
