@@ -1,7 +1,7 @@
 <template>
   <div class="wallet-password-modal">
     <b-modal
-      ref="walletpassword"
+      ref="walletPassword"
       title="Passphrase"
       hide-footer
       centered
@@ -42,16 +42,20 @@ export default {
       identifier: {}
     };
   },
-  created() {
+  mounted() {
     this.$eventHub.$on('showHardwarePassword', (identifier, callback) => {
-      this.$refs.walletpassword.show();
+      this.$refs.walletPassword.show();
       this.callback = callback;
       this.identifier = identifier;
     });
   },
+  beforeDestroy() {
+    this.$eventHub.$off('showHardwarePassword');
+  },
   methods: {
     submitPassword() {
       this.callback(this.passphrase);
+      this.passphrase = '';
     },
     clear() {
       this.passphrase = '';

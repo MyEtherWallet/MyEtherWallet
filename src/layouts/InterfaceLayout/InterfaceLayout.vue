@@ -1,5 +1,6 @@
 <template>
   <div class="send-eth-and-tokens">
+    <wallet-password-modal />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -83,6 +84,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
+import WalletPasswordModal from '@/components/WalletPasswordModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
@@ -103,7 +105,8 @@ import {
   LedgerWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  KeepkeyWallet
 } from '@/wallets';
 
 export default {
@@ -113,6 +116,7 @@ export default {
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
+    'wallet-password-modal': WalletPasswordModal,
     'print-modal': PrintModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-password-modal': HardwarePasswordModal,
@@ -216,6 +220,11 @@ export default {
           break;
         case 'mnemonic':
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
+          break;
+        case 'keepkey':
+          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
+            this.toggleNetworkAddrModal(_newWallet);
+          });
           break;
         default:
           // eslint-disable-next-line
