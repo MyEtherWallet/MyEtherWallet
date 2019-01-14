@@ -305,7 +305,7 @@ export default {
     },
     parseRaw(raw) {
       this.jsonText = JSON.stringify({
-        name: raw.name,
+        name: `${raw.name}.eth`,
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
