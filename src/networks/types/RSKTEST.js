@@ -13,5 +13,6 @@ export default {
   contracts: contracts,
   ensResolver: '',
   ensAbi: '',
-  icon: rsk
+  icon: rsk,
+  unsupportedTabs: ['dapps']
 };

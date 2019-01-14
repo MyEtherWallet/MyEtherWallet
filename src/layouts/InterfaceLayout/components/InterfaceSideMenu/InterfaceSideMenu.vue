@@ -6,7 +6,7 @@
     </div>
     <div class="side-menu">
       <ul>
-        <li v-for="(tab, idx) in tabData" :key="tab.name + idx">
+        <li v-for="(tab, idx) in supportedTabs(tabData)" :key="tab.name + idx">
           <div
             :class="[
               isTabActive(tab.routes) ? 'active' : '',
@@ -64,6 +64,13 @@ export default {
     },
     isTabActive(routes) {
       return routes.includes(this.$route.path);
+    },
+    supportedTabs(tabData) {
+      const tabs = this.$store.state.network.type.unsupportedTabs || [];
+      const toReturn = tabData.filter(function(tab) {
+        return !tabs.includes(tab.name);
+      });
+      return toReturn;
     },
     tabAction(tab) {
       if (typeof tab.children === 'undefined' || tab.children.length === 0) {
