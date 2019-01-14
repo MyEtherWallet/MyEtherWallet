@@ -105,7 +105,11 @@
       v-show="loadingProviderRates"
       class="radio-button-container animated-background"
     >
-      <ul>
+      <div class="provider-loading-message">
+        {{ $t('interface.loadingProviders') }}
+      </div>
+      <!-- Loading logo image disabled -->
+      <ul v-if="false">
         <li>
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
