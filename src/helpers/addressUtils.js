@@ -1,4 +1,4 @@
-import { store } from '@/main';
+import store from '@/store';
 import {
   isValidChecksumAddress as isValidRSKChecksumAddress,
   toChecksumAddress as toRSKChecksumAddress
@@ -15,12 +15,6 @@ const isAddress = address => {
     return true;
   }
   const chainID = store.getters.network.type.chainID;
-  console.log(
-    chainID,
-    toRSKChecksumAddress(address, chainID),
-    address,
-    isValidRSKChecksumAddress(address, chainID)
-  );
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return isValidRSKChecksumAddress(address, chainID);
   return web3.utils.checkAddressChecksum(address);

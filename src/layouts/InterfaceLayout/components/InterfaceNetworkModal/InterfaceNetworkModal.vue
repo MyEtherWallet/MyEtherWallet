@@ -53,32 +53,6 @@
             </p>
           </div>
         </div>
-        <div v-if="customNetworks.length > 0" class="content-block">
-          <h4 class="cust">Custom Networks</h4>
-          <div
-            v-for="(net, idx) in customNetworks"
-            :key="net.service + '(' + net.type.name + ')' + idx"
-            class="grid-3"
-          >
-            <div
-              :class="
-                net.service === network.service &&
-                net.type.name === network.type.name
-                  ? 'current-network'
-                  : ''
-              "
-              class="switch-network custom-network-item"
-            >
-              <p @click="switchNetwork(net)">
-                {{ net.service }} {{ '(' + net.type.name + ')' }}
-              </p>
-              <i
-                class="fa fa-times-circle"
-                @click.prevent="removeNetwork(net, idx)"
-              />
-            </div>
-          </div>
-        </div>
       </div>
       <form ref="networkAdd" class="network-add hidden">
         <div class="content-block">
@@ -92,15 +66,15 @@
               placeholder="ETH Node Name"
               autocomplete="off"
             />
-            <select v-model="selectedNetwork" class="custom-select-1">
+            <select v-model="selectedNetworkName" class="custom-select-1">
               <option
-                v-for="type in Object.keys(types)"
-                :value="types[type]"
-                :key="types[type].name + types[type].name_long"
+                v-for="type in types"
+                :value="type.name"
+                :key="type.name + type.name_long"
+                :selected="selectedNetworkName === type.name"
+                >{{ type.name | capitalize }} -
+                {{ type.name_long | capitalize }}</option
               >
-                {{ types[type].name | capitalize }} -
-                {{ types[type].name_long | capitalize }}
-              </option>
             </select>
             <input
               v-validate="'required|url:require_protocol'"
@@ -162,7 +136,7 @@
             >
               {{ errors.first('customExplorerTx') }}
             </p>
-            <p v-show="errors.has('customChain') || chainID.length > 0">
+            <p v-show="errors.has('customChain') || (chainID && chainID > 0)">
               {{ errors.first('customChain') }}
             </p>
             <p
@@ -192,7 +166,7 @@
               v-model="username"
               class="custom-input-text-1"
               type="text"
-              name=""
+              name
               placeholder="User Name"
               autocomplete="off"
             />
@@ -200,7 +174,7 @@
               v-model="password"
               class="custom-input-text-1"
               type="password"
-              name=""
+              name
               placeholder="Password"
               autocomplete="off"
             />
@@ -234,7 +208,7 @@
                 errors.has('customChain') ||
                 errors.has('customExplorerTx') ||
                 blockExplorerTX === '' ||
-                chainID.length === 0 ||
+                !chainID ||
                 blockExplorerAddr === '' ||
                 errors.has('customExplorerAddr')
                   ? 'disabled'
@@ -273,8 +247,7 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetwork: {},
-      chainID: '',
+      selectedNetworkName: 'ETH',
       port: 443,
       name: '',
       url: '',
@@ -293,11 +266,12 @@ export default {
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
-    }
-  },
-  watch: {
-    selectedNetwork(newVal) {
-      this.chainID = newVal ? newVal.chainID : -1;
+    },
+    chainID() {
+      return this.selectedNetwork.chainID;
+    },
+    selectedNetwork() {
+      return this.types[this.selectedNetworkName];
     }
   },
   mounted() {
@@ -315,6 +289,7 @@ export default {
       contracts: [],
       ensResolver: ''
     };
+    this.selectedNetworkName = this.network.type.name;
   },
   methods: {
     networkModalOpen() {
@@ -337,7 +312,6 @@ export default {
       this.$refs.networkAdd.classList.toggle('hidden');
     },
     resetCompState() {
-      this.selectedNetwork = this.network;
       this.chainID = '';
       this.port = 443;
       this.name = '';
@@ -382,7 +356,7 @@ export default {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance').then(() => {
-          this.selectedNetwork = network;
+          this.selectedeNtworkName = network.name;
         });
       });
 
