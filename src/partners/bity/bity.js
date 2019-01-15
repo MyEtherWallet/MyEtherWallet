@@ -1,4 +1,4 @@
-import { networkSymbols} from '../partnersConfig';
+import { networkSymbols } from '../partnersConfig';
 import { getRates, openOrder, getStatus } from './bity-calls';
 import {
   bityStatuses,
