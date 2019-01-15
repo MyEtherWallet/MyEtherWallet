@@ -7,46 +7,100 @@
     class="nopadding print-mod"
     size="lg"
   >
-    <div id="printContainer" class="print-modal"></div>
+    <div id="printContainer" class="print-modal">
+      <div class="print-modal-header">
+        <div class="logo-container">
+          <img src="@/assets/images/logo.png" height="35px" />
+          <span class="divider"></span>
+          <p>ENS Reveal Bid</p>
+        </div>
+        <div class="date-container">{{ todaysDate }}</div>
+      </div>
+      <div class="print-modal-body">
+        <div
+          v-for="data in Object.keys(displayedData)"
+          :key="data"
+          class="print-item"
+        >
+          <p class="print-item-title">{{ displayedData[data].title }}</p>
+          <p>{{ displayedData[data].info }}</p>
+        </div>
+        <div class="json-string-container">
+          <p>JSON String</p>
+          <div>{{ jsonString }}</div>
+        </div>
+      </div>
+      <div class="print-modal-footer">
+        <div>
+          <img src="@/assets/images/icons/support.svg" />
+          <span>support@myetherwallet.com</span>
+        </div>
+        <div>
+          <img src="@/assets/images/icons/web-solution.svg" />
+          <span>https://www.myetherwallet.com</span>
+        </div>
+      </div>
+    </div>
     <div class="button-container">
       <div class="print-button" @click="print">Print</div>
     </div>
   </b-modal>
 </template>
 <script>
-import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+import printJS from 'print-js';
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
-    actualBid: {
-      type: String,
-      default: '0.01'
-    },
-    bidMask: {
-      type: String,
-      default: '0.02'
-    },
-    revealDate: {
-      type: Number,
-      default: 1547489617293
-    },
-    auctionEnd: {
-      type: Number,
-      default: 1547489617293
-    },
-    secretPhrase: {
-      type: String,
-      default: 'example secret phrase'
-    },
     jsonString: {
-      type: String,
-      default:
-        '{"name":"mewtopia.eth","nameSHA3":"0xf7944c277d363b1bf85d10f3cd04bc00f0dbe5f7b8c8984664a17e0d471eb238","bidAmount":0.01,"bidMask":0.02,"value":"10000000000000000","secretPhrase":"sure beef match","secretPhraseSHA3":"0xeff0abbcd7596fc7cef758639a5ef3856fa2b8f07201d8fa7b52f7bdb9789d1a"}'
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
-    return {};
+    return {
+      todaysDate: new Date()
+        .toDateString()
+        .split(' ')
+        .splice(1, 3)
+        .join(' ')
+    };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    }),
+    displayedData() {
+      const revealTime = new Date(this.jsonString['revealDate']);
+      const auctionEnd = new Date(this.jsonString['auctionDateEnd']);
+      const obj = {
+        actualBid: {
+          title: 'Actual Bid',
+          info: `${this.jsonString['bidAmount']} ${this.network.type.name}`
+        },
+        bidMask: {
+          title: 'Bid Mask',
+          info: `${this.jsonString['bidMask']} ${this.network.type.name}`
+        },
+        revealDate: {
+          title: 'Reveal Date',
+          info: `${revealTime.toGMTString()} / ${revealTime.toLocaleTimeString()}`
+        },
+        auctionEnd: {
+          title: 'Auction End',
+          info: `${auctionEnd.toGMTString()} / ${auctionEnd.toLocaleTimeString()}`
+        },
+        secretPhrase: {
+          title: 'Secret Phrase',
+          info: this.jsonString['secretPhrase']
+        }
+      };
+
+      return obj;
+    }
   },
   methods: {
     async print() {
