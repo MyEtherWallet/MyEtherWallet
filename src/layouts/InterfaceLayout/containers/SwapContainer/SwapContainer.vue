@@ -34,7 +34,12 @@
                 {{ $t('common.totalBalance') }}
               </p>
             </div>
-            <swap-currency-picker />
+            <swap-currency-picker
+              :currencies="fromArray"
+              :override-currency="overrideFrom"
+              :from-source="true"
+              page="SwapContainerFrom"
+              @selectedCurrency="setFromCurrency"/>
             <div class="the-form amount-number">
               <input
                 v-model="fromValue"
