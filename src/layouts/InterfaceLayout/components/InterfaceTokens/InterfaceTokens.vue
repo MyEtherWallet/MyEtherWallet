@@ -184,7 +184,7 @@ export default {
       ) {
         const localStorageName = {};
         const token = {
-          addr: address,
+          address: address,
           decimals: decimal,
           email: '',
           name: symbol,

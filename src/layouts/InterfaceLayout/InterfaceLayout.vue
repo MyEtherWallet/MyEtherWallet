@@ -271,7 +271,6 @@ export default {
           return token;
         });
       }
-
       return tokens;
     },
     async setNonce() {
@@ -345,7 +344,7 @@ export default {
             ? token.balance
             : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
           const convertedToken = {
-            addr: token.addr,
+            address: token.address,
             balance: balance,
             decimals: token.decimals,
             email: token.email,
