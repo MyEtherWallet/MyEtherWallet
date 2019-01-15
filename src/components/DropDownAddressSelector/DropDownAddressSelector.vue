@@ -69,7 +69,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import { isAddress } from '@/helpers/AddressUtils';
+import { isAddress } from '@/helpers/addressUtils';
 export default {
   components: {
     blockie: Blockie
@@ -87,7 +87,7 @@ export default {
       selectedAddress: this.options.value,
       validAddress: false,
       dropdownOpen: false,
-      addresses: []
+      addresses: ['0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D']
     };
   },
   watch: {
