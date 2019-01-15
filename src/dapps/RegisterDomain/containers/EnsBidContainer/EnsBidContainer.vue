@@ -296,11 +296,12 @@ export default {
     }
   },
   mounted() {
+    /*
     // If domain name isn't set, redirect to Dapps page.
     if (this.domainName === '') {
-      //console.log('Domain name is not set! Redirecting to Dapps container.');
       this.$router.push('/interface/dapps');
     }
+    */
   },
   methods: {
     openJsonModal() {

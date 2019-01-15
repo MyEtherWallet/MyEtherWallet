@@ -4,6 +4,7 @@ $dapps-container-mobile-width: 650px;
 
 .dapps-container {
   @extend %interface-container;
+  min-height: 550px;
 }
 
 .buttons-container {
@@ -12,8 +13,10 @@ $dapps-container-mobile-width: 650px;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 40px;
 
-  > * {
-    margin-bottom: 10px;
+  @media all and (max-width: $dapps-container-mobile-width) {
+    > * {
+      margin-bottom: 10px;
+    }
   }
 
   > *:last-child {
