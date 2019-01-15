@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
   "metaMaskModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
   "software": "Software",
-  "softwareDesc": "JSON file, Private key, Mnemonic phrase",
+  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "Not recommended",
   "unlock": "Unlock wallet",
   "installMetamask": "Install MetaMask",

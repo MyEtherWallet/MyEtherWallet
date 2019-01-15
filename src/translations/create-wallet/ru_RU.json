@@ -14,7 +14,7 @@
   "byMnemonicRandom": "Случайно",
   "byMnemonicWriteDown": "Запишите мнемоническую фразу",
   "byMnemonicAlreadyWritten": "Я записал(а) мою мнемоническую фразу",
-  "byJsonFile": "С помощью файла JSON",
+  "byJsonFile": "С помощью файла Keystore",
   "byJsonFileSaveKeystore": "Сохранить хранилище ключа",
   "byJsonFileDontLoseTitle": "Не потеряйте его",
   "byJsonFileDontLoseDesc": "Будьте осторожны, если вы его потеряете, его нельзя будет восстановить.",
