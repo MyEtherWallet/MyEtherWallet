@@ -1,13 +1,30 @@
 @import '~@/scss/GlobalVariables';
+
+.title {
+  margin-bottom: 13px;
+  padding: 0 8px;
+}
+
 .buy-subdomain-container {
   background-color: $white;
   border-radius: 4px;
   grid-area: main;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .buy-subdomain-content {
-  padding: 35px 62px;
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
 }
 
 .buy-subdomain-form-container {
@@ -20,19 +37,27 @@
   .form {
     display: flex;
     flex-direction: column;
-    padding: 31px 0 24px;
   }
 
   .subdomain-input {
     display: flex;
 
+    @media all and (max-width: $tablet-width) {
+      display: block;
+      text-align: center;
+    }
+
     input {
       background-color: $light-grey-1;
       border: 0;
-      border-radius: 4px;
+      border-radius: 4px 0 0 4px;
       height: 52px;
-      padding-left: 24px;
+      padding-left: 20px;
+      padding-right: 20px;
       width: 100%;
+      @media all and (max-width: $tablet-width) {
+        border-radius: 4px;
+      }
     }
 
     button {
@@ -40,8 +65,26 @@
       border: 0;
       color: $white;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 0 4px 4px 0;
       padding: 15px 35px;
+
+      &:active {
+        background-color: $light-blue-8;
+      }
+
+      @media all and (max-width: $tablet-width) {
+        border-radius: 4px;
+        padding: 21px 55px;
+        margin-top: 50px;
+        min-width: 300px;
+      }
+      @media all and (max-width: $mobile-width) {
+        border-radius: 4px;
+        padding: 21px 55px;
+        margin-top: 30px;
+        width: 100%;
+      }
+
     }
   }
 
@@ -51,11 +94,17 @@
     flex-direction: column;
 
     .result-item {
-      border-top: 2px dashed $opaque-grey;
+      border-top: 2px dashed $light-grey-2;
       color: $dark-blue-1;
-      display: flex;
-      justify-content: space-between;
+      //justify-content: space-between;
       padding: 14px;
+      //align-items: center;
+
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      @media all and (max-width: $tablet-width) {
+        grid-template-columns: 1fr 100px;
+      }
     }
 
     .result-item.disabled {
@@ -63,10 +112,17 @@
     }
 
     button {
+      margin-left: 9px;
       border-radius: 12px;
-      border: 1px solid $dark-grey-11;
-      color: $dark-grey-11;
+      border: 1px solid $mew-green;
+      color: $mew-green;
       cursor: pointer;
+      background-color: $white;
+      padding: 1px 11px;
+
+      span {
+        font-size: 11px;
+      }
 
       &:hover {
         background-color: $mew-green;
@@ -76,3 +132,26 @@
     }
   }
 }
+
+.result-section {
+  margin-top: 70px;
+}
+
+.domain-name {
+   word-break: break-all;
+}
+
+.buy-button-container {
+  justify-content: flex-end;
+  text-align: right;
+  display: flex;
+  @media all and (max-width: $tablet-width) {
+    display: block;
+  }
+
+  >span {
+    display: block;
+  }
+}
+
+

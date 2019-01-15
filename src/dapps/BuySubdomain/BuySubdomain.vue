@@ -3,7 +3,9 @@
     <back-button />
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
-        <p>{{ $t('interface.subdomains') }}</p>
+        <div class="title">
+          <h4>{{ $t('interface.subdomains') }}</h4>
+        </div>
         <div class="form">
           <div class="subdomain-input">
             <input
@@ -15,24 +17,27 @@
           </div>
         </div>
         <div v-show="results.length > 0" class="result-section">
-          <p>{{ $t('dapps.allSubDomains') }}</p>
+          <div class="title">
+            <h4>{{ $t('dapps.allSubDomains') }}</h4>
+          </div>
           <div class="results-container">
             <div
               v-for="item in sortedResults"
               :key="domainName + item.domain"
               :class="[item.active ? '' : 'disabled', 'result-item']"
             >
-              <span>{{ domainName }}.{{ item.domain }}.eth</span>
-              <span>
+              <span class="domain-name"
+                >{{ domainName }}.{{ item.domain }}.eth</span
+              >
+              <div class="buy-button-container">
                 <span class="amt"
-                  >{{ web3.utils.fromWei(item.price, 'ether') }}
-                </span>
-                <span class="currency">ETH </span>
+                  >{{ web3.utils.fromWei(item.price, 'ether') }} ETH</span
+                >
                 <button @click="buyDomain(item)">
                   <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
                   <span v-else> <i class="fa fa-times" /> </span>
                 </button>
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -57,11 +62,13 @@ import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import web3 from 'web3';
 import { mapGetters } from 'vuex';
+import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'standard-button': StandardButton
   },
   data() {
     return {

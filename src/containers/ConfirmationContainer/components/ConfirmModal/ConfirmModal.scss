@@ -126,7 +126,7 @@ $confirmation-modal-mobile-width: 500px;
             display: block;
             padding: 16px 0 0 0;
           }
-          
+
           p:nth-child(even) {
             max-width: 295px;
             text-align: right;
@@ -138,7 +138,7 @@ $confirmation-modal-mobile-width: 500px;
             @media all and (max-width: $confirmation-modal-mobile-width) {
               max-width: initial;
               text-align: left;
-            }            
+            }
           }
         }
       } // .expended-info

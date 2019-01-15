@@ -112,7 +112,6 @@ $ens-bid-mobile-width: 600px;
     @media all and (max-width: $mobile-width) {
       width: 100%;
     }
-
   }
 
   .submit {
@@ -178,7 +177,7 @@ $ens-bid-mobile-width: 600px;
     @media all and (max-width: $ens-bid-mobile-width) {
       display: block;
 
-      >* {
+      > * {
         display: block;
       }
     }
