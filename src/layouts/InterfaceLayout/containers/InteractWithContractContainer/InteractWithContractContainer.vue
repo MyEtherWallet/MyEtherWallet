@@ -331,6 +331,9 @@ export default {
     abi(newVal) {
       this.isValidAbi = Misc.isJson(newVal);
     },
+    address(newVal){
+      this.isValidAddress = this.web3.utils.isAddress(this.web3.utils.toChecksumAddress(newVal));
+    },
     selectedMethod(newVal) {
       this.writeInputs = {};
       for (const inputs in newVal) {
