@@ -146,6 +146,10 @@ export default {
     gasPrice: {
       type: String,
       default: '0'
+    },
+    minimumGasPrice: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -199,18 +203,38 @@ export default {
     gasPriceInputs() {
       return {
         economy: {
-          gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
-              'gwei'
-            )
-          ).toFixed(),
-          eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
-              'ether'
-            )
-          ).toFixed()
+          gwei:
+            this.minimumGasPrice === '0'
+              ? new BigNumber(
+                  utils.fromWei(
+                    new BigNumber(this.gasPrice).div(2).toFixed(0),
+                    'gwei'
+                  )
+                ).toFixed()
+              : new BigNumber(
+                  utils.fromWei(
+                    new BigNumber(this.minimumGasPrice)
+                      .times(1000000000)
+                      .toFixed(0),
+                    'gwei'
+                  )
+                ).toFixed(),
+          eth:
+            this.minimumGasPrice === '0'
+              ? new BigNumber(
+                  utils.fromWei(
+                    new BigNumber(this.gasPrice).div(2).toFixed(0),
+                    'ether'
+                  )
+                ).toFixed()
+              : new BigNumber(
+                  utils.fromWei(
+                    new BigNumber(this.minimumGasPrice)
+                      .times(1000000000)
+                      .toFixed(0),
+                    'ether'
+                  )
+                ).toFixed()
         },
         regular: {
           gwei: new BigNumber(
