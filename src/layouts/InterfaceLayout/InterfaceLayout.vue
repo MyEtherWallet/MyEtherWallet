@@ -387,7 +387,7 @@ export default {
     getBalance() {
       const web3 = this.web3;
       web3.eth
-        .getBalance(this.address)
+        .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
