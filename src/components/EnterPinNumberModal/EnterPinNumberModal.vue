@@ -71,13 +71,15 @@ export default {
       callback: () => {}
     };
   },
-  watch: {},
-  created() {
+  mounted() {
     this.$eventHub.$on('showHardwarePinMatrix', (deviceInfo, callback) => {
       this.$refs.enterpin.show();
       this.deviceInfo = deviceInfo;
       this.callback = callback;
     });
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('showHardwarePinMatrix');
   },
   methods: {
     clear() {

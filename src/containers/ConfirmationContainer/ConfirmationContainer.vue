@@ -147,7 +147,7 @@ export default {
       this.showErrorModal(message, linkMessage);
     });
 
-    this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
+    this.$eventHub.$on('showTxConfirmModal', async (tx, resolve) => {
       this.parseRawTx(tx);
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
@@ -156,7 +156,7 @@ export default {
       this.isHardwareWallet = this.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet.signTransaction(tx).then(_response => {
+      await this.wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });

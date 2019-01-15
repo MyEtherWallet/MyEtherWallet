@@ -1,6 +1,7 @@
 <template>
   <div class="send-eth-and-tokens">
     <wallet-password-modal />
+    <enter-pin-number-modal />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -85,6 +86,7 @@
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
@@ -121,7 +123,8 @@ export default {
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
-    'mnemonic-password-modal': MnemonicPasswordModal
+    'mnemonic-password-modal': MnemonicPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal
   },
   data() {
     return {
