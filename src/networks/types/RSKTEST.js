@@ -13,5 +13,7 @@ export default {
   contracts: contracts,
   ensResolver: '',
   ensAbi: '',
-  icon: rsk
+  icon: rsk,
+  regularGasPrice: 0.000001,
+  minimumGasPrice: 0.000001
 };

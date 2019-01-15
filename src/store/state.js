@@ -9,9 +9,14 @@ const network =
     : nodeList['ETH'][0];
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
+const regularGasPrice = network.type.regularGasPrice;
 const gasPrice =
-  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 10;
-
+  store.get('gasPrice') !== undefined
+    ? store.get('gasPrice')
+    : regularGasPrice !== undefined
+    ? regularGasPrice
+    : 41;
+const minimumGasPrice = network.type.minimumGasPrice || 0;
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const ens = network.type.ensResolver == null;
@@ -28,6 +33,7 @@ const state = {
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: gasPrice,
+  minimumGasPrice: minimumGasPrice,
   Networks: nodeList,
   network: network,
   notifications: notifications,

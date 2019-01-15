@@ -4,6 +4,7 @@
       v-if="wallet !== null"
       ref="settings"
       :gas-price="gasPrice"
+      :minimum-gas-price="minimumGasPrice"
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
@@ -320,8 +321,9 @@ export default {
       isHomePage: true,
       showGetFreeWallet: false,
       gasPrice: '0',
+      minimumGasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {}      
     };
   },
   computed: {
@@ -357,11 +359,20 @@ export default {
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.gasPrice = new BigNumber(res).toString();
+          if (res === '0') {
+            this.gasPrice = new BigNumber('1').toString();
+          } else {
+            this.gasPrice = new BigNumber(res).toString();
+          }
         })
         .catch(e => {
           ErrorHandler(e, false);
         });
+
+      this.minimumGasPrice =
+        this.$store.state.network.type.minimumGasPrice !== undefined
+          ? this.$store.state.network.type.minimumGasPrice.toString()
+          : '0';
     }
   },
   mounted() {
