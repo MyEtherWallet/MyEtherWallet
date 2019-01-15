@@ -1,5 +1,7 @@
 @import '../../RegisterDomain';
 
+$ens-bid-mobile-width: 600px;
+
 %accordion-template {
   background-color: $dark-blue-12 !important;
   border: 0;
@@ -31,7 +33,6 @@
 
   .edit {
     cursor: pointer;
-    margin-right: 20px;
   }
 }
 
@@ -63,13 +64,22 @@
   .input-container {
     display: flex;
     flex-direction: column;
-    margin-top: 32px;
+    margin-bottom: 20px;
 
     label {
       color: $dark-blue-2;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 600;
       padding: 10px 7px;
+
+      i {
+        font-size: 14px;
+        margin-right: 2px;
+      }
+
+      .input-title {
+        font-size: 16px;
+      }
     }
 
     input {
@@ -84,15 +94,25 @@
 }
 
 .buttons-container {
-  display: flex;
-  justify-content: space-around;
-  padding: 20px 10px;
+  text-align: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
 
   button {
     border-radius: 5px;
     cursor: pointer;
     padding: 20px;
     width: 260px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+
   }
 
   .submit {
@@ -147,12 +167,21 @@
 }
 
 .detail-info {
-  padding: 20px 17px;
+  //padding: 20px 17px;
 
   .detail-info-item {
     display: flex;
     justify-content: space-between;
     padding: 7px 10px;
+
+    // Mobile
+    @media all and (max-width: $ens-bid-mobile-width) {
+      display: block;
+
+      >* {
+        display: block;
+      }
+    }
 
     .detail-title {
       color: $dark-grey-11;

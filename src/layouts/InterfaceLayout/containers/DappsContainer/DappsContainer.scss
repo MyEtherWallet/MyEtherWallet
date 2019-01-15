@@ -12,12 +12,12 @@ $dapps-container-mobile-width: 650px;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 40px;
 
-  >* {
+  > * {
     margin-bottom: 10px;
   }
 
-  >*:last-child {
-    margin-bottom: 0px;
+  > *:last-child {
+    margin-bottom: 0;
   }
 
   // Tablet
@@ -25,12 +25,8 @@ $dapps-container-mobile-width: 650px;
     padding: 20px;
   }
 
-
   @media all and (max-width: $dapps-container-mobile-width) {
     display: block;
     padding: 10px;
   }
-
 }
-
-
