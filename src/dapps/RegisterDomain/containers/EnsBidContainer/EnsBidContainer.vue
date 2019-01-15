@@ -1,5 +1,6 @@
 <template lang="html">
   <div>
+    <print-modal ref="printModal" :json-string="raw" />
     <json-string-modal ref="jsonStringModal" :update-json-string="updateJson" />
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
@@ -187,12 +188,13 @@
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
-import printJS from 'print-js';
+import PrintModal from '../../components/PrintModal';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
     timer: Timer,
+    'print-modal': PrintModal,
     'json-string-modal': JsonStringModal
   },
   props: {
@@ -323,23 +325,24 @@ export default {
       window.getSelection().removeAllRanges();
     },
     downloadAndSend() {
-      const raw = {
-        data: this.raw['data'],
-        from: this.raw['from'],
-        to: this.raw['to'],
-        value: this.raw['value'],
-        gasPrice: this.raw['gasPrice'],
-        gas: this.raw['gas'],
-        nonce: this.raw['nonce']
-      };
-      if (!this.$route.fullPath.includes('reveal')) {
-        printJS({
-          printable: 'printableData',
-          type: 'html',
-          header: 'MyEtherWallet - ENS reveal bid'
-        });
-      }
-      this.web3.eth.sendTransaction(raw);
+      this.$refs.printModal.$refs.print.show();
+      // const raw = {
+      //   data: this.raw['data'],
+      //   from: this.raw['from'],
+      //   to: this.raw['to'],
+      //   value: this.raw['value'],
+      //   gasPrice: this.raw['gasPrice'],
+      //   gas: this.raw['gas'],
+      //   nonce: this.raw['nonce']
+      // };
+      // if (!this.$route.fullPath.includes('reveal')) {
+      //   printJS({
+      //     printable: 'printableData',
+      //     type: 'html',
+      //     header: 'MyEtherWallet - ENS reveal bid'
+      //   });
+      // }
+      // this.web3.eth.sendTransaction(raw);
     }
   }
 };
