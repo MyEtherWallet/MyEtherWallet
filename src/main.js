@@ -84,3 +84,4 @@ new Vue({
   store,
   render: h => h(getApp())
 }).$mount('#app');
+export { store, router };
