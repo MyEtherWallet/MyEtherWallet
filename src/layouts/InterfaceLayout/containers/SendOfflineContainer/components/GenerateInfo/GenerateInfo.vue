@@ -8,18 +8,15 @@
               <h4>{{ $t('interface.fromAddr') }}</h4>
             </div>
             <div class="form-controller">
-              <button
-                class="title-button prevent-user-select"
+              <p
+                class="linker-1 prevent-user-select"
                 @click="deleteFromAddress"
               >
                 {{ $t('common.clear') }}
-              </button>
-              <button
-                class="title-button prevent-user-select"
-                @click="copyFromAddress"
-              >
+              </p>
+              <p class="linker-1 prevent-user-select" @click="copyFromAddress">
                 {{ $t('common.copy') }}
-              </button>
+              </p>
             </div>
           </div>
         </div>
