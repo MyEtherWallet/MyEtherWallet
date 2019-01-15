@@ -1,6 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .print-modal {
+  min-height: 300px;
+  min-width: 300px;
   padding: 50px 54px;
 }
 
@@ -44,7 +46,6 @@
   flex-direction: column;
   justify-content: space-around;
 
-
   .print-item {
     align-items: center;
     border-bottom: 1px solid $light-grey-3;
@@ -61,6 +62,7 @@
   .json-string-container {
     p {
       @extend .print-item;
+
       border-bottom: none;
       font-size: inherit;
       font-weight: bold;
@@ -89,7 +91,6 @@
     padding-left: 5px;
   }
 }
-
 
 .button-container {
   align-items: center;

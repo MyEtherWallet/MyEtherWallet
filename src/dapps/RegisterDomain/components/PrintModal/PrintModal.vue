@@ -48,7 +48,7 @@
 </template>
 <script>
 import html2canvas from 'html2canvas';
-import printJS from 'print-js';
+// import printJS from 'print-js';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -107,15 +107,21 @@ export default {
       const element = document.getElementById('printContainer');
       const screen = await html2canvas(element, {
         async: true,
-        logging: false
+        logging: false,
+        width: element.clientWidth,
+        height: element.clientHeight,
+        windowWidth: element.clientWidth,
+        windowHeight: element.clientHeight
       }).then(canvas => {
         return canvas;
       });
 
-      printJS({
-        printable: screen.toDataURL('image/png'),
-        type: 'image'
-      });
+      console.log(screen);
+
+      // printJS({
+      //   printable: screen.toDataURL('image/png'),
+      //   type: 'image'
+      // });
     }
   }
 };
