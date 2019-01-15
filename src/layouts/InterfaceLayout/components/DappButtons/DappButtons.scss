@@ -27,7 +27,7 @@ $dapp-button-mobile-width: 650px;
   img {
     //margin-bottom: 15px;
     @media all and (max-width: $dapp-button-mobile-width) {
-      margin-top: 0px;
+      margin-top: 0;
       margin-left: -10px;
       margin-right: 5px;
     }
@@ -38,7 +38,6 @@ $dapp-button-mobile-width: 650px;
     font-size: 18px;
     font-weight: 500;
   }
-
 
   // a {
   //   color: black;

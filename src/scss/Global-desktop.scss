@@ -656,6 +656,7 @@
   .qrcode-modal {
     .popover {
       max-width: 180px;
+      text-align: center;
     }
   }
 
@@ -1318,6 +1319,10 @@
   opacity: 1;
 }
 
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: $white;
+}
+
 // *********************************************************************
 // Interface: buttons next to title
 // *********************************************************************
@@ -1327,6 +1332,8 @@
   margin-left: auto;
   background-color: $background-color-white;
   border: 0;
+  font-size: 14px;
+  font-weight: 400;
 
   &:hover {
     // Desktop
@@ -1339,3 +1346,4 @@
     color: $text--link-color;
   }
 }
+
