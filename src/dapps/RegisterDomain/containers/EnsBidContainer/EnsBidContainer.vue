@@ -325,24 +325,22 @@ export default {
       window.getSelection().removeAllRanges();
     },
     downloadAndSend() {
-      this.$refs.printModal.$refs.print.show();
-      // const raw = {
-      //   data: this.raw['data'],
-      //   from: this.raw['from'],
-      //   to: this.raw['to'],
-      //   value: this.raw['value'],
-      //   gasPrice: this.raw['gasPrice'],
-      //   gas: this.raw['gas'],
-      //   nonce: this.raw['nonce']
-      // };
-      // if (!this.$route.fullPath.includes('reveal')) {
-      //   printJS({
-      //     printable: 'printableData',
-      //     type: 'html',
-      //     header: 'MyEtherWallet - ENS reveal bid'
-      //   });
-      // }
-      // this.web3.eth.sendTransaction(raw);
+      const raw = {
+        data: this.raw['data'],
+        from: this.raw['from'],
+        to: this.raw['to'],
+        value: this.raw['value'],
+        gasPrice: this.raw['gasPrice'],
+        gas: this.raw['gas'],
+        nonce: this.raw['nonce']
+      };
+      if (!this.$route.fullPath.includes('reveal')) {
+        this.$refs.printModal.$refs.print.show();
+      }
+
+      this.$refs.printModal.$refs.print.$on('hidden', () => {
+        this.web3.eth.sendTransaction(raw);
+      });
     }
   }
 };
