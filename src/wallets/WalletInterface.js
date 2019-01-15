@@ -6,9 +6,7 @@ import {
 } from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
-import { toChecksumAddress as toRSKChecksumAddress } from 'rskjs-util';
-import { store } from '@/main';
-import { RSK, RSKTEST } from '@/networks/types';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 class WalletInterface {
   constructor(key, isPub = false, identifier) {
     this.identifier = identifier;
@@ -61,11 +59,7 @@ class WalletInterface {
   }
 
   getChecksumAddressString() {
-    const chainID = store.getters.network.type.chainID;
-    if (chainID === RSK.chainID || chainID === RSKTEST.chainID) {
-      return toRSKChecksumAddress(this.getAddressString(), chainID); // RSK checksum is different
-    }
-    return ethUtil.toChecksumAddress(this.getAddressString());
+    return toChecksumAddress(this.getAddressString());
   }
   signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== 'function')
