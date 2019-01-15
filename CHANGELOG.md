@@ -2,6 +2,12 @@
 
 ### Devop
 
+- Address checksum validation based on the network (RSK) [#461](https://github.com/MyEtherWallet/MyEtherWallet/pull/461)
+
+### Release v5.0.0-beta.1
+
+### Devop
+
 - Add node_modules cache to TravisCI for faster builds, and remove Brotli compression from offline [#435](https://github.com/MyEtherWallet/MyEtherWallet/pull/435)
 - Prep release and multiple fixes: #412, #409, #408, #413, #414, #433, #419, #415, #425, #427, #430, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
 
