@@ -13,13 +13,18 @@
       display: flex;
       margin-bottom: 10px;
 
+      .title-container {
+        display: flex;
+      }
+
       h4 {
         font-size: 14px;
         font-weight: 400;
       }
 
-      i {
+      img {
         cursor: pointer;
+        padding-left: 5px;
       }
 
       p {
