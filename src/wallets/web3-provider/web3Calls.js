@@ -40,7 +40,7 @@ class Web3Calls {
         params: 2,
         inputFormatter: [
           function(address) {
-            if (utils.isAddress(address)) {
+            if (utils.isAddress(address.toLowerCase())) {
               return address;
             }
             throw new Error(

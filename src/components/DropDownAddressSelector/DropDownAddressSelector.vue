@@ -69,8 +69,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import web3 from 'web3';
-
+import { isAddress } from '@/helpers/AddressUtils';
 export default {
   components: {
     blockie: Blockie
@@ -88,18 +87,12 @@ export default {
       selectedAddress: this.options.value,
       validAddress: false,
       dropdownOpen: false,
-      addresses: [
-        '0x7545566a4339daf3fad6979208b2042f06e8c881',
-        '0x7545196a7339daf3fad6979208b2042f06e8c882',
-        '0x7545193a4339daf3fad6979208b2042f06e8c883',
-        '0x7515196a4339daf3fad6979208b2042f06e8c884',
-        '0x7545296a4339daf3fad6979208b2042f06e8c885'
-      ]
+      addresses: []
     };
   },
   watch: {
     selectedAddress: function(address) {
-      if (web3.utils.isAddress(address)) {
+      if (isAddress(address)) {
         this.validAddress = true;
       } else {
         this.validAddress = false;
@@ -107,7 +100,7 @@ export default {
     }
   },
   mounted() {
-    if (web3.utils.isAddress(this.selectedAddress)) {
+    if (isAddress(this.selectedAddress)) {
       this.validAddress = true;
     } else {
       this.validAddress = false;
