@@ -4,6 +4,7 @@ $dapps-container-mobile-width: 650px;
 
 .dapps-container {
   @extend %interface-container;
+
   min-height: 550px;
 }
 
