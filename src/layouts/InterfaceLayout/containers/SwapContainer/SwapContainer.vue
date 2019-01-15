@@ -288,7 +288,9 @@ export default {
       return false;
     },
     fromAboveMaxAllowed() {
-      if (
+      if (this.selectedProvider.provider === this.providerNames.bity) {
+        return this.toAboveMaxAllowed;
+      } else if (
         +this.fromValue > this.selectedProvider.maxValue &&
         this.selectedProvider.maxValue > 0
       )

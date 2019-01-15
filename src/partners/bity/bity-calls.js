@@ -11,15 +11,23 @@ const getRates = () => {
   return get(bityRateEndpoint);
 };
 
-const openOrder = orderInfo => {
-  return post(
+const openOrder = async orderInfo => {
+  const result = await post(
     buildPath(),
     utils.buildPayload(bityMethods.createTransaction, orderInfo)
   );
+  if (!result.error) {
+    return result.result;
+  }
+  throw Error(result.error.message);
 };
 
-const getStatus = orderInfo => {
-  return post(buildPath(), utils.buildPayload(bityMethods.status, orderInfo));
+const getStatus = async orderId => {
+  const result = await post(
+    buildPath(),
+    utils.buildPayload(bityMethods.status, [orderId])
+  );
+  return result.result;
 };
 
 export { getRates, openOrder, getStatus };

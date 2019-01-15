@@ -1,4 +1,4 @@
-import { networkSymbols, BASE_CURRENCY } from '../partnersConfig';
+import { networkSymbols } from '../partnersConfig';
 import { getRates, openOrder, getStatus } from './bity-calls';
 import {
   bityStatuses,
@@ -114,29 +114,42 @@ export default class BitySwap {
   }
 
   minCheck(fromCurrency, fromValue, toCurrency, toValue) {
-    return toValue > this.minValue || fromValue > this.minValue;
+    return (
+      this.validityCheck(fromCurrency, fromValue, toCurrency, toValue) !==
+      'lessThanMin'
+    );
   }
 
   maxCheck(fromCurrency, fromValue, toCurrency, toValue) {
-    const overMax =
-      (toCurrency === 'BTC' && toValue > this.maxValue) ||
-      (fromCurrency === 'BTC' && fromValue > this.maxValue);
-    const overMaxETH =
-      (toCurrency === 'ETH' && toValue > this.maxValue) ||
-      (fromCurrency === 'ETH' &&
-        fromValue * this._getRate(toCurrency, fromCurrency) > this.maxValue);
-    const overMaxREP =
-      (toCurrency === 'REP' && toValue > this.maxValue) ||
-      (fromCurrency === 'REP' &&
-        fromValue * this._getRate(fromCurrency, toCurrency) > this.maxValue);
-    if (toCurrency === 'BTC' && overMax) {
-      return false;
-    } else if (toCurrency === 'ETH' && overMaxETH) {
-      return false;
-    } else if (toCurrency === 'REP' && overMaxREP) {
-      return false;
-    }
-    return true;
+    return (
+      this.validityCheck(fromCurrency, fromValue, toCurrency, toValue) !==
+      'greaterThanMax'
+    );
+  }
+
+  validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
+    if (toValue < this.minValue || fromValue < this.minValue)
+      return 'lessThanMin';
+    else if (
+      (toCurrency == 'BTC' && toValue > this.maxValue) ||
+      (fromCurrency == 'BTC' && fromValue > this.maxValue)
+    )
+      return 'greaterThanMax';
+    else if (
+      (toCurrency == 'ETH' &&
+        toValue * this._getRate('ETH', 'BTC') > this.maxValue) ||
+      (fromCurrency == 'ETH' &&
+        fromValue * this._getRate('ETH', 'BTC') > this.maxValue)
+    )
+      return 'greaterThanMax';
+    else if (
+      (toCurrency == 'REP' &&
+        toValue * this._getRate('REP', 'BTC') > this.maxValue) ||
+      (fromCurrency == 'REP' &&
+        fromValue * this._getRate('REP', 'BTC') > this.maxValue)
+    )
+      return 'greaterThanMax';
+    return 'noErrors';
   }
 
   setNetwork(network) {
@@ -189,10 +202,7 @@ export default class BitySwap {
   }
 
   async startSwap(swapDetails) {
-    swapDetails.dataForInitialization = await this.buildOrder(
-      swapDetails.fromCurrency === BASE_CURRENCY,
-      swapDetails
-    );
+    swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
     swapDetails.providerReceives =
       swapDetails.dataForInitialization.input.amount;
     swapDetails.providerSends = swapDetails.dataForInitialization.output.amount;
@@ -203,27 +213,25 @@ export default class BitySwap {
     return swapDetails;
   }
 
-  async buildOrder(
-    isFrom,
-    { fromCurrency, toCurrency, fromValue, toValue, toAddress }
-  ) {
+  async buildOrder({
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue,
+    toAddress
+  }) {
     if (
       this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
       this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
     ) {
       const order = {
         amount: fromValue,
-        mode: isFrom ? 0 : 1, // check how I should handle this now
+        mode: 0,
         pair: fromCurrency + toCurrency,
         destAddress: toAddress
       };
 
-      const bityOrder = await openOrder(order);
-
-      if (!bityOrder.error) {
-        return bityOrder.data;
-      }
-      throw Error('error creating bity order');
+      return await openOrder(order);
     }
   }
 
@@ -233,7 +241,7 @@ export default class BitySwap {
       statusId: order.reference,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
-      sendValue: order.input.amount,
+      sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
       validFor: order.validFor || TIME_SWAP_VALID
@@ -241,17 +249,29 @@ export default class BitySwap {
   }
 
   static async getOrderStatus(noticeDetails) {
-    const data = await getStatus({ orderid: noticeDetails.statusId });
-    switch (data.status) {
-      case bityStatuses.OPEN:
-        return 'new';
-      case bityStatuses.RCVE:
-      case bityStatuses.CONF:
-        return 'pending';
-      case bityStatuses.FILL:
-        return 'complete';
-      case bityStatuses.CANC:
-        return 'cancelled';
+    const data = await getStatus(noticeDetails.orderId);
+    if (data.status === bityStatuses.EXEC) {
+      return 'complete';
+    }
+    if (data.input.status !== bityStatuses.FILL) {
+      switch (data.input.status) {
+        case bityStatuses.OPEN:
+          return 'new';
+        case bityStatuses.RCVE:
+        case bityStatuses.CONF:
+          return 'pending';
+        case bityStatuses.CANC:
+          return 'cancelled';
+      }
+    } else {
+      switch (data.output.status) {
+        case bityStatuses.FILL:
+          return 'complete';
+        case bityStatuses.CANC:
+          return 'cancelled';
+        default:
+          return 'pending';
+      }
     }
   }
 }

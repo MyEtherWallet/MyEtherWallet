@@ -165,9 +165,6 @@ export default {
           this.$emit('toAddress', '');
           this.$emit('validAddress', false);
         }
-      } else {
-        this.validAddress = false;
-        this.$emit('validAddress', false);
       }
     }
   }
