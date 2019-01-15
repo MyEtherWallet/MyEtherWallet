@@ -1,10 +1,8 @@
+const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BrotliPlugin = require('brotli-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const webpackConfig = {
@@ -21,11 +19,17 @@ const webpackConfig = {
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
-      test: /\.(jpe?g|png|gif|svg)$/i,
       disable: process.env.NODE_ENV !== 'production',
+      test: /\.(jpe?g|png|gif|svg)$/i,
       pngquant: {
-        quality: '95-100'
-      }
+        quality: '100'
+      },
+      plugins: [
+        imageminMozjpeg({
+          quality: 100,
+          progressive: true
+        })
+      ]
     })
   ],
   optimization: {
@@ -62,17 +66,9 @@ if (process.env.BUILD_TYPE === 'mewcx') {
 }
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
-    new BrotliPlugin({
-      asset: '[path].br[query]',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-  webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: false,
+      failOnUnused: true,
       globOptions: {
         ignore: [
           // Unknown
@@ -139,7 +135,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/mewcx/files/img/icons/icon48.png',
           'src/builds/mewcx/files/manifest.json',
           'src/builds/mewcx/index.js',
-          'src/builds/web/storage/index.js',
+          'src/builds/web/storage/index.js'
         ]
       }
     })
@@ -156,6 +152,6 @@ module.exports = {
   configureWebpack: webpackConfig,
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
-  integrity: true,
+  integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   chainWebpack: config => {}
 };

@@ -52,6 +52,8 @@
                 {{ fromAddress.name }} {{ $t('interface.articleTo') }}
                 <span class="address">{{ qrcode }}</span>
               </h4>
+              <p>{{ swapDetails.providerAddress }}</p>
+
               <qrcode :value="qrcode" :options="{ size: 200 }" />
             </div>
           </li>
@@ -82,7 +84,7 @@ import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
 
-import { fiat, utils } from '@/partners';
+import { fiat, utils, qrcodeBuilder } from '@/partners';
 
 export default {
   components: {
@@ -194,11 +196,10 @@ export default {
       }
     },
     buildQrCodeContent(swapDetails) {
-      if (swapDetails.fromCurrency === 'BTC') {
-        this.qrcode = `bitcoin:${swapDetails.providerAddress}`;
-      } else {
-        this.qrcode = swapDetails.providerAddress;
-      }
+      this.qrcode = qrcodeBuilder(
+        swapDetails.providerAddress,
+        swapDetails.fromCurrency
+      );
     },
     bitySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);

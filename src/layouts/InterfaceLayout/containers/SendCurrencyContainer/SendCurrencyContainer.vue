@@ -288,13 +288,13 @@ export default {
       this.amount =
         new BigNumber(e.target.value).decimalPlaces() > decimals
           ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
-          : e.target.value;
-      e.target.value = this.amount;
+          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0) ? e.target.value : 0;
       if (this.amount < 0) {
         this.isValidAmount = false;
       } else {
         this.isValidAmount = true;
       }
+      e.target.value = this.amount;
       if (this.verifyAddr()) {
         this.estimateGas();
       }
@@ -344,14 +344,13 @@ export default {
       window.scrollTo(0, 0);
     },
     setBalanceToAmt() {
-      console.log(this.selectedCurrency.symbol, this.network.type.name);
       if (this.selectedCurrency.symbol === this.network.type.name) {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
           .toString();
-        this.amount = this.parsedBalance
+        this.amount = this.amount > 0 ? this.parsedBalance
           .minus(unit.fromWei(txFee, 'ether'))
-          .toString();
+          .toString() : 0;
       } else {
         this.amount = this.selectedCurrency.balance;
       }
