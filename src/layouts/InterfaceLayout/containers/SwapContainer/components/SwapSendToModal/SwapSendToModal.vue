@@ -52,7 +52,7 @@
                 {{ fromAddress.name }} {{ $t('interface.articleTo') }}
                 <span class="address">{{ qrcode }}</span>
               </h4>
-              <p> {{swapDetails.providerAddress}}</p>
+              <p>{{ swapDetails.providerAddress }}</p>
 
               <qrcode :value="qrcode" :options="{ size: 200 }" />
             </div>
