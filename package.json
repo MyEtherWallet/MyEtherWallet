@@ -69,6 +69,7 @@
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.0",
     "i18n-iso-countries": "3.7.8",
+    "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.0",
     "jest-skipped-reporter": "0.0.4",
     "jspdf": "1.5.3",
