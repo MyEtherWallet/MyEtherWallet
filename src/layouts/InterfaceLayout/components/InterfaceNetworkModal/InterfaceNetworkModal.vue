@@ -53,6 +53,32 @@
             </p>
           </div>
         </div>
+        <div v-if="customNetworks.length > 0" class="content-block">
+          <h4 class="cust">Custom Networks</h4>
+          <div
+            v-for="(net, idx) in customNetworks"
+            :key="net.service + '(' + net.type.name + ')' + idx"
+            class="grid-3"
+          >
+            <div
+              :class="
+                net.service === network.service &&
+                net.type.name === network.type.name
+                  ? 'current-network'
+                  : ''
+              "
+              class="switch-network custom-network-item"
+            >
+              <p @click="switchNetwork(net)">
+                {{ net.service }} {{ '(' + net.type.name + ')' }}
+              </p>
+              <i
+                class="fa fa-times-circle"
+                @click.prevent="removeNetwork(net, idx)"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <form ref="networkAdd" class="network-add hidden">
         <div class="content-block">
@@ -72,9 +98,9 @@
                 :value="type.name"
                 :key="type.name + type.name_long"
                 :selected="selectedNetworkName === type.name"
-                >{{ type.name | capitalize }} -
-                {{ type.name_long | capitalize }}</option
               >
+                {{ type.name | capitalize }} - {{ type.name_long | capitalize }}
+              </option>
             </select>
             <input
               v-validate="'required|url:require_protocol'"
