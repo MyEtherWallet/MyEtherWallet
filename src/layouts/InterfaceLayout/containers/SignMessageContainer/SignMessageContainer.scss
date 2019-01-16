@@ -31,13 +31,11 @@ p {
           margin-left: auto;
         }
       }
-
     }
 
     .form-block {
       @extend %form-block-base;
     }
-
   }
 
   .submit-button-container {

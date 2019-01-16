@@ -29,7 +29,7 @@ describe('SignMessageContainer.vue', () => {
   it('should render correct contents', () => {});
 
   describe('SignMessageContainer.vue Methods', () => {
-    it('should render correct contents', () => {
+    xit('should render correct contents', () => {
       // const textArea = wrapper.find('.domain-name .custom-textarea-1');
       wrapper.find('.copy-buttons span').trigger('click');
       expect(
