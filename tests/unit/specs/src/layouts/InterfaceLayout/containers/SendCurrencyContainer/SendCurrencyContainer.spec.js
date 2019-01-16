@@ -4,7 +4,6 @@ import { shallowMount } from '@vue/test-utils'
 import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import nodeList from '@/networks';
 import url from 'url';
