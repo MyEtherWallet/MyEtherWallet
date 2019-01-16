@@ -34,19 +34,18 @@
   display: none;
 }
 
-
 .send-currency-container-safe-send {
   @extend %interface-container;
 
   .inner-safesend-text-container {
-    width:55%;
-    font-size:16px;
+    width: 55%;
+    font-size: 16px;
   }
   .inner-safesend-text {
-    color:#05c0a5;
-    font-size:16px
+    color: #05c0a5;
+    font-size: 16px;
   }
-  .protection-fee-text{
+  .protection-fee-text {
     color: #506175;
     line-height: 21px;
     padding: 0 8px;
