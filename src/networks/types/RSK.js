@@ -14,5 +14,11 @@ export default {
   ensResolver: '',
   ensAbi: '',
   icon: rsk,
-  unsupportedTabs: ['dapps']
+  supportedTabs: {
+    dapps: [],
+    send: ['send-transaction', 'send-offline'],
+    swap: ['swap'],
+    contracts: ['contracts', 'interact-with-contract', 'deploy-contract'],
+    messages: ['messages', 'sign-message', 'verify-message']
+  }
 };

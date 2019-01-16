@@ -31,7 +31,7 @@
           </div>
           <ul v-if="tab.children.length" :class="tab.name" class="child-tab">
             <li
-              v-for="(child, cidx) in tab.children"
+              v-for="(child, cidx) in supportedTabs(tab.children)"
               :key="child.name + cidx"
               :class="isTabActive(child.routes) ? 'active' : ''"
               @click.prevent="tabAction(child)"
@@ -66,11 +66,22 @@ export default {
       return routes.includes(this.$route.path);
     },
     supportedTabs(tabData) {
-      const tabs = this.$store.state.network.type.unsupportedTabs || [];
-      const toReturn = tabData.filter(function(tab) {
-        return !tabs.includes(tab.name);
+      const tabs = this.$store.state.network.type.supportedTabs;
+
+      if (tabs === undefined) {
+        return tabData;
+      }
+
+      const supportedTabs = []
+        .concat(tabs.dapps)
+        .concat(tabs.send)
+        .concat(tabs.swap)
+        .concat(tabs.contracts)
+        .concat(tabs.messages);
+
+      return tabData.filter(function(tab) {
+        return supportedTabs.includes(tab.name);
       });
-      return toReturn;
     },
     tabAction(tab) {
       if (typeof tab.children === 'undefined' || tab.children.length === 0) {
