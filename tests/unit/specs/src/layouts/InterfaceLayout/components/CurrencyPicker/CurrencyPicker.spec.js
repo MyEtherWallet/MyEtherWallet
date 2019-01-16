@@ -1,13 +1,17 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils'
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
+import {
+  Tooling
+} from '@@/helpers';
 
-import { Tooling } from '@@/helpers';
-
-const currency = [
-  { symbol: 'BTC', name: 'Bitcoin' },
-  { symbol: 'Aug', name: 'Augur' },
-  { symbol: 'OMG', name: 'OhMyGod' }
-];
+const currency = [{ symbol: 'BTC', name: 'Bitcoin' },
+{ symbol: 'Aug', name: 'Augur' },
+{ symbol: 'OMG', name: 'OhMyGod' }];
 
 describe('CurrencyPicker.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -16,6 +20,28 @@ describe('CurrencyPicker.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    const network = nodeList['ETH'][3];
+    const hostUrl = url.parse(network.url);
+
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+      hostUrl.pathname
+      }`
+    );
+
+    let getters = {
+      web3: () => {
+        return newWeb3
+      },
+      network: () => {
+        return network
+      }
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
   });
 
   beforeEach(() => {
@@ -23,96 +49,51 @@ describe('CurrencyPicker.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
     });
   });
 
   it('should render correct localCurrency data', () => {
-    const currencyElements = wrapper.vm.$el.querySelectorAll(
-      '.item-container div'
-    );
-    for (let i = 0; i < currencyElements.length; i++) {
+    const currencyElements = wrapper.vm.$el.querySelectorAll('.item-container div');
+    for (var i = 0; i < currencyElements.length; i++) {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.$data.localCurrency[i];
-      expect(
-        currencyElement.querySelectorAll('p')[0].textContent.trim()
-      ).toEqual(localCurrency.symbol + ' - ' + localCurrency.name);
-      expect(
-        currencyElement.querySelectorAll('p')[2].textContent.trim()
-      ).toEqual(localCurrency.name);
+      expect(currencyElement.querySelectorAll('p')[0].textContent.trim()).toEqual(localCurrency.symbol + " - " + localCurrency.name);
+      expect(currencyElement.querySelectorAll('p')[2].textContent.trim()).toEqual(localCurrency.name);
     }
   });
 
   it('should render correct selectedCurrency data', () => {
-    const data = wrapper.vm.$data;
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[0]
-        .textContent.replace(/\r?\n|\r/g, '')
-        .replace(/\s+/g, ' ')
-        .trim()
-    ).toEqual(
-      `${data.selectedCurrency.symbol} - ${data.selectedCurrency.name}`
-    );
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[1]
-        .textContent.trim()
-    ).toEqual(data.selectedCurrency.name);
+    expect(wrapper.vm.$el.querySelectorAll('.dropdown-container p')[0].textContent.trim().indexOf(wrapper.vm.$data.selectedCurrency.symbol)).toBeGreaterThan(-1);
+    expect(wrapper.vm.$el.querySelectorAll('.dropdown-container p')[0].textContent.trim().indexOf(wrapper.vm.$data.selectedCurrency.name)).toBeGreaterThan(-1);
+    expect(wrapper.vm.$el.querySelectorAll('.dropdown-container p')[1].textContent.trim()).toEqual(wrapper.vm.$data.selectedCurrency.name);
   });
 
   it('should show elements according to token props', () => {
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(0)
-        .isVisible()
-    ).toBe(true);
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(1)
-        .isVisible()
-    ).toBe(false);
+    expect(wrapper.findAll('.dropdown-container p').at(0).isVisible()).toBe(true);
+    expect(wrapper.findAll('.dropdown-container p').at(1).isVisible()).toBe(false);
     wrapper.setProps({ token: false });
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(0)
-        .isVisible()
-    ).toBe(false);
-    expect(
-      wrapper
-        .findAll('.dropdown-container p')
-        .at(1)
-        .isVisible()
-    ).toBe(true);
+    expect(wrapper.findAll('.dropdown-container p').at(0).isVisible()).toBe(false);
+    expect(wrapper.findAll('.dropdown-container p').at(1).isVisible()).toBe(true);
   });
 
   it('should render correct search data', () => {
     const search = 'search';
     wrapper.setData({ search });
-    expect(
-      wrapper.vm.$el.querySelector('.dropdown-search-container input').value
-    ).toEqual(search);
+    expect(wrapper.vm.$el.querySelector('.dropdown-search-container input').value).toEqual(search);
   });
 
   it('should render correct currency props', () => {
     wrapper.setProps({ currency });
-    const currencyElements = wrapper.vm.$el.querySelectorAll(
-      '.item-container div'
-    );
-    for (let i = 0; i < currencyElements.length; i++) {
+    const currencyElements = wrapper.vm.$el.querySelectorAll('.item-container div');
+    for (var i = 0; i < currencyElements.length; i++) {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.$data.localCurrency[i];
-      expect(
-        currencyElement.querySelectorAll('p')[0].textContent.trim()
-      ).toEqual(localCurrency.symbol + ' - ' + localCurrency.name);
-      expect(
-        currencyElement.querySelectorAll('p')[2].textContent.trim()
-      ).toEqual(localCurrency.name);
+      expect(currencyElement.querySelectorAll('p')[0].textContent.trim()).toEqual(localCurrency.symbol + " - " + localCurrency.name);
+      expect(currencyElement.querySelectorAll('p')[2].textContent.trim()).toEqual(localCurrency.name);
     }
   });
+
 
   it('should render correct search method', () => {
     const search = 'Bit';
@@ -122,33 +103,25 @@ describe('CurrencyPicker.vue', () => {
     inputElement.trigger('change');
 
     expect(wrapper.vm.$data.localCurrency[0].name).toEqual(currency[0].name);
-    expect(wrapper.vm.$data.localCurrency[0].symbol).toEqual(
-      currency[0].symbol
-    );
+    expect(wrapper.vm.$data.localCurrency[0].symbol).toEqual(currency[0].symbol);
   });
 
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
       wrapper.find('.dropdown-container').trigger('click');
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(true);
       wrapper.find('.dropdown-container').trigger('click');
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(false);
     });
 
     it('should render correct localCurrency data', () => {
       const currencyElements = wrapper.findAll('.item-container div');
-      for (let i = 0; i < currencyElements.length; i++) {
+      for (var i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
         const localCurrency = wrapper.vm.$data.localCurrency[i];
         currencyElement.trigger('click');
-        expect(localCurrency.name).toEqual(
-          wrapper.vm.$data.selectedCurrency.name
-        );
-        expect(localCurrency.symbol).toEqual(
-          wrapper.vm.$data.selectedCurrency.symbol
-        );
+        expect(localCurrency.name).toEqual(wrapper.vm.$data.selectedCurrency.name);
+        expect(localCurrency.symbol).toEqual(wrapper.vm.$data.selectedCurrency.symbol);
       }
     });
   });

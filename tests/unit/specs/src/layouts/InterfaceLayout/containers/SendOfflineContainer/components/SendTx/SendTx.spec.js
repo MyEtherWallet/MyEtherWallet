@@ -1,36 +1,49 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
 import SendTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SendTx/SendTx.vue';
-import sinon from 'sinon';
-import { Tooling } from '@@/helpers';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import sinon from 'sinon'
+import {
+  Tooling
+} from '@@/helpers';
 
-describe('SendTx.vue', () => {
-  let localVue, i18n, store;
+xdescribe('SendTx.vue', () => {
+  let localVue, i18n, wrapper, store;
 
-  const rawTx = '{ "rawTransaction": "0xasdfasdfasdfasdfasasdfasdf" }';
-  const spy = sinon.stub();
+  const signedTx = 'signedTx'
+  const rawTx = { data: 'rawTx' }
+  const spy = sinon.stub()
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+    Vue.config.errorHandler = () => {};
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
-    shallowMount(SendTx, {
+    wrapper = shallowMount(SendTx, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      sync: false,
       propsData: {
-        rawTx: rawTx,
+        signedTx: signedTx,
         pathUpdate: spy()
       }
     });
   });
 
-  it('should render correct content', () => {});
+  it('should render correct rawTx props', () => {
+  
+  });
 
-  describe('SendTx.vue Methods', () => {});
+  describe('SendTx.vue Methods', () => {
+    it('should clear signedTx when button clicked', () => {
+      wrapper.findAll('.form-controller p').at(1).trigger('click');
+      expect(wrapper.vm.signedTx).toEqual('');
+    })
+  });
 });

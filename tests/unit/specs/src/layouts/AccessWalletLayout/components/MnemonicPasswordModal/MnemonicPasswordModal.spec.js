@@ -2,7 +2,10 @@ import { shallowMount } from '@vue/test-utils';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import { MnemonicWallet } from '@/wallets';
 import sinon from 'sinon';
-import { Mnemonic, Tooling } from '@@/helpers';
+import {
+  Mnemonic,
+  Tooling
+} from '@@/helpers';
 
 const longMnemonic = Mnemonic.long;
 const shortMnemonic = Mnemonic.short;
@@ -16,7 +19,7 @@ const BModalStub = {
   methods: {
     hide: hideModal
   }
-};
+}
 
 describe('MnemonicPasswordModal.vue', () => {
   describe('MnemonicPasswordModal.vue Methods', () => {
@@ -39,13 +42,11 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('[FAILING] should supply the mnemonic password directly', done => {
+    xit('should supply the mnemonic password directly', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(
-            Mnemonic.longAddresses[0].toLowerCase()
-          );
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.longAddresses[0].toLowerCase());
           done();
         },
         phrase: longMnemonic
@@ -56,13 +57,11 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('[FAILING] should supply the mnemonic password via the v-model on the input element', done => {
+    xit('should supply the mnemonic password via the v-model on the input element', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(
-            Mnemonic.shortAddresses[0].toLowerCase()
-          );
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.shortAddresses[0].toLowerCase());
           done();
         },
         phrase: shortMnemonic
@@ -75,13 +74,11 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('[FAILING] should accept an empty password to create an instance of MnemonicWallet and pass it to the hardwareWalletOpen prop function', done => {
+    xit('should accept an empty password to create an instance of MnemonicWallet and pass it to the hardwareWalletOpen prop function', (done) => {
       wrapper.setProps({
-        hardwareWalletOpen: function(walletObject) {
+        hardwareWalletOpen: function (walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
-          expect(walletObject.addressesToIndexMap[0]).toEqual(
-            Mnemonic.noPasswordShortAddresses[0].toLowerCase()
-          );
+          expect(walletObject.addressesToIndexMap[0]).toEqual(Mnemonic.noPasswordShortAddresses[0].toLowerCase());
           done();
         },
         phrase: Mnemonic.noPasswordShort
@@ -91,5 +88,6 @@ describe('MnemonicPasswordModal.vue', () => {
         wrapper.vm.unlockWallet();
       });
     });
+
   });
 });

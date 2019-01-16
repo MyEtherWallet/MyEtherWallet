@@ -46,5 +46,5 @@ describe('WhereAreMyFundsStored.vue', () => {
         .getElementsByClassName('content').length
     ).toEqual(0);
   });
-  describe('WhereAreMyFundsStored.vue Methods', () => {});
+  describe('WhereAreMyFundsStored.vue Methods', () => { });
 });

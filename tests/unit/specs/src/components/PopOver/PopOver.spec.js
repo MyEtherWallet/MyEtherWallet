@@ -1,27 +1,28 @@
 import Vue from 'vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils'
 
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
 
 const RouterLinkStub = {
   name: 'title',
-  template: '<p>aaa</p>',
-  // render: ()=>{},
+  template: '<p></p>',
   props: ['to']
-};
+}
 
 const BBtnStub = {
   name: 'b-btn',
   template: '<div class="b-btn">{{id}}</div>',
-  props: ['id']
-};
+  props: ['id'],
+}
 
 const BColStub = {
   name: 'b-col',
   template: '<div class="b-col"><slot></slot></div>',
-  props: ['id']
-};
+  props: ['id'],
+}
 
 describe('PopOver.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -34,7 +35,7 @@ describe('PopOver.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => {};
+    Vue.config.warnHandler = () => { };
   });
 
   beforeEach(() => {
@@ -45,7 +46,7 @@ describe('PopOver.vue', () => {
       attachToDocument: true,
       propsData: { poptitle, popcontent, popovertype },
       stubs: {
-        title: RouterLinkStub,
+        'title': RouterLinkStub,
         'b-col': BColStub,
         'b-btn': BBtnStub
       }
@@ -53,17 +54,11 @@ describe('PopOver.vue', () => {
   });
 
   it('should render correct popcontent', () => {
-    expect(
-      wrapper.vm.$el.querySelector('p.popover-content').textContent
-    ).toEqual(popcontent);
+    expect(wrapper.vm.$el.querySelector('p.popover-content').textContent).toEqual(popcontent);
   });
 
   it('should render correct popoverID', () => {
     wrapper.setData({ popovertype: 'A' });
-    expect(wrapper.vm.$el.querySelector('.b-btn').textContent).toEqual(
-      wrapper.vm.$data.popOverId
-    );
+    expect(wrapper.vm.$el.querySelector('.b-btn').textContent).toEqual(wrapper.vm.$data.popOverId);
   });
-
-  describe('PopOver.vue Methods', () => {});
 });

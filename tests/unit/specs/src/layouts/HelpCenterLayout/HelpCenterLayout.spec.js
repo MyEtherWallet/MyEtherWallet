@@ -1,7 +1,11 @@
+import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout/HelpCenterLayout.vue';
 
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
+
 
 describe('HelpCenterLayout.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -23,18 +27,19 @@ describe('HelpCenterLayout.vue', () => {
   });
 
   it('should render correct contents', () => {
-    let activeSpan = wrapper.findAll('.switcher span').at(1);
+    var activeSpan = wrapper.findAll('.switcher span').at(1);
     activeSpan.trigger('click');
 
-    expect(wrapper.vm.$data.openFAQs).toBe(false);
-    expect(wrapper.vm.$data.openCategories).toBe(true);
+    expect(wrapper.vm.$data.openFAQs).toBe(false)
+    expect(wrapper.vm.$data.openCategories).toBe(true)
 
-    activeSpan = wrapper.findAll('.switcher span').at(0);
+    var activeSpan = wrapper.findAll('.switcher span').at(0);
     activeSpan.trigger('click');
 
-    expect(wrapper.vm.$data.openFAQs).toBe(true);
-    expect(wrapper.vm.$data.openCategories).toBe(false);
+    expect(wrapper.vm.$data.openFAQs).toBe(true)
+    expect(wrapper.vm.$data.openCategories).toBe(false)
+
   });
 
-  describe('HelpCenterLayout.vue Methods', () => {});
+  describe('HelpCenterLayout.vue Methods', () => { });
 });

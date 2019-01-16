@@ -1,10 +1,22 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
 import ProvidersRadioSelector from '@/layouts/InterfaceLayout/containers/SwapContainer/components/ProvidersRadioSelector/ProvidersRadioSelector.vue';
+import BigNumber from 'bignumber.js';
 
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
 
-describe('ProvidersRadioSelector.vue', () => {
+function valueForRate(rate, value) {
+      return new BigNumber(value)
+        .times(rate)
+        .toFixed(6)
+        .toString(10);
+    }
+
+xdescribe('ProvidersRadioSelector.vue', () => {
   let localVue, i18n, wrapper, store;
+
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -17,27 +29,46 @@ describe('ProvidersRadioSelector.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
     });
   });
 
-  xit('[FAILING] should render correct content', () => {
-    const containerElements = wrapper.vm.$el.querySelectorAll(
-      '.radio-button-container'
-    );
-    for (let i = 0; i < containerElements.length; i++) {
-      const containerElement = containerElements[i];
-      expect(containerElement.querySelector('input').id).toEqual(
-        wrapper.vm.$data.providers[i].name
-      );
-      expect(
-        containerElement.querySelectorAll('div')[2].textContent.trim()
-      ).toEqual(wrapper.vm.$data.providers[i].swapValue1);
-      expect(
-        containerElement.querySelectorAll('div')[3].textContent.trim()
-      ).toEqual(wrapper.vm.$data.providers[i].swapValue2);
-    }
+  it('should render correct loadingData data', () => {
+    expect(wrapper.find('.animated-background').isVisible()).toBe(wrapper.vm.loadingData);
+    wrapper.setProps({ loadingData: false });
+    expect(wrapper.find('.animated-background').isVisible()).toBe(wrapper.vm.loadingData);
   });
 
-  describe('ProvidersRadioSelector.vue Methods', () => {});
+  it('should render correct noProvidersPair data', () => {
+    let noProvidersPair = {
+      fromCurrency: 'BTC',
+      toCurrency: 'ETH'
+    };
+
+    wrapper.setProps({ noProvidersPair });
+    const radioButtonContainer = wrapper.vm.$el.querySelectorAll('.radio-button-container')[4];
+    const errorElement = radioButtonContainer.querySelectorAll('ul li div')[2];
+    expect(errorElement.textContent.indexOf(noProvidersPair.fromCurrency)).toBeGreaterThan(-1);
+    expect(errorElement.textContent.indexOf(noProvidersPair.toCurrency)).toBeGreaterThan(-1);
+  });
+
+  it('should render correct providerData data', () => {
+    let providerData = [
+      { provider: 'kybernetwork', fromValue: '100', rate: '2', fromCurrency: 'BTC', toCurrency: 'ETH' },
+      { provider: 'bity', fromValue: '100', rate: '2', fromCurrency: 'BTC', toCurrency: 'ETH' },
+      { provider: 'simplex', fromValue: '100', rate: '2', fromCurrency: 'BTC', toCurrency: 'ETH' },
+      { provider: 'changelly', fromValue: '100', rate: '2', fromCurrency: 'BTC', toCurrency: 'ETH' }];
+    wrapper.setProps({ providerData });
+
+    const liElements = wrapper.vm.$el.querySelectorAll('.radio-button-container ul li');
+    for (var i = 0; i < liElements.length; i++) {
+      var liElement = liElements[i];
+
+      if (providerData[i] != undefined) {
+        let rateDisplay = providerData[i].fromValue + " " + providerData[i].fromCurrency + " = "
+          + valueForRate(Number(providerData[i].rate), Number(providerData[i].fromValue)) + " " + providerData[i].toCurrency
+        expect(liElement.querySelectorAll('div')[2].textContent.trim()).toEqual(rateDisplay);
+      }
+    }
+  });
 });

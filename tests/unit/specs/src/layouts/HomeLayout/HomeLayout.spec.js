@@ -1,12 +1,16 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils'
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
 
 const RouterLinkStub = {
   name: 'router-link',
   template: '<div class="routerlink"><slot> </slot></div>',
   props: ['to']
-};
+}
 describe('HomeLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -15,7 +19,18 @@ describe('HomeLayout.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    store.replaceState({ online: true });
+
+
+    let getters = {
+      online: () => {
+        return true;
+      }
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
+
   });
 
   beforeEach(() => {
@@ -30,9 +45,8 @@ describe('HomeLayout.vue', () => {
     });
   });
 
-  xit('[FAILING] should render correct contents', () => {
-    expect(wrapper.vm.$data.online).toBe(true);
-  });
 
-  describe('HomeLayout.vue Methods', () => {});
+  it('should render correct contents', () => {
+    expect(wrapper.vm.online).toBe(true);
+  });
 });

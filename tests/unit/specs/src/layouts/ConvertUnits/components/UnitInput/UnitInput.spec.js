@@ -1,12 +1,17 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
 import UnitInput from '@/layouts/ConvertUnits/components/UnitInput/UnitInput.vue';
+import DropDownUnitSelector from '@/layouts/ConvertUnits/components/DropDownUnitSelector/DropDownUnitSelector.vue';
 
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
+
 
 describe('UnitInput.vue', () => {
   let localVue, i18n, wrapper, store;
-  const content = 'UnitInput content';
 
+  let options = ['Wei', 'Kwei', 'Mwei', 'Gwei', 'Szabo'];
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -20,35 +25,22 @@ describe('UnitInput.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      propsData: { content }
+      propsData: { options },
+      stubs: {
+        'dropdown-unit-selector': DropDownUnitSelector
+      }
     });
   });
 
-  it('should render correct contents', () => {
-    for (
-      let i = 0;
-      i < wrapper.vm.$el.querySelector('.block-left .select-block').length;
-      i++
-    ) {
-      const dropDownText = wrapper.vm.$el.querySelector(
-        '.block-left .select-block select'
-      ).options[i].text;
-      const unitInputData = wrapper.vm.$data.leftDropDown[i].label;
-      expect(dropDownText.trim()).toEqual(unitInputData);
-    }
-
-    for (
-      let i = 0;
-      i < wrapper.vm.$el.querySelector('.block-right .select-block').length;
-      i++
-    ) {
-      const dropDownText = wrapper.vm.$el.querySelector(
-        '.block-right .select-block select'
-      ).options[i].text;
-      const unitInputData = wrapper.vm.$data.rightDropDown[i].label;
-      expect(dropDownText.trim()).toEqual(unitInputData);
-    }
+  it('should render correct valueLeft data', () => {
+    expect(wrapper.vm.$el.querySelector('.block-left input').value).toEqual(String(wrapper.vm.$data.valueLeft));
   });
 
-  describe('UnitInput.vue Methods', () => {});
+  it('should render correct valueRight data', () => {
+    expect(wrapper.vm.$el.querySelector('.block-right input').value).toEqual(String(wrapper.vm.$data.valueRight));
+  });
+
+  it('should render correct options data', () => {
+    // console.log(wrapper.vm.$el.querySelector('.block-right .select-block .dropdown-list-box'));
+  });
 });
