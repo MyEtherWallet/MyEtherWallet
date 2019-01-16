@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount, mount } from '@vue/test-utils'
-import GenerateTx from '@/layouts/InterfaceLayout/components/GenerateTx/GenerateTx.vue';
-import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
+import GenerateTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateTx';
 import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
 import SignedTxModal from '@/layouts/InterfaceLayout/components/SignedTxModal/SignedTxModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
@@ -16,7 +15,7 @@ import {
 
 describe('GenerateTx.vue', () => {
     let localVue, i18n, wrapper, store;
-    
+
     const gasLimit = 1000;
     const nonce = 1;
     const toData = 120;
@@ -40,7 +39,7 @@ describe('GenerateTx.vue', () => {
             balance: {
               result:''
             }
-        } 
+        }
 
          let  getters = {
             account: () => {
@@ -51,9 +50,9 @@ describe('GenerateTx.vue', () => {
             }
           }
 
-       
+
         store = new Vuex.Store({
-          getters,  
+          getters,
         });
 
     });
@@ -64,7 +63,7 @@ describe('GenerateTx.vue', () => {
        //      balance: {
        //        result:''
        //      }
-       //    } 
+       //    }
        //  })
         wrapper = mount(GenerateTx, {
           localVue,
@@ -78,7 +77,7 @@ describe('GenerateTx.vue', () => {
           },
           propsData: { gasLimit, nonce }
         });
-  }); 
+  });
 
     it('should render correct propsData', () => {
        var inputElements = wrapper.vm.$el.querySelectorAll('.gas-amount input')
@@ -112,7 +111,7 @@ describe('GenerateTx.vue', () => {
 
     })
 
-  describe('GenerateTx.vue Methods',  () => {  
+  describe('GenerateTx.vue Methods',  () => {
      it('should emit pathUpdate when button click', () => {
         // wrapper.find('.generate-info .close-button').trigger('click')
         // expect(wrapper.emitted().pathUpdate).toBeTruthy();
