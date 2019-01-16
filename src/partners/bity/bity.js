@@ -161,7 +161,7 @@ export default class BitySwap {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
         if (
-          prop !== value.symbol &&
+          /*prop !== value.symbol &&*/
           disabledPairing(this.currencies, value.symbol, prop, 'from')
         ) {
           if (this.currencies[prop])
@@ -177,13 +177,13 @@ export default class BitySwap {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (prop !== value.symbol) {
-          if (this.currencies[prop])
-            collectMap.set(prop, {
-              symbol: prop,
-              name: this.currencies[prop].name
-            });
-        }
+        // if (prop !== value.symbol) {
+        if (this.currencies[prop])
+          collectMap.set(prop, {
+            symbol: prop,
+            name: this.currencies[prop].name
+          });
+        // }
       }
     }
   }
@@ -218,12 +218,7 @@ export default class BitySwap {
         destAddress: toAddress
       };
 
-      const bityOrder = await openOrder(order);
-
-      if (!bityOrder.error) {
-        return bityOrder.data;
-      }
-      throw Error('error creating bity order');
+      return await openOrder(order);
     }
   }
 
@@ -233,7 +228,7 @@ export default class BitySwap {
       statusId: order.reference,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
-      sendValue: order.input.amount,
+      sendValue: order.payment_amount,
       status: order.status,
       timestamp: order.timestamp_created,
       validFor: order.validFor || TIME_SWAP_VALID
@@ -241,17 +236,29 @@ export default class BitySwap {
   }
 
   static async getOrderStatus(noticeDetails) {
-    const data = await getStatus({ orderid: noticeDetails.statusId });
-    switch (data.status) {
-      case bityStatuses.OPEN:
-        return 'new';
-      case bityStatuses.RCVE:
-      case bityStatuses.CONF:
-        return 'pending';
-      case bityStatuses.FILL:
-        return 'complete';
-      case bityStatuses.CANC:
-        return 'cancelled';
+    const data = await getStatus(noticeDetails.orderId);
+    if (data.status === bityStatuses.EXEC) {
+      return 'complete';
+    }
+    if (data.input.status !== bityStatuses.FILL) {
+      switch (data.input.status) {
+        case bityStatuses.OPEN:
+          return 'new';
+        case bityStatuses.RCVE:
+        case bityStatuses.CONF:
+          return 'pending';
+        case bityStatuses.CANC:
+          return 'cancelled';
+      }
+    } else {
+      switch (data.output.status) {
+        case bityStatuses.FILL:
+          return 'complete';
+        case bityStatuses.CANC:
+          return 'cancelled';
+        default:
+          return 'pending';
+      }
     }
   }
 }

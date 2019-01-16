@@ -1,7 +1,7 @@
 <template>
   <div class="info-block-container">
     <interface-network-modal ref="network" />
-    <div class="info-block network" @click="networkModalOpen">
+    <div class="info-block network">
       <div class="block-image network-type">
         <div class="icon-block">
           <img :src="network.type.icon" class="icon" />
@@ -23,7 +23,20 @@
           </p>
         </div>
         <div class="icon-container">
-          <img src="~@/assets/images/icons/change.svg" />
+          <b-btn
+            id="networkModal"
+            class="custom-tooltip"
+            @click="networkModalOpen"
+          >
+            <img src="~@/assets/images/icons/change.svg" />
+          </b-btn>
+          <b-popover
+            content="Open Networks"
+            target="networkModal"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
         </div>
       </div>
     </div>

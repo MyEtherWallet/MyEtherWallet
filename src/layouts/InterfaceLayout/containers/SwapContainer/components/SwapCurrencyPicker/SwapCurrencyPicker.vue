@@ -17,6 +17,7 @@
               'alt-' + selectedCurrency.symbol,
               'cc-icon'
             ]"
+            class="currency-symbol"
           />
           {{ selectedCurrency.symbol }}
           <span class="subname">- {{ selectedCurrency.name }}</span>
@@ -88,6 +89,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    overrideCurrency: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -101,6 +108,9 @@ export default {
     };
   },
   watch: {
+    overrideCurrency(newVal) {
+      this.selectedCurrency = newVal;
+    },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
     },

@@ -11,21 +11,12 @@
         <div class="buttons">
           <div
             :class="[
-              gasPrice === locHighestGas / 4 ? 'active' : '',
-              'small-circle-button-green-border'
-            ]"
-            @click="setSpeed(locHighestGas / 4)"
-          >
-            {{ $t('common.slow') }}
-          </div>
-          <div
-            :class="[
               gasPrice === locHighestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
             @click="setSpeed(locHighestGas / 2)"
           >
-            {{ $t('common.regular') }}
+            {{ $t('common.economy') }}
           </div>
           <div
             :class="[
@@ -33,6 +24,15 @@
               'small-circle-button-green-border'
             ]"
             @click="setSpeed(locHighestGas)"
+          >
+            {{ $t('common.regular') }}
+          </div>
+          <div
+            :class="[
+              gasPrice === locHighestGas * 1.25 ? 'active' : '',
+              'small-circle-button-green-border'
+            ]"
+            @click="setSpeed(locHighestGas * 1.25)"
           >
             {{ $t('common.fast') }}
           </div>
@@ -43,7 +43,7 @@
           :value="gasPrice"
           :placeholder="$t('common.gasPrice')"
           type="number"
-          name=""
+          name
           @change="setSpeed"
         />
         <div class="good-button-container">
@@ -75,29 +75,6 @@
         </div>
       </div>
     </div>
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <div class="title-helper">
-            <h4>{{ $t('common.gasLimit') }}</h4>
-            <popover :popcontent="$t('popover.gasLimit')" />
-          </div>
-        </div>
-      </div>
-      <div class="the-form gas-amount">
-        <input
-          v-model="locGasLimit"
-          :placeholder="$t('common.gasLimit')"
-          type="number"
-        />
-        <div class="good-button-container">
-          <i
-            class="fa fa-check-circle good-button not-good"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -105,35 +82,18 @@
 import { mapGetters } from 'vuex';
 export default {
   props: {
-    data: {
-      type: String,
-      default: ''
-    },
-    toAddress: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: '0'
-    },
-    gasLimit: {
-      type: Number,
-      default: 21000
-    },
     nonce: {
       type: Number,
       default: 0
     },
     highestGas: {
       type: Number,
-      default: 0
+      default: 10
     }
   },
   data() {
     return {
       locNonce: this.nonce,
-      locGasLimit: this.gasLimit,
       locHighestGas: this.highestGas
     };
   },
@@ -146,8 +106,8 @@ export default {
     locNonce(newVal) {
       this.$emit('nonceUpdate', Number(newVal));
     },
-    locGasLimit(newVal) {
-      this.$emit('gasLimitUpdate', Number(newVal));
+    nonce(newVal) {
+      this.locNonce = newVal;
     }
   },
   mounted() {

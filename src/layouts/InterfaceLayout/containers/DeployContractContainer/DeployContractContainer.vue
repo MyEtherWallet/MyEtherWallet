@@ -7,12 +7,12 @@
         <div class="title">
           <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode')">{{
-              $t('common.clear')
-            }}</span>
-            <span @click="copyToClipboard('bytecode')">{{
-              $t('common.copy')
-            }}</span>
+            <span @click="deleteInput('bytecode')">
+              {{ $t('common.clear') }}
+            </span>
+            <span @click="copyToClipboard('bytecode')">
+              {{ $t('common.copy') }}
+            </span>
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@
             ]"
             @click="changeGas(5)"
           >
-            {{ $t('common.slow') }}
+            {{ $t('common.economy') }}
           </div>
           <div
             :class="[
@@ -126,7 +126,7 @@
           v-model="gasLimit"
           :placeholder="$t('common.gasLimit')"
           type="number"
-          name=""
+          name
         />
         <div class="good-button-container">
           <p>Gwei</p>
@@ -142,7 +142,9 @@
       <div class="buttons">
         <div
           :class="[
-            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            abi === '' || bytecode === '' || validByte || !validAbi
+              ? 'disabled'
+              : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
           @click="confirmationModalOpen"
@@ -187,7 +189,8 @@ export default {
       gasLimit: 21000,
       data: '',
       nonce: 0,
-      validAbi: false
+      validAbi: true,
+      validByte: true
     };
   },
   computed: {
@@ -211,8 +214,13 @@ export default {
       }
       this.estimateGas();
     },
-    bytecode() {
-      this.estimateGas();
+    bytecode(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.validByte = true;
+        this.estimateGas();
+      } else {
+        this.validByte = false;
+      }
     },
     gasAmount() {
       this.estimateGas();

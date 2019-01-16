@@ -8,6 +8,29 @@ const mapToObject = map => {
   return obj;
 };
 
+const objectToMap = obj => {
+  return new Map(Object.entries(obj));
+};
+
+function isValidEntry(value) {
+  return (
+    value !== '' && value !== null && +value > 0 && Number.isFinite(+value)
+  );
+}
+
+function checkInvalidOrMissingValue(value, to) {
+  if (to) {
+    if (!isValidEntry(value)) {
+      return 0;
+    }
+    return value;
+  }
+  if (!isValidEntry(value)) {
+    return 1;
+  }
+  return value;
+}
+
 const getTimeRemaining = (timestamp, validFor = 600) => {
   return (
     validFor - parseInt((new Date().getTime() - Date.parse(timestamp)) / 1000)
@@ -43,8 +66,11 @@ function stringEqual(strA, strB) {
 
 export {
   mapToObject,
+  objectToMap,
   stringEqual,
   getTimeRemaining,
   getTimeRemainingString,
-  buildPayload
+  buildPayload,
+  isValidEntry,
+  checkInvalidOrMissingValue
 };

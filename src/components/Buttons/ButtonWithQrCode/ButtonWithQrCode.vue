@@ -4,10 +4,6 @@
       <div class="the-button large-round-button-green-filled">
         {{ buttonname }}
       </div>
-      <div class="qrcode-container">
-        <img :src="qrcodeIconImage" class="dummy-qrcode" />
-        <div class="real-qrcode"><img src="" /></div>
-      </div>
     </div>
   </div>
 </template>

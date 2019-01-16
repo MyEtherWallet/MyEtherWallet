@@ -44,14 +44,26 @@
             {{ toAddress.address }}
           </p>
         </div>
-        <div v-show="!isFromFiat" class="confirm-send-button">
-          <h4>
-            {{ $t('interface.send') }} {{ fromAddress.value }}
-            {{ fromAddress.name }} {{ $t('interface.articleTo') }}
-            <span class="address">{{ qrcode }}</span>
-          </h4>
-          <qrcode :value="qrcode" :options="{ size: 200 }" />
-        </div>
+        <ul v-show="!isFromFiat" class="confirm-send-button">
+          <li>
+            <div>
+              <h4>
+                {{ $t('interface.send') }} {{ fromAddress.value }}
+                {{ fromAddress.name }} {{ $t('interface.articleTo') }}
+                <span class="address">{{ qrcode }}</span>
+              </h4>
+              <qrcode :value="qrcode" :options="{ size: 200 }" />
+            </div>
+          </li>
+          <li>
+            <div @click="sentTransaction">
+              <button-with-qrcode
+                :qrcode="qrcode"
+                :buttonname="$t('interface.sentCoins')"
+              />
+            </div>
+          </li>
+        </ul>
         <simplex-checkout-form
           v-if="isFromFiat && swapProvider === 'simplex'"
           :form-data="swapDetails.dataForInitialization"
@@ -70,7 +82,7 @@ import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckoutForm from '../CheckoutForm';
 
-import { fiat, utils } from '@/partners';
+import { fiat, utils, qrcodeBuilder } from '@/partners';
 
 export default {
   components: {
@@ -156,8 +168,15 @@ export default {
       }, 1000);
     },
     redirectToPartner() {
-      this.swapStarted(this.swapDetails);
-      this.$refs.swapconfirmation.hide();
+      this.$store
+        .dispatch('addSwapNotification', [
+          `Swap_Order`,
+          this.currentAddress,
+          this.swapDetails
+        ])
+        .then(() => {
+          this.$refs.swapconfirmation.hide();
+        });
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
@@ -175,17 +194,27 @@ export default {
       }
     },
     buildQrCodeContent(swapDetails) {
-      if (swapDetails.fromCurrency === 'BTC') {
-        this.qrcode = `bitcoin:${swapDetails.providerAddress}`;
-      } else {
-        this.qrcode = swapDetails.providerAddress;
-      }
+      this.qrcode = qrcodeBuilder(
+        swapDetails.providerAddress,
+        swapDetails.fromCurrency
+      );
     },
     bitySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
     },
     changellySwap(swapDetails) {
       this.buildQrCodeContent(swapDetails);
+    },
+    sentTransaction() {
+      this.$store
+        .dispatch('addSwapNotification', [
+          `Swap_Order`,
+          this.currentAddress,
+          this.swapDetails
+        ])
+        .then(() => {
+          this.$refs.swapconfirmation.hide();
+        });
     }
   }
 };

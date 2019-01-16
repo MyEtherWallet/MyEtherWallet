@@ -5,7 +5,13 @@
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
-            <h4>{{ $t('interface.tokens') }}</h4>
+            <div class="title-container">
+              <h4>{{ $t('interface.tokens') }}</h4>
+              <img
+                src="~@/assets/images/icons/change.svg"
+                @click="fetchTokens"
+              />
+            </div>
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
@@ -51,9 +57,9 @@
           </div>
           <div
             v-show="
-              localTokens.length === 0 &&
-                customTokens.length === 0 &&
-                !receivedTokens
+              search !== '' &&
+                localTokens.length === 0 &&
+                customTokens.length === 0
             "
             class="spinner-container"
           >
@@ -105,6 +111,14 @@ export default {
     getTokenBalance: {
       type: Function,
       default: function() {}
+    },
+    triggerAlert: {
+      type: Function,
+      default: function() {}
+    },
+    fetchTokens: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -112,7 +126,8 @@ export default {
       search: '',
       localTokens: [],
       customTokens: [],
-      util: utils
+      util: utils,
+      tokenExists: false
     };
   },
   computed: {
@@ -159,32 +174,45 @@ export default {
       store.set('customTokens', storedTokens);
     },
     async addToken(address, symbol, decimal) {
-      const localStorageName = {};
-      const token = {
-        addr: address,
-        decimals: decimal,
-        email: '',
-        name: symbol,
-        symbol: symbol,
-        website: '',
-        type: 'custom'
-      };
-      let newArray = [];
-      token['balance'] = await this.getTokenBalance(token);
-      if (token['balance'] === undefined) {
-        // eslint-disable-next-line
-        console.error('Token Balance Returned Undefined');
-      }
+      if (
+        this.localTokens.find(item => {
+          return (
+            utils.toChecksumAddress(item.address) ===
+            utils.toChecksumAddress(address)
+          );
+        }) !== undefined
+      ) {
+        const localStorageName = {};
+        const token = {
+          addr: address,
+          decimals: decimal,
+          email: '',
+          name: symbol,
+          symbol: symbol,
+          website: '',
+          type: 'custom'
+        };
+        let newArray = [];
+        token['balance'] = await this.getTokenBalance(token);
+        if (token['balance'] === undefined) {
+          // eslint-disable-next-line
+          console.error('Token Balance Returned Undefined');
+        }
 
-      if (this.customTokens.length > 0) {
-        newArray = this.customTokens.map(item => item);
-      }
-      newArray.push(token);
-      this.customTokens = newArray;
-      localStorageName[this.network.type.name] = this.customTokens;
+        if (this.customTokens.length > 0) {
+          newArray = this.customTokens.map(item => item);
+        }
+        newArray.push(token);
+        this.customTokens = newArray;
+        localStorageName[this.network.type.name] = this.customTokens;
 
-      store.set('customTokens', localStorageName);
-      this.$refs.tokenModal.$refs.token.hide();
+        store.set('customTokens', localStorageName);
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert('Successfully added token!');
+      } else {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert('Token Already Exists!', 'danger');
+      }
     },
     tokenListExpend() {
       this.$refs.tokenTableContainer.classList.toggle('expanded');

@@ -9,7 +9,7 @@
     <div class="qr-divider">
       <div class="ios">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png" />
+          <img src="@/assets/images/etc/qr-code-apple.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
@@ -21,7 +21,7 @@
       </div>
       <div class="android">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png" />
+          <img src="@/assets/images/etc/qr-code-android.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
