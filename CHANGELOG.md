@@ -9,6 +9,7 @@
 
 ### Bug
 
+- Fix UI Interface -> Contract [#474](https://github.com/MyEtherWallet/MyEtherWallet/pull/474)
 - Fix UI Interface -> Dapps [#462](https://github.com/MyEtherWallet/MyEtherWallet/pull/462)
 - Fix UI Interface -> Swap [#457](https://github.com/MyEtherWallet/MyEtherWallet/pull/457)
 - Fix UI Interface -> Send Offline [#444](https://github.com/MyEtherWallet/MyEtherWallet/pull/444)
