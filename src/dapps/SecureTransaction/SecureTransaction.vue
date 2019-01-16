@@ -6,9 +6,8 @@
         <div class="input-container">
           <div class="inner-safesend-text-container">
             <strong
-              ><span class="inner-safesend-text">SafeSend</span
-              >&nbsp;protects your transaction from fraud, phishing, and
-              theft.</strong
+              ><span class="inner-safesend-text">SafeSend</span>&nbsp;protects
+              your transaction from fraud, phishing, and theft.</strong
             >
           </div>
           <br />
