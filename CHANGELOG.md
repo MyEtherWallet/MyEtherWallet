@@ -1,3 +1,7 @@
+### Bug
+
+- Dapps back issue [#](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+
 ### Release v5.0.0-beta.1
 
 ### Devop
