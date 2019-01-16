@@ -29,7 +29,7 @@
 }
 
 %send-form-base {
-  padding: 40px 60px 0;
+  padding: 40px 60px;
 
   // Tablet
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {

@@ -17,7 +17,11 @@
           </div>
         </div>
         <div class="the-form byte-code">
-          <textarea ref="bytecode" v-model="bytecode" class="custom-textarea-1" />
+          <textarea
+            ref="bytecode"
+            v-model="bytecode"
+            class="custom-textarea-1"
+          />
         </div>
       </div>
 
@@ -56,14 +60,17 @@
             </h4>
           </div>
         </div>
-        <div v-for="(construct, idx) in constructors" :key="construct.type + idx">
+        <div
+          v-for="(construct, idx) in constructors"
+          :key="construct.type + idx"
+        >
           <div v-for="(input, idx) in construct.inputs" :key="input.name + idx">
             <div class="title-container">
               <div class="title">
                 <h5>{{ input.name | capitalize }}:</h5>
               </div>
             </div>
-            <div class="the-form domain-name">
+            <div class="the-form contract-name">
               <input ref="contractName" v-model="inputs[input.name]" />
             </div>
           </div>
@@ -76,7 +83,7 @@
             <h4>{{ $t('interface.contractName') }}</h4>
           </div>
         </div>
-        <div class="the-form domain-name">
+        <div class="the-form contract-name">
           <input
             ref="contractName"
             v-model="contractName"
@@ -85,7 +92,7 @@
         </div>
       </div>
 
-      <div v-if="false" class="send-form2">
+      <div v-if="false" class="send-form">
         <div class="title-container">
           <div class="title">
             <div class="title-and-popover">
