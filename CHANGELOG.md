@@ -1,7 +1,31 @@
-### Release v5.0.5
+### Release v5.0.0-beta.1
+
+### Devop
+
+- Add node_modules cache to TravisCI for faster builds, and remove Brotli compression from offline [#435](https://github.com/MyEtherWallet/MyEtherWallet/pull/435)
+- Prep release and multiple fixes: #412, #409, #408, #413, #414, #433, #419, #415, #425, #427, #430, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
+
+### Release v5.0.0-beta.0
 
 ### Bug
 
+- Fix slide on mobile, fix network default, json -> keystore instance [#410](https://github.com/MyEtherWallet/MyEtherWallet/pull/410)
+- Fix New wallet, Access buttons [#326](https://github.com/MyEtherWallet/MyEtherWallet/pull/326)
+- Fix front interface bugs [#344](https://github.com/MyEtherWallet/MyEtherWallet/pull/344)
+- Hide header on getting start [#341](https://github.com/MyEtherWallet/MyEtherWallet/pull/341)
+- Fix small bugs [#383](https://github.com/MyEtherWallet/MyEtherWallet/pull/383)
+- Only show security button on specific pages [#334](https://github.com/MyEtherWallet/MyEtherWallet/pull/334)
+- Fix/replace apple qr code [#323](https://github.com/MyEtherWallet/MyEtherWallet/pull/323)
+- Fix ENS resolver/error placement [#324](https://github.com/MyEtherWallet/MyEtherWallet/pull/324)
+- Fix header settings modal styles [#287](https://github.com/MyEtherWallet/MyEtherWallet/pull/287)
+- Fix fixed buttons, scroll-up, security [#282](https://github.com/MyEtherWallet/MyEtherWallet/pull/282)
+- Fix Github issues [#276](https://github.com/MyEtherWallet/MyEtherWallet/pull/276)
+- Fix network modal issues pt 2 [#279](https://github.com/MyEtherWallet/MyEtherWallet/pull/279)
+- Fix network modal [#255](https://github.com/MyEtherWallet/MyEtherWallet/pull/255)
+- Fall back for token fetch [#262](https://github.com/MyEtherWallet/MyEtherWallet/pull/262)
+- Fix footer links [#235](https://github.com/MyEtherWallet/MyEtherWallet/pull/235)
+- Fix multiple issues: #195, #198, #199, #202, #203, #207, #209, #213, #210, #191, #224, #201, #225, #220, and #208 [#215](https://github.com/MyEtherWallet/MyEtherWallet/pull/215)
+- Fix network and address modal dropdown issue [#234](https://github.com/MyEtherWallet/MyEtherWallet/pull/234)
 - Fix missing text issue on getting started modal [#173](https://github.com/MyEtherWallet/MyEtherWallet/pull/173)
 - Reimplement logout with the new logout modal [#177](https://github.com/MyEtherWallet/MyEtherWallet/pull/177)
 - Close modal when adding a custom token [#175](https://github.com/MyEtherWallet/MyEtherWallet/pull/175)
@@ -10,14 +34,48 @@
 
 ### Feature
 
+- Remove print in creating a json wallet, create mnemonic paper, enhance paper wallet, fix #371 [#387](https://github.com/MyEtherWallet/MyEtherWallet/pull/387)
+- Update Getting Started page contents [#386](https://github.com/MyEtherWallet/MyEtherWallet/pull/386)
+- Add detailed Notifications [#231](https://github.com/MyEtherWallet/MyEtherWallet/pull/231)
+- Manual refresh for balance and token [#342](https://github.com/MyEtherWallet/MyEtherWallet/pull/342)
+- implement settings config [#298](https://github.com/MyEtherWallet/MyEtherWallet/pull/298)
 - Path saver + send offline tx refactor [#159](https://github.com/MyEtherWallet/MyEtherWallet/pull/159)
 - implement nonce cache [#149](https://github.com/MyEtherWallet/MyEtherWallet/pull/149)
 - Redo Metamask with the breaking changes [#145](https://github.com/MyEtherWallet/MyEtherWallet/pull/145)
 - Mnemonic Phrase auto populate [#140](https://github.com/MyEtherWallet/MyEtherWallet/pull/140)
 - Implement Buying Subdomains dapps. [#122](https://github.com/MyEtherWallet/MyEtherWallet/pull/122)
+- Add support for Ledger live paths. [#216](https://github.com/MyEtherWallet/MyEtherWallet/pull/216)
+- Implement Swap [#127](https://github.com/MyEtherWallet/MyEtherWallet/pull/127)
 
 ### Devop
 
+- Refactors, validations, and fixes: #311, #362, #389, #359, #366, #369, #368, #367, #370, #361, #344, #341, #375, #377, #364, #347, #346, #380, #394, #388, #391, #392, #382, #393, #399, #398, #376, #356, #401, and #374 [#345](https://github.com/MyEtherWallet/MyEtherWallet/pull/345)
+- Resize team container [#337](https://github.com/MyEtherWallet/MyEtherWallet/pull/337)
+- Change pricebar animation [#338](https://github.com/MyEtherWallet/MyEtherWallet/pull/338)
+- Left align pricebar contents [#336](https://github.com/MyEtherWallet/MyEtherWallet/pull/336)
+- Adjust header size [#335](https://github.com/MyEtherWallet/MyEtherWallet/pull/335)
+- Show rates based on from amount, Add switch order of selected currencies [#372](https://github.com/MyEtherWallet/MyEtherWallet/pull/372)
+- Enable metamask compatibility with mew.sendBatchTransaction fixes #351 [#352](https://github.com/MyEtherWallet/MyEtherWallet/pull/352)
+- Fix #316, #317, #318, #319, #320, #321 [#322](https://github.com/MyEtherWallet/MyEtherWallet/pull/322)
+- Add RSK network [#291](https://github.com/MyEtherWallet/MyEtherWallet/pull/291)
+- Replace temporary notice to check if hardware wallet is attached to a final version [#309](https://github.com/MyEtherWallet/MyEtherWallet/pull/309)
+- Cleanup unused files [#308](https://github.com/MyEtherWallet/MyEtherWallet/pull/308)
+- Remove ETC epool [#307](https://github.com/MyEtherWallet/MyEtherWallet/pull/307)
+- Revise and update docs [#301](https://github.com/MyEtherWallet/MyEtherWallet/pull/301)
+- Greenkeeper chores [#302](https://github.com/MyEtherWallet/MyEtherWallet/pull/302)
+- Add all derivation paths to HD wallets [#297](https://github.com/MyEtherWallet/MyEtherWallet/pull/297)
+- Prevent excessive polling of eth_getTransactionReceipt [#266](https://github.com/MyEtherWallet/MyEtherWallet/pull/266)
+- Check and verify npm package versions [#233](https://github.com/MyEtherWallet/MyEtherWallet/pull/233)
+- Setup automated travis builds and release [#280](https://github.com/MyEtherWallet/MyEtherWallet/pull/280)
+- Safe external links and meta descriptions [#261](https://github.com/MyEtherWallet/MyEtherWallet/pull/261)
+- Update FAQ content, refactor how FAQ is implemented [#245](https://github.com/MyEtherWallet/MyEtherWallet/pull/245)
+- Fixes #237, #238, #236, #260, #253, #283, #284, #286 [#274](https://github.com/MyEtherWallet/MyEtherWallet/pull/274)
+- Lazy loading components for faster loading [#181](https://github.com/MyEtherWallet/MyEtherWallet/pull/181)
+- ChainID calculation refactoring and BitBox v5 support [#206](https://github.com/MyEtherWallet/MyEtherWallet/pull/206)
+- Generate deterministic builds [#217](https://github.com/MyEtherWallet/MyEtherWallet/pull/217)
+- Use token package [#183](https://github.com/MyEtherWallet/MyEtherWallet/pull/183)
+- Update nonce properly on send and fetch, parse response properly [#185](https://github.com/MyEtherWallet/MyEtherWallet/pull/185)
+- Replace heroku urls [#178](https://github.com/MyEtherWallet/MyEtherWallet/pull/178)
 - Crowdin translations [#75](https://github.com/MyEtherWallet/MyEtherWallet/pull/75)
 - refinalize copy based on new version [#165](https://github.com/MyEtherWallet/MyEtherWallet/pull/165)
 - fix invalid chain id error [#164](https://github.com/MyEtherWallet/MyEtherWallet/pull/164)
@@ -33,7 +91,7 @@
 
 - Some fixes for the ENS Registrar, and validate and normalise ens domains [#120](https://github.com/MyEtherWallet/MyEtherWallet/pull/120)
 
-### Release v5.0.4
+### Release v5.0.0.alpha.4
 
 ### Devop
 
@@ -47,7 +105,7 @@
 - Finish unit conversion [#114](https://github.com/MyEtherWallet/MyEtherWallet/pull/114)
 - Finish ENS registrar dapp [#81](https://github.com/MyEtherWallet/MyEtherWallet/pull/81)
 
-### Release v5.0.3
+### Release v5.0.0.alpha.3
 
 ### Feature
 
@@ -79,7 +137,7 @@
 - Add Network logo and change dot colors [#49](https://github.com/MyEtherWallet/MyEtherWallet/pull/49)
 - Fetch tokens and contract abi [#41](https://github.com/MyEtherWallet/MyEtherWallet/pull/41)
 
-### Release v5.0.2
+### Release v5.0.0.alpha.2
 
 ### Feature
 
@@ -91,7 +149,7 @@
 - Update footer to match design [#29](https://github.com/MyEtherWallet/MyEtherWallet/pull/29)
 - Miscellaneous cleanup and changes. [#22](https://github.com/MyEtherWallet/MyEtherWallet/pull/22)
 
-### Release v5.0.1
+### Release v5.0.0.alpha.1
 
 ### Devop
 

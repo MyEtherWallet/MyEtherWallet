@@ -5,7 +5,13 @@
       <div class="tokens-container">
         <div class="token-search">
           <div class="block-title">
-            <h4>{{ $t('interface.tokens') }}</h4>
+            <div class="title-container">
+              <h4>{{ $t('interface.tokens') }}</h4>
+              <img
+                src="~@/assets/images/icons/change.svg"
+                @click="fetchTokens"
+              />
+            </div>
             <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
           </div>
           <div class="search-block">
@@ -24,7 +30,7 @@
                 {{ token.balance }}
                 <i
                   class="fa fa-times-circle clickable"
-                  @click="removeToken(index);"
+                  @click="removeToken(index)"
                 />
               </td>
             </tr>
@@ -33,7 +39,13 @@
           <table v-show="localTokens.length > 0">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
-              <td>{{ token.balance }}</td>
+              <td
+                v-if="token.balance === 'Load'"
+                @click="getSpecificTokenBalance(token, index)"
+              >
+                {{ token.balance }}
+              </td>
+              <td v-else>{{ token.balance }}</td>
             </tr>
           </table>
 
@@ -45,9 +57,9 @@
           </div>
           <div
             v-show="
-              localTokens.length === 0 &&
-                customTokens.length === 0 &&
-                !receivedTokens
+              search !== '' &&
+                localTokens.length === 0 &&
+                customTokens.length === 0
             "
             class="spinner-container"
           >
@@ -78,6 +90,8 @@
 import store from 'store';
 import { mapGetters } from 'vuex';
 import InterfaceTokensModal from '../InterfaceTokensModal';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -97,13 +111,23 @@ export default {
     getTokenBalance: {
       type: Function,
       default: function() {}
+    },
+    triggerAlert: {
+      type: Function,
+      default: function() {}
+    },
+    fetchTokens: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
     return {
       search: '',
       localTokens: [],
-      customTokens: []
+      customTokens: [],
+      util: utils,
+      tokenExists: false
     };
   },
   computed: {
@@ -136,6 +160,10 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    async getSpecificTokenBalance(token, idx) {
+      this.tokens[idx].balance = await this.getTokenBalance(token);
+      this.tokens.sort(sortByBalance);
+    },
     addTokenModal() {
       this.$refs.tokenModal.$refs.token.show();
     },
@@ -146,32 +174,45 @@ export default {
       store.set('customTokens', storedTokens);
     },
     async addToken(address, symbol, decimal) {
-      const localStorageName = {};
-      const token = {
-        addr: address,
-        decimals: decimal,
-        email: '',
-        name: symbol,
-        symbol: symbol,
-        website: '',
-        type: 'custom'
-      };
-      let newArray = [];
-      token['balance'] = await this.getTokenBalance(token);
-      if (token['balance'] === undefined) {
-        // eslint-disable-next-line
-        console.error('Token Balance Returned Undefined');
-      }
+      if (
+        this.localTokens.find(item => {
+          return (
+            utils.toChecksumAddress(item.address) ===
+            utils.toChecksumAddress(address)
+          );
+        }) !== undefined
+      ) {
+        const localStorageName = {};
+        const token = {
+          addr: address,
+          decimals: decimal,
+          email: '',
+          name: symbol,
+          symbol: symbol,
+          website: '',
+          type: 'custom'
+        };
+        let newArray = [];
+        token['balance'] = await this.getTokenBalance(token);
+        if (token['balance'] === undefined) {
+          // eslint-disable-next-line
+          console.error('Token Balance Returned Undefined');
+        }
 
-      if (this.customTokens.length > 0) {
-        newArray = this.customTokens.map(item => item);
-      }
-      newArray.push(token);
-      this.customTokens = newArray;
-      localStorageName[this.network.type.name] = this.customTokens;
+        if (this.customTokens.length > 0) {
+          newArray = this.customTokens.map(item => item);
+        }
+        newArray.push(token);
+        this.customTokens = newArray;
+        localStorageName[this.network.type.name] = this.customTokens;
 
-      store.set('customTokens', localStorageName);
-      this.$refs.tokenModal.$refs.token.hide();
+        store.set('customTokens', localStorageName);
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert('Successfully added token!');
+      } else {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert('Token Already Exists!', 'danger');
+      }
     },
     tokenListExpend() {
       this.$refs.tokenTableContainer.classList.toggle('expanded');
@@ -181,16 +222,20 @@ export default {
     async assignTokens(arr, query) {
       const oldArray = this.customTokens.slice();
       if (query !== '') {
-        this.customTokens = oldArray.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
-        this.localTokens = this.tokens.filter(token => {
-          if (token.name.toLowerCase().includes(query.toLowerCase())) {
-            return token;
-          }
-        });
+        this.customTokens = oldArray
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
+        this.localTokens = this.tokens
+          .filter(token => {
+            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+              return token;
+            }
+          })
+          .sort(sortByBalance);
       } else {
         this.localTokens = arr;
         if (

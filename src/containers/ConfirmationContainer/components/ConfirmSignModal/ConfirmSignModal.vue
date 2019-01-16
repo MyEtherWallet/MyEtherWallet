@@ -11,19 +11,25 @@
         <div class="tx-info">
           <div class="tx-data tx-from">
             <div class="address-info">
-              <p class="address-title">{{ $t('confirmation.signingAddr') }}</p>
-              <p>{{ from }}</p>
+              <p class="title address-title">
+                {{ $t('confirmation.signingAddr') }}
+              </p>
+              <div class="from-address">
+                <blockie
+                  :address="wallet.getChecksumAddressString()"
+                  width="30px"
+                  height="30px"
+                />
+                <span>{{ from }}</span>
+              </div>
             </div>
-          </div>
-          <div class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
           <div class="tx-data tx-to">
             <div class="address-info">
-              <p class="address-title">
+              <p class="title address-title">
                 {{ $t('interface.txSideMenuMessage') }}
               </p>
-              <p>{{ messageToSign }}</p>
+              <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
           </div>
         </div>
@@ -40,27 +46,18 @@
               >
                 {{ $t('confirmation.confirmSigning') }}
               </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top"
-                >
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">{{ $t('confirm.scanQrCode') }}</p>
-                    <div class="qrcode-block">
-                      <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
-                </b-popover>
-              </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </b-modal>
@@ -68,7 +65,13 @@
 </template>
 
 <script>
+import Blockie from '@/components/Blockie';
+import { mapGetters } from 'vuex';
+
 export default {
+  components: {
+    blockie: Blockie
+  },
   props: {
     confirmSignMessage: {
       type: Function,
@@ -98,6 +101,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      wallet: 'wallet'
+    }),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;

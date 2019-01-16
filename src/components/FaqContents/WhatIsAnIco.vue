@@ -71,9 +71,10 @@
       For more information please refer to :
       <a
         href="https://kb.myetherwallet.com/best-of/how-not-to-miss-out-on-ico.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Best Ways to Avoid Missing Out On That ICO</a
       >
-        Best Ways to Avoid Missing Out On That ICO
-      </a>
     </p>
   </div>
 </template>

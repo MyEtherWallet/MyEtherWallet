@@ -7,12 +7,12 @@
         <div class="title">
           <h4>{{ $t('interface.byteCode') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('bytecode');">{{
-              $t('common.clear')
-            }}</span>
-            <span @click="copyToClipboard('bytecode');">{{
-              $t('common.copy')
-            }}</span>
+            <span @click="deleteInput('bytecode')">
+              {{ $t('common.clear') }}
+            </span>
+            <span @click="copyToClipboard('bytecode')">
+              {{ $t('common.copy') }}
+            </span>
           </div>
         </div>
       </div>
@@ -26,10 +26,8 @@
         <div class="title">
           <h4>{{ $t('interface.abiJsonInt') }}</h4>
           <div class="copy-buttons">
-            <span @click="deleteInput('abi');">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard('abi');">{{
-              $t('common.copy')
-            }}</span>
+            <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard('abi')">{{ $t('common.copy') }}</span>
           </div>
         </div>
       </div>
@@ -88,7 +86,7 @@
         <div class="title">
           <div class="title-and-popover">
             <h4>{{ $t('common.speedTx') }}</h4>
-            <popover :popcontent="$t('popover.whatIsSpeedOfTX')" />
+            <popover :popcontent="$t('popover.txSpeed')" />
           </div>
           <p>{{ $t('common.txFee') }}: {{ transactionFee }} ETH</p>
         </div>
@@ -98,16 +96,16 @@
               gasPrice === 5 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(5);"
+            @click="changeGas(5)"
           >
-            {{ $t('common.slow') }}
+            {{ $t('common.economy') }}
           </div>
           <div
             :class="[
               gasPrice === 45 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(45);"
+            @click="changeGas(45)"
           >
             {{ $t('common.regular') }}
           </div>
@@ -116,7 +114,7 @@
               gasPrice === 75 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
-            @click="changeGas(75);"
+            @click="changeGas(75)"
           >
             {{ $t('common.fast') }}
           </div>
@@ -128,7 +126,7 @@
           v-model="gasLimit"
           :placeholder="$t('common.gasLimit')"
           type="number"
-          name=""
+          name
         />
         <div class="good-button-container">
           <p>Gwei</p>
@@ -144,7 +142,9 @@
       <div class="buttons">
         <div
           :class="[
-            abi === '' || bytecode === '' || !validAbi ? 'disabled' : '',
+            abi === '' || bytecode === '' || validByte || !validAbi
+              ? 'disabled'
+              : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
           @click="confirmationModalOpen"
@@ -153,9 +153,9 @@
         </div>
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="mailto:support@myetherwallet.com"
+        link="https://kb.myetherwallet.com"
       />
     </div>
   </div>
@@ -189,7 +189,8 @@ export default {
       gasLimit: 21000,
       data: '',
       nonce: 0,
-      validAbi: false
+      validAbi: true,
+      validByte: true
     };
   },
   computed: {
@@ -213,8 +214,13 @@ export default {
       }
       this.estimateGas();
     },
-    bytecode() {
-      this.estimateGas();
+    bytecode(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.validByte = true;
+        this.estimateGas();
+      } else {
+        this.validByte = false;
+      }
     },
     gasAmount() {
       this.estimateGas();

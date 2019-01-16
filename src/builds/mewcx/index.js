@@ -5,12 +5,14 @@ const cxRoutes = [
   {
     path: '/',
     name: 'Home',
-    component: AccessWalletLayout
+    component: AccessWalletLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/browser-action',
     name: 'BrowserAction',
-    component: AccessWalletLayout
+    component: AccessWalletLayout,
+    meta: { requiresAuth: false }
   }
 ];
 const configRoutes = routes => {

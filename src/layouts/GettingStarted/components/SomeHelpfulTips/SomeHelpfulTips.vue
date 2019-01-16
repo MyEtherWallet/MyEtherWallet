@@ -19,8 +19,12 @@
               <h5>{{ tip.title }}</h5>
               <p>
                 {{ tip.desc }}
-                <a v-if="tip.linkText" :href="tip.linkUrl">
-                  {{ tip.linkText }}</a
+                <a
+                  v-if="tip.linkText"
+                  :href="tip.linkUrl"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >{{ tip.linkText }}</a
                 >
                 {{ tip.descCont !== '' ? tip.descCont : '' }}
               </p>

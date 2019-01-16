@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <img
+        :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
+      />
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -15,14 +17,13 @@
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
-    <div class="address">
-      {{ tokenTransferTo !== '' ? tokenTransferTo : address }}
-    </div>
+    <div class="address">{{ checksumAddress }}</div>
   </div>
 </template>
 
 <script>
 import web3 from 'web3';
+// import BigNumber from 'bignumber.js';
 export default {
   props: {
     address: {
@@ -52,6 +53,18 @@ export default {
     tokenSymbol: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    lowerCaseCurrency() {
+      return this.currency.toLowerCase();
+    },
+    checksumAddress() {
+      if (web3.utils.isAddress(this.tokenTransferTo))
+        return web3.utils.toChecksumAddress(this.tokenTransferTo);
+      if (web3.utils.isAddress(this.address))
+        return web3.utils.toChecksumAddress(this.address);
+      return '';
     }
   },
   methods: {

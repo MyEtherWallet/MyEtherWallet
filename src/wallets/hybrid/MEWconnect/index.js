@@ -5,7 +5,8 @@ import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
-  getBufferFromHex
+  getBufferFromHex,
+  calculateChainIdFromV
 } from '../../utils';
 import * as ethUtil from 'ethereumjs-util';
 
@@ -41,10 +42,20 @@ class MEWconnectWallet {
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
     const txSigner = async tx => {
+      const networkId = tx.chainId;
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
           tx = new ethTx(sanitizeHex(result));
+          const signedChainId = calculateChainIdFromV(tx.v);
+          if (signedChainId !== networkId)
+            throw new Error(
+              'Invalid networkId signature returned. Expected: ' +
+                networkId +
+                ', Got: ' +
+                signedChainId,
+              'InvalidNetworkId'
+            );
           resolve(getSignTransactionObject(tx));
         });
       });

@@ -1,9 +1,11 @@
 @import '~@/scss/GlobalVariables';
 
 .wrap {
+  padding: 40px 60px;
+  @media all and (max-width: $mobile-width) {
+    padding: 30px 10px;
+  }
   .send-form {
-    padding: 40px 60px 0;
-
     .title-container {
       align-items: flex-end;
       display: flex;
@@ -147,7 +149,7 @@
       input {
         background-color: $background-color-1;
         border: 0;
-        padding: 13px 15px;
+        padding: 13px 35px 13px 15px;
         width: 100%;
       }
 
@@ -197,13 +199,17 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 60px 0;
+    padding: 60px 0 10px;
     text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      padding: 60px 0 0 0;
+    }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      width: 300px;
+      //width: 300px;
     }
 
     p {

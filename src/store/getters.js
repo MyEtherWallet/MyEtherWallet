@@ -31,14 +31,17 @@ const notifications = state => {
 const online = state => {
   return state.online;
 };
-const Transactions = state => {
-  return state.Transactions;
+const transactions = state => {
+  return state.transactions;
 };
 const wallet = state => {
   return state.wallet;
 };
 const web3 = state => {
   return state.web3;
+};
+const sidemenuOpen = state => {
+  return state.sidemenuOpen;
 };
 
 export default {
@@ -53,7 +56,8 @@ export default {
   notifications,
   path,
   online,
-  Transactions,
+  transactions,
   wallet,
-  web3
+  web3,
+  sidemenuOpen
 };

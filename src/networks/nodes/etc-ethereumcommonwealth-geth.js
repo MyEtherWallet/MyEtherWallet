@@ -1,7 +1,7 @@
 import { ETC } from '../types';
 export default {
   type: ETC,
-  service: 'Ethereum Commonwealth Geth',
+  service: 'CW Geth',
   url: 'https://etc-geth.0xinfra.com/',
   port: 443,
   auth: false,

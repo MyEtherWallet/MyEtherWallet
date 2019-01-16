@@ -1,6 +1,7 @@
 {
-  "getAFreeWallet": "Get a Free wallet",
+  "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "Access My Wallet",
+  "accessWallet": "Access Wallet",
   "faqs": "FAQs",
   "sendTx": "Send ETH & Tokens",
   "swap": "Swap",
@@ -9,9 +10,9 @@
   "customerSupport": "Customer Support",
   "address": "Address",
   "balance": "Balance",
-  "terms": "Terms and Conditions",
+  "terms": "Terms",
   "continue": "Continue",
-  "jsonF": "JSON File",
+  "jsonF": "Keystore File",
   "mnemonicP": "Mnemonic Phrase",
   "privKey": "Private Key",
   "mewConnect": "MEWconnect",
@@ -27,7 +28,7 @@
   "verify": "Verify",
   "copy": "Copy",
   "clear": "Clear",
-  "slow": "Slow",
+  "economy": "Economy",
   "regular": "Regular",
   "fast": "Fast",
   "advanced": "Advanced",
@@ -52,5 +53,10 @@
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
-  "confirmAndSend": "Confirm and Send"
+  "confirmAndSend": "Confirm and Send",
+  "oops": "Oops!",
+  "logOutWallet": "Log Out Wallet",
+  "goBack": "Go back",
+  "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
+  "waitingForHash" : "Waiting for Transaction Hash"
 }

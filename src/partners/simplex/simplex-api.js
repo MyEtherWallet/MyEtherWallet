@@ -19,7 +19,6 @@ const getOrder = reqObj => {
       Accept: 'application/json'
     }
   };
-  // return post('https://localhost:8080/order', reqObj, options);
   return post(`${host.url}/order`, reqObj, options);
 };
 const getStatus = userId => {

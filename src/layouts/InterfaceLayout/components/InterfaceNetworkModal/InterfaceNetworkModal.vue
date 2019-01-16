@@ -27,7 +27,7 @@
       </div>
       <div ref="networkList" class="network-list">
         <div
-          v-for="(key, index) in Object.keys(Networks)"
+          v-for="(key, index) in Object.keys(reorderedNetworks)"
           :key="key + index"
           class="content-block"
         >
@@ -47,7 +47,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net);"
+              @click="switchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -69,29 +69,26 @@
               "
               class="switch-network custom-network-item"
             >
-              <p @click="switchNetwork(net);">
+              <p @click="switchNetwork(net)">
                 {{ net.service }} {{ '(' + net.type.name + ')' }}
               </p>
               <i
                 class="fa fa-times-circle"
-                @click.prevent="removeNetwork(net, idx);"
+                @click.prevent="removeNetwork(net, idx)"
               />
             </div>
           </div>
         </div>
       </div>
-      <form
-        v-if="selectedNetwork && selectedNetwork.type"
-        ref="networkAdd"
-        class="network-add hidden"
-      >
+      <form ref="networkAdd" class="network-add hidden">
         <div class="content-block">
           <div class="input-block-container">
             <input
+              v-validate="'required'"
               v-model="name"
               class="custom-input-text-1"
               type="text"
-              name=""
+              name="nodeName"
               placeholder="ETH Node Name"
               autocomplete="off"
             />
@@ -106,48 +103,75 @@
               </option>
             </select>
             <input
+              v-validate="'required|url:require_protocol'"
               v-model="url"
               class="custom-input-text-1"
               type="text"
-              name=""
+              name="nodeUrl"
               placeholder="URL"
               autocomplete="off"
             />
             <input
               v-model="port"
               class="custom-input-text-1"
-              type="text"
-              name=""
+              type="number"
+              name="nodePort"
               placeholder="Port"
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-validate="'required|url:require_protocol'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="blockExplorerTX"
               class="custom-input-text-1"
-              type="number"
-              name=""
+              type="text"
+              name="customExplorerTx"
               placeholder="https://etherscan.io/tx/"
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-validate="'required|numeric'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="chainID"
               class="custom-input-text-1"
               type="number"
-              name=""
+              name="customChain"
               placeholder="Chain ID"
               autocomplete="off"
             />
             <input
-              v-show="selectedNetwork.type.name === 'CUS'"
+              v-validate="'required|url:require_protocol'"
+              v-show="selectedNetwork.name === 'CUS'"
               v-model="blockExplorerAddr"
               class="custom-input-text-1"
-              type="number"
-              name=""
+              type="text"
+              name="customExplorerAddr"
               placeholder="https://etherscan.io/address/"
               autocomplete="off"
             />
+          </div>
+          <div>
+            <p v-show="errors.has('nodeName')">
+              {{ errors.first('nodeName') }}
+            </p>
+            <p v-show="errors.has('nodeUrl')">{{ errors.first('nodeUrl') }}</p>
+            <p
+              v-show="
+                errors.has('customExplorerTx') || blockExplorerTX.length > 0
+              "
+            >
+              {{ errors.first('customExplorerTx') }}
+            </p>
+            <p v-show="errors.has('customChain') || chainID.length > 0">
+              {{ errors.first('customChain') }}
+            </p>
+            <p
+              v-show="
+                errors.has('customExplorerAddr') || blockExplorerAddr.length > 0
+              "
+            >
+              {{ errors.first('customExplorerAddr') }}
+            </p>
           </div>
         </div>
 
@@ -186,15 +210,45 @@
         <div class="content-block">
           <div class="save-button-container">
             <button
-              class="save-button large-round-button-green-filled clickable"
+              v-show="selectedNetwork.name !== 'CUS'"
+              :class="[
+                errors.has('nodeName') ||
+                errors.has('nodeUrl') ||
+                url === '' ||
+                name === ''
+                  ? 'disabled'
+                  : '',
+                'save-button large-round-button-green-filled clickable'
+              ]"
+              @click.prevent="saveCustomNetwork"
+            >
+              {{ $t('interface.save') }}
+            </button>
+            <button
+              v-show="selectedNetwork.name === 'CUS'"
+              :class="[
+                errors.has('nodeName') ||
+                errors.has('nodeUrl') ||
+                url === '' ||
+                name === '' ||
+                errors.has('customChain') ||
+                errors.has('customExplorerTx') ||
+                blockExplorerTX === '' ||
+                chainID.length === 0 ||
+                blockExplorerAddr === '' ||
+                errors.has('customExplorerAddr')
+                  ? 'disabled'
+                  : '',
+                'save-button large-round-button-green-filled clickable'
+              ]"
               @click.prevent="saveCustomNetwork"
             >
               {{ $t('interface.save') }}
             </button>
             <interface-bottom-text
-              :link-text="$t('interface.learnMore')"
+              :link-text="$t('interface.helpCenter')"
               :question="$t('interface.dontKnow')"
-              link="mailto:support@myetherwallet.com"
+              link="https://kb.myetherwallet.com"
             />
           </div>
         </div>
@@ -208,6 +262,7 @@ import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
+import Misc from '@/helpers/misc';
 
 import { mapGetters } from 'vuex';
 
@@ -218,9 +273,9 @@ export default {
   data() {
     return {
       types: networkTypes,
-      selectedNetwork: this.network,
+      selectedNetwork: {},
       chainID: '',
-      port: '',
+      port: 443,
       name: '',
       url: '',
       username: '',
@@ -234,11 +289,15 @@ export default {
     ...mapGetters({
       network: 'network',
       Networks: 'Networks'
-    })
+    }),
+    reorderedNetworks() {
+      const networks = Misc.reorderNetworks();
+      return networks;
+    }
   },
   watch: {
     selectedNetwork(newVal) {
-      this.chainID = newVal ? newVal.type.chainID : -1;
+      this.chainID = newVal ? newVal.chainID : -1;
     }
   },
   mounted() {
@@ -280,7 +339,7 @@ export default {
     resetCompState() {
       this.selectedNetwork = this.network;
       this.chainID = '';
-      this.port = '';
+      this.port = 443;
       this.name = '';
       this.url = '';
       this.username = '';
@@ -326,6 +385,8 @@ export default {
           this.selectedNetwork = network;
         });
       });
+
+      this.$refs.network.hide();
     }
   }
 };

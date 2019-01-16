@@ -23,7 +23,7 @@
         <div class="the-form gas-amount">
           <input
             ref="fromaddress"
-            :value="wallet.getChecksumAddressString()"
+            v-model="hexAddress"
             type="text"
             placeholder="From Address"
             autocomplete="off"
@@ -31,7 +31,7 @@
           <div class="good-button-container">
             <i
               :class="[
-                isValid ? 'not-good' : '',
+                !isValidAddress ? 'not-good' : '',
                 'fa fa-check-circle good-button'
               ]"
               aria-hidden="true"
@@ -49,7 +49,10 @@
       />
       <div v-if="!moreInfoGenerated" class="submit-button-container">
         <div
-          class="submit-button large-round-button-green-filled clickable"
+          :class="[
+            isValidAddress ? 'clickable' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
           @click="generateInfo"
         >
           {{ $t('interface.generateInfo') }}
@@ -65,9 +68,9 @@
         </div>
       </div>
       <interface-bottom-text
-        link="mailto:support@myetherwallet.com"
+        link="https://kb.myetherwallet.com"
         question="Have issues?"
-        link-text="Learn More"
+        link-text="Help Center"
       />
     </div>
   </div>
@@ -99,17 +102,32 @@ export default {
   data() {
     return {
       moreInfoGenerated: false,
-      isValid: false
+      hexAddress: ''
     };
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet',
       web3: 'web3'
-    })
+    }),
+    isValidAddress() {
+      return this.web3.utils.isAddress(this.hexAddress);
+    }
+  },
+  watch: {
+    hexAddress(newVal, oldVal) {
+      if (newVal !== oldVal) this.moreInfoGenerated = false;
+    }
+  },
+  async mounted() {
+    this.hexAddress = this.web3.utils.toChecksumAddress(
+      await this.web3.eth.getCoinbase()
+    );
   },
   methods: {
-    generateInfo() {
+    async generateInfo() {
+      this.nonceUpdated(
+        await this.web3.eth.getTransactionCount(this.hexAddress)
+      );
       this.moreInfoGenerated = true;
     },
     copyFromAddress() {
@@ -127,12 +145,6 @@ export default {
     },
     nonceUpdated(e) {
       this.$emit('nonceUpdate', e);
-    },
-    checkAddress() {
-      return this.web3.utils.isAddress(this.wallet.getChecksumAddressString());
-    },
-    mounted() {
-      this.isValid = this.checkAddress();
     }
   }
 };

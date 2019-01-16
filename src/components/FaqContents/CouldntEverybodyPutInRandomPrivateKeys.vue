@@ -9,10 +9,16 @@
 
     <p>
       Ethereum is based on
-      <a href="https://en.wikipedia.org/wiki/Public-key_cryptography"
+      <a
+        href="https://en.wikipedia.org/wiki/Public-key_cryptography"
+        rel="noopener noreferrer"
+        target="_blank"
         >Public Key Cryptography</a
       >, specifically
-      <a href="https://eprint.iacr.org/2013/734.pdf"
+      <a
+        href="https://eprint.iacr.org/2013/734.pdf"
+        rel="noopener noreferrer"
+        target="_blank"
         >Elliptic curve cryptography</a
       >
       which is very widely used, not just in Ethereum. Most servers are
@@ -52,9 +58,10 @@
       If you know anything about Bitcoin,
       <a
         href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver"
+        rel="noopener noreferrer"
+        target="_blank"
+        >this will put it in perspective:</a
       >
-        this will put it in perspective:
-      </a>
     </p>
 
     <blockquote>
@@ -69,9 +76,10 @@
     <p>
       <a
         href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392"
+        rel="noopener noreferrer"
+        target="_blank"
+        >If you want something a bit more technical:</a
       >
-        If you want something a bit more technical:
-      </a>
     </p>
 
     <blockquote>
@@ -100,40 +108,51 @@
       <li>
         <a
           href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >BIP-39s (mnemonic phrases &amp; Ledger Hardware Wallets)</a
         >
-          BIP-39s (mnemonic phrases &amp; Ledger Hardware Wallets)
-        </a>
       </li>
       <li>
         <a
           href="https://kb.myetherwallet.com/security/ethereum-two-people-same-private-key.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >How does it ensure that it doesn't give different people the same
+          key?</a
         >
-          How does it ensure that it doesn't give different people the same key?
-        </a>
       </li>
       <li>
         <a
           href="https://crypto.stackexchange.com/questions/30269/are-all-possible-ec-private-keys-valid"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Not all private keys are valid on the curve</a
         >
-          Not all private keys are valid on the curve
-        </a>
       </li>
       <li>
-        <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">
-          https://en.wikipedia.org/wiki/Public-key_cryptography
-        </a>
+        <a
+          href="https://en.wikipedia.org/wiki/Public-key_cryptography"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://en.wikipedia.org/wiki/Public-key_cryptography</a
+        >
       </li>
       <li>
-        <a href="https://eprint.iacr.org/2013/734.pdf">
-          https://eprint.iacr.org/2013/734.pdf
-        </a>
+        <a
+          href="https://eprint.iacr.org/2013/734.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://eprint.iacr.org/2013/734.pdf</a
+        >
       </li>
       <li>
         <a
           href="https://www.reddit.com/r/ethereum/comments/6s1wzp/probably_a_stupid_question_about_mew_vulnerability/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Randomness of Private Keys Explained</a
         >
-          Randomness of Private Keys Explained
-        </a>
       </li>
     </ul>
 
@@ -142,23 +161,26 @@
       <li>
         <a
           href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/</a
         >
-          https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/
-        </a>
       </li>
       <li>
         <a
           href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392"
+          target="_blank"
+          rel="noopener noreferrer"
+          >http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392</a
         >
-          http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392
-        </a>
       </li>
       <li>
         <a
           href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver"
+          target="_blank"
+          rel="noopener noreferrer"
+          >http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver</a
         >
-          http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver
-        </a>
       </li>
     </ul>
   </div>

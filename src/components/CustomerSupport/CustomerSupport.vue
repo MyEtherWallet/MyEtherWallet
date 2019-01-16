@@ -1,6 +1,6 @@
 <template>
   <div class="support">
-    <a href="mailto:support@myetherwallet.com">
+    <a href="mailto:support@myetherwallet.com" rel="noopener noreferrer">
       <div class="support-content">
         <div class="support-icon">
           <img src="~@/assets/images/icons/help-center.svg" />

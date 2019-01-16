@@ -18,7 +18,7 @@
                 :value="toAmt"
                 :placeholder="$t('interface.depAmount')"
                 type="string"
-                name=""
+                name
                 @input="debouncedAmount"
               />
             </div>
@@ -41,7 +41,6 @@
             </div>
             <div class="the-form address-block">
               <textarea
-                v-ens-resolver="address"
                 ref="toaddress"
                 v-model="address"
                 name="name"
@@ -59,7 +58,7 @@
         </div>
       </div>
 
-      <div class="send-form">
+      <div class="send-form nopadding">
         <div class="title-container">
           <div class="title">
             <div class="title-helper">
@@ -70,13 +69,16 @@
         <div class="the-form gas-amount">
           <input
             v-model="toData"
+            :disabled="selectedCoinType.symbol !== 'ETH'"
             type="string"
-            name=""
             placeholder="e.g. 0x65746865726d696e652d657531"
           />
           <div class="good-button-container">
             <i
-              class="fa fa-check-circle good-button not-good"
+              :class="[
+                toData !== '' ? 'good-button' : 'not-good',
+                'fa fa-check-circle'
+              ]"
               aria-hidden="true"
             />
           </div>
@@ -89,13 +91,42 @@
         :to-address="address"
         :gas-limit="gasLimit"
         :highest-gas="highestGas"
+        class="tx-speed-input"
         @nonceUpdate="nonceUpdated"
         @gasLimitUpdate="gasLimitUpdated"
       />
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <div class="title-helper">
+              <h4>{{ $t('common.gasLimit') }}</h4>
+              <popover :popcontent="$t('popover.gasLimit')" />
+            </div>
+          </div>
+        </div>
+        <div class="the-form gas-amount">
+          <input
+            v-model="localGas"
+            :placeholder="$t('common.gasLimit')"
+            type="number"
+          />
+          <div class="good-button-container">
+            <i
+              class="fa fa-check-circle good-button not-good"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+      </div>
       <div class="submit-button-container">
         <div
           :class="[
-            !validAddress ? 'disabled' : '',
+            toData.length >= 2 &&
+            address.length > 0 &&
+            validAddress &&
+            toAmt >= 0
+              ? ''
+              : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
           @click="generateTx"
@@ -103,9 +134,9 @@
           {{ $t('interface.generateTx') }}
         </div>
         <interface-bottom-text
-          link="mailto:support@myetherwallet.com"
+          link="https://kb.myetherwallet.com"
           question="Have issues?"
-          link-text="Learn More"
+          link-text="Help Center"
         />
       </div>
     </div>
@@ -124,11 +155,10 @@ import TxSpeedInput from '../TxSpeedInput';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from '../SignedTxModal';
 import Blockie from '@/components/Blockie';
-// eslint-disable-next-line
-const EthTx = require('ethereumjs-tx');
-import BN from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
+import { Misc } from '@/helpers';
 import utils from 'web3-utils';
 
 export default {
@@ -167,21 +197,29 @@ export default {
       localGas: this.gasLimit,
       selectedCoinType: {},
       raw: {},
-      signed: '',
-      locNonce: this.nonce,
-      validAddress: false
+      signed: '{}',
+      locNonce: this.nonce
     };
   },
   computed: {
     ...mapGetters({
-      account: 'account',
       wallet: 'wallet',
       network: 'network',
       web3: 'web3',
       gasPrice: 'gasPrice'
-    })
+    }),
+    validAddress() {
+      return this.web3.utils.isAddress(this.address);
+    }
   },
   watch: {
+    toData(newVal) {
+      if (Misc.validateHexString(newVal)) {
+        this.toData = newVal;
+      } else {
+        this.toData = '0x';
+      }
+    },
     gasLimit(newVal) {
       this.localGas = newVal;
     },
@@ -189,7 +227,9 @@ export default {
       this.createDataHex(newVal, null, null);
     },
     address(newVal) {
-      this.createDataHex(null, newVal, null);
+      if (this.validAddress) {
+        this.createDataHex(null, newVal, null);
+      }
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
@@ -197,7 +237,13 @@ export default {
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
-      this.toAmt = new BN(e.target.value).decimalPlaces(18).toFixed();
+      const decimals =
+        this.selectedCurrency.symbol === this.network.type.name
+          ? 18
+          : this.selectedCurrency.decimals;
+      this.toAmt = new BigNumber(e.target.value)
+        .decimalPlaces(decimals)
+        .toFixed();
       e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
@@ -229,26 +275,15 @@ export default {
           type: 'function'
         }
       ];
-      if (
-        locCurrency.hasOwnProperty('symbol') &&
-        locCurrency.symbol !== 'ETH' &&
-        locAddress !== ''
-      ) {
+      if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
-        const contract = new this.web3.eth.Contract(
-          abi,
-          locCurrency.hasOwnProperty('addr')
-            ? locCurrency.addr
-            : locCurrency.address
-        );
-        const convertedAmount = new BN(locVal).exponentiatedBy(
+        const contract = new this.web3.eth.Contract(abi, locCurrency.address);
+        const convertedAmount = new BigNumber(locVal).exponentiatedBy(
           locCurrency.decimals
         );
         this.toData = await contract.methods
           .transfer(locAddress, convertedAmount.toFixed())
           .encodeABI();
-      } else {
-        this.toData = '0x';
       }
     },
     copyToAddress() {
@@ -261,27 +296,23 @@ export default {
         from: this.wallet.getAddressString(),
         gas: this.localGas,
         value:
-          this.selectedCoinType.symbol !== 'ETH'
+          this.selectedCoinType.symbol !== this.network.type.name
             ? 0
             : unit.toWei(this.toAmt, 'ether'),
         data: this.toData,
         nonce: this.locNonce,
-        gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+        gasPrice: unit.toWei(this.gasPrice, 'gwei'),
         to:
-          this.selectedCoinType.symbol !== 'ETH'
-            ? this.selectedCoinType.hasOwnProperty('addr')
-              ? this.selectedCoinType.addr
-              : this.selectedCoinType.address
+          this.selectedCoinType.symbol !== this.network.type.name
+            ? this.selectedCoinType.address
             : this.address,
-        chainId: this.network.type.chainID || 1,
+        chainId: this.network.type.chainID,
         generateOnly: true
       };
-
       this.raw = raw;
-
-      const signed = await this.web3.eth.signTransaction(this.raw);
+      const signed = await this.wallet.signTransaction(this.raw);
       this.signed = JSON.stringify(signed);
-      this.$emit('createdRawTx', JSON.stringify(signed));
+      this.$emit('createdRawTx', this.signed);
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
     },

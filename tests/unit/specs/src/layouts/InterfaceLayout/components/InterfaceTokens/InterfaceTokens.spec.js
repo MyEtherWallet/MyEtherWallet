@@ -1,9 +1,22 @@
 import Vue from 'vue';
 import VueX from 'vuex';
+import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens/InterfaceTokens.vue';
-
+import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal/InterfaceTokensModal.vue';
 import { Tooling } from '@@/helpers';
+
+const showModal = sinon.stub();
+const hideModal = sinon.stub();
+const BModalStub = {
+  name: 'b-modal',
+  template: '<div><slot></slot></div>',
+  props: ['to'],
+  methods: {
+    show: showModal,
+    hide: hideModal
+  }
+};
 
 describe('InterfaceTokens.vue', () => {
   const customTokens = [
@@ -26,7 +39,7 @@ describe('InterfaceTokens.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    let getters = {
+    const getters = {
       network: () => []
     };
 
@@ -41,87 +54,61 @@ describe('InterfaceTokens.vue', () => {
     wrapper = shallowMount(InterfaceTokens, {
       localVue,
       i18n,
-      store
+      store,
+      stubs: {
+        'interface-tokens-modal': InterfaceTokensModal,
+        'b-modal': BModalStub
+      }
     });
   });
 
-  xit('[FAILING MAX STACK] should render correct search data', () => {
+  it('should render correct search data', () => {
     const search = 'search';
     wrapper.setData({ search });
     expect(wrapper.vm.$el.querySelector('.search-block input').value).toEqual(
-      searchb
+      search
     );
   });
 
-  xit('[FAILING MAX STACK] should render correct customTokens data', () => {
+  it('should render correct customTokens data', () => {
     wrapper.setData({ customTokens });
 
     const tableElement = wrapper.vm.$el.querySelectorAll(
       '.token-table-container table'
     )[0];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
-      expect(trElement.querySelectorAll('td')[0].textContent).toEqual(
+      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
         customTokens[i].name
       );
       expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
-        `${customTokens[i].balance}`
+        String(customTokens[i].balance)
       );
     }
   });
 
-  xit('[FAILING MAX STACK] should render correct localTokens data', () => {
+  it('should render correct localTokens data', () => {
     wrapper.setData({ localTokens });
     const tableElement = wrapper.vm.$el.querySelectorAll(
       '.token-table-container table'
     )[1];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
-      expect(trElement.querySelectorAll('td')[0].textContent).toEqual(
+      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
         localTokens[i].name
       );
-      expect(trElement.querySelectorAll('td')[1].textContent).toEqual(
+      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
         String(localTokens[i].balance)
       );
     }
   });
 
-  xit('[FAILING MAX STACK] should render correct receivedTokens data', () => {
-    expect(
-      wrapper
-        .findAll('.spinner-container')
-        .at(0)
-        .isVisible()
-    ).toBe(false);
-    expect(
-      wrapper
-        .findAll('.spinner-container')
-        .at(1)
-        .isVisible()
-    ).toBe(true);
-    wrapper.setData({ receivedTokens: true });
-    expect(
-      wrapper
-        .findAll('.spinner-container')
-        .at(0)
-        .isVisible()
-    ).toBe(true);
-    expect(
-      wrapper
-        .findAll('.spinner-container')
-        .at(1)
-        .isVisible()
-    ).toBe(false);
-    wrapper.setData({ search: 'search' });
-    expect(
-      wrapper
-        .findAll('.spinner-container')
-        .at(0)
-        .isVisible()
-    ).toBe(false);
+  describe('InterfaceTokens.vue Methods', () => {
+    it('should render correct addTokenModal method', () => {
+      wrapper.vm.addTokenModal();
+      expect(showModal.called).toBe(true);
+    });
   });
-
-  describe('InterfaceTokens.vue Methods', () => {});
 });

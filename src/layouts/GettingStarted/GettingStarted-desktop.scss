@@ -100,7 +100,7 @@
     a:not(:last-child) {
       padding-right: 15px;
       margin-right: 15px;
-      border-right: 1px solid $mew-green;
+      border-right: 1px solid $light-blue-2;
       line-height: 15px;
       display: inline-block;
     }
@@ -108,10 +108,6 @@
 
   .create-wallet-warnings__copyright {
     margin-left: auto;
-
-    p {
-      color: $mew-green;
-    }
   }
 
   .next-button,
@@ -119,3 +115,7 @@
     display: none;
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.footer-color {
+  color: $light-blue-2 !important;
+}

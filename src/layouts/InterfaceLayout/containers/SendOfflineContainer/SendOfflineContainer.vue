@@ -10,7 +10,7 @@
           isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
           'genInfo'
         ]"
-        @click="processChange(tab.name2 ? tab.name2 : tab.name);"
+        @click="processChange(tab.name2 ? tab.name2 : tab.name)"
       >
         <div class="prevent-pointer-events">
           <p class="title">{{ tab.title }}</p>
@@ -79,14 +79,6 @@ export default {
       ]
     };
   },
-  watch: {
-    gasLimit(newVal) {
-      this.gasLimit = newVal;
-    },
-    nonce(newVal) {
-      this.nonce = newVal;
-    }
-  },
   methods: {
     createdRawTx(e) {
       this.rawTx = e;
@@ -107,6 +99,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped file="SendOfflineContainer.scss">
 @import 'SendOfflineContainer.scss';
 </style>

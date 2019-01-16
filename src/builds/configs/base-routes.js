@@ -1,83 +1,86 @@
-import ConvertUnits from '@/layouts/ConvertUnits';
-import TeamLayout from '@/layouts/TeamLayout';
-import PrivacyPolicyLayout from '@/layouts/PrivacyPolicyLayout';
-import TermsAndConditionsLayout from '@/layouts/TermsAndConditionsLayout';
-import AccessWalletLayout from '@/layouts/AccessWalletLayout';
-import InterfaceLayout from '@/layouts/InterfaceLayout';
-import HelpCenterLayout from '@/layouts/HelpCenterLayout';
-import NotFoundLayout from '@/layouts/NotFoundLayout';
-import GettingStarted from '@/layouts/GettingStarted';
+const ConvertUnits = () => import('@/layouts/ConvertUnits');
+const TeamLayout = () => import('@/layouts/TeamLayout');
+const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
+const TermsAndConditionsLayout = () =>
+  import('@/layouts/TermsAndConditionsLayout');
+const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
+const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
+const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
+const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
+const GettingStarted = () => import('@/layouts/GettingStarted');
 
-import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer';
-import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer';
-import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer';
-import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer';
-import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer';
-import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
-import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer';
-import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer';
-import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer';
-import store from '@/store';
+const DappsContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DappsContainer');
+const DeployContractContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DeployContractContainer');
+const InteractWithContractContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/InteractWithContractContainer');
+const SendCurrencyContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
+const SendOfflineContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SendOfflineContainer');
+const SwapContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SwapContainer');
+const SignMessageContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
+const VerifyMessageContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
+import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
+
 const router = [
   {
     path: '/team',
     name: 'TeamLayout',
-    component: TeamLayout
+    component: TeamLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/privacy-policy',
     name: 'PrivacyPolicyLayout',
-    component: PrivacyPolicyLayout
+    component: PrivacyPolicyLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/terms-and-conditions',
     name: 'TermsAndConditionsLayout',
-    component: TermsAndConditionsLayout
+    component: TermsAndConditionsLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/access-my-wallet',
     name: 'AccessWalletLayout',
-    component: AccessWalletLayout
+    component: AccessWalletLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/help-center',
     name: 'HelpCenterLayout',
-    component: HelpCenterLayout
+    component: HelpCenterLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/convert-units',
     name: 'ConvertUnits',
-    component: ConvertUnits
+    component: ConvertUnits,
+    meta: { requiresAuth: false }
   },
   {
     path: '/getting-started',
     name: 'GettingStarted',
-    component: GettingStarted
+    component: GettingStarted,
+    meta: { requiresAuth: false }
   },
   {
     path: '*',
     name: '404',
-    component: NotFoundLayout
+    component: NotFoundLayout,
+    meta: { requiresAuth: false }
   },
   {
     path: '/interface',
     component: InterfaceLayout,
-    beforeEnter(to, ___, next) {
-      if (store.state.wallet === null) {
-        store.dispatch('setLastPath', to.path);
-        next({ name: 'AccessWalletLayout' });
-      } else {
-        if (store.state.path !== '') {
-          const localPath = store.state.path;
-          store.dispatch('setLastPath', '');
-          next({ path: localPath });
-        } else {
-          next();
-        }
-      }
-    },
     children: [
       {
         path: '',

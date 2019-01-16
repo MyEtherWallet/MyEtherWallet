@@ -8,8 +8,13 @@
       <div class="page-container">
         <div v-show="!byJson && !byMnemonic" class="nav-tab-user-input-box">
           <b-tabs class="x100">
-            <div class="progress-bar" />
-            <b-tab class="mew-connect-block" title="MEWconnect" active>
+            <div v-if="showProgressBar" class="progress-bar" />
+            <b-tab
+              class="mew-connect-block"
+              title="MEWconnect"
+              active
+              @click="showProgressBar = false"
+            >
               <div class="title-block">
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
@@ -20,8 +25,26 @@
 
               <div class="appstores">
                 <div class="icons">
-                  <img src="@/assets/images/icons/appstore.png" />
-                  <img src="@/assets/images/icons/playstore.png" />
+                  <a
+                    href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~@/assets/images/icons/appstore.svg"
+                      height="40"
+                    />
+                  </a>
+                  <a
+                    href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~@/assets/images/icons/google-play.svg"
+                      height="40"
+                    />
+                  </a>
                 </div>
                 <div class="download">
                   <p @click="scanToDownloadModalOpen">
@@ -34,7 +57,10 @@
                 <img src="@/assets/images/etc/phones.png" />
               </div>
             </b-tab>
-            <b-tab :title="$t('createWallet.byJsonFile')">
+            <b-tab
+              :title="$t('createWallet.byJsonFile')"
+              @click="showProgressBar = true"
+            >
               <div class="title-block">
                 <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
@@ -50,9 +76,15 @@
                 :switcher="switcher"
                 :param="'Json'"
               />
-              <create-wallet-input-footer />
+              <create-wallet-input-footer
+                :combo="$t('createWallet.keyPass')"
+                :desc="$t('createWallet.keyPassDesc')"
+              />
             </b-tab>
-            <b-tab :title="$t('createWallet.byMnemonic')">
+            <b-tab
+              :title="$t('createWallet.byMnemonic')"
+              @click="showProgressBar = true"
+            >
               <div class="title-block">
                 <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
@@ -68,7 +100,10 @@
                 :switcher="switcher"
                 :param="'Mnemonic'"
               />
-              <create-wallet-input-footer />
+              <create-wallet-input-footer
+                :combo="$t('createWallet.passMnem')"
+                :desc="$t('createWallet.passMnemDesc')"
+              />
             </b-tab>
           </b-tabs>
         </div>
@@ -94,6 +129,7 @@ import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
 import store from 'store';
+import Misc from '@/helpers/misc';
 
 export default {
   components: {
@@ -110,7 +146,8 @@ export default {
     return {
       byJson: false,
       byMnemonic: false,
-      password: ''
+      password: '',
+      showProgressBar: false
     };
   },
   mounted() {
@@ -125,6 +162,7 @@ export default {
   },
   methods: {
     switcher(by) {
+      Misc.scrollToTop(1000);
       if (by === 'Json') {
         this.byJson = true;
         this.byMnemonic = false;

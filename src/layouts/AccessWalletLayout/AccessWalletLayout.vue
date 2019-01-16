@@ -36,8 +36,29 @@ export default {
   },
   methods: {
     async getRates() {
+      this.tokens = [];
+      const tokenNames = [
+        'BTC',
+        'ETH',
+        'REP',
+        'KNC',
+        'OMG',
+        'EOS',
+        'XRP',
+        'BCH',
+        'LTC',
+        'TRX',
+        'NEO',
+        'ETC',
+        'QTUM',
+        'ADA',
+        'XMR',
+        'QTUM',
+        'SNT',
+        'ELF'
+      ];
       const rates = await fetch(
-        'https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT'
+        'https://cryptorates.mewapi.io/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF'
       )
         .then(res => {
           return res.json();
@@ -51,6 +72,15 @@ export default {
           if (a.rank < b.rank) return -1;
           if (a.rank > b.rank) return 1;
           return 0;
+        })
+        .filter(item => {
+          if (
+            tokenNames.find(el => {
+              return el === item.symbol;
+            }) !== undefined
+          ) {
+            return item;
+          }
         });
     }
   }

@@ -8,7 +8,8 @@ import * as HDKey from 'hdkey';
 import {
   getSignTransactionObject,
   sanitizeHex,
-  getBufferFromHex
+  getBufferFromHex,
+  calculateChainIdFromV
 } from '../../utils';
 
 const NEED_PASSWORD = true;
@@ -42,9 +43,7 @@ class SecalotWallet {
       tx.v = getBufferFromHex(sanitizeHex(result.v));
       tx.r = getBufferFromHex(sanitizeHex(result.r));
       tx.s = getBufferFromHex(sanitizeHex(result.s));
-      const signedChainId = Math.floor(
-        (parseInt(sanitizeHex(result.v)) - 35) / 2
-      );
+      const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
