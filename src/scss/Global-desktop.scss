@@ -1210,6 +1210,8 @@
     color: $button--background-color-1;
     display: inline-block;
     font-size: 20px;
+    background-color: $white;
+    border-radius: 100%;
 
     &.not-good {
       color: $text-good-button-not-good;
