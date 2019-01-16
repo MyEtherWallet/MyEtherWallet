@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <img :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)" />
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -54,6 +54,9 @@ export default {
     }
   },
   computed: {
+    lowerCaseCurrency(){
+      return this.currency.toLowerCase();
+    },
     checksumAddress() {
       if (web3.utils.isAddress(this.tokenTransferTo))
         return web3.utils.toChecksumAddress(this.tokenTransferTo);

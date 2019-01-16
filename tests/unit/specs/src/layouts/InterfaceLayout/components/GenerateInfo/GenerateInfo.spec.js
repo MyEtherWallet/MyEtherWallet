@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils'
-import GenerateInfo from '@/layouts/InterfaceLayout/components/GenerateInfo/GenerateInfo.vue';
-import TxSpeedInput from '@/layouts/InterfaceLayout/components/TxSpeedInput/TxSpeedInput.vue';
+import GenerateInfo from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateInfo.vue';
+import TxSpeedInput from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/TxSpeedInput';
 import PopOver from '@/components/PopOver/PopOver.vue';
 
 
@@ -13,7 +13,7 @@ import {
 
 describe('GenerateInfo.vue', () => {
     let localVue, i18n, wrapper, store;
-    
+
     const gasLimit = 1000;
     const nonce = 1;
 
@@ -58,7 +58,7 @@ describe('GenerateInfo.vue', () => {
           },
           propsData: { gasLimit, nonce }
         });
-        
+
     });
 
     it('should render correct content', () => {

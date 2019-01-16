@@ -21,6 +21,12 @@ describe('SendCurrencyContainer.vue', () => {
   const resetView = jest.fn()
 
   beforeAll(() => {
+
+    window.scrollTo = jest.fn().mockImplementation((valX, valY) => {
+      window.pageXOffset = valX;
+      window.pageYOffset = valY;
+    });
+
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
