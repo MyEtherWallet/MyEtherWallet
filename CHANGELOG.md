@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix interact contract disabled [](<>)
+- Fix interact contract disabled [#469](https://github.com/MyEtherWallet/MyEtherWallet/pull/469)
 
 ### Release v5.0.0-beta.1
 
