@@ -83,7 +83,7 @@ export default {
       ens: 'ens'
     })
   },
-  mounted() {
+  created() {
     this.setup();
   },
   methods: {
