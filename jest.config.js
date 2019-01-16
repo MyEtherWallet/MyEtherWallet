@@ -1,10 +1,11 @@
 module.exports = {
-  collectCoverage: process.env.NODE_ENV === 'production' ? true : false,
+  collectCoverage: true, //process.env.NODE_ENV === 'production' ? true : false,
   globals: {
     WITH_NETWORK: false,
     VERSION: 'test'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
+  coveragePathIgnorePatterns: ['.*index.js$', 'src/components/FaqContents/.*', 'src/wallets/hardware/.*', 'src/networks/.*'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
   reporters: ['default', 'jest-skipped-reporter'],

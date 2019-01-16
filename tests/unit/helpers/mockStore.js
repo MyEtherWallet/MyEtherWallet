@@ -6,7 +6,7 @@ const state = {
   ens: true,
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-  gasPrice: gasPrice,
+  gasPrice: 41,
   Networks: {},
   network: {},
   notifications: {},
