@@ -1,4 +1,4 @@
-import EtherScanRequestManger from './etherscan-request-manager';
+import EtherScanRequestManager from './etherscan-request-manager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
@@ -22,7 +22,7 @@ class EtherscanProvider {
     const req = {
       payload,
       store: this.store,
-      requestManager: new Web3RequestManager(
+      requestManager: new EtherScanRequestManager(
         new EtherscanProvider(
           this.host,
           { apikey: this.apikey },
