@@ -17,8 +17,8 @@ class WSProvider {
     this.wsProvider.send = (payload, callback) => {
       const _this = this.wsProvider;
       if (_this.connection.readyState === _this.connection.CONNECTING) {
-        setTimeout(function() {
-          this.wsProvider.send(payload, callback);
+        setTimeout(() => {
+          _this.send(payload, callback);
         }, 10);
         return;
       }

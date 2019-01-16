@@ -4,9 +4,9 @@
     <div class="send-form">
       <div class="advanced-content safe-send-container">
         <div class="input-container">
-          <div style="width:55%;font-size:16px">
+          <div class="inner-safesend-text-container">
             <strong
-              ><span style="color:#05c0a5;font-size:16px">SafeSend</span
+              ><span class="inner-safesend-text">SafeSend</span
               >&nbsp;protects your transaction from fraud, phishing, and
               theft.</strong
             >
