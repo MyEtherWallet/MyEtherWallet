@@ -11,12 +11,14 @@
   }
 }
 
+.content-container {
+  @extend %send-form-base;
+}
+
 .deploy-contract-container {
   @extend %interface-container;
 
   .send-form {
-    @extend %send-form-base;
-
     .title-container {
       .title {
         align-items: flex-end;
@@ -32,6 +34,8 @@
         .copy-buttons {
           color: $text-color-3;
           margin-left: auto;
+          min-width: 100px;
+          text-align: right;
 
           span {
             cursor: pointer;
@@ -280,5 +284,13 @@
         width: 300px;
       }
     }
+  }
+}
+
+
+.byte-code {
+  margin-bottom: 30px;
+  textarea {
+    height: 70px;
   }
 }
