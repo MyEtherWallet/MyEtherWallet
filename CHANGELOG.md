@@ -1,3 +1,7 @@
+### Bug
+
+- Fix interact contract disabled [](<>)
+
 ### Release v5.0.0-beta.1
 
 ### Devop
