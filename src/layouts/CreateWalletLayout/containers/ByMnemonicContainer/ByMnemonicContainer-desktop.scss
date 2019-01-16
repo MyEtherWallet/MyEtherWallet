@@ -31,6 +31,10 @@
           align-items: center;
           margin-bottom: 40px;
           justify-content: center;
+
+          h3 {
+            margin-right: 7px;
+          }
         } // .title-popover
 
         .contents {
@@ -102,3 +106,7 @@
     } // .nav-tab-user-input-box
   } // .wrap
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.icon {
+  cursor: pointer;
+}

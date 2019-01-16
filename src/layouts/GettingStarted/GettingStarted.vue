@@ -37,10 +37,15 @@
         :progress-bar-value="'__80percent'"
         class="cww cww4 positionBottom"
       />
-      <congratulations
+      <what-is-upside
         ref="cww5"
-        :progress-bar-value="'__100percent'"
+        :progress-bar-value="'__90percent'"
         class="cww cww5 positionBottom"
+      />
+      <congratulations
+        ref="cww6"
+        :progress-bar-value="'__100percent'"
+        class="cww cww6 positionBottom"
       />
 
       <div class="create-wallet-warnings__footer-container">
@@ -50,22 +55,24 @@
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link to="/">{{ $t('header.home') }}</router-link>
-            <router-link to="/privacy-policy">{{
+            <router-link class="footer-color" to="/">{{
+              $t('header.home')
+            }}</router-link>
+            <router-link class="footer-color" to="/privacy-policy">{{
               $t('footer.privacy')
             }}</router-link>
-            <router-link to="/terms-and-conditions">{{
+            <router-link class="footer-color" to="/terms-and-conditions">{{
               $t('common.terms')
             }}</router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
-            <p>{{ $t('footer.copyright') }}</p>
+            <p class="footer-color">{{ $t('footer.copyright') }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="cwwCurrent != '4'" class="next-button" @click="mouseScrollDown">
+    <div v-if="cwwCurrent !== 5" class="next-button" @click="mouseScrollDown">
       {{ $t('common.next') }}
     </div>
   </div>
@@ -76,7 +83,9 @@ import WhatIsMyEtherWallet from './components/WhatIsMyEtherWallet';
 import WhereAreMyFundsStored from './components/WhereAreMyFundsStored';
 import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPassword';
 import SomeHelpfulTips from './components/SomeHelpfulTips';
+import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -84,29 +93,36 @@ export default {
     'where-my-funds-stored': WhereAreMyFundsStored,
     'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
     'some-helpful-tips': SomeHelpfulTips,
+    'what-is-upside': WhatIsUpside,
     congratulations: Congratulations
   },
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5'],
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
       scrollListener: function() {}
     };
   },
   mounted: function() {
     this.scrollListener = e => {
-      if (e.deltaY < 0) {
+      if (e.deltaY < -6) {
         this.mouseScrollUp();
       }
-      if (e.deltaY > 0) {
+      if (e.deltaY > 6) {
         this.mouseScrollDown();
       }
     };
 
-    window.addEventListener('wheel', this.scrollListener);
+    window.addEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', this.scrollListener);
+    window.removeEventListener(
+      'wheel',
+      utils._.throttle(this.scrollListener, 600)
+    );
   },
   methods: {
     mouseScrollDown: function() {

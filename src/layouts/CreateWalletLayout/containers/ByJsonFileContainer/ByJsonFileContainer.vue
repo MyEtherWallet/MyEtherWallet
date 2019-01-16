@@ -14,7 +14,6 @@
             <div class="title-block">
               <div class="title-popover">
                 <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')" />
               </div>
             </div>
             <div class="contents">
@@ -34,10 +33,11 @@
                     :class="[
                       { disable: !downloadable },
                       'next-button',
-                      'large-round-button-green-filled'
+                      'large-round-button-green-filled',
+                      'nopadding'
                     ]"
                     :download="name"
-                    @click="downloadDone();"
+                    @click="downloadDone()"
                   >
                     <span v-if="downloadable">
                       {{ $t('createWallet.byJsonFileDownloadKeyFile') }}
@@ -46,14 +46,6 @@
                       <i class="fa fa-spinner fa-lg fa-spin" />
                     </div>
                   </a>
-                </div>
-                <div class="printer-icon">
-                  <router-link to="/">
-                    <img
-                      class="icon"
-                      src="~@/assets/images/icons/printer.svg"
-                    />
-                  </router-link>
                 </div>
               </div>
             </div>

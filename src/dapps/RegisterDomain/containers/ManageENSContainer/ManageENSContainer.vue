@@ -19,7 +19,7 @@
             <button
               :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="updateResolver(resolverAddress);"
+              @click.prevent="updateResolver(resolverAddress)"
             >
               Update
             </button>
@@ -41,7 +41,7 @@
             <button
               :class="!web3.utils.isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="transferDomain(transferTo);"
+              @click.prevent="transferDomain(transferTo)"
             >
               Transfer
             </button>
@@ -50,9 +50,9 @@
       </div>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.learnMore')"
+      :link-text="$t('interface.helpCenter')"
       :question="$t('interface.haveIssues')"
-      link="mailto:support@myetherwallet.com"
+      link="https://kb.myetherwallet.com"
     />
   </div>
 </template>
@@ -87,6 +87,11 @@ export default {
     ...mapGetters({
       web3: 'web3'
     })
+  },
+  mounted() {
+    if (this.domainName === '') {
+      this.$router.push('/interface/dapps/register-domain');
+    }
   }
 };
 </script>

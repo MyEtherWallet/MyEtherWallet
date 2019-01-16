@@ -119,6 +119,11 @@
     box-shadow: none !important;
   }
 
+  .popover-container button {
+    background-color: transparent !important;
+    border-color: transparent;
+  }
+
   // *********************************************************************
   // Disable WebKit Spinners
   // *********************************************************************
@@ -131,7 +136,6 @@
   // *********************************************************************
   // Custom Scrollbar
   // *********************************************************************
-
   // width
   ::-webkit-scrollbar {
     border-radius: 10px;
@@ -156,6 +160,9 @@
     border-radius: 10px;
   }
 
+  // *********************************************************************
+  // .no-border
+  // *********************************************************************
   .no-border {
     .dropdown .dropdown-toggle {
       border: 0 !important;
@@ -215,7 +222,7 @@
   }
 
   .page-container {
-    padding: 0 15px;
+    padding: 0 25px;
   }
 
   // *********************************************************************
@@ -355,7 +362,13 @@
   // Standard buttons
   // *********************************************************************
 
+  .large-round-button {
+    padding: 21px 15px;
+  }
+
   .large-round-button-green-filled {
+    @extend .large-round-button;
+
     background-color: $button--background-color-1;
     border: 1px solid $button--border-color-1;
     border-radius: 6px;
@@ -363,13 +376,14 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
     display: inline-block;
     text-align: center;
   }
 
   .large-round-button-green-border {
+    @extend .large-round-button;
+
     background-color: $background-color-white;
     border: 1px solid $button--border-color-2;
     border-radius: 6px;
@@ -377,22 +391,24 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-filled {
+    @extend .large-round-button;
+
     background-color: $button--background-color-2;
     border: 1px solid $button--border-color-1;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-filled__body-text-color {
+    @extend .large-round-button;
+
     color: $text-base-color;
     background-color: $button--background-color-2;
     border: 1px solid $button--border-color-1;
@@ -400,18 +416,18 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
   .large-round-button-white-border {
+    @extend .large-round-button;
+
     border: 1px solid $button--border-color-1;
     border-radius: 5px;
     color: $button--text-color-1;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    padding: 21px 55px;
     user-select: none;
   }
 
@@ -559,12 +575,13 @@
   // [Bootstrap] Dropdown language menu style
   // *********************************************************************
   .modal {
-    z-index: $z-bootstrap-modal;
+    //z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
-  .modal-backdrop {
-    z-index: $z-bootstrap-modal-backdrop;
-  }
+  // .modal-backdrop {
+  //   z-index: $z-bootstrap-modal-backdrop;
+  // }
 
   .language-menu-container {
     position: relative;
@@ -594,6 +611,20 @@
     position: absolute !important;
     right: 13px !important;
     top: 16px !important;
+    display: none;
+  }
+
+  .mobile-language-menu-container {
+    .dropdown-menu {
+      left: 40px !important;
+      height: 200px;
+      overflow-y: auto;
+
+      > a {
+        font-size: 20px;
+        padding: 10px 10px;
+      }
+    }
   }
 
   // *********************************************************************
@@ -618,6 +649,10 @@
   // *********************************************************************
   // Tooltip
   // *********************************************************************
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+  }
 
   .popover {
     pointer-events: none;
@@ -708,7 +743,7 @@
 
   .bootstrap-modal {
     .modal-dialog {
-      max-width: 530px;
+      //max-width: 530px;
     }
   }
 
@@ -801,7 +836,7 @@
     }
 
     .modal-body {
-      padding: 40px;
+      padding: 20px 43px;
     }
   }
 

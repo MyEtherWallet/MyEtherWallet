@@ -5,6 +5,10 @@
   border: 1px solid $mew-green;
 }
 
+.cc-icon {
+  font-size: 26px;
+}
+
 .currency-picker-container {
   margin-bottom: 5px;
   min-width: 150px;
@@ -15,6 +19,16 @@
   border-radius: 4px;
   display: flex;
   position: relative;
+
+  .currency-symbol {
+    width: 40px;
+    margin-right: 0;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
 
   &.open {
     @extend %open;
@@ -37,7 +51,7 @@
   i {
     position: absolute;
     right: 20px;
-    top: 16px;
+    top: 20px;
   }
 
   p {
@@ -105,7 +119,16 @@
   .item {
     border-bottom: 1px solid $light-grey-6;
     cursor: pointer;
-    padding: 10px 8px;
+    padding: 10px 15px;
+
+    p {
+      display: flex;
+      align-items: center;
+
+      i {
+        width: 40px;
+      }
+    }
 
     &:last-child {
       border-bottom: 0;

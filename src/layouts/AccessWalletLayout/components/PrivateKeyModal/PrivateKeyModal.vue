@@ -15,7 +15,11 @@
           type="text"
           name="PrivateKey"
           autocomplete="off"
+          placeholder="Enter Private Key"
         />
+      </div>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
       </div>
       <button
         :disabled="
@@ -25,7 +29,8 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('accessWallet.unlock') }}
+        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -38,7 +43,8 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      privateKey: ''
+      privateKey: '',
+      spinner: false
     };
   },
   computed: {
@@ -48,10 +54,12 @@ export default {
   },
   methods: {
     unlockWallet() {
+      this.spinner = true;
       this.$store.dispatch('decryptWallet', [
         new WalletInterface(this.privateKey, false, privKeyType)
       ]);
       this.privateKey = '';
+      this.spinner = false;
       this.$router.push({
         path: 'interface'
       });

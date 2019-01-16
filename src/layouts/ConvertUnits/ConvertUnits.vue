@@ -46,7 +46,7 @@ export default {
         title: 'Convert Units',
         boldSubTitle: '',
         textContent: [
-          'MyEtherWallet is comprised of talented, inspiring, and hardworking individuals from around the world. We share the passion to code.'
+          'Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions.'
         ]
       },
       etherUnitRef: [

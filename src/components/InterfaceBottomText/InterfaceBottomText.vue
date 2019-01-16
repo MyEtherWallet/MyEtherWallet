@@ -1,7 +1,10 @@
 <template>
   <div class="bottom-text">
     <p>
-      {{ question }} <a :href="link" target="_blank">{{ linkText }}</a>
+      {{ question }}
+      <a :href="link" target="_blank" rel="noopener noreferrer">{{
+        linkText
+      }}</a>
     </p>
   </div>
 </template>

@@ -14,4 +14,7 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+.npm
+.config
 /tests/unit/coverage/
+release

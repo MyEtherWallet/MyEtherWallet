@@ -2,7 +2,7 @@ import utils from 'web3-utils';
 import { toPayload } from './jsonrpc';
 import EthCalls from '../web3Calls';
 import store from 'store';
-import BN from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
@@ -13,11 +13,11 @@ export default async ({ payload, requestManager }, res, next) => {
   let fetchedNonce;
   if (store.get(utils.sha3(addr)) === undefined) {
     store.set(utils.sha3(addr), {
-      nonce: storedNonce,
-      timestamp: +new Date()
+      nonce: utils.toHex(storedNonce),
+      timestamp: 0
     });
   } else {
-    storedNonce = store.get(utils.sha3(addr)).nonce;
+    storedNonce = new BigNumber(store.get(utils.sha3(addr)).nonce);
   }
 
   const lastFetch =
@@ -26,37 +26,37 @@ export default async ({ payload, requestManager }, res, next) => {
     ) / 60; // Get minutes
   if (lastFetch >= 15) {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
-    storedNonce = new BN(fetchedNonce).toFixed();
+    storedNonce = new BigNumber(fetchedNonce).toFixed();
     store.set(utils.sha3(addr), {
-      nonce: storedNonce,
+      nonce: utils.toHex(storedNonce),
       timestamp: +new Date()
     });
   } else if (lastFetch < 1) {
     fetchedNonce = storedNonce;
   } else {
     fetchedNonce = await ethCalls.getTransactionCount(addr);
-    if (new BN(storedNonce).isLessThan(new BN(fetchedNonce))) {
+    if (new BigNumber(storedNonce).isLessThan(new BigNumber(fetchedNonce))) {
       store.set(utils.sha3(addr), {
-        nonce: new BN(fetchedNonce).toFixed(),
+        nonce: utils.toHex(new BigNumber(fetchedNonce).toFixed()),
         timestamp: +new Date()
       });
     } else {
       store.set(utils.sha3(addr), {
-        nonce: storedNonce,
+        nonce: utils.toHex(storedNonce),
         timestamp: +new Date()
       });
     }
   }
 
-  if (new BN(storedNonce).isGreaterThan(new BN(fetchedNonce))) {
+  if (new BigNumber(storedNonce).isGreaterThan(new BigNumber(fetchedNonce))) {
     res(
       null,
-      toPayload(payload.id, `0x${new BN(storedNonce).toString('hex')}`)
+      toPayload(payload.id, `0x${new BigNumber(storedNonce).toString(16)}`)
     );
   } else {
     const currentTime = store.get(utils.sha3(addr)).timestamp;
     store.set(utils.sha3(addr), {
-      nonce: new BN(fetchedNonce).toFixed(),
+      nonce: utils.toHex(new BigNumber(fetchedNonce).toFixed()),
       timestamp: currentTime
     });
 

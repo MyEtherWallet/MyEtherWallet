@@ -1,4 +1,8 @@
-import { swapServer } from '../config';
+import {
+  mewSimplex,
+  TIME_SWAP_VALID_DEFAULT,
+  swapNotificationStatuses as notificationStatuses
+} from '../partnersConfig';
 
 const SimplexCurrencies = {
   fiat: {
@@ -19,23 +23,36 @@ const SimplexCurrencies = {
     ETH: {
       symbol: 'ETH',
       name: 'Ether'
-    },
-    BCH: {
-      symbol: 'BCH',
-      name: 'Bitcoin Cash'
-    },
-    LTC: {
-      symbol: 'LTC',
-      name: 'Litecoin'
     }
   }
 };
 
-const SimplexMinFiat = 50;
-const SimplexMaxFiat = 20000;
-
-const host = {
-  url: process.env.API_HOST || swapServer //'https://apiccswap.myetherwallet.com'
+const statuses = {
+  new: 'new',
+  initiated: 'INITIATED',
+  declined: 'simplexcc_declined',
+  pending: 'pending_simplexcc_approval',
+  payment: 'pending_simplexcc_payment_to_partner',
+  sent: 'SENT_TO_SIMPLEX',
+  cancelled: 'cancelled'
 };
 
-export { SimplexCurrencies, host, SimplexMinFiat, SimplexMaxFiat };
+const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
+const MIN_FIAT = 50;
+const MAX_FIAT = 20000;
+const PROVIDER_NAME = 'simplex';
+
+const host = {
+  url: process.env.SIMPLEX_API_HOST || mewSimplex
+};
+
+export {
+  SimplexCurrencies,
+  host,
+  statuses,
+  notificationStatuses,
+  TIME_SWAP_VALID,
+  MIN_FIAT,
+  MAX_FIAT,
+  PROVIDER_NAME
+};

@@ -4,15 +4,15 @@
     hide-footer
     centered
     hide-header
+    no-close-on-backdrop
+    no-close-on-esc
     class="bootstrap-modal padding-40-20 background-image-1"
   >
     <div class="d-block text-center">
       <h3 class="title">{{ $t('createWallet.tutorialModalHeader') }}</h3>
-      <p class="content">
-        {{ $t('createWallet.tutorialModalDesc') }}
+      <i18n path="createWallet.tutorialModalDesc" tag="p" class="content">
         <span @click="skip">{{ $t('createWallet.tutorialModalSkip') }}</span>
-        {{ $t('createWallet.tutorialModalSkipCont') }}
-      </p>
+      </i18n>
     </div>
     <div class="button-container">
       <router-link

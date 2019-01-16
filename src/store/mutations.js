@@ -72,6 +72,10 @@ const UPDATE_SWAP_TRANSACTION = function(state, newTx) {
   store.set('transactions', newTx);
 };
 
+const TOGGLE_SIDEMENU = function(state) {
+  state.sidemenuOpen = !state.sidemenuOpen;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -87,5 +91,6 @@ export default {
   SET_WEB3_INSTANCE,
   SWITCH_NETWORK,
   UPDATE_NOTIFICATION,
-  UPDATE_SWAP_TRANSACTION
+  UPDATE_SWAP_TRANSACTION,
+  TOGGLE_SIDEMENU
 };

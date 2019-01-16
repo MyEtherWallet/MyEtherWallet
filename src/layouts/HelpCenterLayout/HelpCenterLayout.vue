@@ -8,12 +8,12 @@
           <div class="switcher">
             <span
               :class="openFAQs ? 'active' : ''"
-              @click="(openFAQs = true), (openCategories = false);"
+              @click="(openFAQs = true), (openCategories = false)"
               >FAQs</span
             >
             <span
               :class="openCategories ? 'active' : ''"
-              @click="(openFAQs = false), (openCategories = true);"
+              @click="(openFAQs = false), (openCategories = true)"
               >Categories</span
             >
           </div>

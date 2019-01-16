@@ -36,36 +36,41 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation;"
+                  @click="modalDetailInformation = !modalDetailInformation"
                 />
                 <span class="slider round" />
               </label>
             </div>
           </div>
-          <div v-if="modalDetailInformation" class="expended-info">
-            <div class="grid-block">
-              <p>{{ $t('interface.network') }}</p>
-              <p>{{ network.type.name }} by {{ network.service }}</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.gasLimit') }}</p>
-              <p>{{ gas }} wei</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.gasPrice') }}</p>
-              <p>{{ gasPrice }} gwei</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.txFee') }}</p>
-              <p>{{ fee }} ETH</p>
-            </div>
-            <div class="grid-block">
-              <p>Nonce</p>
-              <p>{{ nonce }}</p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('common.data') }}</p>
-              <p>{{ data }}</p>
+          <div
+            :class="modalDetailInformation && 'expended-info-open'"
+            class="expended-info"
+          >
+            <div class="padding-container">
+              <div class="grid-block">
+                <p>{{ $t('interface.network') }}</p>
+                <p>{{ network.type.name }} by {{ network.service }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasLimit') }}</p>
+                <p>{{ gas }} wei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasPrice') }}</p>
+                <p>{{ gasPrice }} gwei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.txFee') }}</p>
+                <p>{{ fee }} ETH</p>
+              </div>
+              <div class="grid-block">
+                <p>Nonce</p>
+                <p>{{ nonce }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.data') }}</p>
+                <p>{{ data }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -92,20 +97,20 @@
                   triggers="hover focus"
                   placement="top"
                 >
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">
-                      {{ $t('confirmation.scanQrCode') }}
-                    </p>
-                    <div class="qrcode-block">
-                      <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
                 </b-popover>
               </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </b-modal>
@@ -185,7 +190,7 @@ export default {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
     }
@@ -240,6 +245,7 @@ export default {
             ? value
                 .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
                 .toFixed()
+                .toString(10)
             : value;
         this.tokenSymbol =
           tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';

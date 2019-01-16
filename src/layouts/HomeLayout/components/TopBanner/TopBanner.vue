@@ -9,7 +9,7 @@
             <p>{{ $t('home.subheading') }}</p>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/top-banner.jpg" />
+            <img src="~@/assets/images/home/big-spaceman.png" />
           </div>
         </div>
         <div class="grid-col-2 promo-cards">
@@ -20,7 +20,9 @@
                   <img src="~@/assets/images/home/create-wallet.png" />
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">{{ $t('home.getANewWallet') }}</h2>
+                  <h2 class="color-white">
+                    {{ $t('common.createANewWallet') }}
+                  </h2>
                   <p class="color-white">{{ $t('home.obtainAddress') }}</p>
                   <p class="button">
                     {{ $t('home.getStarted') }}

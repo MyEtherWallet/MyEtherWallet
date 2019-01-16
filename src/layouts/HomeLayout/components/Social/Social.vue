@@ -13,6 +13,7 @@
               :href="link.to"
               :key="link.name + index"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <div :class="link.name">
                 <img :src="link.img" />

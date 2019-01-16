@@ -1,4 +1,4 @@
 import KyberSwap from './kyber';
-import { KyberCurrencies } from './config';
+import { KyberCurrencies, PROVIDER_NAME } from './config';
 
-export { KyberSwap, KyberCurrencies };
+export { KyberSwap, KyberCurrencies, PROVIDER_NAME };

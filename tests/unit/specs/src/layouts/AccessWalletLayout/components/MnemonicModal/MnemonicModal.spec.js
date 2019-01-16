@@ -3,16 +3,12 @@
  */
 import { shallowMount } from '@vue/test-utils';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
-import {
-  Mnemonic,
-  Tooling
-} from '@@/helpers';
+import { Mnemonic, Tooling } from '@@/helpers';
 
 const longMnemonic = Mnemonic.long;
 const shortMnemonic = Mnemonic.short;
 
 describe('MnemonicModal.vue', () => {
-
   describe('MnemonicModal.vue', () => {
     let localVue, i18n, wrapper;
 
@@ -35,30 +31,30 @@ describe('MnemonicModal.vue', () => {
       });
     });
 
-    xit('[FAILING MAX STACK] should check the switch to change the number of words', () => {
+    it('should check the switch to change the number of words', () => {
       const checkboxInput = wrapper.find('input[type="checkbox"]');
       expect(checkboxInput.element.checked).toEqual(false);
       checkboxInput.setChecked();
       expect(checkboxInput.element.checked).toEqual(true);
     });
 
-    xit('[FAILING MAX STACK] should click the element that changes the number of words display', () => {
+    it('should click the element that changes the number of words display', () => {
       expect(wrapper.vm.mnemonic24).toEqual(false);
-      let btn = wrapper.find('.slider');
+      const btn = wrapper.find('.slider');
       btn.trigger('click');
       expect(wrapper.vm.mnemonic24).toEqual(true);
     });
 
-    xit('[FAILING MAX STACK] should start with 12 input fields', () => {
-      let btn = wrapper.findAll('input[type="text"]');
+    it('should start with 12 input fields', () => {
+      const btn = wrapper.findAll('input[type="text"]');
       for (let i = 0; i < 12; i++) {
         const inputField = btn.at(i);
         expect(inputField.element.value).toEqual('');
       }
     });
 
-    xit('[FAILING MAX STACK] should not have more than 12 input fields', () => {
-      let btn = wrapper.findAll('input[type="text"]');
+    it('should not have more than 12 input fields', () => {
+      const btn = wrapper.findAll('input[type="text"]');
       let didFail = false;
       try {
         btn.at(14);
@@ -69,16 +65,15 @@ describe('MnemonicModal.vue', () => {
       }
     });
 
-    xit('[FAILING MAX STACK] should start with 12 input fields then change to 24', () => {
-      let btn = wrapper.find('.slider');
+    it('should start with 12 input fields then change to 24', () => {
+      const btn = wrapper.find('.slider');
       btn.trigger('click');
-      let input = wrapper.findAll('input[type="text"]');
+      const input = wrapper.findAll('input[type="text"]');
       for (let i = 0; i < 24; i++) {
         const inputField = input.at(i);
         expect(inputField.element.value).toEqual('');
       }
     });
-
   });
 
   describe('MnemonicModal.vue Methods', () => {
@@ -103,12 +98,12 @@ describe('MnemonicModal.vue', () => {
       });
     });
 
-    xit('[FAILING MAX STACK] should convert the word array to a single string before passing it to the mnemonicPhrasePasswordModalOpen prop function', () => {
+    it('should convert the word array to a single string before passing it to the mnemonicPhrasePasswordModalOpen prop function', () => {
       wrapper.setData({ mnemonicPhrase: longMnemonic.split(' ') });
       wrapper.vm.openPasswordModal();
     });
 
-    xit('[FAILING MAX STACK] should populate and submit a 12 word mnemonic phrase', (done) => {
+    it('should populate and submit a 12 word mnemonic phrase', done => {
       wrapper.setProps({
         mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
           // expect(MnemonicPhrase).toEqual(shortMnemonic);
@@ -118,14 +113,14 @@ describe('MnemonicModal.vue', () => {
       // wrapper.setData({ mnemonicSize: 12, mnemonic24: false, mnemonicPhrase: [].fill(' ', 0, 11) });
       const phrase = shortMnemonic.split(' ');
       for (let i = 0; i < 12; i++) {
-         const textInput = wrapper.findAll('.phrases input').at(i);
+        const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(12);
       wrapper.vm.openPasswordModal();
     });
 
-    xit('[FAILING MAX STACK] should populate and submit a 24 word mnemonic phrase', (done) => {
+    it('should populate and submit a 24 word mnemonic phrase', done => {
       wrapper.vm.mnemonicValueBitSizeChange();
       const phrase = longMnemonic.split(' ');
       for (let i = 0; i < 24; i++) {
@@ -140,7 +135,7 @@ describe('MnemonicModal.vue', () => {
     });
 
     // Indicates the array length change mechanism is functioning properly
-    xit('[FAILING] should populate a 24 word mnemonic phrase and truncate it to 12 words', (done) => {
+    xit('[FAILING] should populate a 24 word mnemonic phrase and truncate it to 12 words', done => {
       wrapper.setProps({
         mnemonicPhrasePasswordModalOpen: function(MnemonicPhrase) {
           // expect(MnemonicPhrase).toEqual(shortMnemonic);
@@ -151,7 +146,7 @@ describe('MnemonicModal.vue', () => {
       const doubleLengthPhrase = shortMnemonic + ' ' + shortMnemonic;
       const phrase = doubleLengthPhrase.split(' ');
       for (let i = 0; i < 24; i++) {
-         const textInput = wrapper.findAll('.phrases input').at(i);
+        const textInput = wrapper.findAll('.phrases input').at(i);
         textInput.setValue(phrase[i]);
       }
       expect(wrapper.vm.mnemonicPhrase.length).toEqual(24);
@@ -162,5 +157,4 @@ describe('MnemonicModal.vue', () => {
       });
     });
   });
-
 });

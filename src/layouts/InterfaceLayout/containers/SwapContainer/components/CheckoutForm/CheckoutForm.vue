@@ -46,7 +46,7 @@
         name="digital_total_amount[currency]"
       />
     </form>
-    <div class="confirm-send-button" @click="submit();">
+    <div class="confirm-send-button" @click="submit()">
       <button-with-qrcode :qrcode="qrcode" buttonname="Confirm and Send" />
     </div>
   </div>
@@ -79,6 +79,7 @@ export default {
   },
   methods: {
     submit() {
+      this.continueAction();
       document.querySelector('#payment_form').submit();
     }
   }

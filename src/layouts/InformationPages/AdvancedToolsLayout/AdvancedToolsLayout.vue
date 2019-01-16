@@ -9,7 +9,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="ensDebuggerOpen = !ensDebuggerOpen;"
+                @click="ensDebuggerOpen = !ensDebuggerOpen"
               >
                 <p>ENS Debugger & Data Grabber</p>
                 <i
@@ -84,7 +84,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="convertDecHexOpen = !convertDecHexOpen;"
+                @click="convertDecHexOpen = !convertDecHexOpen"
               >
                 <p>Convert Decimal to Hexadecimal & Hex to Decimal</p>
                 <i
@@ -131,7 +131,7 @@
             <div class="input-title">
               <div
                 class="the-title"
-                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen;"
+                @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen"
               >
                 <p>Mistyped Private Key</p>
                 <i
@@ -154,7 +154,11 @@
                   operations by Russia to more serious computer-based attacks on
                   US information systems and infrastructure.
                 </p>
-                <div class="link-block"><a href="">Learn more</a></div>
+                <div class="link-block">
+                  <a href="https:/kb.myetherwallet.com" target="_blank">
+                    >Learn more</a
+                  >
+                </div>
               </div>
             </div>
             <div
@@ -189,7 +193,7 @@
 
           <li>
             <div class="input-title">
-              <div class="the-title" @click="SHA3Open = !SHA3Open;">
+              <div class="the-title" @click="SHA3Open = !SHA3Open">
                 <p>"SHA3" (Keccak-256) It!</p>
                 <i
                   v-if="!SHA3Open"
@@ -208,7 +212,9 @@
                   US information systems and infrastructure.
                 </p>
                 <div class="link-block">
-                  <a href="">Yooo... sha3 !== Keccak-256?!</a>
+                  <a href="#" rel="noopener noreferrer" target="_blank"
+                    >Yooo... sha3 !== Keccak-256?!</a
+                  >
                 </div>
               </div>
             </div>

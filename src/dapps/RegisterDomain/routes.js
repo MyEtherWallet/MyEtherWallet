@@ -1,14 +1,19 @@
-import RegisterDomain from './RegisterDomain';
-import EnsBidContainer from './containers/EnsBidContainer';
-import InitialENSStateContainer from './containers/InitialENSStateContainer';
-import NameForbiddenENSContainer from './containers/NameForbiddenENSContainer';
-import AlreadyOwnedENSContainer from './containers/AlreadyOwnedENSContainer';
-import FinalizeContainer from './containers/FinalizeContainer';
-import ManageENSContainer from './containers/ManageENSContainer';
+const RegisterDomain = () => import('./RegisterDomain');
+const EnsBidContainer = () => import('./containers/EnsBidContainer');
+const InitialENSStateContainer = () =>
+  import('./containers/InitialENSStateContainer');
+const NameForbiddenENSContainer = () =>
+  import('./containers/NameForbiddenENSContainer');
+const AlreadyOwnedENSContainer = () =>
+  import('./containers/AlreadyOwnedENSContainer');
+const FinalizeContainer = () => import('./containers/FinalizeContainer');
+const ManageENSContainer = () => import('./containers/ManageENSContainer');
+
 export default {
   path: 'dapps/register-domain',
   component: RegisterDomain,
   props: true,
+  meta: { requiresAuth: true },
   children: [
     {
       path: '',

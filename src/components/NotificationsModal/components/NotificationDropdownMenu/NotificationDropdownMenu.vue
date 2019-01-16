@@ -1,7 +1,7 @@
 <template>
   <div class="full-width-dropdown-menu">
     <div class="wrap">
-      <div class="title-container" @click="dropdownOpen = !dropdownOpen;">
+      <div class="title-container" @click="dropdownOpen = !dropdownOpen">
         <p class="notification-title">{{ title }}</p>
         <p class="time">13:20:23&nbsp;&nbsp;11/11/2018</p>
         <i v-if="!dropdownOpen" class="fa fa-angle-down" aria-hidden="true" />

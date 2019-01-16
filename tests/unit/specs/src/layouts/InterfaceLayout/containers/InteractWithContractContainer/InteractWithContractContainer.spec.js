@@ -12,7 +12,7 @@ import url from 'url';
 import Web3 from 'web3';
 import sinon from 'sinon';
 
-import { Tooling, ERC20 } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('InteractWithContractContainer.vue', () => {
   let localVue, i18n, wrapper, store, getters;
@@ -63,7 +63,6 @@ describe('InteractWithContractContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      sync: false,
       stubs: {
         'interface-bottom-text': InterfaceBottomText,
         'interface-container-title': InterfaceContainerTitle,
@@ -73,54 +72,28 @@ describe('InteractWithContractContainer.vue', () => {
     });
   });
 
-  it('should render correct abi data', done => {
+  it('should render correct abi data', () => {
     const abi = 'abi';
     wrapper.setData({ abi });
-    Vue.nextTick(() => {
-      expect(
-        wrapper.vm.$el.querySelector('.domain-name textarea').value
-      ).toEqual(abi);
-      done();
-    });
+    expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(
+      abi
+    );
   });
 
-  it('should render correct address data', done => {
+  it('should render correct address data', () => {
     const address = 'address';
     wrapper.setData({ interact: true, address });
-    Vue.nextTick(() => {
-      expect(wrapper.find('.address').text()).toEqual(
-        'Contract Address: ' + address
-      );
-      done();
-    });
+    expect(wrapper.find('.address').text()).toEqual(
+      'Contract Address: ' + address
+    );
   });
 
-  it('should render valid abi', done => {
+  it('should render isValidAbi abi', () => {
     const abi = { value: 'val' };
     wrapper.setData({ abi: JSON.stringify(abi) });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.validAbi).toBe(true);
-      done();
-    });
+    expect(wrapper.vm.$data.isValidAbi).toBe(true);
     wrapper.setData({ abi });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.validAbi).toBe(false);
-      done();
-    });
-  });
-
-  it('should render valid address', done => {
-    const address = 'address';
-    wrapper.setData({ address });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.validAddress).toBe(false);
-      done();
-    });
-    wrapper.setData({ address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D' });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.validAddress).toBe(true);
-      done();
-    });
+    expect(wrapper.vm.$data.isValidAbi).toBe(false);
   });
 
   it('should render correct result data', () => {
@@ -131,65 +104,48 @@ describe('InteractWithContractContainer.vue', () => {
     wrapper.setData({ selectedMethod });
   });
 
-  it('should render correct interact data', done => {
+  it('should render correct interact data', () => {
     wrapper.setData({ interact: true });
-    Vue.nextTick(() => {
-      expect(wrapper.find('.interact-buttons').exists()).toBe(true);
-      done();
-    });
+    expect(wrapper.find('.interact-buttons').exists()).toBe(true);
   });
 
-  it('should render correct value data', done => {
+  it('should render correct value data', () => {
     const value = 'value';
     wrapper.setData({ interact: true });
     wrapper.setData({ value });
-    Vue.nextTick(() => {
-      expect(
-        wrapper.vm.$el.querySelector('.send-form .result-container input').value
-      ).toEqual(value);
-      done();
-    });
+    expect(
+      wrapper.vm.$el.querySelector('.send-form .result-container input').value
+    ).toEqual(value);
   });
 
-  it('should render correct resType data', done => {
+  it('should render correct resType data', () => {
     wrapper.setData({ result: 'resType' });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.resType).toEqual('string');
-    });
+    expect(wrapper.vm.$data.resType).toEqual('string');
     wrapper.setData({ result: 1212 });
-    Vue.nextTick(() => {
-      expect(wrapper.vm.$data.resType).toEqual('number');
-      done();
-    });
+    expect(wrapper.vm.$data.resType).toEqual('number');
   });
 
-  it('should render correct loading data', done => {
+  it('should render correct loading data', () => {
     const selectedMethod = {
       constant: false,
       inputs: []
     };
     wrapper.setData({ selectedMethod: selectedMethod, interact: true });
     wrapper.setData({ loading: true });
-    Vue.nextTick(() => {
-      expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
-      done();
-    });
+    expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
   });
 
   describe('InteractWithContractContainer.vue Methods', () => {
-    it('should verify message when click button', done => {
+    it('should verify message when click button', () => {
       wrapper.setData({ writeInputs: 'ww' });
       const currencyElements = wrapper.findAll(
         '.functions .item-container div'
       );
-      for (var i = 0; i < currencyElements.length; i++) {
+      for (let i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
       }
-      Vue.nextTick(() => {
-        expect(wrapper.vm.$data.inputsFilled).toBe(true);
-        done();
-      });
+      expect(wrapper.vm.$data.inputsFilled).toBe(true);
     });
 
     it('should verify message when click button', () => {
@@ -214,13 +170,13 @@ describe('InteractWithContractContainer.vue', () => {
       const currencyElements = wrapper.findAll(
         '.functions .item-container div'
       );
-      for (var i = 0; i < currencyElements.length; i++) {
+      for (let i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
       }
     });
 
-    xit('[FAILING MAX STACK] should switch view when submit button clicked', () => {
+    it('should switch view when submit button clicked', () => {
       const abi = [
         {
           constant: true,
@@ -242,22 +198,16 @@ describe('InteractWithContractContainer.vue', () => {
       wrapper.find('.interact-buttons .submit-button').trigger('click');
     });
 
-    it('should delete input when button clicked', done => {
+    it('should delete input when button clicked', () => {
       const abi = 'abi';
       wrapper.setData({ abi });
-      Vue.nextTick(() => {
-        expect(
-          wrapper.vm.$el.querySelector('.domain-name textarea').value
-        ).toEqual(abi);
-        wrapper.find('.copy-buttons span').trigger('click');
-      });
-      Vue.nextTick(() => {
-        expect(
-          wrapper.vm.$el.querySelector('.domain-name textarea').value
-        ).toEqual('');
-        done();
-      });
-
+      expect(
+        wrapper.vm.$el.querySelector('.domain-name textarea').value
+      ).toEqual(abi);
+      wrapper.find('.copy-buttons span').trigger('click');
+      expect(
+        wrapper.vm.$el.querySelector('.domain-name textarea').value
+      ).toEqual('');
       // wrapper.findAll('.copy-buttons span').at(1).trigger('click');
     });
   });

@@ -41,7 +41,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 999;
+    z-index: 1999;
     position: fixed;
     top: 0;
     left: 0;
@@ -110,17 +110,13 @@
 
   .create-wallet-warnings__copyright {
     margin-left: auto;
-
-    p {
-      color: $mew-green;
-    }
   }
 
   .next-button {
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1999;
     width: 100%;
     background-color: $mew-green;
     text-align: center;

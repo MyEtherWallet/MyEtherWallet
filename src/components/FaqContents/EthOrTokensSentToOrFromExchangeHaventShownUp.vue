@@ -8,6 +8,8 @@
       A successful transaction will look like
       <a
         href="https://etherscan.io/tx/0xcde5a30a1a1514919e9c357d4e89211701aa22a741936ad9516c2987d8b097c9"
+        target="_blank"
+        rel="noopener noreferrer"
         >this</a
       >.
     </p>
@@ -15,6 +17,8 @@
       And unsuccessful one will look like
       <a
         href="https://etherscan.io/tx/0xf9c8514fad47eb54a414930563aabfeceb465c9f308f5f294a37edd0d669243c"
+        target="_blank"
+        rel="noopener noreferrer"
         >this</a
       >.
     </p>

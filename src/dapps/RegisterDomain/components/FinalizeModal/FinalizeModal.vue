@@ -22,7 +22,9 @@
         </div>
         <p>
           {{ $t('dapps.nodeProvider') }}
-          <a :href="network.url" target="_blank">{{ network.service }}</a>
+          <a :href="network.url" target="_blank" rel="noopener noreferrer">{{
+            network.service
+          }}</a>
         </p>
       </div>
     </b-modal>

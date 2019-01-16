@@ -1,14 +1,13 @@
 <template>
   <div class="home">
     <top-banner />
-    <about /> <faqs /> <social /> <promo class="promo" />
+    <about /> <faqs /> <social />
   </div>
 </template>
 
 <script>
 import AboutContainer from '@/containers/AboutContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
-import Promo from './components/Promo';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
 import { mapGetters } from 'vuex';
@@ -19,8 +18,7 @@ export default {
     'top-banner': TopBanner,
     about: AboutContainer,
     faqs: FaqsContainer,
-    social: Social,
-    promo: Promo
+    social: Social
   },
   data() {
     return {

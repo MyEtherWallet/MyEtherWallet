@@ -19,14 +19,16 @@
       You can also run
       <a
         href="https://kb.myetherwallet.com/offline/running-myetherwallet-locally.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        >MyEtherWallet locally</a
       >
-        MyEtherWallet locally
-      </a>
       and/or
       <a
         href="https://kb.myetherwallet.com/networks/run-your-own-node-with-myetherwallet.html"
-      >
-        connect it to your own node </a
+        target="_blank"
+        rel="noopener noreferrer"
+        >connect it to your own node</a
       >.
     </p>
   </div>
