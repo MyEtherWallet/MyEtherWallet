@@ -1,4 +1,8 @@
 @import '../InformationPages/InformationPages';
+.page-container {
+  max-width: 1280px;
+  padding-bottom: 80px;
+}
 
 .team-info {
   .member {

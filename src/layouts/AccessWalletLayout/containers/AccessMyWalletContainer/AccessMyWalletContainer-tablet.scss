@@ -7,16 +7,19 @@
 
   .title {
     margin-bottom: 50px;
-    text-align: left;
+    text-align: center;
   }
 
   .buttons-container {
     display: grid;
     grid-column-gap: 20px;
-    grid-template-columns: repeat(4, 215px);
+    grid-row-gap: 20px;
+    grid-template-columns: repeat(2, 228px);
+    justify-content: center;
     margin: 0 auto;
     overflow-y: auto;
     position: relative;
     text-align: center;
+    max-width: 725px;
   }
-} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+}

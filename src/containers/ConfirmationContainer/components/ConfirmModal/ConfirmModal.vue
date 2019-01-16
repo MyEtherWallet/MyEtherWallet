@@ -97,15 +97,6 @@
                   triggers="hover focus"
                   placement="top"
                 >
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">
-                      {{ $t('confirmation.scanQrCode') }}
-                    </p>
-                    <div class="qrcode-block">
-                      <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
                 </b-popover>
               </div>
             </div>
@@ -199,7 +190,7 @@ export default {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
     }
@@ -254,6 +245,7 @@ export default {
             ? value
                 .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
                 .toFixed()
+                .toString(10)
             : value;
         this.tokenSymbol =
           tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';

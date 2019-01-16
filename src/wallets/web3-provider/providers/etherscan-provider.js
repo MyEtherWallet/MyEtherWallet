@@ -1,4 +1,4 @@
-import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
+import EtherScanRequestManger from './etherscan-request-manager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,

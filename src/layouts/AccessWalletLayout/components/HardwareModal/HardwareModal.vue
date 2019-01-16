@@ -7,9 +7,9 @@
     centered
   >
     <div class="d-block text-center">
-      <span v-show="mayNotBeAttached"
-        >(TEMP implementation) Please check if your device is connected</span
-      >
+      <b-alert :show="mayNotBeAttached" fade variant="warning">
+        Please make sure your device is connected
+      </b-alert>
       <ul ref="hardwareList" class="button-options hardware-button-options">
         <li
           :class="selected === 'ledger' ? 'active' : ''"

@@ -100,7 +100,7 @@ describe('InterfaceTokens.vue', () => {
         .findAll('.spinner-container')
         .at(1)
         .isVisible()
-    ).toBe(true);
+    ).toBe(false);
     wrapper.setData({ receivedTokens: true });
     expect(
       wrapper

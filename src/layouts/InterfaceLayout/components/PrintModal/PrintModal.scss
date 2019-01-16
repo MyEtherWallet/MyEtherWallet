@@ -6,8 +6,22 @@
   display: flex;
   justify-content: space-between;
   min-height: 290px;
-  padding: 30px;
   position: relative;
+  overflow: hidden;
+}
+
+.floating-img {
+  position: absolute;
+  top: -90px;
+  z-index: 1;
+}
+
+.floating-spaceman {
+  bottom: 15px;
+  position: absolute;
+  right: 390px;
+  width: 75px;
+  z-index: 3;
 }
 
 .right-section,
@@ -17,9 +31,13 @@
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
+  position: relative;
+  z-index: 2;
 }
 
 .right-section {
+  padding: 30px 30px 30px 0;
+
   .header-text {
     display: flex;
     align-items: center;
@@ -53,6 +71,8 @@
 }
 
 .left-section {
+  padding: 30px 0 30px 30px;
+
   .blockie-contianer {
     display: flex;
 

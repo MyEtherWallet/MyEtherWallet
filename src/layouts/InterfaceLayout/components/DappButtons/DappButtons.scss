@@ -1,18 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
 .dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
   border-radius: 5px;
   color: $black;
   cursor: pointer;
+  height: 100%;
   padding: 40px 20px;
   text-align: center;
-  height: 100%;
-  background: $light-green-4;
 
   &:hover {
     border: 1px solid $mew-green;
     background-color: $light-green-6;
-    box-shadow: 2px 10px 20px $light-grey-10;
   }
 
   img {
@@ -27,7 +27,7 @@
     padding: 0 10px;
   }
 
-  a {
-    color: black;
-  }
+  // a {
+  //   color: black;
+  // }
 }

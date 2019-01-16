@@ -1,12 +1,28 @@
 <template>
   <div class="header">
-    <settings-modal ref="settings" />
+    <settings-modal
+      v-if="wallet !== null"
+      ref="settings"
+      :gas-price="gasPrice"
+    />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
+    <issue-log-modal ref="issuelog" />
+    <logout-warning-modal ref="logoutWarningModal" />
+
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
     >
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet'
+        "
+        to="/getting-started"
+      >
+        <user-reminder-button />
+      </router-link>
       <scroll-up-button />
     </div>
     <div
@@ -21,29 +37,31 @@
       <div class="page-container">
         <ul>
           <li>
-            <div
-              @click="
+            <router-link
+              to="/"
+              @click.native="
                 scrollTop();
                 isMobileMenuOpen = false;
               "
             >
               {{ $t('header.home') }}
-            </div>
+            </router-link>
           </li>
           <li v-if="isHomePage">
-            <a href="/#about-mew" @click="isMobileMenuOpen = false">{{
-              $t('header.about')
-            }}</a>
+            <router-link
+              to="/#about-mew"
+              @click.native="isMobileMenuOpen = false"
+            >
+              {{ $t('header.about') }}
+            </router-link>
           </li>
           <li>
-            <a href="/#faqs" @click="isMobileMenuOpen = false">{{
-              $t('common.faqs')
-            }}</a>
-          </li>
-          <li v-if="false">
-            <a href="/#news" @click="isMobileMenuOpen = false">{{
-              $t('common.news')
-            }}</a>
+            <a
+              href="https://kb.myetherwallet.com"
+              target="_blank"
+              @click="isMobileMenuOpen = false"
+              >Help Center</a
+            >
           </li>
           <li>
             <div class="mobile-language-menu-container">
@@ -68,9 +86,8 @@
                   :data-language-code="language.langCode"
                   :data-flag-name="language.flag"
                   @click="languageItemClicked"
+                  >{{ language.name }}</b-dropdown-item
                 >
-                  {{ language.name }}
-                </b-dropdown-item>
               </b-nav-item-dropdown>
               <div class="arrows">
                 <i class="fa fa-angle-right" aria-hidden="true" />
@@ -82,7 +99,7 @@
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->
-    <div class="wrap">
+    <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
         :class="[
@@ -109,20 +126,28 @@
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
-                  src="~@/assets/images/logo.png"
+                  src="~@/assets/images/short-hand-logo.png"
+                />
+                <img
+                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
+                  class="beta-tag"
+                  src="~@/assets/images/beta.png"
                 />
               </div>
             </router-link>
             <div class="top-menu">
               <b-nav>
-                <b-nav-item v-if="isHomePage" to="/" exact @click="scrollTop()">
-                  {{ $t('header.home') }}</b-nav-item
+                <b-nav-item
+                  v-if="isHomePage"
+                  to="/"
+                  exact
+                  @click="scrollTop()"
+                  >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div v-if="!isHomePage" class="menu-tx-popup"><txpoppup /></div>
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
@@ -150,19 +175,32 @@
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
+                      >{{ language.name }}</b-dropdown-item
                     >
-                      {{ language.name }}
-                    </b-dropdown-item>
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null" ref="notification" />
+                <div v-if="wallet !== null" class="notification-menu-container">
+                  <notification ref="notification" />
+                </div>
                 <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop && 'noshow'"
-                  class="get-free-wallet nopadding"
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet nopadding'
+                  ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">Get a Free Wallet</div>
+                  <div class="get-free-wallet-button">New Wallet</div>
+                </b-nav-item>
+                <b-nav-item
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet nopadding'
+                  ]"
+                  to="/access-my-wallet"
+                >
+                  <div class="access-button">Access</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="wallet !== null"
@@ -171,16 +209,19 @@
                   extra-toggle-classes="identicon-dropdown"
                 >
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"
-                    />
+                    <div class="settings-container">
+                      <blockie
+                        :address="wallet.getAddressString()"
+                        width="35px"
+                        height="35px"
+                      />
+                      <i class="fa fa-angle-down" aria-hidden="true" />
+                    </div>
                   </template>
-                  <b-dropdown-item @click="openSettings">
-                    Settings
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="logout"> Log out </b-dropdown-item>
+                  <b-dropdown-item @click="openSettings"
+                    >Settings</b-dropdown-item
+                  >
+                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -215,10 +256,13 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import TxTopMenuPopup from '@/components/TxTopMenuPopup';
 import LogoutModal from '@/components/LogoutModal';
+import LogoutWarningModal from '@/components/LogoutWarningModal';
+import IssueLogModal from '@/components/IssueLogModal';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -227,8 +271,10 @@ export default {
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    txpoppup: TxTopMenuPopup,
-    'logout-modal': LogoutModal
+    'logout-modal': LogoutModal,
+    'logout-warning-modal': LogoutWarningModal,
+    'issue-log-modal': IssueLogModal,
+    'user-reminder-button': UserReminderButton
   },
   data() {
     return {
@@ -236,15 +282,15 @@ export default {
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
         // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
         { name: 'English', flag: 'en', langCode: 'en_US' },
-        // { name: 'Español', flag: 'es', langCode: 'es_ES' },
+        { name: 'Español', flag: 'es', langCode: 'es_ES' },
         // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
         // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
         // { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
         // { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
         // { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
         // { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
-        // { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
-        // { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
+        { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
+        { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
         // { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
         // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
         // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
@@ -253,21 +299,37 @@ export default {
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' },
+        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' }
         { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',
       currentFlag: 'en',
       isPageOnTop: true,
       isMobileMenuOpen: false,
-      isHomePage: true
+      isHomePage: true,
+      showGetFreeWallet: false,
+      gasPrice: '0'
     };
   },
   computed: {
     ...mapGetters({
       wallet: 'wallet',
-      online: 'online'
-    })
+      online: 'online',
+      web3: 'web3'
+    }),
+    showButtons() {
+      if (
+        this.wallet === null &&
+        (this.$route.fullPath === '/' ||
+          this.$route.fullPath === '/#about-mew' ||
+          this.$route.fullPath === '/#faqs' ||
+          this.$route.fullPath === '/convert-units' ||
+          this.$route.fullPath === '/team')
+      ) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     $route(newVal) {
@@ -276,6 +338,17 @@ export default {
       } else {
         this.isHomePage = true;
       }
+    },
+    wallet() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toString();
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        });
     }
   },
   mounted() {
@@ -311,13 +384,29 @@ export default {
       this.onPageScroll();
     };
   },
+  created() {
+    function dummyErrorHandler() {}
+
+    try {
+      window.addEventListener(
+        'popstate',
+        event => {
+          if (
+            this.wallet !== null &&
+            !event.target.location.hash.includes('interface')
+          )
+            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
+        },
+        false
+      );
+    } catch (err) {
+      dummyErrorHandler(err);
+    }
+  },
   methods: {
     openSettings() {
       this.$refs.settings.$refs.settings.show();
     },
-    // openNotifications() {
-    //   this.$children[1].$refs.notifications.show();
-    // },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
       const flag = e.target.getAttribute('data-flag-name');
@@ -339,6 +428,9 @@ export default {
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
+      if (topPos < -150) {
+        this.showGetFreeWallet = true;
+      }
     }
   }
 };

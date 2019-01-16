@@ -18,7 +18,7 @@
     padding: 70px 0 20px;
 
     @media all and (max-width: $tablet-width) {
-      padding: 30px 0;
+      padding: 7px 0;
     }
   }
 
@@ -63,8 +63,18 @@
 
       .content-links {
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: max-height 0.3s ease;
         max-height: 0;
+        .content-links-animation-block {
+          padding-top: 20px;
+        }
+
+        .content {
+          margin-bottom: 15px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
 
         .sub-title {
           color: $text-color-1;
@@ -72,7 +82,6 @@
 
         p {
           color: $text--footer-link-color;
-          margin-bottom: 15px;
         }
 
         .no-margin {
@@ -82,8 +91,7 @@
 
       &.content-open {
         .content-links {
-          max-height: 500px;
-          margin-top: 20px;
+          max-height: 400px;
         }
 
         .open {
@@ -111,6 +119,10 @@
       p {
         color: $text--footer-link-color;
         margin-bottom: 15px;
+
+        &.no-padding {
+          margin: 0;
+        }
       }
 
       i {
@@ -168,6 +180,7 @@
 
     .links {
       display: flex;
+      align-items: center;
 
       div {
         border-right: 1px solid $border-color-2;
