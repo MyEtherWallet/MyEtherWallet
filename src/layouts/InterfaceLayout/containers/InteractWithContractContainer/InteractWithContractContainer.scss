@@ -162,6 +162,7 @@ $contract-mobile-width: 600px;
 
 .interact-div {
   @extend %send-form-base;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -196,12 +197,8 @@ $contract-mobile-width: 600px;
 }
 
 .contract-address-title {
-
   // Mobile
   @media all and (max-width: $contract-mobile-width) {
     margin-bottom: 55px;
   }
 }
-
-
-

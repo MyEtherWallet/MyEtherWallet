@@ -16,9 +16,9 @@
   display: flex;
   position: relative;
 
-
   &.open {
     @extend %open;
+
     border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -53,6 +53,7 @@
 
 .dropdown-text-container-white {
   @extend %dropdown-text-container-base;
+
   background-color: $white;
 
   // Mobile
