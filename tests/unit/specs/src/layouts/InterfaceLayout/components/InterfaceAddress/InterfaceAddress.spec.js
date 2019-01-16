@@ -1,22 +1,35 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils'
 import InterfaceAddress from '@/layouts/InterfaceLayout/components/InterfaceAddress/InterfaceAddress.vue';
 
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
+
 
 describe('InterfaceAddress.vue', () => {
   let localVue, i18n, wrapper, store;
   const address = 'InterfaceAddress address';
-  const triggerAlert = () => {
-    console.log('I got clicked');
-  };
-  const print = () => {
-    console.log('I got clicked');
-  };
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+     const wallet = {
+      identifier: function () {
+        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
+      }
+    };
+
+    let getters = {
+      wallet: () => {return wallet }
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
   });
 
   beforeEach(() => {
@@ -26,20 +39,19 @@ describe('InterfaceAddress.vue', () => {
       store,
       attachToDocument: true,
       propsData: {
-        address: address,
-        triggerAlert: triggerAlert,
-        print: print
+        address: address
       }
     });
   });
 
-  it('should render correct content', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelector('.information-container p.address')
-        .textContent.trim()
-    ).toEqual(address);
+  it('should render correct address props', () => {
+    expect(wrapper.vm.$el.querySelector('.information-container p.address').textContent.trim()).toEqual(address)
   });
 
-  describe('InterfaceAddress.vue Methods', () => {});
+  it('should render correct hasMultipleAddr data', () => {
+    expect(wrapper.vm.$data.hasMultipleAddr).toBe(true);
+  });
+  
+  describe('InterfaceAddress.vue Methods', () => {
+  });
 });

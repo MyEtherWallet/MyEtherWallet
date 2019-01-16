@@ -1,12 +1,16 @@
-import { shallowMount } from '@vue/test-utils';
+import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
 import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal/HardwareModal.vue';
-import { Tooling } from '@@/helpers';
+import {
+  Tooling
+} from '@@/helpers';
 
 const RouterLinkStub = {
   name: 'router-link',
   template: '<div class="routerlink"><slot> </slot></div>',
   props: ['to']
-};
+}
+
 
 describe('HardwareModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -29,28 +33,28 @@ describe('HardwareModal.vue', () => {
   });
 
   it('should render correct contents', () => {
-    const liElements = wrapper.findAll('li');
+    const liElements = wrapper.findAll('li')
 
-    let liElement = liElements.at(0);
-    liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('ledger');
+    var liElement = liElements.at(0)
+    liElement.trigger('click')
+    expect(wrapper.vm.$data.selected).toEqual('ledger')
 
-    liElement = liElements.at(1);
-    liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('trezor');
+    liElement = liElements.at(1)
+    liElement.trigger('click')
+    expect(wrapper.vm.$data.selected).toEqual('trezor')
 
-    liElement = liElements.at(2);
-    liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('bitbox');
+    liElement = liElements.at(2)
+    liElement.trigger('click')
+    expect(wrapper.vm.$data.selected).toEqual('bitbox')
 
-    liElement = liElements.at(3);
-    liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('secalot');
+    liElement = liElements.at(3)
+    liElement.trigger('click')
+    expect(wrapper.vm.$data.selected).toEqual('secalot')
 
-    wrapper.find('.mid-round-button-green-filled').trigger('click');
-    wrapper.find('.mid-round-button-green-filled').trigger('click');
-    expect(wrapper.vm.$data.mayNotBeAttached).toBe(false);
+    wrapper.find('.mid-round-button-green-filled').trigger('click')
+    wrapper.find('.mid-round-button-green-filled').trigger('click')
+    expect(wrapper.vm.$data.mayNotBeAttached).toBe(false)
   });
 
-  describe('HardwareModal.vue Methods', () => {});
+  describe('HardwareModal.vue Methods', () => { });
 });

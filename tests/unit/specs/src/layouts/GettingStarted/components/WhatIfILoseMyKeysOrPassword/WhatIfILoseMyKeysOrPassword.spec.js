@@ -31,5 +31,5 @@ describe('WhatIfILoseMyKeysOrPassword.vue', () => {
     ).toEqual(progressBarValue);
   });
 
-  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {});
+  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => { });
 });
