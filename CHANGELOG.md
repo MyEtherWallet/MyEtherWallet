@@ -1,3 +1,7 @@
+### Bug
+
+- Make routes with child set first child active #437 []()
+
 ### Release v5.0.0-beta.1
 
 ### Devop
