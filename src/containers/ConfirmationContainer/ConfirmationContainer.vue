@@ -50,11 +50,6 @@
       :message="successMessage"
       :link-message="linkMessage"
     />
-    <error-modal
-      ref="errorModal"
-      :message="successMessage"
-      :link-message="linkMessage"
-    />
   </div>
 </template>
 
@@ -65,7 +60,6 @@ import * as ethTx from 'ethereumjs-tx';
 import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
-import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
@@ -76,7 +70,6 @@ export default {
     'confirm-modal': ConfirmModal,
     'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
-    'error-modal': ErrorModal,
     'confirm-sign-modal': ConfirmSignModal
   },
   props: {

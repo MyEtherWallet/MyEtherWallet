@@ -7,7 +7,6 @@
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
-    <issue-log-modal ref="issuelog" />
     <logout-warning-modal ref="logoutWarningModal" />
 
     <div
@@ -261,7 +260,6 @@ import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
-import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 
 export default {
@@ -273,7 +271,6 @@ export default {
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
     'logout-warning-modal': LogoutWarningModal,
-    'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton
   },
   data() {

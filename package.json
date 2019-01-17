@@ -84,7 +84,7 @@
     "secp256k1": "3.6.1",
     "sinon": "7.2.2",
     "store": "2.0.12",
-    "stylelint": "9.9.0",
+    "stylelint": "9.10.0",
     "stylelint-config-prettier": "4.0.0",
     "stylelint-config-standard": "18.2.0",
     "trezor-connect": "6.0.3",

@@ -10,7 +10,7 @@
       >
         <div class="modal-contents">
           <div class="modal-header-block">
-            <h2 class="title">Oops! Something Goes Wrong :(</h2>
+            <h2 class="title">Oops! Something Went Wrong :(</h2>
             <p class="sub-text">
               You can send out this log to MEW force team. And we will assist
               you to solve the issue ASAP.
