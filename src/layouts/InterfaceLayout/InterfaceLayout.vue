@@ -20,11 +20,6 @@
       :hardware-brand="hardwareBrand"
       @hardwareWalletOpen="toggleNetworkAddrModal"
     />
-    <print-modal
-      ref="printModal"
-      :priv-key="wallet.privateKey"
-      :address="wallet.getChecksumAddressString()"
-    />
     <div class="wrap">
       <div>
         <div
@@ -92,7 +87,6 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
-import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -113,7 +107,6 @@ export default {
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
-    'print-modal': PrintModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
@@ -224,7 +217,7 @@ export default {
       }
     },
     print() {
-      this.$refs.printModal.$refs.print.show();
+      this.$eventHub.$emit('printModal', 'address');
     },
     triggerAlert(msg, type) {
       let timeout;

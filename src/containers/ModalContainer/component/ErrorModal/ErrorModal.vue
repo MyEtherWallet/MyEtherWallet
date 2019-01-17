@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    ref="success"
+    ref="errorModal"
     centered
     hide-footer
     hide-header
@@ -11,14 +11,14 @@
       <h2 class="title">{{ $t('confirmation.error') }}</h2>
       <p>{{ message }}</p>
     </div>
-    <div class="button-container">
+    <!-- <div class="button-container">
       <b-btn
         class="mid-round-button-lightgrey-filled close-button"
         @click="hideModal"
       >
         {{ linkMessage === '' ? 'An Error Occured' : linkMessage }}
       </b-btn>
-    </div>
+    </div> -->
   </b-modal>
 </template>
 
@@ -31,21 +31,14 @@ export default {
     message: {
       type: String,
       default: ''
-    },
-    linkMessage: {
-      type: String,
-      default: ''
-    },
-    linkTo: {
-      type: String,
-      default: '/'
     }
+    // linkMessage: {
+    //   type: String,
+    //   default: ''
+    // }
   },
   methods: {
     hideModal() {
-      if (this.linkTo !== '/') {
-        this.$router.push({ path: this.linkTo });
-      }
       this.$refs.success.hide();
     }
   }

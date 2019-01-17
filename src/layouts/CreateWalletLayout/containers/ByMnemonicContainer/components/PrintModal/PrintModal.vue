@@ -8,9 +8,9 @@
       class="nopadding print-mod"
       size="lg"
     >
-      <div class="print-container">
+      <div>
         <div id="printContainer">
-          <div class="content">
+          <div class="content print-container">
             <div class="header">
               <img src="~@/assets/images/logo.png" height="30px" />
               <div></div>
