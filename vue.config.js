@@ -71,6 +71,10 @@ if (process.env.NODE_ENV === 'production') {
       failOnUnused: true,
       globOptions: {
         ignore: [
+          // Are we using these?
+          'src/components/DropDownAddressSelector/#####DropDownAddressSelector.vue',
+          'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
+          'src/components/DropDownAddressSelector/index.js',
           // Unknown
           'src/contracts/contract-abi-etsc.json',
           'src/contracts/contract-abi-exp.json',
