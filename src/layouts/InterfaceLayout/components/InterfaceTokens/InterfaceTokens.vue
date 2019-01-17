@@ -41,6 +41,7 @@
               <td>{{ token.name }}</td>
               <td
                 v-if="token.balance === 'Load'"
+                class="load-token"
                 @click="getSpecificTokenBalance(token, index)"
               >
                 {{ token.balance }}
