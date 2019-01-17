@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import FaqsContainer from '@/containers/FaqsContainer/FaqsContainer.vue';
 
@@ -23,7 +22,7 @@ describe('FaqsContainer.vue', () => {
     });
   });
 
-  xit('[FAILING MAX STACK] should render correct FAQ contents', () => {
+  it('should render correct FAQ contents', () => {
     const linkWrappers = wrapper.findAll('.qa__contents--title');
     let linkWrapper = linkWrappers.at(0);
     linkWrapper.trigger('click');

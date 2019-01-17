@@ -8,11 +8,8 @@ import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
 import tabsConfig from '@/layouts/InterfaceLayout/components/InterfaceSideMenu/InterfaceSideMenu.config';
 
-const switchTabs = jest.fn();
-
 describe('InterfaceSideMenu.vue', () => {
   let localVue, i18n, wrapper, store, spy;
-  const resetView = jest.fn();
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;

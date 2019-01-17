@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import SignMessageContainer from '@/layouts/InterfaceLayout/containers/SignMessageContainer/SignMessageContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
@@ -8,7 +7,8 @@ import PopOver from '@/components/PopOver/PopOver.vue';
 
 import { Tooling } from '@@/helpers';
 
-xdescribe('SignMessageContainer.vue', () => {
+//xdescribe
+describe('SignMessageContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -34,8 +34,8 @@ xdescribe('SignMessageContainer.vue', () => {
   });
 
   describe('SignMessageContainer.vue Methods', () => {
-    xit('[FAILING MAX STACK] should render correct deleteInputText method', () => {
-      const textArea = wrapper.find('.domain-name .custom-textarea-1');
+    xit('[Failing] should render correct deleteInputText method', () => {
+      // const textArea = wrapper.find('.domain-name .custom-textarea-1');
       wrapper.find('.copy-buttons span').trigger('click');
       expect(
         wrapper.vm.$el

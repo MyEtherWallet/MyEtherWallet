@@ -1,7 +1,5 @@
-import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import ByMnemonicContainer from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/ByMnemonicContainer.vue';
-import sinon from 'sinon';
 import VerificationModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/VerificationModal/VerificationModal.vue';
 import FinishModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/FinishModal/FinishModal.vue';
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';

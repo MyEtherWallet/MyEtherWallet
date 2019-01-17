@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
-import store from 'store';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
@@ -30,9 +28,9 @@ const BModalStub = {
   }
 };
 
-xdescribe('SwapContainer.vue', () => {
+//xdescribe
+describe('SwapContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const resetView = jest.fn(() => console.log('resetView function called'));
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -105,7 +103,7 @@ xdescribe('SwapContainer.vue', () => {
     });
   });
 
-  it('should render correct fromArray to currenPicker element', () => {
+  xit('[Failing] should render correct fromArray to currenPicker element', () => {
     const containerElements = wrapper.vm.$el.querySelectorAll(
       '.item-container'
     );
@@ -125,7 +123,7 @@ xdescribe('SwapContainer.vue', () => {
     }
   });
 
-  it('should render correct toArray to currenPicker element', () => {
+  xit('[Failing] should render correct toArray to currenPicker element', () => {
     const containerElements = wrapper.vm.$el.querySelectorAll(
       '.item-container'
     );
@@ -170,7 +168,7 @@ xdescribe('SwapContainer.vue', () => {
       });
     });
 
-    it('should open swapConfirmationModal when click button', () => {
+    xit('[Failing] should open swapConfirmationModal when click button', () => {
       const btnSubmit = wrapper.find('.submit-button');
       btnSubmit.trigger('click');
       expect(showModal.called).toBe(true);

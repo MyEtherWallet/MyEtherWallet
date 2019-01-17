@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
-import sinon from 'sinon';
 
-import { Mnemonic, Tooling } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('PriceBar.vue', () => {
   let localVue, i18n, wrapper, store;

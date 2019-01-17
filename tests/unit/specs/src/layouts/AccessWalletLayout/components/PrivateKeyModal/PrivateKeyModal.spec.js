@@ -1,12 +1,9 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import sinon from 'sinon';
-import { Mnemonic, Tooling } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
-const longMnemonic = Mnemonic.long;
-import { BasicWallet } from '@/wallets';
 describe('PrivateKeyModal.vue', () => {
   describe('PrivateKeyModal.vue', () => {
     let localVue, i18n, wrapper, store;
@@ -37,8 +34,8 @@ describe('PrivateKeyModal.vue', () => {
   });
 
   describe('PrivateKeyModal.vue Methods', () => {
-    let localVue, i18n, wrapper, store, spy;
-    spy = sinon.stub();
+    let localVue, i18n, wrapper, store;
+    const spy = sinon.stub();
     const mockRoute = {
       push: spy
     };

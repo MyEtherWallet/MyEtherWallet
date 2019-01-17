@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { shallowMount, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import GenerateTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateTx/GenerateTx.vue';
-import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import TxSpeedInput from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/TxSpeedInput/TxSpeedInput.vue';
 import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SignedTxModal/SignedTxModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
@@ -121,7 +120,7 @@ describe('GenerateTx.vue', () => {
       expect(wrapper.emitted().nonceUpdate).toBeTruthy();
     });
 
-    xit('should emit gasLimitUpdate update when input changed', () => {
+    xit('[Failing] should emit gasLimitUpdate update when input changed', () => {
       const inputElement = wrapper.findAll('.gas-amount input').at(3);
       const inputText = 11;
       inputElement.setValue(inputText);

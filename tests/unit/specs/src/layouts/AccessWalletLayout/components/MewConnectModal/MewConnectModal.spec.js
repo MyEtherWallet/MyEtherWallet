@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import { shallowMount } from '@vue/test-utils';
 import MewConnectModal from '@/layouts/AccessWalletLayout/components/MewConnectModal/MewConnectModal.vue';
@@ -26,7 +25,7 @@ describe('MewConnectModal.vue', () => {
     });
   });
 
-  xit('[FAILING MAX STACK] should render correct contents', () => {
+  it('should render correct contents', () => {
     const QrCode = 'QrCode';
     wrapper.setData({ QrCode: QrCode });
     expect(wrapper.vm.$data.QrCode).toEqual(QrCode);

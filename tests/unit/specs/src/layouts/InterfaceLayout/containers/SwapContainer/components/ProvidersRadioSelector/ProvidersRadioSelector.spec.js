@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import ProvidersRadioSelector from '@/layouts/InterfaceLayout/containers/SwapContainer/components/ProvidersRadioSelector/ProvidersRadioSelector.vue';
 import BigNumber from 'bignumber.js';

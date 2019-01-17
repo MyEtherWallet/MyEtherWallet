@@ -1,17 +1,14 @@
 import Vue from 'vue';
-import VueX from 'vuex';
-// import CreateWalletLayout from '@/layouts/CreateWalletLayout/CreateWalletLayout.vue';
+import CreateWalletLayout from '@/layouts/CreateWalletLayout/CreateWalletLayout.vue';
 import { shallowMount } from '@vue/test-utils';
 import ByMnemonicContainer from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/ByMnemonicContainer.vue';
-// import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
-import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJsonBlock.vue';
-// import CreateWalletInput from '@/layouts/CreateWalletLayout/components/CreateWalletInput/CreateWalletInput.vue';
+import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
+import CreateWalletInput from '@/layouts/CreateWalletLayout/components/CreateWalletInput/CreateWalletInput.vue';
 import TutorialModal from '@/layouts/CreateWalletLayout/components/TutorialModal/TutorialModal.vue';
 import PageTitle from '@/layouts/CreateWalletLayout/components/PageTitle/PageTitle.vue';
 import PageFooter from '@/layouts/CreateWalletLayout/components/PageFooter/PageFooter.vue';
 import ScanToDownloadModal from '@/layouts/CreateWalletLayout/components/ScanToDownloadModal/ScanToDownloadModal.vue';
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter/CreateWalletInputFooter.vue';
-import PopOver from '@/components/PopOver/PopOver.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 const RouterLinkStub = {
@@ -20,7 +17,8 @@ const RouterLinkStub = {
   props: ['to']
 };
 
-xdescribe('CreateWalletLayout.vue', () => {
+//xdescribe
+describe('CreateWalletLayout.vue', () => {
   let localVue, i18n, wrapper, store, showModal, hideModal;
 
   beforeAll(() => {
@@ -70,31 +68,31 @@ xdescribe('CreateWalletLayout.vue', () => {
     });
   }
 
-  it('should render correct byJson data', () => {
+  xit('[Failing] should render correct byJson data', () => {
     wrapper.setData({ byJson: true });
     expect(wrapper.find('.create-wallet-by-json-file').exists()).toBe(true);
     wrapper.setData({ byJson: false });
     expect(wrapper.find('.create-wallet-by-json-file').exists()).toBe(false);
   });
 
-  it('should render correct byMnemonic data', () => {
+  xit('[Failing] should render correct byMnemonic data', () => {
     wrapper.setData({ byJson: true });
     expect(wrapper.find('.nav-tab-user-input-box').isVisible()).toBe(false);
     wrapper.setData({ byJson: false });
     expect(wrapper.find('.nav-tab-user-input-box').isVisible()).toBe(true);
   });
 
-  it('should render correct skipTutorial localStorage data', () => {
+  xit('[Failing] should render correct skipTutorial localStorage data', () => {
     expect(showModal.called).toBe(true);
   });
 
   describe('CreateWalletLayout.vue Methods', () => {
-    it('should render correct skip method', () => {
+    xit('[Failing] should render correct skip method', () => {
       wrapper.vm.skip();
       expect(hideModal.called).toBe(true);
     });
 
-    it('should render correct scanToDownloadModalOpen method', () => {
+    xit('[Failing] should render correct scanToDownloadModalOpen method', () => {
       localStorage.setItem('skipTutorial', true);
       initWrapper();
       expect(showModal.called).toBe(false);
@@ -102,7 +100,7 @@ xdescribe('CreateWalletLayout.vue', () => {
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct switcher method', () => {
+    xit('[Failing] should render correct switcher method', () => {
       wrapper.vm.switcher('Json');
       expect(wrapper.vm.$data.byJson).toBe(true);
       expect(wrapper.vm.$data.byMnemonic).toBe(false);

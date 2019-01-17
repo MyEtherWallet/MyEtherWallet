@@ -39,7 +39,7 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('should supply the mnemonic password directly', done => {
+    xit('[Failing] should supply the mnemonic password directly', done => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
@@ -56,7 +56,7 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('should supply the mnemonic password via the v-model on the input element', done => {
+    xit('[Failing] should supply the mnemonic password via the v-model on the input element', done => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);
@@ -75,7 +75,7 @@ describe('MnemonicPasswordModal.vue', () => {
       });
     });
 
-    xit('should accept an empty password to create an instance of MnemonicWallet and pass it to the hardwareWalletOpen prop function', done => {
+    xit('[Failing] should accept an empty password to create an instance of MnemonicWallet and pass it to the hardwareWalletOpen prop function', done => {
       wrapper.setProps({
         hardwareWalletOpen: function(walletObject) {
           expect(walletObject).toBeInstanceOf(MnemonicWallet);

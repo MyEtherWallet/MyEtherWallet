@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
@@ -37,7 +36,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     store = baseSetup.store;
 
     const wallet = {
-      getChecksumAddressString: jest.fn(x => 0),
+      getChecksumAddressString: jest.fn(() => 0),
       getAddressString: function() {
         return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
       }

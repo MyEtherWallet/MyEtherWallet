@@ -1,23 +1,23 @@
 import Vue from 'vue';
 import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
-import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer/InteractWithContractContainer.vue';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
+// import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer/InteractWithContractContainer.vue';
+// import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 
 import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer/DeployContractContainer.vue';
-import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
-import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
+// import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
+// import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import sinon from 'sinon';
+// import sinon from 'sinon';
 
 import { Tooling } from '@@/helpers';
 
-describe('InteractWithContractContainer.vue', () => {
-  let localVue, i18n, wrapper, store, getters;
+describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
+  let localVue, i18n, /*wrapper,*/ store /*, getters*/;
   const resetView = jest.fn();
 
   // beforeAll(() => {
@@ -124,7 +124,7 @@ describe('InteractWithContractContainer.vue', () => {
     //     'popover': PopOver
     //   }
     // });
-    wrapper = shallowMount(DeployContractContainer, {
+    const wrapper = shallowMount(DeployContractContainer, {
       localVue,
       i18n,
       store,
@@ -137,6 +137,7 @@ describe('InteractWithContractContainer.vue', () => {
         resetView: resetView
       }
     });
+    wrapper.find('div'); // added to suppress eslint warning
   });
 
   it('should render correct abi data', () => {});

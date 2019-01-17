@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import { Tooling } from '@@/helpers';

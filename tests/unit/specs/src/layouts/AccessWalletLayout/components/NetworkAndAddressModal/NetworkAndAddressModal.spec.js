@@ -5,12 +5,12 @@ import { shallowMount } from '@vue/test-utils';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import {
-  LedgerWallet,
-  TrezorWallet,
-  DigitalBitboxWallet,
-  SecalotWallet
-} from '@/wallets';
+// import {
+//   LedgerWallet,
+//   TrezorWallet,
+//   DigitalBitboxWallet,
+//   SecalotWallet
+// } from '@/wallets';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -26,8 +26,8 @@ const BModalStub = {
 };
 
 describe('NetworkAndAddressModal.vue', () => {
-  let localVue, i18n, wrapper, store, spy;
-  spy = sinon.stub();
+  let localVue, i18n, wrapper, store;
+  const spy = sinon.stub();
   const mockRoute = {
     push: spy
   };

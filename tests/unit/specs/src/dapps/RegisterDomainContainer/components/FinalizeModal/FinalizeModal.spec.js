@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
@@ -19,7 +18,8 @@ const BModalStub = {
   }
 };
 
-xdescribe('FinalizeModal.vue', () => {
+//xdescribe
+describe('FinalizeModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {

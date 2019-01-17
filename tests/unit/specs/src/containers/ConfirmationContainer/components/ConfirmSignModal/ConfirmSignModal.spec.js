@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmSignModal from '@/containers/ConfirmationContainer/components/ConfirmSignModal/ConfirmSignModal.vue';

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import SomeHelpfulTips from '@/layouts/GettingStarted/components/SomeHelpfulTips/SomeHelpfulTips.vue';
 import { Tooling } from '@@/helpers';
@@ -24,7 +23,7 @@ describe('SomeHelpfulTips.vue', () => {
     });
   });
 
-  xit('[FAILING MAX STACK] should render correct contents', () => {
+  it('should render correct contents', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.block-progressbar__progressbar div')

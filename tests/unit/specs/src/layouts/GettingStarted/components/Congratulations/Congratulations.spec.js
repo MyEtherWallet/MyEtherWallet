@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import { shallowMount } from '@vue/test-utils';
 import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
 

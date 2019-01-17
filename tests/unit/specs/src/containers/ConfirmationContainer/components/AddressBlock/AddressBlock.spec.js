@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
 import web3 from 'web3';
 import { Tooling } from '@@/helpers';

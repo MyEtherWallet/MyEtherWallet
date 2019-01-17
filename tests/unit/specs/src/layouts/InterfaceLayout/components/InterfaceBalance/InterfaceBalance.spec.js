@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBalance/InterfaceBalance.vue';
@@ -17,7 +16,7 @@ const BModalStub = {
   }
 };
 
-const $t = () => {};
+// const $t = () => {};
 describe('InterfaceBalance.vue', () => {
   let localVue, i18n, wrapper, store;
   const balance = '100';

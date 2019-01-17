@@ -26,7 +26,7 @@ describe('Notification.vue', () => {
 
   beforeEach(() => {
     const wallet = {
-      getChecksumAddressString: jest.fn(x => 0)
+      getChecksumAddressString: jest.fn(() => 0)
     };
     getters = {
       notifications: () => [],
@@ -39,7 +39,7 @@ describe('Notification.vue', () => {
       getters,
       state: {
         wallet: {
-          getAddressString: jest.fn(x => 0)
+          getAddressString: jest.fn(() => 0)
         }
       }
     });

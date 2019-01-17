@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';

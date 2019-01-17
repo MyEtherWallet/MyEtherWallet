@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import HelpCenterLayout from '@/layouts/HelpCenterLayout/HelpCenterLayout.vue';
 
@@ -24,13 +23,14 @@ describe('HelpCenterLayout.vue', () => {
   });
 
   it('should render correct contents', () => {
-    var activeSpan = wrapper.findAll('.switcher span').at(1);
+    let activeSpan;
+    activeSpan = wrapper.findAll('.switcher span').at(1);
     activeSpan.trigger('click');
 
     expect(wrapper.vm.$data.openFAQs).toBe(false);
     expect(wrapper.vm.$data.openCategories).toBe(true);
 
-    var activeSpan = wrapper.findAll('.switcher span').at(0);
+    activeSpan = wrapper.findAll('.switcher span').at(0);
     activeSpan.trigger('click');
 
     expect(wrapper.vm.$data.openFAQs).toBe(true);

@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
-// import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
+import { shallowMount } from '@vue/test-utils';
+import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJsonBlock.vue';
 
@@ -26,7 +26,8 @@ const BModalStub = {
   }
 };
 
-xdescribe('ByJsonFileContainer.vue', () => {
+//xdescribe
+describe('ByJsonFileContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();

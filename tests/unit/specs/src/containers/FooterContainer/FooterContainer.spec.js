@@ -1,9 +1,8 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
-import { shallowMount, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
 
-const $t = () => {};
+// const $t = () => {};
 
 const RouterLinkStub = {
   name: 'router-link',
@@ -41,11 +40,11 @@ describe('FooterContainer.vue', () => {
     });
   });
 
-  xit('[FAILING MAX STACK] should render correct lowerLinks', () => {
+  it('should render correct lowerLinks', () => {
     const linkWrappers = wrapper.findAll(RouterLinkStub);
 
     const lowerLinkWrappers = [];
-    for (var i = 0; i < linkWrappers.length; i++) {
+    for (let i = 0; i < linkWrappers.length; i++) {
       const linkWrapper = linkWrappers.at(i);
       if (
         linkWrapper.vm.$el.parentElement.parentElement.className.indexOf(
@@ -56,7 +55,7 @@ describe('FooterContainer.vue', () => {
       }
     }
 
-    for (var i = 0; i < lowerLinkWrappers.length; i++) {
+    for (let i = 0; i < lowerLinkWrappers.length; i++) {
       const lowerLink = wrapper.vm.$data.lowerLinks[i];
       const lowerLinkWrapper = lowerLinkWrappers[i];
       expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to);
@@ -78,11 +77,11 @@ describe('FooterContainer.vue', () => {
     }
   });
 
-  xit('[FAILING MAX STACK] should render correct footerContent', () => {
+  it('should render correct footerContent', () => {
     const contentWrappers = wrapper.findAll(RouterLinkStub);
 
     const contentsElements = [];
-    for (var i = 0; i < contentWrappers.length; i++) {
+    for (let i = 0; i < contentWrappers.length; i++) {
       const contentWrapper = contentWrappers.at(i);
       if (
         contentWrapper.vm.$el.parentElement.parentElement.className.indexOf(
@@ -94,7 +93,7 @@ describe('FooterContainer.vue', () => {
     }
 
     const contents = [];
-    for (var i = 0; i < wrapper.vm.$data.footerContent.length; i++) {
+    for (let i = 0; i < wrapper.vm.$data.footerContent.length; i++) {
       const footerContent = wrapper.vm.$data.footerContent[i];
       for (let j = 0; j < footerContent.contents.length; j++) {
         if (footerContent.contents[j].to !== undefined) {
@@ -103,7 +102,7 @@ describe('FooterContainer.vue', () => {
       }
     }
 
-    for (var i = 0; i < contentsElements.length; i++) {
+    for (let i = 0; i < contentsElements.length; i++) {
       expect(contents[i].to).toEqual(contentsElements[i].vm.to);
     }
   });
