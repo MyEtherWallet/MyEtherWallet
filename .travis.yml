@@ -93,7 +93,6 @@ jobs:
         on:
           tags: true
           branch: master
-          repo: myetherwallet/myetherwallet
     - stage: deploy to production
       script: skip
       before_deploy:
@@ -108,5 +107,4 @@ jobs:
         on:
           branch: master
           tags: true
-          repo: myetherwallet/myetherwallet
         target-branch: gh-pages
