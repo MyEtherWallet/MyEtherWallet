@@ -36,7 +36,7 @@
                 name="amount"
                 @input="debouncedAmount"
               />
-              <!--              <i
+              <i
                 :class="[
                   selectedCurrency.symbol === network.type.name
                     ? parsedBalance.lt(amount)
@@ -48,7 +48,7 @@
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
-              />-->
+              />
             </div>
           </div>
           <div

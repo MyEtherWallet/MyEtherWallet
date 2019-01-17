@@ -91,6 +91,7 @@ describe('SendCurrencyContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
         'interface-container-title': InterfaceContainerTitle,
         popover: PopOver,
@@ -102,7 +103,9 @@ describe('SendCurrencyContainer.vue', () => {
   it('should render correct isValidAddress data', () => {
     const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
     wrapper.setData({ address });
-    expect(wrapper.vm.$data.isValidAddress).toBe(true);
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.$data.isValidAddress).toBe(true);
+    })
   });
 
   it('should render correct amount data', () => {
@@ -129,7 +132,9 @@ describe('SendCurrencyContainer.vue', () => {
     it('should render correct verifyAddr method', () => {
       const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
       wrapper.setData({ address });
-      expect(wrapper.vm.verifyAddr()).toBe(true);
+      wrapper.vm.$nextTick(() => {
+        expect(wrapper.vm.verifyAddr()).toBe(true);
+      })
     });
 
     it('should render correct selectedCurrency data', () => {
