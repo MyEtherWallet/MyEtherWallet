@@ -335,9 +335,7 @@ export default {
         nonce: this.raw['nonce']
       };
       if (!this.$route.fullPath.includes('reveal')) {
-        this.$eventHub.$emit('printModal', 'ens', raw).then(res => {
-          console.log('YEET', res);
-        });
+        this.$eventHub.$emit('printModal', 'ens', raw);
       } else {
         this.web3.eth.sendTransaction(raw);
       }
