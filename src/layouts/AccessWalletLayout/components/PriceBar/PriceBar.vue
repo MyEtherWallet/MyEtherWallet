@@ -10,7 +10,7 @@
               class="token-container"
             >
               <p>{{ token.symbol }}</p>
-              <p>{{ token.quotes.USD.price }}</p>
+              <p>${{ token.quotes.USD.price }}</p>
               <p class="percent-container">
                 <span>{{ token.quotes.USD.percent_change_24h }}%</span>
                 <i
