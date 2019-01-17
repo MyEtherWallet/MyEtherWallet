@@ -5,7 +5,7 @@
     <print-modal
       ref="printModal"
       :print-type="printType"
-      :mnemonic="mnemonic"
+      :printable-data="printData"
     />
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
       errorMsg: '',
       issueTrace: '',
       printType: '',
-      printData: []
+      printData: {}
     };
   },
   mounted() {
@@ -38,7 +38,7 @@ export default {
       this.$refs.errorModal.$refs.errorModal.show();
     });
     this.$eventHub.$on('printModal', (type, printData) => {
-      this.printData = printData ? printData : [];
+      this.printData = printData ? printData : {};
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
       if (type === 'ens') {

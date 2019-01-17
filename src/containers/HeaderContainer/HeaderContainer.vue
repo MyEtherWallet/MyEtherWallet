@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header wrap">
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
