@@ -66,24 +66,28 @@ export default {
       return routes.includes(this.$route.path);
     },
     tabAction(tab) {
+      const elToHide = document.getElementsByClassName('child-tab');
       if (typeof tab.children === 'undefined' || tab.children.length === 0) {
         // ==============================
         // If this is real menu link
         // ==============================
         this.toggleSideMenu();
+        Array.prototype.forEach.call(elToHide, function(el) {
+          el.classList.remove('show-child');
+        });
         this.$router.push({ path: tab.routes[0] });
       } else {
         // ==============================
         // If child tabs exist
         // ==============================
         // Close all open child tabs
-        const elToHide = document.getElementsByClassName('child-tab');
         Array.prototype.forEach.call(elToHide, function(el) {
           el.classList.remove('show-child');
         });
         // Show child tab
         const el = document.getElementsByClassName(tab.name)[0];
         el.classList.add('show-child');
+        this.$router.push({ path: tab.children[0].routes[0] });
       }
     }
   }
