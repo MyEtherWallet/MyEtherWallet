@@ -7,11 +7,7 @@ import Web3 from 'web3';
 import { shallowMount } from '@vue/test-utils';
 import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/SendOfflineContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
-import GenerateInfo from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateInfo/GenerateInfo.vue';
-import GenerateTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/GenerateTx/GenerateTx.vue';
-import SendTx from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SendTx/SendTx.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import { Tooling } from '@@/helpers';
 
 describe('SendOfflineContainer.vue', () => {

@@ -1,14 +1,9 @@
-import Vue from 'vue';
 import { shallowMount, mount } from '@vue/test-utils';
 import SoftwareModal from '@/layouts/AccessWalletLayout/components/SoftwareModal/SoftwareModal.vue';
 import sinon from 'sinon';
 
 import { Tooling } from '@@/helpers';
 
-const CloseButtonStub = {
-  name: 'b-btn',
-  template: '<div><slot> </slot></div>'
-};
 const RouterLinkStub = {
   name: 'router-link',
   template: '<p> <slot> </slot></p>',
@@ -102,9 +97,7 @@ describe('SoftwareModal.vue', () => {
 
     it('should trigger openPrivateKeyInput method when continueAccess button is clicked', () => {
       wrapper.setData({ selected: 'byPriv' });
-      const btn = wrapper
-        .find('.mid-round-button-green-filled')
-        .trigger('click');
+      wrapper.find('.mid-round-button-green-filled').trigger('click');
       expect(openPrivateKeyInput.called).toBe(true);
     });
   });

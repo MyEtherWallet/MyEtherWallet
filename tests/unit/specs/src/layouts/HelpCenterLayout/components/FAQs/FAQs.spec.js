@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import FAQs from '@/layouts/HelpCenterLayout/components/FAQs/FAQs.vue';
 import { Tooling } from '@@/helpers';

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import UnitInput from '@/layouts/ConvertUnits/components/UnitInput/UnitInput.vue';
 import DropDownUnitSelector from '@/layouts/ConvertUnits/components/DropDownUnitSelector/DropDownUnitSelector.vue';

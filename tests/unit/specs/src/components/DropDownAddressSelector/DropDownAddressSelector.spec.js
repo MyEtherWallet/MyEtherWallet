@@ -10,7 +10,7 @@ function shortenAddress(address) {
 }
 
 describe('DropDownAddressSelector.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -20,7 +20,7 @@ describe('DropDownAddressSelector.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(DropDownAddressSelector, {
+    shallowMount(DropDownAddressSelector, {
       localVue,
       i18n,
       store,

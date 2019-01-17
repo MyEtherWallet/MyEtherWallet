@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
 import nodeList from '@/networks';
-// import AccessMyWalletContainer from '@/layouts/AccessWalletLayout/containers/AccessMyWalletContainer/AccessMyWalletContainer.vue';
+import AccessMyWalletContainer from '@/layouts/AccessWalletLayout/containers/AccessMyWalletContainer/AccessMyWalletContainer.vue';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
 import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal/HardwareModal.vue';
@@ -12,7 +12,7 @@ import MewConnectModal from '@/layouts/AccessWalletLayout/components/MewConnectM
 import SoftwareModal from '@/layouts/AccessWalletLayout/components/SoftwareModal/SoftwareModal.vue';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
-// import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
+import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import { Tooling } from '@@/helpers';
 
@@ -22,7 +22,8 @@ const BBtnStub = {
   props: ['title']
 };
 
-xdescribe('AccessMyWalletContainer.vue', () => {
+//xdescribe
+describe('AccessMyWalletContainer.vue', () => {
   let localVue, i18n, wrapper, store, showModal, hideModal;
 
   beforeAll(() => {
@@ -93,7 +94,7 @@ xdescribe('AccessMyWalletContainer.vue', () => {
     resetWrapper();
   });
 
-  it('should render correct hardwareBrand props', () => {
+  xit('[Failing] should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
     wrapper.setData({ hardwareBrand });
     expect(
@@ -104,7 +105,7 @@ xdescribe('AccessMyWalletContainer.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct buttons data', () => {
+  xit('[Failing] should render correct buttons data', () => {
     const accessWalletButtons = wrapper.vm.$el.querySelectorAll(
       '.wrap .page-container .buttons-container div.button-block'
     );
@@ -125,37 +126,37 @@ xdescribe('AccessMyWalletContainer.vue', () => {
     }
   });
   describe('AccessMyWalletContainer.vue Methods', () => {
-    it('should render correct mewConnectModalOpen method', () => {
+    xit('[Failing] should render correct mewConnectModalOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.mewConnectModalOpen();
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct networkAndAddressOpen method', () => {
+    xit('[Failing] should render correct networkAndAddressOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.networkAndAddressOpen();
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct hardwareModalOpen method', () => {
+    xit('[Failing] should render correct hardwareModalOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.hardwareModalOpen();
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct softwareModalOpen method', () => {
+    xit('[Failing] should render correct softwareModalOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.softwareModalOpen();
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct passwordOpen method', () => {
+    xit('[Failing] should render correct passwordOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.passwordOpen();
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct privateKeyOpen method', () => {
+    xit('[Failing] should render correct privateKeyOpen method', () => {
       expect(showModal.called).toBe(false);
       wrapper.vm.privateKeyOpen();
       expect(showModal.called).toBe(true);

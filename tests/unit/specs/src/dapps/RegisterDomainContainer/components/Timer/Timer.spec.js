@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import Timer from '@/dapps/RegisterDomain/components/Timer/Timer.vue';
 import { Tooling } from '@@/helpers';
@@ -24,7 +23,8 @@ describe('Timer.vue', () => {
   });
 
   it('should render correct dateType', () => {
-    var dateType = 'reveal';
+    let dateType;
+    dateType = 'reveal';
     wrapper.setProps({ dateType });
     expect(
       wrapper
@@ -38,7 +38,7 @@ describe('Timer.vue', () => {
         .at(1)
         .isVisible()
     ).toBe(false);
-    var dateType = 'auction';
+    dateType = 'auction';
     wrapper.setProps({ dateType });
     expect(
       wrapper

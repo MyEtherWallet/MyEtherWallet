@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import Categories from '@/layouts/HelpCenterLayout/components/Categories/Categories.vue';
 import CategoryButton from '@/layouts/HelpCenterLayout/components/CategoryButton/CategoryButton.vue';
 import { Tooling } from '@@/helpers';
@@ -29,7 +29,7 @@ describe('Categories.vue', () => {
 
   it('should render correct contents', () => {
     for (
-      var i = 0;
+      let i = 0;
       i < wrapper.vm.$el.querySelectorAll('.category-buttons li').length;
       i++
     ) {
@@ -42,7 +42,7 @@ describe('Categories.vue', () => {
     }
 
     for (
-      var i = 0;
+      let i = 0;
       i < wrapper.vm.$el.querySelectorAll('.link-block').length;
       i++
     ) {
@@ -64,7 +64,7 @@ describe('Categories.vue', () => {
       const socialElements = linkBlockElement.querySelectorAll('.social div');
 
       for (let j = 0; j < socialElements.length; j++) {
-        const socialElement = socialElements[h];
+        const socialElement = socialElements[j];
 
         expect(socialElement.querySelector('a').href).toEqual(
           wrapper.vm.$data.linkBlocks[i].social[j].link + '/'

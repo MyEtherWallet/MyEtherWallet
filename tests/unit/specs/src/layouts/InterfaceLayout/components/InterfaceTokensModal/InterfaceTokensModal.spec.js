@@ -1,6 +1,4 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
-import store from 'store';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
@@ -45,7 +43,7 @@ describe('InterfaceTokensModal.vue', () => {
     store.replaceState({
       web3: {
         utils: {
-          isAddress: function(val) {}
+          isAddress: () => {}
         }
       }
     });

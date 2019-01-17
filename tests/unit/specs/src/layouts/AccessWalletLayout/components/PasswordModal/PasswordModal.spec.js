@@ -1,9 +1,8 @@
 import { shallowMount } from '@vue/test-utils';
-// import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
-import sinon from 'sinon';
+import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import { Tooling } from '@@/helpers';
-
-xdescribe('PasswordModal.vue', () => {
+//xdescribe
+describe('PasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {

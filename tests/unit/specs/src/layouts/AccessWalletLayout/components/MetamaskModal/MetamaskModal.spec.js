@@ -2,13 +2,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import MetamaskModal from '@/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue';
-import languages from '@/translations';
 import { Tooling } from '@@/helpers';
 
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import store from 'store';
 
 const RouterLinkStub = {
   name: 'router-link',

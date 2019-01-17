@@ -6,17 +6,14 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import sinon from 'sinon';
 
 import { Tooling } from '@@/helpers';
 
 describe('InteractWithContractContainer.vue', () => {
   let localVue, i18n, wrapper, store, getters;
-  const resetView = jest.fn();
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -49,7 +46,7 @@ describe('InteractWithContractContainer.vue', () => {
         web3: newWeb3,
         Networks: nodeList,
         wallet: {
-          getAddressString: jest.fn(x => 0)
+          getAddressString: jest.fn(() => 0)
         }
       }
     });
@@ -149,23 +146,6 @@ describe('InteractWithContractContainer.vue', () => {
     });
 
     it('should verify message when click button', () => {
-      const abi = [
-        {
-          constant: true,
-          inputs: [],
-          name: 'name',
-          outputs: [
-            {
-              name: '',
-              type: 'string'
-            }
-          ],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        }
-      ];
-
       wrapper.setData({ interact: true });
       const currencyElements = wrapper.findAll(
         '.functions .item-container div'

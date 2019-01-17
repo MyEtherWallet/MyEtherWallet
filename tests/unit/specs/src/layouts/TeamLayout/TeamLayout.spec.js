@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
 

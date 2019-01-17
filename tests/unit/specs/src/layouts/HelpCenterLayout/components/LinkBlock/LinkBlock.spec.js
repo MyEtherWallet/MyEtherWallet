@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import LinkBlock from '@/layouts/HelpCenterLayout/components/LinkBlock/LinkBlock.vue';
 
 import { Tooling } from '@@/helpers';

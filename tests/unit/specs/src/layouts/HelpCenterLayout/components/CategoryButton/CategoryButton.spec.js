@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import CategoryButton from '@/layouts/HelpCenterLayout/components/CategoryButton/CategoryButton.vue';
 
 import { Tooling } from '@@/helpers';

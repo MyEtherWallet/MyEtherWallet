@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import sinon from 'sinon';

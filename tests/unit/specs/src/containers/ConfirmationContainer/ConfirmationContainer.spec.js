@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmationContainer from '@/containers/ConfirmationContainer/ConfirmationContainer.vue';
@@ -28,11 +27,7 @@ const BModalStub = {
   }
 };
 
-const mockRoute = {
-  $on: jest.fn()
-};
-
-xdescribe('ConfirmationContainer.vue', () => {
+xdescribe('[Failing] ConfirmationContainer.vue', () => {
   let localVue, i18n, wrapper, store, newWeb3;
 
   beforeAll(() => {

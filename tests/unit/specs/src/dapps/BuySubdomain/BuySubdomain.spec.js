@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
-import sinon from 'sinon';
 import BuySubdomain from '@/dapps/BuySubdomain/BuySubdomain.vue';
 import domains from '@/dapps/BuySubdomain/domains.json';
 import InterfaceBottomText from '@/components/InterfaceBottomText';

@@ -1,9 +1,8 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import Social from '@/layouts/HomeLayout/components/Social/Social.vue';
 import { Tooling } from '@@/helpers';
 
-const $t = () => {};
+// const $t = () => {};
 describe('Social.vue', () => {
   let localVue, i18n, wrapper, store;
 

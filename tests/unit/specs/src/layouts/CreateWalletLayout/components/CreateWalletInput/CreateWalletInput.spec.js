@@ -1,10 +1,10 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-// import CreateWalletInput from '@/layouts/CreateWalletLayout/components/CreateWalletInput/CreateWalletInput.vue';
+import CreateWalletInput from '@/layouts/CreateWalletLayout/components/CreateWalletInput/CreateWalletInput.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
-xdescribe('CreateWalletInput.vue', () => {
+//xdescribe
+describe('CreateWalletInput.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -21,7 +21,7 @@ xdescribe('CreateWalletInput.vue', () => {
       attachToDocument: true
     });
   });
-  it('should render correct value props', () => {
+  xit('[Failing] should render correct value props', () => {
     const value = '100';
     wrapper.setProps({ value });
     expect(

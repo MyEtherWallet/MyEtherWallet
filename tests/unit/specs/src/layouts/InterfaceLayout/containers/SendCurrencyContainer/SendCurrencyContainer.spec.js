@@ -8,13 +8,11 @@ import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import store from 'store';
 
 import { Tooling } from '@@/helpers';
 
 describe('SendCurrencyContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const resetView = jest.fn();
 
   beforeAll(() => {
     window.scrollTo = jest.fn().mockImplementation((valX, valY) => {
@@ -47,7 +45,7 @@ describe('SendCurrencyContainer.vue', () => {
     );
 
     const wallet = {
-      getChecksumAddressString: jest.fn(x => 0),
+      getChecksumAddressString: jest.fn(() => 0),
       getAddressString: function() {
         return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
       }

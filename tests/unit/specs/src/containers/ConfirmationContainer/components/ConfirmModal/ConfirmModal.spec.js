@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
-import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import store from 'store';
 import { Tooling } from '@@/helpers';
 
 const AddressBlockStub = {

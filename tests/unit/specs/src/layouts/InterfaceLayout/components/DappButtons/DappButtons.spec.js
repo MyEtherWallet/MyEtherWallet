@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
 

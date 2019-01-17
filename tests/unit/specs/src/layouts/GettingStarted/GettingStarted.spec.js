@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import GettingStarted from '@/layouts/GettingStarted/GettingStarted.vue';
 import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
@@ -7,7 +6,6 @@ import WhatIfILoseMyKeysOrPassword from '@/layouts/GettingStarted/components/Wha
 import WhatIsMyEtherWallet from '@/layouts/GettingStarted/components/WhatIsMyEtherWallet/WhatIsMyEtherWallet.vue';
 import WhereAreMyFundsStored from '@/layouts/GettingStarted/components/WhereAreMyFundsStored/WhereAreMyFundsStored.vue';
 
-import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 const RouterLinkStub = {
   name: 'router-link',
