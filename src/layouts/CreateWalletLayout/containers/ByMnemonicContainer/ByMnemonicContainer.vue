@@ -1,11 +1,6 @@
 <template>
   <div class="create-wallet-by-mnemonic">
     <finish-modal ref="finish" :unlock="unlockWallet" />
-    <print-modal
-      ref="print"
-      :mnemonic="mnemonicValues"
-      :is-twenty-four="mnemonic24"
-    />
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
@@ -78,7 +73,6 @@
 <script>
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import FinishModal from './components/FinishModal';
-import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
 const bip39 = require('bip39');
 
@@ -86,7 +80,6 @@ export default {
   components: {
     'finish-modal': FinishModal,
     'verification-modal': VerificationModal,
-    'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter
   },
   data() {

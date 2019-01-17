@@ -25,7 +25,7 @@ export default {
       errorMsg: '',
       issueTrace: '',
       printType: '',
-      mnemonic: []
+      printData: []
     };
   },
   mounted() {
@@ -37,10 +37,15 @@ export default {
       this.errorMsg = errorMsg;
       this.$refs.errorModal.$refs.errorModal.show();
     });
-    this.$eventHub.$on('printModal', (type, mnemonic) => {
-      this.mnemonic = mnemonic ? mnemonic : [];
+    this.$eventHub.$on('printModal', (type, printData) => {
+      this.printData = printData ? printData : [];
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
+      if (type === 'ens') {
+        this.$refs.printModal.$refs.print.$on('hidden', () => {
+          return '';
+        });
+      }
     });
   }
 };
