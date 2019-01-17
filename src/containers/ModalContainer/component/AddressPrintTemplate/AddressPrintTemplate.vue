@@ -47,7 +47,10 @@
         </div>
 
         <div class="qr-code-container">
-          <qrcode :value="wallet.getChecksumAddressString()" :options="{ size: 100 }" />
+          <qrcode
+            :value="wallet.getChecksumAddressString()"
+            :options="{ size: 100 }"
+          />
           <div class="text-container">
             <h4>{{ myAddress }}</h4>
             <span>
@@ -70,8 +73,7 @@
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" /> Cut
-        Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" /> Cut Here
       </div>
       <div class="dash"></div>
     </div>
@@ -122,10 +124,7 @@
           {{ link1 }}
         </p>
         <p>
-          <img
-            height="15px"
-            src="~@/assets/images/icons/web-solution.svg"
-          />
+          <img height="15px" src="~@/assets/images/icons/web-solution.svg" />
           {{ link2 }}
         </p>
       </div>
@@ -165,5 +164,5 @@ export default {
       wallet: 'wallet'
     })
   }
-}
+};
 </script>
