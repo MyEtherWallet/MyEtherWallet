@@ -1,0 +1,23 @@
+@import '../AccountInfo';
+
+.main-menu--network-block {
+  background-color: $light-blue-4;
+}
+
+.block-content {
+  padding-top: 7px;
+}
+
+.change-button {
+  background-color: transparent;
+  border: 1px solid $white;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+
+  &:active {
+    background-color: rgba(0, 0, 0, .1);
+  }
+}

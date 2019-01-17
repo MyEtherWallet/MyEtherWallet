@@ -34,68 +34,90 @@
       :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
       class="mobile-menu-content"
     >
-      <div class="page-container">
-        <ul>
-          <li>
-            <router-link
-              to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
-            >
-              {{ $t('header.home') }}
-            </router-link>
-          </li>
-          <li v-if="isHomePage">
-            <router-link
-              to="/#about-mew"
-              @click.native="isMobileMenuOpen = false"
-            >
-              {{ $t('header.about') }}
-            </router-link>
-          </li>
-          <li>
-            <a
-              href="https://kb.myetherwallet.com"
-              target="_blank"
-              @click="isMobileMenuOpen = false"
-              >Help Center</a
-            >
-          </li>
-          <li>
-            <div class="mobile-language-menu-container">
-              <b-nav-item-dropdown
-                class="mobile-language-menu"
-                extra-toggle-classes="nav-link-custom"
-                right
-              >
-                <template slot="button-content">
-                  <div class="current-language-flag">
-                    <p>{{ currentName }}</p>
-                    <img
-                      :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                      class="show"
-                    />
-                  </div>
-                </template>
-                <b-dropdown-item
-                  v-for="language in supportedLanguages"
-                  :active="$root._i18n.locale === language.flag"
-                  :key="language.key"
-                  :data-language-code="language.langCode"
-                  :data-flag-name="language.flag"
-                  @click="languageItemClicked"
-                  >{{ language.name }}</b-dropdown-item
-                >
-              </b-nav-item-dropdown>
-              <div class="arrows">
-                <i class="fa fa-angle-right" aria-hidden="true" />
-              </div>
-            </div>
-          </li>
-        </ul>
+      <!-- Mobile menu contnet -->
+      <div v-if="wallet !== null" class="account-info-block-container">
+        <balance-block />
+        <network-block />
       </div>
+      <ul>
+        <li v-if="false">
+          <router-link
+            to="/"
+            @click.native="
+              scrollTop();
+              isMobileMenuOpen = false;
+            "
+          >
+            {{ $t('header.home') }}
+          </router-link>
+        </li>
+        <!-- Mobile Menu >>> about ============== -->
+        <li v-if="isHomePage">
+          <router-link
+            to="/#about-mew"
+            @click.native="isMobileMenuOpen = false"
+          >
+            <div class="mobile-menu--item-container">
+              <p>{{ $t('header.about') }}</p>
+              <i aria-hidden="true" class="fa fa-angle-right"></i>
+            </div>
+          </router-link>
+        </li>
+        <!-- Mobile Menu >>> Help Center ============== -->
+        <li>
+          <a
+            href="https://kb.myetherwallet.com"
+            target="_blank"
+            @click="isMobileMenuOpen = false"
+          >
+            <div class="mobile-menu--item-container">
+              <p>Help Center</p>
+              <i aria-hidden="true" class="fa fa-angle-right"></i>
+            </div>
+          </a>
+        </li>
+        <!-- Mobile Menu >>> Settings ============== -->
+        <li v-if="wallet !== null">
+          <div class="mobile-menu--item-container" @click="openSettings">
+            <span>Settings</span>
+            <i aria-hidden="true" class="fa fa-angle-right"></i>
+          </div>
+        </li>
+        <!-- Mobile Menu >>> Language ============== -->
+        <li>
+          <div class="mobile-language-menu-container">
+            <b-nav-item-dropdown
+              class="mobile-language-menu"
+              extra-toggle-classes="nav-link-custom"
+              right
+            >
+              <template slot="button-content">
+                <div class="current-language-flag">
+                  <p>{{ currentName }}</p>
+                  <img
+                    :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                    class="show"
+                  />
+                </div>
+              </template>
+              <b-dropdown-item
+                v-for="language in supportedLanguages"
+                :active="$root._i18n.locale === language.flag"
+                :key="language.key"
+                :data-language-code="language.langCode"
+                :data-flag-name="language.flag"
+                @click="languageItemClicked"
+                >{{ language.name }}</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+            <div class="arrows">
+              <i class="fa fa-angle-right" aria-hidden="true" />
+            </div>
+          </div>
+          <i aria-hidden="true" class="fa fa-angle-right"></i>
+        </li>
+      </ul>
+      <!-- Mobile menu contnet -->
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->
@@ -263,6 +285,8 @@ import LogoutModal from '@/components/LogoutModal';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
+import BalanceBlock from './components/BalanceBlock';
+import NetworkBlock from './components/NetworkBlock';
 
 export default {
   components: {
@@ -274,7 +298,9 @@ export default {
     'logout-modal': LogoutModal,
     'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
-    'user-reminder-button': UserReminderButton
+    'user-reminder-button': UserReminderButton,
+    'balance-block': BalanceBlock,
+    'network-block': NetworkBlock
   },
   data() {
     return {
@@ -405,6 +431,7 @@ export default {
   },
   methods: {
     openSettings() {
+      this.isMobileMenuOpen = false;
       this.$refs.settings.$refs.settings.show();
     },
     languageItemClicked(e) {

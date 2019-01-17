@@ -1,0 +1,28 @@
+@import '~@/scss/GlobalVariables';
+
+* {
+  color: $white;
+  line-height: initial;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.block-wrap {
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.block-title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.top-right-content {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+

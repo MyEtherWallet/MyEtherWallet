@@ -1,0 +1,17 @@
+@import '../AccountInfo';
+
+.main-menu--balance-block {
+  background-color: $light-blue-1;
+}
+
+
+.block-content {
+  padding-top: 15px;
+  .balance-amount {
+    font-size: 22px;
+  }
+}
+
+.more-info-icon {
+  height: 30px;
+}
