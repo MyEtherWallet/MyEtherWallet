@@ -12,7 +12,7 @@
 
 import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
-const BitBoxSupportedMajorVersion = 5;
+const BitBoxSupportedMajorVersion = 6;
 class DigitalBitboxEth {
   static aes_cbc_b64_decrypt = (ciphertext, key) => {
     try {

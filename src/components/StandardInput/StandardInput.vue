@@ -45,6 +45,7 @@
       <input
         v-if="!options.isTextarea"
         ref="inputdata"
+        :readonly="options.readOnly"
         :value="options.value"
         :class="[
           options.rightInputText ? 'right-padding' : '',
@@ -53,12 +54,12 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
-        name=""
       />
 
       <textarea
         v-if="options.isTextarea"
         ref="textareadata"
+        :readonly="options.readOnly"
         v-model="inputValue"
         :placeholder="options.placeHolder"
         :disabled="options.inputDisabled"
