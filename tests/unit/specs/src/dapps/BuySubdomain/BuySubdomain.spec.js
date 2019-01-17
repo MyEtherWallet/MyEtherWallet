@@ -8,7 +8,7 @@ import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 describe('BuySubdomain.vue', () => {
   let localVue, i18n, wrapper, store, newWeb3;
@@ -20,7 +20,7 @@ describe('BuySubdomain.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     newWeb3 = new Web3(

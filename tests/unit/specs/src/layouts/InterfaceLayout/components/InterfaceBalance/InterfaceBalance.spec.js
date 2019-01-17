@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBalance/InterfaceBalance.vue';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal/InterfaceBalanceModal.vue';
 import sinon from 'sinon';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 import nodeList from '@/networks';
 
 const showModal = sinon.stub();
@@ -21,7 +21,7 @@ describe('InterfaceBalance.vue', () => {
   let localVue, i18n, wrapper, store;
   const balance = '100';
 
-  const network = nodeList['ETH'][3];
+  const network = nodeList['ETH'][ETH_NETWORK_INDEX];
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();

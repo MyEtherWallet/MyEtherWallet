@@ -11,7 +11,7 @@ import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
 import sinon from 'sinon';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 const BNavItemStub = {
   name: 'b-nav-item',
@@ -53,7 +53,7 @@ describe('HeaderContainer.vue', () => {
       }
     };
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     getters = {

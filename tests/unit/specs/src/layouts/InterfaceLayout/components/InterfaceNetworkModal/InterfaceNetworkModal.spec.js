@@ -5,7 +5,7 @@ import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/Interfac
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import nodeList from '@/networks';
 
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 //xdescribe
 describe('InterfaceNetworkModal.vue', () => {
@@ -20,7 +20,7 @@ describe('InterfaceNetworkModal.vue', () => {
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     // const hostUrl = url.parse(network.url);
 
     // const newWeb3 = new Web3(

@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import AlreadyOwnedENSContainer from '@/dapps/RegisterDomain/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 import nodeList from '@/networks';
 import url from 'url';
@@ -41,7 +41,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
       }
     };
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(
