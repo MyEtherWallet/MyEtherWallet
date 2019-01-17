@@ -1249,6 +1249,15 @@
   // Custom Links
   // *********************************************************************
 
+  .linker-1 {
+    color: $link-text-color-3;
+    cursor: pointer;
+  }
+
+  .linker-1:hover {
+    color: $link-text-color-1;
+  }
+
   .disabled {
     background-color: $light-grey-12;
     pointer-events: none;

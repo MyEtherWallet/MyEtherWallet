@@ -34,7 +34,13 @@
                 {{ $t('common.totalBalance') }}
               </p>
             </div>
-            <swap-currency-picker />
+            <swap-currency-picker
+              :currencies="fromArray"
+              :override-currency="overrideFrom"
+              :from-source="true"
+              page="SwapContainerFrom"
+              @selectedCurrency="setFromCurrency"
+            />
             <div class="the-form amount-number">
               <input
                 v-model="fromValue"
@@ -288,7 +294,9 @@ export default {
       return false;
     },
     fromAboveMaxAllowed() {
-      if (
+      if (this.selectedProvider.provider === this.providerNames.bity) {
+        return this.toAboveMaxAllowed;
+      } else if (
         +this.fromValue > this.selectedProvider.maxValue &&
         this.selectedProvider.maxValue > 0
       )

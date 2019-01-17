@@ -1,94 +1,32 @@
 <template>
   <div class="send-currency-container">
     <interface-container-title :title="$t('common.sendTx')" />
-    <!-- .form-content-container -->
-    <div class="form-content-container">
-      <!-- .send-form ============================================================================= -->
-      <div class="send-form">
-        <!-- .form-block .amount-to-address -->
-        <div class="form-block amount-to-address">
-          <!-- Type and Amount block -->
-          <div class="amount">
-            <div class="single-input-block">
-              <div class="title">
-                <h4>{{ $t('interface.sendTxType') }}</h4>
-              </div>
-              <currency-picker
-                :currency="tokensWithBalance"
-                :page="'sendEgasAmountthAndTokens'"
-                :token="true"
-                @selectedCurrency="setSelectedCurrency"
-              />
-            </div>
-            <div class="single-input-block">
-              <div class="title">
-                <h4>{{ $t('interface.sendTxAmount') }}</h4>
-                <button
-                  class="title-button prevent-user-select"
-                  @click="setBalanceToAmt"
-                >
-                  {{ $t('interface.entireBalance') }}
-                </button>
-              </div>
-              <div class="the-form amount-number">
-                <input
-                  :value="amount"
-                  type="number"
-                  placeholder="Amount"
-                  @input="debouncedAmount"
-                />
-                <i
-                  :class="[
-                    selectedCurrency.symbol === network.type.name
-                      ? parsedBalance.lt(amount)
-                        ? 'not-good'
-                        : ''
-                      : selectedCurrency.balance < amount
-                      ? 'not-good'
-                      : '',
-                    'fa fa-check-circle good-button'
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
-              <div
-                v-if="
-                  selectedCurrency.symbol === network.type.name
-                    ? parsedBalance.lt(amount)
-                    : selectedCurrency.balance < amount
-                "
-                class="error-message-container"
-              >
-                <p>{{ $t('common.dontHaveEnough') }}</p>
-              </div>
-            </div>
-          </div>
-          <!-- Type and Amount block -->
 
-          <!-- To Address block -->
-          <div class="to-address">
+    <div class="send-form">
+      <div class="form-block amount-to-address">
+        <div class="amount">
+          <div class="single-input-block">
             <div class="title">
-              <h4>
-                {{ $t('interface.sendTxToAddr') }}
-                <blockie
-                  v-show="isValidAddress && address.length !== 0"
-                  :address="hexAddress"
-                  :size="8"
-                  :scale="16"
-                  width="32px"
-                  height="32px"
-                  class="blockie-image"
-                />
-              </h4>
-
-              <button
-                class="title-button prevent-user-select"
-                @click="copyToClipboard('address')"
-              >
-                {{ $t('common.copy') }}
-              </button>
+              <h4>{{ $t('interface.sendTxType') }}</h4>
             </div>
-            <div class="the-form address-block">
+            <currency-picker
+              :currency="tokensWithBalance"
+              :page="'sendEgasAmountthAndTokens'"
+              :token="true"
+              @selectedCurrency="setSelectedCurrency"
+            />
+          </div>
+          <div class="single-input-block">
+            <div class="title">
+              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <p
+                class="title-button prevent-user-select"
+                @click="setBalanceToAmt"
+              >
+                Entire Balance
+              </p>
+            </div>
+            <div class="the-form amount-number">
               <input
                 v-validate="'min_value:10'"
                 :value="amount"
@@ -113,100 +51,138 @@
               />
             </div>
           </div>
-          <!-- To Address block -->
-        </div>
-        <!-- .form-block .amount-to-address -->
-      </div>
-      <!-- .send-form ============================================================================= -->
-
-      <!-- .send-form .advanced =================================================================== -->
-      <!-- Hide deopdown address selector for now until addressbook is ready. -->
-      <div v-if="false"><dropdown-address-selector /></div>
-      <div class="send-form advanced">
-        <div class="advanced-content">
-          <div class="toggle-button-container">
-            <h4>{{ $t('common.advanced') }}</h4>
-            <!-- .toggle-button -->
-            <div class="toggle-button">
-              <span>{{ $t('interface.dataGas') }}</span>
-              <!-- Rounded switch -->
-              <div class="sliding-switch-white">
-                <label class="switch">
-                  <input
-                    type="checkbox"
-                    @click="advancedExpend = !advancedExpend"
-                  />
-                  <span class="slider round" />
-                </label>
-              </div>
-            </div>
-            <!-- .toggle-button -->
-          </div>
           <div
-            :class="advancedExpend && 'input-container-open'"
-            class="input-container"
+            v-if="
+              selectedCurrency.symbol === network.type.name
+                ? parsedBalance.lt(amount)
+                : selectedCurrency.balance < amount
+            "
+            class="error-message-container"
           >
-            <div class="margin-container">
-              <div
-                v-show="selectedCurrency.symbol === network.type.name"
-                class="the-form user-input"
-              >
-                <p>Add Data</p>
+            <p>{{ $t('common.dontHaveEnough') }}</p>
+          </div>
+        </div>
+        <div class="to-address">
+          <div class="title">
+            <h4>
+              {{ $t('interface.sendTxToAddr') }}
+              <blockie
+                v-show="isValidAddress && address.length !== 0"
+                :address="hexAddress"
+                :size="8"
+                :scale="16"
+                width="32px"
+                height="32px"
+                class="blockie-image"
+              />
+            </h4>
+
+            <p
+              class="copy-button prevent-user-select"
+              @click="copyToClipboard('address')"
+            >
+              {{ $t('common.copy') }}
+            </p>
+          </div>
+          <div class="the-form address-block">
+            <input
+              v-ens-resolver="'address'"
+              ref="address"
+              type="text"
+              name="name"
+              autocomplete="off"
+              @input="debounceInput"
+            />
+            <i
+              :class="[
+                isValidAddress && address.length !== 0 ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="send-form advanced">
+      <div class="advanced-content">
+        <div class="toggle-button-container">
+          <h4>{{ $t('common.advanced') }}</h4>
+          <div class="toggle-button">
+            <span>{{ $t('interface.dataGas') }}</span>
+            <!-- Rounded switch -->
+            <div class="sliding-switch-white">
+              <label class="switch">
                 <input
-                  :value="data"
-                  type="text"
-                  placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
-                  autocomplete="off"
-                  @input="debounceData"
+                  type="checkbox"
+                  @click="advancedExpend = !advancedExpend"
                 />
-                <i
-                  :class="[
-                    data.length !== 0 ? '' : 'not-good',
-                    'fa fa-check-circle good-button'
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="the-form user-input">
-                <p>{{ $t('common.gasLimit') | capitalize }}</p>
-                <input
-                  v-model="gasLimit"
-                  :placeholder="$t('common.gasLimit')"
-                  type="number"
-                  name
-                />
-              </div>
+                <span class="slider round" />
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          :class="advancedExpend && 'input-container-open'"
+          class="input-container"
+        >
+          <div class="margin-container">
+            <div
+              v-show="selectedCurrency.symbol === network.type.name"
+              class="the-form user-input"
+            >
+              <p>Add Data</p>
+              <input
+                :value="data"
+                type="text"
+                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
+                autocomplete="off"
+                @input="debounceData"
+              />
+              <i
+                :class="[
+                  data.length !== 0 ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
+            <div class="the-form user-input">
+              <p>{{ $t('common.gasLimit') | capitalize }}</p>
+              <input
+                v-model="gasLimit"
+                :placeholder="$t('common.gasLimit')"
+                type="number"
+                name
+              />
             </div>
           </div>
         </div>
       </div>
-      <!-- .send-form .advanced =================================================================== -->
-
-      <!-- .submit-button-container =============================================================== -->
-      <div class="submit-button-container">
-        <div
-          :class="[
-            isValidAddress &&
-            address.length !== 0 &&
-            isValidAmount &&
-            data.length !== 0
-              ? ''
-              : 'disabled',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="confirmationModalOpen"
-        >
-          {{ $t('interface.sendTx') }}
-        </div>
-        <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
-          link="https://kb.myetherwallet.com"
-        />
-      </div>
-      <!-- .submit-button-container =============================================================== -->
     </div>
-    <!-- .form-content-container -->
+
+    <div class="submit-button-container">
+      <div
+        :class="[
+          isValidAddress &&
+          address.length !== 0 &&
+          isValidAmount &&
+          data.length !== 0
+            ? ''
+            : 'disabled',
+          'submit-button large-round-button-green-filled'
+        ]"
+        @click="confirmationModalOpen"
+      >
+        {{ $t('interface.sendTx') }}
+      </div>
+      <interface-bottom-text
+        :link-text="$t('interface.helpCenter')"
+        :question="$t('interface.haveIssues')"
+        link="https://kb.myetherwallet.com"
+      />
+    </div>
   </div>
 </template>
 
@@ -222,15 +198,13 @@ import { Misc } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
-import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'currency-picker': CurrencyPicker,
-    'dropdown-address-selector': DropDownAddressSelector
+    'currency-picker': CurrencyPicker
   },
   props: {
     tokensWithBalance: {

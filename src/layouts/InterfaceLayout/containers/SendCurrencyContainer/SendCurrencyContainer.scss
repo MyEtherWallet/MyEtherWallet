@@ -4,11 +4,23 @@
   @extend %interface-container;
 
   .send-form {
+    @extend %send-form-base;
+
     .title-container {
       .title {
         display: flex;
         flex-direction: column;
         padding: 0 8px;
+
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
 
         .title-helper {
           display: flex;
@@ -51,6 +63,16 @@
         justify-content: space-between;
         margin-bottom: 13px;
         padding: 0 8px;
+
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
       }
 
       .amount {
