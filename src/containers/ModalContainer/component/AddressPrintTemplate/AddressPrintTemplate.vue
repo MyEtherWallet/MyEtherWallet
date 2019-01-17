@@ -99,7 +99,7 @@
       <div class="my-address-container">
         <div class="text-container">
           <h3>{{ myAddress }}</h3>
-          <p>{{ address }}</p>
+          <p>{{ wallet.getChecksumAddressString() }}</p>
         </div>
         <qrcode
           :value="wallet.getChecksumAddressString()"
@@ -138,8 +138,12 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import Blockie from '@/components/Blockie';
 
 export default {
+  components: {
+    blockie: Blockie
+  },
   data() {
     return {
       header: 'MY ADDRESS ICON',
@@ -166,3 +170,6 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+@import 'AddressPrintTemplate.scss';
+</style>

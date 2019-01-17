@@ -21,10 +21,6 @@
     </div> -->
   </b-modal>
 </template>
-
-<style lang="scss" scoped>
-@import 'ErrorModal';
-</style>
 <script>
 export default {
   props: {
@@ -44,3 +40,6 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+@import 'ErrorModal';
+</style>

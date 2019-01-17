@@ -219,7 +219,7 @@ export default {
       this.$refs.verification.$refs.verification.show();
     },
     openPrintModal() {
-      this.$refs.print.$refs.print.show();
+      this.$eventHub.$emit('printModal', 'mnemonic', this.mnemonicValues);
     }
   }
 };

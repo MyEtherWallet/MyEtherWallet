@@ -2,13 +2,17 @@
   <div>
     <issue-log-modal ref="issueLog" :stack-trace="issueTrace" />
     <error-modal ref="errorModal" :message="errorMsg" />
-    <print-modal ref="printModal" :type="printType" />
+    <print-modal
+      ref="printModal"
+      :print-type="printType"
+      :mnemonic="mnemonic"
+    />
   </div>
 </template>
 <script>
-import IssueLogModal from './components/IssueLogModal';
-import ErrorModal from './components/ErrorModal';
-import PrintModal from './components/PrintModal';
+import IssueLogModal from './component/IssueLogModal';
+import ErrorModal from './component/ErrorModal';
+import PrintModal from './component/PrintModal';
 export default {
   name: 'ModalContainer',
   components: {
@@ -20,7 +24,8 @@ export default {
     return {
       errorMsg: '',
       issueTrace: '',
-      printType: ''
+      printType: '',
+      mnemonic: []
     };
   },
   mounted() {
@@ -32,7 +37,8 @@ export default {
       this.errorMsg = errorMsg;
       this.$refs.errorModal.$refs.errorModal.show();
     });
-    this.$eventHub.$on('printModal', type => {
+    this.$eventHub.$on('printModal', (type, mnemonic) => {
+      this.mnemonic = mnemonic ? mnemonic : [];
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
     });
