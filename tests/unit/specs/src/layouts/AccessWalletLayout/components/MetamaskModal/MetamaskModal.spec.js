@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import MetamaskModal from '@/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 import nodeList from '@/networks';
 import url from 'url';
@@ -30,7 +30,7 @@ describe('MetamaskModal.vue', () => {
         return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
       }
     };
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     getters = {

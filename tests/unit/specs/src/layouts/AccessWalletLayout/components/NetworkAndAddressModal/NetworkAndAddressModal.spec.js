@@ -4,7 +4,7 @@ import nodeList from '@/networks';
 import { shallowMount } from '@vue/test-utils';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
 import sinon from 'sinon';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 // import {
 //   LedgerWallet,
 //   TrezorWallet,
@@ -42,7 +42,7 @@ describe('NetworkAndAddressModal.vue', () => {
       decryptWallet: jest.fn()
     };
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
 
     const getters = {
       customPaths: () => {},

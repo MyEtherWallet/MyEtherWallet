@@ -14,7 +14,7 @@ import url from 'url';
 import Web3 from 'web3';
 // import sinon from 'sinon';
 
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
   let localVue, i18n, /*wrapper,*/ store /*, getters*/;
@@ -71,7 +71,7 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
       setGasPrice: jest.fn()
     };
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(

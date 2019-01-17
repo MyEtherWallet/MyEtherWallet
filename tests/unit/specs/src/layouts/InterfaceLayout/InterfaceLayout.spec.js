@@ -8,7 +8,7 @@ import InterfaceAddress from '@/layouts/InterfaceLayout/components/InterfaceAddr
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 describe('InterfaceLayout.vue', () => {
   let localVue, i18n, wrapper, store, getters;
@@ -27,7 +27,7 @@ describe('InterfaceLayout.vue', () => {
       }
     };
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     getters = {

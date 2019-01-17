@@ -10,7 +10,7 @@ import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
 
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 describe('InteractWithContractContainer.vue', () => {
   let localVue, i18n, wrapper, store, getters;
@@ -21,7 +21,7 @@ describe('InteractWithContractContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(

@@ -8,7 +8,7 @@ import { shallowMount } from '@vue/test-utils';
 import SendOfflineContainer from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/SendOfflineContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 describe('SendOfflineContainer.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -28,7 +28,7 @@ describe('SendOfflineContainer.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(

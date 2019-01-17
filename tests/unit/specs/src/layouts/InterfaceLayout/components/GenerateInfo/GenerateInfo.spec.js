@@ -7,7 +7,7 @@ import PopOver from '@/components/PopOver/PopOver.vue';
 import nodeList from '@/networks';
 import Web3 from 'web3';
 
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 import url from 'url';
 
 describe('GenerateInfo.vue', () => {
@@ -26,7 +26,7 @@ describe('GenerateInfo.vue', () => {
   });
 
   beforeEach(() => {
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${

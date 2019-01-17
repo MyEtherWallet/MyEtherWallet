@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
@@ -37,7 +37,7 @@ describe('SwapContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(

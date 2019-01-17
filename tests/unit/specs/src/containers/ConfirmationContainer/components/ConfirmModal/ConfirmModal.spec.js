@@ -6,7 +6,7 @@ import VueQrcode from '@xkeshi/vue-qrcode';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-import { Tooling } from '@@/helpers';
+import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
 
 const AddressBlockStub = {
   name: 'address-block',
@@ -32,7 +32,7 @@ describe('ConfirmModal.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.errorHandler = () => {};
-    const network = nodeList['ETH'][3];
+    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
     const hostUrl = url.parse(network.url);
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
