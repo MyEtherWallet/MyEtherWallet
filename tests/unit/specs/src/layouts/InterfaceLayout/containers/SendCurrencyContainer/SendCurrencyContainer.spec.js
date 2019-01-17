@@ -105,7 +105,7 @@ describe('SendCurrencyContainer.vue', () => {
     wrapper.setData({ address });
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.$data.isValidAddress).toBe(true);
-    })
+    });
   });
 
   it('should render correct amount data', () => {
@@ -134,7 +134,7 @@ describe('SendCurrencyContainer.vue', () => {
       wrapper.setData({ address });
       wrapper.vm.$nextTick(() => {
         expect(wrapper.vm.verifyAddr()).toBe(true);
-      })
+      });
     });
 
     it('should render correct selectedCurrency data', () => {

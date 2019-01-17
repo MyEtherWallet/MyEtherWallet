@@ -1,14 +1,13 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
-import veeValidate from 'vee-validate'
+import veeValidate from 'vee-validate';
 // import languages from '@/translations';
 import VueX from 'vuex';
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 import en_US from '@/translations/en_US';
-
 
 function createLocalVueInstance() {
   const localVue = createLocalVue();
