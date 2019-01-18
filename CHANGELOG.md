@@ -1,5 +1,6 @@
 ### Bug
 
+- Fix interact contract disabled [#469](https://github.com/MyEtherWallet/MyEtherWallet/pull/469)
 - Dapps back issue [#472](https://github.com/MyEtherWallet/MyEtherWallet/pull/472)
 - Make routes with child set first child active #437 [#473](https://github.com/MyEtherWallet/MyEtherWallet/pull/473)
 
