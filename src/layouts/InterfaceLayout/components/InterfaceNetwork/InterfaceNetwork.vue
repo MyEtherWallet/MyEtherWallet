@@ -24,6 +24,7 @@
         </div>
         <div class="icon-container">
           <b-btn
+            v-if="wallet.identifier !== 'web3_wallet'"
             id="networkModal"
             class="custom-tooltip"
             @click="networkModalOpen"
