@@ -76,7 +76,10 @@ describe('EnsBidContainer.vue', () => {
         startAuctionAndBid
       },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub()
+        }
       },
       stubs: {
         timer: TimerStub,
@@ -148,7 +151,10 @@ describe('EnsBidContainer.vue', () => {
       store,
       propsData: { revealBid },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub()
+        }
       }
     });
     wrapper
@@ -166,7 +172,10 @@ describe('EnsBidContainer.vue', () => {
       store,
       propsData: { sendBid },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub()
+        }
       }
     });
     wrapper
@@ -189,7 +198,10 @@ describe('EnsBidContainer.vue', () => {
       i18n,
       store,
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub()
+        }
       }
     });
     const highestBidder = 'highestBidder';
@@ -291,7 +303,10 @@ describe('EnsBidContainer.vue', () => {
         i18n,
         store,
         mocks: {
-          $route: mockRoute
+          $route: mockRoute,
+          $router: {
+            replace: sinon.stub()
+          }
         },
         stubs: {
           'b-modal': BModalStub
