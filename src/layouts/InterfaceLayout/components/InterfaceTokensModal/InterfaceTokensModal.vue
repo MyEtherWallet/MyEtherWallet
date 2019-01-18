@@ -58,6 +58,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { mapGetters } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -84,11 +85,7 @@ export default {
   },
   watch: {
     tokenAddress(newVal) {
-      if (
-        newVal !== '' &&
-        newVal.length !== 0 &&
-        this.web3.utils.isAddress(newVal)
-      ) {
+      if (newVal !== '' && newVal.length !== 0 && isAddress(newVal)) {
         this.validAddress = true;
       } else {
         this.validAddress = false;

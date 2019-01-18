@@ -9,15 +9,24 @@
               <h4>{{ $t('interface.signedTx') }}</h4>
             </div>
             <div class="form-controller">
-              <p class="linker-1 prevent-user-select" @click="uploadJson">
+              <button
+                class="title-button prevent-user-select"
+                @click="uploadJson"
+              >
                 Upload JSON
-              </p>
-              <p class="linker-1 prevent-user-select" @click="deleteTxHex">
+              </button>
+              <button
+                class="title-button prevent-user-select"
+                @click="deleteTxHex"
+              >
                 {{ $t('common.clear') }}
-              </p>
-              <p class="linker-1 prevent-user-select" @click="copyTxHex">
+              </button>
+              <button
+                class="title-button prevent-user-select"
+                @click="copyTxHex"
+              >
                 {{ $t('common.copy') }}
-              </p>
+              </button>
             </div>
           </div>
         </div>
