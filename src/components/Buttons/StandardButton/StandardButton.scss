@@ -60,6 +60,21 @@ $blue-border-button-background--click: #f2f4fd;
 // Common Style
 //=======================================================================
 
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+}
+
+button[disabled] {
+  background-color: $disabled !important;
+  border-color: $disabled !important;
+  cursor: default !important;
+}
+
 @mixin btn-mixin-1() {
   text-align: center;
   user-select: none;
@@ -357,3 +372,20 @@ $blue-border-button-background--click: #f2f4fd;
     }
   }
 } // .standard-button__blue-border
+
+//=======================================================================
+// Accept Terms Checkbox
+//=======================================================================
+.accept-terms-Check-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+//=======================================================================
+// Customer support block
+//=======================================================================
+.customer-support-block {
+  margin-top: 20px;
+}

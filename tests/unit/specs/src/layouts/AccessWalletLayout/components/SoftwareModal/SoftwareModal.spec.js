@@ -4,10 +4,6 @@ import sinon from 'sinon';
 
 import { Tooling } from '@@/helpers';
 
-// const CloseButtonStub = {
-//   name: 'b-btn',
-//   template: '<div><slot> </slot></div>'
-// };
 const RouterLinkStub = {
   name: 'router-link',
   template: '<p> <slot> </slot></p>',
@@ -78,7 +74,6 @@ describe('SoftwareModal.vue', () => {
     });
     beforeEach(() => {
       wrapper = mount(SoftwareModal, {
-        // mocks: { $t: () => 'some specific text' },
         localVue,
         i18n,
         store,

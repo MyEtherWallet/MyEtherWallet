@@ -23,7 +23,8 @@ describe('HelpCenterLayout.vue', () => {
   });
 
   it('should render correct contents', () => {
-    let activeSpan = wrapper.findAll('.switcher span').at(1);
+    let activeSpan;
+    activeSpan = wrapper.findAll('.switcher span').at(1);
     activeSpan.trigger('click');
 
     expect(wrapper.vm.$data.openFAQs).toBe(false);

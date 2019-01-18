@@ -3,41 +3,49 @@
     <div class="wrap">
       <div class="send-form">
         <div class="form-block amount-to-address">
-          <div class="amount">
-            <div class="title">
-              <h4>{{ $t('interface.sendTxAmount') }}</h4>
-            </div>
-            <currency-picker
-              :currency="tokens"
-              :token="true"
-              page="sendOfflineGenTx"
-              @selectedCurrency="setSelectedCurrency"
-            />
-            <div class="the-form amount-number">
-              <input
-                :value="toAmt"
-                :placeholder="$t('interface.depAmount')"
-                type="string"
-                name
-                @input="debouncedAmount"
+          <ul class="type-amount">
+            <li class="type">
+              <div class="title">
+                <h4>{{ $t('interface.sendTxType') }}</h4>
+              </div>
+              <currency-picker
+                :currency="tokens"
+                :token="true"
+                page="sendOfflineGenTx"
+                @selectedCurrency="setSelectedCurrency"
               />
-            </div>
-          </div>
+            </li>
+            <li class="amount">
+              <div class="title">
+                <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              </div>
+              <div class="the-form amount-number">
+                <input
+                  :value="toAmt"
+                  :placeholder="$t('interface.depAmount')"
+                  type="string"
+                  name
+                  @input="debouncedAmount"
+                />
+              </div>
+            </li>
+          </ul>
           <div class="to-address">
             <div class="title">
               <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
               <blockie
                 v-show="address !== '' && validAddress"
                 :address="address"
-                width="22px"
-                height="22px"
+                class="blockie-image-icon"
+                width="32px"
+                height="32px"
               />
-              <p
-                class="copy-button linker-1 prevent-user-select"
+              <button
+                class="title-button copy-button prevent-user-select"
                 @click="copyToAddress"
               >
                 {{ $t('common.copy') }}
-              </p>
+              </button>
             </div>
             <div class="the-form address-block">
               <textarea
@@ -58,7 +66,7 @@
         </div>
       </div>
 
-      <div class="send-form nopadding">
+      <div class="send-form">
         <div class="title-container">
           <div class="title">
             <div class="title-helper">
@@ -158,6 +166,7 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
 import { Misc } from '@/helpers';
 import utils from 'web3-utils';
 
@@ -209,7 +218,7 @@ export default {
       gasPrice: 'gasPrice'
     }),
     validAddress() {
-      return this.web3.utils.isAddress(this.address);
+      return isAddress(this.address);
     }
   },
   watch: {
@@ -238,9 +247,9 @@ export default {
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.symbol === this.network.type.name
+        this.selectedCoinType.symbol === this.network.type.name
           ? 18
-          : this.selectedCurrency.decimals;
+          : this.selectedCoinType.decimals;
       this.toAmt = new BigNumber(e.target.value)
         .decimalPlaces(decimals)
         .toFixed();
@@ -287,7 +296,8 @@ export default {
       }
     },
     copyToAddress() {
-      this.$refs('toaddress').select();
+      const el = this.$refs.toaddress;
+      el.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },

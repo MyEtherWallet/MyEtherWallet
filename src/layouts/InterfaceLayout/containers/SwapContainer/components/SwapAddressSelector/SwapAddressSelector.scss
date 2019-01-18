@@ -1,5 +1,11 @@
 @import '~@/scss/GlobalVariables';
 
+.dropdown--title {
+  margin-bottom: 13px;
+  padding: 0 8px;
+  display: flex;
+}
+
 .drop-down-address-selector {
   position: relative;
 }
@@ -38,6 +44,14 @@
     position: absolute;
     top: 10px;
     left: 15px;
+    .currency-icon {
+      position: absolute;
+      bottom: -3px;
+      right: -4px;
+      height: 16px;
+      border: 1px solid $white;
+      border-radius: 100%;
+    }
   }
 
   .dropdown-open-button {
@@ -76,7 +90,8 @@
       cursor: pointer;
       padding: 10px 15px;
       position: relative;
-      display: flex;
+      display: grid;
+      grid-template-columns: 40px 1fr 70px 25px;
       align-items: center;
 
       &:nth-child(odd) {
@@ -88,12 +103,41 @@
       }
 
       .list-blockie {
-        margin-right: 10px;
-      }
-
-      .address-note {
-        margin-left: 100px;
+        margin-right: 0;
+        position: relative;
+        .currency-icon {
+          position: absolute;
+          bottom: -3px;
+          right: 5px;
+          height: 16px;
+          border: 1px solid $white;
+          border-radius: 100%;
+        }
       }
     }
   }
+}
+
+.address-block {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listed-address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.address-note {
+  font-size: 10px;
+  font-weight: 700;
+  text-align: right;
+  color: $mew-green;
+}
+
+.good-button {
+  text-align: right;
 }

@@ -1,6 +1,6 @@
 import normalise from '@/helpers/normalise';
-import web3 from 'web3';
 import nodeList from '@/networks';
+import { isAddress } from './addressUtils';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -43,7 +43,7 @@ const formatDate = date => {
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
 };
 const isValidETHAddress = address => {
-  return web3.utils.isAddress(address);
+  return isAddress(address);
 };
 const isValidENSorEtherAddress = address => {
   return isValidETHAddress(address) || isValidENSAddress(address);

@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import Social from '@/layouts/HomeLayout/components/Social/Social.vue';
 import { Tooling } from '@@/helpers';
 
+// const $t = () => {};
 describe('Social.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -22,20 +23,13 @@ describe('Social.vue', () => {
   });
 
   it('should render correct contents', () => {
-    // const wrapper = shallowMount(Social, {
-    // 	      mocks:{$t}
-    // });
-
     const linkElements = wrapper.vm.$el
       .querySelector('.icons')
       .getElementsByTagName('a');
     const imgElements = wrapper.vm.$el.getElementsByTagName('img');
-    // for(var i=0; i<imgElements.length; i++) {
-    // }
 
     for (let i = 0; i < wrapper.vm.$data.links.length; i++) {
       const data = wrapper.vm.$data.links[i];
-
       const link = data.to;
       let linkElement = linkElements[i].href;
       if (
