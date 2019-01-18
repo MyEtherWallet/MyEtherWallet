@@ -20,7 +20,7 @@
 
 ### Devop
 
-- Swap Revision
+- Swap Revision [#458](https://github.com/MyEtherWallet/MyEtherWallet/pull/458)
 - Address checksum validation based on the network (RSK) [#461](https://github.com/MyEtherWallet/MyEtherWallet/pull/461)
 
 ### Release v5.0.0-beta.1
