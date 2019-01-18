@@ -119,8 +119,12 @@
 .network-title {
   display: flex;
   align-items: center;
+
+  .icon {
+    width: 40px;
+  }
+
   img {
     height: 25px;
-    margin-right: 13px;
   }
 }
