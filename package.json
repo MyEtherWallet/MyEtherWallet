@@ -34,7 +34,7 @@
     "vue": "2.5.21",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
-    "vuex": "3.0.1",
+    "vuex": "3.1.0",
     "websocket": "1.0.28"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
-    "bignumber.js": "8.0.1",
+    "bignumber.js": "8.0.2",
     "bip39": "2.5.0",
     "bootstrap-vue": "2.0.0-rc.11",
     "canvas": "1.6.13",
@@ -86,7 +86,7 @@
     "secp256k1": "3.6.1",
     "sinon": "7.2.2",
     "store": "2.0.12",
-    "stylelint": "9.9.0",
+    "stylelint": "9.10.0",
     "stylelint-config-prettier": "4.0.0",
     "stylelint-config-standard": "18.2.0",
     "trezor-connect": "6.0.3",
@@ -105,7 +105,7 @@
     "web3-providers-http": "1.0.0-beta.37",
     "web3-providers-ws": "1.0.0-beta.37",
     "web3-utils": "1.0.0-beta.37",
-    "webpack": "4.28.1",
+    "webpack": "4.28.4",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
