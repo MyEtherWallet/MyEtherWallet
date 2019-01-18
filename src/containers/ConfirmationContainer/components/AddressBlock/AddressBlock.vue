@@ -22,8 +22,8 @@
 </template>
 
 <script>
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import web3 from 'web3';
-// import BigNumber from 'bignumber.js';
 export default {
   props: {
     address: {
@@ -60,10 +60,9 @@ export default {
       return this.currency.toLowerCase();
     },
     checksumAddress() {
-      if (web3.utils.isAddress(this.tokenTransferTo))
-        return web3.utils.toChecksumAddress(this.tokenTransferTo);
-      if (web3.utils.isAddress(this.address))
-        return web3.utils.toChecksumAddress(this.address);
+      if (isAddress(this.tokenTransferTo))
+        return toChecksumAddress(this.tokenTransferTo);
+      if (isAddress(this.address)) return toChecksumAddress(this.address);
       return '';
     }
   },
