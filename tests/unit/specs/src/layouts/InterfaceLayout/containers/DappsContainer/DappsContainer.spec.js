@@ -63,14 +63,14 @@ describe('DappsContainer.vue', () => {
     );
   });
 
-  xit('[FAILING] should render correct domainSale title', () => {
+  it('should render correct domainSale title', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('h4').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.domainSale.title)
     );
   });
 
-  xit('[FAILING] should render correct domainSale description', () => {
+  it('should render correct domainSale description', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('p').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.domainSale.desc)

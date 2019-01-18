@@ -1,3 +1,5 @@
+### Release v5.0.0-beta.2
+
 ### Bug
 
 - Fix interact contract disabled [#469](https://github.com/MyEtherWallet/MyEtherWallet/pull/469)
@@ -7,8 +9,6 @@
 ### Feature
 
 - Add KeepKey [#350](https://github.com/MyEtherWallet/MyEtherWallet/pull/350)
-
-### Release v5.0.0-beta.1
 
 ### Devop
 
