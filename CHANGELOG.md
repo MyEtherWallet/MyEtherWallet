@@ -1,5 +1,9 @@
 ### Release v5.0.0-beta.2
 
+### Hotfix
+
+- Logout buttons [#484](https://github.com/MyEtherWallet/MyEtherWallet/pull/484)
+
 ### Bug
 
 - Fix interact contract disabled [#469](https://github.com/MyEtherWallet/MyEtherWallet/pull/469)
