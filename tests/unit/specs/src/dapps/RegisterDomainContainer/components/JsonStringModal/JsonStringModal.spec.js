@@ -44,7 +44,7 @@ describe('JsonStringModal.vue', () => {
     ).toEqual(jsonText);
   });
 
-  describe('RegisterDomain.vue Methods', () => {
+  describe('JsonStringModal.vue Methods', () => {
     it('should reset jsonText when submit button clicked', () => {
       const jsonText = 'jsonText';
       wrapper.setData({ jsonText });
