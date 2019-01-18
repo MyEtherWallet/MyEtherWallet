@@ -7,7 +7,13 @@ describe('BackButton.vue', () => {
   let localVue, i18n, wrapper, store;
   const spy = sinon.stub();
   const mockRoute = {
-    go: spy
+    replace: spy,
+    go: spy,
+    history: {
+      current: {
+        path: '/interface/dapps/register-domain'
+      }
+    }
   };
 
   beforeAll(() => {
