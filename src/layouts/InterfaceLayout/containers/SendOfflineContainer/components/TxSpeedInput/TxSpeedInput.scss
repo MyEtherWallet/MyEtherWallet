@@ -2,7 +2,7 @@
 
 .wrap {
   .send-form {
-    padding: 20px 0 0;
+    margin-bottom: 30px;
 
     .title-container {
       align-items: flex-end;
@@ -36,12 +36,20 @@
         .title-helper {
           display: flex;
           margin-bottom: 2px;
+          align-items: center;
+          h4 {
+            margin-right: 7px;
+          }
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
+
+        > * {
+          margin-left: 5px;
+        }
       }
     }
 
@@ -151,8 +159,8 @@
         align-items: center;
         display: flex;
         position: absolute;
-        right: 10px;
-        top: 12px;
+        right: 13px;
+        top: 14px;
 
         p {
           color: $text--link-color;
