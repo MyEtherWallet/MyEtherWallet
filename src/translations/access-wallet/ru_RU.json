@@ -21,7 +21,7 @@
   "unlockMetamaskWallet": "Не удается получить доступ к кошельку! Разблокируйте ваш кошелек с помощью расширения Metamask",
   "metaMaskModalDesc": "Пожалуйста, используйте MyEtherWallet с безопасным подключением (SSL/HTTPS) для соединения.",
   "software": "Программа",
-  "softwareDesc": "Keystore-файл, закрытый ключ, мнемоническая фраза",
+  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
   "notRecommended": "Не рекомендуется",
   "unlock": "Разблокировать кошелек",
   "installMetamask": "Установить MetaMask",

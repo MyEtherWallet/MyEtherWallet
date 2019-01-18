@@ -49,6 +49,10 @@
       :phrase="phrase"
     />
 
+    <wallet-password-modal />
+
+    <enter-pin-number-modal />
+
     <div class="wrap">
       <div class="page-container">
         <div class="title">
@@ -91,6 +95,8 @@ import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
 import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
+import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -115,7 +121,9 @@ export default {
     'private-key-modal': PrivateKeyModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'access-wallet-button': AccessWalletButton
+    'access-wallet-button': AccessWalletButton,
+    'wallet-password-modal': WalletPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal
   },
   data() {
     return {
@@ -139,7 +147,7 @@ export default {
         {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot',
+          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot, Keepkey',
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
           img: !this.online ? hardwareImg : hardwareDisabledImg,
