@@ -14,9 +14,22 @@
 }
 
 .scrollup-container {
+  position: fixed;
+  bottom: 40px;
+  right: 35px;
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s ease;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    bottom: 30px;
+    right: 15px;
+  }
+
+  .user-reminder {
+    margin-bottom: 5px;
+  }
 
   &.active {
     opacity: 1;
