@@ -20,152 +20,157 @@
       <interface-container-title :title="$t('common.swap')" />
     </div>
 
-    <div class="send-form">
-      <div class="form-block amount-to-address">
-        <div class="amount">
+    <div class="form-content-container">
+      <div class="send-form">
+        <div class="form-block amount-to-address">
+          <div class="amount">
+            <div class="title title-and-copy">
+              <h4>{{ $t('common.from') }}</h4>
+              <p
+                v-if="tokenBalances[fromCurrency] > 0"
+                class="all-button prevent-user-select"
+                @click="swapAll"
+              >
+                {{ $t('common.totalBalance') }}
+              </p>
+            </div>
+            <swap-currency-picker
+              :currencies="fromArray"
+              :override-currency="overrideFrom"
+              :from-source="true"
+              page="SwapContainerFrom"
+              @selectedCurrency="setFromCurrency"
+            />
+            <div class="the-form amount-number">
+              <input
+                v-model="fromValue"
+                type="number"
+                name
+                value
+                placeholder="Deposit Amount"
+                @input="amountChanged('from')"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
+              <p v-if="notEnough && !fromBelowMinAllowed">
+                {{ $t('common.dontHaveEnough') }}
+              </p>
+              <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+            </div>
+          </div>
+          <div class="exchange-icon" @click="flipCurrencies">
+            <img :src="images.swap" />
+          </div>
+          <div class="amount">
+            <div class="title">
+              <h4>{{ $t('common.to') }}</h4>
+            </div>
+            <swap-currency-picker
+              :currencies="toArray"
+              :override-currency="overrideTo"
+              :from-source="false"
+              page="SwapContainerTo"
+              @selectedCurrency="setToCurrency"
+            />
+            <div class="the-form amount-number">
+              <input
+                v-model="toValue"
+                type="number"
+                name
+                value
+                placeholder="Received Amount"
+                @input="amountChanged('to')"
+              />
+            </div>
+            <div class="error-message-container">
+              <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
+              <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- form-block amount-to-address -->
+      </div>
+
+      <div class="send-form">
+        <div class="the-form gas-amount">
+          <drop-down-address-selector
+            :currency="toCurrency"
+            :current-address="currentAddress"
+            :copybutton="true"
+            title="To Address"
+            @toAddress="setToAddress"
+            @validAddress="setAddressValid"
+          />
+        </div>
+        <div v-show="!isValidAddress" class="error-message-container">
+          <p>{{ $t('interface.notValidAddr') }}</p>
+        </div>
+      </div>
+
+      <div v-show="showRefundAddress" class="send-form">
+        <div class="title-container">
           <div class="title title-and-copy">
-            <h4>{{ $t('common.from') }}</h4>
-            <p
-              v-if="tokenBalances[fromCurrency] > 0"
-              class="all-button prevent-user-select"
-              @click="swapAll"
-            >
-              {{ $t('common.totalBalance') }}
+            <h4>{{ fromCurrency }} {{ $t('interface.refund') }}</h4>
+            <p class="copy-button prevent-user-select">
+              {{ $t('common.copy') }}
             </p>
           </div>
-          <swap-currency-picker
-            :currencies="fromArray"
-            :override-currency="overrideFrom"
-            :from-source="true"
-            page="SwapContainerFrom"
-            @selectedCurrency="setFromCurrency"
-          />
-          <div class="the-form amount-number">
-            <input
-              v-model="fromValue"
-              type="number"
-              name
-              value
-              placeholder="Deposit Amount"
-              @input="amountChanged('from')"
-            />
-          </div>
-          <div class="error-message-container">
-            <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-            <p v-if="notEnough && !fromBelowMinAllowed">
-              {{ $t('common.dontHaveEnough') }}
-            </p>
-            <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
-          </div>
         </div>
-        <div class="exchange-icon" @click="flipCurrencies">
-          <img :src="images.swap" />
-        </div>
-        <div class="amount">
-          <div class="title">
-            <h4>{{ $t('common.to') }}</h4>
-          </div>
-          <swap-currency-picker
-            :currencies="toArray"
-            :override-currency="overrideTo"
-            :from-source="false"
-            page="SwapContainerTo"
-            @selectedCurrency="setToCurrency"
+        <div class="the-form gas-amount">
+          <drop-down-address-selector
+            :currency="fromCurrency"
+            :current-address="currentAddress"
+            @toAddress="setRefundAddress"
           />
-          <div class="the-form amount-number">
-            <input
-              v-model="toValue"
-              type="number"
-              name
-              value
-              placeholder="Received Amount"
-              @input="amountChanged('to')"
-            />
-          </div>
-          <div class="error-message-container">
-            <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-            <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
-          </div>
         </div>
       </div>
-      <!-- form-block amount-to-address -->
-    </div>
 
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>{{ $t('common.toAddress') }}</h4>
-          <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title title-and-copy">
+            <h4>{{ $t('interface.providers') }}</h4>
+          </div>
         </div>
-      </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector
-          :currency="toCurrency"
-          :current-address="currentAddress"
-          @toAddress="setToAddress"
-          @validAddress="setAddressValid"
+        <providers-radio-selector
+          :loading-provider-error="loadingError"
+          :loading-provider-rates="!haveProviderRates"
+          :provider-data="providerList"
+          :from-value="+fromValue"
+          :to-value="+toValue"
+          :no-providers-pair="noProvidersPair"
+          :loading-data="loadingData"
+          :providers-found="providersFound"
+          :provider-selected="selectedProvider"
+          :switch-currency-order="switchCurrencyOrder"
+          @selectedProvider="setSelectedProvider"
         />
       </div>
-      <div v-show="!isValidAddress" class="error-message-container">
-        <p>{{ $t('interface.notValidAddr') }}</p>
-      </div>
-    </div>
 
-    <div v-show="showRefundAddress" class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>{{ fromCurrency }} {{ $t('interface.refund') }}</h4>
-          <p class="copy-button prevent-user-select">{{ $t('common.copy') }}</p>
+      <div class="submit-button-container">
+        <div
+          v-show="finalizingSwap"
+          class="disabled submit-button large-round-button-green-filled clickable"
+        >
+          <i class="fa fa-spinner fa-spin" />
+          {{ $t('interface.swapButtonLoading') }}
         </div>
-      </div>
-      <div class="the-form gas-amount">
-        <drop-down-address-selector
-          :currency="fromCurrency"
-          :current-address="currentAddress"
-          @toAddress="setRefundAddress"
+        <div
+          v-show="!finalizingSwap"
+          :class="[
+            validSwap ? '' : 'disabled',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="swapConfirmationModalOpen"
+        >
+          {{ $t('common.continue') }}
+          <i class="fa fa-long-arrow-right" aria-hidden="true" />
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
         />
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title title-and-copy">
-          <h4>{{ $t('interface.providers') }}</h4>
-        </div>
-      </div>
-      <providers-radio-selector
-        :loading-provider-error="loadingError"
-        :loading-provider-rates="!haveProviderRates"
-        :provider-data="providerList"
-        :from-value="+fromValue"
-        :to-value="+toValue"
-        :no-providers-pair="noProvidersPair"
-        :loading-data="loadingData"
-        :providers-found="providersFound"
-        :provider-selected="selectedProvider"
-        :switch-currency-order="switchCurrencyOrder"
-        @selectedProvider="setSelectedProvider"
-      />
-    </div>
-
-    <div class="submit-button-container">
-      <div
-        v-show="finalizingSwap"
-        class="disabled submit-button large-round-button-green-filled clickable"
-      >
-        <i class="fa fa-spinner fa-spin" />
-        {{ $t('interface.swapButtonLoading') }}
-      </div>
-      <div
-        v-show="!finalizingSwap"
-        :class="[
-          validSwap ? '' : 'disabled',
-          'submit-button large-round-button-green-filled clickable'
-        ]"
-        @click="swapConfirmationModalOpen"
-      >
-        {{ $t('common.continue') }}
-        <i class="fa fa-long-arrow-right" aria-hidden="true" />
       </div>
     </div>
   </div>
@@ -289,7 +294,9 @@ export default {
       return false;
     },
     fromAboveMaxAllowed() {
-      if (
+      if (this.selectedProvider.provider === this.providerNames.bity) {
+        return this.toAboveMaxAllowed;
+      } else if (
         +this.fromValue > this.selectedProvider.maxValue &&
         this.selectedProvider.maxValue > 0
       )

@@ -55,6 +55,11 @@
   @extend %dropdown-text-container-base;
 
   background-color: $white;
+
+  // Mobile
+  @media all and (max-width: 600px) {
+    border: 1px solid $mew-green;
+  }
 }
 
 .dropdown-search-container {
