@@ -17,7 +17,7 @@
 ### Feature
 
 - Add KeepKey [#350](https://github.com/MyEtherWallet/MyEtherWallet/pull/350)
-- Add MEW Websocket node [#350](https://github.com/MyEtherWallet/MyEtherWallet/pull/483)
+- Add MEW Websocket node [#483](https://github.com/MyEtherWallet/MyEtherWallet/pull/483)
 
 ### Devop
 
