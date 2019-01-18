@@ -246,9 +246,9 @@ export default {
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.symbol === this.network.type.name
+        this.selectedCoinType.symbol === this.network.type.name
           ? 18
-          : this.selectedCurrency.decimals;
+          : this.selectedCoinType.decimals;
       this.toAmt = new BigNumber(e.target.value)
         .decimalPlaces(decimals)
         .toFixed();
