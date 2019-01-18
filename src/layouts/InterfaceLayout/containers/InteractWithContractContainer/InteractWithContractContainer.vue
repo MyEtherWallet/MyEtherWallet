@@ -2,10 +2,12 @@
   <div class="interact-with-contract-container">
     <interface-container-title :title="$t('common.interactWcontract')" />
     <div v-if="!interact" class="interact-div">
-      <div class="send-form">
+      <div class="send-form contract-address-container">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.contractAddr') }}</h4>
+            <h4 class="contract-address-title">
+              {{ $t('interface.contractAddr') }}
+            </h4>
             <div class="select-contract no-border">
               <currency-picker
                 :currency="network.type.contracts"

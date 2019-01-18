@@ -1,28 +1,47 @@
 @import '~@/scss/GlobalVariables';
 
+.form-content-container {
+  // Desktop
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    padding: 40px;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
 %interface-container {
   border-radius: 5px;
   grid-area: main;
   overflow: hidden;
+  background: $background-color-white;
 
   @media all and (max-width: $tablet-width) {
     margin-bottom: 10px;
   }
-
-  > div {
-    background: $background-color-white;
-  }
 }
 
 %send-form-base {
-  padding: 40px 60px 0;
+  padding: 40px 60px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
 
   @media all and (max-width: $mobile-width) {
     padding: 10px;
   }
 
   .title-container {
-    align-items: flex-end;
+    align-items: center;
     display: flex;
     margin-bottom: 5px;
   }

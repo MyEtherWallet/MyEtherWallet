@@ -7,9 +7,11 @@ describe('InterfaceAddress.vue', () => {
   let localVue, i18n, wrapper, store;
   const address = 'InterfaceAddress address';
   const triggerAlert = () => {
+    // eslint-disable-next-line no-console
     console.log('I got clicked');
   };
   const print = () => {
+    // eslint-disable-next-line no-console
     console.log('I got clicked');
   };
   beforeAll(() => {
