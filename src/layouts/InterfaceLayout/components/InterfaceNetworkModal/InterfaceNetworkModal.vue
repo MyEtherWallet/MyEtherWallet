@@ -103,7 +103,13 @@
               </option>
             </select>
             <input
-              v-validate="'required|url:require_protocol'"
+              v-validate="{
+                required: true,
+                url: {
+                  require_protocol: true,
+                  protocols: ['http', 'https', 'ws', 'wss']
+                }
+              }"
               v-model="url"
               class="custom-input-text-1"
               type="text"
@@ -121,7 +127,7 @@
             />
             <input
               v-validate="'required|url:require_protocol'"
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
               class="custom-input-text-1"
               type="text"
@@ -131,8 +137,8 @@
             />
             <input
               v-validate="'required|numeric'"
-              v-show="selectedNetwork.name === 'CUS'"
-              v-model="chainID"
+              v-show="selectedNetworkName === 'CUS'"
+              :value="chainID"
               class="custom-input-text-1"
               type="number"
               name="customChain"
@@ -141,7 +147,7 @@
             />
             <input
               v-validate="'required|url:require_protocol'"
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
               class="custom-input-text-1"
               type="text"
@@ -210,7 +216,7 @@
         <div class="content-block">
           <div class="save-button-container">
             <button
-              v-show="selectedNetwork.name !== 'CUS'"
+              v-show="selectedNetworkName !== 'CUS'"
               :class="[
                 errors.has('nodeName') ||
                 errors.has('nodeUrl') ||
@@ -225,7 +231,7 @@
               {{ $t('interface.save') }}
             </button>
             <button
-              v-show="selectedNetwork.name === 'CUS'"
+              v-show="selectedNetworkName === 'CUS'"
               :class="[
                 errors.has('nodeName') ||
                 errors.has('nodeUrl') ||
@@ -304,13 +310,13 @@ export default {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
     }
-    this.types['custom'] = {
+    this.types['CUS'] = {
       name: 'CUS',
       name_long: 'CUSTOM',
       homePage: '',
       blockExplorerTX: '',
       blockExplorerAddr: '',
-      chainID: '',
+      chainID: networkTypes['ETH'].chainID,
       tokens: [],
       contracts: [],
       ensResolver: ''
@@ -338,7 +344,6 @@ export default {
       this.$refs.networkAdd.classList.toggle('hidden');
     },
     resetCompState() {
-      this.chainID = '';
       this.port = 443;
       this.name = '';
       this.url = '';
