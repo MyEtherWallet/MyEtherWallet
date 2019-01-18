@@ -39,8 +39,13 @@ describe('BackButton.vue', () => {
 
   describe('BackButton.vue Methods', () => {
     it('should go back when button clicked', () => {
+      const stringifiedPath = wrapper.vm.$router.history.current.path.split(
+        '/'
+      );
       wrapper.find('.back-container').trigger('click');
-      expect(spy.called).toBe(true);
+      expect(
+        spy.calledWith(`/${stringifiedPath[1]}/${stringifiedPath[2]}`)
+      ).toBe(true);
     });
   });
 });

@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import nodeList from '@/networks';
@@ -16,9 +17,8 @@ const TimerStub = {
   props: ['dateNumber']
 };
 
-const showModal = jest.fn();
-const hideModal = jest.fn();
-
+const showModal = sinon.stub();
+const hideModal = sinon.stub();
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
@@ -48,7 +48,7 @@ describe('EnsBidContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][2];
+    const network = nodeList['ETH'][3];
     const hostUrl = url.parse(network.url);
 
     const newWeb3 = new Web3(
@@ -56,6 +56,16 @@ describe('EnsBidContainer.vue', () => {
         hostUrl.pathname
       }`
     );
+
+    const getters = {
+      web3: () => {
+        return newWeb3;
+      }
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
 
     store.replaceState({
       web3: newWeb3
@@ -65,7 +75,7 @@ describe('EnsBidContainer.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = mount(EnsBidContainer, {
+    wrapper = shallowMount(EnsBidContainer, {
       localVue,
       i18n,
       store,
@@ -78,11 +88,17 @@ describe('EnsBidContainer.vue', () => {
       mocks: {
         $route: mockRoute,
         $router: {
-          replace: sinon.stub()
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
         }
       },
       stubs: {
         timer: TimerStub,
+        'b-modal': BModalStub,
         'json-string-modal': JsonStringModal
       }
     });
@@ -153,7 +169,12 @@ describe('EnsBidContainer.vue', () => {
       mocks: {
         $route: mockRoute,
         $router: {
-          replace: sinon.stub()
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
         }
       }
     });
@@ -174,7 +195,12 @@ describe('EnsBidContainer.vue', () => {
       mocks: {
         $route: mockRoute,
         $router: {
-          replace: sinon.stub()
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
         }
       }
     });
@@ -200,7 +226,12 @@ describe('EnsBidContainer.vue', () => {
       mocks: {
         $route: mockRoute,
         $router: {
-          replace: sinon.stub()
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
         }
       }
     });
@@ -270,7 +301,7 @@ describe('EnsBidContainer.vue', () => {
     expect(wrapper.find('.erroredMsg').isVisible()).toBe(true);
   });
   describe('EnsBidContainer.vue Methods', () => {
-    xit('[FAILING] should update json when submit button clicked', () => {
+    it('should update json when submit button clicked', () => {
       const raw = {
         bidAmount: 0.222,
         bidMask: 0.111,
@@ -296,24 +327,30 @@ describe('EnsBidContainer.vue', () => {
       expect(wrapper.vm.$data.localStep).toBe(1);
     });
 
-    xit('[FAILING] should trigger openJsonModal method when button clicked', () => {
+    it('should trigger openJsonModal method when button clicked', () => {
       mockRoute.fullPath = 'revealBid';
-      wrapper = mount(EnsBidContainer, {
+      wrapper = shallowMount(EnsBidContainer, {
         localVue,
         i18n,
         store,
         mocks: {
           $route: mockRoute,
           $router: {
-            replace: sinon.stub()
+            replace: sinon.stub(),
+            history: {
+              current: {
+                path: '/interface/dapps/register-domain'
+              }
+            }
           }
         },
         stubs: {
-          'b-modal': BModalStub
+          'b-modal': BModalStub,
+          'json-string-modal': JsonStringModal
         }
       });
       wrapper.find('.json-string').trigger('click');
-      expect(showModal).toHaveBeenCalled();
+      expect(showModal.called).toBe(true);
     });
   });
 });

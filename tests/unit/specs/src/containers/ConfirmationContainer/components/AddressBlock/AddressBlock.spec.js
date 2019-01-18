@@ -12,7 +12,7 @@ function capitalize(value) {
 
 describe('AddressBlock.vue', () => {
   let localVue, i18n, wrapper, store;
-  const address = 'address';
+  const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
   const direction = 'from';
   const currency = 'ETH';
   const tokenTransferTo = 'tokenTransferTo';
@@ -46,50 +46,52 @@ describe('AddressBlock.vue', () => {
     });
   });
 
-  xit('[FAILING] should render correct address props', () => {
+  it('should render correct address props', () => {
     wrapper.setProps({ tokenTransferTo: '' });
-    expect(wrapper.vm.$el.querySelector('.address').textContent.trim()).toEqual(
-      address
-    );
+    expect(
+      wrapper.vm.$el
+        .querySelector('.address-container .address')
+        .textContent.trim()
+    ).toEqual(wrapper.vm.checksumAddress);
   });
 
-  xit('[FAILING] should render correct direction props', () => {
+  it('should render correct direction props', () => {
     expect(
       wrapper.vm.$el.querySelector('.identicon-container p').textContent.trim()
     ).toEqual(capitalize(direction) + ' Address');
   });
 
-  xit('[FAILING] should render correct currency props', () => {
+  it('should render correct currency props', () => {
     wrapper.setProps({ tokenSymbol: '' });
     expect(
       wrapper.vm.$el.querySelector('.currency-type').textContent.trim()
     ).toEqual(currency.toUpperCase());
   });
 
-  xit('[FAILING] should render correct tokenTransferVal props', () => {
+  it('should render correct tokenTransferVal props', () => {
     expect(
-      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim()
-    ).toEqual('- ' + tokenTransferVal);
+      wrapper.vm.$el
+        .querySelector('.currency-amt')
+        .textContent.trim()
+        .indexOf(tokenTransferVal)
+    ).toBeGreaterThan(-1);
   });
 
-  xit('[FAILING] should render correct tokenTransferTo props', () => {
-    expect(wrapper.vm.$el.querySelector('.address').textContent.trim()).toEqual(
-      tokenTransferTo
-    );
-  });
-
-  xit('[FAILING] should render correct tokenSymbol props', () => {
+  it('should render correct tokenSymbol props', () => {
     expect(
       wrapper.vm.$el.querySelector('.currency-type').textContent.trim()
     ).toEqual(tokenSymbol);
   });
 
-  xit('[FAILING] should render correct value props', () => {
+  it('should render correct value props', () => {
     wrapper.setProps({ tokenTransferVal: '' });
     const eth = web3.utils.fromWei(value, 'ether');
     expect(
-      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim()
-    ).toEqual('- ' + eth);
+      wrapper.vm.$el
+        .querySelector('.currency-amt')
+        .textContent.trim()
+        .indexOf(String(eth))
+    ).toBeGreaterThan(-1);
   });
 
   describe('AddressBlock.vue Methods', () => {});

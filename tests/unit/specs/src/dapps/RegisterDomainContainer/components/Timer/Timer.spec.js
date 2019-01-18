@@ -23,7 +23,8 @@ describe('Timer.vue', () => {
   });
 
   it('should render correct dateType', () => {
-    let dateType = 'reveal';
+    let dateType;
+    dateType = 'reveal';
     wrapper.setProps({ dateType });
     expect(
       wrapper
