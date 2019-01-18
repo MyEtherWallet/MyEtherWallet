@@ -5,7 +5,7 @@ import veeValidate from 'vee-validate';
 import VueX from 'vuex';
 
 import ClickOutside from '@/directives/ClickOutside';
-import EnsResolver from '@/directives/EnsResolver';
+import NameServiceResolver from '@/directives/NameServiceResolver';
 import en_US from '@/translations/en_US';
 
 function createLocalVueInstance() {
@@ -14,7 +14,7 @@ function createLocalVueInstance() {
   localVue.use(BootstrapVue);
   localVue.use(VueX);
   localVue.directive('click-outside', ClickOutside);
-  localVue.directive('ens-resolver', EnsResolver);
+  localVue.directive('ens-resolver', NameServiceResolver);
   localVue.use(veeValidate);
   localVue.filter('capitalize', function(value) {
     if (!value) return '';
