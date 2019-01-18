@@ -1,6 +1,33 @@
 <template>
   <div class="price-bar">
-    <div class="wrap" style="overflow: hidden;">
+    <div class="wrap">
+      <div class="page-container">
+        <slider-bar duration="20s" delay="1s">
+          <div class="slider-container">
+            <div
+              v-for="token in tokens"
+              :key="token.symbol"
+              class="token-container"
+            >
+              <p>{{ token.symbol }}</p>
+              <p>${{ token.quotes.USD.price }}</p>
+              <p class="percent-container">
+                <span>{{ token.quotes.USD.percent_change_24h }}%</span>
+                <i
+                  :class="[
+                    token.quotes.USD.percent_change_24h > 0
+                      ? 'fa-arrow-up'
+                      : 'fa-arrow-down',
+                    'fa'
+                  ]"
+                />
+              </p>
+            </div>
+          </div>
+        </slider-bar>
+      </div>
+    </div>
+    <!-- <div class="wrap" style="overflow: hidden;">
       <div class="page-container">
         <div class="slider-container">
           <transition name="first-set">
@@ -51,11 +78,15 @@
           </transition>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
+import SliderBar from '@/components/SliderBar';
 export default {
+  components: {
+    'slider-bar': SliderBar
+  },
   props: {
     tokens: {
       type: Array,
@@ -70,14 +101,6 @@ export default {
       token2: [],
       hidden: true
     };
-  },
-  watch: {
-    tokens(newVal) {
-      if (newVal.length > 0) {
-        this.token1 = newVal.slice(0, 8);
-        this.token2 = newVal.slice(9, 17);
-      }
-    }
   },
   mounted() {
     setInterval(() => {
