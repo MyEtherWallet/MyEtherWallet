@@ -34,7 +34,7 @@
     "vue": "2.5.21",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
-    "vuex": "3.0.1",
+    "vuex": "3.1.0",
     "websocket": "1.0.28"
   },
   "devDependencies": {
@@ -85,7 +85,7 @@
     "secp256k1": "3.6.1",
     "sinon": "7.2.2",
     "store": "2.0.12",
-    "stylelint": "9.9.0",
+    "stylelint": "9.10.0",
     "stylelint-config-prettier": "4.0.0",
     "stylelint-config-standard": "18.2.0",
     "trezor-connect": "6.0.3",

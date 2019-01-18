@@ -7,7 +7,13 @@ describe('BackButton.vue', () => {
   let localVue, i18n, wrapper, store;
   const spy = sinon.stub();
   const mockRoute = {
-    go: spy
+    replace: spy,
+    go: spy,
+    history: {
+      current: {
+        path: '/interface/dapps/register-domain'
+      }
+    }
   };
 
   beforeAll(() => {
@@ -33,8 +39,13 @@ describe('BackButton.vue', () => {
 
   describe('BackButton.vue Methods', () => {
     it('should go back when button clicked', () => {
+      const stringifiedPath = wrapper.vm.$router.history.current.path.split(
+        '/'
+      );
       wrapper.find('.back-container').trigger('click');
-      expect(spy.calledWith(-1)).toBe(true);
+      expect(
+        spy.calledWith(`/${stringifiedPath[1]}/${stringifiedPath[2]}`)
+      ).toBe(true);
     });
   });
 });

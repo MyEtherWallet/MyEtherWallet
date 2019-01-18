@@ -1,4 +1,10 @@
+### Bug
+
+- Dapps back issue [#472](https://github.com/MyEtherWallet/MyEtherWallet/pull/472)
+- Make routes with child set first child active #437 [#473](https://github.com/MyEtherWallet/MyEtherWallet/pull/473)
+
 ### Feature
+
 - Add KeepKey [#350](https://github.com/MyEtherWallet/MyEtherWallet/pull/350)
 
 ### Release v5.0.0-beta.1
