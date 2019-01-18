@@ -86,7 +86,15 @@ describe('EnsBidContainer.vue', () => {
         startAuctionAndBid
       },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
+        }
       },
       stubs: {
         timer: TimerStub,
@@ -159,7 +167,15 @@ describe('EnsBidContainer.vue', () => {
       store,
       propsData: { revealBid },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
+        }
       }
     });
     wrapper
@@ -177,7 +193,15 @@ describe('EnsBidContainer.vue', () => {
       store,
       propsData: { sendBid },
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
+        }
       }
     });
     wrapper
@@ -200,7 +224,15 @@ describe('EnsBidContainer.vue', () => {
       i18n,
       store,
       mocks: {
-        $route: mockRoute
+        $route: mockRoute,
+        $router: {
+          replace: sinon.stub(),
+          history: {
+            current: {
+              path: '/interface/dapps/register-domain'
+            }
+          }
+        }
       }
     });
     const highestBidder = 'highestBidder';
@@ -302,7 +334,15 @@ describe('EnsBidContainer.vue', () => {
         i18n,
         store,
         mocks: {
-          $route: mockRoute
+          $route: mockRoute,
+          $router: {
+            replace: sinon.stub(),
+            history: {
+              current: {
+                path: '/interface/dapps/register-domain'
+              }
+            }
+          }
         },
         stubs: {
           'b-modal': BModalStub,
