@@ -32,7 +32,7 @@
   "sendTxAmount": "액수 ",
   "sendTxToAddr": "수신 주소",
   "fromAddr": "From Address",
-  "yourAddr": "Your Address",
+  "myAddr": "My Address",
   "txSideMenuTitle": "발신 ",
   "txSideMenuContract": "계약 ",
   "txSideMenuMessage": "메시지 ",
@@ -54,8 +54,8 @@
   "refund": "address for refund (if needed) from Changelly",
   "providers": "Providers",
   "buyEth": "Buy ETH with",
-  "noProviderFound": "No provider found for",
-  "loadingProviders": "Please wait while we load provider rates",
+  "noProviderFound": "No providers found :(",
+  "loadingProviders": "Please wait while we load provider rates...",
   "loadRateError": "An Error occured while retrieving the rates for",
   "pleaseTryAgain": "please wait an try agian",
   "articleTo": "to",
@@ -66,5 +66,6 @@
   "sendTxType": "Type",
   "belowMin": "Below minimun swap value of",
   "notValidAddr": "Not a valid address for destination chain",
-  "sentCoins": "I sent my coins"
+  "sentCoins": "I sent my coins",
+  "entireBalance": "Entire Balance"
 }
