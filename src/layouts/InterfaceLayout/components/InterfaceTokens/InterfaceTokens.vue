@@ -41,6 +41,7 @@
               <td>{{ token.name }}</td>
               <td
                 v-if="token.balance === 'Load'"
+                class="load-token"
                 @click="getSpecificTokenBalance(token, index)"
               >
                 {{ token.balance }}
@@ -184,7 +185,7 @@ export default {
       ) {
         const localStorageName = {};
         const token = {
-          addr: address,
+          address: address,
           decimals: decimal,
           email: '',
           name: symbol,
