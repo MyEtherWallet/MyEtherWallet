@@ -6,8 +6,7 @@ import { Tooling } from '@@/helpers';
 
 const RouterLinkStub = {
   name: 'title',
-  template: '<p>aaa</p>',
-  // render: ()=>{},
+  template: '<p></p>',
   props: ['to']
 };
 
@@ -64,6 +63,4 @@ describe('PopOver.vue', () => {
       wrapper.vm.$data.popOverId
     );
   });
-
-  describe('PopOver.vue Methods', () => {});
 });

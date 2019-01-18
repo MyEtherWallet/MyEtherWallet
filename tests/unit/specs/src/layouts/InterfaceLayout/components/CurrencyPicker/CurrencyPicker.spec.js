@@ -1,6 +1,9 @@
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
-
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
 import { Tooling } from '@@/helpers';
 
 const currency = [
@@ -16,6 +19,28 @@ describe('CurrencyPicker.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    const network = nodeList['ETH'][3];
+    const hostUrl = url.parse(network.url);
+
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+        hostUrl.pathname
+      }`
+    );
+
+    const getters = {
+      web3: () => {
+        return newWeb3;
+      },
+      network: () => {
+        return network;
+      }
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
   });
 
   beforeEach(() => {
@@ -44,21 +69,23 @@ describe('CurrencyPicker.vue', () => {
   });
 
   it('should render correct selectedCurrency data', () => {
-    const data = wrapper.vm.$data;
     expect(
       wrapper.vm.$el
         .querySelectorAll('.dropdown-container p')[0]
-        .textContent.replace(/\r?\n|\r/g, '')
-        .replace(/\s+/g, ' ')
-        .trim()
-    ).toEqual(
-      `${data.selectedCurrency.symbol} - ${data.selectedCurrency.name}`
-    );
+        .textContent.trim()
+        .indexOf(wrapper.vm.$data.selectedCurrency.symbol)
+    ).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.dropdown-container p')[0]
+        .textContent.trim()
+        .indexOf(wrapper.vm.$data.selectedCurrency.name)
+    ).toBeGreaterThan(-1);
     expect(
       wrapper.vm.$el
         .querySelectorAll('.dropdown-container p')[1]
         .textContent.trim()
-    ).toEqual(data.selectedCurrency.name);
+    ).toEqual(wrapper.vm.$data.selectedCurrency.name);
   });
 
   it('should show elements according to token props', () => {
@@ -130,10 +157,8 @@ describe('CurrencyPicker.vue', () => {
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
       wrapper.find('.dropdown-container').trigger('click');
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(true);
       wrapper.find('.dropdown-container').trigger('click');
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.vm.$data.open).toBe(false);
     });
 

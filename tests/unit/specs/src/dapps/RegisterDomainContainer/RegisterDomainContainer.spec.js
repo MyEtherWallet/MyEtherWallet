@@ -2,6 +2,10 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import RegisterDomain from '@/dapps/RegisterDomain/RegisterDomain.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
+import Vuex from 'vuex';
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
 
 import { Tooling } from '@@/helpers';
 
@@ -17,7 +21,7 @@ describe('RegisterDomain.vue', () => {
   const deedOwner = 'deedOwner';
   const secretPhrase = 'secretPhrase';
   const auctionDateEnd = Date.now();
-  const highestBidder = 'highestBidder';
+  const highestBid = 'highestBid';
   const contractInitiated = true;
   const step = 10;
 
@@ -28,6 +32,32 @@ describe('RegisterDomain.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
     Vue.config.errorHandler = () => {};
+
+    const network = nodeList['ETH'][3];
+    const hostUrl = url.parse(network.url);
+
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+        hostUrl.pathname
+      }`
+    );
+
+    const getters = {
+      Networks: () => {
+        return nodeList;
+      },
+      network: () => {
+        return network;
+      },
+      web3: () => {
+        return newWeb3;
+      },
+      ens: () => {}
+    };
+
+    store = new Vuex.Store({
+      getters
+    });
   });
 
   beforeEach(() => {
@@ -110,10 +140,10 @@ describe('RegisterDomain.vue', () => {
     );
   });
 
-  xit('[FAILING] should render correct highestBidder data', () => {
-    wrapper.setData({ highestBidder });
+  it('should render correct highestBidder data', () => {
+    wrapper.setData({ highestBid });
     expect(wrapper.find('router-view').attributes('highest-bidder')).toEqual(
-      highestBidder
+      highestBid
     );
   });
 

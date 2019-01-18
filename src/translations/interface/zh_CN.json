@@ -6,7 +6,7 @@
   "httpBasicAccess": "HTTP 基础服访问验证",
   "tokens": "代币",
   "customToken": "自定义代币",
-  "dataGas": "数据与交易费限制",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "发送交易",
   "haveIssues": "有问题？",
   "registerEns": "Register ENS",
