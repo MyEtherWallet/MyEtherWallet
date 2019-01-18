@@ -11,8 +11,8 @@ const RSKAbi = [
   {
     constant: false,
     inputs: [
-        { name: 'node', type: 'bytes32' },
-        { name: 'addrValue', type: 'address' }
+      { name: 'node', type: 'bytes32' },
+      { name: 'addrValue', type: 'address' }
     ],
     name: 'setAddr',
     outputs: [],
