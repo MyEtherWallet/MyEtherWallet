@@ -60,6 +60,7 @@ describe('InteractWithContractContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
         'interface-bottom-text': InterfaceBottomText,
         'interface-container-title': InterfaceContainerTitle,
@@ -78,11 +79,13 @@ describe('InteractWithContractContainer.vue', () => {
   });
 
   it('should render correct address data', () => {
-    const address = 'address';
-    wrapper.setData({ interact: true, address });
-    expect(wrapper.find('.address').text()).toEqual(
-      'Contract Address: ' + address
-    );
+    Vue.nextTick(() => {
+      const address = 'address';
+      wrapper.setData({ interact: true, address });
+      expect(wrapper.find('.address').text()).toEqual(
+        'Contract Address: ' + address
+      );
+    });
   });
 
   it('should render isValidAbi abi', () => {
