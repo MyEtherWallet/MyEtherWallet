@@ -5,7 +5,9 @@
       <p class="balance-amount">7130.000000 ETH</p>
     </div>
     <div class="top-right-content">
-      <img class="more-info-icon" src="@/assets/images/icons/more.svg" />
+      <button>
+        <img class="more-info-icon" src="@/assets/images/icons/more.svg" />
+      </button>
     </div>
   </div>
 </template>

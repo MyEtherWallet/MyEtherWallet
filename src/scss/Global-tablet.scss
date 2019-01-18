@@ -582,11 +582,7 @@
     position: relative;
 
     .arrows {
-      color: $text-color-4;
-      font-size: 18px;
-      position: absolute;
-      right: -2px;
-      top: 5px;
+      display: none;
     }
 
     .language-menu {
@@ -609,7 +605,28 @@
     display: none;
   }
 
+  .mobile-language-menu {
+    .nav-link {
+      padding: 0;
+    }
+    .current-language-flag {
+      display: flex;
+      align-items: center;
+      p {
+        font-size: 17px;
+        line-height: initial;
+        margin-right: 10px;
+      }
+
+      img {
+        height: 15px;
+        border-radius: 4px;
+      }
+    }
+  }
+
   .mobile-language-menu-container {
+    padding: 0;
     .dropdown-menu {
       left: 40px !important;
       height: 200px;

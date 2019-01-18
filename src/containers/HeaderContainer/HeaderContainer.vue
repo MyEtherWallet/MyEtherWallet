@@ -83,9 +83,9 @@
             <i aria-hidden="true" class="fa fa-angle-right"></i>
           </div>
         </li>
-        <!-- Mobile Menu >>> Language ============== -->
         <li>
-          <div class="mobile-language-menu-container">
+          <div class="mobile-menu--item-container">
+            <span>Language</span>
             <b-nav-item-dropdown
               class="mobile-language-menu"
               extra-toggle-classes="nav-link-custom"
@@ -113,11 +113,13 @@
             <div class="arrows">
               <i class="fa fa-angle-right" aria-hidden="true" />
             </div>
+            <i aria-hidden="true" class="fa fa-angle-right margin-left-20"></i>
           </div>
-          <i aria-hidden="true" class="fa fa-angle-right"></i>
         </li>
       </ul>
       <!-- Mobile menu contnet -->
+      <!-- Logout Button -->
+      <div class="mobile-logout-button"><button>Logout</button></div>
     </div>
     <!-- .mobile-menu-content -->
     <!-- Fixed position mobile menu ends here ------------- -->

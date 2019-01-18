@@ -188,42 +188,6 @@
 } // .fixed-header
 
 //********************************************************
-// .mobile-language-menu-container
-//********************************************************
-.mobile-language-menu-container {
-  user-select: none;
-  display: flex !important;
-  align-items: center;
-  padding: 16px 21px 16px 7px !important;
-
-  .arrows {
-    margin-left: auto;
-  }
-}
-
-.mobile-language-menu {
-  .current-language-flag {
-    display: flex;
-    align-items: center;
-
-    &::after {
-      display: none;
-    }
-
-    img {
-      height: 25px;
-      border-radius: 4px;
-    }
-    p {
-      margin-right: 15px;
-      font-size: 20px;
-      display: block;
-      color: #506175;
-    }
-  }
-}
-
-//********************************************************
 // .notification-menu-container
 //********************************************************
 .notification-menu-container {
@@ -251,13 +215,33 @@
   padding: 20px;
   color: $text-base-color;
 
-  >* {
+  .mobile-language-menu {
+    margin-left: auto;
+  }
+
+  > * {
     font-size: 17px;
-    line-height: initial;
+    line-height: 23px;
   }
 
   i {
     margin-left: auto;
+    &.margin-left-20 {
+      margin-left: 20px;
+    }
+  }
+
+  // Mobile
+  @media all and (max-width: $tablet-width) {
+    .arrows {
+      display: none;
+    }
+
+    .language-selector-container {
+      i {
+        margin-left: 20px;
+      }
+    }
   }
 }
 
@@ -278,8 +262,12 @@
   }
 }
 
+.mobile-menu-content::-webkit-scrollbar {
+  display: none; // Safari and Chrome
+}
+
 .mobile-menu-content {
-  padding-top: 48px;
+  padding: 0;
   position: fixed;
   width: 100vw;
   //z-index: $z-menu + 100;
@@ -288,11 +276,11 @@
   left: 0;
   transition: all 0.2s linear;
   height: 0;
-  overflow: hidden;
+  overflow-y: auto;
   background-color: white;
 
   ul {
-    >li {
+    > li {
       margin: 0 10px;
       border-bottom: 1px solid $light-grey-4;
       &:first-child {
@@ -304,6 +292,8 @@
   @media all and (max-width: $tablet-width) {
     &.mobile-menu-open-height-change {
       height: 100vh;
+      padding-top: 82px;
+      padding-bottom: 60px;
     }
   }
 }
@@ -433,9 +423,30 @@
   margin: 0 10px;
   //border: 1px solid grey;
 
-  >* {
+  > * {
     margin-bottom: 10px;
   }
 }
 
+//********************************************************
+// [MOBILE ONLY] .mobile-logout-button
+//********************************************************
+.mobile-logout-button {
+  padding: 10px;
+  width: 100%;
 
+  button {
+    border-radius: 4px;
+    width: 100%;
+    background-color: $white;
+    border: 1px solid $red-2;
+    color: $red-2;
+    line-height: initial;
+    padding: 20px;
+    font-size: 15px;
+    &:active {
+      background-color: $red-2;
+      color: $white;
+    }
+  }
+}

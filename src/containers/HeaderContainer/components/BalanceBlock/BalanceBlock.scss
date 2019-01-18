@@ -4,7 +4,6 @@
   background-color: $light-blue-1;
 }
 
-
 .block-content {
   padding-top: 15px;
   .balance-amount {
@@ -14,4 +13,15 @@
 
 .more-info-icon {
   height: 30px;
+}
+
+.top-right-content {
+  button {
+    background-color: transparent;
+    border-radius: 100%;
+    border: 0;
+    &:active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
 }
