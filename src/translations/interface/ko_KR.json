@@ -6,7 +6,7 @@
   "httpBasicAccess": "HTTP 기본접근 인증 ",
   "tokens": "토큰 ",
   "customToken": "사용자지정 토큰 ",
-  "dataGas": "데이터 및 가스 제한됨 ",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "트랜잭션 발신 ",
   "haveIssues": "문제가 있으신가요?",
   "registerEns": "Register ENS",
