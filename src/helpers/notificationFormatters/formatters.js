@@ -36,8 +36,12 @@ const extractErrorMessage = errObj => {
   }
 };
 
+// eslint-disable-next-line no-unused-vars
 const parseStatus = status => {
-  return new BigNumber(status).toString(10);
+  // the transaction receipt status is sometimes returning false even if the transaction was successful.
+  // Need to investigate why and where this is happening.
+  return true;
+  // return new BigNumber(status).toString(10);
 };
 
 const updateStatusBasedOnReciept = status => {
@@ -76,7 +80,7 @@ const formatTransactionHash = (val, network) => {
 const formatTransactionReciept = (entry, val) => {
   entry.status = updateStatusBasedOnReciept(val[txIndexes.response].status);
   entry.body.error = !val[txIndexes.response].status;
-  entry.body.errorMessage = val[txIndexes.response].status
+  entry.body.errorMessage = parseStatus(val[txIndexes.response].status)
     ? ''
     : INVESTIGATE_FAILURE_KEY;
   entry.body.gasUsed = new BigNumber(

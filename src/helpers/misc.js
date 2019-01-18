@@ -1,5 +1,6 @@
 import normalise from '@/helpers/normalise';
-import web3 from 'web3';
+import nodeList from '@/networks';
+import { isAddress } from './addressUtils';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -42,7 +43,7 @@ const formatDate = date => {
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
 };
 const isValidETHAddress = address => {
-  return web3.utils.isAddress(address);
+  return isAddress(address);
 };
 const isValidENSorEtherAddress = address => {
   return isValidETHAddress(address) || isValidENSAddress(address);
@@ -87,6 +88,23 @@ const validateHexString = str => {
   const re = /^[0-9A-F]+$/g;
   return re.test(str);
 };
+
+const reorderNetworks = () => {
+  const oldObject = Object.assign({}, nodeList);
+  delete oldObject['ETH'];
+  delete oldObject['RIN'];
+  delete oldObject['ROP'];
+  return Object.assign(
+    {},
+    {
+      ETH: nodeList['ETH'],
+      ROP: nodeList['ROP'],
+      RIN: nodeList['RIN'],
+      ...oldObject
+    }
+  );
+};
+
 export default {
   isJson,
   doesExist,
@@ -97,5 +115,6 @@ export default {
   isValidETHAddress,
   sanitizeHex,
   validateHexString,
-  scrollToTop
+  scrollToTop,
+  reorderNetworks
 };

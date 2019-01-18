@@ -80,6 +80,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -110,7 +111,7 @@ export default {
       web3: 'web3'
     }),
     isValidAddress() {
-      return this.web3.utils.isAddress(this.hexAddress);
+      return isAddress(this.hexAddress);
     }
   },
   watch: {

@@ -53,7 +53,7 @@ describe('DropDownAddressSelector.vue', () => {
 
       expect(
         wrapper.vm.$el.querySelector('div div input').value.trim()
-      ).toEqual('0x7545566a4339daf3fad6979208b2042f06e8c881');
+      ).toEqual('0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D');
       expect(wrapper.vm.$data.dropdownOpen).toBe(false);
       expect(wrapper.vm.$data.validAddress).toBe(true);
     });

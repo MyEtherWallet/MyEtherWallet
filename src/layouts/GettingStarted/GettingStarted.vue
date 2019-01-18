@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <div v-if="cwwCurrent != '4'" class="next-button" @click="mouseScrollDown">
+    <div v-if="cwwCurrent !== 5" class="next-button" @click="mouseScrollDown">
       {{ $t('common.next') }}
     </div>
   </div>
