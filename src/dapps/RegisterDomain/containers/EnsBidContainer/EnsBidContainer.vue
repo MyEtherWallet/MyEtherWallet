@@ -293,6 +293,10 @@ export default {
       this.parseRaw(newVal);
     }
   },
+  mounted() {
+    if (this.domainName === '')
+      this.$router.replace('/interface/dapps/register-domain');
+  },
   methods: {
     openJsonModal() {
       this.$refs.jsonStringModal.$refs.jsonString.show();
