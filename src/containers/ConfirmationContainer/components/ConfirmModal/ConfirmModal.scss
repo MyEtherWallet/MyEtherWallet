@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+$confirmation-modal-mobile-width: 500px;
+
 .bootstrap-modal .modal-dialog {
   max-width: 700px;
 }
@@ -119,10 +121,24 @@
           grid-template-columns: 1fr 1fr;
           padding: 16px 0;
 
+          // Mobile
+          @media all and (max-width: $confirmation-modal-mobile-width) {
+            display: block;
+            padding: 16px 0 0 0;
+          }
+
           p:nth-child(even) {
             max-width: 295px;
             text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
             text-overflow: ellipsis;
+
+            // Mobile
+            @media all and (max-width: $confirmation-modal-mobile-width) {
+              max-width: initial;
+              text-align: left;
+            }
           }
         }
       } // .expended-info

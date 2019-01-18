@@ -34,7 +34,7 @@ describe('InterfaceBalanceModal.vue', () => {
     const valuesElements = wrapper.vm.$el.querySelectorAll(
       '.equivalent-values'
     );
-    for (let i = 0; i < valuesElements[0].length; i++) {
+    for (let i = 0; i < valuesElements.length; i++) {
       const valuesElement = valuesElements[i];
       expect(valuesElement.querySelector('p').textContent.trim()).toEqual(
         wrapper.vm.$data.equivalentValues[i].name

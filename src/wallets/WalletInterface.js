@@ -6,6 +6,7 @@ import {
 } from './utils';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 class WalletInterface {
   constructor(key, isPub = false, identifier) {
     this.identifier = identifier;
@@ -58,7 +59,7 @@ class WalletInterface {
   }
 
   getChecksumAddressString() {
-    return ethUtil.toChecksumAddress(this.getAddressString());
+    return toChecksumAddress(this.getAddressString());
   }
   signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== 'function')
