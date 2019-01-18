@@ -72,9 +72,6 @@ export default {
         // If this is real menu link
         // ==============================
         this.toggleSideMenu();
-        Array.prototype.forEach.call(elToHide, function(el) {
-          el.classList.remove('show-child');
-        });
         this.$router.push({ path: tab.routes[0] });
       } else {
         // ==============================
