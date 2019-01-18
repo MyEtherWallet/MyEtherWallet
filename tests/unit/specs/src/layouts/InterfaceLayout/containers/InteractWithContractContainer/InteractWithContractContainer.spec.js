@@ -58,6 +58,7 @@ describe('InteractWithContractContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
         'interface-bottom-text': InterfaceBottomText,
         'interface-container-title': InterfaceContainerTitle,
@@ -68,19 +69,26 @@ describe('InteractWithContractContainer.vue', () => {
   });
 
   it('should render correct address data', () => {
-    const address = 'address';
-    wrapper.setData({ interact: true, address });
-    expect(wrapper.find('.address').text()).toEqual(
-      'Contract Address: ' + address
-    );
+    Vue.nextTick(() => {
+      const address = 'address';
+      wrapper.setData({ interact: true, address });
+      expect(wrapper.find('.address').text()).toEqual(
+        'Contract Address: ' + address
+      );
+    });
   });
 
   it('should render valid abi', () => {
-    const abi = { value: 'val' };
-    wrapper.setData({ abi: JSON.stringify(abi) });
-    expect(wrapper.vm.$data.isValidAbi).toBe(true);
-    wrapper.setData({ abi });
-    expect(wrapper.vm.$data.isValidAbi).toBe(false);
+    Vue.nextTick(() => {
+      // inputElement.setValue(inputText);
+      // inputElement.trigger('change');
+      // expect(wrapper.emitted().nonceUpdate).toBeTruthy();
+      const abi = { value: 'val' };
+      wrapper.setData({ abi: JSON.stringify(abi) });
+      expect(wrapper.vm.$data.isValidAbi).toBe(true);
+      wrapper.setData({ abi });
+      expect(wrapper.vm.$data.isValidAbi).toBe(false);
+    });
   });
 
   xit('[FAILING] should render valid address', () => {
