@@ -10,6 +10,7 @@ import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
 import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
+import ethinfuraws from './eth-infura-ws';
 import ethmew from './eth-mew';
 import ethmewws from './eth-mew-ws';
 import etho from './etho';
@@ -22,6 +23,8 @@ import poa from './poa';
 import rinethscan from './rin-ethscan';
 import rininfura from './rin-infura';
 import ropinfura from './rop-infura';
+import rininfuraws from './rin-infura-ws';
+import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
 import rskpublic from './rsk-public';
 import rsktestpublic from './rsk-test-public';
@@ -40,6 +43,7 @@ export {
   etcgastracker,
   ethethscan,
   ethinfura,
+  ethinfuraws,
   ethmew,
   ethmewws,
   etho,
@@ -52,6 +56,8 @@ export {
   rinethscan,
   rininfura,
   ropinfura,
+  rininfuraws,
+  ropinfuraws,
   ropmew,
   rskpublic,
   rsktestpublic,

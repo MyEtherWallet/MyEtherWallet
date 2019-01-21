@@ -199,6 +199,7 @@ import { isAddress } from '@/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
+
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -299,10 +300,10 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      const isEth = this.selectedCurrency.name === 'Ethereum';
-      this.nonce = await this.web3.eth.getTransactionCount(
-        this.wallet.getAddressString()
-      );
+      const isEth = this.selectedCurrency.symbol === this.network.type.name;
+      const coinbase = await this.web3.eth.getCoinbase();
+      this.nonce = await this.web3.eth.getTransactionCount(coinbase);
+
       this.raw = {
         from: coinbase,
         gas: this.gasLimit,
@@ -317,7 +318,7 @@ export default {
         data: Misc.sanitizeHex(this.data),
         chainId: this.network.type.chainID || 1
       };
-      if (this.address === '') {
+      if (this.hexAddress === '') {
         delete this.raw['to'];
       }
       this.web3.eth.sendTransaction(this.raw);
