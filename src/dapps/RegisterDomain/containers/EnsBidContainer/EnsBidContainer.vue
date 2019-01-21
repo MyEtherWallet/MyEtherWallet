@@ -42,7 +42,7 @@
           :class="[showDetail ? 'done' : '', 'accordion-header']"
           header-tag="header"
         >
-          <div><span> 1 </span> &nbsp; ({{ $t('dapps.bidInfo') }})</div>
+          <div><span> 1 </span> &nbsp; {{ $t('dapps.bidInfo') }}</div>
           <div v-show="showDetail" class="edit" @click="editInputs">
             {{ $t('dapps.edit') }}
           </div>
@@ -76,10 +76,12 @@
             </div>
             <div class="input-container">
               <label for="localSecretPhrase" class="secret-phrase-label">
-                <span> {{ $t('dapps.secretPhrase') }} </span>
-                <span class="random" @click.prevent="generateKeyPhrase">
-                  <i class="fa fa-lg fa-refresh" /> {{ $t('dapps.random') }}
+                <span class="input-title">
+                  {{ $t('dapps.secretPhrase') }}
                 </span>
+                <button class="title-button" @click.prevent="generateKeyPhrase">
+                  <i class="fa fa-lg fa-refresh" /> {{ $t('dapps.random') }}
+                </button>
               </label>
               <input
                 v-model="localSecretPhrase"
@@ -137,9 +139,9 @@
               <div class="json-container">
                 <div class="json-label-container">
                   <span class="json-title">{{ $t('dapps.jsonString') }}</span>
-                  <span class="json-copy" @click="copyString">{{
-                    $t('common.copy')
-                  }}</span>
+                  <button class="title-button" @click="copyString">
+                    {{ $t('common.copy') }}
+                  </button>
                 </div>
                 <textarea ref="json" v-model="jsonText" class="json-content" />
               </div>
@@ -294,6 +296,10 @@ export default {
     raw(newVal) {
       this.parseRaw(newVal);
     }
+  },
+  mounted() {
+    if (this.domainName === '')
+      this.$router.replace('/interface/dapps/register-domain');
   },
   methods: {
     openJsonModal() {

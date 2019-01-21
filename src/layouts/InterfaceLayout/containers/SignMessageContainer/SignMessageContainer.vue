@@ -1,65 +1,73 @@
 <template>
-  <div class="deploy-contract-container">
+  <div class="sign-message-container">
     <interface-container-title :title="$t('common.signMessage')" />
-    <div class="send-form">
-      <p>{{ $t('interface.signMessageDesc') }}</p>
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
-        </div>
-      </div>
-
-      <div class="the-form">
-        <textarea
-          v-validate="'required'"
-          v-model="message"
-          name="message"
-          class="custom-textarea-1"
-        />
-        <span v-show="errors.has('message')">
-          {{ errors.first('message') }}
-        </span>
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>{{ $t('common.signature') }}</h4>
-          <popover :popcontent="$t('popover.signature')" />
-
-          <div class="copy-buttons">
-            <span @click="deleteInputText('signature')">{{
-              $t('common.clear')
-            }}</span>
-            <span @click="copyToClipboard('signature')">{{
-              $t('common.copy')
-            }}</span>
+    <div class="content-container">
+      <div class="send-form">
+        <p>{{ $t('interface.signMessageDesc') }}</p>
+        <div class="title-container">
+          <div class="title">
+            <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
           </div>
         </div>
-      </div>
-      <div class="the-form domain-name">
-        <textarea ref="signature" disabled class="custom-textarea-1" />
-      </div>
-    </div>
 
-    <div class="submit-button-container">
-      <div class="buttons">
-        <div
-          :class="[
-            message.length > 0 ? '' : 'disabled',
-            'submit-button large-round-button-green-filled clickable'
-          ]"
-          @click="signMessage"
-        >
-          {{ $t('common.sign') }}
+        <div class="the-form">
+          <textarea
+            v-validate="'required'"
+            v-model="message"
+            name="message"
+            class="custom-textarea-1"
+          />
+          <span v-show="errors.has('message')">
+            {{ errors.first('message') }}
+          </span>
         </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
-      />
+
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>{{ $t('common.signature') }}</h4>
+            <popover :popcontent="$t('popover.signature')" />
+
+            <div class="copy-buttons">
+              <button
+                class="title-button"
+                @click="deleteInputText('signature')"
+              >
+                {{ $t('common.clear') }}
+              </button>
+              <button
+                class="title-button"
+                @click="copyToClipboard('signature')"
+              >
+                {{ $t('common.copy') }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="the-form domain-name">
+          <textarea ref="signature" disabled class="custom-textarea-1" />
+        </div>
+      </div>
+
+      <div class="submit-button-container">
+        <div class="buttons">
+          <button
+            :class="[
+              message.length > 0 ? '' : 'disabled',
+              'submit-button large-round-button-green-filled clickable'
+            ]"
+            @click="signMessage"
+          >
+            {{ $t('common.sign') }}
+          </button>
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
+        />
+      </div>
     </div>
   </div>
 </template>

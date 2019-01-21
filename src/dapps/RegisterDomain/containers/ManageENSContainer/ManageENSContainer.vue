@@ -5,9 +5,9 @@
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="updateResolver">
-              {{ $t('dapps.updateResolver') }}:
-            </label>
+            <label for="updateResolver"
+              >{{ $t('dapps.updateResolver') }}:</label
+            >
             <input
               v-model="resolverAddress"
               type="text"
@@ -17,7 +17,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
+              :class="!isAddress(resolverAddress) ? 'disabled' : ''"
               type="submit"
               @click.prevent="updateResolver(resolverAddress)"
             >
@@ -29,7 +29,7 @@
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns"> {{ $t('dapps.transferEnsTo') }}: </label>
+            <label for="transferEns">{{ $t('dapps.transferEnsTo') }}:</label>
             <input
               v-model="transferTo"
               type="text"
@@ -39,7 +39,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!web3.utils.isAddress(transferTo) ? 'disabled' : ''"
+              :class="!isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
@@ -58,6 +58,7 @@
 </template>
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { isAddress } from '@/helpers/addressUtils';
 import { mapGetters } from 'vuex';
 export default {
   components: {
@@ -80,7 +81,8 @@ export default {
   data() {
     return {
       resolverAddress: '',
-      transferTo: ''
+      transferTo: '',
+      isAddress: isAddress
     };
   },
   computed: {

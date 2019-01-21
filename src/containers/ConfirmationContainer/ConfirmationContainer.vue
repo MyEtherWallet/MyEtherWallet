@@ -64,7 +64,7 @@ import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
+import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -145,16 +145,20 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
-
       this.isHardwareWallet = this.wallet.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet.signTransaction(tx).then(_response => {
+      const signPromise = this.wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
-
-      this.confirmationModalOpen();
+      if (this.wallet.identifier === KEEPKEY) {
+        signPromise.then(() => {
+          this.confirmationModalOpen();
+        });
+      } else {
+        this.confirmationModalOpen();
+      }
     });
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
@@ -242,10 +246,16 @@ export default {
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
-      this.wallet.signMessage(data).then(_response => {
+      const signPromise = this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
-      this.signConfirmationModalOpen();
+      if (this.wallet.identifier === KEEPKEY) {
+        signPromise.then(() => {
+          this.signConfirmationModalOpen();
+        });
+      } else {
+        this.signConfirmationModalOpen();
+      }
     });
   },
   mounted() {
