@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import tabsConfig from './InterfaceSideMenu.config'
+import tabsConfig from './InterfaceSideMenu.config';
 export default {
   data() {
     return {
