@@ -1,3 +1,7 @@
+### Devop
+
+- Fix weird interaction in side menu [](<>)
+
 ### Release v5.0.0-beta.2
 
 ### Hotfix
