@@ -195,6 +195,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -268,7 +269,9 @@ export default {
       this.amount =
         new BigNumber(e.target.value).decimalPlaces() > decimals
           ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
-          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0) ? e.target.value : 0;
+          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0)
+          ? e.target.value
+          : 0;
       if (this.amount < 0) {
         this.isValidAmount = false;
       } else {
@@ -328,9 +331,10 @@ export default {
         const txFee = new BigNumber(this.gasLimit)
           .times(unit.toWei(this.gasPrice, 'gwei'))
           .toString();
-        this.amount = this.amount > 0 ? this.parsedBalance
-          .minus(unit.fromWei(txFee, 'ether'))
-          .toString() : 0;
+        this.amount =
+          this.amount > 0
+            ? this.parsedBalance.minus(unit.fromWei(txFee, 'ether')).toString()
+            : 0;
       } else {
         this.amount = this.selectedCurrency.balance;
       }
@@ -410,7 +414,7 @@ export default {
       }
     },
     verifyAddr() {
-      return this.web3.utils.isAddress(this.hexAddress);
+      return isAddress(this.hexAddress);
     }
   }
 };

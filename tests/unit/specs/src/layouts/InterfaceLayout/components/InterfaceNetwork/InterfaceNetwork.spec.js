@@ -6,7 +6,7 @@ import Web3 from 'web3';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceNetwork from '@/layouts/InterfaceLayout/components/InterfaceNetwork/InterfaceNetwork.vue';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal/InterfaceNetworkModal.vue';
-import PopOver from '@/components/PopOver/PopOver.vue';
+import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBalance/InterfaceBalance.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
@@ -21,6 +21,7 @@ const BModalStub = {
   }
 };
 
+//xdescribe
 describe('InterfaceNetwork.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -30,8 +31,12 @@ describe('InterfaceNetwork.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][2];
+    const network = nodeList['ETH'][3];
     const hostUrl = url.parse(network.url);
+
+    const wallet = {
+      getChecksumAddressString: jest.fn(() => 0)
+    };
 
     const newWeb3 = new Web3(
       `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
@@ -39,7 +44,20 @@ describe('InterfaceNetwork.vue', () => {
       }`
     );
 
+    const getters = {
+      Networks: () => {
+        return nodeList;
+      },
+      network: () => {
+        return network;
+      },
+      wallet: () => {
+        return wallet;
+      }
+    };
+
     store = new Vuex.Store({
+      getters,
       state: {
         web3: newWeb3,
         Networks: nodeList,
@@ -59,13 +77,13 @@ describe('InterfaceNetwork.vue', () => {
       store,
       stubs: {
         'interface-network-modal': InterfaceNetworkModal,
-        popover: PopOver,
+        'interface-balance': InterfaceBalance,
         'b-modal': BModalStub
       }
     });
   });
 
-  xit('[FAILING] should render correct blockNumber props', () => {
+  xit('[Failing] should render correct blockNumber props', () => {
     const blockNumber = 100;
     wrapper.setProps({ blockNumber });
     expect(wrapper.find('.information-container span').text()).toEqual(
@@ -74,7 +92,7 @@ describe('InterfaceNetwork.vue', () => {
   });
 
   describe('InterfaceNetwork.vue Methods', () => {
-    xit('[FAILING] should render correct networkModalOpen method', () => {
+    xit('[Failing] should render correct networkModalOpen method', () => {
       wrapper.vm.networkModalOpen();
       expect(showModal.called).toBe(true);
     });

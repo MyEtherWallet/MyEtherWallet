@@ -1,20 +1,18 @@
 @import '../InterfaceContainer';
 
+$contract-mobile-width: 600px;
+
 .interact-with-contract-container {
   @extend %interface-container;
 
-  .submit-button {
-    margin: 0 auto;
-    text-align: center;
-    width: 300px;
+  .contract-address-container {
+    margin-bottom: 30px;
   }
 
   .send-form {
-    @extend %send-form-base;
-
     .title-container {
       .title {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
         margin-bottom: 10px;
         padding: 0 8px;
@@ -23,15 +21,21 @@
 
         .select-contract {
           margin-left: auto;
-          min-width: 330px;
+          min-width: 230px;
           position: absolute;
           right: 0;
-          top: -17px;
+          top: -12px;
+          @media all and (max-width: $contract-mobile-width) {
+            min-width: initial;
+            left: 0;
+            top: 35px;
+          }
         }
 
         .copy-buttons {
           color: $text-color-3;
           margin-left: auto;
+          min-width: 100px;
 
           span {
             cursor: pointer;
@@ -62,7 +66,7 @@
       input {
         background-color: $background-color-1;
         border: 0;
-        padding: 13px 15px;
+        padding: 13px 45px 13px 15px;
         width: 100%;
       }
 
@@ -72,24 +76,35 @@
       }
 
       i {
-        bottom: 3px;
+        bottom: 13px;
         position: absolute;
-        right: 3px;
+        right: 16px;
       }
 
       .address-validation-check {
         bottom: 13px;
-        right: 6px;
+        right: 16px;
       }
     }
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    margin-top: 60px;
     text-align: center;
 
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+
     .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
       position: relative;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     img {
@@ -146,6 +161,8 @@
 }
 
 .interact-div {
+  @extend %send-form-base;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -176,5 +193,12 @@
 
   i {
     bottom: 33px !important;
+  }
+}
+
+.contract-address-title {
+  // Mobile
+  @media all and (max-width: $contract-mobile-width) {
+    margin-bottom: 55px;
   }
 }

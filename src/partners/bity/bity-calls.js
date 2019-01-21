@@ -19,7 +19,7 @@ const openOrder = async orderInfo => {
   if (!result.error) {
     return result.result;
   }
-  throw Error('error creating bity order');
+  throw Error(result.error.message);
 };
 
 const getStatus = async orderId => {

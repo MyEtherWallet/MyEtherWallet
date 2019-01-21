@@ -213,7 +213,7 @@
   }
 
   .advanced {
-    padding-top: 10px;
+    padding-top: 30px;
 
     .advanced-content {
       padding: 20px 0;
@@ -222,6 +222,10 @@
 
       .toggle-button-container {
         display: flex;
+        // Mobile
+        @media all and (max-width: $mobile-width) {
+          display: block;
+        }
 
         h4 {
           padding: 0 8px;
@@ -232,6 +236,10 @@
           display: flex;
           margin-left: auto;
           user-select: none;
+
+          @media all and (max-width: $mobile-width) {
+            padding: 0 8px;
+          }
 
           > span {
             margin-right: 15px;
@@ -260,17 +268,19 @@
   }
 
   .submit-button-container {
-    padding: 60px 0;
+    margin-top: 60px;
     text-align: center;
 
-    .bottom-text {
-      margin-top: 20px;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
     }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      //width: 200px;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     p {
@@ -300,8 +310,8 @@
   }
 
   i {
-    right: 12px;
+    right: 13px;
     position: absolute;
-    top: 16px;
+    bottom: 13px;
   }
 }

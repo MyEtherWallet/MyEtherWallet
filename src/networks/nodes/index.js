@@ -11,6 +11,7 @@ import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethmew from './eth-mew';
+import ethmewws from './eth-mew-ws';
 import etho from './etho';
 import go from './go';
 import kovethscan from './kov-ethscan';
@@ -40,6 +41,7 @@ export {
   ethethscan,
   ethinfura,
   ethmew,
+  ethmewws,
   etho,
   go,
   kovethscan,

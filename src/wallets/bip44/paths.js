@@ -107,6 +107,14 @@ const rskTestnet = {
   path: "m/44'/37310'/0'/0",
   label: 'RSK Testnet'
 };
+const keepkeyEthereum = {
+  path: "m/44'/60'",
+  label: 'Ethereum'
+};
+const keepkeyEthereumClassic = {
+  path: "m/44'/61'",
+  label: 'Ethereum Classic'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -134,5 +142,7 @@ export {
   mixBlockchain,
   iolite,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  keepkeyEthereum,
+  keepkeyEthereumClassic
 };
