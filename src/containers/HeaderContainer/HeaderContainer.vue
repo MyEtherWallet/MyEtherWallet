@@ -254,6 +254,11 @@
             <!-- .top-menu -->
             <div class="mobile-menu">
               <div
+                :class="
+                  !isMobileMenuOpen
+                    ? 'mobile-menu-button--open'
+                    : 'mobile-menu-button--close'
+                "
                 class="mobile-menu-button"
                 @click="isMobileMenuOpen = !isMobileMenuOpen"
               >

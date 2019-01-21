@@ -175,24 +175,59 @@
     .mobile-menu {
       display: none;
       margin-left: auto;
+      padding: 9px 0 0 0;
 
       @media all and (max-width: $tablet-width) {
         display: block;
       }
 
-      .mobile-menu-button {
-        padding: 10px 5px;
+      $mobile-menu-button-color: $background-color-black;
 
-        div {
-          background-color: $background-color-black;
+      .mobile-menu-button {
+        width: 30px;
+        height: 30px;
+        position: relative;
+        overflow: hidden;
+
+        > div {
+          position: absolute;
+          background-color: $mobile-menu-button-color;
           border-radius: 2px;
           height: 4px;
-          margin-bottom: 5px;
-          width: 26px;
+          width: 28px;
+          transition: all 0.3s ease;
         }
-
+      }
+      $line-spacing-size: 9px;
+      .mobile-menu-button--open {
+        .bar-1 {
+          top: 0;
+          left: 0;
+        }
+        .bar-2 {
+          top: 1 * $line-spacing-size;
+          left: 0;
+        }
         .bar-3 {
-          margin: 0;
+          top: 2 * $line-spacing-size;
+          left: 0;
+          width: 15px;
+        }
+      }
+      .mobile-menu-button--close {
+        .bar-1 {
+          top: 10px;
+          left: -1px;
+          transform: rotate(45deg);
+        }
+        .bar-2 {
+          top: 10px;
+          left: -1px;
+          transform: rotate(-45deg);
+        }
+        .bar-3 {
+          top: 6 * $line-spacing-size;
+          left: 0;
           width: 15px;
         }
       }
