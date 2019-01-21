@@ -17,13 +17,14 @@
           </p>
           <p v-else>{{ 'Web3 Provider' + '(' + network.type.name + ')' }}</p>
           <p>
-            {{ $t('interface.lastBlock') }}: #
+            {{ $t('interface.lastBlock') }}# :
             <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
             <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
           </p>
         </div>
         <div class="icon-container">
           <b-btn
+            v-if="wallet.identifier !== 'web3_wallet'"
             id="networkModal"
             class="custom-tooltip"
             @click="networkModalOpen"

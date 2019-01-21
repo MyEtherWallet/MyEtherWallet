@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img :src="require(`@/assets/images/currency/${currency}.svg`)" />
+      <img
+        :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
+      />
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -20,8 +22,8 @@
 </template>
 
 <script>
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import web3 from 'web3';
-// import BigNumber from 'bignumber.js';
 export default {
   props: {
     address: {
@@ -54,11 +56,13 @@ export default {
     }
   },
   computed: {
+    lowerCaseCurrency() {
+      return this.currency.toLowerCase();
+    },
     checksumAddress() {
-      if (web3.utils.isAddress(this.tokenTransferTo))
-        return web3.utils.toChecksumAddress(this.tokenTransferTo);
-      if (web3.utils.isAddress(this.address))
-        return web3.utils.toChecksumAddress(this.address);
+      if (isAddress(this.tokenTransferTo))
+        return toChecksumAddress(this.tokenTransferTo);
+      if (isAddress(this.address)) return toChecksumAddress(this.address);
       return '';
     }
   },
