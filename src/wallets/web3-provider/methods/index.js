@@ -15,3 +15,4 @@ export {
   ethGetTransactionCount,
   netVersion,
   ethGetTransactionReceipt
+};
