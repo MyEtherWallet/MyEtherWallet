@@ -174,8 +174,11 @@
     }
 
     > div {
-      //margin: 0 auto;
       margin-bottom: 20px;
+    }
+
+    .version {
+      text-align: center;
     }
 
     .links {
@@ -229,4 +232,10 @@
       }
     }
   }
+
+  .version {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
 } // @media all and (max-width: $mobile-width)

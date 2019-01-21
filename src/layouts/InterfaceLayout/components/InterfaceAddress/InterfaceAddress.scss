@@ -1,5 +1,9 @@
 @import '../InformationBlock';
 
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: transparent;
+}
+
 .address {
   background-color: $transaction-block-address;
 }

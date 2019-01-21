@@ -1,5 +1,9 @@
 @import '../InformationBlock';
 
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: transparent;
+}
+
 .network {
   background-color: $transaction-block-network;
   position: relative;

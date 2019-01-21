@@ -94,6 +94,7 @@
               </a>
             </div>
           </div>
+          <!-- .links -->
           <div class="copyright">
             <p>
               {{ $t('footer.pricingP') }}
@@ -107,6 +108,7 @@
               {{ $t('footer.copyright') }}
             </p>
           </div>
+          <!-- .copyright -->
           <div class="social">
             <a
               v-for="link in links"
@@ -118,9 +120,22 @@
               <i :class="'fa ' + link.class" />
             </a>
           </div>
+          <!-- .social -->
+        </div>
+        <!-- .foot-note -->
+        <div class="version">
+          <a
+            :href="
+              `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
+            "
+            target="_blank"
+            >{{ version }} @ Github</a
+          >
         </div>
       </div>
+      <!-- .page-container -->
     </div>
+    <!-- .wrap -->
   </div>
 </template>
 
@@ -148,10 +163,6 @@ export default {
         {
           title: this.$t('common.terms'),
           to: '/terms-and-conditions'
-        },
-        {
-          title: `v${version}`,
-          href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
         }
       ],
       footerContent: [

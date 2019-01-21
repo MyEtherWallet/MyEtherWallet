@@ -1,5 +1,9 @@
 @import '../InformationBlock';
 
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: transparent;
+}
+
 .balance {
   background-color: $transaction-block-balance;
 

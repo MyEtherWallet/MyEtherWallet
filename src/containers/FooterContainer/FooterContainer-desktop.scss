@@ -142,8 +142,8 @@
       }
     }
   }
-} // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
-.version {
-  padding-left: 50px;
-}
+  .version {
+    text-align: center;
+  }
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
