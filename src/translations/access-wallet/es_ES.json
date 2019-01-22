@@ -12,7 +12,7 @@
   "accessByPrivateKey": "Acceso por clave privada",
   "networkAndAddress": "Dirección de red",
   "pleaseTypeInMnemonicPhrase": "Por favor escriba su frase mnemónica.",
-  "accessDeviceAddresses": "Conéctate con tu dispositivo",
+  "accessDeviceAddresses": "Choose a Hardware",
   "password": "Contraseña",
   "mewConnectDesc": "Usar MEW Connect para acceder a mi billetera",
   "metaMaskDesc": "Utilizar la extensión MetaMask a mi cartera",
