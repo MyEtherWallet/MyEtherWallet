@@ -4,6 +4,10 @@
 
 - Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
 
+### Devop
+
+- Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)
+
 ### Release v5.0.0-beta.2
 
 ### Hotfix
