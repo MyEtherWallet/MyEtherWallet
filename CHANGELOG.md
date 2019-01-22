@@ -7,6 +7,7 @@
 
 ### Bug
 
+- Fix UI, Header, Footer bugs and issues [#496](https://github.com/MyEtherWallet/MyEtherWallet/pull/496)
 - Fix UI Interface -> Message [#475](https://github.com/MyEtherWallet/MyEtherWallet/pull/475)
 - Fix UI Interface -> Contract [#474](https://github.com/MyEtherWallet/MyEtherWallet/pull/474)
 - Fix UI Interface -> Dapps [#462](https://github.com/MyEtherWallet/MyEtherWallet/pull/462)
