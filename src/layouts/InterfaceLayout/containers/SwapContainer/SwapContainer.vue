@@ -367,7 +367,7 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        // !this.notEnough &&
+        !this.notEnough &&
         (this.toAddress !== '' || canExit) &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
