@@ -222,7 +222,7 @@
                   v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
+                    'get-free-wallet access-wallet nopadding'
                   ]"
                   to="/access-my-wallet"
                 >

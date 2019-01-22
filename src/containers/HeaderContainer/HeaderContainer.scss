@@ -158,9 +158,10 @@
           margin-left: 26px;
           padding: 13px 0;
 
-          &.get-free-wallet {
-            margin-left: 0;
+          &.access-wallet {
+            margin-left: 10px;
           }
+
           &.nopadding {
             padding: 0;
           }
@@ -181,7 +182,7 @@
         display: block;
       }
 
-      $mobile-menu-button-color: $background-color-black;
+      $mobile-menu-button-color: $dark-blue-6;
 
       .mobile-menu-button {
         width: 30px;
@@ -382,6 +383,10 @@
   opacity: 0;
   overflow: hidden;
 
+  .nav-link {
+    padding: 0;
+  }
+
   .access-button {
     @extend %button-templates;
 
@@ -413,31 +418,26 @@
     0% {
       height: 0;
       opacity: 0;
-      margin-left: 0;
     }
 
     50% {
       display: inline-block;
-      height: 54px;
       opacity: 0.5;
     }
 
     100% {
       display: inline-block;
-      height: 54px;
       opacity: 1;
     }
   }
 
   @keyframes fadeOutFromBlock {
     0% {
-      height: 54px;
       opacity: 1;
     }
 
     50% {
       display: none;
-      height: 54px;
       opacity: 0.5;
     }
 
@@ -445,7 +445,6 @@
       display: none;
       height: 0;
       opacity: 0;
-      margin-left: 0;
     }
   }
 } // .get-free-wallet
