@@ -160,29 +160,42 @@ export default class BitySwap {
   }
 
   minCheck(fromCurrency, fromValue, toCurrency, toValue) {
-    return toValue > this.minValue || fromValue > this.minValue;
+    return (
+      this.validityCheck(fromCurrency, fromValue, toCurrency, toValue) !==
+      'lessThanMin'
+    );
   }
 
   maxCheck(fromCurrency, fromValue, toCurrency, toValue) {
-    const overMax =
-      (toCurrency === 'BTC' && toValue > this.maxValue) ||
-      (fromCurrency === 'BTC' && fromValue > this.maxValue);
-    const overMaxETH =
-      (toCurrency === 'ETH' && toValue > this.maxValue) ||
-      (fromCurrency === 'ETH' &&
-        fromValue * this._getRate(toCurrency, fromCurrency) > this.maxValue);
-    const overMaxREP =
-      (toCurrency === 'REP' && toValue > this.maxValue) ||
-      (fromCurrency === 'REP' &&
-        fromValue * this._getRate(fromCurrency, toCurrency) > this.maxValue);
-    if (toCurrency === 'BTC' && overMax) {
-      return false;
-    } else if (toCurrency === 'ETH' && overMaxETH) {
-      return false;
-    } else if (toCurrency === 'REP' && overMaxREP) {
-      return false;
-    }
-    return true;
+    return (
+      this.validityCheck(fromCurrency, fromValue, toCurrency, toValue) !==
+      'greaterThanMax'
+    );
+  }
+
+  validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
+    if (toValue < this.minValue || fromValue < this.minValue)
+      return 'lessThanMin';
+    else if (
+      (toCurrency == 'BTC' && toValue > this.maxValue) ||
+      (fromCurrency == 'BTC' && fromValue > this.maxValue)
+    )
+      return 'greaterThanMax';
+    else if (
+      (toCurrency == 'ETH' &&
+        toValue * this._getRate('ETH', 'BTC') > this.maxValue) ||
+      (fromCurrency == 'ETH' &&
+        fromValue * this._getRate('ETH', 'BTC') > this.maxValue)
+    )
+      return 'greaterThanMax';
+    else if (
+      (toCurrency == 'REP' &&
+        toValue * this._getRate('REP', 'BTC') > this.maxValue) ||
+      (fromCurrency == 'REP' &&
+        fromValue * this._getRate('REP', 'BTC') > this.maxValue)
+    )
+      return 'greaterThanMax';
+    return 'noErrors';
   }
 
   setNetwork(network) {
@@ -285,17 +298,20 @@ export default class BitySwap {
     return swapDetails;
   }
 
-  async buildOrder(
-    isFrom,
-    { fromCurrency, toCurrency, fromValue, toValue, toAddress }
-  ) {
+  async buildOrder({
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue,
+    toAddress
+  }) {
     if (
       this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
       this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
     ) {
       const order = {
         amount: fromValue,
-        mode: isFrom ? 0 : 1, // check how I should handle this now
+        mode: 0,
         pair: fromCurrency + toCurrency,
         destAddress: toAddress
       };

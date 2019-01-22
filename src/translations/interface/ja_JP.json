@@ -6,7 +6,7 @@
   "httpBasicAccess": "HTTPベーシックアクセス認証",
   "tokens": "トークン",
   "customToken": "カスタムトークン",
-  "dataGas": "データとGAS制限",
+  "dataGas": "Data & Gas Limit",
   "sendTx": "トランザクションを送る",
   "haveIssues": "問題がありますか？",
   "registerEns": "Register ENS",
@@ -32,7 +32,7 @@
   "sendTxAmount": "量",
   "sendTxToAddr": "宛先アドレス",
   "fromAddr": "From Address",
-  "yourAddr": "Your Address",
+  "myAddr": "My Address",
   "txSideMenuTitle": "送る",
   "txSideMenuContract": "契約",
   "txSideMenuMessage": "メッセージ",
@@ -54,8 +54,8 @@
   "refund": "changelly からの払い戻し (必要な) 場合のアドレス",
   "providers": "プロバイダー一覧",
   "buyEth": "スイス連邦工科大学とを購入します。",
-  "noProviderFound": "プロバイダーが見つかりません",
-  "loadingProviders": "我々 はプロバイダー料金を読み込むまでお待ちください。",
+  "noProviderFound": "No providers found :(",
+  "loadingProviders": "Please wait while we load provider rates...",
   "loadRateError": "料金を取得中にエラーが発生しました。",
   "pleaseTryAgain": "もう一度しようとをお待ちください。",
   "articleTo": "宛先",
@@ -66,5 +66,6 @@
   "sendTxType": "タイプ",
   "belowMin": "最小のスワップ値以下",
   "notValidAddr": "先チェーンの有効なアドレスではなく",
-  "sentCoins": "I sent my coins"
+  "sentCoins": "I sent my coins",
+  "entireBalance": "Entire Balance"
 }

@@ -26,7 +26,6 @@ describe('TeamLayout.vue', () => {
     const memberElements = wrapper.vm.$el.getElementsByClassName('member');
     for (let i = 0; i < memberElements.length; i++) {
       const memberElement = memberElements[i];
-
       const member = wrapper.vm.$data.members[i];
       expect(member.name).toEqual(
         memberElement.querySelector('h4').textContent.trim()
@@ -34,7 +33,6 @@ describe('TeamLayout.vue', () => {
       expect(member.position).toEqual(
         memberElement.querySelector('h6').textContent.trim()
       );
-      // expect(member.img).toEqual(memberElement.querySelector('img').getAttribute('src'))
     }
   });
 });

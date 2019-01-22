@@ -32,7 +32,7 @@
   "sendTxAmount": "Amount",
   "sendTxToAddr": "To Address",
   "fromAddr": "From Address",
-  "yourAddr": "Your Address",
+  "myAddr":"My Address",
   "txSideMenuTitle": "Send",
   "txSideMenuContract": "Contract",
   "txSideMenuMessage": "Message",
@@ -54,9 +54,9 @@
   "refund": "address for refund (if needed) from Changelly",
   "providers": "Providers",
   "buyEth": "Buy ETH with",
-  "noProviderFound": "No provider found for",
-  "loadingProviders": "Please wait while we load provider rates",
-  "loadRateError": "An Error occured while retrieving the rates for",
+  "noProviderFound":"No providers found :(",
+  "loadingProviders": "Please wait while we load provider rates...",
+  "loadRateError":"An Error occured while retrieving the rates for",
   "pleaseTryAgain": "please wait an try agian",
   "articleTo": "to",
   "send": "Send",
@@ -64,7 +64,8 @@
   "search": "Search",
   "timeRemaining": "Time Remaining",
   "sendTxType": "Type",
-  "belowMin": "Below minimun swap value of",
-  "notValidAddr": "Not a valid address for destination chain",
-  "sentCoins": "I sent my coins"
+  "belowMin":"Below minimun swap value of",
+  "notValidAddr":"Not a valid address for destination chain",
+  "sentCoins": "I sent my coins",
+  "entireBalance": "Entire Balance"
 }

@@ -6,12 +6,13 @@ $mobile-collepse-width: 700px;
   border-radius: 0 0 5px 5px;
 }
 
+input,
+textarea {
+  background-color: $background-color-1;
+  border-radius: 4px;
+}
+
 .wrap {
-  //margin-bottom: 10px;
-  padding: 40px 60px;
-  @media all and (max-width: $mobile-collepse-width) {
-    padding: 30px 10px;
-  }
   .send-form {
     margin-bottom: 30px;
 
@@ -29,7 +30,11 @@ $mobile-collepse-width: 700px;
 
         .title-helper {
           display: flex;
+          align-items: center;
           margin-bottom: 2px;
+          h4 {
+            margin-right: 7px;
+          }
         }
       }
 
@@ -39,20 +44,7 @@ $mobile-collepse-width: 700px;
       }
     }
 
-    .form-block {
-      border-radius: 5px;
-
-      .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
-      }
-    }
-
     .amount-to-address {
-      display: grid;
-      grid-column-gap: 5px;
-      grid-template-columns: 2fr 3fr;
-
       @media all and (max-width: $mobile-collepse-width) {
         display: block;
       }
@@ -62,10 +54,19 @@ $mobile-collepse-width: 700px;
         padding: 0 8px;
       }
 
-      .amount {
-        @media all and (max-width: $mobile-collepse-width) {
-          margin-bottom: 30px;
+      .type-amount {
+        margin-bottom: 30px;
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        grid-gap: 5px;
+
+        @media all and (max-width: 700px) {
+          display: block;
+          .type {
+            margin-bottom: 30px;
+          }
         }
+
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -83,7 +84,6 @@ $mobile-collepse-width: 700px;
           position: relative;
 
           input {
-            background-color: transparent;
             border: 0;
             padding: 13px 15px;
             width: 100%;
@@ -127,8 +127,7 @@ $mobile-collepse-width: 700px;
           }
 
           textarea {
-            background-color: transparent;
-            border: 0;
+            border: 1px solid $background-color-1;
             height: 100%;
             padding: 13px 15px;
             resize: none;
@@ -152,8 +151,8 @@ $mobile-collepse-width: 700px;
         align-items: center;
         display: flex;
         position: absolute;
-        right: 10px;
-        top: 12px;
+        right: 13px;
+        top: 14px;
 
         p {
           color: $text--link-color;
@@ -194,13 +193,21 @@ $mobile-collepse-width: 700px;
   } // .advanced
 
   .submit-button-container {
-    padding: 60px 0 0 0;
+    margin-top: 60px;
     text-align: center;
+
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      //width: 300px;
+
+      // Mobile
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     p {
@@ -217,4 +224,10 @@ $mobile-collepse-width: 700px;
   .tx-speed-input {
     display: none;
   }
+}
+
+.blockie-image-icon {
+  position: absolute;
+  left: 108px;
+  top: -5px;
 }

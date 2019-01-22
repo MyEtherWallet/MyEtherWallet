@@ -23,6 +23,7 @@ import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 
 export default {
+  name: 'DappsContainer',
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'dapp-buttons': DappButtons

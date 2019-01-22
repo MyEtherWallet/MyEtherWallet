@@ -11,8 +11,8 @@
         <h2>Are you sure to logout your wallet?</h2>
 
         <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
+          <button class="no" @click="cancel">No</button>
+          <button class="yes" @click="logout">Yes</button>
         </div>
       </div>
     </b-modal>
@@ -23,24 +23,7 @@
 export default {
   name: 'Logout',
   data() {
-    return {
-      buttonNo: {
-        title: 'No',
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonYes: {
-        title: 'Yes',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      }
-    };
+    return {};
   },
   methods: {
     logout() {

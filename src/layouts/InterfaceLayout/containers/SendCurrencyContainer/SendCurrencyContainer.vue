@@ -195,6 +195,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -414,7 +415,7 @@ export default {
       }
     },
     verifyAddr() {
-      return this.web3.utils.isAddress(this.hexAddress);
+      return isAddress(this.hexAddress);
     }
   }
 };
