@@ -66,7 +66,7 @@ export default {
     },
     mnemonicToArr() {
       return Object.keys(this.mnemonic).map(item => {
-        return item;
+        return this.mnemonic[item];
       });
     }
   }

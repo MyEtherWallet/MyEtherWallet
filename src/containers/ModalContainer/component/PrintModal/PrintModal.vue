@@ -12,7 +12,7 @@
         <address-print-template v-if="printType === 'address'" />
         <mnemonic-print-template
           v-if="printType === 'mnemonic'"
-          :mnemonic="mnemonic"
+          :mnemonic="printData"
         />
         <div v-if="printType === 'ens'"></div>
       </div>
@@ -39,10 +39,10 @@ export default {
       type: String,
       default: ''
     },
-    mnemonic: {
-      type: Array,
+    printData: {
+      type: Object,
       default: () => {
-        return [];
+        return {};
       }
     }
   },

@@ -5,7 +5,7 @@
     <print-modal
       ref="printModal"
       :print-type="printType"
-      :printable-data="printData"
+      :print-data="printData"
     />
   </div>
 </template>
@@ -38,7 +38,6 @@ export default {
       this.$refs.errorModal.$refs.errorModal.show();
     });
     this.$eventHub.$on('printModal', (type, printData) => {
-      console.log(printData)
       this.printData = printData ? printData : {};
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
