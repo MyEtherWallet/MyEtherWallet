@@ -66,6 +66,7 @@
   "sendTxType": "Type",
   "belowMin":"Below minimun swap value of",
   "notValidAddr":"Not a valid address for destination chain",
+  "notValidAddrSrc":"Not a valid address for source chain",
   "sentCoins": "I sent my coins",
   "entireBalance": "Entire Balance"
 }
