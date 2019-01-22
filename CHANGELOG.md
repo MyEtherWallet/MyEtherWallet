@@ -2,6 +2,10 @@
 
 - Print ENS bid details [#360](https://github.com/MyEtherWallet/MyEtherWallet/pull/360)
 
+### Devop
+
+- Fix weird interaction in side menu [#494](https://github.com/MyEtherWallet/MyEtherWallet/pull/494)
+
 ### Release v5.0.0-beta.2
 
 ### Hotfix
