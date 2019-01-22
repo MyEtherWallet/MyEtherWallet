@@ -20,12 +20,12 @@
                   <standard-input
                     :options="inputCountryCode"
                     class="country-code"
-                    @changedValue="setCountryCode"
+                    @changedValue="countryCode = $event"
                   />
                   <standard-input
                     :options="inputPhoneNumber"
                     class="phone-number"
-                    @changedValue="setPhone"
+                    @changedValue="phoneNumber = $event"
                   />
                 </div>
               </li>
@@ -46,7 +46,7 @@
               <li>
                 <standard-input
                   :options="inputVerification"
-                  @changedValue="setTan"
+                  @changedValue="tan = $event"
                 />
               </li>
             </ul>
@@ -73,13 +73,13 @@
               <li>
                 <standard-input
                   :options="inputBicSwift"
-                  @changedValue="setBic"
+                  @changedValue="orderDetails.bic_swift = $event"
                 />
               </li>
               <li>
                 <standard-input
                   :options="inputAbaNumber"
-                  @changedValue="setAba"
+                  @changedValue="orderDetails.aba_number = $event"
                 />
               </li>
             </ul>
@@ -94,42 +94,47 @@
           >
             <ul>
               <li>
-                <standard-input :options="inputName" @changedValue="setName" />
+                <standard-input
+                  :options="inputName"
+                  @changedValue="orderDetails.owner.name = $event"
+                />
               </li>
               <li>
                 <div class="grid-billing-address">
                   <standard-input
                     :options="inputAddress1"
                     class="address1"
-                    @changedValue="setAddress1"
+                    @changedValue="orderDetails.owner.address = $event"
                   />
                   <standard-input
                     :options="inputAddress2"
                     class="address2"
-                    @changedValue="setAddress2"
+                    @changedValue="
+                      orderDetails.owner.address_complement = $event
+                    "
                   />
                   <standard-input
                     :options="inputCity"
                     class="city"
-                    @changedValue="setCity"
+                    @changedValue="orderDetails.owner.city = $event"
                   />
                   <!--<standard-dropdown class="state" />-->
                   <standard-input
                     :options="inputState"
                     class="state"
-                    @changedValue="setState"
+                    @changedValue="orderDetails.owner.state = $event"
                   />
                   <standard-input
                     :options="inputZip"
                     class="zip"
-                    @changedValue="setZip"
+                    @changedValue="orderDetails.owner.zip = $event"
                   />
                   <standard-dropdown
                     :options="countryOptions"
                     :option-display-key="'1'"
                     :option-value-key="'0'"
                     class="country"
-                    @selection="setCountry"
+                    @selection="orderDetails.owner.country = $event"
                     @opened="roomForDropDown"
                   />
                   <div v-if="addSpace" class="extraSpace"></div>
@@ -243,38 +248,38 @@ export default {
       step2: false,
       step3: false,
       inputCountryCode: {
-        title: 'Country Code',
+        title: this.$t('interface.countryCode'),
         placeHolder: '000'
       },
       inputPhoneNumber: {
-        title: 'Phone Number',
+        title: this.$t('interface.phoneNumber'),
         placeHolder: '000-000-0000'
       },
       inputVerification: {
-        title: 'Verification Code',
+        title: this.$t('interface.verificationCode'),
         placeHolder: '000000'
       },
       inputBicSwift: {
-        title: 'BIC_Swift',
-        popover: 'This is international bank routing number.',
+        title: this.$t('interface.bicSwiftCode'),
+        popover: this.$t('interface.bicSwiftPopOver'),
         value: ''
       },
       inputAbaNumber: {
-        title: 'ABA Number',
-        popover: 'This is ABA number.',
+        title: this.$t('interface.abaNumber'),
+        popover: this.$t('interface.abaPopOver'),
         value: ''
       },
       inputIbanNumber: {
-        title: 'IBAN Number',
-        popover: 'This is international bank account number (IBAN).',
+        title: this.$t('interface.ibanNumber'),
+        popover: this.$t('interface.ibanPopOver'),
         value: ''
       },
       inputName: {
-        title: 'Name on the bank account',
+        title: this.$t('interface.ownerName'),
         value: ''
       },
       inputAddress1: {
-        title: 'Billing Address',
+        title: this.$t('interface.billingAddress'),
         placeHolder: 'Address 1',
         value: ''
       },
@@ -283,38 +288,38 @@ export default {
         value: ''
       },
       inputCity: {
-        placeHolder: 'City',
+        placeHolder: this.$t('interface.city'),
         value: ''
       },
       inputState: {
-        placeHolder: 'State',
+        placeHolder: this.$t('interface.state'),
         value: ''
       },
       inputZip: {
-        placeHolder: 'Zip',
+        placeHolder: this.$t('interface.zipCode'),
         value: ''
       },
       inputCountry: {
-        placeHolder: 'Country',
+        placeHolder: this.$t('interface.country'),
         value: ''
       },
       button1: {
-        title: 'Send',
+        title: this.$t('interface.send'),
         buttonStyle: 'green',
         value: ''
       },
       verifyButton: {
-        title: 'Verify',
+        title: this.$t('interface.verify'),
         buttonStyle: 'green',
         value: ''
       },
       button2: {
-        title: 'Continue',
+        title: this.$t('interface.continue'),
         buttonStyle: 'green',
         value: ''
       },
       button3: {
-        title: 'Submit',
+        title: this.$t('interface.submit'),
         buttonStyle: 'green',
         value: ''
       },
@@ -373,45 +378,6 @@ export default {
     updateStage(stage) {
       this.status[stage] = true;
     },
-    setCountryCode(val) {
-      this.countryCode = val;
-    },
-    setPhone(val) {
-      this.phoneNumber = val;
-    },
-    setTan(val) {
-      this.tan = val;
-    },
-    setIban(val) {
-      this.orderDetails.iban = val;
-    },
-    setBic(val) {
-      this.orderDetails.bic_swift = val;
-    },
-    setAba(val) {
-      this.orderDetails.aba_number = val;
-    },
-    setName(val) {
-      this.orderDetails.owner.name = val;
-    },
-    setAddress1(val) {
-      this.orderDetails.owner.address = val;
-    },
-    setAddress2(val) {
-      this.orderDetails.owner.address_complement = val;
-    },
-    setCity(val) {
-      this.orderDetails.owner.city = val;
-    },
-    setZip(val) {
-      this.orderDetails.owner.zip = val;
-    },
-    setState(val) {
-      this.orderDetails.owner.state = val;
-    },
-    setCountry(val) {
-      this.orderDetails.owner.country = val;
-    },
     openMenu(val) {
       return val;
       // console.log(val);
@@ -421,8 +387,8 @@ export default {
       this.$emit('backButtonClick');
     },
     async registerPhone() {
-      if (this.phoneNumber === '') throw Error('Phone Number Required');
-      if (this.countryCode === '') throw Error('Country Code Required');
+      if (this.phoneNumber === '') throw Error(this.$t('interface.phoneRequired'));
+      if (this.countryCode === '') throw Error(this.$t('interface.countryCodeRequired'));
       const initData = {
         phoneNumber: this.countryCode + this.phoneNumber,
         ...this.swapDetails
