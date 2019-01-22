@@ -43,7 +43,7 @@
           <textarea ref="abi" v-model="abi" class="custom-textarea-1" />
           <i
             :class="[
-              validAbi && validAbi !== '' ? '' : 'not-good',
+              isValidAbi && isValidAbi !== '' ? '' : 'not-good',
               'fa fa-check-circle good-button'
             ]"
             aria-hidden="true"
@@ -153,9 +153,9 @@
         <div class="buttons">
           <div
             :class="[
-              abi === '' || bytecode === '' || validByte || !validAbi
-                ? 'disabled'
-                : '',
+              abi === '' && bytecode === '' ? 'disabled' : '',
+              abi !== '' && isValidAbi ? '' : 'disabled',
+              bytecode !== '' && isValidByte ? '' : 'disabled',
               'submit-button large-round-button-green-filled clickable'
             ]"
             @click="confirmationModalOpen"
@@ -201,8 +201,8 @@ export default {
       gasLimit: 21000,
       data: '',
       nonce: 0,
-      validAbi: true,
-      validByte: true
+      isValidAbi: false,
+      isValidByte: false
     };
   },
   computed: {
@@ -216,8 +216,8 @@ export default {
   watch: {
     abi(newVal) {
       this.constructors = [];
-      this.validAbi = Misc.isJson(newVal);
-      if (newVal !== '' && this.validAbi) {
+      this.isValidAbi = Misc.isJson(newVal);
+      if (newVal !== '' && this.isValidAbi) {
         JSON.parse(newVal).forEach(item => {
           if (item.type === 'constructor') {
             this.constructors.push(item);
@@ -227,11 +227,11 @@ export default {
       this.estimateGas();
     },
     bytecode(newVal) {
-      if (Misc.validateHexString(newVal)) {
-        this.validByte = true;
+      if (Misc.validateHexString(newVal) && newVal !== '') {
+        this.isValidByte = true;
         this.estimateGas();
       } else {
-        this.validByte = false;
+        this.isValidByte = false;
       }
     },
     gasAmount() {
@@ -244,9 +244,9 @@ export default {
         ? `myContracts${store.get('localContracts').length}`
         : 'myContracts';
     this.constructors = [];
-    this.validAbi = Misc.isJson(this.abi);
-    if (this.abi !== '' && this.validAbi) {
-      JSON.parse(this.abi && this.validAbi).forEach(item => {
+    this.isValidAbi = Misc.isJson(this.abi);
+    if (this.abi !== '' && this.isValidAbi) {
+      JSON.parse(this.abi && this.isValidAbi).forEach(item => {
         if (item.type === 'constructor') {
           this.constructors.push(item);
         }
@@ -261,8 +261,9 @@ export default {
         const web3 = this.web3;
         const contract = new web3.eth.Contract(JSON.parse(this.abi));
         const deployArgs = Object.keys(this.inputs).map(key => {
-          return this.inputs[key];
+          return web3.utils.soliditySha3(this.inputs[key]);
         });
+
         this.data = contract
           .deploy({ data: this.bytecode, arguments: deployArgs })
           .encodeABI();
