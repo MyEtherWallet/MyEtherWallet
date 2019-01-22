@@ -171,7 +171,6 @@ import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import { providerNames } from '@/partners';
 
 export default {
   props: {
@@ -264,21 +263,12 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return [
-            `${details.minValue} ${details.fromCurrency} (From Min.)`,
-            `${details.minValue} ${details.toCurrency} (From Min.)`
-          ];
-        }
         return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return `${details.maxValue} ${details.fromCurrency} (Max.)`;
-        }
         return `${details.maxValue} ${details.fromCurrency} (Max.)`;
       }
       return '';

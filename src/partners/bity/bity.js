@@ -148,7 +148,7 @@ export default class BitySwap {
       provider: this.name,
       rate: rate,
       minValue: this.minValue,
-      maxValue: this.maxValue
+      maxValue: this.getBtcEquivalent(fromCurrency)
     };
   }
 
@@ -171,6 +171,14 @@ export default class BitySwap {
       this.validityCheck(fromCurrency, fromValue, toCurrency, toValue) !==
       'greaterThanMax'
     );
+  }
+
+  getBtcEquivalent(currency) {
+    if (currency === 'BTC') {
+      return this.maxValue;
+    }
+    const btcRate = this._getRate(currency, 'BTC');
+    return this.maxValue / btcRate;
   }
 
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
