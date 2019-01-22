@@ -10,7 +10,7 @@
         <div v-show="isTwentyFour" class="full-mnemonic">
           <div>
             <div
-              v-for="(item, idx) in mnemonic.slice(0, 12)"
+              v-for="(item, idx) in mnemonicToArr.slice(0, 12)"
               :key="item"
               class="item"
             >
@@ -19,7 +19,7 @@
           </div>
           <div>
             <div
-              v-for="(item, idx) in mnemonic.slice(12, 24)"
+              v-for="(item, idx) in mnemonicToArr.slice(12, 24)"
               :key="item"
               class="item"
             >
@@ -29,7 +29,7 @@
         </div>
         <div v-show="!isTwentyFour" class="half-mnemonic">
           <div
-            v-for="(item, idx) in mnemonic.slice(0, 12)"
+            v-for="(item, idx) in mnemonicToArr.slice(0, 12)"
             :key="item"
             class="item"
           >
@@ -54,15 +54,20 @@
 export default {
   props: {
     mnemonic: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [];
+        return {};
       }
     }
   },
   computed: {
     isTwentyFour() {
-      return this.mnemonic.length > 12;
+      return Object.keys(this.mnemonic).length > 12;
+    },
+    mnemonicToArr() {
+      return Object.keys(this.mnemonic).map(item => {
+        return item;
+      });
     }
   }
 };

@@ -212,7 +212,11 @@ export default {
       this.$refs.verification.$refs.verification.show();
     },
     openPrintModal() {
-      this.$eventHub.$emit('printModal', 'mnemonic', this.mnemonicValues);
+      const newObj = {};
+      this.mnemonicValues.forEach((item, idx) => {
+        newObj[idx] = item;
+      });
+      this.$eventHub.$emit('printModal', 'mnemonic', newObj);
     }
   }
 };
