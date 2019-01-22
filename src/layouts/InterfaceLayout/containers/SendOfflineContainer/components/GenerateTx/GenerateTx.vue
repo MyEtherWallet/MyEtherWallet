@@ -1,5 +1,5 @@
 <template>
-  <div class="generate-info">
+  <div class="generate-tx">
     <div class="wrap">
       <div class="send-form">
         <div class="form-block amount-to-address">
@@ -93,6 +93,7 @@
         </div>
       </div>
       <tx-speed-input
+        v-if="false"
         :nonce="nonce"
         :data="toData"
         :value="toAmt"
