@@ -75,7 +75,6 @@ export default class Changelly {
   }
 
   calcculateChangellyTrueRate(topRate) {
-    console.log(topRate); // todo remove dev item
     return new BigNumber(topRate).minus(
       new BigNumber(topRate).times(new BigNumber(FEE_RATE))
     );

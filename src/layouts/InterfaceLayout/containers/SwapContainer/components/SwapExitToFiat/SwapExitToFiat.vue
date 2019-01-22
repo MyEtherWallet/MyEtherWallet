@@ -13,10 +13,7 @@
           <accordion-menu :isopen="step1" title="Phone Number" number="1">
             <ul>
               <li>
-                <p>
-                  You will receive a 6 digit verification code through your
-                  phone number. Click 'Send' to continue.
-                </p>
+                <p>{{ $t('interface.enterPhoneForSMS') }}</p>
               </li>
               <li>
                 <div class="grid-phone-number">
@@ -44,7 +41,7 @@
           >
             <ul>
               <li>
-                <p>Enter the 6 digit verification code you received below.</p>
+                <p>{{ $t('interface.verifyCodeInstructions') }}</p>
               </li>
               <li>
                 <standard-input
@@ -64,6 +61,9 @@
             @titleClicked="reOpenBankInformation"
           >
             <ul>
+              <li v-if="previouslyVerified">
+                <p>{{ $t('interface.previouslyVerified') }}</p>
+              </li>
               <li>
                 <standard-input
                   :options="inputIbanNumber"
@@ -229,6 +229,7 @@ export default {
   },
   data() {
     return {
+      previouslyVerified: false,
       addSpace: false,
       countryList: Object.entries(getNames('en')),
       status: {
@@ -353,6 +354,7 @@ export default {
     if (haveCred !== null && haveCred !== undefined) {
       const userDetails = store.get('exit_to_fiat');
       if (userDetails.phone_token && userDetails.verified) {
+        this.previouslyVerified = true;
         this.step1 = false;
         this.verifyStep = false;
         this.step2 = true;
