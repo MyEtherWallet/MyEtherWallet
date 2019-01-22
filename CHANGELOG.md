@@ -6,7 +6,7 @@
 - Prep release and multiple fixes: #412, #409, #408, #413, #414, #433, #419, #415, #425, #427, #430, and #410 [#407](https://github.com/MyEtherWallet/MyEtherWallet/pull/407)
 
 ### Bug
-
+- Update Send offline -> processes reduced to one page [#497](https://github.com/MyEtherWallet/MyEtherWallet/pull/497)
 - Fix UI, Header, Footer bugs and issues [#496](https://github.com/MyEtherWallet/MyEtherWallet/pull/496)
 - Fix UI Interface -> Message [#475](https://github.com/MyEtherWallet/MyEtherWallet/pull/475)
 - Fix UI Interface -> Contract [#474](https://github.com/MyEtherWallet/MyEtherWallet/pull/474)
