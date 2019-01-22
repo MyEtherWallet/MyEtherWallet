@@ -7,9 +7,9 @@
     url('./cryptocoins.svg#cryptocoins') format('svg');
 }
 
-i {
-  line-height: 1;
-}
+/*i {*/
+  /*line-height: 1;*/
+/*}*/
 
 .cc::before {
   font-family: cryptocoins !important;

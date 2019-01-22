@@ -5,7 +5,8 @@ import {
   notificationStatuses,
   TIME_SWAP_VALID,
   requireExtraId,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  FEE_RATE
 } from './config';
 
 export {
@@ -15,5 +16,6 @@ export {
   notificationStatuses,
   TIME_SWAP_VALID,
   requireExtraId,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  FEE_RATE
 };
