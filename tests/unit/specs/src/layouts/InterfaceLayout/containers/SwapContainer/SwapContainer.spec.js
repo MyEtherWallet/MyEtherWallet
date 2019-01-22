@@ -1,10 +1,15 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import Vuex from 'vuex';
+import { shallowMount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
 
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
 
+import sinon from 'sinon';
 const RouterLinkStub = {
   name: 'router-link',
   template: '<p> <slot> </slot></p>',
@@ -12,6 +17,18 @@ const RouterLinkStub = {
   props: ['to']
 };
 
+const showModal = sinon.spy();
+
+const BModalStub = {
+  name: 'b-modal',
+  template: '<div><slot></slot></div>',
+  props: ['to'],
+  methods: {
+    show: showModal
+  }
+};
+
+//xdescribe
 describe('SwapContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
@@ -19,6 +36,56 @@ describe('SwapContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    const network = nodeList['ETH'][3];
+    const hostUrl = url.parse(network.url);
+
+    const newWeb3 = new Web3(
+      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
+        hostUrl.pathname
+      }`
+    );
+
+    const account = {
+      balance: 0
+    };
+
+    const wallet = {
+      getChecksumAddressString: function() {
+        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
+      }
+    };
+
+    const getters = {
+      Networks: () => {
+        return nodeList;
+      },
+      network: () => {
+        return network;
+      },
+      web3: () => {
+        return newWeb3;
+      },
+      account: () => {
+        return account;
+      },
+      gasPrice: () => {
+        return 0;
+      },
+      ens: () => {},
+      wallet: () => {
+        return wallet;
+      }
+    };
+
+    store = new Vuex.Store({
+      getters,
+      state: {
+        web3: newWeb3,
+        Networks: nodeList,
+        network: network
+      }
+    });
   });
 
   beforeEach(() => {
@@ -30,12 +97,13 @@ describe('SwapContainer.vue', () => {
       stubs: {
         'currency-picker': CurrencyPicker,
         'swap-confirmation-modal': SwapConfirmationModal,
-        'router-link': RouterLinkStub
+        'router-link': RouterLinkStub,
+        'b-modal': BModalStub
       }
     });
   });
 
-  xit('[FAILED] should render correct fromArray to currenPicker element', () => {
+  xit('[Failing] should render correct fromArray to currenPicker element', () => {
     const containerElements = wrapper.vm.$el.querySelectorAll(
       '.item-container'
     );
@@ -55,7 +123,7 @@ describe('SwapContainer.vue', () => {
     }
   });
 
-  xit('[FAILED] should render correct toArray to currenPicker element', () => {
+  xit('[Failing] should render correct toArray to currenPicker element', () => {
     const containerElements = wrapper.vm.$el.querySelectorAll(
       '.item-container'
     );
@@ -86,7 +154,7 @@ describe('SwapContainer.vue', () => {
     });
 
     beforeEach(() => {
-      wrapper = mount(SwapContainer, {
+      wrapper = shallowMount(SwapContainer, {
         localVue,
         i18n,
         store,
@@ -94,18 +162,16 @@ describe('SwapContainer.vue', () => {
         stubs: {
           'currency-picker': CurrencyPicker,
           'swap-confirmation-modal': SwapConfirmationModal,
-          'router-link': RouterLinkStub
+          'router-link': RouterLinkStub,
+          'b-modal': BModalStub
         }
       });
     });
 
-    xit('[FAILED] should expand domainCheckForm when click button', () => {
+    xit('[Failing] should open swapConfirmationModal when click button', () => {
       const btnSubmit = wrapper.find('.submit-button');
-      // console.log(wrapper.findAll('.show').length)
-      // console.log(wrapper.find('.bootstrap-modal').html())
       btnSubmit.trigger('click');
-      // console.log(wrapper.findAll('.show').length)
-      // console.log(wrapper.find('.bootstrap-modal').html())
+      expect(showModal.called).toBe(true);
     });
   });
 });

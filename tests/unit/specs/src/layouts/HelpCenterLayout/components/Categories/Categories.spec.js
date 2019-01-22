@@ -36,7 +36,6 @@ describe('Categories.vue', () => {
       const categoryButtonElement = wrapper.vm.$el.querySelectorAll(
         '.category-buttons li'
       )[i];
-      // expect(categoryButtonElement.querySelector('.button-icon img').getAttribute('src')).toEqual(wrapper.vm.$data.categoryButtons[i].icon)
       expect(
         categoryButtonElement.querySelector('.button-title').textContent.trim()
       ).toEqual(wrapper.vm.$data.categoryButtons[i].title);
@@ -50,7 +49,6 @@ describe('Categories.vue', () => {
       const linkBlockElement = wrapper.vm.$el.querySelectorAll('.link-block')[
         i
       ];
-
       expect(
         linkBlockElement.querySelector('.block-icon img').getAttribute('src')
       ).toEqual(wrapper.vm.$data.linkBlocks[i].icon);

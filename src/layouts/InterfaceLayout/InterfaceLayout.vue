@@ -1,5 +1,7 @@
 <template>
   <div class="send-eth-and-tokens">
+    <wallet-password-modal />
+    <enter-pin-number-modal />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -83,6 +85,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import ENS from 'ethereum-ens';
+import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
@@ -103,7 +107,8 @@ import {
   LedgerWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  KeepkeyWallet
 } from '@/wallets';
 
 export default {
@@ -113,11 +118,13 @@ export default {
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
+    'wallet-password-modal': WalletPasswordModal,
     'print-modal': PrintModal,
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
-    'mnemonic-password-modal': MnemonicPasswordModal
+    'mnemonic-password-modal': MnemonicPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal
   },
   data() {
     return {
@@ -217,6 +224,11 @@ export default {
         case 'mnemonic':
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
           break;
+        case 'keepkey':
+          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
+            this.toggleNetworkAddrModal(_newWallet);
+          });
+          break;
         default:
           // eslint-disable-next-line
           console.error('something not right'); // todo remove dev item
@@ -271,7 +283,6 @@ export default {
           return token;
         });
       }
-
       return tokens;
     },
     async setNonce() {
@@ -345,7 +356,7 @@ export default {
             ? token.balance
             : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
           const convertedToken = {
-            addr: token.addr,
+            address: token.address,
             balance: balance,
             decimals: token.decimals,
             email: token.email,
@@ -387,7 +398,7 @@ export default {
     getBalance() {
       const web3 = this.web3;
       web3.eth
-        .getBalance(this.address)
+        .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);

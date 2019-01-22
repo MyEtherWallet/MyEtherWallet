@@ -27,6 +27,7 @@
         </div>-->
       </div>
 
+    <div class="form-content-container">
       <div class="send-form">
         <div class="form-block amount-to-address">
           <div class="amount">
@@ -99,18 +100,12 @@
       </div>
 
       <div v-show="!isExitToFiat" class="send-form">
-        <div class="title-container">
-          <div class="title title-and-copy">
-            <h4>{{ $t('common.toAddress') }}</h4>
-            <p class="copy-button prevent-user-select">
-              {{ $t('common.copy') }}
-            </p>
-          </div>
-        </div>
         <div class="the-form gas-amount">
           <drop-down-address-selector
             :currency="toCurrency"
             :current-address="currentAddress"
+            :copybutton="true"
+            title="To Address"
             @toAddress="setToAddress"
             @validAddress="setAddressValid"
           />
@@ -124,27 +119,6 @@
         v-show="isExitToFiat && fromCurrency !== baseCurrency"
         class="send-form"
       >
-        <div class="title-container">
-          <div class="title title-and-copy">
-            <h4>{{ $t('interface.fromAddr') }}</h4>
-            <p class="copy-button prevent-user-select">
-              {{ $t('common.copy') }}
-            </p>
-          </div>
-        </div>
-        <div class="the-form gas-amount">
-          <drop-down-address-selector
-            :currency="fromCurrency"
-            :current-address="currentAddress"
-            @toAddress="setExitFromAddress"
-            @validAddress="setAddressValid"
-          />
-        </div>
-        <div v-show="!isValidAddress" class="error-message-container">
-          <p>{{ $t('interface.notValidAddr') }}</p>
-        </div>
-      </div>
-
       <div v-show="showRefundAddress" class="send-form">
         <div class="title-container">
           <div class="title title-and-copy">
@@ -161,6 +135,7 @@
             @toAddress="setRefundAddress"
           />
         </div>
+      </div>
       </div>
 
       <div class="send-form">
@@ -203,6 +178,11 @@
           {{ $t('common.continue') }}
           <i class="fa fa-long-arrow-right" aria-hidden="true" />
         </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
+        />
       </div>
     </div>
     <swap-exit-to-fiat
@@ -212,6 +192,7 @@
       :exit-to-fiat-callback="exitToFiatCallback"
       @backButtonClick="exitToFiatAbort"
     ></swap-exit-to-fiat>
+    </div>
   </div>
 </template>
 <script>
@@ -342,7 +323,9 @@ export default {
       return false;
     },
     fromAboveMaxAllowed() {
-      if (
+      if (this.selectedProvider.provider === this.providerNames.bity) {
+        return this.toAboveMaxAllowed;
+      } else if (
         +this.fromValue > this.selectedProvider.maxValue &&
         this.selectedProvider.maxValue > 0
       )
