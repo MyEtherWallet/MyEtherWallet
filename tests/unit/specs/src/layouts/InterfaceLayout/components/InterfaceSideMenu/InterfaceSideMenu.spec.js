@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import InterfaceSideMenu from '@/layouts/InterfaceLayout/components/InterfaceSideMenu/InterfaceSideMenu.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import Notification from '@/components/Notification/Notification.vue';
@@ -29,7 +29,7 @@ describe('InterfaceSideMenu.vue', () => {
       push: spy
     };
 
-    wrapper = shallowMount(InterfaceSideMenu, {
+    wrapper = mount(InterfaceSideMenu, {
       localVue,
       i18n,
       store,

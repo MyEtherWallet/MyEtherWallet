@@ -12,7 +12,7 @@
   "accessByPrivateKey": "秘密キーによるアクセス",
   "networkAndAddress": "ネットワークとアドレス",
   "pleaseTypeInMnemonicPhrase": "簡略記憶用のフレーズを入力してください。",
-  "accessDeviceAddresses": "デバイスと接続してください",
+  "accessDeviceAddresses": "Choose a Hardware",
   "password": "パスワード",
   "mewConnectDesc": "MEWconnect を使用して私の財布にアクセス",
   "metaMaskDesc": "私の財布にアクセスするのに MetaMask 拡張子を使用します。",
