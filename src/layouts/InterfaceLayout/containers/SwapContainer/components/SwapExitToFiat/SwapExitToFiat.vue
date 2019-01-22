@@ -354,7 +354,6 @@ export default {
     if (haveCred !== null && haveCred !== undefined) {
       const userDetails = store.get('exit_to_fiat');
       if (userDetails.phone_token && userDetails.verified) {
-        this.previouslyVerified = true;
         this.step1 = false;
         this.verifyStep = false;
         this.step2 = true;
@@ -430,6 +429,7 @@ export default {
       };
       const existing = await this.provider.registerUser(initData);
       if (existing) {
+        this.previouslyVerified = true;
         this.step1 = false;
         this.verifyStep = false;
         this.step2 = true;
