@@ -2,13 +2,16 @@ import BigNumber from 'bignumber.js';
 import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
   BASE_CURRENCY,
-  baseCurrencyEntry,
+  TOP_OPTIONS_ORDER,
   EthereumTokens
 } from './partnersConfig';
 
 function comparator(a, b) {
   a = a.symbol;
   b = b.symbol;
+  if (TOP_OPTIONS_ORDER.includes(a) || TOP_OPTIONS_ORDER.includes(b)) {
+    return TOP_OPTIONS_ORDER.indexOf(b) - TOP_OPTIONS_ORDER.indexOf(a);
+  }
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
@@ -96,13 +99,9 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getInitialCurrencyEntries(collectMapFrom, collectMapTo);
     });
-    if (collectMapTo.has(BASE_CURRENCY)) collectMapTo.delete(BASE_CURRENCY);
-    if (collectMapFrom.has(BASE_CURRENCY)) collectMapFrom.delete(BASE_CURRENCY);
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
-    toArray.splice(0, 0, baseCurrencyEntry);
-    fromArray.splice(0, 0, baseCurrencyEntry);
     return { toArray, fromArray };
   }
 
@@ -111,9 +110,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedFromCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
-    const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [baseCurrencyEntry, ...toArray];
+    return Array.from(collectMap.values()).sort(comparator);
   }
 
   setToCurrencyBuilder(value) {
@@ -121,9 +118,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedToCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
-    const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [baseCurrencyEntry, ...toArray];
+    return Array.from(collectMap.values()).sort(comparator);
   }
 
   async updateRateEstimate(fromCurrency, toCurrency, fromValue) {

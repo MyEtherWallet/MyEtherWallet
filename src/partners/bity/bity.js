@@ -388,7 +388,7 @@ export default class BitySwap {
       const orderData = {
         pair: fromCurrency + toCurrency,
         phoneToken: this.phoneToken,
-        orderDetails: { ...orderDetails } // details //{ ...orderDetails }
+        orderDetails: { ...orderDetails }
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
