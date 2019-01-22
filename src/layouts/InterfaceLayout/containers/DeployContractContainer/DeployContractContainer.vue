@@ -261,8 +261,9 @@ export default {
         const web3 = this.web3;
         const contract = new web3.eth.Contract(JSON.parse(this.abi));
         const deployArgs = Object.keys(this.inputs).map(key => {
-          return this.inputs[key];
+          return web3.utils.soliditySha3(this.inputs[key]);
         });
+
         this.data = contract
           .deploy({ data: this.bytecode, arguments: deployArgs })
           .encodeABI();
