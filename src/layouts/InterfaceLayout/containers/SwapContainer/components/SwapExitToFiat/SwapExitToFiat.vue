@@ -67,7 +67,7 @@
               <li>
                 <standard-input
                   :options="inputIbanNumber"
-                  @changedValue="setIban"
+                  @changedValue="orderDetails.iban = $event"
                 />
               </li>
               <li>
