@@ -28,7 +28,6 @@
             </div>
             <div class="the-form amount-number">
               <input
-                v-validate="'min_value:10'"
                 :value="amount"
                 type="number"
                 placeholder="Amount"
@@ -88,10 +87,10 @@
             <input
               v-ens-resolver="'address'"
               ref="address"
+              v-model="address"
               type="text"
               name="name"
               autocomplete="off"
-              @input="debounceInput"
             />
             <i
               :class="[
@@ -258,6 +257,10 @@ export default {
     },
     selectedCurrency(newVal) {
       if (this.verifyAddr()) this.estimateGas();
+      this.data = '0x';
+    },
+    hexAddress() {
+      if (this.verifyAddr()) this.estimateGas();
     }
   },
   methods: {
@@ -283,10 +286,6 @@ export default {
         this.estimateGas();
       }
     }, 300),
-    debounceInput: utils._.debounce(function(e) {
-      this.address = e.target.value;
-      if (this.verifyAddr()) this.estimateGas();
-    }, 500),
     debounceData: utils._.debounce(function(e) {
       if (this.validateHexString(e.target.value)) {
         this.data = e.target.value;
@@ -314,7 +313,7 @@ export default {
             ? 0
             : unit.toWei(this.amount, 'ether')
           : 0,
-        to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+        to: isEth ? this.hexAddress : this.selectedCurrency.address,
         data: Misc.sanitizeHex(this.data),
         chainId: this.network.type.chainID || 1
       };
@@ -342,7 +341,7 @@ export default {
     },
     async createDataHex() {
       let amount;
-      if (this.selectedCurrency.name !== 'Ether') {
+      if (this.selectedCurrency.name !== this.network.type.name) {
         if (this.amount !== 0 && this.amount !== '') {
           amount = this.amount;
         } else {
@@ -364,7 +363,7 @@ export default {
         ];
         const contract = new this.web3.eth.Contract(
           jsonInterface,
-          this.selectedCurrency.addr
+          this.selectedCurrency.address
         );
         this.data = await contract.methods
           .transfer(
@@ -382,7 +381,7 @@ export default {
       this.selectedCurrency = e;
     },
     async estimateGas() {
-      if (this.hexAddress !== '') {
+      if (this.verifyAddr()) {
         const isEth = this.selectedCurrency.symbol === this.network.type.name;
         const bnAmount = new BigNumber(this.amount);
         const coinbase = await this.web3.eth.getCoinbase();
@@ -396,7 +395,7 @@ export default {
               ? 0
               : unit.toWei(bnAmount, 'ether')
             : 0,
-          to: isEth ? this.hexAddress : this.selectedCurrency.addr,
+          to: isEth ? this.hexAddress : this.selectedCurrency.address,
           data: Misc.sanitizeHex(this.data)
         };
 

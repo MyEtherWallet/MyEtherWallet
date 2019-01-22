@@ -53,6 +53,7 @@ const EnsResolver = {
         }
       } else {
         _this.isValidAddress = false;
+        _this.hexAddress = '';
         removeElements();
         errorPar.innerText = 'Invalid address';
         el.parentNode.parentNode.appendChild(errorPar);
