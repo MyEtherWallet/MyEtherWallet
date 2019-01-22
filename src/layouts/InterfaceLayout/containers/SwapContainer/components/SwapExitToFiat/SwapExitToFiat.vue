@@ -387,8 +387,10 @@ export default {
       this.$emit('backButtonClick');
     },
     async registerPhone() {
-      if (this.phoneNumber === '') throw Error(this.$t('interface.phoneRequired'));
-      if (this.countryCode === '') throw Error(this.$t('interface.countryCodeRequired'));
+      if (this.phoneNumber === '')
+        throw Error(this.$t('interface.phoneRequired'));
+      if (this.countryCode === '')
+        throw Error(this.$t('interface.countryCodeRequired'));
       const initData = {
         phoneNumber: this.countryCode + this.phoneNumber,
         ...this.swapDetails
