@@ -111,7 +111,7 @@
             />
           </div>
           <div v-show="!isValidAddress" class="error-message-container">
-            <p>{{ $t('interface.notValidAddr') }}</p>
+            <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
           </div>
         </div>
 
@@ -119,7 +119,6 @@
           v-show="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
         >
-
           <div class="the-form gas-amount">
             <drop-down-address-selector
               :currency="fromCurrency"
@@ -131,7 +130,9 @@
             />
           </div>
           <div v-show="!isValidAddress" class="error-message-container">
-            <p>{{ $t('interface.notValidAddrSrc') }}</p>
+            <p>
+              {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
+            </p>
           </div>
         </div>
 
@@ -141,7 +142,7 @@
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
-              :title="fromCurrency + $t('interface.refund')"
+              :title="$t('interface.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
               @validAddress="setAddressValid"
             />
@@ -195,14 +196,14 @@
           />
         </div>
       </div>
-      <swap-exit-to-fiat
-        v-if="bityExitToFiat"
-        :swap-details="swapDetails"
-        :exit-from-address="exitSourceAddress"
-        :exit-to-fiat-callback="exitToFiatCallback"
-        @backButtonClick="exitToFiatAbort"
-      ></swap-exit-to-fiat>
     </div>
+    <swap-exit-to-fiat
+      v-if="bityExitToFiat"
+      :swap-details="swapDetails"
+      :exit-from-address="exitSourceAddress"
+      :exit-to-fiat-callback="exitToFiatCallback"
+      @backButtonClick="exitToFiatAbort"
+    ></swap-exit-to-fiat>
   </div>
 </template>
 <script>
@@ -329,7 +330,7 @@ export default {
       if (MIN_SWAP_AMOUNT > +this.fromValue)
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
       if (this.selectedProvider.minValue > +this.fromValue)
-        return this.$t('interface.belowMinSwap');
+        return this.$t('interface.belowMin');
       return false;
     },
     fromAboveMaxAllowed() {
@@ -343,11 +344,11 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinSwap');
+      if (this.checkBityMin) return this.$t('interface.belowMin');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMaxSwap');
+      if (this.checkBityMax) return this.$t('interface.aboveMax');
       return false;
     },
     providerList() {

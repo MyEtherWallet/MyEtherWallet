@@ -58,8 +58,12 @@
           <li>
             <div>
               <h4>
-                {{ $t('interface.send') }} {{ fromAddress.value }}
-                {{ fromAddress.name }} {{ $t('interface.articleTo') }}
+                {{
+                  $t('interface.notFromEthSwap', {
+                    value: fromAddress.value,
+                    currency: fromAddress.name
+                  })
+                }}
                 <span class="address">{{ qrcode }}</span>
               </h4>
               <p>{{ swapDetails.providerAddress }}</p>
@@ -71,7 +75,9 @@
             <div @click="sentTransaction">
               <button-with-qrcode
                 :qrcode="qrcode"
-                :buttonname="$t('interface.sentCoins')"
+                :buttonname="
+                  $t('interface.sentCoins', { currency: fromAddress.name })
+                "
               />
             </div>
           </li>
