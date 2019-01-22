@@ -392,6 +392,7 @@ export default class BitySwap {
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(e);
     }
   }
@@ -467,23 +468,6 @@ export default class BitySwap {
       return swapNotificationStatuses.PENDING;
     }
   }
-
-  /*
-  *
-  *     status: response.legacy_status,
-    timestamp_created: response.timestamp_created + "Z",
-    fromAddress: response.input.crypto_address,
-    payment_address: response.payment_details.crypto_address,
-    payment_amount: response.input.amount,
-    input: {
-      amount: response.input.amount,
-      currency: response.input.currency
-    },
-    output: {
-      amount: response.output.amount,
-      currency: response.output.currency
-    }
-  * */
 
   static async getOrderStatusFiat(noticeDetails) {
     try {
