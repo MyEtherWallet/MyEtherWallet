@@ -28,7 +28,9 @@
             <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
           </div>
           <div v-else>
-            <i :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']" />
+            <i
+              :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']"
+            />
           </div>
           <!--<img class="currency-icon" src="@/assets/images/currency/eth.svg" />-->
         </div>
