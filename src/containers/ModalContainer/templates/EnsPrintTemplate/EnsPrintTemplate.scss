@@ -1,12 +1,12 @@
 @import '~@/scss/GlobalVariables';
 
-.print-modal {
+.ens-print-modal {
   min-height: 300px;
   min-width: 300px;
   padding: 50px 54px;
 }
 
-.print-modal-header {
+.ens-print-header {
   align-items: center;
   border-bottom: 1px solid $light-grey-3;
   display: flex;
@@ -41,7 +41,7 @@
   text-align: right;
 }
 
-.print-modal-body {
+.ens-print-body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -75,7 +75,7 @@
   }
 }
 
-.print-modal-footer {
+.ens-print-footer {
   display: flex;
   justify-content: space-between;
 

@@ -14,7 +14,10 @@
           v-if="printType === 'mnemonic'"
           :mnemonic="printData"
         />
-        <div v-if="printType === 'ens'"></div>
+        <ens-print-template
+          v-if="printType === 'ens'"
+          :json-string="printData"
+        />
       </div>
       <div class="button-container">
         <div class="print-button" @click="print">Print</div>
@@ -23,8 +26,9 @@
   </div>
 </template>
 <script>
-import AddressPrintTemplate from '../AddressPrintTemplate';
-import MnemonicPrintTemplate from '../MnemonicPrintTemplate';
+import AddressPrintTemplate from '../../templates/AddressPrintTemplate';
+import MnemonicPrintTemplate from '../../templates/MnemonicPrintTemplate';
+import EnsPrintTemplate from '../../templates/EnsPrintTemplate';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 
@@ -32,6 +36,7 @@ export default {
   name: 'PrintModal',
   components: {
     'address-print-template': AddressPrintTemplate,
+    'ens-print-template': EnsPrintTemplate,
     'mnemonic-print-template': MnemonicPrintTemplate
   },
   props: {

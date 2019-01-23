@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
-import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
@@ -98,8 +97,7 @@ describe('EnsBidContainer.vue', () => {
       },
       stubs: {
         timer: TimerStub,
-        'b-modal': BModalStub,
-        'json-string-modal': JsonStringModal
+        'b-modal': BModalStub
       }
     });
   });
@@ -301,56 +299,10 @@ describe('EnsBidContainer.vue', () => {
     expect(wrapper.find('.erroredMsg').isVisible()).toBe(true);
   });
   describe('EnsBidContainer.vue Methods', () => {
-    it('should update json when submit button clicked', () => {
-      const raw = {
-        bidAmount: 0.222,
-        bidMask: 0.111,
-        secretPhrase: 'secretPhrase',
-        revealDate: Date.now(),
-        auctionDateEnd: Date.now()
-      };
-
-      const textAreaElement = wrapper.find(
-        '.json-string-form .input-container textarea'
-      );
-      textAreaElement.setValue(JSON.stringify(raw));
-      textAreaElement.trigger('change');
-      wrapper.find('.json-string-form .submit-button').trigger('click');
-      expect(wrapper.vm.$data.localSecretPhrase).toEqual(raw.secretPhrase);
-      expect(wrapper.vm.$data.localBidAmount).toEqual(raw.bidAmount);
-      expect(wrapper.vm.$data.localBidMask).toEqual(raw.bidMask);
-    });
-
     it('should edit input according when button clicked', () => {
       wrapper.setData({ localStep: 100 });
       wrapper.find('.edit').trigger('click');
       expect(wrapper.vm.$data.localStep).toBe(1);
-    });
-
-    it('should trigger openJsonModal method when button clicked', () => {
-      mockRoute.fullPath = 'revealBid';
-      wrapper = shallowMount(EnsBidContainer, {
-        localVue,
-        i18n,
-        store,
-        mocks: {
-          $route: mockRoute,
-          $router: {
-            replace: sinon.stub(),
-            history: {
-              current: {
-                path: '/interface/dapps/register-domain'
-              }
-            }
-          }
-        },
-        stubs: {
-          'b-modal': BModalStub,
-          'json-string-modal': JsonStringModal
-        }
-      });
-      wrapper.find('.json-string').trigger('click');
-      expect(showModal.called).toBe(true);
     });
   });
 });

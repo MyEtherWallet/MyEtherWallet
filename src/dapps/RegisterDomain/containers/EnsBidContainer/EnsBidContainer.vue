@@ -1,7 +1,5 @@
 <template lang="html">
   <div>
-    <print-modal ref="printModal" :json-string="raw" />
-    <json-string-modal ref="jsonStringModal" :update-json-string="updateJson" />
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
         <div>
@@ -188,16 +186,12 @@
 
 <script>
 import Timer from '../../components/Timer';
-import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
-import PrintModal from '../../components/PrintModal';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    timer: Timer,
-    'print-modal': PrintModal,
-    'json-string-modal': JsonStringModal
+    timer: Timer
   },
   props: {
     domainName: {
@@ -303,7 +297,7 @@ export default {
   },
   methods: {
     openJsonModal() {
-      this.$refs.jsonStringModal.$refs.jsonString.show();
+      this.$eventHub.$emit('revealJsonModal', this.updateJson);
     },
     updateJson(val) {
       const json = JSON.parse(val);
@@ -341,14 +335,14 @@ export default {
         nonce: this.raw['nonce']
       };
       if (!this.$route.fullPath.includes('reveal')) {
-        this.$eventHub.$emit('printModal', 'ens', raw);
+        new Promise(resolve => {
+          this.$eventHub.$emit('printModal', 'ens', this.raw, resolve);
+        }).then(() => {
+          this.web3.eth.sendTransaction(raw);
+        });
       } else {
         this.web3.eth.sendTransaction(raw);
       }
-
-      this.$refs.printModal.$refs.print.$on('hidden', () => {
-        this.web3.eth.sendTransaction(raw);
-      });
     }
   }
 };
