@@ -110,7 +110,7 @@ describe('SendCurrencyContainer.vue', () => {
 
   it('should render correct amount data', () => {
     expect(wrapper.vm.$el.querySelector('.amount-number input').value).toEqual(
-      String(wrapper.vm.$data.amount)
+      String(wrapper.vm.$data.value)
     );
   });
 

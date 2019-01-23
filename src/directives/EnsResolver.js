@@ -1,12 +1,13 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
+import store from '@/store';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
     vnode.context.$watch(binding.value, function(e) {
       const _this = vnode.context;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
-      const ens = _this.ens;
+      const ens = store.getters.ens;
       const removeElements = function() {
         const child = el.parentNode.parentNode.lastChild;
         Object.keys(child.classList).forEach(item => {
@@ -53,6 +54,7 @@ const EnsResolver = {
         }
       } else {
         _this.isValidAddress = false;
+        _this.hexAddress = '';
         removeElements();
         errorPar.innerText = 'Invalid address';
         el.parentNode.parentNode.appendChild(errorPar);
