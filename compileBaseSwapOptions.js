@@ -1,47 +1,34 @@
-
-const fs = require('fs')
+const fs = require('fs');
 const uuid = require('uuid/v4');
 
 const fetch = require('node-fetch');
 const web3 = require('web3');
 
-const swapConfigFolder = './src/partners/partnersConfig'
+const swapConfigFolder = './src/partners/partnersConfig';
+const changellyConfigFolder = './src/partners/changelly/config';
+const kyberConfigFolder = './src/partners/kyber/config';
 
-class CompileSwapOptions{
-  constructor(){
+class CompileSwapOptions {
+  constructor() {
     this.web3 = new web3('https://api.myetherwallet.com/eth');
+    this.changellyBaseOptions = {};
+    this.kyberBaseOptions = {};
 
-    this.decimalFunc = [{
-      constant: true,
-      inputs: [],
-      name: 'decimals',
-      outputs: [
-        {
-          name: '',
-          type: 'uint8'
-        }
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function'
-    }]
-
-this.needDecimalCheck = [];
+    this.needDecimalCheck = [];
   }
 
-
-  async getDecimals(address){
+  async getDecimals(address) {
     try {
-      const methodObject = await new this.web3.eth.Contract(
+      return await new this.web3.eth.Contract(
         ERC20(),
         address.contractAddress
-      ).methods.decimals().call();
-      return methodObject;
+      ).methods
+        .decimals()
+        .call();
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   }
-
 
   async post(url = ``, data = {}, opts = {}) {
     const defaultOptions = {
@@ -82,9 +69,11 @@ this.needDecimalCheck = [];
     };
   }
 
-  async getKyberSupported () {
+  async getKyberSupported() {
     try {
-      const tokenList = await this.get('https://tracker.kyber.network/api/tokens/supported');
+      const tokenList = await this.get(
+        'https://tracker.kyber.network/api/tokens/supported'
+      );
       const tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
         if (
@@ -95,9 +84,21 @@ this.needDecimalCheck = [];
         ) {
           // otherwise the entry is invalid
           const symbol = tokenList[i].symbol.toUpperCase();
-          tokenDetails[symbol] = tokenList[i];
+          tokenDetails[symbol] = {
+            symbol: tokenList[i].symbol,
+            name: tokenList[i].name,
+            decimals: tokenList[i].decimals,
+            contractAddress: tokenList[i].contractAddress
+          };
+          this.kyberBaseOptions[symbol] = {
+            symbol: tokenList[i].symbol,
+            name: tokenList[i].name,
+            decimals: tokenList[i].decimals,
+            contractAddress: tokenList[i].contractAddress
+          };
         }
       }
+
       this.KyberCurrencies = tokenDetails;
       return {
         ETH: tokenDetails,
@@ -106,17 +107,17 @@ this.needDecimalCheck = [];
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  async getChangellyCurrencies ()  {
+  async getChangellyCurrencies() {
     const results = await this.post(
       'https://swap.mewapi.io/changelly',
       this.buildPayload('getCurrenciesFull', {})
     );
     return results.result;
-  };
+  }
 
-   createEntry(item) {
+  createEntry(item) {
     const matchRegEx = /(?<=https:\/\/etherscan\.io\/token\/)(.*)(?=\?)/;
     const match = matchRegEx.exec(item.addressUrl);
     let decimals = this.KyberCurrencies[item.name.toUpperCase()]
@@ -126,52 +127,58 @@ this.needDecimalCheck = [];
     if (match === null) {
       return {
         name: item.fullName,
+        symbol: item.name.toUpperCase(),
         contractAddress: item.addressUrl,
         decimals: decimals
       };
     } else {
-      if(decimals === 0 ){
-        this.needDecimalCheck.push({symbol: item.name.toUpperCase(), contractAddress: match[0]})
+      if (decimals === 0) {
+        this.needDecimalCheck.push({
+          symbol: item.name.toUpperCase(),
+          contractAddress: match[0]
+        });
       }
       return {
         name: item.fullName,
+        symbol: item.name.toUpperCase(),
         contractAddress: match[0],
         decimals: decimals
       };
     }
   }
 
-   processChangelly(accumulator, currentValue) {
+  processChangelly(accumulator, currentValue) {
     const regex = /https:\/\/etherscan\.io/;
+    if(!currentValue.enabled) return accumulator;
     if (regex.test(currentValue.transactionUrl)) {
       accumulator.ETH[currentValue.name.toUpperCase()] = this.createEntry(
         currentValue
       );
     } else {
-      if(!currentValue.extraIdName){
+      if (!currentValue.extraIdName) {
         accumulator.other[currentValue.name.toUpperCase()] = {
-          name: currentValue.name,
-          fullName: currentValue.fullName,
+          symbol: currentValue.name.toUpperCase(),
+          name: currentValue.fullName,
           addressLookup: currentValue.addressUrl,
           explorer: currentValue.transactionUrl
         };
-      } else {
-        console.log(currentValue); // todo remove dev item
       }
     }
     return accumulator;
   }
 
-  async supplyChangellySupported (priorCollected = {
-    ETH: {},
-    other: {}
-  }) {
+  async supplyChangellySupported(
+    priorCollected = {
+      ETH: {},
+      other: {}
+    }
+  ) {
     try {
       const currencyList = await this.getChangellyCurrencies();
       if (currencyList) {
         currencyList.sort((a, b) => {
-          var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-          var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+          const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+          const nameB = b.name.toUpperCase(); // ignore upper and lowercase
           if (nameA < nameB) {
             return -1;
           }
@@ -183,42 +190,77 @@ this.needDecimalCheck = [];
           return 0;
         });
 
-        return currencyList.reduce(this.processChangelly.bind(this), priorCollected);
+        const changellyCurrencies = currencyList.reduce(
+          this.processChangelly.bind(this),
+          { ETH: {}, other: {} }
+        );
+        this.formatChangellyBaseOptions({
+          ...changellyCurrencies.ETH,
+          ...changellyCurrencies.other
+        });
+        return {
+          ETH: { ...changellyCurrencies.ETH, ...priorCollected.ETH },
+          other: { ...changellyCurrencies.other, ...priorCollected.other }
+        };
       }
-      throw Error('Changelly get supported currencies failed to return a value');
+      throw Error(
+        'Changelly get supported currencies failed to return a value'
+      );
     } catch (e) {
-      console.error(e);
+      //console.error(e);
     }
-  };
+  }
+
+  formatChangellyBaseOptions(options) {
+    this.changellyBaseOptions = {};
+    for (let prop in options) {
+      this.changellyBaseOptions[prop] = {
+        symbol: prop,
+        name: options[prop].name
+      };
+    }
+  }
 
   async run() {
     const kyberTokens = await this.getKyberSupported();
-    const withChangelly = await this.supplyChangellySupported(kyberTokens)
+    const withChangelly = await this.supplyChangellySupported(kyberTokens);
 
-      for(let i=0; i< this.needDecimalCheck.length; i++){
-        const decimals = await this.getDecimals(this.needDecimalCheck[i]);
-        if(withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals){
-          withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
-        }
-        // console.log(decimals); // todo remove dev item
+    for (let i = 0; i < this.needDecimalCheck.length; i++) {
+      const decimals = await this.getDecimals(this.needDecimalCheck[i]);
+      if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
+        withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
       }
-console.log(Object.keys(withChangelly.ETH).length); // todo remove dev item
-    console.log(Object.keys(withChangelly.other).length); // todo remove dev item
+    }
+    if (Object.keys(withChangelly.ETH).length > 0) {
+      fs.writeFileSync(
+        `${swapConfigFolder}/EthereumTokens.js`,
+        `export default ${JSON.stringify(withChangelly.ETH)} `
+      );
+    }
+    if (Object.keys(this.changellyBaseOptions).length > 0) {
+      fs.writeFileSync(
+        `${changellyConfigFolder}/currencies.js`,
+        `const ChangellyCurrencies = ${JSON.stringify(
+          this.changellyBaseOptions
+        )} \n export { ChangellyCurrencies };`
+      );
+    }
 
-    // console.log(withChangelly); // todo remove dev item
-    fs.writeFileSync(`${swapConfigFolder}/EthereumTokens.js`, `export default ${JSON.stringify(withChangelly.ETH)} `);
-    fs.writeFileSync(`${swapConfigFolder}/NonEthereumCrypto.js`,  `export default ${JSON.stringify(withChangelly.other)}`);
-    fs.writeFileSync(`swapOptions.json`, JSON.stringify(withChangelly));
+    if (Object.keys(this.kyberBaseOptions).length > 0) {
+      fs.writeFileSync(
+        `${kyberConfigFolder}/currenciesETH.js`,
+        `const KyberCurrenciesETH =  ${JSON.stringify(
+          this.kyberBaseOptions
+        )} \n export { KyberCurrenciesETH };`
+      );
+    }
   }
-
 }
 
 const builder = new CompileSwapOptions();
 builder.run();
 
-
-
-function ERC20(){
+function ERC20() {
   return [
     {
       constant: true,
@@ -441,5 +483,5 @@ function ERC20(){
       name: 'Approval',
       type: 'event'
     }
-  ]
+  ];
 }
