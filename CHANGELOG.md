@@ -1,4 +1,5 @@
 ### Release v5.0.0-beta.3
+
 ### Feature
 
 - Print ENS bid details [#360](https://github.com/MyEtherWallet/MyEtherWallet/pull/360)

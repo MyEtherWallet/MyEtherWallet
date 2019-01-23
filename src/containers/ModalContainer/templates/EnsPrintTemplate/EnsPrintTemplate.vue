@@ -88,11 +88,6 @@ export default {
 
       return obj;
     }
-  },
-  watch: {
-    jsonString(newVal) {
-      console.log(newVal);
-    }
   }
 };
 </script>
