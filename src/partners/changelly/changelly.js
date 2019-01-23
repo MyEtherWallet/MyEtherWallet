@@ -74,10 +74,10 @@ export default class Changelly {
     return false;
   }
 
-  calculateChangellyTrueRate(topRate) {
-    return new BigNumber(topRate).minus(
-      new BigNumber(topRate).times(new BigNumber(FEE_RATE))
-    );
+  calculateTrueRate(topRate) {
+    return new BigNumber(topRate)
+      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
+      .toNumber();
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
@@ -90,7 +90,7 @@ export default class Changelly {
         toCurrency,
         provider: this.name,
         minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
-        rate: this.calculateChangellyTrueRate(
+        rate: this.calculateTrueRate(
           this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
         )
       };
@@ -121,7 +121,7 @@ export default class Changelly {
       toCurrency,
       provider: this.name,
       minValue: minAmount,
-      rate: this.calculateChangellyTrueRate(changellyDetails[1])
+      rate: this.calculateTrueRate(changellyDetails[1])
     };
   }
 
