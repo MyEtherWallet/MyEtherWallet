@@ -1,6 +1,16 @@
 <template>
   <div>
     <issue-log-modal ref="issueLog" :stack-trace="issueTrace" />
+    <enter-pin-modal
+      ref="enterPin"
+      :callback="callback"
+      :device-info="deviceInfo"
+    />
+    <wallet-passphrase-modal
+      ref="walletPassword"
+      :callback="callback"
+      :device-info="deviceInfo"
+    />
     <reveal-json-modal ref="revealJson" :update-json-string="callback" />
     <error-modal ref="errorModal" :message="errorMsg" />
     <print-modal
@@ -15,13 +25,18 @@ import IssueLogModal from './components/IssueLogModal';
 import ErrorModal from './components/ErrorModal';
 import PrintModal from './components/PrintModal';
 import RevealJsonModal from './components/RevealJsonModal';
+import EnterPinModal from './components/EnterPinModal';
+import WalletPassphraseModal from './components/WalletPassphraseModal';
+
 export default {
   name: 'ModalContainer',
   components: {
     'issue-log-modal': IssueLogModal,
     'error-modal': ErrorModal,
     'print-modal': PrintModal,
-    'reveal-json-modal': RevealJsonModal
+    'reveal-json-modal': RevealJsonModal,
+    'enter-pin-modal': EnterPinModal,
+    'wallet-passphrase-modal': WalletPassphraseModal
   },
   data() {
     return {
@@ -29,10 +44,21 @@ export default {
       issueTrace: '',
       printType: '',
       printData: {},
-      callback: () => {}
+      callback: () => {},
+      deviceInfo: {}
     };
   },
   mounted() {
+    this.$eventHub.$on('showHardwarePassword', (deviceInfo, callback) => {
+      this.$refs.walletPassword.$refs.walletPassword.show();
+      this.callback = callback;
+      this.deviceInfo = deviceInfo;
+    });
+    this.$eventHub.$on('showHardwarePinMatrix', (deviceInfo, callback) => {
+      this.$refs.enterPin.$refs.enterpin.show();
+      this.deviceInfo = deviceInfo;
+      this.callback = callback;
+    });
     this.$eventHub.$on('issueOccured', issueTrace => {
       this.issueTrace = issueTrace;
       this.$refs.issueLog.$refs.issuelog.show();
