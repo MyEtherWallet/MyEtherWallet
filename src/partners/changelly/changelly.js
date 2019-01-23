@@ -7,7 +7,8 @@ import {
   statuses,
   TIME_SWAP_VALID,
   PROVIDER_NAME,
-  FEE_RATE
+  FEE_RATE,
+  requireExtraId
 } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
@@ -43,6 +44,7 @@ export default class Changelly {
         currencyDetails,
         tokenDetails
       } = await changellyApi.getSupportedCurrencies(this.network);
+      console.log(currencyDetails, tokenDetails); // todo remove dev item
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.hasRates =
