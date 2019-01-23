@@ -24,7 +24,7 @@
         <div v-if="!validAddress" class="blockie-place-holder-image" />
         <div v-if="validAddress" class="selected-address-blockie">
           <blockie :address="selectedAddress" width="30px" height="30px" />
-          <div v-if="currency === 'ETH'">
+          <div v-if="isToken(currency)">
             <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
           </div>
           <div v-else>
@@ -32,7 +32,6 @@
               :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']"
             />
           </div>
-          <!--<img class="currency-icon" src="@/assets/images/currency/eth.svg" />-->
         </div>
         <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
           <i
@@ -145,6 +144,9 @@ export default {
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
+    },
+    isToken(symbol) {
+      return typeof EthereumTokens[symbol] !== 'undefined';
     },
     listedAddressClick(address) {
       this.toAddressCheckMark = true;

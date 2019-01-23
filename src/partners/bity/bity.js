@@ -287,10 +287,7 @@ export default class BitySwap {
         }
       }
     } else if (!this.checkIfExit(swapDetails)) {
-      swapDetails.dataForInitialization = await this.buildOrder(
-        swapDetails.fromCurrency === BASE_CURRENCY,
-        swapDetails
-      );
+      swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
       swapDetails.providerSends =

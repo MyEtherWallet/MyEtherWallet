@@ -23,6 +23,7 @@ function cleanPhoneData(phoneNumber) {
     .replace('.', '')
     .replace(' ', '')
     .replace('(', '')
+    .replace(',', '')
     .replace('-', '');
   if (cleanedNumber.slice(0, 1) !== '+') {
     cleanedNumber = '+' + cleanedNumber;
