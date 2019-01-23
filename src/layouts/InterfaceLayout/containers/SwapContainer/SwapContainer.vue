@@ -732,13 +732,18 @@ export default {
       // get any component state values to temporarily persist, and reset swap state to state before exit to fiat selected.
       this.bityExitToFiat = !this.bityExitToFiat;
     },
-    async swapConfirmationModalOpenExitToFiat() {},
     resetSwapState() {
       // this.toAddress = '';
       this.fromCurrency = this.baseCurrency;
       // this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 0;
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        this.fromValue,
+        'from'
+      );
     }
   }
 };
