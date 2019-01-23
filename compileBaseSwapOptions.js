@@ -1,3 +1,4 @@
+// NOTE: this is a temporary solution.  This operation will be moved to runtime in the future. Currently it relies on manually updated files.
 const fs = require('fs');
 const uuid = require('uuid/v4');
 
@@ -242,16 +243,16 @@ class CompileSwapOptions {
         `${changellyConfigFolder}/currencies.js`,
         `const ChangellyCurrencies = ${JSON.stringify(
           this.changellyBaseOptions
-        )} \n export { ChangellyCurrencies };`
+        )}; \nexport { ChangellyCurrencies };\n`
       );
     }
 
     if (Object.keys(this.kyberBaseOptions).length > 0) {
       fs.writeFileSync(
         `${kyberConfigFolder}/currenciesETH.js`,
-        `const KyberCurrenciesETH =  ${JSON.stringify(
+        `const KyberCurrenciesETH = ${JSON.stringify(
           this.kyberBaseOptions
-        )} \n export { KyberCurrenciesETH };`
+        )}; \nexport { KyberCurrenciesETH };\n`
       );
     }
   }

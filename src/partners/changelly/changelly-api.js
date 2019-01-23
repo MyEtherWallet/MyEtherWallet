@@ -19,7 +19,6 @@ const getSupportedCurrencies = async network => {
             currencyList[i].extraIdName === null ||
             currencyList[i].extraIdName === undefined
           ) {
-            // console.log(currencyList[i].name, currencyList[i].extraIdName); // todo remove dev item
             const details = {
               symbol: currencyList[i].name.toUpperCase(),
               name: currencyList[i].fullName

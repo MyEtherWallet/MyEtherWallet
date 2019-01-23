@@ -101,8 +101,6 @@ export default class Kyber {
     }
   }
 
-
-
   async retrieveRates() {
     const { rates, tokenDetails } = await kyberApi.retrieveRatesFromAPI(
       this.network,
