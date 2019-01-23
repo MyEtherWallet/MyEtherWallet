@@ -24,6 +24,7 @@
 
 ### Feature
 
+- Add Send Offline Helper page [#505](https://github.com/MyEtherWallet/MyEtherWallet/pull/505)
 - Add KeepKey [#350](https://github.com/MyEtherWallet/MyEtherWallet/pull/350)
 - Add MEW Websocket node [#483](https://github.com/MyEtherWallet/MyEtherWallet/pull/483)
 

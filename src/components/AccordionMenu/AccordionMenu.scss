@@ -3,9 +3,8 @@
 //***************************************************
 // Variables
 //***************************************************
-  $border-radius-size: 4px;
-  $animation-duration: 0.3s;
-
+$border-radius-size: 4px;
+$animation-duration: 0.3s;
 
 //***************************************************
 // Accordion Menu
@@ -60,7 +59,7 @@
 .accordion-content-container {
   background-color: $white;
   border-radius: 0 0 $border-radius-size $border-radius-size;
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
   transition: all $animation-duration ease;
   &.open {
@@ -71,4 +70,3 @@
     padding: 30px;
   }
 }
-
