@@ -61,8 +61,6 @@ export default class BitySwap {
 
     this.phoneSha = undefined;
     this.userDetails = this.loadStoredCredentials();
-    // this.phoneToken =
-    //   'OPWip5M2mbpidCtoYZZPJ1zxrDnOinWHok9TLyVfE1mQDOIp0dU6orrP+Gxm3Qrm';
     this.retrieveRates();
   }
 
