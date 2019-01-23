@@ -11,7 +11,7 @@ The best way to start an integration is by creating a fork of MyEtherWallet, and
 - Dapps live in the dapps folder.  All the code related to the dapp will be located in a sub-folder to the dapps folder.
 
 - This sub-folder should contain at least one .vue file, routes.js file, and .scss style file for the dapp.  It may also contain any additional files/helpers for the dapp or the dapps ui.
-- The UI of the dapp must follow MEW design guidlines located at
+- The UI of the dapp must follow MEW design guidlines located [here](https://github.com/MyEtherWallet/MyEtherWallet-V5-Design-Resources/tree/master/style%20guideline)
 - Inclusion of the dapp on the dapp page is through an entry in the ```src/dapps/index.js``` file.
   - The entry is added to the dapps object in the file and includes the icon as well as title and description displayed to users.
 - To properly route to the dapp the dapps routes must be added to the router.  This is done by importing the routing.js file from the dapp sub-directory and adding it to the routes object in ```src/dapps/routes.js```
