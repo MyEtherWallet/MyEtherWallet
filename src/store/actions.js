@@ -1,6 +1,7 @@
 import url from 'url';
 import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
+import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 
@@ -64,8 +65,8 @@ const checkIfOnline = function({ commit }) {
 };
 
 const clearWallet = function({ commit, state }) {
-  if (state.wallet.identifier === 'MEWconnect') {
-    state.wallet.wallet.mewConnectDisconnect();
+  if (state.wallet.identifier === MEW_CONNECT) {
+    state.wallet.mewConnectDisconnect();
   }
   commit('CLEAR_WALLET');
 };
