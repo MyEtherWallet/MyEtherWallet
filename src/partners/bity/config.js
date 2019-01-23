@@ -63,6 +63,7 @@ const BITY_EXIT_RATES =
   '/api/v2/pairs?input_tags=crypto&output_tags=fiat&prices=1';
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
 
+const BASE_EQUIVALENT_CURRENCY = 'BTC';
 const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;
 const BITY_MIN = 0.01;
@@ -84,5 +85,6 @@ export {
   PROVIDER_NAME,
   BITY_MIN,
   BITY_MAX,
-  BITY_DECIMALS
+  BITY_DECIMALS,
+  BASE_EQUIVALENT_CURRENCY
 };

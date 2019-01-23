@@ -26,7 +26,8 @@ import {
   BITY_MAX,
   BITY_MIN,
   BITY_DECIMALS,
-  LOCAL_STORAGE_KEY
+  LOCAL_STORAGE_KEY,
+  BASE_EQUIVALENT_CURRENCY
 } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
@@ -174,10 +175,10 @@ export default class BitySwap {
   }
 
   getBtcEquivalent(currency) {
-    if (currency === 'BTC') {
+    if (currency === BASE_EQUIVALENT_CURRENCY) {
       return this.maxValue;
     }
-    const btcRate = this._getRate(currency, 'BTC');
+    const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
     return this.maxValue / btcRate;
   }
 
@@ -185,26 +186,26 @@ export default class BitySwap {
     if (toValue < this.minValue || fromValue < this.minValue)
       return 'lessThanMin';
     else if (
-      (toCurrency == 'BTC' && toValue > this.maxValue) ||
-      (fromCurrency == 'BTC' && fromValue > this.maxValue)
-    )
+      (toCurrency === BASE_EQUIVALENT_CURRENCY && toValue > this.maxValue) ||
+      (fromCurrency === BASE_EQUIVALENT_CURRENCY && fromValue > this.maxValue)
+    ) {
       return 'greaterThanMax';
-    else if (
-      (toCurrency == 'ETH' &&
-        toValue * this._getRate('ETH', 'BTC') > this.maxValue) ||
-      (fromCurrency == 'ETH' &&
-        fromValue * this._getRate('ETH', 'BTC') > this.maxValue)
-    )
-      return 'greaterThanMax';
-    else if (
-      (toCurrency == 'REP' &&
-        toValue * this._getRate('REP', 'BTC') > this.maxValue) ||
-      (fromCurrency == 'REP' &&
-        fromValue * this._getRate('REP', 'BTC') > this.maxValue)
-    )
-      return 'greaterThanMax';
+    } else if (
+      this.mainPairs.includes(toCurrency) ||
+      this.mainPairs.includes(fromCurrency)
+    ) {
+      if (
+        toValue * this._getRate(toCurrency, BASE_EQUIVALENT_CURRENCY) >
+          this.maxValue ||
+        fromValue * this._getRate(fromCurrency, BASE_EQUIVALENT_CURRENCY) >
+          this.maxValue
+      ) {
+        return 'greaterThanMax';
+      }
+    }
     return 'noErrors';
   }
+
 
   setNetwork(network) {
     this.network = network;
@@ -482,7 +483,7 @@ export default class BitySwap {
       if (
         timeSinceOrder > 600 &&
         data.status === bityStatuses.OPEN &&
-        data.input.currency === 'ETH'
+        data.input.currency === BASE_CURRENCY
       ) {
         return swapNotificationStatuses.COMPLETE;
       }

@@ -43,7 +43,6 @@ export default class Changelly {
         currencyDetails,
         tokenDetails
       } = await changellyApi.getSupportedCurrencies(this.network);
-      console.log(currencyDetails, tokenDetails); // todo remove dev item
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.hasRates =
