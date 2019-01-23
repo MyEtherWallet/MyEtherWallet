@@ -1,9 +1,15 @@
+### Release v5.0.0-beta.3
 ### Feature
 
 - Print ENS bid details [#360](https://github.com/MyEtherWallet/MyEtherWallet/pull/360)
 
+### Hotfix
+
+- Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
+
 ### Devop
 
+- Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)
 - Fix weird interaction in side menu [#494](https://github.com/MyEtherWallet/MyEtherWallet/pull/494)
 
 ### Release v5.0.0-beta.2
