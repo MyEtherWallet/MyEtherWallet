@@ -53,8 +53,6 @@ export default class BitySwap {
     this.network = props.network || networkSymbols.ETH;
     this.decimals = BITY_DECIMALS;
     this.hasRates = 0;
-    this.validStatus = ['RCVE', 'FILL', 'CONF', 'EXEC'];
-    this.invalidStatus = ['CANC'];
     this.mainPairs = ['REP', 'ETH'];
     this.minValue = BITY_MIN;
     this.maxValue = BITY_MAX;
@@ -101,7 +99,10 @@ export default class BitySwap {
       exitData.forEach(entry => {
         if (entry.enabled) {
           data.forEach(rateEntry => {
-            if (rateEntry.pair === entry.input + entry.output) {
+            if (
+              rateEntry.pair === entry.input + entry.output &&
+              !this.fiatCurrencies.includes(entry.input)
+            ) {
               this.rates.set(
                 `${entry.input}/${entry.output}`,
                 parseFloat(rateEntry.rate_we_buy)
@@ -206,7 +207,6 @@ export default class BitySwap {
     return 'noErrors';
   }
 
-
   setNetwork(network) {
     this.network = network;
   }
@@ -246,11 +246,13 @@ export default class BitySwap {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        if (this.currencies[prop])
-          collectMap.set(prop, {
-            symbol: prop,
-            name: this.currencies[prop].name
-          });
+        if (disabledPairing(this.currencies, value.symbol, prop, 'to')) {
+          if (this.currencies[prop])
+            collectMap.set(prop, {
+              symbol: prop,
+              name: this.currencies[prop].name
+            });
+        }
       }
     }
   }
