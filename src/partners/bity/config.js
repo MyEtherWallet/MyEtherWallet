@@ -2,7 +2,7 @@ const BityCurrencies = {
   BTC: {
     symbol: 'BTC',
     name: 'Bitcoin',
-    invalidFrom: ['REP']
+    invalidFrom: ['REP', 'CHF', 'EUR']
   },
   ETH: {
     symbol: 'ETH',
