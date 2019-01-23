@@ -494,10 +494,10 @@ export default {
         });
     },
     setENS() {
-      if (this.wallet.identifier === 'Web3') {
-        this.$store.dispatch('setENS', new ENS(window.web3.currentProvider));
-      } else {
+      if (this.network.type.ensResolver) {
         this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+      } else {
+        this.$store.dispatch('setENS', null);
       }
     }
   }
