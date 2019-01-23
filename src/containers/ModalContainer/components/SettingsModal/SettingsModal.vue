@@ -1,136 +1,120 @@
 <template>
-  <div class="settings-modal">
-    <div class="modal-container">
-      <b-modal
-        ref="settings"
-        title="Settings"
-        hide-footer
-        centered
-        class="bootstrap-modal nopadding"
+  <b-modal
+    ref="settings"
+    title="Settings"
+    hide-footer
+    centered
+    class="bootstrap-modal nopadding"
+  >
+    <div class="modal-contents">
+      <full-width-dropdown
+        ref="gasDropdown"
+        title="Transaction Speed"
+        class="tx-speed"
       >
-        <div class="modal-contents">
-          <full-width-dropdown
-            ref="gasDropdown"
-            title="Transaction Speed"
-            class="tx-speed"
-          >
-            <div class="radio-buttons">
-              <ul>
-                <li
-                  v-for="(val, key) in gasPriceInputs"
-                  :key="key"
-                  :class="selectedGasType === key ? 'selected' : ''"
-                >
-                  <div>
-                    <input
-                      :id="key"
-                      :value="key"
-                      :checked="selectedGasType === key"
-                      name="speedRadioInputs"
-                      type="radio"
-                      @change="selectGasType(key)"
-                    />
-                    <label :for="key">
-                      {{ key | capitalize }} ({{
-                        gasPriceInputs[key].gwei
-                      }}
-                      Gwei)
-                    </label>
-                  </div>
-                  <p>
-                    {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0"
-                      >($
-                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})</span
-                    >
-                  </p>
-                </li>
-                <li :class="selectedGasType === 'other' ? 'selected' : ''">
-                  <div>
-                    <input
-                      id="ccc"
-                      :checked="selectedGasType === 'other'"
-                      type="radio"
-                      name="speedRadioInputs"
-                      value="other"
-                      @change="selectGasType('other')"
-                    />
-                    <input
-                      ref="customInput"
-                      v-model="customGas"
-                      type="number"
-                      @focus="selectedGasType = 'other'"
-                    />
-                    <p class="gwei">Gwei</p>
-                  </div>
-                  <p>
-                    {{ customGasEth }} ETH
-                    <span v-if="ethPrice !== 0 && customGasEth !== 0"
-                      >($ {{ convert(customGasEth) | concatAddr }})</span
-                    >
-                  </p>
-                </li>
-              </ul>
-            </div>
-            <div class="button-block">
-              <standard-button
-                :options="buttonSave"
-                @click.native="saveGasChanges"
-              />
-            </div>
-          </full-width-dropdown>
-
-          <full-width-dropdown
-            title="Import Configurations"
-            class="import-config"
-          >
-            <b-alert :show="popup" fade variant="info"
-              >Imported file successfully!</b-alert
+        <div class="radio-buttons">
+          <ul>
+            <li
+              v-for="(val, key) in gasPriceInputs"
+              :key="key"
+              :class="selectedGasType === key ? 'selected' : ''"
             >
-            <p>
-              Please click the button below to open and import you configuration
-              file from your local computer.
-            </p>
-            <div class="import-button-block">
-              <standard-input :options="inputFileName" />
-              <input
-                ref="uploadInput"
-                type="file"
-                name="file"
-                style="display: none"
-                @change="receiveUploadedFile"
-              />
-              <standard-button
-                :options="buttonUploadFile"
-                @click.native="uploadFile"
-              />
-            </div>
-            <div class="button-block">
-              <standard-button
-                :options="buttonImport"
-                @click.native="setDataFromImportedFile"
-              />
-            </div>
-          </full-width-dropdown>
-
-          <full-width-dropdown
-            title="Export Configurations"
-            class="export-config"
-          >
-            <p>
-              Please click the button below to download your configuration file
-              into your local computer.
-            </p>
-            <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button"
-                >Export</a
-              >
-            </div>
-          </full-width-dropdown>
+              <div>
+                <input
+                  :id="key"
+                  :value="key"
+                  :checked="selectedGasType === key"
+                  name="speedRadioInputs"
+                  type="radio"
+                  @change="selectGasType(key)"
+                />
+                <label :for="key">
+                  {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }} Gwei)
+                </label>
+              </div>
+              <p>
+                {{ gasPriceInputs[key].eth }} ETH
+                <span v-if="ethPrice !== 0">
+                  ($ {{ convert(gasPriceInputs[key].eth) | concatAddr }})
+                </span>
+              </p>
+            </li>
+            <li :class="selectedGasType === 'other' ? 'selected' : ''">
+              <div>
+                <input
+                  id="ccc"
+                  :checked="selectedGasType === 'other'"
+                  type="radio"
+                  name="speedRadioInputs"
+                  value="other"
+                  @change="selectGasType('other')"
+                />
+                <input
+                  ref="customInput"
+                  v-model="customGas"
+                  type="number"
+                  @focus="selectedGasType = 'other'"
+                />
+                <p class="gwei">Gwei</p>
+              </div>
+              <p>
+                {{ customGasEth }} ETH
+                <span v-if="ethPrice !== 0 && customGasEth !== 0">
+                  ($ {{ convert(customGasEth) | concatAddr }})
+                </span>
+              </p>
+            </li>
+          </ul>
         </div>
-      </b-modal>
+        <div class="button-block">
+          <standard-button
+            :options="buttonSave"
+            @click.native="saveGasChanges"
+          />
+        </div>
+      </full-width-dropdown>
+
+      <full-width-dropdown title="Import Configurations" class="import-config">
+        <b-alert :show="popup" fade variant="info"
+          >Imported file successfully!</b-alert
+        >
+        <p>
+          Please click the button below to open and import you configuration
+          file from your local computer.
+        </p>
+        <div class="import-button-block">
+          <standard-input :options="inputFileName" />
+          <input
+            ref="uploadInput"
+            type="file"
+            name="file"
+            style="display: none"
+            @change="receiveUploadedFile"
+          />
+          <standard-button
+            :options="buttonUploadFile"
+            @click.native="uploadFile"
+          />
+        </div>
+        <div class="button-block">
+          <standard-button
+            :options="buttonImport"
+            @click.native="setDataFromImportedFile"
+          />
+        </div>
+      </full-width-dropdown>
+
+      <full-width-dropdown title="Export Configurations" class="export-config">
+        <p>
+          Please click the button below to download your configuration file into
+          your local computer.
+        </p>
+        <div class="button-block">
+          <a :href="file" :download="fileName" class="export-button">Export</a>
+        </div>
+      </full-width-dropdown>
     </div>
-  </div>
+  </b-modal>
 </template>
 
 <script>

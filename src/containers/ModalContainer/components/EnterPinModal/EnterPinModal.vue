@@ -1,14 +1,16 @@
 <template>
   <b-modal
     ref="enterpin"
-    title="Password"
+    :title="deviceInfo.name | capitalize"
     hide-footer
     centered
     class="bootstrap-modal nopadding"
   >
     <div class="modal-contents">
       <div class="pin-input-block">
-        <p class="main-title">Enter PIN for your {{ deviceInfo.name }}</p>
+        <p class="main-title">
+          Enter PIN for your {{ deviceInfo.name | capitalize }}
+        </p>
         <p class="sub-title">
           The PIN layout is displayed on your Hardware wallet
         </p>

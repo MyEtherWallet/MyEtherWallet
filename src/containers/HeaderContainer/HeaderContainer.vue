@@ -1,14 +1,6 @@
 <template>
   <div class="header wrap">
-    <settings-modal
-      v-if="wallet !== null"
-      ref="settings"
-      :gas-price="gasPrice"
-    />
     <notifications-modal ref="notifications" />
-    <logout-modal ref="logout" />
-    <logout-warning-modal ref="logoutWarningModal" />
-
     <div
       :class="isPageOnTop == false ? 'active' : ''"
       class="scrollup-container"
@@ -256,21 +248,14 @@ import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import UserReminderButton from '@/components/UserReminderButton';
-import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
-import LogoutModal from '@/components/LogoutModal';
-import LogoutWarningModal from '@/components/LogoutWarningModal';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
     'scroll-up-button': ScrollUpButton,
-    'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
-    'logout-modal': LogoutModal,
-    'logout-warning-modal': LogoutWarningModal,
     'user-reminder-button': UserReminderButton
   },
   data() {
@@ -304,8 +289,7 @@ export default {
       isPageOnTop: true,
       isMobileMenuOpen: false,
       isHomePage: true,
-      showGetFreeWallet: false,
-      gasPrice: '0'
+      showGetFreeWallet: false
     };
   },
   computed: {
@@ -335,17 +319,6 @@ export default {
       } else {
         this.isHomePage = true;
       }
-    },
-    wallet() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          this.gasPrice = new BigNumber(res).toString();
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
     }
   },
   mounted() {
@@ -392,7 +365,7 @@ export default {
             this.wallet !== null &&
             !event.target.location.hash.includes('interface')
           )
-            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
+            this.$eventHub.$emit('logoutModal', 'warning');
         },
         false
       );
@@ -402,7 +375,7 @@ export default {
   },
   methods: {
     openSettings() {
-      this.$refs.settings.$refs.settings.show();
+      this.$eventHub.$emit('settingsModal');
     },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
@@ -417,7 +390,7 @@ export default {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$refs.logout.$refs.logout.show();
+      this.$eventHub.$emit('logoutModal', '');
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();

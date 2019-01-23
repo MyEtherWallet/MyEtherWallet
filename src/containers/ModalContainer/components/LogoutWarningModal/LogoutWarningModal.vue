@@ -1,29 +1,20 @@
 <template>
-  <div class="modal-container">
-    <div
-      v-if="false"
-      class="dev-only-button"
-      @click="$refs.logoutWarningModal.show()"
-    >
-      Open Logout Warning Modal
-    </div>
-    <b-modal
-      ref="logoutWarningModal"
-      hide-footer
-      hide-header
-      centered
-      class="bootstrap-modal nopadding"
-    >
-      <div class="modal-contents">
-        <h2>{{ $t('common.oops') }}</h2>
-        <p>{{ $t('common.logoutWarning') }}</p>
-        <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
-        </div>
+  <b-modal
+    ref="logoutWarning"
+    hide-footer
+    hide-header
+    centered
+    class="bootstrap-modal nopadding"
+  >
+    <div class="modal-contents">
+      <h2>{{ $t('common.oops') }}</h2>
+      <p>{{ $t('common.logoutWarning') }}</p>
+      <div class="buttons">
+        <standard-button :options="buttonNo" @click.native="cancel" />
+        <standard-button :options="buttonYes" @click.native="logout" />
       </div>
-    </b-modal>
-  </div>
+    </div>
+  </b-modal>
 </template>
 
 <script>
@@ -52,11 +43,11 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('clearWallet');
-      this.$refs.logoutWarningModal.hide();
+      this.$refs.logoutWarning.hide();
       this.$router.push('/');
     },
     cancel() {
-      this.$refs.logoutWarningModal.hide();
+      this.$refs.logoutWarning.hide();
     }
   }
 };

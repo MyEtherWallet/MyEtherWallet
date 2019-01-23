@@ -37,8 +37,9 @@ class KeepkeyWallet {
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
       this.eventHub.$emit(
-        'showHardwarePinMatrix',
+        'showKeepKeyInput',
         { name: this.identifier },
+        String(MESSAGETYPE_PINMATRIXREQUEST),
         pin => {
           this.keepkey.acknowledgeWithPin(pin);
         }
@@ -46,8 +47,9 @@ class KeepkeyWallet {
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
       this.eventHub.$emit(
-        'showHardwarePassword',
+        'showKeepKeyInput',
         { name: this.identifier },
+        String(MESSAGETYPE_PASSPHRASEREQUEST),
         passPhrase => {
           this.keepkey.acknowledgeWithPassphrase(passPhrase);
         }

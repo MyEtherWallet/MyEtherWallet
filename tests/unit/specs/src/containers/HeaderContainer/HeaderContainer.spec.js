@@ -5,7 +5,6 @@ import HeaderContainer from '@/containers/HeaderContainer/HeaderContainer.vue';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
-import SettingsModal from '@/components/SettingsModal';
 
 import nodeList from '@/networks';
 import url from 'url';
@@ -112,8 +111,7 @@ describe('HeaderContainer.vue', () => {
         blockie: Blockie,
         notification: Notification,
         'b-modal': BModalStub,
-        'scroll-up-button': ScrollUpButton,
-        'settings-modal': SettingsModal
+        'scroll-up-button': ScrollUpButton
         // 'notifications-modal': NotificationsModal,
         // 'logout-modal': LogoutModal,
         // 'logout-warning-modal': LogoutWarningModal,
