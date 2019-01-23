@@ -49,7 +49,7 @@ if (process.env.BUILD_TYPE === 'mewcx') {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/files',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
@@ -148,7 +148,9 @@ if (process.env.NODE_ENV === 'production') {
 const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
-    importWorkboxFrom: 'local'
+    importWorkboxFrom: 'local',
+    skipWaiting: true,
+    clientsClaim: true
   }
 };
 module.exports = {
@@ -157,5 +159,5 @@ module.exports = {
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  chainWebpack: config => {}
+  chainWebpack: config => { }
 };
