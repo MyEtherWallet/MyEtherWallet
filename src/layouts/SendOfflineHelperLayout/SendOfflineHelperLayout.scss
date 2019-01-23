@@ -1,0 +1,73 @@
+@import '~@/scss/GlobalVariables';
+
+// ***********************************************************
+// Send Offline Helper
+// ***********************************************************
+.send-offline-helper {
+  position: relative;
+}
+
+
+// ***********************************************************
+// Wrap
+// ***********************************************************
+.wrap {
+  padding: 100px 0;
+  background-color: $light-blue-9;
+}
+
+
+// ***********************************************************
+// Page Header
+// ***********************************************************
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 45px;
+    font-weight: 500;
+    line-height: 60px;
+    margin: 0;
+    padding: 0;
+  }
+  p {
+    margin: 0 auto;
+    margin-top: 20px;
+    max-width: 700px;
+    line-height: 25px;
+  }
+}
+
+
+// ***********************************************************
+// Accordion Container
+// ***********************************************************
+.accordion-container {
+  margin: 0 auto;
+  max-width: 800px;
+  text-align: center;
+
+  >* {
+    margin-bottom: 15px;
+  }
+
+  .drop-down-address-selector,
+  .user-input,
+  .expending-options {
+    margin-bottom: 30px;
+  }
+}
+
+
+.buttons {
+  >* {
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
+
+

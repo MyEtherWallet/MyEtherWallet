@@ -1,0 +1,74 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// Variables
+//***************************************************
+  $border-radius-size: 4px;
+  $animation-duration: 0.3s;
+
+
+//***************************************************
+// Accordion Menu
+//***************************************************
+.accordion-menu {
+  position: relative;
+}
+
+.accordion-header {
+  user-select: none;
+  background-color: $light-grey-14;
+  color: $white;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: $border-radius-size;
+  transition: all $animation-duration ease;
+
+  &.open {
+    background-color: $dark-blue-12;
+    border-radius: $border-radius-size $border-radius-size 0 0;
+    .edit-button {
+      display: none;
+    }
+  }
+
+  * {
+    line-height: initial;
+  }
+  .accordion-number {
+    border: 1px solid $white;
+    border-radius: 100%;
+    width: 22px;
+    height: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .accordion-title {
+    margin-left: 8px;
+    font-weight: 600;
+  }
+
+  .edit-button {
+    margin-left: auto;
+    display: block;
+    cursor: pointer;
+  }
+}
+
+.accordion-content-container {
+  background-color: $white;
+  border-radius: 0 0 $border-radius-size $border-radius-size;
+  max-height: 0px;
+  overflow: hidden;
+  transition: all $animation-duration ease;
+  &.open {
+    max-height: 800px;
+  }
+
+  .content {
+    padding: 30px;
+  }
+}
+

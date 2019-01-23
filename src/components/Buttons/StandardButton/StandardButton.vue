@@ -6,7 +6,7 @@
     }"
     class="standard-button"
   >
-    <div class="accept-terms-Check-Box">
+    <div v-if="options.checkbox" class="accept-terms-Check-Box">
       <check-box
         :terms="true"
         class="checkbox"
@@ -56,6 +56,9 @@
     </div>
     <div v-if="options.customerSupport" class="customer-support-block">
       <customer-support />
+    </div>
+    <div v-if="options.helpCenter" class="help-center">
+      <p>Having issues? <a href="">Help Center</a></p>
     </div>
   </div>
 </template>

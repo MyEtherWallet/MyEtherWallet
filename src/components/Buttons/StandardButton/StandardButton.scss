@@ -81,7 +81,7 @@ button[disabled] {
 }
 
 @mixin btn-mixin-2() {
-  padding: 18px 45px;
+  padding: 18px 30px;
   font-weight: 500;
   cursor: pointer;
   font-size: 14px;
@@ -117,16 +117,16 @@ button[disabled] {
 
   .arrow-right {
     position: absolute;
-    top: 23px;
+    top: 21px;
     right: 20px;
-    height: 11px;
+    height: 15px;
   }
 
   .arrow-left {
     position: absolute;
-    top: 23px;
+    top: 21px;
     left: 20px;
-    height: 11px;
+    height: 15px;
   }
 }
 
@@ -387,5 +387,13 @@ button[disabled] {
 // Customer support block
 //=======================================================================
 .customer-support-block {
+  margin-top: 20px;
+}
+
+
+//=======================================================================
+// Help Center
+//=======================================================================
+.help-center {
   margin-top: 20px;
 }

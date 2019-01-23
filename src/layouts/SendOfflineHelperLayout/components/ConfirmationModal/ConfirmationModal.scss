@@ -1,0 +1,39 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 20px;
+  }
+}
+
+.modal-contents {
+
+  ul {
+    li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+
+      .name {
+        min-width: 140px;
+        color: $mew-green;
+      }
+
+      .data {
+        word-break: break-all;
+        margin-left: auto;
+      }
+    }
+  }
+
+}
+
+
+.confirmation-button {
+  margin-top: 40px;
+  text-align: center;
+}
