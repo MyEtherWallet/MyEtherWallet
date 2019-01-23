@@ -451,10 +451,11 @@ export default {
           .getId()
           .then(netId => {
             if (this.network.type.chainID.toString() !== netId) {
-              Object.keys(networkTypes).forEach(net => {
-                if (networkTypes[net].chainID === netId) {
+              Object.keys(networkTypes).some(net => {
+                if (networkTypes[net].chainID === netId && this.Networks[net]) {
                   this.$store.dispatch('switchNetwork', this.Networks[net][0]);
                   clearInterval(this.pollNetwork);
+                  return true;
                 }
               });
             }
