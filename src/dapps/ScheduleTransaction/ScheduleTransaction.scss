@@ -1,0 +1,36 @@
+@import '~@/scss/GlobalVariables';
+
+.schedule-transaction-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.schedule-transaction-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+}
+
+.schedule-transaction-form-container {
+  p {
+    color: $dark-blue-7;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+}
