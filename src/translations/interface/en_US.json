@@ -85,6 +85,7 @@
   "ibanPopOver": "This is international bank account number (IBAN).",
   "ownerName": "Name on the bank account",
   "billingAddress": "Billing Address",
+  "addressOptional": "Address 2 (Optional)",
   "city": "City",
   "state": "State",
   "zipCode": "Zip Code",
