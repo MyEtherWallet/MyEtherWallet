@@ -134,7 +134,6 @@ export default {
       this.printData = printData ? printData : {};
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
-      console.log(type);
       if (type === PRINT_ENS) {
         this.$refs.printModal.$refs.print.$on('hidden', resolve);
       }

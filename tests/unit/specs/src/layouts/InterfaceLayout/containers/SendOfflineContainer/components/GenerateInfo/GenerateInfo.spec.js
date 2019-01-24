@@ -79,7 +79,6 @@ describe('GenerateInfo.vue', () => {
         .find('.submit-button-container div.submit-button')
         .trigger('click');
 
-      console.log(wrapper.vm.$data.moreInfoGenerated);
       wrapper.vm.$nextTick(() => {
         expect(wrapper.vm.$data.moreInfoGenerated).toBe(true);
       });

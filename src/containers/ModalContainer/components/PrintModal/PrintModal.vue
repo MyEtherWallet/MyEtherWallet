@@ -31,11 +31,7 @@ import MnemonicPrintTemplate from '../../templates/MnemonicPrintTemplate';
 import EnsPrintTemplate from '../../templates/EnsPrintTemplate';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
-import {
-  PRINT_ENS,
-  PRINT_ADDRESS,
-  PRINT_MNEMONIC
-} from '../../modalTypes.js';
+import { PRINT_ENS, PRINT_ADDRESS, PRINT_MNEMONIC } from '../../modalTypes.js';
 
 export default {
   name: 'PrintModal',
@@ -61,7 +57,7 @@ export default {
       printEns: PRINT_ENS,
       printAddr: PRINT_ADDRESS,
       printMnem: PRINT_MNEMONIC
-    }
+    };
   },
   methods: {
     async print() {

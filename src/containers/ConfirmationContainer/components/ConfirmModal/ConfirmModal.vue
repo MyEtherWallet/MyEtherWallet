@@ -213,7 +213,10 @@ export default {
       const web3 = this.web3;
       const networkToken = this.network.type.tokens;
       const tokenIndex = networkToken.findIndex(el => {
-        return el.address.toLowerCase() === this.to.toLowerCase();
+        if (el.hasOwProperty('address')) {
+          return el.address.toLowerCase() === this.to.toLowerCase();
+        }
+        return -1;
       });
 
       const jsonInterface = {
