@@ -1,4 +1,3 @@
-/* eslint-disable */
 const CoralConfig = {
   gasLimitSuggestion: 300000,
   chainID: 1,

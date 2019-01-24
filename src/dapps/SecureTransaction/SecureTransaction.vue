@@ -194,7 +194,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import { CoralConfig } from '@/partners/coral';
+import { CoralConfig } from './config';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import normalise from '@/helpers/normalise';
