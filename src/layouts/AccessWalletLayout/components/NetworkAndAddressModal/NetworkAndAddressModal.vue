@@ -149,7 +149,7 @@
             >
               <li>{{ $t('accessWallet.id') }}</li>
               <li>{{ $t('common.address') }}</li>
-              <li v-if="wallet !== null">{{ $t('common.balance') }}</li>
+              <li>{{ $t('common.balance') }}</li>
             </ul>
 
             <ul
@@ -165,7 +165,7 @@
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
-              <li v-if="!!wallet">{{ account.balance }}</li>
+              <li>{{ account.balance }}</li>
               <li class="user-input-checkbox">
                 <label class="checkbox-container checkbox-container-small">
                   <input
@@ -220,6 +220,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
+import web3utils from 'web3-utils';
 import ethIcon from '@/assets/images/icons/ethereum-icon.png';
 
 const MAX_ADDRESSES = 5;
@@ -290,6 +291,9 @@ export default {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.selectedNetwork = network;
+        this.$store.dispatch('setWeb3Instance');
+        this.currentIndex = 0;
+        this.setHDAccounts();
       });
     },
     unselectAllAddresses: function(selected) {
@@ -330,9 +334,19 @@ export default {
         this.getPaths();
         this.currentIndex = 0;
         this.setHDAccounts();
+        this.$refs.networkAndAddress.show();
       });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
+    setBalances: web3utils._.debounce(function() {
+      this.HDAccounts.forEach(account => {
+        this.web3.eth
+          .getBalance(account.account.getChecksumAddressString())
+          .then(balance => {
+            account.balance = balance;
+          });
+      });
+    }, 1000),
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
       if (!this.wallet !== null) {
@@ -344,6 +358,7 @@ export default {
       this.$refs.networkAndAddress.hide();
     },
     async setHDAccounts() {
+      if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
       this.HDAccounts = [];
       for (
         let i = this.currentIndex;
@@ -351,20 +366,12 @@ export default {
         i++
       ) {
         const account = await this.hardwareWallet.getAccount(i);
-        if (!this.wallet) {
-          this.HDAccounts.push({
-            index: i,
-            account: account
-          });
-        } else {
-          this.HDAccounts.push({
-            index: i,
-            account: account,
-            balance: await this.web3.eth.getBalance(
-              account.getChecksumAddressString()
-            )
-          });
-        }
+        this.HDAccounts.push({
+          index: i,
+          account: account,
+          balance: 'loading'
+        });
+        this.setBalances();
       }
       this.currentIndex += MAX_ADDRESSES;
     },
