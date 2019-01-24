@@ -41,6 +41,7 @@ import LogoutWarningModal from './components/LogoutWarningModal';
 
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { PRINT_ENS, LOGOUT_WARNING } from './modalTypes.js';
 import { Messages } from '@keepkey/keepkey.js';
 const { MessageType } = Messages;
 const {
@@ -110,7 +111,7 @@ export default {
       }
     );
     this.$eventHub.$on('logoutModal', type => {
-      type === 'warning'
+      type === LOGOUT_WARNING
         ? this.$refs.logoutWarning.$refs.logoutWarning.show()
         : this.$refs.logout.$refs.logout.show();
     });
@@ -133,7 +134,8 @@ export default {
       this.printData = printData ? printData : {};
       this.printType = type;
       this.$refs.printModal.$refs.print.show();
-      if (type === 'ens') {
+      console.log(type);
+      if (type === PRINT_ENS) {
         this.$refs.printModal.$refs.print.$on('hidden', resolve);
       }
     });

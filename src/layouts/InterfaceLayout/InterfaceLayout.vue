@@ -109,6 +109,9 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
+
+import { PRINT_ADDRESS } from '@/containers/ModalContainer/modalTypes.js';
+
 export default {
   components: {
     'interface-side-menu': InterfaceSideMenu,
@@ -231,7 +234,7 @@ export default {
       }
     },
     print() {
-      this.$eventHub.$emit('printModal', 'address');
+      this.$eventHub.$emit('printModal', PRINT_ADDRESS);
     },
     triggerAlert(msg, type) {
       let timeout;

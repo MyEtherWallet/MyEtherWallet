@@ -390,7 +390,7 @@ export default {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$eventHub.$emit('logoutModal', '');
+      this.$eventHub.$emit('logoutModal');
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();

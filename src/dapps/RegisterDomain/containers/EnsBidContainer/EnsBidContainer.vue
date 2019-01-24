@@ -188,6 +188,7 @@
 import Timer from '../../components/Timer';
 import { Misc } from '@/helpers';
 import { mapGetters } from 'vuex';
+import { PRINT_ENS } from '@/containers/ModalContainer/modalTypes.js';
 
 export default {
   components: {
@@ -336,7 +337,7 @@ export default {
       };
       if (!this.$route.fullPath.includes('reveal')) {
         new Promise(resolve => {
-          this.$eventHub.$emit('printModal', 'ens', this.raw, resolve);
+          this.$eventHub.$emit('printModal', PRINT_ENS, this.raw, resolve);
         }).then(() => {
           this.web3.eth.sendTransaction(raw);
         });

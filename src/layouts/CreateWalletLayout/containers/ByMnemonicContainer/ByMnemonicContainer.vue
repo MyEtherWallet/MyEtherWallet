@@ -74,6 +74,7 @@
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import FinishModal from './components/FinishModal';
 import VerificationModal from './components/VerificationModal';
+import { PRINT_MNEMONIC } from '@/containers/ModalContainer/modalTypes.js';
 const bip39 = require('bip39');
 
 export default {
@@ -216,7 +217,7 @@ export default {
       this.mnemonicValues.forEach((item, idx) => {
         newObj[idx] = item;
       });
-      this.$eventHub.$emit('printModal', 'mnemonic', newObj);
+      this.$eventHub.$emit('printModal', PRINT_MNEMONIC, newObj);
     }
   }
 };

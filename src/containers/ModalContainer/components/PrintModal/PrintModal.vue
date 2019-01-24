@@ -9,13 +9,13 @@
       size="lg"
     >
       <div id="printContainer" class="print-modal">
-        <address-print-template v-if="printType === 'address'" />
+        <address-print-template v-if="printType === printAddr" />
         <mnemonic-print-template
-          v-if="printType === 'mnemonic'"
+          v-if="printType === printMnem"
           :mnemonic="printData"
         />
         <ens-print-template
-          v-if="printType === 'ens'"
+          v-if="printType === printEns"
           :json-string="printData"
         />
       </div>
@@ -31,6 +31,11 @@ import MnemonicPrintTemplate from '../../templates/MnemonicPrintTemplate';
 import EnsPrintTemplate from '../../templates/EnsPrintTemplate';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+import {
+  PRINT_ENS,
+  PRINT_ADDRESS,
+  PRINT_MNEMONIC
+} from '../../modalTypes.js';
 
 export default {
   name: 'PrintModal',
@@ -49,6 +54,13 @@ export default {
       default: () => {
         return {};
       }
+    }
+  },
+  data() {
+    return {
+      printEns: PRINT_ENS,
+      printAddr: PRINT_ADDRESS,
+      printMnem: PRINT_MNEMONIC
     }
   },
   methods: {
