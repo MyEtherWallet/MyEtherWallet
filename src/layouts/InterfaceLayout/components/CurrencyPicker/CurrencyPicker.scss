@@ -116,12 +116,13 @@
       border-bottom: 0;
     }
 
-    &:hover {
+    &.selected {
       background-color: $light-grey-3;
     }
 
-    &.selected {
-      background-color: $light-grey-3;
+    &:hover,
+    &.selected:hover {
+      background-color: $white;
     }
   }
 }

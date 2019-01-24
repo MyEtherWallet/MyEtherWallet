@@ -64,11 +64,13 @@
             <p v-if="addr.address === currentAddress" class="address-note">
               {{ $t('interface.myAddr') }}
             </p>
-            <i
-              v-if="toAddressCheckMark"
-              aria-hidden="true"
-              class="fa fa-check-circle good-button"
-            />
+            <div class="good-button-container">
+              <i
+                v-if="toAddressCheckMark"
+                aria-hidden="true"
+                class="fa fa-check-circle good-button"
+              />
+            </div>
           </li>
         </ul>
       </div>
