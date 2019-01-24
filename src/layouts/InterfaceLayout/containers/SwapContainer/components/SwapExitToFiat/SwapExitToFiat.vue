@@ -284,7 +284,7 @@ export default {
         value: ''
       },
       inputAddress2: {
-        placeHolder: 'Address 2 (Optional)',
+        placeHolder: this.$t('interface.addressOptional'),
         value: ''
       },
       inputCity: {
