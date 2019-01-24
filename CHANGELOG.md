@@ -3,6 +3,7 @@
 ### Hotfix
 
 - Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
+- Fix KeepKey network modal issue [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/510)
 
 ### Devop
 
