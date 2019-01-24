@@ -61,7 +61,7 @@
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.txFee') }}</p>
-                <p>{{ fee }} ETH</p>
+                <p>{{ fee }} {{ network.type.name }}</p>
               </div>
               <div class="grid-block">
                 <p>Nonce</p>
@@ -96,8 +96,7 @@
                   target="exPopover9"
                   triggers="hover focus"
                   placement="top"
-                >
-                </b-popover>
+                ></b-popover>
               </div>
             </div>
           </div>
@@ -107,9 +106,8 @@
               href="https:/kb.myetherwallet.com"
               target="_blank"
               rel="noopener noreferrer"
+              >Learn more</a
             >
-              Learn more
-            </a>
           </p>
         </div>
       </div>
@@ -233,6 +231,9 @@ export default {
       const transferFuncSig = web3.eth.abi.encodeFunctionSignature(
         jsonInterface
       );
+      this.tokenTransferTo = '';
+      this.tokenTransferVal = '';
+      this.tokenSymbol = '';
       if (data.substr(0, 10) === transferFuncSig) {
         const params = web3.eth.abi.decodeParameters(
           ['address', 'uint256'],
