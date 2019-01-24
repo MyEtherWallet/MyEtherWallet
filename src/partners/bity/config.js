@@ -64,10 +64,12 @@ const BITY_EXIT_RATES =
 const bityRateEndpoint = 'https://bity.com/api/v1/rate2/';
 
 const BASE_EQUIVALENT_CURRENCY = 'BTC';
+const FIAT_EQUIVALENT_CURRENCY = 'CHF';
 const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;
 const BITY_MIN = 0.01;
-const FIAT_MIN = 10; // don't have an exact number. but have not been able to do a tx below about 10;
+const FIAT_MIN = 10; // in CHF
+const FIAT_MAX = 5000; // in CHF
 const BITY_MAX = 3;
 const BITY_DECIMALS = 6;
 const PROVIDER_NAME = 'bity';
@@ -88,5 +90,7 @@ export {
   BITY_MAX,
   BITY_DECIMALS,
   BASE_EQUIVALENT_CURRENCY,
-  FIAT_MIN
+  FIAT_EQUIVALENT_CURRENCY,
+  FIAT_MIN,
+  FIAT_MAX
 };

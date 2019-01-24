@@ -28,7 +28,9 @@ import {
   BITY_DECIMALS,
   LOCAL_STORAGE_KEY,
   BASE_EQUIVALENT_CURRENCY,
-  FIAT_MIN
+  FIAT_EQUIVALENT_CURRENCY,
+  FIAT_MIN,
+  FIAT_MAX
 } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
@@ -58,6 +60,7 @@ export default class BitySwap {
     this.minValue = BITY_MIN;
     this.maxValue = BITY_MAX;
     this.fiatMinValue = FIAT_MIN;
+    this.fiatMaxValue = FIAT_MAX;
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
 
@@ -149,8 +152,12 @@ export default class BitySwap {
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: this.minValue,
-      maxValue: this.getBtcEquivalent(fromCurrency)
+      minValue: this.fiatCurrencies.includes(toCurrency)
+        ? this.getChfEquivalentMaxMin(fromCurrency, false)
+        : this.minValue,
+      maxValue: this.fiatCurrencies.includes(toCurrency)
+        ? this.getChfEquivalentMaxMin(fromCurrency, true)
+        : this.getBtcEquivalentMax(fromCurrency)
     };
   }
 
@@ -175,7 +182,7 @@ export default class BitySwap {
     );
   }
 
-  getBtcEquivalent(currency) {
+  getBtcEquivalentMax(currency) {
     if (currency === BASE_EQUIVALENT_CURRENCY) {
       return this.maxValue;
     }
@@ -183,15 +190,24 @@ export default class BitySwap {
     return this.maxValue / btcRate;
   }
 
+  getChfEquivalentMaxMin(cryptoCurrency, max) {
+    if (cryptoCurrency === FIAT_EQUIVALENT_CURRENCY) {
+      return max ? this.fiatMaxValue : this.fiatMinValue;
+    }
+    const chfRate = this._getRate(cryptoCurrency, FIAT_EQUIVALENT_CURRENCY);
+    return max ? this.fiatMaxValue / chfRate : this.fiatMinValue / chfRate;
+  }
+
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
     if (this.fiatCurrencies.includes(toCurrency)) {
-      if (toValue < this.fiatMinValue || fromValue < this.minValue)
+      if (
+        fromValue * this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY) <
+        this.fiatMinValue
+      )
         return 'lessThanMin';
       else if (
-        toValue * this._getRate(toCurrency, BASE_EQUIVALENT_CURRENCY) >
-          this.maxValue ||
-        fromValue * this._getRate(fromCurrency, BASE_EQUIVALENT_CURRENCY) >
-          this.maxValue
+        fromValue * this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY) >
+        this.fiatMaxValue
       ) {
         return 'greaterThanMax';
       }
