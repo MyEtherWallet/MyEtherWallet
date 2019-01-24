@@ -141,12 +141,7 @@
               <h4>{{ $t('accessWallet.interactAddr') }}</h4>
             </div>
 
-            <ul
-              :class="[
-                wallet !== null ? 'fours' : 'threes',
-                'address-block table-header'
-              ]"
-            >
+            <ul class="address-block table-header fours">
               <li>{{ $t('accessWallet.id') }}</li>
               <li>{{ $t('common.address') }}</li>
               <li>{{ $t('common.balance') }}</li>
@@ -158,8 +153,7 @@
               :key="account.index"
               :class="[
                 selectedId === 'address' + account.index ? 'selected' : '',
-                wallet !== null ? 'fours' : 'threes',
-                'address-block address-data'
+                'address-block address-data fours'
               ]"
               @click="setAccount(account)"
             >
