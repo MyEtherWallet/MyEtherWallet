@@ -67,6 +67,7 @@ const BASE_EQUIVALENT_CURRENCY = 'BTC';
 const LOCAL_STORAGE_KEY = 'linkedPhone';
 const TIME_SWAP_VALID = 600;
 const BITY_MIN = 0.01;
+const FIAT_MIN = 10; // don't have an exact number. but have not been able to do a tx below about 10;
 const BITY_MAX = 3;
 const BITY_DECIMALS = 6;
 const PROVIDER_NAME = 'bity';
@@ -86,5 +87,6 @@ export {
   BITY_MIN,
   BITY_MAX,
   BITY_DECIMALS,
-  BASE_EQUIVALENT_CURRENCY
+  BASE_EQUIVALENT_CURRENCY,
+  FIAT_MIN
 };

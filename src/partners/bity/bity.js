@@ -27,7 +27,8 @@ import {
   BITY_MIN,
   BITY_DECIMALS,
   LOCAL_STORAGE_KEY,
-  BASE_EQUIVALENT_CURRENCY
+  BASE_EQUIVALENT_CURRENCY,
+  FIAT_MIN
 } from './config';
 
 function disabledPairing(currencyList, symbol, invalid, side) {
@@ -56,6 +57,7 @@ export default class BitySwap {
     this.mainPairs = ['REP', 'ETH'];
     this.minValue = BITY_MIN;
     this.maxValue = BITY_MAX;
+    this.fiatMinValue = FIAT_MIN;
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
 
@@ -182,6 +184,21 @@ export default class BitySwap {
   }
 
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
+    if (this.fiatCurrencies.includes(toCurrency)) {
+      // Todo
+      if (toValue < this.fiatMinValue || fromValue < this.minValue)
+        return 'lessThanMin';
+      else if (
+        toValue * this._getRate(toCurrency, BASE_EQUIVALENT_CURRENCY) >
+          this.maxValue ||
+        fromValue * this._getRate(fromCurrency, BASE_EQUIVALENT_CURRENCY) >
+          this.maxValue
+      ) {
+        return 'greaterThanMax';
+      }
+      return 'noErrors';
+    }
+
     if (toValue < this.minValue || fromValue < this.minValue)
       return 'lessThanMin';
     else if (
