@@ -185,7 +185,6 @@ export default class BitySwap {
 
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
     if (this.fiatCurrencies.includes(toCurrency)) {
-      // Todo
       if (toValue < this.fiatMinValue || fromValue < this.minValue)
         return 'lessThanMin';
       else if (
