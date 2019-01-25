@@ -83,7 +83,7 @@ export default {
     ...mapGetters({
       ethDonationAddress: 'ethDonationAddress',
       ens: 'ens',
-      wallet: 'wallet',
+      account: 'account',
       web3: 'web3'
     }),
     sortedResults() {
@@ -147,7 +147,7 @@ export default {
     async buyDomain(item) {
       const domain = this.web3.utils.sha3(item.domain);
       const subdomain = this.domainName;
-      const ownerAddress = this.wallet.getAddressString();
+      const ownerAddress = this.account.address;
       const referrerAddress = this.ethDonationAddress;
       const resolverAddress = await this.ens.resolver('resolver.eth').addr();
       const itemContract = this.knownRegistrarInstances[item.domain];

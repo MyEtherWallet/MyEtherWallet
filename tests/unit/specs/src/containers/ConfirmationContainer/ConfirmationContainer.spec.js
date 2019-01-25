@@ -8,8 +8,7 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import ConfirmCollectionModal from '@/containers/ConfirmationContainer/components/ConfirmCollectionModal/ConfirmCollectionModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import sinon from 'sinon';
-import nodeList from '@/networks';
-import url from 'url';
+import { state, getters } from '@@/helpers/mockStore';
 import Web3 from 'web3';
 
 import { Tooling } from '@@/helpers';
@@ -28,7 +27,7 @@ const BModalStub = {
 };
 
 xdescribe('[Failing] ConfirmationContainer.vue', () => {
-  let localVue, i18n, wrapper, store, newWeb3;
+  let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -36,41 +35,9 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const wallet = {
-      getChecksumAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      wallet: () => {
-        return wallet;
-      },
-      gasPrice: () => {
-        return 100;
-      }
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 
@@ -256,7 +223,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
   //     initWrapper();
   //     wrapper.vm.showSuccessModal();
   //     expect(showModal.called).toBe(true);
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
@@ -281,7 +248,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
 
   //   it('should render correct reset method', () => {
   //     wrapper.vm.reset();
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
