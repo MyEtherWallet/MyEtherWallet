@@ -110,7 +110,15 @@ import {
   SecalotWallet,
   KeepkeyWallet
 } from '@/wallets';
-
+import {
+  WEB3_WALLET as WEB3_TYPE,
+  LEDGER as LEDGER_TYPE,
+  TREZOR as TREZOR_TYPE,
+  BITBOX as BITBOX_TYPE,
+  SECALOT as SECALOT_TYPE,
+  KEEPKEY as KEEPKEY_TYPE,
+  MNEMONIC as MNEMONIC_TYPE
+} from '@/wallets/bip44/walletTypes';
 export default {
   components: {
     'interface-side-menu': InterfaceSideMenu,
@@ -205,26 +213,26 @@ export default {
 
     switchAddress() {
       switch (this.wallet.identifier) {
-        case 'ledger':
+        case LEDGER_TYPE:
           LedgerWallet().then(_newWallet => {
             this.toggleNetworkAddrModal(_newWallet);
           });
           break;
-        case 'trezor':
+        case TREZOR_TYPE:
           TrezorWallet().then(_newWallet => {
             this.toggleNetworkAddrModal(_newWallet);
           });
           break;
-        case 'bitbox':
+        case BITBOX_TYPE:
           this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
           break;
-        case 'secalot':
+        case SECALOT_TYPE:
           this.togglePasswordModal(SecalotWallet, 'Secalot');
           break;
-        case 'mnemonic':
+        case MNEMONIC_TYPE:
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
           break;
-        case 'keepkey':
+        case KEEPKEY_TYPE:
           KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
             this.toggleNetworkAddrModal(_newWallet);
           });
@@ -351,6 +359,7 @@ export default {
           return 0;
         })
         .map(token => {
+          token.address = token.addr;
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance
@@ -442,10 +451,11 @@ export default {
           .getId()
           .then(netId => {
             if (this.network.type.chainID.toString() !== netId) {
-              Object.keys(networkTypes).forEach(net => {
-                if (networkTypes[net].chainID === netId) {
+              Object.keys(networkTypes).some(net => {
+                if (networkTypes[net].chainID === netId && this.Networks[net]) {
                   this.$store.dispatch('switchNetwork', this.Networks[net][0]);
                   clearInterval(this.pollNetwork);
+                  return true;
                 }
               });
             }
@@ -457,20 +467,19 @@ export default {
       }, 500);
     },
     clearIntervals() {
-      const self = this;
-      if (self.wallet === null) {
-        clearInterval(self.pollNetwork);
-        clearInterval(self.pollBlock);
-        clearInterval(self.pollAddress);
-      }
+      clearInterval(this.pollNetwork);
+      clearInterval(this.pollBlock);
+      clearInterval(this.pollAddress);
     },
     setupOnlineEnvironment() {
+      this.clearIntervals();
       if (this.online === true) {
         if (this.wallet !== null) {
-          if (this.wallet.identifier === 'web3_wallet') {
+          if (this.wallet.identifier === WEB3_TYPE) {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
+          this.getBlock();
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();

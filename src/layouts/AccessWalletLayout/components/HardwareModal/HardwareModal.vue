@@ -16,56 +16,116 @@
             :class="selected === 'ledger' ? 'active' : ''"
             @click="select('ledger')"
           >
-            <img class="icon" src="~@/assets/images/icons/button-ledger.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-ledger-hover.png"
+            <div>
+              <img
+                class="icon"
+                src="~@/assets/images/icons/button-ledger.png"
+              />
+              <img
+                class="icon-hover"
+                src="~@/assets/images/icons/button-ledger-hover.png"
+              />
+              <span>Ledger Wallet</span>
+            </div>
+            <i
+              :class="[
+                selected === 'ledger' ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-            <span>Ledger Wallet</span>
           </li>
           <li
             :class="selected === 'bitbox' ? 'active' : ''"
             @click="select('bitbox')"
           >
-            <img class="icon" src="~@/assets/images/icons/button-bitbox.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-bitbox-hover.png"
+            <div>
+              <img
+                class="icon"
+                src="~@/assets/images/icons/button-bitbox.png"
+              />
+              <img
+                class="icon-hover"
+                src="~@/assets/images/icons/button-bitbox-hover.png"
+              />
+              <span>Digital Bitbox</span>
+            </div>
+            <i
+              :class="[
+                selected === 'bitbox' ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-            <span>Digital Bitbox</span>
           </li>
           <li
             :class="selected === 'secalot' ? 'active' : ''"
             @click="select('secalot')"
           >
-            <img class="icon" src="~@/assets/images/icons/button-secalot.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-secalot-hover.png"
+            <div>
+              <img
+                class="icon"
+                src="~@/assets/images/icons/button-secalot.png"
+              />
+              <img
+                class="icon-hover"
+                src="~@/assets/images/icons/button-secalot-hover.png"
+              />
+              <span>Secalot</span>
+            </div>
+            <i
+              :class="[
+                selected === 'secalot' ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-            <span>Secalot</span>
           </li>
           <li
             :class="selected === 'trezor' ? 'active' : ''"
             @click="select('trezor')"
           >
-            <img class="icon" src="~@/assets/images/icons/button-trezor.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-trezor-hover.png"
+            <div>
+              <img
+                class="icon"
+                src="~@/assets/images/icons/button-trezor.png"
+              />
+              <img
+                class="icon-hover"
+                src="~@/assets/images/icons/button-trezor-hover.png"
+              />
+              <span>Trezor</span>
+            </div>
+            <i
+              :class="[
+                selected === 'trezor' ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-            <span>Trezor</span>
           </li>
           <li
             :class="selected === 'keepkey' ? 'active' : ''"
             @click="select('keepkey')"
           >
-            <img class="icon" src="~@/assets/images/icons/button-keepkey.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-keepkey-hover.png"
+            <div>
+              <img
+                class="icon"
+                src="~@/assets/images/icons/button-keepkey.png"
+              />
+              <img
+                class="icon-hover"
+                src="~@/assets/images/icons/button-keepkey-hover.png"
+              />
+              <span>KeepKey</span>
+            </div>
+            <i
+              :class="[
+                selected === 'keepkey' ? '' : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-            <span>KeepKey</span>
           </li>
         </ul>
       </div>

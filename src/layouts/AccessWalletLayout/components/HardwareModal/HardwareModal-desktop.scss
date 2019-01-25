@@ -34,6 +34,10 @@
           line-height: 16px;
         }
 
+        div {
+          flex: 1;
+        }
+
         &.active {
           border: 1px solid $mew-green;
           color: $text-black;
@@ -44,11 +48,12 @@
           }
 
           .icon-hover {
-            display: block;
+            display: inline-block;
           }
         }
 
         &:hover {
+          border: 1px solid $mew-green;
           color: $text-black;
           font-weight: 500;
 
@@ -57,7 +62,7 @@
           }
 
           .icon-hover {
-            display: block;
+            display: inline-block;
           }
         }
 
