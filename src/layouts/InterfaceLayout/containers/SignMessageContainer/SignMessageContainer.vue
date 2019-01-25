@@ -92,22 +92,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet',
+      account: 'account',
       web3: 'web3'
     })
   },
   methods: {
     signMessage() {
       this.web3.eth
-        .sign(this.message, this.wallet.getAddressString())
+        .sign(this.message, this.account.address)
         .then(_signedMessage => {
           this.$refs.signature.value = JSON.stringify(
             {
-              address: this.wallet.getChecksumAddressString(),
+              address: this.account.address,
               msg: this.message,
               sig: _signedMessage,
               version: '3',
-              signer: this.wallet.isHardware ? this.wallet.identifier : 'MEW'
+              signer: this.account.isHardware ? this.account.identifier : 'MEW'
             },
             null,
             2

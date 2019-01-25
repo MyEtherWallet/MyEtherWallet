@@ -107,6 +107,7 @@ export default {
       ens: 'ens',
       gasPrice: 'gasPrice',
       web3: 'web3',
+      account: 'account',
       wallet: 'wallet',
       network: 'network'
     })
@@ -155,7 +156,7 @@ export default {
               .sendBatchTransactions(this.preparedSwap)
               .then(_result => {
                 let tradeIndex;
-                if (this.wallet.identifier === WEB3_WALLET) {
+                if (this.account.identifier === WEB3_WALLET) {
                   tradeIndex = 0;
                 } else {
                   tradeIndex = [_result.length - 1];
@@ -280,7 +281,7 @@ export default {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
           this.preparedSwap = {
-            from: this.wallet.getChecksumAddressString(),
+            from: this.account.address,
             to: tokenInfo.contractAddress,
             value: 0,
             data: new this.web3.eth.Contract(
@@ -300,14 +301,14 @@ export default {
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
           this.preparedSwap = {
-            from: this.wallet.getChecksumAddressString(),
+            from: this.account.address,
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
           };
         }
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
-          entry.from = this.wallet.getChecksumAddressString();
+          entry.from = this.account.address;
           if (
             +unit.toWei(this.gasPrice, 'gwei').toString() >
             +swapDetails.kyberMaxGas

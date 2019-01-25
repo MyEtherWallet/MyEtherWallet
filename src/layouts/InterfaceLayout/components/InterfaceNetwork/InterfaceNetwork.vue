@@ -12,7 +12,7 @@
           <div class="title-and-helper">
             <h2>{{ $t('interface.network') }}</h2>
           </div>
-          <p v-if="wallet.identifier !== 'web3_wallet'">
+          <p v-if="account.identifier !== identifier">
             {{ network.service + '(' + network.type.name + ')' }}
           </p>
           <p v-else>{{ 'Web3 Provider' + '(' + network.type.name + ')' }}</p>
@@ -24,7 +24,7 @@
         </div>
         <div class="icon-container">
           <b-btn
-            v-if="wallet.identifier !== 'web3_wallet'"
+            v-if="account.identifier !== identifier"
             id="networkModal"
             class="custom-tooltip"
             @click="networkModalOpen"
@@ -47,6 +47,7 @@
 <script>
 import InterfaceNetworkModal from '../InterfaceNetworkModal';
 import { mapGetters } from 'vuex';
+import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 
 export default {
   components: {
@@ -60,13 +61,14 @@ export default {
   },
   data() {
     return {
-      parsedNetwork: 0
+      parsedNetwork: 0,
+      identifier: WEB3_WALLET
     };
   },
   computed: {
     ...mapGetters({
       network: 'network',
-      wallet: 'wallet',
+      account: 'account',
       web3: 'web3'
     })
   },
@@ -82,7 +84,7 @@ export default {
   },
   methods: {
     networkModalOpen() {
-      if (this.wallet.identifier !== 'web3_wallet') {
+      if (this.account.identifier !== this.identifier) {
         this.$refs.network.$refs.network.show();
       }
     }

@@ -269,7 +269,6 @@ export default {
       ens: 'ens',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      wallet: 'wallet',
       network: 'network'
     }),
     bestRate() {
@@ -419,7 +418,7 @@ export default {
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
-    this.currentAddress = this.wallet.getChecksumAddressString();
+    this.currentAddress = this.account.address;
   },
   methods: {
     flipCurrencies() {
