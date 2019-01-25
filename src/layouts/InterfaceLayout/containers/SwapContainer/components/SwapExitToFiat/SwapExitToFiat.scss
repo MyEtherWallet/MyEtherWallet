@@ -34,6 +34,9 @@ ul {
 // .content-container
 // *********************************************************************
 .button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-bottom: 0;
   text-align: center;
 }
 
@@ -96,4 +99,10 @@ ul {
 .extraSpace {
   min-height: 200px;
   margin: 0;
+}
+
+
+.beta-notice{
+  color: #05C0A5;
+  padding-bottom: 10px;
 }

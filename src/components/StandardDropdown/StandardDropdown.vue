@@ -2,7 +2,8 @@
   <div class="standard-dropdown">
     <div class="wrap">
       <div class="dropdown-button" @click="dropdownOpen">
-        <p>{{ chosenValue }}</p>
+        <p v-if="chosenValue !== ''">{{ chosenValue }}</p>
+        <p v-if="chosenValue === ''" class="placeholder">{{ placeholder }}</p>
         <i aria-hidden="true" class="fa fa-angle-down"></i>
       </div>
       <div v-if="open">
@@ -37,6 +38,10 @@ export default {
       type: String,
       default: ''
     },
+    placeholder: {
+      type: String,
+      default: ''
+    },
     optionValueKey: {
       type: String,
       default: ''
@@ -44,7 +49,7 @@ export default {
   },
   data() {
     return {
-      chosenValue: 'CA',
+      chosenValue: '',
       open: false,
       search: '',
       localOptions: this.options

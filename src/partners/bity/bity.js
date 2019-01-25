@@ -1,4 +1,5 @@
 import store from 'store';
+import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
 import {
   networkSymbols,
@@ -187,7 +188,9 @@ export default class BitySwap {
       return this.maxValue;
     }
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
-    return this.maxValue / btcRate;
+    return new BigNumber(this.maxValue)
+      .div(new BigNumber(btcRate))
+      .toFixed(6, BigNumber.ROUND_UP)
   }
 
   getChfEquivalentMaxMin(cryptoCurrency, max) {
@@ -195,14 +198,24 @@ export default class BitySwap {
       return max ? this.fiatMaxValue : this.fiatMinValue;
     }
     const chfRate = this._getRate(cryptoCurrency, FIAT_EQUIVALENT_CURRENCY);
-    return max ? this.fiatMaxValue / chfRate : this.fiatMinValue / chfRate;
+    return max
+      ? new BigNumber(this.fiatMaxValue)
+          .div(new BigNumber(chfRate))
+          .toFixed(6, BigNumber.ROUND_UP)
+      : new BigNumber(this.fiatMinValue)
+          .div(new BigNumber(chfRate))
+          .toFixed(6, BigNumber.ROUND_UP);
   }
 
   validityCheck(fromCurrency, fromValue, toCurrency, toValue) {
     if (this.fiatCurrencies.includes(toCurrency)) {
       if (
-        fromValue * this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY) <
-        this.fiatMinValue
+        new BigNumber(fromValue)
+          .times(
+            new BigNumber(this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY))
+          )
+          .toFixed(2)
+           < this.fiatMinValue
       )
         return 'lessThanMin';
       else if (
