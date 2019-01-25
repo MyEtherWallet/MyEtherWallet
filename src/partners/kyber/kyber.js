@@ -16,9 +16,9 @@ import {
   kyberNetworkABI,
   kyberValidNetworks,
   kyberNetworkENS,
-  walletDepositeAddress
+  walletDepositeAddress,
+  FEE_RATE
 } from './config';
-import { statuses } from '../simplex/config';
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
@@ -107,6 +107,7 @@ export default class Kyber {
       this.rates,
       this.tokenDetails
     );
+
     this.rates = rates;
     this.tokenDetails = tokenDetails;
     this.hasRates =
@@ -156,18 +157,23 @@ export default class Kyber {
     }
   }
 
+  calculateTrueRate(topRate) {
+    return new BigNumber(topRate)
+      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
+      .toNumber();
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     const rate = await this.getExpactedRateInTokens(
       fromCurrency,
       toCurrency,
       this.getRateForUnit ? 1 : fromValue
     );
-
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      rate: rate
+      rate: this.calculateTrueRate(rate)
     };
   }
 
@@ -418,7 +424,7 @@ export default class Kyber {
       );
       if (finalRate === 0)
         throw Error(
-          'Recieved a rate of 0. Invalid quantity.  Try swaping a lower amount.'
+          'Received a rate of 0. Invalid quantity.  Try swaping a lower amount.'
         );
       const prepareSwapTxData = await this.canUserSwap(kyberSwapDetails);
       prepareSwapTxData.add(
@@ -453,21 +459,6 @@ export default class Kyber {
 
   static async getOrderStatus(/*noticeDetails*/) {
     return 'new';
-  }
-
-  static parseKyberStatus(status) {
-    switch (status) {
-      case statuses.new:
-      case statuses.initiated:
-      case statuses.sent:
-        return 'new';
-      case statuses.pending:
-        return 'pending';
-      case statuses.payment:
-        return 'complete';
-      case statuses.cancelled:
-        return 'cancelled';
-    }
   }
 
   getTokenAddress(token) {
