@@ -5,6 +5,14 @@
 - Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
 - Fix KeepKey network modal issue [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/510)
 
+### Bug
+
+- Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
+
+### Feature
+
+- Add Crypto to Fiat swap option [#325](https://github.com/MyEtherWallet/MyEtherWallet/pull/325)
+
 ### Devop
 
 - Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)

@@ -30,7 +30,7 @@
           </p>
         </div>
         <div class="right-arrow"><img :src="arrowImage" /></div>
-        <div class="to-address">
+        <div v-if="!toFiat" class="to-address">
           <div class="icon">
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
@@ -44,12 +44,26 @@
             {{ toAddress.address }}
           </p>
         </div>
+        <div v-else class="to-address">
+          <div class="icon">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          </div>
+          <p class="value">
+            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+          </p>
+          <p class="block-title">{{ $t('common.to') }}</p>
+          <p class="address">{{ fiatDest }}</p>
+        </div>
         <ul v-show="!isFromFiat" class="confirm-send-button">
           <li>
             <div>
               <h4>
-                {{ $t('interface.send') }} {{ fromAddress.value }}
-                {{ fromAddress.name }} {{ $t('interface.articleTo') }}
+                {{
+                  $t('interface.notFromEthSwap', {
+                    value: fromAddress.value,
+                    currency: fromAddress.name
+                  })
+                }}
                 <span class="address">{{ qrcode }}</span>
               </h4>
               <p>{{ swapDetails.providerAddress }}</p>
@@ -61,7 +75,9 @@
             <div @click="sentTransaction">
               <button-with-qrcode
                 :qrcode="qrcode"
-                :buttonname="$t('interface.sentCoins')"
+                :buttonname="
+                  $t('interface.sentCoins', { currency: fromAddress.name })
+                "
               />
             </div>
           </li>
@@ -122,6 +138,15 @@ export default {
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.rawSwapDetails.fromCurrency);
+    },
+    toFiat() {
+      return this.fiatCurrencies.includes(this.rawSwapDetails.toCurrency);
+    },
+    fiatDest() {
+      if (this.swapDetails.orderDetails) {
+        return this.swapDetails.orderDetails.output.owner.name;
+      }
+      return '';
     }
   },
   watch: {
