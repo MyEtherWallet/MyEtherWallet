@@ -159,7 +159,7 @@
             >
               <li>{{ account.index }}.</li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
-              <li>{{ account.balance }}</li>
+              <li>{{ convertBalance(account.balance) }}</li>
               <li class="user-input-checkbox">
                 <label class="checkbox-container checkbox-container-small">
                   <input
@@ -215,6 +215,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 import web3utils from 'web3-utils';
+import BigNumber from 'bignumber.js';
 import ethIcon from '@/assets/images/icons/ethereum-icon.png';
 
 const MAX_ADDRESSES = 5;
@@ -308,6 +309,10 @@ export default {
     showCustomPathInput() {
       this.customPath = { label: '', dpath: '' };
       this.customPathInput = !this.customPathInput;
+    },
+    convertBalance(bal) {
+      if (bal === 'loading') return bal;
+      return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     addCustomPath() {
       // // TODO: figure out a more precise regex
