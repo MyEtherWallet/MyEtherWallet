@@ -17,7 +17,7 @@
 
 ### Feature
 
-- Componentize wallet options, change all wallet address instance to coinbase [](<>)
+- Componentize wallet options, change all wallet address instance to coinbase [#511](https://github.com/MyEtherWallet/MyEtherWallet/pull/511)
 
 ### Release v5.0.0-beta.2
 
