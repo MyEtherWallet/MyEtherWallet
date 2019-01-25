@@ -167,7 +167,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import MEW from '@/assets/images/logo.png';
-import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
+import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
