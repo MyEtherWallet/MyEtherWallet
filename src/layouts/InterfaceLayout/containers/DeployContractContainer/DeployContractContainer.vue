@@ -91,20 +91,19 @@
                   v-model="inputs[input.name]"
                   :value="true"
                   :name="input.name"
-                  :checked="inputs[input.name] === true ? true : false"
                   type="radio"
                 />
-                <label :for="input.name">true</label>
+                <label :for="input.name">True</label>
               </div>
               <div>
                 <input
                   v-model="inputs[input.name]"
                   :value="false"
                   :name="input.name"
-                  :checked="inputs[input.name] === false ? true : false"
                   type="radio"
+                  checked
                 />
-                <label :for="input.name">false</label>
+                <label :for="input.name">False</label>
               </div>
             </div>
             <i
@@ -201,6 +200,16 @@ export default {
         JSON.parse(this.abi).forEach(item => {
           if (item.type === 'constructor') {
             _constructor = item;
+          }
+        });
+      }
+
+      // Sets radio buttons to false due to vue reactivity
+      if (_constructor && _constructor.hasOwnProperty('inputs')) {
+        _constructor.inputs.forEach(item => {
+          if (item.type === 'bool') {
+            // eslint-disable-next-line
+            this.inputs[item.name] = false;
           }
         });
       }
