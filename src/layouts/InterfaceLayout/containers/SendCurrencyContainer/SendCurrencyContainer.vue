@@ -43,12 +43,12 @@
                 aria-hidden="true"
               />
             </div>
-          </div>
-          <div
-            v-if="!isValidAmount || errors.has('value')"
-            class="error-message-container"
-          >
-            <p>{{ $t('common.dontHaveEnough') }}</p>
+            <div
+              v-if="!isValidAmount || errors.has('value')"
+              class="error-message-container"
+            >
+              <p>{{ $t('common.dontHaveEnough') }}</p>
+            </div>
           </div>
         </div>
         <div class="to-address">
@@ -221,9 +221,14 @@ export default {
       network: 'network'
     }),
     isValidAmount() {
+      const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+        this.gasLimit
+      );
+      const txFeeEth = ethUnit.fromWei(txFee, 'ether');
+
       if (this.isToken)
         return new BigNumber(this.value).lte(this.selectedCurrency.balance);
-      return new BigNumber(this.value).lte(this.balanceDefault);
+      return new BigNumber(this.value + txFeeEth).lte(this.balanceDefault);
     },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
@@ -279,7 +284,7 @@ export default {
         this.value = this.balanceDefault.minus(
           ethUnit.fromWei(
             new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
-              .times(21000)
+              .times(this.gasLimit)
               .toString(),
             'ether'
           )
