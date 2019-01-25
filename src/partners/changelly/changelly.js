@@ -6,7 +6,8 @@ import {
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  FEE_RATE
 } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
@@ -73,6 +74,12 @@ export default class Changelly {
     return false;
   }
 
+  calculateTrueRate(topRate) {
+    return new BigNumber(topRate)
+      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
+      .toNumber();
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     if (
       this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
@@ -83,7 +90,9 @@ export default class Changelly {
         toCurrency,
         provider: this.name,
         minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
-        rate: this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
+        rate: this.calculateTrueRate(
+          this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
+        )
       };
     }
 
@@ -112,7 +121,7 @@ export default class Changelly {
       toCurrency,
       provider: this.name,
       minValue: minAmount,
-      rate: changellyDetails[1]
+      rate: this.calculateTrueRate(changellyDetails[1])
     };
   }
 

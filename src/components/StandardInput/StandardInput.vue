@@ -54,6 +54,8 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
+        name=""
+        @blur="emitValue"
       />
 
       <textarea
@@ -125,6 +127,9 @@ export default {
         this.$refs['inputdata'].select();
       }
       document.execCommand('copy');
+    },
+    emitValue(evt) {
+      this.$emit('changedValue', evt.srcElement.value);
     }
   }
 };
