@@ -1,0 +1,53 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// .modal-contents
+//***************************************************
+
+.dev-only-button {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background-color: red;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.modal-contents {
+  padding: 40px;
+}
+
+.modal-header-block {
+  .title {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 40px;
+    color: $dark-blue-6;
+    margin-bottom: 20px;
+  }
+  .sub-text {
+    text-align: center;
+  }
+}
+
+.modal-user-input-block {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.modal-button-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > * {
+    margin: 0 5px;
+  }
+}
