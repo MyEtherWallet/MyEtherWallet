@@ -39,7 +39,7 @@
                   </p>
                   <div>
                     <span>{{ $t('common.from') }}</span>
-                    {{ wallet.getChecksumAddressString() | concatAddr }}
+                    {{ account.address | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -189,7 +189,7 @@ export default {
     ...mapGetters({
       web3: 'web3',
       network: 'network',
-      wallet: 'wallet'
+      account: 'account'
     }),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {

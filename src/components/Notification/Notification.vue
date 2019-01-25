@@ -137,14 +137,13 @@ export default {
       web3: 'web3',
       network: 'network',
       notifications: 'notifications',
-      wallet: 'wallet'
+      account: 'account'
     }),
     sortedNotifications() {
       this.countUnread();
-      if (!this.notifications[this.wallet.getChecksumAddressString()])
-        return [];
+      if (!this.notifications[this.account.address]) return [];
       // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()]
+      return this.notifications[this.account.address]
         .sort((a, b) => {
           a = a.timestamp;
           b = b.timestamp;
@@ -160,10 +159,8 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.notifications[this.wallet.getChecksumAddressString()] === undefined
-    ) {
-      this.notifications[this.wallet.getChecksumAddressString()] = [];
+    if (this.notifications[this.account.address] === undefined) {
+      this.notifications[this.account.address] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -207,11 +204,10 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[this.wallet.getChecksumAddressString()] !==
-          undefined &&
-        self.notifications[this.wallet.getChecksumAddressString()].length > 0
+        self.notifications[this.account.address] !== undefined &&
+        self.notifications[this.account.address].length > 0
       ) {
-        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
+        self.notifications[this.account.address].map(item => {
           if (item.read === false) {
             self.unreadCount++;
           }
@@ -229,46 +225,42 @@ export default {
         }
 
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);
       };
     },
     expandAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          if (notice.expanded !== true) {
-            updatedNotif.read = true;
-            updatedNotif.expanded = true;
-          }
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        if (notice.expanded !== true) {
+          updatedNotif.read = true;
+          updatedNotif.expanded = true;
         }
-      );
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     CallapseAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          updatedNotif.expanded = false;
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
-        }
-      );
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        updatedNotif.expanded = false;
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);

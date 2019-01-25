@@ -4,9 +4,7 @@ import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
 import ManageENSContainer from '@/dapps/RegisterDomain/containers/ManageENSContainer/ManageENSContainer.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
+import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 describe('ManageENSContainer.vue', () => {
@@ -22,30 +20,9 @@ describe('ManageENSContainer.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      ens: () => {}
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 

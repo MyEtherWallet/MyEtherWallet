@@ -24,6 +24,10 @@
 - Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
+### Feature
+
+- Componentize wallet options, change all wallet address instance to coinbase [#511](https://github.com/MyEtherWallet/MyEtherWallet/pull/511)
+
 ### Release v5.0.0-beta.2
 
 ### Hotfix
