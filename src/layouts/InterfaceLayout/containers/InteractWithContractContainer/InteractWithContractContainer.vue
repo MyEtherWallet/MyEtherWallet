@@ -335,7 +335,7 @@ export default {
     ...mapGetters({
       network: 'network',
       gasPrice: 'gasPrice',
-      wallet: 'wallet',
+      account: 'account',
       web3: 'web3'
     })
   },
@@ -405,7 +405,7 @@ export default {
       const contract = new this.web3.eth.Contract([method], this.address);
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.wallet.getAddressString() })
+          .call({ from: this.account.address })
           .then(res => {
             this.result = res;
           })
@@ -450,7 +450,7 @@ export default {
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...params)
-          .call({ from: this.wallet.getAddressString() })
+          .call({ from: this.account.address })
           .then(res => {
             this.result = res;
             this.loading = false;
@@ -461,13 +461,11 @@ export default {
             this.loading = false;
           });
       } else {
-        this.nonce = await web3.eth.getTransactionCount(
-          this.wallet.getAddressString()
-        );
+        this.nonce = await web3.eth.getTransactionCount(this.account.address);
         this.gasLimit = await contract.methods[this.selectedMethod.name](
           ...params
         )
-          .estimateGas({ from: this.wallet.getAddressString() })
+          .estimateGas({ from: this.account.address })
           .then(res => {
             this.transactionFee = unit.fromWei(
               unit.toWei(this.gasPrice, 'gwei') * res,
@@ -484,7 +482,7 @@ export default {
         ).encodeABI();
 
         this.raw = {
-          from: this.wallet.getAddressString(),
+          from: this.account.address,
           gas: this.gasLimit,
           nonce: this.nonce,
           gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),

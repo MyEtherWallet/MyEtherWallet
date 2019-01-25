@@ -79,7 +79,7 @@ export default {
     ...mapGetters({
       web3: 'web3',
       network: 'network',
-      wallet: 'wallet',
+      account: 'account',
       ens: 'ens'
     })
   },
@@ -133,7 +133,7 @@ export default {
         .setOwner(this.nameHash, toAddress)
         .encodeABI();
       const raw = {
-        from: this.wallet.getChecksumAddressString(),
+        from: this.account.address,
         to: this.ensRegistry.address,
         data: data,
         value: 0
@@ -142,7 +142,7 @@ export default {
     },
     async updateResolver(newResolverAddr) {
       const web3 = this.web3;
-      const from = this.wallet.getAddressString();
+      const from = this.account.address;
 
       // Public resolver address
       const resolver = await this.ens.resolver('resolver.eth');
@@ -179,7 +179,7 @@ export default {
       web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
     },
     async finalize() {
-      const address = this.wallet.getAddressString();
+      const address = this.account.address;
       const web3 = this.web3;
       const name = web3.utils.sha3(this.domainName);
       const data = await this.auctionRegistrarContract.methods
@@ -296,7 +296,7 @@ export default {
     },
     async createTransaction(type) {
       this.loading = true;
-      const address = this.wallet.getAddressString();
+      const address = this.account.address;
       const utils = this.web3.utils;
       const domainName = utils.sha3(this.domainName);
       const bidHash = await this.auctionRegistrarContract.methods
