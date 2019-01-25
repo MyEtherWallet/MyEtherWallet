@@ -21,7 +21,7 @@
 
 ### Bug
 
-- Fix #513 []()
+- Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
 ### Release v5.0.0-beta.2
