@@ -95,7 +95,7 @@ export default {
     return {
       isHardwareWallet: false,
       responseFunction: null,
-      advancedExpend: false,
+      advancedExpand: false,
       addressValid: true,
       amount: 0,
       amountValid: true,
@@ -420,7 +420,7 @@ export default {
     },
     reset() {
       this.responseFunction = null;
-      this.advancedExpend = false;
+      this.advancedExpand = false;
       this.addressValid = true;
       this.amount = 0;
       this.amountValid = true;
