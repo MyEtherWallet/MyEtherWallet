@@ -227,12 +227,12 @@ export default {
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
 
       if (this.isToken) {
-        return new BigNumber(this.value).lte(this.selectedCurrency.balance);
+        return (
+          new BigNumber(this.value).lte(this.selectedCurrency.balance) &&
+          new BigNumber(txFeeEth).lte(this.balanceDefault)
+        );
       }
-      return (
-        new BigNumber(txFeeEth).lt(this.balanceDefault) &&
-        new BigNumber(this.value + txFeeEth).lte(this.balanceDefault)
-      );
+      return new BigNumber(this.value + txFeeEth).lte(this.balanceDefault);
     },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
