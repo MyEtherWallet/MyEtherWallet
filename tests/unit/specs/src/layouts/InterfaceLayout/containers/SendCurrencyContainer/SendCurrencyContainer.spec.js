@@ -55,7 +55,9 @@ describe('SendCurrencyContainer.vue', () => {
       network: () => {
         return network;
       },
-      gasPrice: () => {},
+      gasPrice: () => {
+        return 41;
+      },
       wallet: () => {
         return wallet;
       },
@@ -65,7 +67,7 @@ describe('SendCurrencyContainer.vue', () => {
       account: () => {
         return {
           balance: {
-            result: ''
+            result: 0
           }
         };
       },
