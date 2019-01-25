@@ -4,7 +4,6 @@
     <router-view />
     <footer-container />
     <confirmation-container v-if="wallet !== null" />
-    <modal-container />
   </div>
 </template>
 
@@ -12,7 +11,6 @@
 import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
-import ModalContainer from '@/containers/ModalContainer';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -20,8 +18,7 @@ export default {
   components: {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
-    'confirmation-container': ConfirmationContainer,
-    'modal-container': ModalContainer
+    'confirmation-container': ConfirmationContainer
   },
   computed: {
     ...mapGetters({

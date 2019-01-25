@@ -44,16 +44,6 @@ const parseStatus = status => {
   // return new BigNumber(status).toString(10);
 };
 
-// const formatSwapSpecial = details => {
-//   if (
-//     details.provider === 'bity' &&
-//     fiatCurrencies.includes(details.toCurrency)
-//   ) {
-//     return { phoneToken: details.phoneToken };
-//   }
-//   return {};
-// };
-
 const updateStatusBasedOnReciept = status => {
   return parseStatus(status)
     ? notificationStatuses.COMPLETE
