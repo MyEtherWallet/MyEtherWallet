@@ -1,6 +1,5 @@
 <template lang="html">
   <div>
-    <print-modal ref="printModal" :json-string="raw" />
     <json-string-modal ref="jsonStringModal" :update-json-string="updateJson" />
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
@@ -190,13 +189,12 @@
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
-import PrintModal from '../../components/PrintModal';
+import printJS from 'print-js';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
     timer: Timer,
-    'print-modal': PrintModal,
     'json-string-modal': JsonStringModal
   },
   props: {
@@ -313,7 +311,7 @@ export default {
     },
     parseRaw(raw) {
       this.jsonText = JSON.stringify({
-        name: `${raw.name}.eth`,
+        name: raw.name,
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
@@ -341,14 +339,13 @@ export default {
         nonce: this.raw['nonce']
       };
       if (!this.$route.fullPath.includes('reveal')) {
-        this.$eventHub.$emit('printModal', 'ens', raw);
-      } else {
-        this.web3.eth.sendTransaction(raw);
+        printJS({
+          printable: 'printableData',
+          type: 'html',
+          header: 'MyEtherWallet - ENS reveal bid'
+        });
       }
-
-      this.$refs.printModal.$refs.print.$on('hidden', () => {
-        this.web3.eth.sendTransaction(raw);
-      });
+      this.web3.eth.sendTransaction(raw);
     }
   }
 };
