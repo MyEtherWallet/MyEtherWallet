@@ -115,14 +115,14 @@ describe('SendCurrencyContainer.vue', () => {
   });
 
   it('should render correct "data" data', () => {
-    wrapper.setData({ advancedExpend: true });
+    wrapper.setData({ advancedExpand: true });
     expect(wrapper.vm.$el.querySelector('.user-input input').value).toEqual(
       wrapper.vm.$data.data
     );
   });
 
   it('should render correct gasLimit data', () => {
-    wrapper.setData({ advancedExpend: true });
+    wrapper.setData({ advancedExpand: true });
     expect(
       wrapper.vm.$el.querySelectorAll('.user-input input')[1].value
     ).toEqual(String(wrapper.vm.$data.gasLimit));

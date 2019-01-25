@@ -256,7 +256,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
   //     initWrapper();
   //     wrapper.vm.showSuccessModal();
   //     expect(showModal.called).toBe(true);
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
@@ -281,7 +281,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
 
   //   it('should render correct reset method', () => {
   //     wrapper.vm.reset();
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
