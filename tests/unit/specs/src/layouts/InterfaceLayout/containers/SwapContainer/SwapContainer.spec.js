@@ -2,12 +2,10 @@ import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
 
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
+import { state, getters } from '@@/helpers/mockStore';
 
 import sinon from 'sinon';
 const RouterLinkStub = {
@@ -37,54 +35,9 @@ describe('SwapContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const account = {
-      balance: 0
-    };
-
-    const wallet = {
-      getChecksumAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      account: () => {
-        return account;
-      },
-      gasPrice: () => {
-        return 0;
-      },
-      ens: () => {},
-      wallet: () => {
-        return wallet;
-      }
-    };
-
     store = new Vuex.Store({
       getters,
-      state: {
-        web3: newWeb3,
-        Networks: nodeList,
-        network: network
-      }
+      state
     });
   });
 
