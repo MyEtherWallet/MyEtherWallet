@@ -190,7 +190,7 @@ export default class BitySwap {
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
     return new BigNumber(this.maxValue)
       .div(new BigNumber(btcRate))
-      .toFixed(6, BigNumber.ROUND_UP)
+      .toFixed(6, BigNumber.ROUND_UP);
   }
 
   getChfEquivalentMaxMin(cryptoCurrency, max) {
@@ -214,8 +214,7 @@ export default class BitySwap {
           .times(
             new BigNumber(this._getRate(fromCurrency, FIAT_EQUIVALENT_CURRENCY))
           )
-          .toFixed(2)
-           < this.fiatMinValue
+          .toFixed(2) < this.fiatMinValue
       )
         return 'lessThanMin';
       else if (

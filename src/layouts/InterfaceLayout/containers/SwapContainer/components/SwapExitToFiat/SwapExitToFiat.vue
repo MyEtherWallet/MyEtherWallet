@@ -7,16 +7,20 @@
       />
       <div class="form-content-container">
         <div class="accordion-menu-container">
-          <p class="beta-notice">{{$t('interface.CryptoToFiatBeta')}}</p>
+          <p class="beta-notice">{{ $t('interface.CryptoToFiatBeta') }}</p>
 
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
-          <accordion-menu :isopen="step1" :title="$t('interface.phoneNumber')" number="1">
+          <accordion-menu
+            :isopen="step1"
+            :title="$t('interface.phoneNumber')"
+            number="1"
+          >
             <ul>
               <li>
                 <p>{{ $t('interface.enterPhoneForSMS') }}</p>
-                <p>{{ $t('interface.clickToContinue', {label: 'Send'}) }}</p>
+                <p>{{ $t('interface.clickToContinue', { label: 'Send' }) }}</p>
               </li>
               <li>
                 <div class="grid-phone-number">
