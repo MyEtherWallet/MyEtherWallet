@@ -3,11 +3,10 @@ import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal/InterfaceNetworkModal.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
-import nodeList from '@/networks';
+import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
-//xdescribe
 describe('InterfaceNetworkModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -20,25 +19,6 @@ describe('InterfaceNetworkModal.vue', () => {
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
-    // const hostUrl = url.parse(network.url);
-
-    // const newWeb3 = new Web3(
-    //   `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-    //     hostUrl.pathname
-    //   }`
-    // );
-
-    const getters = {
-      notifications: () => [],
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      }
-    };
-
     const actions = {
       switchNetwork: jest.fn(),
       setWeb3Instance: jest.fn()
@@ -46,7 +26,7 @@ describe('InterfaceNetworkModal.vue', () => {
 
     store = new Vuex.Store({
       getters,
-
+      state,
       actions
     });
 

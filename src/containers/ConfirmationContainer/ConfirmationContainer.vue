@@ -88,7 +88,7 @@ export default {
     return {
       isHardwareWallet: false,
       responseFunction: null,
-      advancedExpend: false,
+      advancedExpand: false,
       addressValid: true,
       amount: 0,
       amountValid: true,
@@ -121,11 +121,12 @@ export default {
     ...mapGetters({
       gasPrice: 'gasPrice',
       wallet: 'wallet',
-      web3: 'web3'
+      web3: 'web3',
+      account: 'account'
     }),
     fromAddress() {
-      if (this.wallet) {
-        return this.wallet.getChecksumAddressString();
+      if (this.account) {
+        return this.account.address;
       }
     }
   },
@@ -145,14 +146,14 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
-      this.isHardwareWallet = this.wallet.isHardware;
+      this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       const signPromise = this.wallet.signTransaction(tx).then(_response => {
         this.signedTxObject = _response;
         this.signedTx = this.signedTxObject.rawTransaction;
       });
-      if (this.wallet.identifier === KEEPKEY) {
+      if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.confirmationModalOpen();
         });
@@ -163,7 +164,7 @@ export default {
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
       const newTx = new ethTx(tx);
-      this.isHardwareWallet = this.wallet.isHardware;
+      this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.signedTxObject = {
@@ -229,7 +230,7 @@ export default {
         this.signCallback = signCallback;
 
         this.confirmationCollectionModalOpen();
-        if (this.wallet.identifier !== WEB3_WALLET) {
+        if (this.account.identifier !== WEB3_WALLET) {
           for (let i = 0; i < tx.length; i++) {
             const _signedTx = await this.wallet.signTransaction(tx[i]);
             signed.push(_signedTx);
@@ -249,7 +250,7 @@ export default {
       const signPromise = this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
-      if (this.wallet.identifier === KEEPKEY) {
+      if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.signConfirmationModalOpen();
         });
@@ -333,14 +334,14 @@ export default {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       const _method =
-        this.wallet.identifier === WEB3_WALLET
+        this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
       const _arr = this.signedArray;
       const promises = _arr.map(tx => {
         const promiEvent = new Web3PromiEvent(false);
         const _tx = tx.tx;
-        _tx.from = this.wallet.getAddressString();
+        _tx.from = this.account.address;
         const _rawTx = tx.rawTransaction;
         const req = web3.eth[_method].request(_rawTx, (err, data) => {
           if (err !== null) {
@@ -412,7 +413,7 @@ export default {
     },
     reset() {
       this.responseFunction = null;
-      this.advancedExpend = false;
+      this.advancedExpand = false;
       this.addressValid = true;
       this.amount = 0;
       this.amountValid = true;

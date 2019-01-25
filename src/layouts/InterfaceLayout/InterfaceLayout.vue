@@ -157,12 +157,13 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.wallet.getChecksumAddressString();
+        return this.account.address;
       }
     },
     ...mapGetters({
       network: 'network',
       wallet: 'wallet',
+      account: 'account',
       online: 'online',
       web3: 'web3',
       Networks: 'Networks',
@@ -202,7 +203,7 @@ export default {
     },
 
     switchAddress() {
-      switch (this.wallet.identifier) {
+      switch (this.account.identifier) {
         case LEDGER_TYPE:
           LedgerWallet().then(_newWallet => {
             this.toggleNetworkAddrModal(_newWallet);
@@ -268,7 +269,7 @@ export default {
       if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
-          tokens = await tb.getBalance(this.wallet.getChecksumAddressString());
+          tokens = await tb.getBalance(this.account.address);
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
@@ -285,9 +286,9 @@ export default {
     },
     async setNonce() {
       const nonce = await this.web3.eth.getTransactionCount(
-        this.wallet.getAddressString()
+        this.account.address
       );
-      store.set(this.web3.utils.sha3(this.wallet.getAddressString()), {
+      store.set(this.web3.utils.sha3(this.account.address), {
         nonce: nonce,
         timestamp: +new Date()
       });
@@ -304,9 +305,7 @@ export default {
         }
       ];
       const contract = new web3.eth.Contract(contractAbi);
-      const data = contract.methods
-        .balanceOf(this.wallet.getAddressString())
-        .encodeABI();
+      const data = contract.methods.balanceOf(this.account.address).encodeABI();
       const balance = await web3.eth
         .call({
           to: token.address
@@ -421,10 +420,7 @@ export default {
             return;
           }
           const address = accounts[0];
-          if (
-            this.wallet !== null &&
-            address !== this.wallet.getAddressString()
-          ) {
+          if (this.wallet !== null && address !== this.account.address) {
             const wallet = new Web3Wallet(address);
             this.$store.dispatch('decryptWallet', [
               wallet,
@@ -465,7 +461,7 @@ export default {
       this.clearIntervals();
       if (this.online === true) {
         if (this.wallet !== null) {
-          if (this.wallet.identifier === WEB3_TYPE) {
+          if (this.account.identifier === WEB3_TYPE) {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
@@ -493,10 +489,10 @@ export default {
         });
     },
     setENS() {
-      if (this.wallet.identifier === 'Web3') {
-        this.$store.dispatch('setENS', new ENS(window.web3.currentProvider));
-      } else {
+      if (this.network.type.ensResolver) {
         this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+      } else {
+        this.$store.dispatch('setENS', null);
       }
     }
   }

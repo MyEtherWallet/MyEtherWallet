@@ -7,11 +7,29 @@
 ### Hotfix
 
 - Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
+- Fix KeepKey network modal issue [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/510)
+
+### Bug
+
+- Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
+
+### Feature
+
+- Add Crypto to Fiat swap option [#325](https://github.com/MyEtherWallet/MyEtherWallet/pull/325)
 
 ### Devop
 
 - Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)
 - Fix weird interaction in side menu [#494](https://github.com/MyEtherWallet/MyEtherWallet/pull/494)
+- Upload history build to gh-pages-history [#504](https://github.com/MyEtherWallet/MyEtherWallet/pull/504)
+
+### Bug
+
+- Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
+
+### Feature
+
+- Componentize wallet options, change all wallet address instance to coinbase [#511](https://github.com/MyEtherWallet/MyEtherWallet/pull/511)
 
 ### Release v5.0.0-beta.2
 

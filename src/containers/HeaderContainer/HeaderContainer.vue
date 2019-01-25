@@ -202,7 +202,7 @@
                   <template slot="button-content">
                     <div class="settings-container">
                       <blockie
-                        :address="wallet.getAddressString()"
+                        :address="account.address"
                         width="35px"
                         height="35px"
                       />
@@ -296,7 +296,8 @@ export default {
     ...mapGetters({
       wallet: 'wallet',
       online: 'online',
-      web3: 'web3'
+      web3: 'web3',
+      account: 'account'
     }),
     showButtons() {
       if (
