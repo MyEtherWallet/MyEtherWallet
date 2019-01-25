@@ -1,6 +1,9 @@
 const state = {
   account: {
-    balance: 0
+    balance: 0,
+    address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+    identifier: 'keystore',
+    isHardware: false
   },
   customPaths: {},
   ens: true,
@@ -20,7 +23,7 @@ const state = {
 
 const getters = {
   account: () => {
-    return { balance: 0 };
+    return state.account;
   },
   customPaths: () => {},
   ens: () => {},

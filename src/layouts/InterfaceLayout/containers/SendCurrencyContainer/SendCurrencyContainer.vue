@@ -105,7 +105,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="advancedExpend = !advancedExpend"
+                  @click="advancedExpand = !advancedExpand"
                 />
                 <span class="slider round" />
               </label>
@@ -113,7 +113,7 @@
           </div>
         </div>
         <div
-          :class="advancedExpend && 'input-container-open'"
+          :class="advancedExpand && 'input-container-open'"
           class="input-container"
         >
           <div class="margin-container">
@@ -203,7 +203,7 @@ export default {
   },
   data() {
     return {
-      advancedExpend: false,
+      advancedExpand: false,
       isValidAddress: false,
       hexAddress: '',
       address: '',

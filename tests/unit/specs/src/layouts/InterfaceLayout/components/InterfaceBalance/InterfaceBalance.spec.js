@@ -4,7 +4,7 @@ import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBala
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal/InterfaceBalanceModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import nodeList from '@/networks';
+import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.stub();
 const BModalStub = {
@@ -21,22 +21,15 @@ describe('InterfaceBalance.vue', () => {
   let localVue, i18n, wrapper, store;
   const balance = '100';
 
-  const network = nodeList['ETH'][3];
-
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const getters = {
-      network: () => {
-        return network;
-      }
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 

@@ -16,7 +16,7 @@
               </p>
               <div class="from-address">
                 <blockie
-                  :address="wallet.getChecksumAddressString()"
+                  :address="account.address"
                   width="30px"
                   height="30px"
                 />
@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      account: 'account'
     }),
     signedMessageSignature() {
       if (this.signedMessage) {
