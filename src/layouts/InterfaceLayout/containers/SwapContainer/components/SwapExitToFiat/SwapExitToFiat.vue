@@ -7,13 +7,16 @@
       />
       <div class="form-content-container">
         <div class="accordion-menu-container">
+          <p class="beta-notice">{{$t('interface.CryptoToFiatBeta')}}</p>
+
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
-          <accordion-menu :isopen="step1" title="Phone Number" number="1">
+          <accordion-menu :isopen="step1" :title="$t('interface.phoneNumber')" number="1">
             <ul>
               <li>
                 <p>{{ $t('interface.enterPhoneForSMS') }}</p>
+                <p>{{ $t('interface.clickToContinue', {label: 'Send'}) }}</p>
               </li>
               <li>
                 <div class="grid-phone-number">
@@ -36,7 +39,7 @@
           <!-- accordion-menu ******************************** -->
           <accordion-menu
             :isopen="verifyStep"
-            title="Enter Verification"
+            :title="$t('interface.enterVerification')"
             number="2"
           >
             <ul>
@@ -56,7 +59,7 @@
           <!-- accordion-menu ******************************** -->
           <accordion-menu
             :isopen="step2"
-            title="Bank Information"
+            :title="$t('interface.bankInfo')"
             number="3"
             @titleClicked="reOpenBankInformation"
           >
@@ -89,7 +92,7 @@
           <!-- accordion-menu ******************************** -->
           <accordion-menu
             :isopen="step3"
-            title="Personal Information"
+            :title="$t('interface.personalInfo')"
             number="4"
           >
             <ul>
@@ -131,6 +134,7 @@
                   />
                   <standard-dropdown
                     :options="countryOptions"
+                    :placeholder="$t('interface.country')"
                     :option-display-key="'1'"
                     :option-value-key="'0'"
                     class="country"
@@ -179,11 +183,18 @@
             @click.native="
               step3 = false;
               step2 = false;
-              step1 = true;
+              step1 = false;
               updateStage('accountHolder');
               createExitOrder();
             "
           />
+          <div
+            v-show="finalizingSwap"
+            class="disabled submit-button large-round-button-green-filled clickable"
+          >
+            <i class="fa fa-spinner fa-spin" />
+            {{ $t('interface.swapButtonLoading') }}
+          </div>
         </div>
         <!-- .button-container -->
       </div>
@@ -236,6 +247,7 @@ export default {
     return {
       previouslyVerified: false,
       addSpace: false,
+      finalizingSwap: false,
       countryList: Object.entries(getNames('en')),
       status: {
         phone: false,
@@ -306,22 +318,26 @@ export default {
       button1: {
         title: this.$t('interface.send'),
         buttonStyle: 'green',
-        value: ''
+        value: '',
+        noWalletTerms: true
       },
       verifyButton: {
         title: this.$t('interface.verify'),
         buttonStyle: 'green',
-        value: ''
+        value: '',
+        noWalletTerms: true
       },
       button2: {
         title: this.$t('interface.continue'),
         buttonStyle: 'green',
-        value: ''
+        value: '',
+        noWalletTerms: true
       },
       button3: {
         title: this.$t('interface.submit'),
         buttonStyle: 'green',
-        value: ''
+        value: '',
+        noWalletTerms: true
       },
       provider: {},
       countryCode: '',
@@ -418,6 +434,7 @@ export default {
       }
     },
     async createExitOrder() {
+      this.finalizingSwap = true;
       const details = {
         input: {
           amount: this.swapDetails.fromValue,
@@ -434,6 +451,7 @@ export default {
         orderDetails: details,
         special: { phoneToken: this.provider.phoneToken }
       });
+      this.finalizingSwap = false;
       this.exitToFiatCallback(swapDetails);
     }
   }

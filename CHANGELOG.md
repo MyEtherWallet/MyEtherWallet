@@ -11,6 +11,7 @@
 ### Feature
 
 - Print ENS bid details [#360](https://github.com/MyEtherWallet/MyEtherWallet/pull/360)
+- Add Crypto to Fiat swap option [#325](https://github.com/MyEtherWallet/MyEtherWallet/pull/325)
 
 ### Devop
 
