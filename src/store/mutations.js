@@ -23,11 +23,19 @@ const CHECK_IF_ONLINE = function(state) {
 
 const CLEAR_WALLET = function(state) {
   state.wallet = null;
-  state.account = { balance: 0 };
+  state.account = {
+    balance: 0,
+    address: null,
+    isHardWare: null,
+    identifier: ''
+  };
 };
 
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
+  state.account['address'] = wallet.getChecksumAddressString();
+  state.account['isHardware'] = wallet.isHardware;
+  state.account['identifier'] = wallet.identifier;
 };
 
 const INIT_STATES = function(state, stateObj) {

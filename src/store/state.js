@@ -17,7 +17,10 @@ const ens = network.type.ensResolver == null;
 store.set('network', network);
 const state = {
   account: {
-    balance: 0
+    balance: 0,
+    address: null,
+    isHardware: false,
+    identifier: ''
   },
   customPaths: customPaths,
   ens: ens,

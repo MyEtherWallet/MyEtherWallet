@@ -5,9 +5,7 @@ import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurr
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
+import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
@@ -35,55 +33,10 @@ describe('SendCurrencyContainer.vue', () => {
       setGasPrice: jest.fn()
     };
 
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const wallet = {
-      getChecksumAddressString: jest.fn(() => 0),
-      getAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      network: () => {
-        return network;
-      },
-      gasPrice: () => {},
-      wallet: () => {
-        return wallet;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      account: () => {
-        return {
-          balance: {
-            result: ''
-          }
-        };
-      },
-      ens: () => {}
-    };
-
     store = new VueX.Store({
       getters,
       actions,
-      state: {
-        web3: newWeb3,
-        network: network,
-        wallet: {
-          getAddressString: () => {
-            return '0x72ea3508d9d817a91465abb59be10fef9857a055';
-          }
-        }
-      }
+      state
     });
 
     wrapper = shallowMount(SendCurrencyContainer, {
@@ -110,19 +63,19 @@ describe('SendCurrencyContainer.vue', () => {
 
   it('should render correct amount data', () => {
     expect(wrapper.vm.$el.querySelector('.amount-number input').value).toEqual(
-      String(wrapper.vm.$data.amount)
+      String(wrapper.vm.$data.value)
     );
   });
 
   it('should render correct "data" data', () => {
-    wrapper.setData({ advancedExpend: true });
+    wrapper.setData({ advancedExpand: true });
     expect(wrapper.vm.$el.querySelector('.user-input input').value).toEqual(
       wrapper.vm.$data.data
     );
   });
 
   it('should render correct gasLimit data', () => {
-    wrapper.setData({ advancedExpend: true });
+    wrapper.setData({ advancedExpand: true });
     expect(
       wrapper.vm.$el.querySelectorAll('.user-input input')[1].value
     ).toEqual(String(wrapper.vm.$data.gasLimit));

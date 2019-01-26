@@ -20,6 +20,7 @@
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
     "update:lists": "node fetchEthListData.js",
+    "update:swap": "node compileBaseSwapOptions.js",
     "update": "npm run update:packages && npm run update:lists"
   },
   "gitHooks": {
@@ -69,9 +70,11 @@
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.0",
+    "i18n-iso-countries": "3.7.8",
     "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.0",
     "jest-skipped-reporter": "0.0.4",
+    "jspdf": "1.5.3",
     "keccak": "2.0.0",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",

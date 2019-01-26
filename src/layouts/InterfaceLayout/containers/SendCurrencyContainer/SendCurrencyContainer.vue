@@ -13,7 +13,7 @@
               :currency="tokensWithBalance"
               :page="'sendEgasAmountthAndTokens'"
               :token="true"
-              @selectedCurrency="setSelectedCurrency"
+              @selectedCurrency="selectedCurrency = $event"
             />
           </div>
           <div class="single-input-block">
@@ -21,30 +21,23 @@
               <h4>{{ $t('interface.sendTxAmount') }}</h4>
               <p
                 class="title-button prevent-user-select"
-                @click="setBalanceToAmt"
+                @click="sendEntireBalance"
               >
                 Entire Balance
               </p>
             </div>
             <div class="the-form amount-number">
               <input
-                v-validate="'min_value:10'"
-                :value="amount"
+                v-validate="'min_value:0'"
+                v-model="value"
                 type="number"
                 placeholder="Amount"
                 min="0"
-                name="amount"
-                @input="debouncedAmount"
+                name="value"
               />
               <i
                 :class="[
-                  selectedCurrency.symbol === network.type.name
-                    ? parsedBalance.lt(amount)
-                      ? 'not-good'
-                      : ''
-                    : errors.has('amount')
-                    ? 'not-good'
-                    : '',
+                  !isValidAmount || errors.has('value') ? 'not-good' : '',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
@@ -52,11 +45,7 @@
             </div>
           </div>
           <div
-            v-if="
-              selectedCurrency.symbol === network.type.name
-                ? parsedBalance.lt(amount)
-                : selectedCurrency.balance < amount
-            "
+            v-if="!isValidAmount || errors.has('value')"
             class="error-message-container"
           >
             <p>{{ $t('common.dontHaveEnough') }}</p>
@@ -67,7 +56,7 @@
             <h4>
               {{ $t('interface.sendTxToAddr') }}
               <blockie
-                v-show="isValidAddress && address.length !== 0"
+                v-show="isValidAddress"
                 :address="hexAddress"
                 :size="8"
                 :scale="16"
@@ -88,14 +77,14 @@
             <input
               v-ens-resolver="'address'"
               ref="address"
+              v-model="address"
               type="text"
               name="name"
               autocomplete="off"
-              @input="debounceInput"
             />
             <i
               :class="[
-                isValidAddress && address.length !== 0 ? '' : 'not-good',
+                isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
                 'fa fa-check-circle good-button'
               ]"
               aria-hidden="true"
@@ -116,7 +105,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="advancedExpend = !advancedExpend"
+                  @click="advancedExpand = !advancedExpand"
                 />
                 <span class="slider round" />
               </label>
@@ -124,21 +113,17 @@
           </div>
         </div>
         <div
-          :class="advancedExpend && 'input-container-open'"
+          :class="advancedExpand && 'input-container-open'"
           class="input-container"
         >
           <div class="margin-container">
-            <div
-              v-show="selectedCurrency.symbol === network.type.name"
-              class="the-form user-input"
-            >
+            <div v-show="!isToken" class="the-form user-input">
               <p>Add Data</p>
               <input
-                :value="data"
+                v-model="data"
                 type="text"
                 placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
-                @input="debounceData"
               />
               <i
                 :class="[
@@ -165,15 +150,10 @@
     <div class="submit-button-container">
       <div
         :class="[
-          isValidAddress &&
-          address.length !== 0 &&
-          isValidAmount &&
-          data.length !== 0
-            ? ''
-            : 'disabled',
+          validInputs ? '' : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
-        @click="confirmationModalOpen"
+        @click="submitTransaction"
       >
         {{ $t('interface.sendTx') }}
       </div>
@@ -187,17 +167,15 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import normalise from '@/helpers/normalise';
+import EthTx from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
+import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 
 export default {
@@ -225,19 +203,14 @@ export default {
   },
   data() {
     return {
-      advancedExpend: false,
-      amount: 0,
-      isValidAmount: true,
-      nonce: 0,
-      gasLimit: 21000,
-      data: '0x',
-      transactionFee: 0,
-      selectedCurrency: {},
-      raw: {},
-      signedTx: '',
-      address: '',
+      advancedExpand: false,
+      isValidAddress: false,
       hexAddress: '',
-      isValidAddress: false
+      address: '',
+      value: '0',
+      gasLimit: '21000',
+      data: '',
+      selectedCurrency: ''
     };
   },
   computed: {
@@ -245,177 +218,132 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      network: 'network',
-      ens: 'ens'
+      network: 'network'
     }),
-    parsedBalance() {
-      return new BigNumber(unit.fromWei(this.account.balance, 'ether'));
+    isValidAmount() {
+      if (this.isToken)
+        return new BigNumber(this.value).lte(this.selectedCurrency.balance);
+      return new BigNumber(this.value).lte(this.balanceDefault);
+    },
+    balanceDefault() {
+      return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
+    },
+    validInputs() {
+      return (
+        this.isValidAmount &&
+        this.isValidAddress &&
+        new BigNumber(this.gasLimit).gte(0) &&
+        Misc.validateHexString(this.data)
+      );
+    },
+    isToken() {
+      return this.selectedCurrency.symbol !== this.network.type.name;
+    },
+    txData() {
+      if (this.isToken) {
+        return this.getTokenTransferABI(
+          this.value,
+          this.selectedCurrency.decimals
+        );
+      }
+      return Misc.sanitizeHex(this.data);
+    },
+    txValue() {
+      if (this.isToken) {
+        return '0x00';
+      }
+      return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
+    },
+    txTo() {
+      return this.isToken ? this.selectedCurrency.address : this.hexAddress;
+    },
+    multiWatch() {
+      return (
+        this.value,
+        this.isValidAddress,
+        this.data,
+        this.selectedCurrency,
+        new Date().getTime() / 1000
+      );
     }
   },
   watch: {
-    gasPrice(newVal) {
-      if (this.verifyAddr()) this.estimateGas();
-    },
-    selectedCurrency(newVal) {
-      if (this.verifyAddr()) this.estimateGas();
-    }
+    multiWatch: utils._.debounce(function() {
+      if (this.validInputs) this.estimateGas();
+    }, 500)
   },
   methods: {
-    validateHexString: Misc.validateHexString,
-    debouncedAmount: utils._.debounce(function(e) {
-      const decimals =
-        this.selectedCurrency.symbol === this.network.type.name
-          ? 18
-          : this.selectedCurrency.decimals;
-      this.amount =
-        new BigNumber(e.target.value).decimalPlaces() > decimals
-          ? new BigNumber(e.target.value).decimalPlaces(decimals).toFixed()
-          : new BigNumber(e.target.value).isGreaterThanOrEqualTo(0)
-          ? e.target.value
-          : 0;
-      if (this.amount < 0) {
-        this.isValidAmount = false;
-      } else {
-        this.isValidAmount = true;
+    sendEntireBalance() {
+      if (this.isToken) this.value = this.selectedCurrency.balance;
+      else
+        this.value = this.balanceDefault.minus(
+          ethUnit.fromWei(
+            new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+              .times(21000)
+              .toString(),
+            'ether'
+          )
+        );
+    },
+    getTokenTransferABI(amount, decimals) {
+      const jsonInterface = [
+        {
+          constant: false,
+          inputs: [
+            { name: '_to', type: 'address' },
+            { name: '_amount', type: 'uint256' }
+          ],
+          name: 'transfer',
+          outputs: [{ name: '', type: 'bool' }],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ];
+      const contract = new this.web3.eth.Contract(jsonInterface);
+      return contract.methods
+        .transfer(
+          this.hexAddress,
+          new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
+        )
+        .encodeABI();
+    },
+    async estimateGas() {
+      const coinbase = await this.web3.eth.getCoinbase();
+      const params = {
+        from: coinbase,
+        value: this.txValue,
+        to: this.txTo,
+        data: this.txData
+      };
+      this.gasLimit = await this.web3.eth.estimateGas(params);
+    },
+    async submitTransaction() {
+      window.scrollTo(0, 0);
+      try {
+        const coinbase = await this.web3.eth.getCoinbase();
+        const nonce = await this.web3.eth.getTransactionCount(coinbase);
+        const _tx = new EthTx({
+          nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
+          gasPrice: Misc.sanitizeHex(
+            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+          ),
+          gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
+          to: this.txTo,
+          value: this.txValue,
+          data: this.txData,
+          chainId: this.network.type.chainID
+        });
+        const json = _tx.toJSON(true);
+        json.from = coinbase;
+        this.web3.eth.sendTransaction(json);
+      } catch (e) {
+        throw e;
       }
-      e.target.value = this.amount;
-      if (this.verifyAddr()) {
-        this.estimateGas();
-      }
-    }, 300),
-    debounceInput: utils._.debounce(function(e) {
-      this.address = e.target.value;
-      if (this.verifyAddr()) this.estimateGas();
-    }, 500),
-    debounceData: utils._.debounce(function(e) {
-      if (this.validateHexString(e.target.value)) {
-        this.data = e.target.value;
-        if (this.verifyAddr()) this.estimateGas();
-      } else {
-        this.data = '0x';
-      }
-    }, 500),
+    },
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
-    },
-    async createTx() {
-      const isEth = this.selectedCurrency.symbol === this.network.type.name;
-      const coinbase = await this.web3.eth.getCoinbase();
-      this.nonce = await this.web3.eth.getTransactionCount(coinbase);
-
-      this.raw = {
-        from: coinbase,
-        gas: this.gasLimit,
-        nonce: this.nonce,
-        gasPrice: unit.toWei(this.gasPrice, 'gwei'),
-        value: isEth
-          ? this.amount === ''
-            ? 0
-            : unit.toWei(this.amount, 'ether')
-          : 0,
-        to: isEth ? this.hexAddress : this.selectedCurrency.addr,
-        data: Misc.sanitizeHex(this.data),
-        chainId: this.network.type.chainID || 1
-      };
-      if (this.hexAddress === '') {
-        delete this.raw['to'];
-      }
-      this.web3.eth.sendTransaction(this.raw);
-    },
-    confirmationModalOpen() {
-      this.createTx();
-      window.scrollTo(0, 0);
-    },
-    setBalanceToAmt() {
-      if (this.selectedCurrency.symbol === this.network.type.name) {
-        const txFee = new BigNumber(this.gasLimit)
-          .times(unit.toWei(this.gasPrice, 'gwei'))
-          .toString();
-        this.amount =
-          this.amount > 0
-            ? this.parsedBalance.minus(unit.fromWei(txFee, 'ether')).toString()
-            : 0;
-      } else {
-        this.amount = this.selectedCurrency.balance;
-      }
-    },
-    async createDataHex() {
-      let amount;
-      if (this.selectedCurrency.name !== 'Ether') {
-        if (this.amount !== 0 && this.amount !== '') {
-          amount = this.amount;
-        } else {
-          amount = 0;
-        }
-        const jsonInterface = [
-          {
-            constant: false,
-            inputs: [
-              { name: '_to', type: 'address' },
-              { name: '_amount', type: 'uint256' }
-            ],
-            name: 'transfer',
-            outputs: [{ name: '', type: 'bool' }],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function'
-          }
-        ];
-        const contract = new this.web3.eth.Contract(
-          jsonInterface,
-          this.selectedCurrency.addr
-        );
-        this.data = await contract.methods
-          .transfer(
-            this.hexAddress,
-            new BigNumber(amount)
-              .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
-              .toFixed()
-          )
-          .encodeABI();
-      } else {
-        this.data = this.data !== '0x' ? this.data : '0x';
-      }
-    },
-    setSelectedCurrency(e) {
-      this.selectedCurrency = e;
-    },
-    async estimateGas() {
-      if (this.hexAddress !== '') {
-        const isEth = this.selectedCurrency.symbol === this.network.type.name;
-        const bnAmount = new BigNumber(this.amount);
-        const coinbase = await this.web3.eth.getCoinbase();
-        if (!isEth) {
-          await this.createDataHex();
-        }
-        const params = {
-          from: coinbase,
-          value: isEth
-            ? this.amount === ''
-              ? 0
-              : unit.toWei(bnAmount, 'ether')
-            : 0,
-          to: isEth ? this.hexAddress : this.selectedCurrency.addr,
-          data: Misc.sanitizeHex(this.data)
-        };
-
-        this.web3.eth
-          .estimateGas(params)
-          .then(res => {
-            const resBN = new BigNumber(res);
-            const txFee = resBN.times(unit.toWei(this.gasPrice, 'gwei'));
-            this.transactionFee = txFee.toString();
-            this.gasLimit = res ? res : this.gasLimit;
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          });
-      }
-    },
-    verifyAddr() {
-      return isAddress(this.hexAddress);
     }
   }
 };

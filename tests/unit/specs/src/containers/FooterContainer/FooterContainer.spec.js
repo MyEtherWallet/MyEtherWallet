@@ -1,7 +1,7 @@
 import Vuex from 'vuex';
 import { mount } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
-
+import { state, getters } from '@@/helpers/mockStore';
 // const $t = () => {};
 
 const RouterLinkStub = {
@@ -21,12 +21,9 @@ describe('FooterContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const getters = {
-      ethDonationAddress: () => {}
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 
