@@ -2,7 +2,6 @@ import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
 import veeValidate from 'vee-validate';
-// import languages from '@/translations';
 import VueX from 'vuex';
 
 import ClickOutside from '@/directives/ClickOutside';

@@ -22,7 +22,7 @@
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider.provider)" />
+            <img :src="providerLogo(provider)" />
           </div>
           <div
             :class="[
@@ -167,11 +167,11 @@
 <script>
 import BigNumber from 'bignumber.js';
 import MEW from '@/assets/images/logo.png';
-import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
+import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import { providerNames } from '@/partners';
+import bityBeta from '@/assets/images/etc/bitybeta.png';
 
 export default {
   props: {
@@ -232,6 +232,9 @@ export default {
         bity: Bity,
         simplex: Simplex,
         changelly: Changelly
+      },
+      betaLogos: {
+        bity: bityBeta
       }
     };
   },
@@ -259,26 +262,24 @@ export default {
       clickedEl.classList.add('radio-selected');
       this.$emit('selectedProvider', provider);
     },
-    providerLogo(name) {
-      return this.logos[name];
+    providerLogo(details) {
+      if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
+      return this.logos[details.provider];
+    },
+    useBetaLogo(details) {
+      return (
+        details.provider === 'bity' &&
+        (details.toCurrency === 'EUR' || details.toCurrency === 'CHF')
+      );
     },
     minNote(details) {
       if (details.minValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return [
-            `${details.minValue} ${details.fromCurrency} (From Min.)`,
-            `${details.minValue} ${details.toCurrency} (From Min.)`
-          ];
-        }
         return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return `${details.maxValue} ${details.fromCurrency} (Max.)`;
-        }
         return `${details.maxValue} ${details.fromCurrency} (Max.)`;
       }
       return '';

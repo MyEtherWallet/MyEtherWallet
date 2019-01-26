@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import nodeList from '@/networks';
 import AccessMyWalletContainer from '@/layouts/AccessWalletLayout/containers/AccessMyWalletContainer/AccessMyWalletContainer.vue';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
@@ -15,6 +14,7 @@ import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/Netw
 import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 
 const BBtnStub = {
   name: 'b-btn',
@@ -34,24 +34,9 @@ describe('AccessMyWalletContainer.vue', () => {
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
 
-    const network = nodeList['ETH'][3];
-
-    const getters = {
-      customPaths: () => {},
-      network: () => {
-        return network;
-      },
-      Networks: () => {
-        return nodeList;
-      },
-      path: () => {}
-    };
-
     store = new Vuex.Store({
       getters,
-      state: {
-        network: network
-      }
+      state
     });
   });
 

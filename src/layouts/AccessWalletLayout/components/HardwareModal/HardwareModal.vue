@@ -11,63 +11,18 @@
         <b-alert :show="mayNotBeAttached" fade variant="warning"
           >Please make sure your device is connected</b-alert
         >
-        <ul ref="hardwareList" class="button-options hardware-button-options">
-          <li
-            :class="selected === 'ledger' ? 'active' : ''"
-            @click="select('ledger')"
-          >
-            <img class="icon" src="~@/assets/images/icons/button-ledger.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-ledger-hover.png"
-            />
-            <span>Ledger Wallet</span>
-          </li>
-          <li
-            :class="selected === 'bitbox' ? 'active' : ''"
-            @click="select('bitbox')"
-          >
-            <img class="icon" src="~@/assets/images/icons/button-bitbox.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-bitbox-hover.png"
-            />
-            <span>Digital Bitbox</span>
-          </li>
-          <li
-            :class="selected === 'secalot' ? 'active' : ''"
-            @click="select('secalot')"
-          >
-            <img class="icon" src="~@/assets/images/icons/button-secalot.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-secalot-hover.png"
-            />
-            <span>Secalot</span>
-          </li>
-          <li
-            :class="selected === 'trezor' ? 'active' : ''"
-            @click="select('trezor')"
-          >
-            <img class="icon" src="~@/assets/images/icons/button-trezor.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-trezor-hover.png"
-            />
-            <span>Trezor</span>
-          </li>
-          <li
-            :class="selected === 'keepkey' ? 'active' : ''"
-            @click="select('keepkey')"
-          >
-            <img class="icon" src="~@/assets/images/icons/button-keepkey.png" />
-            <img
-              class="icon-hover"
-              src="~@/assets/images/icons/button-keepkey-hover.png"
-            />
-            <span>KeepKey</span>
-          </li>
-        </ul>
+        <div class="button-options hardware-button-options">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :select="select"
+            :regular-icon="item.imgPath"
+            :hover-icon="item.imgHoverPath"
+            :text="item.text"
+            :name="item.name"
+          />
+        </div>
       </div>
       <div class="button-container">
         <div
@@ -87,6 +42,17 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import ledger from '@/assets/images/icons/button-ledger.png';
+import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
+import bitbox from '@/assets/images/icons/button-bitbox.png';
+import bitboxHov from '@/assets/images/icons/button-bitbox-hover.png';
+import secalot from '@/assets/images/icons/button-secalot.png';
+import secalotHov from '@/assets/images/icons/button-secalot-hover.png';
+import trezor from '@/assets/images/icons/button-trezor.png';
+import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
+import keepkey from '@/assets/images/icons/button-keepkey.png';
+import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
+import WalletOption from '../WalletOption';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -96,7 +62,8 @@ import {
 } from '@/wallets';
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'wallet-option': WalletOption
   },
   props: {
     networkAndAddressOpen: {
@@ -111,7 +78,39 @@ export default {
   data() {
     return {
       selected: '',
-      mayNotBeAttached: false
+      mayNotBeAttached: false,
+      items: [
+        {
+          name: 'ledger',
+          imgPath: ledger,
+          imgHoverPath: ledgerHov,
+          text: 'Ledger'
+        },
+        {
+          name: 'bitbox',
+          imgPath: bitbox,
+          imgHoverPath: bitboxHov,
+          text: 'Digital Bitbox'
+        },
+        {
+          name: 'secalot',
+          imgPath: secalot,
+          imgHoverPath: secalotHov,
+          text: 'Secalot'
+        },
+        {
+          name: 'trezor',
+          imgPath: trezor,
+          imgHoverPath: trezorHov,
+          text: 'Trezor'
+        },
+        {
+          name: 'keepkey',
+          imgPath: keepkey,
+          imgHoverPath: keepkeyHov,
+          text: 'KeepKey'
+        }
+      ]
     };
   },
   mounted() {
@@ -166,14 +165,6 @@ export default {
       } else {
         this.selected = '';
       }
-    },
-    hardwareButtonActivate(e) {
-      const buttonEls = this.$refs.hardwareList.children;
-      for (let i = 0; i < buttonEls.length; i++) {
-        buttonEls[i].classList.remove('active');
-      }
-
-      e.target.classList.add('active');
     }
   }
 };
