@@ -114,10 +114,10 @@ const isDarklisted = addr => {
       utils.toChecksumAddress(addr.toLowerCase())
     );
   });
-  const errMsg = darklistAddr[darklisted].comment;
+  const errMsg = darklisted === -1 ? '' : darklistAddr[darklisted].comment;
   const errObject = {
     error: darklisted === -1 ? false : true,
-    msg: darklisted === -1 ? '' : errMsg
+    msg: errMsg
   };
   return errObject;
 };
