@@ -2,6 +2,7 @@ const LEDGER = 'ledger';
 const TREZOR = 'trezor';
 const BITBOX = 'bitbox';
 const SECALOT = 'secalot';
+const KEEPKEY = 'keepkey';
 const MEW_CONNECT = 'mew_connect';
 const KEYSTORE = 'keystore';
 const MNEMONIC = 'mnemonic';
@@ -12,6 +13,7 @@ export {
   TREZOR,
   BITBOX,
   SECALOT,
+  KEEPKEY,
   MEW_CONNECT,
   KEYSTORE,
   MNEMONIC,

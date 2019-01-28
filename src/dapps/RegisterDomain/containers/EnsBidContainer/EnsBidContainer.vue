@@ -41,7 +41,7 @@
           :class="[showDetail ? 'done' : '', 'accordion-header']"
           header-tag="header"
         >
-          <div><span> 1 </span> &nbsp; ({{ $t('dapps.bidInfo') }})</div>
+          <div><span> 1 </span> &nbsp; {{ $t('dapps.bidInfo') }}</div>
           <div v-show="showDetail" class="edit" @click="editInputs">
             {{ $t('dapps.edit') }}
           </div>
@@ -296,12 +296,8 @@ export default {
     }
   },
   mounted() {
-    /*
-    // If domain name isn't set, redirect to Dapps page.
-    if (this.domainName === '') {
-      this.$router.push('/interface/dapps');
-    }
-    */
+    if (this.domainName === '')
+      this.$router.replace('/interface/dapps/register-domain');
   },
   methods: {
     openJsonModal() {

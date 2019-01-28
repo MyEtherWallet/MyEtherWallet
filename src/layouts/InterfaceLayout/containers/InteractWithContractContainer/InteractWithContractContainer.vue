@@ -21,8 +21,10 @@
         <div class="the-form domain-name">
           <input
             v-ens-resolver="address"
+            v-validate="'required'"
             v-model="address"
             type="text"
+            name="nameAddr"
             placeholder="Enter Domain Name or Address"
           />
 
@@ -42,17 +44,21 @@
           <div class="title">
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
-              <button class="title-button" @click="deleteInput('abi')">
-                {{ $t('common.clear') }}
-              </button>
-              <button class="title-button" @click="copyToClipboard('abi')">
+              <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
+              <span @click="copyToClipboard('abi')">
                 {{ $t('common.copy') }}
-              </button>
+              </span>
             </div>
           </div>
         </div>
         <div class="the-form domain-name">
-          <textarea ref="abi" v-model="abi" class="custom-textarea-1" name="" />
+          <textarea
+            v-validate="'required'"
+            ref="abi"
+            v-model="abi"
+            class="custom-textarea-1"
+            name="abiField"
+          />
           <i
             :class="[
               isValidAbi && abi !== '' ? '' : 'not-good',
@@ -65,7 +71,9 @@
       <div class="submit-button-container">
         <div
           :class="[
-            isValidAbi && isValidAddress && (address !== '' && abi !== '')
+            isValidAbi &&
+            isValidAddress &&
+            (!errors.has('nameAddr') && !errors.has('abiField'))
               ? ''
               : 'disabled',
             'submit-button large-round-button-green-filled clickable'
@@ -120,7 +128,7 @@
             <input
               v-model="result"
               type="text"
-              name=""
+              name
               placeholder="0x00000000000000"
               disabled
             />
@@ -166,7 +174,7 @@
               :type="checkType(input.type)"
               v-model="writeInputs[input.name]"
               :placeholder="input.name"
-              name=""
+              name
               class="contract-inputs"
             />
           </div>
@@ -179,7 +187,7 @@
                 <h4>{{ $t('common.value') }}:</h4>
               </div>
             </div>
-            <input v-model="value" type="text" name="" placeholder="ETH" />
+            <input v-model="value" type="text" name placeholder="ETH" />
           </div>
           <div
             v-if="result !== '' && selectedMethod.inputs.length > 0"
@@ -193,7 +201,7 @@
                 v-if="resType === 'string'"
                 v-model="result"
                 type="text"
-                name=""
+                name
                 placeholder="0x00000000000000"
                 disabled
               />
@@ -220,8 +228,8 @@
                       selectedMethod.outputs[idx].name !== ''
                         ? selectedMethod.outputs[idx].name
                         : selectedMethod.outputs[idx].type
-                    }}</label
-                  >
+                    }}
+                  </label>
                   <input
                     :name="
                       selectedMethod.outputs[idx].name !== ''
@@ -259,7 +267,7 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading"> {{ $t('interface.read') }} </span>
+            <span v-show="!loading">{{ $t('interface.read') }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
           <div
@@ -271,7 +279,7 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading"> {{ $t('interface.write') }} </span>
+            <span v-show="!loading">{{ $t('interface.write') }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
@@ -334,6 +342,11 @@ export default {
   watch: {
     abi(newVal) {
       this.isValidAbi = Misc.isJson(newVal);
+    },
+    address(newVal) {
+      this.isValidAddress = this.web3.utils.isAddress(
+        this.web3.utils.toChecksumAddress(newVal)
+      );
     },
     selectedMethod(newVal) {
       this.writeInputs = {};

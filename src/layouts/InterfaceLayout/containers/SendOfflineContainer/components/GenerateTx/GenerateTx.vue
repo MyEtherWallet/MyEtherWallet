@@ -167,6 +167,7 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
 import { Misc } from '@/helpers';
 import utils from 'web3-utils';
 
@@ -218,7 +219,7 @@ export default {
       gasPrice: 'gasPrice'
     }),
     validAddress() {
-      return this.web3.utils.isAddress(this.address);
+      return isAddress(this.address);
     }
   },
   watch: {
@@ -247,9 +248,9 @@ export default {
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
-        this.selectedCurrency.symbol === this.network.type.name
+        this.selectedCoinType.symbol === this.network.type.name
           ? 18
-          : this.selectedCurrency.decimals;
+          : this.selectedCoinType.decimals;
       this.toAmt = new BigNumber(e.target.value)
         .decimalPlaces(decimals)
         .toFixed();

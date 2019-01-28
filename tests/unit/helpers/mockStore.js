@@ -6,6 +6,7 @@ const state = {
   ens: true,
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+  gasPrice: 41,
   Networks: {},
   network: {},
   notifications: {},
@@ -52,8 +53,7 @@ const getters = {
   Transactions: () => {},
   wallet: () => {
     return {
-      getChecksumAddressString: () => '',
-      wallet: 'wallet'
+      getChecksumAddressString: () => ''
     };
   },
   web3: () => {
