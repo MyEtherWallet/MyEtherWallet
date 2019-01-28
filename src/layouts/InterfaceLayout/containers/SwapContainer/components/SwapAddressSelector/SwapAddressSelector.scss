@@ -138,6 +138,11 @@
   color: $mew-green;
 }
 
-.good-button {
+.good-button-container {
   text-align: right;
+  display: flex;
+  justify-content: center;
+  .good-button {
+    line-height: 12px;
+  }
 }
