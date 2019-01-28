@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
+$input-title-color: #212529;
+$mew-green-dark-1: #04ae95;
+$mew-green-dark-2: #04957f;
+
 .schedule-transaction-container {
   background-color: $white;
   border-radius: 4px;
@@ -24,7 +28,7 @@
 
 .schedule-transaction-form-container {
   p {
-    color: $dark-blue-7;
+    color: $input-title-color;
     font-size: 16px;
     font-weight: bold;
   }
@@ -32,5 +36,32 @@
   .form {
     display: flex;
     flex-direction: column;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.btn-group {
+
+  & .btn {
+    background-color: $mew-green;
+    border-color: $mew-green;
+  
+    &:hover {
+      background-color: $mew-green-dark-1;
+      border-color: $mew-green-dark-1;
+    }
+    
+    &:active {
+      background-color: $mew-green-dark-1;
+      border-color: $mew-green-dark-1;
+    }
+  
+    &.selected {
+      background-color: $mew-green-dark-2;
+      border-color: $mew-green-dark-2;
+    }
   }
 }
