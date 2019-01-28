@@ -1,0 +1,27 @@
+@import '~@/scss/GlobalVariables';
+
+.vdatetime-popup__header,
+.vdatetime-calendar__month__day--selected > span > span,
+.vdatetime-calendar__month__day--selected:hover > span > span  {
+  background: $mew-green;
+}
+
+.vdatetime-year-picker__item--selected,
+.vdatetime-time-picker__item--selected,
+.vdatetime-popup__actions__button {
+  color: $mew-green;
+}
+
+.vdatetime-popup {
+  border-radius: 5px;
+}
+.vdatetime-popup__header {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.vdatetime-input {
+  background-color: #f9f9f9;
+  border: 1px solid #f9f9f9;
+  padding: 17px 20px;
+}

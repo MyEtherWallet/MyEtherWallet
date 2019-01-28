@@ -1,6 +1,16 @@
 <template>
   <div class="schedule-transaction-container">
-    <back-button />
+    <b-container>
+      <b-row align-h="start">
+        <b-col cols="4">
+          <back-button />
+        </b-col>
+
+        <b-col class="vertical-center-self horizontal-center" cols="4">
+          <h2>Schedule a transaction</h2>
+        </b-col>
+      </b-row>
+    </b-container>
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
         <standard-input :options="amountInputOptions()" v-model="amount" />
@@ -22,12 +32,21 @@
                   />
                 </div>
 
-                <div :class="selectedMode === supportedModes[1] && 'hide'">
-                  Time
+                <div :class="[
+                  'datetime-picker-container',
+                  selectedMode === supportedModes[1] && 'hide'
+                ]">
+                  <div class="input-title">Date & Time</div>
+                  <datetime-picker
+                    v-model="datetime"
+                    :min-datetime="now.toISOString()"
+                    class="theme-mew"
+                    type="datetime"
+                  />
                 </div>
               </b-col>
 
-              <b-col>
+              <b-col class="mode-btn-col">
                 <b-button-group class="float-right">
                   <b-button
                     v-for="(mode, index) in supportedModes"
@@ -44,11 +63,11 @@
 
           <hr />
 
-          <b-container class="timebounty-container">
+          <b-container class="send-form advanced">
             <b-row>
               <b-col>
                 <p>Time Bounty</p>
-                <div :class="advancedTimeBounty && 'hide'">
+                <div :class="advancedExpand && 'hide'">
                   <b-button-group>
                     <b-button
                       v-for="(bounty, index) in timeBountyPresets"
@@ -64,24 +83,23 @@
                   </b-button-group>
                 </div>
 
-                <div :class="!advancedTimeBounty && 'hide'">
+                <div :class="!advancedExpand && 'hide'">
                   <standard-input
                     :options="customTimeBountyInputOptions()"
                     v-model="timeBounty"
                   />
                 </div>
               </b-col>
-
               <b-col>
                 <div class="toggle-button-container float-right">
-                  <h4>Advanced Time Bounty</h4>
+                  <h4>Advanced Settings</h4>
                   <div class="toggle-button">
                     <!-- Rounded switch -->
                     <div class="sliding-switch-white">
                       <label class="switch">
                         <input
                           type="checkbox"
-                          @click="advancedTimeBounty = !advancedTimeBounty"
+                          @click="advancedExpand = !advancedExpand"
                         />
                         <span class="slider round" />
                       </label>
@@ -90,70 +108,48 @@
                 </div>
               </b-col>
             </b-row>
-          </b-container>
 
-          <hr />
-
-          <div class="send-form advanced">
-            <div class="advanced-content">
-              <div class="toggle-button-container">
-                <h4>{{ $t('common.advanced') }}</h4>
-                <div class="toggle-button">
-                  <!-- Rounded switch -->
-                  <div class="sliding-switch-white">
-                    <label class="switch">
-                      <input
-                        type="checkbox"
-                        @click="advancedExpand = !advancedExpand"
-                      />
-                      <span class="slider round" />
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <b-container :class="!advancedExpand && 'hide'">
-                <standard-input :options="dataInputOptions()" v-model="data" />
-                <b-row>
-                  <b-col>
-                    <standard-input
-                      :options="gasLimitInputOptions()"
-                      v-model="gasLimit"
-                    />
-                  </b-col>
-                  <b-col>
-                    <standard-input :options="futureGasLimitInputOptions()" />
-                  </b-col>
-                </b-row>
-                <standard-input
-                  :options="requireDepositInputOptions()"
-                  v-model="deposit"
-                />
-                <standard-input
-                  :options="executionWindowInputOptions()"
-                  v-model="windowSize"
-                />
-              </b-container>
+            <div :class="!advancedExpand && 'hide'">
+              <standard-input :options="dataInputOptions()" v-model="data" />
+              <b-row>
+                <b-col>
+                  <standard-input
+                    :options="gasLimitInputOptions()"
+                    v-model="gasLimit"
+                  />
+                </b-col>
+                <b-col>
+                  <standard-input :options="futureGasLimitInputOptions()" />
+                </b-col>
+              </b-row>
+              <standard-input
+                :options="requireDepositInputOptions()"
+                v-model="deposit"
+              />
+              <standard-input
+                :options="executionWindowInputOptions()"
+                v-model="windowSize"
+              />
             </div>
-          </div>
-
-          <hr />
-
-          <div
-            class="submit-button large-round-button-green-filled clickable"
-            @click="scheduleTx"
-          >
-            Schedule
-          </div>
+          </b-container>
         </div>
       </div>
-      <div>
-        <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
-          link="https://www.ethereum-alarm-clock.com/"
-        />
+    </div>
+
+    <div class="submit-button-container">
+      <div
+        :class="[
+          'submit-button large-round-button-green-filled'
+        ]"
+        @click="scheduleTx"
+      >
+        Schedule
       </div>
+      <interface-bottom-text
+        :link-text="$t('interface.helpCenter')"
+        :question="$t('interface.haveIssues')"
+        link="https://kb.myetherwallet.com"
+      />
     </div>
   </div>
 </template>
@@ -162,6 +158,8 @@
 import { mapGetters } from 'vuex';
 import { EAC } from '@ethereum-alarm-clock/lib';
 import BigNumber from 'bignumber.js';
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
 
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -177,7 +175,8 @@ export default {
     'back-button': BackButton,
     'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker,
-    'standard-input': StandardInput
+    'standard-input': StandardInput,
+    'datetime-picker': Datetime
   },
   data() {
     return {
@@ -188,6 +187,7 @@ export default {
       amount: '0',
       gasLimit: '21000',
       data: '',
+      datetime: '',
       currentBlockNumber: '',
       selectedBlockNumber: '',
       timeBountyPresets: TIME_BOUNTY_PRESETS,
@@ -206,7 +206,8 @@ export default {
         return {
           title: 'To Address',
           buttonCopy: true,
-          value: this.toAddress
+          value: this.toAddress,
+          placeHolder: 'e.g. 0xa554Bb3d545C6F08909D5DD15cFe2d3c7513F597'
         };
       },
       customTimeBountyInputOptions() {
@@ -257,7 +258,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['web3', 'network', 'wallet'])
+    ...mapGetters(['web3', 'network', 'wallet']),
+    now() {
+      return new Date();
+    }
   },
   beforeMount() {
     this.web3.eth
@@ -270,6 +274,8 @@ export default {
         // eslint-disable-next-line no-console
         console.error(err);
       });
+    
+    this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
   },
   methods: {
     scheduleTx: async function() {
@@ -282,14 +288,14 @@ export default {
         deposit,
         windowSize,
         timeBounty,
-        selectedMode
+        selectedMode,
+        datetime
       } = this;
 
       const eac = new EAC(this.web3);
-      const now = Math.round(new Date().getTime() / 1000);
-      const oneDayFromNow = now + 24 * 60 * 60;
 
       const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
+      const timestamp = Math.round(new Date(datetime).getTime() / 1000); 
 
       const ethToWeiBN = value =>
         new BigNumber(this.web3.utils.toWei(value.toString(), 'ether'));
@@ -297,7 +303,7 @@ export default {
       const schedulingOptions = {
         toAddress,
         windowStart: new BigNumber(
-          timestampScheduling ? oneDayFromNow : selectedBlockNumber
+          timestampScheduling ? timestamp : selectedBlockNumber
         ),
         timestampScheduling,
         callGas: new BigNumber(gasLimit),
@@ -317,6 +323,11 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
 @import 'ScheduleTransaction.scss';
+</style>
+
+<style lang="scss">
+@import 'DateTimePicker.scss';
 </style>
