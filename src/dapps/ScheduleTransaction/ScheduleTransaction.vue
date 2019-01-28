@@ -2,9 +2,7 @@
   <div class="schedule-transaction-container">
     <b-container>
       <b-row align-h="start">
-        <b-col cols="4">
-          <back-button />
-        </b-col>
+        <b-col cols="4"> <back-button /> </b-col>
 
         <b-col class="vertical-center-self horizontal-center" cols="4">
           <h2>Schedule a transaction</h2>
@@ -32,10 +30,12 @@
                   />
                 </div>
 
-                <div :class="[
-                  'datetime-picker-container',
-                  selectedMode === supportedModes[1] && 'hide'
-                ]">
+                <div
+                  :class="[
+                    'datetime-picker-container',
+                    selectedMode === supportedModes[1] && 'hide'
+                  ]"
+                >
                   <div class="input-title">Date & Time</div>
                   <datetime-picker
                     v-model="datetime"
@@ -138,9 +138,7 @@
 
     <div class="submit-button-container">
       <div
-        :class="[
-          'submit-button large-round-button-green-filled'
-        ]"
+        :class="['submit-button large-round-button-green-filled']"
         @click="scheduleTx"
       >
         Schedule
@@ -148,7 +146,7 @@
       <interface-bottom-text
         :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
+        link="https://www.ethereum-alarm-clock.com"
       />
     </div>
   </div>
@@ -274,7 +272,7 @@ export default {
         // eslint-disable-next-line no-console
         console.error(err);
       });
-    
+
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
   },
   methods: {
@@ -295,7 +293,7 @@ export default {
       const eac = new EAC(this.web3);
 
       const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
-      const timestamp = Math.round(new Date(datetime).getTime() / 1000); 
+      const timestamp = Math.round(new Date(datetime).getTime() / 1000);
 
       const ethToWeiBN = value =>
         new BigNumber(this.web3.utils.toWei(value.toString(), 'ether'));
@@ -322,7 +320,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 @import 'ScheduleTransaction.scss';
