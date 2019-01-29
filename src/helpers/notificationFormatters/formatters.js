@@ -1,4 +1,6 @@
 import BigNumber from 'bignumber.js';
+import uuid from 'uuid/v4'
+
 import {
   INVESTIGATE_FAILURE_KEY,
   type,
@@ -52,6 +54,7 @@ const updateStatusBasedOnReciept = status => {
 
 const formatTransactionHash = (val, network) => {
   return {
+    id: uuid(),
     title: 'Transaction',
     read: false,
     timestamp: Date.now(),
@@ -102,6 +105,7 @@ const formatTransactionReciept = (entry, val) => {
 
 const formatTransactionError = (val, network) => {
   return {
+    id: uuid(),
     title: 'Transaction',
     read: false,
     timestamp: Date.now(),
@@ -147,6 +151,7 @@ const formatSwap = (val, network) => {
     : swapOnlyStatuses.NEW;
 
   const formatted = {
+    id: uuid(),
     title: 'Swap',
     read: false,
     timestamp: Date.now(),
@@ -226,6 +231,7 @@ const formatSwapErrorUpdate = (entry, val) => {
 
 const formatSwapError = (val, network) => {
   return {
+    id: uuid(),
     title: 'Swap',
     read: false,
     timestamp: Date.now(),
@@ -237,7 +243,9 @@ const formatSwapError = (val, network) => {
     network: network,
     body: {
       error: true,
-      errorMessage: extractErrorMessage(val[swapIndexes.response]),
+      errorMessage: val[swapIndexes.response].hasOwnProperty('message')
+        ? val[swapIndexes.response].message
+        : val[swapIndexes.response],
       hash: undefined,
       amount: new BigNumber(val[swapIndexes.txDetails].value).toString(),
       nonce: new BigNumber(val[swapIndexes.txDetails].nonce).toString(),

@@ -30,7 +30,8 @@ export default class Kyber {
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
-    this.tradeGasLimit = defaultValues.tradeGasLimit;
+    console.log('return below to proper value after notification work')
+    this.tradeGasLimit = 100000; //defaultValues.tradeGasLimit; //
     this.tokenToTokenGasLimit = defaultValues.tokenToTokenGasLimit;
     this.tokenApprovalGas = defaultValues.tokenApprovalGasLimit;
     this.maxGasPrice = defaultValues.maxGasPrice; // 30 Gwei
