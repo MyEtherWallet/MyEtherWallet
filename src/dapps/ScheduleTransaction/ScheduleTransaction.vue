@@ -169,12 +169,14 @@
       >
         Schedule
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://www.ethereum-alarm-clock.com"
-      />
     </div>
+
+    <a
+      href="https://blog.chronologic.network/announcing-the-ethereum-alarm-clock-chronologic-partnership-b3d7545bea3b"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="eac-logo"
+    />
   </div>
 </template>
 
@@ -186,7 +188,6 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
 
@@ -197,7 +198,6 @@ export default {
   name: 'ScheduleTransaction',
   components: {
     'back-button': BackButton,
-    'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
     'datetime-picker': Datetime
