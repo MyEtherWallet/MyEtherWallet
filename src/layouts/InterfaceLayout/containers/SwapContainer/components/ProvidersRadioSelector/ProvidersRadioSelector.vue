@@ -63,6 +63,24 @@
             </p>
           </div>
         </li>
+        <!-- list of other providers who don't support the selected currency pair -->
+        <li
+          v-for="(providerName, idx) in otherProviders"
+          :key="providerName + idx"
+          class="unavailable"
+        >
+          <div class="provider-image">
+            <img :src="providerLogo(providerName)" />
+          </div>
+          <div>
+            <div class="show-mobile">
+              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+            </div>
+          </div>
+          <div class="show-desktop">
+            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+          </div>
+        </li>
       </ul>
     </div>
     <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
@@ -158,6 +176,24 @@
           </div>
           <div />
         </li>
+        <!-- list of providers -->
+        <li
+          v-for="(providerName, idx) in otherProviders"
+          :key="providerName + idx"
+          class="unavailable"
+        >
+          <div class="provider-image">
+            <img :src="providerLogo(providerName)" />
+          </div>
+          <div>
+            <div class="show-mobile">
+              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+            </div>
+          </div>
+          <div class="show-desktop">
+            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+          </div>
+        </li>
       </ul>
     </div>
     <!-- =========================================================================== -->
@@ -175,6 +211,12 @@ import bityBeta from '@/assets/images/etc/bitybeta.png';
 
 export default {
   props: {
+    allSupportedProviders: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     providerData: {
       type: Array,
       default: function() {
@@ -226,6 +268,7 @@ export default {
   },
   data() {
     return {
+      otherProviderList: [],
       logos: {
         mew: MEW,
         kybernetwork: KyberNetwork,
@@ -244,9 +287,33 @@ export default {
         (this.providersFound.length === 0 || this.providerData.length === 0) &&
         !this.loadingData
       );
+    },
+    otherProviders() {
+      const activeProviders = this.listActiveProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
+    }
+  },
+  watch: {
+    providerData() {
+      this.listOtherProviders();
     }
   },
   methods: {
+    listOtherProviders() {
+      if (this.providerData.length !== 0) {
+        console.log('sss', this.allSupportedProviders); // todo remove dev item
+      }
+    },
+    listActiveProviders() {
+      const activeProviders = [];
+      this.providerData.forEach(entry => {
+        console.log('ss', entry.provider); // todo remove dev item
+        activeProviders.push(entry.provider);
+      });
+      return activeProviders;
+    },
     minCheck(details) {
       return details.minValue > +this.fromValue;
     },
@@ -263,8 +330,11 @@ export default {
       this.$emit('selectedProvider', provider);
     },
     providerLogo(details) {
+      if (details.provider) {
       if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
       return this.logos[details.provider];
+      }
+      return this.logos[details];
     },
     useBetaLogo(details) {
       return (
