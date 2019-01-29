@@ -15,10 +15,28 @@ const ADD_CUSTOM_PATH = function(state, paths) {
   store.set('customPaths', paths);
 };
 
-const CHECK_IF_ONLINE = function(state) {
+const CHECK_IF_ONLINE = async function(state) {
+  const lastFetch = new Date(state.darklist.timestamp);
+  const now = new Date(Date.now());
+
+  const daysSinceLastFetch = Math.round(
+    Math.abs((lastFetch.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
+  );
+
   state.online =
     window.location.protocol === 'http:' ||
     window.location.protocol === 'https:';
+  if (state.online && daysSinceLastFetch > 10) {
+    const darkList = await fetch(
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
+    )
+      .then(res => res.json())
+      .catch(console.log);
+    state.darklist = {
+      data: darkList,
+      timestamp: Date.now()
+    };
+  }
 };
 
 const CLEAR_WALLET = function(state) {
