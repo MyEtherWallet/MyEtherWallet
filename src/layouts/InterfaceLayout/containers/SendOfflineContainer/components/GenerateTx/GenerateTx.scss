@@ -2,8 +2,19 @@
 
 $mobile-collepse-width: 700px;
 
-.generate-info {
+.generate-tx {
   border-radius: 0 0 5px 5px;
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
 }
 
 input,
