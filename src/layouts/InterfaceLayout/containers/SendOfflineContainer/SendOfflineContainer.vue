@@ -2,7 +2,7 @@
   <div class="send-offline-container">
     <interface-container-title :title="$t('common.offline')" />
     <generate-tx />
-    <!-- DISABLED ----------------- -->
+    <!-- DISABLED Begin -->
     <div v-if="false">
       <div class="scroll-container">
         <div class="progress-status prevent-user-select">
@@ -37,7 +37,7 @@
         />
       </div>
     </div>
-    <!-- DISABLED ----------------- -->
+    <!-- DISABLED End -->
   </div>
   <!-- .form-content-container -->
 </template>
