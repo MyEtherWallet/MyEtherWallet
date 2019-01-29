@@ -157,7 +157,15 @@
               ]"
               @click="setAccount(account)"
             >
-              <li>{{ account.index }}.</li>
+              <li>
+                <blockie
+                  :address="account.account.getChecksumAddressString()"
+                  :size="8"
+                  :scale="16"
+                  width="30px"
+                  height="30px"
+                />
+              </li>
               <li>{{ account.account.getChecksumAddressString() }}</li>
               <li>{{ convertBalance(account.balance) }}</li>
               <li class="user-input-checkbox">
@@ -216,12 +224,13 @@ import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import ethIcon from '@/assets/images/icons/ethereum-icon.png';
+import Blockie from '@/components/Blockie';
 
 const MAX_ADDRESSES = 5;
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'blockie': Blockie
   },
   props: {
     hardwareWallet: {
@@ -233,7 +242,6 @@ export default {
   },
   data() {
     return {
-      ethereumIcon: ethIcon,
       selectedNetwork: this.$store.state.network,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
