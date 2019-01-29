@@ -230,7 +230,7 @@ const MAX_ADDRESSES = 5;
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'blockie': Blockie
+    blockie: Blockie
   },
   props: {
     hardwareWallet: {
