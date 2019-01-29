@@ -31,7 +31,10 @@ const CHECK_IF_ONLINE = async function(state) {
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
       .then(res => res.json())
-      .catch(console.log);
+      .catch(e => {
+        // eslint-disable-next-line
+        console.log(e);
+      });
     state.darklist = {
       data: darkList,
       timestamp: Date.now()
