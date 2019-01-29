@@ -137,8 +137,14 @@
               <b-row>
                 <b-col>
                   <standard-input
+                    :options="futureGasPriceInputOptions()"
+                    @changedValue="futureGasPrice = $event"
+                  />
+                </b-col>
+                <b-col>
+                  <standard-input
                     :options="gasLimitInputOptions()"
-                    @changedValue="gasLimit = $event"
+                    @changedValue="futureGasLimit = $event"
                   />
                 </b-col>
                 <b-col>
@@ -203,7 +209,8 @@ export default {
       isValidAddress: false,
       toAddress: '',
       amount: '0',
-      gasLimit: '21000',
+      futureGasLimit: '21000',
+      futureGasPrice: '1',
       data: '',
       datetime: '',
       currentBlockNumber: '',
@@ -259,13 +266,19 @@ export default {
       gasLimitInputOptions() {
         return {
           title: 'Gas Limit',
-          value: this.gasLimit
+          value: this.futureGasLimit
+        };
+      },
+      futureGasPriceInputOptions() {
+        return {
+          title: 'Future Gas Price (gwei)',
+          value: this.gasPrice
         };
       },
       futureGasLimitInputOptions() {
         return {
           title: 'Future Gas Limit',
-          value: this.gasLimit,
+          value: this.futureGasLimit,
           inputDisabled: true
         };
       },
@@ -284,7 +297,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['web3', 'network', 'wallet']),
+    ...mapGetters(['web3', 'network', 'wallet', 'gasPrice']),
     now() {
       return new Date();
     }
@@ -302,13 +315,15 @@ export default {
       });
 
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
+    this.futureGasPrice = this.gasPrice;
   },
   methods: {
     scheduleTx: async function() {
       const {
         toAddress,
         amount,
-        gasLimit,
+        futureGasLimit,
+        futureGasPrice,
         data,
         selectedBlockNumber,
         deposit,
@@ -332,12 +347,15 @@ export default {
           timestampScheduling ? timestamp : selectedBlockNumber
         ),
         timestampScheduling,
-        callGas: new BigNumber(gasLimit),
+        callGas: new BigNumber(futureGasLimit),
         callData: data,
         callValue: ethToWeiBN(amount),
         windowSize: new BigNumber(windowSize),
         bounty: ethToWeiBN(timeBounty),
-        requiredDeposit: ethToWeiBN(deposit)
+        requiredDeposit: ethToWeiBN(deposit),
+        gasPrice: new BigNumber(
+          this.web3.utils.toWei(futureGasPrice.toString(), 'gwei')
+        )
       };
       console.log(schedulingOptions);
 
