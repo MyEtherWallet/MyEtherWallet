@@ -29,7 +29,7 @@
     <div class="owner-options">
       <button
         v-if="
-          deedOwner === wallet.getChecksumAddressString() &&
+          deedOwner === account.address &&
             owner === '0x0000000000000000000000000000000000000000'
         "
         class="finalize-button"
@@ -38,7 +38,7 @@
         {{ $t('dapps.finalize') }}
       </button>
       <button
-        v-if="owner === wallet.getChecksumAddressString()"
+        v-if="owner === account.address"
         class="manage-button"
         @click="manageEns"
       >
@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      account: 'account'
     })
   },
   mounted() {

@@ -11,11 +11,14 @@
     </b-container>
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
-        <standard-input :options="amountInputOptions()" v-model="amount" />
+        <standard-input
+          :options="amountInputOptions()"
+          @changedValue="amount = $event"
+        />
         <div class="form-block">
           <standard-input
             :options="toAddressInputOptions()"
-            v-model="toAddress"
+            @changedValue="toAddress = $event"
           />
 
           <hr />
@@ -23,7 +26,7 @@
           <div :class="selectedMode === supportedModes[0] && 'hide'">
             <standard-input
               :options="blockNumberInputOptions()"
-              v-model="selectedBlockNumber"
+              @changedValue="selectedBlockNumber = $event"
             />
           </div>
 
@@ -76,7 +79,7 @@
                 <div :class="!advancedExpand && 'hide'">
                   <standard-input
                     :options="customTimeBountyInputOptions()"
-                    v-model="timeBounty"
+                    @changedValue="timeBounty = $event"
                   />
                 </div>
               </b-col>
@@ -121,21 +124,21 @@
                 <b-col>
                   <standard-input
                     :options="executionWindowInputOptions()"
-                    v-model="windowSize"
+                    @changedValue="windowSize = $event"
                   />
                 </b-col>
               </b-row>
 
               <standard-input
                 :options="requireDepositInputOptions()"
-                v-model="deposit"
+                @changedValue="deposit = $event"
               />
 
               <b-row>
                 <b-col>
                   <standard-input
                     :options="gasLimitInputOptions()"
-                    v-model="gasLimit"
+                    @changedValue="gasLimit = $event"
                   />
                 </b-col>
                 <b-col>
@@ -143,7 +146,10 @@
                 </b-col>
               </b-row>
 
-              <standard-input :options="dataInputOptions()" v-model="data" />
+              <standard-input
+                :options="dataInputOptions()"
+                @changedValue="data = $event"
+              />
             </div>
           </b-container>
         </div>

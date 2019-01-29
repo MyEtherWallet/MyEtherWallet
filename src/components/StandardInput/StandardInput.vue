@@ -54,7 +54,8 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
-        @input="emitInput()"
+        name=""
+        @blur="emitValue"
       />
 
       <textarea
@@ -127,11 +128,8 @@ export default {
       }
       document.execCommand('copy');
     },
-    emitInput() {
-      const value = this.$refs[
-        this.options.isTextarea ? 'textareadata' : 'inputdata'
-      ].value;
-      this.$emit('input', value);
+    emitValue(evt) {
+      this.$emit('changedValue', evt.srcElement.value);
     }
   }
 };

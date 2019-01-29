@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 
 const RouterLinkStub = {
   name: 'router-link',
@@ -17,14 +18,9 @@ describe('HomeLayout.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    const getters = {
-      online: () => {
-        return true;
-      }
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 
