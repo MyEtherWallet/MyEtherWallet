@@ -16,17 +16,10 @@ const ADD_CUSTOM_PATH = function(state, paths) {
 };
 
 const CHECK_IF_ONLINE = async function(state) {
-  const lastFetch = new Date(state.darklist.timestamp);
-  const now = new Date(Date.now());
-
-  const daysSinceLastFetch = Math.round(
-    Math.abs((lastFetch.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
-  );
-
   state.online =
     window.location.protocol === 'http:' ||
     window.location.protocol === 'https:';
-  if (state.online && daysSinceLastFetch > 10) {
+  if (state.online) {
     const darkList = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
