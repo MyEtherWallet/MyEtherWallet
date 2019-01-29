@@ -9,10 +9,8 @@ import DeployContractContainer from '@/layouts/InterfaceLayout/containers/Deploy
 // import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
 // import sinon from 'sinon';
+import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
@@ -32,43 +30,10 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
       setGasPrice: jest.fn()
     };
 
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const wallet = {
-      getAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      gasPrice: () => {},
-      web3: () => {
-        return newWeb3;
-      },
-      wallet: () => {
-        return wallet;
-      }
-    };
-
     store = new VueX.Store({
       actions,
       getters,
-      state: {
-        web3: newWeb3,
-        network: network,
-        wallet: {
-          getAddressString: function() {
-            return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-          }
-        }
-      }
+      state
     });
   });
   beforeEach(() => {

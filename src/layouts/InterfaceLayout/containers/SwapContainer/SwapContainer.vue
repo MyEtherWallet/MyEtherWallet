@@ -1,178 +1,209 @@
 <template>
   <div class="swap-container">
-    <swap-confirmation-modal
-      ref="swapConfirmation"
-      :selected-provider="selectedProvider"
-      :swap-details="swapDetails"
-      :current-address="currentAddress"
-      @swapStarted="resetSwapState"
-    />
+    <div v-show="!bityExitToFiat">
+      <swap-confirmation-modal
+        ref="swapConfirmation"
+        :selected-provider="selectedProvider"
+        :swap-details="swapDetails"
+        :current-address="currentAddress"
+        @swapStarted="resetSwapState"
+      />
 
-    <swap-send-to-modal
-      ref="swapSendTo"
-      :selected-provider="selectedProvider"
-      :swap-details="swapDetails"
-      :current-address="currentAddress"
-      @swapStarted="resetSwapState"
-    />
+      <swap-send-to-modal
+        ref="swapSendTo"
+        :selected-provider="selectedProvider"
+        :swap-details="swapDetails"
+        :current-address="currentAddress"
+        @swapStarted="resetSwapState"
+      />
 
-    <div class="title-block">
-      <interface-container-title :title="$t('common.swap')" />
-    </div>
-
-    <div class="form-content-container">
-      <div class="send-form">
-        <div class="form-block amount-to-address">
-          <div class="amount">
-            <div class="title title-and-copy">
-              <h4>{{ $t('common.from') }}</h4>
-              <p
-                v-if="tokenBalances[fromCurrency] > 0"
-                class="all-button prevent-user-select"
-                @click="swapAll"
-              >
-                {{ $t('common.totalBalance') }}
-              </p>
-            </div>
-            <swap-currency-picker
-              :currencies="fromArray"
-              :override-currency="overrideFrom"
-              :from-source="true"
-              page="SwapContainerFrom"
-              @selectedCurrency="setFromCurrency"
-            />
-            <div class="the-form amount-number">
-              <input
-                v-model="fromValue"
-                type="number"
-                name
-                value
-                placeholder="Deposit Amount"
-                @input="amountChanged('from')"
-              />
-            </div>
-            <div class="error-message-container">
-              <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-              <p v-if="notEnough && !fromBelowMinAllowed">
-                {{ $t('common.dontHaveEnough') }}
-              </p>
-              <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
-            </div>
-          </div>
-          <div class="exchange-icon" @click="flipCurrencies">
-            <img :src="images.swap" />
-          </div>
-          <div class="amount">
-            <div class="title">
-              <h4>{{ $t('common.to') }}</h4>
-            </div>
-            <swap-currency-picker
-              :currencies="toArray"
-              :override-currency="overrideTo"
-              :from-source="false"
-              page="SwapContainerTo"
-              @selectedCurrency="setToCurrency"
-            />
-            <div class="the-form amount-number">
-              <input
-                v-model="toValue"
-                type="number"
-                name
-                value
-                placeholder="Received Amount"
-                @input="amountChanged('to')"
-              />
-            </div>
-            <div class="error-message-container">
-              <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
-              <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
-            </div>
-          </div>
-        </div>
-        <!-- form-block amount-to-address -->
+      <div class="title-block">
+        <interface-container-title :title="$t('common.swap')" />
+        <!--        <div class="buy-eth">
+          <a href="https://ccswap.myetherwallet.com" target="_blank">
+            <span>{{ $t('interface.buyEth') }}</span>
+            <img :src="images.visaMaster" />
+          </a>
+        </div>-->
       </div>
 
-      <div class="send-form">
-        <div class="the-form gas-amount">
-          <drop-down-address-selector
-            :currency="toCurrency"
-            :current-address="currentAddress"
-            :copybutton="true"
-            title="To Address"
-            @toAddress="setToAddress"
-            @validAddress="setAddressValid"
-          />
+      <div class="form-content-container">
+        <div class="send-form">
+          <div class="form-block amount-to-address">
+            <div class="amount">
+              <div class="title title-and-copy">
+                <h4>{{ $t('common.from') }}</h4>
+                <p
+                  v-if="tokenBalances[fromCurrency] > 0"
+                  class="all-button prevent-user-select"
+                  @click="swapAll"
+                >
+                  {{ $t('common.totalBalance') }}
+                </p>
+              </div>
+              <swap-currency-picker
+                :currencies="fromArray"
+                :override-currency="overrideFrom"
+                :from-source="true"
+                page="SwapContainerFrom"
+                @selectedCurrency="setFromCurrency"
+              />
+              <div class="the-form amount-number">
+                <input
+                  v-model="fromValue"
+                  type="number"
+                  name
+                  value
+                  placeholder="Deposit Amount"
+                  @input="amountChanged('from')"
+                />
+              </div>
+              <div class="error-message-container">
+                <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
+                <p v-if="notEnough && !fromBelowMinAllowed">
+                  {{ $t('common.dontHaveEnough') }}
+                </p>
+                <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
+              </div>
+            </div>
+            <div class="exchange-icon" @click="flipCurrencies">
+              <img :src="images.swap" />
+            </div>
+            <div class="amount">
+              <div class="title">
+                <h4>{{ $t('common.to') }}</h4>
+              </div>
+              <swap-currency-picker
+                :currencies="toArray"
+                :override-currency="overrideTo"
+                :from-source="false"
+                page="SwapContainerTo"
+                @selectedCurrency="setToCurrency"
+              />
+              <div class="the-form amount-number">
+                <input
+                  v-model="toValue"
+                  type="number"
+                  name
+                  value
+                  placeholder="Received Amount"
+                  @input="amountChanged('to')"
+                />
+              </div>
+              <div class="error-message-container">
+                <p v-if="toBelowMinAllowed">{{ toBelowMinAllowed }}</p>
+                <p v-if="toAboveMaxAllowed">{{ toAboveMaxAllowed }}</p>
+              </div>
+            </div>
+          </div>
+          <!-- form-block amount-to-address -->
         </div>
-        <div v-show="!isValidAddress" class="error-message-container">
-          <p>{{ $t('interface.notValidAddr') }}</p>
-        </div>
-      </div>
 
-      <div v-show="showRefundAddress" class="send-form">
-        <div class="title-container">
-          <div class="title title-and-copy">
-            <h4>{{ fromCurrency }} {{ $t('interface.refund') }}</h4>
-            <p class="copy-button prevent-user-select">
-              {{ $t('common.copy') }}
+        <div v-show="!isExitToFiat" class="send-form">
+          <div class="the-form gas-amount">
+            <drop-down-address-selector
+              :currency="toCurrency"
+              :current-address="currentAddress"
+              :copybutton="true"
+              :title="$t('common.toAddress')"
+              @toAddress="setToAddress"
+              @validAddress="setAddressValid"
+            />
+          </div>
+          <div v-show="!isValidAddress" class="error-message-container">
+            <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
+          </div>
+        </div>
+
+        <div
+          v-show="isExitToFiat && fromCurrency !== baseCurrency"
+          class="send-form"
+        >
+          <div class="the-form gas-amount">
+            <drop-down-address-selector
+              :currency="fromCurrency"
+              :current-address="currentAddress"
+              :copybutton="true"
+              :title="$t('interface.fromAddr')"
+              @toAddress="setExitFromAddress"
+              @validAddress="setAddressValid"
+            />
+          </div>
+          <div v-show="!isValidAddress" class="error-message-container">
+            <p>
+              {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
             </p>
           </div>
         </div>
-        <div class="the-form gas-amount">
-          <drop-down-address-selector
-            :currency="fromCurrency"
-            :current-address="currentAddress"
-            @toAddress="setRefundAddress"
+
+        <div v-show="showRefundAddress" class="send-form">
+          <div class="the-form gas-amount">
+            <drop-down-address-selector
+              :currency="fromCurrency"
+              :current-address="currentAddress"
+              :copybutton="true"
+              :title="$t('interface.refund', { currency: fromCurrency })"
+              @toAddress="setRefundAddress"
+              @validAddress="setAddressValid"
+            />
+          </div>
+        </div>
+
+        <div class="send-form">
+          <div class="title-container">
+            <div class="title title-and-copy">
+              <h4>{{ $t('interface.providers') }}</h4>
+            </div>
+          </div>
+          <providers-radio-selector
+            :loading-provider-error="loadingError"
+            :loading-provider-rates="!haveProviderRates"
+            :provider-data="providerList"
+            :from-value="+fromValue"
+            :to-value="+toValue"
+            :no-providers-pair="noProvidersPair"
+            :loading-data="loadingData"
+            :providers-found="providersFound"
+            :provider-selected="selectedProvider"
+            :switch-currency-order="switchCurrencyOrder"
+            @selectedProvider="setSelectedProvider"
+          />
+        </div>
+
+        <div class="submit-button-container">
+          <div
+            v-show="finalizingSwap"
+            class="disabled submit-button large-round-button-green-filled clickable"
+          >
+            <i class="fa fa-spinner fa-spin" />
+            {{ $t('interface.swapButtonLoading') }}
+          </div>
+          <div
+            v-show="!finalizingSwap"
+            :class="[
+              validSwap ? '' : 'disabled',
+              'submit-button large-round-button-green-filled clickable'
+            ]"
+            @click="swapConfirmationModalOpen"
+          >
+            {{ $t('common.continue') }}
+            <i class="fa fa-long-arrow-right" aria-hidden="true" />
+          </div>
+          <interface-bottom-text
+            :link-text="$t('interface.helpCenter')"
+            :question="$t('interface.haveIssues')"
+            link="https://kb.myetherwallet.com"
           />
         </div>
       </div>
-
-      <div class="send-form">
-        <div class="title-container">
-          <div class="title title-and-copy">
-            <h4>{{ $t('interface.providers') }}</h4>
-          </div>
-        </div>
-        <providers-radio-selector
-          :loading-provider-error="loadingError"
-          :loading-provider-rates="!haveProviderRates"
-          :provider-data="providerList"
-          :from-value="+fromValue"
-          :to-value="+toValue"
-          :no-providers-pair="noProvidersPair"
-          :loading-data="loadingData"
-          :providers-found="providersFound"
-          :provider-selected="selectedProvider"
-          :switch-currency-order="switchCurrencyOrder"
-          @selectedProvider="setSelectedProvider"
-        />
-      </div>
-
-      <div class="submit-button-container">
-        <div
-          v-show="finalizingSwap"
-          class="disabled submit-button large-round-button-green-filled clickable"
-        >
-          <i class="fa fa-spinner fa-spin" />
-          {{ $t('interface.swapButtonLoading') }}
-        </div>
-        <div
-          v-show="!finalizingSwap"
-          :class="[
-            validSwap ? '' : 'disabled',
-            'submit-button large-round-button-green-filled clickable'
-          ]"
-          @click="swapConfirmationModalOpen"
-        >
-          {{ $t('common.continue') }}
-          <i class="fa fa-long-arrow-right" aria-hidden="true" />
-        </div>
-        <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
-          link="https://kb.myetherwallet.com"
-        />
-      </div>
     </div>
+    <swap-exit-to-fiat
+      v-if="bityExitToFiat"
+      :swap-details="swapDetails"
+      :exit-from-address="exitSourceAddress"
+      :exit-to-fiat-callback="exitToFiatCallback"
+      @backButtonClick="exitToFiatAbort"
+    ></swap-exit-to-fiat>
   </div>
 </template>
 <script>
@@ -185,12 +216,13 @@ import DropDownAddressSelector from './components/SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap.svg';
-import ImageKybernetowrk from '@/assets/images/etc/kybernetowrk.png';
+import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 
 import SwapCurrencyPicker from './components/SwapCurrencyPicker';
 import SwapConfirmationModal from './components/SwapConfirmationModal';
+import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 
 import {
@@ -201,11 +233,13 @@ import {
   isValidEntry,
   providerNames,
   BASE_CURRENCY,
+  fiat,
   MIN_SWAP_AMOUNT,
   ERC20
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
+import SwapSendForm from './components/SwapExitToFiat';
 
 export default {
   components: {
@@ -215,6 +249,8 @@ export default {
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
+    'swap-exit-to-fiat': SwapExitToFiat,
+    'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
   data() {
@@ -232,6 +268,7 @@ export default {
       toAddress: '',
       currentAddress: '',
       refundAddress: '',
+      exitFromAddress: '',
       validAddress: true,
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
@@ -260,7 +297,10 @@ export default {
       loadingError: false,
       overrideFrom: {},
       overrideTo: {},
-      switchCurrencyOrder: false
+      switchCurrencyOrder: false,
+      bityExitToFiat: false,
+      exitToFiatCallback: () => {},
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
     };
   },
   computed: {
@@ -269,7 +309,6 @@ export default {
       ens: 'ens',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      wallet: 'wallet',
       network: 'network'
     }),
     bestRate() {
@@ -290,7 +329,7 @@ export default {
       if (MIN_SWAP_AMOUNT > +this.fromValue)
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
       if (this.selectedProvider.minValue > +this.fromValue)
-        return this.$t('interface.belowMinSwap');
+        return this.$t('interface.belowMin');
       return false;
     },
     fromAboveMaxAllowed() {
@@ -304,11 +343,11 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinSwap');
+      if (this.checkBityMin) return this.$t('interface.belowMin');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMaxSwap');
+      if (this.checkBityMax) return this.$t('interface.aboveMax');
       return false;
     },
     providerList() {
@@ -317,10 +356,18 @@ export default {
       }
       return [];
     },
+    isExitToFiat() {
+      return this.fiatCurrenciesArray.includes(this.toCurrency);
+    },
     validSwap() {
+      // initial chack.  will provide an alert on the next screen if no address is provided
+      const canExit =
+        this.isExitToFiat && this.fromCurrency !== this.baseCurrency
+          ? this.exitFromAddress !== ''
+          : true;
       return (
         !this.notEnough &&
-        this.toAddress !== '' &&
+        (this.toAddress !== '' || canExit) &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
@@ -385,6 +432,11 @@ export default {
         return new BigNumber(this.account.balance).lt(this.fromValue);
       }
       return false;
+    },
+    exitSourceAddress() {
+      return this.isExitToFiat && this.fromCurrency === this.baseCurrency
+        ? this.currentAddress
+        : this.exitFromAddress;
     }
   },
   watch: {
@@ -419,7 +471,7 @@ export default {
     const { toArray, fromArray } = this.swap.initialCurrencyLists;
     this.toArray = toArray;
     this.fromArray = fromArray;
-    this.currentAddress = this.wallet.getChecksumAddressString();
+    this.currentAddress = this.account.address;
   },
   methods: {
     flipCurrencies() {
@@ -448,6 +500,9 @@ export default {
     },
     setRefundAddress(address) {
       this.refundAddress = address;
+    },
+    setExitFromAddress(address) {
+      this.exitFromAddress = address;
     },
     setAddressValid(value) {
       this.validAddress = value;
@@ -580,13 +635,11 @@ export default {
           this.toValue
         );
         this.providersFound = providersFound;
-
         const results = await Promise.all(
           callsToMake.map(func =>
             func(fromCurrency, toCurrency, fromValue, this.toValue)
           )
         );
-
         this.loadingData = false;
         if (
           results.every(
@@ -636,25 +689,24 @@ export default {
             fromAddress: this.currentAddress,
             refundAddress: this.swap.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
-              : this.refundAddress
+              : this.refundAddress,
+            exitFromAddress:
+              this.isExitToFiat && this.fromCurrency === this.baseCurrency
+                ? this.currentAddress
+                : this.exitFromAddress
           };
-
           this.swapDetails = await this.swap.startSwap(swapDetails);
           this.finalizingSwap = false;
-          if (
-            this.swapDetails.dataForInitialization &&
-            this.swapDetails.maybeToken
-          ) {
-            this.$refs.swapConfirmation.$refs.swapconfirmation.show();
-          } else if (
-            this.swapDetails.dataForInitialization &&
-            !this.swapDetails.maybeToken
-          ) {
-            this.$refs.swapSendTo.$refs.swapconfirmation.show();
+
+          if (this.swapDetails.isExitToFiat) {
+            this.bityExitToFiat = true;
+            this.exitToFiatCallback = swapDetailsExit => {
+              this.bityExitToFiat = false;
+              this.swapDetails = swapDetailsExit;
+              this.openConfirmModal(this.swapDetails);
+            };
           } else {
-            throw Error(
-              'Error while requesting finalized details from provider'
-            );
+            this.openConfirmModal(this.swapDetails);
           }
         }
       } catch (e) {
@@ -666,12 +718,31 @@ export default {
         errorLogger(e);
       }
     },
+    openConfirmModal(swapDetails) {
+      if (swapDetails.dataForInitialization && swapDetails.maybeToken) {
+        this.$refs.swapConfirmation.$refs.swapconfirmation.show();
+      } else if (swapDetails.dataForInitialization && !swapDetails.maybeToken) {
+        this.$refs.swapSendTo.$refs.swapconfirmation.show();
+      } else {
+        throw Error('Error while requesting finalized details from provider');
+      }
+    },
+    exitToFiatAbort() {
+      // get any component state values to temporarily persist, and reset swap state to state before exit to fiat selected.
+      this.bityExitToFiat = !this.bityExitToFiat;
+    },
     resetSwapState() {
       // this.toAddress = '';
       this.fromCurrency = this.baseCurrency;
       // this.toCurrency = 'BTC';
       this.fromValue = 1;
       this.toValue = 0;
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        this.fromValue,
+        'from'
+      );
     }
   }
 };

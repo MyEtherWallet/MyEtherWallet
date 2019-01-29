@@ -15,19 +15,41 @@ const ADD_CUSTOM_PATH = function(state, paths) {
   store.set('customPaths', paths);
 };
 
-const CHECK_IF_ONLINE = function(state) {
+const CHECK_IF_ONLINE = async function(state) {
   state.online =
     window.location.protocol === 'http:' ||
     window.location.protocol === 'https:';
+  if (state.online) {
+    const darkList = await fetch(
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
+    )
+      .then(res => res.json())
+      .catch(e => {
+        // eslint-disable-next-line
+        console.log(e);
+      });
+    state.darklist = {
+      data: darkList,
+      timestamp: Date.now()
+    };
+  }
 };
 
 const CLEAR_WALLET = function(state) {
   state.wallet = null;
-  state.account = { balance: 0 };
+  state.account = {
+    balance: 0,
+    address: null,
+    isHardWare: null,
+    identifier: ''
+  };
 };
 
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
+  state.account['address'] = wallet.getChecksumAddressString();
+  state.account['isHardware'] = wallet.isHardware;
+  state.account['identifier'] = wallet.identifier;
 };
 
 const INIT_STATES = function(state, stateObj) {
