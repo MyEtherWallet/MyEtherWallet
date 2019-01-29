@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import uuid from 'uuid/v4'
+import uuid from 'uuid/v4';
 
 import {
   INVESTIGATE_FAILURE_KEY,

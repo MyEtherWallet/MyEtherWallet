@@ -47,10 +47,7 @@ const getSwapEntryIndexForTxReceipt = (entry, val) => {
 
 const getNotificationIndex = (entry, val) => {
   const hashToCompare = extractHashToCompare(txIndexes.response, val);
-  return (
-    entry.hash === hashToCompare &&
-    entry.type !== notificationType.SWAP
-  );
+  return entry.hash === hashToCompare && entry.type !== notificationType.SWAP;
 };
 
 const mapToObject = map => {
