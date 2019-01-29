@@ -2,10 +2,10 @@
   <div class="schedule-transaction-container">
     <b-container>
       <b-row align-h="start">
-        <b-col cols="4"> <back-button /> </b-col>
+        <b-col cols="2"> <back-button /> </b-col>
 
-        <b-col class="vertical-center-self horizontal-center" cols="4">
-          <h2>Schedule a transaction</h2>
+        <b-col class="vertical-center-self horizontal-center" cols="8">
+          <h3>Schedule a transaction</h3>
         </b-col>
       </b-row>
     </b-container>
@@ -20,54 +20,44 @@
 
           <hr />
 
-          <b-container class="mode-container">
-            <b-row>
-              <b-col>
-                <div :class="selectedMode === supportedModes[0] && 'hide'">
-                  <standard-input
-                    :options="blockNumberInputOptions()"
-                    v-model="selectedBlockNumber"
-                  />
-                </div>
+          <div :class="selectedMode === supportedModes[0] && 'hide'">
+            <standard-input
+              :options="blockNumberInputOptions()"
+              v-model="selectedBlockNumber"
+            />
+          </div>
 
-                <div
-                  :class="[
-                    'datetime-picker-container',
-                    selectedMode === supportedModes[1] && 'hide'
-                  ]"
-                >
-                  <div class="input-title">Date & Time</div>
-                  <datetime-picker
-                    v-model="datetime"
-                    :min-datetime="now.toISOString()"
-                    class="theme-mew"
-                    type="datetime"
-                  />
-                </div>
-              </b-col>
-
-              <b-col class="mode-btn-col">
-                <b-button-group class="float-right">
-                  <b-button
-                    v-for="(mode, index) in supportedModes"
-                    :key="index"
-                    :class="['mode-btn', mode === selectedMode && 'selected']"
-                    @click="selectedMode = mode"
-                  >
-                    {{ mode }}
-                  </b-button>
-                </b-button-group>
-              </b-col>
-            </b-row>
-          </b-container>
+          <div
+            :class="[
+              'datetime-picker-container',
+              selectedMode === supportedModes[1] && 'hide'
+            ]"
+          >
+            <div class="input-title">Date & Time</div>
+            <datetime-picker
+              v-model="datetime"
+              :min-datetime="now.toISOString()"
+              class="theme-mew"
+              type="datetime"
+            />
+          </div>
 
           <hr />
 
           <b-container class="send-form advanced">
             <b-row>
-              <b-col>
-                <p>Time Bounty</p>
-                <div :class="advancedExpand && 'hide'">
+              <b-col cols="3">
+                <standard-input
+                  :options="bountyUsdDisplayOptions()"
+                  class="bounty-usd-display"
+                />
+              </b-col>
+
+              <b-col cols="3">
+                <div
+                  :class="[advancedExpand && 'hide', 'time-bounty-selector']"
+                >
+                  <div class="input-title">Time Bounty</div>
                   <b-button-group>
                     <b-button
                       v-for="(bounty, index) in timeBountyPresets"
@@ -90,9 +80,10 @@
                   />
                 </div>
               </b-col>
-              <b-col>
+
+              <b-col cols="6" class="toggle-button-col">
                 <div class="toggle-button-container float-right">
-                  <h4>Advanced Settings</h4>
+                  <h4>Advanced</h4>
                   <div class="toggle-button">
                     <!-- Rounded switch -->
                     <div class="sliding-switch-white">
@@ -109,8 +100,37 @@
               </b-col>
             </b-row>
 
+            <hr />
+
             <div :class="!advancedExpand && 'hide'">
-              <standard-input :options="dataInputOptions()" v-model="data" />
+              <b-row>
+                <b-col class="mode-container">
+                  <div class="input-title">Scheduling mode</div>
+                  <b-button-group>
+                    <b-button
+                      v-for="(mode, index) in supportedModes"
+                      :key="index"
+                      :class="['mode-btn', mode === selectedMode && 'selected']"
+                      @click="selectedMode = mode"
+                    >
+                      {{ mode }}
+                    </b-button>
+                  </b-button-group>
+                </b-col>
+
+                <b-col>
+                  <standard-input
+                    :options="executionWindowInputOptions()"
+                    v-model="windowSize"
+                  />
+                </b-col>
+              </b-row>
+
+              <standard-input
+                :options="requireDepositInputOptions()"
+                v-model="deposit"
+              />
+
               <b-row>
                 <b-col>
                   <standard-input
@@ -122,14 +142,8 @@
                   <standard-input :options="futureGasLimitInputOptions()" />
                 </b-col>
               </b-row>
-              <standard-input
-                :options="requireDepositInputOptions()"
-                v-model="deposit"
-              />
-              <standard-input
-                :options="executionWindowInputOptions()"
-                v-model="windowSize"
-              />
+
+              <standard-input :options="dataInputOptions()" v-model="data" />
             </div>
           </b-container>
         </div>
@@ -165,7 +179,7 @@ import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPic
 import StandardInput from '@/components/StandardInput';
 
 const TIME_BOUNTY_PRESETS = [0.02, 0.04, 0.08];
-const SUPPORTED_MODES = ['Minutes', 'Block Number'];
+const SUPPORTED_MODES = ['Date & Time', 'Block Number'];
 
 export default {
   name: 'ScheduleTransaction',
@@ -190,6 +204,7 @@ export default {
       selectedBlockNumber: '',
       timeBountyPresets: TIME_BOUNTY_PRESETS,
       timeBounty: TIME_BOUNTY_PRESETS[0],
+      timeBountyUsd: '0',
       windowSize: 90,
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
@@ -210,8 +225,15 @@ export default {
       },
       customTimeBountyInputOptions() {
         return {
+          title: 'Time Bounty',
           placeHolder: 'ETH',
           value: this.timeBounty
+        };
+      },
+      bountyUsdDisplayOptions() {
+        return {
+          value: `$${this.timeBountyUsd}`,
+          inputDisabled: true
         };
       },
       blockNumberInputOptions() {
