@@ -20,7 +20,7 @@
         </div>
         <div class="the-form domain-name">
           <input
-            v-ens-resolver="address"
+            v-ens-resolver="'address'"
             v-validate="'required'"
             v-model="address"
             type="text"
@@ -342,11 +342,6 @@ export default {
   watch: {
     abi(newVal) {
       this.isValidAbi = Misc.isJson(newVal);
-    },
-    address(newVal) {
-      this.isValidAddress = this.web3.utils.isAddress(
-        this.web3.utils.toChecksumAddress(newVal)
-      );
     },
     selectedMethod(newVal) {
       this.writeInputs = {};
