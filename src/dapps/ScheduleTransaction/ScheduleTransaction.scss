@@ -1,8 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 $input-title-color: #212529;
-$mew-green-dark-1: #04ae95;
-$mew-green-dark-2: #04957f;
+$mew-green-light: #05c7aa;
 
 .schedule-transaction-container {
   background-color: $white;
@@ -44,26 +43,31 @@ $mew-green-dark-2: #04957f;
 }
 
 .btn-group {
-  margin: 8px 0;
+  width: 100%;
 
   & .btn {
-    background-color: $mew-green;
-    border-color: $mew-green;
-    padding: 12px;
+    background-color: $white;
+    border-color: $light-grey-7;
+    color: $black;
+    padding: 14px;
+    text-align: center;
 
     &:hover {
-      background-color: $mew-green-dark-1;
-      border-color: $mew-green-dark-1;
+      background-color: $mew-green-light;
+      border-color: $mew-green-light;
+      color: $white;
     }
 
     &:active {
-      background-color: $mew-green-dark-1;
-      border-color: $mew-green-dark-1;
+      background-color: $mew-green;
+      border-color: $mew-green;
+      color: $white;
     }
 
     &.selected {
-      background-color: $mew-green-dark-2;
-      border-color: $mew-green-dark-2;
+      background-color: $mew-green;
+      border-color: $mew-green;
+      color: $white;
     }
   }
 }
@@ -78,12 +82,10 @@ $mew-green-dark-2: #04957f;
   margin-bottom: 10px;
 }
 
-.mode-btn-col {
-  align-self: center;
-}
-
 .container {
   padding: 0;
+  margin: 0;
+  max-width: 100%;
 }
 
 .toggle-button-container {
@@ -113,12 +115,19 @@ $mew-green-dark-2: #04957f;
   }
 }
 
-.standard-input {
+.toggle-button-col {
+  align-self: center;
+}
+
+.standard-input,
+.datetime-picker-container,
+.mode-container,
+.time-bounty-selector {
   padding: 12px 0;
 }
 
 .submit-button-container {
-  margin-top: 60px;
+  margin-top: 40px;
   text-align: center;
 
   @media all and (max-width: $mobile-width) {
@@ -148,4 +157,8 @@ $mew-green-dark-2: #04957f;
 
 h2 {
   margin: 0;
+}
+
+.bounty-usd-display {
+  margin-top: 28px;
 }

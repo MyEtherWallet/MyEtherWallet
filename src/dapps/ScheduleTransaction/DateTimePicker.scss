@@ -1,9 +1,15 @@
 @import '~@/scss/GlobalVariables';
 
-.vdatetime-popup__header,
 .vdatetime-calendar__month__day--selected > span > span,
 .vdatetime-calendar__month__day--selected:hover > span > span {
   background: $mew-green;
+}
+
+.vdatetime-popup__header {
+  background: $light-grey-3;
+  color: $black;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .vdatetime-year-picker__item--selected,
@@ -15,13 +21,14 @@
 .vdatetime-popup {
   border-radius: 5px;
 }
-.vdatetime-popup__header {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
 
 .vdatetime-input {
   background-color: #f9f9f9;
   border: 1px solid #f9f9f9;
   padding: 17px 20px;
+  width: 100%;
+}
+
+.bounty-usd-display .input-container input {
+  text-align: center;
 }
