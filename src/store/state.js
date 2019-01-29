@@ -1,4 +1,5 @@
 import nodeList from '@/networks';
+import darklist from '@/darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
@@ -35,7 +36,8 @@ const state = {
   transactions: {},
   wallet: null,
   web3: {},
-  sidemenuOpen: false
+  sidemenuOpen: false,
+  darklist: darklist
 };
 
 export default state;

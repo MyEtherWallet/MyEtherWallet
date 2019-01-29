@@ -48,8 +48,11 @@ async function fetchDarkList () {
     )
     .then(res => res.json())
     .catch(console.log);
-
-    fs.writeFileSync(`${darklistFolder}/address-darklist.json`, JSON.stringify(darkList));
+    const jsonToStore = {
+      'data': darkList,
+      'timestamp': Date.now()
+    }
+    fs.writeFileSync(`${darklistFolder}/address-darklist.json`, JSON.stringify(jsonToStore));
   } catch (e) {
     console.log(e); // todo replace with proper error
   }
