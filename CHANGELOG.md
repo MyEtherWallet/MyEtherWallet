@@ -1,8 +1,9 @@
-### Release v5.0.0-beta.3
-
 ### Feature
 
+- Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 - Print ENS bid details [#360](https://github.com/MyEtherWallet/MyEtherWallet/pull/360)
+
+### Release v5.0.0-beta.3
 
 ### Hotfix
 
@@ -19,12 +20,14 @@
 
 ### Devop
 
+- Update Logo for Kyber Network [#518](https://github.com/MyEtherWallet/MyEtherWallet/pull/518)
 - Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)
 - Fix weird interaction in side menu [#494](https://github.com/MyEtherWallet/MyEtherWallet/pull/494)
 - Upload history build to gh-pages-history [#504](https://github.com/MyEtherWallet/MyEtherWallet/pull/504)
 
 ### Bug
 
+- Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
 ### Feature
