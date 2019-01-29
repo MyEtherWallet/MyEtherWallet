@@ -8,6 +8,7 @@ const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
 const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
+const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -70,6 +71,12 @@ const router = [
     path: '/getting-started',
     name: 'GettingStarted',
     component: GettingStarted,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/send-offline-helper',
+    name: 'SendOfflineHelper',
+    component: SendOfflineHelper,
     meta: { requiresAuth: false }
   },
   {
