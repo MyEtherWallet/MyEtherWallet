@@ -120,44 +120,6 @@ $contract-mobile-width: 600px;
       cursor: pointer;
     }
   }
-
-  .address-container {
-    align-items: center;
-    color: $dark-blue-7;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 8px;
-
-    .address {
-      border-bottom: 2px solid $background-color-1;
-    }
-
-    .functions {
-      border: 1px solid $background-color-1;
-      border-radius: 5px;
-      flex: 30;
-    }
-  }
-
-  .interact-buttons {
-    display: flex;
-  }
-}
-
-.bool-input {
-  display: flex;
-  flex-direction: column;
-
-  .bool-input-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 0 8px;
-  }
-}
-
-.contract-inputs {
-  margin-bottom: 10px;
 }
 
 .interact-div {
@@ -169,31 +131,43 @@ $contract-mobile-width: 600px;
   min-height: 400px;
 }
 
-.result-container {
-  align-items: end !important;
-  flex-direction: column;
+.contract-methods-container {
+  @extend %send-form-base;
 
-  input {
-    margin-bottom: 10px;
+  h4 {
+    margin-bottom: 23px;
+    color: $dark-blue-7;
   }
 
-  label {
-    padding: 0 8px;
-  }
-
-  .result-inputs {
+  .contract-addr-container {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    width: 100%;
+    justify-content: space-between;
+
+    .contract-addr {
+      flex: 1;
+      border-bottom: 2px solid $light-grey-4;
+      padding-bottom: 9px;
+
+      p {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .picker-container {
+      border: 1px solid $light-grey-14;
+      border-radius: 4px;
+    }
   }
 }
 
-.with-resolver {
-  display: block !important;
+.interact-buttons {
+  display: flex;
+}
 
-  i {
-    bottom: 33px !important;
-  }
+.method-arguments-container {
+  padding-top: 33px;
 }
 
 .contract-address-title {

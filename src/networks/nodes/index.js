@@ -7,7 +7,6 @@ import eosc from './eosc';
 import esn from './esn';
 import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
 import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
-import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
@@ -40,7 +39,6 @@ export {
   esn,
   etcethereumcommonwealthgeth,
   etcethereumcommonwealthparity,
-  etcgastracker,
   ethethscan,
   ethinfura,
   ethinfuraws,

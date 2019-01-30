@@ -13,7 +13,7 @@
                 :currency="network.type.contracts"
                 :token="false"
                 page="interactWContract"
-                @selectedCurrency="selectedCurrency"
+                @selectedCurrency="selectedContract"
               />
             </div>
           </div>
@@ -90,205 +90,112 @@
         />
       </div>
     </div>
-    <div v-else class="interact-div">
-      <div class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>{{ $t('interface.readWriteC') }}</h4>
-          </div>
+    <div v-else class="contract-methods-container">
+      <h4>Read/Write Contract</h4>
+      <div class="contract-addr-container">
+        <div class="contract-addr">
+          <p>Contract Address: {{ address }}</p>
         </div>
-        <div class="address-container">
-          <div class="address">
-            {{ $t('interface.contractAddr') }}: {{ address }}
-          </div>
-          <div class="functions">
-            <currency-picker
-              :currency="methods"
-              :token="false"
-              page="interactWContract"
-              @selectedCurrency="selectFunction"
-            />
-          </div>
+        <div class="picker-container">
+          <currency-picker
+            :currency="methods"
+            :token="false"
+            page="interactWContract"
+            @selectedCurrency="selectFunction"
+          />
         </div>
       </div>
-      <div v-show="selectedMethod.name !== undefined" class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>{{ selectedMethod.name }}</h4>
+      <div
+        v-if="selectedMethod.name !== undefined"
+        class="method-arguments-container"
+      >
+        <h4>{{ selectedMethod.name | capitalize }}</h4>
+        <div v-for="(input, idx) in writeInputs" :key="input.name + idx">
+          <div class="title-container">
+            <div class="title">
+              <h5>{{ input.name | capitalize }} ({{ input.type }}):</h5>
+            </div>
           </div>
-        </div>
-        <div>
-          <div
-            v-if="
-              selectedMethod.constant === true &&
-                selectedMethod.inputs.length === 0
-            "
-            class="the-form domain-name"
-          >
+          <div class="the-form contract-name">
             <input
-              v-model="result"
-              type="text"
-              name
-              placeholder="0x00000000000000"
-              disabled
+              v-if="getType(input.type).type !== 'radio'"
+              :type="getType(input.type).type"
+              v-model="inputs[input.name]"
             />
-          </div>
-          <div
-            v-for="(input, idx) in selectedMethod.inputs"
-            v-else
-            v-show="selectedMethod.inputs.length !== 0"
-            :key="input.name + idx"
-            class="the-form domain-name"
-          >
-            <div v-if="input.type === 'bool'" class="bool-input">
-              <div class="title-container">
-                <div class="title">
-                  <p>{{ input.name | capitalize }}</p>
-                </div>
+            <div
+              v-if="getType(input.type).type === 'radio'"
+              class="bool-input-container"
+            >
+              <div>
+                <input
+                  v-model="inputs[input.name]"
+                  :value="true"
+                  :name="input.name"
+                  type="radio"
+                />
+                <label :for="input.name">True</label>
               </div>
-              <div class="bool-input-container">
-                <div>
-                  <input
-                    v-model="writeInputs[input.name]"
-                    :value="true"
-                    :name="input.name"
-                    :checked="writeInputs[input.name] === true ? true : false"
-                    type="radio"
-                  />
-                  <label :for="input.name">true</label>
-                </div>
-                <div>
-                  <input
-                    v-model="writeInputs[input.name]"
-                    :value="false"
-                    :name="input.name"
-                    :checked="writeInputs[input.name] === false ? true : false"
-                    type="radio"
-                  />
-                  <label :for="input.name">false</label>
-                </div>
+              <div>
+                <input
+                  v-model="inputs[input.name]"
+                  :value="false"
+                  :name="input.name"
+                  type="radio"
+                  checked
+                />
+                <label :for="input.name">False</label>
               </div>
             </div>
-            <input
-              v-else
-              :type="checkType(input.type)"
-              v-model="writeInputs[input.name]"
-              :placeholder="input.name"
-              name
-              class="contract-inputs"
+            <i
+              :class="[
+                isValidInput(
+                  inputs[input.name],
+                  getType(input.type).solidityType
+                )
+                  ? ''
+                  : 'not-good',
+                'fa fa-check-circle good-button'
+              ]"
+              aria-hidden="true"
             />
-          </div>
-          <div
-            v-show="selectedMethod.constant === false"
-            class="the-form domain-name result-container"
-          >
-            <div class="title-container">
-              <div class="title">
-                <h4>{{ $t('common.value') }}:</h4>
-              </div>
-            </div>
-            <input v-model="value" type="text" name placeholder="ETH" />
-          </div>
-          <div
-            v-if="result !== '' && selectedMethod.inputs.length > 0"
-            class="the-form domain-name result-container"
-          >
-            <div class="title-container">
-              <div class="title"><h4>Result:</h4></div>
-            </div>
-            <div class="result-inputs">
-              <input
-                v-if="resType === 'string'"
-                v-model="result"
-                type="text"
-                name
-                placeholder="0x00000000000000"
-                disabled
-              />
-              <div v-if="resType === 'object'">
-                <!--
-                  Have to separate them since v-for still loops when v-if is in the same line getting max stack
-                -->
-                <div
-                  v-for="(res, idx) in Object.keys(result)"
-                  :key="
-                    selectedMethod.outputs[idx].name !== ''
-                      ? selectedMethod.outputs[idx].name + idx
-                      : selectedMethod.outputs[idx].type + idx
-                  "
-                >
-                  <label
-                    :name="
-                      selectedMethod.outputs[idx].name !== ''
-                        ? selectedMethod.outputs[idx].name
-                        : selectedMethod.outputs[idx].type + idx
-                    "
-                  >
-                    {{
-                      selectedMethod.outputs[idx].name !== ''
-                        ? selectedMethod.outputs[idx].name
-                        : selectedMethod.outputs[idx].type
-                    }}
-                  </label>
-                  <input
-                    :name="
-                      selectedMethod.outputs[idx].name !== ''
-                        ? selectedMethod.outputs[idx].name
-                        : selectedMethod.outputs[idx].type + idx
-                    "
-                    :value="result[res]"
-                    type="text"
-                    placeholder="0x00000000000000"
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-      <div class="submit-button-container">
-        <div class="buttons interact-buttons">
-          <div
-            class="submit-button large-round-button-green-border clickable"
-            @click="switchView('backwards')"
-          >
-            {{ $t('common.back') }}
-          </div>
-          <div
-            v-if="
-              selectedMethod.constant === true &&
-                selectedMethod.inputs.length > 0
-            "
-            :class="[
-              inputsFilled ? '' : 'disabled',
-              loading ? 'disabled' : '',
-              'submit-button large-round-button-green-filled clickable'
-            ]"
-            @click="write"
-          >
-            <span v-show="!loading">{{ $t('interface.read') }}</span>
-            <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
-          </div>
-          <div
-            v-if="selectedMethod.constant === false"
-            :class="[
-              inputsFilled ? '' : 'disabled',
-              loading ? 'disabled' : '',
-              'submit-button large-round-button-green-filled clickable'
-            ]"
-            @click="write"
-          >
-            <span v-show="!loading">{{ $t('interface.write') }}</span>
-            <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
-          </div>
+    </div>
+    <div class="submit-button-container">
+      <div class="interact-buttons">
+        <div
+          class="submit-button large-round-button-green-border clickable"
+          @click="switchView('backwards')"
+        >
+          {{ $t('common.back') }}
         </div>
-        <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
-          link="https://kb.myetherwallet.com"
-        />
+        <div
+          v-if="
+            selectedMethod.hasOwnProperty('inputs') &&
+              selectedMethod.inputs.length > 0
+          "
+          :class="[
+            inputsFilled ? '' : 'disabled',
+            loading ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="write"
+        >
+          <span v-show="!loading && !selectedMethod.constant">{{
+            $t('interface.write')
+          }}</span>
+          <span v-show="!loading && selectedMethod.constant">{{
+            $t('interface.read')
+          }}</span>
+          <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
+        </div>
       </div>
+      <interface-bottom-text
+        :link-text="$t('interface.helpCenter')"
+        :question="$t('interface.haveIssues')"
+        link="https://kb.myetherwallet.com"
+      />
     </div>
   </div>
 </template>
@@ -299,6 +206,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 
 import * as unit from 'ethjs-unit';
 
@@ -313,22 +221,12 @@ export default {
       abi: '',
       address: '',
       interact: false,
-      isValidAbi: false,
-      isValidAddress: false,
       methods: [],
       selectedMethod: {},
       result: '',
-      writeInputs: {},
-      inputsFilled: false,
       loading: false,
-      resType: 'string',
-      gasLimit: 21000,
-      value: 0,
-      data: '',
-      raw: {},
-      nonce: 0,
-      transactionFee: 0,
-      hexAddress: ''
+      hexAddress: '',
+      inputs: {}
     };
   },
   computed: {
@@ -337,29 +235,40 @@ export default {
       gasPrice: 'gasPrice',
       account: 'account',
       web3: 'web3'
-    })
+    }),
+    isValidAbi() {
+      return Misc.isJson(this.abi);
+    },
+    isValidAddress() {
+      return isAddress(this.address);
+    },
+    writeInputs() {
+      const _self = this;
+      const _inputs = this.selectedMethod.inputs;
+      _inputs.forEach(input => {
+        // eslint-disable-next-line
+        _self.input[input.name] = input.type === 'bool' ? false : '';
+      });
+
+      return _inputs;
+    },
+    allValid() {
+      let _allvalid = true;
+      if (this.abiConstructor) {
+        this.abiConstructor.inputs.forEach(item => {
+          if (
+            !this.isValidInput(
+              this.inputs[item.name],
+              this.getType(item.type).solidityType
+            )
+          )
+            _allvalid = false;
+        });
+      }
+      return _allvalid && this.isValidAbi && this.isValidaddress;
+    }
   },
   watch: {
-    abi(newVal) {
-      this.isValidAbi = Misc.isJson(newVal);
-    },
-    selectedMethod(newVal) {
-      this.writeInputs = {};
-      for (const inputs in newVal) {
-        if (newVal.hasOwnProperty(inputs)) {
-          newVal.inputs.forEach(input => {
-            this.$set(this.writeInputs, input.name, '');
-          });
-        }
-      }
-    },
-    writeInputs: {
-      // Watches nested values instead
-      handler: function() {
-        this.checkInputsFilled();
-      },
-      deep: true
-    },
     result(newVal) {
       this.resType = typeof newVal;
     },
@@ -367,23 +276,44 @@ export default {
       this.abi = '';
       this.address = '';
       this.interact = false;
-      this.isValidAbi = false;
-      this.isValidAddress = false;
       this.methods = [];
       this.selectedMethod = {};
       this.result = '';
-      this.writeInputs = {};
-      this.inputsFilled = false;
     }
   },
   methods: {
-    selectedCurrency(currency) {
-      if (currency.abi === '') {
+    isValidInput(value, solidityType) {
+      if (!value) value = '';
+      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'address') return isAddress(value);
+      if (solidityType === 'string') return true;
+      if (solidityType === 'bytes')
+        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
+      if (solidityType === 'bool')
+        return typeof value == typeof true || value === '';
+      return false;
+    },
+    getType(inputType) {
+      if (!inputType) inputType = '';
+      if (inputType.includes('uint'))
+        return { type: 'number', solidityType: 'uint' };
+      if (inputType.includes('address'))
+        return { type: 'text', solidityType: 'address' };
+      if (inputType.includes('string'))
+        return { type: 'text', solidityType: 'string' };
+      if (inputType.includes('bytes'))
+        return { type: 'text', solidityType: 'bytes' };
+      if (inputType.includes('bool'))
+        return { type: 'radio', solidityType: 'bool' };
+      return { type: 'text', solidityType: 'string' };
+    },
+    selectedContract(selected) {
+      if (selected.abi === '') {
         this.abi = '';
       } else {
-        this.abi = JSON.stringify(currency.abi);
+        this.abi = JSON.stringify(selected.abi);
       }
-      this.address = currency.address;
+      this.address = selected.address;
     },
     checkType(type) {
       if (
@@ -456,47 +386,33 @@ export default {
             this.loading = false;
           });
       } else {
-        this.nonce = await web3.eth.getTransactionCount(this.account.address);
-        this.gasLimit = await contract.methods[this.selectedMethod.name](
+        const nonce = await web3.eth.getTransactionCount(this.account.address);
+        const gasLimit = await contract.methods[this.selectedMethod.name](
           ...params
         )
           .estimateGas({ from: this.account.address })
           .then(res => {
-            this.transactionFee = unit.fromWei(
-              unit.toWei(this.gasPrice, 'gwei') * res,
-              'ether'
-            );
             return res;
           })
           .catch(err => {
             // eslint-disable-next-line
             console.error(err);
           });
-        this.data = contract.methods[this.selectedMethod.name](
+        const data = contract.methods[this.selectedMethod.name](
           ...params
         ).encodeABI();
 
-        this.raw = {
+        const raw = {
           from: this.account.address,
-          gas: this.gasLimit,
-          nonce: this.nonce,
+          gas: gasLimit,
+          nonce: nonce,
           gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-          value: this.value,
+          value: 0,
           to: this.hexAddress,
-          data: this.data
+          data: data
         };
 
-        await web3.eth.sendTransaction(this.raw);
-      }
-    },
-    checkInputsFilled() {
-      const inputs = Object.keys(this.writeInputs);
-      for (let i = 0; i < inputs.length; i++) {
-        if (this.writeInputs[inputs[i]] === '') {
-          this.inputsFilled = false;
-          return;
-        }
-        this.inputsFilled = true;
+        await web3.eth.sendTransaction(raw);
       }
     }
   }
