@@ -115,7 +115,7 @@
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
                     >
-                      {{ mode }}
+                      {{ mode.name }}
                     </b-button>
                   </b-button-group>
                 </b-col>
@@ -125,6 +125,10 @@
                     :options="executionWindowInputOptions()"
                     @changedValue="windowSize = $event"
                   />
+                  <div v-show="!isValidExecutionWindow" class="text-danger">
+                    Please set an execution window of
+                    {{ selectedMode.executionWindow.min }} or higher
+                  </div>
                 </b-col>
               </b-row>
 
@@ -195,7 +199,24 @@ import StandardInput from '@/components/StandardInput';
 import { isAddress } from '@/helpers/addressUtils';
 
 const TIME_BOUNTY_PRESETS = [0.02, 0.04, 0.08];
-const SUPPORTED_MODES = ['Date & Time', 'Block Number'];
+const SUPPORTED_MODES = [
+  {
+    name: 'Date & Time',
+    executionWindow: {
+      min: 5,
+      default: 10
+    },
+    unit: 'Minutes'
+  },
+  {
+    name: 'Block Number',
+    executionWindow: {
+      min: 20,
+      default: 90
+    },
+    unit: 'Blocks'
+  }
+];
 
 export default {
   name: 'ScheduleTransaction',
@@ -220,7 +241,7 @@ export default {
       timeBountyPresets: TIME_BOUNTY_PRESETS,
       timeBounty: TIME_BOUNTY_PRESETS[0],
       timeBountyUsd: '0',
-      windowSize: 90,
+      windowSize: 10,
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
       deposit: TIME_BOUNTY_PRESETS[0] * 2,
@@ -293,7 +314,8 @@ export default {
       executionWindowInputOptions() {
         return {
           title: 'Execution Window',
-          value: this.windowSize
+          value: this.windowSize,
+          placeHolder: this.selectedMode.unit
         };
       }
     };
@@ -306,20 +328,23 @@ export default {
     validInputs() {
       return (
         // this.isValidAmount &&
-        this.isValidAddress // &&
-        // new BigNumber(this.gasLimit).gte(0) &&
-        // Misc.validateHexString(this.data)
+        this.isValidAddress && this.isValidExecutionWindow
       );
     },
     isValidAddress() {
-      if (
+      return (
         this.toAddress !== '' &&
         this.toAddress.length !== 0 &&
         isAddress(this.toAddress)
-      ) {
-        return true;
-      }
-      return false;
+      );
+    },
+    isValidExecutionWindow() {
+      return this.windowSize > this.selectedMode.executionWindow.min;
+    }
+  },
+  watch: {
+    selectedMode() {
+      this.windowSize = this.selectedMode.executionWindow.default;
     }
   },
   beforeMount() {
