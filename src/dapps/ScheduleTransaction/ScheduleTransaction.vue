@@ -143,6 +143,9 @@
                     :options="futureGasPriceInputOptions()"
                     @changedValue="futureGasPrice = $event"
                   />
+                  <div v-show="!isValidFutureGasPrice" class="text-danger">
+                    Please set a gas price of {{ minGasPrice }} or higher
+                  </div>
                 </b-col>
                 <b-col>
                   <standard-input
@@ -234,6 +237,7 @@ export default {
       amount: '0',
       futureGasLimit: '21000',
       futureGasPrice: '1',
+      minGasPrice: 1,
       data: '',
       datetime: '',
       currentBlockNumber: '',
@@ -248,7 +252,8 @@ export default {
       amountInputOptions() {
         return {
           title: 'Amount',
-          value: this.amount
+          value: this.amount,
+          type: 'number'
         };
       },
       toAddressInputOptions() {
@@ -263,7 +268,8 @@ export default {
         return {
           title: 'Time Bounty',
           placeHolder: 'ETH',
-          value: this.timeBounty
+          value: this.timeBounty,
+          type: 'number'
         };
       },
       bountyUsdDisplayOptions() {
@@ -276,7 +282,8 @@ export default {
         return {
           title: 'Block Number',
           value: this.selectedBlockNumber,
-          placeHolder: `Current block number: ${this.currentBlockNumber}`
+          placeHolder: `Current block number: ${this.currentBlockNumber}`,
+          type: 'number'
         };
       },
       dataInputOptions() {
@@ -289,33 +296,39 @@ export default {
       gasLimitInputOptions() {
         return {
           title: 'Gas Limit',
-          value: this.futureGasLimit
+          value: this.futureGasLimit,
+          type: 'number'
         };
       },
       futureGasPriceInputOptions() {
         return {
           title: 'Future Gas Price (gwei)',
-          value: this.gasPrice
+          value: this.futureGasPrice,
+          type: 'number'
         };
       },
       futureGasLimitInputOptions() {
         return {
           title: 'Future Gas Limit',
           value: this.futureGasLimit,
-          inputDisabled: true
+          inputDisabled: true,
+          type: 'number'
         };
       },
       requireDepositInputOptions() {
         return {
           title: 'Require a deposit',
-          value: this.deposit
+          value: this.deposit,
+          placeHolder: 'ETH',
+          type: 'number'
         };
       },
       executionWindowInputOptions() {
         return {
           title: 'Execution Window',
           value: this.windowSize,
-          placeHolder: this.selectedMode.unit
+          placeHolder: this.selectedMode.unit,
+          type: 'number'
         };
       }
     };
@@ -327,8 +340,9 @@ export default {
     },
     validInputs() {
       return (
-        // this.isValidAmount &&
-        this.isValidAddress && this.isValidExecutionWindow
+        this.isValidAddress &&
+        this.isValidExecutionWindow &&
+        this.isValidFutureGasPrice
       );
     },
     isValidAddress() {
@@ -339,7 +353,10 @@ export default {
       );
     },
     isValidExecutionWindow() {
-      return this.windowSize > this.selectedMode.executionWindow.min;
+      return this.windowSize >= this.selectedMode.executionWindow.min;
+    },
+    isValidFutureGasPrice() {
+      return parseFloat(this.futureGasPrice) >= this.minGasPrice;
     }
   },
   watch: {
@@ -383,8 +400,10 @@ export default {
       const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
       const timestamp = Math.round(new Date(datetime).getTime() / 1000);
 
-      const ethToWeiBN = value =>
-        new BigNumber(this.web3.utils.toWei(value.toString(), 'ether'));
+      const ethToWeiBN = value => {
+        value = value === '' ? 0 : value;
+        return new BigNumber(this.web3.utils.toWei(value.toString(), 'ether'));
+      };
 
       const schedulingOptions = {
         toAddress,
