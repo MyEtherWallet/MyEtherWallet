@@ -33,6 +33,7 @@ const looper = () => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
       if (
+        _name !== 'webpack' &&
         ALL_PACKAGES[_name] !== latestVersion &&
         new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME
       ) {
