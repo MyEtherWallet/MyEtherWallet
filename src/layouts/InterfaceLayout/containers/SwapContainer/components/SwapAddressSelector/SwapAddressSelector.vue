@@ -24,7 +24,14 @@
         <div v-if="!validAddress" class="blockie-place-holder-image" />
         <div v-if="validAddress" class="selected-address-blockie">
           <blockie :address="selectedAddress" width="30px" height="30px" />
-          <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
+          <div v-if="isToken(currency)">
+            <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
+          </div>
+          <div v-else>
+            <i
+              :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']"
+            />
+          </div>
         </div>
         <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
           <i
@@ -78,6 +85,8 @@
 </template>
 
 <script>
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
 import Blockie from '@/components/Blockie';
@@ -135,6 +144,9 @@ export default {
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
+    },
+    isToken(symbol) {
+      return typeof EthereumTokens[symbol] !== 'undefined';
     },
     listedAddressClick(address) {
       this.toAddressCheckMark = true;

@@ -29,7 +29,14 @@
               aria-hidden="true"
             />
           </div>
-          <ul v-if="tab.children.length" :class="tab.name" class="child-tab">
+          <ul
+            v-if="tab.children.length"
+            :class="[
+              tab.name,
+              isTabActive(tab.routes) ? 'show-child' : '',
+              'child-tab'
+            ]"
+          >
             <li
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
@@ -53,11 +60,6 @@ export default {
       tabData: tabsConfig.tabs
     };
   },
-  mounted() {
-    // Open First side menu when this component is loaded
-    const firstMenuItem = document.getElementsByClassName('child-tab')[0];
-    firstMenuItem.classList.add('show-child');
-  },
   methods: {
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
@@ -66,27 +68,10 @@ export default {
       return routes.includes(this.$route.path);
     },
     tabAction(tab) {
-      const elToHide = document.getElementsByClassName('child-tab');
-      if (typeof tab.children === 'undefined' || tab.children.length === 0) {
-        // ==============================
-        // If this is real menu link
-        // ==============================
+      if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
         this.toggleSideMenu();
-        Array.prototype.forEach.call(elToHide, function(el) {
-          el.classList.remove('show-child');
-        });
         this.$router.push({ path: tab.routes[0] });
       } else {
-        // ==============================
-        // If child tabs exist
-        // ==============================
-        // Close all open child tabs
-        Array.prototype.forEach.call(elToHide, function(el) {
-          el.classList.remove('show-child');
-        });
-        // Show child tab
-        const el = document.getElementsByClassName(tab.name)[0];
-        el.classList.add('show-child');
         this.$router.push({ path: tab.children[0].routes[0] });
       }
     }
