@@ -63,25 +63,12 @@
             </p>
           </div>
         </li>
-        <!-- list of other providers who don't support the selected currency pair -->
-        <li
-          v-for="(providerName, idx) in otherProviders"
-          :key="providerName + idx"
-          class="unavailable"
-        >
-          <div class="provider-image">
-            <img :src="providerLogo(providerName)" />
-          </div>
-          <div>
-            <div class="show-mobile">
-              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-            </div>
-          </div>
-          <div class="show-desktop">
-            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-          </div>
-        </li>
       </ul>
+      <!-- list of other providers who don't support the selected currency pair -->
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
     <div
@@ -115,24 +102,11 @@
           </div>
           <div class="background-masker" />
         </li>
-        <li
-          v-for="(providerName, idx) in otherInactiveProviders"
-          :key="providerName + idx"
-          class="unavailable"
-        >
-          <div class="provider-image">
-            <img :src="providerLogo(providerName)" />
-          </div>
-          <div>
-            <div class="show-mobile">
-              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-            </div>
-          </div>
-          <div class="show-desktop">
-            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-          </div>
-        </li>
       </ul>
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving the supporting providers rates -->
     <!-- =========================================================================== -->
@@ -143,34 +117,10 @@
       <div class="provider-loading-message">
         {{ $t('interface.loadingProviders') }}
       </div>
-      <!-- Loading logo image disabled -->
-      <ul>
-        <li
-          v-for="(providerName, idx) in allSupportedProviders"
-          :key="providerName + idx"
-          class="unavailable"
-        >
-          <div class="provider-image">
-            <img :src="providerLogo(providerName)" />
-          </div>
-          <div>
-            <div class="show-mobile">
-              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-            </div>
-          </div>
-          <div class="show-desktop">
-            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-          </div>
-        </li>
-<!--        <li>
-          <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" />
-          </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
-          <div>{{ $t('interface.loadingProviders') }}</div>
-          <div class="background-masker" />
-        </li>-->
-      </ul>
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Message When Error Seems to have occured while retrieving rate -->
     <!-- =========================================================================== -->
@@ -200,23 +150,10 @@
         {{ $t('interface.noProviderFound') }}
       </div>
       <ul>
-        <li
-          v-for="(providerName, idx) in otherProviders"
-          :key="providerName + idx"
-          class="unavailable"
-        >
-          <div class="provider-image">
-            <img :src="providerLogo(providerName)" />
-          </div>
-          <div>
-            <div class="show-mobile">
-              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-            </div>
-          </div>
-          <div class="show-desktop">
-            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
-          </div>
-        </li>
+        <provider-info-list
+          :all-supported-providers="allSupportedProviders"
+          :unavailable-providers="unavailableProviders"
+        />
       </ul>
     </div>
     <!-- =========================================================================== -->
@@ -232,7 +169,12 @@ import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
 import bityBeta from '@/assets/images/etc/bitybeta.png';
 
+import ProviderInfoList from './ProviderInfoList';
+
 export default {
+  components: {
+    'provider-info-list': ProviderInfoList
+  },
   props: {
     allSupportedProviders: {
       type: Array,
@@ -311,6 +253,26 @@ export default {
         !this.loadingData
       );
     },
+    unavailableProviders() {
+      if (this.loadingData) {
+        const activeProviders = this.listPotentialProviders();
+        console.log('activeProviders 1', activeProviders); // todo remove dev item
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.providerData.length !== 0) {
+        const activeProviders = this.listActiveProviders();
+        console.log('activeProviders 2', activeProviders); // todo remove dev item
+
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.noAvaliableProviders) {
+        return this.allSupportedProviders;
+      }
+    }
+  },
+  methods: {
     otherProviders() {
       const activeProviders = this.listActiveProviders();
       return this.allSupportedProviders.filter(entry => {
@@ -318,27 +280,14 @@ export default {
       });
     },
     otherInactiveProviders() {
-      const activeProviders = this.listActiveProviders();
+      const activeProviders = this.listPotentialProviders();
       return this.allSupportedProviders.filter(entry => {
         return !activeProviders.includes(entry);
       });
-    }
-  },
-  watch: {
-    providerData() {
-      this.listOtherProviders();
-    }
-  },
-  methods: {
-    listOtherProviders() {
-      if (this.providerData.length !== 0) {
-        console.log('sss', this.allSupportedProviders); // todo remove dev item
-      }
     },
     listActiveProviders() {
       const activeProviders = [];
       this.providerData.forEach(entry => {
-        console.log('ss', entry.provider); // todo remove dev item
         activeProviders.push(entry.provider);
       });
       return activeProviders;
@@ -346,8 +295,7 @@ export default {
     listPotentialProviders() {
       const activeProviders = [];
       this.providersFound.forEach(entry => {
-        console.log('ss', entry.provider); // todo remove dev item
-        activeProviders.push(entry.provider);
+        activeProviders.push(entry);
       });
       return activeProviders;
     },
