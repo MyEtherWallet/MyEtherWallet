@@ -255,7 +255,6 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      wallet: 'wallet',
       network: 'network',
       ens: 'ens'
     })
@@ -290,11 +289,11 @@ export default {
       this.estimateGas();
     }
   },
-  mounted() {
-    const address = this.$store.state.wallet.getAddressString();
+  async mounted() {
+    const coinbase = await this.web3.eth.getCoinbase();
 
     this.web3.eth
-      .getBalance(address)
+      .getBalance(coinbase)
       .then(res => {
         this.balance = this.web3.utils.fromWei(res, 'ether');
         this.$store.dispatch('setAccountBalance', this.balance);
@@ -335,12 +334,10 @@ export default {
       document.execCommand('copy');
     },
     async createTx() {
-      this.nonce = await this.$store.state.web3.eth.getTransactionCount(
-        this.wallet.getAddressString(),
-        'latest'
-      );
+      const coinbase = await this.web3.eth.getCoinbase();
+      this.nonce = await this.web3.eth.getTransactionCount(coinbase, 'latest');
       const value = this.amount === '' ? 0 : unit.toWei(this.amount, 'ether');
-      const CoralSafeSendContract = new this.$store.state.web3.eth.Contract(
+      const CoralSafeSendContract = new this.web3.eth.Contract(
         CoralConfig.safeSendEscrowContractAbi,
         CoralConfig.safeSendEscrowContractAddress
       );
@@ -356,20 +353,20 @@ export default {
       const valueLessGas =
         parseFloat(value, 10) - Number(unit.toWei(gasLimit, 'gwei'));
       this.raw = {
-        from: this.$store.state.wallet.getAddressString(),
+        from: coinbase,
         value: valueLessGas,
         to: CoralConfig.safeSendEscrowContractAddress,
         nonce: this.nonce,
         gas: gasLimit,
         data: encodedABI,
-        gasPrice: Number(unit.toWei(this.$store.state.gasPrice, 'gwei')),
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toString(),
         chainId: CoralConfig.chainID || 1
       };
 
       if (this.address === '') {
         delete this.raw['to'];
       }
-      this.$store.state.web3.eth.sendTransaction(this.raw);
+      this.web3.eth.sendTransaction(this.raw);
     },
     confirmationModalOpen() {
       this.createTx();
@@ -386,12 +383,13 @@ export default {
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
     },
-    estimateGas() {
+    async estimateGas() {
       const isEth = this.selectedCurrency.name === 'Ethereum';
       const bnAmount = new BigNumber(this.amount);
+      const coinbase = await this.web3.eth.getCoinbase();
       this.web3.eth
         .estimateGas({
-          from: this.wallet.getAddressString(),
+          from: coinbase,
           value: isEth
             ? this.amount === ''
               ? 0
