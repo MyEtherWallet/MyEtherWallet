@@ -181,6 +181,7 @@ const formatSwap = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
@@ -255,6 +256,7 @@ const formatSwapError = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false

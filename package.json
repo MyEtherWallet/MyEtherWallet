@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.0-beta.2",
+  "version": "5.0.0-beta.3",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -20,6 +20,7 @@
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
     "update:lists": "node fetchEthListData.js",
+    "update:swap": "node compileBaseSwapOptions.js",
     "update": "npm run update:packages && npm run update:lists"
   },
   "gitHooks": {
@@ -47,7 +48,7 @@
     "@vue/cli-plugin-eslint": "3.3.0",
     "@vue/cli-plugin-pwa": "3.3.0",
     "@vue/cli-plugin-unit-jest": "3.3.0",
-    "@vue/cli-service": "3.3.0",
+    "@vue/cli-service": "3.3.1",
     "@vue/eslint-config-prettier": "4.0.1",
     "@vue/test-utils": "1.0.0-beta.28",
     "@xkeshi/vue-qrcode": "1.0.0",
@@ -69,9 +70,11 @@
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.0",
+    "i18n-iso-countries": "3.7.8",
     "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.0",
     "jest-skipped-reporter": "0.0.4",
+    "jspdf": "1.5.3",
     "keccak": "2.0.0",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
@@ -84,9 +87,9 @@
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
     "secp256k1": "3.6.1",
-    "sinon": "7.2.2",
+    "sinon": "7.2.3",
     "store": "2.0.12",
-    "stylelint": "9.10.0",
+    "stylelint": "9.10.1",
     "stylelint-config-prettier": "4.0.0",
     "stylelint-config-standard": "18.2.0",
     "trezor-connect": "6.0.3",
@@ -105,7 +108,7 @@
     "web3-providers-http": "1.0.0-beta.37",
     "web3-providers-ws": "1.0.0-beta.37",
     "web3-utils": "1.0.0-beta.37",
-    "webpack": "4.28.4",
+    "webpack": "4.29.0",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },

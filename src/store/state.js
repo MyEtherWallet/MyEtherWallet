@@ -1,4 +1,5 @@
 import nodeList from '@/networks';
+import darklist from '@/darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
@@ -17,7 +18,10 @@ const ens = network.type.ensResolver == null;
 store.set('network', network);
 const state = {
   account: {
-    balance: 0
+    balance: 0,
+    address: null,
+    isHardware: false,
+    identifier: ''
   },
   customPaths: customPaths,
   ens: ens,
@@ -32,7 +36,8 @@ const state = {
   transactions: {},
   wallet: null,
   web3: {},
-  sidemenuOpen: false
+  sidemenuOpen: false,
+  darklist: darklist
 };
 
 export default state;

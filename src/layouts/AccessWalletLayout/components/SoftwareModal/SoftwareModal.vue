@@ -7,30 +7,18 @@
     centered
   >
     <div class="d-block content-container text-center">
-      <ul class="button-options">
-        <li
+      <div class="button-options">
+        <wallet-option
           v-for="(item, idx) in items"
           :key="item.name + idx"
-          :class="selected === item.name ? 'selected' : ''"
-          @click="select(item.name)"
-        >
-          <div>
-            <img
-              :src="selected === item.name ? item.imgHoverPath : item.imgPath"
-              class="icon"
-            />
-            <img :src="item.imgHoverPath" class="hover-icon" />
-            <span>{{ item.text }}</span>
-          </div>
-          <i
-            :class="[
-              selected === item.name ? '' : 'not-good',
-              'fa fa-check-circle good-button'
-            ]"
-            aria-hidden="true"
-          />
-        </li>
-      </ul>
+          :selected="selected === item.name"
+          :select="select"
+          :regular-icon="item.imgPath"
+          :hover-icon="item.imgHoverPath"
+          :text="item.text"
+          :name="item.name"
+        />
+      </div>
       <input
         ref="jsonInput"
         type="file"
@@ -65,10 +53,12 @@ import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import privKeyImg from '@/assets/images/icons/button-key.svg';
+import WalletOption from '../WalletOption';
 
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'wallet-option': WalletOption
   },
   props: {
     value: {
@@ -130,7 +120,11 @@ export default {
       }
     },
     select(ref) {
-      this.selected = ref;
+      if (this.selected !== ref) {
+        this.selected = ref;
+      } else {
+        this.selected = '';
+      }
     },
     uploadFile(e) {
       const self = this;

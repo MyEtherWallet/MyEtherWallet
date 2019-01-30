@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import AccessWalletLayout from '@/layouts/AccessWalletLayout/AccessWalletLayout.vue';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 
 import PriceBar from '@/layouts/AccessWalletLayout/components/PriceBar/PriceBar.vue';
 
@@ -25,14 +26,9 @@ describe('AccessWalletLayout.vue', () => {
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
 
-    const getters = {
-      online: () => {
-        return true;
-      }
-    };
-
     store = new Vuex.Store({
-      getters
+      getters,
+      state
     });
   });
 

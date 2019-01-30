@@ -15,12 +15,17 @@ const getSupportedCurrencies = async network => {
           !requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
           currencyList[i].enabled
         ) {
-          const details = {
-            symbol: currencyList[i].name.toUpperCase(),
-            name: currencyList[i].fullName
-          };
-          currencyDetails[details.symbol] = details;
-          tokenDetails[details.symbol] = details;
+          if (
+            currencyList[i].extraIdName === null ||
+            currencyList[i].extraIdName === undefined
+          ) {
+            const details = {
+              symbol: currencyList[i].name.toUpperCase(),
+              name: currencyList[i].fullName
+            };
+            currencyDetails[details.symbol] = details;
+            tokenDetails[details.symbol] = details;
+          }
         }
       }
       return { currencyDetails, tokenDetails };
