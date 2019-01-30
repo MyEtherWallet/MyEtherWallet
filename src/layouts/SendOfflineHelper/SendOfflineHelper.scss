@@ -21,7 +21,15 @@
 }
 
 .button-container {
-  margin-top: 30px;
+  margin-top: 40px;
   width: 100%;
   text-align: center;
+}
+
+.standard-input {
+  margin-bottom: 25px;
+
+  &.no-margin {
+    margin-bottom: 0px;
+  }
 }

@@ -12,12 +12,8 @@
 // .menu-title
 // *********************************************************************
 
-.opened .menu-title {
-  border-radius: 5px 5px 0 0;
-}
-
 .menu-title {
-  padding: 10px;
+  padding: 10px 15px;
   background-color: $dark-blue-12;
   display: flex;
   align-items: center;
@@ -26,6 +22,15 @@
   border-radius: 5px;
   > div {
     color: $white;
+  }
+
+  &.grey-title {
+    background-color: $grey-1;
+  }
+
+  .edit-button {
+    margin-left: auto;
+    display: block;
   }
 
   .title-number {
@@ -49,14 +54,18 @@
   }
 }
 
+.opened .menu-title {
+  border-radius: 5px 5px 0 0;
+}
+
+.opened .edit-button {
+  display: none;
+}
+
 
 // *********************************************************************
 // .content-container
 // *********************************************************************
-
-.opened .menu-content-container {
-  max-height: 600px;
-}
 
 .menu-content-container {
   border-radius: 0 0 5px 5px;
@@ -70,10 +79,9 @@
   }
 }
 
-
-
-
-
+.opened .menu-content-container {
+  max-height: 600px;
+}
 
 
 

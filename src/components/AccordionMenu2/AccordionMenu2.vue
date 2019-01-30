@@ -1,11 +1,16 @@
 <template>
   <div class="accordion-menu-2">
     <div :class="isopen && 'opened'" class="wrap">
-      <div class="menu-title" @click="titleClicked">
+      <div
+        :class="greytitle ? 'grey-title' : ''"
+        class="menu-title"
+        @click="titleClicked"
+      >
         <div class="title-number">
           <span>{{ number }}</span>
         </div>
         <div>{{ title }}</div>
+        <div v-if="editbutton" class="edit-button">{{ $t('common.edit') }}</div>
       </div>
       <div class="menu-content-container">
         <div class="padding-block"><slot></slot></div>
@@ -18,6 +23,10 @@
 export default {
   components: {},
   props: {
+    greytitle: {
+      type: Boolean,
+      default: false
+    },
     number: {
       type: String,
       default: ''
@@ -27,6 +36,10 @@ export default {
       default: ''
     },
     isopen: {
+      type: Boolean,
+      default: false
+    },
+    editbutton: {
       type: Boolean,
       default: false
     }
