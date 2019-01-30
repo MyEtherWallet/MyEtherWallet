@@ -13,6 +13,7 @@ import accessWallet from './access-wallet/es_ES';
 import interfaceTranslations from './interface/es_ES';
 import team from './team/es_ES';
 import popover from './popover/es_ES';
+import sendOfflineHelper from './send-offline-helper/es_ES';
 
 const es_ES = {
   common: common,
@@ -28,6 +29,7 @@ const es_ES = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  sendOfflineHelper: sendOfflineHelper
 };
 export default es_ES;

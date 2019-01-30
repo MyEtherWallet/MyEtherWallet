@@ -1,9 +1,27 @@
 @import '~@/scss/GlobalVariables';
 
 .send-offline-helper {
-  // css
+  background-color: $light-grey-2;
+  padding: 100px 0;
 }
 
 .wrap {
-  // css
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-title {
+  margin-bottom: 40px;
+}
+
+.page-content-container {
+  >* {
+    margin-bottom: 20px;
+  }
+}
+
+.button-container {
+  margin-top: 30px;
+  width: 100%;
+  text-align: center;
 }

@@ -13,6 +13,7 @@ import accessWallet from './access-wallet/zh_CN';
 import interfaceTranslations from './interface/zh_CN';
 import team from './team/zh_CN';
 import popover from './popover/zh_CN';
+import sendOfflineHelper from './send-offline-helper/zh_CN';
 
 const zh_CN = {
   common: common,
@@ -28,6 +29,7 @@ const zh_CN = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  sendOfflineHelper: sendOfflineHelper
 };
 export default zh_CN;

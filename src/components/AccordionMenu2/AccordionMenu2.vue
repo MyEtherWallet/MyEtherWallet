@@ -1,13 +1,13 @@
 <template>
-  <div class="accordion-menu-1">
-    <div class="wrap">
+  <div class="accordion-menu-2">
+    <div :class="isopen && 'opened'" class="wrap">
       <div class="menu-title" @click="titleClicked">
         <div class="title-number">
           <span>{{ number }}</span>
         </div>
         <div>{{ title }}</div>
       </div>
-      <div :class="isopen && 'opened'" class="menu-content-container">
+      <div class="menu-content-container">
         <div class="padding-block"><slot></slot></div>
       </div>
     </div>
@@ -43,5 +43,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccordionMenu1.scss';
+@import 'AccordionMenu2.scss';
 </style>
