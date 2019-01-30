@@ -166,6 +166,7 @@
             :providers-found="providersFound"
             :provider-selected="selectedProvider"
             :switch-currency-order="switchCurrencyOrder"
+            :all-supported-providers="supportedProviders"
             @selectedProvider="setSelectedProvider"
           />
         </div>
@@ -232,6 +233,7 @@ import {
   bestRateForQuantity,
   isValidEntry,
   providerNames,
+  supportedProviders,
   BASE_CURRENCY,
   fiat,
   MIN_SWAP_AMOUNT,
@@ -285,6 +287,7 @@ export default {
       fromArray: [],
       providerData: [],
       providerNames: providerNames,
+      supportedProviders: supportedProviders,
       tokenBalances: {},
       ratesRetrived: false,
       issueRecievingRates: false,

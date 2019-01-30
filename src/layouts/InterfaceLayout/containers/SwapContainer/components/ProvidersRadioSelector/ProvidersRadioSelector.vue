@@ -3,6 +3,9 @@
     <!-- =========================================================================== -->
     <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
+        <li>
+          sfsfsfdsadf
+        </li>
         <li
           v-for="(provider, idx) in providerData"
           :key="provider.provider + idx"
@@ -165,18 +168,7 @@
       <div class="no-provider-message">
         {{ $t('interface.noProviderFound') }}
       </div>
-      <ul v-if="false">
-        <li>
-          <div class="mew-custom-form__radio-button" />
-          <div class="provider-image" />
-          <div>
-            {{ $t('interface.noProviderFound') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
-            {{ noProvidersPair.toCurrency }}
-          </div>
-          <div />
-        </li>
-        <!-- list of providers -->
+      <ul>
         <li
           v-for="(providerName, idx) in otherProviders"
           :key="providerName + idx"
@@ -331,8 +323,8 @@ export default {
     },
     providerLogo(details) {
       if (details.provider) {
-      if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
-      return this.logos[details.provider];
+        if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
+        return this.logos[details.provider];
       }
       return this.logos[details];
     },
