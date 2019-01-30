@@ -3,9 +3,6 @@
     <!-- =========================================================================== -->
     <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
-        <li>
-          sfsfsfdsadf
-        </li>
         <li
           v-for="(provider, idx) in providerData"
           :key="provider.provider + idx"
@@ -118,6 +115,23 @@
           </div>
           <div class="background-masker" />
         </li>
+        <li
+          v-for="(providerName, idx) in otherInactiveProviders"
+          :key="providerName + idx"
+          class="unavailable"
+        >
+          <div class="provider-image">
+            <img :src="providerLogo(providerName)" />
+          </div>
+          <div>
+            <div class="show-mobile">
+              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+            </div>
+          </div>
+          <div class="show-desktop">
+            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+          </div>
+        </li>
       </ul>
     </div>
     <!-- Animation while retrieving the supporting providers rates -->
@@ -130,15 +144,32 @@
         {{ $t('interface.loadingProviders') }}
       </div>
       <!-- Loading logo image disabled -->
-      <ul v-if="false">
-        <li>
+      <ul>
+        <li
+          v-for="(providerName, idx) in allSupportedProviders"
+          :key="providerName + idx"
+          class="unavailable"
+        >
+          <div class="provider-image">
+            <img :src="providerLogo(providerName)" />
+          </div>
+          <div>
+            <div class="show-mobile">
+              <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+            </div>
+          </div>
+          <div class="show-desktop">
+            <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+          </div>
+        </li>
+<!--        <li>
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
           <div class="provider-image"><img :src="providerLogo('mew')" /></div>
           <div>{{ $t('interface.loadingProviders') }}</div>
           <div class="background-masker" />
-        </li>
+        </li>-->
       </ul>
     </div>
     <!-- Message When Error Seems to have occured while retrieving rate -->
@@ -285,6 +316,12 @@ export default {
       return this.allSupportedProviders.filter(entry => {
         return !activeProviders.includes(entry);
       });
+    },
+    otherInactiveProviders() {
+      const activeProviders = this.listActiveProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
     }
   },
   watch: {
@@ -301,6 +338,14 @@ export default {
     listActiveProviders() {
       const activeProviders = [];
       this.providerData.forEach(entry => {
+        console.log('ss', entry.provider); // todo remove dev item
+        activeProviders.push(entry.provider);
+      });
+      return activeProviders;
+    },
+    listPotentialProviders() {
+      const activeProviders = [];
+      this.providersFound.forEach(entry => {
         console.log('ss', entry.provider); // todo remove dev item
         activeProviders.push(entry.provider);
       });
