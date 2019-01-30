@@ -55,6 +55,7 @@
         :type="options.type"
         :disabled="options.inputDisabled"
         name=""
+        @input="emitValue"
         @blur="emitValue"
       />
 
