@@ -20,9 +20,7 @@
             :options="toAddressInputOptions()"
             @changedValue="toAddress = $event"
           />
-          <div
-            v-show="!isValidAddress && toAddress !== ''"
-            class="text-danger">
+          <div v-show="!isValidAddress && toAddress !== ''" class="text-danger">
             Invalid Address
           </div>
 
@@ -60,10 +58,7 @@
               </b-col>
 
               <b-col cols="3">
-                <div
-                  v-show="!advancedExpand"
-                  class="time-bounty-selector"
-                >
+                <div v-show="!advancedExpand" class="time-bounty-selector">
                   <div class="input-title">Time Bounty</div>
                   <b-button-group>
                     <b-button
@@ -80,8 +75,7 @@
                   </b-button-group>
                 </div>
 
-                <div
-                  v-show="advancedExpand">
+                <div v-show="advancedExpand">
                   <standard-input
                     :options="customTimeBountyInputOptions()"
                     @changedValue="timeBounty = $event"
@@ -318,7 +312,11 @@ export default {
       );
     },
     isValidAddress() {
-      if (this.toAddress !== '' && this.toAddress.length !== 0 && isAddress(this.toAddress)) {
+      if (
+        this.toAddress !== '' &&
+        this.toAddress.length !== 0 &&
+        isAddress(this.toAddress)
+      ) {
         return true;
       }
       return false;
