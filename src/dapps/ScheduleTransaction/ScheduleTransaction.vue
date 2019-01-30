@@ -80,6 +80,9 @@
                     :options="customTimeBountyInputOptions()"
                     @changedValue="timeBounty = $event"
                   />
+                  <div v-show="!isValidTimeBounty" class="text-danger">
+                    Please set a bounty of {{ minBounty }} or higher
+                  </div>
                 </div>
               </b-col>
 
@@ -204,7 +207,7 @@ import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPic
 import StandardInput from '@/components/StandardInput';
 import { isAddress } from '@/helpers/addressUtils';
 
-const TIME_BOUNTY_PRESETS = [0.02, 0.04, 0.08];
+const TIME_BOUNTY_PRESETS = ['0.02', '0.04', '0.08'];
 const SUPPORTED_MODES = [
   {
     name: 'Date & Time',
@@ -342,12 +345,17 @@ export default {
     now() {
       return new Date();
     },
+    minBounty() {
+      const wei = this.web3.utils.toWei(this.futureGasPrice, 'gwei');
+      return this.web3.utils.fromWei(wei, 'ether');
+    },
     validInputs() {
       return (
         this.isValidAddress &&
         this.isValidExecutionWindow &&
         this.isValidFutureGasPrice &&
-        this.isValidGasLimit
+        this.isValidGasLimit &&
+        this.isValidBounty
       );
     },
     isValidAddress() {
@@ -355,6 +363,13 @@ export default {
         this.toAddress !== '' &&
         this.toAddress.length !== 0 &&
         isAddress(this.toAddress)
+      );
+    },
+    isValidTimeBounty() {
+      return new BigNumber(
+        this.web3.utils.toWei(this.timeBounty, 'ether')
+      ).gte(
+        this.web3.utils.toWei(this.futureGasPrice, 'gwei')
       );
     },
     isValidExecutionWindow() {
@@ -385,7 +400,7 @@ export default {
       });
 
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
-    this.futureGasPrice = this.gasPrice;
+    this.futureGasPrice = this.gasPrice.toString();
   },
   methods: {
     scheduleTx: async function() {
@@ -432,7 +447,8 @@ export default {
       };
       console.log(schedulingOptions);
 
-      const receipt = await eac.validateScheduleOptions(schedulingOptions);
+      const endowment = await eac.computeEndowment(schedulingOptions);
+      const receipt = await eac.validateScheduleOptions(schedulingOptions, endowment);
 
       console.log(receipt);
     }
