@@ -3,35 +3,43 @@
     <div class="wrap">
       <div class="page-title"><page-title :options="titleOptions" /></div>
       <div class="page-content-container">
-        {{ $t('interface.myAddr') }}
         <accordion-menu
-          :isopen="true"
+          :greytitle="false"
+          :editbutton="true"
+          :isopen="false"
           :title="$t('sendOfflineHelper.generateInfo')"
           number="1"
         >
           <dropdown-address-selector title="From Address" />
           <div class="button-container">
-            <standard-button :options="continueButton" />
+            <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>
         <accordion-menu
+          :greytitle="false"
+          :editbutton="true"
           :isopen="true"
           :title="$t('sendOfflineHelper.txFeeAndNonce')"
           number="2"
         >
-          <dropdown-address-selector title="From Address" />
+          <standard-input :options="inputTxFee" />
+          <standard-input :options="inputNonce" />
           <div class="button-container">
-            <standard-button :options="continueButton" />
+            <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>
         <accordion-menu
+          :greytitle="false"
           :isopen="true"
           :title="$t('sendOfflineHelper.signedTx')"
           number="3"
         >
-          <dropdown-address-selector title="From Address" />
+          <standard-input :options="inputSignedTx" />
+          <expending-option title="Raw Transaction">
+            <standard-input :options="inputRawTx" class="no-margin" />
+          </expending-option>
           <div class="button-container">
-            <standard-button :options="continueButton" />
+            <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>
       </div>
@@ -45,6 +53,7 @@ import AccordionMenu2 from '@/components/AccordionMenu2';
 import DropDownAddressSelector2 from '@/components/DropDownAddressSelector2';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
+import ExpendingOption from '@/components/ExpendingOption';
 
 export default {
   components: {
@@ -52,7 +61,8 @@ export default {
     'accordion-menu': AccordionMenu2,
     'dropdown-address-selector': DropDownAddressSelector2,
     'standard-button': StandardButton,
-    'standard-input': StandardInput
+    'standard-input': StandardInput,
+    'expending-option': ExpendingOption
   },
   data() {
     return {
@@ -63,11 +73,31 @@ export default {
           'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
         ]
       },
-      continueButton: {
+      buttonContinue: {
         title: 'Continue',
         buttonStyle: 'green',
         noWalletTerms: true,
         rightArrow: true
+      },
+      inputTxFee: {
+        title: this.$t('sendOfflineHelper.txFee'),
+        topTextInfo: '0.00031 ($1.34)',
+        rightInputText: 'Gwei'
+      },
+      inputNonce: {
+        title: this.$t('sendOfflineHelper.nonce'),
+        popover: 'Nonce is Nonce!'
+      },
+      inputSignedTx: {
+        title: this.$t('sendOfflineHelper.signedTx'),
+        isTextarea: true,
+        buttonClear: true,
+        buttonCopy: true
+      },
+      inputRawTx: {
+        isTextarea: true,
+        buttonClear: true,
+        buttonCopy: true
       }
     };
   }
