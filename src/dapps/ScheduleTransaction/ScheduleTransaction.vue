@@ -20,10 +20,15 @@
             :options="toAddressInputOptions()"
             @changedValue="toAddress = $event"
           />
+          <div
+            v-show="!isValidAddress && toAddress !== ''"
+            class="text-danger">
+            Invalid Address
+          </div>
 
           <hr />
 
-          <div :class="selectedMode === supportedModes[0] && 'hide'">
+          <div v-show="selectedMode === supportedModes[1]">
             <standard-input
               :options="blockNumberInputOptions()"
               @changedValue="selectedBlockNumber = $event"
@@ -31,10 +36,8 @@
           </div>
 
           <div
-            :class="[
-              'datetime-picker-container',
-              selectedMode === supportedModes[1] && 'hide'
-            ]"
+            v-show="selectedMode === supportedModes[0]"
+            class="datetime-picker-container"
           >
             <div class="input-title">Date & Time</div>
             <datetime-picker
@@ -58,7 +61,8 @@
 
               <b-col cols="3">
                 <div
-                  :class="[advancedExpand && 'hide', 'time-bounty-selector']"
+                  v-show="!advancedExpand"
+                  class="time-bounty-selector"
                 >
                   <div class="input-title">Time Bounty</div>
                   <b-button-group>
@@ -76,7 +80,8 @@
                   </b-button-group>
                 </div>
 
-                <div :class="!advancedExpand && 'hide'">
+                <div
+                  v-show="advancedExpand">
                   <standard-input
                     :options="customTimeBountyInputOptions()"
                     @changedValue="timeBounty = $event"
@@ -105,7 +110,7 @@
 
             <hr />
 
-            <div :class="!advancedExpand && 'hide'">
+            <div v-show="advancedExpand">
               <b-row>
                 <b-col class="mode-container">
                   <div class="input-title">Scheduling mode</div>
@@ -164,10 +169,13 @@
 
     <div class="submit-button-container">
       <div
-        :class="['submit-button large-round-button-green-filled']"
+        :class="[
+          validInputs ? '' : 'disabled',
+          'submit-button large-round-button-green-filled'
+        ]"
         @click="scheduleTx"
       >
-        Schedule
+        Schedule Transaction
       </div>
     </div>
 
@@ -190,6 +198,7 @@ import 'vue-datetime/dist/vue-datetime.css';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
+import { isAddress } from '@/helpers/addressUtils';
 
 const TIME_BOUNTY_PRESETS = [0.02, 0.04, 0.08];
 const SUPPORTED_MODES = ['Date & Time', 'Block Number'];
@@ -206,7 +215,6 @@ export default {
     return {
       advancedExpand: false,
       advancedTimeBounty: false,
-      isValidAddress: false,
       toAddress: '',
       amount: '0',
       futureGasLimit: '21000',
@@ -300,6 +308,20 @@ export default {
     ...mapGetters(['web3', 'network', 'wallet', 'gasPrice']),
     now() {
       return new Date();
+    },
+    validInputs() {
+      return (
+        // this.isValidAmount &&
+        this.isValidAddress // &&
+        // new BigNumber(this.gasLimit).gte(0) &&
+        // Misc.validateHexString(this.data)
+      );
+    },
+    isValidAddress() {
+      if (this.toAddress !== '' && this.toAddress.length !== 0 && isAddress(this.toAddress)) {
+        return true;
+      }
+      return false;
     }
   },
   beforeMount() {
@@ -355,11 +377,12 @@ export default {
         requiredDeposit: ethToWeiBN(deposit),
         gasPrice: new BigNumber(
           this.web3.utils.toWei(futureGasPrice.toString(), 'gwei')
-        )
+        ),
+        fee: new BigNumber(0)
       };
       console.log(schedulingOptions);
 
-      const receipt = await eac.schedule(schedulingOptions);
+      const receipt = await eac.validateScheduleOptions(schedulingOptions);
 
       console.log(receipt);
     }

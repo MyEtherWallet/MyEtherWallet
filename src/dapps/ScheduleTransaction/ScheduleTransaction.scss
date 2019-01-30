@@ -38,10 +38,6 @@ $mew-green-light: #05c7aa;
   }
 }
 
-.hide {
-  display: none;
-}
-
 .btn-group {
   width: 100%;
 
@@ -127,7 +123,7 @@ $mew-green-light: #05c7aa;
 }
 
 .submit-button-container {
-  margin-top: 40px;
+  margin-top: 30px;
   text-align: center;
 
   @media all and (max-width: $mobile-width) {
