@@ -2,6 +2,10 @@
 
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
+### Devop
+
+- Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
+
 ### Release v5.0.0-beta.3
 
 ### Hotfix
