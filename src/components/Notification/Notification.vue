@@ -41,7 +41,7 @@
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
-            :key="notification.title + notification.timestamp + idx"
+            :key="notification.id"
             class="notification-item"
           >
             <keep-alive
@@ -113,7 +113,11 @@ import {
   detailComponentMapping
 } from './components/config';
 
-import { INVESTIGATE_FAILURE_KEY } from '@/helpers/notificationFormatters';
+import {
+  INVESTIGATE_FAILURE_KEY,
+  notificationStatuses,
+  notificationType
+} from '@/helpers/notificationFormatters';
 
 export default {
   components: {
@@ -140,7 +144,7 @@ export default {
       account: 'account'
     }),
     sortedNotifications() {
-      this.countUnread();
+      // this.countUnread();
       if (!this.notifications[this.account.address]) return [];
       // eslint-disable-next-line
       return this.notifications[this.account.address]
@@ -169,8 +173,58 @@ export default {
       this.shown = false;
       this.hideDetails();
     });
+    this.checkForUnResolvedTxNotifications();
   },
   methods: {
+    checkForUnResolvedTxNotifications() {
+      if (!this.notifications[this.account.address]) return [];
+      const check = this.notifications[this.account.address]
+        .filter(entry => entry.network === this.network.type.name)
+        .filter(entry => {
+          const isOlder =
+            parseInt(
+              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+                1000
+            ) > 6000;
+          const isUnResolved = entry.status === notificationStatuses.PENDING;
+          const notExternalSwap =
+            entry.type === notificationType.TRANSACTION ||
+            (entry.type === notificationType.SWAP && entry.body.isDex === true);
+          const hasHash = entry.hash !== '' && entry.hash !== undefined;
+          return isOlder && isUnResolved && hasHash && notExternalSwap;
+        });
+      check.forEach(entry => {
+        this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+          const noticeIdx = this.notifications[this.account.address].findIndex(
+            noticeEntry => entry.id === noticeEntry.id
+          );
+          if (noticeIdx >= 0) {
+            entry.status = result.status
+              ? notificationStatuses.COMPLETE
+              : notificationStatuses.FAILED;
+            entry.body.error = !result.status;
+            entry.body.errorMessage = result.status
+              ? ''
+              : INVESTIGATE_FAILURE_KEY;
+            entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
+            entry.body.blockNumber = new BigNumber(
+              result.blockNumber
+            ).toString();
+            if (entry.body.isDex) {
+              entry.swapStatus = result.status
+                ? notificationStatuses.COMPLETE
+                : notificationStatuses.FAILED;
+              entry.body.timeRemaining = -1;
+            }
+            this.$store.dispatch('updateNotification', [
+              this.account.address,
+              noticeIdx,
+              entry
+            ]);
+          }
+        });
+      });
+    },
     showNotifications() {
       this.shown = true;
       this.$refs.notification.show();
@@ -199,6 +253,16 @@ export default {
         return detailComponentMapping[type];
       }
       return 'transaction-details';
+    },
+    collectNotifications(notifications) {
+      return notifications
+        .sort((a, b) => {
+          a = a.timestamp;
+          b = b.timestamp;
+
+          return a > b ? -1 : a < b ? 1 : 0;
+        })
+        .filter(entry => entry.network === this.network.type.name);
     },
     countUnread() {
       const self = this;

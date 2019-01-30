@@ -45,7 +45,8 @@ const txIndexes = {
   label: 0,
   address: 1,
   txDetails: 2,
-  response: 3
+  response: 3,
+  txHash: 4
 };
 
 const fiatCurrencies = ['CHF', 'USD', 'EUR'];
