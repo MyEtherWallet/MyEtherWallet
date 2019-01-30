@@ -101,7 +101,7 @@
             :currency="methods"
             :token="false"
             page="interactWContract"
-            @selectedCurrency="selectFunction"
+            @selectedCurrency="selectedFunction"
           />
         </div>
       </div>
@@ -110,23 +110,28 @@
         class="method-arguments-container"
       >
         <h4>{{ selectedMethod.name | capitalize }}</h4>
-        <div v-for="(input, idx) in writeInputs" :key="input.name + idx">
+        <div
+          v-for="(input, idx) in writeInputs"
+          :key="input.name + idx"
+          class="input-item-container"
+        >
           <div class="title-container">
             <div class="title">
               <h5>{{ input.name | capitalize }} ({{ input.type }}):</h5>
             </div>
           </div>
-          <div class="the-form contract-name">
+          <div class="input-container">
             <input
               v-if="getType(input.type).type !== 'radio'"
               :type="getType(input.type).type"
               v-model="inputs[input.name]"
+              class="non-bool-input"
             />
             <div
               v-if="getType(input.type).type === 'radio'"
               class="bool-input-container"
             >
-              <div>
+              <div class="bool-items">
                 <input
                   v-model="inputs[input.name]"
                   :value="true"
@@ -135,7 +140,7 @@
                 />
                 <label :for="input.name">True</label>
               </div>
-              <div>
+              <div class="bool-items">
                 <input
                   v-model="inputs[input.name]"
                   :value="false"
@@ -148,6 +153,7 @@
             </div>
             <i
               :class="[
+                getType(input.type).type !== 'radio' ? 'non-bool-i' : '',
                 isValidInput(
                   inputs[input.name],
                   getType(input.type).solidityType
@@ -176,7 +182,7 @@
               selectedMethod.inputs.length > 0
           "
           :class="[
-            inputsFilled ? '' : 'disabled',
+            allValid ? '' : 'disabled',
             loading ? 'disabled' : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
@@ -245,17 +251,18 @@ export default {
     writeInputs() {
       const _self = this;
       const _inputs = this.selectedMethod.inputs;
+      _self.inputs = {};
       _inputs.forEach(input => {
         // eslint-disable-next-line
-        _self.input[input.name] = input.type === 'bool' ? false : '';
+        _self.inputs[input.name] = input.type === 'bool' ? false : '';
       });
 
       return _inputs;
     },
     allValid() {
       let _allvalid = true;
-      if (this.abiConstructor) {
-        this.abiConstructor.inputs.forEach(item => {
+      if (this.selectedMethod.inputs) {
+        this.selectedMethod.inputs.forEach(item => {
           if (
             !this.isValidInput(
               this.inputs[item.name],
@@ -265,7 +272,7 @@ export default {
             _allvalid = false;
         });
       }
-      return _allvalid && this.isValidAbi && this.isValidaddress;
+      return _allvalid && this.isValidAbi && this.isValidAddress;
     }
   },
   watch: {
@@ -315,18 +322,7 @@ export default {
       }
       this.address = selected.address;
     },
-    checkType(type) {
-      if (
-        type === 'address' ||
-        type === 'string' ||
-        type === 'byte' ||
-        type.includes('bytes')
-      ) {
-        return 'string';
-      }
-      return 'number';
-    },
-    selectFunction(method) {
+    selectedFunction(method) {
       const contract = new this.web3.eth.Contract([method], this.address);
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()

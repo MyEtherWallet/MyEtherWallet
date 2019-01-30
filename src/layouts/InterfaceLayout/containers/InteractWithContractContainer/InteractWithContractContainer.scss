@@ -162,12 +162,38 @@ $contract-mobile-width: 600px;
   }
 }
 
+.input-container {
+  display: flex;
+  position: relative;
+
+  .non-bool-i {
+    position: absolute;
+    right: 10px;
+    top: 13px;
+  }
+}
+
 .interact-buttons {
   display: flex;
 }
 
+.non-bool-input {
+  background-color: $background-color-1;
+  border: 0;
+  padding: 13px 15px;
+  width: 100%;
+}
+
 .method-arguments-container {
   padding-top: 33px;
+}
+
+.bool-input-container {
+  display: flex;
+
+  .bool-items {
+    padding: 0 10px;
+  }
 }
 
 .contract-address-title {
@@ -175,4 +201,8 @@ $contract-mobile-width: 600px;
   @media all and (max-width: $contract-mobile-width) {
     margin-bottom: 55px;
   }
+}
+
+.input-item-container {
+  padding: 10px 0;
 }
