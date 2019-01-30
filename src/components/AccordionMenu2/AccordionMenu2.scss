@@ -6,12 +6,16 @@
 .wrap {
   margin: 0;
   padding: 0;
-  padding-bottom: 10px;
 }
 
 // *********************************************************************
 // .menu-title
 // *********************************************************************
+
+.opened .menu-title {
+  border-radius: 5px 5px 0 0;
+}
+
 .menu-title {
   padding: 10px;
   background-color: $dark-blue-12;
@@ -45,19 +49,33 @@
   }
 }
 
+
 // *********************************************************************
 // .content-container
 // *********************************************************************
+
+.opened .menu-content-container {
+  max-height: 600px;
+}
+
 .menu-content-container {
+  border-radius: 0 0 5px 5px;
   max-height: 0;
   overflow: hidden;
   transition: all 0.2s linear;
+  background-color: $white;
 
   .padding-block {
-    padding: 30px 10px;
-  }
-
-  &.opened {
-    max-height: 600px;
+    padding: 30px 30px;
   }
 }
+
+
+
+
+
+
+
+
+
+

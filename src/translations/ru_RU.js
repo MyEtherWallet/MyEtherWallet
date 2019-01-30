@@ -13,6 +13,7 @@ import accessWallet from './access-wallet/ru_RU';
 import interfaceTranslations from './interface/ru_RU';
 import team from './team/ru_RU';
 import popover from './popover/ru_RU';
+import sendOfflineHelper from './send-offline-helper/ru_RU';
 
 const ru_RU = {
   common: common,
@@ -28,6 +29,7 @@ const ru_RU = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  sendOfflineHelper: sendOfflineHelper
 };
 export default ru_RU;
