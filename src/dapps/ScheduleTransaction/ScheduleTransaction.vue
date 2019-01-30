@@ -150,8 +150,11 @@
                 <b-col>
                   <standard-input
                     :options="gasLimitInputOptions()"
-                    @changedValue="futureGasLimit = $event"
+                    @changedValue="gasLimit = $event"
                   />
+                  <div v-show="!isValidGasLimit" class="text-danger">
+                    Please set a gas limit of 0 or higher
+                  </div>
                 </b-col>
                 <b-col>
                   <standard-input :options="futureGasLimitInputOptions()" />
@@ -235,7 +238,8 @@ export default {
       advancedTimeBounty: false,
       toAddress: '',
       amount: '0',
-      futureGasLimit: '21000',
+      gasLimit: '21000',
+      minGasLimit: 0,
       futureGasPrice: '1',
       minGasPrice: 1,
       data: '',
@@ -296,7 +300,7 @@ export default {
       gasLimitInputOptions() {
         return {
           title: 'Gas Limit',
-          value: this.futureGasLimit,
+          value: this.gasLimit,
           type: 'number'
         };
       },
@@ -310,7 +314,7 @@ export default {
       futureGasLimitInputOptions() {
         return {
           title: 'Future Gas Limit',
-          value: this.futureGasLimit,
+          value: this.gasLimit,
           inputDisabled: true,
           type: 'number'
         };
@@ -342,7 +346,8 @@ export default {
       return (
         this.isValidAddress &&
         this.isValidExecutionWindow &&
-        this.isValidFutureGasPrice
+        this.isValidFutureGasPrice &&
+        this.isValidGasLimit
       );
     },
     isValidAddress() {
@@ -357,6 +362,9 @@ export default {
     },
     isValidFutureGasPrice() {
       return parseFloat(this.futureGasPrice) >= this.minGasPrice;
+    },
+    isValidGasLimit() {
+      return new BigNumber(this.gasLimit).gte(this.minGasLimit);
     }
   },
   watch: {
@@ -384,7 +392,7 @@ export default {
       const {
         toAddress,
         amount,
-        futureGasLimit,
+        gasLimit,
         futureGasPrice,
         data,
         selectedBlockNumber,
@@ -411,7 +419,7 @@ export default {
           timestampScheduling ? timestamp : selectedBlockNumber
         ),
         timestampScheduling,
-        callGas: new BigNumber(futureGasLimit),
+        callGas: new BigNumber(gasLimit),
         callData: data,
         callValue: ethToWeiBN(amount),
         windowSize: new BigNumber(windowSize),
