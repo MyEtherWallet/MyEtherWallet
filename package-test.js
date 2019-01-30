@@ -34,7 +34,8 @@ const looper = () => {
       const latestVersionTime = info['time'][latestVersion];
       if (
         ALL_PACKAGES[_name] !== latestVersion &&
-        new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME
+        new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME &&
+        _name !== 'webpack'
       ) {
         console.error(
           'new update found',

@@ -50,7 +50,7 @@
           <textarea ref="abi" v-model="abi" class="custom-textarea-1" />
           <i
             :class="[
-              isValidAbi && isValidAbi !== '' ? '' : 'not-good',
+              isValidAbi && abi !== '' ? '' : 'not-good',
               'fa fa-check-circle good-button'
             ]"
             aria-hidden="true"
