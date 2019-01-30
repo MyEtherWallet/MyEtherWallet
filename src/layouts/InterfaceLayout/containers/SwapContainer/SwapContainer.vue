@@ -258,7 +258,10 @@ export default {
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
-      currencyDetails: {},
+      toAddress: '',
+      currentAddress: '',
+      refundAddress: '',
+      exitFromAddress: '',
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
       fromValue: 1,
@@ -266,12 +269,7 @@ export default {
       invalidFrom: 'none',
       selectedProvider: {},
       swapDetails: {},
-      finalizingSwap: false,
-      toAddress: '',
-      currentAddress: '',
-      refundAddress: '',
-      exitFromAddress: '',
-      validAddress: true,
+      currencyDetails: {},
       swap: new Swap(providers, {
         network: this.$store.state.network.type.name,
         web3: this.$store.state.web3,
@@ -286,24 +284,26 @@ export default {
       toArray: [],
       fromArray: [],
       providerData: [],
-      providerNames: providerNames,
-      supportedProviders: supportedProviders,
       tokenBalances: {},
-      ratesRetrived: false,
-      issueRecievingRates: false,
       providerRatesRecieved: [],
       noProvidersPair: {},
-      loadingData: true,
       providersFound: [],
       tempStatuses: [],
-      haveProviderRates: false,
-      loadingError: false,
       overrideFrom: {},
       overrideTo: {},
+      providerNames: providerNames,
+      supportedProviders: supportedProviders,
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol),
+      finalizingSwap: false,
+      validAddress: true,
+      ratesRetrived: false,
+      issueRecievingRates: false,
+      loadingData: true,
+      haveProviderRates: false,
+      loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
-      exitToFiatCallback: () => {},
-      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
+      exitToFiatCallback: () => {}
     };
   },
   computed: {
@@ -477,6 +477,22 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    reset() {
+      this.fromValue = 1;
+      this.toValue = 0;
+      this.updateRateEstimate(
+        this.fromCurrency,
+        this.toCurrency,
+        this.fromValue,
+        'from'
+      );
+      this.finalizingSwap = false;
+      this.validAddress = true;
+      this.issueRecievingRates = false;
+      this.loadingError = false;
+      this.switchCurrencyOrder = false;
+      this.bityExitToFiat = false;
+    },
     flipCurrencies() {
       this.switchCurrencyOrder = true;
       const origTo = this.toValue;
@@ -735,17 +751,7 @@ export default {
       this.bityExitToFiat = !this.bityExitToFiat;
     },
     resetSwapState() {
-      // this.toAddress = '';
-      this.fromCurrency = this.baseCurrency;
-      // this.toCurrency = 'BTC';
-      this.fromValue = 1;
-      this.toValue = 0;
-      this.updateRateEstimate(
-        this.fromCurrency,
-        this.toCurrency,
-        this.fromValue,
-        'from'
-      );
+      this.reset();
     }
   }
 };

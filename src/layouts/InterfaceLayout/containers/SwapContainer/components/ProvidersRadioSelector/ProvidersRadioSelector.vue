@@ -104,6 +104,7 @@
         </li>
       </ul>
       <provider-info-list
+        v-show="!loadingProviderRates"
         :all-supported-providers="allSupportedProviders"
         :unavailable-providers="unavailableProviders"
       />
