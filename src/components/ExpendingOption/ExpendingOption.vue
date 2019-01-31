@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <div class="contnet-container">
+    <div :class="expanded ? 'expanded' : ''" class="contnet-container">
       <div class="content"><slot></slot></div>
     </div>
   </div>
