@@ -4,8 +4,8 @@
 // .expending-option
 // *********************************************************************
 .expending-option {
-  border-top: 2px solid #f9f9f9;
-  border-bottom: 2px solid #f9f9f9;
+  border-top: 2px solid $light-grey-1;
+  border-bottom: 2px solid $light-grey-1;
   padding: 20px 0px;
 }
 
@@ -36,6 +36,12 @@
 // .contnet-container
 // *********************************************************************
 .contnet-container {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  &.expanded {
+    max-height: 800px;
+  }
   .content {
     padding-top: 20px;
   }

@@ -39,7 +39,8 @@
             <standard-input :options="inputRawTx" class="no-margin" />
           </expending-option>
           <div class="button-container">
-            <standard-button :options="buttonContinue" />
+            <standard-button :options="buttonUploadJson" />
+            <standard-button :options="buttonSendTx" />
           </div>
         </accordion-menu>
       </div>
@@ -78,6 +79,17 @@ export default {
         buttonStyle: 'green',
         noWalletTerms: true,
         rightArrow: true
+      },
+      buttonSendTx: {
+        title: 'Send Transaction',
+        buttonStyle: 'green',
+        noWalletTerms: true
+      },
+      buttonUploadJson: {
+        title: 'Upload JSON File',
+        buttonStyle: 'green-border',
+        noWalletTerms: true,
+        noMinWidth: true
       },
       inputTxFee: {
         title: this.$t('sendOfflineHelper.txFee'),

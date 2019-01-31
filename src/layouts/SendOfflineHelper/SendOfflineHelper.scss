@@ -3,6 +3,13 @@
 .send-offline-helper {
   background-color: $light-grey-2;
   padding: 100px 0;
+
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px 20px;
+  }
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
 }
 
 .wrap {
@@ -24,6 +31,18 @@
   margin-top: 40px;
   width: 100%;
   text-align: center;
+
+  >* {
+    margin-right: 10px;
+    @media all and (max-width: 600px) {
+      margin: 0 0 10px 0;
+      width: 100%;
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+  }
 }
 
 .standard-input {
