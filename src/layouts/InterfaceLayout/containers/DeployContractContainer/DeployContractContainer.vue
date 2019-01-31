@@ -255,7 +255,6 @@ export default {
       return _allvalid && this.isValidAbi && this.isValidByte;
     }
   },
-  mounted() {},
   methods: {
     isValidInput(value, solidityType) {
       if (!value) value = '';

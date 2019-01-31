@@ -2,6 +2,10 @@
 
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
+### Devop
+
+- Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)
+
 ### Release v5.0.0-beta.3
 
 ### Hotfix
