@@ -190,6 +190,9 @@
       >
         Schedule Transaction
       </div>
+      <div v-if="scheduleError" class="text-danger m-3">
+        {{ scheduleError }}
+      </div>
     </div>
 
     <a
@@ -262,6 +265,7 @@ export default {
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
       deposit: TIME_BOUNTY_PRESETS[0] * 2,
+      scheduleError: '',
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -441,7 +445,9 @@ export default {
         callGas: new BigNumber(gasLimit),
         callData: data,
         callValue: ethToWeiBN(amount),
-        windowSize: new BigNumber(windowSize),
+        windowSize: new BigNumber(
+          timestampScheduling ? windowSize * 60 : windowSize
+        ),
         bounty: ethToWeiBN(timeBounty),
         requiredDeposit: ethToWeiBN(deposit),
         gasPrice: new BigNumber(
@@ -452,10 +458,16 @@ export default {
       console.log(schedulingOptions);
 
       const endowment = await eac.computeEndowment(schedulingOptions);
-      const receipt = await eac.validateScheduleOptions(
-        schedulingOptions,
-        endowment
-      );
+
+      try {
+        await eac.validateScheduleOptions(schedulingOptions, endowment);
+        this.scheduleError = '';
+      } catch (e) {
+        this.scheduleError = e.message;
+        return;
+      }
+
+      const receipt = await eac.schedule(schedulingOptions);
 
       console.log(receipt);
     }
