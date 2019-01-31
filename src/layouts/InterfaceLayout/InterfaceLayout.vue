@@ -358,7 +358,6 @@ export default {
           return 0;
         })
         .map(token => {
-          token.address = token.addr;
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance

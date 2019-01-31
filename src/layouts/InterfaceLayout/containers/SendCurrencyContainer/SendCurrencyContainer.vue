@@ -285,14 +285,17 @@ export default {
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;
       else
-        this.value = this.balanceDefault.minus(
-          ethUnit.fromWei(
-            new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
-              .times(this.gasLimit)
-              .toString(),
-            'ether'
-          )
-        );
+        this.value =
+          this.balanceDefault > 0
+            ? this.balanceDefault.minus(
+                ethUnit.fromWei(
+                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+                    .times(this.gasLimit)
+                    .toString(),
+                  'ether'
+                )
+              )
+            : 0;
     },
     getTokenTransferABI(amount, decimals) {
       const jsonInterface = [
