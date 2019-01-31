@@ -11,7 +11,7 @@
         <h1>{{ timeRemaining }}</h1>
         <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
-      <div >
+      <div>
         <div class="swap-detail">
           <div class="from-address">
             <div class="icon">
@@ -26,7 +26,10 @@
             >
               {{ $t('interface.fromAddr') }}
             </p>
-            <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
+            <p
+              v-show="fromAddress.address !== '' && !isFromFiat"
+              class="address"
+            >
               {{ fromAddress.address }}
             </p>
           </div>

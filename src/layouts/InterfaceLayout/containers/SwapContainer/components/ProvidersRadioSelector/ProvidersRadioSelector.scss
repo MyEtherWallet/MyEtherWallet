@@ -40,14 +40,14 @@ $swap-custom-mobile-colleps-width: 700px;
     padding: 30px;
   }
 
-    .unavailable{
-      width: 100%;
-      //color: $dark-grey-7;
-      background-color: $light-grey-4;
-      &:first-child {
-        border-top: 2px solid $light-grey-3;
-      }
+  .unavailable {
+    width: 100%;
+    //color: $dark-grey-7;
+    background-color: $light-grey-4;
+    &:first-child {
+      border-top: 2px solid $light-grey-3;
     }
+  }
 
   ul {
     li {

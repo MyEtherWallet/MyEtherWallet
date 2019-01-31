@@ -2,6 +2,7 @@
   <ul>
     <li
       v-for="(providerName, idx) in unavailableProviders"
+      v-show="false"
       :key="providerName + idx"
       class="unavailable"
     >
