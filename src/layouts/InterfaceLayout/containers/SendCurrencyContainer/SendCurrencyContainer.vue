@@ -232,7 +232,7 @@ export default {
           new BigNumber(txFeeEth).lte(this.balanceDefault)
         );
       }
-      return new BigNumber(this.value + txFeeEth).lte(this.balanceDefault);
+      return new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault);
     },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
