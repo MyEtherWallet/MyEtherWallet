@@ -177,11 +177,16 @@ $contract-mobile-width: 600px;
   display: flex;
 }
 
-.non-bool-input {
+%input-temp {
   background-color: $background-color-1;
   border: 0;
   padding: 13px 15px;
   width: 100%;
+}
+
+.non-bool-input,
+.result-input {
+  @extend %input-temp;
 }
 
 .method-arguments-container {
@@ -194,6 +199,12 @@ $contract-mobile-width: 600px;
   .bool-items {
     padding: 0 10px;
   }
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
 }
 
 .contract-address-title {

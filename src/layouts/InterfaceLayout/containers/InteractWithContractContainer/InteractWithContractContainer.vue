@@ -20,12 +20,11 @@
         </div>
         <div class="the-form domain-name">
           <input
-            v-ens-resolver="'address'"
             v-validate="'required'"
             v-model="address"
             type="text"
             name="nameAddr"
-            placeholder="Enter Domain Name or Address"
+            placeholder="Enter Contract Address"
           />
 
           <i
@@ -98,7 +97,7 @@
         </div>
         <div class="picker-container">
           <currency-picker
-            :currency="methods"
+            :currency="contractMethods"
             :token="false"
             page="interactWContract"
             @selectedCurrency="selectedFunction"
@@ -111,7 +110,7 @@
       >
         <h4>{{ selectedMethod.name | capitalize }}</h4>
         <div
-          v-for="(input, idx) in writeInputs"
+          v-for="(input, idx) in selectedMethod.inputs"
           :key="input.name + idx"
           class="input-item-container"
         >
@@ -123,6 +122,7 @@
           <div class="input-container">
             <input
               v-if="getType(input.type).type !== 'radio'"
+              :disabled="noInput"
               :type="getType(input.type).type"
               v-model="inputs[input.name]"
               class="non-bool-input"
@@ -152,6 +152,7 @@
               </div>
             </div>
             <i
+              v-if="!noInput"
               :class="[
                 getType(input.type).type !== 'radio' ? 'non-bool-i' : '',
                 isValidInput(
@@ -166,42 +167,94 @@
             />
           </div>
         </div>
-      </div>
-    </div>
-    <div class="submit-button-container">
-      <div class="interact-buttons">
-        <div
-          class="submit-button large-round-button-green-border clickable"
-          @click="switchView('backwards')"
-        >
-          {{ $t('common.back') }}
+        <div v-show="selectedMethod.constant === false">
+          <div class="title-container">
+            <div class="title">
+              <h4>{{ $t('common.value') }}:</h4>
+            </div>
+          </div>
+          <input
+            v-model="value"
+            type="text"
+            name
+            placeholder="ETH"
+            class="non-bool-input"
+          />
         </div>
-        <div
-          v-if="
-            selectedMethod.hasOwnProperty('inputs') &&
-              selectedMethod.inputs.length > 0
-          "
-          :class="[
-            allValid ? '' : 'disabled',
-            loading ? 'disabled' : '',
-            'submit-button large-round-button-green-filled clickable'
-          ]"
-          @click="write"
-        >
-          <span v-show="!loading && !selectedMethod.constant">{{
-            $t('interface.write')
-          }}</span>
-          <span v-show="!loading && selectedMethod.constant">{{
-            $t('interface.read')
-          }}</span>
-          <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
+        <div v-if="result !== ''">
+          <div class="title-container">
+            <div class="title"><h4>Result:</h4></div>
+          </div>
+          <div class="result-inputs">
+            <input
+              v-if="resType === 'string'"
+              v-model="result"
+              type="text"
+              name
+              placeholder="0x00000000000000"
+              disabled
+              class="non-bool-input"
+            />
+            <div v-if="resType === 'object'">
+              <!--
+                Have to separate them since v-for still loops when v-if is in the same line getting max stack
+              -->
+              <div
+                v-for="(item, idx) in selectedMethod.outputs"
+                :key="item.name + idx"
+                class="result-container"
+              >
+                <label :name="item.name !== '' ? item.name : item.type + idx">
+                  {{ item.name !== '' ? item.name : item.type | capitalize }}
+                </label>
+                <input
+                  :name="item.name !== '' ? item.name : item.type + idx"
+                  :value="result[idx]"
+                  type="text"
+                  placeholder="0x00000000000000"
+                  disabled
+                  class="result-input"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
-      />
+      <div class="submit-button-container">
+        <div class="interact-buttons">
+          <div
+            class="submit-button large-round-button-green-border clickable"
+            @click="switchView('backwards')"
+          >
+            {{ $t('common.back') }}
+          </div>
+          <div
+            v-if="
+              selectedMethod.hasOwnProperty('inputs') &&
+                selectedMethod.inputs.length > 0
+            "
+            :class="[
+              allValid ? '' : 'disabled',
+              loading ? 'disabled' : '',
+              'submit-button large-round-button-green-filled clickable'
+            ]"
+            @click="write"
+          >
+            <span v-show="!loading && !selectedMethod.constant">{{
+              $t('interface.write')
+            }}</span>
+            <span v-show="!loading && selectedMethod.constant">{{
+              $t('interface.read')
+            }}</span>
+            <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
+          </div>
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -227,11 +280,11 @@ export default {
       abi: '',
       address: '',
       interact: false,
-      methods: [],
+      contractMethods: [],
       selectedMethod: {},
       result: '',
       loading: false,
-      hexAddress: '',
+      value: 0,
       inputs: {}
     };
   },
@@ -248,16 +301,13 @@ export default {
     isValidAddress() {
       return isAddress(this.address);
     },
-    writeInputs() {
-      const _self = this;
-      const _inputs = this.selectedMethod.inputs;
-      _self.inputs = {};
-      _inputs.forEach(input => {
-        // eslint-disable-next-line
-        _self.inputs[input.name] = input.type === 'bool' ? false : '';
-      });
-
-      return _inputs;
+    noInput() {
+      return (
+        this.selectedMethod.constant && this.selectedMethod.inputs.length === 0
+      );
+    },
+    resType() {
+      return typeof this.result;
     },
     allValid() {
       let _allvalid = true;
@@ -273,17 +323,23 @@ export default {
         });
       }
       return _allvalid && this.isValidAbi && this.isValidAddress;
+    },
+    contractArgs() {
+      const _contractArgs = [];
+      if (this.selectedMethod) {
+        this.selectedMethod.inputs.forEach(item => {
+          _contractArgs.push(this.inputs[item.name]);
+        });
+      }
+      return _contractArgs;
     }
   },
   watch: {
-    result(newVal) {
-      this.resType = typeof newVal;
-    },
     network() {
       this.abi = '';
       this.address = '';
       this.interact = false;
-      this.methods = [];
+      this.contractMethods = [];
       this.selectedMethod = {};
       this.result = '';
     }
@@ -338,6 +394,11 @@ export default {
         this.result = '';
       }
       this.selectedMethod = method;
+      this.selectedMethod.inputs.forEach(input => {
+        if (input.type === 'bool') {
+          this.inputs[input.name] = false;
+        }
+      });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -349,10 +410,11 @@ export default {
     switchView(direction) {
       switch (direction) {
         case 'forward':
-          this.methods = JSON.parse(this.abi)
-            .map(func => func)
-            .filter(func => func.type !== 'constructor')
-            .filter(func => func.constant !== undefined);
+          JSON.parse(this.abi).forEach(item => {
+            if (item.type !== 'constructor' && item.constant !== undefined) {
+              this.contractMethods.push(item);
+            }
+          });
           this.interact = true;
           break;
         default:
@@ -365,12 +427,9 @@ export default {
         [this.selectedMethod],
         this.address
       );
-      const params = Object.keys(this.writeInputs).map(input =>
-        web3.utils.toHex(this.writeInputs[input])
-      );
       this.loading = true;
       if (this.selectedMethod.constant === true) {
-        contract.methods[this.selectedMethod.name](...params)
+        contract.methods[this.selectedMethod.name](...this.contractArgs)
           .call({ from: this.account.address })
           .then(res => {
             this.result = res;
@@ -384,7 +443,7 @@ export default {
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
         const gasLimit = await contract.methods[this.selectedMethod.name](
-          ...params
+          ...this.contractArgs
         )
           .estimateGas({ from: this.account.address })
           .then(res => {
@@ -395,7 +454,7 @@ export default {
             console.error(err);
           });
         const data = contract.methods[this.selectedMethod.name](
-          ...params
+          ...this.contractArgs
         ).encodeABI();
 
         const raw = {
@@ -404,7 +463,7 @@ export default {
           nonce: nonce,
           gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
           value: 0,
-          to: this.hexAddress,
+          to: this.address,
           data: data
         };
 
