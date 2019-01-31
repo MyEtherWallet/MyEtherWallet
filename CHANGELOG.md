@@ -6,6 +6,8 @@
 
 - Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
 
+- Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
+
 ### Release v5.0.0-beta.3
 
 ### Hotfix
