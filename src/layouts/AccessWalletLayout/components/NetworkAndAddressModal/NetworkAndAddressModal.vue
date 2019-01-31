@@ -94,10 +94,10 @@
                 }}</b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
-                  :class="selectedPath.dpath === val.dpath ? 'active' : ''"
+                  :class="selectedPath === val.path ? 'active' : ''"
                   :key="key"
                   @click="changePath(key)"
-                  >{{ val.dpath }}</b-dropdown-item
+                  >{{ val.path }}</b-dropdown-item
                 >
                 <b-dropdown-item @click="showCustomPathInput">{{
                   $t('accessWallet.addCustomPath')
@@ -122,7 +122,7 @@
             <br />
             <input
               id="customPathInput"
-              v-model="customPath.dpath"
+              v-model="customPath.path"
               placeholder="m/44'/1'/0'/0"
             />
             <br />
@@ -222,6 +222,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
+import { checkCustomPath } from '@/helpers/checkDeterministicPath';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -315,7 +316,7 @@ export default {
       this.currentIndex = 0;
     },
     showCustomPathInput() {
-      this.customPath = { label: '', dpath: '' };
+      this.customPath = { label: '', path: '' };
       this.customPathInput = !this.customPathInput;
     },
     convertBalance(bal) {
@@ -323,8 +324,19 @@ export default {
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     addCustomPath() {
-      // // TODO: figure out a more precise regex
-      // // eslint-disable-next-line no-useless-escape
+      console.log(this.customPath); // todo remove dev item
+      console.log(checkCustomPath()); // todo remove dev item
+      const customPath = checkCustomPath(this.customPath.path);
+      if (customPath) {
+        this.customPath.path = customPath;
+        this.$store.dispatch('addCustomPath', this.customPath).then(() => {
+          this.getPaths();
+        });
+        this.showCustomPathInput(); // reset the path input
+      }
+
+      // TODO: figure out a more precise regex
+      // eslint-disable-next-line no-useless-escape
       // const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
       // if (regExp.test(this.customPath.dpath)) {
       //   this.$store.dispatch('addCustomPath', this.customPath).then(() => {
