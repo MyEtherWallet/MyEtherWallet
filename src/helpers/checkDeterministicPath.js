@@ -1,4 +1,4 @@
-function checkPath(path) {
+function checkCustomPath(path) {
   try {
     let array1;
     // const regExp = /(?<root>^\w+\/)(?<bip>\d+'?\/)(?<coin>\d+'?\/)(?<chain>\d+'?\/)(?<account>.+$)/;
@@ -27,4 +27,4 @@ function checkPath(path) {
   }
 }
 
-export default checkPath;
+export default checkCustomPath;

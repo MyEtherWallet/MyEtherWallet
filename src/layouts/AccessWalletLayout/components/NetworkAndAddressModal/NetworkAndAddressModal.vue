@@ -222,7 +222,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
-import { checkCustomPath } from '@/helpers/checkDeterministicPath';
+import checkDeterministicPath from '@/helpers/checkDeterministicPath';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -325,31 +325,74 @@ export default {
     },
     addCustomPath() {
       console.log(this.customPath); // todo remove dev item
-      console.log(checkCustomPath()); // todo remove dev item
-      const customPath = checkCustomPath(this.customPath.path);
+      const customPath = this.checkCustomPath(this.customPath.path);
+      console.log(customPath); // todo remove dev item
       if (customPath) {
         this.customPath.path = customPath;
-        this.$store.dispatch('addCustomPath', this.customPath).then(() => {
-          this.getPaths();
-        });
+        this.$store
+          .dispatch('addCustomPath', {
+            label: this.customPath.label,
+            path: customPath
+          })
+          .then(() => {
+            this.getPaths();
+          });
         this.showCustomPathInput(); // reset the path input
+      } else {
+        this.invalidPath = this.customPath;
       }
-
-      // TODO: figure out a more precise regex
-      // eslint-disable-next-line no-useless-escape
-      // const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
-      // if (regExp.test(this.customPath.dpath)) {
-      //   this.$store.dispatch('addCustomPath', this.customPath).then(() => {
-      //     this.getPaths();
-      //   });
-      //   this.showCustomPathInput(); // reset the path input
-      // } else {
-      //   // TODO: add indication of an invalid path
-      // }
+      console.log(checkDeterministicPath()); // todo remove dev item
+    },
+    splitPath(path) {
+      let array1;
+      const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
+      const matcher = RegExp(regExp, 'g');
+      if ((array1 = matcher.exec(path)) !== null) {
+        return array1;
+      }
+      return null;
+    },
+    checkCustomPath(path) {
+      try {
+        let array1;
+        // // eslint-disable-next-line
+        // const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
+        // const matcher = RegExp(regExp, 'g');
+        if ((array1 = this.splitPath(path)) !== null) {
+          let assembledPath = '';
+          if (array1[1]) {
+            if (array1[1] !== 'm') return false;
+            assembledPath = assembledPath.concat(array1[1]);
+          } else {
+            return false;
+          }
+          if (array1[2])
+            assembledPath = assembledPath.concat('/', array1[2], '`');
+          if (array1[3])
+            assembledPath = assembledPath.concat('/', array1[3], '`');
+          if (array1[4])
+            assembledPath = assembledPath.concat('/', array1[4], '`');
+          if (array1[5]) assembledPath = assembledPath.concat('/', array1[5]);
+          return assembledPath;
+        }
+        return false;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
     },
     changePath(key) {
       this.resetPaginationValues();
-      this.hardwareWallet.init(this.availablePaths[key].path).then(() => {
+      console.log(this.hardwareWallet); // todo remove dev item
+      let selectedPath;
+      if (this.availablePaths[key]) {
+        selectedPath = this.availablePaths[key].path;
+      } else if (this.customPaths[key]) {
+        selectedPath = this.customPaths[key].path;
+      } else {
+        selectedPath = this.selectedPath;
+      }
+      this.hardwareWallet.init(selectedPath).then(() => {
         this.getPaths();
         this.currentIndex = 0;
         this.setHDAccounts();
@@ -405,9 +448,12 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (const _p in this.availablePaths)
-        if (this.availablePaths[_p].path === path)
+      for (const _p in this.availablePaths) {
+        if (this.availablePaths[_p].path === path) {
           return this.availablePaths[_p].label;
+        }
+      }
+
       return 'Unknown';
     },
     getPaths() {
