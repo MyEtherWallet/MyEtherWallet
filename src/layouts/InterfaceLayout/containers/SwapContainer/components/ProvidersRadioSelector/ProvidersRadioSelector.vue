@@ -257,13 +257,11 @@ export default {
     unavailableProviders() {
       if (this.loadingData) {
         const activeProviders = this.listPotentialProviders();
-        console.log('activeProviders 1', activeProviders); // todo remove dev item
         return this.allSupportedProviders.filter(entry => {
           return !activeProviders.includes(entry);
         });
       } else if (this.providerData.length !== 0) {
         const activeProviders = this.listActiveProviders();
-        console.log('activeProviders 2', activeProviders); // todo remove dev item
 
         return this.allSupportedProviders.filter(entry => {
           return !activeProviders.includes(entry);

@@ -478,8 +478,6 @@ export default {
   },
   methods: {
     reset() {
-      this.fromValue = 1;
-      this.toValue = 0;
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
@@ -541,7 +539,7 @@ export default {
         this.fromCurrency,
         this.toCurrency,
         this.fromValue,
-        'from'
+        'to'
       );
     },
     setToCurrency(value) {
@@ -552,7 +550,7 @@ export default {
         this.fromCurrency,
         this.toCurrency,
         this.fromValue,
-        'to'
+        'from'
       );
     },
     async getBalance(currency) {

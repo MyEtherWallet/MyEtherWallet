@@ -40,6 +40,15 @@ const extractErrorMessage = errObj => {
 
 // eslint-disable-next-line no-unused-vars
 const parseStatus = status => {
+  if (typeof status === 'boolean') {
+    return status;
+  } else if (typeof status === 'string') {
+    if (status.slice(0, 2) === '0x') {
+      return new BigNumber(status).gt(0);
+    }
+    return status.toLowerCase() === 'true';
+  }
+  // return false;
   // the transaction receipt status is sometimes returning false even if the transaction was successful.
   // Need to investigate why and where this is happening.
   return true;
