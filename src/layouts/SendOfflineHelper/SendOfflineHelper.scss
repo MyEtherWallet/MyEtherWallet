@@ -22,7 +22,7 @@
 }
 
 .page-content-container {
-  >* {
+  > * {
     margin-bottom: 20px;
   }
 }
@@ -32,7 +32,7 @@
   width: 100%;
   text-align: center;
 
-  >* {
+  > * {
     margin-right: 10px;
     @media all and (max-width: 600px) {
       margin: 0 0 10px 0;
@@ -49,6 +49,6 @@
   margin-bottom: 25px;
 
   &.no-margin {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 }
