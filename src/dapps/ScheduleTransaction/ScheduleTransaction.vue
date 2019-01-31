@@ -59,7 +59,13 @@
 
               <b-col cols="3">
                 <div v-show="!advancedExpand" class="time-bounty-selector">
-                  <div class="input-title">Time Bounty</div>
+                  <div
+                    v-b-tooltip.hover
+                    title="The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed."
+                    class="input-title"
+                  >
+                    Time Bounty
+                  </div>
                   <b-button-group>
                     <b-button
                       v-for="(bounty, index) in timeBountyPresets"
@@ -366,9 +372,7 @@ export default {
       );
     },
     isValidTimeBounty() {
-      return new BigNumber(
-        this.web3.utils.toWei(this.timeBounty, 'ether')
-      ).gte(
+      return new BigNumber(this.web3.utils.toWei(this.timeBounty, 'ether')).gte(
         this.web3.utils.toWei(this.futureGasPrice, 'gwei')
       );
     },
@@ -448,7 +452,10 @@ export default {
       console.log(schedulingOptions);
 
       const endowment = await eac.computeEndowment(schedulingOptions);
-      const receipt = await eac.validateScheduleOptions(schedulingOptions, endowment);
+      const receipt = await eac.validateScheduleOptions(
+        schedulingOptions,
+        endowment
+      );
 
       console.log(receipt);
     }
