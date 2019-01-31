@@ -175,14 +175,28 @@ export default {
       store.set('customTokens', storedTokens);
     },
     async addToken(address, symbol, decimal) {
-      if (
-        this.localTokens.find(item => {
-          return (
-            utils.toChecksumAddress(item.address) ===
-            utils.toChecksumAddress(address)
-          );
-        }) !== undefined
-      ) {
+      const findTokenByAddr = this.localTokens.findIndex(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(address)
+        );
+      });
+      const findTokenBySymbol = this.localTokens.findIndex(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+      if (findTokenByAddr === -1) {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert(
+          'A default token with this contract address already exists!',
+          'danger'
+        );
+      } else if (findTokenBySymbol) {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert(
+          "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          'danger'
+        );
+      } else {
         const localStorageName = {};
         const token = {
           address: address,
@@ -210,9 +224,6 @@ export default {
         store.set('customTokens', localStorageName);
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert('Successfully added token!');
-      } else {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Token Already Exists!', 'danger');
       }
     },
     tokenListExpend() {
