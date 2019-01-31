@@ -1,3 +1,7 @@
+### Devop
+
+- Set server side headers on webpack dev server [#534](https://github.com/MyEtherWallet/MyEtherWallet/pull/534)
+
 ### Feature
 
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
