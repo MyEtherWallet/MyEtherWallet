@@ -361,7 +361,7 @@ export default {
         this.isValidExecutionWindow &&
         this.isValidFutureGasPrice &&
         this.isValidGasLimit &&
-        this.isValidBounty
+        this.isValidTimeBounty
       );
     },
     isValidAddress() {
