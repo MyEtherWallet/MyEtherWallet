@@ -530,7 +530,7 @@ export default {
         this.tokenBalances[this.fromCurrency]
       );
     },
-    setFromCurrency(value) {
+    setFromCurrency(value, dir = 'from') {
       this.currencyDetails.from = value;
       this.fromCurrency = value.symbol;
       this.getBalance(this.fromCurrency);
@@ -539,10 +539,10 @@ export default {
         this.fromCurrency,
         this.toCurrency,
         this.fromValue,
-        'to'
+        dir
       );
     },
-    setToCurrency(value) {
+    setToCurrency(value, dir = 'to') {
       this.currencyDetails.to = value;
       this.toCurrency = value.symbol;
       this.fromArray = this.swap.setFromCurrencyBuilder(value);
@@ -550,7 +550,7 @@ export default {
         this.fromCurrency,
         this.toCurrency,
         this.fromValue,
-        'from'
+        dir
       );
     },
     async getBalance(currency) {
