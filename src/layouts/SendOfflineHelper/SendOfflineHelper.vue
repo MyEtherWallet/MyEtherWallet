@@ -53,7 +53,7 @@
 <script>
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 import AccordionMenu from '@/components/AccordionMenu';
-import DropDownAddressSelector from '@/components/DropDownAddressSelector';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector2';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
 import ExpendingOption from '@/components/ExpendingOption';
