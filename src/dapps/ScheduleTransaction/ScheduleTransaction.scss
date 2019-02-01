@@ -170,3 +170,12 @@ h2 {
   display: block;
   background-size: cover;
 }
+
+.schedule-success-alert {
+  border-color: $mew-green;
+  background-color: white;
+
+  p {
+    margin: 0;
+  }
+}
