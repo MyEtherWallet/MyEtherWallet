@@ -146,8 +146,8 @@ export default {
     sortedNotifications() {
       this.countUnread();
       if (!this.notifications[this.account.address]) return [];
-      // eslint-disable-next-line
-      return this.notifications[this.account.address]
+      const notifications = this.notifications[this.account.address];
+      return notifications
         .sort((a, b) => {
           a = a.timestamp;
           b = b.timestamp;
