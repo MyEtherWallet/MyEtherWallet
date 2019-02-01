@@ -284,7 +284,6 @@ export default {
       selectedBlockNumber: '',
       timeBountyPresets: TIME_BOUNTY_PRESETS,
       timeBounty: TIME_BOUNTY_PRESETS[0],
-      timeBountyUsd: '0',
       windowSize: 10,
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
@@ -294,6 +293,7 @@ export default {
         txHash: '',
         error: ''
       },
+      ethPrice: new BigNumber(0),
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -319,7 +319,7 @@ export default {
       },
       bountyUsdDisplayOptions() {
         return {
-          value: `$${this.timeBountyUsd}`,
+          value: this.timeBountyUsd,
           inputDisabled: true
         };
       },
@@ -387,6 +387,17 @@ export default {
       'notifications',
       'account'
     ]),
+    timeBountyUsd() {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2
+      });
+
+      return formatter.format(
+        this.ethPrice.times(new BigNumber(this.timeBounty))
+      );
+    },
     now() {
       return new Date();
     },
@@ -451,8 +462,18 @@ export default {
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
     this.futureGasPrice = this.gasPrice.toString();
   },
-  mounted() {
+  mounted: async function() {
     this.eac = new EAC(this.web3);
+
+    const url = 'https://cryptorates.mewapi.io/convert/ETH';
+    const fetchValues = await fetch(url);
+    const values = await fetchValues.json();
+
+    if (!values['USDT'])
+      throw new Error(
+        'USDT conversion no longer available. Please provide an alternative USD conversion method'
+      );
+    this.ethPrice = new BigNumber(values['USDT']);
   },
   methods: {
     scheduleTx: async function() {
