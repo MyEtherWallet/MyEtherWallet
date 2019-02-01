@@ -19,11 +19,11 @@
     align-items: center;
     padding: 10px 0;
     li {
-      &:nth-child(1){
+      &:nth-child(1) {
         color: $mew-green;
       }
 
-      &:last-child{
+      &:last-child {
         margin-left: auto;
       }
     }
@@ -38,6 +38,3 @@
   width: 100%;
   text-align: center;
 }
-
-
-
