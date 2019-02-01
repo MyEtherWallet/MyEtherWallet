@@ -21,7 +21,8 @@
             </div>
           </div>
           <div v-else class="modal-title" @click="hideDetails">
-            <i class="fa fa-long-arrow-left" aria-hidden="true" /> {{$t('common.back')}}
+            <i class="fa fa-long-arrow-left" aria-hidden="true" />
+            {{ $t('common.back') }}
           </div>
         </div>
       </template>
