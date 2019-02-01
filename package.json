@@ -29,16 +29,20 @@
   "dependencies": {
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
+    "luxon": "1.10.0",
     "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
     "vee-validate": "2.1.5",
     "vue": "2.5.22",
+    "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
     "vuex": "3.1.0",
-    "websocket": "1.0.28"
+    "websocket": "1.0.28",
+    "weekstart": "1.0.0"
   },
   "devDependencies": {
+    "@ethereum-alarm-clock/lib": "0.3.0",
     "@keepkey/keepkey.js": "1.1.1",
     "@ledgerhq/hw-app-eth": "4.32.0",
     "@ledgerhq/hw-transport-u2f": "4.32.0",
