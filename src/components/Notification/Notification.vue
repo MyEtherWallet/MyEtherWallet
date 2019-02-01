@@ -144,7 +144,7 @@ export default {
       account: 'account'
     }),
     sortedNotifications() {
-      // this.countUnread();
+      this.countUnread();
       if (!this.notifications[this.account.address]) return [];
       // eslint-disable-next-line
       return this.notifications[this.account.address]
@@ -253,16 +253,6 @@ export default {
         return detailComponentMapping[type];
       }
       return 'transaction-details';
-    },
-    collectNotifications(notifications) {
-      return notifications
-        .sort((a, b) => {
-          a = a.timestamp;
-          b = b.timestamp;
-
-          return a > b ? -1 : a < b ? 1 : 0;
-        })
-        .filter(entry => entry.network === this.network.type.name);
     },
     countUnread() {
       const self = this;
