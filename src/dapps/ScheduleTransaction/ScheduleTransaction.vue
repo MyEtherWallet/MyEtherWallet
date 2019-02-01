@@ -190,9 +190,32 @@
       >
         Schedule Transaction
       </div>
-      <div v-if="scheduleError" class="text-danger m-3">
-        {{ scheduleError }}
+      <div v-if="scheduled.error" class="text-danger m-3">
+        {{ scheduled.error }}
       </div>
+      <b-alert
+        :show="scheduled.show"
+        variant="success"
+        dismissible
+        fade
+        class="m-5 schedule-success-alert"
+        @dismissed="scheduled.show = false"
+      >
+        <p>
+          Your TX has been scheduled with the transaction hash
+          <a
+            :href="
+              'https://app.chronologic.network/awaiting/scheduler/' +
+                scheduled.txHash
+            "
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ scheduled.txHash }}
+          </a>
+          and is waiting to be mined.
+        </p>
+      </b-alert>
     </div>
 
     <a
@@ -246,6 +269,7 @@ export default {
   },
   data() {
     return {
+      eac: null,
       advancedExpand: false,
       advancedTimeBounty: false,
       toAddress: '',
@@ -265,7 +289,11 @@ export default {
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
       deposit: TIME_BOUNTY_PRESETS[0] * 2,
-      scheduleError: '',
+      scheduled: {
+        show: false,
+        txHash: '',
+        error: ''
+      },
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -351,7 +379,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['web3', 'network', 'wallet', 'gasPrice']),
+    ...mapGetters([
+      'web3',
+      'network',
+      'wallet',
+      'gasPrice',
+      'notifications',
+      'account'
+    ]),
     now() {
       return new Date();
     },
@@ -393,6 +428,12 @@ export default {
   watch: {
     selectedMode() {
       this.windowSize = this.selectedMode.executionWindow.default;
+    },
+    notifications: async function() {
+      const notifications = this.notifications[this.account.address];
+      const scheduledTxHash = notifications[0].hash;
+      this.scheduled.txHash = scheduledTxHash;
+      this.scheduled.show = true;
     }
   },
   beforeMount() {
@@ -410,6 +451,9 @@ export default {
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
     this.futureGasPrice = this.gasPrice.toString();
   },
+  mounted() {
+    this.eac = new EAC(this.web3);
+  },
   methods: {
     scheduleTx: async function() {
       const {
@@ -425,8 +469,6 @@ export default {
         selectedMode,
         datetime
       } = this;
-
-      const eac = new EAC(this.web3);
 
       const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
       const timestamp = Math.round(new Date(datetime).getTime() / 1000);
@@ -455,21 +497,19 @@ export default {
         ),
         fee: new BigNumber(0)
       };
-      console.log(schedulingOptions);
 
-      const endowment = await eac.computeEndowment(schedulingOptions);
+      const endowment = await this.eac.computeEndowment(schedulingOptions);
 
       try {
-        await eac.validateScheduleOptions(schedulingOptions, endowment);
-        this.scheduleError = '';
+        await this.eac.validateScheduleOptions(schedulingOptions, endowment);
+        this.scheduled.error = null;
       } catch (e) {
-        this.scheduleError = e.message;
+        this.scheduled.error = e.message;
         return;
       }
 
-      const receipt = await eac.schedule(schedulingOptions);
-
-      console.log(receipt);
+      console.log(schedulingOptions);
+      this.eac.schedule(schedulingOptions);
     }
   }
 };
