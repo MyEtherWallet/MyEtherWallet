@@ -6,7 +6,7 @@
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="false"
+          :isopen="true"
           :title="$t('sendOfflineHelper.generateInfo')"
           number="1"
         >
@@ -52,8 +52,8 @@
 
 <script>
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
-import AccordionMenu2 from '@/components/AccordionMenu2';
-import DropDownAddressSelector2 from '@/components/DropDownAddressSelector2';
+import AccordionMenu from '@/components/AccordionMenu';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
 import ExpendingOption from '@/components/ExpendingOption';
@@ -62,8 +62,8 @@ import ConfirmationModal from './components/ConfirmationModal';
 export default {
   components: {
     'page-title': TitleTextContentsLayout,
-    'accordion-menu': AccordionMenu2,
-    'dropdown-address-selector': DropDownAddressSelector2,
+    'accordion-menu': AccordionMenu,
+    'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
     'standard-input': StandardInput,
     'expending-option': ExpendingOption,
