@@ -8,7 +8,7 @@
       class="bootstrap-modal nopadding"
     >
       <div class="modal-contents">
-        <h2>Are you sure to logout your wallet?</h2>
+        <h2>Are you sure you want to logout of your wallet?</h2>
 
         <div class="buttons">
           <button class="no" @click="cancel">No</button>

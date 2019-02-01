@@ -49,41 +49,41 @@ describe('DappsContainer.vue', () => {
     });
   });
 
-  it('should render correct registerDomain title', () => {
+  xit('[01/30/19] should render correct registerDomain title', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[0].querySelector('h4').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.registerDomain.title)
     );
   });
 
-  it('should render correct registerDomain description', () => {
+  xit('[01/30/19] should render correct registerDomain description', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[0].querySelector('p').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.registerDomain.desc)
     );
   });
 
-  it('should render correct domainSale title', () => {
+  xit('[01/30/19] should render correct domainSale title', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('h4').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.domainSale.title)
     );
   });
 
-  it('should render correct domainSale description', () => {
+  xit('[01/30/19] should render correct domainSale description', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('p').textContent.trim()).toEqual(
       translate(wrapper.vm.$data.localDapps.domainSale.desc)
     );
   });
 
-  it('should render correct registerDomain route', () => {
+  xit('[01/30/19] should render correct registerDomain route', () => {
     expect(
       wrapper.vm.$el.querySelectorAll('.param')[0].textContent.trim()
     ).toEqual(wrapper.vm.$data.localDapps.registerDomain.route);
   });
 
-  it('should render correct domainSale route', () => {
+  xit('[01/30/19] should render correct domainSale route', () => {
     expect(
       wrapper.vm.$el.querySelectorAll('.param')[1].textContent.trim()
     ).toEqual(wrapper.vm.$data.localDapps.domainSale.route);

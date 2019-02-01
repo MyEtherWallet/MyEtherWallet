@@ -27,15 +27,16 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <router-link v-if="content.to !== undefined" :to="content.to"
-                    ><p>{{ content.text }}</p></router-link
-                  >
+                  <router-link v-if="content.to !== undefined" :to="content.to">
+                    <p>{{ content.text }}</p>
+                  </router-link>
                   <a
                     v-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
-                    ><p>{{ content.text }}</p></a
                   >
+                    <p>{{ content.text }}</p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -98,10 +99,10 @@
             <p>
               {{ $t('footer.pricingP') }}
               <a
-                href="https://coinmarketcap.com/"
+                href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinMarketCap</a
+                >CoinGecko</a
               >
               <br />
               {{ $t('footer.copyright') }}

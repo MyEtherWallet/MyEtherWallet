@@ -67,7 +67,12 @@
 <script>
 import Blockie from '@/components/Blockie';
 import { mapGetters } from 'vuex';
-import { KEYSTORE, PRIV_KEY, MEW_CONNECT } from '@/wallets/bip44/walletTypes';
+import {
+  KEYSTORE,
+  PRIV_KEY,
+  MEW_CONNECT,
+  WEB3_WALLET
+} from '@/wallets/bip44/walletTypes';
 
 export default {
   components: {
@@ -106,7 +111,8 @@ export default {
       if (
         this.account.identifier !== KEYSTORE &&
         this.account.identifier !== PRIV_KEY &&
-        this.account.identifier !== MEW_CONNECT
+        this.account.identifier !== MEW_CONNECT &&
+        this.account.identifier !== WEB3_WALLET
       ) {
         this.hasMultipleAddr = true;
       } else {

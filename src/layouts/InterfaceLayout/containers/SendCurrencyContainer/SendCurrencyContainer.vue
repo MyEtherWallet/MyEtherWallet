@@ -233,7 +233,7 @@ export default {
           new BigNumber(txFeeEth).lte(this.balanceDefault)
         );
       }
-      return new BigNumber(this.value + txFeeEth).lte(this.balanceDefault);
+      return new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault);
     },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
@@ -286,14 +286,17 @@ export default {
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;
       else
-        this.value = this.balanceDefault.minus(
-          ethUnit.fromWei(
-            new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
-              .times(this.gasLimit)
-              .toString(),
-            'ether'
-          )
-        );
+        this.value =
+          this.balanceDefault > 0
+            ? this.balanceDefault.minus(
+                ethUnit.fromWei(
+                  new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei'))
+                    .times(this.gasLimit)
+                    .toString(),
+                  'ether'
+                )
+              )
+            : 0;
     },
     getTokenTransferABI(amount, decimals) {
       const jsonInterface = [
