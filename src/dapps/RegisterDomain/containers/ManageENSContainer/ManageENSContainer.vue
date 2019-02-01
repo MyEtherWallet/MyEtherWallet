@@ -9,7 +9,7 @@
               >{{ $t('dapps.updateResolver') }}:</label
             >
             <input
-              v-model="resolverAddress"
+              v-model="locResolverAddr"
               type="text"
               name="updateResolver"
               placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
@@ -17,9 +17,9 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!isAddress(resolverAddress) ? 'disabled' : ''"
+              :class="!isAddress(locResolverAddr) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="updateResolver(resolverAddress)"
+              @click.prevent="updateResolver(locResolverAddr)"
             >
               Update
             </button>
@@ -76,11 +76,15 @@ export default {
     transferDomain: {
       type: Function,
       default: function() {}
+    },
+    resolverAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      resolverAddress: '',
+      locResolverAddr: this.resolverAddress,
       transferTo: '',
       isAddress: isAddress
     };
