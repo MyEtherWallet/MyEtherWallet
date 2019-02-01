@@ -60,6 +60,12 @@ const addCustomPath = function({ commit, state }, val) {
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
+const removeCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  delete newPaths[val.path];
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
 const checkIfOnline = function({ commit }) {
   commit('CHECK_IF_ONLINE');
 };
@@ -211,6 +217,7 @@ export default {
   clearWallet,
   createAndSignTx,
   decryptWallet,
+  removeCustomPath,
   setAccountBalance,
   setGasPrice,
   setState,
