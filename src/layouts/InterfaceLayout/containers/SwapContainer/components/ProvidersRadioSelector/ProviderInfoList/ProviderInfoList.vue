@@ -2,20 +2,18 @@
   <ul>
     <li
       v-for="(providerName, idx) in unavailableProviders"
-      v-show="false"
       :key="providerName + idx"
-      class="unavailable"
     >
       <div class="provider-image">
         <img :src="providerLogo(providerName)" />
       </div>
       <div>
         <div class="show-mobile">
-          <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+          <p>{{ getTagLine(providerName) }}</p>
         </div>
       </div>
       <div class="show-desktop">
-        <p>crypto-to-crypto and fiat-to-crypto swaps</p>
+        <p>{{ getTagLine(providerName) }}</p>
       </div>
     </li>
   </ul>
@@ -23,11 +21,10 @@
 
 <script>
 import MEW from '@/assets/images/logo.png';
-import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
-import Bity from '@/assets/images/etc/bity.png';
-import Simplex from '@/assets/images/etc/simplex.png';
-import Changelly from '@/assets/images/etc/changelly.png';
-import bityBeta from '@/assets/images/etc/bitybeta.png';
+import KyberNetwork from '@/assets/images/etc/kybernetwork_gray.png';
+import Bity from '@/assets/images/etc/bity_gray.png';
+import Simplex from '@/assets/images/etc/simplex_gray.png';
+import Changelly from '@/assets/images/etc/changelly_gray.png';
 
 export default {
   props: {
@@ -55,7 +52,6 @@ export default {
         changelly: Changelly
       },
       betaLogos: {
-        bity: bityBeta
       }
     };
   },
@@ -79,11 +75,6 @@ export default {
       });
     }
   },
-  watch: {
-    providerData() {
-      this.listOtherProviders();
-    }
-  },
   methods: {
     providerLogo(details) {
       if (details.provider) {
@@ -97,6 +88,9 @@ export default {
         details.provider === 'bity' &&
         (details.toCurrency === 'EUR' || details.toCurrency === 'CHF')
       );
+    },
+    getTagLine(name) {
+      return this.$t(`interface.${name}TagLine`);
     }
   }
 };
