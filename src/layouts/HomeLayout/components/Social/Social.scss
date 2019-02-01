@@ -30,6 +30,10 @@
       a {
         padding-bottom: 10px;
         min-width: 80px;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
 
       a:first-child > div {

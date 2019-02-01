@@ -12,7 +12,7 @@
   "nameHash": "Namehash",
   "owner": "所有者",
   "deedOwner": "Highest Bidder(Deed Owner)",
-  "resolverAddr": "Resolver Address",
+  "resolverAddr": "Address",
   "revealsBid": "Reveals Bid",
   "auctionCloses": "Auction Closes",
   "manage": "管理する",
