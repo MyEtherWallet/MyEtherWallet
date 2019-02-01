@@ -1,6 +1,4 @@
-### Devop
-
-- Set server side headers on webpack dev server [#534](https://github.com/MyEtherWallet/MyEtherWallet/pull/534)
+### Release v5.0.0-beta.4
 
 ### Feature
 
@@ -8,10 +6,12 @@
 
 ### Devop
 
-- Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)
-- Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
-
 - Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
+- Add display of swap partners [#537](https://github.com/MyEtherWallet/MyEtherWallet/pull/537)
+- Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)
+- Set server side headers on webpack dev server [#534](https://github.com/MyEtherWallet/MyEtherWallet/pull/534)
+- Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
+- Improve notification handling of tx errors [#524](https://github.com/MyEtherWallet/MyEtherWallet/pull/524)
 
 ### Release v5.0.0-beta.3
 
