@@ -51,7 +51,7 @@
     align-items: center;
     display: flex;
     padding: 12px 0;
-    transition: all 0.3s ease;
+    //transition: all 0.3s ease;
 
     @media all and (max-width: $tablet-width) {
       padding: 20px 0;
@@ -145,8 +145,13 @@
           padding: 13px 0;
 
           &.get-free-wallet {
-            margin-left: 0;
+            margin-left: 10px;
           }
+
+          &.first-button {
+            margin-left: 30px;
+          }
+
           &.nopadding {
             padding: 0;
           }
@@ -327,6 +332,11 @@
   display: none;
   opacity: 0;
   overflow: hidden;
+  margin-left: 10px;
+
+  .nav-link {
+    padding: 7px 0;
+  }
 
   .access-button {
     @extend %button-templates;
@@ -359,7 +369,7 @@
     0% {
       height: 0;
       opacity: 0;
-      margin-left: 0;
+      //margin-left: 0;
     }
 
     50% {
@@ -391,7 +401,7 @@
       display: none;
       height: 0;
       opacity: 0;
-      margin-left: 0;
+      //margin-left: 0;
     }
   }
 } // .get-free-wallet
