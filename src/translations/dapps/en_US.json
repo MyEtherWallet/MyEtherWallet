@@ -12,7 +12,7 @@
   "nameHash": "Namehash",
   "owner": "Owner",
   "deedOwner": "Highest Bidder(Deed Owner)",
-  "resolverAddr": "Resolver Address",
+  "resolverAddr": "Address",
   "revealsBid": "Reveals Bid",
   "auctionCloses": "Auction Closes",
   "manage": "Manage",
