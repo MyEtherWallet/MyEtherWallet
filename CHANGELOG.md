@@ -4,6 +4,7 @@
 
 ### Devop
 
+- Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)
 - Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
 
 - Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
