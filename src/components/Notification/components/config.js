@@ -37,10 +37,25 @@ const noticeStatusFields = {
   transaction: 'status'
 };
 
+const notificationStatuses = {
+  PENDING: 'pending',
+  COMPLETE: 'complete',
+  FAILED: 'failed'
+};
+
+const notificationType = {
+  TRANSACTION: 'transaction',
+  SWAP: 'swap',
+  SWAP_ERROR: 'swapError',
+  ERROR: 'transactionError'
+};
+
 export {
   statusTypes,
   notificationHeaderLabels,
   listComponentMapping,
   detailComponentMapping,
-  noticeStatusFields
+  noticeStatusFields,
+  notificationStatuses,
+  notificationType
 };
