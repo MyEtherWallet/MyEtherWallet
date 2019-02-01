@@ -7,6 +7,10 @@
   border-top: 2px solid $light-grey-1;
   border-bottom: 2px solid $light-grey-1;
   padding: 20px 0;
+
+  &.hide-bottom-border {
+    border-bottom: 0;
+  }
 }
 
 // *********************************************************************
@@ -40,7 +44,7 @@
   &.expanded {
     max-height: 800px;
   }
-  .content {
+  .content-block {
     padding-top: 20px;
   }
 }
