@@ -96,41 +96,48 @@
                   v-for="(val, key) in customPaths"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="key"
-                  @click="changePath(key)"
-                  >{{ val.path }}</b-dropdown-item
-                >
+                  class="custom-networks"
+                  ><div @click="changePath(key)">{{ val.path }}</div>
+                  <span>
+                    <i
+                      class="fa fa-times-circle"
+                      @click.prevent="removeCustomPath(val.path)"
+                  /></span>
+                </b-dropdown-item>
                 <b-dropdown-item @click="showCustomPathInput">{{
                   $t('accessWallet.addCustomPath')
                 }}</b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
-          <p v-show="invalidPath !== ''" class="error-message-container">
-            {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath
-            }}{{ $t('accessWallet.invalidPathDescCont') }}
+          <p
+            v-show="invalidPath !== '' && customPathInput"
+            class="error-message-container"
+          >
+            {{ $t('accessWallet.invalidPathDesc', { path: invalidPath.path }) }}
           </p>
           <p v-show="!customPathInput" class="derivation-brands">
             {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
           </p>
-          <div v-show="customPathInput">
+          <div v-show="customPathInput" class="custom-path-container">
             <!-- TODO: how to structure the path input? -->
+            <label for="customPathLabel">Alias</label>
             <input
               id="customPathLabel"
               v-model="customPath.label"
               placeholder="my custom path"
             />
-            <br />
+            <label for="customPathInput">Path</label>
             <input
               id="customPathInput"
               v-model="customPath.path"
               placeholder="m/44'/1'/0'/0"
             />
-            <br />
-            <button @click="addCustomPath">
-              {{ $t('accessWallet.addCustomPath') }}
-            </button>
-            <button @click="showCustomPathInput">
+            <button class="submit-button cancel" @click="showCustomPathInput">
               {{ $t('common.cancel') }}
+            </button>
+            <button class="submit-button submit" @click="addCustomPath">
+              {{ $t('accessWallet.addCustomPath') }}
             </button>
           </div>
         </div>
@@ -323,6 +330,16 @@ export default {
       if (bal === 'loading') return bal;
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
+    removeCustomPath(path) {
+      this.$store
+        .dispatch('removeCustomPath', {
+          label: '',
+          path: path
+        })
+        .then(() => {
+          this.getPaths();
+        });
+    },
     addCustomPath() {
       console.log(this.customPath); // todo remove dev item
       const customPath = this.checkCustomPath(this.customPath.path);
@@ -383,7 +400,6 @@ export default {
     },
     changePath(key) {
       this.resetPaginationValues();
-      console.log(this.hardwareWallet); // todo remove dev item
       let selectedPath;
       if (this.availablePaths[key]) {
         selectedPath = this.availablePaths[key].path;
@@ -392,12 +408,18 @@ export default {
       } else {
         selectedPath = this.selectedPath;
       }
-      this.hardwareWallet.init(selectedPath).then(() => {
-        this.getPaths();
-        this.currentIndex = 0;
-        this.setHDAccounts();
-        this.$refs.networkAndAddress.show();
-      });
+      this.hardwareWallet
+        .init(selectedPath)
+        .then(() => {
+          this.getPaths();
+          this.currentIndex = 0;
+          this.setHDAccounts();
+          this.$refs.networkAndAddress.show();
+        })
+        .catch(error => {
+          this.HDAccounts = [];
+          console.error(error);
+        });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
     setBalances: web3utils._.debounce(function() {
@@ -453,13 +475,16 @@ export default {
           return this.availablePaths[_p].label;
         }
       }
-
+      for (const _p in this.customPaths) {
+        if (this.customPaths[_p].path === path) {
+          return this.customPaths[_p].label;
+        }
+      }
       return 'Unknown';
     },
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      // this.customPaths = this.customPaths;
     }
   }
 };
