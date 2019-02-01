@@ -21,7 +21,8 @@
             </div>
           </div>
           <div v-else class="modal-title" @click="hideDetails">
-            <i class="fa fa-long-arrow-left" aria-hidden="true" /> Back
+            <i class="fa fa-long-arrow-left" aria-hidden="true" />
+            {{ $t('common.back') }}
           </div>
         </div>
       </template>
@@ -146,8 +147,8 @@ export default {
     sortedNotifications() {
       this.countUnread();
       if (!this.notifications[this.account.address]) return [];
-      // eslint-disable-next-line
-      return this.notifications[this.account.address]
+      const notifications = this.notifications[this.account.address];
+      return notifications
         .sort((a, b) => {
           a = a.timestamp;
           b = b.timestamp;
@@ -182,10 +183,9 @@ export default {
         .filter(entry => entry.network === this.network.type.name)
         .filter(entry => {
           const isOlder =
-            parseInt(
-              (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-                1000
-            ) > 6000;
+            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+              1000 >
+            6000;
           const isUnResolved = entry.status === notificationStatuses.PENDING;
           const notExternalSwap =
             entry.type === notificationType.TRANSACTION ||
