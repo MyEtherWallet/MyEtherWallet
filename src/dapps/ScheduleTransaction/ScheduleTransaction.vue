@@ -529,7 +529,6 @@ export default {
         return;
       }
 
-      console.log(schedulingOptions);
       this.eac.schedule(schedulingOptions);
     }
   }

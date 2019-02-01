@@ -94,6 +94,12 @@
               </div>
             </div>
           </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="openSettings">Settings</div>
+          </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="logout">Log out</div>
+          </li>
         </ul>
       </div>
     </div>
@@ -407,6 +413,9 @@ export default {
   methods: {
     openSettings() {
       this.$refs.settings.$refs.settings.show();
+      this.$refs.settings.$refs.settings.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
@@ -422,6 +431,9 @@ export default {
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
+      this.$refs.logout.$refs.logout.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();
