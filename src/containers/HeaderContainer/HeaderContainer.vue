@@ -85,6 +85,12 @@
               </div>
             </div>
           </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="openSettings">Settings</div>
+          </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="logout">Log out</div>
+          </li>
         </ul>
       </div>
     </div>
@@ -375,8 +381,12 @@ export default {
     }
   },
   methods: {
-    openSettings() {
-      this.$eventHub.$emit('settingsModal');
+    async openSettings() {
+      new Promise(resolve => {
+        this.$eventHub.$emit('settingsModal', resolve);
+      }).then(() => {
+        this.isMobileMenuOpen = false;
+      });
     },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
@@ -391,7 +401,11 @@ export default {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$eventHub.$emit('logoutModal');
+      new Promise(resolve => {
+        this.$eventHub.$emit('logoutModal', '', resolve);
+      }).then(() => {
+        this.isMobileMenuOpen = false;
+      });
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();

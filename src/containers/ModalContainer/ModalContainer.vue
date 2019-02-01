@@ -110,13 +110,18 @@ export default {
         }
       }
     );
-    this.$eventHub.$on('logoutModal', type => {
+    this.$eventHub.$on('logoutModal', (type, resolve) => {
       type === LOGOUT_WARNING
         ? this.$refs.logoutWarning.$refs.logoutWarning.show()
         : this.$refs.logout.$refs.logout.show();
+
+      if (type !== LOGOUT_WARNING) {
+        this.$refs.logout.$refs.logout.$on('hidden', resolve);
+      }
     });
-    this.$eventHub.$on('settingsModal', () => {
+    this.$eventHub.$on('settingsModal', resolve => {
       this.$refs.settingsModal.$refs.settings.show();
+      this.$refs.settingsModal.$refs.settings.$on('hidden', resolve);
     });
     this.$eventHub.$on('issueOccured', issueTrace => {
       this.issueTrace = issueTrace;
