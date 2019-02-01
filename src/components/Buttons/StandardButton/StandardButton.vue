@@ -6,7 +6,10 @@
     }"
     class="standard-button"
   >
-    <div v-if="!options.noWalletTerms" class="accept-terms-Check-Box">
+    <div
+      v-if="options.terms !== undefined && options.terms"
+      class="accept-terms-Check-Box"
+    >
       <check-box
         :terms="true"
         class="checkbox"

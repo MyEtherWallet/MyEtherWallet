@@ -12,7 +12,11 @@
               <p>{{ token.symbol }}</p>
               <p>${{ token.quotes.USD.price }}</p>
               <p class="percent-container">
-                <span>{{ token.quotes.USD.percent_change_24h }}%</span>
+                <span
+                  >{{
+                    roundPercentage(token.quotes.USD.percent_change_24h)
+                  }}%</span
+                >
                 <i
                   :class="[
                     token.quotes.USD.percent_change_24h > 0
@@ -27,62 +31,11 @@
         </slider-bar>
       </div>
     </div>
-    <!-- <div class="wrap" style="overflow: hidden;">
-      <div class="page-container">
-        <div class="slider-container">
-          <transition name="first-set">
-            <div v-if="!hidden">
-              <div
-                v-for="token in token1"
-                :key="token.symbol"
-                class="token-container"
-              >
-                <p class="token-text">{{ token.symbol }}</p>
-                <p class="token-text">${{ token.quotes.USD.price }}</p>
-                <p class="token-text percent-container">
-                  <span>{{ token.quotes.USD.percent_change_24h }}%</span>
-                  <i
-                    :class="
-                      token.quotes.USD.percent_change_24h > 0
-                        ? 'fa fa-arrow-up'
-                        : 'fa fa-arrow-down'
-                    "
-                    aria-hidden="true"
-                  />
-                </p>
-              </div>
-            </div>
-          </transition>
-          <transition name="second-set">
-            <div v-if="hidden">
-              <div
-                v-for="token in token2"
-                :key="token.symbol"
-                class="token-container"
-              >
-                <p class="token-text">{{ token.symbol }}</p>
-                <p class="token-text">${{ token.quotes.USD.price }}</p>
-                <p class="token-text percent-container">
-                  <span>{{ token.quotes.USD.percent_change_24h }}%</span>
-                  <i
-                    :class="
-                      token.quotes.USD.percent_change_24h > 0
-                        ? 'fa fa-arrow-up'
-                        : 'fa fa-arrow-down'
-                    "
-                    aria-hidden="true"
-                  />
-                </p>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-    </div>-->
   </div>
 </template>
 <script>
 import SliderBar from '@/components/SliderBar';
+import BigNumber from 'bignumber.js';
 export default {
   components: {
     'slider-bar': SliderBar
@@ -106,6 +59,11 @@ export default {
     setInterval(() => {
       this.hidden = !this.hidden;
     }, 3000);
+  },
+  methods: {
+    roundPercentage(num) {
+      return new BigNumber(num).toFixed(2);
+    }
   }
 };
 </script>
