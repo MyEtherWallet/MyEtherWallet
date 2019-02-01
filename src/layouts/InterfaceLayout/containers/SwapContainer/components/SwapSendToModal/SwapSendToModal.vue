@@ -11,52 +11,60 @@
         <h1>{{ timeRemaining }}</h1>
         <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
-      <div class="swap-detail">
-        <div class="from-address">
-          <div class="icon">
-            <i :class="['cc', fromAddress.name, 'cc-icon']" />
+      <div>
+        <div class="swap-detail">
+          <div class="from-address">
+            <div class="icon">
+              <i :class="['cc', fromAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+            </p>
+            <p
+              v-show="fromAddress.address !== '' && !isFromFiat"
+              class="block-title"
+            >
+              {{ $t('interface.fromAddr') }}
+            </p>
+            <p
+              v-show="fromAddress.address !== '' && !isFromFiat"
+              class="address"
+            >
+              {{ fromAddress.address }}
+            </p>
           </div>
-          <p class="value">
-            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
-          </p>
-          <p
-            v-show="fromAddress.address !== '' && !isFromFiat"
-            class="block-title"
-          >
-            {{ $t('interface.fromAddr') }}
-          </p>
-          <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
-            {{ fromAddress.address }}
-          </p>
-        </div>
-        <div class="right-arrow"><img :src="arrowImage" /></div>
-        <div v-if="!toFiat" class="to-address">
-          <div class="icon">
-            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          <div class="right-arrow"><img :src="arrowImage" /></div>
+          <!-- Fiat to Crypto-->
+          <div v-if="!toFiat" class="to-address">
+            <div class="icon">
+              <i :class="['cc', toAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            </p>
+            <p v-show="toAddress.address !== ''" class="block-title">
+              {{ $t('interface.sendTxToAddr') }}
+            </p>
+            <p v-show="toAddress.address !== ''" class="address">
+              {{ toAddress.address }}
+            </p>
           </div>
-          <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
-          </p>
-          <p v-show="toAddress.address !== ''" class="block-title">
-            {{ $t('interface.sendTxToAddr') }}
-          </p>
-          <p v-show="toAddress.address !== ''" class="address">
-            {{ toAddress.address }}
-          </p>
-        </div>
-        <div v-else class="to-address">
-          <div class="icon">
-            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          <!-- Crypto to Crypto -->
+          <div v-else class="to-address">
+            <div class="icon">
+              <i :class="['cc', toAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            </p>
+            <p class="block-title">{{ $t('common.to') }}</p>
+            <p class="address">{{ fiatDest }}</p>
           </div>
-          <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
-          </p>
-          <p class="block-title">{{ $t('common.to') }}</p>
-          <p class="address">{{ fiatDest }}</p>
         </div>
+
         <ul v-show="!isFromFiat" class="confirm-send-button">
           <li>
-            <div>
+            <div class="provider-address-details">
               <h4>
                 {{
                   $t('interface.notFromEthSwap', {

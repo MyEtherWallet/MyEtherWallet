@@ -64,6 +64,11 @@
           </div>
         </li>
       </ul>
+      <!-- list of other providers who don't support the selected currency pair -->
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
     <div
@@ -98,6 +103,11 @@
           <div class="background-masker" />
         </li>
       </ul>
+      <provider-info-list
+        v-show="!loadingProviderRates"
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving the supporting providers rates -->
     <!-- =========================================================================== -->
@@ -108,17 +118,10 @@
       <div class="provider-loading-message">
         {{ $t('interface.loadingProviders') }}
       </div>
-      <!-- Loading logo image disabled -->
-      <ul v-if="false">
-        <li>
-          <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" />
-          </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
-          <div>{{ $t('interface.loadingProviders') }}</div>
-          <div class="background-masker" />
-        </li>
-      </ul>
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Message When Error Seems to have occured while retrieving rate -->
     <!-- =========================================================================== -->
@@ -147,17 +150,11 @@
       <div class="no-provider-message">
         {{ $t('interface.noProviderFound') }}
       </div>
-      <ul v-if="false">
-        <li>
-          <div class="mew-custom-form__radio-button" />
-          <div class="provider-image" />
-          <div>
-            {{ $t('interface.noProviderFound') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
-            {{ noProvidersPair.toCurrency }}
-          </div>
-          <div />
-        </li>
+      <ul>
+        <provider-info-list
+          :all-supported-providers="allSupportedProviders"
+          :unavailable-providers="unavailableProviders"
+        />
       </ul>
     </div>
     <!-- =========================================================================== -->
@@ -173,8 +170,19 @@ import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
 import bityBeta from '@/assets/images/etc/bitybeta.png';
 
+import ProviderInfoList from './ProviderInfoList';
+
 export default {
+  components: {
+    'provider-info-list': ProviderInfoList
+  },
   props: {
+    allSupportedProviders: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     providerData: {
       type: Array,
       default: function() {
@@ -226,6 +234,7 @@ export default {
   },
   data() {
     return {
+      otherProviderList: [],
       logos: {
         mew: MEW,
         kybernetwork: KyberNetwork,
@@ -244,9 +253,51 @@ export default {
         (this.providersFound.length === 0 || this.providerData.length === 0) &&
         !this.loadingData
       );
+    },
+    unavailableProviders() {
+      if (this.loadingData) {
+        const activeProviders = this.listPotentialProviders();
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.providerData.length !== 0) {
+        const activeProviders = this.listActiveProviders();
+
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.noAvaliableProviders) {
+        return this.allSupportedProviders;
+      }
     }
   },
   methods: {
+    otherProviders() {
+      const activeProviders = this.listActiveProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
+    },
+    otherInactiveProviders() {
+      const activeProviders = this.listPotentialProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
+    },
+    listActiveProviders() {
+      const activeProviders = [];
+      this.providerData.forEach(entry => {
+        activeProviders.push(entry.provider);
+      });
+      return activeProviders;
+    },
+    listPotentialProviders() {
+      const activeProviders = [];
+      this.providersFound.forEach(entry => {
+        activeProviders.push(entry);
+      });
+      return activeProviders;
+    },
     minCheck(details) {
       return details.minValue > +this.fromValue;
     },
@@ -263,8 +314,11 @@ export default {
       this.$emit('selectedProvider', provider);
     },
     providerLogo(details) {
-      if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
-      return this.logos[details.provider];
+      if (details.provider) {
+        if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
+        return this.logos[details.provider];
+      }
+      return this.logos[details];
     },
     useBetaLogo(details) {
       return (
