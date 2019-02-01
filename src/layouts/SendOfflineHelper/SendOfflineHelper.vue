@@ -45,6 +45,8 @@
         </accordion-menu>
       </div>
     </div>
+
+    <confirmation-modal />
   </div>
 </template>
 
@@ -55,6 +57,7 @@ import DropDownAddressSelector2 from '@/components/DropDownAddressSelector2';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
 import ExpendingOption from '@/components/ExpendingOption';
+import ConfirmationModal from './components/ConfirmationModal';
 
 export default {
   components: {
@@ -63,7 +66,8 @@ export default {
     'dropdown-address-selector': DropDownAddressSelector2,
     'standard-button': StandardButton,
     'standard-input': StandardInput,
-    'expending-option': ExpendingOption
+    'expending-option': ExpendingOption,
+    'confirmation-modal': ConfirmationModal
   },
   data() {
     return {

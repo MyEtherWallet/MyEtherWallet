@@ -1,5 +1,8 @@
 <template>
-  <div class="expending-option">
+  <div
+    :class="hidebottomborder ? 'hide-bottom-border' : ''"
+    class="expending-option"
+  >
     <div class="title-bar-container">
       <div class="input-title">{{ title }}</div>
       <!-- Rounded switch -->
@@ -12,7 +15,7 @@
     </div>
 
     <div :class="expanded ? 'expanded' : ''" class="contnet-container">
-      <div class="content"><slot></slot></div>
+      <div class="content-block"><slot></slot></div>
     </div>
   </div>
 </template>
@@ -23,6 +26,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    hidebottomborder: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

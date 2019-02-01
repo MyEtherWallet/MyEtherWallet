@@ -1,0 +1,43 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// .modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 20px;
+  }
+}
+
+//***************************************************
+// .tx-info-container
+//***************************************************
+.tx-info-container {
+  ul {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    li {
+      &:nth-child(1){
+        color: $mew-green;
+      }
+
+      &:last-child{
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+//***************************************************
+// .button-block-container
+//***************************************************
+.button-block-container {
+  margin-top: 40px;
+  width: 100%;
+  text-align: center;
+}
+
+
+
