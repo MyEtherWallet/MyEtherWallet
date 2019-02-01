@@ -51,8 +51,7 @@ export default {
         simplex: Simplex,
         changelly: Changelly
       },
-      betaLogos: {
-      }
+      betaLogos: {}
     };
   },
   computed: {
