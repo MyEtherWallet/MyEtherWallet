@@ -63,6 +63,12 @@ export default {
         return [];
       }
     },
+    baseCurrency: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
     page: {
       type: String,
       default: ''
@@ -74,7 +80,7 @@ export default {
   },
   data() {
     return {
-      selectedCurrency: { name: 'Select an item', abi: '', address: '' },
+      selectedCurrency: this.baseCurrency,
       open: false,
       search: '',
       abi: '',
@@ -103,7 +109,7 @@ export default {
         return [this.networkToken, ...this.currency];
       }
       return [
-        { name: 'Select an item', abi: '', address: '' },
+        // { name: 'Select an item', abi: '', address: '' },
         ...this.currency
       ];
     }

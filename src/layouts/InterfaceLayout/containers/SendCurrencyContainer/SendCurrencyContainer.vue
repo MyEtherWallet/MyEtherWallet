@@ -10,6 +10,7 @@
               <h4>{{ $t('interface.sendTxType') }}</h4>
             </div>
             <currency-picker
+              :base-currency="baseCurrency"
               :currency="tokensWithBalance"
               :page="'sendEgasAmountthAndTokens'"
               :token="true"
@@ -274,6 +275,12 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    baseCurrency() {
+      return {
+        name: this.network.type.name_long,
+        symbol: this.network.type.name
+      };
     }
   },
   watch: {

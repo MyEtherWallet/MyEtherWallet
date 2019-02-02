@@ -194,35 +194,39 @@ export default {
           return isOlder && isUnResolved && hasHash && notExternalSwap;
         });
       check.forEach(entry => {
-        this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
-          const noticeIdx = this.notifications[this.account.address].findIndex(
-            noticeEntry => entry.id === noticeEntry.id
-          );
-          if (noticeIdx >= 0) {
-            entry.status = result.status
-              ? notificationStatuses.COMPLETE
-              : notificationStatuses.FAILED;
-            entry.body.error = !result.status;
-            entry.body.errorMessage = result.status
-              ? ''
-              : INVESTIGATE_FAILURE_KEY;
-            entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
-            entry.body.blockNumber = new BigNumber(
-              result.blockNumber
-            ).toString();
-            if (entry.body.isDex) {
-              entry.swapStatus = result.status
+        this.web3.eth
+          .getTransactionReceipt(entry.hash)
+          .then(result => {
+            const noticeIdx = this.notifications[
+              this.account.address
+            ].findIndex(noticeEntry => entry.id === noticeEntry.id);
+            if (result === null) return;
+            if (noticeIdx >= 0) {
+              entry.status = result.status
                 ? notificationStatuses.COMPLETE
                 : notificationStatuses.FAILED;
-              entry.body.timeRemaining = -1;
+              entry.body.error = !result.status;
+              entry.body.errorMessage = result.status
+                ? ''
+                : INVESTIGATE_FAILURE_KEY;
+              entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
+              entry.body.blockNumber = new BigNumber(
+                result.blockNumber
+              ).toString();
+              if (entry.body.isDex) {
+                entry.swapStatus = result.status
+                  ? notificationStatuses.COMPLETE
+                  : notificationStatuses.FAILED;
+                entry.body.timeRemaining = -1;
+              }
+              this.$store.dispatch('updateNotification', [
+                this.account.address,
+                noticeIdx,
+                entry
+              ]);
             }
-            this.$store.dispatch('updateNotification', [
-              this.account.address,
-              noticeIdx,
-              entry
-            ]);
-          }
-        });
+          })
+          .catch(console.error);
       });
     },
     showNotifications() {
