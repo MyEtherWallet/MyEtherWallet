@@ -60,8 +60,8 @@ import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import domains from './domains.json';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
-import web3 from 'web3';
 import { mapGetters } from 'vuex';
+import _ from 'underscore';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
@@ -120,7 +120,7 @@ export default {
     });
   },
   methods: {
-    debounceInput: web3.utils._.debounce(function(e) {
+    debounceInput: _.debounce(function(e) {
       this.domainName = normalise(e.target.value);
     }, 1500),
     async query() {

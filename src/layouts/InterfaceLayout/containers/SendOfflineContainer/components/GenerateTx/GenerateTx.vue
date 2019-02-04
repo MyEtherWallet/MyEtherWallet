@@ -168,7 +168,7 @@ import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import { Misc } from '@/helpers';
-import utils from 'web3-utils';
+import _ from 'underscore';
 
 export default {
   components: {
@@ -245,7 +245,7 @@ export default {
     }
   },
   methods: {
-    debouncedAmount: utils._.debounce(function(e) {
+    debouncedAmount: _.debounce(function(e) {
       const decimals =
         this.selectedCoinType.symbol === this.network.type.name
           ? 18

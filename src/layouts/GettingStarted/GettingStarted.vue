@@ -85,7 +85,7 @@ import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPasswor
 import SomeHelpfulTips from './components/SomeHelpfulTips';
 import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
-import utils from 'web3-utils';
+import _ from 'underscore';
 
 export default {
   components: {
@@ -113,16 +113,10 @@ export default {
       }
     };
 
-    window.addEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.addEventListener('wheel', _.throttle(this.scrollListener, 600));
   },
   beforeDestroy() {
-    window.removeEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.removeEventListener('wheel', _.throttle(this.scrollListener, 600));
   },
   methods: {
     mouseScrollDown: function() {

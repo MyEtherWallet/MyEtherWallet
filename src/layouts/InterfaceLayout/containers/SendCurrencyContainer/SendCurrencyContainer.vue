@@ -176,7 +176,7 @@ import EthTx from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
-import utils from 'web3-utils';
+import _ from 'underscore';
 
 export default {
   components: {
@@ -277,7 +277,7 @@ export default {
     }
   },
   watch: {
-    multiWatch: utils._.debounce(function() {
+    multiWatch: _.debounce(function() {
       if (this.validInputs) this.estimateGas();
     }, 500)
   },

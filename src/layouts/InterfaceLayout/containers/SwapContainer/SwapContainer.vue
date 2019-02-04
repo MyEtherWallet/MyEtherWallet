@@ -226,6 +226,8 @@ import SwapConfirmationModal from './components/SwapConfirmationModal';
 import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 
+import _ from 'underscore';
+
 import {
   Swap,
   providers,
@@ -575,12 +577,12 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
+          _.debounce(
             this.updateEstimate(this.providerNames.simplex + direction),
             200
           );
         } else {
-          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+          _.debounce(this.updateEstimate(direction), 200);
         }
       } else if (direction === 'from') {
         this.toValue = '';

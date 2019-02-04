@@ -223,6 +223,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 import web3utils from 'web3-utils';
+import _ from 'underscore';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 
@@ -345,7 +346,7 @@ export default {
       });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
-    setBalances: web3utils._.debounce(function() {
+    setBalances: _.debounce(function() {
       this.HDAccounts.forEach(account => {
         this.web3.eth
           .getBalance(account.account.getChecksumAddressString())
