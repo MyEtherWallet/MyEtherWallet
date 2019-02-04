@@ -72,7 +72,7 @@
     "hdkey": "1.1.0",
     "i18n-iso-countries": "3.7.8",
     "imagemin-mozjpeg": "8.0.0",
-    "imagemin-webpack-plugin": "2.4.0",
+    "imagemin-webpack-plugin": "2.4.1",
     "jest-skipped-reporter": "0.0.4",
     "jspdf": "1.5.3",
     "keccak": "2.0.0",
