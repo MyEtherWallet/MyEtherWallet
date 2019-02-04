@@ -50,9 +50,6 @@ const isValidETHAddress = address => {
 const isValidENSorEtherAddress = address => {
   return isValidETHAddress(address) || isValidENSAddress(address);
 };
-const isValidRNSorRSKAddress = address => {
-  return isValidETHAddress(address.toLowerCase()) || isValidENSAddress(address);
-};
 const isValidENSAddress = function(address) {
   try {
     address = normalise(address);
@@ -132,7 +129,6 @@ export default {
   padLeftEven,
   formatDate,
   isValidENSorEtherAddress,
-  isValidRNSorRSKAddress,
   isValidENSAddress,
   isValidETHAddress,
   sanitizeHex,
