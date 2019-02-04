@@ -29,6 +29,7 @@ import rskpublic from './rsk-public';
 import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
+import goerli from './goerli-mew-ws';
 export {
   akaremote,
   ath,
@@ -60,5 +61,6 @@ export {
   rskpublic,
   rsktestpublic,
   tomo,
-  ubq
+  ubq,
+  goerli
 };
