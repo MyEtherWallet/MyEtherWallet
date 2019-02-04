@@ -1,7 +1,7 @@
 const package = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
-const EXCEPTIONS = ['canvas', 'ethereum-ens', 'webpack'];
+const EXCEPTIONS = ['canvas', 'ethereum-ens', 'webpack', 'babel-jest', 'web3', 'web3-core-helpers', 'web3-core-method', 'web3-utils'];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
