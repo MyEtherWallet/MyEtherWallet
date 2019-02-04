@@ -92,7 +92,11 @@
                 </div>
               </b-col>
 
-              <b-col cols="6" class="toggle-button-col">
+              <b-col cols="3" class="vertical-center-self">
+                <div class="timebounty-gasprice-coverage">Covers up to <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas price on future execution</div>
+              </b-col>
+
+              <b-col cols="3" class="toggle-button-col">
                 <div class="toggle-button-container float-right">
                   <h4>Advanced</h4>
                   <div class="toggle-button">
@@ -229,7 +233,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { EAC } from '@ethereum-alarm-clock/lib';
+import { EAC, Util } from '@ethereum-alarm-clock/lib';
 import BigNumber from 'bignumber.js';
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
@@ -239,7 +243,7 @@ import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPic
 import StandardInput from '@/components/StandardInput';
 import { isAddress } from '@/helpers/addressUtils';
 
-const TIME_BOUNTY_PRESETS = ['0.02', '0.04', '0.08'];
+const TIME_BOUNTY_DEFAULTS = ['0.01', '0.02', '0.03'];
 const SUPPORTED_MODES = [
   {
     name: 'Date & Time',
@@ -282,12 +286,12 @@ export default {
       datetime: '',
       currentBlockNumber: '',
       selectedBlockNumber: '',
-      timeBountyPresets: TIME_BOUNTY_PRESETS,
-      timeBounty: TIME_BOUNTY_PRESETS[0],
+      timeBountyPresets: TIME_BOUNTY_DEFAULTS,
+      timeBounty: TIME_BOUNTY_DEFAULTS[0],
       windowSize: 10,
       supportedModes: SUPPORTED_MODES,
       selectedMode: SUPPORTED_MODES[0],
-      deposit: TIME_BOUNTY_PRESETS[0] * 2,
+      deposit: TIME_BOUNTY_DEFAULTS[0] * 2,
       scheduled: {
         show: false,
         txHash: '',
@@ -398,6 +402,17 @@ export default {
         this.ethPrice.times(new BigNumber(this.timeBounty))
       );
     },
+    estimatedMaximumExecutionGasPrice() {
+      const estimated = Util.estimateMaximumExecutionGasPrice(
+        new BigNumber(this.web3.utils.toWei(this.timeBounty, 'ether')),
+        new BigNumber(
+          this.web3.utils.toWei(this.futureGasPrice, 'gwei')
+        ),
+        new BigNumber(this.gasLimit)
+      );
+
+      return Math.round(this.web3.utils.fromWei(estimated.toString(), 'gwei'));
+    },
     now() {
       return new Date();
     },
@@ -461,6 +476,43 @@ export default {
 
     this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
     this.futureGasPrice = this.gasPrice.toString();
+
+    const estimateBountyForGasPrice = gasPrice => {
+      const estimatedWei = Util.estimateBountyForExecutionGasPrice(
+        new BigNumber(this.web3.utils.toWei(gasPrice.toString(), 'gwei')),
+        new BigNumber(this.gasLimit.toString()),
+        new BigNumber(this.web3.utils.toWei('0', 'gwei'))
+      );
+
+      const estimatedEth = this.web3.utils.fromWei(estimatedWei.toString(), 'ether');
+
+      // Estimate the number of decimals to show
+      let decimalPoints = 0;
+      if (estimatedEth.substring(0, 2) === '0.') {
+        let endFound = false;
+
+        let i = estimatedEth.length;
+        while (i-- && !endFound) {
+          const char = estimatedEth.charAt(estimatedEth.length - i - 1);
+          if (char !== '0' && char !== '.') {
+            endFound = true;
+            break;
+          }
+          decimalPoints += 1;
+        }
+      }
+
+      return parseFloat(estimatedEth).toFixed(decimalPoints);
+    };
+
+    this.timeBountyPresets = [
+      estimateBountyForGasPrice(this.gasPrice * 5),
+      estimateBountyForGasPrice(this.gasPrice * 8),
+      estimateBountyForGasPrice(this.gasPrice * 13)
+    ];
+
+    this.timeBounty = this.timeBountyPresets[0];
+    this.deposit = this.timeBountyPresets[0] * 2;
   },
   mounted: async function() {
     this.eac = new EAC(this.web3);
