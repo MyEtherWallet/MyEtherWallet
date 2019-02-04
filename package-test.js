@@ -1,6 +1,8 @@
 const package = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
+// webpack 4.29.0 is conflicting with vue-cli and breaking hot reload [1-31-19]
+// babel-jest 24.0.0 is breaking all the tests [2-1-19]
 const EXCEPTIONS = ['canvas', 'ethereum-ens', 'webpack', 'babel-jest'];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
