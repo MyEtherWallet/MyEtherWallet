@@ -19,6 +19,7 @@ import RSK from './RSK.js';
 import RSKTEST from './RSKTEST.js';
 import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
+import GOERLI from './GOERLI';
 export {
   AKA,
   ATH,
@@ -40,5 +41,6 @@ export {
   RSK,
   RSKTEST,
   TOMO,
-  UBQ
+  UBQ,
+  GOERLI
 };
