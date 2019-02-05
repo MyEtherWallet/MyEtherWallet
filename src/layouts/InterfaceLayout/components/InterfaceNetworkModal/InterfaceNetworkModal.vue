@@ -138,7 +138,7 @@
             <input
               v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
-              :value="chainID"
+              v-model="chainID"
               class="custom-input-text-1"
               type="number"
               name="customChain"
@@ -280,6 +280,7 @@ export default {
     return {
       types: networkTypes,
       selectedNetworkName: 'ETH',
+      chainID: networkTypes['ETH'].chainID,
       port: 443,
       name: '',
       url: '',
@@ -299,11 +300,15 @@ export default {
       const networks = Misc.reorderNetworks();
       return networks;
     },
-    chainID() {
-      return this.selectedNetwork.chainID;
-    },
     selectedNetwork() {
       return this.types[this.selectedNetworkName];
+    }
+  },
+  watch: {
+    selectedNetworkName(val) {
+      if (val !== 'CUS') {
+        this.chainID = this.selectedNetwork.chainID;
+      }
     }
   },
   mounted() {
@@ -366,20 +371,20 @@ export default {
           blockExplorerTX:
             this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
           chainID: this.chainID,
-          contracts: this.Networks[this.selectedNetwork.name][0].type.contracts,
+          contracts: [],
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: this.Networks[this.selectedNetwork.name][0].type.tokens
+          tokens: []
         },
         url: this.url,
         username: this.username
       };
 
       this.customNetworks.push(customNetwork);
+      store.set('customNetworks', this.customNetworks);
       this.resetCompState();
       this.$refs.addCustomToggle.click();
-      store.set('customNetworks', this.customNetworks);
     },
     expendAuth() {
       this.$refs.authForm.classList.toggle('hidden');
