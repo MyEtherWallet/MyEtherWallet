@@ -266,7 +266,14 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-
+import {
+  uint,
+  address,
+  string,
+  bytes32,
+  bytes,
+  bool
+} from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
 
 export default {
@@ -328,7 +335,12 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          _contractArgs.push(this.inputs[item.name]);
+          if (item.type === 'bytes32[]') {
+            const parsedItem = this.formatInput(this.inputs[item.name]);
+            _contractArgs.push(parsedItem);
+          } else {
+            _contractArgs.push(this.inputs[item.name]);
+          }
         });
       }
       return _contractArgs;
@@ -345,31 +357,44 @@ export default {
     }
   },
   methods: {
+    resetDefaults() {
+      this.abi = '';
+      this.address = '';
+      this.interact = false;
+      this.contractMethods = [];
+      this.selectedMethod = {};
+      this.result = '';
+      this.loading = false;
+      this.value = 0;
+      this.inputs = {};
+    },
     isValidInput(value, solidityType) {
       if (!value) value = '';
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
-      if (solidityType === 'address') return isAddress(value);
-      if (solidityType === 'string') return true;
-      if (solidityType === 'bytes')
+      if (solidityType === uint) return value != '' && !isNaN(value);
+      if (solidityType === address) return isAddress(value);
+      if (solidityType === string) return true;
+      if (solidityType === bytes)
         return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
-      if (solidityType === 'bool')
+      if (solidityType === bytes32) {
+        const values = [];
+        if (value[0] === '[') {
+          const strToArr = value.substr(0, value.length - 1);
+          strToArr.split(',').forEach(item => {
+            values.push(Misc.validateHexString(item));
+          });
+        } else {
+          value.split(',').forEach(item => {
+            const newItem = item.replace(' ', '');
+            values.push(Misc.validateHexString(newItem));
+          });
+        }
+        return !values.includes(false);
+      }
+      if (solidityType === bool)
         return typeof value == typeof true || value === '';
       return false;
     },
-    getType(inputType) {
-      if (!inputType) inputType = '';
-      if (inputType.includes('uint'))
-        return { type: 'number', solidityType: 'uint' };
-      if (inputType.includes('address'))
-        return { type: 'text', solidityType: 'address' };
-      if (inputType.includes('string'))
-        return { type: 'text', solidityType: 'string' };
-      if (inputType.includes('bytes'))
-        return { type: 'text', solidityType: 'bytes' };
-      if (inputType.includes('bool'))
-        return { type: 'radio', solidityType: 'bool' };
-      return { type: 'text', solidityType: 'string' };
-    },
+    getType: Misc.solidityType,
     selectedContract(selected) {
       if (selected.abi === '') {
         this.abi = '';
@@ -400,6 +425,15 @@ export default {
         }
       });
     },
+    formatInput(str) {
+      if (str[0] === '[') {
+        return str;
+      }
+      const newArr = str.split(',');
+      return newArr.map(function(item) {
+        return item.replace(' ', '');
+      });
+    },
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
@@ -416,9 +450,10 @@ export default {
             }
           });
           this.interact = true;
+          this.loading = false;
           break;
         default:
-          this.interact = false;
+          this.resetDefaults();
       }
     },
     async write() {

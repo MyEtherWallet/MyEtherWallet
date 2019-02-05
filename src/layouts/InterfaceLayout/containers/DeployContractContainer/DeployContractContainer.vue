@@ -267,20 +267,7 @@ export default {
         return typeof value == typeof true || value === '';
       return false;
     },
-    getType(inputType) {
-      if (!inputType) inputType = '';
-      if (inputType.includes('uint'))
-        return { type: 'number', solidityType: 'uint' };
-      if (inputType.includes('address'))
-        return { type: 'text', solidityType: 'address' };
-      if (inputType.includes('string'))
-        return { type: 'text', solidityType: 'string' };
-      if (inputType.includes('bytes'))
-        return { type: 'text', solidityType: 'bytes' };
-      if (inputType.includes('bool'))
-        return { type: 'radio', solidityType: 'bool' };
-      return { type: 'text', solidityType: 'string' };
-    },
+    getType: Misc.solidityType,
     async sendTransaction() {
       try {
         await this.estimateGas();
