@@ -384,6 +384,14 @@ export default {
         }
         return !values.includes(false);
       }
+      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'address') return isAddress(value);
+      if (solidityType === 'string') return true;
+      if (solidityType === 'bytes')
+        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
+      if (solidityType === 'bool')
+        return typeof value == typeof true || value === '';
+      return false;
     },
     getType: Misc.solidityType,
     selectedContract(selected) {
