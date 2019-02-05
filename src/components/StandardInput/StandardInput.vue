@@ -132,9 +132,7 @@ export default {
     emitValue(evt) {
       this.$emit('changedValue', evt.srcElement.value);
     },
-    emitText(evt){
-
-    }
+    emitText(evt) {}
   }
 };
 </script>
