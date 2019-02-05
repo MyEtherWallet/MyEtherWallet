@@ -1,6 +1,5 @@
 import tokens from '@/tokens/tokens-esn.json';
 import contracts from '@/contracts/contract-abi-esn.json';
-// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'ESN',
