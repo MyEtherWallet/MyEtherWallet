@@ -116,6 +116,16 @@ export default {
       this.$emit('selectedCurrency', newVal);
     }
   },
+  mounted() {
+    this.localCurrency =
+      this.token === true
+        ? [this.networkToken]
+        : [{ name: 'Select an item', abi: '', address: '' }];
+    this.selectedCurrency =
+      this.token === true
+        ? this.networkToken
+        : { name: 'Select an item', abi: '', address: '' };
+  },
   methods: {
     openDropdown() {
       this.open = !this.open;
