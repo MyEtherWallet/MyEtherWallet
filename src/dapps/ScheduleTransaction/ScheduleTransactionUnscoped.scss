@@ -31,3 +31,18 @@
 .bounty-usd-display .input-container input {
   text-align: center;
 }
+
+.timezone-selector {
+  p {
+    color: black;
+  }
+  .dropdown-list {
+    li {
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+  }
+  .dropdown-button .placeholder {
+    color: black;
+  }
+}

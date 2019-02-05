@@ -118,7 +118,8 @@ $mew-green-light: #05c7aa;
 .standard-input,
 .datetime-picker-container,
 .mode-container,
-.time-bounty-selector {
+.time-bounty-selector,
+.timezone-selector {
   padding: 12px 0;
 }
 
@@ -180,6 +181,7 @@ h2 {
   }
 }
 
-.timebounty-gasprice-coverage, .timebounty-gasprice-coverage span  {
+.timebounty-gasprice-coverage,
+.timebounty-gasprice-coverage span {
   font-size: 12px;
 }
