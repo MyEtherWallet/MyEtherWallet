@@ -39,7 +39,7 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.1.2",
+    "@keepkey/keepkey.js": "1.1.3",
     "@ledgerhq/hw-app-eth": "4.35.0",
     "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
@@ -121,7 +121,13 @@
       "canvas",
       "ethereum-ens",
       "webpack",
-      "babel-jest"
+      "babel-jest",
+      "web3-core-helpers",
+      "web3-core-method",
+      "web3-core-requestmanager",
+      "web3-providers-http",
+      "web3-providers-ws",
+      "web3-utils"
     ]
   }
 }
