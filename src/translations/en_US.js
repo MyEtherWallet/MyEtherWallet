@@ -13,7 +13,7 @@ import accessWallet from './access-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
 import team from './team/en_US';
 import popover from './popover/en_US';
-import sendOfflineHelper from './send-offline-helper/en_US';
+import withoutWallet from './without-wallet/en_US';
 
 const en_US = {
   common: common,
@@ -30,6 +30,6 @@ const en_US = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  sendOfflineHelper: sendOfflineHelper
+  withoutWallet: withoutWallet
 };
 export default en_US;

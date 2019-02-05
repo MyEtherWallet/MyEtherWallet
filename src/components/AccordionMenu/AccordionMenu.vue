@@ -11,6 +11,7 @@
         </div>
         <div>{{ title }}</div>
         <div v-if="editbutton" class="edit-button">{{ $t('common.edit') }}</div>
+        <div v-if="rightText !== ''" class="edit-button">{{ rightText }}</div>
       </div>
       <div class="menu-content-container">
         <div class="padding-block"><slot></slot></div>
@@ -42,6 +43,10 @@ export default {
     editbutton: {
       type: Boolean,
       default: false
+    },
+    rightText: {
+      type: String,
+      default: ''
     }
   },
   data() {

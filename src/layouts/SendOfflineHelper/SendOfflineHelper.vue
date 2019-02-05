@@ -3,12 +3,52 @@
     <div class="wrap">
       <div class="page-title"><page-title :options="titleOptions" /></div>
       <div class="page-content-container">
+        <div class="collapse-container">
+          <accordion-menu
+            :greytitle="false"
+            :isopen="showNetwork"
+            :title="$t('withoutWallet.selectNetwork')"
+            :right-text="networkTitle"
+            number="1"
+            @titleClicked="showNetwork = !showNetwork"
+          >
+            <ul class="networks">
+              <li
+                v-for="(key, index) in Object.keys(reorderNetworkList)"
+                :key="$router.path + key + index"
+              >
+                <div class="network-title">
+                  <img :src="Networks[key][0].type.icon" />
+                  <p>{{ key }}</p>
+                </div>
+                <div class="network-content">
+                  <p
+                    v-for="net in Networks[key]"
+                    :key="net.service"
+                    :class="
+                        net.service === selectedNetwork.service &&
+                        net.type &&
+                        net.type.name === selectedNetwork.type.name
+                          ? 'current-network'
+                          : ''
+                      "
+                    @click="switchNetwork(net)"
+                  >
+                    {{ net.service }}
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </accordion-menu>
+        </div>
+
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="true"
-          :title="$t('sendOfflineHelper.generateInfo')"
-          number="1"
+          :isopen="showGenerateInfo"
+          :title="$t('withoutWallet.generateInfo')"
+          number="2"
+          @titleClicked="showGenerateInfo = !showGenerateInfo"
         >
           <dropdown-address-selector title="From Address" />
           <div class="button-container">
@@ -18,11 +58,15 @@
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="true"
-          :title="$t('sendOfflineHelper.txFeeAndNonce')"
-          number="2"
+          :isopen="showFee"
+          :title="$t('withoutWallet.txFeeAndNonce')"
+          number="3"
+          @titleClicked="showFee = !showFee"
         >
-          <standard-input :options="inputTxFee" />
+          <standard-input
+            :options="inputTxFee"
+            @changedValue="gasLimit = $event"
+          />
           <standard-input :options="inputNonce" />
           <div class="button-container">
             <standard-button :options="buttonContinue" />
@@ -30,9 +74,10 @@
         </accordion-menu>
         <accordion-menu
           :greytitle="false"
-          :isopen="true"
-          :title="$t('sendOfflineHelper.signedTx')"
-          number="3"
+          :isopen="showSignedInput"
+          :title="$t('withoutWallet.signedTx')"
+          number="4"
+          @titleClicked="showSignedInput = !showSignedInput"
         >
           <standard-input :options="inputSignedTx" />
           <expending-option title="Raw Transaction">
@@ -51,6 +96,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import Misc from '@/helpers/misc';
+
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
@@ -71,6 +119,13 @@ export default {
   },
   data() {
     return {
+      selectedNetwork: this.$store.state.network,
+      gasLimit: 0,
+      nonce: 0,
+      showNetwork: false,
+      showGenerateInfo: true,
+      showFee: false,
+      showSignedInput: false,
       titleOptions: {
         title: 'Send Offline Helper',
         boldSubTitle: '',
@@ -96,16 +151,16 @@ export default {
         noMinWidth: true
       },
       inputTxFee: {
-        title: this.$t('sendOfflineHelper.txFee'),
+        title: this.$t('withoutWallet.txFee'),
         topTextInfo: '0.00031 ($1.34)',
         rightInputText: 'Gwei'
       },
       inputNonce: {
-        title: this.$t('sendOfflineHelper.nonce'),
+        title: this.$t('withoutWallet.nonce'),
         popover: 'Nonce is Nonce!'
       },
       inputSignedTx: {
-        title: this.$t('sendOfflineHelper.signedTx'),
+        title: this.$t('withoutWallet.signedTx'),
         isTextarea: true,
         buttonClear: true,
         buttonCopy: true
@@ -116,6 +171,35 @@ export default {
         buttonCopy: true
       }
     };
+  },
+  computed: {
+    ...mapGetters({
+      network: 'network',
+      Networks: 'Networks',
+      customPaths: 'customPaths',
+      path: 'path',
+      web3: 'web3',
+      wallet: 'wallet'
+    }),
+    reorderNetworkList() {
+      return Misc.reorderNetworks();
+    },
+    networkTitle() {
+      return `${this.selectedNetwork.type.name} - ${
+        this.selectedNetwork.service
+      } `;
+    }
+  },
+  methods: {
+    switchNetwork(network) {
+      this.$store.dispatch('switchNetwork', network).then(() => {
+        this.selectedNetwork = network;
+        this.$store.dispatch('setWeb3Instance');
+        this.showNetwork = false;
+        this.showGenerateInfo = true;
+      });
+    },
+    setGasLimit(val) {}
   }
 };
 </script>
