@@ -51,8 +51,9 @@
         >
           <standard-input
             :options="inputSignedTx"
-            @changedValue="rawSigned = $event"
+            @changedValue="getTransactionDetails($event)"
           />
+          <p v-if="invalidSignature">Invalid Signature</p>
           <expending-option title="Raw Transaction">
             <standard-input :options="inputRawTx" class="no-margin" />
           </expending-option>
@@ -60,11 +61,41 @@
             <standard-button :options="buttonUploadJson" />
             <standard-button
               :options="buttonSendTx"
-              @click.native="getTransactionDetails"
+              @click.native="
+                showTxDetails = true;
+                showSignedInput = false;
+              "
             />
           </div>
         </accordion-menu>
         <accordion-menu
+          :greytitle="false"
+          :editbutton="true"
+          :isopen="showTxDetails"
+          :title="$t('withoutWallet.txDetails')"
+          number="3"
+          @titleClicked="showTxDetails = !showTxDetails"
+        >
+          <ul>
+            <li>Sender: {{ senderAddress }}</li>
+            <li>Nonce: {{ nonce }}</li>
+            <li>Value: {{ value }} {{ selectedNetwork.type.name }}</li>
+            <li>Data: {{ data }}</li>
+            <li>Chain ID: {{ chainId }}</li>
+            <li>Fee: {{ fee }}</li>
+            <li>Gas Limit: {{ gasLimit }}</li>
+            <li>Gas Price: {{ gasPrice }}</li>
+          </ul>
+          <standard-input
+            :options="inputTxFee"
+            @changedValue="gasLimit = $event"
+          />
+          <standard-input :options="inputNonce" />
+          <div class="button-container">
+            <standard-button :options="buttonContinue" />
+          </div>
+        </accordion-menu>
+        <!--        <accordion-menu
           :greytitle="false"
           :editbutton="true"
           :isopen="showFee"
@@ -80,7 +111,7 @@
           <div class="button-container">
             <standard-button :options="buttonContinue" />
           </div>
-        </accordion-menu>
+        </accordion-menu>-->
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
@@ -105,6 +136,8 @@
 import ethTx from 'ethereumjs-tx';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
+import BigNumber from 'bignumber.js';
+import web3Utils from 'web3-utils';
 
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -130,6 +163,7 @@ export default {
       showNetwork: false,
       showGenerateInfo: false,
       showFee: false,
+      showTxDetails: false,
       showSignedInput: true,
       titleOptions: {
         title: 'Send Offline Helper',
@@ -175,12 +209,18 @@ export default {
         buttonClear: true,
         buttonCopy: true
       },
+      invalidSignature: false,
       senderAddress: '',
       rawSigned: '',
       minAccountBalance: 0,
       fee: 0,
+      nonce: 0,
+      gasPrice: 0,
       gasLimit: 0,
-      nonce: 0
+      to: '0x',
+      value: 0,
+      data: '0x',
+      chainId: 0
     };
   },
   computed: {
@@ -210,17 +250,40 @@ export default {
         this.showGenerateInfo = true;
       });
     },
-    getTransactionDetails() {
+    getTransactionDetails(rawSigned) {
+      const positions = {
+        nonce: 0,
+        gasPrice: 1,
+        gasLimit: 2,
+        to: 3,
+        value: 4,
+        data: 5,
+        v: 6,
+        r: 7,
+        s: 8
+      };
+      if (rawSigned) this.rawSigned = rawSigned;
       console.log('getTransactionDetails'); // todo remove dev item
       if (this.rawSigned !== '') {
         const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
         const tx = new ethTx(sanatizedRawSigned);
+        const isValid = tx.verifySignature();
+        if (!isValid) {
+          this.invalidSignature = true;
+        }
         this.senderAddress = Misc.sanitizeHex(
           tx.getSenderAddress().toString('hex')
         );
-        this.gasLimit = tx.getSenderAddress().toString('hex');
-        this.nonce = tx.getSenderAddress().toString('hex');
+        const asJson = tx.toJSON();
+        console.log(tx.toJSON()); // todo remove dev item
+        this.gasLimit = asJson[positions.gasLimit];
+        this.nonce = new BigNumber(asJson[positions.nonce]).toString();
+        this.value = web3Utils.fromWei(
+          new BigNumber(asJson[positions.value]).toString()
+        );
+        this.data = asJson[positions.data];
         this.fee = tx.getBaseFee().toString();
+        this.chainId = tx.getChainId();
         this.minAccountBalance = tx.getUpfrontCost().toString();
         console.log(this.senderAddress); // todo remove dev item
         console.log(tx); // todo remove dev item
