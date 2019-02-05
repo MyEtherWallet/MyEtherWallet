@@ -66,7 +66,7 @@ const checkIfOnline = function({ commit }) {
 
 const clearWallet = function({ commit, state }) {
   if (state.wallet.identifier === MEW_CONNECT) {
-    state.wallet.mewConnectDisconnect();
+    state.wallet.mewConnect.disconnectRTC();
   }
   commit('CLEAR_WALLET');
 };

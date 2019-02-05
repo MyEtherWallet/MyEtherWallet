@@ -280,6 +280,11 @@ export default {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
           tokens = await tb.getBalance(this.account.address);
+          tokens = tokens.map(token => {
+            token.address = token.addr;
+            delete token.addr;
+            return token;
+          });
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
@@ -318,9 +323,7 @@ export default {
       const data = contract.methods.balanceOf(this.account.address).encodeABI();
       const balance = await web3.eth
         .call({
-          to: token.address
-            ? web3.utils.toChecksumAddress(token.address)
-            : web3.utils.toChecksumAddress(token.addr),
+          to: token.address,
           data: data
         })
         .then(res => {
@@ -358,7 +361,6 @@ export default {
           return 0;
         })
         .map(token => {
-          token.address = token.addr;
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance
