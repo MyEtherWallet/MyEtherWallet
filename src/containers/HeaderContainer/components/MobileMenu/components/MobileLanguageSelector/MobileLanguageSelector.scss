@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+
+//********************************************************
+// mobile-language-selector
+//********************************************************
+.mobile-language-selector {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+
+//********************************************************
+// Selected Language (Absolute Position)
+//********************************************************
+.selected-language {
+  position: absolute;
+  top: -7px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+
+  >div {
+    line-height: initial;
+  }
+}
+
+
+//********************************************************
+// Language Menu Content Container (Fixed Position)
+//********************************************************
+.language-menu-content-container {
+  background-color: $white;
+  border: 1px solid $light-grey-2;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: fixed;
+  top: 120px;
+  left: 0;
+  right: 0;
+  width: 80vw;
+  margin: 0 auto;
+}
+
+
+

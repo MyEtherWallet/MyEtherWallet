@@ -32,114 +32,7 @@
     </div>
     <!-- Scroll up button ******************************* -->
 
-    <!-- Mobile menu ************************************ -->
-    <div class="mobile-menu">
-      <!-- Mobile menu button -->
-      <!-- Mobile menu button -->
-      <!-- Mobile menu button -->
-      <div class="mobile-menu-button--container">
-        <div
-          class="mobile-menu-button"
-          @click="isMobileMenuOpen = !isMobileMenuOpen"
-        >
-          <div class="bar-1" />
-          <div class="bar-2" />
-          <div class="bar-3" />
-        </div>
-      </div>
-
-      <!-- Mobile menu black background -->
-      <!-- Mobile menu black background -->
-      <!-- Mobile menu black background -->
-      <div
-        :class="isMobileMenuOpen && 'mobile-menu-open'"
-        class="mobile-menu--underblock"
-      />
-
-      <!-- Mobile menu container -->
-      <!-- Mobile menu container -->
-      <!-- Mobile menu container -->
-      <div
-        :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
-        class="mobile-menu--container"
-      >
-        <div class="menu-content">
-          <div class="user-address-info-block">
-            234rt23t2
-          </div>
-          <ul>
-            <li>
-              <router-link
-                to="/"
-                @click.native="
-                  scrollTop();
-                  isMobileMenuOpen = false;
-                "
-              >
-                {{ $t('header.home') }}
-              </router-link>
-            </li>
-            <li v-if="isHomePage">
-              <router-link
-                to="/#about-mew"
-                @click.native="isMobileMenuOpen = false"
-              >
-                {{ $t('header.about') }}
-              </router-link>
-            </li>
-            <li>
-              <a
-                href="https://kb.myetherwallet.com"
-                target="_blank"
-                @click="isMobileMenuOpen = false"
-                >Help Center</a
-              >
-            </li>
-            <li>
-              <div class="mobile-language-menu-container">
-                <b-nav-item-dropdown
-                  class="mobile-language-menu"
-                  extra-toggle-classes="nav-link-custom"
-                  right
-                >
-                  <template slot="button-content">
-                    <div class="current-language-flag">
-                      <p>{{ currentName }}</p>
-                      <img
-                        :src="
-                          require(`@/assets/images/flags/${currentFlag}.svg`)
-                        "
-                        class="show"
-                      />
-                    </div>
-                  </template>
-                  <b-dropdown-item
-                    v-for="language in supportedLanguages"
-                    :active="$root._i18n.locale === language.flag"
-                    :key="language.key"
-                    :data-language-code="language.langCode"
-                    :data-flag-name="language.flag"
-                    @click="languageItemClicked"
-                    >{{ language.name }}</b-dropdown-item
-                  >
-                </b-nav-item-dropdown>
-                <div class="arrows">
-                  <i class="fa fa-angle-right" aria-hidden="true" />
-                </div>
-              </div>
-            </li>
-            <li v-if="wallet !== null">
-              <div class="cursor-pointer" @click="openSettings">Settings</div>
-            </li>
-            <li v-if="wallet !== null">
-              <div class="cursor-pointer" @click="logout">Log out</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Mobile menu container -->
-    </div>
-    <!-- Mobile menu ************************************ -->
+    <mobile-menu />
 
     <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
@@ -294,6 +187,7 @@ import LogoutModal from '@/components/LogoutModal';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
+import MobileMenu from './components/MobileMenu';
 
 export default {
   components: {
@@ -305,7 +199,8 @@ export default {
     'logout-modal': LogoutModal,
     'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
-    'user-reminder-button': UserReminderButton
+    'user-reminder-button': UserReminderButton,
+    'mobile-menu': MobileMenu
   },
   data() {
     return {
