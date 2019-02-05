@@ -4,7 +4,7 @@ import {
   toChecksumAddress as toRSKChecksumAddress
 } from 'rskjs-util';
 import { RSK, RSKTEST } from '@/networks/types';
-import web3 from 'web3';
+import { toChecksumAddress as web3ToChecksumAddress } from 'web3-utils';
 const isAddress = address => {
   if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
     return false;
@@ -17,12 +17,12 @@ const isAddress = address => {
   const chainID = store.getters.network.type.chainID;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return isValidRSKChecksumAddress(address, chainID);
-  return web3.utils.checkAddressChecksum(address);
+  return web3ToChecksumAddress(address);
 };
 const toChecksumAddress = address => {
   const chainID = store.getters.network.type.chainID;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return toRSKChecksumAddress(address, chainID);
-  return web3.utils.toChecksumAddress(address);
+  return web3ToChecksumAddress(address);
 };
 export { isAddress, toChecksumAddress };

@@ -25,9 +25,8 @@
         <div>
           <p v-if="message !== '' && showMessage === true">
             {{ JSON.parse(message).address }}
-            {{ $t('interface.verifiedMessage') }}:<br
-              v-if="JSON.parse(message).msg.length > 20"
-            />
+            {{ $t('interface.verifiedMessage') }}:
+            <br v-if="JSON.parse(message).msg.length > 20" />
             <b>{{ JSON.parse(message).msg }}</b>
           </p>
           <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
@@ -66,6 +65,7 @@ import { MessageUtil } from '@/helpers';
 import { mapGetters } from 'vuex';
 // eslint-disable-next-line
 const createKeccakHash = require('keccak');
+import { sha3 } from 'web3-utils';
 
 export default {
   components: {
@@ -125,7 +125,7 @@ export default {
           hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
         }
       } else if (json.version === '1') {
-        hash = this.web3.utils.sha3(json.msg);
+        hash = sha3(json.msg);
       }
 
       const pubKey = MessageUtil.ecrecover(

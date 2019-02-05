@@ -1,10 +1,8 @@
-import web3 from 'web3';
 const secp256k1 = require('secp256k1');
 const assert = require('assert');
 const createKeccakHash = require('keccak');
-
+import { BN } from 'web3-utils';
 function toBuffer(v) {
-  const BN = web3.utils.BN;
   if (!Buffer.isBuffer(v)) {
     if (Array.isArray(v)) {
       v = Buffer.from(v);

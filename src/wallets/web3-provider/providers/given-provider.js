@@ -1,4 +1,3 @@
-import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
@@ -10,7 +9,7 @@ import {
 class GivenProvider {
   constructor(host, options, store, eventHub) {
     this.givenProvider = Object.assign({}, host);
-    const requestManager = new Web3RequestManager(host);
+    const requestManager = host;
     options = options ? options : null;
     if (this.givenProvider.sendAsync) {
       this.givenProvider.send = this.givenProvider.sendAsync;

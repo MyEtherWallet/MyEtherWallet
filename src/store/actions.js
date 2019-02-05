@@ -4,7 +4,7 @@ import MEWProvider from '@/wallets/web3-provider';
 import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   txIndexes,
   swapIndexes,
@@ -16,7 +16,7 @@ const addNotification = function({ commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
-    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
+    address = toChecksumAddress(val[txIndexes.address]);
   } else {
     throw Error('Unable to determine sending address for notification.');
   }
@@ -37,7 +37,7 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = async function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
+  const address = toChecksumAddress(val[swapIndexes.address]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -172,7 +172,7 @@ const setENS = function({ commit }, ens) {
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -185,7 +185,7 @@ const updateNotification = function({ commit, state }, val) {
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
 
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = toChecksumAddress(val[0]);
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
     newNotif[item] = state.transactions[item];

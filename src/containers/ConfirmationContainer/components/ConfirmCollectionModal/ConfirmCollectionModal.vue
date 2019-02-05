@@ -13,9 +13,12 @@
             <span>{{ $t('interface.network') }}</span>
             {{ network.type.name }} by {{ network.service }}
           </p>
-          <div><div class="line" /></div>
+          <div>
+            <div class="line" />
+          </div>
           <p>
-            <span>{{ $t('confirmation.txTotal') }}:</span> {{ txTotal }}
+            <span>{{ $t('confirmation.txTotal') }}:</span>
+            {{ txTotal }}
             {{ network.type.name }}
           </p>
         </div>
@@ -34,7 +37,7 @@
                 />
                 <div>
                   <p>
-                    - {{ web3.utils.hexToNumberString(item.value) }}
+                    - {{ hexToNumberString(item.value) }}
                     <span>{{ network.type.name }}</span>
                   </p>
                   <div>
@@ -57,7 +60,7 @@
                 />
                 <div>
                   <p>
-                    + {{ web3.utils.hexToNumberString(item.value) }}
+                    + {{ hexToNumberString(item.value) }}
                     <span>{{ network.type.name }}</span>
                   </p>
                   <div>
@@ -74,22 +77,18 @@
             <b-collapse :id="`accordion${idx}`" class="body">
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasLimit') }}t</span>
-                <span>{{ web3.utils.hexToNumberString(item.gas) }}</span>
+                <span>{{ hexToNumberString(item.gas) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span>
-                  {{
-                    web3.utils.hexToNumberString(
-                      web3.utils.fromWei(item.gasPrice, 'gwei')
-                    )
-                  }}
+                  {{ hexToNumberString(fromWei(item.gasPrice, 'gwei')) }}
                   Gwei
                 </span>
               </div>
               <div class="body-item">
                 <span class="item-title">Nonce</span>
-                <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
+                <span>{{ hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
                 <span class="item-title">{{ $t('common.data') }}</span>
@@ -158,7 +157,8 @@
 <script>
 import AddressBlock from '../AddressBlock';
 import { mapGetters } from 'vuex';
-
+import { hexToNumberString, fromWei } from 'web3-utils';
+import BN from 'bignumber.js';
 export default {
   components: {
     'address-block': AddressBlock
@@ -185,6 +185,12 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      fromWei: fromWei,
+      hexToNumberString: hexToNumberString
+    };
+  },
   computed: {
     ...mapGetters({
       web3: 'web3',
@@ -210,7 +216,6 @@ export default {
     },
     txTotal() {
       if (this.unSignedArray.length > 0) {
-        const BN = this.web3.utils.BN;
         let totalGas = new BN();
         this.unSignedArray.forEach(item => {
           totalGas = totalGas.add(
@@ -219,7 +224,7 @@ export default {
             )
           );
         });
-        return this.web3.utils.fromWei(totalGas.toString(), 'ether').toString();
+        return fromWei(totalGas.toString(), 'ether').toString();
       }
       return 0;
     }

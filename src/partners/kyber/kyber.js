@@ -4,6 +4,7 @@ import ENS from 'ethereum-ens';
 import { utils } from '../helpers';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
+import { toChecksumAddress } from 'web3-utils';
 import {
   ERC20,
   kyberBaseCurrency,
@@ -466,9 +467,7 @@ export default class Kyber {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
         return this.tokenDetails[token].contractAddress;
       }
-      return this.web3.utils.toChecksumAddress(
-        this.tokenDetails[token].contractAddress
-      );
+      return toChecksumAddress(this.tokenDetails[token].contractAddress);
     } catch (e) {
       errorLogger(e);
       throw Error(

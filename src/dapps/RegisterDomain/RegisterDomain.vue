@@ -44,7 +44,7 @@ import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
-
+import { toChecksumAddress, sha3, toWei } from 'web3-utils';
 const ETH_TLD = '.eth';
 
 export default {
@@ -117,10 +117,8 @@ export default {
       this.domainNameErr = false;
       this.ensRegistry = this.network.type.contracts.find(contract => {
         return (
-          web3.utils.toChecksumAddress(contract.address) ===
-          web3.utils.toChecksumAddress(
-            '0x314159265dD8dbb310642f98f50C066173C1259b'
-          )
+          toChecksumAddress(contract.address) ===
+          toChecksumAddress('0x314159265dD8dbb310642f98f50C066173C1259b')
         );
       });
       this.ensRegistryContract = new web3.eth.Contract(
@@ -149,8 +147,8 @@ export default {
       const publicResolverAddress = await resolver.addr();
       const publicResolver = this.network.type.contracts.find(contract => {
         return (
-          web3.utils.toChecksumAddress(contract.address) ===
-          web3.utils.toChecksumAddress(publicResolverAddress)
+          toChecksumAddress(contract.address) ===
+          toChecksumAddress(publicResolverAddress)
         );
       });
 
@@ -181,7 +179,7 @@ export default {
     async finalize() {
       const address = this.account.address;
       const web3 = this.web3;
-      const name = web3.utils.sha3(this.domainName);
+      const name = sha3(this.domainName);
       const data = await this.auctionRegistrarContract.methods
         .finalizeAuction(name)
         .encodeABI();
@@ -200,9 +198,8 @@ export default {
       return registrarAddress;
     },
     async checkDomain() {
-      const web3 = this.web3;
       this.loading = true;
-      this.labelHash = web3.utils.sha3(this.domainName);
+      this.labelHash = sha3(this.domainName);
 
       try {
         const domainStatus = await this.auctionRegistrarContract.methods
@@ -297,14 +294,13 @@ export default {
     async createTransaction(type) {
       this.loading = true;
       const address = this.account.address;
-      const utils = this.web3.utils;
-      const domainName = utils.sha3(this.domainName);
+      const domainName = sha3(this.domainName);
       const bidHash = await this.auctionRegistrarContract.methods
         .shaBid(
           domainName,
           address,
-          utils.toWei(this.bidAmount.toString(), 'ether'),
-          utils.sha3(this.secretPhrase)
+          toWei(this.bidAmount.toString(), 'ether'),
+          sha3(this.secretPhrase)
         )
         .call();
 
@@ -321,8 +317,8 @@ export default {
       } else if (type === 'reveal') {
         contractReference = this.auctionRegistrarContract.methods.unsealBid(
           domainName,
-          utils.toWei(this.bidAmount.toString(), 'ether'),
-          utils.sha3(this.secretPhrase)
+          toWei(this.bidAmount.toString(), 'ether'),
+          sha3(this.secretPhrase)
         );
       }
 
@@ -336,11 +332,11 @@ export default {
         to: this.registrarAddress,
         data: contractReference.encodeABI(),
         name: this.domainName,
-        nameSHA3: utils.sha3(this.domainName),
+        nameSHA3: sha3(this.domainName),
         bidAmount: this.bidAmount,
         bidMask: this.bidMask,
         secretPhrase: this.secretPhrase,
-        secretPhraseSHA3: utils.sha3(this.secretPhrase),
+        secretPhraseSHA3: sha3(this.secretPhrase),
         auctionDateEnd: new Date(auctionDateEnd),
         revealDate: new Date(revealDate)
       };

@@ -23,7 +23,7 @@
 
 <script>
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
-import web3 from 'web3';
+import { fromWei } from 'web3-utils';
 export default {
   props: {
     address: {
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     converter(num) {
-      return web3.utils.fromWei(num.toString(), 'ether');
+      return fromWei(num.toString(), 'ether');
     }
   }
 };

@@ -191,7 +191,7 @@ import JsonStringModal from '../../components/JsonStringModal';
 import { Misc } from '@/helpers';
 import printJS from 'print-js';
 import { mapGetters } from 'vuex';
-
+import { toWei } from 'web3-utils';
 export default {
   components: {
     timer: Timer,
@@ -315,7 +315,7 @@ export default {
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
-        value: this.web3.utils.toWei(raw.bidAmount.toString(), 'ether'),
+        value: toWei(raw.bidAmount.toString(), 'ether'),
         secretPhrase: raw.secretPhrase,
         secretPhraseSHA3: raw.secretPhraseSHA3
       });

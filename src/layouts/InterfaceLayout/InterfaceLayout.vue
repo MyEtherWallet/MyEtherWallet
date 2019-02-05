@@ -119,6 +119,7 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
+import { sha3, fromWei, toBN } from 'web3-utils';
 export default {
   components: {
     'interface-side-menu': InterfaceSideMenu,
@@ -303,7 +304,7 @@ export default {
       const nonce = await this.web3.eth.getTransactionCount(
         this.account.address
       );
-      store.set(this.web3.utils.sha3(this.account.address), {
+      store.set(sha3(this.account.address), {
         nonce: nonce,
         timestamp: +new Date()
       });
@@ -331,11 +332,8 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            const denominator = web3.utils
-              .toBN(10)
-              .pow(web3.utils.toBN(token.decimals));
-            tokenBalance = web3.utils
-              .toBN(res)
+            const denominator = toBN(10).pow(toBN(token.decimals));
+            tokenBalance = toBN(res)
               .div(denominator)
               .toString(10);
           }
@@ -410,7 +408,7 @@ export default {
       web3.eth
         .getBalance(this.address.toLowerCase())
         .then(res => {
-          this.balance = web3.utils.fromWei(res, 'ether');
+          this.balance = fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(err => {
@@ -491,9 +489,7 @@ export default {
       this.web3.eth
         .getGasPrice()
         .then(res => {
-          this.highestGas = new BigNumber(
-            this.web3.utils.fromWei(res, 'gwei')
-          ).toNumber();
+          this.highestGas = new BigNumber(fromWei(res, 'gwei')).toNumber();
         })
         .catch(err => {
           // eslint-disable-next-line no-console

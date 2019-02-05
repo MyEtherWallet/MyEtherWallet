@@ -81,6 +81,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import TxSpeedInput from '../TxSpeedInput';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
+import { toChecksumAddress } from 'web3-utils';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -120,9 +121,7 @@ export default {
     }
   },
   async mounted() {
-    this.hexAddress = this.web3.utils.toChecksumAddress(
-      await this.web3.eth.getCoinbase()
-    );
+    this.hexAddress = toChecksumAddress(await this.web3.eth.getCoinbase());
   },
   methods: {
     async generateInfo() {

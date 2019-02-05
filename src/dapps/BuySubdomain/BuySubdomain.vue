@@ -30,12 +30,12 @@
                 >{{ domainName }}.{{ item.domain }}.eth</span
               >
               <div class="buy-button-container">
-                <span class="amt"
-                  >{{ web3.utils.fromWei(item.price, 'ether') }} ETH</span
-                >
+                <span class="amt">{{ fromWei(item.price, 'ether') }} ETH</span>
                 <button @click="buyDomain(item)">
-                  <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
-                  <span v-else> <i class="fa fa-times" /> </span>
+                  <span v-if="item.active">{{ $t('dapps.buy') }}</span>
+                  <span v-else>
+                    <i class="fa fa-times" />
+                  </span>
                 </button>
               </div>
             </div>
@@ -63,7 +63,7 @@ import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import _ from 'underscore';
 import StandardButton from '@/components/Buttons/StandardButton';
-
+import { fromWei, sha3 } from 'web3-utils';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -76,7 +76,8 @@ export default {
       ensContract: function() {},
       results: [],
       domainName: '',
-      knownRegistrarInstances: {}
+      knownRegistrarInstances: {},
+      fromWei: fromWei
     };
   },
   computed: {
@@ -125,7 +126,6 @@ export default {
     }, 1500),
     async query() {
       this.results = [];
-      const sha3 = this.web3.utils.sha3;
       if (this.domainName.length > 1) {
         for (const key in this.knownRegistrarInstances) {
           const getSubdomain = await this.knownRegistrarInstances[
@@ -145,7 +145,7 @@ export default {
       }
     },
     async buyDomain(item) {
-      const domain = this.web3.utils.sha3(item.domain);
+      const domain = sha3(item.domain);
       const subdomain = this.domainName;
       const ownerAddress = this.account.address;
       const referrerAddress = this.ethDonationAddress;

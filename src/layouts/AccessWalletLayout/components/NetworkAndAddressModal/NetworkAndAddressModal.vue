@@ -15,10 +15,9 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span
-            >({{ selectedNetwork.type.name }} -
-            {{ selectedNetwork.service }})</span
-          >
+          <span>
+            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+          </span>
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -89,9 +88,9 @@
                   >{{ val.label }}</b-dropdown-item
                 >
                 <b-dropdown-divider />
-                <b-dropdown-item>{{
-                  $t('accessWallet.customPaths')
-                }}</b-dropdown-item>
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath.dpath === val.dpath ? 'active' : ''"
@@ -99,9 +98,9 @@
                   @click="changePath(key)"
                   >{{ val.dpath }}</b-dropdown-item
                 >
-                <b-dropdown-item @click="showCustomPathInput">{{
-                  $t('accessWallet.addCustomPath')
-                }}</b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -192,9 +191,8 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link
+            <router-link to="/terms-and-conditions">
+              {{ $t('common.terms') }} </router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -222,11 +220,10 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
-import web3utils from 'web3-utils';
 import _ from 'underscore';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
-
+import { fromWei } from 'web3-utils';
 const MAX_ADDRESSES = 5;
 export default {
   components: {
@@ -321,7 +318,7 @@ export default {
     },
     convertBalance(bal) {
       if (bal === 'loading') return bal;
-      return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
+      return new BigNumber(fromWei(bal, 'ether')).toFixed(3);
     },
     addCustomPath() {
       // // TODO: figure out a more precise regex

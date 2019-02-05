@@ -1,5 +1,4 @@
-import Web3WSProvider from 'web3-providers-ws';
-import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
+import { WebsocketProvider as Web3WSProvider } from 'web3-providers';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
@@ -14,9 +13,7 @@ class WSProvider {
   constructor(host, options, store, eventHub) {
     this.wsProvider = new Web3WSProvider(host, options);
     const _this = this.wsProvider;
-    const requestManager = new Web3RequestManager(
-      new Web3WSProvider(host, options)
-    );
+    const requestManager = new Web3WSProvider(host, options);
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {
       if (_this.connection.readyState === _this.connection.CONNECTING) {
