@@ -112,7 +112,7 @@ export default {
       this.selectedCurrency = newVal;
     },
     selectedCurrency(newVal) {
-      this.$emit('selectedCurrency', newVal);
+      this.$emit('selectedCurrency', newVal, this.fromSource ? 'to' : 'from');
     },
     currencies(newVal) {
       this.localCurrencies = [];

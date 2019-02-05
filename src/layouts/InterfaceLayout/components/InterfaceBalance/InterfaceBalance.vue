@@ -11,7 +11,7 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp; {{ network.type.name }}</p>
+              <p>{{ network.type.name }}</p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>

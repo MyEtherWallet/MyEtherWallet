@@ -145,7 +145,7 @@ export default {
         rightArrow: true
       },
       buttonSendTx: {
-        title: 'Send Transaction',
+        title: 'Continue',
         buttonStyle: 'green',
         noWalletTerms: true
       },
