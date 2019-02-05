@@ -26,12 +26,12 @@
                     v-for="net in Networks[key]"
                     :key="net.service"
                     :class="
-                        net.service === selectedNetwork.service &&
-                        net.type &&
-                        net.type.name === selectedNetwork.type.name
-                          ? 'current-network'
-                          : ''
-                      "
+                      net.service === selectedNetwork.service &&
+                      net.type &&
+                      net.type.name === selectedNetwork.type.name
+                        ? 'current-network'
+                        : ''
+                    "
                     @click="switchNetwork(net)"
                   >
                     {{ net.service }}
@@ -44,15 +44,24 @@
 
         <accordion-menu
           :greytitle="false"
-          :editbutton="true"
-          :isopen="showGenerateInfo"
-          :title="$t('withoutWallet.generateInfo')"
+          :isopen="showSignedInput"
+          :title="$t('withoutWallet.signedTx')"
           number="2"
-          @titleClicked="showGenerateInfo = !showGenerateInfo"
+          @titleClicked="showSignedInput = !showSignedInput"
         >
-          <dropdown-address-selector title="From Address" />
+          <standard-input
+            :options="inputSignedTx"
+            @changedValue="rawSigned = $event"
+          />
+          <expending-option title="Raw Transaction">
+            <standard-input :options="inputRawTx" class="no-margin" />
+          </expending-option>
           <div class="button-container">
-            <standard-button :options="buttonContinue" />
+            <standard-button :options="buttonUploadJson" />
+            <standard-button
+              :options="buttonSendTx"
+              @click.native="getTransactionDetails"
+            />
           </div>
         </accordion-menu>
         <accordion-menu
@@ -74,28 +83,26 @@
         </accordion-menu>
         <accordion-menu
           :greytitle="false"
-          :isopen="showSignedInput"
-          :title="$t('withoutWallet.signedTx')"
-          number="4"
-          @titleClicked="showSignedInput = !showSignedInput"
+          :editbutton="true"
+          :isopen="showGenerateInfo"
+          :title="$t('withoutWallet.generateInfo')"
+          number="2"
+          @titleClicked="showGenerateInfo = !showGenerateInfo"
         >
-          <standard-input :options="inputSignedTx" />
-          <expending-option title="Raw Transaction">
-            <standard-input :options="inputRawTx" class="no-margin" />
-          </expending-option>
+          <dropdown-address-selector title="From Address" />
           <div class="button-container">
-            <standard-button :options="buttonUploadJson" />
-            <standard-button :options="buttonSendTx" />
+            <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>
       </div>
     </div>
 
-    <confirmation-modal />
+    <confirmation-modal ref="offlineConfirm" />
   </div>
 </template>
 
 <script>
+import ethTx from 'ethereumjs-tx';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 
@@ -120,12 +127,10 @@ export default {
   data() {
     return {
       selectedNetwork: this.$store.state.network,
-      gasLimit: 0,
-      nonce: 0,
       showNetwork: false,
-      showGenerateInfo: true,
+      showGenerateInfo: false,
       showFee: false,
-      showSignedInput: false,
+      showSignedInput: true,
       titleOptions: {
         title: 'Send Offline Helper',
         boldSubTitle: '',
@@ -169,7 +174,13 @@ export default {
         isTextarea: true,
         buttonClear: true,
         buttonCopy: true
-      }
+      },
+      senderAddress: '',
+      rawSigned: '',
+      minAccountBalance: 0,
+      fee: 0,
+      gasLimit: 0,
+      nonce: 0
     };
   },
   computed: {
@@ -199,7 +210,25 @@ export default {
         this.showGenerateInfo = true;
       });
     },
-    setGasLimit(val) {}
+    getTransactionDetails() {
+      console.log('getTransactionDetails'); // todo remove dev item
+      if (this.rawSigned !== '') {
+        const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
+        const tx = new ethTx(sanatizedRawSigned);
+        this.senderAddress = Misc.sanitizeHex(
+          tx.getSenderAddress().toString('hex')
+        );
+        this.gasLimit = tx.getSenderAddress().toString('hex');
+        this.nonce = tx.getSenderAddress().toString('hex');
+        this.fee = tx.getBaseFee().toString();
+        this.minAccountBalance = tx.getUpfrontCost().toString();
+        console.log(this.senderAddress); // todo remove dev item
+        console.log(tx); // todo remove dev item
+      }
+    },
+    sendTransaction() {
+      this.$refs.offlineConfirm.$refs.sendOfflineConfirmation.show();
+    }
   }
 };
 </script>

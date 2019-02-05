@@ -62,9 +62,9 @@ export default {
       }
     };
   },
-  mounted() {
-    this.$refs.sendOfflineConfirmation.show();
-  },
+  // mounted() {
+  //   this.$refs.sendOfflineConfirmation.show();
+  // },
   beforeDestroy() {},
   methods: {}
 };
