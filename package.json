@@ -31,7 +31,7 @@
     "idna-uts46": "1.1.0",
     "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
-    "vee-validate": "2.1.5",
+    "vee-validate": "2.1.7",
     "vue": "2.5.22",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
@@ -39,9 +39,9 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.1.1",
-    "@ledgerhq/hw-app-eth": "4.32.0",
-    "@ledgerhq/hw-transport-u2f": "4.32.0",
+    "@keepkey/keepkey.js": "1.1.2",
+    "@ledgerhq/hw-app-eth": "4.35.0",
+    "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.9",
     "@vue/cli-plugin-babel": "3.3.0",
@@ -86,7 +86,7 @@
     "remark-preset-lint-recommended": "3.0.2",
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
-    "secp256k1": "3.6.1",
+    "secp256k1": "3.6.2",
     "sinon": "7.2.3",
     "store": "2.0.12",
     "stylelint": "9.10.1",
@@ -115,5 +115,13 @@
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "canvas",
+      "ethereum-ens",
+      "webpack",
+      "babel-jest"
+    ]
   }
 }
