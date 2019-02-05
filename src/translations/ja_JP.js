@@ -13,7 +13,7 @@ import accessWallet from './access-wallet/ja_JP';
 import interfaceTranslations from './interface/ja_JP';
 import team from './team/ja_JP';
 import popover from './popover/ja_JP';
-import sendOfflineHelper from './send-offline-helper/ja_JP';
+import withoutWallet from './without-wallet/en_US';
 
 const ja_JP = {
   common: common,
@@ -30,6 +30,6 @@ const ja_JP = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  sendOfflineHelper: sendOfflineHelper
+  withoutWallet: withoutWallet
 };
 export default ja_JP;
