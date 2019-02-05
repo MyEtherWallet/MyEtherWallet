@@ -117,10 +117,6 @@ export default {
     }
   },
   mounted() {
-    this.localCurrency =
-      this.token === true
-        ? [this.networkToken]
-        : [{ name: 'Select an item', abi: '', address: '' }];
     this.selectedCurrency =
       this.token === true
         ? this.networkToken
