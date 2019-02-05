@@ -99,7 +99,8 @@
                 :key="type.name + type.name_long"
                 :selected="selectedNetworkName === type.name"
               >
-                {{ type.name | capitalize }} - {{ type.name_long | capitalize }}
+                {{ type.name | capitalize }} -
+                {{ type.name_long | capitalize }}
               </option>
             </select>
             <input
@@ -301,7 +302,7 @@ export default {
       return networks;
     },
     selectedNetwork() {
-      return this.types[this.selectedNetworkName];
+      return this.network.type;
     }
   },
   watch: {
