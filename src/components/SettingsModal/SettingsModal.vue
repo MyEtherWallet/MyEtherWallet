@@ -37,10 +37,10 @@
                   </div>
                   <p>
                     {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0"
-                      >($
-                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})</span
-                    >
+                    <span v-if="ethPrice !== 0">
+                      ($
+                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})
+                    </span>
                   </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
@@ -134,7 +134,7 @@
 <script>
 import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
 import BigNumber from 'bignumber.js';
-import utils from 'web3-utils';
+import { fromWei, toWei } from 'web3-utils';
 import store from 'store';
 
 export default {
@@ -200,44 +200,26 @@ export default {
       return {
         economy: {
           gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
-              'gwei'
-            )
+            fromWei(new BigNumber(this.gasPrice).div(2).toFixed(0), 'gwei')
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
-              'ether'
-            )
+            fromWei(new BigNumber(this.gasPrice).div(2).toFixed(0), 'ether')
           ).toFixed()
         },
         regular: {
           gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'gwei'
-            )
+            fromWei(new BigNumber(this.gasPrice).div(1).toFixed(0), 'gwei')
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
-              'ether'
-            )
+            fromWei(new BigNumber(this.gasPrice).div(1).toFixed(0), 'ether')
           ).toFixed()
         },
         fast: {
           gwei: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).times(1.25).toFixed(0),
-              'gwei'
-            )
+            fromWei(new BigNumber(this.gasPrice).times(1.25).toFixed(0), 'gwei')
           ).toFixed(),
           eth: new BigNumber(
-            utils.fromWei(
-              new BigNumber(this.gasPrice).div(1.25).toFixed(0),
-              'ether'
-            )
+            fromWei(new BigNumber(this.gasPrice).div(1.25).toFixed(0), 'ether')
           ).toFixed()
         }
       };
@@ -246,11 +228,9 @@ export default {
   watch: {
     customGas(newVal) {
       if (newVal !== '') {
-        const toGwei = new BigNumber(
-          utils.toWei(`${newVal}`, 'gwei')
-        ).toFixed();
+        const toGwei = new BigNumber(toWei(`${newVal}`, 'gwei')).toFixed();
         this.customGasEth = new BigNumber(
-          `${utils.fromWei(toGwei, 'ether')}`
+          `${fromWei(toGwei, 'ether')}`
         ).toFixed();
       }
     }

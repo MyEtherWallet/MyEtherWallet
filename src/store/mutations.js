@@ -63,7 +63,7 @@ const SET_ACCOUNT_BALANCE = function(state, balance) {
 };
 
 const SET_ENS = function(state, ens) {
-  state.ens = ens;
+  state.ens = Object.freeze(ens);
 };
 
 const SET_GAS_PRICE = function(state, val) {
@@ -76,7 +76,7 @@ const SET_LAST_PATH = function(state, val) {
 };
 
 const SET_WEB3_INSTANCE = function(state, web3) {
-  state.web3 = web3;
+  state.web3 = Object.freeze(web3);
 };
 
 const SWITCH_NETWORK = function(state, networkObj) {

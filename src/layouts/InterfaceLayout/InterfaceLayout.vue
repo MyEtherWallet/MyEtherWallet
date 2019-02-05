@@ -84,7 +84,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ENS from 'ethereum-ens';
+import Ens from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
@@ -287,6 +287,7 @@ export default {
             return token;
           });
         } catch (e) {
+          console.log(e);
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
             return token;
@@ -498,7 +499,7 @@ export default {
     },
     setENS() {
       if (this.network.type.ensResolver) {
-        this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+        this.$store.dispatch('setENS', new Ens(this.web3.currentProvider));
       } else {
         this.$store.dispatch('setENS', null);
       }

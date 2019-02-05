@@ -9,6 +9,7 @@ const EnsResolver = {
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       const ens = store.getters.ens;
+      console.log(ens);
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {

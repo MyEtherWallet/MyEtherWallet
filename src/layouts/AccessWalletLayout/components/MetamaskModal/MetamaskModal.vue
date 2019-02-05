@@ -67,7 +67,9 @@
           {{ $t('accessWallet.acceptTerms') }}
           <router-link to="/terms-and-conditions">
             {{ $t('common.terms') }} </router-link
-          >. <input type="checkbox" /> <span class="checkmark" />
+          >.
+          <input type="checkbox" />
+          <span class="checkmark" />
         </label>
       </div>
       <div class="button-container">
@@ -143,7 +145,8 @@ export default {
       }
     },
     signIn(web3) {
-      new Web3(web3.currentProvider).eth
+      console.log(Web3);
+      new Web3(web3.givenProvider).eth
         .getAccounts()
         .then(accounts => {
           if (!accounts.length) return (this.unlockWeb3Wallet = true);

@@ -14,7 +14,7 @@ export default async (
   const localTx = Object.assign({}, payload);
   delete localTx['gas'];
   delete localTx['nonce'];
-  const ethCalls = new EthCalls(requestManager);
+  const ethCalls = EthCalls(requestManager);
   tx.nonce = !tx.nonce
     ? await store.state.web3.eth.getTransactionCount(
         store.state.wallet.getAddressString()

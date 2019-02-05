@@ -1,6 +1,6 @@
 import debugLogger from 'debug';
 import BigNumber from 'bignumber.js';
-import ENS from 'ethereum-ens';
+import { Ens } from 'web3-eth-ens';
 import { utils } from '../helpers';
 import { networkSymbols } from '../partnersConfig';
 import kyberApi from './kyber-api';
@@ -39,7 +39,7 @@ export default class Kyber {
     this.tokenDetails = {};
     this.setDefaultCurrencyList();
     this.web3 = props.web3;
-    this.ens = new ENS(props.web3.currentProvider);
+    this.ens = new Ens(props.web3.currentProvider);
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];

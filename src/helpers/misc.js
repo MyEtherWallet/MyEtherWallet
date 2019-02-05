@@ -1,7 +1,6 @@
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
-import utils from 'web3-utils';
 import store from '@/store';
 /* Accepts string, returns boolean */
 const isJson = str => {
@@ -109,10 +108,7 @@ const reorderNetworks = () => {
 
 const isDarklisted = addr => {
   const darklisted = store.getters.darklist.data.findIndex(item => {
-    return (
-      utils.toChecksumAddress(item.address.toLowerCase()) ===
-      utils.toChecksumAddress(addr.toLowerCase())
-    );
+    return item.address.toLowerCase() === addr.toLowerCase();
   });
   const errMsg =
     darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;

@@ -8,7 +8,9 @@ import {
 } from '../methods';
 class GivenProvider {
   constructor(host, options, store, eventHub) {
+    console.log('abc');
     this.givenProvider = Object.assign({}, host);
+    console.log('abcd');
     const requestManager = host;
     options = options ? options : null;
     if (this.givenProvider.sendAsync) {
