@@ -33,18 +33,32 @@
             />
           </div>
 
-          <div
-            v-show="selectedMode === supportedModes[0]"
-            class="datetime-picker-container"
-          >
-            <div class="input-title">Date & Time</div>
-            <datetime-picker
-              v-model="datetime"
-              :min-datetime="now.toISOString()"
-              class="theme-mew"
-              type="datetime"
-            />
-          </div>
+          <b-row v-show="selectedMode === supportedModes[0]">
+            <b-col>
+              <div class="datetime-picker-container">
+                <div class="input-title">Date & Time</div>
+                <datetime-picker
+                  v-model="datetime"
+                  :min-datetime="now.toISOString()"
+                  :value-zone="selectedTimeZone"
+                  :zone="selectedTimeZone"
+                  class="theme-mew"
+                  type="datetime"
+                />
+              </div>
+            </b-col>
+
+            <b-col>
+              <div class="timezone-selector">
+                <div class="input-title">Timezone</div>
+                <standard-dropdown
+                  :options="timezoneOptions"
+                  :placeholder="selectedTimeZone"
+                  @selection="selectedTimeZone = $event"
+                />
+              </div>
+            </b-col>
+          </b-row>
 
           <hr />
 
@@ -93,7 +107,11 @@
               </b-col>
 
               <b-col cols="3" class="vertical-center-self">
-                <div class="timebounty-gasprice-coverage">Covers up to <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas price on future execution</div>
+                <div class="timebounty-gasprice-coverage">
+                  Covers up to
+                  <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas
+                  price on future execution
+                </div>
               </b-col>
 
               <b-col cols="3" class="toggle-button-col">
@@ -237,10 +255,13 @@ import { EAC, Util } from '@ethereum-alarm-clock/lib';
 import BigNumber from 'bignumber.js';
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
+import moment from 'moment';
+import 'moment-timezone';
 
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
+import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
 
 const TIME_BOUNTY_DEFAULTS = ['0.01', '0.02', '0.03'];
@@ -269,6 +290,7 @@ export default {
     'back-button': BackButton,
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
+    'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime
   },
   data() {
@@ -298,6 +320,7 @@ export default {
         error: ''
       },
       ethPrice: new BigNumber(0),
+      selectedTimeZone: moment.tz.guess(),
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -405,20 +428,21 @@ export default {
     estimatedMaximumExecutionGasPrice() {
       const estimated = Util.estimateMaximumExecutionGasPrice(
         new BigNumber(this.web3.utils.toWei(this.timeBounty, 'ether')),
-        new BigNumber(
-          this.web3.utils.toWei(this.futureGasPrice, 'gwei')
-        ),
+        new BigNumber(this.web3.utils.toWei(this.futureGasPrice, 'gwei')),
         new BigNumber(this.gasLimit)
       );
 
       return Math.round(this.web3.utils.fromWei(estimated.toString(), 'gwei'));
     },
     now() {
-      return new Date();
+      return moment();
     },
     minBounty() {
       const wei = this.web3.utils.toWei(this.futureGasPrice, 'gwei');
       return this.web3.utils.fromWei(wei, 'ether');
+    },
+    timezoneOptions() {
+      return moment.tz.names();
     },
     validInputs() {
       return (
@@ -474,7 +498,9 @@ export default {
         console.error(err);
       });
 
-    this.datetime = new Date(this.now.getTime() + 60 * 60 * 1000).toISOString(); // Now +1 h
+    this.datetime = moment()
+      .add(1, 'hours')
+      .toISOString();
     this.futureGasPrice = this.gasPrice.toString();
 
     const estimateBountyForGasPrice = gasPrice => {
@@ -484,7 +510,10 @@ export default {
         new BigNumber(this.web3.utils.toWei('0', 'gwei'))
       );
 
-      const estimatedEth = this.web3.utils.fromWei(estimatedWei.toString(), 'ether');
+      const estimatedEth = this.web3.utils.fromWei(
+        estimatedWei.toString(),
+        'ether'
+      );
 
       // Estimate the number of decimals to show
       let decimalPoints = 0;
@@ -544,7 +573,8 @@ export default {
       } = this;
 
       const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
-      const timestamp = Math.round(new Date(datetime).getTime() / 1000);
+
+      const timestamp = moment(datetime).unix();
 
       const ethToWeiBN = value => {
         value = value === '' ? 0 : value;
@@ -592,5 +622,5 @@ export default {
 </style>
 
 <style lang="scss">
-@import 'DateTimePicker.scss';
+@import 'ScheduleTransactionUnscoped.scss';
 </style>
