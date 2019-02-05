@@ -229,7 +229,6 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
-import checkDeterministicPath from '@/helpers/checkDeterministicPath';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -341,9 +340,7 @@ export default {
         });
     },
     addCustomPath() {
-      console.log(this.customPath); // todo remove dev item
       const customPath = this.checkCustomPath(this.customPath.path);
-      console.log(customPath); // todo remove dev item
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
@@ -358,10 +355,10 @@ export default {
       } else {
         this.invalidPath = this.customPath;
       }
-      console.log(checkDeterministicPath()); // todo remove dev item
     },
     splitPath(path) {
       let array1;
+      // eslint-disable-next-line security/detect-unsafe-regex
       const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
@@ -372,9 +369,6 @@ export default {
     checkCustomPath(path) {
       try {
         let array1;
-        // // eslint-disable-next-line
-        // const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
-        // const matcher = RegExp(regExp, 'g');
         if ((array1 = this.splitPath(path)) !== null) {
           let assembledPath = '';
           if (array1[1]) {
@@ -394,6 +388,7 @@ export default {
         }
         return false;
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error(e);
         return false;
       }
@@ -417,7 +412,9 @@ export default {
           this.$refs.networkAndAddress.show();
         })
         .catch(error => {
+          // if HD path is not supported by the hardware
           this.HDAccounts = [];
+          // eslint-disable-next-line no-console
           console.error(error);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
