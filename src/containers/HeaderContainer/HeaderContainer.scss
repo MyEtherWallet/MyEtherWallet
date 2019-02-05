@@ -24,11 +24,15 @@
   }
 }
 
-
-
 //********************************************************
 // Desktop & Tablet menu
 //********************************************************
+.fixed-header-wrap {
+  @media all and (max-width: $tablet-width) {
+    display: none;
+  }
+}
+
 .fixed-header-border-bottom {
   //border-bottom: 1px solid black;
   box-shadow: 0 0 2px #0000003b;
@@ -165,7 +169,6 @@
   } // .header-container
 } // .fixed-header
 
-
 //********************************************************
 // .notification-menu-container
 //********************************************************
@@ -294,15 +297,6 @@
   cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
 //********************************************************
 // .mobile-menu-content
 //********************************************************
@@ -310,6 +304,7 @@
   @media all and (min-width: calc(#{$tablet-width} + 1px)) {
     display: none;
   }
+
   pointer-events: none;
   z-index: 999;
   position: fixed;
@@ -326,36 +321,6 @@
   }
 }
 
-.mobile-menu-button--container {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  display: none;
-  z-index: 999999;
-
-  @media all and (max-width: $tablet-width) {
-    display: block;
-  }
-
-  .mobile-menu-button {
-    padding: 10px 5px;
-
-    div {
-      background-color: $background-color-black;
-      border-radius: 2px;
-      height: 4px;
-      margin-bottom: 5px;
-      width: 26px;
-    }
-
-    .bar-3 {
-      margin: 0;
-      width: 15px;
-    }
-  }
-} // .mobile-menu-button--container
-
-
 .mobile-menu--container {
   position: fixed;
   width: 100vw;
@@ -369,7 +334,7 @@
   background-color: white;
 
   .menu-content {
-    padding-top: 110px;
+    padding-top: 80px;
   }
 
   ul {
@@ -397,18 +362,12 @@
   }
 }
 
-
 //********************************************************
 // Mobile Address Block
 //********************************************************
-.user-address-info-block {
-  background-color: $light-purple-1;
-  color: $white;
-  margin: 10px;
-  padding: 20px;
-  border-radius: 5px;
-}
+.address-block-container {
 
+}
 
 //********************************************************
 // .mobile-language-menu-container
@@ -445,6 +404,3 @@
     }
   }
 }
-
-
-
