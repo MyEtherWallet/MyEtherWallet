@@ -7,5 +7,6 @@
   "nonce": "Nonce",
   "fromAddress": "From Address",
   "confirmAndSend": "Confirm & Send",
-  "selectNetwork": "Select Network"
+  "selectNetwork": "Select Network",
+  "txDetails": "Transaction Details"
 }
