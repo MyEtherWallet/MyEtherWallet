@@ -84,12 +84,12 @@
           <ul>
             <li>Sender: {{ senderAddress }}</li>
             <li>Nonce: {{ nonce }}</li>
-            <li>Value: {{ value }} {{ selectedNetwork.type.name }}</li>
+            <li>Value: {{ toEth(value) }} {{ selectedNetwork.type.name }}</li>
             <li>Data: {{ data }}</li>
             <li>Chain ID: {{ chainId }}</li>
-            <li>Fee: {{ fee }}</li>
+            <li>Fee: {{ toEth(fee) }} {{ selectedNetwork.type.name }} (${{calculateCost(fee)}})</li>
             <li>Gas Limit: {{ gasLimit }}</li>
-            <li>Gas Price: {{ gasPrice }}</li>
+            <li>Gas Price: {{ toGwei(gasPrice) }}</li>
           </ul>
           <standard-input
             :options="inputTxFee"
@@ -226,7 +226,8 @@ export default {
       to: '0x',
       value: 0,
       data: '0x',
-      chainId: 0
+      chainId: 0,
+      ethPrice: 0
     };
   },
   computed: {
@@ -246,6 +247,9 @@ export default {
         this.selectedNetwork.service
       } `;
     }
+  },
+  mounted() {
+    this.fetchBalanceData();
   },
   methods: {
     switchNetwork(network) {
@@ -286,19 +290,15 @@ export default {
         console.log(tx.toJSON()); // todo remove dev item
         this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toString();
         this.nonce = new BigNumber(asJson[positions.nonce]).toString();
-        this.value = web3Utils.fromWei(
-          new BigNumber(asJson[positions.value]).toString()
-        );
+        this.value = new BigNumber(asJson[positions.value]).toString();
         this.data = asJson[positions.data];
 
         this.chainId = tx.getChainId();
         this.minAccountBalance = tx.getUpfrontCost().toString();
-        this.gasPrice = web3Utils.fromWei(
-          new BigNumber(
-            Misc.sanitizeHex(tx.gasPrice.toString('hex'))
-          ).toString(),
-          'gwei'
-        );
+        this.gasPrice = new BigNumber(
+          Misc.sanitizeHex(tx.gasPrice.toString('hex'))
+        ).toString();
+
         this.fee = new BigNumber(this.gasLimit).times(this.gasPrice).toString();
         console.log(this.senderAddress); // todo remove dev item
         console.log(tx); // todo remove dev item
@@ -308,12 +308,21 @@ export default {
       this.$refs.offlineConfirm.$refs.sendOfflineConfirmation.show();
     },
     async fetchBalanceData() {
-      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      if (!values['DAI']) return 0;
-      this.ethPrice = new BigNumber(values['DAI']);
+      if (!values['ETH']) return 0;
+      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
+    toEth(val) {
+      return web3Utils.fromWei(new BigNumber(val));
+    },
+    toGwei(val) {
+      return web3Utils.fromWei(new BigNumber(val), 'gwei');
+    },
+    calculateCost(inWei) {
+      return this.ethPrice.times(this.toEth(inWei));
+    }
   }
 };
 </script>
