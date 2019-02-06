@@ -116,9 +116,9 @@ export default {
       this.walletJson = createBlob('mime', e.data.walletJson);
       this.name = e.data.name.toString();
     };
-    worker.onerror = function() {
+    worker.onerror = function(e) {
       // eslint-disable-next-line no-console
-      console.error('onerror received from worker'); // replace with debugger
+      throw new Error(e);
     };
   },
   methods: {

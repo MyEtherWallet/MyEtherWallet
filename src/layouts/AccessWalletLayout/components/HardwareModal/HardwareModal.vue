@@ -155,8 +155,7 @@ export default {
           break;
         default:
           // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
-          break;
+          throw new Error(e);
       }
     },
     select(ref) {

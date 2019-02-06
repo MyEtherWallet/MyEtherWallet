@@ -113,8 +113,9 @@ export default {
             2
           );
         })
-        // eslint-disable-next-line
-        .catch(console.error);
+        .catch(e => {
+          throw new Error(e);
+        });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

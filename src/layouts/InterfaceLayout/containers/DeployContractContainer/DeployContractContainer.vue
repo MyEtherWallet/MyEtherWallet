@@ -300,8 +300,7 @@ export default {
         json.from = coinbase;
         this.web3.eth.sendTransaction(json);
       } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
+        throw new Error(e);
       }
     },
     confirmationModalOpen() {

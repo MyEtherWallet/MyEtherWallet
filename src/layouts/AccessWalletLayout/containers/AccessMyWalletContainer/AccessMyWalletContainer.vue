@@ -234,7 +234,7 @@ export default {
         this.networkAndAddressOpen();
       } catch (e) {
         // eslint-disable-next-line
-        console.error(e); // todo replace with proper error
+        throw new Error(e);
         // close the open modal and present the user with a reason for the error (if appropriate)
       }
     }
