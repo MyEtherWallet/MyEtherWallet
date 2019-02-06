@@ -1,48 +1,55 @@
 <template>
   <div class="send-offline-container">
     <interface-container-title :title="$t('common.offline')" />
-    <div class="scroll-container">
-      <div class="progress-status prevent-user-select">
-        <div
-          v-for="(tab, idx) in tabs"
-          :key="tab.title + idx"
-          :class="[
-            isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
-            'genInfo'
-          ]"
-          @click="processChange(tab.name2 ? tab.name2 : tab.name)"
-        >
-          <div class="prevent-pointer-events">
-            <p class="title">{{ tab.title }}</p>
-            <p class="description prevent-pointer-events">{{ tab.desc }}</p>
+    <generate-tx />
+    <!-- DISABLED Begin -->
+    <div v-if="false">
+      <div class="scroll-container">
+        <div class="progress-status prevent-user-select">
+          <div
+            v-for="(tab, idx) in tabs"
+            :key="tab.title + idx"
+            :class="[
+              isTabActive(tab.name) || isTabActive(tab.name2) ? 'active' : '',
+              'genInfo'
+            ]"
+            @click="processChange(tab.name2 ? tab.name2 : tab.name)"
+          >
+            <div class="prevent-pointer-events">
+              <p class="title">{{ tab.title }}</p>
+              <p class="description prevent-pointer-events">{{ tab.desc }}</p>
+            </div>
           </div>
         </div>
       </div>
+      <!-- .form-content-container -->
+      <div class="form-content-container">
+        <router-view
+          :raw-tx="rawTx"
+          :nonce="nonce"
+          :gas-limit="gasLimit"
+          :tokens="tokens"
+          :highest-gas="highestGas"
+          @nonceUpdate="nonceUpdated"
+          @gasLimitUpdate="gasLimitUpdate"
+          @createdRawTx="createdRawTx"
+          @pathUpdate="processChange"
+        />
+      </div>
     </div>
-    <!-- .form-content-container -->
-    <div class="form-content-container">
-      <router-view
-        :raw-tx="rawTx"
-        :nonce="nonce"
-        :gas-limit="gasLimit"
-        :tokens="tokens"
-        :highest-gas="highestGas"
-        @nonceUpdate="nonceUpdated"
-        @gasLimitUpdate="gasLimitUpdate"
-        @createdRawTx="createdRawTx"
-        @pathUpdate="processChange"
-      />
-    </div>
+    <!-- DISABLED End -->
   </div>
   <!-- .form-content-container -->
 </template>
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import GenerateTx from './components/GenerateTx';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle
+    'interface-container-title': InterfaceContainerTitle,
+    'generate-tx': GenerateTx
   },
   props: {
     tokens: {
