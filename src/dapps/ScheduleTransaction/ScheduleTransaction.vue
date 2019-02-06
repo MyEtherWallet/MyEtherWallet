@@ -11,10 +11,23 @@
     </b-container>
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
-        <standard-input
-          :options="amountInputOptions()"
-          @changedValue="amount = $event"
-        />
+        <b-row>
+          <b-col>
+            <standard-input
+              :options="amountInputOptions()"
+              @changedValue="amount = $event"
+            />
+          </b-col>
+          <b-col class="scheduling-currency-picker">
+            <div class="input-title">{{ $t('interface.sendTxType') }}</div>
+            <currency-picker
+              :currency="tokensWithBalance"
+              :page="'sendEgasAmountthAndTokens'"
+              :token="true"
+              @selectedCurrency="selectedCurrency = $event"
+            />
+          </b-col>
+        </b-row>
         <div class="form-block">
           <standard-input
             :options="toAddressInputOptions()"
@@ -302,6 +315,14 @@ export default {
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime
   },
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       eac: null,
@@ -330,6 +351,7 @@ export default {
       },
       ethPrice: new BigNumber(0),
       selectedTimeZone: moment.tz.guess(),
+      selectedCurrency: '',
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -423,6 +445,9 @@ export default {
       'notifications',
       'account'
     ]),
+    isTokenTransfer() {
+      return this.selectedCurrency.symbol === this.network.type.name;
+    },
     timeBountyUsd() {
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -521,6 +546,11 @@ export default {
     }
   },
   beforeMount() {
+    this.selectedCurrency = {
+      name: this.network.type.name_long,
+      symbol: this.network.type.name
+    };
+
     this.web3.eth
       .getBlockNumber()
       .then(res => {
