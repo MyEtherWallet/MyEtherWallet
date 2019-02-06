@@ -50,11 +50,11 @@
     display: flex;
     align-items: center;
 
-    >button {
+    > button {
       $button-size: 40px;
 
       &:active {
-        background-color: rgba(0,0,0,0.2);
+        background-color: rgba(0, 0, 0, 0.2);
       }
 
       width: $button-size;
@@ -71,5 +71,3 @@
     }
   }
 }
-
-

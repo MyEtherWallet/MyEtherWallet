@@ -1,9 +1,6 @@
 <template>
-  <div class="mobile-language-selector">
-    <div class="selected-language">
-      <div class="language-name">{{ currentName }}</div>
-      <div class="language-flag">En</div>
-    </div>
+  <div :class="menuOpen ? 'open' : ''" class="mobile-language-selector">
+    <div class="backdrop" @click="$emit('isopen', false)"></div>
     <div class="language-menu-content-container">
       <ul>
         <li v-for="lan in supportedLanguages" :key="lan.key">{{ lan.name }}</li>
@@ -16,7 +13,7 @@
 export default {
   components: {},
   props: {
-    ismenuopen: {
+    open: {
       type: Boolean,
       default: false
     }
@@ -48,13 +45,14 @@ export default {
         { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
       ],
       currentName: 'English',
-      currentFlag: 'en'
+      currentFlag: 'en',
+      menuOpen: false
     };
   },
   computed: {},
   watch: {
-    ismenuopen(newVal) {
-      this.isMobileMenuOpen = newVal;
+    open(newVal) {
+      this.menuOpen = newVal;
     }
   },
   mounted() {},

@@ -6,6 +6,10 @@
       :gas-price="gasPrice"
     />
     <logout-modal ref="logout" />
+    <mobile-language-selector
+      :open="langSelectorOpen"
+      @isopen="langSelectorOpen = false"
+    />
 
     <!-- Mobile menu header ************************************ -->
     <div
@@ -87,10 +91,17 @@
             ></a>
           </li>
           <li>
-            <div class="menu-link-block">
+            <div
+              class="menu-link-block"
+              @click="langSelectorOpen = !langSelectorOpen"
+            >
               <div>Language</div>
+              <p>{{ flagImg }}</p>
+              <div class="selected-lang">
+                <div>English</div>
+                <img src="@/assets/images/flags/en.svg" />
+              </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
-              <mobile-language-selector />
             </div>
           </li>
           <li v-if="account.address">
@@ -129,7 +140,10 @@ export default {
     return {
       isOnTop: true,
       isMenuOpen: false,
-      isHomePage: true
+      isHomePage: true,
+      langSelectorOpen: false,
+      currentName: 'English',
+      currentFlag: 'en'
     };
   },
   computed: {
@@ -155,7 +169,6 @@ export default {
 
     // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = () => {
-      console.log('Mobile Menu scroll detected !!!');
       this.onPageScroll();
     };
   },
