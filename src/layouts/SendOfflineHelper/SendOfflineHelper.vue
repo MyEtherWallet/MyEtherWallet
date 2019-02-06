@@ -150,7 +150,8 @@
             Signed Chain ID does not match chain id for selected network
           </p>
           <p v-if="wrongNetwork && correctNetwork !== ''">
-            Signed Chain ID ({{correctNetwork}}) does not match chain id for selected network
+            Signed Chain ID ({{ correctNetwork }}) does not match chain id for
+            selected network
           </p>
           <expending-option title="Raw Transaction">
             <standard-input
@@ -446,10 +447,12 @@ export default {
         ).eq(new BigNumber(this.chainID));
         this.chainID = tx.getChainId();
 
-        if(this.wrongNetwork){
-          const correctNetwork = this.networkTypes.filter(entry => entry.chainID === this.chainID);
+        if (this.wrongNetwork) {
+          const correctNetwork = this.networkTypes.filter(
+            entry => entry.chainID === this.chainID
+          );
           console.log(correctNetwork); // todo remove dev item
-          if(correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
+          if (correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
         }
         this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
         const asJson = tx.toJSON();
@@ -460,7 +463,6 @@ export default {
         // this.data = asJson[positions.data];
         this.data =
           '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
-
 
         this.minAccountBalance = tx.getUpfrontCost().toString();
         this.gasPrice = new BigNumber(
