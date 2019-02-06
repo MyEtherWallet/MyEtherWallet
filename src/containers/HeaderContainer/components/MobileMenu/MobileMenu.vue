@@ -9,6 +9,8 @@
     <mobile-language-selector
       :open="langSelectorOpen"
       @isopen="langSelectorOpen = false"
+      @currentlang="langChange"
+      @currentflag="flagChange"
     />
 
     <!-- Mobile menu header ************************************ -->
@@ -96,10 +98,11 @@
               @click="langSelectorOpen = !langSelectorOpen"
             >
               <div>Language</div>
-              <p>{{ flagImg }}</p>
               <div class="selected-lang">
-                <div>English</div>
-                <img src="@/assets/images/flags/en.svg" />
+                <div>{{ currentLang }}</div>
+                <img
+                  :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                />
               </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
@@ -142,7 +145,7 @@ export default {
       isMenuOpen: false,
       isHomePage: true,
       langSelectorOpen: false,
-      currentName: 'English',
+      currentLang: 'English',
       currentFlag: 'en'
     };
   },
@@ -174,6 +177,12 @@ export default {
   },
   created() {},
   methods: {
+    langChange(data) {
+      this.currentLang = data;
+    },
+    flagChange(data) {
+      this.currentFlag = data;
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.$on('hidden', () => {
         this.isMenuOpen = false;

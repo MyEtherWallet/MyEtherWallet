@@ -3,13 +3,24 @@
     <div class="backdrop" @click="$emit('isopen', false)"></div>
     <div class="language-menu-content-container">
       <ul>
-        <li v-for="lan in supportedLanguages" :key="lan.key">{{ lan.name }}</li>
+        <li
+          v-for="language in supportedLanguages"
+          :active="$root._i18n.locale === language.langCode"
+          :key="language.key"
+          :data-language-code="language.langCode"
+          :data-flag-name="language.flag"
+          @click="languageItemClicked"
+        >
+          {{ language.name }}
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import store from 'store';
+
 export default {
   components: {},
   props: {
@@ -57,7 +68,20 @@ export default {
   },
   mounted() {},
   created() {},
-  methods: {}
+  methods: {
+    languageItemClicked(e) {
+      const code = e.target.getAttribute('data-language-code');
+      const flag = e.target.getAttribute('data-flag-name');
+
+      this._i18n.locale = code;
+      this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
+      this.currentFlag = flag;
+      store.set('locale', code);
+      this.$emit('isopen', false);
+      this.$emit('currentlang', this.currentName);
+      this.$emit('currentflag', this.currentFlag);
+    }
+  }
 };
 </script>
 
