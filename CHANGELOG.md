@@ -1,6 +1,7 @@
 ### Release v5.0.0-beta.4
 
 ### Feature
+
 - Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
