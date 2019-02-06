@@ -1,7 +1,6 @@
 import tokens from '@/tokens/tokens-kov.json';
 import contracts from '@/contracts/contract-abi-kov.json';
 import kov from '@/assets/images/icons/network.svg';
-// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'KOV',
