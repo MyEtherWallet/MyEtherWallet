@@ -2,11 +2,13 @@
 
 ### Feature
 
+- Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 - DApp: Schedule transaction using Ethereum Alarm Clock [#545](https://github.com/MyEtherWallet/MyEtherWallet/pull/545)
 
 ### Devop
 
+- Upgrade keepkey and use bip32ToAddressNList [#543](https://github.com/MyEtherWallet/MyEtherWallet/pull/543)
 - Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
 - Add display of swap partners [#537](https://github.com/MyEtherWallet/MyEtherWallet/pull/537)
 - Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)

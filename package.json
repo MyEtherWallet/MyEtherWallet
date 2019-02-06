@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.0-beta.3",
+  "version": "5.0.0-beta.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -34,7 +34,7 @@
     "moment-timezone": "^0.5.23",
     "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
-    "vee-validate": "2.1.5",
+    "vee-validate": "2.1.7",
     "vue": "2.5.22",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "@ethereum-alarm-clock/lib": "0.3.0",
-    "@keepkey/keepkey.js": "1.1.1",
-    "@ledgerhq/hw-app-eth": "4.32.0",
-    "@ledgerhq/hw-transport-u2f": "4.32.0",
+    "@keepkey/keepkey.js": "1.1.2",
+    "@ledgerhq/hw-app-eth": "4.35.0",
+    "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.9",
     "@vue/cli-plugin-babel": "3.3.0",
@@ -84,7 +84,7 @@
     "keccak": "2.0.0",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
-    "package-json": "5.0.0",
+    "package-json": "6.0.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "1.16.1",
@@ -92,7 +92,7 @@
     "remark-preset-lint-recommended": "3.0.2",
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
-    "secp256k1": "3.6.1",
+    "secp256k1": "3.6.2",
     "sinon": "7.2.3",
     "store": "2.0.12",
     "stylelint": "9.10.1",
@@ -103,7 +103,7 @@
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
-    "vue-i18n": "8.7.0",
+    "vue-i18n": "8.8.0",
     "vue-template-compiler": "2.5.22",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
@@ -121,5 +121,13 @@
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "canvas",
+      "ethereum-ens",
+      "webpack",
+      "babel-jest"
+    ]
   }
 }
