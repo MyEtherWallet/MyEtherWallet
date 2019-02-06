@@ -64,7 +64,24 @@ function stringEqual(strA, strB) {
   return mismatch === 0;
 }
 
+const isJson = str => {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    try {
+      const asStr = JSON.stringify(str);
+      JSON.parse(asStr);
+      return true;
+    } catch (e) {
+      return false;
+    }
+    // return false;
+  }
+};
+
 export {
+  isJson,
   mapToObject,
   objectToMap,
   stringEqual,

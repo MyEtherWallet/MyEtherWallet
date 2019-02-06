@@ -91,3 +91,13 @@
     height: 70px;
   }
 }
+
+.bool-input-container {
+  display: flex;
+  padding: 0 20px;
+  width: 100%;
+
+  div {
+    padding: 10px;
+  }
+}

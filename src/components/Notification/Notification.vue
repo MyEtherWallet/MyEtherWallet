@@ -21,7 +21,8 @@
             </div>
           </div>
           <div v-else class="modal-title" @click="hideDetails">
-            <i class="fa fa-long-arrow-left" aria-hidden="true" /> Back
+            <i class="fa fa-long-arrow-left" aria-hidden="true" />
+            {{ $t('common.back') }}
           </div>
         </div>
       </template>
@@ -41,7 +42,7 @@
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
-            :key="notification.title + notification.timestamp + idx"
+            :key="notification.id"
             class="notification-item"
           >
             <keep-alive
@@ -113,7 +114,11 @@ import {
   detailComponentMapping
 } from './components/config';
 
-import { INVESTIGATE_FAILURE_KEY } from '@/helpers/notificationFormatters';
+import {
+  INVESTIGATE_FAILURE_KEY,
+  notificationStatuses,
+  notificationType
+} from '@/helpers/notificationFormatters';
 
 export default {
   components: {
@@ -137,14 +142,13 @@ export default {
       web3: 'web3',
       network: 'network',
       notifications: 'notifications',
-      wallet: 'wallet'
+      account: 'account'
     }),
     sortedNotifications() {
       this.countUnread();
-      if (!this.notifications[this.wallet.getChecksumAddressString()])
-        return [];
-      // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()]
+      if (!this.notifications[this.account.address]) return [];
+      const notifications = this.notifications[this.account.address];
+      return notifications
         .sort((a, b) => {
           a = a.timestamp;
           b = b.timestamp;
@@ -160,10 +164,8 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.notifications[this.wallet.getChecksumAddressString()] === undefined
-    ) {
-      this.notifications[this.wallet.getChecksumAddressString()] = [];
+    if (this.notifications[this.account.address] === undefined) {
+      this.notifications[this.account.address] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
@@ -172,8 +174,57 @@ export default {
       this.shown = false;
       this.hideDetails();
     });
+    this.checkForUnResolvedTxNotifications();
   },
   methods: {
+    checkForUnResolvedTxNotifications() {
+      if (!this.notifications[this.account.address]) return [];
+      const check = this.notifications[this.account.address]
+        .filter(entry => entry.network === this.network.type.name)
+        .filter(entry => {
+          const isOlder =
+            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+              1000 >
+            6000;
+          const isUnResolved = entry.status === notificationStatuses.PENDING;
+          const notExternalSwap =
+            entry.type === notificationType.TRANSACTION ||
+            (entry.type === notificationType.SWAP && entry.body.isDex === true);
+          const hasHash = entry.hash !== '' && entry.hash !== undefined;
+          return isOlder && isUnResolved && hasHash && notExternalSwap;
+        });
+      check.forEach(entry => {
+        this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+          const noticeIdx = this.notifications[this.account.address].findIndex(
+            noticeEntry => entry.id === noticeEntry.id
+          );
+          if (noticeIdx >= 0) {
+            entry.status = result.status
+              ? notificationStatuses.COMPLETE
+              : notificationStatuses.FAILED;
+            entry.body.error = !result.status;
+            entry.body.errorMessage = result.status
+              ? ''
+              : INVESTIGATE_FAILURE_KEY;
+            entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
+            entry.body.blockNumber = new BigNumber(
+              result.blockNumber
+            ).toString();
+            if (entry.body.isDex) {
+              entry.swapStatus = result.status
+                ? notificationStatuses.COMPLETE
+                : notificationStatuses.FAILED;
+              entry.body.timeRemaining = -1;
+            }
+            this.$store.dispatch('updateNotification', [
+              this.account.address,
+              noticeIdx,
+              entry
+            ]);
+          }
+        });
+      });
+    },
     showNotifications() {
       this.shown = true;
       this.$refs.notification.show();
@@ -207,11 +258,10 @@ export default {
       const self = this;
       self.unreadCount = 0;
       if (
-        self.notifications[this.wallet.getChecksumAddressString()] !==
-          undefined &&
-        self.notifications[this.wallet.getChecksumAddressString()].length > 0
+        self.notifications[this.account.address] !== undefined &&
+        self.notifications[this.account.address].length > 0
       ) {
-        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
+        self.notifications[this.account.address].map(item => {
           if (item.read === false) {
             self.unreadCount++;
           }
@@ -229,46 +279,42 @@ export default {
         }
 
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);
       };
     },
     expandAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          if (notice.expanded !== true) {
-            updatedNotif.read = true;
-            updatedNotif.expanded = true;
-          }
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        if (notice.expanded !== true) {
+          updatedNotif.read = true;
+          updatedNotif.expanded = true;
         }
-      );
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     CallapseAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          updatedNotif.expanded = false;
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
-        }
-      );
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        updatedNotif.expanded = false;
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);

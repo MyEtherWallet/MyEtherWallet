@@ -1,6 +1,50 @@
+### Release v5.0.0-beta.4
+
+### Feature
+
+- Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
+- Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
+
 ### Devop
 
+- Upgrade keepkey and use bip32ToAddressNList [#543](https://github.com/MyEtherWallet/MyEtherWallet/pull/543)
+- Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
+- Add display of swap partners [#537](https://github.com/MyEtherWallet/MyEtherWallet/pull/537)
+- Refactor interact w contract [#536](https://github.com/MyEtherWallet/MyEtherWallet/pull/536)
+- Set server side headers on webpack dev server [#534](https://github.com/MyEtherWallet/MyEtherWallet/pull/534)
+- Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
+- Improve notification handling of tx errors [#524](https://github.com/MyEtherWallet/MyEtherWallet/pull/524)
+
+### Release v5.0.0-beta.3
+
+### Hotfix
+
+- Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
+- Fix KeepKey network modal issue [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/510)
+
+### Bug
+
+- Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
+
+### Feature
+
+- Add Crypto to Fiat swap option [#325](https://github.com/MyEtherWallet/MyEtherWallet/pull/325)
+
+### Devop
+
+- Update Logo for Kyber Network [#518](https://github.com/MyEtherWallet/MyEtherWallet/pull/518)
+- Send Transaction container refactor [#499](https://github.com/MyEtherWallet/MyEtherWallet/pull/499)
 - Fix weird interaction in side menu [#494](https://github.com/MyEtherWallet/MyEtherWallet/pull/494)
+- Upload history build to gh-pages-history [#504](https://github.com/MyEtherWallet/MyEtherWallet/pull/504)
+
+### Bug
+
+- Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
+- Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
+
+### Feature
+
+- Componentize wallet options, change all wallet address instance to coinbase [#511](https://github.com/MyEtherWallet/MyEtherWallet/pull/511)
 
 ### Release v5.0.0-beta.2
 

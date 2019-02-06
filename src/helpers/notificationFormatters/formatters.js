@@ -1,4 +1,6 @@
 import BigNumber from 'bignumber.js';
+import uuid from 'uuid/v4';
+
 import {
   INVESTIGATE_FAILURE_KEY,
   type,
@@ -36,12 +38,18 @@ const extractErrorMessage = errObj => {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 const parseStatus = status => {
+  if (typeof status === 'boolean') {
+    return status;
+  } else if (typeof status === 'string') {
+    if (status.slice(0, 2) === '0x') {
+      return new BigNumber(status).gt(0);
+    }
+    return status.toLowerCase() === 'true';
+  }
   // the transaction receipt status is sometimes returning false even if the transaction was successful.
   // Need to investigate why and where this is happening.
   return true;
-  // return new BigNumber(status).toString(10);
 };
 
 const updateStatusBasedOnReciept = status => {
@@ -52,6 +60,7 @@ const updateStatusBasedOnReciept = status => {
 
 const formatTransactionHash = (val, network) => {
   return {
+    id: uuid(),
     title: 'Transaction',
     read: false,
     timestamp: Date.now(),
@@ -102,6 +111,7 @@ const formatTransactionReciept = (entry, val) => {
 
 const formatTransactionError = (val, network) => {
   return {
+    id: uuid(),
     title: 'Transaction',
     read: false,
     timestamp: Date.now(),
@@ -147,6 +157,7 @@ const formatSwap = (val, network) => {
     : swapOnlyStatuses.NEW;
 
   const formatted = {
+    id: uuid(),
     title: 'Swap',
     read: false,
     timestamp: Date.now(),
@@ -181,6 +192,7 @@ const formatSwap = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false
@@ -225,6 +237,7 @@ const formatSwapErrorUpdate = (entry, val) => {
 
 const formatSwapError = (val, network) => {
   return {
+    id: uuid(),
     title: 'Swap',
     read: false,
     timestamp: Date.now(),
@@ -236,7 +249,9 @@ const formatSwapError = (val, network) => {
     network: network,
     body: {
       error: true,
-      errorMessage: extractErrorMessage(val[swapIndexes.response]),
+      errorMessage: val[swapIndexes.response].hasOwnProperty('message')
+        ? val[swapIndexes.response].message
+        : val[swapIndexes.response],
       hash: undefined,
       amount: new BigNumber(val[swapIndexes.txDetails].value).toString(),
       nonce: new BigNumber(val[swapIndexes.txDetails].nonce).toString(),
@@ -255,6 +270,7 @@ const formatSwapError = (val, network) => {
       createdAt: val[swapIndexes.details].parsed.timestamp,
       rate: val[swapIndexes.details].rate,
       provider: val[swapIndexes.details].provider,
+      special: val[swapIndexes.details].special,
       isDex: val[swapIndexes.details].isDex
     },
     expanded: false

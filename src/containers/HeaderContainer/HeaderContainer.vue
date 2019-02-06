@@ -94,6 +94,12 @@
               </div>
             </div>
           </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="openSettings">Settings</div>
+          </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="logout">Log out</div>
+          </li>
         </ul>
       </div>
     </div>
@@ -211,7 +217,7 @@
                   <template slot="button-content">
                     <div class="settings-container">
                       <blockie
-                        :address="wallet.getAddressString()"
+                        :address="account.address"
                         width="35px"
                         height="35px"
                       />
@@ -315,7 +321,8 @@ export default {
     ...mapGetters({
       wallet: 'wallet',
       online: 'online',
-      web3: 'web3'
+      web3: 'web3',
+      account: 'account'
     }),
     showButtons() {
       if (
@@ -406,6 +413,9 @@ export default {
   methods: {
     openSettings() {
       this.$refs.settings.$refs.settings.show();
+      this.$refs.settings.$refs.settings.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
@@ -421,6 +431,9 @@ export default {
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
+      this.$refs.logout.$refs.logout.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();
