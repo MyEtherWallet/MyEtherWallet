@@ -13,6 +13,16 @@
 .wrap {
   padding: 100px 0;
   background-color: $light-blue-9;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 60px 0;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 0;
+  }
 }
 
 // ***********************************************************
@@ -28,12 +38,25 @@
     line-height: 60px;
     margin: 0;
     padding: 0;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+      font-size: 25px;
+      font-weight: 600;
+      line-height: 40px;
+    }
   }
   p {
     margin: 0 auto;
     margin-top: 20px;
     max-width: 700px;
     line-height: 25px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+    }
   }
 }
 
@@ -62,6 +85,16 @@
 
     &:last-child {
       margin-right: 0;
+    }
+
+    @media all and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  @media all and (max-width: 600px) {
+    .mobile-margin-bottom {
+      margin-bottom: 10px;
     }
   }
 }

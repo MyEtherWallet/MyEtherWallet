@@ -172,6 +172,10 @@ export default {
               text: this.$t('footer.extension'),
               href:
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            },
+            {
+              text: 'Send Offline Helper',
+              to: '/send-offline-helper'
             }
           ]
         },

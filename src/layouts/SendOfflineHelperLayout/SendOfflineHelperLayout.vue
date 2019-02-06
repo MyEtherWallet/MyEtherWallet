@@ -53,7 +53,10 @@
               <standard-input :options="rawTx" />
             </expending-options>
             <div class="buttons">
-              <standard-button :options="uploadJsonButton" />
+              <standard-button
+                :options="uploadJsonButton"
+                class="mobile-margin-bottom"
+              />
               <standard-button :options="sendTxButton" />
             </div>
           </accordion-menu>

@@ -68,5 +68,10 @@ $animation-duration: 0.3s;
 
   .content {
     padding: 30px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      padding: 20px 10px;
+    }
   }
 }

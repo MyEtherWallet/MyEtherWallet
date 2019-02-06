@@ -134,6 +134,11 @@ button[disabled] {
   display: inline-block;
   transition: opacity 0.3s ease;
 
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    width: 100%;
+  }
+
   &.full-width {
     display: block;
   }
