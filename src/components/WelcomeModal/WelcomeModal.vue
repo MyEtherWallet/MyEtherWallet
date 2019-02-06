@@ -2,7 +2,6 @@
   <b-modal
     ref="welcome"
     hide-footer
-    centered
     hide-header
     no-close-on-backdrop
     no-close-on-esc
@@ -12,21 +11,18 @@
       <img src="@/assets/images/modal/garlands.png" />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
-          <h3>Welcome to MEW V5</h3>
-          <p>
-            Welcome to the brand new MEW! If this is your first time visiting,
-            check out our <a target="_blank">Medium article on what's new</a>.
-            Vintage MEW can still be accessed
+          <h3>{{ $t('home.welcomeTov5') }}</h3>
+          <i18n path="home.welcomeToV5Desc1" tag="p" for="home.welcomeToLink1">
+            <a href="" target="_blank">{{ $t('home.welcomeToLink1') }}</a>
+          </i18n>
+          <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
             <a href="https://vintage.myetherwallet.com" target="_blank">
-              here
+              {{ $t('home.welcomeToLink2') }}
             </a>
-            , or at the bottom of the page.
-          </p>
+          </i18n>
         </div>
         <div class="welcome-modal-button">
-          <button @click="closeModal">
-            Take me to MEW!
-          </button>
+          <button @click="closeModal">{{ $t('home.onwards') }}!</button>
         </div>
       </div>
     </div>
