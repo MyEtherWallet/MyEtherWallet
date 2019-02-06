@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-
+import * as Sentry from '@sentry/browser';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 // import InfiniteSlider from 'vue-infinite-slide-bar';
@@ -78,9 +78,22 @@ const i18n = new VueI18n({
 });
 
 /* eslint-disable no-new */
-new Vue({
+const vue = new Vue({
   i18n,
   router,
   store,
   render: h => h(getApp())
 }).$mount('#app');
+
+Sentry.init({
+  dsn: 'https://929a06cd498c43c590e04059c420eb2c@sentry.io/1387795',
+  integrations: [new Sentry.Integrations.Vue({ vue })],
+  maxBreadcrumbs: 0,
+  environment: process.env.BUILD_TYPE,
+  requestBodies: 'small',
+  hooks: {
+    beforeSend(event) {
+      console.log(event);
+    }
+  }
+});
