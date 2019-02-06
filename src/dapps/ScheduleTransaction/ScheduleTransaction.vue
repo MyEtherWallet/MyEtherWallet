@@ -31,6 +31,10 @@
               :options="blockNumberInputOptions()"
               @changedValue="selectedBlockNumber = $event"
             />
+            <div v-show="!isValidBlockNumber" class="text-danger">
+              Should be at least
+              {{ supportedModes[1].executionWindow.min }} blocks in the future
+            </div>
           </div>
 
           <b-row v-show="selectedMode === supportedModes[0]">
@@ -45,6 +49,11 @@
                   class="theme-mew"
                   type="datetime"
                 />
+                <div v-show="!isValidDateTime" class="text-danger">
+                  Make sure that the time is at least
+                  {{ supportedModes[0].executionWindow.min }} minutes in the
+                  future
+                </div>
               </div>
             </b-col>
 
@@ -450,8 +459,33 @@ export default {
         this.isValidExecutionWindow &&
         this.isValidFutureGasPrice &&
         this.isValidGasLimit &&
-        this.isValidTimeBounty
+        this.isValidTimeBounty &&
+        this.isValidWindowStart
       );
+    },
+    isValidDateTime() {
+      return (
+        moment(this.datetime) >
+        moment().add(this.supportedModes[0].executionWindow.min, 'minutes')
+      );
+    },
+    isValidBlockNumber() {
+      const { selectedBlockNumber, supportedModes, currentBlockNumber } = this;
+      return (
+        parseInt(selectedBlockNumber) >
+        currentBlockNumber + supportedModes[1].executionWindow.min
+      );
+    },
+    isValidWindowStart() {
+      const {
+        selectedMode,
+        supportedModes,
+        isValidBlockNumber,
+        isValidDateTime
+      } = this;
+      return selectedMode === supportedModes[0]
+        ? isValidDateTime
+        : isValidBlockNumber;
     },
     isValidAddress() {
       return (
