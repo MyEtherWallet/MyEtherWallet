@@ -23,10 +23,9 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
-
 
 //********************************************************
 // Language Menu Content Container (Fixed Position)
@@ -55,9 +54,8 @@
       //border-bottom: 1px solid $light-grey-2;
 
       &:active {
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0, 0, 0, 0.1);
       }
     }
   }
 }
-

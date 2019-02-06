@@ -83,7 +83,6 @@ $mobile-menu-z-index: 999;
   width: 100vw;
   opacity: 0;
   transition: all $menu-opening-animation-duration ease;
-  user-select: none;
   pointer-events: none;
 
   &.menu-open {
@@ -149,7 +148,7 @@ $mobile-menu-z-index: 999;
           right: 50px;
           display: flex;
           align-items: center;
-          >*{
+          > * {
             font-size: 16px;
           }
           img {
