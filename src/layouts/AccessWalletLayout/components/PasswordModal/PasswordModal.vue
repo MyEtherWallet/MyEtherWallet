@@ -100,6 +100,7 @@ export default {
       };
       worker.onerror = function(e) {
         self.error = e.message;
+        throw new Error(e);
       };
     },
     switchViewPassword() {

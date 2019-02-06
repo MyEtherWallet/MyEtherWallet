@@ -239,9 +239,9 @@ export default {
           });
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
-          break;
+          throw new Error(
+            `Wallet type ${this.account.identifier} can't switch addresses`
+          );
       }
     },
     print() {
@@ -341,9 +341,8 @@ export default {
           }
           return tokenBalance;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          throw new Error(e);
         });
       return balance;
     },
@@ -400,9 +399,8 @@ export default {
         .then(res => {
           this.blockNumber = res;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          throw new Error(e);
         });
     },
     getBalance() {
@@ -413,23 +411,18 @@ export default {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          throw new Error(e);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            return;
+            throw new Error(err);
           }
           if (!accounts.length) {
-            // eslint-disable-next-line no-console
-            console.error('Please unlock metamask');
-            return;
+            throw new Error('Please unlock metamask');
           }
           const address = accounts[0];
           if (this.wallet !== null && address !== this.account.address) {
@@ -459,8 +452,7 @@ export default {
             }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.error(e);
+            throw new Error(e);
           });
       }, 500);
     },
@@ -495,9 +487,8 @@ export default {
             this.web3.utils.fromWei(res, 'gwei')
           ).toNumber();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          throw new Error(e);
         });
     },
     setENS() {

@@ -386,9 +386,8 @@ export default {
           .then(res => {
             this.result = res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
+            throw new Error(e);
           });
       } else {
         this.result = '';
@@ -435,10 +434,9 @@ export default {
             this.result = res;
             this.loading = false;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
             this.loading = false;
+            throw new Error(e);
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
@@ -449,9 +447,8 @@ export default {
           .then(res => {
             return res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err);
+          .catch(e => {
+            throw new Error(e);
           });
         const data = contract.methods[this.selectedMethod.name](
           ...this.contractArgs

@@ -183,9 +183,8 @@ export default {
                 }
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
-                    entry.catch(err => {
-                      // eslint-disable-next-line no-console
-                      console.error(err);
+                    entry.catch(e => {
+                      throw new Error(e);
                     });
                   }
                 });

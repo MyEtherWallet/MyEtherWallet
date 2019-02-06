@@ -352,9 +352,8 @@ export default {
         .then(res => {
           this.gasPrice = new BigNumber(res).toString();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          throw new Error(e);
         });
     }
   },
@@ -392,8 +391,6 @@ export default {
     };
   },
   created() {
-    function dummyErrorHandler() {}
-
     try {
       window.addEventListener(
         'popstate',
@@ -406,8 +403,8 @@ export default {
         },
         false
       );
-    } catch (err) {
-      dummyErrorHandler(err);
+    } catch (e) {
+      throw new Error(e);
     }
   },
   methods: {

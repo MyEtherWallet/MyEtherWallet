@@ -225,8 +225,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+      throw new Error(e);
     }
   }
 

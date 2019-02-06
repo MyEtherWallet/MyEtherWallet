@@ -61,9 +61,8 @@ export default {
             path: 'interface'
           });
         })
-        .catch(_error => {
-          // eslint-disable-next-line
-          console.error(_error);
+        .catch(e => {
+          throw new Error(e);
         });
     });
     this.$refs.mewConnect.$on('hidden', () => {

@@ -434,8 +434,7 @@ export default class BitySwap {
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+      throw new Error(e);
     }
   }
 
@@ -505,10 +504,9 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return swapNotificationStatuses.PENDING;
+      throw new Error(e);
     }
+    return swapNotificationStatuses.PENDING;
   }
 
   static async getOrderStatusFiat(noticeDetails) {
@@ -545,9 +543,8 @@ export default class BitySwap {
           return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return swapNotificationStatuses.PENDING;
+      throw new Error(e);
     }
+    return swapNotificationStatuses.PENDING;
   }
 }

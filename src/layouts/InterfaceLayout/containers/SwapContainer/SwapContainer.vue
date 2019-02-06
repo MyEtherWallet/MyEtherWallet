@@ -730,9 +730,8 @@ export default {
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
-        // eslint-disable-next-line no-console
-        console.error(e);
         errorLogger(e);
+        throw new Error(e);
       }
     },
     openConfirmModal(swapDetails) {

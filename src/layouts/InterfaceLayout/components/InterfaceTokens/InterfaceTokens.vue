@@ -237,7 +237,7 @@ export default {
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
           // eslint-disable-next-line
-          console.error('Token Balance Returned Undefined');
+          throw new Error('Token Balance Returned Undefined');
         }
 
         if (this.customTokens.length > 0) {

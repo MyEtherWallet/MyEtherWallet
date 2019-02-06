@@ -86,17 +86,9 @@ const vue = new Vue({
 }).$mount('#app');
 
 Sentry.init({
-  dsn: 'https://929a06cd498c43c590e04059c420eb2c@sentry.io/1387795',
+  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [new Sentry.Integrations.Vue({ vue })],
   maxBreadcrumbs: 0,
   environment: process.env.BUILD_TYPE,
-  requestBodies: 'small',
-  hooks: {
-    beforeSend(event) {
-      if (event.user) {
-        delete event.user.ip;
-      }
-      return event;
-    }
-  }
+  requestBodies: 'small'
 });
