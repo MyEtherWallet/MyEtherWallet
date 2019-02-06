@@ -67,7 +67,7 @@
               </div>
               <div class="grid-block">
                 <p>Chain ID</p>
-                <p>{{ rawTx.chainId }}</p>
+                <p>{{ rawTx.chainID }}</p>
               </div>
               <div class="grid-block">
                 <p>Gas Limit</p>
@@ -106,7 +106,7 @@
           </ul>
           <ul>
             <li>Chain ID</li>
-            <li>{{ rawTx.chainId }}</li>
+            <li>{{ rawTx.chainID }}</li>
           </ul>
           <ul>
             <li>Gas Limit</li>

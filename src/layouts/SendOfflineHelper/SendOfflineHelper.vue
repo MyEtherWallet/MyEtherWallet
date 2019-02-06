@@ -2,18 +2,26 @@
   <div class="send-offline-helper">
     <div class="wrap">
       <div class="page-title">
-        <page-title :options="titleOptions" />
+        <page-title
+          :options="{
+            title: 'Send Offline Helper',
+            boldSubTitle: '',
+            textContent: [
+              'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
+            ]
+          }"
+        />
       </div>
       <div class="page-content-container">
         <!-- Select Network-->
         <div class="collapse-container">
           <accordion-menu
             :greytitle="false"
-            :isopen="showNetwork"
+            :isopen="stage1"
             :title="$t('withoutWallet.selectNetwork')"
             :right-text="networkTitle"
             number="1"
-            @titleClicked="showNetwork = !showNetwork"
+            @titleClicked="stage1 = !stage1"
           >
             <ul class="networks">
               <li
@@ -44,61 +52,152 @@
             </ul>
           </accordion-menu>
         </div>
-        <!-- Generate Info -->
 
+        <!-- Generate Info -->
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="showGenerateInfo"
+          :isopen="stage2"
           :title="$t('withoutWallet.generateInfo')"
           number="2"
-          @titleClicked="showGenerateInfo = !showGenerateInfo"
+          @titleClicked="stage2 = !stage2"
         >
-          <dropdown-address-selector title="From Address" />
-          <div class="button-container">
-            <standard-button :options="buttonContinue" />
-          </div>
-        </accordion-menu>
-        <!-- Paste/Upload Signed Tx-->
-
-        <accordion-menu
-          :greytitle="false"
-          :isopen="showSignedInput"
-          :title="$t('withoutWallet.signedTx')"
-          number="3"
-          @titleClicked="showSignedInput = !showSignedInput"
-        >
-          <standard-input
-            :options="inputSignedTx"
-            @changedValue="getTransactionDetails($event)"
+          <dropdown-address-selector
+            title="From Address"
+            @toAddress="generateInformation($event)"
           />
-          <p v-if="invalidSignature">Invalid Signature</p>
-          <p v-if="wrongNetwork">
-            Signed Chain ID does not match chain id for selected network
-          </p>
-          <expending-option title="Raw Transaction">
-            <standard-input :options="inputRawTx" class="no-margin" />
-          </expending-option>
-          <div class="button-container">
-            <standard-button :options="buttonUploadJson" />
+          <div v-if="informationGenerated">
+            <ul>
+              <li class="detail-container">
+                <span class="detail-name">Sender:</span>
+                <span class="detail-text">{{ genInfo.address }}</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Nonce:</span>
+                <span class="detail-text"> {{ genInfo.nonce }} </span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Chain ID:</span>
+                <span class="detail-text">
+                  {{ genInfo.chainID }} ({{ genInfo.networkName }})</span
+                >
+              </li>
+              <li class="detail-container with-divider">
+                <span class="detail-name">Current Gas Price:</span>
+                <span class="detail-text">
+                  {{ toGwei(genInfo.gasPrice) }} Gwei</span
+                >
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Retrieved:</span>
+                <span class="detail-text"
+                  >{{ dateTimeDisplay(genInfo.timestamp) }}
+                </span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">at block: </span>
+                <span class="detail-text">{{ genInfo.blockNumber }}</span>
+              </li>
+            </ul>
+          </div>
+          <div v-show="informationGenerated" class="button-container">
+            <a
+              ref="generatedDownloadLink"
+              :href="generatedJson"
+              :download="exportFileName"
+            >
+              <standard-button
+                :options="{
+                  title: 'Export JSON File',
+                  buttonStyle: 'green-border',
+                  noWalletTerms: true,
+                  noMinWidth: true
+                }"
+              />
+            </a>
+
             <standard-button
-              :options="buttonSendTx"
-              @click.native="
-                showTxDetails = true;
-                showSignedInput = false;
-              "
+              :options="{
+                title: 'Continue',
+                buttonStyle: 'green',
+                noWalletTerms: true,
+                rightArrow: true
+              }"
+              @click.native="stage2Btn"
             />
           </div>
         </accordion-menu>
-        <!-- Review and Send-->
 
+        <!-- Paste/Upload Signed Tx-->
+        <accordion-menu
+          :greytitle="false"
+          :isopen="stage3"
+          :title="$t('withoutWallet.signedTx')"
+          number="3"
+          @titleClicked="stage3 = !stage3"
+        >
+          <standard-input
+            :options="{
+              title: $t('withoutWallet.signedTx'),
+              isTextarea: true,
+              buttonClear: true,
+              buttonCopy: true
+            }"
+            @changedValue="getTransactionDetails($event)"
+          />
+          <p v-if="invalidSignature">Invalid Signature</p>
+          <p v-if="wrongNetwork && correctNetwork === ''">
+            Signed Chain ID does not match chain id for selected network
+          </p>
+          <p v-if="wrongNetwork && correctNetwork !== ''">
+            Signed Chain ID ({{correctNetwork}}) does not match chain id for selected network
+          </p>
+          <expending-option title="Raw Transaction">
+            <standard-input
+              :options="{
+                isTextarea: true,
+                buttonClear: true,
+                buttonCopy: true
+              }"
+              class="no-margin"
+            />
+          </expending-option>
+          <div class="button-container">
+            <input
+              ref="jsonInput"
+              type="file"
+              name="file"
+              style="display: none"
+              @change="uploadFile"
+            />
+            <standard-button
+              :options="{
+                title: 'Upload JSON File',
+                buttonStyle: 'green-border',
+                noWalletTerms: true,
+                noMinWidth: true
+              }"
+              @click.native="uploadClick()"
+            />
+            <standard-button
+              :options="{
+                title: 'Continue',
+                buttonStyle: 'green',
+                noWalletTerms: true
+              }"
+              @click.native="stage3Btn"
+            />
+          </div>
+        </accordion-menu>
+
+        <!-- Review and Send-->
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="showTxDetails"
+          :isopen="stage4"
           :title="$t('withoutWallet.txDetails')"
           number="4"
-          @titleClicked="showTxDetails = !showTxDetails"
+          @titleClicked="stage4 = !stage4"
         >
           <ul>
             <li class="detail-container">
@@ -134,7 +233,7 @@
             <li class="detail-container with-divider">
               <span class="detail-name">Chain ID:</span>
               <span class="detail-text"
-                >{{ chainId }} ({{ selectedNetwork.type.name_long }})</span
+                >{{ chainID }} ({{ selectedNetwork.type.name_long }})</span
               >
             </li>
             <li class="detail-container">
@@ -155,20 +254,25 @@
           </ul>
           <div class="button-container">
             <standard-button
-              :options="buttonContinue"
-              @click.native="showConfirmation()"
+              :options="{
+                title: 'Continue',
+                buttonStyle: 'green',
+                noWalletTerms: true,
+                rightArrow: true
+              }"
+              @click.native="stage4Btn"
             />
           </div>
         </accordion-menu>
-        <!-- Sent Tx Details & Hash-->
 
+        <!-- Sent Tx Details & Hash-->
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
-          :isopen="showFee"
+          :isopen="stage5"
           :title="$t('withoutWallet.txFeeAndNonce')"
-          number="3"
-          @titleClicked="showFee = !showFee"
+          number="5"
+          @titleClicked="stage5 = !stage5"
         >
           SHOW TX HASH, AS LINK TO ETHERSCAN AND THEN THE TRANSACTION RECEIPT
         </accordion-menu>
@@ -190,6 +294,7 @@ import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
+import * as networkTypes from '@/networks/types';
 
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -211,59 +316,16 @@ export default {
   },
   data() {
     return {
+      networkTypes: Object.values(networkTypes),
       selectedNetwork: this.$store.state.network,
-      showNetwork: false,
-      showGenerateInfo: false,
-      showFee: false,
-      showTxDetails: false,
-      showSignedInput: true,
-      titleOptions: {
-        title: 'Send Offline Helper',
-        boldSubTitle: '',
-        textContent: [
-          'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
-        ]
-      },
-      buttonContinue: {
-        title: 'Continue',
-        buttonStyle: 'green',
-        noWalletTerms: true,
-        rightArrow: true
-      },
-      buttonSendTx: {
-        title: 'Continue',
-        buttonStyle: 'green',
-        noWalletTerms: true
-      },
-      buttonUploadJson: {
-        title: 'Upload JSON File',
-        buttonStyle: 'green-border',
-        noWalletTerms: true,
-        noMinWidth: true
-      },
-      inputTxFee: {
-        title: this.$t('withoutWallet.txFee'),
-        topTextInfo: '0.00031 ($1.34)',
-        rightInputText: 'Gwei'
-      },
-      inputNonce: {
-        title: this.$t('withoutWallet.nonce'),
-        popover: 'Nonce is Nonce!'
-      },
-      inputSignedTx: {
-        title: this.$t('withoutWallet.signedTx'),
-        isTextarea: true,
-        buttonClear: true,
-        buttonCopy: true
-      },
-      inputRawTx: {
-        isTextarea: true,
-        buttonClear: true,
-        buttonCopy: true
-      },
+      stage1: false, // Select Network
+      stage2: true, // Generate Information
+      stage3: false, // Enter/Upload Signed Transaction
+      stage4: false, // Review and Send
+      stage5: false, // Show Transaction Hash and Transaction Receipt
       showAllData: false,
-      invalidSignature: false,
-      wrongNetwork: false,
+      informationGenerated: false,
+      downloadable: false,
       from: '0x',
       rawSigned: '',
       minAccountBalance: 0,
@@ -274,8 +336,22 @@ export default {
       to: '0x',
       value: 0,
       data: '0x',
-      chainId: 0,
-      ethPrice: 0
+      chainID: 0,
+      ethPrice: 0,
+      genInfo: {
+        address: '0x',
+        gasPrice: 0,
+        nonce: 0,
+        chainID: this.$store.state.network.type.chainID,
+        networkName: this.$store.state.network.type.name_long
+      },
+      generatedJson: {},
+      file: '',
+      exportFileName: 'Generated Information',
+      //Error Flags
+      invalidSignature: false,
+      wrongNetwork: false,
+      correctNetwork: ''
     };
   },
   computed: {
@@ -304,7 +380,7 @@ export default {
         to: this.to,
         value: this.toEth(this.value),
         data: this.data,
-        chainId: this.chainId
+        chainID: this.chainID
       };
     },
     envDetails() {
@@ -315,15 +391,31 @@ export default {
     }
   },
   mounted() {
+    this.switchNetwork(this.$store.state.network);
     this.fetchBalanceData();
   },
   methods: {
+    stage1Btn() {
+      this.stage1 = false;
+      this.stage2 = true;
+    },
+    stage2Btn() {
+      this.stage2 = false;
+      this.stage3 = true;
+    },
+    stage3Btn() {
+      this.stage3 = false;
+      this.stage4 = true;
+    },
+    stage4Btn() {
+      this.stage4 = false;
+      this.stage5 = true;
+    },
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.selectedNetwork = network;
         this.$store.dispatch('setWeb3Instance');
-        this.showNetwork = false;
-        this.showGenerateInfo = true;
+        this.stage1Btn();
         this.getTransactionDetails();
       });
     },
@@ -348,10 +440,17 @@ export default {
         const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
         const tx = new ethTx(sanatizedRawSigned);
         this.invalidSignature = !tx.verifySignature();
-        this.chainId = tx.getChainId();
+        this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(
           this.selectedNetwork.type.chainID
-        ).eq(new BigNumber(this.chainId));
+        ).eq(new BigNumber(this.chainID));
+        this.chainID = tx.getChainId();
+
+        if(this.wrongNetwork){
+          const correctNetwork = this.networkTypes.filter(entry => entry.chainID === this.chainID);
+          console.log(correctNetwork); // todo remove dev item
+          if(correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
+        }
         this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
         const asJson = tx.toJSON();
         this.to = asJson[positions.to];
@@ -362,7 +461,6 @@ export default {
         this.data =
           '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
 
-        this.chainId = tx.getChainId();
 
         this.minAccountBalance = tx.getUpfrontCost().toString();
         this.gasPrice = new BigNumber(
@@ -371,9 +469,6 @@ export default {
 
         this.fee = new BigNumber(this.gasLimit).times(this.gasPrice).toString();
       }
-    },
-    showConfirmation() {
-      this.$refs.offlineConfirm.$refs.sendOfflineConfirmation.show();
     },
     async fetchBalanceData() {
       const url = 'https://cryptorates.mewapi.io/ticker';
@@ -391,11 +486,53 @@ export default {
       if (!val) return 0;
       return web3Utils.fromWei(new BigNumber(val).toString(), 'gwei');
     },
+    dateTimeDisplay(unixTimeStamp) {
+      return new Date(unixTimeStamp).toString();
+    },
     calculateCost(inWei) {
       return new BigNumber(this.ethPrice)
         .times(this.toEth(inWei))
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
+    },
+    async generateInformation(address) {
+      // this.web3.
+      if (address === '') return;
+      this.genInfo.address = address;
+      this.genInfo.gasPrice = await this.web3.eth.getGasPrice();
+      this.genInfo.nonce = await this.web3.eth.getTransactionCount(address);
+      this.genInfo.blockNumber = await this.web3.eth.getBlockNumber();
+      this.genInfo.chainID = this.selectedNetwork.type.chainID;
+      this.genInfo.timestamp = Date.now(); //;
+      this.exportGeneratedInfo();
+      this.informationGenerated = true;
+    },
+    exportGeneratedInfo() {
+      const createBlob = (mime, str) => {
+        const string = typeof str === 'object' ? JSON.stringify(str) : str;
+        if (string === null) return '';
+        const blob = new Blob([string], {
+          type: mime
+        });
+        this.downloadable = true;
+        return window.URL.createObjectURL(blob);
+      };
+      this.generatedJson = createBlob('mime', this.genInfo);
+      this.exportFileName = this.genInfo.address;
+    },
+    uploadClick() {
+      const jsonInput = this.$refs.jsonInput;
+      jsonInput.value = '';
+      jsonInput.click();
+    },
+    uploadFile(e) {
+      const self = this;
+      const reader = new FileReader();
+      reader.onloadend = function(evt) {
+        self.$emit('file', JSON.parse(evt.target.result));
+        self.file = JSON.parse(evt.target.result);
+      };
+      reader.readAsBinaryString(e.target.files[0]);
     }
   }
 };
