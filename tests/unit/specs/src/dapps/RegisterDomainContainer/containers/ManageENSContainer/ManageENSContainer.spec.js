@@ -56,7 +56,7 @@ describe('ManageENSContainer.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct resolverAddress data', () => {
+  xit('should render correct resolverAddress data', () => {
     const resolverAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
     wrapper.setData({ resolverAddress });
     expect(

@@ -7,7 +7,6 @@ import eosc from './eosc';
 import esn from './esn';
 import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
 import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
-import etcgastracker from './etc-gastracker';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
@@ -30,6 +29,7 @@ import rskpublic from './rsk-public';
 import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
+import goerli from './goerli-mew-ws';
 export {
   akaremote,
   ath,
@@ -40,7 +40,6 @@ export {
   esn,
   etcethereumcommonwealthgeth,
   etcethereumcommonwealthparity,
-  etcgastracker,
   ethethscan,
   ethinfura,
   ethinfuraws,
@@ -62,5 +61,6 @@ export {
   rskpublic,
   rsktestpublic,
   tomo,
-  ubq
+  ubq,
+  goerli
 };
