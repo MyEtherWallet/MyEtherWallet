@@ -10,7 +10,7 @@
             </h4>
             <div class="select-contract no-border">
               <currency-picker
-                :currency="network.type.contracts"
+                :currency="mergedContracts"
                 :token="false"
                 page="interactWContract"
                 @selectedCurrency="selectedContract"
@@ -167,10 +167,10 @@
             />
           </div>
         </div>
-        <div v-show="selectedMethod.constant === false">
+        <div v-show="selectedMethod.payable">
           <div class="title-container">
             <div class="title">
-              <h4>{{ $t('common.value') }}:</h4>
+              <h4>{{ $t('common.value') }} in ETH:</h4>
             </div>
           </div>
           <input
@@ -181,13 +181,17 @@
             class="non-bool-input"
           />
         </div>
-        <div v-if="result !== ''">
+        <div v-if="selectedMethod.constant">
           <div class="title-container">
             <div class="title"><h4>Result:</h4></div>
           </div>
           <div class="result-inputs">
             <input
-              v-if="resType === 'string'"
+              v-if="
+                resType === 'string' ||
+                  resType === 'boolean' ||
+                  resType === 'number'
+              "
               v-model="result"
               type="text"
               name
@@ -268,6 +272,7 @@ import { Misc } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
+import store from 'store';
 
 export default {
   components: {
@@ -295,6 +300,10 @@ export default {
       account: 'account',
       web3: 'web3'
     }),
+    mergedContracts() {
+      const customContracts = store.get('customContracts') || [];
+      return this.network.type.contracts.concat(customContracts);
+    },
     isValidAbi() {
       return Misc.isJson(this.abi);
     },
@@ -417,6 +426,7 @@ export default {
       } else {
         this.result = '';
       }
+      this.loading = false;
       this.selectedMethod = method;
       this.selectedMethod.inputs.forEach(input => {
         if (input.type === 'bool') {
