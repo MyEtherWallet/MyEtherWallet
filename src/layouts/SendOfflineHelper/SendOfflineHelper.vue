@@ -162,7 +162,7 @@
         </accordion-menu>
         <!-- Sent Tx Details & Hash-->
 
-                <accordion-menu
+        <accordion-menu
           :greytitle="false"
           :editbutton="true"
           :isopen="showFee"
@@ -170,9 +170,8 @@
           number="3"
           @titleClicked="showFee = !showFee"
         >
-                  SHOW TX HASH, AS LINK TO ETHERSCAN AND THEN THE TRANSACTION RECEIPT
+          SHOW TX HASH, AS LINK TO ETHERSCAN AND THEN THE TRANSACTION RECEIPT
         </accordion-menu>
-
       </div>
     </div>
 
