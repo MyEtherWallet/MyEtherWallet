@@ -1,7 +1,9 @@
 <template>
   <div class="send-offline-helper">
     <div class="wrap">
-      <div class="page-title"><page-title :options="titleOptions" /></div>
+      <div class="page-title">
+        <page-title :options="titleOptions" />
+      </div>
       <div class="page-content-container">
         <div class="collapse-container">
           <accordion-menu
@@ -54,6 +56,9 @@
             @changedValue="getTransactionDetails($event)"
           />
           <p v-if="invalidSignature">Invalid Signature</p>
+          <p v-if="wrongNetwork">
+            Signed Chain ID does not match chain id for selected network
+          </p>
           <expending-option title="Raw Transaction">
             <standard-input :options="inputRawTx" class="no-margin" />
           </expending-option>
@@ -210,6 +215,7 @@ export default {
         buttonCopy: true
       },
       invalidSignature: false,
+      wrongNetwork: false,
       senderAddress: '',
       rawSigned: '',
       minAccountBalance: 0,
@@ -248,6 +254,7 @@ export default {
         this.$store.dispatch('setWeb3Instance');
         this.showNetwork = false;
         this.showGenerateInfo = true;
+        this.getTransactionDetails();
       });
     },
     getTransactionDetails(rawSigned) {
@@ -267,31 +274,46 @@ export default {
       if (this.rawSigned !== '') {
         const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
         const tx = new ethTx(sanatizedRawSigned);
-        const isValid = tx.verifySignature();
-        if (!isValid) {
-          this.invalidSignature = true;
-        }
+        this.invalidSignature = !tx.verifySignature();
+        this.chainId = tx.getChainId();
+        this.wrongNetwork = !new BigNumber(
+          this.selectedNetwork.type.chainID
+        ).eq(new BigNumber(this.chainId));
         this.senderAddress = Misc.sanitizeHex(
           tx.getSenderAddress().toString('hex')
         );
         const asJson = tx.toJSON();
         console.log(tx.toJSON()); // todo remove dev item
-        this.gasLimit = asJson[positions.gasLimit];
+        this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toString();
         this.nonce = new BigNumber(asJson[positions.nonce]).toString();
         this.value = web3Utils.fromWei(
           new BigNumber(asJson[positions.value]).toString()
         );
         this.data = asJson[positions.data];
-        this.fee = tx.getBaseFee().toString();
+
         this.chainId = tx.getChainId();
         this.minAccountBalance = tx.getUpfrontCost().toString();
+        this.gasPrice = web3Utils.fromWei(
+          new BigNumber(
+            Misc.sanitizeHex(tx.gasPrice.toString('hex'))
+          ).toString(),
+          'gwei'
+        );
+        this.fee = new BigNumber(this.gasLimit).times(this.gasPrice).toString();
         console.log(this.senderAddress); // todo remove dev item
         console.log(tx); // todo remove dev item
       }
     },
     sendTransaction() {
       this.$refs.offlineConfirm.$refs.sendOfflineConfirmation.show();
-    }
+    },
+    async fetchBalanceData() {
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
+      if (!values['DAI']) return 0;
+      this.ethPrice = new BigNumber(values['DAI']);
+    },
   }
 };
 </script>
