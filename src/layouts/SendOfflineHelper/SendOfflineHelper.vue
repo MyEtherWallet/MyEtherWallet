@@ -43,7 +43,19 @@
             </ul>
           </accordion-menu>
         </div>
-
+                <accordion-menu
+          :greytitle="false"
+          :editbutton="true"
+          :isopen="showGenerateInfo"
+          :title="$t('withoutWallet.generateInfo')"
+          number="2"
+          @titleClicked="showGenerateInfo = !showGenerateInfo"
+        >
+          <dropdown-address-selector title="From Address" />
+          <div class="button-container">
+            <standard-button :options="buttonContinue" />
+          </div>
+        </accordion-menu>
         <accordion-menu
           :greytitle="false"
           :isopen="showSignedInput"
@@ -82,22 +94,63 @@
           @titleClicked="showTxDetails = !showTxDetails"
         >
           <ul>
-            <li>Sender: {{ senderAddress }}</li>
-            <li>Nonce: {{ nonce }}</li>
-            <li>Value: {{ toEth(value) }} {{ selectedNetwork.type.name }}</li>
-            <li>Data: {{ data }}</li>
-            <li>Chain ID: {{ chainId }}</li>
-            <li>Fee: {{ toEth(fee) }} {{ selectedNetwork.type.name }} (${{calculateCost(fee)}})</li>
-            <li>Gas Limit: {{ gasLimit }}</li>
-            <li>Gas Price: {{ toGwei(gasPrice) }}</li>
+            <li class="detail-container">
+              <span class="detail-name">Sender:</span>
+              <span class="detail-text">{{ from }}</span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Receiver:</span>
+              <span class="detail-text">{{ to }}</span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Nonce:</span>
+              <span class="detail-text"> {{ nonce }} </span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Value:</span>
+              <span class="detail-text">
+                {{ toEth(value) }} {{ selectedNetwork.type.name }}
+              </span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Data:</span>
+              <span class="detail-text">
+                {{ truncateData(data) }}
+                <span class="show-all-btn" @click="showAllData = !showAllData">
+                  Show All
+                </span>
+              </span>
+
+              <span v-if="showAllData" class="data-all">{{ data }}</span>
+            </li>
+
+            <li class="detail-container with-divider">
+              <span class="detail-name">Chain ID:</span>
+              <span class="detail-text"
+                >{{ chainId }} ({{ selectedNetwork.type.name_long }})</span
+              >
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Gas Limit:</span>
+              <span class="detail-text">{{ gasLimit }}</span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Gas Price:</span>
+              <span class="detail-text">{{ toGwei(gasPrice) }} Gwei</span>
+            </li>
+            <li class="detail-container">
+              <span class="detail-name">Fee:</span>
+              <span class="detail-text">
+                {{ toEth(fee) }} {{ selectedNetwork.type.name }} ($
+                {{ calculateCost(fee) }})
+              </span>
+            </li>
           </ul>
-          <standard-input
-            :options="inputTxFee"
-            @changedValue="gasLimit = $event"
-          />
-          <standard-input :options="inputNonce" />
           <div class="button-container">
-            <standard-button :options="buttonContinue" />
+            <standard-button
+              :options="buttonContinue"
+              @click.native="showConfirmation()"
+            />
           </div>
         </accordion-menu>
         <!--        <accordion-menu
@@ -117,23 +170,16 @@
             <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>-->
-        <accordion-menu
-          :greytitle="false"
-          :editbutton="true"
-          :isopen="showGenerateInfo"
-          :title="$t('withoutWallet.generateInfo')"
-          number="2"
-          @titleClicked="showGenerateInfo = !showGenerateInfo"
-        >
-          <dropdown-address-selector title="From Address" />
-          <div class="button-container">
-            <standard-button :options="buttonContinue" />
-          </div>
-        </accordion-menu>
+
       </div>
     </div>
 
-    <confirmation-modal ref="offlineConfirm" />
+    <confirmation-modal
+      ref="offlineConfirm"
+      :raw-tx="rawTx"
+      :signed-tx="rawSigned"
+      :env-details="envDetails"
+    />
   </div>
 </template>
 
@@ -214,9 +260,10 @@ export default {
         buttonClear: true,
         buttonCopy: true
       },
+      showAllData: false,
       invalidSignature: false,
       wrongNetwork: false,
-      senderAddress: '',
+      from: '0x',
       rawSigned: '',
       minAccountBalance: 0,
       fee: 0,
@@ -246,6 +293,24 @@ export default {
       return `${this.selectedNetwork.type.name} - ${
         this.selectedNetwork.service
       } `;
+    },
+    rawTx() {
+      return {
+        from: this.from,
+        nonce: this.nonce,
+        gasPrice: this.toGwei(this.gasPrice),
+        gasLimit: this.gasLimit,
+        to: this.to,
+        value: this.toEth(this.value),
+        data: this.data,
+        chainId: this.chainId
+      };
+    },
+    envDetails() {
+      return {
+        network: this.selectedNetwork,
+        ethPrice: this.ethPrice
+      };
     }
   },
   mounted() {
@@ -261,6 +326,10 @@ export default {
         this.getTransactionDetails();
       });
     },
+    truncateData(data) {
+      if (!data) return '';
+      return `${data.slice(0, 20)}...${data.slice(-10)}`;
+    },
     getTransactionDetails(rawSigned) {
       const positions = {
         nonce: 0,
@@ -274,7 +343,6 @@ export default {
         s: 8
       };
       if (rawSigned) this.rawSigned = rawSigned;
-      console.log('getTransactionDetails'); // todo remove dev item
       if (this.rawSigned !== '') {
         const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
         const tx = new ethTx(sanatizedRawSigned);
@@ -283,45 +351,50 @@ export default {
         this.wrongNetwork = !new BigNumber(
           this.selectedNetwork.type.chainID
         ).eq(new BigNumber(this.chainId));
-        this.senderAddress = Misc.sanitizeHex(
-          tx.getSenderAddress().toString('hex')
-        );
+        this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
         const asJson = tx.toJSON();
-        console.log(tx.toJSON()); // todo remove dev item
+        this.to = asJson[positions.to];
         this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toString();
         this.nonce = new BigNumber(asJson[positions.nonce]).toString();
         this.value = new BigNumber(asJson[positions.value]).toString();
-        this.data = asJson[positions.data];
+        // this.data = asJson[positions.data];
+        this.data =
+          '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
 
         this.chainId = tx.getChainId();
+
         this.minAccountBalance = tx.getUpfrontCost().toString();
         this.gasPrice = new BigNumber(
           Misc.sanitizeHex(tx.gasPrice.toString('hex'))
         ).toString();
 
         this.fee = new BigNumber(this.gasLimit).times(this.gasPrice).toString();
-        console.log(this.senderAddress); // todo remove dev item
-        console.log(tx); // todo remove dev item
       }
     },
-    sendTransaction() {
+    showConfirmation() {
       this.$refs.offlineConfirm.$refs.sendOfflineConfirmation.show();
     },
     async fetchBalanceData() {
       const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
-      const values = await fetchValues.json();
+      const result = await fetchValues.json();
+      const values = result.data;
       if (!values['ETH']) return 0;
       this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
     toEth(val) {
-      return web3Utils.fromWei(new BigNumber(val));
+      if (!val) return 0;
+      return web3Utils.fromWei(new BigNumber(val).toString());
     },
     toGwei(val) {
-      return web3Utils.fromWei(new BigNumber(val), 'gwei');
+      if (!val) return 0;
+      return web3Utils.fromWei(new BigNumber(val).toString(), 'gwei');
     },
     calculateCost(inWei) {
-      return this.ethPrice.times(this.toEth(inWei));
+      return new BigNumber(this.ethPrice)
+        .times(this.toEth(inWei))
+        .precision(2, BigNumber.ROUND_UP)
+        .toNumber();
     }
   }
 };

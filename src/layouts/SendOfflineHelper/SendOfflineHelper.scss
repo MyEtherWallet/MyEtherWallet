@@ -116,3 +116,47 @@
 
   // ul
 }
+
+.detail-container {
+  position: relative;
+
+  .detail-name {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 7px 20px;
+    width: 100%;
+    position: relative;
+    display: block;
+
+    &.right-padding {
+      padding-right: 70px;
+    }
+  }
+
+  .detail-text {
+    //padding-bottom: 7px;
+    position: absolute;
+    top: 10px;
+    right: 21px;
+    //color: $mew-green;
+  }
+
+  .show-all-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    font-size: 10px;
+
+    &:hover {
+      color: $mew-green;
+    }
+  }
+
+  .data-all {
+    overflow-wrap: break-word;
+  }
+}
+
+.with-divider {
+  border-bottom: 1px solid $light-grey-7;
+}
