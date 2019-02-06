@@ -39,7 +39,7 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.1.1",
+    "@keepkey/keepkey.js": "1.1.2",
     "@ledgerhq/hw-app-eth": "4.35.0",
     "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
@@ -115,5 +115,13 @@
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "canvas",
+      "ethereum-ens",
+      "webpack",
+      "babel-jest"
+    ]
   }
 }
