@@ -5,6 +5,7 @@
         <page-title :options="titleOptions" />
       </div>
       <div class="page-content-container">
+        <!-- Select Network-->
         <div class="collapse-container">
           <accordion-menu
             :greytitle="false"
@@ -43,7 +44,9 @@
             </ul>
           </accordion-menu>
         </div>
-                <accordion-menu
+        <!-- Generate Info -->
+
+        <accordion-menu
           :greytitle="false"
           :editbutton="true"
           :isopen="showGenerateInfo"
@@ -56,11 +59,13 @@
             <standard-button :options="buttonContinue" />
           </div>
         </accordion-menu>
+        <!-- Paste/Upload Signed Tx-->
+
         <accordion-menu
           :greytitle="false"
           :isopen="showSignedInput"
           :title="$t('withoutWallet.signedTx')"
-          number="2"
+          number="3"
           @titleClicked="showSignedInput = !showSignedInput"
         >
           <standard-input
@@ -85,12 +90,14 @@
             />
           </div>
         </accordion-menu>
+        <!-- Review and Send-->
+
         <accordion-menu
           :greytitle="false"
           :editbutton="true"
           :isopen="showTxDetails"
           :title="$t('withoutWallet.txDetails')"
-          number="3"
+          number="4"
           @titleClicked="showTxDetails = !showTxDetails"
         >
           <ul>
@@ -153,7 +160,9 @@
             />
           </div>
         </accordion-menu>
-        <!--        <accordion-menu
+        <!-- Sent Tx Details & Hash-->
+
+                <accordion-menu
           :greytitle="false"
           :editbutton="true"
           :isopen="showFee"
@@ -161,15 +170,8 @@
           number="3"
           @titleClicked="showFee = !showFee"
         >
-          <standard-input
-            :options="inputTxFee"
-            @changedValue="gasLimit = $event"
-          />
-          <standard-input :options="inputNonce" />
-          <div class="button-container">
-            <standard-button :options="buttonContinue" />
-          </div>
-        </accordion-menu>-->
+                  SHOW TX HASH, AS LINK TO ETHERSCAN AND THEN THE TRANSACTION RECEIPT
+        </accordion-menu>
 
       </div>
     </div>
