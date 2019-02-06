@@ -93,7 +93,10 @@ Sentry.init({
   requestBodies: 'small',
   hooks: {
     beforeSend(event) {
-      console.log(event);
+      if (event.user) {
+        delete event.user.ip;
+      }
+      return event;
     }
   }
 });
