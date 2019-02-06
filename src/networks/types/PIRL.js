@@ -1,7 +1,6 @@
 import tokens from '@/tokens/tokens-pirl.json';
 import contracts from '@/contracts/contract-abi-pirl.json';
 import pirl from '@/assets/images/networks/pirl.svg';
-// import { EthAbi } from '../ensAbis';
 
 export default {
   name: 'PIRL',

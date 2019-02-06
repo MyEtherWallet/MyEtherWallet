@@ -43,6 +43,9 @@ const web3 = state => {
 const sidemenuOpen = state => {
   return state.sidemenuOpen;
 };
+const darklist = state => {
+  return state.darklist;
+};
 
 export default {
   account,
@@ -59,5 +62,6 @@ export default {
   transactions,
   wallet,
   web3,
-  sidemenuOpen
+  sidemenuOpen,
+  darklist
 };

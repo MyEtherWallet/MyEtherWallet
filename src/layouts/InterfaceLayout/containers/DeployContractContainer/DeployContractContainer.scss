@@ -93,13 +93,11 @@
 }
 
 .bool-input-container {
-  align-items: center;
   display: flex;
-  justify-content: space-around;
   padding: 0 20px;
   width: 100%;
 
   div {
-    flex: 1;
+    padding: 10px;
   }
 }

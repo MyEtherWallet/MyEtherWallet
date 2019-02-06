@@ -1,4 +1,5 @@
 import nodeList from '@/networks';
+import darklist from '@/darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
@@ -9,7 +10,7 @@ const network =
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
-  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
+  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 10;
 
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
@@ -35,7 +36,8 @@ const state = {
   transactions: {},
   wallet: null,
   web3: {},
-  sidemenuOpen: false
+  sidemenuOpen: false,
+  darklist: darklist
 };
 
 export default state;
