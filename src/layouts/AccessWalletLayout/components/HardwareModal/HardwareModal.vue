@@ -61,6 +61,10 @@ import {
   BitBoxWallet,
   SecalotWallet
 } from '@/wallets';
+import {
+  KeepkeyErrorHandler,
+  LedgerErrorHandler
+} from '@/wallets/errorHandlers';
 export default {
   components: {
     'customer-support': CustomerSupport,
@@ -126,10 +130,12 @@ export default {
       }, 1000);
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(LedgerErrorHandler);
           break;
         case 'trezor':
           TrezorWallet().then(_newWallet => {
@@ -150,9 +156,11 @@ export default {
           });
           break;
         case 'keepkey':
-          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(KeepkeyErrorHandler);
           break;
         default:
           ErrorHandler(new Error('No switch address for given account.'), true);
