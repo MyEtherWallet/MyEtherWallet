@@ -264,7 +264,7 @@ import { mapGetters } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 
 import * as unit from 'ethjs-unit';
@@ -387,7 +387,7 @@ export default {
             this.result = res;
           })
           .catch(e => {
-            throw new Error(e);
+            ErrorHandler(e, false);
           });
       } else {
         this.result = '';
@@ -436,7 +436,7 @@ export default {
           })
           .catch(e => {
             this.loading = false;
-            throw new Error(e);
+            ErrorHandler(e, false);
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
@@ -448,7 +448,7 @@ export default {
             return res;
           })
           .catch(e => {
-            throw new Error(e);
+            ErrorHandler(e, false);
           });
         const data = contract.methods[this.selectedMethod.name](
           ...this.contractArgs

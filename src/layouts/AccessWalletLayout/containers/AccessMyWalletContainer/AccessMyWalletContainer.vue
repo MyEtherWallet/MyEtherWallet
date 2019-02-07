@@ -108,6 +108,7 @@ import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   components: {
@@ -233,9 +234,7 @@ export default {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {
-        // eslint-disable-next-line
-        throw new Error(e);
-        // close the open modal and present the user with a reason for the error (if appropriate)
+        ErrorHandler(e, false);
       }
     }
   }

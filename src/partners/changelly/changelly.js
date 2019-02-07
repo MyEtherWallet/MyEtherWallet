@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
+import { ErrorHandler } from '@/helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -225,7 +226,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      throw new Error(e);
+      ErrorHandler(e, false);
     }
   }
 

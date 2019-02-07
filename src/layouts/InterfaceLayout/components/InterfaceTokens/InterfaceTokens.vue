@@ -90,6 +90,7 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
@@ -236,8 +237,7 @@ export default {
         let newArray = [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          // eslint-disable-next-line
-          throw new Error('Token Balance Returned Undefined');
+          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
         }
 
         if (this.customTokens.length > 0) {
