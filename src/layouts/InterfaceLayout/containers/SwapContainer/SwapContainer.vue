@@ -19,12 +19,6 @@
 
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
-        <!--        <div class="buy-eth">
-          <a href="https://ccswap.myetherwallet.com" target="_blank">
-            <span>{{ $t('interface.buyEth') }}</span>
-            <img :src="images.visaMaster" />
-          </a>
-        </div>-->
       </div>
 
       <div class="form-content-container">
@@ -56,6 +50,7 @@
                   value
                   placeholder="Deposit Amount"
                   @input="amountChanged('from')"
+                  @change="demoDisplay"
                 />
               </div>
               <div class="error-message-container">
@@ -265,9 +260,12 @@ export default {
       exitFromAddress: '',
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
+      displayToValue: 1,
+      displayFromValue: 1,
       fromValue: 1,
       toValue: 1,
       invalidFrom: 'none',
+      lastBestRate: 0,
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -324,6 +322,8 @@ export default {
             }).rate;
           }
           return bestRateForQuantity([...this.providerList], this.fromValue);
+        } else {
+          return this.lastBestRate;
         }
       } catch (e) {
         errorLogger(e);
@@ -444,6 +444,12 @@ export default {
     }
   },
   watch: {
+    toValue(val1) {
+      console.log('toValue: ', val1); // todo remove dev item
+    },
+    fromValue(val1) {
+      console.log('fromValue: ', val1); // todo remove dev item
+    },
     ['this.network.type.name']() {
       this.swap.updateNetwork(this.network.type.name);
     },
@@ -454,6 +460,10 @@ export default {
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
+      this.lastBestRate = bestRateForQuantity(
+        [...this.providerList],
+        this.fromValue
+      );
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
@@ -478,6 +488,9 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    demoDisplay(e) {
+      console.log(e); // todo remove dev item
+    },
     reset() {
       this.updateRateEstimate(
         this.fromCurrency,
@@ -571,18 +584,19 @@ export default {
         (isValidEntry(this.fromValue) && direction === 'from') ||
         (isValidEntry(this.toValue) && direction === 'to')
       ) {
-        if (
-          this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
-            this.fromCurrency
-          ]
-        ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
-        } else {
-          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
-        }
+        this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+        // if (
+        //   this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
+        //     this.fromCurrency
+        //   ]
+        // ) {
+        //   this.web3.utils._.debounce(
+        //     this.updateEstimate(this.providerNames.simplex + direction),
+        //     200
+        //   );
+        // } else {
+        //   this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+        // }
       } else if (direction === 'from') {
         this.toValue = '';
       } else if (direction === 'to') {
@@ -590,7 +604,7 @@ export default {
       }
     },
     async updateEstimate(input) {
-      let fromValue, toValue, simplexProvider, simplexRateDetails;
+      let fromValue, toValue/*, simplexProvider, simplexRateDetails*/;
       switch (input) {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
@@ -604,31 +618,34 @@ export default {
             this.bestRate
           );
           break;
-        case `${this.providerNames.simplex}to`:
-          simplexProvider = this.swap.getProvider(this.providerNames.simplex);
-
-          if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateDigital(
-              this.fromCurrency,
-              this.toCurrency,
-              this.toValue
-            );
-            this.fromValue = simplexRateDetails.fromValue;
-            this.toValue = simplexRateDetails.toValue;
-          }
-          break;
-        case `${this.providerNames.simplex}from`:
-          simplexProvider = this.swap.getProvider(this.providerNames.simplex);
-          if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
-            simplexRateDetails = await simplexProvider.updateFiat(
-              this.fromCurrency,
-              this.toCurrency,
-              this.fromValue
-            );
-            this.fromValue = simplexRateDetails.fromValue;
-            this.toValue = simplexRateDetails.toValue;
-          }
-          break;
+        // case `${this.providerNames.simplex}to`:
+        //   simplexProvider = this.swap.getProvider(this.providerNames.simplex);
+        //
+        //   if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
+        //     simplexRateDetails = await simplexProvider.updateDigital(
+        //       this.fromCurrency,
+        //       this.toCurrency,
+        //       this.toValue
+        //     );
+        //     console.log(simplexRateDetails); // todo remove dev item
+        //     this.fromValue = simplexRateDetails.fromValue;
+        //     this.toValue = simplexRateDetails.toValue;
+        //   }
+        //   break;
+        // case `${this.providerNames.simplex}from`:
+        //   simplexProvider = this.swap.getProvider(this.providerNames.simplex);
+        //   if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
+        //     simplexRateDetails = await simplexProvider.updateFiat(
+        //       this.fromCurrency,
+        //       this.toCurrency,
+        //       this.fromValue
+        //     );
+        //     console.log(simplexRateDetails); // todo remove dev item
+        //
+        //     this.fromValue = simplexRateDetails.fromValue;
+        //     this.toValue = simplexRateDetails.toValue;
+        //   }
+        //   break;
         default:
           toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
           fromValue = this.swap.calculateFromValue(this.toValue, this.bestRate);

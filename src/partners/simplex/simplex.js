@@ -89,7 +89,7 @@ export default class Simplex {
         toValue,
         fromValue
       );
-
+console.log(simplexRateDetails); // todo remove dev item
       const rate = new BigNumber(simplexRateDetails.toValue)
         .div(simplexRateDetails.fromValue)
         .toString(10);
@@ -121,14 +121,16 @@ export default class Simplex {
   }
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
-    if (fromValue <= 0)
-      return { error: 'result.result', fromValue: fromValue, toValue: 0 };
+    if (fromValue <= 0) fromValue = 51;
+      // return { error: 'result.result', fromValue: fromValue, toValue: 0 };
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
       requested_currency: fromCurrency,
       requested_amount: +fromValue
     });
+
+    console.log('updateFiat:', result); // todo remove dev item
 
     if (result.error) {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
@@ -141,8 +143,8 @@ export default class Simplex {
   }
 
   async updateDigital(fromCurrency, toCurrency, toValue) {
-    if (toValue <= 0)
-      return { error: 'result.result', fromValue: 0, toValue: toValue };
+    if (toValue <= 0) toValue = 1;
+      // return { error: 'result.result', fromValue: 0, toValue: toValue };
 
     const result = await getQuote({
       digital_currency: toCurrency,
@@ -150,6 +152,9 @@ export default class Simplex {
       requested_currency: toCurrency,
       requested_amount: +toValue
     });
+
+    console.log('updateDigital:', result); // todo remove dev item
+
 
     if (result.error) {
       return { error: result.result, fromValue: 0, toValue: toValue };
