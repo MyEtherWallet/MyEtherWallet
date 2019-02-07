@@ -33,7 +33,7 @@ async function fetchTokens() {
       });
     }
   } catch (e) {
-    console.error(e); // todo replace with proper error
+    console.error(e); // Not captured by sentry
   }
 }
 
@@ -54,7 +54,7 @@ async function fetchDarkList () {
     }
     fs.writeFileSync(`${darklistFolder}/address-darklist.json`, JSON.stringify(jsonToStore));
   } catch (e) {
-    console.log(e); // todo replace with proper error
+    console.log(e); // Not captured by sentry
   }
 }
 

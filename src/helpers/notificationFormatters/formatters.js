@@ -32,8 +32,6 @@ const extractErrorMessage = errObj => {
     }
     return errObj;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
     return errObj;
   }
 };
@@ -95,6 +93,10 @@ const formatTransactionReciept = (entry, val) => {
   entry.body.gasUsed = new BigNumber(
     val[txIndexes.response].gasUsed
   ).toString();
+  if (val[txIndexes.response].contractAddress) {
+    entry.body.contractAddress = val[txIndexes.response].contractAddress;
+    entry.type = notificationType.CONTRACT_CREATION;
+  }
   entry.body.blockNumber = new BigNumber(
     val[txIndexes.response].blockNumber
   ).toString();
