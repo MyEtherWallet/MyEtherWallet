@@ -6,6 +6,7 @@ import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { ErrorHandler } from '@/helpers';
+import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import {
   getSignTransactionObject,
@@ -19,6 +20,7 @@ const NEED_PASSWORD = true;
 class BitBoxWallet {
   constructor(password) {
     this.identifier = bitboxType;
+    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[bitboxType];
@@ -87,11 +89,6 @@ class BitBoxWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async (basePath, password) => {
-  const _bitboxWallet = new BitBoxWallet(password);
-  await _bitboxWallet.init(basePath);
-  return _bitboxWallet;
-};
 const getRootPubKey = (_bitbox, _path) => {
   return new Promise((resolve, reject) => {
     _bitbox.getAddress(_path, (result, error) => {
@@ -103,5 +100,12 @@ const getRootPubKey = (_bitbox, _path) => {
     });
   });
 };
+
+const createWallet = async (basePath, password) => {
+  const _bitboxWallet = new BitBoxWallet(password);
+  await _bitboxWallet.init(basePath);
+  return _bitboxWallet;
+};
+createWallet.errorHandler = errorHandler;
 
 export default createWallet;

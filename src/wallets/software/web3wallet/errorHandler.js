@@ -1,7 +1,5 @@
 import * as Sentry from '@sentry/browser';
-const ERRORS = {
-  U2F_TIMEOUT: 'Failed to sign with Ledger device: U2F TIMEOUT'
-};
+const ERRORS = {};
 const ErrorHandler = err => {
   const errorValues = Object.values(ERRORS);
   if (errorValues.includes(err.message)) {
