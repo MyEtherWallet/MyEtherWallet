@@ -122,6 +122,19 @@
         </div>
       </div>
 
+      <div
+        v-if="abiConstructor !== null && abiConstructor.payable"
+        class="send-form"
+      >
+        <div class="title-container">
+          <div class="title">
+            <h4>Value in ETH:</h4>
+          </div>
+        </div>
+        <div class="the-form contract-name">
+          <input ref="value" v-model="value" placeholder="Value in ETH" />
+        </div>
+      </div>
       <div class="send-form">
         <div class="title-container">
           <div class="title">
@@ -167,6 +180,8 @@ import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
+import store from 'store';
+import EthUtil from 'ethereumjs-util';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -182,7 +197,8 @@ export default {
       inputs: {},
       contractName: '',
       gasLimit: 21000,
-      data: ''
+      data: '',
+      value: 0
     };
   },
   computed: {
@@ -267,20 +283,7 @@ export default {
         return typeof value == typeof true || value === '';
       return false;
     },
-    getType(inputType) {
-      if (!inputType) inputType = '';
-      if (inputType.includes('uint'))
-        return { type: 'number', solidityType: 'uint' };
-      if (inputType.includes('address'))
-        return { type: 'text', solidityType: 'address' };
-      if (inputType.includes('string'))
-        return { type: 'text', solidityType: 'string' };
-      if (inputType.includes('bytes'))
-        return { type: 'text', solidityType: 'bytes' };
-      if (inputType.includes('bool'))
-        return { type: 'radio', solidityType: 'bool' };
-      return { type: 'text', solidityType: 'string' };
-    },
+    getType: Misc.solidityType,
     async sendTransaction() {
       try {
         await this.estimateGas();
@@ -299,9 +302,44 @@ export default {
         delete json.to;
         json.from = coinbase;
         this.web3.eth.sendTransaction(json);
+        const contractAddr = EthUtil.bufferToHex(
+          EthUtil.generateAddress(
+            EthUtil.toBuffer(nonce),
+            EthUtil.toBuffer(coinbase)
+          )
+        );
+        this.pushContractToStore(contractAddr);
       } catch (e) {
         ErrorHandler(e, false);
       }
+    },
+    pushContractToStore(addr) {
+      const localStoredContract = store.get('customContracts') || [];
+      const itemIndex = localStoredContract.findIndex(item => {
+        return (
+          EthUtil.toChecksumAddress(item.address) ===
+          EthUtil.toChecksumAddress(addr)
+        );
+      });
+
+      if (itemIndex === -1) {
+        const storableObj = {
+          abi: this.abi,
+          address: addr,
+          comment: '',
+          name: this.contractName
+        };
+        localStoredContract.push(storableObj);
+      } else {
+        localStoredContract[itemIndex] = {
+          abi: JSON.stringify(JSON.parse(this.abi)),
+          address: addr,
+          comment: '',
+          name: this.contractName
+        };
+      }
+
+      store.set('customContracts', localStoredContract);
     },
     confirmationModalOpen() {
       this.sendTransaction();
