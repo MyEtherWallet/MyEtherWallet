@@ -72,7 +72,6 @@ export default class Simplex {
     );
   }
 
-  // simplex rate error.
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
@@ -138,7 +137,10 @@ console.log(simplexRateDetails); // todo remove dev item
     this.currentOrder = result.result;
     return {
       fromValue: result.result.fiat_money.total_amount,
-      toValue: result.result.digital_money.amount
+      toValue: result.result.digital_money.amount,
+      rate: new BigNumber(result.result.digital_money.amount)
+        .div(result.result.fiat_money.total_amount)
+        .toString(10)
     };
   }
 
