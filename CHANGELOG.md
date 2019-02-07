@@ -8,11 +8,8 @@
 
 ### Devop
 
-<<<<<<< HEAD
 - Catch byte32\[] and use constant types [#561](https://github.com/MyEtherWallet/MyEtherWallet/pull/561)
-=======
 - Setup Sentry [#573](https://github.com/MyEtherWallet/MyEtherWallet/pull/573)
->>>>>>> develop
 - Upgrade keepkey and use bip32ToAddressNList [#543](https://github.com/MyEtherWallet/MyEtherWallet/pull/543)
 - Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
 - Add display of swap partners [#537](https://github.com/MyEtherWallet/MyEtherWallet/pull/537)
