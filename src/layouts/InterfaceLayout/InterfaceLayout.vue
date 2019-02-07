@@ -34,8 +34,13 @@
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
 
-    <div class="info-block-container">
-      <mobile-interface-address />
+    <div class="mobile-interface-address-block">
+      <mobile-interface-address
+        :address="address"
+        :trigger-alert="triggerAlert"
+        :print="print"
+        :switch-addr="switchAddress"
+      />
     </div>
 
     <div class="wrap">
