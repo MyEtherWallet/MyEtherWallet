@@ -11,12 +11,14 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
+import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = true;
 
 class SecalotWallet {
   constructor(password) {
     this.identifier = secalotType;
+    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[secalotType];
@@ -82,6 +84,7 @@ const createWallet = async (basePath, password) => {
   await _secalotWallet.init(basePath);
   return _secalotWallet;
 };
+createWallet.errorHandler = errorHandler;
 const getRootPubKey = (_secalot, _path) => {
   return new Promise((resolve, reject) => {
     _secalot.getAddress(_path, (result, error) => {

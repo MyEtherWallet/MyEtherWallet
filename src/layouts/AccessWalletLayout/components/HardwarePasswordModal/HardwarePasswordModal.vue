@@ -75,9 +75,11 @@ export default {
       this.$refs.passwordInput.focus();
     },
     unlockWallet() {
-      this.walletConstructor('', this.password).then(_newWallet => {
-        this.$emit('hardwareWalletOpen', _newWallet);
-      });
+      this.walletConstructor('', this.password)
+        .then(_newWallet => {
+          this.$emit('hardwareWalletOpen', _newWallet);
+        })
+        .catch(this.walletConstructor.errorHandler);
     },
     switchViewPassword() {
       this.show = !this.show;

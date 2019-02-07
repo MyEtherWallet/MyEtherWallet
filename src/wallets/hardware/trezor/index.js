@@ -10,12 +10,14 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
+import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
   constructor() {
     this.identifier = trezorType;
+    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[trezorType];
@@ -81,6 +83,7 @@ const createWallet = async basePath => {
   await _trezorWallet.init(basePath);
   return _trezorWallet;
 };
+createWallet.errorHandler = errorHandler;
 const getRootPubKey = async _path => {
   const result = await Trezor.getPublicKey({ path: _path });
   if (!result.success) throw new Error(result.payload.error);

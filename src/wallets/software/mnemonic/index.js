@@ -6,6 +6,7 @@ import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
+import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = true;
 const IS_HARDWARE = false;
@@ -14,6 +15,7 @@ class MnemonicWallet {
   constructor(mnemonic, password) {
     if (!bip39.validateMnemonic(mnemonic)) throw new Error('Invalid Mnemonic');
     this.identifier = mnemonicType;
+    this.errorHandler = errorHandler;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;
     this.mnemonic = mnemonic;
@@ -73,5 +75,6 @@ const createWallet = async (mnemonic, password, basePath) => {
   await _mnemonicWallet.init(basePath);
   return _mnemonicWallet;
 };
+createWallet.errorHandler = errorHandler;
 
 export default createWallet;
