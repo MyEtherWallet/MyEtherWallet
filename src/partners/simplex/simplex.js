@@ -90,7 +90,6 @@ export default class Simplex {
         fromValue
       );
 
-
       const rate = new BigNumber(simplexRateDetails.toValue)
         .div(simplexRateDetails.fromValue)
         .toString(10);
@@ -245,7 +244,7 @@ export default class Simplex {
     return swapDetails;
   }
 
- async createSwap(swapDetails) {
+  createSwap(swapDetails) {
     if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
       return getOrder({
         'g-recaptcha-response': '',
