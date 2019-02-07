@@ -70,7 +70,6 @@
               class="copy-button prevent-user-select"
               @click="copyToClipboard('address')"
             >
-              something
               {{ $t('common.copy') }}
             </p>
           </div>
