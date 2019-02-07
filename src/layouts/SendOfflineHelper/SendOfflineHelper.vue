@@ -498,7 +498,6 @@ export default {
         .toNumber();
     },
     async generateInformation(address) {
-      // this.web3.
       if (address === '') return;
       this.genInfo.address = address;
       this.genInfo.gasPrice = await this.web3.eth.getGasPrice();
