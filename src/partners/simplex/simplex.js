@@ -72,6 +72,7 @@ export default class Simplex {
     );
   }
 
+  // simplex rate error.
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
@@ -88,9 +89,12 @@ export default class Simplex {
         toValue,
         fromValue
       );
-      const rate = new BigNumber(simplexRateDetails.fromValue)
-        .div(simplexRateDetails.toValue)
+
+
+      const rate = new BigNumber(simplexRateDetails.toValue)
+        .div(simplexRateDetails.fromValue)
         .toString(10);
+
       return {
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
@@ -106,6 +110,7 @@ export default class Simplex {
     const rate = new BigNumber(simplexRateDetails.toValue)
       .div(simplexRateDetails.fromValue)
       .toString(10);
+
     return {
       fromCurrency: fromCurrency,
       toCurrency: toCurrency,
@@ -146,6 +151,7 @@ export default class Simplex {
       requested_currency: toCurrency,
       requested_amount: +toValue
     });
+
     if (result.error) {
       return { error: result.result, fromValue: 0, toValue: toValue };
     }
@@ -239,7 +245,7 @@ export default class Simplex {
     return swapDetails;
   }
 
-  createSwap(swapDetails) {
+ async createSwap(swapDetails) {
     if (this.canOrder(swapDetails.fromValue, swapDetails.toValue)) {
       return getOrder({
         'g-recaptcha-response': '',
