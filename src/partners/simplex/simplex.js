@@ -66,7 +66,10 @@ export default class Simplex {
   }
 
   canQuote(fiatAmount) {
-    return fiatAmount >= this.minFiat && fiatAmount <= this.maxFiat;
+    return (
+      new BigNumber(fiatAmount).gt(new BigNumber(this.minFiat)) &&
+      new BigNumber(fiatAmount).lt(new BigNumber(this.maxFiat))
+    );
   }
 
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
@@ -79,12 +82,12 @@ export default class Simplex {
         updateType = 'updateDigital';
       }
 
-      simplexRateDetails = await this[updateType]({
-        fromCurrency: fromCurrency,
-        toCurrency: toCurrency,
-        toValue: toValue,
-        fromValue: fromValue
-      });
+      simplexRateDetails = await this[updateType](
+        fromCurrency,
+        toCurrency,
+        toValue,
+        fromValue
+      );
       const rate = new BigNumber(simplexRateDetails.fromValue)
         .div(simplexRateDetails.toValue)
         .toString(10);
@@ -114,6 +117,8 @@ export default class Simplex {
   }
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
+    if (fromValue <= 0)
+      return { error: 'result.result', fromValue: fromValue, toValue: 0 };
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -126,12 +131,15 @@ export default class Simplex {
     }
     this.currentOrder = result.result;
     return {
-      fromValue: result.result.fiat_money.base_amount,
+      fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount
     };
   }
 
   async updateDigital(fromCurrency, toCurrency, toValue) {
+    if (toValue <= 0)
+      return { error: 'result.result', fromValue: 0, toValue: toValue };
+
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -143,7 +151,7 @@ export default class Simplex {
     }
     this.currentOrder = result.result;
     return {
-      fromValue: result.result.fiat_money.base_amount,
+      fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount
     };
   }
