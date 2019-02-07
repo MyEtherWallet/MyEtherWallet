@@ -30,7 +30,7 @@
           <button @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </button>
-          <button @click="print">
+          <button v-if="false" @click="print">
             <img src="~@/assets/images/icons/printer-white.svg" />
           </button>
         </div>

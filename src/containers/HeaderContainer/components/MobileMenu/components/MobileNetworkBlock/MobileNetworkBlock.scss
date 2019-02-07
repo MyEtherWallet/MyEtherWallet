@@ -32,14 +32,13 @@
     padding: 7px 20px;
 
     &:active {
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
 }
 
-
 .bottom-block {
-  margin-top: 0px;
+  margin-top: 0;
   p {
     font-size: 16px;
     line-height: 24px;
