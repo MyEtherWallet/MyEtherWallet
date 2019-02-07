@@ -77,6 +77,7 @@ import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   components: {
@@ -183,9 +184,8 @@ export default {
                 }
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
-                    entry.catch(err => {
-                      // eslint-disable-next-line no-console
-                      console.error(err);
+                    entry.catch(e => {
+                      ErrorHandler(e, false);
                     });
                   }
                 });

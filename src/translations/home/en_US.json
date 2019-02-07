@@ -33,5 +33,11 @@
   "howToSendTxTitle": "How can I send a transaction?",
   "howToSendTxDesc": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the Ethereum blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more",
   "forgotPasswordPrivKeyTitle": "I forgot my password/private key! What can I do?",
-  "forgotPasswordPrivKeyDesc": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more"
+  "forgotPasswordPrivKeyDesc": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more",
+  "welcomeTov5": "Welcome to MEW V5",
+  "welcomeToV5Desc1": "Welcome to the brand new MEW! If this is your first time visiting, check out our {0}.",
+  "welcomeToV5Desc2": "Vintage MEW can still be accessed {0}, or at the bottom of the page.",
+  "welcomeToLink1": "Medium article on what's new",
+  "welcomeToLink2": "here",
+  "onwards": "Onwards"
 }

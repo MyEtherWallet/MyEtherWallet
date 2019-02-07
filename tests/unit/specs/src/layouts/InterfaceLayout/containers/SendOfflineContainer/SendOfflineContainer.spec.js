@@ -102,11 +102,4 @@ describe('SendOfflineContainer.vue', () => {
       ).toEqual(wrapper.vm.$data.tabs[i].desc);
     }
   });
-
-  describe('SendOfflineContainer.vue Methods', () => {
-    it('should render correct processChange method', () => {
-      wrapper.vm.processChange('name');
-      expect(spy.calledWith({ name: 'name' })).toBe(true);
-    });
-  });
 });

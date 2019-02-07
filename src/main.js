@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-
+import * as Sentry from '@sentry/browser';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 // import InfiniteSlider from 'vue-infinite-slide-bar';
@@ -33,6 +33,7 @@ import languages from '@/translations';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
+import { Promise } from 'q';
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -78,9 +79,25 @@ const i18n = new VueI18n({
 });
 
 /* eslint-disable no-new */
-new Vue({
+const vue = new Vue({
   i18n,
   router,
   store,
   render: h => h(getApp())
 }).$mount('#app');
+
+Sentry.init({
+  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+  integrations: [new Sentry.Integrations.Vue({ vue })],
+  maxBreadcrumbs: 0,
+  environment: BUILD_TYPE,
+  requestBodies: 'small',
+  release: NODE_ENV === 'production' ? VERSION : 'develop',
+  beforeSend(event) {
+    return new Promise(resolve => {
+      vue.$eventHub.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
+  }
+});
