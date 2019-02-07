@@ -189,7 +189,9 @@ $mobile-menu-z-index: 999;
   }
 }
 
-.mobile-address-block--container {
-  padding-bottom: 10px;
+.block--container {
   border-bottom: 1px solid $light-grey-2;
+  >* {
+    margin-bottom: 10px;
+  }
 }

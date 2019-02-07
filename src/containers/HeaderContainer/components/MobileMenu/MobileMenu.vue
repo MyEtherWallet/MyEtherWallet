@@ -55,8 +55,9 @@
       class="mobile-menu-content--container"
     >
       <div class="mobile-menu-content">
-        <div v-if="account.address" class="mobile-address-block--container">
-          <mobile-address-block />
+        <div v-if="account.address" class="block--container">
+          <mobile-balance-block />
+          <mobile-network-block />
         </div>
         <ul>
           <li>
@@ -126,7 +127,9 @@
 <script>
 import { mapGetters } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileAddressBlock from './components/MobileAddressBlock';
+//import MobileAddressBlock from './components/MobileAddressBlock';
+import MobileBalanceBlock from './components/MobileBalanceBlock';
+import MobileNetworkBlock from './components/MobileNetworkBlock';
 import SettingsModal from '@/components/SettingsModal';
 import LogoutModal from '@/components/LogoutModal';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
@@ -135,7 +138,9 @@ export default {
   components: {
     'logout-modal': LogoutModal,
     'mobile-menu-button': MobileMenuButton,
-    'mobile-address-block': MobileAddressBlock,
+    //'mobile-address-block': MobileAddressBlock,
+    'mobile-balance-block': MobileBalanceBlock,
+    'mobile-network-block': MobileNetworkBlock,
     'settings-modal': SettingsModal,
     'mobile-language-selector': MobileLanguageSelector
   },
