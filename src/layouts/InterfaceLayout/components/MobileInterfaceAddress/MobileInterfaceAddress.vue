@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-interface-address">
-    <address-qrcode-modal ref="qrcode" />
+    <address-qrcode-modal ref="qrcode" :address="account.address" />
     <div class="wrap">
       <div class="top-block">
         <div class="blockie-container">
