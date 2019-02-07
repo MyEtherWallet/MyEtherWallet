@@ -303,10 +303,7 @@ export default {
         json.from = coinbase;
         this.web3.eth.sendTransaction(json);
         const contractAddr = EthUtil.bufferToHex(
-          EthUtil.generateAddress(
-            EthUtil.toBuffer(nonce),
-            EthUtil.toBuffer(coinbase)
-          )
+          EthUtil.generateAddress(coinbase, nonce)
         );
         this.pushContractToStore(contractAddr);
       } catch (e) {
@@ -316,15 +313,11 @@ export default {
     pushContractToStore(addr) {
       const localStoredContract = store.get('customContracts') || [];
       const itemIndex = localStoredContract.findIndex(item => {
-        return (
-          EthUtil.toChecksumAddress(item.address) ===
-          EthUtil.toChecksumAddress(addr)
-        );
+        return item.name.toLowerCase() === this.contractName.toLowerCase();
       });
-
       if (itemIndex === -1) {
         const storableObj = {
-          abi: this.abi,
+          abi: JSON.parse(this.abi),
           address: addr,
           comment: '',
           name: this.contractName
@@ -332,13 +325,12 @@ export default {
         localStoredContract.push(storableObj);
       } else {
         localStoredContract[itemIndex] = {
-          abi: JSON.stringify(JSON.parse(this.abi)),
+          abi: JSON.parse(this.abi),
           address: addr,
           comment: '',
           name: this.contractName
         };
       }
-
       store.set('customContracts', localStoredContract);
     },
     confirmationModalOpen() {
