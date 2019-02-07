@@ -97,7 +97,7 @@ export default {
   mounted() {
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
-    if (this.errorCount > 10) {
+    if (this.errorCount >= 10) {
       this.showSkipper = true;
     }
   },
