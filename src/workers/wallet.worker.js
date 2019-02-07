@@ -1,4 +1,4 @@
-import { Wallet, Configs } from '@/helpers';
+import { Wallet, Configs, ErrorHandler } from '@/helpers';
 
 const create = password => {
   const createdWallet = {};
@@ -21,7 +21,7 @@ const unlock = (file, password) => {
     const wallet = Wallet.fromV3(newFile, password, true);
     return wallet;
   } catch (e) {
-    throw new Error(e);
+    return ErrorHandler(e, true);
   }
 };
 
