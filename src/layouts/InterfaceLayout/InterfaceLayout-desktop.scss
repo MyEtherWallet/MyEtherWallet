@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .info-block-container {
+    display: none;
+  }
+
   .wrap {
     display: grid;
     grid-column-gap: 0;
@@ -65,4 +69,8 @@
       }
     }
   }
+}
+
+.interface-layout {
+  background-color: $light-grey-2;
 }
