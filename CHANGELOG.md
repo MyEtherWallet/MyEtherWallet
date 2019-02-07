@@ -2,11 +2,17 @@
 
 ### Feature
 
+- Add welcome to mew modal [#571](https://github.com/MyEtherWallet/MyEtherWallet/pull/571)
 - Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
 ### Devop
 
+<<<<<<< HEAD
+- Catch byte32\[] and use constant types [#561](https://github.com/MyEtherWallet/MyEtherWallet/pull/561)
+=======
+- Setup Sentry [#573](https://github.com/MyEtherWallet/MyEtherWallet/pull/573)
+>>>>>>> develop
 - Upgrade keepkey and use bip32ToAddressNList [#543](https://github.com/MyEtherWallet/MyEtherWallet/pull/543)
 - Fixes from meeting [#538](https://github.com/MyEtherWallet/MyEtherWallet/pull/538)
 - Add display of swap partners [#537](https://github.com/MyEtherWallet/MyEtherWallet/pull/537)
@@ -14,6 +20,7 @@
 - Set server side headers on webpack dev server [#534](https://github.com/MyEtherWallet/MyEtherWallet/pull/534)
 - Hide switch on web3 wallet, update logout text, add package exception for webpack [#529](https://github.com/MyEtherWallet/MyEtherWallet/pull/529)
 - Improve notification handling of tx errors [#524](https://github.com/MyEtherWallet/MyEtherWallet/pull/524)
+- Enable custom HD paths (fixes #509) [#550](https://github.com/MyEtherWallet/MyEtherWallet/pull/550)
 
 ### Release v5.0.0-beta.3
 
@@ -24,6 +31,7 @@
 
 ### Bug
 
+- Fix Getting started layout bugs for mobile and desktop [#569](https://github.com/MyEtherWallet/MyEtherWallet/pull/569)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
 ### Feature
@@ -39,6 +47,7 @@
 
 ### Bug
 
+- Fix Access My Wallet buttons position [#566](https://github.com/MyEtherWallet/MyEtherWallet/pull/566)
 - Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
