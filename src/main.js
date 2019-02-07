@@ -92,6 +92,7 @@ Sentry.init({
   maxBreadcrumbs: 0,
   environment: process.env.BUILD_TYPE,
   requestBodies: 'small',
+  release: process.env.VERSION || 'develop',
   beforeSend(event) {
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);
