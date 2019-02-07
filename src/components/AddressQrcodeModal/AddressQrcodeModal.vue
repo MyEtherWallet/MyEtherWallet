@@ -3,12 +3,12 @@
     <b-modal
       ref="addressQrcode"
       hide-footer
-      hide-header
       centered
       class="bootstrap-modal nopadding"
+      title="Address"
     >
       <div class="modal-contents">
-        <qrcode :value="address" :options="{ size: 200 }" />
+        <qrcode :value="address" :options="{ size: 160 }" />
         <textarea v-model="address" class="address" readonly></textarea>
         <button @click="copyToClipboard">Copy</button>
       </div>
