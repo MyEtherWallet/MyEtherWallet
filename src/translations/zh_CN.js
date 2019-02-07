@@ -13,7 +13,7 @@ import accessWallet from './access-wallet/zh_CN';
 import interfaceTranslations from './interface/zh_CN';
 import team from './team/zh_CN';
 import popover from './popover/zh_CN';
-import withoutWallet from './without-wallet/en_US';
+import withoutWallet from './without-wallet/zh_CN';
 
 const zh_CN = {
   common: common,

@@ -13,7 +13,7 @@ import accessWallet from './access-wallet/ko_KR';
 import interfaceTranslations from './interface/ko_KR';
 import team from './team/ko_KR';
 import popover from './popover/ko_KR';
-import withoutWallet from './without-wallet/en_US';
+import withoutWallet from './without-wallet/ko_KR';
 
 const ko_KR = {
   common: common,

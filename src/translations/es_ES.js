@@ -13,7 +13,7 @@ import accessWallet from './access-wallet/es_ES';
 import interfaceTranslations from './interface/es_ES';
 import team from './team/es_ES';
 import popover from './popover/es_ES';
-import withoutWallet from './without-wallet/en_US';
+import withoutWallet from './without-wallet/es_ES';
 
 const es_ES = {
   common: common,
