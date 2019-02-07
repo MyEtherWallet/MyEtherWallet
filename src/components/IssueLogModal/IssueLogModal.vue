@@ -10,18 +10,35 @@
       >
         <div class="modal-contents">
           <div class="modal-header-block">
-            <h2 class="title">Oops! Something Goes Wrong :(</h2>
+            <h2 class="title">Something went wrong.</h2>
             <p class="sub-text">
-              You can send out this log to MEW force team. And we will assist
-              you to solve the issue ASAP.
+              Do you want to inform MEW about this error?
             </p>
           </div>
           <div class="modal-user-input-block">
-            <standard-input :options="userInputOptions" />
+            <code>
+              {{ JSON.stringify(error) }}
+            </code>
           </div>
           <div class="modal-button-block">
-            <standard-button :options="cancelButtonOptions" />
-            <standard-button :options="sendButtonOptions" />
+            <standard-button
+              :options="cancelButtonOptions"
+              @click.native="sendError(false)"
+            />
+            <standard-button
+              :options="sendButtonOptions"
+              @click.native="sendError(true)"
+            />
+          </div>
+          <div v-if="showSkipper" class="button-block">
+            <div class="checkbox-container">
+              <label for="terms" @click="neverShow = !neverShow">
+                <span :class="[neverShow ? 'enable' : '', 'custom-marker']">
+                  <i v-if="neverShow" class="fa fa-check" />
+                </span>
+                <input name="terms" type="checkbox" /> Never Show again
+              </label>
+            </div>
           </div>
         </div>
 
@@ -35,13 +52,24 @@
 
 <script>
 import StandardButton from '@/components/Buttons/StandardButton';
-import StandardInput from '@/components/StandardInput';
+import store from 'store';
 
 export default {
   name: 'IssueLogModal',
   components: {
-    'standard-button': StandardButton,
-    'standard-input': StandardInput
+    'standard-button': StandardButton
+  },
+  props: {
+    error: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    resolver: {
+      type: Function,
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -56,17 +84,27 @@ export default {
         buttonStyle: 'green',
         noMinWidth: true
       },
-      userInputOptions: {
-        title: 'Issue Log',
-        buttonCopy: true,
-        isTextarea: true
-      }
+      errorCount: 0,
+      showSkipper: false,
+      neverShow: false
     };
   },
-  mounted() {},
+  watch: {
+    neverShow(newVal) {
+      store.set('neverReport', newVal);
+    }
+  },
+  mounted() {
+    const popUpCount = store.get('errorPop') || 0;
+    this.errorCount = popUpCount;
+    if (this.errorCount >= 10) {
+      this.showSkipper = true;
+    }
+  },
   methods: {
-    modalOpen() {
-      this.$refs.issuelog.show();
+    sendError(bool) {
+      this.resolver(bool);
+      this.$refs.issuelog.hide();
     }
   }
 };

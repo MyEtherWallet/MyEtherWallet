@@ -13,7 +13,7 @@
       border-radius: 4px;
       padding: 0;
       margin: 10px 10px;
-      overflow-y: auto;
+      overflow: hidden;
       max-height: calc(100vh - 180px);
     }
 
@@ -107,6 +107,8 @@
     .block-progressbar__content {
       background-color: $white;
       padding: 40px 20px;
+      overflow-y: auto;
+      height: calc(100% - 55px);
 
       &.text-cented {
         text-align: center;

@@ -4,7 +4,7 @@ import * as nodes from './nodes';
 const nodeList = {};
 
 Object.keys(types).forEach(key => {
-  nodeList[key] = [];
+  nodeList[types[key].name] = [];
 });
 
 Object.keys(nodes).forEach(key => {

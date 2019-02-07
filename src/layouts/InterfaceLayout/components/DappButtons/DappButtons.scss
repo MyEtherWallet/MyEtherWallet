@@ -38,8 +38,15 @@ $dapp-button-mobile-width: 650px;
     font-size: 18px;
     font-weight: 500;
   }
+}
 
-  // a {
-  //   color: black;
-  // }
+.disabled {
+  background-color: $white;
+  border: 1px solid $light-grey-6;
+  color: $light-grey-6;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-6;
+  }
 }

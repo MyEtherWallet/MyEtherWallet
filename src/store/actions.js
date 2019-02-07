@@ -56,7 +56,13 @@ const addSwapNotification = async function({ commit, state }, val) {
 
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
-  newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
+  newPaths[val.path] = { label: val.label, path: val.path };
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
+const removeCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  delete newPaths[val.path];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
@@ -66,7 +72,7 @@ const checkIfOnline = function({ commit }) {
 
 const clearWallet = function({ commit, state }) {
   if (state.wallet.identifier === MEW_CONNECT) {
-    state.wallet.mewConnectDisconnect();
+    state.wallet.mewConnect.disconnectRTC();
   }
   commit('CLEAR_WALLET');
 };
@@ -211,6 +217,7 @@ export default {
   clearWallet,
   createAndSignTx,
   decryptWallet,
+  removeCustomPath,
   setAccountBalance,
   setGasPrice,
   setState,
