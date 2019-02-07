@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 .wrap {
   border-radius: 4px;
   padding: 10px;
@@ -13,11 +12,11 @@
 // *******************************************
 .top-block {
   display: grid;
-  grid-template-columns: 50px auto 40px 90px;
+  grid-template-columns: 50px auto 40px 120px;
   align-items: center;
   // Tablet
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-    grid-template-columns: 50px auto 0 90px;
+    grid-template-columns: 50px auto 0 120px;
   }
 }
 

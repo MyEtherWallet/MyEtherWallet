@@ -1,5 +1,6 @@
 <template>
   <div class="mobile-interface-address">
+    <address-qrcode-modal ref="qrcode" />
     <div class="wrap">
       <div class="top-block">
         <div class="blockie-container">
@@ -20,87 +21,30 @@
           }}
         </div>
         <div class="buttons-container">
-          <button>
+          <button @click="openQrcode">
             <img src="~@/assets/images/icons/qr-code-white.svg" />
             <div class="floating-barcode">
               <div class="barcode-image"></div>
             </div>
           </button>
-          <button>
+          <button @click="copy">
+            <img src="~@/assets/images/icons/copy.svg" />
+          </button>
+          <button @click="print">
             <img src="~@/assets/images/icons/printer-white.svg" />
           </button>
         </div>
       </div>
       <div class="bottom-block">
-        <button>Change Address</button>
+        <button @click="switchAddr">Change Address</button>
       </div>
     </div>
-
-    <div v-if="false" class="info-block address">
-      <div class="block-image">
-        <blockie
-          :address="address"
-          :size="8"
-          :scale="16"
-          width="64px"
-          height="64px"
-          class="blockie-image"
-        />
-        <input
-          ref="copyAddress"
-          :value="address"
-          class="hidden-input"
-          autocomplete="off"
-        />
-      </div>
-      <div class="block-content">
-        <div class="information-container">
-          <h2>{{ $t('common.address') }}</h2>
-          <p class="address">{{ address }}</p>
-        </div>
-        <div class="icon-container">
-          <b-btn id="print" class="custom-tooltip" @click="print">
-            <img src="~@/assets/images/icons/printer-white.svg" />
-          </b-btn>
-          <b-btn id="copy" class="custom-tooltip" @click="copy">
-            <img src="~@/assets/images/icons/copy.svg" />
-          </b-btn>
-          <b-btn
-            v-if="hasMultipleAddr"
-            id="switch"
-            class="custom-tooltip"
-            @click="switchAddr"
-          >
-            <img src="~@/assets/images/icons/change.svg" />
-          </b-btn>
-          <b-popover
-            :content="$t('popover.print')"
-            target="print"
-            placement="top"
-            triggers="hover"
-            title=""
-          />
-          <b-popover
-            :content="$t('popover.copy')"
-            target="copy"
-            placement="top"
-            triggers="hover"
-            title=""
-          />
-          <b-popover
-            :content="$t('popover.switchAddress')"
-            target="switch"
-            placement="top"
-            triggers="hover"
-            title=""
-          />
-        </div>
-      </div>
-    </div>
+    <!-- .wrap -->
   </div>
 </template>
 
 <script>
+import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import Blockie from '@/components/Blockie';
 import { mapGetters } from 'vuex';
 import {
@@ -112,7 +56,8 @@ import {
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'address-qrcode-modal': AddressQrcodeModal
   },
   props: {
     address: {
@@ -143,6 +88,8 @@ export default {
     })
   },
   mounted() {
+    //this.$refs.addressQrcode.$refs.addressQrcode.show();
+
     if (this.account.address !== null) {
       if (
         this.account.identifier !== KEYSTORE &&
@@ -161,6 +108,10 @@ export default {
       this.triggerAlert('Address Copied!');
       this.$refs.copyAddress.select();
       document.execCommand('copy');
+    },
+    openQrcode() {
+      this.$refs.qrcode.$refs.addressQrcode.show();
+      //console.log(this.$refs);
     }
   }
 };

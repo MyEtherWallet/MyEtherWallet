@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .mobile-interface-address-block {
+    margin: 0 10px;
+  }
+
   .interface-layout {
     padding-top: 10px;
   }
