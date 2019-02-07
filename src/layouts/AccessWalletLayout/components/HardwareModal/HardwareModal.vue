@@ -134,10 +134,12 @@ export default {
             .catch(LedgerWallet.errorHandler);
           break;
         case 'trezor':
-          TrezorWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
