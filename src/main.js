@@ -90,9 +90,9 @@ Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [new Sentry.Integrations.Vue({ vue })],
   maxBreadcrumbs: 0,
-  environment: process.env.BUILD_TYPE,
+  environment: BUILD_TYPE,
   requestBodies: 'small',
-  release: process.env.VERSION || 'develop',
+  release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);
