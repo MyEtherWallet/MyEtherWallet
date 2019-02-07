@@ -99,20 +99,10 @@ export default {
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      scrollListener: function() {}
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6']
     };
   },
   mounted: function() {
-    this.scrollListener = e => {
-      if (e.deltaY < -6) {
-        this.mouseScrollUp();
-      }
-      if (e.deltaY > 6) {
-        this.mouseScrollDown();
-      }
-    };
-
     window.addEventListener(
       'wheel',
       utils._.throttle(this.scrollListener, 600)
@@ -125,6 +115,14 @@ export default {
     );
   },
   methods: {
+    scrollListener(e) {
+      if (e.deltaY < -2) {
+        this.mouseScrollUp();
+      }
+      if (e.deltaY > 2) {
+        this.mouseScrollDown();
+      }
+    },
     mouseScrollDown: function() {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;
