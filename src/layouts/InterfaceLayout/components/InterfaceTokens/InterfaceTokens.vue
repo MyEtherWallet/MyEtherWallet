@@ -90,6 +90,7 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
@@ -143,9 +144,6 @@ export default {
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
     },
-    customTokens(newVal) {
-      this.customTokens = newVal;
-    },
     network(newVal) {
       if (
         store.get('customTokens') !== undefined &&
@@ -161,6 +159,10 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    getCustomTokens() {
+      const storedTokens = store.get('customTokens');
+      this.customTokens = storedTokens;
+    },
     async getSpecificTokenBalance(token, idx) {
       this.tokens[idx].balance = await this.getTokenBalance(token);
       this.tokens.sort(sortByBalance);
@@ -169,21 +171,60 @@ export default {
       this.$refs.tokenModal.$refs.token.show();
     },
     removeToken(idx) {
-      const storedTokens = store.get('customTokens');
+      let storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
-      storedTokens[this.network.type.name] = this.customTokens;
+      storedTokens = this.customTokens;
       store.set('customTokens', storedTokens);
     },
+    searchBySymbol(symbol) {
+      const searchNetwork = this.localTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
+    searchByAddr(addr) {
+      const searchNetwork = this.localTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
     async addToken(address, symbol, decimal) {
-      if (
-        this.localTokens.find(item => {
-          return (
-            utils.toChecksumAddress(item.address) ===
-            utils.toChecksumAddress(address)
-          );
-        }) !== undefined
-      ) {
-        const localStorageName = {};
+      const findTokenBySymbol = this.searchBySymbol(symbol);
+      const findTokenByAddr = this.searchByAddr(address);
+      if (findTokenByAddr) {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert(
+          'A default token with this contract address already exists!',
+          'danger'
+        );
+      } else if (findTokenBySymbol) {
+        this.$refs.tokenModal.$refs.token.hide();
+        this.triggerAlert(
+          "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          'danger'
+        );
+      } else {
         const token = {
           address: address,
           decimals: decimal,
@@ -196,8 +237,7 @@ export default {
         let newArray = [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          // eslint-disable-next-line
-          console.error('Token Balance Returned Undefined');
+          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
         }
 
         if (this.customTokens.length > 0) {
@@ -205,14 +245,10 @@ export default {
         }
         newArray.push(token);
         this.customTokens = newArray;
-        localStorageName[this.network.type.name] = this.customTokens;
 
-        store.set('customTokens', localStorageName);
+        store.set('customTokens', this.customTokens);
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert('Successfully added token!');
-      } else {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Token Already Exists!', 'danger');
       }
     },
     tokenListExpend() {
@@ -239,11 +275,8 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
-        if (
-          store.get('customTokens') !== undefined &&
-          store.get('customTokens')[this.network.type.name] !== undefined
-        ) {
-          this.customTokens = store.get('customTokens')[this.network.type.name];
+        if (store.get('customTokens') !== undefined) {
+          this.customTokens = store.get('customTokens');
         }
       }
     }

@@ -7,7 +7,12 @@
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
-    <issue-log-modal ref="issuelog" />
+    <issue-log-modal
+      v-if="Object.keys.length > 0"
+      ref="issuelog"
+      :error="error"
+      :resolver="resolver"
+    />
     <logout-warning-modal ref="logoutWarningModal" />
 
     <div
@@ -93,6 +98,12 @@
                 <i class="fa fa-angle-right" aria-hidden="true" />
               </div>
             </div>
+          </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="openSettings">Settings</div>
+          </li>
+          <li v-if="wallet !== null">
+            <div class="cursor-pointer" @click="logout">Log out</div>
           </li>
         </ul>
       </div>
@@ -252,7 +263,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -308,7 +319,9 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: '0'
+      gasPrice: '0',
+      error: {},
+      resolver: () => {}
     };
   },
   computed: {
@@ -346,9 +359,8 @@ export default {
         .then(res => {
           this.gasPrice = new BigNumber(res).toString();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     }
   },
@@ -384,10 +396,21 @@ export default {
     window.onscroll = () => {
       this.onPageScroll();
     };
+
+    this.$eventHub.$on('issueModal', (error, resolve) => {
+      let errorPop = store.get('errorPop') || 0;
+      errorPop += 1;
+      store.set('errorPop', errorPop);
+      if (store.get('neverReport')) {
+        resolve(false);
+      } else {
+        this.$refs.issuelog.$refs.issuelog.show();
+        this.error = error;
+        this.resolver = resolve;
+      }
+    });
   },
   created() {
-    function dummyErrorHandler() {}
-
     try {
       window.addEventListener(
         'popstate',
@@ -400,13 +423,16 @@ export default {
         },
         false
       );
-    } catch (err) {
-      dummyErrorHandler(err);
+    } catch (e) {
+      ErrorHandler(e, false);
     }
   },
   methods: {
     openSettings() {
       this.$refs.settings.$refs.settings.show();
+      this.$refs.settings.$refs.settings.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     languageItemClicked(e) {
       const code = e.target.getAttribute('data-language-code');
@@ -422,6 +448,9 @@ export default {
     },
     logout() {
       this.$refs.logout.$refs.logout.show();
+      this.$refs.logout.$refs.logout.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     showNotifications() {
       this.$refs.notifications.$refs.notification.show();

@@ -1,6 +1,9 @@
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
+import utils from 'web3-utils';
+import store from '@/store';
+import { uint, address, string, bytes, bool } from './solidityTypes';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -105,6 +108,46 @@ const reorderNetworks = () => {
   );
 };
 
+const solidityType = inputType => {
+  if (!inputType) inputType = '';
+  if (inputType.includes('[') && inputType.includes(']')) {
+    if (inputType.includes(uint))
+      return { type: 'string', solidityType: `${uint}[]` };
+    if (inputType.includes(address))
+      return { type: 'text', solidityType: `${address}[]` };
+    if (inputType.includes(string))
+      return { type: 'text', solidityType: `${string}[]` };
+    if (inputType.includes(bytes))
+      return { type: 'text', solidityType: `${bytes}[]` };
+    if (inputType.includes(bool))
+      return { type: 'string', solidityType: `${bool}[]` };
+    return { type: 'text', solidityType: `${string}[]` };
+  }
+  if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
+  if (inputType.includes(address))
+    return { type: 'text', solidityType: address };
+  if (inputType.includes(string)) return { type: 'text', solidityType: string };
+  if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
+  if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+  return { type: 'text', solidityType: string };
+};
+
+const isDarklisted = addr => {
+  const darklisted = store.getters.darklist.data.findIndex(item => {
+    return (
+      utils.toChecksumAddress(item.address.toLowerCase()) ===
+      utils.toChecksumAddress(addr.toLowerCase())
+    );
+  });
+  const errMsg =
+    darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;
+  const errObject = {
+    error: darklisted === -1 ? false : true,
+    msg: errMsg
+  };
+  return errObject;
+};
+
 export default {
   isJson,
   doesExist,
@@ -116,5 +159,7 @@ export default {
   sanitizeHex,
   validateHexString,
   scrollToTop,
-  reorderNetworks
+  reorderNetworks,
+  isDarklisted,
+  solidityType
 };

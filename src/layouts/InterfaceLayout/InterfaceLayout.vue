@@ -98,6 +98,7 @@ import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
+import { ErrorHandler } from '@/helpers';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
@@ -239,9 +240,12 @@ export default {
           });
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
-          break;
+          ErrorHandler(
+            new Error(
+              `Wallet type ${this.account.identifier} can't switch addresses`
+            ),
+            false
+          );
       }
     },
     print() {
@@ -280,6 +284,11 @@ export default {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
           tokens = await tb.getBalance(this.account.address);
+          tokens = tokens.map(token => {
+            token.address = token.addr;
+            delete token.addr;
+            return token;
+          });
         } catch (e) {
           tokens = this.network.type.tokens.map(token => {
             token.balance = 'Load';
@@ -318,9 +327,7 @@ export default {
       const data = contract.methods.balanceOf(this.account.address).encodeABI();
       const balance = await web3.eth
         .call({
-          to: token.address
-            ? web3.utils.toChecksumAddress(token.address)
-            : web3.utils.toChecksumAddress(token.addr),
+          to: token.address,
           data: data
         })
         .then(res => {
@@ -338,9 +345,8 @@ export default {
           }
           return tokenBalance;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
       return balance;
     },
@@ -358,7 +364,6 @@ export default {
           return 0;
         })
         .map(token => {
-          token.address = token.addr;
           const balanceCheck = new BigNumber(token.balance);
           const balance = balanceCheck.isNaN()
             ? token.balance
@@ -398,9 +403,8 @@ export default {
         .then(res => {
           this.blockNumber = res;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     getBalance() {
@@ -411,23 +415,18 @@ export default {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            return;
+            ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            // eslint-disable-next-line no-console
-            console.error('Please unlock metamask');
-            return;
+            ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
           if (this.wallet !== null && address !== this.account.address) {
@@ -457,8 +456,7 @@ export default {
             }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.error(e);
+            ErrorHandler(e, false);
           });
       }, 500);
     },
@@ -493,9 +491,8 @@ export default {
             this.web3.utils.fromWei(res, 'gwei')
           ).toNumber();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     setENS() {

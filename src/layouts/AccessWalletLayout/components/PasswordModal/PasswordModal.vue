@@ -52,6 +52,7 @@ import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Worker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 export default {
   props: {
     file: {
@@ -99,7 +100,8 @@ export default {
         });
       };
       worker.onerror = function(e) {
-        self.error = e.message;
+        self.spinner = false;
+        self.error = ErrorHandler(e.message, false);
       };
     },
     switchViewPassword() {
