@@ -5,6 +5,7 @@ import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
+import { ErrorHandler } from '@/helpers';
 import * as HDKey from 'hdkey';
 import {
   getSignTransactionObject,
@@ -46,12 +47,15 @@ class BitBoxWallet {
       tx.s = getBufferFromHex(sanitizeHex(result.s));
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
-        throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
-          'InvalidNetworkId'
+        ErrorHandler(
+          new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
+          ),
+          false
         );
       return getSignTransactionObject(tx);
     };
