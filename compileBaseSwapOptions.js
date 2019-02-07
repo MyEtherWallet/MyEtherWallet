@@ -27,7 +27,7 @@ class CompileSwapOptions {
         .decimals()
         .call();
     } catch (e) {
-      throw new Error(e);
+      console.error(e);
     }
   }
 
@@ -106,7 +106,7 @@ class CompileSwapOptions {
         other: {}
       };
     } catch (e) {
-      throw new Error(e);
+      console.error(e);
     }
   }
 
@@ -208,7 +208,7 @@ class CompileSwapOptions {
         'Changelly get supported currencies failed to return a value'
       );
     } catch (e) {
-      throw new Error(e);
+      console.error(e);
     }
   }
 

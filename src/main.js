@@ -33,6 +33,7 @@ import languages from '@/translations';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
+import { Promise } from 'q';
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -90,5 +91,12 @@ Sentry.init({
   integrations: [new Sentry.Integrations.Vue({ vue })],
   maxBreadcrumbs: 0,
   environment: process.env.BUILD_TYPE,
-  requestBodies: 'small'
+  requestBodies: 'small',
+  beforeSend(event) {
+    return new Promise(resolve => {
+      vue.$eventHub.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
+  }
 });

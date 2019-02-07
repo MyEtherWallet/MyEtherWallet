@@ -46,6 +46,7 @@
 
 <script>
 import { MnemonicWallet } from '@/wallets';
+import { ErrorHandler } from '@/helpers';
 export default {
   props: {
     hardwareWalletOpen: {
@@ -81,7 +82,9 @@ export default {
           this.hardwareWalletOpen(wallet);
         })
         .catch(e => {
-          throw new Error(e);
+          this.password = '';
+          this.spinner = false;
+          this.error = ErrorHandler(e, true);
         });
     },
     switchViewPassword() {

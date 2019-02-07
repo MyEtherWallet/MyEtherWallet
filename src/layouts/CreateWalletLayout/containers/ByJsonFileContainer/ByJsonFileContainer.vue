@@ -64,6 +64,7 @@ import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   components: {
@@ -117,8 +118,7 @@ export default {
       this.name = e.data.name.toString();
     };
     worker.onerror = function(e) {
-      // eslint-disable-next-line no-console
-      throw new Error(e);
+      ErrorHandler(e, false);
     };
   },
   methods: {

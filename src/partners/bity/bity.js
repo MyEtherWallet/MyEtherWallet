@@ -7,6 +7,7 @@ import {
   swapNotificationStatuses
 } from '../partnersConfig';
 import { utils } from '../helpers';
+import { ErrorHandler } from '@/helpers';
 import {
   getRates,
   openOrder,
@@ -434,7 +435,7 @@ export default class BitySwap {
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
-      throw new Error(e);
+      ErrorHandler(e, false);
     }
   }
 
@@ -504,7 +505,7 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      throw new Error(e);
+      ErrorHandler(e, false);
     }
     return swapNotificationStatuses.PENDING;
   }
@@ -543,7 +544,7 @@ export default class BitySwap {
           return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
-      throw new Error(e);
+      ErrorHandler(e, false);
     }
     return swapNotificationStatuses.PENDING;
   }

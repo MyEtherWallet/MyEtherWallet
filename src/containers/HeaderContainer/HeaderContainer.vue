@@ -7,7 +7,12 @@
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
-    <issue-log-modal ref="issuelog" />
+    <issue-log-modal
+      v-if="Object.keys.length > 0"
+      ref="issuelog"
+      :error="error"
+      :resolver="resolver"
+    />
     <logout-warning-modal ref="logoutWarningModal" />
 
     <div
@@ -258,7 +263,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -314,7 +319,9 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: '0'
+      gasPrice: '0',
+      error: {},
+      resolver: () => {}
     };
   },
   computed: {
@@ -353,7 +360,7 @@ export default {
           this.gasPrice = new BigNumber(res).toString();
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
     }
   },
@@ -389,6 +396,19 @@ export default {
     window.onscroll = () => {
       this.onPageScroll();
     };
+
+    this.$eventHub.$on('issueModal', (error, resolve) => {
+      let errorPop = store.get('errorPop') || 0;
+      errorPop += 1;
+      store.set('errorPop', errorPop);
+      if (store.get('neverReport')) {
+        resolve(false);
+      } else {
+        this.$refs.issuelog.$refs.issuelog.show();
+        this.error = error;
+        this.resolver = resolve;
+      }
+    });
   },
   created() {
     try {
@@ -404,7 +424,7 @@ export default {
         false
       );
     } catch (e) {
-      throw new Error(e);
+      ErrorHandler(e, false);
     }
   },
   methods: {

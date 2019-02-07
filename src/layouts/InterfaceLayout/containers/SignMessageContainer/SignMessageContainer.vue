@@ -74,6 +74,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
@@ -114,7 +115,7 @@ export default {
           );
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
     },
     copyToClipboard(ref) {

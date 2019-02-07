@@ -162,7 +162,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
@@ -300,7 +300,7 @@ export default {
         json.from = coinbase;
         this.web3.eth.sendTransaction(json);
       } catch (e) {
-        throw new Error(e);
+        ErrorHandler(e, false);
       }
     },
     confirmationModalOpen() {

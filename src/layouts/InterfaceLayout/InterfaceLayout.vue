@@ -98,6 +98,7 @@ import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
+import { ErrorHandler } from '@/helpers';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
@@ -239,8 +240,11 @@ export default {
           });
           break;
         default:
-          throw new Error(
-            `Wallet type ${this.account.identifier} can't switch addresses`
+          ErrorHandler(
+            new Error(
+              `Wallet type ${this.account.identifier} can't switch addresses`
+            ),
+            false
           );
       }
     },
@@ -342,7 +346,7 @@ export default {
           return tokenBalance;
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
       return balance;
     },
@@ -400,7 +404,7 @@ export default {
           this.blockNumber = res;
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
     },
     getBalance() {
@@ -412,17 +416,17 @@ export default {
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            throw new Error(err);
+            ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            throw new Error('Please unlock metamask');
+            ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
           if (this.wallet !== null && address !== this.account.address) {
@@ -452,7 +456,7 @@ export default {
             }
           })
           .catch(e => {
-            throw new Error(e);
+            ErrorHandler(e, false);
           });
       }, 500);
     },
@@ -488,7 +492,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          throw new Error(e);
+          ErrorHandler(e, false);
         });
     },
     setENS() {
