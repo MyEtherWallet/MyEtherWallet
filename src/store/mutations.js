@@ -25,7 +25,7 @@ const CHECK_IF_ONLINE = async function(state) {
     )
       .then(res => res.json())
       .catch(e => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-console
         console.log(e);
       });
     state.darklist = {

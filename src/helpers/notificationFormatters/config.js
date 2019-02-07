@@ -8,14 +8,16 @@ const type = {
   SWAP_HASH: 'Swap_Hash',
   SWAP_RECEIPT: 'Swap_Receipt',
   SWAP_ERROR: 'Swap_Error',
-  SWAP_ORDER: 'Swap_Order'
+  SWAP_ORDER: 'Swap_Order',
+  CONTRACT_CREATION: 'Contract_Creation'
 };
 
 const notificationType = {
   TRANSACTION: 'transaction',
   SWAP: 'swap',
   SWAP_ERROR: 'swapError',
-  ERROR: 'transactionError'
+  ERROR: 'transactionError',
+  CONTRACT_CREATION: 'contractCreation'
 };
 
 const swapOnlyStatuses = {
