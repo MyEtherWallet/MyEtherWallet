@@ -1,0 +1,171 @@
+<template>
+  <div class="mobile-interface-address">
+    <div class="wrap">
+      <div class="top-block">
+        <div class="blockie-container">
+          <blockie
+            :address="address"
+            :size="8"
+            :scale="16"
+            class="blockie-image"
+          />
+        </div>
+        <div class="address">{{ account.address }}</div>
+        <div class="address-end">
+          {{
+            account.address.substring(
+              account.address.length - 4,
+              account.address.length
+            )
+          }}
+        </div>
+        <div class="buttons-container">
+          <button>
+            <img src="~@/assets/images/icons/qr-code-white.svg" />
+            <div class="floating-barcode">
+              <div class="barcode-image"></div>
+            </div>
+          </button>
+          <button>
+            <img src="~@/assets/images/icons/printer-white.svg" />
+          </button>
+        </div>
+      </div>
+      <div class="bottom-block">
+        <button>Change Address</button>
+      </div>
+    </div>
+
+    <div v-if="false" class="info-block address">
+      <div class="block-image">
+        <blockie
+          :address="address"
+          :size="8"
+          :scale="16"
+          width="64px"
+          height="64px"
+          class="blockie-image"
+        />
+        <input
+          ref="copyAddress"
+          :value="address"
+          class="hidden-input"
+          autocomplete="off"
+        />
+      </div>
+      <div class="block-content">
+        <div class="information-container">
+          <h2>{{ $t('common.address') }}</h2>
+          <p class="address">{{ address }}</p>
+        </div>
+        <div class="icon-container">
+          <b-btn id="print" class="custom-tooltip" @click="print">
+            <img src="~@/assets/images/icons/printer-white.svg" />
+          </b-btn>
+          <b-btn id="copy" class="custom-tooltip" @click="copy">
+            <img src="~@/assets/images/icons/copy.svg" />
+          </b-btn>
+          <b-btn
+            v-if="hasMultipleAddr"
+            id="switch"
+            class="custom-tooltip"
+            @click="switchAddr"
+          >
+            <img src="~@/assets/images/icons/change.svg" />
+          </b-btn>
+          <b-popover
+            :content="$t('popover.print')"
+            target="print"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
+          <b-popover
+            :content="$t('popover.copy')"
+            target="copy"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
+          <b-popover
+            :content="$t('popover.switchAddress')"
+            target="switch"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Blockie from '@/components/Blockie';
+import { mapGetters } from 'vuex';
+import {
+  KEYSTORE,
+  PRIV_KEY,
+  MEW_CONNECT,
+  WEB3_WALLET
+} from '@/wallets/bip44/walletTypes';
+
+export default {
+  components: {
+    blockie: Blockie
+  },
+  props: {
+    address: {
+      type: String,
+      default: ''
+    },
+    triggerAlert: {
+      type: Function,
+      default: function() {}
+    },
+    print: {
+      type: Function,
+      default: function() {}
+    },
+    switchAddr: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
+    return {
+      hasMultipleAddr: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    })
+  },
+  mounted() {
+    if (this.account.address !== null) {
+      if (
+        this.account.identifier !== KEYSTORE &&
+        this.account.identifier !== PRIV_KEY &&
+        this.account.identifier !== MEW_CONNECT &&
+        this.account.identifier !== WEB3_WALLET
+      ) {
+        this.hasMultipleAddr = true;
+      } else {
+        this.hasMultipleAddr = false;
+      }
+    }
+  },
+  methods: {
+    copy() {
+      this.triggerAlert('Address Copied!');
+      this.$refs.copyAddress.select();
+      document.execCommand('copy');
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import 'MobileInterfaceAddress.scss';
+</style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="send-eth-and-tokens">
+  <div class="interface-layout">
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
     <wallet-password-modal />
     <enter-pin-number-modal />
     <mnemonic-modal
@@ -27,6 +30,14 @@
       :priv-key="wallet.privateKey"
       :address="account.address"
     />
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+
+    <div class="info-block-container">
+      <mobile-interface-address />
+    </div>
+
     <div class="wrap">
       <div>
         <div
@@ -96,6 +107,7 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import * as networkTypes from '@/networks/types';
@@ -132,7 +144,8 @@ export default {
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'enter-pin-number-modal': EnterPinNumberModal
+    'enter-pin-number-modal': EnterPinNumberModal,
+    'mobile-interface-address': MobileInterfaceAddress
   },
   data() {
     return {

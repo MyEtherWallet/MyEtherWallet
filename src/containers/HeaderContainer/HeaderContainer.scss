@@ -2,8 +2,14 @@
 
 .wrap {
   padding-top: 99px;
-  @media all and (max-width: $tablet-width) {
-    padding-top: 82px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding-top: 70px;
+  }
+
+  @media all and (max-width: $mobile-width) {
+    padding-top: 70px;
   }
 }
 
