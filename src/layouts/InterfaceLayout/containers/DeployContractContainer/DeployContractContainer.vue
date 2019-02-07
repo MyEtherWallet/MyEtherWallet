@@ -333,7 +333,7 @@ export default {
         localStoredContract.push(storableObj);
       } else {
         localStoredContract[itemIndex] = {
-          abi: this.abi,
+          abi: JSON.stringify(JSON.parse(this.abi)),
           address: addr,
           comment: '',
           name: this.contractName
