@@ -2,6 +2,7 @@
 
 ### Feature
 
+- Add welcome to mew modal [#571](https://github.com/MyEtherWallet/MyEtherWallet/pull/571)
 - Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
