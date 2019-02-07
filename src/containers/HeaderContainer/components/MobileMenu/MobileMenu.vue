@@ -127,7 +127,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
-//import MobileAddressBlock from './components/MobileAddressBlock';
+import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import SettingsModal from '@/components/SettingsModal';
@@ -138,7 +138,7 @@ export default {
   components: {
     'logout-modal': LogoutModal,
     'mobile-menu-button': MobileMenuButton,
-    //'mobile-address-block': MobileAddressBlock,
+    'mobile-address-block': MobileAddressBlock,
     'mobile-balance-block': MobileBalanceBlock,
     'mobile-network-block': MobileNetworkBlock,
     'settings-modal': SettingsModal,
