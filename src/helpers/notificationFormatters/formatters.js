@@ -32,8 +32,6 @@ const extractErrorMessage = errObj => {
     }
     return errObj;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
     return errObj;
   }
 };

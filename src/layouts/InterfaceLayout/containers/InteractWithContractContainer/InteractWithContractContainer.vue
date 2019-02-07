@@ -44,9 +44,9 @@
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">
-                {{ $t('common.copy') }}
-              </span>
+              <span @click="copyToClipboard('abi')">{{
+                $t('common.copy')
+              }}</span>
             </div>
           </div>
         </div>
@@ -183,7 +183,9 @@
         </div>
         <div v-if="selectedMethod.constant">
           <div class="title-container">
-            <div class="title"><h4>Result:</h4></div>
+            <div class="title">
+              <h4>Result:</h4>
+            </div>
           </div>
           <div class="result-inputs">
             <input
@@ -208,9 +210,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">
-                  {{ item.name !== '' ? item.name : item.type | capitalize }}
-                </label>
+                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                  item.name !== '' ? item.name : item.type | capitalize
+                }}</label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -244,12 +246,12 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">{{
-              $t('interface.write')
-            }}</span>
-            <span v-show="!loading && selectedMethod.constant">{{
-              $t('interface.read')
-            }}</span>
+            <span v-show="!loading && !selectedMethod.constant">
+              {{ $t('interface.write') }}
+            </span>
+            <span v-show="!loading && selectedMethod.constant">
+              {{ $t('interface.read') }}
+            </span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
@@ -268,7 +270,7 @@ import { mapGetters } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
@@ -412,6 +414,7 @@ export default {
       this.address = selected.address;
     },
     selectedFunction(method) {
+      if (!method.hasOwnProperty('constant')) return;
       const contract = new this.web3.eth.Contract([method], this.address);
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
@@ -419,9 +422,8 @@ export default {
           .then(res => {
             this.result = res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
+            ErrorHandler(e, false);
           });
       } else {
         this.result = '';
@@ -479,10 +481,9 @@ export default {
             this.result = res;
             this.loading = false;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
             this.loading = false;
+            ErrorHandler(e, false);
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
@@ -493,9 +494,8 @@ export default {
           .then(res => {
             return res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err);
+          .catch(e => {
+            ErrorHandler(e, false);
           });
         const data = contract.methods[this.selectedMethod.name](
           ...this.contractArgs
