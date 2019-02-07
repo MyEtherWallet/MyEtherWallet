@@ -2,6 +2,7 @@
 
 ### Feature
 
+- Add welcome to mew modal [#571](https://github.com/MyEtherWallet/MyEtherWallet/pull/571)
 - Add [Görli](https://github.com/goerli/testnet) testnet [#552](https://github.com/MyEtherWallet/MyEtherWallet/pull/552)
 - Make use of address darklist from ethereum-list [#521](https://github.com/MyEtherWallet/MyEtherWallet/pull/521)
 
@@ -25,6 +26,7 @@
 
 ### Bug
 
+- Fix Getting started layout bugs for mobile and desktop [#569](https://github.com/MyEtherWallet/MyEtherWallet/pull/569)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
 ### Feature
@@ -40,6 +42,7 @@
 
 ### Bug
 
+- Fix Access My Wallet buttons position [#566](https://github.com/MyEtherWallet/MyEtherWallet/pull/566)
 - Fix #513 [#516](https://github.com/MyEtherWallet/MyEtherWallet/pull/516)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
