@@ -59,5 +59,6 @@
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "Waiting for Transaction Hash",
-  "edit": "Edit"
+  "edit": "Edit",
+  "nonce": "Nonce"
 }
