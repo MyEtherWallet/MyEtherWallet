@@ -1,3 +1,8 @@
+### Release v5.0.0-beta.5
+
+### Hotfix
+- Fix swap issue[#575](https://github.com/MyEtherWallet/MyEtherWallet/pull/575)
+
 ### Release v5.0.0-beta.4
 
 ### Feature
