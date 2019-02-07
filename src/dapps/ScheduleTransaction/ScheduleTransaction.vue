@@ -17,6 +17,12 @@
               :options="amountInputOptions()"
               @changedValue="amount = $event"
             />
+            <div v-show="!isValidAmount" class="text-danger">
+              Amount higher than balance
+            </div>
+            <div v-show="!hasEnoughEthToSchedule" class="text-danger">
+              Not enough ETH on account to schedule
+            </div>
           </b-col>
           <b-col class="scheduling-currency-picker">
             <div class="input-title">{{ $t('interface.sendTxType') }}</div>
@@ -215,6 +221,7 @@
               </b-row>
 
               <standard-input
+                v-if="!isTokenTransfer"
                 :options="dataInputOptions()"
                 @changedValue="data = $event"
               />
@@ -285,26 +292,10 @@ import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPic
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
-
-const TIME_BOUNTY_DEFAULTS = ['0.01', '0.02', '0.03'];
-const SUPPORTED_MODES = [
-  {
-    name: 'Date & Time',
-    executionWindow: {
-      min: 5,
-      default: 10
-    },
-    unit: 'Minutes'
-  },
-  {
-    name: 'Block Number',
-    executionWindow: {
-      min: 20,
-      default: 90
-    },
-    unit: 'Blocks'
-  }
-];
+import {
+  EAC_SCHEDULING_CONFIG,
+  calcSchedulingTotalCost
+} from './ScheduleHelpers';
 
 export default {
   name: 'ScheduleTransaction',
@@ -330,20 +321,22 @@ export default {
       advancedTimeBounty: false,
       toAddress: '',
       amount: '0',
-      gasLimit: '21000',
+      gasLimit: EAC_SCHEDULING_CONFIG.SCHEDULING_GAS_LIMIT,
       minGasLimit: 0,
       futureGasPrice: '1',
-      minGasPrice: 1,
+      minGasPrice: EAC_SCHEDULING_CONFIG.FUTURE_GAS_PRICE_MIN,
       data: '',
       datetime: '',
       currentBlockNumber: '',
       selectedBlockNumber: '',
-      timeBountyPresets: TIME_BOUNTY_DEFAULTS,
-      timeBounty: TIME_BOUNTY_DEFAULTS[0],
+      timeBountyPresets: EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS,
+      timeBounty: EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0],
       windowSize: 10,
-      supportedModes: SUPPORTED_MODES,
-      selectedMode: SUPPORTED_MODES[0],
-      deposit: TIME_BOUNTY_DEFAULTS[0] * 2,
+      supportedModes: EAC_SCHEDULING_CONFIG.SUPPORTED_MODES,
+      selectedMode: EAC_SCHEDULING_CONFIG.SUPPORTED_MODES[0],
+      deposit:
+        EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0] *
+        EAC_SCHEDULING_CONFIG.BOUNTY_TO_DEPOSIT_MULTIPLIER,
       scheduled: {
         show: false,
         txHash: '',
@@ -446,7 +439,7 @@ export default {
       'account'
     ]),
     isTokenTransfer() {
-      return this.selectedCurrency.symbol === this.network.type.name;
+      return this.selectedCurrency.symbol !== this.network.type.name;
     },
     timeBountyUsd() {
       const formatter = new Intl.NumberFormat('en-US', {
@@ -478,8 +471,31 @@ export default {
     timezoneOptions() {
       return moment.tz.names();
     },
+    schedulingCost() {
+      return calcSchedulingTotalCost({
+        gasPrice: new BigNumber(
+          this.web3.utils.toWei(this.gasPrice.toString(), 'gwei')
+        ),
+        gasLimit: new BigNumber(this.gasLimit),
+        futureGasLimit: new BigNumber(this.gasLimit),
+        futureGasPrice: new BigNumber(
+          this.web3.utils.toWei(this.futureGasPrice.toString(), 'gwei')
+        ),
+        timeBounty: new BigNumber(
+          this.web3.utils.toWei(this.timeBounty.toString(), 'ether')
+        )
+      });
+    },
+    maxEthToSend() {
+      const accountBalance = new BigNumber(this.account.balance);
+      return accountBalance.gt(0)
+        ? accountBalance.minus(this.schedulingCost)
+        : 0;
+    },
     validInputs() {
       return (
+        this.hasEnoughEthToSchedule &&
+        this.isValidAmount &&
         this.isValidAddress &&
         this.isValidExecutionWindow &&
         this.isValidFutureGasPrice &&
@@ -487,6 +503,21 @@ export default {
         this.isValidTimeBounty &&
         this.isValidWindowStart
       );
+    },
+    isValidAmount() {
+      const enteredAmount = new BigNumber(
+        this.isTokenTransfer
+          ? this.amount
+          : this.web3.utils.toWei(this.amount.toString(), 'ether')
+      );
+
+      const max = new BigNumber(
+        this.isTokenTransfer
+          ? this.selectedCurrency.balance
+          : this.maxEthToSend.toString()
+      );
+
+      return enteredAmount <= max;
     },
     isValidDateTime() {
       return (
@@ -532,6 +563,15 @@ export default {
     },
     isValidGasLimit() {
       return new BigNumber(this.gasLimit).gte(this.minGasLimit);
+    },
+    hasEnoughEthToSchedule() {
+      const accountBalance = new BigNumber(this.account.balance);
+      const totalEthNeeded = this.schedulingCost.plus(
+        this.isTokenTransfer
+          ? 0
+          : this.web3.utils.toWei(this.amount.toString(), 'ether')
+      );
+      return totalEthNeeded <= accountBalance;
     }
   },
   watch: {
@@ -636,7 +676,8 @@ export default {
         datetime
       } = this;
 
-      const timestampScheduling = selectedMode === SUPPORTED_MODES[0];
+      const timestampScheduling =
+        selectedMode === EAC_SCHEDULING_CONFIG.SUPPORTED_MODES[0];
 
       const timestamp = moment(datetime).unix();
 
