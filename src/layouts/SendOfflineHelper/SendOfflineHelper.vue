@@ -154,13 +154,10 @@
             selected network
           </p>
           <expending-option title="Raw Transaction">
-            <standard-input
-              :options="{
-                isTextarea: true,
-                buttonClear: true,
-                buttonCopy: true
-              }"
-              class="no-margin"
+            <textarea
+              :value="JSON.stringify(rawTx)"
+              class="no-margin raw-tx-input"
+              disabled
             />
           </expending-option>
           <div class="button-container">
@@ -451,7 +448,6 @@ export default {
           const correctNetwork = this.networkTypes.filter(
             entry => entry.chainID === this.chainID
           );
-          console.log(correctNetwork); // todo remove dev item
           if (correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
         }
         this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
@@ -460,9 +456,9 @@ export default {
         this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toString();
         this.nonce = new BigNumber(asJson[positions.nonce]).toString();
         this.value = new BigNumber(asJson[positions.value]).toString();
-        // this.data = asJson[positions.data];
-        this.data =
-          '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
+        this.data = asJson[positions.data];
+        // this.data =
+        //   '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
 
         this.minAccountBalance = tx.getUpfrontCost().toString();
         this.gasPrice = new BigNumber(
@@ -519,7 +515,7 @@ export default {
         return window.URL.createObjectURL(blob);
       };
       this.generatedJson = createBlob('mime', this.genInfo);
-      this.exportFileName = this.genInfo.address;
+      this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
     },
     uploadClick() {
       const jsonInput = this.$refs.jsonInput;

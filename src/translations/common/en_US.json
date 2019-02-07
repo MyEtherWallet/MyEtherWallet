@@ -60,5 +60,6 @@
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "Waiting for Transaction Hash",
   "edit": "Edit",
-  "nonce": "Nonce"
+  "nonce": "Nonce",
+  "createdContract": "Created Contract Address"
 }

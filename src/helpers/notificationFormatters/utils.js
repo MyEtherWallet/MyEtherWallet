@@ -20,8 +20,6 @@ const getSwapEntryIndex = (entry, val) => {
     }
     return false;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
     return false;
   }
 };
@@ -39,8 +37,6 @@ const getSwapEntryIndexForTxReceipt = (entry, val) => {
     }
     return false;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
     return false;
   }
 };
@@ -90,8 +86,6 @@ const extractEvmErrorData = errObj => {
     }
     return errObj;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
     return errObj;
   }
 };

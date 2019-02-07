@@ -28,7 +28,6 @@ const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
-import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
 
 const router = [
   {
@@ -116,8 +115,8 @@ const router = [
       },
       {
         path: 'send-offline',
-        component: SendOfflineContainer,
-        children: offlineRoutes.children
+        name: 'Send Offline Container',
+        component: SendOfflineContainer
       },
       {
         path: 'swap',
