@@ -16,7 +16,13 @@ const unlock = (file, password) => {
   Object.keys(file).forEach(key => {
     newFile[key.toLowerCase()] = file[key];
   });
-  return Wallet.fromV3(newFile, password, true);
+
+  try {
+    const wallet = Wallet.fromV3(newFile, password, true);
+    return wallet;
+  } catch (e) {
+    throw new Error(e);
+  }
 };
 
 // onmessage breaks tests as it is undefined

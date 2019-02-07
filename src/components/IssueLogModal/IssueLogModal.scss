@@ -38,8 +38,9 @@
 }
 
 .modal-user-input-block {
-  margin-top: 30px;
-  margin-bottom: 20px;
+  height: 300px;
+  overflow: hidden;
+  margin: 30px;
 }
 
 .modal-button-block {
@@ -49,5 +50,39 @@
 
   > * {
     margin: 0 5px;
+  }
+}
+
+.button-block {
+  padding-top: 40px;
+  text-align: center;
+
+  .checkbox-container {
+    margin-bottom: 30px;
+
+    input {
+      display: none;
+    }
+
+    label {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .custom-marker {
+      background-color: $light-grey-6;
+      border: 1px solid $light-grey-6;
+      border-radius: 5px;
+      height: 20px;
+      left: -25px;
+      position: absolute;
+      width: 20px;
+    }
+
+    .enable {
+      background-color: $mew-green;
+      border: 1px solid $mew-green;
+      color: $white;
+    }
   }
 }

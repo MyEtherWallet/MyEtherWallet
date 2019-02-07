@@ -28,6 +28,14 @@
             </a>
           </p>
         </li>
+        <li v-if="isContractCreation">
+          <p>{{ $t('common.createdContract') }}:</p>
+          <p>
+            <a :href="addressLink(details.contractAddress)" target="_blank">
+              {{ details.contractAddress }}
+            </a>
+          </p>
+        </li>
         <li>
           <p>{{ $t('common.txFee') }}:</p>
           <p>
@@ -127,6 +135,12 @@ export default {
     },
     isError() {
       return this.notice.body.error;
+    },
+    isContractCreation() {
+      return (
+        this.notice.body.contractAddress !== undefined &&
+        this.notice.body.contractAddress !== null
+      );
     },
     details() {
       return this.notice.body;
