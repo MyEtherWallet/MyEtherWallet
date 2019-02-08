@@ -232,7 +232,9 @@ export default {
             err
           ]);
         })
-        .catch(console.error); // eslint-disable-line
+        .catch(err => {
+          ErrorHandler(err, true);
+        });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'
