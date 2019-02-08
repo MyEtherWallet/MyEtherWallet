@@ -71,6 +71,7 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
+import { ErrorHandler } from '@/helpers';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -411,6 +412,9 @@ export default {
             ),
             receipt
           ]);
+        });
+        promiEvent.catch(err => {
+          ErrorHandler(err, true);
         });
         batch.add(req);
         return promiEvent.eventEmitter;

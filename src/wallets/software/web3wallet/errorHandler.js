@@ -1,14 +1,13 @@
-import * as Sentry from '@sentry/browser';
+import { ErrorHandler } from '@/helpers';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.'
 };
-const ErrorHandler = err => {
+export default err => {
   const errorValues = Object.values(ERRORS);
   if (errorValues.includes(err.message)) {
     console.error(err.message, err); // eslint-disable-line
   } else {
-    Sentry.captureException(err);
+    ErrorHandler(err, false);
   }
 };
-export default ErrorHandler;
