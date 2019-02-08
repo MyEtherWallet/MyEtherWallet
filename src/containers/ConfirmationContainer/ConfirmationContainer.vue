@@ -156,10 +156,13 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      const signPromise = this.wallet.signTransaction(tx).then(_response => {
-        this.signedTxObject = _response;
-        this.signedTx = this.signedTxObject.rawTransaction;
-      });
+      const signPromise = this.wallet.signTransaction(tx);
+      signPromise
+        .then(_response => {
+          this.signedTxObject = _response;
+          this.signedTx = this.signedTxObject.rawTransaction;
+        })
+        .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.confirmationModalOpen();
@@ -219,7 +222,8 @@ export default {
             this.lastRaw,
             receipt
           ]);
-        });
+        })
+        .catch(this.wallet.errorHandler);
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'

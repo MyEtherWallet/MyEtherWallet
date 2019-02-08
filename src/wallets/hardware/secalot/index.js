@@ -18,7 +18,6 @@ const NEED_PASSWORD = true;
 class SecalotWallet {
   constructor(password) {
     this.identifier = secalotType;
-    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[secalotType];
@@ -68,6 +67,7 @@ class SecalotWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );

@@ -20,7 +20,6 @@ const NEED_PASSWORD = true;
 class BitBoxWallet {
   constructor(password) {
     this.identifier = bitboxType;
-    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[bitboxType];
@@ -78,6 +77,7 @@ class BitBoxWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
