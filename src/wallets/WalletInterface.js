@@ -70,6 +70,7 @@ class WalletInterface {
         const networkId = tx._chainId;
         tx.sign(this.privateKey);
         const signedChainId = calculateChainIdFromV(tx.v);
+        console.log(signedChainId, networkId);
         if (signedChainId !== networkId)
           throw new Error(
             'Invalid networkId signature returned. Expected: ' +
