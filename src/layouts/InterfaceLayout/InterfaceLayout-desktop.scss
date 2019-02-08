@@ -24,6 +24,12 @@
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: auto;
 
+        .content-container {
+          > * {
+            height: 100%;
+          }
+        }
+
         .tokens {
           border-radius: 5px;
         }

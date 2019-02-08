@@ -2,9 +2,11 @@
   <div class="info-block-container">
     <interface-network-modal ref="network" />
     <div class="info-block network">
-      <div class="block-image network-type">
-        <div class="icon-block">
-          <img :src="network.type.icon" class="icon" />
+      <div class="block-image">
+        <div class="network-type">
+          <div class="icon-block">
+            <img :src="network.type.icon" class="icon" />
+          </div>
         </div>
       </div>
       <div class="block-content">
@@ -23,6 +25,7 @@
           </p>
         </div>
         <div class="icon-container">
+          <button class="change-button">Change</button>
           <b-btn
             v-if="account.identifier !== identifier"
             id="networkModal"

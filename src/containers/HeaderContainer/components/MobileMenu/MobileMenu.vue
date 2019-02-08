@@ -111,7 +111,7 @@
           </li>
           <li v-if="account.address">
             <div class="menu-link-block" @click="openSettings">
-              <div>{{$t('common.settings')}}</div>
+              <div>{{ $t('common.settings') }}</div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
           </li>

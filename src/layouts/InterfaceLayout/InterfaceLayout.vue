@@ -63,7 +63,7 @@
           >{{ alert.msg }}</b-alert
         >
         <div class="tx-contents">
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-address
               :address="address"
               :trigger-alert="triggerAlert"
@@ -71,10 +71,10 @@
               :switch-addr="switchAddress"
             />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-network :block-number="blockNumber" />
           </div>
           <router-view
@@ -115,6 +115,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
+import { ErrorHandler } from '@/helpers';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
@@ -257,9 +258,12 @@ export default {
           });
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
-          break;
+          ErrorHandler(
+            new Error(
+              `Wallet type ${this.account.identifier} can't switch addresses`
+            ),
+            false
+          );
       }
     },
     print() {
@@ -359,9 +363,8 @@ export default {
           }
           return tokenBalance;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
       return balance;
     },
@@ -418,9 +421,8 @@ export default {
         .then(res => {
           this.blockNumber = res;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     getBalance() {
@@ -431,23 +433,18 @@ export default {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            return;
+            ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            // eslint-disable-next-line no-console
-            console.error('Please unlock metamask');
-            return;
+            ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
           if (this.wallet !== null && address !== this.account.address) {
@@ -477,8 +474,7 @@ export default {
             }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.error(e);
+            ErrorHandler(e, false);
           });
       }, 500);
     },
@@ -513,9 +509,8 @@ export default {
             this.web3.utils.fromWei(res, 'gwei')
           ).toNumber();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     setENS() {
