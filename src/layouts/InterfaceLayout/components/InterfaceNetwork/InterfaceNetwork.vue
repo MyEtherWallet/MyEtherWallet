@@ -25,15 +25,14 @@
           </p>
         </div>
         <div class="icon-container">
-          <button class="change-button">Change</button>
-          <b-btn
+          <button
             v-if="account.identifier !== identifier"
             id="networkModal"
-            class="custom-tooltip"
+            class="change-button"
             @click="networkModalOpen"
           >
-            <img src="~@/assets/images/icons/change.svg" />
-          </b-btn>
+            Change
+          </button>
           <b-popover
             content="Open Networks"
             target="networkModal"
