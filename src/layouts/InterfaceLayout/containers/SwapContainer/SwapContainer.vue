@@ -530,6 +530,7 @@ export default {
         this.fromCurrency,
         this.tokenBalances[this.fromCurrency]
       );
+      this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
       this.currencyDetails.from = value;
