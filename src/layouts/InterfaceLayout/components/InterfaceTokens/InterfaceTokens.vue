@@ -173,7 +173,8 @@ export default {
           type: 'custom'
         };
         if (
-          token.network.toLowerCase() === this.network.type.name_long.toLowerCase()
+          token.network.toLowerCase() ===
+          this.network.type.name_long.toLowerCase()
         ) {
           v5CustomTokens[this.network.type.name_long].push(newObj);
         }
