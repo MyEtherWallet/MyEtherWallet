@@ -72,18 +72,6 @@ export default class Simplex {
     );
   }
 
-  // async getEstimate(fromCurrency, toCurrency, value) {
-  //   // const rateInfo = await this.getRate(
-  //   //   fromCurrency,
-  //   //   toCurrency,
-  //   //   fromValue,
-  //   //   toValue,
-  //   //   isFiat
-  //   // );
-  //   //
-  //   // return rateInfo;
-  // }
-
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
@@ -133,7 +121,6 @@ export default class Simplex {
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
     if (fromValue <= 0) fromValue = 51;
-    // return { error: 'result.result', fromValue: fromValue, toValue: 0 };
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -156,8 +143,6 @@ export default class Simplex {
 
   async updateDigital(fromCurrency, toCurrency, toValue) {
     if (toValue <= 0) toValue = 1;
-    // return { error: 'result.result', fromValue: 0, toValue: toValue };
-
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
@@ -225,9 +210,11 @@ export default class Simplex {
 
   canOrder(fiatAmount, digitalAmount) {
     return (
-      fiatAmount >= this.minFiat &&
-      fiatAmount <= this.maxFiat &&
-      digitalAmount > 0
+      new BigNumber(fiatAmount).gte(new BigNumber(this.minFiat)) &&
+      new BigNumber(new BigNumber(fiatAmount)).lte(
+        new BigNumber(this.maxFiat)
+      ) &&
+      new BigNumber(digitalAmount).gt(0)
     );
   }
 
@@ -249,7 +236,7 @@ export default class Simplex {
     await this.updateFiat(
       swapDetails.fromCurrency,
       swapDetails.toCurrency,
-      swapDetails.fromCurrency
+      swapDetails.fromValue
     );
     swapDetails.dataForInitialization = await this.createSwap(swapDetails);
     swapDetails.timestamp = new Date().toISOString();
