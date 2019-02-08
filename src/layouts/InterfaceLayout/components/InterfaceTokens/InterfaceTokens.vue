@@ -159,7 +159,30 @@ export default {
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    getV3Tokens() {
+      const v3Tokens = store.get('localTokens');
+      const v5CustomTokens = store.get('customTokens');
+      const parsedV3Tokens = [];
+      v3Tokens.forEach(token => {
+        const newObj = {
+          address: token.contractAddress,
+          decimals: token.decimal,
+          email: '',
+          name: token.symbol,
+          symbol: token.symbol,
+          website: '',
+          type: 'custom'
+        };
+        parsedV3Tokens.push(newObj);
+      });
+
+      store.set('customTokens', v5CustomTokens.concat(parsedV3Tokens));
+      store.remove('customTokens');
+    },
     getCustomTokens() {
+      if (store.get('localTokens') !== undefined) {
+        this.getV3Tokens();
+      }
       const storedTokens = store.get('customTokens');
       this.customTokens = storedTokens;
     },
