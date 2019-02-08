@@ -94,6 +94,8 @@ Sentry.init({
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
+    // eslint-disable-next-line
+    if(NODE_ENV !== 'production')  return null;
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);
     }).then(res => {
