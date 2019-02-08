@@ -1,5 +1,8 @@
 import * as Sentry from '@sentry/browser';
-const ERRORS = {};
+const ERRORS = {
+  REJECT_TX:
+    'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.'
+};
 const ErrorHandler = err => {
   const errorValues = Object.values(ERRORS);
   if (errorValues.includes(err.message)) {

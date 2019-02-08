@@ -241,7 +241,7 @@ export default {
       return (
         this.isValidAmount &&
         this.isValidAddress &&
-        new BigNumber(this.gasLimit).gte(0) &&
+        (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
         Misc.validateHexString(this.data)
       );
     },
@@ -328,7 +328,15 @@ export default {
         to: this.txTo,
         data: this.txData
       };
-      this.gasLimit = await this.web3.eth.estimateGas(params);
+      this.web3.eth
+        .estimateGas(params)
+        .then(gasLimit => {
+          this.gasLimit = gasLimit;
+        })
+        .catch(err => {
+          this.gasLimit = -1;
+          console.error(err); // eslint-disable-line
+        });
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
