@@ -24,13 +24,13 @@
         </div>
         <div class="icon-container">
           <button class="change-button">Change</button>
-          <b-btn id="print" class="custom-tooltip" @click="print">
+          <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
             <img src="~@/assets/images/icons/qr-code-white.svg" />
           </b-btn>
-          <b-btn id="print" class="custom-tooltip" @click="print">
+          <b-btn id="popover-ref-print" class="custom-tooltip" @click="print">
             <img src="~@/assets/images/icons/printer-white.svg" />
           </b-btn>
-          <b-btn id="copy" class="custom-tooltip" @click="copy">
+          <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
           <b-btn
@@ -43,14 +43,14 @@
           </b-btn>
           <b-popover
             :content="$t('popover.print')"
-            target="print"
+            target="popover-ref-print"
             placement="top"
             triggers="hover"
             title=""
           />
           <b-popover
             :content="$t('popover.copy')"
-            target="copy"
+            target="popover-ref-copy"
             placement="top"
             triggers="hover"
             title=""
@@ -58,6 +58,13 @@
           <b-popover
             :content="$t('popover.switchAddress')"
             target="switch"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
+          <b-popover
+            content="Address in Qrcode"
+            target="popover-ref-qrcode"
             placement="top"
             triggers="hover"
             title=""
@@ -96,6 +103,10 @@ export default {
       default: function() {}
     },
     switchAddr: {
+      type: Function,
+      default: function() {}
+    },
+    qrcode: {
       type: Function,
       default: function() {}
     }

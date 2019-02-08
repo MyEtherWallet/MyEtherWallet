@@ -13,6 +13,10 @@
       grid-template-columns: 0 1fr;
     }
 
+    .sidemenu {
+      background-color: $white;
+    }
+
     .contents {
       background-color: $light-grey-2;
       padding: 20px;
