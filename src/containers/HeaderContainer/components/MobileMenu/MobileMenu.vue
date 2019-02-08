@@ -22,7 +22,7 @@
         to="/"
         @click.native="
           scrollTop();
-          isMobileMenuOpen = false;
+          isMenuOpen = false;
         "
       >
         <div
@@ -83,16 +83,12 @@
             </router-link>
           </li>
           <li>
-            <a
-              href="https://kb.myetherwallet.com"
-              target="_blank"
-              @click="isMenuOpen = false"
-            >
+            <router-link to="/#faqs" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </div>
-            </a>
+            </router-link>
           </li>
           <li>
             <div
