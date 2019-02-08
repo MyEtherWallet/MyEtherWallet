@@ -328,10 +328,8 @@ export default {
       }
     },
     fromBelowMinAllowed() {
-      // MIN_SWAP_AMOUNT > +this.fromValue
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
-      //this.selectedProvider.minValue > +this.fromValue
       if (
         new BigNumber(this.selectedProvider.minValue).gt(
           new BigNumber(this.fromValue)
@@ -349,8 +347,6 @@ export default {
         ) &&
         new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        //  +this.fromValue > this.selectedProvider.maxValue &&
-        //  this.selectedProvider.maxValue > 0
         return this.$t('interface.aboveMaxSwap');
       return false;
     },
@@ -581,12 +577,10 @@ export default {
       }
     },
     amountChanged(direction) {
-      // todo: NOTE: the rates won't update if one field is zero.  it gets replaced, but shouldn't.  [figure out how to handle]
       if (
         (isValidEntry(this.fromValue) && direction === 'from') ||
         (isValidEntry(this.toValue) && direction === 'to')
       ) {
-        // this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         if (
           this.swap.getProvider(this.providerNames.simplex).currencies.fiat[
             this.fromCurrency
