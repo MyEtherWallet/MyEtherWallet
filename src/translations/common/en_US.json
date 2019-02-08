@@ -59,11 +59,12 @@
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "waitingForHash": "Waiting for Transaction Hash",
+  "createdContract": "Created Contract Address",
+  "waitingForHash": "Waiting for Transaction Hash",
   "changeAddress": "Change Address",
   "network": "Network",
   "change": "Change",
   "language": "Language",
   "logout": "Logout",
   "settings": "Settings"
-
 }
