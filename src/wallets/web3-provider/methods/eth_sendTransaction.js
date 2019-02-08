@@ -50,6 +50,7 @@ export default async (
           const _promiObj = store.state.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
+
           _promiObj
             .once('transactionHash', hash => {
               const localStoredObj = locStore.get(
@@ -68,9 +69,6 @@ export default async (
             })
             .on('error', err => {
               res(err);
-            })
-            .catch(err => {
-              console.log('caught error', err.message);
             });
           setEvents(_promiObj, _tx, store.dispatch);
         });
