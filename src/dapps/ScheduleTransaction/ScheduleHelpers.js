@@ -41,4 +41,16 @@ const calcSchedulingTotalCost = ({
   return deployCost.plus(futureExecutionCost).plus(EAC_SCHEDULING_CONFIG.FEE);
 };
 
-export { calcSchedulingTotalCost, EAC_SCHEDULING_CONFIG };
+const canBeConvertedToWei = (web3, string, denomination = 'ether') => {
+  try {
+    web3.utils.toWei(string.toString(), denomination);
+  } catch (e) {
+    if (!e.message.includes('too many decimal places')) {
+      console.error(e);
+    }
+    return false;
+  }
+  return true;
+};
+
+export { calcSchedulingTotalCost, EAC_SCHEDULING_CONFIG, canBeConvertedToWei };
