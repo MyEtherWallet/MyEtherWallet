@@ -56,7 +56,9 @@
           <p>{{ $t('header.errorMessage') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
-        <li @click="emitShowDetails">{{ $t('header.more') }}</li>
+        <li @click="emitShowDetails" class="show-pointer">
+          {{ $t('header.more') }}
+        </li>
       </ul>
     </div>
   </div>
