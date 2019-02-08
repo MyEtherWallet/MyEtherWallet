@@ -119,6 +119,12 @@
         ]"
         class="fixed-header"
       >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a href="https://vintage.myetherwallet.com">
+            Click here to go back!
+          </a>
+        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
