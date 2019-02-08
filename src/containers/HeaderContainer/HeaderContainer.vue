@@ -127,7 +127,7 @@
                   v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
+                    'get-free-wallet first-button nopadding'
                   ]"
                   to="/create-wallet"
                 >
