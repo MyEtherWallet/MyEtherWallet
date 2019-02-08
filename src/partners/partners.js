@@ -155,7 +155,7 @@ export default class SwapProviders {
   calculateFromValue(toValue, bestRate) {
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
-        .div(bestRate)
+        .div(new BigNumber(bestRate))
         .toFixed(6)
         .toString(10),
       false
@@ -165,7 +165,7 @@ export default class SwapProviders {
   calculateToValue(fromValue, bestRate) {
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
-        .times(bestRate)
+        .times(new BigNumber(bestRate))
         .toFixed(6)
         .toString(10),
       true
