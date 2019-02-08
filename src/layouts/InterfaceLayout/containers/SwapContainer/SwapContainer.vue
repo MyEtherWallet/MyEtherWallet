@@ -593,11 +593,7 @@ export default {
         } else {
           this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         }
-      } /*else if (direction === 'from') {
-        this.toValue = '';
-      } else if (direction === 'to') {
-        this.fromValue = '';
-      }*/
+      }
     },
     async updateEstimate(input) {
       let fromValue, toValue, simplexProvider, simplexRateDetails;
