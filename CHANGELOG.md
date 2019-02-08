@@ -3,6 +3,7 @@
 ### Devop
 
 - Swap fix, sentry version addition, deploy contract deteministic updates, JSON parsing [#575](https://github.com/MyEtherWallet/MyEtherWallet/pull/575)
+- Add keepkey affiliate link, link out to mewconnect, vintage mew header []()
 
 ### Release v5.0.0-beta.4
 
