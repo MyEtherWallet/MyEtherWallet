@@ -728,6 +728,13 @@ export default {
           }
         }
       } catch (e) {
+        //abort (empty response from
+        if (e.message === 'invalid') {
+          this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
+          this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+          this.finalizingSwap = false;
+          return;
+        }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
