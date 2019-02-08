@@ -308,7 +308,7 @@ export default {
         this.account.address
       );
       store.set(this.web3.utils.sha3(this.account.address), {
-        nonce: nonce,
+        nonce: this.web3.utils.toHex(nonce),
         timestamp: +new Date()
       });
     },

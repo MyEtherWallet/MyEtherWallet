@@ -68,6 +68,9 @@ export default async (
             })
             .on('error', err => {
               res(err);
+            })
+            .catch(err => {
+              console.log('caught error', err.message);
             });
           setEvents(_promiObj, _tx, store.dispatch);
         });

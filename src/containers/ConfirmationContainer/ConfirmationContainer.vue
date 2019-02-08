@@ -215,7 +215,7 @@ export default {
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
         })
-        .then(receipt => {
+        .on('receipt', receipt => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_RECEIPT,
             this.fromAddress,
@@ -223,7 +223,15 @@ export default {
             receipt
           ]);
         })
-        .catch(this.wallet.errorHandler);
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_ERROR,
+            this.fromAddress,
+            this.lastRaw,
+            err
+          ]);
+        })
+        .catch(console.error); // eslint-disable-line
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'
