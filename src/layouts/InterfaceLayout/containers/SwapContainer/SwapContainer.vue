@@ -582,6 +582,7 @@ export default {
     },
     amountChanged(direction) {
       // todo: NOTE: the rates won't update if one field is zero.  it gets replaced, but shouldn't.  [figure out how to handle]
+      console.log('direction', direction); // todo remove dev item
       console.log('to', isValidEntry(this.toValue)); // todo remove dev item
 
       console.log('from', isValidEntry(this.fromValue)); // todo remove dev item
