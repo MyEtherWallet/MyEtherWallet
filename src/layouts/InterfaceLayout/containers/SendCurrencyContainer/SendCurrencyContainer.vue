@@ -11,7 +11,7 @@
             </div>
             <currency-picker
               :currency="tokensWithBalance"
-              :page="'sendEgasAmountthAndTokens'"
+              :page="'sendEthAndTokens'"
               :token="true"
               @selectedCurrency="selectedCurrency = $event"
             />

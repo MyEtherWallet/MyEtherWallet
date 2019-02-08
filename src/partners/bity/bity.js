@@ -7,6 +7,7 @@ import {
   swapNotificationStatuses
 } from '../partnersConfig';
 import { utils } from '../helpers';
+import { ErrorHandler } from '@/helpers';
 import {
   getRates,
   openOrder,
@@ -434,8 +435,7 @@ export default class BitySwap {
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+      ErrorHandler(e, false);
     }
   }
 
@@ -505,10 +505,9 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return swapNotificationStatuses.PENDING;
+      ErrorHandler(e, false);
     }
+    return swapNotificationStatuses.PENDING;
   }
 
   static async getOrderStatusFiat(noticeDetails) {
@@ -545,9 +544,8 @@ export default class BitySwap {
           return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return swapNotificationStatuses.PENDING;
+      ErrorHandler(e, false);
     }
+    return swapNotificationStatuses.PENDING;
   }
 }
