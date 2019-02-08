@@ -81,7 +81,9 @@
         </div>
       </div>
       <div class="bottom-image-container">
-        <img class="icon" src="~@/assets/images/etc/mewconnectad.png" />
+        <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
+          <img class="icon" src="~@/assets/images/etc/mewconnectad.png" />
+        </a>
       </div>
     </div>
   </div>
