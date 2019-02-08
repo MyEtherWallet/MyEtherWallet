@@ -6,6 +6,12 @@
 }
 /* stylelint-enable */
 
+.show-pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .notification-count {
   //background: $red-1;
   border-radius: 50%;
