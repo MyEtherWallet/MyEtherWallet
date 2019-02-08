@@ -31,7 +31,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('checkIfOnline');
-    if (!store.get('notFirstTimeVisit')) {
+    if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
     }
 

@@ -10,11 +10,12 @@
           <i class="fa fa-angle-up" aria-hidden="true" />
         </p>
         <ul>
-          <li :class="cwwCurrent == 0 ? 'active' : ''" />
-          <li :class="cwwCurrent == 1 ? 'active' : ''" />
-          <li :class="cwwCurrent == 2 ? 'active' : ''" />
-          <li :class="cwwCurrent == 3 ? 'active' : ''" />
-          <li :class="cwwCurrent == 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 0 ? 'active' : ''" />
+          <li :class="cwwCurrent === 1 ? 'active' : ''" />
+          <li :class="cwwCurrent === 2 ? 'active' : ''" />
+          <li :class="cwwCurrent === 3 ? 'active' : ''" />
+          <li :class="cwwCurrent === 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 5 ? 'active' : ''" />
         </ul>
         <p>
           <i class="fa fa-angle-down" aria-hidden="true" />
@@ -111,7 +112,7 @@ export default {
     window.addEventListener('wheel', this.scrollAction);
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', this.scrollAction);
+    window.removeEventListener('wheel');
   },
   methods: {
     scrollListener(e) {
