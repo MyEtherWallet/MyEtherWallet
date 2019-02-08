@@ -30,6 +30,7 @@
       :priv-key="wallet.privateKey"
       :address="account.address"
     />
+    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
@@ -44,7 +45,7 @@
     </div>
 
     <div class="wrap">
-      <div>
+      <div class="sidemenu">
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
@@ -69,6 +70,7 @@
               :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
+              :qrcode="openAddressQrcode"
             />
           </div>
           <div class="content-container mobile-hide">
@@ -121,6 +123,7 @@ import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
+import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -151,7 +154,8 @@ export default {
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
-    'mobile-interface-address': MobileInterfaceAddress
+    'mobile-interface-address': MobileInterfaceAddress,
+    'address-qrcode-modal': AddressQrcodeModal
   },
   data() {
     return {
@@ -214,6 +218,9 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    openAddressQrcode() {
+      this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
+    },
     mnemonicphrasePasswordModalOpen(phrase) {
       this.phrase = phrase;
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
