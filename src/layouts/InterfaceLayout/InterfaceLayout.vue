@@ -350,6 +350,15 @@ export default {
         });
       return balance;
     },
+    setCustomTokenStore() {
+      const customTokenStore = store.get('customTokens');
+      Object.keys(networkTypes).forEach(network => {
+        if (customTokenStore[network] === undefined) {
+          customTokenStore[network] = [];
+        }
+      });
+      store.set('customTokens', customTokenStore);
+    },
     async setTokens() {
       this.receivedTokens = false;
       this.tokens = [];
@@ -467,6 +476,12 @@ export default {
     },
     setupOnlineEnvironment() {
       this.clearIntervals();
+      if (store.get('customTokens') === undefined) {
+        store.set('customTokens', {});
+        this.setCustomTokenStore();
+      } else {
+        this.setCustomTokenStore();
+      }
       if (this.online === true) {
         if (this.wallet !== null) {
           if (this.account.identifier === WEB3_TYPE) {

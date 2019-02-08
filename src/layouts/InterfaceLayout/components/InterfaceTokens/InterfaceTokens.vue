@@ -162,7 +162,6 @@ export default {
     getV3Tokens() {
       const v3Tokens = store.get('localTokens');
       const v5CustomTokens = store.get('customTokens');
-      const parsedV3Tokens = [];
       v3Tokens.forEach(token => {
         const newObj = {
           address: token.contractAddress,
@@ -173,17 +172,21 @@ export default {
           website: '',
           type: 'custom'
         };
-        parsedV3Tokens.push(newObj);
+        if (
+          token.network.toLowerCase() === this.network.type.name_long.toLowerCase()
+        ) {
+          v5CustomTokens[this.network.type.name_long].push(newObj);
+        }
       });
 
-      store.set('customTokens', v5CustomTokens.concat(parsedV3Tokens));
+      store.set('customTokens', v5CustomTokens);
       store.remove('customTokens');
     },
     getCustomTokens() {
       if (store.get('localTokens') !== undefined) {
         this.getV3Tokens();
       }
-      const storedTokens = store.get('customTokens');
+      const storedTokens = store.get('customTokens')[this.network.type.name];
       this.customTokens = storedTokens;
     },
     async getSpecificTokenBalance(token, idx) {
@@ -257,6 +260,7 @@ export default {
           website: '',
           type: 'custom'
         };
+        const currentCustomToken = store.get('customTokens');
         let newArray = [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
@@ -268,8 +272,8 @@ export default {
         }
         newArray.push(token);
         this.customTokens = newArray;
-
-        store.set('customTokens', this.customTokens);
+        currentCustomToken[this.network.type.name] = this.customTokens;
+        store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert('Successfully added token!');
       }
@@ -299,7 +303,7 @@ export default {
       } else {
         this.localTokens = arr;
         if (store.get('customTokens') !== undefined) {
-          this.customTokens = store.get('customTokens');
+          this.customTokens = store.get('customTokens')[this.network.type.name];
         }
       }
     }
