@@ -21,8 +21,9 @@
     >
       <router-link
         v-show="
-          $route.fullPath === '/create-wallet' ||
-            $route.fullPath === '/access-my-wallet'
+          ($route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet') &&
+            !gettingStartedDone
         "
         to="/getting-started"
       >
@@ -327,7 +328,8 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {},
+      showGettingStarted: ''
     };
   },
   computed: {
@@ -335,7 +337,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gettingStartedDone: 'gettingStartedDone'
     }),
     showButtons() {
       if (

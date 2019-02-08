@@ -49,6 +49,7 @@ export default {
     done() {
       store.set('skipTutorial', 'done');
       this.$router.push({ path: 'create-wallet' });
+      this.$store.dispatch('gettingStartedDone');
     }
   }
 };

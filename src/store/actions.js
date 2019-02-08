@@ -70,6 +70,10 @@ const checkIfOnline = function({ commit }) {
   commit('CHECK_IF_ONLINE');
 };
 
+const gettingStartedDone = function({ commit }) {
+  commit('GETTING_STARTED_DONE');
+};
+
 const clearWallet = function({ commit, state }) {
   if (state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect.disconnectRTC();
@@ -226,5 +230,6 @@ export default {
   setWeb3Instance,
   switchNetwork,
   updateNotification,
-  updateTransaction
+  updateTransaction,
+  gettingStartedDone
 };
