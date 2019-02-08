@@ -53,6 +53,7 @@ import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
+import { ErrorHandler } from '@/helpers';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -154,8 +155,7 @@ export default {
           });
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
+          ErrorHandler(new Error('No switch address for given account.'), true);
           break;
       }
     },

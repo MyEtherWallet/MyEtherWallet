@@ -6,7 +6,9 @@
 
     <div class="wrap">
       <div class="nav-dots">
-        <p><i class="fa fa-angle-up" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-up" aria-hidden="true" />
+        </p>
         <ul>
           <li :class="cwwCurrent == 0 ? 'active' : ''" />
           <li :class="cwwCurrent == 1 ? 'active' : ''" />
@@ -14,7 +16,9 @@
           <li :class="cwwCurrent == 3 ? 'active' : ''" />
           <li :class="cwwCurrent == 4 ? 'active' : ''" />
         </ul>
-        <p><i class="fa fa-angle-down" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-down" aria-hidden="true" />
+        </p>
       </div>
 
       <what-is-mew
@@ -100,31 +104,24 @@ export default {
     return {
       cwwCurrent: 0,
       cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      scrollListener: function() {}
+      scrollAction: utils._.throttle(this.scrollListener, 600)
     };
   },
   mounted: function() {
-    this.scrollListener = e => {
-      if (e.deltaY < -6) {
-        this.mouseScrollUp();
-      }
-      if (e.deltaY > 6) {
-        this.mouseScrollDown();
-      }
-    };
-
-    window.addEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.addEventListener('wheel', this.scrollAction);
   },
   beforeDestroy() {
-    window.removeEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.removeEventListener('wheel', this.scrollAction);
   },
   methods: {
+    scrollListener(e) {
+      if (e.deltaY < -2) {
+        this.mouseScrollUp();
+      }
+      if (e.deltaY > 2) {
+        this.mouseScrollDown();
+      }
+    },
     mouseScrollDown: function() {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;

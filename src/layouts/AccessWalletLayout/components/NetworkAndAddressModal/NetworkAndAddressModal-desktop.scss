@@ -1,4 +1,18 @@
 @import '~@/scss/GlobalVariables';
+
+// Colors
+$color-white: #fff;
+
+// Green Filled Button Colors
+$green-filled-button-background: #3bc1aa;
+$green-filled-button-background--hover: #3ed7bc;
+$green-filled-button-background--click: #269983;
+
+// Red Filled Button Colors
+$red-filled-button-background: #ff436d;
+$red-filled-button-background--hover: #ff7795;
+$red-filled-button-background--click: #ff5a7f;
+
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   $collapse-button-color: #334758;
 
@@ -184,4 +198,65 @@
   p {
     cursor: pointer;
   }
+}
+
+.custom-path-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: [col] 15% [col] 85%;
+  grid-template-rows: [row] auto [row] auto [row];
+  label {
+    border: 0;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  input {
+    background-color: $background-color-1;
+    border: 0;
+    font-size: 14px;
+    padding: 10px;
+    //width: 50%;
+  }
+
+  .submit-button {
+    text-align: center;
+    user-select: none;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+
+    &.cancel {
+      background-color: $red-filled-button-background;
+      border: 1px solid $red-filled-button-background;
+    }
+
+    &.submit {
+      background-color: $green-filled-button-background;
+      border: 1px solid $green-filled-button-background;
+    }
+
+    color: $color-white;
+
+    &:hover {
+      background-color: $green-filled-button-background--hover;
+      border: 1px solid $green-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $green-filled-button-background--click;
+      border: 1px solid $green-filled-button-background--click;
+    }
+  }
+}
+
+.custom-networks {
+  display: grid;
+  grid-column-gap: 35px;
+  grid-template-columns: 1fr 1fr;
 }
