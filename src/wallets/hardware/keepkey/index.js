@@ -30,7 +30,6 @@ const NEED_PASSWORD = false;
 class KeepkeyWallet {
   constructor(eventHub) {
     this.identifier = keepkeyType;
-    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.eventHub = eventHub;
@@ -127,6 +126,7 @@ class KeepkeyWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );

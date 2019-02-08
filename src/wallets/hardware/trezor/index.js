@@ -17,7 +17,6 @@ const NEED_PASSWORD = false;
 class TrezorWallet {
   constructor() {
     this.identifier = trezorType;
-    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[trezorType];
@@ -67,6 +66,7 @@ class TrezorWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );

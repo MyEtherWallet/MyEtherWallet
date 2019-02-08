@@ -15,7 +15,6 @@ class MnemonicWallet {
   constructor(mnemonic, password) {
     if (!bip39.validateMnemonic(mnemonic)) throw new Error('Invalid Mnemonic');
     this.identifier = mnemonicType;
-    this.errorHandler = errorHandler;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;
     this.mnemonic = mnemonic;
@@ -59,6 +58,7 @@ class MnemonicWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );

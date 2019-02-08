@@ -18,7 +18,6 @@ const NEED_PASSWORD = false;
 class ledgerWallet {
   constructor() {
     this.identifier = ledgerType;
-    this.errorHandler = errorHandler;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[ledgerType];
@@ -94,6 +93,7 @@ class ledgerWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
