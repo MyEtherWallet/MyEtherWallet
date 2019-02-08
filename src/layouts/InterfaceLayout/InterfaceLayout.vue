@@ -47,7 +47,7 @@
           >{{ alert.msg }}</b-alert
         >
         <div class="tx-contents">
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-address
               :address="address"
               :trigger-alert="triggerAlert"
@@ -55,10 +55,10 @@
               :switch-addr="switchAddress"
             />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-network :block-number="blockNumber" />
           </div>
           <router-view
