@@ -72,6 +72,18 @@ export default class Simplex {
     );
   }
 
+  // async getEstimate(fromCurrency, toCurrency, value) {
+  //   // const rateInfo = await this.getRate(
+  //   //   fromCurrency,
+  //   //   toCurrency,
+  //   //   fromValue,
+  //   //   toValue,
+  //   //   isFiat
+  //   // );
+  //   //
+  //   // return rateInfo;
+  // }
+
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
@@ -88,7 +100,6 @@ export default class Simplex {
         toValue,
         fromValue
       );
-console.log(simplexRateDetails); // todo remove dev item
       const rate = new BigNumber(simplexRateDetails.toValue)
         .div(simplexRateDetails.fromValue)
         .toString(10);
@@ -102,6 +113,7 @@ console.log(simplexRateDetails); // todo remove dev item
         maxValue: this.maxFiat
       };
     }
+
     this.invalidFrom = 'simplexMin';
     simplexRateDetails = await this.updateFiat(fromCurrency, toCurrency, 51);
 
@@ -121,15 +133,13 @@ console.log(simplexRateDetails); // todo remove dev item
 
   async updateFiat(fromCurrency, toCurrency, fromValue) {
     if (fromValue <= 0) fromValue = 51;
-      // return { error: 'result.result', fromValue: fromValue, toValue: 0 };
+    // return { error: 'result.result', fromValue: fromValue, toValue: 0 };
     const result = await getQuote({
       digital_currency: toCurrency,
       fiat_currency: fromCurrency,
       requested_currency: fromCurrency,
       requested_amount: +fromValue
     });
-
-    console.log('updateFiat:', result); // todo remove dev item
 
     if (result.error) {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
@@ -146,7 +156,7 @@ console.log(simplexRateDetails); // todo remove dev item
 
   async updateDigital(fromCurrency, toCurrency, toValue) {
     if (toValue <= 0) toValue = 1;
-      // return { error: 'result.result', fromValue: 0, toValue: toValue };
+    // return { error: 'result.result', fromValue: 0, toValue: toValue };
 
     const result = await getQuote({
       digital_currency: toCurrency,
@@ -155,16 +165,16 @@ console.log(simplexRateDetails); // todo remove dev item
       requested_amount: +toValue
     });
 
-    console.log('updateDigital:', result); // todo remove dev item
-
-
     if (result.error) {
       return { error: result.result, fromValue: 0, toValue: toValue };
     }
     this.currentOrder = result.result;
     return {
       fromValue: result.result.fiat_money.total_amount,
-      toValue: result.result.digital_money.amount
+      toValue: result.result.digital_money.amount,
+      rate: new BigNumber(result.result.digital_money.amount)
+        .div(result.result.fiat_money.total_amount)
+        .toString(10)
     };
   }
 

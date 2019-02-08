@@ -50,7 +50,6 @@
                   value
                   placeholder="Deposit Amount"
                   @input="amountChanged('from')"
-                  @change="demoDisplay"
                 />
               </div>
               <div class="error-message-container">
@@ -322,17 +321,22 @@ export default {
             }).rate;
           }
           return bestRateForQuantity([...this.providerList], this.fromValue);
-        } else {
-          return this.lastBestRate;
         }
+        return this.lastBestRate;
       } catch (e) {
         errorLogger(e);
       }
     },
     fromBelowMinAllowed() {
-      if (MIN_SWAP_AMOUNT > +this.fromValue)
+      // MIN_SWAP_AMOUNT > +this.fromValue
+      if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
-      if (this.selectedProvider.minValue > +this.fromValue)
+      //this.selectedProvider.minValue > +this.fromValue
+      if (
+        new BigNumber(this.selectedProvider.minValue).gt(
+          new BigNumber(this.fromValue)
+        )
+      )
         return this.$t('interface.belowMin');
       return false;
     },
@@ -340,14 +344,20 @@ export default {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         return this.toAboveMaxAllowed;
       } else if (
-        +this.fromValue > this.selectedProvider.maxValue &&
-        this.selectedProvider.maxValue > 0
+        new BigNumber(this.fromValue).gt(
+          new BigNumber(this.selectedProvider.maxValue)
+        ) &&
+        new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
+        //  +this.fromValue > this.selectedProvider.maxValue &&
+        //  this.selectedProvider.maxValue > 0
         return this.$t('interface.aboveMaxSwap');
       return false;
     },
     toBelowMinAllowed() {
       if (this.checkBityMin) return this.$t('interface.belowMin');
+      if (new BigNumber(0).gte(new BigNumber(this.toValue)))
+        return this.$t('interface.belowMin');
       return false;
     },
     toAboveMaxAllowed() {
@@ -444,12 +454,6 @@ export default {
     }
   },
   watch: {
-    toValue(val1) {
-      console.log('toValue: ', val1); // todo remove dev item
-    },
-    fromValue(val1) {
-      console.log('fromValue: ', val1); // todo remove dev item
-    },
     ['this.network.type.name']() {
       this.swap.updateNetwork(this.network.type.name);
     },
@@ -488,9 +492,6 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
-    demoDisplay(e) {
-      console.log(e); // todo remove dev item
-    },
     reset() {
       this.updateRateEstimate(
         this.fromCurrency,
@@ -560,7 +561,6 @@ export default {
       this.currencyDetails.to = value;
       this.toCurrency = value.symbol;
       this.fromArray = this.swap.setFromCurrencyBuilder(value);
-      console.log('setToCurrency' ,this.fromValue); // todo remove dev item
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
@@ -582,10 +582,6 @@ export default {
     },
     amountChanged(direction) {
       // todo: NOTE: the rates won't update if one field is zero.  it gets replaced, but shouldn't.  [figure out how to handle]
-      console.log('direction', direction); // todo remove dev item
-      console.log('to', isValidEntry(this.toValue)); // todo remove dev item
-
-      console.log('from', isValidEntry(this.fromValue)); // todo remove dev item
       if (
         (isValidEntry(this.fromValue) && direction === 'from') ||
         (isValidEntry(this.toValue) && direction === 'to')
@@ -603,11 +599,11 @@ export default {
         } else {
           this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         }
-      } else if (direction === 'from') {
+      } /*else if (direction === 'from') {
         this.toValue = '';
       } else if (direction === 'to') {
         this.fromValue = '';
-      }
+      }*/
     },
     async updateEstimate(input) {
       let fromValue, toValue, simplexProvider, simplexRateDetails;
@@ -633,10 +629,23 @@ export default {
               this.toCurrency,
               this.toValue
             );
-            console.log(simplexRateDetails); // todo remove dev item
+
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.fromValue = this.swap.calculateFromValue(this.toValue, rate);
           }
+
           break;
         case `${this.providerNames.simplex}from`:
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
@@ -646,11 +655,23 @@ export default {
               this.toCurrency,
               this.fromValue
             );
-            console.log(simplexRateDetails); // todo remove dev item
 
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.toValue = this.swap.calculateToValue(this.fromValue, rate);
           }
+
           break;
         default:
           toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
