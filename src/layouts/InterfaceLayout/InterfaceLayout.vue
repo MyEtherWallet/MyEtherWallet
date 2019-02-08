@@ -497,7 +497,10 @@ export default {
     },
     setENS() {
       if (this.network.type.ensResolver) {
-        this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+        this.$store.dispatch(
+          'setENS',
+          new ENS(this.web3.currentProvider, this.network.type.ensResolver)
+        );
       } else {
         this.$store.dispatch('setENS', null);
       }
