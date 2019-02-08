@@ -211,6 +211,7 @@ export default {
       const searchCustom = this.customTokens.find(item => {
         return item.symbol.toLowerCase() === symbol.toLowerCase();
       });
+
       if (searchNetwork !== undefined || searchCustom !== undefined) {
         return false;
       }
@@ -239,13 +240,13 @@ export default {
     async addToken(address, symbol, decimal) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (findTokenByAddr) {
+      if (!findTokenByAddr) {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           'A default token with this contract address already exists!',
           'danger'
         );
-      } else if (findTokenBySymbol) {
+      } else if (!findTokenBySymbol) {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
