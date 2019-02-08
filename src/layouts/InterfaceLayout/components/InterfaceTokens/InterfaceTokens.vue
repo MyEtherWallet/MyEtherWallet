@@ -200,7 +200,7 @@ export default {
     removeToken(idx) {
       let storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
-      storedTokens = this.customTokens;
+      storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
     },
     searchBySymbol(symbol) {
