@@ -195,6 +195,9 @@
                 :options="requireDepositInputOptions()"
                 @changedValue="deposit = $event"
               />
+              <div v-show="!isValidDeposit" class="text-danger">
+                Invalid deposit number
+              </div>
 
               <b-row>
                 <b-col>
@@ -294,7 +297,8 @@ import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
 import {
   EAC_SCHEDULING_CONFIG,
-  calcSchedulingTotalCost
+  calcSchedulingTotalCost,
+  canBeConvertedToWei
 } from './ScheduleHelpers';
 
 export default {
@@ -453,6 +457,13 @@ export default {
       );
     },
     estimatedMaximumExecutionGasPrice() {
+      if (
+        !this.isValidFutureGasPrice ||
+        !this.isValidGasLimit ||
+        !this.isValidTimeBounty
+      )
+        return 0;
+
       const estimated = Util.estimateMaximumExecutionGasPrice(
         new BigNumber(this.web3.utils.toWei(this.timeBounty, 'ether')),
         new BigNumber(this.web3.utils.toWei(this.futureGasPrice, 'gwei')),
@@ -465,6 +476,7 @@ export default {
       return moment();
     },
     minBounty() {
+      if (!this.isValidFutureGasPrice) return 0;
       const wei = this.web3.utils.toWei(this.futureGasPrice, 'gwei');
       return this.web3.utils.fromWei(wei, 'ether');
     },
@@ -472,6 +484,15 @@ export default {
       return moment.tz.names();
     },
     schedulingCost() {
+      if (
+        !this.isValidFutureGasPrice ||
+        !this.isValidGasLimit ||
+        !this.isValidTimeBounty
+      ) {
+        // Make the scheduling cost ridiculously big to throw an error
+        return new BigNumber(1e32 * 1e18);
+      }
+
       return calcSchedulingTotalCost({
         gasPrice: new BigNumber(
           this.web3.utils.toWei(this.gasPrice.toString(), 'gwei')
@@ -488,9 +509,8 @@ export default {
     },
     maxEthToSend() {
       const accountBalance = new BigNumber(this.account.balance);
-      return accountBalance.gt(0)
-        ? accountBalance.minus(this.schedulingCost)
-        : 0;
+      const sendableEth = accountBalance.minus(this.schedulingCost);
+      return sendableEth.gt(0) ? sendableEth : new BigNumber(0);
     },
     validInputs() {
       return (
@@ -505,19 +525,20 @@ export default {
       );
     },
     isValidAmount() {
+      if (!canBeConvertedToWei(this.web3, this.amount.toString())) return false;
+
       const enteredAmount = new BigNumber(
         this.isTokenTransfer
           ? this.amount
           : this.web3.utils.toWei(this.amount.toString(), 'ether')
       );
-
       const max = new BigNumber(
         this.isTokenTransfer
           ? this.selectedCurrency.balance
           : this.maxEthToSend.toString()
       );
 
-      return enteredAmount <= max;
+      return enteredAmount.lte(max);
     },
     isValidDateTime() {
       return (
@@ -551,27 +572,41 @@ export default {
       );
     },
     isValidTimeBounty() {
-      return new BigNumber(this.web3.utils.toWei(this.timeBounty, 'ether')).gte(
-        this.web3.utils.toWei(this.futureGasPrice, 'gwei')
+      const convertibleToWei = canBeConvertedToWei(this.web3, this.timeBounty);
+      const invalidFutureGasPrice = canBeConvertedToWei(
+        this.web3,
+        this.futureGasPrice,
+        'gwei'
       );
+      if (!invalidFutureGasPrice || !convertibleToWei) return false;
+
+      const higherThanGasPrice = new BigNumber(
+        this.web3.utils.toWei(this.timeBounty, 'ether')
+      ).gte(this.web3.utils.toWei(this.futureGasPrice, 'gwei'));
+      return higherThanGasPrice;
     },
     isValidExecutionWindow() {
       return this.windowSize >= this.selectedMode.executionWindow.min;
     },
     isValidFutureGasPrice() {
-      return parseFloat(this.futureGasPrice) >= this.minGasPrice;
+      const isHigherThanMin =
+        parseFloat(this.futureGasPrice) >= this.minGasPrice;
+      const convertibleToWei = canBeConvertedToWei(
+        this.web3,
+        this.futureGasPrice,
+        'gwei'
+      );
+      return isHigherThanMin && convertibleToWei;
     },
     isValidGasLimit() {
       return new BigNumber(this.gasLimit).gte(this.minGasLimit);
     },
+    isValidDeposit() {
+      return canBeConvertedToWei(this.web3, this.deposit);
+    },
     hasEnoughEthToSchedule() {
       const accountBalance = new BigNumber(this.account.balance);
-      const totalEthNeeded = this.schedulingCost.plus(
-        this.isTokenTransfer
-          ? 0
-          : this.web3.utils.toWei(this.amount.toString(), 'ether')
-      );
-      return totalEthNeeded <= accountBalance;
+      return accountBalance.gt(this.schedulingCost);
     }
   },
   watch: {
