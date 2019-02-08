@@ -198,7 +198,7 @@ export default {
       this.$refs.tokenModal.$refs.token.show();
     },
     removeToken(idx) {
-      let storedTokens = store.get('customTokens');
+      const storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
