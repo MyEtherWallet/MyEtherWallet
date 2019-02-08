@@ -301,7 +301,9 @@ export default {
         const json = _tx.toJSON(true);
         delete json.to;
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json);
+        this.web3.eth.sendTransaction(json).catch(err => {
+          ErrorHandler(err, false);
+        });
         const contractAddr = EthUtil.bufferToHex(
           EthUtil.generateAddress(coinbase, nonce)
         );

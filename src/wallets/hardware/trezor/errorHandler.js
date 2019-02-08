@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/browser';
+import { ErrorHandler } from '@/helpers';
 const ERRORS = {
   POPUP_CLOSED: 'Popup closed',
   DEVICE_DISCONNECTED: 'Device disconnected',
@@ -6,12 +6,11 @@ const ERRORS = {
   ACTION_CANCELLED: 'Action cancelled by user',
   NO_PERMISSION: 'Permissions not granted'
 };
-const ErrorHandler = err => {
+export default err => {
   const errorValues = Object.values(ERRORS);
   if (errorValues.includes(err.message)) {
     console.error(err.message, err); // eslint-disable-line
   } else {
-    Sentry.captureException(err);
+    ErrorHandler(err, false);
   }
 };
-export default ErrorHandler;
