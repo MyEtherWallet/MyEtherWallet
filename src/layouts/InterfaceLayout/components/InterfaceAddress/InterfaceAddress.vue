@@ -23,6 +23,10 @@
           <p class="address">{{ address }}</p>
         </div>
         <div class="icon-container">
+          <button class="change-button">Change</button>
+          <b-btn id="print" class="custom-tooltip" @click="print">
+            <img src="~@/assets/images/icons/qr-code-white.svg" />
+          </b-btn>
           <b-btn id="print" class="custom-tooltip" @click="print">
             <img src="~@/assets/images/icons/printer-white.svg" />
           </b-btn>
