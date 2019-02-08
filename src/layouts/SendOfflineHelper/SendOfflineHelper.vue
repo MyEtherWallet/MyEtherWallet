@@ -136,15 +136,7 @@
           number="3"
           @titleClicked="stage3 = !stage3"
         >
-          <standard-input
-            :options="{
-              title: $t('withoutWallet.signedTx'),
-              isTextarea: true,
-              buttonClear: true,
-              buttonCopy: true
-            }"
-            @changedValue="getTransactionDetails($event)"
-          />
+          <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
           <p v-if="invalidSignature">Invalid Signature</p>
           <p v-if="wrongNetwork && correctNetwork === ''">
             Signed Chain ID does not match chain id for selected network
@@ -218,13 +210,13 @@
             </li>
             <li class="detail-container">
               <span class="detail-name">Data:</span>
-              <span class="detail-text">
+              <span v-if="data !== '0x'" class="detail-text">
                 {{ truncateData(data) }}
                 <span class="show-all-btn" @click="showAllData = !showAllData">
                   Show All
                 </span>
               </span>
-
+              <span v-else class="data-all"> {{ data }} </span>
               <span v-if="showAllData" class="data-all">{{ data }}</span>
             </li>
 
@@ -253,7 +245,7 @@
           <div class="button-container">
             <standard-button
               :options="{
-                title: 'Continue',
+                title: 'Send',
                 buttonStyle: 'green',
                 noWalletTerms: true,
                 rightArrow: true
@@ -272,7 +264,55 @@
           number="5"
           @titleClicked="stage5 = !stage5"
         >
-          SHOW TX HASH, AS LINK TO ETHERSCAN AND THEN THE TRANSACTION RECEIPT
+          <ul v-if="error === ''">
+            <li class="tx-hash-container">
+              <p>Transaction Hash:</p>
+              <a
+                :href="replaceUrl('', txHash)"
+                class="detail-text"
+                target="_blank"
+              >
+                {{ txHash }}
+              </a>
+            </li>
+            <li class="tx-receipt-container">
+              <p>Transaction Receipt:</p>
+              <div
+                v-if="Object.keys(txReceipt).length > 0"
+                class="tx-receipt-items"
+              >
+                <div
+                  v-for="(item, idx) in Object.keys(txReceipt)"
+                  :key="item + idx"
+                >
+                  <span> {{ item }} </span>
+                  <a
+                    v-if="item === 'transactionHash'"
+                    :href="replaceUrl('', txReceipt[item])"
+                    target="_blank"
+                    class="right-side"
+                  >
+                    {{ txReceipt[item] }}
+                  </a>
+                  <a
+                    v-else-if="item === 'contractAddress'"
+                    :href="replaceUrl('address', txReceipt[item])"
+                    target="_blank"
+                    class="right-side"
+                  >
+                    {{ txReceipt[item] }}
+                  </a>
+                  <span v-else class="right-side"> {{ txReceipt[item] }} </span>
+                </div>
+              </div>
+              <div v-else class="loading">
+                Loading....
+              </div>
+            </li>
+          </ul>
+          <div v-else>
+            {{ error }}
+          </div>
         </accordion-menu>
       </div>
     </div>
@@ -349,7 +389,10 @@ export default {
       //Error Flags
       invalidSignature: false,
       wrongNetwork: false,
-      correctNetwork: ''
+      correctNetwork: '',
+      txHash: '',
+      txReceipt: {},
+      error: ''
     };
   },
   computed: {
@@ -388,11 +431,22 @@ export default {
       };
     }
   },
+  watch: {
+    rawSigned(newVal) {
+      this.getTransactionDetails(newVal);
+    }
+  },
   mounted() {
     this.switchNetwork(this.$store.state.network);
     this.fetchBalanceData();
   },
   methods: {
+    replaceUrl(type, hash) {
+      if (type === 'address') {
+        return this.network.type.blockExplorerAddr.replace('[[address]]', hash);
+      }
+      return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
+    },
     stage1Btn() {
       this.stage1 = false;
       this.stage2 = true;
@@ -408,6 +462,19 @@ export default {
     stage4Btn() {
       this.stage4 = false;
       this.stage5 = true;
+      if (this.rawSigned !== '') {
+        this.web3.eth
+          .sendSignedTransaction(this.rawSigned)
+          .once('transactionHash', hash => {
+            this.txHash = hash;
+          })
+          .then(receipt => {
+            this.txReceipt = receipt;
+          })
+          .catch(e => {
+            this.error = e;
+          });
+      }
     },
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
@@ -435,8 +502,8 @@ export default {
       };
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
-        const sanatizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new ethTx(sanatizedRawSigned);
+        const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
+        const tx = new ethTx(sanitizedRawSigned);
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(
@@ -453,19 +520,18 @@ export default {
         this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
         const asJson = tx.toJSON();
         this.to = asJson[positions.to];
-        this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toString();
-        this.nonce = new BigNumber(asJson[positions.nonce]).toString();
-        this.value = new BigNumber(asJson[positions.value]).toString();
-        this.data = asJson[positions.data];
-        // this.data =
-        //   '0xf86d82021184b2d05e00825208947676e10eefc7311970a12387518442136ea14d81880de0b6b3a7640000802aa02e6304c2419f279bb50d224bd5387befd89f9bcc362cab96c20293745498f4aba07bb13b394265fcd71bf2b5eac7e3c5ed1923f5ccd1b700448027f9dd3edbfe17';
+        this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toFixed();
+        this.nonce = new BigNumber(asJson[positions.nonce]).toFixed();
+        this.value = new BigNumber(asJson[positions.value]).toFixed();
 
+        this.data = asJson[positions.data];
         this.minAccountBalance = tx.getUpfrontCost().toString();
         this.gasPrice = new BigNumber(
           Misc.sanitizeHex(tx.gasPrice.toString('hex'))
-        ).toString();
-
-        this.fee = new BigNumber(this.gasLimit).times(this.gasPrice).toString();
+        ).toFixed();
+        this.fee = new BigNumber(this.toGwei(this.gasPrice))
+          .times(this.gasLimit)
+          .toFixed();
       }
     },
     async fetchBalanceData() {
@@ -478,18 +544,23 @@ export default {
     },
     toEth(val) {
       if (!val) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toString());
+      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'ether');
+    },
+    toWei(val) {
+      if (!val) return 0;
+      return web3Utils.toWei(new BigNumber(val).toFixed(), 'gwei');
     },
     toGwei(val) {
       if (!val) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toString(), 'gwei');
+      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'gwei');
     },
     dateTimeDisplay(unixTimeStamp) {
       return new Date(unixTimeStamp).toString();
     },
-    calculateCost(inWei) {
+    calculateCost(inGwei) {
+      const fromGweiToWei = this.toWei(inGwei);
       return new BigNumber(this.ethPrice)
-        .times(this.toEth(inWei))
+        .times(this.toEth(fromGweiToWei))
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
     },
@@ -526,8 +597,8 @@ export default {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        self.$emit('file', JSON.parse(evt.target.result));
         self.file = JSON.parse(evt.target.result);
+        self.getTransactionDetails(self.file.rawTransaction);
       };
       reader.readAsBinaryString(e.target.files[0]);
     }

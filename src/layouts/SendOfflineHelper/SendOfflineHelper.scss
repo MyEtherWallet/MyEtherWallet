@@ -118,27 +118,20 @@
 }
 
 .detail-container {
-  position: relative;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 
   .detail-name {
     font-weight: 600;
     font-size: 16px;
     padding: 7px 20px;
-    width: 100%;
     position: relative;
     display: block;
 
     &.right-padding {
       padding-right: 70px;
     }
-  }
-
-  .detail-text {
-    //padding-bottom: 7px;
-    position: absolute;
-    top: 10px;
-    right: 21px;
-    //color: $mew-green;
   }
 
   .show-all-btn {
@@ -173,4 +166,45 @@
   padding: 18px 20px;
   resize: none;
   width: 100%;
+}
+
+.tx-hash-container {
+  color: $mew-green;
+  overflow: hidden;
+  padding-bottom: 20px;
+  text-overflow: ellipsis;
+
+  p {
+    color: $dark-blue-1;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  a {
+    width: 100%;
+  }
+}
+
+.tx-receipt-container {
+  p {
+    color: $dark-blue-1;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .tx-receipt-items {
+    padding: 10px;
+
+    div {
+      align-content: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .right-side {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 300px;
+    }
+  }
 }

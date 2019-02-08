@@ -213,8 +213,9 @@
       }
 
       .submit-button {
-        margin: 0 auto;
+        margin: 10px auto;
         text-align: center;
+        width: 300px;
 
         // Mobile
         @media all and (max-width: $mobile-width) {

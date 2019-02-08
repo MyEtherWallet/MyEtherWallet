@@ -25,7 +25,7 @@
                   <input
                     :value="toAmt"
                     :placeholder="$t('interface.depAmount')"
-                    type="string"
+                    type="number"
                     name
                     @input="debouncedAmount"
                   />
@@ -86,8 +86,8 @@
             <div class="good-button-container">
               <i
                 :class="[
-                  toData !== '' ? 'good-button' : 'not-good',
-                  'fa fa-check-circle'
+                  toData !== '' ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
               />
@@ -112,8 +112,60 @@
             <div class="good-button-container">
               <i
                 :class="[
-                  'fa fa-check-circle',
-                  gasLimit > 0 ? 'good-button' : 'not-good'
+                  'fa fa-check-circle good-button',
+                  gasLimit > 0 ? '' : 'not-good'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="send-form">
+          <div class="title-container">
+            <div class="title">
+              <div class="title-helper">
+                <h4>{{ $t('common.nonce') }}</h4>
+                <popover :popcontent="$t('popover.nonce')" />
+              </div>
+            </div>
+          </div>
+          <div class="the-form gas-amount">
+            <input
+              v-model="nonce"
+              :placeholder="$t('common.nonce')"
+              type="number"
+            />
+            <div class="good-button-container">
+              <i
+                :class="[
+                  'fa fa-check-circle good-button',
+                  nonce > 0 ? '' : 'not-good'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="send-form">
+          <div class="title-container">
+            <div class="title">
+              <div class="title-helper">
+                <h4>{{ $t('common.gasPrice') }}</h4>
+                <popover :popcontent="$t('popover.gasPrice')" />
+              </div>
+            </div>
+          </div>
+          <div class="the-form gas-amount">
+            <input
+              v-model="localGasPrice"
+              :placeholder="$t('common.gasPrice')"
+              type="number"
+            />
+            <div class="good-button-container">
+              <i
+                :class="[
+                  'fa fa-check-circle good-button',
+                  gasPrice > 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -121,14 +173,22 @@
           </div>
         </div>
         <div class="submit-button-container">
+          <input
+            ref="jsonInput"
+            type="file"
+            name="file"
+            style="display: none"
+            @change="uploadFile"
+          />
+          <div
+            class="submit-button large-round-button-green-border"
+            @click="uploadClick"
+          >
+            Import JSON
+          </div>
           <div
             :class="[
-              toData.length >= 2 &&
-              address.length > 0 &&
-              validAddress &&
-              toAmt >= 0
-                ? ''
-                : 'disabled',
+              isAllInputValid ? '' : 'disabled',
               'submit-button large-round-button-green-filled'
             ]"
             @click="generateTx"
@@ -174,21 +234,20 @@ export default {
       default: function() {
         return [];
       }
-    },
-    nonce: {
-      type: Number,
-      default: 0
     }
   },
   data() {
     return {
-      toAmt: '0',
+      toAmt: 0,
       address: '',
       toData: '0x',
       gasLimit: 21000,
       selectedCoinType: {},
       raw: {},
-      signed: '{}'
+      signed: '{}',
+      nonce: 0,
+      file: '',
+      localGasPrice: this.gasPrice
     };
   },
   computed: {
@@ -200,6 +259,17 @@ export default {
     }),
     validAddress() {
       return isAddress(this.address);
+    },
+    isAllInputValid() {
+      return (
+        this.toData.length >= 2 &&
+        this.address.length > 0 &&
+        this.validAddress &&
+        this.toAmt >= 0 &&
+        this.gasLimit > 0 &&
+        this.nonce > 0 &&
+        this.localGasPrice
+      );
     }
   },
   watch: {
@@ -279,23 +349,34 @@ export default {
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },
+    uploadClick() {
+      const jsonInput = this.$refs.jsonInput;
+      jsonInput.value = '';
+      jsonInput.click();
+    },
+    uploadFile(e) {
+      const self = this;
+      const reader = new FileReader();
+      reader.onloadend = function(evt) {
+        const file = JSON.parse(evt.target.result);
+        self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
+        self.nonce = file.nonce;
+      };
+      reader.readAsBinaryString(e.target.files[0]);
+    },
     async generateTx() {
+      const isToken = this.selectedCoinType.symbol !== this.network.type.name;
+      const amt = unit.toWei(this.toAmt, 'ether');
       const raw = {
-        from: this.wallet.getAddressString(),
-        gas: this.gasLimit,
-        value:
-          this.selectedCoinType.symbol !== this.network.type.name
-            ? 0
-            : unit.toWei(this.toAmt, 'ether'),
-        data: this.toData,
         nonce: this.nonce,
-        gasPrice: unit.toWei(this.gasPrice, 'gwei'),
-        to:
-          this.selectedCoinType.symbol !== this.network.type.name
-            ? this.selectedCoinType.address
-            : this.address,
-        chainId: this.network.type.chainID,
-        generateOnly: true
+        gasLimit: this.gasLimit,
+        gasPrice: utils.toHex(
+          new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        ),
+        to: isToken ? this.selectedCoinType.address : this.address,
+        value: isToken ? 0 : amt,
+        data: this.toData,
+        chainId: this.network.type.chainID
       };
       this.raw = raw;
       const signed = await this.wallet.signTransaction(this.raw);
@@ -305,6 +386,9 @@ export default {
     },
     setSelectedCurrency(e) {
       this.selectedCoinType = e;
+      if (e.symbol === this.network.type.name) {
+        this.toData = '0x';
+      }
     }
   }
 };
