@@ -30,13 +30,10 @@
           <button @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </button>
-          <button v-if="false" @click="print">
-            <img src="~@/assets/images/icons/printer-white.svg" />
-          </button>
         </div>
       </div>
-      <div class="bottom-block">
-        <button @click="switchAddr">Change Address</button>
+      <div v-if="hasMultipleAddr" class="bottom-block">
+        <button @click="switchAddr">{{ $t('common.changeAddress') }}</button>
       </div>
     </div>
     <!-- .wrap -->

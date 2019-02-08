@@ -3,7 +3,7 @@
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
-      :gas-price="gasPrice"
+      :gas-price="localGasPrice"
     />
     <logout-modal ref="logout" />
     <mobile-language-selector
@@ -57,7 +57,7 @@
       <div class="mobile-menu-content">
         <div v-if="account.address" class="block--container">
           <mobile-balance-block />
-          <mobile-network-block />
+          <mobile-network-block :block-number="blockNumber" />
         </div>
         <ul>
           <li>
@@ -90,15 +90,16 @@
             >
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
-                <i class="fa fa-angle-right" aria-hidden="true"></i></div
-            ></a>
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+              </div>
+            </a>
           </li>
           <li>
             <div
               class="menu-link-block"
               @click="langSelectorOpen = !langSelectorOpen"
             >
-              <div>Language</div>
+              <div>{{ $t('common.language') }}</div>
               <div class="selected-lang">
                 <div>{{ currentLang }}</div>
                 <img
@@ -110,13 +111,13 @@
           </li>
           <li v-if="account.address">
             <div class="menu-link-block" @click="openSettings">
-              <div>Settings</div>
+              <div>{{$t('common.settings')}}</div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
           </li>
         </ul>
         <div v-if="account.address" class="logout-button" @click="logout">
-          <button>Logout</button>
+          <button>{{ $t('common.logout') }}</button>
         </div>
       </div>
     </div>
@@ -125,6 +126,7 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
 import MobileAddressBlock from './components/MobileAddressBlock';
@@ -146,6 +148,12 @@ export default {
   },
   data() {
     return {
+      localGasPrice: '10',
+      balance: 0,
+      blockNumber: 0,
+      pollNetwork: '',
+      pollAddress: '',
+      pollBlock: '',
       isOnTop: true,
       isMenuOpen: false,
       isHomePage: true,
@@ -156,31 +164,48 @@ export default {
   },
   computed: {
     ...mapGetters({
+      network: 'network',
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gasPrice: 'gasPrice'
     })
   },
   watch: {
+    ['account.address']() {
+      this.setupOnlineEnvironment();
+    },
+    gasPrice(val) {
+      this.localGasPrice = new BigNumber(val).toString();
+    },
     $route(newVal) {
       if (newVal.path.includes('interface')) {
         this.isHomePage = false;
       } else {
         this.isHomePage = true;
       }
+    },
+    ['account.balance']() {
+      this.getBalance();
+    },
+    ['network']() {
+      this.setupOnlineEnvironment();
+      // this.getBalance();
     }
   },
   mounted() {
     // On load, if page is not on top, apply small menu and show scroll top button
     //this.onPageScroll();
-
+    // this.setupOnlineEnvironment();
     // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = () => {
       this.onPageScroll();
     };
   },
-  created() {},
+  destroyed() {
+    this.clearIntervals();
+  },
   methods: {
     langChange(data) {
       this.currentLang = data;
@@ -210,6 +235,45 @@ export default {
         this.isOnTop = false;
       } else {
         this.isOnTop = true;
+      }
+    },
+    clearIntervals() {
+      clearInterval(this.pollNetwork);
+      clearInterval(this.pollBlock);
+      clearInterval(this.pollAddress);
+    },
+    setupOnlineEnvironment() {
+      this.clearIntervals();
+      if (this.online === true) {
+        if (this.account.address) {
+          this.getBlock();
+          this.pollBlock = setInterval(this.getBlock, 14000);
+          this.getBalance();
+        }
+      }
+    },
+    getBlock() {
+      this.web3.eth
+        .getBlockNumber()
+        .then(res => {
+          this.blockNumber = res;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        });
+    },
+    getBalance() {
+      if (this.account.address) {
+        this.web3.eth
+          .getBalance(this.account.address.toLowerCase())
+          .then(res => {
+            this.balance = this.web3.utils.fromWei(res, 'ether');
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
       }
     }
   }
