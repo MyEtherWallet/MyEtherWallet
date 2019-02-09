@@ -65,5 +65,7 @@
   "change": "Change",
   "language": "Language",
   "logout": "Logout",
-  "settings": "Settings"
+  "settings": "Settings",
+  "edit": "Edit",
+  "nonce": "Nonce"
 }

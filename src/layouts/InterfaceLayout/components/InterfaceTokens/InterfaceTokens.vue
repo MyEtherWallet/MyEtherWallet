@@ -153,7 +153,7 @@ export default {
         store.get('customTokens') !== undefined &&
         store.get('customTokens')[newVal.type.name] !== undefined
       ) {
-        this.customTokens = store.get('customTokens')[this.network.type.name];
+        this.customTokens = store.get('customTokens')[newVal.type.name];
       } else {
         this.customTokens = [];
       }

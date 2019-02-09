@@ -13,6 +13,7 @@ import accessWallet from './access-wallet/ja_JP';
 import interfaceTranslations from './interface/ja_JP';
 import team from './team/ja_JP';
 import popover from './popover/ja_JP';
+import withoutWallet from './without-wallet/ja_JP';
 
 const ja_JP = {
   common: common,
@@ -28,6 +29,7 @@ const ja_JP = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  withoutWallet: withoutWallet
 };
 export default ja_JP;
