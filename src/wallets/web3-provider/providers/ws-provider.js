@@ -17,20 +17,27 @@ class WSProvider {
     const keepAlive = () => {
       if (
         this.oWSProvider.connection.readyState ===
-        this.wsProvider.connection.OPEN
+        this.oWSProvider.connection.OPEN
       )
         this.wsProvider.connection.send(
           '{"jsonrpc":"2.0","method":"net_version","params":[],"id":0}'
         );
       if (
-        this.oWSProvider.connection.readyState ===
+        this.wsProvider.connection.readyState ===
         this.wsProvider.connection.OPEN
       )
         this.oWSProvider.connection.send(
           '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}'
         );
+      if (
+        this.wsProvider.connection.readyState ===
+          this.wsProvider.connection.CLOSED &&
+        this.oWSProvider.connection.readyState ===
+          this.oWSProvider.connection.CLOSED
+      )
+        clearInterval(this.keepAliveTimer);
     };
-    setInterval(keepAlive, 5000);
+    this.keepAliveTimer = setInterval(keepAlive, 5000);
     const _this = this.wsProvider;
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {

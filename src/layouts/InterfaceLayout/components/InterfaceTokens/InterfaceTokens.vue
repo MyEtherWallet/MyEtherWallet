@@ -148,10 +148,10 @@ export default {
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
     },
-    web3(newVal) {
+    web3() {
       if (
         store.get('customTokens') !== undefined &&
-        store.get('customTokens')[newVal.type.name] !== undefined
+        store.get('customTokens')[this.network.type.name] !== undefined
       ) {
         this.customTokens = store.get('customTokens')[this.network.type.name];
       } else {
