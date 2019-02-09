@@ -320,10 +320,14 @@ export default {
         generateOnly: true
       };
       this.raw = raw;
-      const signed = await this.wallet.signTransaction(this.raw);
-      this.signed = JSON.stringify(signed);
-      this.$emit('createdRawTx', this.signed);
-      this.$refs.signedTxModal.$refs.signedTx.show();
+      this.wallet
+        .signTransaction(this.raw)
+        .then(signed => {
+          this.signed = JSON.stringify(signed);
+          this.$emit('createdRawTx', this.signed);
+          this.$refs.signedTxModal.$refs.signedTx.show();
+        })
+        .catch(this.wallet.errorHandler);
       window.scrollTo(0, 0);
     },
     gasLimitUpdated(e) {
