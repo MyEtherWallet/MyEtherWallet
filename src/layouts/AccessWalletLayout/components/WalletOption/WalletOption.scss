@@ -26,4 +26,14 @@
     margin-right: 8px;
     width: 50px;
   }
+
+}
+
+.disabled {
+  background-color: $white !important;
+  pointer-events: none;
+
+  div {
+    background-color: $white !important;
+  }
 }
