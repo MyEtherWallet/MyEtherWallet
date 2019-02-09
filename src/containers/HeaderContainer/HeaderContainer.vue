@@ -16,7 +16,6 @@
     />
     <logout-warning-modal ref="logoutWarningModal" />
     <!-- Modals ***************************************** -->
-
     <!-- Scroll up button ******************************* -->
     <div class="scroll-up-button">
       <div
@@ -25,8 +24,9 @@
       >
         <router-link
           v-show="
-            $route.fullPath === '/create-wallet' ||
-              $route.fullPath === '/access-my-wallet'
+            ($route.fullPath === '/create-wallet' ||
+              $route.fullPath === '/access-my-wallet') &&
+              !gettingStartedDone
           "
           to="/getting-started"
         >
@@ -36,7 +36,6 @@
       </div>
     </div>
     <!-- Scroll up button ******************************* -->
-
     <mobile-menu />
 
     <!-- Desktop menu *********************************** -->
@@ -49,6 +48,10 @@
         ]"
         class="fixed-header"
       >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a href="https://vintage.myetherwallet.com">Click here to go back!</a>
+        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -85,9 +88,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
-                </b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
+                  $t('header.about')
+                }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -241,7 +244,8 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {},
+      showGettingStarted: ''
     };
   },
   computed: {
@@ -249,7 +253,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gettingStartedDone: 'gettingStartedDone'
     }),
     showButtons() {
       if (

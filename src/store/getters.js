@@ -46,6 +46,9 @@ const sidemenuOpen = state => {
 const darklist = state => {
   return state.darklist;
 };
+const gettingStartedDone = state => {
+  return state.gettingStartedDone;
+};
 
 export default {
   account,
@@ -63,5 +66,6 @@ export default {
   wallet,
   web3,
   sidemenuOpen,
-  darklist
+  darklist,
+  gettingStartedDone
 };
