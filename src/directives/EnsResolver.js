@@ -1,13 +1,12 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
-import store from '@/store';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
     vnode.context.$watch(binding.value, function(e) {
       const _this = vnode.context;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
-      const ens = store.getters.ens;
+      const ens = _this.$store.state.ens;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {

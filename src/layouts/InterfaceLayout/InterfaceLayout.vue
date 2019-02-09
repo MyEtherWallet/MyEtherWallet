@@ -99,6 +99,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { ErrorHandler } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
@@ -168,7 +169,7 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.account.address;
+        return toChecksumAddress(this.account.address);
       }
     },
     ...mapGetters({
