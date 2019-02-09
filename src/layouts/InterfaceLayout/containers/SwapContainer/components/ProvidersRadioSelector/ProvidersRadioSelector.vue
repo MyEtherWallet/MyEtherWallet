@@ -352,14 +352,6 @@ export default {
         .times(rate)
         .toFixed(6)
         .toString(10);
-    },
-    withDefaultSelectedProvider(provider, idx) {
-      return (
-        provider.provider === this.providerSelected.provider ||
-        (!this.providerSelected.provider && idx === 0)
-      );
-      // if (this.providerSelected === '' && idx === 0) {
-      // }
     }
   }
 };

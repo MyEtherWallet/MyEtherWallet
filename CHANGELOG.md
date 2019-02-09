@@ -1,7 +1,12 @@
+### Bug
+
+- Supply gasPrice to estimateGas for token transfers [#554](https://github.com/MyEtherWallet/MyEtherWallet/pull/554)
+
 ### Release v5.0.0-beta.5
 
 ### Devop
 
+- simplex swap revision [#580](https://github.com/MyEtherWallet/MyEtherWallet/pull/580)
 - Swap fix, sentry version addition, deploy contract deteministic updates, JSON parsing [#575](https://github.com/MyEtherWallet/MyEtherWallet/pull/575)
 
 ### Release v5.0.0-beta.4
@@ -34,6 +39,7 @@
 
 ### Bug
 
+- Fix provider selector UI [#579](https://github.com/MyEtherWallet/MyEtherWallet/pull/579)
 - Fix Getting started layout bugs for mobile and desktop [#569](https://github.com/MyEtherWallet/MyEtherWallet/pull/569)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
