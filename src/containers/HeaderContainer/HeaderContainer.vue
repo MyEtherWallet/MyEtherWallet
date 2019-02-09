@@ -72,11 +72,6 @@
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
                 />
-                <img
-                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
-                  class="beta-tag"
-                  src="~@/assets/images/beta.png"
-                />
               </div>
             </router-link>
             <div class="top-menu">
