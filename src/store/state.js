@@ -3,6 +3,8 @@ import darklist from '@/darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
+const gettingStartedDone =
+  store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const network =
   store.get('network') !== undefined
     ? store.get('network')
@@ -37,7 +39,8 @@ const state = {
   wallet: null,
   web3: {},
   sidemenuOpen: false,
-  darklist: darklist
+  darklist: darklist,
+  gettingStartedDone: gettingStartedDone
 };
 
 export default state;
