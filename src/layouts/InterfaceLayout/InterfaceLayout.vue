@@ -353,8 +353,8 @@ export default {
     setCustomTokenStore() {
       const customTokenStore = store.get('customTokens');
       Object.keys(networkTypes).forEach(network => {
-        if (customTokenStore[network] === undefined) {
-          customTokenStore[network] = [];
+        if (customTokenStore[networkTypes[network].name] === undefined) {
+          customTokenStore[networkTypes[network].name] = [];
         }
       });
       store.set('customTokens', customTokenStore);
