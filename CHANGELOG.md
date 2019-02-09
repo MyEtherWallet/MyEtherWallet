@@ -4,6 +4,7 @@
 
 - simplex swap revision [#580](https://github.com/MyEtherWallet/MyEtherWallet/pull/580)
 - Swap fix, sentry version addition, deploy contract deteministic updates, JSON parsing [#575](https://github.com/MyEtherWallet/MyEtherWallet/pull/575)
+- Add keepkey affiliate link, link out to mewconnect, vintage mew header, fix getting started [#581](https://github.com/MyEtherWallet/MyEtherWallet/pull/581)
 
 ### Devop
 

@@ -198,6 +198,10 @@ export default {
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
             },
             {
+              text: 'KeepKey',
+              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+            },
+            {
               text: this.$t('footer.trezor'),
               href: 'https://trezor.io/?a=myetherwallet.com'
             },
