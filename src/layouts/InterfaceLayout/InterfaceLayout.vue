@@ -118,6 +118,7 @@ import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { ErrorHandler } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
@@ -190,7 +191,7 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.account.address;
+        return toChecksumAddress(this.account.address);
       }
     },
     ...mapGetters({
@@ -333,7 +334,7 @@ export default {
         this.account.address
       );
       store.set(this.web3.utils.sha3(this.account.address), {
-        nonce: nonce,
+        nonce: this.web3.utils.toHex(nonce),
         timestamp: +new Date()
       });
     },
@@ -522,7 +523,10 @@ export default {
     },
     setENS() {
       if (this.network.type.ensResolver) {
-        this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+        this.$store.dispatch(
+          'setENS',
+          new ENS(this.web3.currentProvider, this.network.type.ensResolver)
+        );
       } else {
         this.$store.dispatch('setENS', null);
       }
