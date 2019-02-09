@@ -408,8 +408,6 @@ export default {
     },
     openMenu(val) {
       return val;
-      // console.log(val);
-      // this.orderDetails.owner.country = val;
     },
     backButtonAction() {
       this.$emit('backButtonClick');
