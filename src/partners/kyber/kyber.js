@@ -57,8 +57,11 @@ export default class Kyber {
   }
 
   get currencies() {
-    if (this.isValidNetwork) {
+    if (this.isValidNetwork && this.tokenDetails) {
       return this.tokenDetails;
+    } else if (this.isValidNetwork) {
+      console.log('1'); // todo remove dev item
+      return KyberCurrencies;
     }
     return {};
   }
@@ -179,6 +182,7 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
+    if(!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
@@ -465,10 +469,10 @@ export default class Kyber {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.tokenDetails[token].contractAddress;
+        return this.currencies[token].contractAddress;
       }
       return this.web3.utils.toChecksumAddress(
-        this.tokenDetails[token].contractAddress
+        this.currencies[token].contractAddress
       );
     } catch (e) {
       errorLogger(e);
@@ -480,7 +484,7 @@ export default class Kyber {
 
   getTokenDecimals(token) {
     try {
-      return +this.tokenDetails[token].decimals;
+      return +this.currencies[token].decimals;
     } catch (e) {
       errorLogger(e);
       throw Error(
