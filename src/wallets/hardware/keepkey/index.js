@@ -17,6 +17,7 @@ import {
 import * as HDKey from 'hdkey';
 import ethUtil from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
+import errorHandler from './errorHandler';
 
 const { MessageType } = Messages;
 const {
@@ -125,6 +126,7 @@ class KeepkeyWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
@@ -141,6 +143,8 @@ const createWallet = async (basePath, eventHub) => {
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };
+createWallet.errorHandler = errorHandler;
+
 const getRootPubKey = async (_keepkey, _path) => {
   const pubObj = await _keepkey.getPublicKey({
     addressNList: bip32ToAddressNList(_path),

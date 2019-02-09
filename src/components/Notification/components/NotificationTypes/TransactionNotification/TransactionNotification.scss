@@ -28,6 +28,12 @@
   }
 }
 
+.show-pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .notification-container {
   margin-left: 30px;
 }

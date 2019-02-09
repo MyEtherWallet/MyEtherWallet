@@ -9,6 +9,7 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import * as ethUtil from 'ethereumjs-util';
+import errorHandler from './errorHandler';
 
 const SIGNALER_URL = 'https://connect.mewapi.io';
 const IS_HARDWARE = true;
@@ -17,6 +18,7 @@ const IS_HARDWARE = true;
 class MEWconnectWalletInterface extends WalletInterface {
   constructor(pubkey, isHardware, identifier, txSigner, msgSigner, mewConnect) {
     super(pubkey, true, identifier);
+    this.errorHandler = errorHandler;
     this.txSigner = txSigner;
     this.msgSigner = msgSigner;
     this.isHardware = isHardware;
@@ -89,6 +91,7 @@ const createWallet = async qrcode => {
   const _tWallet = await _MEWconnectWallet.init(qrcode);
   return _tWallet;
 };
+createWallet.errorHandler = errorHandler;
 const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);

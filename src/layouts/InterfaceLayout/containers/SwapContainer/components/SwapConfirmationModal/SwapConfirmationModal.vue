@@ -17,18 +17,22 @@
             <i :class="['cc', fromAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+            {{ fromAddress.value }}
+            <span>{{ fromAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.fromAddr') }}</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
-        <div class="right-arrow"><img :src="arrowImage" /></div>
+        <div class="right-arrow">
+          <img :src="arrowImage" />
+        </div>
         <div v-if="!toFiat" class="to-address">
           <div class="icon">
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.sendTxToAddr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
@@ -38,7 +42,8 @@
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('common.to') }}</p>
           <p class="address">{{ fiatDest }}</p>
@@ -249,6 +254,9 @@ export default {
                   this.preparedSwap[0],
                   err
                 ]);
+              })
+              .catch(err => {
+                ErrorHandler(err, true);
               });
           }
         } else {
@@ -280,6 +288,9 @@ export default {
                 this.preparedSwap,
                 err
               ]);
+            })
+            .catch(err => {
+              ErrorHandler(err, true);
             });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);

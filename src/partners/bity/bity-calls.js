@@ -8,11 +8,6 @@ import {
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
-function makeError(msg) {
-  // console.log(msg); // todo remove dev item
-  return Error(msg);
-}
-
 function buildPath() {
   return swapApiEndpoints.base + swapApiEndpoints.bity;
 }
@@ -45,7 +40,7 @@ const getEstimate = async orderInfo => {
     utils.buildPayload(bityMethods.getEstimate, orderInfo)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -56,7 +51,7 @@ const openOrder = async orderInfo => {
     utils.buildPayload(bityMethods.createTransaction, orderInfo)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -67,14 +62,14 @@ const getStatus = async orderInfo => {
     utils.buildPayload(bityMethods.status, orderInfo)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
 
 const loginWithPhone = async exitData => {
   if (exitData.phoneNumber.length <= 10) {
-    throw makeError('Invalid phone number. Check country code');
+    throw Error('Invalid phone number. Check country code');
   }
   exitData.phoneNumber = cleanPhoneData(exitData.phoneNumber);
   const results = await post(
@@ -82,7 +77,7 @@ const loginWithPhone = async exitData => {
     utils.buildPayload(bityMethods.logInWithPhoneNumber, exitData)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -93,7 +88,7 @@ const sendReceivedSmsCode = async exitData => {
     utils.buildPayload(bityMethods.sendReceivedSmsCode, exitData)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -104,7 +99,7 @@ const buildCyptoToFiatOrderData = async orderData => {
     utils.buildPayload(bityMethods.buildCyptoToFiatOrderData, orderData)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -115,7 +110,7 @@ const getCyptoToFiatOrderDetails = async detailsData => {
     utils.buildPayload(bityMethods.getExitOrderDetails, detailsData)
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
@@ -129,7 +124,7 @@ const getStatusFiat = async (orderInfo, phoneToken) => {
     })
   );
   if (results.error) {
-    throw makeError(results.error.message);
+    throw Error(results.error.message);
   }
   return results.result;
 };
