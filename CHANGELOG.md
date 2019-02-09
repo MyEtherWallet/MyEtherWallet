@@ -1,3 +1,8 @@
+### Release v5.0.0-rc.1
+
+### Bug
+- store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
+
 ### Release v5.0.0-rc.0
 
 ### Devop
