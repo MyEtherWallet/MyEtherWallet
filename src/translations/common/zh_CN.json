@@ -55,11 +55,17 @@
   "data": "Data",
   "confirmAndSend": "Confirm and Send",
   "oops": "Oops!",
-  "logOutWallet": "Log Out Wallet",
+  "logOutWallet": "Log Out of Wallet",
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
+  "createdContract": "Created Contract Address",
   "waitingForHash": "Waiting for Transaction Hash",
+  "changeAddress": "Change Address",
+  "network": "Network",
+  "change": "Change",
+  "language": "Language",
+  "logout": "Logout",
+  "settings": "Settings",
   "edit": "Edit",
-  "nonce": "Nonce",
-  "createdContract": "Created Contract Address"
+  "nonce": "Nonce"
 }
