@@ -1,5 +1,16 @@
 @import '~@/scss/GlobalVariables';
 
+.vintage-header {
+  background-color: $mew-green;
+  color: $white;
+  text-align: center;
+  width: 100%;
+
+  a {
+    color: $white;
+    text-decoration: underline;
+  }
+}
 .wrap {
   padding-top: 99px;
 
@@ -48,7 +59,7 @@
   background-color: $background-color-white;
   left: 0;
   position: fixed;
-  padding: 0 25px;
+  // padding: 0 25px;
   top: 0;
   width: 100%;
   //z-index: $z-menu + 100;
@@ -65,8 +76,8 @@
   .header-container {
     align-items: center;
     display: flex;
-    padding: 12px 0;
-    //transition: all 0.3s ease;
+    padding: 12px 25px;
+    transition: all 0.3s ease;
 
     @media all and (max-width: $tablet-width) {
       padding: 20px 0;
