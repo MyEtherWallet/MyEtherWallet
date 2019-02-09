@@ -60,7 +60,6 @@ export default class Kyber {
     if (this.isValidNetwork && this.tokenDetails) {
       return this.tokenDetails;
     } else if (this.isValidNetwork) {
-      console.log('1'); // todo remove dev item
       return KyberCurrencies;
     }
     return {};
@@ -182,7 +181,7 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
-    if(!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
+    if (!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
