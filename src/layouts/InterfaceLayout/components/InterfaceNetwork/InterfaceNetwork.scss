@@ -9,11 +9,16 @@
   position: relative;
 }
 
+.block-image {
+  padding-right: 10px;
+}
+
 .network-type {
   border: 4px solid white;
   border-radius: 100%;
-  margin-right: 25px !important;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   $network-image-size: 60px !important;
 
   height: $network-image-size;
