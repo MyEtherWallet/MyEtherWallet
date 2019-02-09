@@ -80,8 +80,14 @@ export default {
   },
   watch: {
     signedTx(newVal) {
-      const string =
-        typeof newVal === 'object' ? JSON.stringify(newVal) : newVal;
+      const parsedVal = JSON.parse(newVal);
+      const rawTx = this.rawTx;
+      delete rawTx['generateOnly'];
+      const txObj = Object.assign({}, parsedVal.tx, rawTx);
+      delete parsedVal['tx'];
+      parsedVal['tx'] = txObj;
+
+      const string = JSON.stringify(parsedVal);
       const blob = new Blob([string], {
         type: 'mime'
       });
@@ -93,7 +99,7 @@ export default {
     copyAndContinue() {
       this.$refs.signedTxInput.select();
       document.execCommand('copy');
-      this.pathUpdate();
+      this.$refs.signedTx.hide();
     }
   }
 };

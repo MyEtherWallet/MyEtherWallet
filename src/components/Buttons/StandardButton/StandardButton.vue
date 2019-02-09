@@ -60,6 +60,12 @@
     <div v-if="options.customerSupport" class="customer-support-block">
       <customer-support />
     </div>
+    <div v-if="options.helpCenter" class="help-center-block">
+      <p>
+        Having issues?
+        <a href="https://kb.myetherwallet.com/" target="_blank">Help Center</a>
+      </p>
+    </div>
   </div>
 </template>
 
