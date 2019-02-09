@@ -65,6 +65,7 @@
         v-model="inputValue"
         :placeholder="options.placeHolder"
         :disabled="options.inputDisabled"
+        @blur="emitValue"
       />
 
       <p v-if="options.rightInputText" class="right-input-text">

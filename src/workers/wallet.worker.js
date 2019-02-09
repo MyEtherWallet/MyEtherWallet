@@ -17,12 +17,7 @@ const unlock = (file, password) => {
     newFile[key.toLowerCase()] = file[key];
   });
 
-  try {
-    const wallet = Wallet.fromV3(newFile, password, true);
-    return wallet;
-  } catch (e) {
-    throw new Error(e);
-  }
+  return Wallet.fromV3(newFile, password, true);
 };
 
 // onmessage breaks tests as it is undefined

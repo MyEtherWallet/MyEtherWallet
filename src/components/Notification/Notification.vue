@@ -20,7 +20,7 @@
               <span>{{ unreadCount }}</span>
             </div>
           </div>
-          <div v-else class="modal-title" @click="hideDetails">
+          <div v-else class="modal-title show-pointer" @click="hideDetails">
             <i class="fa fa-long-arrow-left" aria-hidden="true" />
             {{ $t('common.back') }}
           </div>
@@ -359,11 +359,11 @@ export default {
       return '';
     },
     async fetchBalanceData() {
-      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      if (!values['DAI']) return 0;
-      this.ethPrice = new BigNumber(values['DAI']);
+      if (!values['ETH']) return 0;
+      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';

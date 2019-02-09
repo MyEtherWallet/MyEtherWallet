@@ -247,7 +247,7 @@ export default {
                 .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
                 .toFixed()
                 .toString(10)
-            : value;
+            : value.toString();
         this.tokenSymbol =
           tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';
       }

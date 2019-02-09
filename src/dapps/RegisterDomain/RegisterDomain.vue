@@ -44,6 +44,7 @@ import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 
 const ETH_TLD = '.eth';
 
@@ -138,7 +139,9 @@ export default {
         data: data,
         value: 0
       };
-      this.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        ErrorHandler(err, false);
+      });
     },
     async updateResolver(newResolverAddr) {
       const web3 = this.web3;
@@ -193,7 +196,9 @@ export default {
         data: data
       };
 
-      web3.eth.sendTransaction(raw);
+      web3.eth.sendTransaction(raw).catch(err => {
+        ErrorHandler(err, false);
+      });
     },
     async getRegistrarAddress() {
       const registrarAddress = await this.ens.owner(ETH_TLD.replace('.', ''));
