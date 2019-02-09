@@ -422,7 +422,7 @@ export default {
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
         this.web3.eth
-          .getBalance(account.account.getChecksumAddressString())
+          .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
           });

@@ -11,5 +11,6 @@ export default {
   chainID: 30,
   tokens: tokens,
   contracts: contracts,
+  ensResolver: '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5',
   icon: rsk
 };
