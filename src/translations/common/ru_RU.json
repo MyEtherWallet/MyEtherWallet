@@ -55,11 +55,17 @@
   "data": "Данные",
   "confirmAndSend": "Подтвердить и отправить",
   "oops": "Oops!",
-  "logOutWallet": "Выйти из кошелька",
+  "logOutWallet": "Log Out of Wallet",
   "goBack": "Вернуться",
   "logoutWarning": "Похоже, что вы забыли выйти из вашего кошелька. Для безопасности вашего кошелька выйдите из него, чтобы продолжить, либо вернитесь в ваш кошелек.",
+  "createdContract": "Created Contract Address",
   "waitingForHash": "Ожидание хеша транзакции",
+  "changeAddress": "Change Address",
+  "network": "Network",
+  "change": "Change",
+  "language": "Language",
+  "logout": "Logout",
+  "settings": "Settings",
   "edit": "Edit",
-  "nonce": "Nonce",
-  "createdContract": "Created Contract Address"
+  "nonce": "Nonce"
 }
