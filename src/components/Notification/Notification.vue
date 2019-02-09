@@ -359,11 +359,11 @@ export default {
       return '';
     },
     async fetchBalanceData() {
-      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      if (!values['DAI']) return 0;
-      this.ethPrice = new BigNumber(values['DAI']);
+      if (!values['ETH']) return 0;
+      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';

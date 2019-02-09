@@ -6,14 +6,14 @@
 .wrap {
   margin: 0;
   padding: 0;
-  padding-bottom: 10px;
 }
 
 // *********************************************************************
 // .menu-title
 // *********************************************************************
+
 .menu-title {
-  padding: 10px;
+  padding: 10px 15px;
   background-color: $dark-blue-12;
   display: flex;
   align-items: center;
@@ -22,6 +22,16 @@
   border-radius: 5px;
   > div {
     color: $white;
+  }
+
+  &.grey-title {
+    background-color: $grey-1;
+  }
+
+  .edit-button {
+    margin-left: auto;
+    display: block;
+    cursor: pointer;
   }
 
   .title-number {
@@ -45,19 +55,30 @@
   }
 }
 
+.opened .menu-title {
+  border-radius: 5px 5px 0 0;
+}
+
+.opened .edit-button {
+  display: none;
+}
+
 // *********************************************************************
 // .content-container
 // *********************************************************************
+
 .menu-content-container {
+  border-radius: 0 0 5px 5px;
   max-height: 0;
   overflow: hidden;
   transition: all 0.2s linear;
+  background-color: $white;
 
   .padding-block {
-    padding: 30px 10px;
+    padding: 30px 30px;
   }
+}
 
-  &.opened {
-    max-height: 600px;
-  }
+.opened .menu-content-container {
+  max-height: 800px;
 }
