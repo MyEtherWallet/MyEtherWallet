@@ -37,10 +37,10 @@
                   </div>
                   <p>
                     {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0"
-                      >($
-                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})</span
-                    >
+                    <span v-if="ethPrice !== 0">
+                      ($
+                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})
+                    </span>
                   </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
@@ -329,7 +329,7 @@ export default {
     exportConfig() {
       const time = new Date().toISOString();
       const notifications = [];
-      const storedNotifs = store.get('notifications');
+      const storedNotifs = store.get('notifications') || {};
       Object.keys(storedNotifs).forEach(item => {
         if (storedNotifs[item].length > 0) {
           const obj = {};

@@ -370,8 +370,8 @@ export default {
       const raw = {
         nonce: this.nonce,
         gasLimit: this.gasLimit,
-        gasPrice: utils.toHex(
-          new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        gasPrice: Misc.sanitizeHex(
+          new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toString(16)
         ),
         to: isToken ? this.selectedCoinType.address : this.address,
         value: isToken ? 0 : amt,
