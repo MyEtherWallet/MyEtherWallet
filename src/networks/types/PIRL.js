@@ -11,7 +11,5 @@ export default {
   chainID: 3125659152,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: '',
   icon: pirl
 };

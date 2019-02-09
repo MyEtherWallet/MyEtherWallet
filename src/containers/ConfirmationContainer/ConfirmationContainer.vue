@@ -71,6 +71,7 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
+import { ErrorHandler } from '@/helpers';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -156,10 +157,13 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      const signPromise = this.wallet.signTransaction(tx).then(_response => {
-        this.signedTxObject = _response;
-        this.signedTx = this.signedTxObject.rawTransaction;
-      });
+      const signPromise = this.wallet.signTransaction(tx);
+      signPromise
+        .then(_response => {
+          this.signedTxObject = _response;
+          this.signedTx = this.signedTxObject.rawTransaction;
+        })
+        .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.confirmationModalOpen();
@@ -212,13 +216,24 @@ export default {
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
         })
-        .then(receipt => {
+        .on('receipt', receipt => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_RECEIPT,
             this.fromAddress,
             this.lastRaw,
             receipt
           ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_ERROR,
+            this.fromAddress,
+            this.lastRaw,
+            err
+          ]);
+        })
+        .catch(err => {
+          ErrorHandler(err, true);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -399,6 +414,9 @@ export default {
             ),
             receipt
           ]);
+        });
+        promiEvent.catch(err => {
+          ErrorHandler(err, true);
         });
         batch.add(req);
         return promiEvent.eventEmitter;

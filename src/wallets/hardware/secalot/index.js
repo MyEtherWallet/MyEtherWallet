@@ -11,6 +11,7 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
+import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = true;
 
@@ -66,6 +67,7 @@ class SecalotWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
@@ -82,6 +84,7 @@ const createWallet = async (basePath, password) => {
   await _secalotWallet.init(basePath);
   return _secalotWallet;
 };
+createWallet.errorHandler = errorHandler;
 const getRootPubKey = (_secalot, _path) => {
   return new Promise((resolve, reject) => {
     _secalot.getAddress(_path, (result, error) => {

@@ -19,12 +19,16 @@ class WSProvider {
         this.oWSProvider.connection.readyState ===
         this.wsProvider.connection.OPEN
       )
-        this.wsProvider.connection.send('{}');
+        this.wsProvider.connection.send(
+          '{"jsonrpc":"2.0","method":"net_version","params":[],"id":0}'
+        );
       if (
         this.oWSProvider.connection.readyState ===
         this.wsProvider.connection.OPEN
       )
-        this.oWSProvider.connection.send('{}');
+        this.oWSProvider.connection.send(
+          '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}'
+        );
     };
     setInterval(keepAlive, 5000);
     const _this = this.wsProvider;

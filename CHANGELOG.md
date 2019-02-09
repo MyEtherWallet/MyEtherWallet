@@ -1,7 +1,3 @@
-### Bug
-
-- Supply gasPrice to estimateGas for token transfers [#554](https://github.com/MyEtherWallet/MyEtherWallet/pull/554)
-
 ### Release v5.0.0-beta.5
 
 ### Devop
@@ -13,6 +9,13 @@
 =======
 - Add keepkey affiliate link, link out to mewconnect, vintage mew header, fix getting started [#581](https://github.com/MyEtherWallet/MyEtherWallet/pull/581)
 >>>>>>> develop
+
+### Bug
+
+- Supply gasPrice to estimateGas for token transfers [#554](https://github.com/MyEtherWallet/MyEtherWallet/pull/554)
+- Fix provider selector UI [#579](https://github.com/MyEtherWallet/MyEtherWallet/pull/579)
+- Fix Getting started layout bugs for mobile and desktop [#569](https://github.com/MyEtherWallet/MyEtherWallet/pull/569)
+- Fix mobile menu [#564](https://github.com/MyEtherWallet/MyEtherWallet/pull/564)
 
 ### Release v5.0.0-beta.4
 
@@ -39,13 +42,12 @@
 
 ### Hotfix
 
+- Fix "New wallet", "Access" buttons on header [#549](https://github.com/MyEtherWallet/MyEtherWallet/pull/549)
 - Fix Token Transfer [#498](https://github.com/MyEtherWallet/MyEtherWallet/pull/498)
 - Fix KeepKey network modal issue [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/510)
 
 ### Bug
 
-- Fix provider selector UI [#579](https://github.com/MyEtherWallet/MyEtherWallet/pull/579)
-- Fix Getting started layout bugs for mobile and desktop [#569](https://github.com/MyEtherWallet/MyEtherWallet/pull/569)
 - Fix deploy contract params and validation issue [#502](https://github.com/MyEtherWallet/MyEtherWallet/pull/502)
 
 ### Feature
