@@ -116,7 +116,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
-import { ErrorHandler } from '@/helpers';
+import { ErrorHandler, Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -333,7 +333,7 @@ export default {
         this.account.address
       );
       store.set(this.web3.utils.sha3(this.account.address), {
-        nonce: this.web3.utils.toHex(nonce),
+        nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
         timestamp: +new Date()
       });
     },
@@ -463,7 +463,10 @@ export default {
             ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
-          if (this.wallet !== null && address !== this.account.address) {
+          if (
+            this.wallet !== null &&
+            address.toLowerCase() !== this.account.address.toLowerCase()
+          ) {
             const wallet = new Web3Wallet(address);
             this.$store.dispatch('decryptWallet', [
               wallet,

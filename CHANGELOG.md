@@ -18,7 +18,6 @@
 
 - Supply gasPrice to estimateGas for token transfers [#554](https://github.com/MyEtherWallet/MyEtherWallet/pull/554)
 
-
 ### Release v5.0.0-beta.4
 
 ### Feature

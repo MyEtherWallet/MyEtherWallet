@@ -7,6 +7,7 @@ import { toPayload } from './jsonrpc';
 import * as locStore from 'store';
 import { getSanitizedTx } from './utils';
 import BigNumber from 'bignumber.js';
+import { Misc } from '@/helpers';
 
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
@@ -59,8 +60,8 @@ export default async (
               locStore.set(
                 utils.sha3(store.state.wallet.getChecksumAddressString()),
                 {
-                  nonce: utils.toHex(
-                    new BigNumber(localStoredObj.nonce).plus(1).toFixed()
+                  nonce: Misc.sanitizeHex(
+                    new BigNumber(localStoredObj.nonce).plus(1).toString(16)
                   ),
                   timestamp: localStoredObj.timestamp
                 }
