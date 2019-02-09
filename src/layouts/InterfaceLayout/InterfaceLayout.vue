@@ -204,7 +204,7 @@ export default {
     })
   },
   watch: {
-    network() {
+    web3() {
       this.setupOnlineEnvironment();
     },
     address() {

@@ -12,6 +12,12 @@
           />
         </div>
         <div class="address">{{ account.address }}</div>
+        <input
+          ref="copyAddress"
+          :value="account.address"
+          class="hidden-input"
+          autocomplete="off"
+        />
         <div class="address-end">
           {{
             account.address.substring(
@@ -85,8 +91,6 @@ export default {
     })
   },
   mounted() {
-    //this.$refs.addressQrcode.$refs.addressQrcode.show();
-
     if (this.account.address !== null) {
       if (
         this.account.identifier !== KEYSTORE &&
@@ -108,7 +112,6 @@ export default {
     },
     openQrcode() {
       this.$refs.qrcode.$refs.addressQrcode.show();
-      //console.log(this.$refs);
     }
   }
 };

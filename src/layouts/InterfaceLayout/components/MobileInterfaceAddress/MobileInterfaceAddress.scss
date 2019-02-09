@@ -20,6 +20,12 @@
   }
 }
 
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: 1;
+}
+
 .blockie-container {
   border-radius: 100%;
   border: 2px solid $white;
