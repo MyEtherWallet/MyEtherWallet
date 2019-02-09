@@ -11,7 +11,5 @@ export default {
   chainID: 8,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: '',
   icon: ubq
 };

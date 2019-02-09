@@ -272,10 +272,7 @@ export default {
         store.set('notifications', notifications);
         store.set('skipTutorial', file.main.skipTutorial);
         store.set('customTokens', file.main.customTokens);
-        store.set('customTokens', file.main.customTokens);
         store.set('customNetworks', file.main.customNetworks);
-        store.set('customNetworks', file.main.customNetworks);
-        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
         store.set('customDeriviationPaths', file.main.customDeriviationPaths);
         store.set('gas', file.main.gas);
 
@@ -357,7 +354,7 @@ export default {
           customTokens:
             store.get('customTokens') !== undefined
               ? store.get('customTokens')
-              : [],
+              : {},
           customDeriviationPaths:
             store.get('customDeriviationPaths') !== undefined
               ? store.get('customDeriviationPaths')

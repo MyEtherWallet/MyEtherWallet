@@ -15,10 +15,9 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span
-            >({{ selectedNetwork.type.name }} -
-            {{ selectedNetwork.service }})</span
-          >
+          <span>
+            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+          </span>
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -89,24 +88,26 @@
                   >{{ val.label }}</b-dropdown-item
                 >
                 <b-dropdown-divider />
-                <b-dropdown-item>{{
-                  $t('accessWallet.customPaths')
-                }}</b-dropdown-item>
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath === val.path ? 'active' : ''"
                   :key="key"
                   class="custom-networks"
-                  ><div @click="changePath(key)">{{ val.path }}</div>
+                >
+                  <div @click="changePath(key)">{{ val.path }}</div>
                   <span>
                     <i
                       class="fa fa-times-circle"
                       @click.prevent="removeCustomPath(val.path)"
-                  /></span>
+                    />
+                  </span>
                 </b-dropdown-item>
-                <b-dropdown-item @click="showCustomPathInput">{{
-                  $t('accessWallet.addCustomPath')
-                }}</b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -199,9 +200,8 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link
+            <router-link to="/terms-and-conditions">
+              {{ $t('common.terms') }} </router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -228,7 +228,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
-import Misc from '@/helpers/misc';
+import { Misc, ErrorHandler } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -249,7 +249,6 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: this.$store.state.network,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       currentIndex: 0,
@@ -273,6 +272,9 @@ export default {
       web3: 'web3',
       wallet: 'wallet'
     }),
+    selectedNetwork() {
+      return this.network;
+    },
     reorderNetworkList() {
       return Misc.reorderNetworks();
     }
@@ -300,7 +302,6 @@ export default {
   methods: {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
-        this.selectedNetwork = network;
         this.$store.dispatch('setWeb3Instance');
         this.currentIndex = 0;
         this.setHDAccounts();
@@ -388,8 +389,7 @@ export default {
         }
         return false;
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        ErrorHandler(e, true);
         return false;
       }
     },
@@ -414,15 +414,14 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          // eslint-disable-next-line no-console
-          console.error(error);
+          ErrorHandler(error, true);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
         this.web3.eth
-          .getBalance(account.account.getChecksumAddressString())
+          .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
           });

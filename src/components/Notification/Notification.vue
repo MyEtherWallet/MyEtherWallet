@@ -20,7 +20,7 @@
               <span>{{ unreadCount }}</span>
             </div>
           </div>
-          <div v-else class="modal-title" @click="hideDetails">
+          <div v-else class="modal-title show-pointer" @click="hideDetails">
             <i class="fa fa-long-arrow-left" aria-hidden="true" />
             {{ $t('common.back') }}
           </div>

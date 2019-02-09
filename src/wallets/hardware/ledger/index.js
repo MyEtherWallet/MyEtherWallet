@@ -11,6 +11,7 @@ import {
   sanitizeHex,
   calculateChainIdFromV
 } from '../../utils';
+import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
 
@@ -92,6 +93,7 @@ class ledgerWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
@@ -108,6 +110,7 @@ const createWallet = async basePath => {
   await _ledgerWallet.init(basePath);
   return _ledgerWallet;
 };
+createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
   const transport = await u2fTransport.create(3000, 3000);
   return transport;

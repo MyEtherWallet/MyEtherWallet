@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/browser';
 
 const ErrorHandler = (err, expected) => {
   if (expected) {
+    console.error(err.message, err); // eslint-disable-line
     return err;
   }
   Sentry.captureException(err);

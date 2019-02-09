@@ -1,0 +1,29 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  text-align: center;
+}
+
+.address {
+  word-break: break-all;
+  width: 230px;
+  margin: 0 auto;
+  display: block;
+  border: 0;
+  resize: none;
+  white-space: normal;
+  text-align: justify;
+  text-align-last: center;
+}
+
+button {
+  background-color: transparent;
+  color: $mew-green;
+  border: 0;
+  margin-top: 10px;
+  font-weight: 500;
+}

@@ -334,6 +334,7 @@ export default class BitySwap {
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
+      if (!swapDetails.dataForInitialization) throw Error('invalid');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
       swapDetails.providerSends =
