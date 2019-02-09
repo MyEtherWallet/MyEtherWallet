@@ -108,7 +108,7 @@ import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
 import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
 
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { ErrorHandler, Misc } from '@/helpers';
 
 export default {
   components: {
@@ -141,8 +141,18 @@ export default {
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: !this.online,
+          img:
+            !this.online &&
+            Misc.browserName() &&
+            Misc.browserName() !== 'safari' &&
+            Misc.browserName() !== 'edge'
+              ? mewConnectImg
+              : mewConnectDisabledImg,
+          disabled:
+            !this.online &&
+            Misc.browserName() &&
+            Misc.browserName() !== 'safari' &&
+            Misc.browserName() !== 'edge',
           classname: 'button-mewconnect'
         },
         {
@@ -161,8 +171,18 @@ export default {
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
           tooltip: this.$t('common.toolTip3'),
-          img: !this.online ? metamaskImg : metamaskDisabledImg,
-          disabled: !this.online,
+          img:
+            !this.online &&
+            Misc.browserName() &&
+            Misc.browserName() !== 'safari' &&
+            Misc.browserName() !== 'edge'
+              ? metamaskImg
+              : metamaskDisabledImg,
+          disabled:
+            !this.online &&
+            Misc.browserName() &&
+            Misc.browserName() !== 'safari' &&
+            Misc.browserName() !== 'edge',
           classname: window.web3 ? 'button-metamask' : 'hide'
         },
         {
