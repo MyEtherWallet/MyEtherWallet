@@ -15,6 +15,10 @@ const ADD_CUSTOM_PATH = function(state, paths) {
   store.set('customPaths', paths);
 };
 
+const GETTING_STARTED_DONE = function(state) {
+  state.gettingStartedDone = true;
+};
+
 const CHECK_IF_ONLINE = async function(state) {
   state.online =
     window.location.protocol === 'http:' ||
@@ -114,5 +118,6 @@ export default {
   SWITCH_NETWORK,
   UPDATE_NOTIFICATION,
   UPDATE_SWAP_TRANSACTION,
-  TOGGLE_SIDEMENU
+  TOGGLE_SIDEMENU,
+  GETTING_STARTED_DONE
 };
