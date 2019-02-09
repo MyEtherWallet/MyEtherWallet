@@ -15,10 +15,9 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span
-            >({{ selectedNetwork.type.name }} -
-            {{ selectedNetwork.service }})</span
-          >
+          <span>
+            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+          </span>
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -89,9 +88,9 @@
                   >{{ val.label }}</b-dropdown-item
                 >
                 <b-dropdown-divider />
-                <b-dropdown-item>{{
-                  $t('accessWallet.customPaths')
-                }}</b-dropdown-item>
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
                   :class="selectedPath === val.path ? 'active' : ''"
@@ -106,9 +105,9 @@
                     />
                   </span>
                 </b-dropdown-item>
-                <b-dropdown-item @click="showCustomPathInput">{{
-                  $t('accessWallet.addCustomPath')
-                }}</b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
@@ -201,9 +200,8 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link
+            <router-link to="/terms-and-conditions">
+              {{ $t('common.terms') }} </router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -251,7 +249,6 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: this.$store.state.network,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       currentIndex: 0,
@@ -275,6 +272,9 @@ export default {
       web3: 'web3',
       wallet: 'wallet'
     }),
+    selectedNetwork() {
+      return this.network;
+    },
     reorderNetworkList() {
       return Misc.reorderNetworks();
     }
@@ -302,7 +302,6 @@ export default {
   methods: {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
-        this.selectedNetwork = network;
         this.$store.dispatch('setWeb3Instance');
         this.currentIndex = 0;
         this.setHDAccounts();
@@ -360,8 +359,8 @@ export default {
     },
     splitPath(path) {
       let array1;
-      // eslint-disable-next-line security/detect-unsafe-regex
-      const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
+      // eslint-disable-next-line
+      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
         return array1;
