@@ -326,6 +326,9 @@ export default {
         from: coinbase,
         value: this.txValue,
         to: this.txTo,
+        gasPrice: Misc.sanitizeHex(
+          ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+        ),
         data: this.txData
       };
       this.gasLimit = await this.web3.eth.estimateGas(params);
