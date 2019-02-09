@@ -6,15 +6,20 @@
 
     <div class="wrap">
       <div class="nav-dots">
-        <p><i class="fa fa-angle-up" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-up" aria-hidden="true" />
+        </p>
         <ul>
-          <li :class="cwwCurrent == 0 ? 'active' : ''" />
-          <li :class="cwwCurrent == 1 ? 'active' : ''" />
-          <li :class="cwwCurrent == 2 ? 'active' : ''" />
-          <li :class="cwwCurrent == 3 ? 'active' : ''" />
-          <li :class="cwwCurrent == 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 0 ? 'active' : ''" />
+          <li :class="cwwCurrent === 1 ? 'active' : ''" />
+          <li :class="cwwCurrent === 2 ? 'active' : ''" />
+          <li :class="cwwCurrent === 3 ? 'active' : ''" />
+          <li :class="cwwCurrent === 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 5 ? 'active' : ''" />
         </ul>
-        <p><i class="fa fa-angle-down" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-down" aria-hidden="true" />
+        </p>
       </div>
 
       <what-is-mew
@@ -55,15 +60,15 @@
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link class="footer-color" to="/">{{
-              $t('header.home')
-            }}</router-link>
-            <router-link class="footer-color" to="/privacy-policy">{{
-              $t('footer.privacy')
-            }}</router-link>
-            <router-link class="footer-color" to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link>
+            <router-link class="footer-color" to="/">
+              {{ $t('header.home') }}
+            </router-link>
+            <router-link class="footer-color" to="/privacy-policy">
+              {{ $t('footer.privacy') }}
+            </router-link>
+            <router-link class="footer-color" to="/terms-and-conditions">
+              {{ $t('common.terms') }}
+            </router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
             <p class="footer-color">{{ $t('footer.copyright') }}</p>
@@ -99,20 +104,15 @@ export default {
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6']
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
+      scrollAction: utils._.throttle(this.scrollListener, 600)
     };
   },
   mounted: function() {
-    window.addEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.addEventListener('wheel', this.scrollAction);
   },
   beforeDestroy() {
-    window.removeEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
+    window.removeEventListener('wheel', this.scrollAction);
   },
   methods: {
     scrollListener(e) {

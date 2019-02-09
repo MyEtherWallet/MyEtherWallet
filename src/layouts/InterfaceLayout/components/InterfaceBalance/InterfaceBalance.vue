@@ -3,7 +3,9 @@
     <interface-balance-modal ref="balance" :balance="balance" />
     <div class="info-block balance">
       <div class="block-image">
-        <img class="icon" src="~@/assets/images/icons/balance.svg" />
+        <div class="icon-border">
+          <img class="icon" src="~@/assets/images/icons/wallet.svg" />
+        </div>
       </div>
       <div class="block-content">
         <div class="information-container">

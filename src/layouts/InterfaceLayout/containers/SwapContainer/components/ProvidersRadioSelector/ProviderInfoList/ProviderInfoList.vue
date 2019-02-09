@@ -8,12 +8,9 @@
         <img :src="providerLogo(providerName)" />
       </div>
       <div>
-        <div class="show-mobile">
+        <div>
           <p>{{ getTagLine(providerName) }}</p>
         </div>
-      </div>
-      <div class="show-desktop">
-        <p>{{ getTagLine(providerName) }}</p>
       </div>
     </li>
   </ul>
