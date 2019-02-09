@@ -358,8 +358,8 @@ export default {
     },
     splitPath(path) {
       let array1;
-      // eslint-disable-next-line security/detect-unsafe-regex
-      const regExp = /(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/;
+      // eslint-disable-next-line
+      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
         return array1;
