@@ -148,7 +148,7 @@ export default {
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
     },
-    web3(newVal) {
+    network(newVal) {
       if (
         store.get('customTokens') !== undefined &&
         store.get('customTokens')[newVal.type.name] !== undefined
@@ -160,6 +160,9 @@ export default {
     }
   },
   mounted() {
+    if (store.get('customTokens')) {
+      this.getCustomTokens();
+    }
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
@@ -178,10 +181,14 @@ export default {
         };
         Object.keys(networkTypes).forEach(network => {
           if (
+            networkTypes[network].name.toLowerCase() ===
+              token.network.toLowerCase() ||
             networkTypes[network].name_long.toLowerCase() ===
-            token.network.toLowerCase()
+              token.network.toLowerCase()
           ) {
-            v5CustomTokens[networkTypes[network].name].push(newObj);
+            if (this.tokenError(newObj.address, newObj.symbol, '')) {
+              v5CustomTokens[networkTypes[network].name].push(newObj);
+            }
           }
         });
       });
@@ -242,22 +249,29 @@ export default {
       }
       return true;
     },
-    async addToken(address, symbol, decimal) {
+    tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (!findTokenByAddr) {
+      if (!findTokenByAddr && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           'A default token with this contract address already exists!',
           'danger'
         );
-      } else if (!findTokenBySymbol) {
+        return false;
+      } else if (!findTokenBySymbol && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
           'danger'
         );
-      } else {
+        return false;
+      }
+
+      return !findTokenByAddr || !findTokenBySymbol;
+    },
+    async addToken(address, symbol, decimal) {
+      if (this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,
