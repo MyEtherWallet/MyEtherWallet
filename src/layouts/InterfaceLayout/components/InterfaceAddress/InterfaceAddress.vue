@@ -27,7 +27,7 @@
             v-if="hasMultipleAddr"
             id="popover-ref-address"
             class="change-button"
-            @click="switchAddress"
+            @click="switchAddr"
           >
             Switch
           </button>
@@ -40,48 +40,40 @@
           <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
-          <b-btn
-            v-if="hasMultipleAddr"
-            id="switch"
-            class="custom-tooltip"
-            @click="switchAddr"
-          >
-            <img src="~@/assets/images/icons/change.svg" />
-          </b-btn>
           <b-popover
             content="Switch Address"
             target="popover-ref-address"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             :content="$t('popover.print')"
             target="popover-ref-print"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             :content="$t('popover.copy')"
             target="popover-ref-copy"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             :content="$t('popover.switchAddress')"
             target="switch"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             content="Address in Qrcode"
             target="popover-ref-qrcode"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
         </div>
       </div>
@@ -150,9 +142,6 @@ export default {
     }
   },
   methods: {
-    switchAddress() {
-      console.log('Switch!!!');
-    },
     copy() {
       this.triggerAlert('Address Copied!');
       this.$refs.copyAddress.select();

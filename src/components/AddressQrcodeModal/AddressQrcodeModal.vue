@@ -28,13 +28,8 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    //console.log(this.$refs);
-    //this.$refs.addressQrcode.show();
-  },
   methods: {
     copyToClipboard: function() {
-      //console.log(str);
       const el = document.querySelector('.address');
       el.select();
       document.execCommand('copy');
