@@ -21,8 +21,9 @@
     >
       <router-link
         v-show="
-          $route.fullPath === '/create-wallet' ||
-            $route.fullPath === '/access-my-wallet'
+          ($route.fullPath === '/create-wallet' ||
+            $route.fullPath === '/access-my-wallet') &&
+            !gettingStartedDone
         "
         to="/getting-started"
       >
@@ -119,6 +120,12 @@
         ]"
         class="fixed-header"
       >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a href="https://vintage.myetherwallet.com">
+            Click here to go back!
+          </a>
+        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -321,7 +328,8 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {},
+      showGettingStarted: ''
     };
   },
   computed: {
@@ -329,7 +337,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gettingStartedDone: 'gettingStartedDone'
     }),
     showButtons() {
       if (
