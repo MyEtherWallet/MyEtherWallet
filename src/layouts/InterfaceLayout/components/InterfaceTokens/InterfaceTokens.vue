@@ -94,6 +94,7 @@ import { ErrorHandler } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -134,7 +135,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      web3: 'web3'
     })
   },
   watch: {
@@ -144,12 +146,12 @@ export default {
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
     },
-    network(newVal) {
+    web3(newVal) {
       if (
         store.get('customTokens') !== undefined &&
         store.get('customTokens')[newVal.type.name] !== undefined
       ) {
-        this.customTokens = store.get('customTokens')[newVal.type.name];
+        this.customTokens = store.get('customTokens')[this.network.type.name];
       } else {
         this.customTokens = [];
       }
@@ -172,16 +174,17 @@ export default {
           website: '',
           type: 'custom'
         };
-        if (
-          token.network.toLowerCase() ===
-          this.network.type.name_long.toLowerCase()
-        ) {
-          v5CustomTokens[this.network.type.name_long].push(newObj);
-        }
+        Object.keys(networkTypes).forEach(network => {
+          if (
+            networkTypes[network].name_long.toLowerCase() ===
+            token.network.toLowerCase()
+          ) {
+            v5CustomTokens[networkTypes[network].name].push(newObj);
+          }
+        });
       });
-
       store.set('customTokens', v5CustomTokens);
-      store.remove('customTokens');
+      store.remove('localTokens');
     },
     getCustomTokens() {
       if (store.get('localTokens') !== undefined) {
@@ -263,17 +266,13 @@ export default {
           type: 'custom'
         };
         const currentCustomToken = store.get('customTokens');
-        let newArray = [];
+        this.customTokens =
+          this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
           ErrorHandler(new Error('Token Balance Returned Undefined'), false);
         }
-
-        if (this.customTokens.length > 0) {
-          newArray = this.customTokens.map(item => item);
-        }
-        newArray.push(token);
-        this.customTokens = newArray;
+        this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
