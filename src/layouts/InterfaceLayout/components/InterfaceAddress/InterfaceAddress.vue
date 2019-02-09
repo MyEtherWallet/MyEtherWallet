@@ -23,40 +23,57 @@
           <p class="address">{{ address }}</p>
         </div>
         <div class="icon-container">
-          <b-btn id="print" class="custom-tooltip" @click="print">
-            <img src="~@/assets/images/icons/printer-white.svg" />
-          </b-btn>
-          <b-btn id="copy" class="custom-tooltip" @click="copy">
-            <img src="~@/assets/images/icons/copy.svg" />
-          </b-btn>
-          <b-btn
+          <button
             v-if="hasMultipleAddr"
-            id="switch"
-            class="custom-tooltip"
+            id="popover-ref-address"
+            class="change-button"
             @click="switchAddr"
           >
-            <img src="~@/assets/images/icons/change.svg" />
+            Switch
+          </button>
+          <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
+            <img src="~@/assets/images/icons/qr-code-white.svg" />
+          </b-btn>
+          <b-btn id="popover-ref-print" class="custom-tooltip" @click="print">
+            <img src="~@/assets/images/icons/printer-white.svg" />
+          </b-btn>
+          <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
+            <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
           <b-popover
-            :content="$t('popover.print')"
-            target="print"
+            content="Switch Address"
+            target="popover-ref-address"
             placement="top"
             triggers="hover"
-            title=""
+            title
+          />
+          <b-popover
+            :content="$t('popover.print')"
+            target="popover-ref-print"
+            placement="top"
+            triggers="hover"
+            title
           />
           <b-popover
             :content="$t('popover.copy')"
-            target="copy"
+            target="popover-ref-copy"
             placement="top"
             triggers="hover"
-            title=""
+            title
           />
           <b-popover
             :content="$t('popover.switchAddress')"
             target="switch"
             placement="top"
             triggers="hover"
-            title=""
+            title
+          />
+          <b-popover
+            content="Address in Qrcode"
+            target="popover-ref-qrcode"
+            placement="top"
+            triggers="hover"
+            title
           />
         </div>
       </div>
@@ -92,6 +109,10 @@ export default {
       default: function() {}
     },
     switchAddr: {
+      type: Function,
+      default: function() {}
+    },
+    qrcode: {
       type: Function,
       default: function() {}
     }

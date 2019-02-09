@@ -1,5 +1,8 @@
 <template>
-  <div class="send-eth-and-tokens">
+  <div class="interface-layout">
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
     <wallet-password-modal />
     <enter-pin-number-modal />
     <mnemonic-modal
@@ -27,8 +30,22 @@
       :priv-key="wallet.privateKey"
       :address="account.address"
     />
+    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+
+    <div class="mobile-interface-address-block">
+      <mobile-interface-address
+        :address="address"
+        :trigger-alert="triggerAlert"
+        :print="print"
+        :switch-addr="switchAddress"
+      />
+    </div>
+
     <div class="wrap">
-      <div>
+      <div class="sidemenu">
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
@@ -47,18 +64,19 @@
           >{{ alert.msg }}</b-alert
         >
         <div class="tx-contents">
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-address
               :address="address"
               :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
+              :qrcode="openAddressQrcode"
             />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-network :block-number="blockNumber" />
           </div>
           <router-view
@@ -96,6 +114,7 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
 import { ErrorHandler } from '@/helpers';
@@ -105,6 +124,7 @@ import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
+import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -134,7 +154,9 @@ export default {
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'enter-pin-number-modal': EnterPinNumberModal
+    'enter-pin-number-modal': EnterPinNumberModal,
+    'mobile-interface-address': MobileInterfaceAddress,
+    'address-qrcode-modal': AddressQrcodeModal
   },
   data() {
     return {
@@ -183,7 +205,7 @@ export default {
     })
   },
   watch: {
-    network() {
+    web3() {
       this.setupOnlineEnvironment();
     },
     address() {
@@ -197,6 +219,9 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    openAddressQrcode() {
+      this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
+    },
     mnemonicphrasePasswordModalOpen(phrase) {
       this.phrase = phrase;
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
