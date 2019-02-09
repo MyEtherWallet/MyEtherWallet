@@ -188,7 +188,7 @@
 <script>
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import printJS from 'print-js';
 import { mapGetters } from 'vuex';
 
@@ -345,7 +345,9 @@ export default {
           header: 'MyEtherWallet - ENS reveal bid'
         });
       }
-      this.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        ErrorHandler(err, false);
+      });
     }
   }
 };

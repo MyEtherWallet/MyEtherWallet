@@ -540,6 +540,7 @@ export default {
         this.fromCurrency,
         this.tokenBalances[this.fromCurrency]
       );
+      this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
       this.currencyDetails.from = value;
@@ -762,6 +763,13 @@ export default {
           }
         }
       } catch (e) {
+        //abort (empty response from
+        if (e.message === 'invalid') {
+          this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
+          this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+          this.finalizingSwap = false;
+          return;
+        }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;

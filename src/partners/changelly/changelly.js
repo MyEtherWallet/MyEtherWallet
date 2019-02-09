@@ -171,7 +171,7 @@ export default class Changelly {
   async startSwap(swapDetails) {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
-      details = await await this.createTransaction(swapDetails);
+      details = await this.createTransaction(swapDetails);
       if (details.message) throw Error(details.message);
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
@@ -182,7 +182,7 @@ export default class Changelly {
       swapDetails.isDex = Changelly.isDex();
       return swapDetails;
     }
-    throw Error('From amount below changelly minimun for currency pair');
+    return Error('From amount below changelly minimun for currency pair');
   }
 
   async createTransaction({

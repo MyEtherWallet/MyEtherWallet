@@ -8,58 +8,34 @@ export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0];
-
-  let storedNonce = 0;
-  let fetchedNonce;
+  let cached = {};
   if (store.get(utils.sha3(addr)) === undefined) {
-    store.set(utils.sha3(addr), {
-      nonce: utils.toHex(storedNonce),
+    cached = {
+      nonce: utils.toHex(0),
       timestamp: 0
-    });
+    };
+    store.set(utils.sha3(addr), cached);
   } else {
-    storedNonce = new BigNumber(store.get(utils.sha3(addr)).nonce);
+    cached = store.get(utils.sha3(addr));
   }
-
-  const lastFetch =
-    Math.round(
-      (new Date().getTime() - store.get(utils.sha3(addr)).timestamp) / 1000
-    ) / 60; // Get minutes
-  if (lastFetch >= 15) {
-    fetchedNonce = await ethCalls.getTransactionCount(addr);
-    storedNonce = new BigNumber(fetchedNonce).toFixed();
-    store.set(utils.sha3(addr), {
-      nonce: utils.toHex(storedNonce),
-      timestamp: +new Date()
-    });
-  } else if (lastFetch < 1) {
-    fetchedNonce = storedNonce;
-  } else {
-    fetchedNonce = await ethCalls.getTransactionCount(addr);
-    if (new BigNumber(storedNonce).isLessThan(new BigNumber(fetchedNonce))) {
-      store.set(utils.sha3(addr), {
-        nonce: utils.toHex(new BigNumber(fetchedNonce).toFixed()),
+  const timeDiff =
+    Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
+  if (timeDiff > 1) {
+    const liveNonce = await ethCalls.getTransactionCount(addr);
+    const liveNonceBN = new BigNumber(liveNonce);
+    const cachedNonceBN = new BigNumber(cached.nonce);
+    if (timeDiff > 15) {
+      cached = {
+        nonce: utils.toHex(liveNonceBN),
         timestamp: +new Date()
-      });
-    } else {
-      store.set(utils.sha3(addr), {
-        nonce: utils.toHex(storedNonce),
+      };
+    } else if (liveNonceBN.isGreaterThan(cachedNonceBN)) {
+      cached = {
+        nonce: utils.toHex(liveNonceBN),
         timestamp: +new Date()
-      });
+      };
     }
+    store.set(utils.sha3(addr), cached);
   }
-
-  if (new BigNumber(storedNonce).isGreaterThan(new BigNumber(fetchedNonce))) {
-    res(
-      null,
-      toPayload(payload.id, `0x${new BigNumber(storedNonce).toString(16)}`)
-    );
-  } else {
-    const currentTime = store.get(utils.sha3(addr)).timestamp;
-    store.set(utils.sha3(addr), {
-      nonce: utils.toHex(new BigNumber(fetchedNonce).toFixed()),
-      timestamp: currentTime
-    });
-
-    res(null, toPayload(payload.id, fetchedNonce));
-  }
+  res(null, toPayload(payload.id, cached.nonce));
 };
