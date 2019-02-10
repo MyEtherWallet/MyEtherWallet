@@ -13,6 +13,7 @@ import accessWallet from './access-wallet/ko_KR';
 import interfaceTranslations from './interface/ko_KR';
 import team from './team/ko_KR';
 import popover from './popover/ko_KR';
+import withoutWallet from './without-wallet/ko_KR';
 
 const ko_KR = {
   common: common,
@@ -28,6 +29,7 @@ const ko_KR = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  withoutWallet: withoutWallet
 };
 export default ko_KR;

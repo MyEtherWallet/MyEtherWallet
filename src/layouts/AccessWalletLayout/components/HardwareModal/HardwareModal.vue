@@ -152,16 +152,20 @@ export default {
       }, 1000);
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
           break;
         case 'trezor':
-          TrezorWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
@@ -176,9 +180,11 @@ export default {
           });
           break;
         case 'keepkey':
-          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
           break;
         default:
           ErrorHandler(new Error('No switch address for given account.'), true);
