@@ -57,6 +57,7 @@
               <label for="localBidAmount">{{ $t('dapps.actualBid') }}</label>
               <input
                 v-model="localBidAmount"
+                :class="[localBidAmount < MIN_BID ? 'errored' : '']"
                 type="number"
                 name="localBidAmount"
               />
@@ -155,11 +156,12 @@
           >
             {{ $t('dapps.jsonString') }}
           </button>
-          <button
+          <div
             v-show="showInfo"
-            name="submit"
-            class="submit"
-            role="tab"
+            :class="[
+              validInputs ? '' : 'disabled',
+              'submit-button large-round-button-green-filled'
+            ]"
             @click.prevent="
               $route.fullPath.includes('auction')
                 ? startAuctionAndBid()
@@ -168,9 +170,8 @@
                 : revealBid()
             "
           >
-            <span v-if="loading === false"> Next </span>
-            <i v-else class="fa fa-spinner fa-spin" />
-          </button>
+            Next
+          </div>
           <button
             v-show="showDetail"
             class="submit"
@@ -191,6 +192,7 @@ import JsonStringModal from '../../components/JsonStringModal';
 import { Misc, ErrorHandler } from '@/helpers';
 import printJS from 'print-js';
 import { mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -262,13 +264,21 @@ export default {
       showDetail: false,
       showInfo: true,
       formatDate: Misc.formatDate,
-      jsonText: ''
+      jsonText: '',
+      MIN_BID: 0.01
     };
   },
   computed: {
     ...mapGetters({
       web3: 'web3'
-    })
+    }),
+    validInputs() {
+      return (
+        this.secretPhrase.length > 0 &&
+        new BigNumber(this.bidAmount).gte(this.MIN_BID) &&
+        new BigNumber(this.bidMask).gte(this.bidAmount)
+      );
+    }
   },
   watch: {
     localSecretPhrase(newVal) {
