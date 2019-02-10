@@ -144,15 +144,13 @@ export default {
           img:
             !this.online &&
             Misc.browserName() &&
-            Misc.browserName() !== 'safari' &&
-            Misc.browserName() !== 'edge'
+            Misc.browserName() === 'chrome'
               ? mewConnectImg
               : mewConnectDisabledImg,
           disabled:
             !this.online &&
             Misc.browserName() &&
-            Misc.browserName() !== 'safari' &&
-            Misc.browserName() !== 'edge',
+            Misc.browserName() === 'chrome',
           classname: 'button-mewconnect'
         },
         {
@@ -174,15 +172,13 @@ export default {
           img:
             !this.online &&
             Misc.browserName() &&
-            Misc.browserName() !== 'safari' &&
-            Misc.browserName() !== 'edge'
+            Misc.browserName() === 'chrome'
               ? metamaskImg
               : metamaskDisabledImg,
           disabled:
             !this.online &&
             Misc.browserName() &&
-            Misc.browserName() !== 'safari' &&
-            Misc.browserName() !== 'edge',
+            Misc.browserName() === 'chrome',
           classname: window.web3 ? 'button-metamask' : 'hide'
         },
         {

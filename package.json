@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@sentry/browser": "4.5.3",
-    "detect-browser": "^4.1.0",
+    "detect-browser": "4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "print-js": "1.0.54",
