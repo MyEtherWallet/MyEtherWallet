@@ -11,7 +11,8 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ens: {
-    resolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
-    registrarTLD: 'test'
+    registry: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+    registrarTLD: 'test',
+    registrarType: 'fifs'
   }
 };

@@ -12,7 +12,7 @@ export default {
   tokens: tokens,
   contracts: contracts,
   ens: {
-    resolver: '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5',
+    registry: '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5',
     registrarTLD: 'rsk'
   },
   icon: rsk
