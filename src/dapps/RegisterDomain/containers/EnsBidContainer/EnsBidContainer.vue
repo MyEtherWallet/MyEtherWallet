@@ -4,20 +4,22 @@
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
         <div>
-          <h3>{{ domainName }}.eth</h3>
+          <h3>{{ domainName }}.{{ tld }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('bid')" class="auction-started">
         <div>
-          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.eth</h3>
+          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.{{ tld }}</h3>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('reveal')" class="auction-started">
         <h3>
-          {{ $t('dapps.revealBid') }} {{ domainName }}.eth
+          {{ $t('dapps.revealBid') }} {{ domainName }}.{{ tld }}
           {{ $t('dapps.revealBidCont') }}. <br />
-          {{ highestBidder }} ETH ({{ $t('dapps.currentHighestBid') }})
+          {{ highestBidder }} {{ networkName }} ({{
+            $t('dapps.currentHighestBid')
+          }})
         </h3>
       </div>
       <div class="timer-container">
@@ -57,6 +59,7 @@
               <label for="localBidAmount">{{ $t('dapps.actualBid') }}</label>
               <input
                 v-model="localBidAmount"
+                :class="[localBidAmount < MIN_BID ? 'errored' : '']"
                 type="number"
                 name="localBidAmount"
               />
@@ -112,7 +115,9 @@
             <div id="printableData" class="detail-info">
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.actualBid') }}</span>
-                <span class="detail-value">{{ raw.bidAmount }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidAmount }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.secretPhrase') }}</span>
@@ -126,7 +131,9 @@
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.bidMask') }}</span>
-                <span class="detail-value">{{ raw.bidMask }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidMask }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.auctionEnd') }}</span>
@@ -155,11 +162,12 @@
           >
             {{ $t('dapps.jsonString') }}
           </button>
-          <button
+          <div
             v-show="showInfo"
-            name="submit"
-            class="submit"
-            role="tab"
+            :class="[
+              validInputs ? '' : 'disabled',
+              'submit-button large-round-button-green-filled'
+            ]"
             @click.prevent="
               $route.fullPath.includes('auction')
                 ? startAuctionAndBid()
@@ -168,9 +176,8 @@
                 : revealBid()
             "
           >
-            <span v-if="loading === false"> Next </span>
-            <i v-else class="fa fa-spinner fa-spin" />
-          </button>
+            Next
+          </div>
           <button
             v-show="showDetail"
             class="submit"
@@ -191,6 +198,7 @@ import JsonStringModal from '../../components/JsonStringModal';
 import { Misc, ErrorHandler } from '@/helpers';
 import printJS from 'print-js';
 import { mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -242,6 +250,14 @@ export default {
       type: String,
       default: ''
     },
+    tld: {
+      type: String,
+      default: ''
+    },
+    networkName: {
+      type: String,
+      default: ''
+    },
     step: {
       type: Number,
       default: 1
@@ -262,13 +278,21 @@ export default {
       showDetail: false,
       showInfo: true,
       formatDate: Misc.formatDate,
-      jsonText: ''
+      jsonText: '',
+      MIN_BID: 0.01
     };
   },
   computed: {
     ...mapGetters({
       web3: 'web3'
-    })
+    }),
+    validInputs() {
+      return (
+        this.secretPhrase.length > 0 &&
+        new BigNumber(this.bidAmount).gte(this.MIN_BID) &&
+        new BigNumber(this.bidMask).gte(this.bidAmount)
+      );
+    }
   },
   watch: {
     localSecretPhrase(newVal) {
