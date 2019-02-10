@@ -5,9 +5,11 @@
       :domain-name="domainName"
       :finalize="finalize"
     />
-    <h3>{{ domainName }}.eth {{ $t('dapps.alreadyOwned') }}.</h3>
+    <h3>{{ domainName }}.{{ tld }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ domainName }}.eth):</p>
+      <p class="label">
+        {{ $t('dapps.labelHash') }}({{ domainName }}.{{ tld }}):
+      </p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
@@ -85,6 +87,10 @@ export default {
       default: ''
     },
     domainName: {
+      type: String,
+      default: ''
+    },
+    tld: {
       type: String,
       default: ''
     },
