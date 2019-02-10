@@ -71,7 +71,8 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
-import { ErrorHandler } from '@/helpers';
+import { ErrorHandler, Misc } from '@/helpers';
+import locStore from 'store';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -137,6 +138,16 @@ export default {
         return this.account.address;
       }
     }
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('showSuccessModal');
+    this.$eventHub.$off('showErrorModal');
+    this.$eventHub.$off('showTxConfirmModal');
+    this.$eventHub.$off('showSendSignedTx');
+    this.$eventHub.$off('showWeb3Wallet');
+    this.$eventHub.$off('showTxCollectionConfirmModal');
+    this.$eventHub.$off('showTxCollectionConfirmModal');
+    this.$eventHub.$off('showMessageConfirmModal');
   },
   created() {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
@@ -403,6 +414,15 @@ export default {
               );
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
+          const localStoredObj = locStore.get(
+            web3.utils.sha3(this.account.address)
+          );
+          locStore.set(web3.utils.sha3(this.account.address), {
+            nonce: Misc.sanitizeHex(
+              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+            ),
+            timestamp: localStoredObj.timestamp
+          });
         });
         promiEvent.eventEmitter.once('receipt', receipt => {
           promiEvent.resolve(receipt);
@@ -415,7 +435,7 @@ export default {
             receipt
           ]);
         });
-        promiEvent.catch(err => {
+        promiEvent.eventEmitter.catch(err => {
           ErrorHandler(err, true);
         });
         batch.add(req);
