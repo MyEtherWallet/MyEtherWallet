@@ -1,27 +1,41 @@
 import { host } from './config';
 import { post, get } from '@/helpers/httpRequests';
+import { utils } from '../helpers';
 
 const getQuote = reqObj => {
-  const options = {
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
-  };
-  return post(`${host.url}/quote`, reqObj, options);
+  try {
+    const options = {
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    };
+    return post(`${host.url}/quote`, reqObj, options);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
 };
 const getOrder = reqObj => {
-  const options = {
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
-  };
-  return post(`${host.url}/order`, reqObj, options);
+  try {
+    const options = {
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    };
+    return post(`${host.url}/order`, reqObj, options);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
 };
+
 const getStatus = userId => {
-  return get(`${host.url}/status/${userId}`);
+  try {
+    return get(`${host.url}/status/${userId}`);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
 };
 export { getQuote, getOrder, getStatus };

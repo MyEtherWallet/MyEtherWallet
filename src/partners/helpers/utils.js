@@ -80,6 +80,19 @@ const isJson = str => {
   }
 };
 
+const handleOrThrow = e => {
+  // typeErrors
+  if (e instanceof TypeError) {
+    console.log('TypeError'); // todo remove dev item
+console.log(e.message); // todo remove dev item
+    throw e;
+  } else if (e instanceof SyntaxError) {
+    console.log('SyntaxError'); // todo remove dev item
+
+  }
+  throw e;
+};
+
 export {
   isJson,
   mapToObject,
@@ -89,5 +102,6 @@ export {
   getTimeRemainingString,
   buildPayload,
   isValidEntry,
-  checkInvalidOrMissingValue
+  checkInvalidOrMissingValue,
+  handleOrThrow
 };
