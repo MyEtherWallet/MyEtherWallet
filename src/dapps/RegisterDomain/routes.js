@@ -1,6 +1,5 @@
 const RegisterDomain = () => import('./RegisterDomain');
 const EnsBidContainer = () => import('./containers/EnsBidContainer');
-const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 const InitialENSStateContainer = () =>
   import('./containers/InitialENSStateContainer');
 const NameForbiddenENSContainer = () =>
@@ -9,6 +8,7 @@ const AlreadyOwnedENSContainer = () =>
   import('./containers/AlreadyOwnedENSContainer');
 const FinalizeContainer = () => import('./containers/FinalizeContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
+const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 
 export default {
   path: 'dapps/register-domain',
@@ -32,12 +32,6 @@ export default {
       path: 'bid',
       name: 'Bid on ENS',
       component: EnsBidContainer,
-      props: true
-    },
-    {
-      path: 'fifs',
-      name: 'Reserve on FIFS',
-      component: FifsBuyContainer,
       props: true
     },
     {
@@ -68,6 +62,12 @@ export default {
       path: 'manage',
       name: 'Manage ENS',
       component: ManageENSContainer,
+      props: true
+    },
+    {
+      path: 'fifs',
+      name: 'Reserve on FIFS',
+      component: FifsBuyContainer,
       props: true
     }
   ]
