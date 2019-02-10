@@ -1,4 +1,3 @@
-
 ### Release v5.0.0-rc.1
 
 ### Feature
@@ -10,6 +9,9 @@
 
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
+
+### Hotfix
+- partner rate correction [#595](https://github.com/MyEtherWallet/MyEtherWallet/pull/595)
 
 ### Release v5.0.0-rc.0
 
