@@ -1,4 +1,4 @@
-const EthAbi = [
+export default [
   {
     constant: true,
     inputs: [{ name: 'node', type: 'bytes32' }],
@@ -106,5 +106,3 @@ const EthAbi = [
     type: 'event'
   }
 ];
-
-export default EthAbi;
