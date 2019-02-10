@@ -457,10 +457,10 @@ export default {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            ErrorHandler(err, false);
+            return ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            ErrorHandler(new Error('Please unlock metamask'), false);
+            return ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
           if (
