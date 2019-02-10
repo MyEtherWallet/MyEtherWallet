@@ -88,11 +88,9 @@ export default {
           imgHoverPath: ledgerHov,
           text: 'Ledger',
           disabled:
-            window.location.protocol !== 'https:' &&
+            window.location.protocol === 'https:' &&
             Misc.browserName() &&
-            (Misc.browserName() === 'safari' ||
-              Misc.browserName() === 'firefox' ||
-              Misc.browserName() === 'edge')
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'bitbox',
@@ -100,11 +98,9 @@ export default {
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
           disabled:
-            window.location.protocol !== 'https:' &&
+            window.location.protocol === 'https:' &&
             Misc.browserName() &&
-            (Misc.browserName() === 'safari' ||
-              Misc.browserName() === 'firefox' ||
-              Misc.browserName() === 'edge')
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'secalot',
@@ -112,11 +108,9 @@ export default {
           imgHoverPath: secalotHov,
           text: 'Secalot',
           disabled:
-            window.location.protocol !== 'https:' &&
+            window.location.protocol === 'https:' &&
             Misc.browserName() &&
-            (Misc.browserName() === 'safari' ||
-              Misc.browserName() === 'firefox' ||
-              Misc.browserName() === 'edge')
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'trezor',
@@ -131,11 +125,9 @@ export default {
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
           disabled:
-            window.location.protocol !== 'https:' &&
+            window.location.protocol === 'https:' &&
             Misc.browserName() &&
-            (Misc.browserName() === 'safari' ||
-              Misc.browserName() === 'firefox' ||
-              Misc.browserName() === 'edge')
+            Misc.browserName() !== 'chrome'
         }
       ]
     };
