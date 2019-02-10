@@ -40,7 +40,7 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
@@ -101,7 +101,7 @@ export default {
       };
       worker.onerror = function(e) {
         self.spinner = false;
-        self.error = ErrorHandler(e.message, false);
+        self.error = ErrorHandler(e, true).message;
       };
     },
     switchViewPassword() {

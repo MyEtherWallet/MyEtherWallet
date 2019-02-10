@@ -28,7 +28,7 @@ describe('DropDownAddressSelector.vue', () => {
     });
   });
 
-  it('render correct addresses', () => {
+  xit('render correct addresses', () => {
     const wrapper = shallowMount(DropDownAddressSelector);
     const dropdownOpen = wrapper.find('.dropdown-open-button');
     dropdownOpen.trigger('click');

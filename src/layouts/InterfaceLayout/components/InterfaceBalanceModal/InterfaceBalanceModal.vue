@@ -11,7 +11,7 @@
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
           <div class="margin-left-auto total-balance-amount">
-            <span>{{ balance }}</span> ETH
+            <span>{{ balance }}</span> {{ network.type.name }}
           </div>
         </div>
       </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 export default {
   props: {
@@ -74,6 +75,11 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    })
+  },
   watch: {
     balance() {
       this.fetchBalanceData();
@@ -82,6 +88,7 @@ export default {
   mounted() {
     this.fetchBalanceData();
   },
+
   methods: {
     async fetchBalanceData() {
       const newArr = [];
