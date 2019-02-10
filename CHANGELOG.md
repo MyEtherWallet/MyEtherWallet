@@ -1,3 +1,11 @@
+### Feature
+
+- Added ENS test name registration to ROP, RIN and Goerli [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
+
+### Bug
+
+- Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
+
 ### Release v5.0.0-rc.0
 
 ### Devop
