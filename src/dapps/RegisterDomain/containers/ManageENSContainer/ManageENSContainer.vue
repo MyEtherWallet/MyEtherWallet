@@ -1,6 +1,6 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('dapps.manage') }} {{ domainName }}.eth</h3>
+    <h3>{{ $t('dapps.manage') }} {{ domainName }}.{{ tld }}</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
@@ -78,6 +78,10 @@ export default {
       default: function() {}
     },
     resolverAddress: {
+      type: String,
+      default: ''
+    },
+    tld: {
       type: String,
       default: ''
     }
