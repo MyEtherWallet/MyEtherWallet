@@ -47,7 +47,6 @@ import { mapGetters } from 'vuex';
 import { ErrorHandler } from '@/helpers';
 
 const ETH_TLD = '.eth';
-
 export default {
   components: {
     'back-button': BackButton
