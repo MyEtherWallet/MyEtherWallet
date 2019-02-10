@@ -116,7 +116,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
-import { ErrorHandler, Misc } from '@/helpers';
+import { ErrorHandler } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -329,13 +329,11 @@ export default {
       return tokens;
     },
     async setNonce() {
-      const nonce = await this.web3.eth.getTransactionCount(
-        this.account.address
-      );
       store.set(this.web3.utils.sha3(this.account.address), {
-        nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
-        timestamp: +new Date()
+        nonce: '0x00',
+        timestamp: 0
       });
+      await this.web3.eth.getTransactionCount(this.account.address);
     },
     async getTokenBalance(token) {
       const web3 = this.web3;
