@@ -37,8 +37,8 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import RegistrarAbi from '@/helpers/registrarAbi';
-import DeedContractAbi from '@/helpers/deedContractAbi';
+import RegistrarAbi from './registrarAbi';
+import DeedContractAbi from './deedContractAbi';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';

@@ -539,10 +539,10 @@ export default {
         });
     },
     setENS() {
-      if (this.network.type.ensResolver) {
+      if (this.network.type.ens) {
         this.$store.dispatch(
           'setENS',
-          new ENS(this.web3.currentProvider, this.network.type.ensResolver)
+          new ENS(this.web3.currentProvider, this.network.type.ens.resolver)
         );
       } else {
         this.$store.dispatch('setENS', null);

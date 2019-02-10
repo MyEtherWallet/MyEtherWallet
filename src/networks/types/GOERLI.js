@@ -10,5 +10,8 @@ export default {
   chainID: 5,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+  ens: {
+    resolver: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+    registrarTLD: 'test'
+  }
 };
