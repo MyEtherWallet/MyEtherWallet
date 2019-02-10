@@ -1,5 +1,6 @@
 <template>
   <div
+    :class="disabled ? 'disabled' : ''"
     @click="select(name)"
     @mouseover="isHovered = true"
     @mouseout="isHovered = false"
@@ -45,6 +46,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
