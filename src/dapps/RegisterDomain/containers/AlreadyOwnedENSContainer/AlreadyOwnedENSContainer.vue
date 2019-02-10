@@ -18,7 +18,7 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div class="content-container">
+    <div v-if="deedOwner != '0x'" class="content-container">
       <p class="label">{{ $t('dapps.deedOwner') }}:</p>
       <p class="content">{{ deedOwner }}</p>
     </div>
@@ -38,7 +38,7 @@
         {{ $t('dapps.finalize') }}
       </button>
       <button
-        v-if="owner === account.address"
+        v-if="owner.toLowerCase() === account.address.toLowerCase()"
         class="manage-button"
         @click="manageEns"
       >

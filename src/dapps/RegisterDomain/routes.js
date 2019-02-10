@@ -1,5 +1,6 @@
 const RegisterDomain = () => import('./RegisterDomain');
 const EnsBidContainer = () => import('./containers/EnsBidContainer');
+const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 const InitialENSStateContainer = () =>
   import('./containers/InitialENSStateContainer');
 const NameForbiddenENSContainer = () =>
@@ -31,6 +32,12 @@ export default {
       path: 'bid',
       name: 'Bid on ENS',
       component: EnsBidContainer,
+      props: true
+    },
+    {
+      path: 'fifs',
+      name: 'Reserve on FIFS',
+      component: FifsBuyContainer,
       props: true
     },
     {

@@ -516,11 +516,11 @@ export default {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
+          this.setENS();
           this.getBlock();
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
-          this.setENS();
           this.setNonce();
           this.getHighestGas();
         }
@@ -542,7 +542,7 @@ export default {
       if (this.network.type.ens) {
         this.$store.dispatch(
           'setENS',
-          new ENS(this.web3.currentProvider, this.network.type.ens.resolver)
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
         );
       } else {
         this.$store.dispatch('setENS', null);

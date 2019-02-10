@@ -15,7 +15,7 @@
           type="text"
           name=""
         />
-        <span>.eth</span>
+        <span>.{{ tld }}</span>
       </div>
       <div class="error-message-container">
         <p
@@ -73,6 +73,10 @@ export default {
       default: false
     },
     domainName: {
+      type: String,
+      default: ''
+    },
+    tld: {
       type: String,
       default: ''
     },

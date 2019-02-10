@@ -4,20 +4,22 @@
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
         <div>
-          <h3>{{ domainName }}.eth</h3>
+          <h3>{{ domainName }}.{{ tld }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('bid')" class="auction-started">
         <div>
-          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.eth</h3>
+          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.{{ tld }}</h3>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('reveal')" class="auction-started">
         <h3>
-          {{ $t('dapps.revealBid') }} {{ domainName }}.eth
+          {{ $t('dapps.revealBid') }} {{ domainName }}.{{ tld }}
           {{ $t('dapps.revealBidCont') }}. <br />
-          {{ highestBidder }} ETH ({{ $t('dapps.currentHighestBid') }})
+          {{ highestBidder }} {{ networkName }} ({{
+            $t('dapps.currentHighestBid')
+          }})
         </h3>
       </div>
       <div class="timer-container">
@@ -113,7 +115,9 @@
             <div id="printableData" class="detail-info">
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.actualBid') }}</span>
-                <span class="detail-value">{{ raw.bidAmount }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidAmount }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.secretPhrase') }}</span>
@@ -127,7 +131,9 @@
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.bidMask') }}</span>
-                <span class="detail-value">{{ raw.bidMask }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidMask }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.auctionEnd') }}</span>
@@ -241,6 +247,14 @@ export default {
       default: 0
     },
     highestBidder: {
+      type: String,
+      default: ''
+    },
+    tld: {
+      type: String,
+      default: ''
+    },
+    networkName: {
       type: String,
       default: ''
     },

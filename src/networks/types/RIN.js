@@ -13,7 +13,8 @@ export default {
   contracts: contracts,
   ens: {
     resolver: '0xe7410170f87102DF0055eB195163A03B7F2Bff4A',
-    registrarTLD: 'test'
+    registrarTLD: 'test',
+    registrarType: 'fifs'
   },
   icon: rin
 };
