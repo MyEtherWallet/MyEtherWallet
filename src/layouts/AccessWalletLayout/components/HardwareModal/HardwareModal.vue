@@ -89,7 +89,6 @@ export default {
           text: 'Ledger',
           disabled:
             window.location.protocol === 'https:' &&
-            Misc.browserName() &&
             Misc.browserName() !== 'chrome'
         },
         {
@@ -99,7 +98,6 @@ export default {
           text: 'Digital Bitbox',
           disabled:
             window.location.protocol === 'https:' &&
-            Misc.browserName() &&
             Misc.browserName() !== 'chrome'
         },
         {
@@ -109,7 +107,6 @@ export default {
           text: 'Secalot',
           disabled:
             window.location.protocol === 'https:' &&
-            Misc.browserName() &&
             Misc.browserName() !== 'chrome'
         },
         {
@@ -117,7 +114,7 @@ export default {
           imgPath: trezor,
           imgHoverPath: trezorHov,
           text: 'Trezor',
-          disabled: window.location.protocol !== 'https:'
+          disabled: false
         },
         {
           name: 'keepkey',
@@ -126,7 +123,6 @@ export default {
           text: 'KeepKey',
           disabled:
             window.location.protocol === 'https:' &&
-            Misc.browserName() &&
             Misc.browserName() !== 'chrome'
         }
       ]

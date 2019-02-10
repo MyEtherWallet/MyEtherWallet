@@ -2,7 +2,9 @@
   <div class="transactions-side-menu">
     <div class="side-menu-header">
       <img src="~@/assets/images/logo.png" />
-      <div @click="toggleSideMenu"><i class="fa fa-lg fa-times"></i></div>
+      <div @click="toggleSideMenu">
+        <i class="fa fa-lg fa-times"></i>
+      </div>
     </div>
     <div class="side-menu">
       <ul>
@@ -10,7 +12,6 @@
           <div
             :class="[
               isTabActive(tab.routes) ? 'active' : '',
-              disableTab(tab.name) ? 'disable' : '',
               'menu-group-title'
             ]"
             @click.prevent="tabAction(tab)"
@@ -55,38 +56,13 @@
 
 <script>
 import tabsConfig from './InterfaceSideMenu.config';
-import mapGetters from 'vuex';
-const env = NODE_ENV;
 export default {
   data() {
     return {
-      env: env,
-      tabData: tabsConfig.tab
+      tabData: tabsConfig.tabs
     };
   },
-  computed: {
-    ...mapGetters({
-      online: 'online',
-      network: 'network'
-    })
-  },
   methods: {
-    disableTab(tabName) {
-      if (!this.online) {
-        if (tabName === 'message') {
-          return false;
-        }
-      } else {
-        if (this.env === 'production') {
-          if (tabName === 'message' || tabName === 'swap') {
-            return false;
-          }
-        }
-
-        if (this.env === 'production') return false;
-      }
-      return true;
-    },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
