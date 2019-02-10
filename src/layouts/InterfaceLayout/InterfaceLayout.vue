@@ -457,10 +457,10 @@ export default {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            ErrorHandler(err, false);
+            return ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            ErrorHandler(new Error('Please unlock metamask'), false);
+            return ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
           if (
@@ -516,11 +516,11 @@ export default {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
+          this.setENS();
           this.getBlock();
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
-          this.setENS();
           this.setNonce();
           this.getHighestGas();
         }
@@ -539,10 +539,10 @@ export default {
         });
     },
     setENS() {
-      if (this.network.type.ensResolver) {
+      if (this.network.type.ens) {
         this.$store.dispatch(
           'setENS',
-          new ENS(this.web3.currentProvider, this.network.type.ensResolver)
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
         );
       } else {
         this.$store.dispatch('setENS', null);

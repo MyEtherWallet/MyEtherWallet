@@ -85,7 +85,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
-  store.set('network', networkObj);
+  const _netObj = Object.assign({}, networkObj);
+  _netObj.type = {
+    name: networkObj.type.name
+  };
+  store.set('network', _netObj);
 };
 
 const UPDATE_NOTIFICATION = function(state, newNotif) {
