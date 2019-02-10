@@ -101,10 +101,10 @@
               :copybutton="true"
               :title="$t('common.toAddress')"
               @toAddress="setToAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validAddress" class="error-message-container">
             <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
           </div>
         </div>
@@ -120,10 +120,10 @@
               :copybutton="true"
               :title="$t('interface.fromAddr')"
               @toAddress="setExitFromAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validExitAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validExitAddress" class="error-message-container">
             <p>
               {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
             </p>
@@ -138,8 +138,13 @@
               :copybutton="true"
               :title="$t('interface.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validRefundAddress = $event"
             />
+          </div>
+          <div v-show="!validRefundAddress" class="error-message-container">
+            <p>
+              {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
+            </p>
           </div>
         </div>
 
@@ -294,6 +299,8 @@ export default {
       fiatCurrenciesArray: fiat.map(entry => entry.symbol),
       finalizingSwap: false,
       validAddress: true,
+      validRefundAddress: true,
+      validExitAddress: true,
       ratesRetrived: false,
       issueRecievingRates: false,
       loadingData: true,
@@ -378,6 +385,7 @@ export default {
       return (
         !this.notEnough &&
         (this.toAddress !== '' || canExit) &&
+        this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
@@ -419,7 +427,10 @@ export default {
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
-    isValidAddress() {
+    allAddressesValid() {
+      if (this.isExitToFiat) return this.validAddress && this.validExitAddress;
+      if (this.showRefundAddress)
+        return this.validAddress && this.validRefundAddress;
       return this.validAddress;
     },
     notEnough() {
