@@ -1,3 +1,7 @@
+### Feature
+
+- Disable tabs and buttons based on app status [](<>)
+
 ### Release v5.0.0-rc.0
 
 ### Devop
