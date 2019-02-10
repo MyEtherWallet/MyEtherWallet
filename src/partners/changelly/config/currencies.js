@@ -9,6 +9,7 @@ const ChangellyCurrencies = {
   BKX: { symbol: 'BKX', name: 'Bankex' },
   BNB: { symbol: 'BNB', name: 'Binance token' },
   BNT: { symbol: 'BNT', name: 'Bancor Network Token' },
+  BQX: { symbol: 'BQX', name: 'ETHOS' },
   BRD: { symbol: 'BRD', name: 'Bread' },
   CVC: { symbol: 'CVC', name: 'Civic' },
   DAI: { symbol: 'DAI', name: 'Dai' },
@@ -53,7 +54,6 @@ const ChangellyCurrencies = {
   RFR: { symbol: 'RFR', name: 'Refereum' },
   RLC: { symbol: 'RLC', name: 'iEx.ec' },
   SALT: { symbol: 'SALT', name: 'Salt' },
-  SKIN: { symbol: 'SKIN', name: 'SkinCoin' },
   SNM: { symbol: 'SNM', name: 'SONM' },
   STORJ: { symbol: 'STORJ', name: 'Storj' },
   STORM: { symbol: 'STORM', name: 'Storm' },
@@ -68,7 +68,7 @@ const ChangellyCurrencies = {
   WINGS: { symbol: 'WINGS', name: 'Wings DAO' },
   ZAP: { symbol: 'ZAP', name: 'Zap' },
   ZRX: { symbol: 'ZRX', name: '0x Protocol Token' },
-  AION: { symbol: 'AION', name: 'Aion' },
+  ADA: { symbol: 'ADA', name: 'Cardano' },
   AMP: { symbol: 'AMP', name: 'Synereo' },
   ARK: { symbol: 'ARK', name: 'Ark' },
   BCD: { symbol: 'BCD', name: 'Bitcoin Diamond' },
@@ -108,7 +108,6 @@ const ChangellyCurrencies = {
   XTZ: { symbol: 'XTZ', name: 'Tezos' },
   XVG: { symbol: 'XVG', name: 'Verge' },
   XZC: { symbol: 'XZC', name: 'ZCoin' },
-  ZCL: { symbol: 'ZCL', name: 'Zclassic' },
   ZEC: { symbol: 'ZEC', name: 'Zcash' },
   ZEN: { symbol: 'ZEN', name: 'Horizen' }
 };
