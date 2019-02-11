@@ -54,9 +54,26 @@
       />
 
       <div class="create-wallet-warnings__footer-container">
-        <div class="create-wallet-warnings__mouse-scroll">
+        <div v-if="false" class="create-wallet-warnings__mouse-scroll">
           <img src="~@/assets/images/icons/mouse.svg" />
           <p>{{ $t('gettingStarted.scroll') }}</p>
+        </div>
+        <div class="create-wallet-warnings__continue-button">
+          <standard-button
+            v-if="cwwCurrent != '0'"
+            :options="backButton"
+            @click.native="mouseScrollUp"
+          />
+          <standard-button
+            v-if="cwwCurrent !== 5"
+            :options="nextButton"
+            @click.native="mouseScrollDown"
+          />
+          <standard-button
+            v-if="cwwCurrent == 5"
+            :options="getStartedButton"
+            @click.native="done"
+          />
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
@@ -91,6 +108,8 @@ import SomeHelpfulTips from './components/SomeHelpfulTips';
 import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
 import utils from 'web3-utils';
+import StandardButton from '@/components/Buttons/StandardButton';
+import store from 'store';
 
 export default {
   components: {
@@ -99,22 +118,48 @@ export default {
     'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
     'some-helpful-tips': SomeHelpfulTips,
     'what-is-upside': WhatIsUpside,
-    congratulations: Congratulations
+    congratulations: Congratulations,
+    'standard-button': StandardButton
   },
   data() {
     return {
       cwwCurrent: 0,
       cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      scrollAction: utils._.throttle(this.scrollListener, 600)
+      scrollAction: utils._.throttle(this.scrollListener, 600),
+      nextButton: {
+        title: this.$t('common.next'),
+        buttonStyle: 'green',
+        rightArrow: true,
+        noMinWidth: false
+      },
+      backButton: {
+        title: this.$t('common.back'),
+        buttonStyle: 'green-transparent',
+        rightArrow: false,
+        noMinWidth: true,
+        buttonDisabled: false
+      },
+      getStartedButton: {
+        title: 'Get Started',
+        buttonStyle: 'green',
+        rightArrow: false,
+        noMinWidth: true,
+        buttonDisabled: false
+      }
     };
   },
   mounted: function() {
-    window.addEventListener('wheel', this.scrollAction);
+    //window.addEventListener('wheel', this.scrollAction);
   },
   beforeDestroy() {
-    window.removeEventListener('wheel', this.scrollAction);
+    //window.removeEventListener('wheel', this.scrollAction);
   },
   methods: {
+    done() {
+      store.set('skipTutorial', 'done');
+      this.$router.push({ path: 'create-wallet' });
+      this.$store.dispatch('gettingStartedDone');
+    },
     scrollListener(e) {
       if (e.deltaY < -2) {
         this.mouseScrollUp();
@@ -124,6 +169,7 @@ export default {
       }
     },
     mouseScrollDown: function() {
+      console.log('Scroll down');
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;
         this.$refs[this.cwwRefs[this.cwwCurrent - 1]].$el.classList.add(
@@ -135,6 +181,7 @@ export default {
       }
     },
     mouseScrollUp: function() {
+      console.log('Scroll up');
       if (this.cwwCurrent > 0) {
         this.cwwCurrent--;
         this.$refs[this.cwwRefs[this.cwwCurrent + 1]].$el.classList.add(
