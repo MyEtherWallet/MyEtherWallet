@@ -436,7 +436,7 @@ export default {
           this.blockNumber = res;
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          ErrorHandler(e, true);
         });
     },
     getBalance() {
