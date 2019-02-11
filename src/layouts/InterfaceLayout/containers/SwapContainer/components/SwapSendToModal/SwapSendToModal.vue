@@ -163,8 +163,7 @@ export default {
       if (this.swapDetails.dataForInitialization) {
         return qrcodeBuilder(
           this.swapDetails.providerAddress,
-          this.swapDetails.fromCurrency,
-          this.swapDetails.fromValue
+          this.swapDetails.fromCurrency
         );
       }
     }
@@ -228,6 +227,7 @@ export default {
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
       if (!swapDetails.dataForInitialization) {
+        this.$refs.swapconfirmation.hide();
         throw Error('Invalid details from swap provider');
       }
     },
