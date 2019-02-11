@@ -1,3 +1,14 @@
+### Release v5.0.0
+
+### Feature
+
+- Implement SafeSend Dapp [#299](https://github.com/MyEtherWallet/MyEtherWallet/pull/299)
+- Implement SafeSend Tweaks [#597](https://github.com/MyEtherWallet/MyEtherWallet/pull/597)
+
+### Devop
+
+- Add medium link [#598](https://github.com/MyEtherWallet/MyEtherWallet/pull/598)
+
 ### Release v5.0.0-rc.1
 
 ### Feature
@@ -10,6 +21,7 @@
 
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
+- Handle failure to fetch errors [#590](https://github.com/MyEtherWallet/MyEtherWallet/pull/590)
 
 ### Hotfix
 

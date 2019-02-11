@@ -185,7 +185,6 @@
         }
 
         .address-block {
-          height: 47px;
           position: relative;
 
           i {
@@ -194,11 +193,10 @@
             right: 13px;
           }
 
-          textarea {
+          input {
             background-color: transparent;
             border: 0;
-            height: 100%;
-            padding: 13px 15px;
+            padding: 13px 45px 13px 15px;
             resize: none;
             width: 100%;
           }
