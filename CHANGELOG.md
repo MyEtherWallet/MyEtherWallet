@@ -1,6 +1,6 @@
 ### Devop
 
-- Add medium link []()
+- Add medium link [#598](https://github.com/MyEtherWallet/MyEtherWallet/pull/598)
 
 ### Release v5.0.0-rc.1
 
