@@ -172,6 +172,7 @@ export default class Changelly {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
       details = await this.createTransaction(swapDetails);
+      if (!details) throw Error('abort');
       if (details.message) throw Error(details.message);
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;

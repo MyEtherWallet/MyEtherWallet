@@ -1,6 +1,7 @@
 import debugLogger from 'debug';
 import changellyCalls from './changelly-calls';
 import { requireExtraId } from './config';
+import { utils } from '../helpers';
 
 const errorLogger = debugLogger('v5-error:changelly-api');
 
@@ -32,6 +33,7 @@ const getSupportedCurrencies = async network => {
     }
     throw Error('Changelly get supported currencies failed to return a value');
   } catch (e) {
+    utils.handleOrThrow(e);
     errorLogger(e);
   }
 };
