@@ -21,6 +21,13 @@ const dapps = {
     title: 'interface.subdomains',
     desc: 'interface.buySubDomains',
     supportedNetworks: [ETH.name]
+  },
+  secureTransaction: {
+    route: '/interface/dapps/secure-transaction',
+    icon: secureTransaction,
+    title: 'SafeSend ETH Transaction',
+    desc: 'Protect and Secure your ETH transaction using SafeSend',
+    supportedNetworks: [ETH.name]
   }
   // secureTransaction: {
   //   route: '/interface/dapps/secure-transaction',
