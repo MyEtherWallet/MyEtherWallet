@@ -239,6 +239,7 @@ export default class Simplex {
       swapDetails.fromValue
     );
     swapDetails.dataForInitialization = await this.createSwap(swapDetails);
+    if (!swapDetails.dataForInitialization) throw Error('abort');
     swapDetails.timestamp = new Date().toISOString();
     swapDetails.providerReceives = this.currentOrder.fiat_money.total_amount;
     swapDetails.providerSends = this.currentOrder.digital_money.amount;

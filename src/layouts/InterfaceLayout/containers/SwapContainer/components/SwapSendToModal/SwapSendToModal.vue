@@ -76,7 +76,10 @@
               </h4>
               <p>{{ swapDetails.providerAddress }}</p>
 
-              <qrcode :value="qrcode" :options="{ size: 200 }" />
+              <qrcode
+                :value="qrcodeContent"
+                :options="{ size: 200, level: 'H', padding: 25 }"
+              />
             </div>
           </li>
           <li>
@@ -155,6 +158,14 @@ export default {
         return this.swapDetails.orderDetails.output.owner.name;
       }
       return '';
+    },
+    qrcodeContent() {
+      if (this.swapDetails.dataForInitialization) {
+        return qrcodeBuilder(
+          this.swapDetails.providerAddress,
+          this.swapDetails.fromCurrency
+        );
+      }
     }
   },
   watch: {
@@ -215,30 +226,10 @@ export default {
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
-      if (swapDetails.dataForInitialization) {
-        switch (swapDetails.provider) {
-          case 'changelly':
-            this.changellySwap(swapDetails);
-            break;
-          case 'bity':
-            this.bitySwap(swapDetails);
-            break;
-        }
-      } else {
+      if (!swapDetails.dataForInitialization) {
+        this.$refs.swapconfirmation.hide();
         throw Error('Invalid details from swap provider');
       }
-    },
-    buildQrCodeContent(swapDetails) {
-      this.qrcode = qrcodeBuilder(
-        swapDetails.providerAddress,
-        swapDetails.fromCurrency
-      );
-    },
-    bitySwap(swapDetails) {
-      this.buildQrCodeContent(swapDetails);
-    },
-    changellySwap(swapDetails) {
-      this.buildQrCodeContent(swapDetails);
     },
     sentTransaction() {
       this.$store
