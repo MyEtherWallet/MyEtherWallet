@@ -111,7 +111,7 @@
         <div class="buttons">
           <div
             :class="[
-              gasPrice === highestGas / 4 ? 'active' : '',
+              gasAmount === highestGas / 4 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
             @click="changeGas(highestGas / 4)"
@@ -120,7 +120,7 @@
           </div>
           <div
             :class="[
-              gasPrice === highestGas / 2 ? 'active' : '',
+              gasAmount === highestGas / 2 ? 'active' : '',
               'small-circle-button-green-border'
             ]"
             @click="changeGas(highestGas / 2)"
@@ -129,7 +129,7 @@
           </div>
           <div
             :class="[
-              gasPrice === highestGas ? 'active' : '',
+              gasAmount === highestGas ? 'active' : '',
               'small-circle-button-green-border'
             ]"
             @click="changeGas(highestGas)"
@@ -180,7 +180,7 @@
         Send Secured Transaction
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
+        :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
         link="https://heycoral.com/safesend/index.html"
       />
@@ -249,15 +249,15 @@ export default {
     validAmount() {
       return (
         new BigNumber(this.amount).gte(this.minimumAmount) &&
-        new BigNumber(this.amount).lt(this.account.balance) &&
+        new BigNumber(this.amount).lt(this.balance) &&
         new BigNumber(this.amount).lt(this.maxAmount)
       );
     },
     transactionFee() {
       return this.web3.utils.fromWei(
-        new BigNumber(this.gasPrice)
+        new BigNumber(this.gasAmount)
           .times(CoralConfig.gasLimitSuggestion)
-          .toFixed(),
+          .toFixed(0),
         'ether'
       );
     }
@@ -268,7 +268,7 @@ export default {
       .getBalance(coinbase)
       .then(res => {
         this.balance = this.web3.utils.fromWei(res, 'ether');
-        this.$store.dispatch('setAccountBalance', this.balance);
+        this.$store.dispatch('setAccountBalance', res);
       })
       .catch(err => {
         ErrorHandler(err, true);
@@ -282,6 +282,7 @@ export default {
       .catch(err => {
         ErrorHandler(err, true);
       });
+    this.gasAmount = this.gasPrice;
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
@@ -316,7 +317,7 @@ export default {
         gas: gasLimit,
         data: encodedABI,
         gasPrice: Misc.sanitizeHex(
-          new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toString(16)
+          new BigNumber(unit.toWei(this.gasAmount, 'gwei')).toString(16)
         ),
         chainId: 1
       };
@@ -330,7 +331,6 @@ export default {
     },
     changeGas(val) {
       this.gasAmount = val;
-      this.$store.dispatch('setGasPrice', new BigNumber(val).toNumber());
     },
     setBalanceToAmt() {
       this.amount = this.balance;
