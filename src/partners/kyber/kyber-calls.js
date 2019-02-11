@@ -1,18 +1,27 @@
 import { get } from '@/helpers/httpRequests';
 import { kyberTokenList, kyberTokenInfoList } from './config';
+import { utils } from '../helpers';
 
-const getTokenList = network => {
-  if (kyberTokenList[network]) {
-    return get(kyberTokenList[network]);
+const getTokenList = async network => {
+  try {
+    if (kyberTokenList[network]) {
+      return get(kyberTokenList[network]);
+    }
+    return Promise.resolve({});
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve({});
 };
 
-const getRates = network => {
-  if (kyberTokenInfoList[network]) {
-    return get(kyberTokenInfoList[network]);
+const getRates = async network => {
+  try {
+    if (kyberTokenInfoList[network]) {
+      return get(kyberTokenInfoList[network]);
+    }
+    return Promise.resolve({});
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve({});
 };
 
 export default { getTokenList, getRates };
