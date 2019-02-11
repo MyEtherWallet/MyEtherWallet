@@ -34,7 +34,7 @@
     "print-js": "1.0.54",
     "register-service-worker": "1.5.2",
     "vee-validate": "2.1.7",
-    "vue": "2.6.2",
+    "vue": "2.6.5",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
     "vuex": "3.1.0",
