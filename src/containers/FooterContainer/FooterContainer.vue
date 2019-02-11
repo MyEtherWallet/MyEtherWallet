@@ -34,6 +34,7 @@
                     v-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <p>{{ content.text }}</p>
                   </a>
