@@ -5,6 +5,10 @@
 - Implement SafeSend Dapp [#299](https://github.com/MyEtherWallet/MyEtherWallet/pull/299)
 - Implement SafeSend Tweaks [#597](https://github.com/MyEtherWallet/MyEtherWallet/pull/597)
 
+### Devop
+
+- Add medium link [#598](https://github.com/MyEtherWallet/MyEtherWallet/pull/598)
+
 ### Release v5.0.0-rc.1
 
 ### Feature
