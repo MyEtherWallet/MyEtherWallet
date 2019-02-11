@@ -59,7 +59,7 @@ const openOrder = async orderInfo => {
 const getStatus = async orderInfo => {
   const results = await post(
     buildPath(),
-    utils.buildPayload(bityMethods.status, orderInfo)
+    utils.buildPayload(bityMethods.status, [orderInfo])
   );
   if (results.error) {
     throw Error(results.error.message);
