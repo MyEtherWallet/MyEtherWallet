@@ -95,19 +95,23 @@ export default {
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
         self.spinner = false;
+        this.password = '';
         self.$router.push({
           path: 'interface'
         });
       };
       worker.onerror = function(e) {
+        e.preventDefault();
         self.spinner = false;
-        self.error = ErrorHandler(e, true).message;
+        self.error = e.message;
+        ErrorHandler(e, true);
       };
     },
     switchViewPassword() {
       this.show = !this.show;
     },
     focusInput() {
+      this.password = '';
       this.$refs.passwordInput.focus();
     }
   }

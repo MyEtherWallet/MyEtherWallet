@@ -18,7 +18,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "default-src 'self'; frame-src 'self' connect.trezor.io:443; img-src 'self' data: blob:; script-src 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+        "default-src 'self'; frame-src 'self' connect.trezor.io:443; img-src 'self' data: blob:; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
@@ -59,7 +59,7 @@ if (process.env.BUILD_TYPE === 'mewcx') {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/files',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
@@ -169,5 +169,5 @@ module.exports = {
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  chainWebpack: config => {}
+  chainWebpack: config => { }
 };

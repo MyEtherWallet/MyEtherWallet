@@ -13,12 +13,20 @@
         <div class="welcome-modal-text">
           <h3>{{ $t('home.welcomeTov5') }}</h3>
           <i18n path="home.welcomeToV5Desc1" tag="p" for="home.welcomeToLink1">
-            <a href="" target="_blank">{{ $t('home.welcomeToLink1') }}</a>
+            <a
+              href="https://medium.com/@myetherwallet/lets-make-it-official-mew5-myetherwallet-s-all-new-interface-is-here-2063117180a4"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ $t('home.welcomeToLink1') }}</a
+            >
           </i18n>
           <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
-            <a href="https://vintage.myetherwallet.com" target="_blank">
-              {{ $t('home.welcomeToLink2') }}
-            </a>
+            <a
+              href="https://vintage.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ $t('home.welcomeToLink2') }}</a
+            >
           </i18n>
         </div>
         <div class="welcome-modal-button">

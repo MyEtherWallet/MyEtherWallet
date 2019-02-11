@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -112,6 +112,7 @@
     "web3-utils": "1.0.0-beta.37",
     "webpack": "4.28.4",
     "worker-loader": "2.0.0",
+    "worker-timers": "5.0.9",
     "zxcvbn": "4.4.2"
   },
   "engines": {

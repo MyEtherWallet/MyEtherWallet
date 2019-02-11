@@ -1,6 +1,7 @@
 import Web3WSProvider from 'web3-providers-ws';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
+import * as workerTimers from 'worker-timers';
 import {
   ethSendTransaction,
   ethSignTransaction,
@@ -35,9 +36,9 @@ class WSProvider {
         this.oWSProvider.connection.readyState ===
           this.oWSProvider.connection.CLOSED
       )
-        clearInterval(this.keepAliveTimer);
+        workerTimers.clearInterval(this.keepAliveTimer);
     };
-    this.keepAliveTimer = setInterval(keepAlive, 5000);
+    this.keepAliveTimer = workerTimers.setInterval(keepAlive, 5000);
     const _this = this.wsProvider;
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {
