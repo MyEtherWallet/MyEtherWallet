@@ -59,6 +59,12 @@ export default {
     decimals: 18,
     contractAddress: '0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c'
   },
+  BQX: {
+    symbol: 'BQX',
+    name: 'ETHOS',
+    decimals: 8,
+    contractAddress: '0x5af2be193a6abca9c8817001f45744777db30756'
+  },
   BRD: {
     name: 'Bread',
     symbol: 'BRD',
@@ -210,10 +216,10 @@ export default {
     contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
   },
   MLN: {
-    name: 'Melon',
     symbol: 'MLN',
-    contractAddress: '0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1',
-    decimals: 18
+    name: 'Melon',
+    decimals: 18,
+    contractAddress: '0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'
   },
   NEXO: {
     name: 'NEXO',
@@ -322,12 +328,6 @@ export default {
     name: 'Salt',
     decimals: 8,
     contractAddress: '0x4156d3342d5c385a87d264f90653733592000581'
-  },
-  SKIN: {
-    name: 'SkinCoin',
-    symbol: 'SKIN',
-    contractAddress: '0x2bdc0d42996017fce214b21607a515da41a9e0c5',
-    decimals: 6
   },
   SNM: {
     name: 'SONM',
@@ -454,12 +454,6 @@ export default {
     name: 'Enigma',
     decimals: 8,
     contractAddress: '0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4'
-  },
-  BQX: {
-    symbol: 'BQX',
-    name: 'ETHOS',
-    decimals: 8,
-    contractAddress: '0x5af2be193a6abca9c8817001f45744777db30756'
   },
   AST: {
     symbol: 'AST',
@@ -640,6 +634,12 @@ export default {
     name: 'Dether',
     decimals: 18,
     contractAddress: '0x5adc961D6AC3f7062D2eA45FEFB8D8167d44b190'
+  },
+  WBTC: {
+    symbol: 'WBTC',
+    name: '\tWrapped BTC',
+    decimals: 8,
+    contractAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
   },
   PT: {
     symbol: 'PT',
