@@ -56,11 +56,18 @@ export default class Kyber {
     return true;
   }
 
+  get defaultCurrencyList(){
+    return KyberCurrencies[this.network]
+  }
+
   get currencies() {
-    if (this.isValidNetwork && this.tokenDetails) {
-      return this.tokenDetails;
+    if (this.isValidNetwork && this.tokenDetails !== undefined) {
+      if (Object.keys(this.tokenDetails).length > 5) {
+        return this.tokenDetails;
+      }
+      return this.defaultCurrencyList;
     } else if (this.isValidNetwork) {
-      return KyberCurrencies;
+      return this.defaultCurrencyList;
     }
     return {};
   }
@@ -99,7 +106,7 @@ export default class Kyber {
     if (fromConstructor) {
       this.tokenDetails = fromConstructor;
     } else if (KyberCurrencies[this.network]) {
-      this.tokenDetails = KyberCurrencies[this.network];
+      this.tokenDetails = this.defaultCurrencyList;
     }
   }
 
@@ -155,6 +162,8 @@ export default class Kyber {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
+      console.log(this.currencies); // todo remove dev item
+      console.log('this.currencies', Object.keys(this.currencies).length); // todo remove dev item
       if (!this.currencies) return false;
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
@@ -181,7 +190,11 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
-    if (!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
+    // try {
+    //   if (!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
+    // } catch (e) {
+    //   errorLogger(e);
+    // }
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
@@ -371,6 +384,7 @@ export default class Kyber {
     }
     const reason = !userCap ? 'user cap value' : 'current token balance';
     const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
+    // errorLogger(errorMessage);
     throw Error(errorMessage);
   }
 
