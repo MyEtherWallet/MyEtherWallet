@@ -383,7 +383,7 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        !this.notEnough &&
+        // !this.notEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
@@ -774,10 +774,8 @@ export default {
           }
         }
       } catch (e) {
-        //abort (empty response from
-        if (e.message === 'invalid') {
-          this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
-          this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+        //abort (empty response from provider or failure to finalize details)
+        if (e.message === 'abort') {
           this.finalizingSwap = false;
           return;
         }

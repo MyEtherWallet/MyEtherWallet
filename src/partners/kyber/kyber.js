@@ -56,8 +56,8 @@ export default class Kyber {
     return true;
   }
 
-  get defaultCurrencyList(){
-    return KyberCurrencies[this.network]
+  get defaultCurrencyList() {
+    return KyberCurrencies[this.network];
   }
 
   get currencies() {
@@ -111,16 +111,20 @@ export default class Kyber {
   }
 
   async retrieveRates() {
-    const { rates, tokenDetails } = await kyberApi.retrieveRatesFromAPI(
+    const ratesAndDetails = await kyberApi.retrieveRatesFromAPI(
       this.network,
       this.rates,
       this.tokenDetails
     );
 
-    this.rates = rates;
-    this.tokenDetails = tokenDetails;
     this.hasRates =
       Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
+
+    if (!ratesAndDetails) return;
+    // throws error if fetch fails and returned value is undefined
+    const { rates, tokenDetails } = ratesAndDetails;
+    this.rates = rates;
+    this.tokenDetails = tokenDetails;
   }
 
   getMainNetAddress(initialAddress) {
@@ -162,8 +166,6 @@ export default class Kyber {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
-      console.log(this.currencies); // todo remove dev item
-      console.log('this.currencies', Object.keys(this.currencies).length); // todo remove dev item
       if (!this.currencies) return false;
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
