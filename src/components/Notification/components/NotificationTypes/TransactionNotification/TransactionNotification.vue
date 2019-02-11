@@ -28,6 +28,14 @@
             </a>
           </p>
         </li>
+        <li v-if="isContractCreation">
+          <p>{{ $t('common.createdContract') }}:</p>
+          <p>
+            <a :href="addressLink(details.contractAddress)" target="_blank">
+              {{ details.contractAddress }}
+            </a>
+          </p>
+        </li>
         <li>
           <p>{{ $t('common.txFee') }}:</p>
           <p>
@@ -48,7 +56,9 @@
           <p>{{ $t('header.errorMessage') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
-        <li @click="emitShowDetails">{{ $t('header.more') }}</li>
+        <li class="show-pointer" @click="emitShowDetails">
+          {{ $t('header.more') }}
+        </li>
       </ul>
     </div>
   </div>
@@ -127,6 +137,12 @@ export default {
     },
     isError() {
       return this.notice.body.error;
+    },
+    isContractCreation() {
+      return (
+        this.notice.body.contractAddress !== undefined &&
+        this.notice.body.contractAddress !== null
+      );
     },
     details() {
       return this.notice.body;

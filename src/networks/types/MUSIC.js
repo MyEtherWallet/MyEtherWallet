@@ -11,7 +11,5 @@ export default {
   chainID: 7762959,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: '',
   icon: music
 };

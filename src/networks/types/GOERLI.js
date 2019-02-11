@@ -9,5 +9,10 @@ export default {
   blockExplorerAddr: 'https://blockscout.com/eth/goerli/address/[[address]]',
   chainID: 5,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  ens: {
+    registry: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+    registrarTLD: 'test',
+    registrarType: 'fifs'
+  }
 };

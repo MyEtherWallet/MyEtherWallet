@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <header-container v-show="$route.fullPath !== '/getting-started'" />
+    <welcome-modal ref="welcome" />
     <router-view />
     <footer-container />
     <confirmation-container v-if="wallet !== null" />
@@ -11,6 +12,8 @@
 import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
+import WelcomeModal from '@/components/WelcomeModal';
+import store from 'store';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -18,7 +21,8 @@ export default {
   components: {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
-    'confirmation-container': ConfirmationContainer
+    'confirmation-container': ConfirmationContainer,
+    'welcome-modal': WelcomeModal
   },
   computed: {
     ...mapGetters({
@@ -27,6 +31,13 @@ export default {
   },
   mounted() {
     this.$store.dispatch('checkIfOnline');
+    if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+      this.$refs.welcome.$refs.welcome.show();
+    }
+
+    this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+      store.set('notFirstTimeVisit', true);
+    });
   }
 };
 </script>

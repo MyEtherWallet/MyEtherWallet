@@ -8,6 +8,7 @@ const AlreadyOwnedENSContainer = () =>
   import('./containers/AlreadyOwnedENSContainer');
 const FinalizeContainer = () => import('./containers/FinalizeContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
+const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 
 export default {
   path: 'dapps/register-domain',
@@ -61,6 +62,12 @@ export default {
       path: 'manage',
       name: 'Manage ENS',
       component: ManageENSContainer,
+      props: true
+    },
+    {
+      path: 'fifs',
+      name: 'Reserve on FIFS',
+      component: FifsBuyContainer,
       props: true
     }
   ]

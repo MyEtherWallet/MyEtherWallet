@@ -30,7 +30,7 @@ const statuses = {
 
 const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const PROVIDER_NAME = 'changelly';
-const FEE_RATE = 0.005;
+const FEE_RATE = 0;
 
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 

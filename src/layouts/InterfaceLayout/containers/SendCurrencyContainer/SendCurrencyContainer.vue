@@ -11,7 +11,7 @@
             </div>
             <currency-picker
               :currency="tokensWithBalance"
-              :page="'sendEgasAmountthAndTokens'"
+              :page="'sendEthAndTokens'"
               :token="true"
               @selectedCurrency="selectedCurrency = $event"
             />
@@ -127,7 +127,7 @@
               />
               <i
                 :class="[
-                  data.length !== 0 ? '' : 'not-good',
+                  isValidData ? '' : 'not-good',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
@@ -139,7 +139,15 @@
                 v-model="gasLimit"
                 :placeholder="$t('common.gasLimit')"
                 type="number"
+                min="0"
                 name
+              />
+              <i
+                :class="[
+                  isValidGasLimit ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
               />
             </div>
           </div>
@@ -173,7 +181,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import EthTx from 'ethereumjs-tx';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -222,7 +230,7 @@ export default {
     }),
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
-        this.gasLimit
+        this.gasLimit || 0
       );
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
 
@@ -234,6 +242,12 @@ export default {
       }
       return new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault);
     },
+    isValidData() {
+      return Misc.validateHexString(this.data);
+    },
+    isValidGasLimit() {
+      return new BigNumber(this.gasLimit).gte(0);
+    },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
     },
@@ -241,7 +255,7 @@ export default {
       return (
         this.isValidAmount &&
         this.isValidAddress &&
-        new BigNumber(this.gasLimit).gte(0) &&
+        (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
         Misc.validateHexString(this.data)
       );
     },
@@ -326,9 +340,20 @@ export default {
         from: coinbase,
         value: this.txValue,
         to: this.txTo,
+        gasPrice: Misc.sanitizeHex(
+          ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+        ),
         data: this.txData
       };
-      this.gasLimit = await this.web3.eth.estimateGas(params);
+      this.web3.eth
+        .estimateGas(params)
+        .then(gasLimit => {
+          this.gasLimit = gasLimit;
+        })
+        .catch(err => {
+          this.gasLimit = -1;
+          ErrorHandler(err, true);
+        });
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
@@ -348,7 +373,9 @@ export default {
         });
         const json = _tx.toJSON(true);
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json);
+        this.web3.eth.sendTransaction(json).catch(err => {
+          ErrorHandler(err, true);
+        });
       } catch (e) {
         throw e;
       }

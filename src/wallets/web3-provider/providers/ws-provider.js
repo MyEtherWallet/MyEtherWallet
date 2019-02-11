@@ -13,10 +13,32 @@ import {
 class WSProvider {
   constructor(host, options, store, eventHub) {
     this.wsProvider = new Web3WSProvider(host, options);
+    this.oWSProvider = new Web3WSProvider(host, options);
+    const keepAlive = () => {
+      if (
+        this.oWSProvider.connection.readyState ===
+        this.oWSProvider.connection.OPEN
+      )
+        this.wsProvider.connection.send(
+          '{"jsonrpc":"2.0","method":"net_version","params":[],"id":0}'
+        );
+      if (
+        this.wsProvider.connection.readyState ===
+        this.wsProvider.connection.OPEN
+      )
+        this.oWSProvider.connection.send(
+          '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}'
+        );
+      if (
+        this.wsProvider.connection.readyState ===
+          this.wsProvider.connection.CLOSED &&
+        this.oWSProvider.connection.readyState ===
+          this.oWSProvider.connection.CLOSED
+      )
+        clearInterval(this.keepAliveTimer);
+    };
+    this.keepAliveTimer = setInterval(keepAlive, 5000);
     const _this = this.wsProvider;
-    const requestManager = new Web3RequestManager(
-      new Web3WSProvider(host, options)
-    );
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {
       if (_this.connection.readyState === _this.connection.CONNECTING) {
@@ -35,7 +57,7 @@ class WSProvider {
       const req = {
         payload,
         store,
-        requestManager,
+        requestManager: new Web3RequestManager(this.oWSProvider),
         eventHub
       };
       const middleware = new MiddleWare();
