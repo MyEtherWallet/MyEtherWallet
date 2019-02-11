@@ -30,7 +30,6 @@
           class="logo-image--container"
         >
           <img class="logo" src="~@/assets/images/short-hand-logo.png" />
-          <img class="beta" src="~@/assets/images/beta.png" />
         </div>
       </router-link>
       <div class="mobile-menu-button--container">

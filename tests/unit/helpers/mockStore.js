@@ -46,9 +46,14 @@ const getters = {
         homePage: 'https://ethereum.org',
         name: 'ETH',
         name_long: 'Ethereum',
-        tokens: []
+        tokens: [],
+        ens: {
+          registry: '0x123456789',
+          registrarTLD: 'eth',
+          registrarType: 'auction'
+        }
       },
-      url: 'https://mainnet.infura.io/mew'
+      url: 'https://api.myetherwallet.com/eth'
     };
   },
   notifications: () => {},
