@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <!-- Modals ***************************************** -->
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
@@ -7,104 +8,37 @@
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
-    <issue-log-modal ref="issuelog" />
-    <logout-warning-modal ref="logoutWarningModal" />
-
-    <div
-      :class="isPageOnTop == false ? 'active' : ''"
-      class="scrollup-container"
-    >
-      <router-link
-        v-show="
-          $route.fullPath === '/create-wallet' ||
-            $route.fullPath === '/access-my-wallet'
-        "
-        to="/getting-started"
-      >
-        <user-reminder-button />
-      </router-link>
-      <scroll-up-button />
-    </div>
-    <div
-      :class="isMobileMenuOpen && 'mobile-menu-open'"
-      class="mobile-menu-underblock"
+    <issue-log-modal
+      v-if="Object.keys.length > 0"
+      ref="issuelog"
+      :error="error"
+      :resolver="resolver"
     />
-    <!-- Fixed position mobile menu starts here ------------- -->
-    <div
-      :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
-      class="mobile-menu-content"
-    >
-      <div class="page-container">
-        <ul>
-          <li>
-            <router-link
-              to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
-            >
-              {{ $t('header.home') }}
-            </router-link>
-          </li>
-          <li v-if="isHomePage">
-            <router-link
-              to="/#about-mew"
-              @click.native="isMobileMenuOpen = false"
-            >
-              {{ $t('header.about') }}
-            </router-link>
-          </li>
-          <li>
-            <a
-              href="https://kb.myetherwallet.com"
-              target="_blank"
-              @click="isMobileMenuOpen = false"
-              >Help Center</a
-            >
-          </li>
-          <li>
-            <div class="mobile-language-menu-container">
-              <b-nav-item-dropdown
-                class="mobile-language-menu"
-                extra-toggle-classes="nav-link-custom"
-                right
-              >
-                <template slot="button-content">
-                  <div class="current-language-flag">
-                    <p>{{ currentName }}</p>
-                    <img
-                      :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                      class="show"
-                    />
-                  </div>
-                </template>
-                <b-dropdown-item
-                  v-for="language in supportedLanguages"
-                  :active="$root._i18n.locale === language.flag"
-                  :key="language.key"
-                  :data-language-code="language.langCode"
-                  :data-flag-name="language.flag"
-                  @click="languageItemClicked"
-                  >{{ language.name }}</b-dropdown-item
-                >
-              </b-nav-item-dropdown>
-              <div class="arrows">
-                <i class="fa fa-angle-right" aria-hidden="true" />
-              </div>
-            </div>
-          </li>
-          <li v-if="wallet !== null">
-            <div class="cursor-pointer" @click="openSettings">Settings</div>
-          </li>
-          <li v-if="wallet !== null">
-            <div class="cursor-pointer" @click="logout">Log out</div>
-          </li>
-        </ul>
+    <logout-warning-modal ref="logoutWarningModal" />
+    <!-- Modals ***************************************** -->
+    <!-- Scroll up button ******************************* -->
+    <div class="scroll-up-button">
+      <div
+        :class="isPageOnTop == false ? 'active' : ''"
+        class="scrollup-container"
+      >
+        <router-link
+          v-show="
+            ($route.fullPath === '/create-wallet' ||
+              $route.fullPath === '/access-my-wallet') &&
+              !gettingStartedDone
+          "
+          to="/getting-started"
+        >
+          <user-reminder-button />
+        </router-link>
+        <scroll-up-button />
       </div>
     </div>
-    <!-- .mobile-menu-content -->
-    <!-- Fixed position mobile menu ends here ------------- -->
+    <!-- Scroll up button ******************************* -->
+    <mobile-menu />
+
+    <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
@@ -114,6 +48,10 @@
         ]"
         class="fixed-header"
       >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a href="https://vintage.myetherwallet.com">Click here to go back!</a>
+        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -133,11 +71,6 @@
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
-                />
-                <img
-                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
-                  class="beta-tag"
-                  src="~@/assets/images/beta.png"
                 />
               </div>
             </router-link>
@@ -192,7 +125,7 @@
                   v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
+                    'get-free-wallet first-button nopadding'
                   ]"
                   to="/create-wallet"
                 >
@@ -232,25 +165,13 @@
               </b-nav>
             </div>
             <!-- .top-menu -->
-            <div class="mobile-menu">
-              <div
-                class="mobile-menu-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen"
-              >
-                <div class="bar-1" />
-                <div class="bar-2" />
-                <div class="bar-3" />
-              </div>
-            </div>
-            <!-- .mobile-menu -->
           </div>
           <!-- .header-container -->
         </div>
         <!-- .page-container -->
       </div>
-      <!-- .fixed-header -->
     </div>
-    <!-- .wrap -->
+    <!-- Desktop menu *********************************** -->
   </div>
   <!-- .header -->
 </template>
@@ -258,7 +179,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -269,6 +190,7 @@ import LogoutModal from '@/components/LogoutModal';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
+import MobileMenu from './components/MobileMenu';
 
 export default {
   components: {
@@ -280,7 +202,8 @@ export default {
     'logout-modal': LogoutModal,
     'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
-    'user-reminder-button': UserReminderButton
+    'user-reminder-button': UserReminderButton,
+    'mobile-menu': MobileMenu
   },
   data() {
     return {
@@ -314,7 +237,10 @@ export default {
       isMobileMenuOpen: false,
       isHomePage: true,
       showGetFreeWallet: false,
-      gasPrice: '0'
+      gasPrice: '0',
+      error: {},
+      resolver: () => {},
+      showGettingStarted: ''
     };
   },
   computed: {
@@ -322,7 +248,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gettingStartedDone: 'gettingStartedDone'
     }),
     showButtons() {
       if (
@@ -352,9 +279,8 @@ export default {
         .then(res => {
           this.gasPrice = new BigNumber(res).toString();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     }
   },
@@ -390,10 +316,24 @@ export default {
     window.onscroll = () => {
       this.onPageScroll();
     };
+
+    this.$eventHub.$on('issueModal', (error, resolve) => {
+      let errorPop = store.get('errorPop') || 0;
+      errorPop += 1;
+      store.set('errorPop', errorPop);
+      if (store.get('neverReport')) {
+        resolve(false);
+      } else {
+        this.$refs.issuelog.$refs.issuelog.show();
+        this.error = error;
+        this.resolver = resolve;
+      }
+    });
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('issueModal');
   },
   created() {
-    function dummyErrorHandler() {}
-
     try {
       window.addEventListener(
         'popstate',
@@ -406,8 +346,8 @@ export default {
         },
         false
       );
-    } catch (err) {
-      dummyErrorHandler(err);
+    } catch (e) {
+      ErrorHandler(e, false);
     }
   },
   methods: {

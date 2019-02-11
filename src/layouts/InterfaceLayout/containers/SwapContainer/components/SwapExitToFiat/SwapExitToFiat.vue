@@ -15,6 +15,8 @@
           <accordion-menu
             :isopen="step1"
             :title="$t('interface.phoneNumber')"
+            :greytitle="false"
+            :editbutton="true"
             number="1"
           >
             <ul>
@@ -43,6 +45,8 @@
           <!-- accordion-menu ******************************** -->
           <accordion-menu
             :isopen="verifyStep"
+            :greytitle="false"
+            :editbutton="true"
             :title="$t('interface.enterVerification')"
             number="2"
           >
@@ -64,6 +68,8 @@
           <accordion-menu
             :isopen="step2"
             :title="$t('interface.bankInfo')"
+            :greytitle="false"
+            :editbutton="true"
             number="3"
             @titleClicked="reOpenBankInformation"
           >
@@ -97,6 +103,8 @@
           <accordion-menu
             :isopen="step3"
             :title="$t('interface.personalInfo')"
+            :greytitle="false"
+            :editbutton="true"
             number="4"
           >
             <ul>
@@ -214,7 +222,7 @@ import store from 'store';
 import { getNames, registerLocale } from 'i18n-iso-countries';
 import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import AccordionMenu1 from '@/components/AccordionMenu1';
+import AccordionMenu from '@/components/AccordionMenu';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -226,7 +234,7 @@ registerLocale(names);
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'accordion-menu': AccordionMenu1,
+    'accordion-menu': AccordionMenu,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'standard-button': StandardButton
@@ -400,8 +408,6 @@ export default {
     },
     openMenu(val) {
       return val;
-      // console.log(val);
-      // this.orderDetails.owner.country = val;
     },
     backButtonAction() {
       this.$emit('backButtonClick');

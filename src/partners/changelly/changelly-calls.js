@@ -13,6 +13,11 @@ const getCurrencies = async network => {
       buildPath(),
       utils.buildPayload(changellyMethods[network].currenciesFull, {})
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   return Promise.resolve({});
@@ -28,6 +33,11 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
         amount: fromValue
       })
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   return Promise.resolve(-1);
@@ -42,6 +52,11 @@ const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
         to: toCurrency
       })
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   return Promise.resolve(-1);
@@ -53,6 +68,11 @@ const validateAddress = async (addressDetails, network) => {
       buildPath(),
       utils.buildPayload(changellyMethods[network].validate, addressDetails)
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   return Promise.resolve(-1);
@@ -67,6 +87,11 @@ const createTransaction = async (transactionParams, network) => {
         transactionParams
       )
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   return Promise.resolve(-1);
@@ -80,6 +105,11 @@ const getStatus = async (orderId, network) => {
         id: orderId
       })
     );
+
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
     return results.result;
   }
   throw Error(`Changelly does not support ${network} network`);

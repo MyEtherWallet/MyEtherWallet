@@ -11,7 +11,5 @@ export default {
   chainID: 61,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: '',
   icon: etc
 };

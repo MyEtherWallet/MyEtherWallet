@@ -16,7 +16,7 @@ const addNotification = function({ commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
-    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
+    address = val[txIndexes.address].toLowerCase();
   } else {
     throw Error('Unable to determine sending address for notification.');
   }
@@ -37,7 +37,7 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = async function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
+  const address = val[swapIndexes.address].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -56,12 +56,22 @@ const addSwapNotification = async function({ commit, state }, val) {
 
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
-  newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
+  newPaths[val.path] = { label: val.label, path: val.path };
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
+const removeCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  delete newPaths[val.path];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
 const checkIfOnline = function({ commit }) {
   commit('CHECK_IF_ONLINE');
+};
+
+const gettingStartedDone = function({ commit }) {
+  commit('GETTING_STARTED_DONE');
 };
 
 const clearWallet = function({ commit, state }) {
@@ -172,7 +182,7 @@ const setENS = function({ commit }, ens) {
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = val[0].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -185,7 +195,7 @@ const updateNotification = function({ commit, state }, val) {
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
 
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = val[0].toLowerCase();
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
     newNotif[item] = state.transactions[item];
@@ -211,6 +221,7 @@ export default {
   clearWallet,
   createAndSignTx,
   decryptWallet,
+  removeCustomPath,
   setAccountBalance,
   setGasPrice,
   setState,
@@ -219,5 +230,6 @@ export default {
   setWeb3Instance,
   switchNetwork,
   updateNotification,
-  updateTransaction
+  updateTransaction,
+  gettingStartedDone
 };

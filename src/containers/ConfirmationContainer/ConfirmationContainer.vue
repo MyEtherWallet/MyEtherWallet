@@ -71,6 +71,8 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
+import { ErrorHandler, Misc } from '@/helpers';
+import locStore from 'store';
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -137,6 +139,16 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    this.$eventHub.$off('showSuccessModal');
+    this.$eventHub.$off('showErrorModal');
+    this.$eventHub.$off('showTxConfirmModal');
+    this.$eventHub.$off('showSendSignedTx');
+    this.$eventHub.$off('showWeb3Wallet');
+    this.$eventHub.$off('showTxCollectionConfirmModal');
+    this.$eventHub.$off('showTxCollectionConfirmModal');
+    this.$eventHub.$off('showMessageConfirmModal');
+  },
   created() {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
       if (!message) message = null;
@@ -156,10 +168,13 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      const signPromise = this.wallet.signTransaction(tx).then(_response => {
-        this.signedTxObject = _response;
-        this.signedTx = this.signedTxObject.rawTransaction;
-      });
+      const signPromise = this.wallet.signTransaction(tx);
+      signPromise
+        .then(_response => {
+          this.signedTxObject = _response;
+          this.signedTx = this.signedTxObject.rawTransaction;
+        })
+        .catch(this.wallet.errorHandler);
       if (this.account.identifier === KEEPKEY) {
         signPromise.then(() => {
           this.confirmationModalOpen();
@@ -212,13 +227,24 @@ export default {
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
         })
-        .then(receipt => {
+        .on('receipt', receipt => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_RECEIPT,
             this.fromAddress,
             this.lastRaw,
             receipt
           ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_ERROR,
+            this.fromAddress,
+            this.lastRaw,
+            err
+          ]);
+        })
+        .catch(err => {
+          ErrorHandler(err, true);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -388,6 +414,15 @@ export default {
               );
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
+          const localStoredObj = locStore.get(
+            web3.utils.sha3(this.account.address)
+          );
+          locStore.set(web3.utils.sha3(this.account.address), {
+            nonce: Misc.sanitizeHex(
+              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+            ),
+            timestamp: localStoredObj.timestamp
+          });
         });
         promiEvent.eventEmitter.once('receipt', receipt => {
           promiEvent.resolve(receipt);
@@ -399,6 +434,9 @@ export default {
             ),
             receipt
           ]);
+        });
+        promiEvent.eventEmitter.catch(err => {
+          ErrorHandler(err, true);
         });
         batch.add(req);
         return promiEvent.eventEmitter;

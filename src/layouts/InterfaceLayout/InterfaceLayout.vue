@@ -1,5 +1,8 @@
 <template>
-  <div class="send-eth-and-tokens">
+  <div class="interface-layout">
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
     <wallet-password-modal />
     <enter-pin-number-modal />
     <mnemonic-modal
@@ -27,8 +30,21 @@
       :priv-key="wallet.privateKey"
       :address="account.address"
     />
+    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <div class="mobile-interface-address-block">
+      <mobile-interface-address
+        :address="address"
+        :trigger-alert="triggerAlert"
+        :print="print"
+        :switch-addr="switchAddress"
+      />
+    </div>
+
     <div class="wrap">
-      <div>
+      <div class="sidemenu">
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
@@ -47,18 +63,19 @@
           >{{ alert.msg }}</b-alert
         >
         <div class="tx-contents">
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-address
               :address="address"
               :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
+              :qrcode="openAddressQrcode"
             />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
-          <div class="mobile-hide">
+          <div class="content-container mobile-hide">
             <interface-network :block-number="blockNumber" />
           </div>
           <router-view
@@ -96,13 +113,17 @@ import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
+import { ErrorHandler } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
+import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -132,7 +153,9 @@ export default {
     'hardware-password-modal': HardwarePasswordModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'enter-pin-number-modal': EnterPinNumberModal
+    'enter-pin-number-modal': EnterPinNumberModal,
+    'mobile-interface-address': MobileInterfaceAddress,
+    'address-qrcode-modal': AddressQrcodeModal
   },
   data() {
     return {
@@ -167,7 +190,7 @@ export default {
     },
     address() {
       if (this.wallet !== null) {
-        return this.account.address;
+        return toChecksumAddress(this.account.address);
       }
     },
     ...mapGetters({
@@ -181,7 +204,7 @@ export default {
     })
   },
   watch: {
-    network() {
+    web3() {
       this.setupOnlineEnvironment();
     },
     address() {
@@ -195,6 +218,9 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    openAddressQrcode() {
+      this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
+    },
     mnemonicphrasePasswordModalOpen(phrase) {
       this.phrase = phrase;
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
@@ -239,9 +265,12 @@ export default {
           });
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
-          break;
+          ErrorHandler(
+            new Error(
+              `Wallet type ${this.account.identifier} can't switch addresses`
+            ),
+            false
+          );
       }
     },
     print() {
@@ -300,13 +329,11 @@ export default {
       return tokens;
     },
     async setNonce() {
-      const nonce = await this.web3.eth.getTransactionCount(
-        this.account.address
-      );
       store.set(this.web3.utils.sha3(this.account.address), {
-        nonce: nonce,
-        timestamp: +new Date()
+        nonce: '0x00',
+        timestamp: 0
       });
+      await this.web3.eth.getTransactionCount(this.account.address);
     },
     async getTokenBalance(token) {
       const web3 = this.web3;
@@ -341,11 +368,19 @@ export default {
           }
           return tokenBalance;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
       return balance;
+    },
+    setCustomTokenStore() {
+      const customTokenStore = store.get('customTokens');
+      Object.keys(networkTypes).forEach(network => {
+        if (customTokenStore[networkTypes[network].name] === undefined) {
+          customTokenStore[networkTypes[network].name] = [];
+        }
+      });
+      store.set('customTokens', customTokenStore);
     },
     async setTokens() {
       this.receivedTokens = false;
@@ -400,9 +435,8 @@ export default {
         .then(res => {
           this.blockNumber = res;
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     getBalance() {
@@ -413,26 +447,24 @@ export default {
           this.balance = web3.utils.fromWei(res, 'ether');
           this.$store.dispatch('setAccountBalance', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            return;
+            return ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            // eslint-disable-next-line no-console
-            console.error('Please unlock metamask');
-            return;
+            return ErrorHandler(new Error('Please unlock metamask'), false);
           }
           const address = accounts[0];
-          if (this.wallet !== null && address !== this.account.address) {
+          if (
+            this.wallet !== null &&
+            address.toLowerCase() !== this.account.address.toLowerCase()
+          ) {
             const wallet = new Web3Wallet(address);
             this.$store.dispatch('decryptWallet', [
               wallet,
@@ -459,8 +491,7 @@ export default {
             }
           })
           .catch(e => {
-            // eslint-disable-next-line
-            console.error(e);
+            ErrorHandler(e, false);
           });
       }, 500);
     },
@@ -471,17 +502,23 @@ export default {
     },
     setupOnlineEnvironment() {
       this.clearIntervals();
+      if (store.get('customTokens') === undefined) {
+        store.set('customTokens', {});
+        this.setCustomTokenStore();
+      } else {
+        this.setCustomTokenStore();
+      }
       if (this.online === true) {
         if (this.wallet !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
+          this.setENS();
           this.getBlock();
           this.getBalance();
           this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
-          this.setENS();
           this.setNonce();
           this.getHighestGas();
         }
@@ -495,14 +532,16 @@ export default {
             this.web3.utils.fromWei(res, 'gwei')
           ).toNumber();
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          ErrorHandler(e, false);
         });
     },
     setENS() {
-      if (this.network.type.ensResolver) {
-        this.$store.dispatch('setENS', new ENS(this.web3.currentProvider));
+      if (this.network.type.ens) {
+        this.$store.dispatch(
+          'setENS',
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        );
       } else {
         this.$store.dispatch('setENS', null);
       }

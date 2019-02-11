@@ -19,12 +19,6 @@
 
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
-        <!--        <div class="buy-eth">
-          <a href="https://ccswap.myetherwallet.com" target="_blank">
-            <span>{{ $t('interface.buyEth') }}</span>
-            <img :src="images.visaMaster" />
-          </a>
-        </div>-->
       </div>
 
       <div class="form-content-container">
@@ -107,10 +101,10 @@
               :copybutton="true"
               :title="$t('common.toAddress')"
               @toAddress="setToAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validAddress" class="error-message-container">
             <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
           </div>
         </div>
@@ -126,10 +120,10 @@
               :copybutton="true"
               :title="$t('interface.fromAddr')"
               @toAddress="setExitFromAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validExitAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validExitAddress" class="error-message-container">
             <p>
               {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
             </p>
@@ -144,8 +138,13 @@
               :copybutton="true"
               :title="$t('interface.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validRefundAddress = $event"
             />
+          </div>
+          <div v-show="!validRefundAddress" class="error-message-container">
+            <p>
+              {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
+            </p>
           </div>
         </div>
 
@@ -212,6 +211,7 @@ import BigNumber from 'bignumber.js';
 import debug from 'debug';
 import { mapGetters } from 'vuex';
 
+import { ErrorHandler } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import DropDownAddressSelector from './components/SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -264,9 +264,12 @@ export default {
       exitFromAddress: '',
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
+      displayToValue: 1,
+      displayFromValue: 1,
       fromValue: 1,
       toValue: 1,
       invalidFrom: 'none',
+      lastBestRate: 0,
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
@@ -296,6 +299,8 @@ export default {
       fiatCurrenciesArray: fiat.map(entry => entry.symbol),
       finalizingSwap: false,
       validAddress: true,
+      validRefundAddress: true,
+      validExitAddress: true,
       ratesRetrived: false,
       issueRecievingRates: false,
       loadingData: true,
@@ -324,14 +329,19 @@ export default {
           }
           return bestRateForQuantity([...this.providerList], this.fromValue);
         }
+        return this.lastBestRate;
       } catch (e) {
         errorLogger(e);
       }
     },
     fromBelowMinAllowed() {
-      if (MIN_SWAP_AMOUNT > +this.fromValue)
+      if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
-      if (this.selectedProvider.minValue > +this.fromValue)
+      if (
+        new BigNumber(this.selectedProvider.minValue).gt(
+          new BigNumber(this.fromValue)
+        )
+      )
         return this.$t('interface.belowMin');
       return false;
     },
@@ -339,14 +349,18 @@ export default {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         return this.toAboveMaxAllowed;
       } else if (
-        +this.fromValue > this.selectedProvider.maxValue &&
-        this.selectedProvider.maxValue > 0
+        new BigNumber(this.fromValue).gt(
+          new BigNumber(this.selectedProvider.maxValue)
+        ) &&
+        new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
         return this.$t('interface.aboveMaxSwap');
       return false;
     },
     toBelowMinAllowed() {
       if (this.checkBityMin) return this.$t('interface.belowMin');
+      if (new BigNumber(0).gte(new BigNumber(this.toValue)))
+        return this.$t('interface.belowMin');
       return false;
     },
     toAboveMaxAllowed() {
@@ -371,6 +385,7 @@ export default {
       return (
         !this.notEnough &&
         (this.toAddress !== '' || canExit) &&
+        this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
@@ -412,7 +427,10 @@ export default {
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
-    isValidAddress() {
+    allAddressesValid() {
+      if (this.isExitToFiat) return this.validAddress && this.validExitAddress;
+      if (this.showRefundAddress)
+        return this.validAddress && this.validRefundAddress;
       return this.validAddress;
     },
     notEnough() {
@@ -453,6 +471,10 @@ export default {
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
+      this.lastBestRate = bestRateForQuantity(
+        [...this.providerList],
+        this.fromValue
+      );
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
@@ -529,6 +551,7 @@ export default {
         this.fromCurrency,
         this.tokenBalances[this.fromCurrency]
       );
+      this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
       this.currencyDetails.from = value;
@@ -582,10 +605,6 @@ export default {
         } else {
           this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         }
-      } else if (direction === 'from') {
-        this.toValue = '';
-      } else if (direction === 'to') {
-        this.fromValue = '';
       }
     },
     async updateEstimate(input) {
@@ -612,9 +631,23 @@ export default {
               this.toCurrency,
               this.toValue
             );
+
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.fromValue = this.swap.calculateFromValue(this.toValue, rate);
           }
+
           break;
         case `${this.providerNames.simplex}from`:
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
@@ -624,9 +657,23 @@ export default {
               this.toCurrency,
               this.fromValue
             );
+
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.toValue = this.swap.calculateToValue(this.fromValue, rate);
           }
+
           break;
         default:
           toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
@@ -727,12 +774,18 @@ export default {
           }
         }
       } catch (e) {
+        //abort (empty response from
+        if (e.message === 'invalid') {
+          this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
+          this.$refs.swapSendTo.$refs.swapconfirmation.hide();
+          this.finalizingSwap = false;
+          return;
+        }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
-        // eslint-disable-next-line no-console
-        console.error(e);
         errorLogger(e);
+        ErrorHandler(e, false);
       }
     },
     openConfirmModal(swapDetails) {

@@ -172,6 +172,10 @@ export default {
               text: this.$t('footer.extension'),
               href:
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            },
+            {
+              text: this.$t('footer.sendOffline'),
+              to: '/send-offline-helper'
             }
           ]
         },
@@ -192,6 +196,10 @@ export default {
               text: this.$t('footer.ethCard'),
               href:
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+            },
+            {
+              text: 'KeepKey',
+              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
             },
             {
               text: this.$t('footer.trezor'),

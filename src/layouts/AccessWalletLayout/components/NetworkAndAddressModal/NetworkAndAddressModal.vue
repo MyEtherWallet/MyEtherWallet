@@ -15,10 +15,9 @@
         <p class="button-number">1</p>
         <p>
           Network
-          <span
-            >({{ selectedNetwork.type.name }} -
-            {{ selectedNetwork.service }})</span
-          >
+          <span>
+            ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+          </span>
         </p>
         <p class="right-button">Cancel</p>
       </b-btn>
@@ -89,48 +88,57 @@
                   >{{ val.label }}</b-dropdown-item
                 >
                 <b-dropdown-divider />
-                <b-dropdown-item>{{
-                  $t('accessWallet.customPaths')
-                }}</b-dropdown-item>
+                <b-dropdown-item>
+                  {{ $t('accessWallet.customPaths') }}
+                </b-dropdown-item>
                 <b-dropdown-item
                   v-for="(val, key) in customPaths"
-                  :class="selectedPath.dpath === val.dpath ? 'active' : ''"
+                  :class="selectedPath === val.path ? 'active' : ''"
                   :key="key"
-                  @click="changePath(key)"
-                  >{{ val.dpath }}</b-dropdown-item
+                  class="custom-networks"
                 >
-                <b-dropdown-item @click="showCustomPathInput">{{
-                  $t('accessWallet.addCustomPath')
-                }}</b-dropdown-item>
+                  <div @click="changePath(key)">{{ val.path }}</div>
+                  <span>
+                    <i
+                      class="fa fa-times-circle"
+                      @click.prevent="removeCustomPath(val.path)"
+                    />
+                  </span>
+                </b-dropdown-item>
+                <b-dropdown-item @click="showCustomPathInput">
+                  {{ $t('accessWallet.addCustomPath') }}
+                </b-dropdown-item>
               </b-dropdown>
             </div>
           </div>
-          <p v-show="invalidPath !== ''" class="error-message-container">
-            {{ $t('accessWallet.invalidPathDesc') }}{{ invalidPath
-            }}{{ $t('accessWallet.invalidPathDescCont') }}
+          <p
+            v-show="invalidPath !== '' && customPathInput"
+            class="error-message-container"
+          >
+            {{ $t('accessWallet.invalidPathDesc', { path: invalidPath.path }) }}
           </p>
           <p v-show="!customPathInput" class="derivation-brands">
             {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
           </p>
-          <div v-show="customPathInput">
+          <div v-show="customPathInput" class="custom-path-container">
             <!-- TODO: how to structure the path input? -->
+            <label for="customPathLabel">Alias</label>
             <input
               id="customPathLabel"
               v-model="customPath.label"
               placeholder="my custom path"
             />
-            <br />
+            <label for="customPathInput">Path</label>
             <input
               id="customPathInput"
-              v-model="customPath.dpath"
+              v-model="customPath.path"
               placeholder="m/44'/1'/0'/0"
             />
-            <br />
-            <button @click="addCustomPath">
-              {{ $t('accessWallet.addCustomPath') }}
-            </button>
-            <button @click="showCustomPathInput">
+            <button class="submit-button cancel" @click="showCustomPathInput">
               {{ $t('common.cancel') }}
+            </button>
+            <button class="submit-button submit" @click="addCustomPath">
+              {{ $t('accessWallet.addCustomPath') }}
             </button>
           </div>
         </div>
@@ -192,9 +200,8 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link
+            <router-link to="/terms-and-conditions">
+              {{ $t('common.terms') }} </router-link
             >.
             <input
               ref="accessMyWalletBtn"
@@ -221,7 +228,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
-import Misc from '@/helpers/misc';
+import { Misc, ErrorHandler } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -242,7 +249,6 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: this.$store.state.network,
       selectedId: '',
       accessMyWalletBtnDisabled: true,
       currentIndex: 0,
@@ -266,6 +272,9 @@ export default {
       web3: 'web3',
       wallet: 'wallet'
     }),
+    selectedNetwork() {
+      return this.network;
+    },
     reorderNetworkList() {
       return Misc.reorderNetworks();
     }
@@ -293,7 +302,6 @@ export default {
   methods: {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
-        this.selectedNetwork = network;
         this.$store.dispatch('setWeb3Instance');
         this.currentIndex = 0;
         this.setHDAccounts();
@@ -315,40 +323,105 @@ export default {
       this.currentIndex = 0;
     },
     showCustomPathInput() {
-      this.customPath = { label: '', dpath: '' };
+      this.customPath = { label: '', path: '' };
       this.customPathInput = !this.customPathInput;
     },
     convertBalance(bal) {
       if (bal === 'loading') return bal;
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
+    removeCustomPath(path) {
+      this.$store
+        .dispatch('removeCustomPath', {
+          label: '',
+          path: path
+        })
+        .then(() => {
+          this.getPaths();
+        });
+    },
     addCustomPath() {
-      // // TODO: figure out a more precise regex
-      // // eslint-disable-next-line no-useless-escape
-      // const regExp = /^\w+\/\d+'\/\d+'\/\d+'/;
-      // if (regExp.test(this.customPath.dpath)) {
-      //   this.$store.dispatch('addCustomPath', this.customPath).then(() => {
-      //     this.getPaths();
-      //   });
-      //   this.showCustomPathInput(); // reset the path input
-      // } else {
-      //   // TODO: add indication of an invalid path
-      // }
+      const customPath = this.checkCustomPath(this.customPath.path);
+      if (customPath) {
+        this.customPath.path = customPath;
+        this.$store
+          .dispatch('addCustomPath', {
+            label: this.customPath.label,
+            path: customPath
+          })
+          .then(() => {
+            this.getPaths();
+          });
+        this.showCustomPathInput(); // reset the path input
+      } else {
+        this.invalidPath = this.customPath;
+      }
+    },
+    splitPath(path) {
+      let array1;
+      // eslint-disable-next-line
+      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
+      const matcher = RegExp(regExp, 'g');
+      if ((array1 = matcher.exec(path)) !== null) {
+        return array1;
+      }
+      return null;
+    },
+    checkCustomPath(path) {
+      try {
+        let array1;
+        if ((array1 = this.splitPath(path)) !== null) {
+          let assembledPath = '';
+          if (array1[1]) {
+            if (array1[1] !== 'm') return false;
+            assembledPath = assembledPath.concat(array1[1]);
+          } else {
+            return false;
+          }
+          if (array1[2])
+            assembledPath = assembledPath.concat('/', array1[2], "'");
+          if (array1[3])
+            assembledPath = assembledPath.concat('/', array1[3], "'");
+          if (array1[4])
+            assembledPath = assembledPath.concat('/', array1[4], "'");
+          if (array1[5]) assembledPath = assembledPath.concat('/', array1[5]);
+          return assembledPath;
+        }
+        return false;
+      } catch (e) {
+        ErrorHandler(e, true);
+        return false;
+      }
     },
     changePath(key) {
       this.resetPaginationValues();
-      this.hardwareWallet.init(this.availablePaths[key].path).then(() => {
-        this.getPaths();
-        this.currentIndex = 0;
-        this.setHDAccounts();
-        this.$refs.networkAndAddress.show();
-      });
+      let selectedPath;
+      if (this.availablePaths[key]) {
+        selectedPath = this.availablePaths[key].path;
+      } else if (this.customPaths[key]) {
+        selectedPath = this.customPaths[key].path;
+      } else {
+        selectedPath = this.selectedPath;
+      }
+      this.hardwareWallet
+        .init(selectedPath)
+        .then(() => {
+          this.getPaths();
+          this.currentIndex = 0;
+          this.setHDAccounts();
+          this.$refs.networkAndAddress.show();
+        })
+        .catch(error => {
+          // if HD path is not supported by the hardware
+          this.HDAccounts = [];
+          ErrorHandler(error, true);
+        });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
         this.web3.eth
-          .getBalance(account.account.getChecksumAddressString())
+          .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
           });
@@ -393,15 +466,21 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (const _p in this.availablePaths)
-        if (this.availablePaths[_p].path === path)
+      for (const _p in this.availablePaths) {
+        if (this.availablePaths[_p].path === path) {
           return this.availablePaths[_p].label;
+        }
+      }
+      for (const _p in this.customPaths) {
+        if (this.customPaths[_p].path === path) {
+          return this.customPaths[_p].label;
+        }
+      }
       return 'Unknown';
     },
     getPaths() {
       this.selectedPath = this.hardwareWallet.getCurrentPath();
       this.availablePaths = this.hardwareWallet.getSupportedPaths();
-      // this.customPaths = this.customPaths;
     }
   }
 };

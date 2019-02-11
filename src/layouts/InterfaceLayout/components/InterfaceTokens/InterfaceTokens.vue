@@ -81,7 +81,9 @@
         </div>
       </div>
       <div class="bottom-image-container">
-        <img class="icon" src="~@/assets/images/etc/mewconnectad.png" />
+        <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
+          <img class="icon" src="~@/assets/images/etc/mewconnect.jpeg" />
+        </a>
       </div>
     </div>
   </div>
@@ -90,9 +92,11 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
+import { ErrorHandler } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -133,7 +137,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      web3: 'web3'
     })
   },
   watch: {
@@ -155,11 +160,47 @@ export default {
     }
   },
   mounted() {
+    if (store.get('customTokens')) {
+      this.getCustomTokens();
+    }
     this.assignTokens(this.tokens, this.search);
   },
   methods: {
+    getV3Tokens() {
+      const v3Tokens = store.get('localTokens');
+      const v5CustomTokens = store.get('customTokens');
+      v3Tokens.forEach(token => {
+        const newObj = {
+          address: token.contractAddress,
+          decimals: token.decimal,
+          email: '',
+          name: token.symbol,
+          symbol: token.symbol,
+          website: '',
+          type: 'custom'
+        };
+        Object.keys(networkTypes).forEach(network => {
+          if (
+            networkTypes[network].name.toLowerCase() ===
+              token.network.toLowerCase() ||
+            networkTypes[network].name_long.toLowerCase() ===
+              token.network.toLowerCase()
+          ) {
+            if (this.tokenError(newObj.address, newObj.symbol, '')) {
+              v5CustomTokens[networkTypes[network].name].push(newObj);
+            }
+          }
+        });
+      });
+      store.set('customTokens', v5CustomTokens);
+      store.remove('localTokens');
+    },
     getCustomTokens() {
-      const storedTokens = store.get('customTokens');
+      if (store.get('localTokens') !== undefined) {
+        this.getV3Tokens();
+      }
+      const storedTokens =
+        store.get('customTokens')[this.network.type.name] || [];
       this.customTokens = storedTokens;
     },
     async getSpecificTokenBalance(token, idx) {
@@ -170,9 +211,9 @@ export default {
       this.$refs.tokenModal.$refs.token.show();
     },
     removeToken(idx) {
-      let storedTokens = store.get('customTokens');
+      const storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
-      storedTokens = this.customTokens;
+      storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
     },
     searchBySymbol(symbol) {
@@ -183,6 +224,7 @@ export default {
       const searchCustom = this.customTokens.find(item => {
         return item.symbol.toLowerCase() === symbol.toLowerCase();
       });
+
       if (searchNetwork !== undefined || searchCustom !== undefined) {
         return false;
       }
@@ -208,22 +250,29 @@ export default {
       }
       return true;
     },
-    async addToken(address, symbol, decimal) {
+    tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (findTokenByAddr) {
+      if (!findTokenByAddr && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           'A default token with this contract address already exists!',
           'danger'
         );
-      } else if (findTokenBySymbol) {
+        return false;
+      } else if (!findTokenBySymbol && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert(
           "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
           'danger'
         );
-      } else {
+        return false;
+      }
+
+      return !findTokenByAddr || !findTokenBySymbol;
+    },
+    async addToken(address, symbol, decimal) {
+      if (this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,
@@ -233,20 +282,16 @@ export default {
           website: '',
           type: 'custom'
         };
-        let newArray = [];
+        const currentCustomToken = store.get('customTokens');
+        this.customTokens =
+          this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          // eslint-disable-next-line
-          console.error('Token Balance Returned Undefined');
+          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
         }
-
-        if (this.customTokens.length > 0) {
-          newArray = this.customTokens.map(item => item);
-        }
-        newArray.push(token);
-        this.customTokens = newArray;
-
-        store.set('customTokens', this.customTokens);
+        this.customTokens.push(token);
+        currentCustomToken[this.network.type.name] = this.customTokens;
+        store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert('Successfully added token!');
       }
@@ -276,7 +321,7 @@ export default {
       } else {
         this.localTokens = arr;
         if (store.get('customTokens') !== undefined) {
-          this.customTokens = store.get('customTokens');
+          this.customTokens = store.get('customTokens')[this.network.type.name];
         }
       }
     }
