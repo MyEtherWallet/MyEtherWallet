@@ -192,11 +192,6 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
-    // try {
-    //   if (!this.tokenDetails) this.getSupportedTokenList(); // retry to get tokens if initial attempt failed
-    // } catch (e) {
-    //   errorLogger(e);
-    // }
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
