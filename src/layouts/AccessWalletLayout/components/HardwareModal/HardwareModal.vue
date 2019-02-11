@@ -21,6 +21,7 @@
             :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
+            :disabled="item.disabled"
           />
         </div>
       </div>
@@ -53,7 +54,7 @@ import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
-import { ErrorHandler } from '@/helpers';
+import { ErrorHandler, Misc } from '@/helpers';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -85,31 +86,44 @@ export default {
           name: 'ledger',
           imgPath: ledger,
           imgHoverPath: ledgerHov,
-          text: 'Ledger'
+          text: 'Ledger',
+          disabled:
+            window.location.protocol === 'https:' &&
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'bitbox',
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
-          text: 'Digital Bitbox'
+          text: 'Digital Bitbox',
+          disabled:
+            window.location.protocol === 'https:' &&
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'secalot',
           imgPath: secalot,
           imgHoverPath: secalotHov,
-          text: 'Secalot'
+          text: 'Secalot',
+          disabled:
+            window.location.protocol === 'https:' &&
+            Misc.browserName() !== 'chrome'
         },
         {
           name: 'trezor',
           imgPath: trezor,
           imgHoverPath: trezorHov,
-          text: 'Trezor'
+          text: 'Trezor',
+          disabled: false
         },
         {
           name: 'keepkey',
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
-          text: 'KeepKey'
+          text: 'KeepKey',
+          disabled:
+            window.location.protocol === 'https:' &&
+            Misc.browserName() !== 'chrome'
         }
       ]
     };
