@@ -117,14 +117,14 @@ export default class Kyber {
       this.tokenDetails
     );
 
-    this.hasRates =
-      Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
-
     if (!ratesAndDetails) return;
+
     // throws error if fetch fails and returned value is undefined
     const { rates, tokenDetails } = ratesAndDetails;
     this.rates = rates;
     this.tokenDetails = tokenDetails;
+    this.hasRates =
+      Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
   }
 
   getMainNetAddress(initialAddress) {
