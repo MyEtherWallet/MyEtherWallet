@@ -6,12 +6,6 @@ import secureTransaction from '@/assets/images/icons/button-key.svg';
 import { ETH, GOERLI, ROP, RIN } from '@/networks/types';
 
 const dapps = {
-  secureTransaction: {
-    route: '/interface/dapps/secure-transaction',
-    icon: secureTransaction,
-    title: 'SafeSend ETH Transaction',
-    desc: 'Protect and Secure your ETH transaction using SafeSend'
-  },
   registerDomain: {
     route: '/interface/dapps/register-domain',
     icon: registerDomain,
@@ -26,6 +20,13 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'interface.subdomains',
     desc: 'interface.buySubDomains',
+    supportedNetworks: [ETH.name]
+  },
+  secureTransaction: {
+    route: '/interface/dapps/secure-transaction',
+    icon: secureTransaction,
+    title: 'SafeSend ETH Transaction',
+    desc: 'Protect and Secure your ETH transaction using SafeSend',
     supportedNetworks: [ETH.name]
   }
 };
