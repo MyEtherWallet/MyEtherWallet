@@ -8,39 +8,47 @@ function buildPath() {
 }
 
 const getCurrencies = async network => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].currenciesFull, {})
-    );
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].currenciesFull, {})
+      );
 
-    if (results.error) {
-      throw Error(results.error.message);
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
     }
-
-    return results.result;
+    return Promise.resolve({});
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve({});
 };
 
 const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].rate, {
-        from: fromCurrency,
-        to: toCurrency,
-        amount: fromValue
-      })
-    );
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].rate, {
+          from: fromCurrency,
+          to: toCurrency,
+          amount: fromValue
+        })
+      );
 
-    if (results.error) {
-      throw Error(results.error.message);
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
     }
-
-    return results.result;
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve(-1);
 };
 
 const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
@@ -62,7 +70,7 @@ const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
     }
     return Promise.resolve(-1);
   } catch (e) {
-    throw Error('invalid');
+    utils.handleOrThrow(e);
   }
 };
 
@@ -82,7 +90,7 @@ const validateAddress = async (addressDetails, network) => {
     }
     return Promise.resolve(-1);
   } catch (e) {
-    throw Error('invalid');
+    utils.handleOrThrow(e);
   }
 };
 
@@ -105,7 +113,7 @@ const createTransaction = async (transactionParams, network) => {
     }
     return Promise.resolve(-1);
   } catch (e) {
-    throw Error('invalid');
+    utils.handleOrThrow(e);
   }
 };
 
@@ -127,7 +135,7 @@ const getStatus = async (orderId, network) => {
     }
     throw Error(`Changelly does not support ${network} network`);
   } catch (e) {
-    throw Error('invalid');
+    utils.handleOrThrow(e);
   }
 };
 

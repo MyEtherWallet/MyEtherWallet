@@ -52,7 +52,8 @@ const getSupportedTokenList = async network => {
         tokenDetails[symbol] = tokenList[i];
       }
     }
-    return tokenDetails;
+    throw new TypeError('Failed to fetch')
+    // return tokenDetails;
   } catch (e) {
     utils.handleOrThrow(e);
     errorLogger(e);
