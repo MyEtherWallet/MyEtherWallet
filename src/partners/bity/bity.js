@@ -330,11 +330,13 @@ export default class BitySwap {
           swapDetails.providerAddress =
             swapDetails.dataForInitialization.payment_address;
           swapDetails.isDex = BitySwap.isDex();
+        } else {
+          throw Error('abort');
         }
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
-      if (!swapDetails.dataForInitialization) throw Error('invalid');
+      if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
       swapDetails.providerSends =

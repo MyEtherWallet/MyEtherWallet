@@ -82,7 +82,7 @@ const isJson = str => {
 
 const handleOrThrow = (e, source) => {
   if (source) {
-    throw Error('invalid');
+    throw Error('abort');
   }
   // typeErrors
   if (e instanceof TypeError) {
@@ -90,8 +90,6 @@ const handleOrThrow = (e, source) => {
       return;
     }
     throw e;
-  } else if (e instanceof SyntaxError) {
-    console.log('SyntaxError'); // todo remove dev item
   }
   throw e;
 };

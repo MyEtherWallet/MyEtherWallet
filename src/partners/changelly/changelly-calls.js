@@ -42,7 +42,6 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
       if (results.error) {
         throw Error(results.error.message);
       }
-
       return results.result;
     }
     return Promise.resolve(-1);

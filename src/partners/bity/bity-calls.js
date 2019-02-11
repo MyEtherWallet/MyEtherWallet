@@ -66,6 +66,7 @@ const openOrder = async orderInfo => {
     if (results.error) {
       throw Error(results.error.message);
     }
+
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
@@ -133,7 +134,6 @@ const buildCyptoToFiatOrderData = async orderData => {
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
-    // throw Error('invalid');
   }
 };
 
@@ -149,7 +149,6 @@ const getCyptoToFiatOrderDetails = async detailsData => {
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
-    // throw Error('invalid');
   }
 };
 
@@ -168,7 +167,6 @@ const getStatusFiat = async (orderInfo, phoneToken) => {
     return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
-    // throw Error('invalid');
   }
 };
 
