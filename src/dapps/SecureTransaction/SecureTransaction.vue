@@ -49,9 +49,6 @@
               aria-hidden="true"
             />
           </div>
-          <div v-if="!validAmount" class="error-message-container">
-            <p>{{ $t('common.dontHaveEnough') }}</p>
-          </div>
         </div>
         <div class="to-address">
           <div class="title">
@@ -164,7 +161,7 @@
       <br />
       <div>
         Your estimated SafeSend Fee (in addition to gas):&nbsp;~{{
-          safeSendPriceEstimate
+          safeSendFee
         }}&nbsp;ETH
       </div>
       <br />
@@ -196,7 +193,6 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import fetch from 'node-fetch';
 import utils from 'web3-utils';
 import { ErrorHandler, Misc } from '@/helpers';
 
@@ -235,7 +231,8 @@ export default {
       address: '',
       isValidAddress: false,
       hexAddress: '',
-      gasAmount: 0
+      gasAmount: 0,
+      coralContract: {}
     };
   },
   computed: {
@@ -260,6 +257,9 @@ export default {
           .toFixed(0),
         'ether'
       );
+    },
+    safeSendFee() {
+      return unit.fromWei(this.safeSendPriceEstimate, 'ether').toString();
     }
   },
   async mounted() {
@@ -282,12 +282,16 @@ export default {
       .catch(err => {
         ErrorHandler(err, true);
       });
+    this.coralContract = new this.web3.eth.Contract(
+      CoralConfig.safeSendEscrowContractAbi,
+      CoralConfig.safeSendEscrowContractAddress
+    );
     this.gasAmount = this.gasPrice;
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
       this.amount = e.target.value;
-      this.getSafeSendFee();
+      if (this.validAmount) this.getSafeSendFee();
     }, 501),
     copyToClipboard(ref) {
       this.$refs[ref].select();
@@ -297,17 +301,13 @@ export default {
       const coinbase = this.account.address;
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
       const value = this.amount === '' ? 0 : unit.toWei(this.amount, 'ether');
-      const CoralSafeSendContract = new this.web3.eth.Contract(
-        CoralConfig.safeSendEscrowContractAbi,
-        CoralConfig.safeSendEscrowContractAddress
-      );
       const to = this.hexAddress;
       const protectionLevel = 20;
-      const query = CoralSafeSendContract.methods.deposit(to, protectionLevel);
+      const query = this.coralContract.methods.deposit(to, protectionLevel);
       const encodedABI = query.encodeABI();
       const gasLimit = CoralConfig.gasLimitSuggestion;
       const valuePlusFees = new BigNumber(value).plus(
-        unit.toWei(this.safeSendPriceEstimate, 'ether')
+        this.safeSendPriceEstimate
       );
       const raw = {
         from: coinbase,
@@ -337,30 +337,9 @@ export default {
       this.getSafeSendFee();
     },
     async getSafeSendFee() {
-      const rates = await fetch(
-        'https://cryptorates.mewapi.io/ticker?filter=ETH'
-      ).then(res => res.json());
-      if (
-        rates &&
-        rates.data &&
-        rates.data.ETH &&
-        rates.data.ETH.quotes &&
-        rates.data.ETH.quotes.USD &&
-        rates.data.ETH.quotes.USD.price
-      ) {
-        const ETHUSDPrice = rates.data.ETH.quotes.USD.price;
-        const amountOfEth = this.amount === '' ? 0 : this.amount;
-        const baseFee = new BigNumber(0.3).div(new BigNumber(ETHUSDPrice));
-        const mainFee = new BigNumber(amountOfEth).times(0.0015);
-        const maxFee = new BigNumber(10).div(new BigNumber(ETHUSDPrice));
-        if (baseFee.plus(mainFee).gt(maxFee)) {
-          this.safeSendPriceEstimate = maxFee.toFixed(3);
-        } else {
-          this.safeSendPriceEstimate = baseFee.plus(mainFee).toFixed(3);
-        }
-      } else {
-        this.safeSendPriceEstimate = 0;
-      }
+      this.safeSendPriceEstimate = await this.coralContract.methods
+        .checkFee(unit.toWei(this.amount, 'ether').toString())
+        .call();
     }
   }
 };
