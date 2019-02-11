@@ -383,7 +383,7 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        // !this.notEnough &&
+        !this.notEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
