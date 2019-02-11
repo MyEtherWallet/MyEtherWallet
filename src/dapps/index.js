@@ -2,6 +2,8 @@ import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
 import registerDomain from '@/assets/images/icons/domain.svg';
 import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
+import secureTransaction from '@/assets/images/icons/button-key.svg'; // eslint-disable-line
+import { ETH, GOERLI, ROP, RIN } from '@/networks/types';
 
 const dapps = {
   registerDomain: {
@@ -10,7 +12,7 @@ const dapps = {
     iconDisabled: registerDomainHov,
     title: 'interface.registerEns',
     desc: 'interface.registerENSDescShort',
-    supportedNetworks: ['ETH']
+    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
   domainSale: {
     route: '/interface/dapps/buy-subdomain',
@@ -18,8 +20,14 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'interface.subdomains',
     desc: 'interface.buySubDomains',
-    supportedNetworks: ['ETH']
+    supportedNetworks: [ETH.name]
   }
+  // secureTransaction: {
+  //   route: '/interface/dapps/secure-transaction',
+  //   icon: secureTransaction,
+  //   title: 'SafeSend ETH Transaction',
+  //   desc: 'Protect and Secure your ETH transaction using SafeSend'
+  // }
 };
 
 export default dapps;

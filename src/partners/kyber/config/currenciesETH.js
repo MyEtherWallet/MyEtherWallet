@@ -377,6 +377,12 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x5adc961D6AC3f7062D2eA45FEFB8D8167d44b190'
   },
+  WBTC: {
+    symbol: 'WBTC',
+    name: '\tWrapped BTC',
+    decimals: 8,
+    contractAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
   ABYSS: {
     symbol: 'ABYSS',
     name: 'ABYSS',
@@ -400,6 +406,12 @@ const KyberCurrenciesETH = {
     name: 'InfinitusTokens',
     decimals: 18,
     contractAddress: '0x00e150d741eda1d49d341189cae4c08a73a49c95'
+  },
+  MLN: {
+    symbol: 'MLN',
+    name: 'Melon',
+    decimals: 18,
+    contractAddress: '0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'
   }
 };
 export { KyberCurrenciesETH };

@@ -40,7 +40,7 @@
   "registerEnsWarn1": "Domain name is less than 7 characters.",
   "registerEnsWarn2": "Invalid symbols on domain",
   "registerEnsContractNotReady": "Contract is not ready yet, transaction might fail.",
-  "updateResolver": "Update Resolver address",
+  "updateResolver": "Update Resolving address",
   "transferEnsTo": "Transfer ENS domain to",
   "ensNotAvailable": "is not available yet"
 }
