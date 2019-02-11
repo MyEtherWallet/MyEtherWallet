@@ -87,12 +87,8 @@ const handleOrThrow = (e, source) => {
   // typeErrors
   if (e instanceof TypeError) {
     if (e.message === 'Failed to fetch') {
-      console.log('Failed to fetch'); // todo remove dev item
       return;
     }
-    console.log('TypeError'); // todo remove dev item
-
-    console.log(e.message); // todo remove dev item
     throw e;
   } else if (e instanceof SyntaxError) {
     console.log('SyntaxError'); // todo remove dev item
