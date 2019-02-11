@@ -5,6 +5,7 @@
 - Disable tabs and buttons based on app status [#591](https://github.com/MyEtherWallet/MyEtherWallet/pull/591)
 - Added ENS test name registration to ROP, RIN and Goerli [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - Implement SafeSend Dapp [#299](https://github.com/MyEtherWallet/MyEtherWallet/pull/299)
+- Implement SafeSend Tweaks [#597](https://github.com/MyEtherWallet/MyEtherWallet/pull/597)
 
 ### Bug
 
@@ -12,6 +13,7 @@
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
 
 ### Hotfix
+
 - partner rate correction [#595](https://github.com/MyEtherWallet/MyEtherWallet/pull/595)
 
 ### Release v5.0.0-rc.0
