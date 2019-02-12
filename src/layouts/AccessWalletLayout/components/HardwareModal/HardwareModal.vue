@@ -175,7 +175,11 @@ export default {
             .catch(KeepkeyWallet.errorHandler);
           break;
         default:
-          ErrorHandler(new Error('No switch address for given account.'), true);
+          ErrorHandler(
+            new Error('No switch address for given account.'),
+            3,
+            this
+          );
           break;
       }
     },

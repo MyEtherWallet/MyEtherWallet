@@ -1,5 +1,9 @@
 import * as Sentry from '@sentry/browser';
-const idxs = ['', 'appWarn', 'appSuccess', 'appError'];
+const idxs = {
+  1: 'appWarn',
+  2: 'appSuccess',
+  3: 'appError'
+};
 
 const ErrorHandler = (err, expected, _this) => {
   if (expected) {

@@ -352,7 +352,7 @@ export default {
         })
         .catch(err => {
           this.gasLimit = -1;
-          ErrorHandler(err, true);
+          ErrorHandler(err, 3, this);
         });
     },
     async submitTransaction() {
@@ -374,7 +374,7 @@ export default {
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
-          ErrorHandler(err, true);
+          ErrorHandler(err, 3, this);
         });
       } catch (e) {
         throw e;

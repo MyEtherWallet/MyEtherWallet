@@ -84,7 +84,7 @@ export default {
         .catch(e => {
           this.password = '';
           this.spinner = false;
-          this.error = ErrorHandler(e, true);
+          this.error = ErrorHandler(e, 3, this);
         });
     },
     switchViewPassword() {

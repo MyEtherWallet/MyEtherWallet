@@ -51,7 +51,7 @@ export default {
             this.$store.dispatch('setAccountBalance', res);
           })
           .catch(err => {
-            ErrorHandler(err, true);
+            ErrorHandler(err, 3, this);
           });
       }
     }

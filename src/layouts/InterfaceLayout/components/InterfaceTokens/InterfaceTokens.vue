@@ -287,7 +287,7 @@ export default {
           this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
+          ErrorHandler(new Error('Token Balance Returned Undefined'), 3, this);
         }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;

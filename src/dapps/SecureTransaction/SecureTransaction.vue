@@ -271,7 +271,7 @@ export default {
         this.$store.dispatch('setAccountBalance', res);
       })
       .catch(err => {
-        ErrorHandler(err, true);
+        ErrorHandler(err, 3, this);
       });
     this.web3.eth.net
       .getId()
@@ -280,7 +280,7 @@ export default {
         this.validNetwork = this.networkID === CoralConfig.chainID;
       })
       .catch(err => {
-        ErrorHandler(err, true);
+        ErrorHandler(err, 3, this);
       });
     this.coralContract = new this.web3.eth.Contract(
       CoralConfig.safeSendEscrowContractAbi,
@@ -322,7 +322,7 @@ export default {
         chainId: 1
       };
       this.web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, true);
+        ErrorHandler(err, 3, this);
       });
     },
     confirmationModalOpen() {

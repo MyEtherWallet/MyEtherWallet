@@ -244,7 +244,7 @@ export default {
           ]);
         })
         .catch(err => {
-          ErrorHandler(err, true);
+          ErrorHandler(err, 3, this);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -436,7 +436,7 @@ export default {
           ]);
         });
         promiEvent.eventEmitter.catch(err => {
-          ErrorHandler(err, true);
+          ErrorHandler(err, 3, this);
         });
         batch.add(req);
         return promiEvent.eventEmitter;
