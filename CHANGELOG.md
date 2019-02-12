@@ -1,3 +1,7 @@
+### Devop
+
+- Fix foreach issue in settings []()
+
 ### Release v5.0.0
 
 ### Feature
