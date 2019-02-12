@@ -1,3 +1,15 @@
+### Devop
+
+- Fix foreach issue in settings [#619](https://github.com/MyEtherWallet/MyEtherWallet/pull/619)
+- Disable HWs if not supported [#618](https://github.com/MyEtherWallet/MyEtherWallet/pull/618)
+
+### Bug
+
+- Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
+- Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
+- Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
+- Fix mnemonic phrase radio button [#611](https://github.com/MyEtherWallet/MyEtherWallet/pull/611)
+
 ### Release v5.0.0
 
 ### Feature
@@ -19,8 +31,6 @@
 
 ### Bug
 
-- Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
-- Fix mnemonic phrase radio button [#611](https://github.com/MyEtherWallet/MyEtherWallet/pull/611)
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
 - Handle failure to fetch errors [#590](https://github.com/MyEtherWallet/MyEtherWallet/pull/590)
