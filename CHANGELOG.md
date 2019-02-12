@@ -1,3 +1,7 @@
+### Bug
+
+- Reenable mewconnect on Safari and Opera []()
+
 ### Release v5.0.1
 
 ### Devop
