@@ -4,6 +4,7 @@
       v-if="account !== null"
       ref="settings"
       :gas-price="localGasPrice"
+      :address="account.address"
     />
     <logout-modal ref="logout" />
     <mobile-language-selector

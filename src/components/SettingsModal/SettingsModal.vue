@@ -146,6 +146,10 @@ export default {
     gasPrice: {
       type: String,
       default: '0'
+    },
+    address: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -262,8 +266,10 @@ export default {
   methods: {
     setDataFromImportedFile() {
       const reader = new FileReader();
+      const notifObj = {};
+      notifObj[this.address] = [];
       reader.onloadend = evt => {
-        const notifications = store.get('notifications');
+        const notifications = store.get('notifications') || notifObj;
         const file = JSON.parse(evt.target.result);
         file.notifications.forEach(objAddr => {
           const addr = Object.keys(objAddr)[0];
