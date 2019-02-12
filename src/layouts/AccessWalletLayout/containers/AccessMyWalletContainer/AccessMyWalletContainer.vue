@@ -104,7 +104,7 @@ import metamaskImg from '@/assets/images/icons/button-metamask.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
 import { mapGetters } from 'vuex';
-import { ErrorHandler, Misc } from '@/helpers';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   components: {
@@ -190,11 +190,7 @@ export default {
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
-          return (
-            !this.online ||
-            (Misc.browserName() !== 'chrome' &&
-              Misc.browserName() !== 'firefox')
-          );
+          return !this.online;
         case 'button-hardware':
           return !this.online;
         default:
