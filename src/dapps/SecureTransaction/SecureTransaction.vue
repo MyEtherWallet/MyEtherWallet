@@ -342,6 +342,7 @@ export default {
           .checkFee(unit.toWei(this.amount, 'ether').toString())
           .call();
       } catch (e) {
+        this.safeSendPriceEstimate = new BigNumber(0).toFixed();
         ErrorHandler(e, true);
       }
     }
