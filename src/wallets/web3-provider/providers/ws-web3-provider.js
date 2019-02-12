@@ -6,30 +6,14 @@ const errors = require('web3-core-helpers').errors;
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
-if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-  Ws = function(url, protocols) {
-    if (protocols) return new window.WebSocket(url, protocols);
-    return new window.WebSocket(url);
-  };
-  _btoa = btoa;
-  parseURL = function(url) {
-    return new URL(url);
-  };
-} else {
-  Ws = require('websocket').w3cwebsocket;
-  _btoa = function(str) {
-    return Buffer(str).toString('base64');
-  };
-  const url = require('url');
-  if (url.URL) {
-    const newURL = url.URL;
-    parseURL = function(url) {
-      return new newURL(url);
-    };
-  } else {
-    parseURL = require('url').parse;
-  }
-}
+Ws = function(url, protocols) {
+  if (protocols) return new window.WebSocket(url, protocols);
+  return new window.WebSocket(url);
+};
+_btoa = btoa;
+parseURL = function(url) {
+  return new URL(url);
+};
 const WebsocketProvider = function WebsocketProvider(url, options) {
   const _this = this;
   this.responseCallbacks = {};
@@ -176,11 +160,8 @@ WebsocketProvider.prototype.send = function(payload, callback) {
     return;
   }
   if (this.connection.readyState !== this.connection.OPEN) {
-    console.error('connection not open on send()');
     if (typeof this.connection.onerror === 'function') {
       this.connection.onerror(new Error('connection not open'));
-    } else {
-      console.error('no error callback');
     }
     callback(new Error('connection not open'));
     return;

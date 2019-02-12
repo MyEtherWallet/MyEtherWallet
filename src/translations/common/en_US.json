@@ -73,5 +73,6 @@
   "settings": "Settings",
   "edit": "Edit",
   "nonce": "Nonce",
-  "notAValidAmount": "Not a valid amount"
+  "notAValidAmount": "Not a valid amount",
+  "vintage": "Vintage"
 }
