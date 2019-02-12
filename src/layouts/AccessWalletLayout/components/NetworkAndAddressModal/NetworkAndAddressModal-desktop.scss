@@ -60,19 +60,18 @@ $red-filled-button-background--click: #ff5a7f;
             overflow: hidden;
             img {
               height: 60%;
-              margin: 0px;
+              margin: 0;
             }
 
             .no-icon {
               text-align: center;
-              
+
               p {
                 font-weight: 700;
                 font-size: 10px;
                 line-height: 10px;
               }
-            }          
-
+            }
           }
 
           p {
@@ -96,7 +95,7 @@ $red-filled-button-background--click: #ff5a7f;
 
       .network {
         display: flex;
-        align-item: center;
+        align-items: center;
       }
 
       p {
@@ -226,7 +225,7 @@ $red-filled-button-background--click: #ff5a7f;
       }
     }
   }
-    
+
   .network-content {
     p {
       //background-color: $light-grey-1;
@@ -301,5 +300,4 @@ $red-filled-button-background--click: #ff5a7f;
     grid-column-gap: 35px;
     grid-template-columns: 1fr 1fr;
   }
-
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
