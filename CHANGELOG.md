@@ -19,6 +19,7 @@
 
 ### Bug
 
+- Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
 - Handle failure to fetch errors [#590](https://github.com/MyEtherWallet/MyEtherWallet/pull/590)
