@@ -106,8 +106,6 @@ import softwareImg from '@/assets/images/icons/button-software.svg';
 import { mapGetters } from 'vuex';
 import { ErrorHandler, Misc } from '@/helpers';
 
-import { isSupported } from 'u2f-api';
-
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
@@ -150,7 +148,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: hardwareImg,
-          disabled: isSupported(),
+          disabled: false,
           classname: 'button-hardware'
         },
         {
