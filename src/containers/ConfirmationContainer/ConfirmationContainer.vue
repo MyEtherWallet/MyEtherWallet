@@ -395,6 +395,7 @@ export default {
             err
           ]);
           this.showErrorModal('Transaction Error!', 'Return');
+          promiEvent.reject(err);
         });
         promiEvent.eventEmitter.once('transactionHash', hash => {
           this.$store

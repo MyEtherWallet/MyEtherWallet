@@ -72,6 +72,7 @@ export default {
   },
   methods: {
     focusInput() {
+      this.password == '';
       this.$refs.passwordInput.focus();
     },
     unlockWallet() {
