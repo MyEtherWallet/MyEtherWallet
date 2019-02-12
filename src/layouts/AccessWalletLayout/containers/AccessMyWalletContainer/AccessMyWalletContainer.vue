@@ -160,7 +160,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: metamaskImg,
-          disabled: !window.web3,
+          disabled: false,
           classname: 'button-metamask'
         },
         {
@@ -199,10 +199,6 @@ export default {
           );
         case 'button-hardware':
           return !this.online;
-        case 'button-metamask':
-          return !window.web3;
-        case 'button-software':
-          return false;
         default:
           return false;
       }
