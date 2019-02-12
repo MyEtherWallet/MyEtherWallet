@@ -1,6 +1,6 @@
 ### Devop
 
-- Fix foreach issue in settings []()
+- Fix foreach issue in settings [#619](https://github.com/MyEtherWallet/MyEtherWallet/pull/619)
 
 ### Release v5.0.0
 
