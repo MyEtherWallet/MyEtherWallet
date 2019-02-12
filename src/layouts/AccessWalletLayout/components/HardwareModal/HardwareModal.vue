@@ -55,6 +55,7 @@ import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
 import { ErrorHandler, Misc } from '@/helpers';
+import { isSupported } from 'u2f-api';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -81,33 +82,28 @@ export default {
     return {
       selected: '',
       mayNotBeAttached: false,
+      isU2FSupported: false,
       items: [
         {
           name: 'ledger',
           imgPath: ledger,
           imgHoverPath: ledgerHov,
           text: 'Ledger',
-          disabled:
-            window.location.protocol === 'https:' &&
-            Misc.browserName() !== 'chrome'
+          disabled: false
         },
         {
           name: 'bitbox',
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
-          disabled:
-            window.location.protocol === 'https:' &&
-            Misc.browserName() !== 'chrome'
+          disabled: false
         },
         {
           name: 'secalot',
           imgPath: secalot,
           imgHoverPath: secalotHov,
           text: 'Secalot',
-          disabled:
-            window.location.protocol === 'https:' &&
-            Misc.browserName() !== 'chrome'
+          disabled: false
         },
         {
           name: 'trezor',
@@ -130,6 +126,14 @@ export default {
     };
   },
   mounted() {
+    isSupported().then(res => {
+      this.items.forEach(item => {
+        const u2fhw = ['secalot', 'ledger', 'bitbox'];
+
+        if (u2fhw.includes(item.name))
+          item.disabled = !(Misc.browserName() === 'chrome' && res);
+      });
+    });
     this.$refs.hardware.$on('hidden', () => {
       this.selected = '';
     });
