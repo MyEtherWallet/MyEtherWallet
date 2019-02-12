@@ -54,10 +54,6 @@
       />
 
       <div class="create-wallet-warnings__footer-container">
-        <div v-if="false" class="create-wallet-warnings__mouse-scroll">
-          <img src="~@/assets/images/icons/mouse.svg" />
-          <p>{{ $t('gettingStarted.scroll') }}</p>
-        </div>
         <div class="create-wallet-warnings__continue-button">
           <standard-button
             v-if="cwwCurrent != '0'"
@@ -107,7 +103,6 @@ import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPasswor
 import SomeHelpfulTips from './components/SomeHelpfulTips';
 import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
-import utils from 'web3-utils';
 import StandardButton from '@/components/Buttons/StandardButton';
 import store from 'store';
 
@@ -125,7 +120,6 @@ export default {
     return {
       cwwCurrent: 0,
       cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      scrollAction: utils._.throttle(this.scrollListener, 600),
       nextButton: {
         title: this.$t('common.next'),
         buttonStyle: 'green',
@@ -148,25 +142,11 @@ export default {
       }
     };
   },
-  mounted: function() {
-    //window.addEventListener('wheel', this.scrollAction);
-  },
-  beforeDestroy() {
-    //window.removeEventListener('wheel', this.scrollAction);
-  },
   methods: {
     done() {
       store.set('skipTutorial', 'done');
       this.$router.push({ path: 'create-wallet' });
       this.$store.dispatch('gettingStartedDone');
-    },
-    scrollListener(e) {
-      if (e.deltaY < -2) {
-        this.mouseScrollUp();
-      }
-      if (e.deltaY > 2) {
-        this.mouseScrollDown();
-      }
     },
     mouseScrollDown: function() {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
