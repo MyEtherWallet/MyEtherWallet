@@ -1,4 +1,4 @@
-import Web3WSProvider from 'web3-providers-ws';
+import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
 import * as workerTimers from 'worker-timers';
