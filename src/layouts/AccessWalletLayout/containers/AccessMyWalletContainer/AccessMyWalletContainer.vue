@@ -106,6 +106,8 @@ import softwareImg from '@/assets/images/icons/button-software.svg';
 import { mapGetters } from 'vuex';
 import { ErrorHandler, Misc } from '@/helpers';
 
+import { isSupported } from 'u2f-api';
+
 export default {
   components: {
     'mew-connect-modal': MewConnectModal,
@@ -148,7 +150,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: hardwareImg,
-          disabled: false,
+          disabled: isSupported(),
           classname: 'button-hardware'
         },
         {
@@ -158,7 +160,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: metamaskImg,
-          disabled: !window.web3,
+          disabled: false,
           classname: 'button-metamask'
         },
         {
@@ -197,10 +199,6 @@ export default {
           );
         case 'button-hardware':
           return !this.online;
-        case 'button-metamask':
-          return !window.web3;
-        case 'button-software':
-          return false;
         default:
           return false;
       }
