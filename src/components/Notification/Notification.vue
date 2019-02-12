@@ -42,7 +42,7 @@
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
-            :key="notification.id"
+            :key="notification.id + idx"
             class="notification-item"
           >
             <keep-alive
