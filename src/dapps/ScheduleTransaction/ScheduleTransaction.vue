@@ -264,10 +264,7 @@
         <p>
           Your TX has been scheduled with the transaction hash
           <a
-            :href="
-              'https://app.chronologic.network/awaiting/scheduler/' +
-                scheduled.txHash
-            "
+            :href="'localhost:8081/awaiting/scheduler/' + scheduled.txHash"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -720,9 +717,6 @@ export default {
 
       if (this.isValidAmount && this.isValidAddress) {
         const tokenTransferData = await this.getTokenTransferData();
-        console.log({
-          tokenTransferData
-        });
         const estimatedGasLimit = await this.web3.eth.estimateGas({
           from: coinbase,
           value: this.isTokenTransfer
@@ -733,15 +727,8 @@ export default {
             : this.address,
           data: this.isTokenTransfer ? tokenTransferData : this.data
         });
-        console.log({
-          estimatedGasLimit: estimatedGasLimit.toString()
-        });
         return estimatedGasLimit.toString();
       }
-
-      console.log({
-        estimatedGasLimit: EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString()
-      });
 
       return EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString();
     },
@@ -751,11 +738,15 @@ export default {
           ERC20,
           this.selectedCurrency.address
         );
+
         const coinbase = await this.web3.eth.getCoinbase();
+        const tokenAmount = new BigNumber(
+          this.amount * Math.pow(10, this.selectedCurrency.decimals)
+        );
         const tokenTransferSettings = {
           _from: coinbase,
           _to: this.toAddress,
-          _value: this.amount
+          _value: tokenAmount.toString()
         };
 
         return tokenContract.methods
