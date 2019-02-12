@@ -46,7 +46,7 @@
     "weekstart": "1.0.0"
   },
   "devDependencies": {
-    "@ethereum-alarm-clock/lib": "0.3.0",
+    "@ethereum-alarm-clock/lib": "0.3.2",
     "@keepkey/keepkey.js": "1.1.3",
     "@ledgerhq/hw-app-eth": "4.36.0",
     "@ledgerhq/hw-transport-u2f": "4.35.0",
