@@ -478,6 +478,7 @@ export default {
     },
     matchWeb3WalletNetwork() {
       this.pollNetwork = setInterval(() => {
+        if (!window.web3.eth.net) return;
         window.web3.eth.net
           .getId()
           .then(netId => {
