@@ -272,7 +272,7 @@ export default {
       return !findTokenByAddr || !findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
-      if (this.tokenError(address, symbol, 'manual')) {
+      if (!this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,

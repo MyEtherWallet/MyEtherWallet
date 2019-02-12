@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Send" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="my-wallet-1" transform="translate(-1091.000000, -778.000000)">
+            <g id="Group-4" transform="translate(1074.000000, 760.000000)">
+                <g id="Group-6" transform="translate(16.000000, 15.000000)">
+                    <text id="!" font-family="SFProText-Medium, SF Pro Text" font-size="14" font-weight="400" fill="#FFFFFF">
+                        <tspan x="12" y="22">!</tspan>
+                    </text>
+                    <path d="M16.6832816,5.36656315 L25.8291796,23.6583592 C26.5701474,25.1402947 25.9694743,26.9423138 24.4875388,27.6832816 C24.0709725,27.8915647 23.6116333,28 23.145898,28 L4.85410197,28 C3.19724772,28 1.85410197,26.6568542 1.85410197,25 C1.85410197,24.5342647 1.96253724,24.0749255 2.17082039,23.6583592 L11.3167184,5.36656315 C12.0576862,3.88462765 13.8597053,3.28395461 15.3416408,4.02492236 C15.922223,4.31521346 16.3929905,4.78598094 16.6832816,5.36656315 Z" id="Triangle" stroke="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

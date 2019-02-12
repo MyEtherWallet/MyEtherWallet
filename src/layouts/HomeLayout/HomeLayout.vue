@@ -11,6 +11,7 @@ import FaqsContainer from '@/containers/FaqsContainer';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
 import { mapGetters } from 'vuex';
+// import { ErrorHandler } from '@/helpers';
 
 export default {
   name: 'HomeContainer',
@@ -23,13 +24,19 @@ export default {
   data() {
     return {
       address: '',
-      resolvedAddress: ''
+      resolvedAddress: '',
+      message: 'pogchamp'
     };
   },
   computed: {
     ...mapGetters({
       online: 'online'
     })
+  },
+  mounted() {
+    // ErrorHandler('bonk', 1, this); // warn
+    // ErrorHandler('bruh', 2, this); // success
+    // ErrorHandler('YEET', 3, this); // error
   }
 };
 </script>
