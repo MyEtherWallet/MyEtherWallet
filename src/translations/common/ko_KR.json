@@ -72,5 +72,7 @@
   "logout": "Logout",
   "settings": "Settings",
   "edit": "Edit",
-  "nonce": "Nonce"
+  "nonce": "Nonce",
+  "notAValidAmount": "Not a valid amount",
+  "vintage": "Vintage"
 }
