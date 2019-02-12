@@ -535,7 +535,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          ErrorHandler(e, true);
         });
     },
     setENS() {
