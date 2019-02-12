@@ -1,12 +1,11 @@
-
 ### Devop
 
 - Fix foreach issue in settings [#619](https://github.com/MyEtherWallet/MyEtherWallet/pull/619)
+- Disable HWs if not supported [#618](https://github.com/MyEtherWallet/MyEtherWallet/pull/618)
 
 ### Bug
 
 - Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
-
 
 ### Release v5.0.0
 
