@@ -41,7 +41,7 @@
     "websocket": "1.0.28"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.1.5",
+    "@keepkey/keepkey.js": "1.1.6",
     "@ledgerhq/hw-app-eth": "4.36.0",
     "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
@@ -108,7 +108,6 @@
     "web3-core-method": "1.0.0-beta.37",
     "web3-core-requestmanager": "1.0.0-beta.37",
     "web3-providers-http": "1.0.0-beta.37",
-    "web3-providers-ws": "1.0.0-beta.37",
     "web3-utils": "1.0.0-beta.37",
     "webpack": "4.28.4",
     "worker-loader": "2.0.0",
