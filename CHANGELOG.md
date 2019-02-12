@@ -4,9 +4,11 @@
 - Disable HWs if not supported [#618](https://github.com/MyEtherWallet/MyEtherWallet/pull/618)
 
 ### Bug
-- Fix mnemonic phrase radio button [#611](https://github.com/MyEtherWallet/MyEtherWallet/pull/611)
+
 - Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
 - Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
+- Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
+- Fix mnemonic phrase radio button [#611](https://github.com/MyEtherWallet/MyEtherWallet/pull/611)
 
 ### Release v5.0.0
 

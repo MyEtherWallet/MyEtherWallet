@@ -324,7 +324,6 @@ button[disabled] {
   @include btn-mixin-1();
 
   .the-button-box {
-    cursor: initial;
     background-color: transparent;
     border: 1px solid $green-filled-button-background;
     color: $green-filled-button-background;
