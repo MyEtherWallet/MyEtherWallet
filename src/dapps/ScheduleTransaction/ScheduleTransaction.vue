@@ -220,7 +220,7 @@
                 </b-col>
                 <b-col>
                   <standard-input
-                    :options="futureGasLimitInputOptions()"  
+                    :options="futureGasLimitInputOptions()"
                     @changedValue="futureGasLimit = $event"
                   />
                   <div v-show="!isValidFutureGasLimit" class="text-danger">
@@ -503,9 +503,7 @@ export default {
       }
 
       return calcSchedulingTotalCost({
-        gasPrice: new BigNumber(
-          unit.toWei(this.gasPrice.toString(), 'gwei')
-        ),
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice.toString(), 'gwei')),
         gasLimit: new BigNumber(this.gasLimit),
         futureGasLimit: new BigNumber(this.futureGasLimit),
         futureGasPrice: new BigNumber(
@@ -673,10 +671,7 @@ export default {
         new BigNumber(unit.toWei('0', 'gwei'))
       );
 
-      const estimatedEth = unit.fromWei(
-        estimatedWei.toString(),
-        'ether'
-      );
+      const estimatedEth = unit.fromWei(estimatedWei.toString(), 'ether');
 
       // Estimate the number of decimals to show
       let decimalPoints = 0;
@@ -730,10 +725,14 @@ export default {
         });
         const estimatedGasLimit = await this.web3.eth.estimateGas({
           from: coinbase,
-          value: this.isTokenTransfer ? 0 : unit.toWei(this.amount.toString(), 'ether'),
-          to: this.isTokenTransfer ? this.selectedCurrency.address : this.address,
+          value: this.isTokenTransfer
+            ? 0
+            : unit.toWei(this.amount.toString(), 'ether'),
+          to: this.isTokenTransfer
+            ? this.selectedCurrency.address
+            : this.address,
           data: this.isTokenTransfer ? tokenTransferData : this.data
-        })
+        });
         console.log({
           estimatedGasLimit: estimatedGasLimit.toString()
         });
@@ -742,25 +741,30 @@ export default {
 
       console.log({
         estimatedGasLimit: EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString()
-      })
+      });
 
       return EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString();
     },
     async getTokenTransferData() {
       if (this.isTokenTransfer && this.isValidAmount && this.isValidAddress) {
-        const tokenContract = await new this.web3.eth.Contract(ERC20, this.selectedCurrency.address);
+        const tokenContract = await new this.web3.eth.Contract(
+          ERC20,
+          this.selectedCurrency.address
+        );
         const coinbase = await this.web3.eth.getCoinbase();
         const tokenTransferSettings = {
           _from: coinbase,
           _to: this.toAddress,
           _value: this.amount
         };
-  
-        return tokenContract.methods.transferFrom(
-          tokenTransferSettings._from,
-          tokenTransferSettings._to,
-          tokenTransferSettings._value
-        ).encodeABI();
+
+        return tokenContract.methods
+          .transferFrom(
+            tokenTransferSettings._from,
+            tokenTransferSettings._to,
+            tokenTransferSettings._value
+          )
+          .encodeABI();
       }
 
       return '0x0';
@@ -807,9 +811,7 @@ export default {
         ),
         bounty: ethToWeiBN(timeBounty),
         requiredDeposit: ethToWeiBN(deposit),
-        gasPrice: new BigNumber(
-          unit.toWei(futureGasPrice.toString(), 'gwei')
-        ),
+        gasPrice: new BigNumber(unit.toWei(futureGasPrice.toString(), 'gwei')),
         fee: new BigNumber(0),
         scheduleGas: new BigNumber(gasLimit)
       };
