@@ -27,7 +27,7 @@
       >
         <img src="~@/assets/images/icons/google-play.svg" height="35" />
       </a>
-      <p>{{ $t('accessWallet.mewConnectDesc2') }}</p>
+      <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
     </div>
     <customer-support />
   </b-modal>
