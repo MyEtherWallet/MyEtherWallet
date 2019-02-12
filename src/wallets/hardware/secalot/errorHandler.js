@@ -1,5 +1,7 @@
 import { ErrorHandler } from '@/helpers';
-const ERRORS = {};
+const ERRORS = {
+  SIGN_FAILED: 'Sign failed'
+};
 export default err => {
   const errorValues = Object.values(ERRORS);
   if (errorValues.includes(err.message)) {

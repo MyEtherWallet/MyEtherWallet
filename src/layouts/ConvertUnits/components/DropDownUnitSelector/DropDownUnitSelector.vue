@@ -66,12 +66,29 @@ export default {
   },
   methods: {
     clickEvent: function(event) {
-      for (let count = 0; count < event.path.length; count++) {
-        if (event.path[count].className === 'unit-selector-click-safe-zone') {
+      const path =
+        event.path ||
+        (event.composedPath && event.composedPath()) ||
+        this.composedPath(event.target);
+      for (let count = 0; count < path.length; count++) {
+        if (path[count].className === 'unit-selector-click-safe-zone') {
           return;
         }
       }
       this.dropdownOpen = false;
+    },
+    composedPath(el) {
+      const path = [];
+
+      while (el) {
+        path.push(el);
+        if (el.tagName === 'HTML') {
+          path.push(document);
+          path.push(window);
+          return path;
+        }
+        el = el.parentElement;
+      }
     },
     selected(val) {
       this.dropdownOpen = false;
