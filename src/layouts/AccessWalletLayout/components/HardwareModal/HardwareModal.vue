@@ -114,7 +114,8 @@ export default {
           imgPath: trezor,
           imgHoverPath: trezorHov,
           text: 'Trezor',
-          disabled: false
+          disabled:
+            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox'
         },
         {
           name: 'keepkey',
