@@ -1,8 +1,11 @@
 import * as Sentry from '@sentry/browser';
+const idxs = ['', 'appWarn', 'appSuccess', 'appError'];
 
-const ErrorHandler = (err, expected) => {
+const ErrorHandler = (err, expected, _this) => {
   if (expected) {
-    console.error(err.message, err); // eslint-disable-line
+    _this.$toasted.global[idxs[expected]]({
+      message: err.message ? err.message : err
+    });
     return err;
   }
   Sentry.captureException(err);

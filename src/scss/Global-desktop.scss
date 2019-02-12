@@ -1357,3 +1357,28 @@
     color: $text--link-color;
   }
 }
+
+%toast {
+  border-radius: 4px !important;
+  min-height: 75px !important;
+  opacity: 0.96;
+  width: 325px !important;
+}
+
+.toast-success {
+  @extend %toast;
+
+  background-color: $mew-green !important;
+}
+
+.toast-warn {
+  @extend %toast;
+
+  background-color: $light-yellow !important;
+}
+
+.toast-error {
+  @extend %toast;
+
+  background-color: $red-7 !important;
+}

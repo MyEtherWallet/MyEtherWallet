@@ -1,3 +1,7 @@
+### Feature
+
+- Add reusable global toasts. Add examples []()
+
 ### Release v5.0.0
 
 ### Feature
