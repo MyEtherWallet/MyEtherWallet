@@ -1,3 +1,7 @@
+### Bug
+
+- Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
+
 ### Release v5.0.0
 
 ### Feature
