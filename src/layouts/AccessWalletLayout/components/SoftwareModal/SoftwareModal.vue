@@ -37,9 +37,8 @@
           'mid-round-button-green-filled'
         ]"
         @click="continueAccess"
+        >{{ $t('common.continue') }}</b-btn
       >
-        {{ $t('common.continue') }}
-      </b-btn>
     </div>
     <customer-support />
   </b-modal>
@@ -54,6 +53,7 @@ import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import privKeyImg from '@/assets/images/icons/button-key.svg';
 import WalletOption from '../WalletOption';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   components: {
@@ -130,8 +130,12 @@ export default {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        self.$emit('file', JSON.parse(evt.target.result));
-        self.file = JSON.parse(evt.target.result);
+        try {
+          self.$emit('file', JSON.parse(evt.target.result));
+          self.file = JSON.parse(evt.target.result);
+        } catch (e) {
+          ErrorHandler(e, true);
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     }

@@ -217,7 +217,7 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
-import { Misc } from '@/helpers';
+import { Misc, ErrorHandler } from '@/helpers';
 import utils from 'web3-utils';
 
 export default {
@@ -358,9 +358,13 @@ export default {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        const file = JSON.parse(evt.target.result);
-        self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-        self.nonce = file.nonce;
+        try {
+          const file = JSON.parse(evt.target.result);
+          self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
+          self.nonce = file.nonce;
+        } catch (e) {
+          ErrorHandler(e, true);
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     },
