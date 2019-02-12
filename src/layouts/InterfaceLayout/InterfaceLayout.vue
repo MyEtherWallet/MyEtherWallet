@@ -436,7 +436,7 @@ export default {
           this.blockNumber = res;
         })
         .catch(e => {
-          ErrorHandler(e, true);
+          ErrorHandler(e, 3, this);
         });
     },
     getBalance() {
@@ -458,7 +458,7 @@ export default {
             return ErrorHandler(err, false);
           }
           if (!accounts.length) {
-            return ErrorHandler(new Error('Please unlock metamask'), false);
+            return ErrorHandler(new Error('Please unlock metamask'), 3, this);
           }
           const address = accounts[0];
           if (

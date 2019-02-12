@@ -256,7 +256,7 @@ export default {
                 ]);
               })
               .catch(err => {
-                ErrorHandler(err, true);
+                ErrorHandler(err, 3, this);
               });
           }
         } else {
@@ -290,7 +290,7 @@ export default {
               ]);
             })
             .catch(err => {
-              ErrorHandler(err, true);
+              ErrorHandler(err, 3, this);
             });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);

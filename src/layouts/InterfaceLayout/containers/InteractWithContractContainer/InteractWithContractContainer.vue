@@ -495,7 +495,7 @@ export default {
             return res;
           })
           .catch(e => {
-            ErrorHandler(e, true);
+            ErrorHandler(e, 3, this);
           });
         const data = contract.methods[this.selectedMethod.name](
           ...this.contractArgs
@@ -511,7 +511,7 @@ export default {
           data: data
         };
         web3.eth.sendTransaction(raw).catch(err => {
-          ErrorHandler(err, true);
+          ErrorHandler(err, 3, this);
         });
       }
     }

@@ -104,7 +104,7 @@ export default {
         e.preventDefault();
         self.spinner = false;
         self.error = e.message;
-        ErrorHandler(e, true);
+        ErrorHandler(e, 3, this);
       };
     },
     switchViewPassword() {

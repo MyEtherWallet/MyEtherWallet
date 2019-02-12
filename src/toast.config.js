@@ -5,9 +5,7 @@ import toastSuccess from '@/assets/images/icons/toast-success.svg';
 const toastObject = {
   position: 'bottom-right',
   duration: 2500,
-  onClick: toastObject => {
-    toastObject.goAway(0);
-  }
+  closeOnSwipe: true
 };
 
 const error = {

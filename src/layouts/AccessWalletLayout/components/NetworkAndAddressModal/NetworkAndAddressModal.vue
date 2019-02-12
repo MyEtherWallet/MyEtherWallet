@@ -389,7 +389,7 @@ export default {
         }
         return false;
       } catch (e) {
-        ErrorHandler(e, true);
+        ErrorHandler(e, 3, this);
         return false;
       }
     },
@@ -414,7 +414,7 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          ErrorHandler(error, true);
+          ErrorHandler(error, 3, this);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
