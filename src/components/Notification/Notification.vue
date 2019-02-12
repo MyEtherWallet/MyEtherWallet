@@ -42,7 +42,7 @@
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
-            :key="notification.id"
+            :key="notification.id + idx"
             class="notification-item"
           >
             <keep-alive
@@ -195,6 +195,7 @@ export default {
         });
       check.forEach(entry => {
         this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+          if (result === null) return;
           const noticeIdx = this.notifications[this.account.address].findIndex(
             noticeEntry => entry.id === noticeEntry.id
           );
