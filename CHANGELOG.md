@@ -1,3 +1,7 @@
+### Bug
+
+- Reenable Metamask when web3 is not found []()
+
 ### Release v5.0.0
 
 ### Feature
