@@ -1,3 +1,7 @@
+### Devop
+
+- Disable HWs if not supported []()
+
 ### Release v5.0.0
 
 ### Feature
