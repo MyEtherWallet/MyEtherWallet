@@ -27,7 +27,7 @@
         <b-collapse
           id="collapse1"
           v-model="showCollapse1"
-          class="mt-2 collapse-content"
+          class="collapse-content"
         >
           <ul class="networks">
             <li
@@ -79,7 +79,7 @@
         <b-collapse
           id="collapse2"
           v-model="showCollapse2"
-          class="mt-2 collapse-content"
+          class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
           <div class="content-container-1">

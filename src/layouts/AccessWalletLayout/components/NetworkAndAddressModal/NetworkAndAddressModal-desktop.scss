@@ -30,7 +30,7 @@ $red-filled-button-background--click: #ff5a7f;
       max-height: 300px;
       overflow-y: auto;
       li {
-        padding: 15px 5px;
+        padding: 10px 5px;
         border-bottom: 1px solid #ececec;
         &:last-child {
           border: 0;
@@ -39,7 +39,7 @@ $red-filled-button-background--click: #ff5a7f;
         .network-content {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-gap: 5px;
+          grid-gap: 0px;
         }
 
         .network-title {
@@ -48,10 +48,10 @@ $red-filled-button-background--click: #ff5a7f;
           margin-bottom: 5px;
 
           .network-icon-container {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             text-align: center;
-            background-color: #bdbdbd;
+            background-color: $light-grey-12;
             border-radius: 100%;
             display: flex;
             align-items: center;
@@ -231,11 +231,12 @@ $red-filled-button-background--click: #ff5a7f;
       //background-color: $light-grey-1;
       cursor: pointer;
       border-radius: 5px;
-      padding: 5px;
+      padding: 2px 7px;
+      user-select: none;
     }
 
     .current-network {
-      background-color: $mew-green;
+      background-color: $dark-blue-2;
       color: $white;
     }
   }

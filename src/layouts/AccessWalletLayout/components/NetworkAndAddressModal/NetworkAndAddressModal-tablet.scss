@@ -16,7 +16,7 @@
       max-height: 300px;
       overflow-y: auto;
       li {
-        padding: 15px 5px;
+        padding: 9px 5px;
         border-bottom: 1px solid #ececec;
         &:last-child {
           border: 0;
@@ -34,10 +34,10 @@
           margin-bottom: 5px;
 
           .network-icon-container {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             text-align: center;
-            background-color: #bdbdbd;
+            background-color: $light-grey-12;
             border-radius: 100%;
             display: flex;
             align-items: center;
@@ -54,8 +54,8 @@
 
               p {
                 font-weight: 700;
-                font-size: 10px;
-                line-height: 10px;
+                font-size: 8px;
+                line-height: 8px;
               }
             }
           }
@@ -211,11 +211,12 @@
       background-color: $light-grey-1;
       cursor: pointer;
       border-radius: 5px;
-      padding: 5px;
+      padding: 2px 7px;
+      user-select: none;
     }
 
     .current-network {
-      background-color: $mew-green;
+      background-color: $dark-blue-2;
       color: $white;
     }
   }
