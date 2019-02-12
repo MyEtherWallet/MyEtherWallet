@@ -337,9 +337,13 @@ export default {
       this.getSafeSendFee();
     },
     async getSafeSendFee() {
-      this.safeSendPriceEstimate = await this.coralContract.methods
-        .checkFee(unit.toWei(this.amount, 'ether').toString())
-        .call();
+      try {
+        this.safeSendPriceEstimate = await this.coralContract.methods
+          .checkFee(unit.toWei(this.amount, 'ether').toString())
+          .call();
+      } catch (e) {
+        ErrorHandler(e, true);
+      }
     }
   }
 };
