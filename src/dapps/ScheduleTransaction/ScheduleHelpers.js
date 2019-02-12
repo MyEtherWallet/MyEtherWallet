@@ -3,7 +3,8 @@ import BigNumber from 'bignumber.js';
 const EAC_SCHEDULING_CONFIG = {
   FUTURE_GAS_PRICE_MIN: 1, // Gwei
   FEE: new BigNumber('0'),
-  SCHEDULING_GAS_LIMIT: new BigNumber('1500000'),
+  TOKEN_SCHEDULING_GAS_LIMIT: new BigNumber('1500000'),
+  FUTURE_GAS_LIMIT: new BigNumber('21000'),
   TIME_BOUNTY_MIN: new BigNumber('1'),
   TIME_BOUNTY_DEFAULTS: ['0.01', '0.02', '0.03'],
   BOUNTY_TO_DEPOSIT_MULTIPLIER: 2,
