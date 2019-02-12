@@ -169,7 +169,6 @@ export default {
       }
     },
     mouseScrollDown: function() {
-      console.log('Scroll down');
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;
         this.$refs[this.cwwRefs[this.cwwCurrent - 1]].$el.classList.add(
@@ -181,7 +180,6 @@ export default {
       }
     },
     mouseScrollUp: function() {
-      console.log('Scroll up');
       if (this.cwwCurrent > 0) {
         this.cwwCurrent--;
         this.$refs[this.cwwRefs[this.cwwCurrent + 1]].$el.classList.add(
