@@ -1,6 +1,6 @@
 ### Devop
 
-- Disable HWs if not supported []()
+- Disable HWs if not supported [#618](https://github.com/MyEtherWallet/MyEtherWallet/pull/618)
 
 ### Release v5.0.0
 
