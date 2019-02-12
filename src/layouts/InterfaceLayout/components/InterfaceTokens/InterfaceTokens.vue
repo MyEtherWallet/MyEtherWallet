@@ -272,7 +272,7 @@ export default {
       return !findTokenByAddr || !findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
-      if (this.tokenError(address, symbol, 'manual')) {
+      if (!this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,
@@ -302,7 +302,7 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray = this.customTokens.slice();
+      const oldArray = this.customTokens ? this.customTokens.slice() : [];
       if (query !== '') {
         this.customTokens = oldArray
           .filter(token => {

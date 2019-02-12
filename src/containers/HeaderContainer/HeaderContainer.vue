@@ -5,6 +5,7 @@
       v-if="wallet !== null"
       ref="settings"
       :gas-price="gasPrice"
+      :address="account.address"
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
