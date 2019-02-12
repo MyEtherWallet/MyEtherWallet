@@ -4,6 +4,7 @@
   text-align: center;
 
   h3 {
+    font-weight: 600;
     font-size: 25px;
     padding: 5px 20px 30px;
   }
@@ -14,7 +15,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 30px;
+  padding: 60px 40px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 20px;
+  }
 }
 
 .welcome-modal {
