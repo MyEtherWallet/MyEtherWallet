@@ -19,6 +19,7 @@
 
 ### Bug
 
+- Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
 - Fix mnemonic phrase radio button [#611](https://github.com/MyEtherWallet/MyEtherWallet/pull/611)
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
