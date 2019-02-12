@@ -67,7 +67,12 @@ DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
       version: 'U2F_V2',
       keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64'))
     };
-    u2f.sign([key], this.timeoutSeconds).then(localCallback);
+    u2f
+      .sign([key], this.timeoutSeconds)
+      .then(localCallback)
+      .catch(err => {
+        callback(undefined, err);
+      });
   }
 };
 
