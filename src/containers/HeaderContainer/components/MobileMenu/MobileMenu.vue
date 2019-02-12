@@ -1,7 +1,7 @@
 <template>
   <div class="mobile-menu">
     <settings-modal
-      v-if="wallet !== null"
+      v-if="account !== null"
       ref="settings"
       :gas-price="localGasPrice"
       :address="account.address"
@@ -41,14 +41,12 @@
       </div>
     </div>
     <!-- Mobile menu header ************************************ -->
-
     <!-- Mobile menu shadow backdrop ************************************ -->
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
       class="mobile-menu-shadow-backdrop"
     ></div>
     <!-- Mobile menu shadow backdrop ************************************ -->
-
     <!-- Mobile menu content ************************************ -->
     <div
       :class="isMenuOpen ? 'menu-open' : ''"
@@ -147,9 +145,6 @@ export default {
       localGasPrice: '10',
       balance: 0,
       blockNumber: 0,
-      pollNetwork: '',
-      pollAddress: '',
-      pollBlock: '',
       isOnTop: true,
       isMenuOpen: false,
       isHomePage: true,
@@ -161,7 +156,6 @@ export default {
   computed: {
     ...mapGetters({
       network: 'network',
-      wallet: 'wallet',
       online: 'online',
       web3: 'web3',
       account: 'account',
@@ -169,9 +163,6 @@ export default {
     })
   },
   watch: {
-    ['account.address']() {
-      this.setupOnlineEnvironment();
-    },
     gasPrice(val) {
       this.localGasPrice = new BigNumber(val).toString();
     },
@@ -181,26 +172,12 @@ export default {
       } else {
         this.isHomePage = true;
       }
-    },
-    ['account.balance']() {
-      this.getBalance();
-    },
-    ['network']() {
-      this.setupOnlineEnvironment();
-      // this.getBalance();
     }
   },
   mounted() {
-    // On load, if page is not on top, apply small menu and show scroll top button
-    //this.onPageScroll();
-    // this.setupOnlineEnvironment();
-    // On scroll,  if page is not on top, apply small menu and show scroll top button
     window.onscroll = () => {
       this.onPageScroll();
     };
-  },
-  destroyed() {
-    this.clearIntervals();
   },
   methods: {
     langChange(data) {
@@ -231,45 +208,6 @@ export default {
         this.isOnTop = false;
       } else {
         this.isOnTop = true;
-      }
-    },
-    clearIntervals() {
-      clearInterval(this.pollNetwork);
-      clearInterval(this.pollBlock);
-      clearInterval(this.pollAddress);
-    },
-    setupOnlineEnvironment() {
-      this.clearIntervals();
-      if (this.online === true) {
-        if (this.account.address) {
-          this.getBlock();
-          this.pollBlock = setInterval(this.getBlock, 14000);
-          this.getBalance();
-        }
-      }
-    },
-    getBlock() {
-      this.web3.eth
-        .getBlockNumber()
-        .then(res => {
-          this.blockNumber = res;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
-    },
-    getBalance() {
-      if (this.account.address) {
-        this.web3.eth
-          .getBalance(this.account.address.toLowerCase())
-          .then(res => {
-            this.balance = this.web3.utils.fromWei(res, 'ether');
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          });
       }
     }
   }
