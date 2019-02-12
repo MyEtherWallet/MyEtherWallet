@@ -47,7 +47,7 @@
               v-if="!isValidAmount || errors.has('value')"
               class="error-message-container"
             >
-              <p>{{ $t('common.dontHaveEnough') }}</p>
+              <p>{{ $t('common.notAValidAmount') }}</p>
             </div>
           </div>
         </div>
@@ -237,10 +237,22 @@ export default {
       if (this.isToken) {
         return (
           new BigNumber(this.value).lte(this.selectedCurrency.balance) &&
-          new BigNumber(txFeeEth).lte(this.balanceDefault)
+          new BigNumber(txFeeEth).lte(this.balanceDefault) &&
+          this.isValidDecimals
         );
       }
-      return new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault);
+      return (
+        new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault) &&
+        this.isValidDecimals
+      );
+    },
+    isValidDecimals() {
+      const decimals = (this.value + '').split('.')[1];
+      if (!decimals) return true;
+      if (this.isToken) {
+        return decimals.length <= this.selectedCurrency.decimals;
+      }
+      return decimals.length <= 18;
     },
     isValidData() {
       return Misc.validateHexString(this.data);

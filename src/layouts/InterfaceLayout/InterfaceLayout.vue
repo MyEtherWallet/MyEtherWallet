@@ -124,6 +124,7 @@ import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
+import web3Utils from 'web3-utils';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -195,12 +196,12 @@ export default {
     },
     ...mapGetters({
       network: 'network',
-      wallet: 'wallet',
       account: 'account',
       online: 'online',
       web3: 'web3',
       Networks: 'Networks',
-      sidemenuOpen: 'sidemenuOpen'
+      sidemenuOpen: 'sidemenuOpen',
+      wallet: 'wallet'
     })
   },
   watch: {
@@ -462,7 +463,7 @@ export default {
           }
           const address = accounts[0];
           if (
-            this.wallet !== null &&
+            this.account.address !== null &&
             address.toLowerCase() !== this.account.address.toLowerCase()
           ) {
             const wallet = new Web3Wallet(address);
@@ -477,6 +478,7 @@ export default {
     },
     matchWeb3WalletNetwork() {
       this.pollNetwork = setInterval(() => {
+        if (!window.web3.eth.net) return;
         window.web3.eth.net
           .getId()
           .then(netId => {
@@ -500,7 +502,7 @@ export default {
       clearInterval(this.pollBlock);
       clearInterval(this.pollAddress);
     },
-    setupOnlineEnvironment() {
+    setupOnlineEnvironment: web3Utils._.debounce(function() {
       this.clearIntervals();
       if (store.get('customTokens') === undefined) {
         store.set('customTokens', {});
@@ -509,7 +511,7 @@ export default {
         this.setCustomTokenStore();
       }
       if (this.online === true) {
-        if (this.wallet !== null) {
+        if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
@@ -523,7 +525,7 @@ export default {
           this.getHighestGas();
         }
       }
-    },
+    }),
     getHighestGas() {
       this.web3.eth
         .getGasPrice()
@@ -533,7 +535,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          ErrorHandler(e, true);
         });
     },
     setENS() {

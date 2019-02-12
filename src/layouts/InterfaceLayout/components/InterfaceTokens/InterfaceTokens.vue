@@ -302,7 +302,7 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray = this.customTokens.slice();
+      const oldArray = this.customTokens ? this.customTokens.slice() : [];
       if (query !== '') {
         this.customTokens = oldArray
           .filter(token => {
