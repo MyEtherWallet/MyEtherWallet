@@ -44,7 +44,7 @@
     "@ledgerhq/hw-app-eth": "4.36.0",
     "@ledgerhq/hw-transport-u2f": "4.35.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
-    "@myetherwallet/mewconnect-web-client": "1.0.9",
+    "@myetherwallet/mewconnect-web-client": "1.0.11",
     "@vue/cli-plugin-babel": "3.4.0",
     "@vue/cli-plugin-eslint": "3.4.0",
     "@vue/cli-plugin-pwa": "3.4.0",
