@@ -1,7 +1,9 @@
 <template>
   <div class="home">
     <top-banner />
-    <about /> <faqs /> <social />
+    <about />
+    <faqs />
+    <social />
   </div>
 </template>
 
@@ -11,7 +13,6 @@ import FaqsContainer from '@/containers/FaqsContainer';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
 import { mapGetters } from 'vuex';
-// import { ErrorHandler } from '@/helpers';
 
 export default {
   name: 'HomeContainer',
@@ -32,11 +33,6 @@ export default {
     ...mapGetters({
       online: 'online'
     })
-  },
-  mounted() {
-    // ErrorHandler('bonk', 1, this); // warn
-    // ErrorHandler('bruh', 2, this); // success
-    // ErrorHandler('YEET', 3, this); // error
   }
 };
 </script>

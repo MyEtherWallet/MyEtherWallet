@@ -50,7 +50,7 @@ import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 export default {
   components: {
     'back-button': BackButton
@@ -155,7 +155,7 @@ export default {
         value: 0
       };
       this.web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async updateResolver(newResolverAddr) {
@@ -202,7 +202,7 @@ export default {
       };
 
       web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async registerFifsName() {
@@ -218,7 +218,7 @@ export default {
         data: data
       };
       web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async getRegistrarAddress() {

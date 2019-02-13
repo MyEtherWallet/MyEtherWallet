@@ -194,7 +194,7 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
-import { ErrorHandler, Misc } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
@@ -271,7 +271,7 @@ export default {
         this.$store.dispatch('setAccountBalance', res);
       })
       .catch(err => {
-        ErrorHandler(err, 3, this);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     this.web3.eth.net
       .getId()
@@ -280,7 +280,7 @@ export default {
         this.validNetwork = this.networkID === CoralConfig.chainID;
       })
       .catch(err => {
-        ErrorHandler(err, 3, this);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     this.coralContract = new this.web3.eth.Contract(
       CoralConfig.safeSendEscrowContractAbi,
@@ -322,7 +322,7 @@ export default {
         chainId: 1
       };
       this.web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, 3, this);
+        Toast.responseHandler(err, Toast.ERROR);
       });
     },
     confirmationModalOpen() {
@@ -343,7 +343,7 @@ export default {
           .call();
       } catch (e) {
         this.safeSendPriceEstimate = new BigNumber(0).toFixed();
-        ErrorHandler(e, true);
+        Toast.responseHandler(e, true);
       }
     }
   }

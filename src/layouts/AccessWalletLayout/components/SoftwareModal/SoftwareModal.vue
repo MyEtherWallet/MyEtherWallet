@@ -53,7 +53,7 @@ import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import privKeyImg from '@/assets/images/icons/button-key.svg';
 import WalletOption from '../WalletOption';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -134,7 +134,7 @@ export default {
           self.$emit('file', JSON.parse(evt.target.result));
           self.file = JSON.parse(evt.target.result);
         } catch (e) {
-          ErrorHandler(e, true);
+          Toast.responseHandler(e, Toast.ERROR);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);

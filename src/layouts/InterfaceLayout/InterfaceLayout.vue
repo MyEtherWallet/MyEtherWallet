@@ -116,7 +116,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -266,7 +266,7 @@ export default {
           });
           break;
         default:
-          ErrorHandler(
+          Toast.responseHandler(
             new Error(
               `Wallet type ${this.account.identifier} can't switch addresses`
             ),
@@ -370,7 +370,7 @@ export default {
           return tokenBalance;
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
       return balance;
     },
@@ -437,7 +437,7 @@ export default {
           this.blockNumber = res;
         })
         .catch(e => {
-          ErrorHandler(e, 3, this);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     getBalance() {
@@ -449,17 +449,20 @@ export default {
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            return ErrorHandler(err, false);
+            return Toast.responseHandler(err, false);
           }
           if (!accounts.length) {
-            return ErrorHandler(new Error('Please unlock metamask'), 3, this);
+            return Toast.responseHandler(
+              new Error('Please unlock metamask'),
+              Toast.ERROR
+            );
           }
           const address = accounts[0];
           if (
@@ -493,7 +496,7 @@ export default {
             }
           })
           .catch(e => {
-            ErrorHandler(e, false);
+            Toast.responseHandler(e, false);
           });
       }, 500);
     },
@@ -535,7 +538,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          ErrorHandler(e, true);
+          Toast.responseHandler(e, true);
         });
     },
     setENS() {

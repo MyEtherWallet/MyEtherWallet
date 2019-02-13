@@ -1,13 +1,16 @@
 import * as Sentry from '@sentry/browser';
+import { Toast } from '@/toasted';
+import * as ResponseEvents from './responseEvents';
+
 const idxs = {
   1: 'appWarn',
   2: 'appSuccess',
   3: 'appError'
 };
 
-const ErrorHandler = (err, expected, _this) => {
+const responseHandler = (err, expected) => {
   if (expected) {
-    _this.$toasted.global[idxs[expected]]({
+    Toast.global[idxs[expected]]({
       message: err.message ? err.message : err
     });
     return err;
@@ -16,4 +19,4 @@ const ErrorHandler = (err, expected, _this) => {
   return;
 };
 
-export default ErrorHandler;
+export default { responseHandler, ...ResponseEvents };
