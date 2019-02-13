@@ -1,6 +1,6 @@
 ### Bug
 
-- Reset tokens when adding custom token, fetch balance on load []()
+- Reset tokens when adding custom token, fetch balance on load [#646](https://github.com/MyEtherWallet/MyEtherWallet/pull/646)
 
 ### Release v5.0.1
 
