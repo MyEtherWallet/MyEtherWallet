@@ -50,7 +50,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      path: 'path'
+      path: 'path',
+      web3: 'web3'
     })
   },
   mounted() {
@@ -58,6 +59,7 @@ export default {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
           console.log('mewconnect modal', wallet); // todo remove dev item
+          if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
           this.$store.dispatch('decryptWallet', [wallet]).then(() => {
             console.log('open interface'); // todo remove dev item
             this.$router.push({
