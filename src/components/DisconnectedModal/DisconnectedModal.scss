@@ -6,24 +6,43 @@
 .modal-contents {
   padding: 40px;
   text-align: center;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 40px 30px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 30px 10px;
+  }
 }
 
-.address {
-  word-break: break-all;
-  width: 230px;
-  margin: 0 auto;
-  display: block;
-  border: 0;
-  resize: none;
-  white-space: normal;
-  text-align: justify;
-  text-align-last: center;
+.icon {
+  img {
+    height: 170px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      height: 150px;
+    }
+  }
 }
 
-button {
-  background-color: transparent;
-  color: $mew-green;
-  border: 0;
-  margin-top: 10px;
-  font-weight: 500;
+.modal-title {
+  font-size: 40px;
+  font-weight: 800;
 }
+
+.text-content {
+  font-size: 18px;
+  margin: 10px 0 40px 0;
+  @media all and (max-width: $mobile-width) {
+    font-size: 16px;
+  }
+}
+
+.ok-button {
+
+}
+
