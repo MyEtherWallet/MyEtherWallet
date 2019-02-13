@@ -181,7 +181,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import EthTx from 'ethereumjs-tx';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -364,7 +364,7 @@ export default {
         })
         .catch(err => {
           this.gasLimit = -1;
-          ErrorHandler(err, 3, this);
+          Toast.responseHandler(err, Toast.ERROR);
         });
     },
     async submitTransaction() {
@@ -386,7 +386,7 @@ export default {
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
-          ErrorHandler(err, 3, this);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       } catch (e) {
         throw e;

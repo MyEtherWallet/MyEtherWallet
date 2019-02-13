@@ -17,7 +17,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
 
@@ -51,7 +51,7 @@ export default {
             this.$store.dispatch('setAccountBalance', res);
           })
           .catch(err => {
-            ErrorHandler(err, 3, this);
+            Toast.responseHandler(err, Toast.ERROR, this);
           });
       }
     }
