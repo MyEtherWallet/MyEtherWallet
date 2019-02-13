@@ -1,3 +1,7 @@
+### Bug
+
+- Reset tokens when adding custom token, fetch balance on load []()
+
 ### Release v5.0.1
 
 ### Devop

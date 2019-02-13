@@ -304,7 +304,7 @@ export default {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
     async fetchTokens() {
-      this.receivedTokens = true;
+      this.receivedTokens = false;
       let tokens = [];
       if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         const tb = new TokenBalance(this.web3.currentProvider);
@@ -384,7 +384,8 @@ export default {
       store.set('customTokens', customTokenStore);
     },
     async setTokens() {
-      this.receivedTokens = false;
+      const customStore = store.get('customTokens');
+      // this.receivedTokens = true;
       this.tokens = [];
       let tokens = await this.fetchTokens();
       tokens = tokens
@@ -414,21 +415,32 @@ export default {
         });
 
       this.tokens = tokens.sort(sortByBalance);
-      let customTokens = [];
       if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[this.network.type.name] !== undefined &&
-        store.get('customTokens')[this.network.type.name].length > 0
+        customStore !== undefined &&
+        customStore[this.network.type.name] !== undefined &&
+        customStore[this.network.type.name].length > 0
       ) {
-        customTokens = store.get('customTokens')[
-          // eslint-disable-next-line
-          this.network.type.name
-        ].filter(token => token.balance > 0);
+        new Promise(resolve => {
+          const newArr = customStore[this.network.type.name].map(
+            async token => {
+              token.balance = await this.getTokenBalance(token);
+              return token;
+            }
+          );
+
+          Promise.all(newArr).then(res => {
+            customStore[this.network.type.name] = res;
+            store.set('customTokens', customStore);
+            resolve(res);
+          });
+        }).then(res => {
+          const allTokens = this.tokens
+            .filter(token => token.balance > 0)
+            .concat(res.filter(token => token.balance > 0));
+          this.tokensWithBalance = allTokens;
+          this.receivedTokens = true;
+        });
       }
-      const allTokens = this.tokens
-        .filter(token => token.balance > 0)
-        .concat(customTokens);
-      this.tokensWithBalance = allTokens;
     },
     getBlock() {
       this.web3.eth
