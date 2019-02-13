@@ -14,6 +14,7 @@ import {
   getSignTransactionObject,
   calculateChainIdFromV
 } from '../../utils';
+import HDKey from 'hdkey';
 import { toBuffer } from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
