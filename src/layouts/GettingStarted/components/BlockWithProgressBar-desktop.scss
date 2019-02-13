@@ -215,4 +215,8 @@
       }
     }
   } // .block-progressbar
+
+  .done-button {
+    display: none;
+  }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
