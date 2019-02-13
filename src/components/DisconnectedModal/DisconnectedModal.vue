@@ -7,17 +7,44 @@
       centered
       class="bootstrap-modal nopadding"
     >
-      <div class="modal-contents">Disconnected content</div>
+      <div class="modal-contents">
+        <div class="icon">
+          <img src="@/assets/images/icons/disconnected.png" />
+        </div>
+        <div class="modal-title">
+          Oops!
+        </div>
+        <div class="text-content">
+          Seems like you are disconnected with MEWconnect, please reconnect
+          using App.
+        </div>
+        <div class="ok-button">
+          <standard-button :options="okayButtonOptions" />
+        </div>
+      </div>
     </b-modal>
   </div>
 </template>
 
 <script>
+import StandardButton from '@/components/Buttons/StandardButton';
+
 export default {
   name: 'DisconnectedModal',
+  components: {
+    'standard-button': StandardButton
+  },
   props: {},
   data() {
-    return {};
+    return {
+      okayButtonOptions: {
+        title: this.$t('common.ok'),
+        buttonStyle: 'green'
+      }
+    };
+  },
+  mounted() {
+    //this.$refs.disconnected.show();
   },
   methods: {}
 };
