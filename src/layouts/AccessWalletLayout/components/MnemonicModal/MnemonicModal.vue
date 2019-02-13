@@ -15,7 +15,7 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input v-model="mnemonic24" type="checkbox" />
+              <input type="checkbox" />
               <span class="slider round" @click="mnemonicValueBitSizeChange" />
             </label>
             <div class="labels">

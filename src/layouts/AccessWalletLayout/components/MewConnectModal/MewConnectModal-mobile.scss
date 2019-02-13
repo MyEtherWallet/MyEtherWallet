@@ -96,4 +96,12 @@
       }
     }
   }
+
+  .appstore-button-container {
+    margin: 0;
+    > * {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
 } // @media all and (max-width: $mobile-width)
