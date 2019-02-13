@@ -57,6 +57,7 @@ export default {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
+          console.log('mewconnect modal', wallet); // todo remove dev item
           this.$store.dispatch('decryptWallet', [wallet]);
           this.$router.push({
             path: 'interface'
