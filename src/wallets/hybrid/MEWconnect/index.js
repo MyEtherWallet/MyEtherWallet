@@ -74,6 +74,10 @@ class MEWconnectWallet {
         });
       });
     };
+
+    const mewConnect = () =>{
+      return this.mewConnect;
+    }
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
     console.log('address', address); // todo remove dev item
     return new MEWconnectWalletInterface(
@@ -82,7 +86,7 @@ class MEWconnectWallet {
       this.identifier,
       txSigner,
       msgSigner,
-      this.mewConnect
+      mewConnect // <- using this.mewConnect here was causing a circular reference and data clone error
     );
   }
 }
