@@ -1,3 +1,9 @@
+### Release v5.0.2
+
+### Bug
+
+- Reduce side paddings of footer links to make them fit to mobile width [#636](https://github.com/MyEtherWallet/MyEtherWallet/pull/636)
+
 ### Release v5.0.1
 
 ### Devop
@@ -33,7 +39,6 @@
 - Added ENS test name registration to ROP, RIN and Goerli [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 
 ### Bug
-
 - Reduce side paddings of footer links to make them fit to mobile width [#636](https://github.com/MyEtherWallet/MyEtherWallet/pull/636)
 - Sentry bug fixes [#589](https://github.com/MyEtherWallet/MyEtherWallet/pull/589)
 - store addresses validation differently, better handling of kyber api no response [#588](https://github.com/MyEtherWallet/MyEtherWallet/pull/588)
