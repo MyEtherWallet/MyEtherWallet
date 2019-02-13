@@ -1,6 +1,6 @@
 ### Bug
 
-- Reenable mewconnect on Safari and Opera []()
+- Reenable mewconnect on Safari and Opera [#631](https://github.com/MyEtherWallet/MyEtherWallet/pull/631)
 
 ### Release v5.0.1
 
