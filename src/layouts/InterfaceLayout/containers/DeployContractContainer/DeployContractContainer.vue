@@ -302,7 +302,7 @@ export default {
         delete json.to;
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
-          ErrorHandler(err, false);
+          ErrorHandler(err, true);
         });
         const contractAddr = EthUtil.bufferToHex(
           EthUtil.generateAddress(coinbase, nonce)
@@ -345,7 +345,9 @@ export default {
         from: coinbase,
         data: this.txData
       };
-      this.gasLimit = await this.web3.eth.estimateGas(params);
+      this.gasLimit = await this.web3.eth.estimateGas(params).catch(err => {
+        ErrorHandler(err, true);
+      });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
