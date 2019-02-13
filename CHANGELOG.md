@@ -22,6 +22,7 @@
 
 ### Devop
 
+- Add disconnected modal [#635](https://github.com/MyEtherWallet/MyEtherWallet/pull/635)
 - Add medium link [#598](https://github.com/MyEtherWallet/MyEtherWallet/pull/598)
 
 ### Release v5.0.0-rc.1
