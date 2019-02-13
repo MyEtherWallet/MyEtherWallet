@@ -16,7 +16,7 @@ import store from '@/store';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
-import { Toast, ToastComponent } from './toasted';
+import Toasted from 'vue-toasted';
 import * as toastConfig from './toast.config';
 
 import PopOver from '@/components/PopOver';
@@ -53,8 +53,7 @@ Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
 //Toasted
-Vue.component('toasted', ToastComponent);
-Vue.toasted = Vue.prototype.$toasted = Toast;
+Vue.use(Toasted);
 
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);

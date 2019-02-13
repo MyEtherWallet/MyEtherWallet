@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import { Toast } from '@/toasted';
+import Vue from 'vue';
 import * as ResponseEvents from './responseEvents';
 
 const idxs = {
@@ -10,7 +10,7 @@ const idxs = {
 
 const responseHandler = (err, expected) => {
   if (expected) {
-    Toast.global[idxs[expected]]({
+    Vue.toasted.global[idxs[expected]]({
       message: err.message ? err.message : err
     });
     return err;
