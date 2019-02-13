@@ -234,6 +234,9 @@
                 :options="dataInputOptions()"
                 @changedValue="data = $event"
               />
+              <div v-show="!isValidData" class="text-danger">
+                Please provide the data in a hexadecimal format.
+              </div>
             </div>
           </b-container>
         </div>
@@ -250,9 +253,13 @@
       >
         Schedule Transaction
       </div>
-      <div v-if="scheduled.error" class="text-danger m-3">
-        {{ scheduled.error }}
+
+      <div v-if="shownErrors" class="text-danger m-3">
+        <div v-for="(err, index) in shownErrors" :key="index">
+          {{ err }}
+        </div>
       </div>
+
       <b-alert
         :show="scheduled.show"
         variant="success"
@@ -300,10 +307,12 @@ import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
 import { ERC20 } from '@/partners';
+import { MessageUtil } from '@/helpers';
 import {
   EAC_SCHEDULING_CONFIG,
   calcSchedulingTotalCost,
-  canBeConvertedToWei
+  canBeConvertedToWei,
+  ERRORS
 } from './ScheduleHelpers';
 
 export default {
@@ -349,12 +358,12 @@ export default {
         EAC_SCHEDULING_CONFIG.BOUNTY_TO_DEPOSIT_MULTIPLIER,
       scheduled: {
         show: false,
-        txHash: '',
-        error: ''
+        txHash: ''
       },
       ethPrice: new BigNumber(0),
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
+      shownErrors: [],
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -526,7 +535,8 @@ export default {
         this.isValidFutureGasLimit &&
         this.isValidGasLimit &&
         this.isValidTimeBounty &&
-        this.isValidWindowStart
+        this.isValidWindowStart &&
+        this.isValidData
       );
     },
     isValidAmount() {
@@ -611,6 +621,9 @@ export default {
     },
     isValidDeposit() {
       return canBeConvertedToWei(this.web3, this.deposit);
+    },
+    isValidData() {
+      return MessageUtil.isHexString(this.data) || this.data === '';
     },
     hasEnoughEthToSchedule() {
       const accountBalance = new BigNumber(this.account.balance);
@@ -760,6 +773,12 @@ export default {
 
       return '0x0';
     },
+    removeError(error) {
+      const index = this.shownErrors.indexOf(error);
+      if (index > -1) {
+        this.shownErrors.splice(index, 1);
+      }
+    },
     async scheduleTx() {
       const {
         amount,
@@ -774,9 +793,14 @@ export default {
         selectedMode,
         datetime,
         isTokenTransfer,
-        selectedCurrency,
-        data
+        selectedCurrency
       } = this;
+
+      let { data } = this;
+
+      if (data === '') {
+        data = '0x0';
+      }
 
       const timestampScheduling =
         selectedMode === EAC_SCHEDULING_CONFIG.SUPPORTED_MODES[0];
@@ -812,9 +836,13 @@ export default {
 
       try {
         await this.eac.validateScheduleOptions(schedulingOptions, endowment);
-        this.scheduled.error = null;
+
+        // Remove any errors if shown
+        this.removeError(ERRORS.SCHEDULING);
       } catch (e) {
-        this.scheduled.error = e.message;
+        // Show a scheduling error
+        this.shownErrors.push(ERRORS.SCHEDULING);
+        console.error(e);
         return;
       }
 
