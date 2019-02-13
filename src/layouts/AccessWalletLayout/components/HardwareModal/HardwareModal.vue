@@ -132,7 +132,11 @@ export default {
         const inMobile = ['secalot', 'keepkey'];
 
         if (u2fhw.includes(item.name))
-          item.disabled = !(Misc.browserName() === 'chrome' && res);
+          item.disabled = !(
+            (Misc.browserName() === 'chrome' ||
+              Misc.browserName() === 'opera') &&
+            res
+          );
         if (this.isMobile()) item.disabled = !inMobile.includes(item.name);
       });
     });
