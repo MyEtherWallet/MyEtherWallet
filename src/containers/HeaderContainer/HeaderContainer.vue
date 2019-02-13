@@ -1,6 +1,7 @@
 <template>
   <div class="header">
     <!-- Modals ***************************************** -->
+    <disconnected-modal />
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
@@ -192,6 +193,7 @@ import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
+import DisconnectedModal from '@/components/DisconnectedModal';
 
 export default {
   components: {
@@ -204,7 +206,8 @@ export default {
     'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
-    'mobile-menu': MobileMenu
+    'mobile-menu': MobileMenu,
+    'disconnected-modal': DisconnectedModal
   },
   data() {
     return {
