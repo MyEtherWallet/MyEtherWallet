@@ -75,7 +75,7 @@ class MEWconnectWallet {
       });
     };
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
-
+    console.log('address', address); // todo remove dev item
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
       this.isHardware,
@@ -94,13 +94,18 @@ const createWallet = async qrcode => {
 createWallet.errorHandler = errorHandler;
 const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
-    mewConnect.initiatorStart(url);
-    mewConnect.on('RtcConnectedEvent', () => {
-      mewConnect.sendRtcMessage('address', '');
-      mewConnect.once('address', data => {
-        resolve(data.address);
+    try {
+      mewConnect.initiatorStart(url);
+      mewConnect.on('RtcConnectedEvent', () => {
+        mewConnect.sendRtcMessage('address', '');
+        mewConnect.once('address', data => {
+          console.log('rtc address data', data.address); // todo remove dev item
+          resolve(data.address);
+        });
       });
-    });
+    } catch (e) {
+      console.error(e);
+    }
   });
 };
 

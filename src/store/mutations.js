@@ -50,6 +50,7 @@ const CLEAR_WALLET = function(state) {
 };
 
 const DECRYPT_WALLET = function(state, wallet) {
+  console.log('DECRYPT_WALLET', wallet); // todo remove dev item
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
