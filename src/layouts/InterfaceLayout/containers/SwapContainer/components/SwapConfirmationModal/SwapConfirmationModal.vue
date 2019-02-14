@@ -223,7 +223,9 @@ export default {
                       err
                     ]);
                   })
-                  .catch(() => {});
+                  .catch(err => {
+                    Toast.responseHandler(err, false);
+                  });
               });
           } else {
             this.web3.eth

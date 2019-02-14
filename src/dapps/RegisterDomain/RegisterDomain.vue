@@ -250,6 +250,7 @@ export default {
           }
         }
       } catch (e) {
+        Toast.responseHandler(e, false);
         this.loading = false;
       }
     },
@@ -300,6 +301,7 @@ export default {
       try {
         normalise(value);
       } catch (e) {
+        Toast.responseHandler(e, false);
         this.domainNameErr = true;
         return;
       }
@@ -320,6 +322,7 @@ export default {
         owner = await this.ens.owner(`${this.domainName}.${this.registrarTLD}`);
       } catch (e) {
         owner = '0x';
+        Toast.responseHandler(e, false);
       }
       try {
         resolverAddress = await this.ens
@@ -327,6 +330,7 @@ export default {
           .addr();
       } catch (e) {
         resolverAddress = '0x';
+        Toast.responseHandler(e, Toast.ERROR);
       }
 
       this.nameHash = nameHashPckg.hash(

@@ -4,7 +4,6 @@ import toastSuccess from '@/assets/images/icons/toast-success.svg';
 
 const toastObject = {
   position: 'bottom-right',
-  duration: 2500,
   closeOnSwipe: true
 };
 
@@ -20,7 +19,10 @@ const error = {
       payload.message
     }</div>`;
   },
-  options: Object.assign({}, toastObject, { className: 'toast-error' })
+  options: Object.assign({}, toastObject, {
+    className: 'toast-error',
+    duration: 5000
+  })
 };
 
 const info = {
@@ -35,7 +37,10 @@ const info = {
       payload.message
     }</div>`;
   },
-  options: Object.assign({}, toastObject, { className: 'toast-warn' })
+  options: Object.assign({}, toastObject, {
+    className: 'toast-warn',
+    duration: 4000
+  })
 };
 
 const success = {
@@ -50,7 +55,10 @@ const success = {
       payload.message
     }</div>`;
   },
-  options: Object.assign({}, toastObject, { className: 'toast-success' })
+  options: Object.assign({}, toastObject, {
+    className: 'toast-success',
+    duration: 3000
+  })
 };
 
 export { error, info, success };

@@ -423,7 +423,7 @@ export default {
             this.result = res;
           })
           .catch(e => {
-            Toast.responseHandler(e, false);
+            Toast.responseHandler(e, Toast.WARN);
           });
       } else {
         this.result = '';
