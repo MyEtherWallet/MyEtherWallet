@@ -55,16 +55,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      path: 'path'
+      path: 'path',
+      web3: 'web3'
     })
   },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
-          this.$store.dispatch('decryptWallet', [wallet]);
-          this.$router.push({
-            path: 'interface'
+          if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
+          this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
           });
         })
         .catch(e => {

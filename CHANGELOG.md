@@ -4,6 +4,7 @@
 
 - Fix mobile settings [#651](https://github.com/MyEtherWallet/MyEtherWallet/pull/651)
 - Mandatory password input for Get a New Wallet -> Mnemonic Phrase [#649](https://github.com/MyEtherWallet/MyEtherWallet/pull/649)
+- fix data copy error on FF, and MEWconnect disconnect modal [#648](https://github.com/MyEtherWallet/MyEtherWallet/pull/648)
 - Fix Access my wallet modals [#647](https://github.com/MyEtherWallet/MyEtherWallet/pull/647)
 - Reset tokens when adding custom token, fetch balance on load [#646](https://github.com/MyEtherWallet/MyEtherWallet/pull/646)
 - Fix Ui Access by Software modal [#645](https://github.com/MyEtherWallet/MyEtherWallet/pull/645)
@@ -26,7 +27,6 @@
 
 ### Bug
 
-- Fix Send ETH & Tokens UI bug [#644](https://github.com/MyEtherWallet/MyEtherWallet/pull/644)
 - Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
 - Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
 - Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
@@ -42,6 +42,7 @@
 
 ### Devop
 
+- Add disconnected modal [#635](https://github.com/MyEtherWallet/MyEtherWallet/pull/635)
 - Add medium link [#598](https://github.com/MyEtherWallet/MyEtherWallet/pull/598)
 
 ### Release v5.0.0-rc.1

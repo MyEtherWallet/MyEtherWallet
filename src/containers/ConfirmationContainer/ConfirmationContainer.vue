@@ -73,6 +73,17 @@ import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
+
+const events = {
+  showSuccessModal: 'showSuccessModal',
+  showErrorModal: 'showErrorModal',
+  showTxConfirmModal: 'showTxConfirmModal',
+  showSendSignedTx: 'showSendSignedTx',
+  showWeb3Wallet: 'showWeb3Wallet',
+  showTxCollectionConfirmModal: 'showTxCollectionConfirmModal',
+  showMessageConfirmModal: 'showMessageConfirmModal'
+};
+
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -140,14 +151,9 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$eventHub.$off('showSuccessModal');
-    this.$eventHub.$off('showErrorModal');
-    this.$eventHub.$off('showTxConfirmModal');
-    this.$eventHub.$off('showSendSignedTx');
-    this.$eventHub.$off('showWeb3Wallet');
-    this.$eventHub.$off('showTxCollectionConfirmModal');
-    this.$eventHub.$off('showTxCollectionConfirmModal');
-    this.$eventHub.$off('showMessageConfirmModal');
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
   },
   created() {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
