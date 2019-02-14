@@ -181,7 +181,7 @@ import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
-import EthUtil from 'ethereumjs-util';
+import { generateAddress, bufferToHex } from 'ethereumjs-util';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -304,9 +304,7 @@ export default {
         this.web3.eth.sendTransaction(json).catch(err => {
           Toast.responseHandler(err, Toast.WARN);
         });
-        const contractAddr = EthUtil.bufferToHex(
-          EthUtil.generateAddress(coinbase, nonce)
-        );
+        const contractAddr = bufferToHex(generateAddress(coinbase, nonce));
         this.pushContractToStore(contractAddr);
       } catch (e) {
         Toast.responseHandler(e, false);

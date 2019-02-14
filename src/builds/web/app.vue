@@ -33,7 +33,7 @@ export default {
   created() {
     const msg =
       'New update found! Please refresh your browser to receive the most updated version';
-    window.navigator.serviceWorker.addEventListener('PWA_UPDATED', () => {
+    window.addEventListener('PWA_UPDATED', () => {
       Toast.responseHandler(msg, Toast.SUCCESS);
     });
   },
@@ -48,7 +48,7 @@ export default {
     });
   },
   destroyed() {
-    window.navigator.serviceWorker.removeEventListener('PWA_UPDATED');
+    window.removeEventListener('PWA_UPDATED');
   }
 };
 </script>

@@ -1,7 +1,7 @@
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import bip39 from 'bip39';
-import ethUtil from 'ethereumjs-util';
+import { hashPersonalMessage, ecsign, toBuffer } from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
 const ETH_PATH = "m/44'/60'/0'/0";
 const mnemonic =
@@ -43,8 +43,8 @@ const txParams = {
   chainId: 3
 };
 const ethSignMessage = (msg, privKey) => {
-  const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
-  const signed = ethUtil.ecsign(msgHash, privKey);
+  const msgHash = hashPersonalMessage(toBuffer(msg));
+  const signed = ecsign(msgHash, privKey);
   return Buffer.concat([
     Buffer.from(signed.r),
     Buffer.from(signed.s),
@@ -68,8 +68,8 @@ for (let i = 0; i < 3; i++)
       },
       msg => {
         return new Promise(resolve => {
-          const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
-          const signed = ethUtil.ecsign(
+          const msgHash = hashPersonalMessage(toBuffer(msg));
+          const signed = ecsign(
             msgHash,
             hdk.derive(ETH_PATH + '/' + i).privateKey
           );

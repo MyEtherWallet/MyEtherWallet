@@ -88,7 +88,7 @@ describe('SendOfflineContainer.vue', () => {
     ).toBe(wrapper.vm.$data.rawTx);
   });
 
-  it('should render correct tabs data', () => {
+  xit('should render correct tabs data', () => {
     const pointerEventsElements = wrapper.vm.$el.querySelectorAll(
       'div.prevent-pointer-events'
     );

@@ -37,7 +37,6 @@
     <div class="mobile-interface-address-block">
       <mobile-interface-address
         :address="address"
-        :trigger-alert="triggerAlert"
         :print="print"
         :switch-addr="switchAddress"
       />
@@ -55,18 +54,10 @@
         </div>
       </div>
       <div class="contents">
-        <b-alert
-          :show="alert.show"
-          :variant="alert.type"
-          fade
-          @click.native="triggerAlert(null)"
-          >{{ alert.msg }}</b-alert
-        >
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
               :address="address"
-              :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
               :qrcode="openAddressQrcode"
@@ -90,7 +81,6 @@
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
-              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -242,14 +232,18 @@ export default {
     switchAddress() {
       switch (this.account.identifier) {
         case LEDGER_TYPE:
-          LedgerWallet().then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
           break;
         case TREZOR_TYPE:
-          TrezorWallet().then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case BITBOX_TYPE:
           this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
@@ -261,9 +255,11 @@ export default {
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
           break;
         case KEEPKEY_TYPE:
-          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
           break;
         default:
           Toast.responseHandler(
@@ -277,34 +273,11 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    triggerAlert(msg, type) {
-      let timeout;
-      if (msg !== null) {
-        this.alert = {
-          show: true,
-          msg: msg,
-          type: type ? type : 'info'
-        };
-        timeout = setTimeout(() => {
-          this.alert = {
-            show: false,
-            msg: '',
-            type: type ? type : 'info'
-          };
-        }, 3000);
-      } else {
-        clearTimeout(timeout);
-        this.alert = {
-          show: false,
-          msg: ''
-        };
-      }
-    },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
     },
     async fetchTokens() {
-      this.receivedTokens = true;
+      this.receivedTokens = false;
       let tokens = [];
       if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         const tb = new TokenBalance(this.web3.currentProvider);
@@ -384,7 +357,7 @@ export default {
       store.set('customTokens', customTokenStore);
     },
     async setTokens() {
-      this.receivedTokens = false;
+      const customStore = store.get('customTokens');
       this.tokens = [];
       let tokens = await this.fetchTokens();
       tokens = tokens
@@ -414,21 +387,35 @@ export default {
         });
 
       this.tokens = tokens.sort(sortByBalance);
-      let customTokens = [];
+
       if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[this.network.type.name] !== undefined &&
-        store.get('customTokens')[this.network.type.name].length > 0
+        customStore !== undefined &&
+        customStore[this.network.type.name] !== undefined &&
+        customStore[this.network.type.name].length > 0
       ) {
-        customTokens = store.get('customTokens')[
-          // eslint-disable-next-line
-          this.network.type.name
-        ].filter(token => token.balance > 0);
+        new Promise(resolve => {
+          const newArr = customStore[this.network.type.name].map(
+            async token => {
+              token.balance = await this.getTokenBalance(token);
+              return token;
+            }
+          );
+          Promise.all(newArr).then(res => {
+            customStore[this.network.type.name] = res;
+            store.set('customTokens', customStore);
+            resolve(res);
+          });
+        }).then(res => {
+          const allTokens = this.tokens
+            .filter(token => token.balance > 0)
+            .concat(res.filter(token => token.balance > 0));
+          this.tokensWithBalance = allTokens;
+          this.receivedTokens = true;
+        });
+      } else {
+        this.receivedTokens = true;
+        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
       }
-      const allTokens = this.tokens
-        .filter(token => token.balance > 0)
-        .concat(customTokens);
-      this.tokensWithBalance = allTokens;
     },
     getBlock() {
       this.web3.eth
