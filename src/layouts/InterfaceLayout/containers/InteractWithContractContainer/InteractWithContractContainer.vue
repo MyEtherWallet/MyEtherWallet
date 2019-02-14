@@ -490,6 +490,7 @@ export default {
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
+        let errored = false;
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
@@ -499,24 +500,27 @@ export default {
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
+            errored = true;
           });
-        const data = contract.methods[this.selectedMethod.name](
-          ...this.contractArgs
-        ).encodeABI();
+        if (!errored) {
+          const data = contract.methods[this.selectedMethod.name](
+            ...this.contractArgs
+          ).encodeABI();
 
-        const raw = {
-          from: this.account.address,
-          gas: gasLimit,
-          nonce: nonce,
-          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-          value: 0,
-          to: this.address,
-          data: data
-        };
-        web3.eth.sendTransaction(raw).catch(err => {
-          this.loading = false;
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+          const raw = {
+            from: this.account.address,
+            gas: gasLimit,
+            nonce: nonce,
+            gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+            value: 0,
+            to: this.address,
+            data: data
+          };
+          web3.eth.sendTransaction(raw).catch(err => {
+            this.loading = false;
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+        }
       }
     }
   }
