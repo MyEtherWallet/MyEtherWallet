@@ -193,7 +193,8 @@ export default {
           return (
             !this.online ||
             (Misc.browserName() !== 'chrome' &&
-              Misc.browserName() !== 'firefox')
+              Misc.browserName() !== 'firefox' &&
+              Misc.browserName() !== 'safari')
           );
         case 'button-hardware':
           return !this.online;

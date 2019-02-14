@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-content {
+    padding: 40px;
+  }
+
   .modal-software {
     .button-options {
       display: grid;
@@ -13,5 +17,6 @@
 
   button {
     width: inherit;
+    margin: 0;
   }
 }
