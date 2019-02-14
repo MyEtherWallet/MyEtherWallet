@@ -149,11 +149,10 @@ export default {
     },
     tokens(newVal) {
       this.assignTokens(newVal, this.search);
+      this.getCustomTokens();
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-    },
-    network() {
       this.getCustomTokens();
     }
   },
