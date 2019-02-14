@@ -37,7 +37,6 @@
     <div class="mobile-interface-address-block">
       <mobile-interface-address
         :address="address"
-        :trigger-alert="triggerAlert"
         :print="print"
         :switch-addr="switchAddress"
       />
@@ -55,18 +54,10 @@
         </div>
       </div>
       <div class="contents">
-        <b-alert
-          :show="alert.show"
-          :variant="alert.type"
-          fade
-          @click.native="triggerAlert(null)"
-          >{{ alert.msg }}</b-alert
-        >
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
               :address="address"
-              :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
               :qrcode="openAddressQrcode"
@@ -90,7 +81,6 @@
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
-              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -276,29 +266,6 @@ export default {
     },
     print() {
       this.$refs.printModal.$refs.print.show();
-    },
-    triggerAlert(msg, type) {
-      let timeout;
-      if (msg !== null) {
-        this.alert = {
-          show: true,
-          msg: msg,
-          type: type ? type : 'info'
-        };
-        timeout = setTimeout(() => {
-          this.alert = {
-            show: false,
-            msg: '',
-            type: type ? type : 'info'
-          };
-        }, 3000);
-      } else {
-        clearTimeout(timeout);
-        this.alert = {
-          show: false,
-          msg: ''
-        };
-      }
     },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');

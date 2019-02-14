@@ -117,10 +117,6 @@ export default {
       type: Function,
       default: function() {}
     },
-    triggerAlert: {
-      type: Function,
-      default: function() {}
-    },
     fetchTokens: {
       type: Function,
       default: function() {}
@@ -255,24 +251,24 @@ export default {
       const findTokenByAddr = this.searchByAddr(address);
       if (!findTokenByAddr && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          'A default token with this contract address already exists!',
-          'danger'
+        Toast.responseHandler(
+          'A default or custom token with this contract address already exists!',
+          Toast.ERROR
         );
         return false;
       } else if (!findTokenBySymbol && addType !== '') {
         this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
-          'danger'
+        Toast.responseHandler(
+          "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          Toast.ERROR
         );
         return false;
       }
-
-      return !findTokenByAddr || !findTokenBySymbol;
+      console.log(findTokenByAddr, findTokenBySymbol);
+      return findTokenByAddr || findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
-      if (!this.tokenError(address, symbol, 'manual')) {
+      if (this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,
@@ -296,7 +292,7 @@ export default {
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Successfully added token!');
+        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
     },
     tokenListExpend() {

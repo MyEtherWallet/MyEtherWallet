@@ -4,7 +4,16 @@ import toastSuccess from '@/assets/images/icons/toast-success.svg';
 
 const toastObject = {
   position: 'bottom-right',
-  closeOnSwipe: true
+  closeOnSwipe: true,
+  iconPack: 'fontawesome',
+  action: {
+    text: '',
+    icon: 'fa-times',
+    class: 'toast-action',
+    onClick: (e, toastObject) => {
+      toastObject.goAway(0);
+    }
+  }
 };
 
 const error = {
@@ -25,7 +34,7 @@ const error = {
   })
 };
 
-const info = {
+const warn = {
   name: 'appWarn',
   payloadFunc: payload => {
     // if there is no message passed show default message
@@ -33,7 +42,7 @@ const info = {
       return `<div><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastWarn}" /> &nbsp; Info: ${
+    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${
       payload.message
     }</div>`;
   },
@@ -43,12 +52,30 @@ const info = {
   })
 };
 
+const info = {
+  name: 'appInfo',
+  payloadFunc: payload => {
+    // if there is no message passed show default message
+    if (!payload.message) {
+      return `<div><img src="${toastSuccess}" /> Good job! </div>`;
+    }
+    // if there is a message show it with the message
+    return `<div><img src="${toastSuccess}" /> &nbsp; Info: ${
+      payload.message
+    }</div>`;
+  },
+  options: Object.assign({}, toastObject, {
+    className: 'toast-info',
+    duration: 4000
+  })
+};
+
 const success = {
   name: 'appSuccess',
   payloadFunc: payload => {
     // if there is no message passed show default message
     if (!payload.message) {
-      return `<div><img src="${toastErr}" /> &nbsp; Success!</div>`;
+      return `<div><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
     }
     // if there is a message show it with the message
     return `<div><img src="${toastSuccess}" /> &nbsp; Success: ${
@@ -61,4 +88,4 @@ const success = {
   })
 };
 
-export { error, info, success };
+export { error, warn, success, info };
