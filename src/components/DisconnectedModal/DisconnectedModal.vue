@@ -15,11 +15,10 @@
           Oops!
         </div>
         <div class="text-content">
-          Seems like you are disconnected with MEWconnect, please reconnect
-          using App.
+          {{ $t('header.mewConnectDisconnected') }}
         </div>
         <div class="ok-button">
-          <standard-button :options="okayButtonOptions" />
+          <standard-button :options="okayButtonOptions" @click.native="close" />
         </div>
       </div>
     </b-modal>
@@ -43,10 +42,11 @@ export default {
       }
     };
   },
-  mounted() {
-    //this.$refs.disconnected.show();
-  },
-  methods: {}
+  methods: {
+    close() {
+      this.$refs.disconnected.hide();
+    }
+  }
 };
 </script>
 
