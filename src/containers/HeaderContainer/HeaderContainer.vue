@@ -37,7 +37,7 @@
       </div>
     </div>
     <!-- Scroll up button ******************************* -->
-    <mobile-menu />
+    <mobile-menu :opensettings="openSettings" :logout="logout" />
 
     <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
