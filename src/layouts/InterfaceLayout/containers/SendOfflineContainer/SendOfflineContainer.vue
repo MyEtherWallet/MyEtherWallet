@@ -11,7 +11,7 @@
                   <h4>{{ $t('interface.sendTxType') }}</h4>
                 </div>
                 <currency-picker
-                  :currency="tokensWithBalance"
+                  :currency="allTokens"
                   :token="true"
                   page="sendOfflineGenTx"
                   @selectedCurrency="setSelectedCurrency"
@@ -218,6 +218,7 @@ import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import { Misc, ErrorHandler } from '@/helpers';
+import store from 'store';
 import utils from 'web3-utils';
 
 export default {
@@ -229,7 +230,7 @@ export default {
     'interface-container-title': InterfaceContainerTitle
   },
   props: {
-    tokensWithBalance: {
+    tokens: {
       type: Array,
       default: function() {
         return [];
@@ -259,6 +260,19 @@ export default {
     }),
     validAddress() {
       return isAddress(this.address);
+    },
+    allTokens() {
+      const customToken = store.get('customTokens');
+      const allTokens = this.tokens.concat(customToken[this.network.type.name]);
+      const sortedBySymbol = allTokens.sort((a, b) => {
+        if (a.symbol.toUpperCase() < b.symbol.toUpperCase()) {
+          return -1;
+        } else if (a.symbol.toUpperCase() > b.symbol.toUpperCase()) {
+          return 1;
+        }
+        return 0;
+      })
+      return sortedBySymbol;
     },
     isAllInputValid() {
       return (

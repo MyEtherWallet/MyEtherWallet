@@ -385,7 +385,6 @@ export default {
     },
     async setTokens() {
       const customStore = store.get('customTokens');
-      // this.receivedTokens = true;
       this.tokens = [];
       let tokens = await this.fetchTokens();
       tokens = tokens
@@ -415,10 +414,11 @@ export default {
         });
 
       this.tokens = tokens.sort(sortByBalance);
+
       if (
         customStore !== undefined &&
         customStore[this.network.type.name] !== undefined &&
-        customStore[this.network.type.name].length > 0
+        customStore[this.network.type.name].length
       ) {
         new Promise(resolve => {
           const newArr = customStore[this.network.type.name].map(
@@ -440,6 +440,8 @@ export default {
           this.tokensWithBalance = allTokens;
           this.receivedTokens = true;
         });
+      } else {
+        this.receivedTokens = true;
       }
     },
     getBlock() {
