@@ -129,9 +129,15 @@ export default {
     isSupported().then(res => {
       this.items.forEach(item => {
         const u2fhw = ['secalot', 'ledger', 'bitbox'];
+        const inMobile = ['secalot', 'keepkey'];
 
         if (u2fhw.includes(item.name))
-          item.disabled = !(Misc.browserName() === 'chrome' && res);
+          item.disabled = !(
+            (Misc.browserName() === 'chrome' ||
+              Misc.browserName() === 'opera') &&
+            res
+          );
+        if (this.isMobile()) item.disabled = !inMobile.includes(item.name);
       });
     });
     this.$refs.hardware.$on('hidden', () => {
@@ -139,6 +145,12 @@ export default {
     });
   },
   methods: {
+    isMobile() {
+      return (
+        typeof window.orientation !== 'undefined' ||
+        navigator.userAgent.indexOf('IEMobile') !== -1
+      );
+    },
     continueAccess() {
       const showPluggedInReminder = setTimeout(() => {
         this.mayNotBeAttached = true;

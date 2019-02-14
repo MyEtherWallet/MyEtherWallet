@@ -28,7 +28,6 @@
           @click.prevent="switchViewPassword"
         />
       </div>
-      <p v-show="error !== ''" class="error">{{ error }}</p>
       <div class="not-recommended">
         {{ $t('accessWallet.notARecommendedWay') }}
       </div>
@@ -66,7 +65,6 @@ export default {
     return {
       show: false,
       password: '',
-      error: '',
       spinner: false
     };
   },
@@ -103,7 +101,6 @@ export default {
       worker.onerror = function(e) {
         e.preventDefault();
         self.spinner = false;
-        self.error = e.message;
         Toast.responseHandler(e, Toast.ERROR);
       };
     },
