@@ -3,36 +3,40 @@
     ref="privateKey"
     :title="$t('accessWallet.accessByPrivateKey')"
     hide-footer
-    class="bootstrap-modal modal-software"
+    class="bootstrap-modal nopadding modal-software"
     centered
     @shown="focusInput"
   >
-    <form class="private-key-form">
-      <div class="input-container">
-        <input
-          ref="privateKeyInput"
-          v-model="privateKey"
-          type="text"
-          name="PrivateKey"
-          autocomplete="off"
-          placeholder="Enter Private Key"
-        />
-      </div>
-      <div class="not-recommended">
-        {{ $t('accessWallet.notARecommendedWay') }}
-      </div>
-      <button
-        :disabled="
-          privateKey === '' && privateKey.length === 0 && privateKey.length < 9
-        "
-        class="submit-button large-round-button-green-filled"
-        type="submit"
-        @click.prevent="unlockWallet"
-      >
-        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
-        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
-      </button>
-    </form>
+    <div class="modal-content">
+      <form class="private-key-form">
+        <div class="input-container">
+          <input
+            ref="privateKeyInput"
+            v-model="privateKey"
+            type="text"
+            name="PrivateKey"
+            autocomplete="off"
+            placeholder="Enter Private Key"
+          />
+        </div>
+        <div class="not-recommended">
+          {{ $t('accessWallet.notARecommendedWay') }}
+        </div>
+        <button
+          :disabled="
+            privateKey === '' &&
+              privateKey.length === 0 &&
+              privateKey.length < 64
+          "
+          class="submit-button large-round-button-green-filled"
+          type="submit"
+          @click.prevent="unlockWallet"
+        >
+          <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
+          <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
+        </button>
+      </form>
+    </div>
   </b-modal>
 </template>
 
