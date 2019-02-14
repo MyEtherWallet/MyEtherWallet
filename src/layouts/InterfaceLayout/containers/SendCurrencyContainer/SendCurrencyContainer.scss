@@ -264,9 +264,11 @@
   .submit-button-container {
     margin-top: 60px;
     text-align: center;
+    padding: 0 10px 40px 10px;
 
     @media all and (max-width: $mobile-width) {
       margin-top: 30px;
+      padding: 0 10px 30px 10px;
     }
 
     .submit-button {

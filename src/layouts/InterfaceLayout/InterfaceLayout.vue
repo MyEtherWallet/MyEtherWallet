@@ -242,14 +242,18 @@ export default {
     switchAddress() {
       switch (this.account.identifier) {
         case LEDGER_TYPE:
-          LedgerWallet().then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
           break;
         case TREZOR_TYPE:
-          TrezorWallet().then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case BITBOX_TYPE:
           this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
@@ -261,9 +265,11 @@ export default {
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
           break;
         case KEEPKEY_TYPE:
-          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
-            this.toggleNetworkAddrModal(_newWallet);
-          });
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
           break;
         default:
           ErrorHandler(
