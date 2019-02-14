@@ -54,7 +54,7 @@
               </div>
               <div class="error-message-container">
                 <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-                <p v-if="notEnough && !fromBelowMinAllowed">
+                <p v-if="!hasEnough && !fromBelowMinAllowed">
                   {{ $t('common.dontHaveEnough') }}
                 </p>
                 <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
@@ -383,7 +383,7 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        !this.notEnough &&
+        this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
@@ -428,12 +428,25 @@ export default {
       );
     },
     allAddressesValid() {
-      if (this.isExitToFiat) return this.validAddress && this.validExitAddress;
-      if (this.showRefundAddress)
-        return this.validAddress && this.validRefundAddress;
-      return this.validAddress;
+      const validBaseToAddress = this.toAddress !== '' && this.validAddress;
+
+      if (this.isExitToFiat) {
+        // const validExitAddress =
+        return this.exitFromAddress !== '' && this.validExitAddress;
+        // return (
+        //   (validBaseToAddress && validExitAddress) ||
+        //   this.fromCurrency === this.baseCurrency
+        // );
+      }
+      if (this.showRefundAddress) {
+        const validRefundAddress =
+          this.refundAddress === '' && this.validRefundAddress;
+        return validBaseToAddress && validRefundAddress;
+      }
+
+      return validBaseToAddress;
     },
-    notEnough() {
+    hasEnough() {
       if (
         this.swap.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
@@ -443,16 +456,24 @@ export default {
           this.fromValue
         );
 
-        if (+this.tokenBalances[this.fromCurrency] === +enteredVal) {
-          return false;
-        }
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
+        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
           new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
-        return new BigNumber(this.account.balance).lt(this.fromValue);
+        const enteredVal = this.swap.convertToTokenWei(
+          this.fromCurrency,
+          this.fromValue
+        );
+        console.log(this.account.balance); // todo remove dev item
+        console.log(enteredVal); // todo remove dev item
+        console.log(
+          new BigNumber(this.account.balance).gt(new BigNumber(enteredVal))
+        ); // todo remove dev item
+        return new BigNumber(this.account.balance).gt(
+          new BigNumber(enteredVal)
+        );
       }
-      return false;
+      return true;
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency

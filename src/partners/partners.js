@@ -205,6 +205,8 @@ export default class SwapProviders {
   getTokenDecimals(currency) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].decimals;
+    } else if (currency === 'ETH') {
+      return 18;
     }
     throw Error('Not an Ethereum Token');
   }

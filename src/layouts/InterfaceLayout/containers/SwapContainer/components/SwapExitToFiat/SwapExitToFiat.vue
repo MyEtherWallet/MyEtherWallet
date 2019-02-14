@@ -21,6 +21,7 @@
             :greytitle="false"
             :editbutton="true"
             number="1"
+            @titleClicked="reOpen"
           >
             <ul>
               <li>
@@ -60,6 +61,7 @@
             :editbutton="true"
             :title="$t('interface.enterVerification')"
             number="2"
+            @titleClicked="reOpen"
           >
             <ul>
               <li>
@@ -82,7 +84,7 @@
             :greytitle="false"
             :editbutton="true"
             number="3"
-            @titleClicked="reOpenBankInformation"
+            @titleClicked="reOpen"
           >
             <ul>
               <li v-if="previouslyVerified">
@@ -117,6 +119,7 @@
             :greytitle="false"
             :editbutton="true"
             number="4"
+            @titleClicked="reOpen"
           >
             <ul>
               <li>
@@ -177,7 +180,7 @@
             :options="button1"
             @click.native="
               updateStep('verifyStep');
-              updateStage('phone');
+              updateStage('step1');
               registerPhone();
             "
           />
@@ -186,7 +189,7 @@
             :options="verifyButton"
             @click.native="
             updateStep('step2')
-              updateStage('verify');
+              updateStage('verifyStep');
               confirmUser();
             "
           />
@@ -195,7 +198,7 @@
             :options="button2"
             @click.native="
             updateStep('step3')
-              updateStage('account');
+              updateStage('step2');
             "
           />
           <standard-button
@@ -203,7 +206,7 @@
             :options="button3"
             @click.native="
               updateStep('')
-              updateStage('accountHolder');
+              updateStage('step3');
               createExitOrder();
             "
           />
@@ -272,11 +275,11 @@ export default {
       addSpace: false,
       finalizingSwap: false,
       countryList: Object.entries(getNames('en')),
-      status: {
-        phone: false,
-        verify: false,
-        account: false,
-        accountHolder: false
+      complete: {
+        step1: false,
+        verifyStep: false,
+        step2: false,
+        step3: false
       },
       steps: {
         step1: true,
@@ -409,9 +412,10 @@ export default {
     }
   },
   methods: {
-    reOpenBankInformation() {
-      this.step2 = true;
-      this.step3 = false;
+    reOpen(step) {
+      if(this.complete[step]){
+        this.updateStep(step);
+      }
     },
     roomForDropDown(val) {
       this.addSpace = val;
@@ -427,7 +431,7 @@ export default {
       });
     },
     updateStage(stage) {
-      this.status[stage] = true;
+      this.complete[stage] = true;
     },
     openMenu(val) {
       return val;
