@@ -14,8 +14,8 @@ import {
   getSignTransactionObject,
   calculateChainIdFromV
 } from '../../utils';
-import * as HDKey from 'hdkey';
-import ethUtil from 'ethereumjs-util';
+import HDKey from 'hdkey';
+import { toBuffer } from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
 
@@ -114,7 +114,7 @@ class KeepkeyWallet {
     const msgSigner = async msg => {
       const signMessage = new Messages.EthereumSignMessage();
       signMessage.setAddressNList(bip32ToAddressNList(accountPath));
-      signMessage.setMessage(new Uint8Array(ethUtil.toBuffer(msg)));
+      signMessage.setMessage(new Uint8Array(toBuffer(msg)));
       const [, response] = await this.keepkey.device.exchange(
         Messages.MessageType.MESSAGETYPE_ETHEREUMSIGNMESSAGE,
         signMessage

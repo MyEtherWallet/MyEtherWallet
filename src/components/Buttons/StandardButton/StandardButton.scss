@@ -137,6 +137,13 @@ button[disabled] {
   &.full-width {
     display: block;
   }
+
+  &.mobile-full-width {
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
 }
 
 //=======================================================================

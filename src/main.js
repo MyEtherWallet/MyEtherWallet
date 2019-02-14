@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import Vue from 'vue';
+import Router from 'vue-router';
 import router from '@/router';
 import store from '@/store';
 import VueI18n from 'vue-i18n';
@@ -55,6 +56,9 @@ Vue.component('popover', PopOver);
 //Toasted
 Vue.use(Toasted);
 
+//Router
+Vue.use(Router);
+Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
 Vue.directive('ens-resolver', EnsResolver);
@@ -109,7 +113,8 @@ Sentry.init({
   beforeSend(event) {
     event.tags = {
       network: store.getters.network.type.name,
-      service: store.getters.network.service
+      service: store.getters.network.service,
+      walletType: store.getters.account.identifier
     };
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);

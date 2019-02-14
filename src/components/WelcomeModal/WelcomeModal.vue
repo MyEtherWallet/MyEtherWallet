@@ -5,7 +5,8 @@
     hide-header
     no-close-on-backdrop
     no-close-on-esc
-    class="bootstrap-modal"
+    centered
+    class="bootstrap-modal nopadding"
   >
     <div class="welcome-modal">
       <img src="@/assets/images/modal/garlands.png" />
