@@ -37,7 +37,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -66,7 +66,7 @@ export default {
           });
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
     });
     this.$refs.mewConnect.$on('hidden', () => {
