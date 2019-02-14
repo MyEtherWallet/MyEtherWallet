@@ -20,7 +20,7 @@
           </div>
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0">
+          <table v-show="customTokens.length > 0 && receivedTokens">
             <tr
               v-for="(token, index) in customTokens"
               :key="token.name + index"
@@ -36,7 +36,7 @@
             </tr>
           </table>
 
-          <table v-show="localTokens.length > 0">
+          <table v-show="localTokens.length > 0 && receivedTokens">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
               <td
@@ -51,7 +51,9 @@
           </table>
 
           <div
-            v-show="search === '' && localTokens.length === 0 && receivedTokens"
+            v-show="
+              search === '' && localTokens.length === 0 && !receivedTokens
+            "
             class="spinner-container"
           >
             <i class="fa fa-spinner fa-spin" />
@@ -142,28 +144,17 @@ export default {
     })
   },
   watch: {
+    receivedTokens() {
+      this.getCustomTokens();
+    },
     tokens(newVal) {
       this.assignTokens(newVal, this.search);
+      this.getCustomTokens();
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-    },
-    network(newVal) {
-      if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[newVal.type.name] !== undefined
-      ) {
-        this.customTokens = store.get('customTokens')[newVal.type.name];
-      } else {
-        this.customTokens = [];
-      }
-    }
-  },
-  mounted() {
-    if (store.get('customTokens')) {
       this.getCustomTokens();
     }
-    this.assignTokens(this.tokens, this.search);
   },
   methods: {
     getV3Tokens() {
@@ -215,6 +206,7 @@ export default {
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
+      this.fetchTokens();
     },
     searchBySymbol(symbol) {
       const searchNetwork = this.localTokens.find(item => {
@@ -253,23 +245,26 @@ export default {
     tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          'A default token with this contract address already exists!',
-          'danger'
-        );
-        return false;
-      } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
-          'danger'
-        );
-        return false;
-      }
+      if (address !== '' || symbol !== '') {
+        if (!findTokenByAddr && addType !== '') {
+          this.$refs.tokenModal.$refs.token.hide();
+          this.triggerAlert(
+            'A default token with this contract address already exists!',
+            'danger'
+          );
+          return false;
+        } else if (!findTokenBySymbol && addType !== '') {
+          this.$refs.tokenModal.$refs.token.hide();
+          this.triggerAlert(
+            "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+            'danger'
+          );
+          return false;
+        }
 
-      return !findTokenByAddr || !findTokenBySymbol;
+        return !findTokenByAddr || !findTokenBySymbol;
+      }
+      return false;
     },
     async addToken(address, symbol, decimal) {
       if (!this.tokenError(address, symbol, 'manual')) {
@@ -294,6 +289,7 @@ export default {
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
         this.triggerAlert('Successfully added token!');
+        this.fetchTokens();
       }
     },
     tokenListExpend() {
@@ -320,9 +316,6 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
-        if (store.get('customTokens') !== undefined) {
-          this.customTokens = store.get('customTokens')[this.network.type.name];
-        }
       }
     }
   }

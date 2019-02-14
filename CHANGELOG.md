@@ -8,6 +8,7 @@
 - Fix Ui Access by Software modal [#645](https://github.com/MyEtherWallet/MyEtherWallet/pull/645)
 - Fix welcome modal UI [#632](https://github.com/MyEtherWallet/MyEtherWallet/pull/632)
 - Fix Access my wallet modals [#647](https://github.com/MyEtherWallet/MyEtherWallet/pull/647)
+- Reset tokens when adding custom token, fetch balance on load [#646](https://github.com/MyEtherWallet/MyEtherWallet/pull/646)
 
 ### Release v5.0.1
 
