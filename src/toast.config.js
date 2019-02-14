@@ -30,7 +30,7 @@ const error = {
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-error',
-    duration: 5000
+    duration: 10000
   })
 };
 
@@ -48,7 +48,7 @@ const warn = {
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-warn',
-    duration: 4000
+    duration: 10000
   })
 };
 
@@ -64,7 +64,7 @@ const info = {
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-info',
-    duration: 4000
+    duration: 10000
   })
 };
 
@@ -80,7 +80,7 @@ const success = {
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-success',
-    duration: 3000
+    duration: 10000
   })
 };
 

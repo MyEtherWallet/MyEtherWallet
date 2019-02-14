@@ -27,7 +27,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "4.5.4",
+    "@sentry/browser": "4.6.0",
     "detect-browser": "4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
@@ -42,8 +42,8 @@
   },
   "devDependencies": {
     "@keepkey/keepkey.js": "1.2.0",
-    "@ledgerhq/hw-app-eth": "4.38.6",
-    "@ledgerhq/hw-transport-u2f": "4.38.6",
+    "@ledgerhq/hw-app-eth": "4.39.0",
+    "@ledgerhq/hw-transport-u2f": "4.39.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.12",
     "@vue/cli-plugin-babel": "3.4.0",
@@ -94,7 +94,7 @@
     "stylelint": "9.10.1",
     "stylelint-config-prettier": "4.0.0",
     "stylelint-config-standard": "18.2.0",
-    "trezor-connect": "6.0.3",
+    "trezor-connect": "6.0.5",
     "u2f-api": "1.0.10",
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
