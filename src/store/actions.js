@@ -1,10 +1,10 @@
 import url from 'url';
 import web3 from 'web3';
+import Vue from 'vue';
 import MEWProvider from '@/wallets/web3-provider';
 import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-
 import {
   txIndexes,
   swapIndexes,
@@ -78,6 +78,7 @@ const clearWallet = function({ commit, state }) {
   if (state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect().disconnectRTC();
   }
+  Vue.router.push('/');
   commit('CLEAR_WALLET');
 };
 
