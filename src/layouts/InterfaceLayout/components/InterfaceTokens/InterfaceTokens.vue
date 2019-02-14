@@ -206,6 +206,7 @@ export default {
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
+      this.fetchTokens();
     },
     searchBySymbol(symbol) {
       const searchNetwork = this.localTokens.find(item => {
@@ -244,23 +245,26 @@ export default {
     tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          'A default token with this contract address already exists!',
-          'danger'
-        );
-        return false;
-      } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert(
-          "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
-          'danger'
-        );
-        return false;
-      }
+      if (address !== '' || symbol !== '') {
+        if (!findTokenByAddr && addType !== '') {
+          this.$refs.tokenModal.$refs.token.hide();
+          this.triggerAlert(
+            'A default token with this contract address already exists!',
+            'danger'
+          );
+          return false;
+        } else if (!findTokenBySymbol && addType !== '') {
+          this.$refs.tokenModal.$refs.token.hide();
+          this.triggerAlert(
+            "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+            'danger'
+          );
+          return false;
+        }
 
-      return !findTokenByAddr || !findTokenBySymbol;
+        return !findTokenByAddr || !findTokenBySymbol;
+      }
+      return false;
     },
     async addToken(address, symbol, decimal) {
       if (!this.tokenError(address, symbol, 'manual')) {

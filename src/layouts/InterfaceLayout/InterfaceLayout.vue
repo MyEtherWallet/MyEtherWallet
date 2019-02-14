@@ -417,8 +417,7 @@ export default {
 
       if (
         customStore !== undefined &&
-        customStore[this.network.type.name] !== undefined &&
-        customStore[this.network.type.name].length
+        customStore[this.network.type.name] !== undefined
       ) {
         new Promise(resolve => {
           const newArr = customStore[this.network.type.name].map(
