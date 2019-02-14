@@ -50,6 +50,7 @@
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import Blockie from '@/components/Blockie';
 import { mapGetters } from 'vuex';
+import { Toast } from '@/helpers';
 import {
   KEYSTORE,
   PRIV_KEY,
@@ -66,10 +67,6 @@ export default {
     address: {
       type: String,
       default: ''
-    },
-    triggerAlert: {
-      type: Function,
-      default: function() {}
     },
     print: {
       type: Function,
@@ -106,9 +103,9 @@ export default {
   },
   methods: {
     copy() {
-      this.triggerAlert('Address Copied!');
       this.$refs.copyAddress.select();
       document.execCommand('copy');
+      Toast.responseHandler('Copied!', Toast.INFO);
     },
     openQrcode() {
       this.$refs.qrcode.$refs.addressQrcode.show();
