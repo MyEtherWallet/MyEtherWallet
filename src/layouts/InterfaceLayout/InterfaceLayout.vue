@@ -37,7 +37,6 @@
     <div class="mobile-interface-address-block">
       <mobile-interface-address
         :address="address"
-        :trigger-alert="triggerAlert"
         :print="print"
         :switch-addr="switchAddress"
       />
@@ -55,18 +54,10 @@
         </div>
       </div>
       <div class="contents">
-        <b-alert
-          :show="alert.show"
-          :variant="alert.type"
-          fade
-          @click.native="triggerAlert(null)"
-          >{{ alert.msg }}</b-alert
-        >
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
               :address="address"
-              :trigger-alert="triggerAlert"
               :print="print"
               :switch-addr="switchAddress"
               :qrcode="openAddressQrcode"
@@ -90,7 +81,6 @@
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
-              :trigger-alert="triggerAlert"
             />
           </div>
         </div>
@@ -116,7 +106,7 @@ import InterfaceTokens from './components/InterfaceTokens';
 import MobileInterfaceAddress from './components/MobileInterfaceAddress';
 import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
@@ -266,7 +256,7 @@ export default {
           });
           break;
         default:
-          ErrorHandler(
+          Toast.responseHandler(
             new Error(
               `Wallet type ${this.account.identifier} can't switch addresses`
             ),
@@ -276,29 +266,6 @@ export default {
     },
     print() {
       this.$refs.printModal.$refs.print.show();
-    },
-    triggerAlert(msg, type) {
-      let timeout;
-      if (msg !== null) {
-        this.alert = {
-          show: true,
-          msg: msg,
-          type: type ? type : 'info'
-        };
-        timeout = setTimeout(() => {
-          this.alert = {
-            show: false,
-            msg: '',
-            type: type ? type : 'info'
-          };
-        }, 3000);
-      } else {
-        clearTimeout(timeout);
-        this.alert = {
-          show: false,
-          msg: ''
-        };
-      }
     },
     toggleSideMenu() {
       this.$store.commit('TOGGLE_SIDEMENU');
@@ -370,7 +337,7 @@ export default {
           return tokenBalance;
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
       return balance;
     },
@@ -437,7 +404,7 @@ export default {
           this.blockNumber = res;
         })
         .catch(e => {
-          ErrorHandler(e, true);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     getBalance() {
@@ -449,17 +416,20 @@ export default {
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            return ErrorHandler(err, false);
+            return Toast.responseHandler(err, false);
           }
           if (!accounts.length) {
-            return ErrorHandler(new Error('Please unlock metamask'), false);
+            return Toast.responseHandler(
+              new Error('Please unlock metamask'),
+              Toast.ERROR
+            );
           }
           const address = accounts[0];
           if (
@@ -493,7 +463,7 @@ export default {
             }
           })
           .catch(e => {
-            ErrorHandler(e, false);
+            Toast.responseHandler(e, false);
           });
       }, 500);
     },
@@ -535,7 +505,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          ErrorHandler(e, true);
+          Toast.responseHandler(e, true);
         });
     },
     setENS() {

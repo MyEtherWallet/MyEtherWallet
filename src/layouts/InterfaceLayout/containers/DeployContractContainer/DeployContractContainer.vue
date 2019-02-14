@@ -175,7 +175,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
@@ -302,14 +302,14 @@ export default {
         delete json.to;
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
-          ErrorHandler(err, true);
+          Toast.responseHandler(err, Toast.WARN);
         });
         const contractAddr = EthUtil.bufferToHex(
           EthUtil.generateAddress(coinbase, nonce)
         );
         this.pushContractToStore(contractAddr);
       } catch (e) {
-        ErrorHandler(e, false);
+        Toast.responseHandler(e, false);
       }
     },
     pushContractToStore(addr) {
@@ -346,7 +346,7 @@ export default {
         data: this.txData
       };
       this.gasLimit = await this.web3.eth.estimateGas(params).catch(err => {
-        ErrorHandler(err, true);
+        Toast.responseHandler(err, Toast.WARN);
       });
     },
     copyToClipboard(ref) {

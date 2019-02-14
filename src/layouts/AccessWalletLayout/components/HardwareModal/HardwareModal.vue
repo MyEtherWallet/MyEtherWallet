@@ -54,7 +54,7 @@ import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
-import { ErrorHandler, Misc } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import {
   LedgerWallet,
@@ -180,7 +180,10 @@ export default {
             .catch(KeepkeyWallet.errorHandler);
           break;
         default:
-          ErrorHandler(new Error('No switch address for given account.'), true);
+          Toast.responseHandler(
+            new Error('No switch address for given account.'),
+            Toast.ERROR
+          );
           break;
       }
     },
