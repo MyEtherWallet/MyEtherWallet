@@ -13,7 +13,8 @@ const toastObject = {
     onClick: (e, toastObject) => {
       toastObject.goAway(0);
     }
-  }
+  },
+  duration: 10000
 };
 
 const error = {
@@ -29,8 +30,7 @@ const error = {
     }</div>`;
   },
   options: Object.assign({}, toastObject, {
-    className: 'toast-error',
-    duration: 5000
+    className: 'toast-error'
   })
 };
 
@@ -47,8 +47,7 @@ const warn = {
     }</div>`;
   },
   options: Object.assign({}, toastObject, {
-    className: 'toast-warn',
-    duration: 4000
+    className: 'toast-warn'
   })
 };
 
@@ -63,8 +62,7 @@ const info = {
     return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
-    className: 'toast-info',
-    duration: 4000
+    className: 'toast-info'
   })
 };
 
@@ -79,8 +77,7 @@ const success = {
     return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
-    className: 'toast-success',
-    duration: 3000
+    className: 'toast-success'
   })
 };
 
