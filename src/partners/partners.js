@@ -152,25 +152,34 @@ export default class SwapProviders {
     throw Error('Not an Ethereum Token');
   }
 
-  calculateFromValue(toValue, bestRate) {
+  calculateFromValue(toValue, bestRate, fromCurrency) {
+    let decimals = 6;
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
         .div(new BigNumber(bestRate))
-        .toFixed(6)
+        .toFixed(decimals)
         .toString(10),
       false
     );
   }
 
-  calculateToValue(fromValue, bestRate) {
+  calculateToValue(fromValue, bestRate, toCurrency) {
+    let decimals = 6;
+    if (this.isToken(toCurrency))
+      decimals =
+        this.getTokenDecimals(toCurrency) < 6
+          ? this.getTokenDecimals(toCurrency)
+          : 6;
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(new BigNumber(bestRate))
-        .toFixed(6)
+        .toFixed(decimals)
         .toString(10),
       true
     );
   }
+
+  getDecimalsOr
 
   convertToTokenWei(token, value) {
     const decimals = this.getTokenDecimals(token);

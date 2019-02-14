@@ -735,6 +735,10 @@ export default {
             fromValue
           );
           this.updateEstimate(to);
+          // todo: Bity 3
+          if (this.providerData.length === 1) {
+            this.setSelectedProvider(this.providerData[0].provider);
+          }
         }
       }
     },
