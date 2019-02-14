@@ -18,7 +18,7 @@
     </div>
     <div :class="buttonClass">
       <button
-        :disabled="buttonDisabled"
+        :disabled="diableButton"
         :class="[
           options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
           options.noMinWidth ? 'no-min-width' : ''
@@ -84,15 +84,25 @@ export default {
       default: function() {
         return {};
       }
+    },
+    buttonDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       onBottomOfPage: false,
-      buttonDisabled: this.options.acceptTermsCheckBox
+      termsAccepted: this.options.acceptTermsCheckBox
     };
   },
   computed: {
+    diableButton() {
+      if (this.options.terms !== undefined && this.options.terms) {
+        return this.termsAccepted;
+      }
+      return this.buttonDisabled;
+    },
     buttonClass() {
       switch (this.options.buttonStyle) {
         case 'white':
@@ -129,7 +139,7 @@ export default {
   },
   methods: {
     updateCheckbox(event) {
-      this.buttonDisabled = !event;
+      this.termsAccepted = !event;
     },
     onPageScroll() {
       if (

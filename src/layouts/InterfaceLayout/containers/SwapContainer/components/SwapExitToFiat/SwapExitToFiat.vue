@@ -400,10 +400,10 @@ export default {
     if (haveCred !== null && haveCred !== undefined) {
       const userDetails = store.get('exit_to_fiat');
       if (userDetails.phone_token && userDetails.verified) {
-        this.step1 = false;
-        this.verifyStep = false;
-        this.step2 = true;
-        this.step3 = false;
+        this.steps.step1 = false;
+        this.steps.verifyStep = false;
+        this.steps.step2 = true;
+        this.steps.step3 = false;
       }
       if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
     }
@@ -442,8 +442,6 @@ export default {
     async registerPhone() {
       if (this.phoneNumber === '')
         throw Error(this.$t('interface.phoneRequired'));
-      if (this.countryCode === '')
-        throw Error(this.$t('interface.countryCodeRequired'));
       const initData = {
         phoneNumber: this.countryCode + this.phoneNumber,
         ...this.swapDetails
