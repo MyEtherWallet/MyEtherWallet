@@ -136,6 +136,7 @@ import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
+import { ErrorHandler } from '@/helpers';
 
 export default {
   name: 'Settings',
@@ -269,24 +270,29 @@ export default {
       const notifObj = {};
       notifObj[this.address] = [];
       reader.onloadend = evt => {
-        const notifications = store.get('notifications') || notifObj;
-        const file = JSON.parse(evt.target.result);
-        file.notifications.forEach(objAddr => {
-          const addr = Object.keys(objAddr)[0];
-          notifications[addr] = objAddr[addr];
-        });
-        store.set('notifications', notifications);
-        store.set('skipTutorial', file.main.skipTutorial);
-        store.set('customTokens', file.main.customTokens);
-        store.set('customNetworks', file.main.customNetworks);
-        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
-        store.set('gas', file.main.gas);
+        try {
+          const notifications = store.get('notifications') || notifObj;
+          const file = JSON.parse(evt.target.result);
+          const fNotifications = file.notifications || [];
+          fNotifications.forEach(objAddr => {
+            const addr = Object.keys(objAddr)[0];
+            notifications[addr] = objAddr[addr];
+          });
+          store.set('notifications', notifications);
+          store.set('skipTutorial', file.main.skipTutorial);
+          store.set('customTokens', file.main.customTokens);
+          store.set('customNetworks', file.main.customNetworks);
+          store.set('customDeriviationPaths', file.main.customDeriviationPaths);
+          store.set('gas', file.main.gas);
 
-        this.popup = true;
+          this.popup = true;
 
-        setTimeout(() => {
-          this.popup = false;
-        }, 1500);
+          setTimeout(() => {
+            this.popup = false;
+          }, 1500);
+        } catch (e) {
+          ErrorHandler(e, true);
+        }
       };
       reader.readAsBinaryString(this.importedFile);
     },
