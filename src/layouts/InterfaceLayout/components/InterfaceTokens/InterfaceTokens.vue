@@ -92,7 +92,7 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
@@ -287,7 +287,10 @@ export default {
           this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
+          Toast.responseHandler(
+            new Error('Token Balance Returned Undefined'),
+            Toast.ERROR
+          );
         }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;

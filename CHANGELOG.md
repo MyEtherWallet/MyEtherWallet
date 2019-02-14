@@ -1,3 +1,7 @@
+### Feature
+
+- Add reusable global toasts. Add examples [#617](https://github.com/MyEtherWallet/MyEtherWallet/pull/617)
+
 ### Release v5.0.1
 
 ### Devop

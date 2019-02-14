@@ -181,7 +181,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -289,7 +289,7 @@ export default {
           this.gasPrice = new BigNumber(res).toString();
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
       // this.disconnectMewConnectModal();
     }
@@ -364,7 +364,7 @@ export default {
         false
       );
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
   },
   methods: {

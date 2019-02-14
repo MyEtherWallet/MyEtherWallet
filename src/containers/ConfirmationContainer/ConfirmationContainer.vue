@@ -71,7 +71,7 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
-import { ErrorHandler, Misc } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 
 const events = {
@@ -250,7 +250,7 @@ export default {
           ]);
         })
         .catch(err => {
-          ErrorHandler(err, true);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -443,7 +443,7 @@ export default {
           ]);
         });
         promiEvent.eventEmitter.catch(err => {
-          ErrorHandler(err, true);
+          Toast.responseHandler(err, Toast.ERROR);
         });
         batch.add(req);
         return promiEvent.eventEmitter;
