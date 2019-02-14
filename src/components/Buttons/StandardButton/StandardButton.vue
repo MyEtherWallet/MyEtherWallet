@@ -2,6 +2,7 @@
   <div
     :class="{
       'full-width': options.fullWidth,
+      'mobile-full-width': options.mobileFullWidth,
       'hide-mobile-button': onBottomOfPage && options.isThisMobileBottomButton
     }"
     class="standard-button"
