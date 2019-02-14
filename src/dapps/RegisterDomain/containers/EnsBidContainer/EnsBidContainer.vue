@@ -195,7 +195,7 @@
 <script>
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import printJS from 'print-js';
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -370,7 +370,7 @@ export default {
         });
       }
       this.web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     }
   }

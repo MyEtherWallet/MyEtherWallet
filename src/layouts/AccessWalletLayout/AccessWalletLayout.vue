@@ -11,6 +11,7 @@ import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
 import PriceBar from './components/PriceBar';
 import { mapGetters } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   name: 'AccessWalletLayout',
@@ -64,7 +65,7 @@ export default {
           return res.json();
         })
         .catch(err => {
-          return err;
+          Toast.responseHandler(err, Toast.ERROR);
         });
       return Object.keys(rates.data)
         .map(item => Object.assign(rates.data[item]))
