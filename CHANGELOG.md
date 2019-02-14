@@ -1,3 +1,11 @@
+### Release v5.0.2
+
+### Bug
+
+- Reenable mewconnect on Safari and Opera [#631](https://github.com/MyEtherWallet/MyEtherWallet/pull/631)
+- Fix NetworkAddress layout responsiveness [#629](https://github.com/MyEtherWallet/MyEtherWallet/pull/629)
+- Reduce side paddings of footer links to make them fit to mobile width [#636](https://github.com/MyEtherWallet/MyEtherWallet/pull/636)
+
 ### Release v5.0.1
 
 ### Devop
@@ -7,6 +15,7 @@
 
 ### Bug
 
+- Fix welcome modal UI [#632](https://github.com/MyEtherWallet/MyEtherWallet/pull/632)
 - Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
 - Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
 - Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
