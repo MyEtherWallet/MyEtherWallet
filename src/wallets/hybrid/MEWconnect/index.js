@@ -75,9 +75,9 @@ class MEWconnectWallet {
       });
     };
 
-    const mewConnect = () =>{
+    const mewConnect = () => {
       return this.mewConnect;
-    }
+    };
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
     console.log('address', address); // todo remove dev item
     return new MEWconnectWalletInterface(
