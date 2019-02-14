@@ -84,7 +84,7 @@ export default {
         .catch(e => {
           this.password = '';
           this.spinner = false;
-          this.error = Toast.responseHandler(e, Toast.ERROR, this);
+          this.error = Toast.responseHandler(e, Toast.ERROR);
         });
     },
     switchViewPassword() {

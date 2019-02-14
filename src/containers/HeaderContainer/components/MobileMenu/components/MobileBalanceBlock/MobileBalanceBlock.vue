@@ -51,7 +51,7 @@ export default {
             this.$store.dispatch('setAccountBalance', res);
           })
           .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR, this);
+            Toast.responseHandler(err, Toast.ERROR);
           });
       }
     }
