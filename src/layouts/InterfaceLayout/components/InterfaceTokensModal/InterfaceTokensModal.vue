@@ -43,7 +43,7 @@
               allFieldsValid ? '' : 'disabled',
               'save-button large-round-button-green-filled clickable'
             ]"
-            @click.stop="addToken(tokenAddress, tokenSymbol, tokenDecimal)"
+            @click.prevent="addToken(tokenAddress, tokenSymbol, tokenDecimal)"
           >
             {{ $t('interface.save') }}
           </button>

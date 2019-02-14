@@ -417,7 +417,8 @@ export default {
 
       if (
         customStore !== undefined &&
-        customStore[this.network.type.name] !== undefined
+        customStore[this.network.type.name] !== undefined &&
+        customStore[this.network.type.name].length > 0
       ) {
         new Promise(resolve => {
           const newArr = customStore[this.network.type.name].map(
@@ -426,7 +427,6 @@ export default {
               return token;
             }
           );
-
           Promise.all(newArr).then(res => {
             customStore[this.network.type.name] = res;
             store.set('customTokens', customStore);
@@ -441,6 +441,7 @@ export default {
         });
       } else {
         this.receivedTokens = true;
+        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
       }
     },
     getBlock() {
