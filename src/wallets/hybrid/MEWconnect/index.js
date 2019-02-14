@@ -79,6 +79,7 @@ class MEWconnectWallet {
       return this.mewConnect;
     };
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
+
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
       this.isHardware,
