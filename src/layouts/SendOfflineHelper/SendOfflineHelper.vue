@@ -74,28 +74,28 @@
               </li>
               <li class="detail-container">
                 <span class="detail-name">Nonce:</span>
-                <span class="detail-text"> {{ genInfo.nonce }} </span>
+                <span class="detail-text">{{ genInfo.nonce }}</span>
               </li>
               <li class="detail-container">
                 <span class="detail-name">Chain ID:</span>
-                <span class="detail-text">
-                  {{ genInfo.chainID }} ({{ genInfo.networkName }})</span
+                <span class="detail-text"
+                  >{{ genInfo.chainID }} ({{ genInfo.networkName }})</span
                 >
               </li>
               <li class="detail-container with-divider">
                 <span class="detail-name">Current Gas Price:</span>
-                <span class="detail-text">
-                  {{ toGwei(genInfo.gasPrice) }} Gwei</span
+                <span class="detail-text"
+                  >{{ toGwei(genInfo.gasPrice) }} Gwei</span
                 >
               </li>
               <li class="detail-container">
                 <span class="detail-name">Retrieved:</span>
-                <span class="detail-text"
-                  >{{ dateTimeDisplay(genInfo.timestamp) }}
+                <span class="detail-text">
+                  {{ dateTimeDisplay(genInfo.timestamp) }}
                 </span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">at block: </span>
+                <span class="detail-name">at block:</span>
                 <span class="detail-text">{{ genInfo.blockNumber }}</span>
               </li>
             </ul>
@@ -183,7 +183,7 @@
         <!-- Review and Send-->
         <accordion-menu
           :greytitle="false"
-          :editbutton="true"
+          :editbutton="false"
           :isopen="stage4"
           :title="$t('withoutWallet.txDetails')"
           number="4"
@@ -200,23 +200,23 @@
             </li>
             <li class="detail-container">
               <span class="detail-name">Nonce:</span>
-              <span class="detail-text"> {{ nonce }} </span>
+              <span class="detail-text">{{ nonce }}</span>
             </li>
             <li class="detail-container">
               <span class="detail-name">Value:</span>
-              <span class="detail-text">
-                {{ toEth(value) }} {{ selectedNetwork.type.name }}
-              </span>
+              <span class="detail-text"
+                >{{ toEth(value) }} {{ selectedNetwork.type.name }}</span
+              >
             </li>
             <li class="detail-container">
               <span class="detail-name">Data:</span>
               <span v-if="data !== '0x'" class="detail-text">
                 {{ truncateData(data) }}
-                <span class="show-all-btn" @click="showAllData = !showAllData">
-                  Show All
-                </span>
+                <span class="show-all-btn" @click="showAllData = !showAllData"
+                  >Show All</span
+                >
               </span>
-              <span v-else class="data-all"> {{ data }} </span>
+              <span v-else class="data-all">{{ data }}</span>
               <span v-if="showAllData" class="data-all">{{ data }}</span>
             </li>
 
@@ -258,9 +258,9 @@
         <!-- Sent Tx Details & Hash-->
         <accordion-menu
           :greytitle="false"
-          :editbutton="true"
+          :editbutton="false"
           :isopen="stage5"
-          :title="$t('withoutWallet.txFeeAndNonce')"
+          :title="$t('withoutWallet.txStatus')"
           number="5"
           @titleClicked="stage5 = !stage5"
         >
@@ -271,9 +271,8 @@
                 :href="replaceUrl('', txHash)"
                 class="detail-text"
                 target="_blank"
+                >{{ txHash }}</a
               >
-                {{ txHash }}
-              </a>
             </li>
             <li class="tx-receipt-container">
               <p>Transaction Receipt:</p>
@@ -285,34 +284,28 @@
                   v-for="(item, idx) in Object.keys(txReceipt)"
                   :key="item + idx"
                 >
-                  <span> {{ item }} </span>
+                  <span>{{ item }}</span>
                   <a
                     v-if="item === 'transactionHash'"
                     :href="replaceUrl('', txReceipt[item])"
                     target="_blank"
                     class="right-side"
+                    >{{ txReceipt[item] }}</a
                   >
-                    {{ txReceipt[item] }}
-                  </a>
                   <a
                     v-else-if="item === 'contractAddress'"
                     :href="replaceUrl('address', txReceipt[item])"
                     target="_blank"
                     class="right-side"
+                    >{{ txReceipt[item] }}</a
                   >
-                    {{ txReceipt[item] }}
-                  </a>
-                  <span v-else class="right-side"> {{ txReceipt[item] }} </span>
+                  <span v-else class="right-side">{{ txReceipt[item] }}</span>
                 </div>
               </div>
-              <div v-else class="loading">
-                Loading....
-              </div>
+              <div v-else class="loading">Loading....</div>
             </li>
           </ul>
-          <div v-else>
-            {{ error }}
-          </div>
+          <div v-else>{{ error }}</div>
         </accordion-menu>
       </div>
     </div>
@@ -463,6 +456,8 @@ export default {
       this.stage4 = false;
       this.stage5 = true;
       if (this.rawSigned !== '') {
+        this.error = this.txHash = '';
+        this.txReceipt = {};
         this.web3.eth
           .sendSignedTransaction(this.rawSigned)
           .once('transactionHash', hash => {
@@ -543,7 +538,7 @@ export default {
       this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
     toEth(val) {
-      if (!val) return 0;
+      if (!val || isNaN(val)) return 0;
       return web3Utils.fromWei(new BigNumber(val).toFixed(), 'ether');
     },
     toWei(val) {

@@ -11,7 +11,7 @@
                   <h4>{{ $t('interface.sendTxType') }}</h4>
                 </div>
                 <currency-picker
-                  :currency="tokensWithBalance"
+                  :currency="allTokens"
                   :token="true"
                   page="sendOfflineGenTx"
                   @selectedCurrency="setSelectedCurrency"
@@ -217,6 +217,7 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
+import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import utils from 'web3-utils';
 
@@ -229,7 +230,7 @@ export default {
     'interface-container-title': InterfaceContainerTitle
   },
   props: {
-    tokensWithBalance: {
+    tokens: {
       type: Array,
       default: function() {
         return [];
@@ -259,6 +260,19 @@ export default {
     }),
     validAddress() {
       return isAddress(this.address);
+    },
+    allTokens() {
+      const customToken = store.get('customTokens');
+      const allTokens = this.tokens.concat(customToken[this.network.type.name]);
+      const sortedBySymbol = allTokens.sort((a, b) => {
+        if (a.symbol.toUpperCase() < b.symbol.toUpperCase()) {
+          return -1;
+        } else if (a.symbol.toUpperCase() > b.symbol.toUpperCase()) {
+          return 1;
+        }
+        return 0;
+      });
+      return sortedBySymbol;
     },
     isAllInputValid() {
       return (
@@ -335,10 +349,10 @@ export default {
       if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
-        const convertedAmount = new BigNumber(locVal).exponentiatedBy(
-          locCurrency.decimals
+        const convertedAmount = new BigNumber(locVal).times(
+          new BigNumber(10).pow(locCurrency.decimals)
         );
-        this.toData = await contract.methods
+        this.toData = contract.methods
           .transfer(locAddress, convertedAmount.toFixed())
           .encodeABI();
       }
@@ -372,8 +386,8 @@ export default {
       const isToken = this.selectedCoinType.symbol !== this.network.type.name;
       const amt = unit.toWei(this.toAmt, 'ether');
       const raw = {
-        nonce: this.nonce,
-        gasLimit: this.gasLimit,
+        nonce: Misc.sanitizeHex(new BigNumber(this.nonce).toString(16)),
+        gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
         gasPrice: Misc.sanitizeHex(
           new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toString(16)
         ),

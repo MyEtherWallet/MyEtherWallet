@@ -44,9 +44,9 @@
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">
-                {{ $t('common.copy') }}
-              </span>
+              <span @click="copyToClipboard('abi')">{{
+                $t('common.copy')
+              }}</span>
             </div>
           </div>
         </div>
@@ -210,9 +210,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">
-                  {{ item.name !== '' ? item.name : item.type | capitalize }}
-                </label>
+                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                  item.name !== '' ? item.name : item.type | capitalize
+                }}</label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -237,7 +237,9 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-                selectedMethod.inputs.length > 0
+                ((selectedMethod.constant &&
+                  selectedMethod.inputs.length > 0) ||
+                  !selectedMethod.constant)
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -246,9 +248,9 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">{{
-              $t('interface.write')
-            }}</span>
+            <span v-show="!loading && !selectedMethod.constant">
+              {{ $t('interface.write') }}
+            </span>
             <span v-show="!loading && selectedMethod.constant">{{
               $t('interface.read')
             }}</span>
@@ -423,6 +425,7 @@ export default {
             this.result = res;
           })
           .catch(e => {
+            this.loading = false;
             Toast.responseHandler(e, Toast.WARN);
           });
       } else {
@@ -487,6 +490,7 @@ export default {
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
+        let errored = false;
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
@@ -496,23 +500,27 @@ export default {
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
+            errored = true;
           });
-        const data = contract.methods[this.selectedMethod.name](
-          ...this.contractArgs
-        ).encodeABI();
+        if (!errored) {
+          const data = contract.methods[this.selectedMethod.name](
+            ...this.contractArgs
+          ).encodeABI();
 
-        const raw = {
-          from: this.account.address,
-          gas: gasLimit,
-          nonce: nonce,
-          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-          value: 0,
-          to: this.address,
-          data: data
-        };
-        web3.eth.sendTransaction(raw).catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+          const raw = {
+            from: this.account.address,
+            gas: gasLimit,
+            nonce: nonce,
+            gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+            value: 0,
+            to: this.address,
+            data: data
+          };
+          web3.eth.sendTransaction(raw).catch(err => {
+            this.loading = false;
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+        }
       }
     }
   }

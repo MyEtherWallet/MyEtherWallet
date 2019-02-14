@@ -20,7 +20,7 @@
           </div>
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0">
+          <table v-show="customTokens.length > 0 && receivedTokens">
             <tr
               v-for="(token, index) in customTokens"
               :key="token.name + index"
@@ -36,7 +36,7 @@
             </tr>
           </table>
 
-          <table v-show="localTokens.length > 0">
+          <table v-show="localTokens.length > 0 && receivedTokens">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
               <td
@@ -51,7 +51,9 @@
           </table>
 
           <div
-            v-show="search === '' && localTokens.length === 0 && receivedTokens"
+            v-show="
+              search === '' && localTokens.length === 0 && !receivedTokens
+            "
             class="spinner-container"
           >
             <i class="fa fa-spinner fa-spin" />
@@ -138,28 +140,17 @@ export default {
     })
   },
   watch: {
+    receivedTokens() {
+      this.getCustomTokens();
+    },
     tokens(newVal) {
       this.assignTokens(newVal, this.search);
+      this.getCustomTokens();
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-    },
-    network(newVal) {
-      if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[newVal.type.name] !== undefined
-      ) {
-        this.customTokens = store.get('customTokens')[newVal.type.name];
-      } else {
-        this.customTokens = [];
-      }
-    }
-  },
-  mounted() {
-    if (store.get('customTokens')) {
       this.getCustomTokens();
     }
-    this.assignTokens(this.tokens, this.search);
   },
   methods: {
     getV3Tokens() {
@@ -211,6 +202,7 @@ export default {
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
+      this.fetchTokens();
     },
     searchBySymbol(symbol) {
       const searchNetwork = this.localTokens.find(item => {
@@ -292,6 +284,7 @@ export default {
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        this.fetchTokens();
       }
     },
     tokenListExpend() {
@@ -318,9 +311,6 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
-        if (store.get('customTokens') !== undefined) {
-          this.customTokens = store.get('customTokens')[this.network.type.name];
-        }
       }
     }
   }
