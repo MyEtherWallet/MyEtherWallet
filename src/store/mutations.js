@@ -51,15 +51,10 @@ const CLEAR_WALLET = function(state) {
 
 //
 const DECRYPT_WALLET = function(state, wallet) {
-  console.log('DECRYPT_WALLET', wallet); // todo remove dev item
-  // todo: MEWconnect failing after this line on firefox
-  // todo: with error: "DataCloneError: The object could not be cloned."
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
-  console.log('DECRYPT_WALLET 2 ', state.wallet); // todo remove dev item
-  console.log('DECRYPT_WALLET 3 ', state.account); // todo remove dev item
 };
 
 const INIT_STATES = function(state, stateObj) {
