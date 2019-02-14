@@ -79,7 +79,6 @@ class MEWconnectWallet {
       return this.mewConnect;
     };
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
-    console.log('address', address); // todo remove dev item
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
       this.isHardware,
@@ -103,7 +102,6 @@ const signalerConnect = (url, mewConnect) => {
       mewConnect.on('RtcConnectedEvent', () => {
         mewConnect.sendRtcMessage('address', '');
         mewConnect.once('address', data => {
-          console.log('rtc address data', data.address); // todo remove dev item
           resolve(data.address);
         });
       });
