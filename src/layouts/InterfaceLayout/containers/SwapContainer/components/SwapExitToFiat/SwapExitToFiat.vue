@@ -2,9 +2,12 @@
   <div class="swap-send-form">
     <div class="wrap">
       <interface-container-title
-        :isbackbutton="true"
-        @backButtonClick="backButtonAction"
-      />
+        ><h3 @click="backButtonAction">
+          <i class="fa fa-arrow-left"></i>
+          {{ $t('interface.back') }}
+        </h3></interface-container-title
+      >
+
       <div class="form-content-container">
         <div class="accordion-menu-container">
           <p class="beta-notice">{{ $t('interface.CryptoToFiatBeta') }}</p>
@@ -13,7 +16,7 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="step1"
+            :isopen="steps.step1"
             :title="$t('interface.phoneNumber')"
             :greytitle="false"
             :editbutton="true"
@@ -22,21 +25,29 @@
             <ul>
               <li>
                 <p>{{ $t('interface.enterPhoneForSMS') }}</p>
-                <p>{{ $t('interface.clickToContinue', { label: 'Send' }) }}</p>
               </li>
               <li>
                 <div class="grid-phone-number">
-                  <standard-input
-                    :options="inputCountryCode"
-                    class="country-code"
-                    @changedValue="countryCode = $event"
-                  />
-                  <standard-input
-                    :options="inputPhoneNumber"
+                  <vue-tel-input
+                    v-model="phonenumber"
+                    :preferred-countries="['us', 'gb', 'ua']"
                     class="phone-number"
-                    @changedValue="phoneNumber = $event"
-                  />
+                    @onValidate="setPhoneNumber"
+                  ></vue-tel-input>
+                  <!--<standard-input-->
+                  <!--:options="inputCountryCode"-->
+                  <!--class="country-code"-->
+                  <!--@changedValue="countryCode = $event"-->
+                  <!--/>-->
+                  <!--<standard-input-->
+                  <!--:options="inputPhoneNumber"-->
+                  <!--class="phone-number"-->
+                  <!--@changedValue="phoneNumber = $event"-->
+                  <!--/>-->
                 </div>
+              </li>
+              <li>
+                <p>{{ $t('interface.clickToContinue', { label: 'Send' }) }}</p>
               </li>
             </ul>
           </accordion-menu>
@@ -44,7 +55,7 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="verifyStep"
+            :isopen="steps.verifyStep"
             :greytitle="false"
             :editbutton="true"
             :title="$t('interface.enterVerification')"
@@ -66,7 +77,7 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="step2"
+            :isopen="steps.step2"
             :title="$t('interface.bankInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -101,7 +112,7 @@
           <!-- accordion-menu ******************************** -->
           <!-- accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="step3"
+            :isopen="steps.step3"
             :title="$t('interface.personalInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -162,40 +173,36 @@
         <!-- .accordion-menu-container -->
         <div class="button-container">
           <standard-button
-            v-if="step1"
+            v-if="steps.step1"
             :options="button1"
             @click.native="
-              step1 = false;
-              step2 = false;
-              verifyStep = true;
+              updateStep('verifyStep');
               updateStage('phone');
               registerPhone();
             "
           />
           <standard-button
-            v-if="verifyStep"
+            v-if="steps.verifyStep"
             :options="verifyButton"
             @click.native="
+            updateStep('step2')
               updateStage('verify');
               confirmUser();
             "
           />
           <standard-button
-            v-if="step2"
+            v-if="steps.step2"
             :options="button2"
             @click.native="
+            updateStep('step3')
               updateStage('account');
-              step2 = false;
-              step3 = true;
             "
           />
           <standard-button
-            v-if="step3"
+            v-if="steps.step3"
             :options="button3"
             @click.native="
-              step3 = false;
-              step2 = false;
-              step1 = false;
+              updateStep('')
               updateStage('accountHolder');
               createExitOrder();
             "
@@ -218,6 +225,8 @@
 </template>
 
 <script>
+import 'vue-tel-input/dist/vue-tel-input.css';
+
 import store from 'store';
 import { getNames, registerLocale } from 'i18n-iso-countries';
 import names from 'i18n-iso-countries/langs/en.json';
@@ -226,6 +235,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
+import VueTelInput from 'vue-tel-input';
 
 import { providerMap } from '@/partners';
 
@@ -237,7 +247,8 @@ export default {
     'accordion-menu': AccordionMenu,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
-    'standard-button': StandardButton
+    'standard-button': StandardButton,
+    'vue-tel-input': VueTelInput
   },
   props: {
     swapDetails: {
@@ -267,10 +278,12 @@ export default {
         account: false,
         accountHolder: false
       },
-      step1: true,
-      verifyStep: false,
-      step2: false,
-      step3: false,
+      steps: {
+        step1: true,
+        verifyStep: false,
+        step2: false,
+        step3: false
+      },
       inputCountryCode: {
         title: this.$t('interface.countryCode'),
         placeHolder: '000'
@@ -403,11 +416,25 @@ export default {
     roomForDropDown(val) {
       this.addSpace = val;
     },
+    updateStep(stage) {
+      const allSteps = Object.keys(this.steps);
+      allSteps.forEach(step => {
+        if (step !== stage) {
+          this.steps[step] = false;
+        } else {
+          this.steps[step] = true;
+        }
+      });
+    },
     updateStage(stage) {
       this.status[stage] = true;
     },
     openMenu(val) {
       return val;
+    },
+    setPhoneNumber({ number, isValid, country }) {
+      console.log(number, isValid, country);
+      console.log(this.phonenumber); // todo remove dev item
     },
     backButtonAction() {
       this.$emit('backButtonClick');

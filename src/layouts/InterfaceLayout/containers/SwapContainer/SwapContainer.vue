@@ -529,6 +529,7 @@ export default {
       this.switchCurrencyOrder = false;
     },
     setSelectedProvider(provider) {
+      console.log('setSelectedProvider', provider); // todo remove dev item
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
       });
@@ -613,13 +614,15 @@ export default {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
             this.toValue,
-            this.bestRate
+            this.bestRate,
+            this.fromCurrency
           );
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
             this.fromValue,
-            this.bestRate
+            this.bestRate,
+            this.toCurrency
           );
           break;
         case `${this.providerNames.simplex}to`:
@@ -645,7 +648,11 @@ export default {
               .div(simplexRateDetails.fromValue)
               .toString(10);
 
-            this.fromValue = this.swap.calculateFromValue(this.toValue, rate);
+            this.fromValue = this.swap.calculateFromValue(
+              this.toValue,
+              rate,
+              this.fromCurrency
+            );
           }
 
           break;
@@ -735,10 +742,12 @@ export default {
             fromValue
           );
           this.updateEstimate(to);
-          // todo: Bity 3
-          if (this.providerData.length === 1) {
-            this.setSelectedProvider(this.providerData[0].provider);
-          }
+          // doesn't update the ui
+          // // todo: Bity 3
+          // console.log(this.providerData.length); // todo remove dev item
+          // if (this.providerData.length === 1) {
+          //   this.setSelectedProvider(this.providerData[0].provider);
+          // }
         }
       }
     },

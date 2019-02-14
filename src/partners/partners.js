@@ -3,7 +3,8 @@ import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
-  EthereumTokens
+  EthereumTokens,
+  fiat
 } from './partnersConfig';
 
 function comparator(a, b) {
@@ -152,8 +153,8 @@ export default class SwapProviders {
     throw Error('Not an Ethereum Token');
   }
 
-  calculateFromValue(toValue, bestRate, fromCurrency) {
-    let decimals = 6;
+  calculateFromValue(toValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
         .div(new BigNumber(bestRate))
@@ -163,13 +164,8 @@ export default class SwapProviders {
     );
   }
 
-  calculateToValue(fromValue, bestRate, toCurrency) {
-    let decimals = 6;
-    if (this.isToken(toCurrency))
-      decimals =
-        this.getTokenDecimals(toCurrency) < 6
-          ? this.getTokenDecimals(toCurrency)
-          : 6;
+  calculateToValue(fromValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(new BigNumber(bestRate))
@@ -179,7 +175,17 @@ export default class SwapProviders {
     );
   }
 
-  getDecimalsOr
+  decimalForCalculation(currency) {
+    if (!currency) return 6;
+    if (fiat.find(entry => entry.symbol === currency)) {
+      return 2;
+    } else if (this.isToken(currency)) {
+      const decimal = this.getTokenDecimals(currency);
+      if (decimal < 6) return decimal;
+      return 6;
+    }
+    return 6;
+  }
 
   convertToTokenWei(token, value) {
     const decimals = this.getTokenDecimals(token);
