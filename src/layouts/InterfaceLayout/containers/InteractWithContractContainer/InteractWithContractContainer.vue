@@ -272,7 +272,7 @@ import { mapGetters } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
@@ -426,7 +426,7 @@ export default {
           })
           .catch(e => {
             this.loading = false;
-            ErrorHandler(e, true);
+            Toast.responseHandler(e, Toast.WARN);
           });
       } else {
         this.result = '';
@@ -486,7 +486,7 @@ export default {
           })
           .catch(e => {
             this.loading = false;
-            ErrorHandler(e, false);
+            Toast.responseHandler(e, false);
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
@@ -498,7 +498,7 @@ export default {
             return res;
           })
           .catch(e => {
-            ErrorHandler(e, true);
+            Toast.responseHandler(e, Toast.ERROR);
           });
         const data = contract.methods[this.selectedMethod.name](
           ...this.contractArgs
@@ -514,8 +514,8 @@ export default {
           data: data
         };
         web3.eth.sendTransaction(raw).catch(err => {
-          ErrorHandler(err, true);
           this.loading = false;
+          Toast.responseHandler(err, Toast.ERROR);
         });
       }
     }

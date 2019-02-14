@@ -5,7 +5,7 @@ import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import {
@@ -48,7 +48,7 @@ class BitBoxWallet {
       tx.s = getBufferFromHex(sanitizeHex(result.s));
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
-        ErrorHandler(
+        Toast.responseHandler(
           new Error(
             'Invalid networkId signature returned. Expected: ' +
               networkId +
