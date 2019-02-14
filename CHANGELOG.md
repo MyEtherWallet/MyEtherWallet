@@ -18,6 +18,10 @@
 
 - Add reusable global toasts. Add examples [#617](https://github.com/MyEtherWallet/MyEtherWallet/pull/617)
 
+### Devop
+
+- Make toasts stay longer, update packages [#658](https://github.com/MyEtherWallet/MyEtherWallet/pull/658)
+
 ### Release v5.0.1
 
 ### Devop
