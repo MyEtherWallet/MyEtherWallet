@@ -46,7 +46,6 @@ export default {
     logout() {
       this.$store.dispatch('clearWallet');
       this.$refs.logoutWarningModal.hide();
-      this.$router.push('/');
     },
     cancel() {
       this.$refs.logoutWarningModal.hide();
