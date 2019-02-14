@@ -7,6 +7,7 @@
 
 ### Bug
 
+- Fix Access my wallet modals [#647](https://github.com/MyEtherWallet/MyEtherWallet/pull/647)
 - Reenable Metamask when web3 is not found [#622](https://github.com/MyEtherWallet/MyEtherWallet/pull/622)
 - Fix Mew connect modal content [#616](https://github.com/MyEtherWallet/MyEtherWallet/pull/616)
 - Fix Getting started page [#615](https://github.com/MyEtherWallet/MyEtherWallet/pull/615)
