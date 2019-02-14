@@ -7,6 +7,7 @@
 - Reduce side paddings of footer links to make them fit to mobile width [#636](https://github.com/MyEtherWallet/MyEtherWallet/pull/636)
 - Fix Ui Access by Software modal [#645](https://github.com/MyEtherWallet/MyEtherWallet/pull/645)
 - Fix welcome modal UI [#632](https://github.com/MyEtherWallet/MyEtherWallet/pull/632)
+- Fix Access my wallet modals [#647](https://github.com/MyEtherWallet/MyEtherWallet/pull/647)
 
 ### Release v5.0.1
 
