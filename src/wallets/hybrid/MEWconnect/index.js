@@ -8,7 +8,7 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import * as ethUtil from 'ethereumjs-util';
+import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 
 const SIGNALER_URL = 'https://connect.mewapi.io';
@@ -64,7 +64,7 @@ class MEWconnectWallet {
     };
     const msgSigner = async msg => {
       return new Promise(resolve => {
-        const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
+        const msgHash = hashPersonalMessage(toBuffer(msg));
         this.mewConnect.sendRtcMessage('signMessage', {
           hash: msgHash.toString('hex'),
           text: msg
