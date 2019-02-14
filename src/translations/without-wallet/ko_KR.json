@@ -8,5 +8,6 @@
   "fromAddress": "From Address",
   "confirmAndSend": "Confirm & Send",
   "selectNetwork": "Select Network",
-  "txDetails": "Transaction Details"
+  "txDetails": "Transaction Details",
+  "txStatus": "Transaction Status"
 }
