@@ -90,7 +90,9 @@
               file from your local computer.
             </p>
             <div class="import-button-block">
-              <standard-input :options="inputFileName" />
+              <div class="filename">
+                <standard-input :options="inputFileName" />
+              </div>
               <input
                 ref="uploadInput"
                 type="file"
@@ -121,8 +123,8 @@
             </p>
             <div class="button-block">
               <a :href="file" :download="fileName" class="export-button"
-                >Export</a
-              >
+                ><standard-button :options="buttonExport"
+              /></a>
             </div>
           </full-width-dropdown>
         </div>
@@ -159,7 +161,14 @@ export default {
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
-        fullWidth: false
+        mobileFullWidth: true
+      },
+      buttonExport: {
+        title: 'Export',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        mobileFullWidth: true
       },
       buttonUploadFile: {
         title: 'Upload File...',
@@ -187,7 +196,8 @@ export default {
         topTextInfo: '',
         popover: '',
         placeHolder: '',
-        rightInputText: ''
+        rightInputText: '',
+        readOnly: true
       },
       selectedGasType: 'regular',
       customGas: 0,
