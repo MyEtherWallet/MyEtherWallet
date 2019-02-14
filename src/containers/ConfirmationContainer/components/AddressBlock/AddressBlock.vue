@@ -35,8 +35,8 @@ export default {
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     currency: {
       type: String,
