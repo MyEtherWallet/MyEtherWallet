@@ -44,9 +44,9 @@
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">
-                {{ $t('common.copy') }}
-              </span>
+              <span @click="copyToClipboard('abi')">{{
+                $t('common.copy')
+              }}</span>
             </div>
           </div>
         </div>
@@ -210,9 +210,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">
-                  {{ item.name !== '' ? item.name : item.type | capitalize }}
-                </label>
+                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                  item.name !== '' ? item.name : item.type | capitalize
+                }}</label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -248,12 +248,12 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">{{
-              $t('interface.write')
-            }}</span>
-            <span v-show="!loading && selectedMethod.constant">
-              {{ $t('interface.read') }}
+            <span v-show="!loading && !selectedMethod.constant">
+              {{ $t('interface.write') }}
             </span>
+            <span v-show="!loading && selectedMethod.constant">{{
+              $t('interface.read')
+            }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
