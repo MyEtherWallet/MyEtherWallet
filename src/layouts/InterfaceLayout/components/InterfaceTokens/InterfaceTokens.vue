@@ -264,7 +264,6 @@ export default {
         );
         return false;
       }
-      console.log(findTokenByAddr, findTokenBySymbol);
       return findTokenByAddr || findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
