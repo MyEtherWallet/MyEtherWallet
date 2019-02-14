@@ -141,6 +141,7 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
+import { setTimeout } from 'timers';
 export default {
   components: {
     'interface-side-menu': InterfaceSideMenu,
