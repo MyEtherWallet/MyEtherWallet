@@ -3,33 +3,38 @@
     ref="mewConnect"
     :title="$t('accessWallet.mewConnectTitle')"
     hide-footer
-    class="bootstrap-modal modal-mew-connect"
+    class="bootstrap-modal nopadding modal-mew-connect"
     centered
   >
-    <div class="modal-icon">
-      <qrcode :value="QrCode" :options="{ size: 200 }" />
+    <div class="modal-container">
+      <div class="modal-icon">
+        <qrcode :value="QrCode" :options="{ size: 200 }" />
+      </div>
+      <div class="d-block content-container text-center">
+        <h3 class="modal-large-text">
+          {{ $t('accessWallet.mewConnectDesc1') }}
+        </h3>
+      </div>
+      <div class="appstore-button-container">
+        <a
+          href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="~@/assets/images/icons/appstore.svg" height="35" />
+        </a>
+        <a
+          href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="~@/assets/images/icons/google-play.svg" height="35" />
+        </a>
+        <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
+      </div>
+      <customer-support />
     </div>
-    <div class="d-block content-container text-center">
-      <h3 class="modal-large-text">{{ $t('accessWallet.mewConnectDesc1') }}</h3>
-    </div>
-    <div class="appstore-button-container">
-      <a
-        href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img src="~@/assets/images/icons/appstore.svg" height="35" />
-      </a>
-      <a
-        href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img src="~@/assets/images/icons/google-play.svg" height="35" />
-      </a>
-      <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
-    </div>
-    <customer-support />
+    <!-- .modal-container -->
   </b-modal>
 </template>
 
@@ -37,7 +42,7 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -50,20 +55,23 @@ export default {
   },
   computed: {
     ...mapGetters({
-      path: 'path'
+      path: 'path',
+      web3: 'web3'
     })
   },
   mounted() {
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
-          this.$store.dispatch('decryptWallet', [wallet]);
-          this.$router.push({
-            path: 'interface'
+          if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
+          this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+            this.$router.push({
+              path: 'interface'
+            });
           });
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
     });
     this.$refs.mewConnect.$on('hidden', () => {
