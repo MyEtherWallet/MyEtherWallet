@@ -60,9 +60,7 @@ const info = {
       return `<div><img src="${toastSuccess}" /> Good job! </div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; Info: ${
-      payload.message
-    }</div>`;
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-info',
@@ -78,9 +76,7 @@ const success = {
       return `<div><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; Success: ${
-      payload.message
-    }</div>`;
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-success',
