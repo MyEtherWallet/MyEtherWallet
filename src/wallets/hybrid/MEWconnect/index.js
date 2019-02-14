@@ -98,17 +98,13 @@ const createWallet = async qrcode => {
 createWallet.errorHandler = errorHandler;
 const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
-    try {
-      mewConnect.initiatorStart(url);
-      mewConnect.on('RtcConnectedEvent', () => {
-        mewConnect.sendRtcMessage('address', '');
-        mewConnect.once('address', data => {
-          resolve(data.address);
-        });
+    mewConnect.initiatorStart(url);
+    mewConnect.on('RtcConnectedEvent', () => {
+      mewConnect.sendRtcMessage('address', '');
+      mewConnect.once('address', data => {
+        resolve(data.address);
       });
-    } catch (e) {
-      console.error(e);
-    }
+    });
   });
 };
 
