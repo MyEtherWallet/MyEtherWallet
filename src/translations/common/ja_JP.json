@@ -74,5 +74,7 @@
   "edit": "Edit",
   "nonce": "Nonce",
   "notAValidAmount": "Not a valid amount",
-  "vintage": "Vintage"
+  "vintage": "Vintage",
+  "okay": "Okay",
+  "ok": "OK"
 }
