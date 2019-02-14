@@ -1,4 +1,18 @@
 @import '~@/scss/GlobalVariables';
+.modal-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
 .button-container {
   button {
     display: inline-block;
