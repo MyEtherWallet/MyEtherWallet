@@ -130,8 +130,8 @@ export default {
       default: function() {}
     },
     fee: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     signedTx: {
       type: String,
@@ -146,24 +146,24 @@ export default {
       default: ''
     },
     gas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     gasPrice: {
       type: Number,
       default: 0
     },
     nonce: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     to: {
       type: String,
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     isHardwareWallet: {
       type: Boolean,
