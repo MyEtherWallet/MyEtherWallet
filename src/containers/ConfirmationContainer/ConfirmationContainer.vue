@@ -110,15 +110,15 @@ export default {
       responseFunction: null,
       advancedExpand: false,
       addressValid: true,
-      amount: 0,
+      amount: '',
       amountValid: true,
-      nonce: 0,
-      gasLimit: 21000,
+      nonce: '',
+      gasLimit: '21000',
       data: '0x',
       gasAmount: this.gasPrice,
       parsedBalance: 0,
       toAddress: '',
-      transactionFee: 0,
+      transactionFee: '',
       raw: {},
       lastRaw: {},
       ens: {},
@@ -341,17 +341,14 @@ export default {
     },
     parseRawTx(tx) {
       this.raw = tx;
-      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toNumber();
+      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
-      this.gasLimit = new BigNumber(tx.gas).toNumber();
+      this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toNumber();
-      this.transactionFee = Number(
-        unit.fromWei(
-          new BigNumber(tx.gas).times(tx.gasPrice).toString(),
-          'ether'
-        )
-      );
+      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toFixed();
+      this.transactionFee = unit
+        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
+        .toString();
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
@@ -467,15 +464,15 @@ export default {
       this.responseFunction = null;
       this.advancedExpand = false;
       this.addressValid = true;
-      this.amount = 0;
+      this.amount = '';
       this.amountValid = true;
-      this.nonce = 0;
-      this.gasLimit = 21000;
+      this.nonce = '';
+      this.gasLimit = '21000';
       this.data = '0x';
       this.gasAmount = this.gasPrice;
       this.parsedBalance = 0;
       this.toAddress = '';
-      this.transactionFee = 0;
+      this.transactionFee = '';
       this.raw = {};
       this.signedTx = '';
       this.messageToSign = '';

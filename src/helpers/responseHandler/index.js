@@ -5,7 +5,8 @@ import * as ResponseEvents from './responseEvents';
 const idxs = {
   1: 'appWarn',
   2: 'appSuccess',
-  3: 'appError'
+  3: 'appError',
+  4: 'appInfo'
 };
 
 const responseHandler = (err, expected) => {

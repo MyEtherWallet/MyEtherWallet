@@ -109,7 +109,8 @@ Sentry.init({
   beforeSend(event) {
     event.tags = {
       network: store.getters.network.type.name,
-      service: store.getters.network.service
+      service: store.getters.network.service,
+      walletType: store.getters.account.identifier
     };
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);

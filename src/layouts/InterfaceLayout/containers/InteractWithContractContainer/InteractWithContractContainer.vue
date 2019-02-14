@@ -237,7 +237,9 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-                selectedMethod.inputs.length > 0
+                ((selectedMethod.constant &&
+                  selectedMethod.inputs.length > 0) ||
+                  !selectedMethod.constant)
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -249,9 +251,9 @@
             <span v-show="!loading && !selectedMethod.constant">{{
               $t('interface.write')
             }}</span>
-            <span v-show="!loading && selectedMethod.constant">{{
-              $t('interface.read')
-            }}</span>
+            <span v-show="!loading && selectedMethod.constant">
+              {{ $t('interface.read') }}
+            </span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
@@ -423,6 +425,7 @@ export default {
             this.result = res;
           })
           .catch(e => {
+            this.loading = false;
             Toast.responseHandler(e, Toast.WARN);
           });
       } else {
@@ -511,6 +514,7 @@ export default {
           data: data
         };
         web3.eth.sendTransaction(raw).catch(err => {
+          this.loading = false;
           Toast.responseHandler(err, Toast.ERROR);
         });
       }

@@ -1,12 +1,5 @@
 <template>
   <div class="mobile-menu">
-    <settings-modal
-      v-if="account !== null"
-      ref="settings"
-      :gas-price="localGasPrice"
-      :address="account.address"
-    />
-    <logout-modal ref="logout" />
     <mobile-language-selector
       :open="langSelectorOpen"
       @isopen="langSelectorOpen = false"
@@ -104,7 +97,7 @@
             </div>
           </li>
           <li v-if="account.address">
-            <div class="menu-link-block" @click="openSettings">
+            <div class="menu-link-block" @click="opensettings">
               <div>{{ $t('common.settings') }}</div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
@@ -120,25 +113,30 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
 import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
-import SettingsModal from '@/components/SettingsModal';
-import LogoutModal from '@/components/LogoutModal';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
 
 export default {
   components: {
-    'logout-modal': LogoutModal,
     'mobile-menu-button': MobileMenuButton,
     'mobile-address-block': MobileAddressBlock,
     'mobile-balance-block': MobileBalanceBlock,
     'mobile-network-block': MobileNetworkBlock,
-    'settings-modal': SettingsModal,
     'mobile-language-selector': MobileLanguageSelector
+  },
+  props: {
+    opensettings: {
+      type: Function,
+      default: function() {}
+    },
+    logout: {
+      type: Function,
+      default: function() {}
+    }
   },
   data() {
     return {
@@ -155,17 +153,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      network: 'network',
-      online: 'online',
-      web3: 'web3',
-      account: 'account',
-      gasPrice: 'gasPrice'
+      account: 'account'
     })
   },
   watch: {
-    gasPrice(val) {
-      this.localGasPrice = new BigNumber(val).toString();
-    },
     $route(newVal) {
       if (newVal.path.includes('interface')) {
         this.isHomePage = false;
@@ -186,20 +177,8 @@ export default {
     flagChange(data) {
       this.currentFlag = data;
     },
-    openSettings() {
-      this.$refs.settings.$refs.settings.$on('hidden', () => {
-        this.isMenuOpen = false;
-      });
-      this.$refs.settings.$refs.settings.show();
-    },
     scrollTop() {
       window.scrollTo(0, 0);
-    },
-    logout() {
-      this.$refs.logout.$refs.logout.show();
-      this.$refs.logout.$refs.logout.$on('hidden', () => {
-        this.isMenuOpen = false;
-      });
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;

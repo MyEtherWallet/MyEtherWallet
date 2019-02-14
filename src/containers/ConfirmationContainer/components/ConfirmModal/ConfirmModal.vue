@@ -119,6 +119,7 @@
 import AddressBlock from '../AddressBlock';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import store from 'store';
 
 export default {
   components: {
@@ -130,8 +131,8 @@ export default {
       default: function() {}
     },
     fee: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     signedTx: {
       type: String,
@@ -146,24 +147,24 @@ export default {
       default: ''
     },
     gas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     gasPrice: {
       type: Number,
       default: 0
     },
     nonce: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     to: {
       type: String,
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     isHardwareWallet: {
       type: Boolean,
@@ -212,10 +213,22 @@ export default {
     async parseData(data) {
       const web3 = this.web3;
       const networkToken = this.network.type.tokens;
-      const tokenIndex = networkToken.findIndex(el => {
+
+      let token = networkToken.find(el => {
         return el.address.toLowerCase() === this.to.toLowerCase();
       });
-
+      if (!token) {
+        const customStore = store.get('customTokens');
+        if (
+          customStore !== undefined &&
+          customStore[this.network.type.name] !== undefined &&
+          customStore[this.network.type.name].length
+        ) {
+          token = customStore[this.network.type.name].find(el => {
+            return el.address.toLowerCase() === this.to.toLowerCase();
+          });
+        }
+      }
       const jsonInterface = {
         constant: false,
         inputs: [
@@ -241,15 +254,13 @@ export default {
         );
         const value = new BigNumber(params[1]);
         this.tokenTransferTo = params[0];
-        this.tokenTransferVal =
-          tokenIndex !== -1
-            ? value
-                .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
-                .toFixed()
-                .toString(10)
-            : value.toString();
-        this.tokenSymbol =
-          tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';
+        this.tokenTransferVal = token
+          ? value
+              .div(new BigNumber(10).pow(token.decimals))
+              .toFixed()
+              .toString()
+          : value.toString();
+        this.tokenSymbol = token ? token.symbol : 'Unknown Token';
       }
     }
   }
