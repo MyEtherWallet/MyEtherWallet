@@ -16,8 +16,10 @@ import store from '@/store';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
-import PopOver from '@/components/PopOver';
+import Toasted from 'vue-toasted';
+import * as toastConfig from './toast.config';
 
+import PopOver from '@/components/PopOver';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
 
@@ -50,6 +52,9 @@ Vue.prototype.$eventHub = new Vue();
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
+//Toasted
+Vue.use(Toasted);
+
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
 Vue.directive('ens-resolver', EnsResolver);
@@ -65,6 +70,15 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuex);
 Vue.use(VeeValidate);
+
+// Register global toasts
+Object.keys(toastConfig).forEach(item => {
+  Vue.toasted.register(
+    toastConfig[item].name,
+    toastConfig[item].payloadFunc,
+    toastConfig[item].options
+  );
+});
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue);

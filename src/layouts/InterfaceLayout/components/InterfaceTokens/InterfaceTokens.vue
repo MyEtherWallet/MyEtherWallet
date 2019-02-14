@@ -94,7 +94,7 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
@@ -116,10 +116,6 @@ export default {
       default: false
     },
     getTokenBalance: {
-      type: Function,
-      default: function() {}
-    },
-    triggerAlert: {
       type: Function,
       default: function() {}
     },
@@ -245,29 +241,25 @@ export default {
     tokenError(address, symbol, addType) {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
-      if (address !== '' || symbol !== '') {
-        if (!findTokenByAddr && addType !== '') {
-          this.$refs.tokenModal.$refs.token.hide();
-          this.triggerAlert(
-            'A default token with this contract address already exists!',
-            'danger'
-          );
-          return false;
-        } else if (!findTokenBySymbol && addType !== '') {
-          this.$refs.tokenModal.$refs.token.hide();
-          this.triggerAlert(
-            "A default token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
-            'danger'
-          );
-          return false;
-        }
-
-        return !findTokenByAddr || !findTokenBySymbol;
+      if (!findTokenByAddr && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          'A default or custom token with this contract address already exists!',
+          Toast.ERROR
+        );
+        return false;
+      } else if (!findTokenBySymbol && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          Toast.ERROR
+        );
+        return false;
       }
-      return false;
+      return findTokenByAddr || findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
-      if (!this.tokenError(address, symbol, 'manual')) {
+      if (this.tokenError(address, symbol, 'manual')) {
         const token = {
           address: address,
           decimals: decimal,
@@ -282,14 +274,16 @@ export default {
           this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          ErrorHandler(new Error('Token Balance Returned Undefined'), false);
+          Toast.responseHandler(
+            new Error('Token Balance Returned Undefined'),
+            Toast.ERROR
+          );
         }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Successfully added token!');
-        this.fetchTokens();
+        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
     },
     tokenListExpend() {

@@ -13,6 +13,10 @@
 - Reenable mewconnect on Safari and Opera [#631](https://github.com/MyEtherWallet/MyEtherWallet/pull/631)
 - Fix NetworkAddress layout responsiveness [#629](https://github.com/MyEtherWallet/MyEtherWallet/pull/629)
 
+### Feature
+
+- Add reusable global toasts. Add examples [#617](https://github.com/MyEtherWallet/MyEtherWallet/pull/617)
+
 ### Release v5.0.1
 
 ### Devop

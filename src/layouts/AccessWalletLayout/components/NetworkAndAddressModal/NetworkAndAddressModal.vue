@@ -246,7 +246,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -407,7 +407,7 @@ export default {
         }
         return false;
       } catch (e) {
-        ErrorHandler(e, true);
+        Toast.responseHandler(e, Toast.ERROR);
         return false;
       }
     },
@@ -432,7 +432,7 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          ErrorHandler(error, true);
+          Toast.responseHandler(error, Toast.ERROR);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
