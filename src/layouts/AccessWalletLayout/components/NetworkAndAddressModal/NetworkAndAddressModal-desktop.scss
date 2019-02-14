@@ -14,7 +14,11 @@ $red-filled-button-background--hover: #ff7795;
 $red-filled-button-background--click: #ff5a7f;
 
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  $collapse-button-color: #334758;
+  $collapse-button-color: $dark-blue-12;
+
+  .modal-content-container {
+    padding: 10px;
+  }
 
   .collapse-container {
     margin-bottom: 10px;
@@ -34,9 +38,8 @@ $red-filled-button-background--click: #ff5a7f;
 
         .network-content {
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          grid-column-gap: 20px;
-          padding-left: 30px;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 0;
         }
 
         .network-title {
@@ -44,9 +47,31 @@ $red-filled-button-background--click: #ff5a7f;
           align-items: center;
           margin-bottom: 5px;
 
-          img {
-            height: 25px;
+          .network-icon-container {
+            width: 35px;
+            height: 35px;
+            text-align: center;
+            background-color: $light-grey-12;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-right: 10px;
+            overflow: hidden;
+            img {
+              height: 60%;
+              margin: 0;
+            }
+
+            .no-icon {
+              text-align: center;
+
+              p {
+                font-weight: 700;
+                font-size: 10px;
+                line-height: 10px;
+              }
+            }
           }
 
           p {
@@ -66,12 +91,27 @@ $red-filled-button-background--click: #ff5a7f;
       background-color: $collapse-button-color !important;
       border-color: $collapse-button-color !important;
       display: flex;
+      align-items: center;
+
+      .network {
+        display: flex;
+        align-items: center;
+      }
 
       p {
+        text-align: left;
         font-weight: 600;
         color: white;
-        span {
-          font-weight: 400;
+      }
+      .network-name {
+        font-weight: 400;
+        font-size: 12px;
+        margin-left: 5px;
+      }
+
+      div {
+        p {
+          line-height: 16px;
         }
       }
 
@@ -80,16 +120,16 @@ $red-filled-button-background--click: #ff5a7f;
       }
 
       .button-number {
-        line-height: 18px;
-        border: 1px solid white;
-        border-radius: 100%;
-        text-align: center;
-        margin-right: 10px;
-
         $number-size: 20px;
 
+        border: 1px solid white;
+        border-radius: 100%;
+        margin-right: 10px;
         width: $number-size;
         height: $number-size;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
@@ -126,7 +166,7 @@ $red-filled-button-background--click: #ff5a7f;
 
     .content-container-2 {
       background-color: $background-color-1;
-      margin: 0 -30px;
+      margin: 0 -20px;
       margin-bottom: 30px;
       padding: 0;
 
@@ -185,78 +225,80 @@ $red-filled-button-background--click: #ff5a7f;
       }
     }
   }
-} // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
-.current-network {
-  background-color: $mew-green;
-  border-radius: 5px;
-  color: $white;
-  padding: 5px;
-}
+  .network-content {
+    p {
+      //background-color: $light-grey-1;
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 2px 7px;
+      user-select: none;
+    }
 
-.network-content {
-  p {
-    cursor: pointer;
+    .current-network {
+      background-color: $dark-blue-2;
+      color: $white;
+    }
   }
-}
 
-.custom-path-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: [col] 15% [col] 85%;
-  grid-template-rows: [row] auto [row] auto [row];
-  label {
-    border: 0;
-    font-weight: 500;
-    font-size: 14px;
+  .custom-path-container {
+    margin-top: 10px;
     margin-bottom: 10px;
-    padding: 10px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: [col] 15% [col] 85%;
+    grid-template-rows: [row] auto [row] auto [row];
+    label {
+      border: 0;
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      padding: 10px;
+      //width: 50%;
+    }
+
+    .submit-button {
+      text-align: center;
+      user-select: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+
+      &.cancel {
+        background-color: $red-filled-button-background;
+        border: 1px solid $red-filled-button-background;
+      }
+
+      &.submit {
+        background-color: $green-filled-button-background;
+        border: 1px solid $green-filled-button-background;
+      }
+
+      color: $color-white;
+
+      &:hover {
+        background-color: $green-filled-button-background--hover;
+        border: 1px solid $green-filled-button-background--hover;
+      }
+
+      &:active {
+        background-color: $green-filled-button-background--click;
+        border: 1px solid $green-filled-button-background--click;
+      }
+    }
   }
 
-  input {
-    background-color: $background-color-1;
-    border: 0;
-    font-size: 14px;
-    padding: 10px;
-    //width: 50%;
+  .custom-networks {
+    display: grid;
+    grid-column-gap: 35px;
+    grid-template-columns: 1fr 1fr;
   }
-
-  .submit-button {
-    text-align: center;
-    user-select: none;
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 4px;
-
-    &.cancel {
-      background-color: $red-filled-button-background;
-      border: 1px solid $red-filled-button-background;
-    }
-
-    &.submit {
-      background-color: $green-filled-button-background;
-      border: 1px solid $green-filled-button-background;
-    }
-
-    color: $color-white;
-
-    &:hover {
-      background-color: $green-filled-button-background--hover;
-      border: 1px solid $green-filled-button-background--hover;
-    }
-
-    &:active {
-      background-color: $green-filled-button-background--click;
-      border: 1px solid $green-filled-button-background--click;
-    }
-  }
-}
-
-.custom-networks {
-  display: grid;
-  grid-column-gap: 35px;
-  grid-template-columns: 1fr 1fr;
-}
+} // @media all and (min-width: calc(#{$tablet-width} + 1px))
