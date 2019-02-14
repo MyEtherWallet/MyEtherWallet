@@ -1,12 +1,17 @@
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 const ERRORS = {
   NO_DEVICE_SELECTED: 'No device selected.'
 };
+const WARNING = {};
+
 export default err => {
   const errorValues = Object.values(ERRORS);
+  const warningValues = Object.values(WARNING);
   if (errorValues.includes(err.message)) {
-    ErrorHandler(err, true);
+    Toast.responseHandler(err, Toast.ERROR);
+  } else if (warningValues.includes(err.message)) {
+    Toast.responseHandler(err, Toast.WARN);
   } else {
-    ErrorHandler(err, false);
+    Toast.responseHandler(err, false);
   }
 };

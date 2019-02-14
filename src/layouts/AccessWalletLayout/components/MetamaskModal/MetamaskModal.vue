@@ -95,6 +95,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
+import { Toast } from '@/helpers';
 import Web3 from 'web3';
 import { mapGetters } from 'vuex';
 
@@ -135,7 +136,9 @@ export default {
         try {
           await window.ethereum.enable();
         } catch (e) {
+          Toast.responseHandler(e, Toast.WARN);
           this.web3WalletExists = false;
+          return;
         }
         this.signIn(window.web3);
       } else if (window.web3) {
@@ -154,7 +157,8 @@ export default {
             path: 'interface'
           });
         })
-        .catch(() => {
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
           return (this.web3WalletExists = false);
         });
     },

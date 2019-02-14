@@ -211,7 +211,7 @@ import BigNumber from 'bignumber.js';
 import debug from 'debug';
 import { mapGetters } from 'vuex';
 
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import DropDownAddressSelector from './components/SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -783,7 +783,7 @@ export default {
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
         errorLogger(e);
-        ErrorHandler(e, false);
+        Toast.responseHandler(e, false);
       }
     },
     openConfirmModal(swapDetails) {

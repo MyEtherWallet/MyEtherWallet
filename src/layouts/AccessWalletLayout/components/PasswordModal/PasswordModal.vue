@@ -50,9 +50,9 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import _worker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 export default {
   props: {
     file: {
@@ -83,7 +83,7 @@ export default {
   methods: {
     unlockWallet() {
       this.spinner = true;
-      const worker = new Worker();
+      const worker = new _worker();
       const self = this;
       worker.postMessage({
         type: 'unlockWallet',
@@ -104,7 +104,7 @@ export default {
         e.preventDefault();
         self.spinner = false;
         self.error = e.message;
-        ErrorHandler(e, true);
+        Toast.responseHandler(e, Toast.ERROR);
       };
     },
     switchViewPassword() {
