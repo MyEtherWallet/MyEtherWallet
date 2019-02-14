@@ -136,6 +136,7 @@ import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
+import { Toast } from '@/helpers';
 
 export default {
   name: 'Settings',
@@ -382,13 +383,19 @@ export default {
       return new BigNumber(price * this.ethPrice).toFixed();
     },
     async getEthPrice() {
-      await fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
         .then(res => {
-          this.ethPrice = res.json().data[1027].quotes.USD.price;
+          return res.json();
         })
-        .catch(err => {
-          return err;
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
         });
+
+      this.ethPrice = Promise.resolve(price).then(res => {
+        return res.data.ETH.quotes.USD.price;
+      });
     }
   }
 };
