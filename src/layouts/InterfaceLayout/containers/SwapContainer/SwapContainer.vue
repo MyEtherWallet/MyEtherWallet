@@ -432,6 +432,10 @@ export default {
 
       if (this.isExitToFiat) {
         // const validExitAddress =
+        if (this.fromCurrency === this.baseCurrency) {
+          this.exitFromAddress = this.currentAddress;
+          return true;
+        }
         return this.exitFromAddress !== '' && this.validExitAddress;
         // return (
         //   (validBaseToAddress && validExitAddress) ||

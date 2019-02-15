@@ -25,6 +25,7 @@ export default class Changelly {
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
+    this.useFixed = true;
     this.tokenDetails = {};
     this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
@@ -82,6 +83,55 @@ export default class Changelly {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
+
+  }
+
+  async getFixedRate(fromCurrency, toCurrency, fromValue) {
+    if (
+      this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
+      this.getRateForUnit
+    ) {
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
+        rate: this.calculateTrueRate(
+          this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
+        )
+      };
+    }
+
+    const changellyDetails = await Promise.all([
+      changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
+      changellyCalls.getRate(
+        fromCurrency,
+        toCurrency,
+        this.getRateForUnit ? 1 : fromValue,
+        this.network
+      )
+    ]);
+
+    const minAmount = new BigNumber(changellyDetails[0])
+      .times(0.001)
+      .plus(new BigNumber(changellyDetails[0]))
+      .toFixed();
+
+    this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
+      minAmount: minAmount,
+      rate: changellyDetails[1]
+    };
+
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      minValue: minAmount,
+      rate: this.calculateTrueRate(changellyDetails[1])
+    };
+  }
+
+  async getMarketRate(fromCurrency, toCurrency, fromValue) {
     if (
       this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
       this.getRateForUnit

@@ -30,7 +30,7 @@
               <li>
                 <div class="grid-phone-number">
                   <vue-tel-input
-                    v-model="phonenumber"
+                    v-model="phoneNumber"
                     :preferred-countries="['us', 'gb', 'ua']"
                     class="phone-number"
                     @onValidate="setPhoneNumber"
@@ -178,6 +178,7 @@
           <standard-button
             v-if="steps.step1"
             :options="button1"
+            :button-disabled="phoneNumber !== ''"
             @click.native="
               updateStep('verifyStep');
               updateStage('step1');
@@ -438,7 +439,7 @@ export default {
     },
     setPhoneNumber({ number, isValid, country }) {
       console.log(number, isValid, country);
-      console.log(this.phonenumber); // todo remove dev item
+      console.log(this.phoneNumber); // todo remove dev item
     },
     backButtonAction() {
       this.$emit('backButtonClick');
@@ -447,9 +448,10 @@ export default {
       if (this.phoneNumber === '')
         throw Error(this.$t('interface.phoneRequired'));
       const initData = {
-        phoneNumber: this.countryCode + this.phoneNumber,
+        phoneNumber: this.phoneNumber,
         ...this.swapDetails
       };
+      console.log(initData); // todo remove dev item
       const existing = await this.provider.registerUser(initData);
       if (existing) {
         this.previouslyVerified = true;
