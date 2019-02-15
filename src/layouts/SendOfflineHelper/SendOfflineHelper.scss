@@ -23,7 +23,7 @@
 
 .page-content-container {
   > * {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 }
 
@@ -31,7 +31,9 @@
   margin-top: 40px;
   width: 100%;
   text-align: center;
-
+  @media all and (max-width: $mobile-width) {
+    margin-top: 10px;
+  }
   > * {
     margin-right: 10px;
     @media all and (max-width: 600px) {
@@ -57,17 +59,10 @@
   background-color: $mew-green;
   border-radius: 5px;
   color: $white;
-  padding: 5px;
-}
-
-.network-content {
-  p {
-    cursor: pointer;
-  }
 }
 
 .collapse-container {
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
 
   &:last-child {
     margin: 0;
@@ -90,6 +85,18 @@
         grid-template-columns: 1fr 1fr 1fr;
         grid-column-gap: 20px;
         padding-left: 30px;
+        p {
+          cursor: pointer;
+          padding: 2px 5px;
+        }
+        @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        @media all and (max-width: 600px) {
+          grid-template-columns: 1fr;
+          padding-left: 0;
+        }
       }
 
       .network-title {
@@ -97,9 +104,26 @@
         align-items: center;
         margin-bottom: 5px;
 
-        img {
-          height: 25px;
+        .network-icon {
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: $grey-1;
           margin-right: 10px;
+          border-radius: 100%;
+          .no-icon {
+            text-align: center;
+            p {
+              font-size: 11px;
+              line-height: 10px;
+              color: $white;
+            }
+          }
+          img {
+            height: 80%;
+          }
         }
 
         p {
