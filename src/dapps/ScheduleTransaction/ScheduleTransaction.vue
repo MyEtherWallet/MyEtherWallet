@@ -244,6 +244,64 @@
     </div>
 
     <div class="submit-button-container">
+      <b-alert
+        :show="isTokenTransfer && showTokenTransferNotification"
+        variant="warning"
+        dismissible
+        class="m-5"
+        @dismissed="showTokenTransferNotification = false"
+      >
+        <strong>Note:</strong> You are scheduling a token transfer. Token
+        transfers require 2 separate transactions for token scheduling and token
+        transfer approval.
+      </b-alert>
+
+      <div v-for="(tx, index) in scheduledTransactions" :key="index">
+        <b-alert
+          :show="!tx.approved && tx.isTokenTransfer"
+          variant="warning"
+          class="m-5"
+        >
+          <div v-if="!tx.mined">
+            Please wait for the transaction to be mined before approving...
+            <i class="fa fa-spin fa-spinner fa-lg" />
+          </div>
+          <div v-if="tx.mined">
+            <div>
+              The transaction has been mined. Please
+              <strong>approve</strong> the token transfer now.
+            </div>
+            <div
+              class="submit-button large-round-button-green-filled"
+              @click="approveToken(tx)"
+            >
+              Approve Token Transfer
+            </div>
+          </div>
+        </b-alert>
+
+        <b-alert
+          :show="!tx.mined && !tx.notificationDismissed"
+          variant="success"
+          dismissible
+          fade
+          class="m-5 schedule-success-alert"
+          @dismissed="tx.notificationDismissed = true"
+        >
+          <p>
+            Your TX has been scheduled with the transaction hash
+            <a
+              :href="'localhost:8081/awaiting/scheduler/' + tx.hash"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ tx.hash }}
+            </a>
+            and is waiting to be mined.
+          </p>
+        </b-alert>
+      </div>
+
       <div
         :class="[
           validInputs ? '' : 'disabled',
@@ -259,27 +317,6 @@
           {{ err }}
         </div>
       </div>
-
-      <b-alert
-        :show="scheduled.show"
-        variant="success"
-        dismissible
-        fade
-        class="m-5 schedule-success-alert"
-        @dismissed="scheduled.show = false"
-      >
-        <p>
-          Your TX has been scheduled with the transaction hash
-          <a
-            :href="'localhost:8081/awaiting/scheduler/' + scheduled.txHash"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ scheduled.txHash }}
-          </a>
-          and is waiting to be mined.
-        </p>
-      </b-alert>
     </div>
 
     <a
@@ -300,6 +337,8 @@ import 'vue-datetime/dist/vue-datetime.css';
 import moment from 'moment';
 import 'moment-timezone';
 import * as unit from 'ethjs-unit';
+import EthTx from 'ethereumjs-tx';
+import { ErrorHandler } from '@/helpers';
 
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
@@ -356,14 +395,12 @@ export default {
       deposit:
         EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0] *
         EAC_SCHEDULING_CONFIG.BOUNTY_TO_DEPOSIT_MULTIPLIER,
-      scheduled: {
-        show: false,
-        txHash: ''
-      },
       ethPrice: new BigNumber(0),
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
       shownErrors: [],
+      scheduledTransactions: [],
+      showTokenTransferNotification: true,
       amountInputOptions() {
         return {
           title: 'Amount',
@@ -634,13 +671,60 @@ export default {
     selectedMode() {
       this.windowSize = this.selectedMode.executionWindow.default;
     },
-    notifications() {
+    async notifications() {
       const notifications = this.notifications[this.account.address];
-      const scheduledTxHash = notifications[0].hash;
-      if (scheduledTxHash) {
-        this.scheduled.txHash = scheduledTxHash;
-        this.scheduled.show = true;
+      const latestNotification = notifications[0];
+      console.log(notifications);
+
+      if (latestNotification.hash) {
+        if (latestNotification.status === 'pending') {
+          const alreadyHasTx = this.scheduledTransactions.some(
+            tx => tx.hash === latestNotification.hash
+          );
+
+          if (!alreadyHasTx) {
+            const transaction = await this.web3.eth.getTransaction(
+              latestNotification.hash
+            );
+            console.log(transaction);
+            try {
+              const isTokenTransfer = transaction.input.includes(
+                EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_METHOD_ID
+              );
+              this.scheduledTransactions.push({
+                hash: latestNotification.hash,
+                isTokenTransfer,
+                address: null,
+                approved: isTokenTransfer ? false : true,
+                mined: false,
+                notificationDismissed: false,
+                selectedCurrency: isTokenTransfer
+                  ? this.selectedCurrency
+                  : null,
+                toAddress: transaction.to,
+                amount: this.amount
+              });
+            } catch (e) {
+              ErrorHandler(e, false);
+            }
+          }
+        } else if (latestNotification.status === 'complete') {
+          this.scheduledTransactions.forEach(async tx => {
+            if (tx.hash === latestNotification.hash) {
+              const receipt = await this.web3.eth.getTransactionReceipt(
+                tx.hash
+              );
+              const util = new Util(this.web3);
+              tx.receipt = receipt;
+              tx.address = util.getTransactionRequestAddressFromReceipt(
+                receipt
+              );
+              tx.mined = true;
+            }
+          });
+        }
       }
+      console.log(this.scheduledTransactions);
     },
     async selectedCurrency() {
       this.futureGasLimit = await this.estimateGas();
@@ -665,8 +749,7 @@ export default {
         this.selectedBlockNumber = res + 100;
       })
       .catch(err => {
-        // eslint-disable-next-line no-console
-        console.error(err);
+        ErrorHandler(err, false);
       });
 
     this.datetime = moment()
@@ -718,13 +801,78 @@ export default {
     const fetchValues = await fetch(url);
     const values = await fetchValues.json();
 
-    if (!values['USDT'])
-      throw new Error(
-        'USDT conversion no longer available. Please provide an alternative USD conversion method'
+    if (!values['USDT']) {
+      ErrorHandler(
+        new Error(
+          'USDT conversion no longer available. Please provide an alternative USD conversion method'
+        ),
+        false
       );
+      return;
+    }
     this.ethPrice = new BigNumber(values['USDT']);
   },
   methods: {
+    async approveToken(tx) {
+      console.log(`Approving ${tx.hash}`);
+      console.log(tx);
+
+      if (!tx.selectedCurrency) {
+        ErrorHandler(
+          new Error(`${tx.hash} is not a token transfer tx.`),
+          false
+        );
+        return;
+      }
+
+      const tokenContract = await new this.web3.eth.Contract(
+        ERC20,
+        tx.selectedCurrency.address
+      );
+
+      const coinbase = await this.web3.eth.getCoinbase();
+      const tokenAmount = new BigNumber(
+        tx.amount * Math.pow(10, tx.selectedCurrency.decimals)
+      );
+      const approveTokensData = tokenContract.methods
+        .approve(tx.address, tokenAmount.toString())
+        .encodeABI();
+      const nonce = await this.web3.eth.getTransactionCount(coinbase, 'latest');
+
+      const estimatedGasLimit = await this.web3.eth.estimateGas({
+        from: coinbase,
+        value: 0,
+        to: tx.selectedCurrency.address,
+        data: approveTokensData
+      });
+
+      const scheduledTokensApproveTransaction = {
+        to: tx.selectedCurrency.address,
+        value: '',
+        data: approveTokensData,
+        nonce,
+        gasLimit: estimatedGasLimit,
+        gasPrice: this.gasPrice
+      };
+      console.log(scheduledTokensApproveTransaction);
+
+      const approveTx = new EthTx(scheduledTokensApproveTransaction);
+
+      const json = approveTx.toJSON(true);
+      json.from = coinbase;
+      console.log({
+        approveTx,
+        approveTokensData,
+        nonce,
+        coinbase,
+        tokenAmount,
+        json
+      });
+      this.web3.eth.sendTransaction(json).catch(err => {
+        ErrorHandler(err, true);
+      });
+      console.log('tx sent');
+    },
     async estimateGas() {
       const coinbase = await this.web3.eth.getCoinbase();
 
@@ -740,7 +888,11 @@ export default {
             : this.address,
           data: this.isTokenTransfer ? tokenTransferData : this.data
         });
-        return estimatedGasLimit.toString();
+
+        const totalEstimatedGasLimit = new BigNumber(estimatedGasLimit).plus(
+          EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_ADDITIONAL_GAS
+        );
+        return totalEstimatedGasLimit.toString();
       }
 
       return EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString();
@@ -756,18 +908,9 @@ export default {
         const tokenAmount = new BigNumber(
           this.amount * Math.pow(10, this.selectedCurrency.decimals)
         );
-        const tokenTransferSettings = {
-          _from: coinbase,
-          _to: this.toAddress,
-          _value: tokenAmount.toString()
-        };
 
         return tokenContract.methods
-          .transferFrom(
-            tokenTransferSettings._from,
-            tokenTransferSettings._to,
-            tokenTransferSettings._value
-          )
+          .transferFrom(coinbase, this.toAddress, tokenAmount.toString())
           .encodeABI();
       }
 
@@ -842,7 +985,7 @@ export default {
       } catch (e) {
         // Show a scheduling error
         this.shownErrors.push(ERRORS.SCHEDULING);
-        console.error(e);
+        ErrorHandler(e, false);
         return;
       }
 
