@@ -159,7 +159,7 @@ export default {
       pollNetwork: () => {},
       pollBlock: () => {},
       pollAddress: () => {},
-      highestGas: 0,
+      highestGas: '0',
       alert: {
         show: false,
         msg: ''
@@ -527,7 +527,7 @@ export default {
         .then(res => {
           this.highestGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
-          ).toNumber();
+          ).toString();
         })
         .catch(e => {
           Toast.responseHandler(e, true);
