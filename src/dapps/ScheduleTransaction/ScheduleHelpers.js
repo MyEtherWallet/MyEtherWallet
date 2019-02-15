@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 const EAC_SCHEDULING_CONFIG = {
   FUTURE_GAS_PRICE_MIN: 1, // Gwei
   FEE: new BigNumber('0'),
+  TOKEN_TRANSFER_ADDITIONAL_GAS: new BigNumber('20000'),
   TOKEN_SCHEDULING_GAS_LIMIT: new BigNumber('1500000'),
   FUTURE_GAS_LIMIT: new BigNumber('100000'),
   TIME_BOUNTY_MIN: new BigNumber('1'),
@@ -25,11 +26,13 @@ const EAC_SCHEDULING_CONFIG = {
       },
       unit: 'Blocks'
     }
-  ]
+  ],
+  TOKEN_TRANSFER_METHOD_ID: '23b872dd'
 };
 
 const ERRORS = {
-  SCHEDULING: 'Something went wrong scheduling a transaction.'
+  SCHEDULING:
+    'Scheduling parameters invalid. Please check if all data is valid.'
 };
 
 const calcSchedulingTotalCost = ({
