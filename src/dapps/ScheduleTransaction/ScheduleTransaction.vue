@@ -9,6 +9,7 @@
         </b-col>
       </b-row>
     </b-container>
+
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
         <b-row>
@@ -241,84 +242,85 @@
           </b-container>
         </div>
       </div>
-    </div>
-
-    <div class="submit-button-container">
-      <b-alert
-        :show="isTokenTransfer && showTokenTransferNotification"
-        variant="warning"
-        dismissible
-        class="m-5"
-        @dismissed="showTokenTransferNotification = false"
-      >
-        <strong>Note:</strong> You are scheduling a token transfer. Token
-        transfers require 2 separate transactions for token scheduling and token
-        transfer approval.
-      </b-alert>
-
-      <div v-for="(tx, index) in scheduledTransactions" :key="index">
+      <div class="submit-button-container">
         <b-alert
-          :show="!tx.approved && tx.isTokenTransfer"
+          :show="isTokenTransfer && showTokenTransferNotification"
           variant="warning"
-          class="m-5"
-        >
-          <div v-if="!tx.mined">
-            Please wait for the transaction to be mined before approving...
-            <i class="fa fa-spin fa-spinner fa-lg" />
-          </div>
-          <div v-if="tx.mined">
-            <div>
-              The transaction has been mined. Please
-              <strong>approve</strong> the token transfer now.
-            </div>
-            <div
-              class="submit-button large-round-button-green-filled"
-              @click="approveToken(tx)"
-            >
-              Approve Token Transfer
-            </div>
-          </div>
-        </b-alert>
-
-        <b-alert
-          :show="!tx.mined && !tx.notificationDismissed"
-          variant="success"
           dismissible
-          fade
-          class="m-5 schedule-success-alert"
-          @dismissed="tx.notificationDismissed = true"
+          class="mx-5"
+          @dismissed="showTokenTransferNotification = false"
         >
-          <p>
-            Your TX has been scheduled with the transaction hash
-            <a
-              :href="'localhost:8081/awaiting/scheduler/' + tx.hash"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ tx.hash }}
-            </a>
-            and is waiting to be mined.
-          </p>
+          <strong>Note:</strong> You are scheduling a token transfer. Token
+          transfers require 2 separate transactions for token scheduling and
+          token transfer approval.
         </b-alert>
-      </div>
 
-      <div
-        :class="[
-          validInputs ? '' : 'disabled',
-          'submit-button large-round-button-green-filled'
-        ]"
-        @click="scheduleTx"
-      >
-        Schedule Transaction
-      </div>
+        <div v-for="(tx, index) in scheduledTransactions" :key="index">
+          <b-alert
+            :show="!tx.approved && tx.isTokenTransfer"
+            variant="warning"
+            class="m-5"
+          >
+            <div v-if="!tx.mined">
+              <div>
+                <div>
+                  Please wait for the transaction to be mined before
+                  approving...
+                </div>
+                <strong>Note:</strong> If this is taking too long, follow this
+                link
+                <scheduled-transaction-explorer-link :tx-hash="tx.hash" /> to
+                approve the transaction.
+              </div>
+              <i class="fa fa-spin fa-spinner fa-lg" />
+            </div>
+            <div v-if="tx.mined">
+              <div>
+                The transaction has been mined. Please
+                <strong>approve</strong> the token transfer now.
+              </div>
+              <div
+                class="submit-button large-round-button-green-filled"
+                @click="approveToken(tx)"
+              >
+                Approve Token Transfer
+              </div>
+            </div>
+          </b-alert>
 
-      <div v-if="shownErrors" class="text-danger m-3">
-        <div v-for="(err, index) in shownErrors" :key="index">
-          {{ err }}
+          <b-alert
+            :show="!tx.mined && !tx.notificationDismissed"
+            variant="success"
+            dismissible
+            fade
+            class="m-5 schedule-success-alert"
+            @dismissed="tx.notificationDismissed = true"
+          >
+            <p>
+              Your TX has been scheduled with the transaction hash
+              <scheduled-transaction-explorer-link :tx-hash="tx.hash" />
+              and is waiting to be mined.
+            </p>
+          </b-alert>
+        </div>
+
+        <div
+          :class="[
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          @click="scheduleTx"
+        >
+          Schedule Transaction
+        </div>
+
+        <div v-if="shownErrors" class="text-danger m-3">
+          <div v-for="(err, index) in shownErrors" :key="index">
+            {{ err }}
+          </div>
         </div>
       </div>
     </div>
-
     <a
       href="https://blog.chronologic.network/announcing-the-ethereum-alarm-clock-chronologic-partnership-b3d7545bea3b"
       target="_blank"
@@ -353,6 +355,7 @@ import {
   canBeConvertedToWei,
   ERRORS
 } from './ScheduleHelpers';
+import ScheduledTransactionExplorerLink from './components/ScheduledTransactionExplorerLink';
 
 export default {
   name: 'ScheduleTransaction',
@@ -361,7 +364,8 @@ export default {
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
-    'datetime-picker': Datetime
+    'datetime-picker': Datetime,
+    'scheduled-transaction-explorer-link': ScheduledTransactionExplorerLink
   },
   props: {
     tokensWithBalance: {
@@ -688,6 +692,22 @@ export default {
             );
             console.log(transaction);
             try {
+              if (transaction === null) {
+                ErrorHandler(
+                  new Error('Non-existing transaction detected'),
+                  true
+                );
+                return;
+              }
+
+              if (
+                transaction.input.includes(
+                  EAC_SCHEDULING_CONFIG.APPROVE_TOKEN_TRANSFER_METHOD_ID
+                )
+              ) {
+                console.log('Approval transaction detected - skipping.');
+                return;
+              }
               const isTokenTransfer = transaction.input.includes(
                 EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_METHOD_ID
               );
@@ -705,7 +725,7 @@ export default {
                 amount: this.amount
               });
             } catch (e) {
-              ErrorHandler(e, false);
+              ErrorHandler(e, true);
             }
           }
         } else if (latestNotification.status === 'complete') {
@@ -749,7 +769,7 @@ export default {
         this.selectedBlockNumber = res + 100;
       })
       .catch(err => {
-        ErrorHandler(err, false);
+        ErrorHandler(err, true);
       });
 
     this.datetime = moment()
@@ -806,7 +826,7 @@ export default {
         new Error(
           'USDT conversion no longer available. Please provide an alternative USD conversion method'
         ),
-        false
+        true
       );
       return;
     }
@@ -818,10 +838,7 @@ export default {
       console.log(tx);
 
       if (!tx.selectedCurrency) {
-        ErrorHandler(
-          new Error(`${tx.hash} is not a token transfer tx.`),
-          false
-        );
+        ErrorHandler(new Error(`${tx.hash} is not a token transfer tx.`), true);
         return;
       }
 
@@ -985,7 +1002,7 @@ export default {
       } catch (e) {
         // Show a scheduling error
         this.shownErrors.push(ERRORS.SCHEDULING);
-        ErrorHandler(e, false);
+        ErrorHandler(e, true);
         return;
       }
 

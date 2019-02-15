@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { ErrorHandler } from '@/helpers';
 
 const EAC_SCHEDULING_CONFIG = {
   FUTURE_GAS_PRICE_MIN: 1, // Gwei
@@ -27,7 +28,8 @@ const EAC_SCHEDULING_CONFIG = {
       unit: 'Blocks'
     }
   ],
-  TOKEN_TRANSFER_METHOD_ID: '23b872dd'
+  TOKEN_TRANSFER_METHOD_ID: '23b872dd',
+  APPROVE_TOKEN_TRANSFER_METHOD_ID: '095ea7b3'
 };
 
 const ERRORS = {
@@ -53,8 +55,11 @@ const canBeConvertedToWei = (web3, string, denomination = 'ether') => {
   try {
     web3.utils.toWei(string.toString(), denomination);
   } catch (e) {
-    if (!e.message.includes('too many decimal places')) {
-      console.error(e);
+    if (
+      !e.message.includes('too many decimal places') ||
+      !e.message.includes(`invalid number value ''`)
+    ) {
+      ErrorHandler(e, false);
     }
     return false;
   }
