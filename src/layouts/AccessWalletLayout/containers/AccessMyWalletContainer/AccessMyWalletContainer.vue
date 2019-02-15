@@ -70,6 +70,7 @@
             :key="button.title + index"
             :func="button.func"
             :img="button.img"
+            :img-disabled="button.imgDisabled"
             :title="button.title"
             :desc="button.desc"
             :recommend="button.recommend"
@@ -102,6 +103,11 @@ import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import metamaskImg from '@/assets/images/icons/button-metamask.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
+
+import mewConnectImgDisabled from '@/assets/images/icons/button-mewconnect-disabled.svg';
+import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.svg';
+import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.svg';
+import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
 import { mapGetters } from 'vuex';
 import { Toast, Misc } from '@/helpers';
@@ -138,6 +144,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
+          imgDisabled: mewConnectImgDisabled,
           disabled: false,
           classname: 'button-mewconnect'
         },
@@ -148,6 +155,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: hardwareImg,
+          imgDisabled: hardwareImgDisabled,
           disabled: false,
           classname: 'button-hardware'
         },
@@ -158,6 +166,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: metamaskImg,
+          imgDisabled: metamaskImgDisabled,
           disabled: false,
           classname: 'button-metamask'
         },
@@ -168,6 +177,7 @@ export default {
           recommend: this.$t('accessWallet.notRecommended'),
           tooltip: '',
           img: softwareImg,
+          imgDisabled: softwareImgDisabled,
           disabled: false,
           classname: 'button-software'
         }
