@@ -56,7 +56,8 @@
 }
 
 .current-network {
-  background-color: $mew-green;
+  //background-color: $mew-green;
+  background-color: $dark-blue-2;
   border-radius: 5px;
   color: $white;
 }
@@ -96,6 +97,9 @@
         @media all and (max-width: 600px) {
           grid-template-columns: 1fr;
           padding-left: 0;
+          p {
+            padding: 5px 10px;
+          }
         }
       }
 
@@ -175,7 +179,7 @@
 }
 
 .with-divider {
-  border-bottom: 1px solid $light-grey-7;
+  //border-bottom: 1px solid $light-grey-7;
 }
 
 .hide {
