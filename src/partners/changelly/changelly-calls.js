@@ -147,11 +147,12 @@ const getFixRate = async (fromCurrency, toCurrency, fromValue, network) => {
     if (changellyMethods[network]) {
       const results = await post(
         buildPath(),
-        utils.buildPayload(changellyMethods[network].getFixRate, {
-          from: fromCurrency,
-          to: toCurrency,
-          amount: fromValue
-        })
+        utils.buildPayload(changellyMethods[network].getFixRate, [
+          {
+            from: fromCurrency,
+            to: toCurrency
+          }
+        ])
       );
 
       if (results.error) {

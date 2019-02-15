@@ -28,6 +28,7 @@ class CompileSwapOptions {
         .call();
     } catch (e) {
       console.error(e);
+      return {}
     }
   }
 
@@ -130,7 +131,8 @@ class CompileSwapOptions {
         name: item.fullName,
         symbol: item.name.toUpperCase(),
         contractAddress: item.addressUrl,
-        decimals: decimals
+        decimals: decimals,
+        fixRateEnabled: item.fixRateEnabled
       };
     } else {
       if (decimals === 0) {
@@ -143,7 +145,8 @@ class CompileSwapOptions {
         name: item.fullName,
         symbol: item.name.toUpperCase(),
         contractAddress: match[0],
-        decimals: decimals
+        decimals: decimals,
+        fixRateEnabled: item.fixRateEnabled
       };
     }
   }
@@ -161,8 +164,9 @@ class CompileSwapOptions {
           symbol: currentValue.name.toUpperCase(),
           name: currentValue.fullName,
           addressLookup: currentValue.addressUrl,
-          explorer: currentValue.transactionUrl
-        };
+          explorer: currentValue.transactionUrl,
+          fixRateEnabled: currentValue.fixRateEnabled
+      };
       }
     }
     return accumulator;
@@ -217,7 +221,8 @@ class CompileSwapOptions {
     for (let prop in options) {
       this.changellyBaseOptions[prop] = {
         symbol: prop,
-        name: options[prop].name
+        name: options[prop].name,
+        fixRateEnabled: options[prop].fixRateEnabled
       };
     }
   }
