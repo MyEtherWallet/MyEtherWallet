@@ -1,7 +1,6 @@
 ### Devop
 
-- Include Service worker error []()
-
+- Include Service worker error [#660](https://github.com/MyEtherWallet/MyEtherWallet/pull/660)
 
 ### Release v5.0.2
 
