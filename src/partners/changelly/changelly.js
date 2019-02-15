@@ -1,7 +1,8 @@
 import BigNumber from 'bignumber.js';
+import { ErrorHandler } from '@/helpers';
 
 import { networkSymbols } from '../partnersConfig';
-import { ErrorHandler } from '@/helpers';
+import { utils } from '../helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -212,6 +213,7 @@ export default class Changelly {
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;
       swapDetails.isDex = Changelly.isDex();
+      swapDetails.validFor = swapDetails.parsed.validFor;
       return swapDetails;
     }
     return Error('From amount below changelly minimun for currency pair');
@@ -289,6 +291,11 @@ export default class Changelly {
   }
 
   static parseOrder(order) {
+    let validFor;
+    if (order.payTill) {
+      validFor = utils.getTimeRemaining(order.payTill);
+      console.log('validFor', validFor); // todo remove dev item
+    }
     return {
       orderId: order.id,
       statusId: order.id,
@@ -297,7 +304,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: TIME_SWAP_VALID // Rates provided are only an estimate, and
+      validFor: 300 // validFor || TIME_SWAP_VALID // Rates provided are only an estimate, and
     };
   }
 
