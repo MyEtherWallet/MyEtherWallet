@@ -74,6 +74,7 @@
             :get-balance="getBalance"
             :tokens="tokens"
             :highest-gas="highestGas"
+            :nonce="nonce"
           />
           <div v-if="online" class="tokens">
             <interface-tokens
@@ -172,7 +173,8 @@ export default {
       hwInstance: {},
       walletConstructor: () => {},
       hardwareBrand: '',
-      phrase: ''
+      phrase: '',
+      nonce: '0'
     };
   },
   computed: {
@@ -307,7 +309,10 @@ export default {
         nonce: '0x00',
         timestamp: 0
       });
-      await this.web3.eth.getTransactionCount(this.account.address);
+      const fetchedNonce = await this.web3.eth.getTransactionCount(
+        this.account.address
+      );
+      this.nonce = new BigNumber(fetchedNonce).toString();
     },
     async getTokenBalance(token) {
       const web3 = this.web3;
