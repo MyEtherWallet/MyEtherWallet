@@ -347,6 +347,7 @@ export default class BitySwap {
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payment_address;
       swapDetails.isDex = BitySwap.isDex();
+      swapDetails.validFor = swapDetails.parsed.validFor;
     }
 
     return swapDetails;

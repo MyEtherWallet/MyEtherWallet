@@ -141,14 +141,14 @@ export default {
   watch: {
     swapDetails(newValue) {
       this.fromAddress = {
-        value: newValue.fromValue,
+        value: newValue.sendValue || newValue.fromValue,
         name: newValue.fromCurrency,
         address: newValue.fromAddress
           ? newValue.fromAddress
           : this.currentAddress
       };
       this.toAddress = {
-        value: newValue.toValue,
+        value: newValue.recValue || newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
@@ -159,10 +159,16 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      console.log(swapDetails.timestamp, swapDetails.validFor); // todo remove dev item
+      this.timeRemaining = utils.getTimeRemainingString(
+        swapDetails.timestamp,
+        swapDetails.validFor
+      );
+      console.log(this.timeRemaining); // todo remove dev item
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
-          swapDetails.timestamp
+          swapDetails.timestamp,
+          swapDetails.validFor
         );
         if (this.timeRemaining === 'expired') {
           clearInterval(this.timerInterval);
