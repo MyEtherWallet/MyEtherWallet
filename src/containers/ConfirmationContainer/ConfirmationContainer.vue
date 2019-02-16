@@ -49,6 +49,7 @@
       ref="successModal"
       :message="successMessage"
       :link-message="linkMessage"
+      :rawtx="rawTx"
     />
     <error-modal
       ref="errorModal"
