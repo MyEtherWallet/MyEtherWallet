@@ -263,16 +263,17 @@
           >
             <div v-if="!tx.mined">
               <div>
-                <div>
-                  Please wait for the transaction to be mined before
-                  approving...
-                </div>
+                Please wait for the transaction to be mined before approving...
+              </div>
+              <div class="fa-3x">
+                <i class="fa fa-spinner fa-spin fa-lg" />
+              </div>
+              <div>
                 <strong>Note:</strong> If this is taking too long, follow this
                 link
                 <scheduled-transaction-explorer-link :tx-hash="tx.hash" /> to
                 approve the transaction.
               </div>
-              <i class="fa fa-spin fa-spinner fa-lg" />
             </div>
             <div v-if="tx.mined">
               <div>
@@ -340,7 +341,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
@@ -693,7 +694,7 @@ export default {
             console.log(transaction);
             try {
               if (transaction === null) {
-                ErrorHandler(
+                Toast.responseHandler(
                   new Error('Non-existing transaction detected'),
                   true
                 );
@@ -725,7 +726,7 @@ export default {
                 amount: this.amount
               });
             } catch (e) {
-              ErrorHandler(e, true);
+              Toast.responseHandler(e, true);
             }
           }
         } else if (latestNotification.status === 'complete') {
@@ -769,7 +770,7 @@ export default {
         this.selectedBlockNumber = res + 100;
       })
       .catch(err => {
-        ErrorHandler(err, true);
+        Toast.responseHandler(err, true);
       });
 
     this.datetime = moment()
@@ -822,7 +823,7 @@ export default {
     const values = await fetchValues.json();
 
     if (!values['USDT']) {
-      ErrorHandler(
+      Toast.responseHandler(
         new Error(
           'USDT conversion no longer available. Please provide an alternative USD conversion method'
         ),
@@ -838,7 +839,10 @@ export default {
       console.log(tx);
 
       if (!tx.selectedCurrency) {
-        ErrorHandler(new Error(`${tx.hash} is not a token transfer tx.`), true);
+        Toast.responseHandler(
+          new Error(`${tx.hash} is not a token transfer tx.`),
+          true
+        );
         return;
       }
 
@@ -856,37 +860,28 @@ export default {
         .encodeABI();
       const nonce = await this.web3.eth.getTransactionCount(coinbase, 'latest');
 
-      const estimatedGasLimit = await this.web3.eth.estimateGas({
-        from: coinbase,
-        value: 0,
-        to: tx.selectedCurrency.address,
-        data: approveTokensData
-      });
-
       const scheduledTokensApproveTransaction = {
+        from: coinbase,
         to: tx.selectedCurrency.address,
         value: '',
         data: approveTokensData,
         nonce,
-        gasLimit: estimatedGasLimit,
         gasPrice: this.gasPrice
       };
+
+      const estimatedGasLimit = await this.web3.eth.estimateGas(
+        scheduledTokensApproveTransaction
+      );
+      scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit;
       console.log(scheduledTokensApproveTransaction);
 
       const approveTx = new EthTx(scheduledTokensApproveTransaction);
 
       const json = approveTx.toJSON(true);
+      console.log(json);
       json.from = coinbase;
-      console.log({
-        approveTx,
-        approveTokensData,
-        nonce,
-        coinbase,
-        tokenAmount,
-        json
-      });
       this.web3.eth.sendTransaction(json).catch(err => {
-        ErrorHandler(err, true);
+        Toast.responseHandler(err, true);
       });
       console.log('tx sent');
     },
@@ -895,16 +890,20 @@ export default {
 
       if (this.isValidAmount && this.isValidAddress) {
         const tokenTransferData = await this.getTokenTransferData();
-        const estimatedGasLimit = await this.web3.eth.estimateGas({
+        const tokenSchedulingTransaction = {
           from: coinbase,
           value: this.isTokenTransfer
             ? 0
             : unit.toWei(this.amount.toString(), 'ether'),
           to: this.isTokenTransfer
             ? this.selectedCurrency.address
-            : this.address,
+            : this.toAddress,
           data: this.isTokenTransfer ? tokenTransferData : this.data
-        });
+        };
+        console.log(tokenSchedulingTransaction);
+        const estimatedGasLimit = await this.web3.eth.estimateGas(
+          tokenSchedulingTransaction
+        );
 
         const totalEstimatedGasLimit = new BigNumber(estimatedGasLimit).plus(
           EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_ADDITIONAL_GAS
@@ -1002,7 +1001,7 @@ export default {
       } catch (e) {
         // Show a scheduling error
         this.shownErrors.push(ERRORS.SCHEDULING);
-        ErrorHandler(e, true);
+        Toast.responseHandler(e, true);
         return;
       }
 

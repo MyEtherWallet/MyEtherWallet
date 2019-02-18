@@ -1,11 +1,11 @@
 import ethTx from 'ethereumjs-tx';
-import ethUtil from 'ethereumjs-util';
+import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import {
@@ -48,7 +48,7 @@ class BitBoxWallet {
       tx.s = getBufferFromHex(sanitizeHex(result.s));
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
-        ErrorHandler(
+        Toast.responseHandler(
           new Error(
             'Invalid networkId signature returned. Expected: ' +
               networkId +
@@ -61,7 +61,7 @@ class BitBoxWallet {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
+      const msgHash = hashPersonalMessage(toBuffer(msg));
       const result = await this.bitbox.signMessage(
         this.basePath + '/' + idx,
         msgHash

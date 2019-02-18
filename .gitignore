@@ -18,3 +18,8 @@ selenium-debug.log
 .config
 /tests/unit/coverage/
 release
+
+# Generated files
+/src/contracts/
+/src/tokens/
+/src/darklist/

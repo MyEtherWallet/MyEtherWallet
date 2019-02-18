@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 const EAC_SCHEDULING_CONFIG = {
   FUTURE_GAS_PRICE_MIN: 1, // Gwei
@@ -59,7 +59,7 @@ const canBeConvertedToWei = (web3, string, denomination = 'ether') => {
       !e.message.includes('too many decimal places') ||
       !e.message.includes(`invalid number value ''`)
     ) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
     return false;
   }

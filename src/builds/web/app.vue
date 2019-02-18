@@ -15,6 +15,7 @@ import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import WelcomeModal from '@/components/WelcomeModal';
 import store from 'store';
 import { mapGetters } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   name: 'App',
@@ -29,6 +30,13 @@ export default {
       wallet: 'wallet'
     })
   },
+  created() {
+    const msg =
+      'New update found! Please refresh your browser to receive the most updated version';
+    window.addEventListener('PWA_UPDATED', () => {
+      Toast.responseHandler(msg, Toast.SUCCESS);
+    });
+  },
   mounted() {
     this.$store.dispatch('checkIfOnline');
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
@@ -38,6 +46,9 @@ export default {
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {
       store.set('notFirstTimeVisit', true);
     });
+  },
+  destroyed() {
+    window.removeEventListener('PWA_UPDATED');
   }
 };
 </script>

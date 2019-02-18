@@ -1,10 +1,12 @@
 <template>
   <div class="header">
     <!-- Modals ***************************************** -->
+    <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
       :gas-price="gasPrice"
+      :address="account.address"
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
@@ -36,7 +38,7 @@
       </div>
     </div>
     <!-- Scroll up button ******************************* -->
-    <mobile-menu />
+    <mobile-menu :opensettings="openSettings" :logout="logout" />
 
     <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
@@ -179,7 +181,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -191,6 +193,12 @@ import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
+import DisconnectedModal from '@/components/DisconnectedModal';
+
+const events = {
+  issueModal: 'issueModal',
+  mewConnectDisconnected: 'mewConnectDisconnected'
+};
 
 export default {
   components: {
@@ -203,7 +211,8 @@ export default {
     'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
-    'mobile-menu': MobileMenu
+    'mobile-menu': MobileMenu,
+    'disconnected-modal': DisconnectedModal
   },
   data() {
     return {
@@ -280,8 +289,9 @@ export default {
           this.gasPrice = new BigNumber(res).toString();
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
+      // this.disconnectMewConnectModal();
     }
   },
   mounted() {
@@ -298,12 +308,6 @@ export default {
       store.set('locale', storedLocale.langCode);
       this.currentFlag = storedLocale.flag;
     }
-
-    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
-    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    // if (!/zh[-_]/.test(this.currentFlag)) {
-    //   this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    // }
 
     this.currentName = this.supportedLanguages.find(
       item => item.flag === this.currentFlag
@@ -329,9 +333,22 @@ export default {
         this.resolver = resolve;
       }
     });
+
+    // this.disconnectMewConnectModal();
+
+    this.$eventHub.$on('mewConnectDisconnected', () => {
+      this.isMobileMenuOpen = false;
+      this.$refs.mewConnectDisconnected.$refs.disconnected.show();
+      this.$refs.mewConnectDisconnected.$refs.disconnected.$on('hidden', () => {
+        this.$router.push('/access-my-wallet');
+      });
+    });
   },
   beforeDestroy() {
-    this.$eventHub.$off('issueModal');
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
+    // this.$eventHub.$off('issueModal');
   },
   created() {
     try {
@@ -347,7 +364,7 @@ export default {
         false
       );
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
   },
   methods: {

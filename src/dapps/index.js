@@ -2,7 +2,8 @@ import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
 import registerDomain from '@/assets/images/icons/domain.svg';
 import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
-import secureTransaction from '@/assets/images/icons/button-key.svg'; // eslint-disable-line
+import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
+import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
@@ -21,7 +22,15 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'interface.subdomains',
     desc: 'interface.buySubDomains',
-    supportedNetworks: ['ETH']
+    supportedNetworks: [ETH.name]
+  },
+  secureTransaction: {
+    route: '/interface/dapps/secure-transaction',
+    icon: secureTransaction,
+    iconDisabled: secureTransactionHov,
+    title: 'dapps.safesend_title',
+    desc: 'dapps.safesend_desc',
+    supportedNetworks: [ETH.name]
   },
   scheduleTransaction: {
     route: '/interface/dapps/schedule-transaction',
@@ -31,12 +40,6 @@ const dapps = {
       'Schedule a transaction on Ethereum for future execution using the decentralized Ethereum Alarm Clock protocol',
     supportedNetworks: [ETH.name, ROP.name, KOV.name]
   }
-  // secureTransaction: {
-  //   route: '/interface/dapps/secure-transaction',
-  //   icon: secureTransaction,
-  //   title: 'SafeSend ETH Transaction',
-  //   desc: 'Protect and Secure your ETH transaction using SafeSend'
-  // }
 };
 
 export default dapps;

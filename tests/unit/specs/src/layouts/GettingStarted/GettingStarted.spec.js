@@ -82,12 +82,12 @@ describe('GettingStarted.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should update cwwCurrent data when mouse wheel down', () => {
+  xit('should update cwwCurrent data when mouse wheel down', () => {
     wrapper.trigger('wheel', { deltaY: 100 });
     expect(wrapper.vm.$data.cwwCurrent).toBe(1);
   });
 
-  it('should update cwwCurrent data when mouse wheel up', () => {
+  xit('should update cwwCurrent data when mouse wheel up', () => {
     wrapper.setData({ cwwCurrent: 1 });
     wrapper.trigger('wheel', { deltaY: -100 });
     expect(wrapper.vm.$data.cwwCurrent).toBe(0);

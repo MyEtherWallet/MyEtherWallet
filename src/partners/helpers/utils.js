@@ -80,6 +80,20 @@ const isJson = str => {
   }
 };
 
+const handleOrThrow = (e, source) => {
+  if (source) {
+    throw Error('abort');
+  }
+  // typeErrors
+  if (e instanceof TypeError) {
+    if (e.message === 'Failed to fetch') {
+      return;
+    }
+    throw e;
+  }
+  throw e;
+};
+
 export {
   isJson,
   mapToObject,
@@ -89,5 +103,6 @@ export {
   getTimeRemainingString,
   buildPayload,
   isValidEntry,
-  checkInvalidOrMissingValue
+  checkInvalidOrMissingValue,
+  handleOrThrow
 };

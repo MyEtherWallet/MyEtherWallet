@@ -28,7 +28,6 @@
           @click.prevent="switchViewPassword"
         />
       </div>
-      <p v-show="error !== ''" class="error">{{ error }}</p>
       <div class="not-recommended">
         {{ $t('accessWallet.notARecommendedWay') }}
       </div>
@@ -50,9 +49,9 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import _worker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 export default {
   props: {
     file: {
@@ -66,7 +65,6 @@ export default {
     return {
       show: false,
       password: '',
-      error: '',
       spinner: false
     };
   },
@@ -83,7 +81,7 @@ export default {
   methods: {
     unlockWallet() {
       this.spinner = true;
-      const worker = new Worker();
+      const worker = new _worker();
       const self = this;
       worker.postMessage({
         type: 'unlockWallet',
@@ -95,19 +93,22 @@ export default {
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         ]);
         self.spinner = false;
+        this.password = '';
         self.$router.push({
           path: 'interface'
         });
       };
       worker.onerror = function(e) {
+        e.preventDefault();
         self.spinner = false;
-        self.error = ErrorHandler(e, true).message;
+        Toast.responseHandler(e, Toast.ERROR);
       };
     },
     switchViewPassword() {
       this.show = !this.show;
     },
     focusInput() {
+      this.password = '';
       this.$refs.passwordInput.focus();
     }
   }
