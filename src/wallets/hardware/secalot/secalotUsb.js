@@ -42,7 +42,12 @@ SecalotUsb.prototype.exchange = function(apduHex, callback) {
   const localCallback = function(result) {
     self.u2fCallback(result, callback);
   };
-  u2f.sign([key], this.timeoutSeconds).then(localCallback);
+  u2f
+    .sign([key], this.timeoutSeconds)
+    .then(localCallback)
+    .catch(err => {
+      callback(undefined, err);
+    });
 };
 
 export default SecalotUsb;

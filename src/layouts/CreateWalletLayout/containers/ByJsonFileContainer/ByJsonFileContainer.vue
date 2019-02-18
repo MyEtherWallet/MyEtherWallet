@@ -63,8 +63,8 @@ import ByJsonBlock from '../../components/ByJsonBlock';
 import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
-import { ErrorHandler } from '@/helpers';
+import _worker from 'worker-loader!@/workers/wallet.worker.js';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -102,7 +102,7 @@ export default {
     };
   },
   mounted() {
-    const worker = new Worker();
+    const worker = new _worker();
     worker.postMessage({ type: 'createWallet', data: [this.password] });
     worker.onmessage = e => {
       const createBlob = (mime, str) => {
@@ -118,7 +118,7 @@ export default {
       this.name = e.data.name.toString();
     };
     worker.onerror = function(e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     };
   },
   methods: {

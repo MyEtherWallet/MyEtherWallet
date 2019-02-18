@@ -1,5 +1,6 @@
 import debugLogger from 'debug';
 import kyberCalls from './kyber-calls';
+import { utils } from '../helpers';
 
 const errorLogger = debugLogger('v5-error:kyber-api');
 
@@ -8,27 +9,31 @@ const retrieveRatesFromAPI = async (
   rates = new Map(),
   tokenDetails = {}
 ) => {
-  const apiRates = await kyberCalls.getRates(network);
-  const data = Object.keys(apiRates);
-  data.forEach(key => {
-    const keyParts = key.split('_');
-    rates.set(`${keyParts[0]}/${keyParts[1]}`, apiRates[key].currentPrice);
-    if (
-      apiRates[key].symbol &&
-      apiRates[key].name &&
-      apiRates[key].decimals &&
-      apiRates[key].contractAddress
-    ) {
-      // otherwise the entry is invalid
-      tokenDetails[apiRates[key].symbol] = {
-        symbol: apiRates[key].symbol,
-        name: apiRates[key].name,
-        contractAddress: apiRates[key].contractAddress,
-        decimals: apiRates[key].decimals
-      };
-    }
-  });
-  return { rates, tokenDetails };
+  try {
+    const apiRates = await kyberCalls.getRates(network);
+    const data = Object.keys(apiRates);
+    data.forEach(key => {
+      const keyParts = key.split('_');
+      rates.set(`${keyParts[0]}/${keyParts[1]}`, apiRates[key].currentPrice);
+      if (
+        apiRates[key].symbol &&
+        apiRates[key].name &&
+        apiRates[key].decimals &&
+        apiRates[key].contractAddress
+      ) {
+        // otherwise the entry is invalid
+        tokenDetails[apiRates[key].symbol] = {
+          symbol: apiRates[key].symbol,
+          name: apiRates[key].name,
+          contractAddress: apiRates[key].contractAddress,
+          decimals: apiRates[key].decimals
+        };
+      }
+    });
+    return { rates, tokenDetails };
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
 };
 
 const getSupportedTokenList = async network => {
@@ -49,6 +54,7 @@ const getSupportedTokenList = async network => {
     }
     return tokenDetails;
   } catch (e) {
+    utils.handleOrThrow(e);
     errorLogger(e);
   }
 };

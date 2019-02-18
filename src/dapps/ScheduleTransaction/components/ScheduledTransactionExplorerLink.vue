@@ -1,6 +1,6 @@
 <template>
   <a
-    :href="'localhost:8081/awaiting/scheduler/' + txHash"
+    :href="'https://app.chronologic.network/awaiting/scheduler/' + txHash"
     target="_blank"
     rel="noopener noreferrer"
   >

@@ -104,7 +104,7 @@ import metamaskImg from '@/assets/images/icons/button-metamask.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
 import { mapGetters } from 'vuex';
-import { ErrorHandler, Misc } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
@@ -158,7 +158,7 @@ export default {
           recommend: '',
           tooltip: '',
           img: metamaskImg,
-          disabled: !window.web3,
+          disabled: false,
           classname: 'button-metamask'
         },
         {
@@ -193,14 +193,11 @@ export default {
           return (
             !this.online ||
             (Misc.browserName() !== 'chrome' &&
-              Misc.browserName() !== 'firefox')
+              Misc.browserName() !== 'firefox' &&
+              Misc.browserName() !== 'safari')
           );
         case 'button-hardware':
           return !this.online;
-        case 'button-metamask':
-          return !window.web3;
-        case 'button-software':
-          return false;
         default:
           return false;
       }
@@ -255,7 +252,7 @@ export default {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {
-        ErrorHandler(e, false);
+        Toast.responseHandler(e, false);
       }
     }
   }

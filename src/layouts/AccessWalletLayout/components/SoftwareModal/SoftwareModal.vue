@@ -3,45 +3,46 @@
     ref="software"
     :title="$t('accessWallet.accessBySoftware')"
     hide-footer
-    class="bootstrap-modal padding-25-20 modal-software"
+    class="bootstrap-modal nopadding modal-software"
     centered
   >
-    <div class="d-block content-container text-center">
-      <div class="button-options">
-        <wallet-option
-          v-for="(item, idx) in items"
-          :key="item.name + idx"
-          :selected="selected === item.name"
-          :select="select"
-          :regular-icon="item.imgPath"
-          :hover-icon="item.imgHoverPath"
-          :text="item.text"
-          :name="item.name"
+    <div class="modal-content">
+      <div class="d-block content-container text-center">
+        <div class="button-options">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :select="select"
+            :regular-icon="item.imgPath"
+            :hover-icon="item.imgHoverPath"
+            :text="item.text"
+            :name="item.name"
+          />
+        </div>
+        <input
+          ref="jsonInput"
+          type="file"
+          name="file"
+          style="display: none"
+          @change="uploadFile"
         />
       </div>
-      <input
-        ref="jsonInput"
-        type="file"
-        name="file"
-        style="display: none"
-        @change="uploadFile"
-      />
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
+      <div class="button-container">
+        <b-btn
+          :class="[
+            selected !== '' ? 'enabled' : 'disabled',
+            'mid-round-button-green-filled'
+          ]"
+          @click="continueAccess"
+          >{{ $t('common.continue') }}</b-btn
+        >
+      </div>
+      <customer-support />
     </div>
-    <div class="not-recommended">
-      {{ $t('accessWallet.notARecommendedWay') }}
-    </div>
-    <div class="button-container">
-      <b-btn
-        :class="[
-          selected !== '' ? 'enabled' : 'disabled',
-          'mid-round-button-green-filled'
-        ]"
-        @click="continueAccess"
-      >
-        {{ $t('common.continue') }}
-      </b-btn>
-    </div>
-    <customer-support />
   </b-modal>
 </template>
 
@@ -54,6 +55,7 @@ import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import privKeyImg from '@/assets/images/icons/button-key.svg';
 import WalletOption from '../WalletOption';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -130,8 +132,12 @@ export default {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        self.$emit('file', JSON.parse(evt.target.result));
-        self.file = JSON.parse(evt.target.result);
+        try {
+          self.$emit('file', JSON.parse(evt.target.result));
+          self.file = JSON.parse(evt.target.result);
+        } catch (e) {
+          Toast.responseHandler(e, Toast.ERROR);
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     }

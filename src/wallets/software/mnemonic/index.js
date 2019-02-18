@@ -1,7 +1,7 @@
 import * as HDKey from 'hdkey';
 import ethTx from 'ethereumjs-tx';
 import bip39 from 'bip39';
-import ethUtil from 'ethereumjs-util';
+import { hashPersonalMessage, toBuffer, ecsign } from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -45,8 +45,8 @@ class MnemonicWallet {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
-      const signed = ethUtil.ecsign(msgHash, derivedKey.privateKey);
+      const msgHash = hashPersonalMessage(toBuffer(msg));
+      const signed = ecsign(msgHash, derivedKey.privateKey);
       return Buffer.concat([
         Buffer.from(signed.r),
         Buffer.from(signed.s),

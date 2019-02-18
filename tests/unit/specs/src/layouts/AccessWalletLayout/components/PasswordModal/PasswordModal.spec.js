@@ -29,7 +29,7 @@ describe('PasswordModal.vue', () => {
     );
   });
 
-  it(' should render error data', () => {
+  xit(' should render error data', () => {
     const error = 'error';
     wrapper.setData({ error });
     expect(

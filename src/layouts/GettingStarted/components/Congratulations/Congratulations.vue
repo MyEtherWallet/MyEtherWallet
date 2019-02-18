@@ -23,7 +23,10 @@
             {{ $t('gettingStarted.congratulationsDescCont') }}
           </p>
 
-          <div class="mid-round-button-green-filled-green-border" @click="done">
+          <div
+            class="done-button mid-round-button-green-filled-green-border"
+            @click="done"
+          >
             Get Started
           </div>
         </div>

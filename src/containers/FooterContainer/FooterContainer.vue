@@ -34,6 +34,7 @@
                     v-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <p>{{ content.text }}</p>
                   </a>
@@ -226,6 +227,10 @@ export default {
             {
               text: this.$t('common.faqs'),
               to: '/#faqs'
+            },
+            {
+              text: this.$t('common.vintage'),
+              href: 'https://vintage.myetherwallet.com'
             },
             {
               text: this.$t('common.customerSupport'),
