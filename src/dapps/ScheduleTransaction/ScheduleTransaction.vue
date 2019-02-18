@@ -245,14 +245,14 @@
       <div class="submit-button-container">
         <b-alert
           :show="isTokenTransfer && showTokenTransferNotification"
-          variant="warning"
+          variant="info"
           dismissible
           class="mx-5"
           @dismissed="showTokenTransferNotification = false"
         >
           <strong>Note:</strong> You are scheduling a token transfer. Token
-          transfers require 2 separate transactions for token scheduling and
-          token transfer approval.
+          transfers require 2 separate transactions. One for token scheduling
+          and another one for token transfer approval.
         </b-alert>
 
         <div v-for="(tx, index) in scheduledTransactions" :key="index">
@@ -281,7 +281,7 @@
                 <strong>approve</strong> the token transfer now.
               </div>
               <div
-                class="submit-button large-round-button-green-filled"
+                class="submit-button large-round-button-green-filled m-3"
                 @click="approveToken(tx)"
               >
                 Approve Token Transfer
@@ -349,7 +349,6 @@ import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
 import { ERC20 } from '@/partners';
-import { MessageUtil } from '@/helpers';
 import {
   EAC_SCHEDULING_CONFIG,
   calcSchedulingTotalCost,
@@ -665,7 +664,7 @@ export default {
       return canBeConvertedToWei(this.web3, this.deposit);
     },
     isValidData() {
-      return MessageUtil.isHexString(this.data) || this.data === '';
+      return this.web3.utils.isHexStrict(this.data) || this.data === '';
     },
     hasEnoughEthToSchedule() {
       const accountBalance = new BigNumber(this.account.balance);
@@ -711,7 +710,12 @@ export default {
                   EAC_SCHEDULING_CONFIG.APPROVE_TOKEN_TRANSFER_METHOD_ID
                 )
               ) {
-                console.log('Approval transaction detected - skipping.');
+                console.log('Approval transaction detected.');
+                this.scheduledTransactions.forEach((tx, index) => {
+                  if (transaction.input.includes(tx.address.substring(2))) {
+                    this.scheduledTransactions[index].approved = true;
+                  }
+                });
                 return;
               }
               const isTokenTransfer = transaction.input.includes(
@@ -866,13 +870,21 @@ export default {
         .encodeABI();
       const nonce = await this.web3.eth.getTransactionCount(coinbase, 'latest');
 
+      const numIfHex = input =>
+        this.web3.utils.isHexStrict(input)
+          ? this.web3.utils.hexToNumber(input)
+          : input;
+
       const scheduledTokensApproveTransaction = {
         from: coinbase,
         to: tx.selectedCurrency.address,
         value: '',
         data: approveTokensData,
-        nonce,
-        gasPrice: this.gasPrice
+        nonce: numIfHex(nonce),
+        gasPrice: this.web3.utils.toWei(
+          numIfHex(this.gasPrice).toString(),
+          'gwei'
+        )
       };
 
       const estimatedGasLimit = await this.web3.eth.estimateGas(
@@ -897,6 +909,8 @@ export default {
 
       if (this.isValidAmount && this.isValidAddress) {
         const tokenTransferData = await this.getTokenTransferData();
+        const inputData = this.data === '' ? '0x0' : this.data;
+
         const tokenSchedulingTransaction = {
           from: coinbase,
           value: this.isTokenTransfer
@@ -905,7 +919,7 @@ export default {
           to: this.isTokenTransfer
             ? this.selectedCurrency.address
             : this.toAddress,
-          data: this.isTokenTransfer ? tokenTransferData : this.data
+          data: this.isTokenTransfer ? tokenTransferData : inputData
         };
         console.log(tokenSchedulingTransaction);
         const estimatedGasLimit = await this.web3.eth.estimateGas(
