@@ -688,15 +688,20 @@ export default {
           );
 
           if (!alreadyHasTx) {
+            console.log({
+              latestNotificationHash: latestNotification.hash
+            });
             const transaction = await this.web3.eth.getTransaction(
               latestNotification.hash
             );
-            console.log(transaction);
+            console.log({
+              transaction
+            });
             try {
               if (transaction === null) {
                 Toast.responseHandler(
                   new Error('Non-existing transaction detected'),
-                  true
+                  Toast.ERROR
                 );
                 return;
               }
@@ -726,7 +731,11 @@ export default {
                 amount: this.amount
               });
             } catch (e) {
-              Toast.responseHandler(e, true);
+              console.log({
+                Toast,
+                e
+              });
+              Toast.responseHandler(e, Toast.ERROR);
             }
           }
         } else if (latestNotification.status === 'complete') {
@@ -770,7 +779,7 @@ export default {
         this.selectedBlockNumber = res + 100;
       })
       .catch(err => {
-        Toast.responseHandler(err, true);
+        Toast.responseHandler(err, Toast.ERROR);
       });
 
     this.datetime = moment()
@@ -827,7 +836,7 @@ export default {
         new Error(
           'USDT conversion no longer available. Please provide an alternative USD conversion method'
         ),
-        true
+        Toast.ERROR
       );
       return;
     }
@@ -835,13 +844,10 @@ export default {
   },
   methods: {
     async approveToken(tx) {
-      console.log(`Approving ${tx.hash}`);
-      console.log(tx);
-
       if (!tx.selectedCurrency) {
         Toast.responseHandler(
           new Error(`${tx.hash} is not a token transfer tx.`),
-          true
+          Toast.ERROR
         );
         return;
       }
@@ -872,18 +878,19 @@ export default {
       const estimatedGasLimit = await this.web3.eth.estimateGas(
         scheduledTokensApproveTransaction
       );
-      scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit;
-      console.log(scheduledTokensApproveTransaction);
+      console.log({
+        scheduledTokensApproveTransaction,
+        estimatedGasLimit
+      });
+      scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit + 1000000;
 
       const approveTx = new EthTx(scheduledTokensApproveTransaction);
 
       const json = approveTx.toJSON(true);
-      console.log(json);
       json.from = coinbase;
       this.web3.eth.sendTransaction(json).catch(err => {
-        Toast.responseHandler(err, true);
+        Toast.responseHandler(err, Toast.ERROR);
       });
-      console.log('tx sent');
     },
     async estimateGas() {
       const coinbase = await this.web3.eth.getCoinbase();
@@ -1001,7 +1008,7 @@ export default {
       } catch (e) {
         // Show a scheduling error
         this.shownErrors.push(ERRORS.SCHEDULING);
-        Toast.responseHandler(e, true);
+        Toast.responseHandler(e, Toast.ERROR);
         return;
       }
 
