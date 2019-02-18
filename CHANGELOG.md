@@ -1,6 +1,7 @@
 ### Devop
 
-- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2
+- Add Missing nodes from v3 []()
+- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
 
 ### Release v5.0.2
 
