@@ -24,6 +24,7 @@
 
 ### Devop
 
+- Update notification dot [#679](https://github.com/MyEtherWallet/MyEtherWallet/pull/679)
 - Make toasts stay longer, update packages [#658](https://github.com/MyEtherWallet/MyEtherWallet/pull/658)
 
 ### Release v5.0.1
