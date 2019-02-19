@@ -2,9 +2,9 @@
   <div class="schedule-transaction-container">
     <b-container>
       <b-row align-h="start">
-        <b-col cols="2"> <back-button /> </b-col>
+        <b-col cols="4" md="2"> <back-button /> </b-col>
 
-        <b-col class="vertical-center-self horizontal-center" cols="8">
+        <b-col class="vertical-center-self horizontal-center" cols="8" md="8">
           <h3>Schedule a transaction</h3>
         </b-col>
       </b-row>
@@ -13,7 +13,18 @@
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
         <b-row>
-          <b-col>
+          <b-col cols="12" md="4">
+            <div class="scheduling-currency-picker">
+              <div class="input-title">{{ $t('interface.sendTxType') }}</div>
+              <currency-picker
+                :currency="tokensWithBalance"
+                :page="'sendEgasAmountthAndTokens'"
+                :token="true"
+                @selectedCurrency="selectedCurrency = $event"
+              />
+            </div>
+          </b-col>
+          <b-col cols="12" md="8">
             <standard-input
               :options="amountInputOptions()"
               @changedValue="amount = $event"
@@ -24,15 +35,6 @@
             <div v-show="!hasEnoughEthToSchedule" class="text-danger">
               Not enough ETH on account to schedule
             </div>
-          </b-col>
-          <b-col class="scheduling-currency-picker">
-            <div class="input-title">{{ $t('interface.sendTxType') }}</div>
-            <currency-picker
-              :currency="tokensWithBalance"
-              :page="'sendEgasAmountthAndTokens'"
-              :token="true"
-              @selectedCurrency="selectedCurrency = $event"
-            />
           </b-col>
         </b-row>
         <div class="form-block">
@@ -58,7 +60,7 @@
           </div>
 
           <b-row v-show="selectedMode === supportedModes[0]">
-            <b-col>
+            <b-col cols="12" md="6">
               <div class="datetime-picker-container">
                 <div class="input-title">Date & Time</div>
                 <datetime-picker
@@ -77,7 +79,7 @@
               </div>
             </b-col>
 
-            <b-col>
+            <b-col cols="12" md="6">
               <div class="timezone-selector">
                 <div class="input-title">Timezone</div>
                 <standard-dropdown
@@ -93,14 +95,7 @@
 
           <b-container class="send-form advanced">
             <b-row>
-              <b-col cols="3">
-                <standard-input
-                  :options="bountyUsdDisplayOptions()"
-                  class="bounty-usd-display"
-                />
-              </b-col>
-
-              <b-col cols="3">
+              <b-col cols="12" md="3">
                 <div v-show="!advancedExpand" class="time-bounty-selector">
                   <div
                     v-b-tooltip.hover
@@ -135,7 +130,14 @@
                 </div>
               </b-col>
 
-              <b-col cols="3" class="vertical-center-self">
+              <b-col cols="12" md="3">
+                <standard-input
+                  :options="bountyUsdDisplayOptions()"
+                  class="bounty-usd-display"
+                />
+              </b-col>
+
+              <b-col cols="12" md="3" class="vertical-center-self">
                 <div class="timebounty-gasprice-coverage">
                   Covers up to
                   <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas
@@ -143,8 +145,8 @@
                 </div>
               </b-col>
 
-              <b-col cols="3" class="toggle-button-col">
-                <div class="toggle-button-container float-right">
+              <b-col cols="12" md="3" class="toggle-button-col">
+                <div class="toggle-button-container float-md-right">
                   <h4>Advanced</h4>
                   <div class="toggle-button">
                     <!-- Rounded switch -->
@@ -166,21 +168,26 @@
 
             <div v-show="advancedExpand">
               <b-row>
-                <b-col class="mode-container">
-                  <div class="input-title">Scheduling mode</div>
-                  <b-button-group>
-                    <b-button
-                      v-for="(mode, index) in supportedModes"
-                      :key="index"
-                      :class="['mode-btn', mode === selectedMode && 'selected']"
-                      @click="selectedMode = mode"
-                    >
-                      {{ mode.name }}
-                    </b-button>
-                  </b-button-group>
+                <b-col cols="12" md="6">
+                  <div class="mode-container">
+                    <div class="input-title">Scheduling mode</div>
+                    <b-button-group>
+                      <b-button
+                        v-for="(mode, index) in supportedModes"
+                        :key="index"
+                        :class="[
+                          'mode-btn',
+                          mode === selectedMode && 'selected'
+                        ]"
+                        @click="selectedMode = mode"
+                      >
+                        {{ mode.name }}
+                      </b-button>
+                    </b-button-group>
+                  </div>
                 </b-col>
 
-                <b-col>
+                <b-col cols="12" md="6">
                   <standard-input
                     :options="executionWindowInputOptions()"
                     @changedValue="windowSize = $event"
@@ -201,7 +208,7 @@
               </div>
 
               <b-row>
-                <b-col>
+                <b-col cols="12" md="4">
                   <standard-input
                     :options="futureGasPriceInputOptions()"
                     @changedValue="futureGasPrice = $event"
@@ -210,7 +217,7 @@
                     Please set a gas price of {{ minGasPrice }} or higher
                   </div>
                 </b-col>
-                <b-col>
+                <b-col cols="12" md="4">
                   <standard-input
                     :options="gasLimitInputOptions()"
                     @changedValue="gasLimit = $event"
@@ -219,7 +226,7 @@
                     Please set a gas limit of 0 or higher
                   </div>
                 </b-col>
-                <b-col>
+                <b-col cols="12" md="4">
                   <standard-input
                     :options="futureGasLimitInputOptions()"
                     @changedValue="futureGasLimit = $event"
