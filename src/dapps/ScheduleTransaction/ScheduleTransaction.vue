@@ -264,39 +264,6 @@
 
         <div v-for="(tx, index) in scheduledTransactions" :key="index">
           <b-alert
-            :show="!tx.approved && tx.isTokenTransfer"
-            variant="warning"
-            class="m-5"
-          >
-            <div v-if="!tx.mined">
-              <div>
-                Please wait for the transaction to be mined before approving...
-              </div>
-              <div class="fa-3x">
-                <i class="fa fa-spinner fa-spin fa-lg" />
-              </div>
-              <div>
-                <strong>Note:</strong> If this is taking too long, follow this
-                link
-                <scheduled-transaction-explorer-link :tx-hash="tx.hash" /> to
-                approve the transaction.
-              </div>
-            </div>
-            <div v-if="tx.mined">
-              <div>
-                The transaction has been mined. Please
-                <strong>approve</strong> the token transfer now.
-              </div>
-              <div
-                class="submit-button large-round-button-green-filled my-3"
-                @click="approveToken(tx)"
-              >
-                Approve Token Transfer
-              </div>
-            </div>
-          </b-alert>
-
-          <b-alert
             :show="!tx.notificationDismissed"
             variant="success"
             dismissible
@@ -309,6 +276,38 @@
               <scheduled-transaction-explorer-link :tx-hash="tx.hash" />
               and is waiting to be mined.
             </p>
+          </b-alert>
+
+          <b-alert
+            :show="!tx.approved && tx.isTokenTransfer"
+            variant="warning"
+            class="m-5"
+          >
+            <div v-if="!tx.mined">
+              <div>
+                Please wait for the transaction to be mined before approving...
+              </div>
+              <div class="fa-3x">
+                <i class="fa fa-spinner fa-spin fa-lg" />
+              </div>
+              <div>
+                <strong>Note:</strong> If this is taking too long, follow
+                <scheduled-transaction-explorer-link
+                  :tx-hash="tx.hash"
+                  :link-text="'this'"
+                />
+                link to approve the transaction.
+              </div>
+            </div>
+            <div v-if="tx.mined">
+              <div>
+                The transaction has been mined. Please
+                <strong>approve</strong> the token transfer now.
+              </div>
+              <b-button variant="info my-3" @click="approveToken(tx)">
+                Approve Token Transfer
+              </b-button>
+            </div>
           </b-alert>
         </div>
 
