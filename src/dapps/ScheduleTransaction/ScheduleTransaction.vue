@@ -288,7 +288,7 @@
                 <strong>approve</strong> the token transfer now.
               </div>
               <div
-                class="submit-button large-round-button-green-filled m-3"
+                class="submit-button large-round-button-green-filled my-3"
                 @click="approveToken(tx)"
               >
                 Approve Token Transfer
@@ -297,7 +297,7 @@
           </b-alert>
 
           <b-alert
-            :show="!tx.mined && !tx.notificationDismissed"
+            :show="!tx.notificationDismissed"
             variant="success"
             dismissible
             fade
@@ -320,12 +320,6 @@
           @click="scheduleTx"
         >
           Schedule Transaction
-        </div>
-
-        <div v-if="shownErrors" class="text-danger m-3">
-          <div v-for="(err, index) in shownErrors" :key="index">
-            {{ err }}
-          </div>
         </div>
       </div>
     </div>
@@ -357,10 +351,10 @@ import StandardDropdown from '@/components/StandardDropdown';
 import { isAddress } from '@/helpers/addressUtils';
 import { ERC20 } from '@/partners';
 import {
-  EAC_SCHEDULING_CONFIG,
   calcSchedulingTotalCost,
   canBeConvertedToWei,
-  ERRORS
+  EAC_SCHEDULING_CONFIG,
+  estimateBountyForGasPrice
 } from './ScheduleHelpers';
 import ScheduledTransactionExplorerLink from './components/ScheduledTransactionExplorerLink';
 
@@ -409,7 +403,6 @@ export default {
       ethPrice: new BigNumber(0),
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
-      shownErrors: [],
       scheduledTransactions: [],
       showTokenTransferNotification: true,
       amountInputOptions() {
@@ -685,7 +678,6 @@ export default {
     async notifications() {
       const notifications = this.notifications[this.account.address];
       const latestNotification = notifications[0];
-      console.log(notifications);
 
       if (latestNotification.hash) {
         if (latestNotification.status === 'pending') {
@@ -694,15 +686,10 @@ export default {
           );
 
           if (!alreadyHasTx) {
-            console.log({
-              latestNotificationHash: latestNotification.hash
-            });
             const transaction = await this.web3.eth.getTransaction(
               latestNotification.hash
             );
-            console.log({
-              transaction
-            });
+
             try {
               if (transaction === null) {
                 Toast.responseHandler(
@@ -717,7 +704,6 @@ export default {
                   EAC_SCHEDULING_CONFIG.APPROVE_TOKEN_TRANSFER_METHOD_ID
                 )
               ) {
-                console.log('Approval transaction detected.');
                 this.scheduledTransactions.forEach((tx, index) => {
                   if (transaction.input.includes(tx.address.substring(2))) {
                     this.scheduledTransactions[index].approved = true;
@@ -742,10 +728,6 @@ export default {
                 amount: this.amount
               });
             } catch (e) {
-              console.log({
-                Toast,
-                e
-              });
               Toast.responseHandler(e, Toast.ERROR);
             }
           }
@@ -765,7 +747,6 @@ export default {
           });
         }
       }
-      console.log(this.scheduledTransactions);
     },
     async selectedCurrency() {
       this.futureGasLimit = await this.estimateGas();
@@ -798,38 +779,10 @@ export default {
       .toISOString();
     this.futureGasPrice = this.gasPrice.toString();
 
-    const estimateBountyForGasPrice = gasPrice => {
-      const estimatedWei = Util.estimateBountyForExecutionGasPrice(
-        new BigNumber(unit.toWei(gasPrice.toString(), 'gwei')),
-        new BigNumber(this.futureGasLimit.toString()),
-        new BigNumber(unit.toWei('0', 'gwei'))
-      );
-
-      const estimatedEth = unit.fromWei(estimatedWei.toString(), 'ether');
-
-      // Estimate the number of decimals to show
-      let decimalPoints = 0;
-      if (estimatedEth.substring(0, 2) === '0.') {
-        let endFound = false;
-
-        let i = estimatedEth.length;
-        while (i-- && !endFound) {
-          const char = estimatedEth.charAt(estimatedEth.length - i - 1);
-          if (char !== '0' && char !== '.') {
-            endFound = true;
-            break;
-          }
-          decimalPoints += 1;
-        }
-      }
-
-      return parseFloat(estimatedEth).toFixed(decimalPoints);
-    };
-
     this.timeBountyPresets = [
-      estimateBountyForGasPrice(this.gasPrice * 5),
-      estimateBountyForGasPrice(this.gasPrice * 8),
-      estimateBountyForGasPrice(this.gasPrice * 13)
+      estimateBountyForGasPrice(this.gasPrice * 5, this.futureGasLimit),
+      estimateBountyForGasPrice(this.gasPrice * 8, this.futureGasLimit),
+      estimateBountyForGasPrice(this.gasPrice * 13, this.futureGasLimit)
     ];
 
     this.timeBounty = this.timeBountyPresets[0];
@@ -897,10 +850,6 @@ export default {
       const estimatedGasLimit = await this.web3.eth.estimateGas(
         scheduledTokensApproveTransaction
       );
-      console.log({
-        scheduledTokensApproveTransaction,
-        estimatedGasLimit
-      });
       scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit + 1000000;
 
       const approveTx = new EthTx(scheduledTokensApproveTransaction);
@@ -916,7 +865,7 @@ export default {
 
       if (this.isValidAmount && this.isValidAddress) {
         const tokenTransferData = await this.getTokenTransferData();
-        const inputData = this.data === '' ? '0x0' : this.data;
+        const inputData = this.data === '' ? '0x00' : this.data;
 
         const tokenSchedulingTransaction = {
           from: coinbase,
@@ -928,10 +877,17 @@ export default {
             : this.toAddress,
           data: this.isTokenTransfer ? tokenTransferData : inputData
         };
-        console.log(tokenSchedulingTransaction);
-        const estimatedGasLimit = await this.web3.eth.estimateGas(
-          tokenSchedulingTransaction
-        );
+
+        let estimatedGasLimit;
+        try {
+          estimatedGasLimit = await this.web3.eth.estimateGas(
+            tokenSchedulingTransaction
+          );
+        } catch (e) {
+          console.error(e);
+          Toast.responseHandler(e, Toast.ERROR);
+          return EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString();
+        }
 
         const totalEstimatedGasLimit = new BigNumber(estimatedGasLimit).plus(
           EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_ADDITIONAL_GAS
@@ -958,13 +914,7 @@ export default {
           .encodeABI();
       }
 
-      return '0x0';
-    },
-    removeError(error) {
-      const index = this.shownErrors.indexOf(error);
-      if (index > -1) {
-        this.shownErrors.splice(index, 1);
-      }
+      return '0x00';
     },
     async scheduleTx() {
       const {
@@ -986,7 +936,7 @@ export default {
       let { data } = this;
 
       if (data === '') {
-        data = '0x0';
+        data = '0x00';
       }
 
       const timestampScheduling =
@@ -1018,17 +968,11 @@ export default {
         scheduleGas: new BigNumber(gasLimit)
       };
 
-      console.log(schedulingOptions);
       const endowment = await this.eac.computeEndowment(schedulingOptions);
 
       try {
         await this.eac.validateScheduleOptions(schedulingOptions, endowment);
-
-        // Remove any errors if shown
-        this.removeError(ERRORS.SCHEDULING);
       } catch (e) {
-        // Show a scheduling error
-        this.shownErrors.push(ERRORS.SCHEDULING);
         Toast.responseHandler(e, Toast.ERROR);
         return;
       }
