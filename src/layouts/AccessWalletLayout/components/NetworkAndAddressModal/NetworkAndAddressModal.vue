@@ -360,6 +360,7 @@ export default {
     },
     addCustomPath() {
       const customPath = this.checkCustomPath(this.customPath.path);
+      console.log(this.checkCustomPath(this.customPath.path)); // todo remove dev item
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
@@ -378,7 +379,7 @@ export default {
     splitPath(path) {
       let array1;
       // eslint-disable-next-line
-      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
+      const regExp = /(?<root>^\w+)\/?(?<bip>\d+)'?\/?(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)/
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
         return array1;
@@ -386,12 +387,14 @@ export default {
       return null;
     },
     checkCustomPath(path) {
+      console.log(this.splitPath(path)); // todo remove dev item
       try {
         let array1;
         if ((array1 = this.splitPath(path)) !== null) {
           let assembledPath = '';
           if (array1[1]) {
             if (array1[1] !== 'm') return false;
+            console.log('1'); // todo remove dev item
             assembledPath = assembledPath.concat(array1[1]);
           } else {
             return false;
@@ -405,8 +408,10 @@ export default {
           if (array1[5]) assembledPath = assembledPath.concat('/', array1[5]);
           return assembledPath;
         }
+        console.log('2'); // todo remove dev item
         return false;
       } catch (e) {
+        console.log(e); // todo remove dev item
         Toast.responseHandler(e, Toast.ERROR);
         return false;
       }
