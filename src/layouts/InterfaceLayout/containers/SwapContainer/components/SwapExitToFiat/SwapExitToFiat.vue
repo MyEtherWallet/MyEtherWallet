@@ -189,7 +189,7 @@
             v-if="steps.verifyStep"
             :options="verifyButton"
             @click.native="
-            updateStep('step2')
+              updateStep('step2');
               updateStage('verifyStep');
               confirmUser();
             "
@@ -198,7 +198,7 @@
             v-if="steps.step2"
             :options="button2"
             @click.native="
-            updateStep('step3')
+              updateStep('step3');
               updateStage('step2');
             "
           />
@@ -206,7 +206,7 @@
             v-if="steps.step3"
             :options="button3"
             @click.native="
-              updateStep('')
+              updateStep('');
               updateStage('step3');
               createExitOrder();
             "
@@ -414,7 +414,7 @@ export default {
   },
   methods: {
     reOpen(step) {
-      if(this.complete[step]){
+      if (this.complete[step]) {
         this.updateStep(step);
       }
     },

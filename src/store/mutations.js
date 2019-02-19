@@ -49,6 +49,7 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
+//
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();

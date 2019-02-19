@@ -203,10 +203,14 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp, swapDetails.validFor);
+      this.timeRemaining = utils.getTimeRemainingString(
+        swapDetails.timestamp,
+        swapDetails.validFor
+      );
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
-          swapDetails.timestamp, swapDetails.validFor
+          swapDetails.timestamp,
+          swapDetails.validFor
         );
         if (this.timeRemaining === 'expired') {
           clearInterval(this.timerInterval);

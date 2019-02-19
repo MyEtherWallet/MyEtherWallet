@@ -82,7 +82,7 @@ import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -196,7 +196,7 @@ export default {
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
                     entry.catch(e => {
-                      ErrorHandler(e, false);
+                      Toast.responseHandler(e, false);
                     });
                   }
                 });
@@ -229,7 +229,9 @@ export default {
                       err
                     ]);
                   })
-                  .catch(() => {});
+                  .catch(err => {
+                    Toast.responseHandler(err, false);
+                  });
               });
           } else {
             this.web3.eth
@@ -262,7 +264,7 @@ export default {
                 ]);
               })
               .catch(err => {
-                ErrorHandler(err, true);
+                Toast.responseHandler(err, Toast.ERROR);
               });
           }
         } else {
@@ -296,7 +298,7 @@ export default {
               ]);
             })
             .catch(err => {
-              ErrorHandler(err, true);
+              Toast.responseHandler(err, Toast.Error);
             });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);

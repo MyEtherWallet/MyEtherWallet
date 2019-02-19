@@ -5,7 +5,7 @@ import Blockies from './blockies';
 import MessageUtil from './messageUtil';
 import Misc from './misc';
 import CreateJsonWallet from './createJsonWallet';
-import ErrorHandler from './errorHandler';
+import Toast from './responseHandler';
 
 export {
   Wallet,
@@ -15,5 +15,5 @@ export {
   MessageUtil,
   Misc,
   CreateJsonWallet,
-  ErrorHandler
+  Toast
 };
