@@ -8,7 +8,7 @@
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "build": "npm run update && vue-cli-service build",
-    "test": "jest --clearCache && npm run test:unit",
+    "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "codecov": "npm run test:unit && codecov",
     "dev": "vue-cli-service serve",
