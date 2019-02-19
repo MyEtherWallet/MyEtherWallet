@@ -24,6 +24,7 @@
 
 ### Devop
 
+- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
 - Make toasts stay longer, update packages [#658](https://github.com/MyEtherWallet/MyEtherWallet/pull/658)
 
 ### Release v5.0.1
