@@ -27,7 +27,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "4.6.0",
+    "@sentry/browser": "4.6.1",
     "detect-browser": "4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
