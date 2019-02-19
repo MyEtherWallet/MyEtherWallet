@@ -1,3 +1,7 @@
+### Bug
+
+- Fix NaN issue on settings modal []()
+
 ### Devop
 
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
