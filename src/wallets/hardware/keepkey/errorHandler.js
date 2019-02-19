@@ -7,7 +7,6 @@ const ERRORS = {
 const WARNING = {};
 
 export default err => {
-  console.log(err, err.message);
   const errorValues = Object.values(ERRORS);
   const warningValues = Object.values(WARNING);
   if (errorValues.includes(err.message)) {
