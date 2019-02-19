@@ -15,9 +15,7 @@
         >
           <p class="button-number">1</p>
           <div class="network">
-            <p>
-              Network
-            </p>
+            <p>Network</p>
             <p class="network-name">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
@@ -100,9 +98,9 @@
                     >{{ val.label }}</b-dropdown-item
                   >
                   <b-dropdown-divider />
-                  <b-dropdown-item>
-                    {{ $t('accessWallet.customPaths') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item>{{
+                    $t('accessWallet.customPaths')
+                  }}</b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
@@ -117,9 +115,9 @@
                       />
                     </span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="showCustomPathInput">
-                    {{ $t('accessWallet.addCustomPath') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="showCustomPathInput">{{
+                    $t('accessWallet.addCustomPath')
+                  }}</b-dropdown-item>
                 </b-dropdown>
               </div>
             </div>
@@ -216,8 +214,8 @@
           <div class="accept-terms">
             <label class="checkbox-container">
               {{ $t('accessWallet.acceptTerms') }}
-              <router-link to="/terms-and-conditions">
-                {{ $t('common.terms') }}.</router-link
+              <router-link to="/terms-and-conditions"
+                >{{ $t('common.terms') }}.</router-link
               >
               <input
                 ref="accessMyWalletBtn"

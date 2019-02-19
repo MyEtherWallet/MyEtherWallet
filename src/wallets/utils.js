@@ -1,6 +1,7 @@
 import { bufferToInt } from 'ethereumjs-util';
 
 const getBufferFromHex = hex => {
+  hex = sanitizeHex(hex);
   const _hex = hex.toLowerCase().replace('0x', '');
   return new Buffer(_hex, 'hex');
 };
