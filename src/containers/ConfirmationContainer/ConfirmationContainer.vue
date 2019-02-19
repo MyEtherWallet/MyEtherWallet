@@ -71,8 +71,19 @@ import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
-import { ErrorHandler, Misc } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
+
+const events = {
+  showSuccessModal: 'showSuccessModal',
+  showErrorModal: 'showErrorModal',
+  showTxConfirmModal: 'showTxConfirmModal',
+  showSendSignedTx: 'showSendSignedTx',
+  showWeb3Wallet: 'showWeb3Wallet',
+  showTxCollectionConfirmModal: 'showTxCollectionConfirmModal',
+  showMessageConfirmModal: 'showMessageConfirmModal'
+};
+
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -99,15 +110,15 @@ export default {
       responseFunction: null,
       advancedExpand: false,
       addressValid: true,
-      amount: 0,
+      amount: '',
       amountValid: true,
-      nonce: 0,
-      gasLimit: 21000,
+      nonce: '',
+      gasLimit: '21000',
       data: '0x',
       gasAmount: this.gasPrice,
       parsedBalance: 0,
       toAddress: '',
-      transactionFee: 0,
+      transactionFee: '',
       raw: {},
       lastRaw: {},
       ens: {},
@@ -140,14 +151,9 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$eventHub.$off('showSuccessModal');
-    this.$eventHub.$off('showErrorModal');
-    this.$eventHub.$off('showTxConfirmModal');
-    this.$eventHub.$off('showSendSignedTx');
-    this.$eventHub.$off('showWeb3Wallet');
-    this.$eventHub.$off('showTxCollectionConfirmModal');
-    this.$eventHub.$off('showTxCollectionConfirmModal');
-    this.$eventHub.$off('showMessageConfirmModal');
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
   },
   created() {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
@@ -244,7 +250,7 @@ export default {
           ]);
         })
         .catch(err => {
-          ErrorHandler(err, true);
+          Toast.responseHandler(err, Toast.ERROR);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -335,17 +341,14 @@ export default {
     },
     parseRawTx(tx) {
       this.raw = tx;
-      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toNumber();
+      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
-      this.gasLimit = new BigNumber(tx.gas).toNumber();
+      this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toNumber();
-      this.transactionFee = Number(
-        unit.fromWei(
-          new BigNumber(tx.gas).times(tx.gasPrice).toString(),
-          'ether'
-        )
-      );
+      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toFixed();
+      this.transactionFee = unit
+        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
+        .toString();
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
@@ -437,7 +440,7 @@ export default {
           ]);
         });
         promiEvent.eventEmitter.catch(err => {
-          ErrorHandler(err, true);
+          Toast.responseHandler(err, Toast.ERROR);
         });
         batch.add(req);
         return promiEvent.eventEmitter;
@@ -461,15 +464,15 @@ export default {
       this.responseFunction = null;
       this.advancedExpand = false;
       this.addressValid = true;
-      this.amount = 0;
+      this.amount = '';
       this.amountValid = true;
-      this.nonce = 0;
-      this.gasLimit = 21000;
+      this.nonce = '';
+      this.gasLimit = '21000';
       this.data = '0x';
       this.gasAmount = this.gasPrice;
       this.parsedBalance = 0;
       this.toAddress = '';
-      this.transactionFee = 0;
+      this.transactionFee = '';
       this.raw = {};
       this.signedTx = '';
       this.messageToSign = '';

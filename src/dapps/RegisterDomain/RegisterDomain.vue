@@ -50,7 +50,7 @@ import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 export default {
   components: {
     'back-button': BackButton
@@ -155,7 +155,7 @@ export default {
         value: 0
       };
       this.web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async updateResolver(newResolverAddr) {
@@ -202,7 +202,7 @@ export default {
       };
 
       web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async registerFifsName() {
@@ -218,7 +218,7 @@ export default {
         data: data
       };
       web3.eth.sendTransaction(raw).catch(err => {
-        ErrorHandler(err, false);
+        Toast.responseHandler(err, false);
       });
     },
     async getRegistrarAddress() {
@@ -250,6 +250,7 @@ export default {
           }
         }
       } catch (e) {
+        Toast.responseHandler(e, false);
         this.loading = false;
       }
     },
@@ -300,6 +301,7 @@ export default {
       try {
         normalise(value);
       } catch (e) {
+        Toast.responseHandler(e, false);
         this.domainNameErr = true;
         return;
       }
@@ -320,6 +322,7 @@ export default {
         owner = await this.ens.owner(`${this.domainName}.${this.registrarTLD}`);
       } catch (e) {
         owner = '0x';
+        Toast.responseHandler(e, false);
       }
       try {
         resolverAddress = await this.ens
@@ -327,6 +330,7 @@ export default {
           .addr();
       } catch (e) {
         resolverAddress = '0x';
+        Toast.responseHandler(e, Toast.ERROR);
       }
 
       this.nameHash = nameHashPckg.hash(

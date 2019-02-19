@@ -1,13 +1,14 @@
 import BigNumber from 'bignumber.js';
-import { ErrorHandler } from '@/helpers';
 
 import { networkSymbols } from '../partnersConfig';
+import { Toast } from '@/helpers';
+
 import { utils } from '../helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
   statuses,
-  TIME_SWAP_VALID,
+  // TIME_SWAP_VALID,
   PROVIDER_NAME,
   FEE_RATE
 } from './config';
@@ -316,7 +317,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
   }
 
