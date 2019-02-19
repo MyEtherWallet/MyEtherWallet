@@ -32,9 +32,15 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log('--------------------');
-      console.log(to);
-      console.log(from);
+      if (
+        from.matched[0].path === '/interface' &&
+        to.matched[0].path !== '/interface'
+      ) {
+        console.log('Getting out of interface page!!!!');
+      }
+
+      //console.log(to.matched[0].path);
+      //console.log(from.matched[0].path);
     }
   },
   created() {
