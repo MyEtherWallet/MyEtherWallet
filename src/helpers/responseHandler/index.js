@@ -9,10 +9,11 @@ const idxs = {
   4: 'appInfo'
 };
 
-const responseHandler = (err, expected) => {
+const responseHandler = (err, expected, options) => {
   if (expected) {
     Vue.toasted.global[idxs[expected]]({
-      message: err.message ? err.message : err
+      message: err.message ? err.message : err,
+      ...options
     });
     return err;
   }

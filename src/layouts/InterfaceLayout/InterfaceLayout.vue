@@ -529,7 +529,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          Toast.responseHandler(e, false);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     setENS() {
