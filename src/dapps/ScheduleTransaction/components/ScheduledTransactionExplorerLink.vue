@@ -4,7 +4,7 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    {{ txHash }}
+    {{ linkText ? linkText : txHash }}
   </a>
 </template>
 
@@ -15,6 +15,10 @@ export default {
     txHash: {
       type: String,
       default: ''
+    },
+    linkText: {
+      type: String,
+      default: null
     }
   }
 };
