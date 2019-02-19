@@ -30,6 +30,13 @@ export default {
       wallet: 'wallet'
     })
   },
+  watch: {
+    $route(to, from) {
+      console.log('--------------------');
+      console.log(to);
+      console.log(from);
+    }
+  },
   created() {
     const msg =
       'New update found! Please refresh your browser to receive the most updated version';
