@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix NaN issue on settings modal []()
+- Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
 
 ### Devop
 
