@@ -187,6 +187,13 @@ h2 {
   font-size: 12px;
 }
 
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .fa-spinner {
   margin: 15px;
+  animation: spinner 2s linear infinite;
 }
