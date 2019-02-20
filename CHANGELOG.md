@@ -1,6 +1,11 @@
+### Bug
+
+- Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
+
 ### Devop
 
-- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2
+- Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
+- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
 
 ### Release v5.0.2
 
