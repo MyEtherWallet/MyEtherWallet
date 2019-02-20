@@ -4,7 +4,11 @@
 
 ### Devop
 
+<<<<<<< HEAD
 - Add disabled access wallet buttons [#665](https://github.com/MyEtherWallet/MyEtherWallet/pull/665)
+=======
+- Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
+>>>>>>> fix/sentry-errors-5.0.3
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
 - Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
 
