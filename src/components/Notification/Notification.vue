@@ -244,7 +244,6 @@ export default {
       this.$refs.notification.show();
     },
     showDetails(details) {
-      console.log(details); // todo remove dev item
       this.cancelHide = true;
       this.detailsShown = true;
       this.detailType = details[0];
@@ -253,7 +252,6 @@ export default {
         this.notificationDetails.index = details[2];
       }
       // this.toggleCanhide();
-      console.log('showDetails'); // todo remove dev item
     },
     hideDetails() {
       this.detailsShown = false;

@@ -390,8 +390,6 @@ export default {
   },
   watch: {
     tan(val) {
-      console.log(this.tan.toString().length === 6); // todo remove dev item
-      console.log(/\d\d\d\d\d\d/.test(this.tan)); // todo remove dev item
       const correctLength = val.toString().length === 6;
       const allNumbers = /^\d\d\d\d\d\d$/.test(val);
       this.validTan = correctLength && allNumbers;
@@ -437,8 +435,6 @@ export default {
       return val;
     },
     setPhoneNumber({ number, isValid, country }) {
-      console.log(number, isValid, country);
-      console.log('phoneNumber', this.phoneNumber); // todo remove dev item
       this.validPhoneNumber = isValid;
       this.phoneNumber = number;
     },
@@ -452,7 +448,6 @@ export default {
         phoneNumber: this.phoneNumber,
         ...this.swapDetails
       };
-      console.log(initData); // todo remove dev item
       const existing = await this.provider.registerUser(initData);
       if (existing) {
         this.previouslyVerified = true;
@@ -471,7 +466,6 @@ export default {
           ...this.swapDetails
         };
         const verified = await this.provider.verifyUser(verifyData);
-        console.log(typeof verified.success); // todo remove dev item
         if (verified.success) {
           this.invalidTanEntered = false;
           this.stageComplete('verifyStep');

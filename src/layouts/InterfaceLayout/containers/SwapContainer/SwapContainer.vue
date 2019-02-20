@@ -342,29 +342,42 @@ export default {
           new BigNumber(this.fromValue)
         )
       )
-        return this.$t('interface.belowMin');
+        return this.$t('interface.belowMin', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
-        return this.toAboveMaxAllowed;
+        if (this.checkBityMax) {
+          return this.$t('interface.aboveMax', {
+            value: this.selectedProvider.maxValue,
+            currency: this.fromCurrency
+          });
+        } else {
+          return false;
+        }
       } else if (
         new BigNumber(this.fromValue).gt(
           new BigNumber(this.selectedProvider.maxValue)
         ) &&
         new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        return this.$t('interface.aboveMaxSwap');
+        return this.$t('interface.aboveMaxSwap', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMin');
+      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
-        return this.$t('interface.belowMin');
+        return this.$t('interface.belowMinGeneral');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMax');
+      if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
       return false;
     },
     providerList() {
@@ -468,11 +481,6 @@ export default {
           this.fromCurrency,
           this.fromValue
         );
-        console.log(this.account.balance); // todo remove dev item
-        console.log(enteredVal); // todo remove dev item
-        console.log(
-          new BigNumber(this.account.balance).gt(new BigNumber(enteredVal))
-        ); // todo remove dev item
         return new BigNumber(this.account.balance).gt(
           new BigNumber(enteredVal)
         );
@@ -554,7 +562,6 @@ export default {
       this.switchCurrencyOrder = false;
     },
     setSelectedProvider(provider) {
-      console.log('setSelectedProvider', provider); // todo remove dev item
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
       });
