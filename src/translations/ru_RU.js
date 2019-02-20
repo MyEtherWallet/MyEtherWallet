@@ -15,6 +15,11 @@ import team from './team/ru_RU';
 import popover from './popover/ru_RU';
 import withoutWallet from './without-wallet/ru_RU';
 import errorsGlobal from './errors-global/ru_RU';
+import trezorError from './errors-trezor/en_US';
+import ledgerError from './errors-ledger/en_US';
+import secalotError from './errors-secalot/en_US';
+import keepkeyError from './errors-keepkey/en_US';
+import bitboxError from './errors-bitbox/en_US';
 
 const ru_RU = {
   common: common,
@@ -32,6 +37,11 @@ const ru_RU = {
   interface: interfaceTranslations,
   popover: popover,
   withoutWallet: withoutWallet,
-  errorsGlobal: errorsGlobal
+  errorsGlobal: errorsGlobal,
+  trezorError: trezorError,
+  ledgerError: ledgerError,
+  secalotError: secalotError,
+  keepkeyError: keepkeyError,
+  bitboxError: bitboxError
 };
 export default ru_RU;

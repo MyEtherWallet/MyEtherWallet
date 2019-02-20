@@ -15,6 +15,11 @@ import team from './team/ko_KR';
 import popover from './popover/ko_KR';
 import withoutWallet from './without-wallet/ko_KR';
 import errorsGlobal from './errors-global/ko_KR';
+import trezorError from './errors-trezor/en_US';
+import ledgerError from './errors-ledger/en_US';
+import secalotError from './errors-secalot/en_US';
+import keepkeyError from './errors-keepkey/en_US';
+import bitboxError from './errors-bitbox/en_US';
 
 const ko_KR = {
   common: common,
@@ -32,6 +37,11 @@ const ko_KR = {
   interface: interfaceTranslations,
   popover: popover,
   withoutWallet: withoutWallet,
-  errorsGlobal: errorsGlobal
+  errorsGlobal: errorsGlobal,
+  trezorError: trezorError,
+  ledgerError: ledgerError,
+  secalotError: secalotError,
+  keepkeyError: keepkeyError,
+  bitboxError: bitboxError
 };
 export default ko_KR;
