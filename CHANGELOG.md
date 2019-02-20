@@ -4,6 +4,7 @@
 
 ### Devop
 
+- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
 - Update notification dot [#679](https://github.com/MyEtherWallet/MyEtherWallet/pull/679)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
