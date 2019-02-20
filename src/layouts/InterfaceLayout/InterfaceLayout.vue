@@ -198,8 +198,8 @@ export default {
     web3() {
       this.setupOnlineEnvironment();
     },
-    address() {
-      this.setupOnlineEnvironment();
+    address(val) {
+      if (val) this.setupOnlineEnvironment();
     }
   },
   mounted() {
