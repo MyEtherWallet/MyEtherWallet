@@ -1,12 +1,19 @@
+### Bug
+
+- Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
+
 ### Devop
 
-<<<<<<< HEAD
 - Include Service worker error [#660](https://github.com/MyEtherWallet/MyEtherWallet/pull/660)
-=======
+- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
+- Update notification dot [#679](https://github.com/MyEtherWallet/MyEtherWallet/pull/679)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
 - Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
->>>>>>> fix/sentry-errors-5.0.3
+
+### Feature
+
+- Detect when user not in interface and prompt [#684](https://github.com/MyEtherWallet/MyEtherWallet/pull/684)
 
 ### Release v5.0.2
 
