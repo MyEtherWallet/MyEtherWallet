@@ -45,10 +45,14 @@ export default {
     }
   },
   created() {
-    const msg =
+    const succMsg =
       'New update found! Please refresh your browser to receive the most updated version';
+    const errMsg = 'Something went wrong with our service workers!';
     window.addEventListener('PWA_UPDATED', () => {
-      Toast.responseHandler(msg, Toast.SUCCESS);
+      Toast.responseHandler(succMsg, Toast.SUCCESS);
+    });
+    window.addEventListener('PWA_MOUNT_ERROR', () => {
+      Toast.responseHandler(errMsg, Toast.WARN);
     });
   },
   mounted() {
