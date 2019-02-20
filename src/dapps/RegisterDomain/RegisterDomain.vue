@@ -330,7 +330,6 @@ export default {
           .addr();
       } catch (e) {
         resolverAddress = '0x';
-        Toast.responseHandler(e, Toast.ERROR);
       }
 
       this.nameHash = nameHashPckg.hash(

@@ -2,7 +2,11 @@
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
-      <div v-show="unreadCount > 0" class="notification-dot" />
+      <div v-show="unreadCount > 0" class="notification-dot">
+        <div class="parent">
+          <div class="heart"></div>
+        </div>
+      </div>
     </div>
     <b-modal
       ref="notification"
@@ -11,6 +15,7 @@
       no-padding
       class="bootstrap-modal-wide nopadding"
       @show="countUnread"
+      @hide="hiddenModal"
     >
       <template slot="modal-title">
         <div>
@@ -120,6 +125,8 @@ import {
   notificationType
 } from '@/helpers/notificationFormatters';
 
+import { Swap } from '@/partners';
+
 export default {
   components: {
     'swap-notification': SwapNotification,
@@ -129,6 +136,7 @@ export default {
   },
   data() {
     return {
+      cancelHide: false,
       shown: false,
       unreadCount: 0,
       ethPrice: new BigNumber(0),
@@ -145,7 +153,6 @@ export default {
       account: 'account'
     }),
     sortedNotifications() {
-      this.countUnread();
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];
       return notifications
@@ -170,13 +177,22 @@ export default {
     }
     this.countUnread();
     this.fetchBalanceData();
-    this.$refs.notification.$on('hide', () => {
-      this.shown = false;
-      this.hideDetails();
-    });
     this.checkForUnResolvedTxNotifications();
   },
   methods: {
+    hiddenModal(/*evt*/) {
+      // if (!this.cancelHide) {
+      this.shown = false;
+      this.hideDetails();
+      // } else {
+      //   evt.cancel();
+      // }
+    },
+    toggleCanhide() {
+      setTimeout(() => {
+        this.cancelHide = false;
+      }, 100);
+    },
     checkForUnResolvedTxNotifications() {
       if (!this.notifications[this.account.address]) return [];
       const check = this.notifications[this.account.address]
@@ -231,12 +247,14 @@ export default {
       this.$refs.notification.show();
     },
     showDetails(details) {
+      this.cancelHide = true;
       this.detailsShown = true;
       this.detailType = details[0];
       this.notificationDetails = details[1];
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
+      // this.toggleCanhide();
     },
     hideDetails() {
       this.detailsShown = false;
@@ -256,16 +274,10 @@ export default {
       return 'transaction-details';
     },
     countUnread() {
-      const self = this;
-      self.unreadCount = 0;
-      if (
-        self.notifications[this.account.address] !== undefined &&
-        self.notifications[this.account.address].length > 0
-      ) {
-        self.notifications[this.account.address].map(item => {
-          if (item.read === false) {
-            self.unreadCount++;
-          }
+      this.unreadCount = 0;
+      if (this.sortedNotifications.length) {
+        this.sortedNotifications.forEach(notif => {
+          if (notif.read === false) this.unreadCount++;
         });
       }
     },
@@ -333,12 +345,18 @@ export default {
       }
       return notice.body.errorMessage;
     },
-    hashLink(hash) {
+    hashLink(hash, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getBlockChainExplorerUrl(currency, hash);
+      }
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
     },
-    addressLink(addr) {
+    addressLink(addr, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getAddressLookupUrl(currency, addr);
+      }
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
       }
