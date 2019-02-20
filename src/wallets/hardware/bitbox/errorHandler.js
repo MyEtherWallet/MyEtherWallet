@@ -8,11 +8,17 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   if (errorValues.includes(err.message)) {
-    const idx = errorValues.indexOf(err.message);
-    Toast.responseHandler(ERRORS[errorValues[idx]], Toast.ERROR);
+    const idx = errorValues.findIndex(item => {
+      return item.includes(err.message);
+    });
+    const message = idx !== -1 ? err.message : ERRORS[errorValues[idx]];
+    Toast.responseHandler(message, Toast.ERROR);
   } else if (warningValues.includes(err.message)) {
-    const idx = warningValues.indexOf(err.message);
-    Toast.responseHandler(WARNING[errorValues[idx]], Toast.WARN);
+    const idx = warningValues.findIndex(item => {
+      return item.includes(err.message);
+    });
+    const message = idx !== -1 ? err.message : WARNING[errorValues[idx]];
+    Toast.responseHandler(message, Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }
