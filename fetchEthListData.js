@@ -18,7 +18,8 @@ async function fetchTokens() {
     const tokenFileURL =
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
     if (tokenList !== undefined && tokenList.length > 0) {
-      tokenList.forEach(async tokenFile => {
+      for (let i = 0; i < tokenList.length; i++) {
+        const tokenFile = tokenList[i]
         let tokensCollection = await fetch(
           `${tokenFileURL + tokenFile.name}/tokens-${tokenFile.name}.json`
         )
@@ -30,7 +31,7 @@ async function fetchTokens() {
             JSON.stringify(tokensCollection)
           );
         }
-      });
+      }
     }
   } catch (e) {
     console.error(e); // Not captured by sentry
@@ -72,7 +73,8 @@ async function fetchContracts() {
     const contractFileURL =
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
-      contractList.forEach(async contractFile => {
+      for (let i = 0; i < contractList.length; i++) {
+        const contractFile = contractList[i]
         let contractsCollection = await fetch(
           `${contractFileURL + contractFile.name}/contract-abi-${
           contractFile.name
@@ -86,7 +88,8 @@ async function fetchContracts() {
             JSON.stringify(contractsCollection)
           );
         }
-      });
+
+      }
     }
   } catch (e) {
     console.error(e); // todo replace with proper error
