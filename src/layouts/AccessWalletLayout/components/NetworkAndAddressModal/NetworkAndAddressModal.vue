@@ -15,9 +15,7 @@
         >
           <p class="button-number">1</p>
           <div class="network">
-            <p>
-              Network
-            </p>
+            <p>Network</p>
             <p class="network-name">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
@@ -109,11 +107,11 @@
                     :key="key"
                     class="custom-networks"
                   >
-                    <div @click="changePath(key)">{{ val.path }}</div>
+                    <div @click="changePath(key)">{{ val.label }}</div>
                     <span>
                       <i
                         class="fa fa-times-circle"
-                        @click.prevent="removeCustomPath(val.path)"
+                        @click.prevent="removeCustomPath(val)"
                       />
                     </span>
                   </b-dropdown-item>
@@ -216,8 +214,8 @@
           <div class="accept-terms">
             <label class="checkbox-container">
               {{ $t('accessWallet.acceptTerms') }}
-              <router-link to="/terms-and-conditions">
-                {{ $t('common.terms') }}.</router-link
+              <router-link to="/terms-and-conditions"
+                >{{ $t('common.terms') }}.</router-link
               >
               <input
                 ref="accessMyWalletBtn"
@@ -349,14 +347,9 @@ export default {
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     removeCustomPath(path) {
-      this.$store
-        .dispatch('removeCustomPath', {
-          label: '',
-          path: path
-        })
-        .then(() => {
-          this.getPaths();
-        });
+      this.$store.dispatch('removeCustomPath', path).then(() => {
+        this.getPaths();
+      });
     },
     addCustomPath() {
       const customPath = this.checkCustomPath(this.customPath.path);
@@ -378,7 +371,7 @@ export default {
     splitPath(path) {
       let array1;
       // eslint-disable-next-line
-      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
+      const regExp = /(?<root>^\w+)\/?(?<bip>\d+)'?\/?(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)/;
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
         return array1;
@@ -386,6 +379,7 @@ export default {
       return null;
     },
     checkCustomPath(path) {
+      path = path.trim();
       try {
         let array1;
         if ((array1 = this.splitPath(path)) !== null) {

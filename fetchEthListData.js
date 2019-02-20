@@ -37,7 +37,7 @@ async function fetchTokens() {
   }
 }
 
-async function fetchDarkList () {
+async function fetchDarkList() {
   try {
     if (!fs.existsSync(darklistFolder)) {
       fs.mkdirSync(darklistFolder)
@@ -46,8 +46,8 @@ async function fetchDarkList () {
     const darkList = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
-    .then(res => res.json())
-    .catch(console.log);
+      .then(res => res.json())
+      .catch(console.log);
     const jsonToStore = {
       'data': darkList,
       'timestamp': Date.now()
@@ -75,7 +75,7 @@ async function fetchContracts() {
       contractList.forEach(async contractFile => {
         let contractsCollection = await fetch(
           `${contractFileURL + contractFile.name}/contract-abi-${
-            contractFile.name
+          contractFile.name
           }.json`
         )
           .then(res => res.json())
@@ -93,10 +93,17 @@ async function fetchContracts() {
   }
 }
 
-function run() {
-  fetchTokens();
-  fetchContracts();
-  fetchDarkList();
+const run = async () => {
+  await fetchTokens();
+  await fetchContracts();
+  await fetchDarkList();
 }
 
-run();
+(async () => {
+  try {
+    await run();
+    console.log("Done");
+  } catch (e) {
+    console.error(e)
+  }
+})();
