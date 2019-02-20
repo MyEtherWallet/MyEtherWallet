@@ -384,6 +384,7 @@ export default class BitySwap {
   }
 
   setStoredCredentials(phoneSha, phoneToken, verified = false) {
+    console.log(phoneSha, phoneToken, verified ); // todo remove dev item
     let userDetails = store.get(LOCAL_STORAGE_KEY);
     if (userDetails === null || userDetails === undefined) {
       userDetails = {};
@@ -398,14 +399,18 @@ export default class BitySwap {
   }
 
   async registerUser(initData) {
+    console.log('registerUser', initData); // todo remove dev item
     this.phoneSha = web3Utils.sha3(initData.phoneNumber);
     if (this.userDetails[this.phoneSha] === undefined) {
+      console.log('1'); // todo remove dev item
       await this.getPhoneToken(initData);
       return false;
     } else if (!this.userDetails[this.phoneSha].verified) {
+      console.log('2'); // todo remove dev item
       await this.getPhoneToken(initData);
       return false;
     }
+    console.log('3'); // todo remove dev item
     return true;
   }
 
@@ -426,6 +431,7 @@ export default class BitySwap {
     };
     // returns {success: true} if successful
     const result = await sendReceivedSmsCode(verificationData);
+    console.log('result', result); // todo remove dev item
     this.setStoredCredentials(this.phoneSha, this.phoneToken, result.success);
     return result;
   }

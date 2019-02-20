@@ -104,5 +104,6 @@
   "changellyTagLine": "Swap ETH, ERC20 tokens, and more!",
   "simplexTagLine": "Buy crypto with a credit card!",
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
-  "back": "Back"
+  "back": "Back",
+  "invalidTanCode": "Invalid Code"
 }
