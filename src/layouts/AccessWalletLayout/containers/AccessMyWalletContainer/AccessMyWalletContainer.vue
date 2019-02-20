@@ -218,6 +218,7 @@ export default {
       this.$refs.softwareModal.$refs.software.show();
     },
     passwordOpen() {
+      this.$refs.softwareModal.$refs.software.hide();
       this.$refs.passwordModal.$refs.password.show();
     },
     privateKeyOpen() {
