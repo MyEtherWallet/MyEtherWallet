@@ -335,21 +335,21 @@ export default {
       }
       return notice.body.errorMessage;
     },
-    hashLink(hash, currency) {
+    hashLink(hash) {
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
-      if (currency) {
-        return Swap.getBlockChainExplorerUrl(currency, hash);
-      }
+      // if (currency) {
+      //   return Swap.getBlockChainExplorerUrl(currency, hash);
+      // }
     },
-    addressLink(addr, currency) {
+    addressLink(addr) {
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
       }
-      if (currency) {
-        return Swap.getAddressLookupUrl(currency, addr);
-      }
+      // if (currency) {
+      //   return Swap.getAddressLookupUrl(currency, addr);
+      // }
     },
     dateString(notice) {
       if (notice !== {}) {
