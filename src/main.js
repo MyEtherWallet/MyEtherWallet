@@ -53,9 +53,6 @@ Vue.prototype.$eventHub = new Vue();
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
-//Toasted
-Vue.use(Toasted);
-
 //Router
 Vue.use(Router);
 Vue.router = router;
@@ -75,15 +72,6 @@ Vue.config.productionTip = false;
 Vue.use(Vuex);
 Vue.use(VeeValidate);
 
-// Register global toasts
-Object.keys(toastConfig).forEach(item => {
-  Vue.toasted.register(
-    toastConfig[item].name,
-    toastConfig[item].payloadFunc,
-    toastConfig[item].options
-  );
-});
-
 /* Init Bootstrap */
 Vue.use(BootstrapVue);
 
@@ -94,6 +82,16 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true
+});
+
+// Register global toasts
+Vue.use(Toasted);
+Object.keys(toastConfig).forEach(item => {
+  Vue.toasted.register(
+    toastConfig[item].name,
+    toastConfig[item].payloadFunc,
+    toastConfig[item].options
+  );
 });
 
 /* eslint-disable no-new */
