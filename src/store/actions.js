@@ -56,13 +56,13 @@ const addSwapNotification = async function({ commit, state }, val) {
 
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
-  newPaths[val.path] = { label: val.label, path: val.path };
+  newPaths[val.label] = { label: val.label, path: val.path };
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
 const removeCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
-  delete newPaths[val.path];
+  delete newPaths[val.label];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 

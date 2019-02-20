@@ -1,7 +1,9 @@
 import { Toast } from '@/helpers';
 import i18n from '@/translation.config.js';
 const ERRORS = {
-  'No device selected.': 'keepkeyError.noDeviceSelected'
+  'No device selected.': 'keepkeyError.noDeviceSelected',
+  'Invalid PIN': 'keepkeyError.invalidPin',
+  'Unable to claim interface.': 'keepKey.cantClaim'
 };
 const WARNING = {};
 

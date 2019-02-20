@@ -4,7 +4,7 @@
     @click="func"
   >
     <div class="button-image">
-      <img :src="img" class="icon" />
+      <img :src="disabled ? imgDisabled : img" class="icon" />
     </div>
     <h3>{{ title }}</h3>
     <p class="desc">{{ desc }}</p>
@@ -20,6 +20,10 @@ export default {
       default: function() {}
     },
     img: {
+      type: String,
+      default: ''
+    },
+    imgDisabled: {
       type: String,
       default: ''
     },

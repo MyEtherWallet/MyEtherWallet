@@ -7,7 +7,8 @@ const ERRORS = {
   'device disconnected during action': 'trezorError.deviceDisconnectAction',
   'Action cancelled by user': 'trezorError.userCancelledAction',
   'Permissions not granted': 'trezorError.noPermission',
-  'Device call in progress': 'trezorError.callInProgress'
+  'Device call in progress': 'trezorError.callInProgress',
+  'Transport is missing': 'trezorError.transportMissing'
 };
 
 const WARNING = {};

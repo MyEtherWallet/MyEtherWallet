@@ -1,16 +1,31 @@
+### Release v5.0.3
+
 ### Bug
 
 - Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
+- Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
 
 ### Devop
 
+- Add disabled access wallet buttons [#665](https://github.com/MyEtherWallet/MyEtherWallet/pull/665)
+- Update Send offline helper UI [#663](https://github.com/MyEtherWallet/MyEtherWallet/pull/663)
+- Include Service worker error [#660](https://github.com/MyEtherWallet/MyEtherWallet/pull/660)
+- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
+- Update notification dot [#679](https://github.com/MyEtherWallet/MyEtherWallet/pull/679)
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
 - Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
+
+### Feature
+
+- Add nonce and gas to offline [#661](https://github.com/MyEtherWallet/MyEtherWallet/pull/661)
+- Detect when user not in interface and prompt [#684](https://github.com/MyEtherWallet/MyEtherWallet/pull/684)
+- Add Exit to Fiat via Bity [#669](https://github.com/MyEtherWallet/MyEtherWallet/pull/669)
 
 ### Release v5.0.2
 
 ### Bug
 
+- Fix Popover UI bugs [#676](https://github.com/MyEtherWallet/MyEtherWallet/pull/676)
 - Fix mobile settings [#651](https://github.com/MyEtherWallet/MyEtherWallet/pull/651)
 - Mandatory password input for Get a New Wallet -> Mnemonic Phrase [#649](https://github.com/MyEtherWallet/MyEtherWallet/pull/649)
 - fix data copy error on FF, and MEWconnect disconnect modal [#648](https://github.com/MyEtherWallet/MyEtherWallet/pull/648)
