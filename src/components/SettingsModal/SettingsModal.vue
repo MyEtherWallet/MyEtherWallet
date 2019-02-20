@@ -36,8 +36,8 @@
                     </label>
                   </div>
                   <p>
-                    {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0">
+                    {{ gasPriceInputs[key].eth }} {{ network.type.name }}
+                    <span v-if="ethPrice !== 0 && network.type.name === 'ETH'">
                       ($
                       {{ convert(gasPriceInputs[key].eth) | concatAddr }})
                     </span>
@@ -62,7 +62,7 @@
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
-                    {{ customGasEth }} ETH
+                    {{ customGasEth }} {{ network.type.name }}
                     <span v-if="ethPrice !== 0 && customGasEth !== 0"
                       >($ {{ convert(customGasEth) | concatAddr }})</span
                     >
@@ -139,6 +139,7 @@ import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Settings',
@@ -211,6 +212,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      network: 'network'
+    }),
     gasPriceInputs() {
       return {
         economy: {
@@ -413,9 +417,7 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
 
-      this.ethPrice = Promise.resolve(price).then(res => {
-        return res.data.ETH.quotes.USD.price;
-      });
+      this.ethPrice = price.data.ETH.quotes.USD.price;
     }
   }
 };
