@@ -88,4 +88,8 @@
   .nav-item {
     border: 2px solid black !important;
   }
+
+  .popover-container {
+    margin-left: 5px;
+  }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
