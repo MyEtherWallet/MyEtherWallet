@@ -59,7 +59,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
+                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;XinFIn
                   Donation
                 </p>
               </a>
