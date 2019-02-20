@@ -23,7 +23,9 @@
               <p class="from-swap-text">
                 {{ details.fromValue }} {{ details.fromCurrency }}
               </p>
-              <p v-if="!isFromOtherChain" class="address">{{ details.from | concatAddress }}</p>
+              <p v-if="!isFromOtherChain" class="address">
+                {{ details.from | concatAddress }}
+              </p>
             </li>
             <li>
               <p class="swap-right-arrow"><img :src="arrowImage" /></p>
@@ -68,24 +70,44 @@
           <p>{{ $t('common.toAddress') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="addressLink(details.to, details.toCurrency)" target="_blank">
+              <a
+                :href="addressLink(details.to, details.toCurrency)"
+                target="_blank"
+              >
                 {{ details.to }}
               </a>
             </p>
           </div>
         </li>
         <li v-if="isFromOtherChain">
-          <p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>
+          <p>
+            {{
+              $t('header.providerDepositAddress', {
+                provider: notice.body.provider
+              })
+            }}:
+          </p>
           <div class="detail-data">
             <p>
-              <a :href="addressLink(details.providerAddress, details.fromCurrency)" target="_blank">
+              <a
+                :href="
+                  addressLink(details.providerAddress, details.fromCurrency)
+                "
+                target="_blank"
+              >
                 {{ details.providerAddress }}
               </a>
             </p>
           </div>
         </li>
         <li v-if="notice.body.provider === providerNames.bity">
-          <p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>
+          <p>
+            {{
+              $t('header.providerDepositAddress', {
+                provider: notice.body.provider
+              })
+            }}:
+          </p>
           <div class="detail-data">
             <p>
               {{ details.orderId }}
@@ -259,10 +281,10 @@ export default {
     isEthereum() {
       return EthereumTokens[this.notice.body.fromCurrency] !== undefined;
     },
-    isToOtherChain(){
+    isToOtherChain() {
       return EthereumTokens[this.notice.body.toCurrency] === undefined;
     },
-    isFromOtherChain(){
+    isFromOtherChain() {
       return EthereumTokens[this.notice.body.fromCurrency] === undefined;
     },
     isFromFiat() {

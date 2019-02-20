@@ -10,7 +10,6 @@
 
       <div class="form-content-container">
         <div class="accordion-menu-container">
-          <p class="beta-notice">{{ $t('interface.CryptoToFiatBeta') }}</p>
           <!-- Phone Number - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps.step1"
@@ -30,6 +29,7 @@
                   <vue-tel-input
                     v-model="phoneNumber"
                     :preferred-countries="['us', 'gb', 'ua']"
+                    :disabled-fetching-country="true"
                     class="phone-number"
                     @onValidate="setPhoneNumber"
                   ></vue-tel-input>
@@ -86,6 +86,9 @@
                   @changedValue="orderDetails.iban = $event"
                 />
               </li>
+              <!--              <li v-if="!isValidIBAN">
+                <p> {{$t('header.invalidIBAN')}}</p>
+              </li>-->
               <li>
                 <standard-input
                   :options="inputBicSwift"
@@ -186,6 +189,7 @@
           <standard-button
             v-if="steps.step3"
             :options="button3"
+            :button-disabled="!canSwap"
             @click.native="
               updateStep('');
               stageComplete('step3');
@@ -382,10 +386,23 @@ export default {
       return this.countryList;
     },
     isValidIBAN() {
+      if (this.orderDetails.iban === '') {
+        return false;
+      }
       return IBAN.isValid(this.orderDetails.iban);
     },
     isValidPhoneNumber() {
       return this.validPhoneNumber;
+    },
+    canSwap() {
+      return (
+        this.orderDetails.iban !== '' &&
+        this.orderDetails.bic_swift !== '' &&
+        this.orderDetails.owner.name !== '' &&
+        this.orderDetails.owner.address !== '' &&
+        this.orderDetails.owner.city !== '' &&
+        this.orderDetails.owner.country !== ''
+      );
     }
   },
   watch: {
@@ -434,7 +451,7 @@ export default {
     openMenu(val) {
       return val;
     },
-    setPhoneNumber({ number, isValid, country }) {
+    setPhoneNumber({ number, isValid }) {
       this.validPhoneNumber = isValid;
       this.phoneNumber = number;
     },

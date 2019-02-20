@@ -179,8 +179,8 @@ export default {
   methods: {
     hiddenModal(/*evt*/) {
       // if (!this.cancelHide) {
-        this.shown = false;
-        this.hideDetails();
+      this.shown = false;
+      this.hideDetails();
       // } else {
       //   evt.cancel();
       // }

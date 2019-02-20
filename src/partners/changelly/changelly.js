@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import { Toast } from '@/helpers';
 
-import { utils } from '../helpers';
+// import { utils } from '../helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
@@ -292,10 +292,10 @@ export default class Changelly {
   }
 
   static parseOrder(order) {
-    let validFor;
-    if (order.payTill) {
-      validFor = utils.getTimeRemaining(order.payTill);
-    }
+    // let validFor;
+    // if (order.payTill) {
+    //   validFor = utils.getTimeRemaining(order.payTill);
+    // }
     return {
       orderId: order.id,
       statusId: order.id,

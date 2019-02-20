@@ -328,16 +328,9 @@ export default {
     },
     providerLogo(details) {
       if (details.provider) {
-        if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
         return this.logos[details.provider];
       }
       return this.logos[details];
-    },
-    useBetaLogo(details) {
-      return (
-        details.provider === 'bity' &&
-        (details.toCurrency === 'EUR' || details.toCurrency === 'CHF')
-      );
     },
     minNote(details) {
       if (details.minValue > 0) {

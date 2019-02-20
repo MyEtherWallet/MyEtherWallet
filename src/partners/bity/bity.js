@@ -191,11 +191,11 @@ export default class BitySwap {
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
     return max
       ? new BigNumber(this.maxValue)
-        .div(new BigNumber(btcRate))
-        .toFixed(6, BigNumber.ROUND_UP)
+          .div(new BigNumber(btcRate))
+          .toFixed(6, BigNumber.ROUND_UP)
       : new BigNumber(this.minValue)
-        .div(new BigNumber(btcRate))
-        .toFixed(6, BigNumber.ROUND_UP);
+          .div(new BigNumber(btcRate))
+          .toFixed(6, BigNumber.ROUND_UP);
   }
 
   getChfEquivalentMaxMin(cryptoCurrency, max) {
@@ -331,9 +331,14 @@ export default class BitySwap {
           swapDetails.parsed = BitySwap.parseExitOrder(
             swapDetails.dataForInitialization
           );
+          swapDetails.timestamp = swapDetails.parsed.timestamp.replace(
+            'ZZ',
+            'Z'
+          );
           swapDetails.providerAddress =
             swapDetails.dataForInitialization.payment_address;
           swapDetails.isDex = BitySwap.isDex();
+          swapDetails.validFor = swapDetails.parsed.validFor;
         } else {
           throw Error('abort');
         }
