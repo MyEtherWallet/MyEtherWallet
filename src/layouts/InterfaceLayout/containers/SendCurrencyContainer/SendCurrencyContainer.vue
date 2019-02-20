@@ -233,7 +233,7 @@ export default {
         this.gasLimit || 0
       );
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
-
+      if (new BigNumber(this.value).lt(0)) return false;
       if (this.isToken) {
         return (
           new BigNumber(this.value).lte(this.selectedCurrency.balance) &&

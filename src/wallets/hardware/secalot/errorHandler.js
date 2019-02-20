@@ -1,6 +1,7 @@
 import { Toast } from '@/helpers';
 const ERRORS = {
-  SIGN_FAILED: 'Sign failed'
+  SIGN_FAILED: 'Sign failed',
+  NOT_CONNECTED: "Cannot read property 'requestId' of null"
 };
 const WARNING = {};
 
