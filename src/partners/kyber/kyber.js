@@ -391,7 +391,7 @@ export default class Kyber {
 
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
-    minRateWei
+    minRateWei // eslint-disable-line
   ) {
     const data = this.getKyberContractObject()
       .methods.trade(
@@ -400,7 +400,7 @@ export default class Kyber {
         await this.getTokenAddress(toCurrency),
         toAddress,
         MAX_DEST_AMOUNT,
-        minRateWei,
+        '0x00',
         walletDepositeAddress
       )
       .encodeABI();
