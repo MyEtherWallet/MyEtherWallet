@@ -2,15 +2,13 @@ Dapp are integrated through inclusion in the dapps section of MEW.
 
 Each dapp has a folder in the dapps directory where their code is located.
 
-The best way to start an integration is by creating a fork of MyEtherWallet, and using it for your development.
+The best way to start an integration is by creating a fork ofXinFin Wallet., and using it for your development.
 
 - Dapps have access to an integrated web3 instance which handles all the interactions with a users wallet, and the network. (in essence you get a ready to go web3 instance to interact with as you wish)
 
 - Dapps live in the dapps folder.  All the code related to the dapp will be located in a sub-folder to the dapps folder.
 
 - This sub-folder should contain at least one .vue file, routes.js file, and .scss style file for the dapp.  It may also contain any additional files/helpers for the dapp or the dapps ui.
-
-- The UI of the dapp must follow MEW design guidlines located [here](https://github.com/MyEtherWallet/MyEtherWallet-V5-Design-Resources/tree/master/style%20guideline)
 
 - Inclusion of the dapp on the dapp page is through an entry in the `src/dapps/index.js` file.
   - The entry is added to the dapps object in the file and includes the icon as well as title and description displayed to users.
@@ -26,7 +24,7 @@ The best way to start an integration is by creating a fork of MyEtherWallet, and
 
 Example directory structure:
 
-MyEtherWallet\\
+XinFin Wallet\\
 │\\
 ├ src\\
     └ dapps\\

@@ -149,7 +149,7 @@ export default class SwapProviders {
     if (noError) {
       return false;
     }
-    throw Error('Not an Ethereum Token');
+    throw Error('Not an XinFin Token');
   }
 
   calculateFromValue(toValue, bestRate) {
@@ -191,7 +191,7 @@ export default class SwapProviders {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].decimals;
     }
-    throw Error('Not an Ethereum Token');
+    throw Error('Not an XinFin Token');
   }
 
   isToken(currency) {
