@@ -376,7 +376,7 @@ export default {
     splitPath(path) {
       let array1;
       // eslint-disable-next-line
-      const regExp = `/(?<root>^\w+)\/(?<bip>\d+)'?\/(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)?/`;
+      const regExp = /(?<root>^\w+)\/?(?<bip>\d+)'?\/?(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)/;
       const matcher = RegExp(regExp, 'g');
       if ((array1 = matcher.exec(path)) !== null) {
         return array1;
@@ -384,6 +384,7 @@ export default {
       return null;
     },
     checkCustomPath(path) {
+      path = path.trim();
       try {
         let array1;
         if ((array1 = this.splitPath(path)) !== null) {
