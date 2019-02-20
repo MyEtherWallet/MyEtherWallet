@@ -18,7 +18,8 @@ async function fetchTokens() {
     const tokenFileURL =
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
     if (tokenList !== undefined && tokenList.length > 0) {
-      tokenList.forEach(async tokenFile => {
+      for (let i = 0; i < tokenList.length; i++) {
+        const tokenFile = tokenList[i]
         let tokensCollection = await fetch(
           `${tokenFileURL + tokenFile.name}/tokens-${tokenFile.name}.json`
         )
@@ -30,14 +31,14 @@ async function fetchTokens() {
             JSON.stringify(tokensCollection)
           );
         }
-      });
+      }
     }
   } catch (e) {
     console.error(e); // Not captured by sentry
   }
 }
 
-async function fetchDarkList () {
+async function fetchDarkList() {
   try {
     if (!fs.existsSync(darklistFolder)) {
       fs.mkdirSync(darklistFolder)
@@ -46,8 +47,8 @@ async function fetchDarkList () {
     const darkList = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
-    .then(res => res.json())
-    .catch(console.log);
+      .then(res => res.json())
+      .catch(console.log);
     const jsonToStore = {
       'data': darkList,
       'timestamp': Date.now()
@@ -72,10 +73,11 @@ async function fetchContracts() {
     const contractFileURL =
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
-      contractList.forEach(async contractFile => {
+      for (let i = 0; i < contractList.length; i++) {
+        const contractFile = contractList[i]
         let contractsCollection = await fetch(
           `${contractFileURL + contractFile.name}/contract-abi-${
-            contractFile.name
+          contractFile.name
           }.json`
         )
           .then(res => res.json())
@@ -86,17 +88,25 @@ async function fetchContracts() {
             JSON.stringify(contractsCollection)
           );
         }
-      });
+
+      }
     }
   } catch (e) {
     console.error(e); // todo replace with proper error
   }
 }
 
-function run() {
-  fetchTokens();
-  fetchContracts();
-  fetchDarkList();
+const run = async () => {
+  await fetchTokens();
+  await fetchContracts();
+  await fetchDarkList();
 }
 
-run();
+(async () => {
+  try {
+    await run();
+    console.log("Done");
+  } catch (e) {
+    console.error(e)
+  }
+})();

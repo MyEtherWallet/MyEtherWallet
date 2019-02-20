@@ -16,7 +16,6 @@
       :error="error"
       :resolver="resolver"
     />
-    <logout-warning-modal ref="logoutWarningModal" />
     <!-- Modals ***************************************** -->
     <!-- Scroll up button ******************************* -->
     <div class="scroll-up-button">
@@ -85,9 +84,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
-                </b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
+                  $t('header.about')
+                }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -189,7 +188,6 @@ import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
-import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
@@ -208,7 +206,6 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
-    'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
@@ -283,15 +280,10 @@ export default {
       }
     },
     wallet() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          this.gasPrice = new BigNumber(res).toString();
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
-        });
-      // this.disconnectMewConnectModal();
+      this.setHighGasPrice();
+    },
+    web3() {
+      this.setHighGasPrice();
     }
   },
   mounted() {
@@ -350,24 +342,17 @@ export default {
     });
     // this.$eventHub.$off('issueModal');
   },
-  created() {
-    try {
-      window.addEventListener(
-        'popstate',
-        event => {
-          if (
-            this.wallet !== null &&
-            !event.target.location.hash.includes('interface')
-          )
-            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
-        },
-        false
-      );
-    } catch (e) {
-      Toast.responseHandler(e, false);
-    }
-  },
   methods: {
+    setHighGasPrice() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toString();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, false);
+        });
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
       this.$refs.settings.$refs.settings.$on('hidden', () => {
@@ -391,9 +376,6 @@ export default {
       this.$refs.logout.$refs.logout.$on('hidden', () => {
         this.isMobileMenuOpen = false;
       });
-    },
-    showNotifications() {
-      this.$refs.notifications.$refs.notification.show();
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;

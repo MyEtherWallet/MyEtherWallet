@@ -407,11 +407,35 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x00e150d741eda1d49d341189cae4c08a73a49c95'
   },
+  USDC: {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    decimals: 6,
+    contractAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  },
+  EURS: {
+    symbol: 'EURS',
+    name: 'STASIS EURS Token',
+    decimals: 2,
+    contractAddress: '0xdb25f211ab05b1c97d595516f45794528a807ad8'
+  },
   MLN: {
     symbol: 'MLN',
     name: 'Melon',
     decimals: 18,
     contractAddress: '0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'
+  },
+  BIX: {
+    symbol: 'BIX',
+    name: 'BIX Token',
+    decimals: 18,
+    contractAddress: '0xb3104b4b9da82025e8b9f8fb28b3553ce2f67069'
+  },
+  CDT: {
+    symbol: 'CDT',
+    name: 'CoinDash',
+    decimals: 18,
+    contractAddress: '0x177d39ac676ed1c67a2b268ad7f1e58826e5b0af'
   }
 };
 export { KyberCurrenciesETH };

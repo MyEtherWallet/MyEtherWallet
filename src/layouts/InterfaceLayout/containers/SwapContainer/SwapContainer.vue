@@ -54,7 +54,7 @@
               </div>
               <div class="error-message-container">
                 <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-                <p v-if="notEnough && !fromBelowMinAllowed">
+                <p v-if="!hasEnough && !fromBelowMinAllowed">
                   {{ $t('common.dontHaveEnough') }}
                 </p>
                 <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
@@ -342,29 +342,41 @@ export default {
           new BigNumber(this.fromValue)
         )
       )
-        return this.$t('interface.belowMin');
+        return this.$t('interface.belowMin', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
-        return this.toAboveMaxAllowed;
+        if (this.checkBityMax) {
+          return this.$t('interface.aboveMax', {
+            value: this.selectedProvider.maxValue,
+            currency: this.fromCurrency
+          });
+        }
+        return false;
       } else if (
         new BigNumber(this.fromValue).gt(
           new BigNumber(this.selectedProvider.maxValue)
         ) &&
         new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        return this.$t('interface.aboveMaxSwap');
+        return this.$t('interface.aboveMaxSwap', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMin');
+      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
-        return this.$t('interface.belowMin');
+        return this.$t('interface.belowMinGeneral');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMax');
+      if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
       return false;
     },
     providerList() {
@@ -383,7 +395,7 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        !this.notEnough &&
+        this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
@@ -428,12 +440,29 @@ export default {
       );
     },
     allAddressesValid() {
-      if (this.isExitToFiat) return this.validAddress && this.validExitAddress;
-      if (this.showRefundAddress)
-        return this.validAddress && this.validRefundAddress;
-      return this.validAddress;
+      const validBaseToAddress = this.toAddress !== '' && this.validAddress;
+
+      if (this.isExitToFiat) {
+        // const validExitAddress =
+        if (this.fromCurrency === this.baseCurrency) {
+          // this.exitFromAddress = this.currentAddress;
+          return true;
+        }
+        return this.exitFromAddress !== '' && this.validExitAddress;
+        // return (
+        //   (validBaseToAddress && validExitAddress) ||
+        //   this.fromCurrency === this.baseCurrency
+        // );
+      }
+      if (this.showRefundAddress) {
+        const validRefundAddress =
+          this.refundAddress === '' && this.validRefundAddress;
+        return validBaseToAddress && validRefundAddress;
+      }
+
+      return validBaseToAddress;
     },
-    notEnough() {
+    hasEnough() {
       if (
         this.swap.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
@@ -443,16 +472,19 @@ export default {
           this.fromValue
         );
 
-        if (+this.tokenBalances[this.fromCurrency] === +enteredVal) {
-          return false;
-        }
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
+        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
           new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
-        return new BigNumber(this.account.balance).lt(this.fromValue);
+        const enteredVal = this.swap.convertToTokenWei(
+          this.fromCurrency,
+          this.fromValue
+        );
+        return new BigNumber(this.account.balance).gt(
+          new BigNumber(enteredVal)
+        );
       }
-      return false;
+      return true;
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
@@ -613,13 +645,15 @@ export default {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
             this.toValue,
-            this.bestRate
+            this.bestRate,
+            this.fromCurrency
           );
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
             this.fromValue,
-            this.bestRate
+            this.bestRate,
+            this.toCurrency
           );
           break;
         case `${this.providerNames.simplex}to`:
@@ -645,7 +679,11 @@ export default {
               .div(simplexRateDetails.fromValue)
               .toString(10);
 
-            this.fromValue = this.swap.calculateFromValue(this.toValue, rate);
+            this.fromValue = this.swap.calculateFromValue(
+              this.toValue,
+              rate,
+              this.fromCurrency
+            );
           }
 
           break;

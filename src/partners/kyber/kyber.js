@@ -320,8 +320,12 @@ export default class Kyber {
         .allowance(fromAddress, this.getKyberNetworkAddress())
         .call();
 
-      if (currentAllowance > 0) {
-        if (currentAllowance < fromValueWei) {
+      if (new BigNumber(currentAllowance).gt(new BigNumber(0))) {
+        if (
+          new BigNumber(currentAllowance)
+            .minus(new BigNumber(fromValueWei))
+            .lt(new BigNumber(0))
+        ) {
           return { approve: true, reset: true };
         }
         return { approve: false, reset: false };
@@ -387,7 +391,7 @@ export default class Kyber {
 
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
-    minRateWei
+    minRateWei // eslint-disable-line
   ) {
     const data = this.getKyberContractObject()
       .methods.trade(
@@ -396,7 +400,7 @@ export default class Kyber {
         await this.getTokenAddress(toCurrency),
         toAddress,
         MAX_DEST_AMOUNT,
-        minRateWei,
+        '0x00',
         walletDepositeAddress
       )
       .encodeABI();
