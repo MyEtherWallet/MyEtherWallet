@@ -2,7 +2,11 @@
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
-      <div v-show="unreadCount > 0" class="notification-dot" />
+      <div v-show="unreadCount > 0" class="notification-dot">
+        <div class="parent">
+          <div class="heart"></div>
+        </div>
+      </div>
     </div>
     <b-modal
       ref="notification"
@@ -149,7 +153,6 @@ export default {
       account: 'account'
     }),
     sortedNotifications() {
-      this.countUnread();
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];
       return notifications
@@ -271,16 +274,10 @@ export default {
       return 'transaction-details';
     },
     countUnread() {
-      const self = this;
-      self.unreadCount = 0;
-      if (
-        self.notifications[this.account.address] !== undefined &&
-        self.notifications[this.account.address].length > 0
-      ) {
-        self.notifications[this.account.address].map(item => {
-          if (item.read === false) {
-            self.unreadCount++;
-          }
+      this.unreadCount = 0;
+      if (this.sortedNotifications.length) {
+        this.sortedNotifications.forEach(notif => {
+          if (notif.read === false) this.unreadCount++;
         });
       }
     },
