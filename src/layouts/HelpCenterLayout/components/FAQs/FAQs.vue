@@ -5,7 +5,7 @@
         <ul class="qa__contents">
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq1')">
-              <h3>Balances not loading or showing onXinFin Wallet.</h3>
+              <h3>Balances not loading or showing on XinFin Wallet.</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq1 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq1 == true" class="show-less">-</span>
@@ -18,7 +18,7 @@
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq2')">
               <h3>
-                DoesXinFin Walletsupport Bitcoin or other coins (LTC STEEM ZEC)?
+                Does XinFin Wallet support Bitcoin or other coins (LTC STEEM ZEC)?
               </h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq2 == false" class="show-more">+</span>
@@ -70,7 +70,7 @@
 
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq6')">
-              <h3>How to buy XinFin(ETH) with USD?</h3>
+              <h3>How to buy XinFin(XDC) with USD?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq6 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq6 == true" class="show-less">-</span>
@@ -97,7 +97,7 @@
           </li>
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq8')">
-              <h3>What happens ifXinFin Walletgoes down?</h3>
+              <h3>What happens if XinFin Walletgoes down?</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq8 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq8 == true" class="show-less">-</span>
@@ -121,7 +121,7 @@
           </li>
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq10')">
-              <h3>Check the current block number onXinFin Wallet.</h3>
+              <h3>Check the current block number on XinFin Wallet.</h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq10 == false" class="show-more">+</span>
                 <span v-if="showFAQs.faq10 == true" class="show-less">-</span>
