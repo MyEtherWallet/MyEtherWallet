@@ -12,32 +12,33 @@
 
     <div class="schedule-transaction-content">
       <div class="schedule-transaction-form-container">
-        <b-row>
-          <b-col cols="12" md="4">
-            <div class="scheduling-currency-picker">
-              <div class="input-title">{{ $t('interface.sendTxType') }}</div>
-              <currency-picker
-                :currency="tokensWithBalance"
-                :page="'sendEgasAmountthAndTokens'"
-                :token="true"
-                @selectedCurrency="selectedCurrency = $event"
+        <b-container>
+          <b-row>
+            <b-col cols="12" md="4">
+              <div class="scheduling-currency-picker">
+                <div class="input-title">{{ $t('interface.sendTxType') }}</div>
+                <currency-picker
+                  :currency="tokensWithBalance"
+                  :page="'sendEgasAmountthAndTokens'"
+                  :token="true"
+                  @selectedCurrency="selectedCurrency = $event"
+                />
+              </div>
+            </b-col>
+            <b-col cols="12" md="8">
+              <standard-input
+                :options="amountInputOptions()"
+                @changedValue="amount = $event"
               />
-            </div>
-          </b-col>
-          <b-col cols="12" md="8">
-            <standard-input
-              :options="amountInputOptions()"
-              @changedValue="amount = $event"
-            />
-            <div v-show="!isValidAmount" class="text-danger">
-              Amount higher than balance
-            </div>
-            <div v-show="!hasEnoughEthToSchedule" class="text-danger">
-              Not enough ETH on account to schedule
-            </div>
-          </b-col>
-        </b-row>
-        <div class="form-block">
+              <div v-show="!isValidAmount" class="text-danger">
+                Amount higher than balance
+              </div>
+              <div v-show="!hasEnoughEthToSchedule" class="text-danger">
+                Not enough ETH on account to schedule
+              </div>
+            </b-col>
+          </b-row>
+
           <standard-input
             :options="toAddressInputOptions()"
             @changedValue="toAddress = $event"
@@ -93,162 +94,151 @@
 
           <hr />
 
-          <b-container class="send-form advanced">
-            <b-row>
-              <b-col cols="12" md="3">
-                <div v-show="!advancedExpand" class="time-bounty-selector">
-                  <div
-                    v-b-tooltip.hover
-                    title="The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed."
-                    class="input-title"
+          <b-row>
+            <b-col cols="12" sm="6" md="6">
+              <div v-show="!advancedExpand" class="time-bounty-selector">
+                <div
+                  v-b-tooltip.hover
+                  title="The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed."
+                  class="input-title"
+                >
+                  Time Bounty
+                </div>
+                <b-button-group>
+                  <b-button
+                    v-for="(bounty, index) in timeBountyPresets"
+                    :key="index"
+                    :class="['btn-group', bounty === timeBounty && 'selected']"
+                    @click="timeBounty = bounty"
                   >
-                    Time Bounty
-                  </div>
-                  <b-button-group>
-                    <b-button
-                      v-for="(bounty, index) in timeBountyPresets"
-                      :key="index"
-                      :class="[
-                        'btn-group',
-                        bounty === timeBounty && 'selected'
-                      ]"
-                      @click="timeBounty = bounty"
-                    >
-                      {{ bounty }}
-                    </b-button>
-                  </b-button-group>
-                </div>
-
-                <div v-show="advancedExpand">
-                  <standard-input
-                    :options="customTimeBountyInputOptions()"
-                    @changedValue="timeBounty = $event"
-                  />
-                  <div v-show="!isValidTimeBounty" class="text-danger">
-                    Please set a bounty of {{ minBounty }} or higher
-                  </div>
-                </div>
-              </b-col>
-
-              <b-col cols="12" md="3">
-                <standard-input
-                  :options="bountyUsdDisplayOptions()"
-                  class="bounty-usd-display"
-                />
-              </b-col>
-
-              <b-col cols="12" md="3" class="vertical-center-self">
+                    {{ bounty }}
+                  </b-button>
+                </b-button-group>
                 <div class="timebounty-gasprice-coverage">
                   Covers up to
                   <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas
                   price on future execution
                 </div>
+              </div>
+
+              <div v-show="advancedExpand">
+                <standard-input
+                  :options="customTimeBountyInputOptions()"
+                  @changedValue="timeBounty = $event"
+                />
+                <div v-show="!isValidTimeBounty" class="text-danger">
+                  Please set a bounty of {{ minBounty }} or higher
+                </div>
+              </div>
+            </b-col>
+
+            <b-col cols="12" sm="6" md="3">
+              <standard-input
+                :options="bountyUsdDisplayOptions()"
+                class="bounty-usd-display"
+              />
+            </b-col>
+
+            <b-col cols="12" sm="12" md="3" class="toggle-button-col">
+              <hr class="d-block d-md-none" />
+              <div class="toggle-button-container float-md-right">
+                <h4>Advanced</h4>
+                <div class="toggle-button">
+                  <!-- Rounded switch -->
+                  <div class="sliding-switch-white">
+                    <label class="switch">
+                      <input
+                        type="checkbox"
+                        @click="advancedExpand = !advancedExpand"
+                      />
+                      <span class="slider round" />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
+
+          <div v-show="advancedExpand">
+            <b-row>
+              <b-col cols="12" md="6">
+                <div class="mode-container">
+                  <div class="input-title">Scheduling mode</div>
+                  <b-button-group>
+                    <b-button
+                      v-for="(mode, index) in supportedModes"
+                      :key="index"
+                      :class="['mode-btn', mode === selectedMode && 'selected']"
+                      @click="selectedMode = mode"
+                    >
+                      {{ mode.name }}
+                    </b-button>
+                  </b-button-group>
+                </div>
               </b-col>
 
-              <b-col cols="12" md="3" class="toggle-button-col">
-                <div class="toggle-button-container float-md-right">
-                  <h4>Advanced</h4>
-                  <div class="toggle-button">
-                    <!-- Rounded switch -->
-                    <div class="sliding-switch-white">
-                      <label class="switch">
-                        <input
-                          type="checkbox"
-                          @click="advancedExpand = !advancedExpand"
-                        />
-                        <span class="slider round" />
-                      </label>
-                    </div>
-                  </div>
+              <b-col cols="12" md="6">
+                <standard-input
+                  :options="executionWindowInputOptions()"
+                  @changedValue="windowSize = $event"
+                />
+                <div v-show="!isValidExecutionWindow" class="text-danger">
+                  Please set an execution window of
+                  {{ selectedMode.executionWindow.min }} or higher
                 </div>
               </b-col>
             </b-row>
 
-            <hr />
-
-            <div v-show="advancedExpand">
-              <b-row>
-                <b-col cols="12" md="6">
-                  <div class="mode-container">
-                    <div class="input-title">Scheduling mode</div>
-                    <b-button-group>
-                      <b-button
-                        v-for="(mode, index) in supportedModes"
-                        :key="index"
-                        :class="[
-                          'mode-btn',
-                          mode === selectedMode && 'selected'
-                        ]"
-                        @click="selectedMode = mode"
-                      >
-                        {{ mode.name }}
-                      </b-button>
-                    </b-button-group>
-                  </div>
-                </b-col>
-
-                <b-col cols="12" md="6">
-                  <standard-input
-                    :options="executionWindowInputOptions()"
-                    @changedValue="windowSize = $event"
-                  />
-                  <div v-show="!isValidExecutionWindow" class="text-danger">
-                    Please set an execution window of
-                    {{ selectedMode.executionWindow.min }} or higher
-                  </div>
-                </b-col>
-              </b-row>
-
-              <standard-input
-                :options="requireDepositInputOptions()"
-                @changedValue="deposit = $event"
-              />
-              <div v-show="!isValidDeposit" class="text-danger">
-                Invalid deposit number
-              </div>
-
-              <b-row>
-                <b-col cols="12" md="4">
-                  <standard-input
-                    :options="futureGasPriceInputOptions()"
-                    @changedValue="futureGasPrice = $event"
-                  />
-                  <div v-show="!isValidFutureGasPrice" class="text-danger">
-                    Please set a gas price of {{ minGasPrice }} or higher
-                  </div>
-                </b-col>
-                <b-col cols="12" md="4">
-                  <standard-input
-                    :options="gasLimitInputOptions()"
-                    @changedValue="gasLimit = $event"
-                  />
-                  <div v-show="!isValidGasLimit" class="text-danger">
-                    Please set a gas limit of 0 or higher
-                  </div>
-                </b-col>
-                <b-col cols="12" md="4">
-                  <standard-input
-                    :options="futureGasLimitInputOptions()"
-                    @changedValue="futureGasLimit = $event"
-                  />
-                  <div v-show="!isValidFutureGasLimit" class="text-danger">
-                    Please set a future gas limit of 0 or higher
-                  </div>
-                </b-col>
-              </b-row>
-
-              <standard-input
-                v-if="!isTokenTransfer"
-                :options="dataInputOptions()"
-                @changedValue="data = $event"
-              />
-              <div v-show="!isValidData" class="text-danger">
-                Please provide the data in a hexadecimal format.
-              </div>
+            <standard-input
+              :options="requireDepositInputOptions()"
+              @changedValue="deposit = $event"
+            />
+            <div v-show="!isValidDeposit" class="text-danger">
+              Invalid deposit number
             </div>
-          </b-container>
-        </div>
+
+            <b-row>
+              <b-col cols="12" md="4">
+                <standard-input
+                  :options="futureGasPriceInputOptions()"
+                  @changedValue="futureGasPrice = $event"
+                />
+                <div v-show="!isValidFutureGasPrice" class="text-danger">
+                  Please set a gas price of {{ minGasPrice }} or higher
+                </div>
+              </b-col>
+              <b-col cols="12" md="4">
+                <standard-input
+                  :options="gasLimitInputOptions()"
+                  @changedValue="gasLimit = $event"
+                />
+                <div v-show="!isValidGasLimit" class="text-danger">
+                  Please set a gas limit of 0 or higher
+                </div>
+              </b-col>
+              <b-col cols="12" md="4">
+                <standard-input
+                  :options="futureGasLimitInputOptions()"
+                  @changedValue="futureGasLimit = $event"
+                />
+                <div v-show="!isValidFutureGasLimit" class="text-danger">
+                  Please set a future gas limit of 0 or higher
+                </div>
+              </b-col>
+            </b-row>
+
+            <standard-input
+              v-if="!isTokenTransfer"
+              :options="dataInputOptions()"
+              @changedValue="data = $event"
+            />
+            <div v-show="!isValidData" class="text-danger">
+              Please provide the data in a hexadecimal format.
+            </div>
+          </div>
+        </b-container>
       </div>
+
       <div class="submit-button-container">
         <b-alert
           :show="isTokenTransfer && showTokenTransferNotification"
