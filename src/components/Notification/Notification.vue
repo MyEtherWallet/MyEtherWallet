@@ -149,7 +149,6 @@ export default {
       account: 'account'
     }),
     sortedNotifications() {
-      this.countUnread();
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];
       return notifications
@@ -260,16 +259,10 @@ export default {
       return 'transaction-details';
     },
     countUnread() {
-      const self = this;
-      self.unreadCount = 0;
-      if (
-        self.notifications[this.account.address] !== undefined &&
-        self.notifications[this.account.address].length > 0
-      ) {
-        self.notifications[this.account.address].map(item => {
-          if (item.read === false) {
-            self.unreadCount++;
-          }
+      this.unreadCount = 0;
+      if (this.sortedNotifications.length) {
+        this.sortedNotifications.forEach(notif => {
+          if (notif.read === false) this.unreadCount++;
         });
       }
     },

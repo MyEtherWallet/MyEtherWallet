@@ -272,6 +272,9 @@ export default {
           `${utils.fromWei(toGwei, 'ether')}`
         ).toFixed();
       }
+    },
+    gasPrice() {
+      this.saveGasChanges();
     }
   },
   mounted() {
