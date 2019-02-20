@@ -36,8 +36,10 @@ export default {
   watch: {
     $route(to, from) {
       if (
+        from.matched.length &&
         from.matched[0].path === '/interface' &&
-        to.matched[0].path !== '/interface'
+        to.matched[0].path !== '/interface' &&
+        this.wallet != null
       ) {
         // Show logout warning modal
         this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();

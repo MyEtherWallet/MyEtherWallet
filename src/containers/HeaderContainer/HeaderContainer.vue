@@ -84,9 +84,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
-                </b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
+                  $t('header.about')
+                }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -280,15 +280,10 @@ export default {
       }
     },
     wallet() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          this.gasPrice = new BigNumber(res).toString();
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
-        });
-      // this.disconnectMewConnectModal();
+      this.setHighGasPrice();
+    },
+    web3() {
+      this.setHighGasPrice();
     }
   },
   mounted() {
@@ -348,6 +343,16 @@ export default {
     // this.$eventHub.$off('issueModal');
   },
   methods: {
+    setHighGasPrice() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toString();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, false);
+        });
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
       this.$refs.settings.$refs.settings.$on('hidden', () => {
@@ -371,9 +376,6 @@ export default {
       this.$refs.logout.$refs.logout.$on('hidden', () => {
         this.isMobileMenuOpen = false;
       });
-    },
-    showNotifications() {
-      this.$refs.notifications.$refs.notification.show();
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
