@@ -1,25 +1,25 @@
 import { Toast } from '@/helpers';
+import i18n from '@/translation.config.js';
 const ERRORS = {
-  'No device selected':
-    'No device was selected. Please make sure your device is plugged in.'
+  'No device selected.': 'keepkeyError.noDeviceSelected'
 };
 const WARNING = {};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
-  if (errorValues.includes(err.message)) {
-    const idx = errorValues.findIndex(item => {
-      return item.includes(err.message);
-    });
-    const message = idx !== -1 ? err.message : ERRORS[errorValues[idx]];
-    Toast.responseHandler(message, Toast.ERROR);
-  } else if (warningValues.includes(err.message)) {
-    const idx = warningValues.findIndex(item => {
-      return item.includes(err.message);
-    });
-    const message = idx !== -1 ? err.message : WARNING[errorValues[idx]];
-    Toast.responseHandler(message, Toast.WARN);
+  const foundError = errorValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  const foundWarning = warningValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  if (foundError) {
+    Toast.responseHandler(i18n.tc(ERRORS[foundError]), Toast.ERROR);
+  } else if (foundWarning) {
+    Toast.responseHandler(i18n.tc(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }

@@ -1,0 +1,7 @@
+{
+  "failedToSign" : "Your Ledger device has timed out.",
+  "noDevice" : "No Ledger device found. Please make sure device is connected.",
+  "deviceBusy" : "Ledger device is currently busy.",
+  "unknown0x6804" : "Ledger device errored. (0x6804)",
+  "failedToSignOther" : "Ledger signing failed"
+}

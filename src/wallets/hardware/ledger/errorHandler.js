@@ -1,32 +1,30 @@
 import { Toast } from '@/helpers';
+import Vue from 'vue';
 const ERRORS = {
-  'Failed to sign with Ledger device: U2F TIMEOUT':
-    'Your Ledger device has timed out.',
-  'No Ledger device found (timeout)':
-    'No Ledger device found. Please make sure device is connected.',
-  'Ledger Device is busy (lock signPersonalMessage)':
-    'Ledger device is currently busy.',
-  'Ledger device: UNKNOWN_ERROR (0x6804)': 'Ledger device errored. (0x6804)',
+  'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failedToSign',
+  'No Ledger device found (timeout)': 'ledgerError.noDevice',
+  'Ledger Device is busy (lock signPersonalMessage)': 'ledgerError.deviceBusy',
+  'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown0x6804',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
-    'Ledger signing failed'
+    'ledgerError.failedToSignOther'
 };
 const WARNING = {};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
-  if (errorValues.includes(err.message)) {
-    const idx = errorValues.findIndex(item => {
-      return item.includes(err.message);
-    });
-    const message = idx !== -1 ? err.message : ERRORS[errorValues[idx]];
-    Toast.responseHandler(message, Toast.ERROR);
-  } else if (warningValues.includes(err.message)) {
-    const idx = warningValues.findIndex(item => {
-      return item.includes(err.message);
-    });
-    const message = idx !== -1 ? err.message : WARNING[errorValues[idx]];
-    Toast.responseHandler(message, Toast.WARN);
+  const foundError = errorValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  const foundWarning = warningValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  if (foundError) {
+    Toast.responseHandler(Vue.$t(ERRORS[foundError]), Toast.ERROR);
+  } else if (foundWarning) {
+    Toast.responseHandler(Vue.$t(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }

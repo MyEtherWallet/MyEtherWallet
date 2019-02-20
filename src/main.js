@@ -14,7 +14,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import router from '@/router';
 import store from '@/store';
-import VueI18n from 'vue-i18n';
+// import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import Toasted from 'vue-toasted';
@@ -32,7 +32,7 @@ import EnsResolver from '@/directives/EnsResolver';
 import Capitalize from '@/filters/Capitalize';
 import ConcatAddr from '@/filters/ConcatAddr';
 // etc
-import languages from '@/translations';
+import i18n from './translation.config.js';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
@@ -75,14 +75,8 @@ Vue.use(VeeValidate);
 /* Init Bootstrap */
 Vue.use(BootstrapVue);
 
-// Define vue-i18n
-Vue.use(VueI18n);
-const i18n = new VueI18n({
-  locale: 'en_US',
-  fallbackLocale: 'en_US',
-  messages: languages,
-  silentTranslationWarn: true
-});
+// // Define vue-i18n
+// Vue.use(VueI18n);
 
 // Register global toasts
 Vue.use(Toasted);
@@ -94,6 +88,7 @@ Object.keys(toastConfig).forEach(item => {
   );
 });
 
+Vue.prototype.translate = i18n.t;
 /* eslint-disable no-new */
 const vue = new Vue({
   i18n,

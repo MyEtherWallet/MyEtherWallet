@@ -15,6 +15,11 @@ import team from './team/es_ES';
 import popover from './popover/es_ES';
 import withoutWallet from './without-wallet/es_ES';
 import errorsGlobal from './errors-global/es_ES';
+import trezorError from './errors-trezor/en_US';
+import ledgerError from './errors-ledger/en_US';
+import secalotError from './errors-secalot/en_US';
+import keepkeyError from './errors-keepkey/en_US';
+import bitboxError from './errors-bitbox/en_US';
 
 const es_ES = {
   common: common,
@@ -32,6 +37,11 @@ const es_ES = {
   interface: interfaceTranslations,
   popover: popover,
   withoutWallet: withoutWallet,
-  errorsGlobal: errorsGlobal
+  errorsGlobal: errorsGlobal,
+  trezorError: trezorError,
+  ledgerError: ledgerError,
+  secalotError: secalotError,
+  keepkeyError: keepkeyError,
+  bitboxError: bitboxError
 };
 export default es_ES;
