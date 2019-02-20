@@ -39,7 +39,7 @@ export default {
         from.matched[0].path === '/interface' &&
         to.matched[0].path !== '/interface'
       ) {
-        //console.log('Getting out of interface page!!!!');
+        // Show logout warning modal
         this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
       }
     }
