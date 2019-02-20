@@ -16,7 +16,6 @@
       :error="error"
       :resolver="resolver"
     />
-    <logout-warning-modal ref="logoutWarningModal" />
     <!-- Modals ***************************************** -->
     <!-- Scroll up button ******************************* -->
     <div class="scroll-up-button">
@@ -189,7 +188,6 @@ import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
-import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
@@ -208,7 +206,6 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
-    'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
@@ -349,23 +346,6 @@ export default {
       this.$eventHub.$off(evt);
     });
     // this.$eventHub.$off('issueModal');
-  },
-  created() {
-    try {
-      window.addEventListener(
-        'popstate',
-        event => {
-          if (
-            this.wallet !== null &&
-            !event.target.location.hash.includes('interface')
-          )
-            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
-        },
-        false
-      );
-    } catch (e) {
-      Toast.responseHandler(e, false);
-    }
   },
   methods: {
     openSettings() {
