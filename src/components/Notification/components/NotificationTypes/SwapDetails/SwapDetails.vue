@@ -23,7 +23,7 @@
               <p class="from-swap-text">
                 {{ details.fromValue }} {{ details.fromCurrency }}
               </p>
-              <p class="address">{{ details.from | concatAddress }}</p>
+              <p v-if="!isFromOtherChain" class="address">{{ details.from | concatAddress }}</p>
             </li>
             <li>
               <p class="swap-right-arrow"><img :src="arrowImage" /></p>
@@ -37,7 +37,7 @@
               <p class="to-swap-text">
                 {{ details.toValue }} {{ details.toCurrency }}
               </p>
-              <p class="address">{{ details.from | concatAddress }}</p>
+              <p class="address">{{ details.to | concatAddress }}</p>
             </li>
           </ul>
         </li>
