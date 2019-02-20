@@ -4,6 +4,7 @@
 
 ### Devop
 
+- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
 - Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
 - Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
 
@@ -29,7 +30,6 @@
 
 ### Devop
 
-- Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
 - Make toasts stay longer, update packages [#658](https://github.com/MyEtherWallet/MyEtherWallet/pull/658)
 
 ### Release v5.0.1
