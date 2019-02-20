@@ -1,3 +1,7 @@
+### Bug
+
+- Fix offline Worker issue []()
+
 ### Release v5.0.3
 
 ### Bug
