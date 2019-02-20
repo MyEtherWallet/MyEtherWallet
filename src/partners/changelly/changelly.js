@@ -96,6 +96,7 @@ export default class Changelly {
   }
 
   async getFixedRate(fromCurrency, toCurrency, fromValue) {
+    console.log('fixed'); // todo remove dev item
     const changellyDetails = await changellyCalls.getFixRate(
       fromCurrency,
       toCurrency,
