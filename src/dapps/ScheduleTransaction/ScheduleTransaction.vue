@@ -764,7 +764,7 @@ export default {
       });
 
     this.datetime = moment()
-      .add(1, 'hours')
+      .add(1, 'days')
       .toISOString();
     this.futureGasPrice = this.gasPrice.toString();
 
