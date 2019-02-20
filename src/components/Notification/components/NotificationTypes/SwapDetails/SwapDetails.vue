@@ -4,6 +4,15 @@
     <div class="notification-content">
       <ul>
         <li>
+          <!-- Change to use provider logo-->
+          <p>{{ $t('header.provider') }}:</p>
+          <div class="detail-data">
+            <p>
+              {{ details.provider }}
+            </p>
+          </div>
+        </li>
+        <li>
           <ul>
             <li>
               <p class="icon from-swap-icon">
@@ -32,7 +41,6 @@
             </li>
           </ul>
         </li>
-
         <li>
           <p>{{ $t('header.time') }}:</p>
           <div class="time-date">
@@ -60,22 +68,30 @@
           <p>{{ $t('common.toAddress') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="addressLink(details.to)" target="_blank">
+              <a :href="addressLink(details.to, details.toCurrency)" target="_blank">
                 {{ details.to }}
               </a>
             </p>
           </div>
         </li>
-        <!--<li v-if="isToOtherChain">-->
-          <!--<p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>-->
-          <!--<div class="detail-data">-->
-            <!--<p>-->
-              <!--<a :href="addressLink(details.providerAddress, details.toCurrency)" target="_blank">-->
-                <!--{{ details.providerAddress }}-->
-              <!--</a>-->
-            <!--</p>-->
-          <!--</div>-->
-        <!--</li>-->
+        <li v-if="isFromOtherChain">
+          <p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>
+          <div class="detail-data">
+            <p>
+              <a :href="addressLink(details.providerAddress, details.fromCurrency)" target="_blank">
+                {{ details.providerAddress }}
+              </a>
+            </p>
+          </div>
+        </li>
+        <li v-if="notice.body.provider === providerNames.bity">
+          <p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>
+          <div class="detail-data">
+            <p>
+              {{ details.orderId }}
+            </p>
+          </div>
+        </li>
         <li v-if="notice.body.gasUsed && isEthereum">
           <p>{{ $t('common.txFee') }}:</p>
           <div class="detail-data">
@@ -136,7 +152,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap, fiat, EthereumTokens } from '@/partners';
+import { providerMap, providerNames, fiat, EthereumTokens } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -205,6 +221,7 @@ export default {
   },
   data() {
     return {
+      providerNames: providerNames,
       timerInterval: null,
       statusInterval: null,
       arrowImage: Arrow,
@@ -244,6 +261,9 @@ export default {
     },
     isToOtherChain(){
       return EthereumTokens[this.notice.body.toCurrency] === undefined;
+    },
+    isFromOtherChain(){
+      return EthereumTokens[this.notice.body.fromCurrency] === undefined;
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);

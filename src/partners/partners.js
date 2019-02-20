@@ -220,6 +220,10 @@ export default class SwapProviders {
     return;
   }
 
+  static isNotToken(currency) {
+    return !EthereumTokens[currency];
+  }
+
   // Get address explorer base url for non-ethereum blockchain
   static getAddressLookupUrl(coin, address) {
     if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
