@@ -320,8 +320,12 @@ export default class Kyber {
         .allowance(fromAddress, this.getKyberNetworkAddress())
         .call();
 
-      if (currentAllowance > 0) {
-        if (currentAllowance < fromValueWei) {
+      if (new BigNumber(currentAllowance).gt(new BigNumber(0))) {
+        if (
+          new BigNumber(currentAllowance)
+            .minus(new BigNumber(fromValueWei))
+            .lt(new BigNumber(0))
+        ) {
           return { approve: true, reset: true };
         }
         return { approve: false, reset: false };
