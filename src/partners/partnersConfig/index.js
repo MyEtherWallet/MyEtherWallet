@@ -1,5 +1,6 @@
 import { chainCurrencies, fiat } from './currencyDetails';
 import EthereumTokens from './EthereumTokens';
+import OtherCoins from './OtherCoins';
 import ERC20 from './ERC20Token.abi';
 import {
   networkSymbols,
@@ -22,6 +23,7 @@ export {
   swapNotificationStatuses,
   baseCurrencyEntry,
   EthereumTokens,
+  OtherCoins,
   networkSymbols,
   chainCurrencies,
   fiat,

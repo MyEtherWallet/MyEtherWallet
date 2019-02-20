@@ -3,14 +3,11 @@
   .col {
     margin: 0;
     padding: 0;
-    //margin-left: 10px;
-    width: 21px;
-    height: 21px;
     position: relative;
+    line-height: 0;
   }
 
   .popover-button {
-    position: absolute;
     background-color: transparent;
     border: 0;
     margin: 0;
