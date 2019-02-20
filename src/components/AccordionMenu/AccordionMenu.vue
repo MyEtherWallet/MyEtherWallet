@@ -10,7 +10,6 @@
           <span>{{ number }}</span>
         </div>
         <div>{{ title }}</div>
-        <div v-if="editbutton" class="edit-button">{{ $t('common.edit') }}</div>
         <div v-if="rightText !== ''" class="edit-button">{{ rightText }}</div>
       </div>
       <div class="menu-content-container">

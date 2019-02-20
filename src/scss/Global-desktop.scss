@@ -1394,3 +1394,14 @@
 
   background-color: $light-blue-4 !important;
 }
+
+// *********************************************************************
+// No margin to remove margins from elements
+// *********************************************************************
+.no-margin {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+}
