@@ -477,8 +477,12 @@ export default {
       }, 500);
     },
     matchWeb3WalletNetwork() {
+      if (
+        !window.web3.eth.net ||
+        typeof window.web3.eth.net.getId !== 'function'
+      )
+        return;
       this.pollNetwork = setInterval(() => {
-        if (!window.web3.eth.net) return;
         window.web3.eth.net
           .getId()
           .then(netId => {
