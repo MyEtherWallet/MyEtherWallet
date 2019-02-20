@@ -14,8 +14,8 @@
           <div>
             Simply send your transaction through this page and our fraud
             detection algorithms get to work. If we find that your destination
-            address is likely to result in your money being stolen, your
-            Ethereum will be sent back to you.
+            address is likely to result in your money being stolen, your XinFin
+            will be sent back to you.
           </div>
         </div>
       </div>
