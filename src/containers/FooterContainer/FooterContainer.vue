@@ -186,8 +186,7 @@ export default {
           contents: [
             {
               text: this.$t('footer.ledger'),
-              href:
-                'https://www.ledgerwallet.com/products/?utm_source=&utm_medium=affiliate&utm_campaign=fa4b&utm_content='
+              href: 'https://www.ledger.com?r=fa4b'
             },
             {
               text: this.$t('footer.digital'),

@@ -20,6 +20,6 @@ selenium-debug.log
 release
 
 # Generated files
-/src/contracts/
-/src/tokens/
-/src/darklist/
+# /src/contracts/
+# /src/tokens/
+# /src/darklist/
