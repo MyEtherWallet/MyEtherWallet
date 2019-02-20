@@ -873,7 +873,6 @@ export default {
             tokenSchedulingTransaction
           );
         } catch (e) {
-          console.error(e);
           Toast.responseHandler(e, Toast.ERROR);
           return EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT.toString();
         }
