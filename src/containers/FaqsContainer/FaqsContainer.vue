@@ -120,7 +120,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'FaqsContainer-desktop.scss';
-//@import 'FaqsContainer-tablet.scss';
-//@import 'FaqsContainer-mobile.scss';
+@import 'FaqsContainer.scss';
 </style>
