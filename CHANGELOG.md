@@ -21,6 +21,7 @@
 
 ### Feature
 
+- Add animation to FAQs [#691](https://github.com/MyEtherWallet/MyEtherWallet/pull/691)
 - Add reusable global toasts. Add examples [#617](https://github.com/MyEtherWallet/MyEtherWallet/pull/617)
 
 ### Devop
