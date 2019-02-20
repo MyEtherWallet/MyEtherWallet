@@ -151,7 +151,7 @@
             <div class="title">
               <div class="title-helper">
                 <h4>{{ $t('common.gasPrice') }}</h4>
-                <popover :popcontent="$t('popover.gasPrice')" />
+                <popover :popcontent="$t('popover.txSpeed')" />
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  gasPrice > 0 ? '' : 'not-good'
+                  localGasPrice > 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -235,6 +235,14 @@ export default {
       default: function() {
         return [];
       }
+    },
+    nonce: {
+      type: String,
+      default: '0'
+    },
+    highestGas: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -246,17 +254,16 @@ export default {
       selectedCoinType: {},
       raw: {},
       signed: '{}',
-      nonce: 0,
+      localNonce: this.nonce,
       file: '',
-      localGasPrice: this.gasPrice
+      localGasPrice: this.highestGas
     };
   },
   computed: {
     ...mapGetters({
       wallet: 'wallet',
       network: 'network',
-      web3: 'web3',
-      gasPrice: 'gasPrice'
+      web3: 'web3'
     }),
     validAddress() {
       return isAddress(this.address);
@@ -281,12 +288,18 @@ export default {
         this.validAddress &&
         this.toAmt >= 0 &&
         this.gasLimit > 0 &&
-        this.nonce > 0 &&
+        this.localNonce > 0 &&
         this.localGasPrice
       );
     }
   },
   watch: {
+    highestGas(newVal) {
+      this.localGasPrice = newVal;
+    },
+    nonce(newVal) {
+      this.localNonce = newVal;
+    },
     toData(newVal) {
       if (Misc.validateHexString(newVal)) {
         this.toData = newVal;
@@ -375,7 +388,7 @@ export default {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-          self.nonce = file.nonce;
+          self.localNonce = file.localNonce;
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
         }
@@ -386,10 +399,10 @@ export default {
       const isToken = this.selectedCoinType.symbol !== this.network.type.name;
       const amt = unit.toWei(this.toAmt, 'ether');
       const raw = {
-        nonce: Misc.sanitizeHex(new BigNumber(this.nonce).toString(16)),
+        nonce: Misc.sanitizeHex(new BigNumber(this.localNonce).toString(16)),
         gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
         gasPrice: Misc.sanitizeHex(
-          new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toString(16)
+          new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
         to: isToken ? this.selectedCoinType.address : this.address,
         value: isToken ? 0 : amt,
