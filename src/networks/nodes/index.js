@@ -3,7 +3,6 @@ import ath from './ath';
 import clo from './clo';
 import egem from './egem';
 import ella from './ella';
-import eosc from './eosc';
 import esn from './esn';
 import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
 import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
@@ -30,13 +29,18 @@ import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
 import goerli from './goerli-mew-ws';
+import exp from './exp';
+import iolite from './iolite';
+import mix from './mix';
+import reosc from './reosc';
+import web from './web';
+
 export {
   akaremote,
   ath,
   clo,
   egem,
   ella,
-  eosc,
   esn,
   etcethereumcommonwealthgeth,
   etcethereumcommonwealthparity,
@@ -46,12 +50,17 @@ export {
   ethmew,
   ethmewws,
   etho,
+  exp,
+  goerli,
   go,
+  iolite,
   kovethscan,
   kovinfura,
+  mix,
   music,
   pirl,
   poa,
+  reosc,
   rinethscan,
   rininfura,
   ropinfura,
@@ -62,5 +71,5 @@ export {
   rsktestpublic,
   tomo,
   ubq,
-  goerli
+  web
 };

@@ -526,7 +526,7 @@ export default {
           ).toNumber();
         })
         .catch(e => {
-          Toast.responseHandler(e, true);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     setENS() {
