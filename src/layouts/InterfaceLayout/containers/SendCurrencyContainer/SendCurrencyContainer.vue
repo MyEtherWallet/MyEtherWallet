@@ -205,8 +205,8 @@ export default {
       default: function() {}
     },
     highestGas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -233,7 +233,7 @@ export default {
         this.gasLimit || 0
       );
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
-
+      if (new BigNumber(this.value).lt(0)) return false;
       if (this.isToken) {
         return (
           new BigNumber(this.value).lte(this.selectedCurrency.balance) &&
