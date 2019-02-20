@@ -5,14 +5,14 @@
       class="page__title"
       itemprop="headline"
     >
-      [GUIDE] How to buy Ethereum (ETH) with USD
+      [GUIDE] How to buy XinFin (ETH) with USD
     </h1>
     <div class="content">
       <h3 id="hello-and-welcome-to-ethereum-">
-        Hello and welcome to Ethereum!
+        Hello and welcome to XinFin!
       </h3>
       <p>
-        Ethereum and digital currencies are a pretty new world and in this new
+        XinFin and digital currencies are a pretty new world and in this new
         world, things can be a little bit different. First, you are responsible
         for your stuff. Your investments, your choices, your security. There are
         no babysitters or undo buttons or a bank to call up and reverse your
@@ -143,7 +143,7 @@
             ...While you are waiting for your verification and transfer,
             download and install
             <a href="https://github.com/ethereum/mist/releases"
-              >Mist / Ethereum Wallet</a
+              >Mist / XinFin Wallet</a
             >. Run it so it can sync the blockchain.
           </p>
         </li>
@@ -168,12 +168,12 @@
 
       <p>
         The private key is like a password, but way more intense. Plus, it's a
-        password that is protected by another password. In Ethereum Wallet, this
+        password that is protected by another password. In XinFin Wallet, this
         private key is in the form of a <abbr>keystore file</abbr>. You need to
         make a backup of this in case anything happens to your computer.
       </p>
       <p>
-        In Ethereum Wallet, go to the top bar and find <abbr>ACCOUNTS</abbr>
+        In XinFin Wallet, go to the top bar and find <abbr>ACCOUNTS</abbr>
         <i class="fa fa-long-arrow-right" aria-hidden="true" />
         <abbr>BACKUP</abbr>
         <i class="fa fa-long-arrow-right" aria-hidden="true" />
@@ -193,7 +193,7 @@
         the need for Shapeshift.)
       </p>
       <p>
-        Then create a Ethereum Wallet account and back it up. In Circle or
+        Then create a XinFin Wallet account and back it up. In Circle or
         Coinbase, send all the BTC to that address. The ETH will appear in your
         ETH wallet in ~20 minutes.
       </p>
@@ -203,7 +203,7 @@
         syncing it. If for some reason you cannot get it to run, here is a list
         of easily accessible wallets. Follow the instructions provided by each
         of these wallets to back up your information. In Jaxx, that is a
-        mnemonic. In MyEtherWallet,
+        mnemonic. InXinFin Wallet.,
         <a
           href="https://kb.myetherwallet.com/how-do-i-move-from-coinbase-to-myetherwallet-exchange-slash-hosted-wallet-mew"
         >
@@ -215,7 +215,7 @@
 
       <ul>
         <li>
-          <a href="http://www.myetherwallet.com/">MyEtherWallet.com</a> or
+          <a href="http://www.myetherwallet.com/">XinFin Wallet.com</a> or
           <a
             href="https://www.reddit.com/r/ethereum/comments/44vbef/myetherwallet_chrome_extension_the_beta_has/"
           >
