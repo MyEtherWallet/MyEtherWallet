@@ -37,7 +37,7 @@ const dapps = {
     icon: scheduleTransaction,
     title: 'Schedule a transaction',
     desc:
-      'Schedule a transaction on Ethereum for future execution using the decentralized Ethereum Alarm Clock protocol',
+      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
     supportedNetworks: [ETH.name, ROP.name, KOV.name]
   }
 };

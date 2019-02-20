@@ -1,3 +1,7 @@
+### Devop
+
+- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2
+
 ### Release v5.0.2
 
 ### Bug
