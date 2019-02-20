@@ -29,7 +29,16 @@
                 :key="$router.path + key + index"
               >
                 <div class="network-title">
-                  <img :src="Networks[key][0].type.icon" />
+                  <div class="network-icon">
+                    <img
+                      v-if="Networks[key][0].type.icon"
+                      :src="Networks[key][0].type.icon"
+                    />
+                    <div v-if="!Networks[key][0].type.icon" class="no-icon">
+                      <p>No</p>
+                      <p>Icon</p>
+                    </div>
+                  </div>
                   <p>{{ key }}</p>
                 </div>
                 <div class="network-content">
