@@ -19,6 +19,7 @@
 
 - Add nonce and gas to offline [#661](https://github.com/MyEtherWallet/MyEtherWallet/pull/661)
 - Detect when user not in interface and prompt [#684](https://github.com/MyEtherWallet/MyEtherWallet/pull/684)
+- Add Exit to Fiat via Bity [#669](https://github.com/MyEtherWallet/MyEtherWallet/pull/669)
 
 ### Release v5.0.2
 
