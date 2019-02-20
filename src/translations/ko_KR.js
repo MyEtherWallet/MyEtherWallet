@@ -15,11 +15,11 @@ import team from './team/ko_KR';
 import popover from './popover/ko_KR';
 import withoutWallet from './without-wallet/ko_KR';
 import errorsGlobal from './errors-global/ko_KR';
-import trezorError from './errors-trezor/en_US';
-import ledgerError from './errors-ledger/en_US';
-import secalotError from './errors-secalot/en_US';
-import keepkeyError from './errors-keepkey/en_US';
-import bitboxError from './errors-bitbox/en_US';
+import trezorError from './errors-trezor/ko_KR';
+import ledgerError from './errors-ledger/ko_KR';
+import secalotError from './errors-secalot/ko_KR';
+import keepkeyError from './errors-keepkey/ko_KR';
+import bitboxError from './errors-bitbox/ko_KR';
 
 const ko_KR = {
   common: common,
