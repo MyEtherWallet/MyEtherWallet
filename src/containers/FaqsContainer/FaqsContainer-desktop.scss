@@ -69,36 +69,61 @@
     .qa__contents--title {
       display: flex;
       cursor: pointer;
-      // user-select: none;
+      user-select: none;
 
       h3 {
         font-size: 18px;
       }
-
-      .show-more-buttons {
-        margin-left: auto;
-        position: relative;
-
-        span {
-          position: absolute;
-          font-size: 50px;
-          font-weight: 400;
-        }
-
-        .show-more {
-          top: -27px;
-          right: 0;
-        }
-
-        .show-less {
-          top: -31px;
-          right: 6px;
-        }
-      } // .show-more-buttons
     }
-
-    .qa__contents--content {
-      margin-top: 20px;
-    } // .qa__contents--content
   }
+
+  .qa__contents--content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    &.faq-open {
+      max-height: 300px;
+    }
+    .qa-text {
+      padding-top: 20px;
+    }
+  } // .qa__contents--content
+
+  .show-more-buttons {
+    margin-left: auto;
+    position: relative;
+
+    .animated-button {
+      //background-color: orange;
+      position: absolute;
+      top: -5px;
+      left: -30px;
+      width: 20px;
+      height: 20px;
+
+      .bar {
+        height: 4px;
+        width: 20px;
+        background-color: $black;
+        position: absolute;
+        top: 14px;
+        left: 0;
+        transition: all 0.4s ease;
+      }
+
+      .bar1 {
+        // empty
+      }
+
+      .bar2 {
+        transform: rotate(90deg);
+      }
+
+      &.faq-open {
+        .bar2 {
+          transform: rotate(0deg);
+        }
+      }
+    }
+  } // .show-more-buttons
 } //@media all and (min-width: calc(#{$tablet-width} + 1px)) {
