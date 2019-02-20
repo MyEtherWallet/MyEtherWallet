@@ -98,26 +98,26 @@
                     >{{ val.label }}</b-dropdown-item
                   >
                   <b-dropdown-divider />
-                  <b-dropdown-item>{{
-                    $t('accessWallet.customPaths')
-                  }}</b-dropdown-item>
+                  <b-dropdown-item>
+                    {{ $t('accessWallet.customPaths') }}
+                  </b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
                     :key="key"
                     class="custom-networks"
                   >
-                    <div @click="changePath(key)">{{ val.path }}</div>
+                    <div @click="changePath(key)">{{ val.label }}</div>
                     <span>
                       <i
                         class="fa fa-times-circle"
-                        @click.prevent="removeCustomPath(val.path)"
+                        @click.prevent="removeCustomPath(val)"
                       />
                     </span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="showCustomPathInput">{{
-                    $t('accessWallet.addCustomPath')
-                  }}</b-dropdown-item>
+                  <b-dropdown-item @click="showCustomPathInput">
+                    {{ $t('accessWallet.addCustomPath') }}
+                  </b-dropdown-item>
                 </b-dropdown>
               </div>
             </div>
@@ -347,14 +347,9 @@ export default {
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     removeCustomPath(path) {
-      this.$store
-        .dispatch('removeCustomPath', {
-          label: '',
-          path: path
-        })
-        .then(() => {
-          this.getPaths();
-        });
+      this.$store.dispatch('removeCustomPath', path).then(() => {
+        this.getPaths();
+      });
     },
     addCustomPath() {
       const customPath = this.checkCustomPath(this.customPath.path);
