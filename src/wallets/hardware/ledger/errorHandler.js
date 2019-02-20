@@ -6,9 +6,18 @@ const ERRORS = {
   'Ledger Device is busy (lock signPersonalMessage)': 'ledgerError.deviceBusy',
   'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown0x6804',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
-    'ledgerError.failedToSignOther'
+    'ledgerError.failedToSignOther',
+  'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
+    'ledgerError.failedSignIneligible',
+  'Ledger Device is busy (lock signTransaction)': 'ledgerError.deviceBusyTx',
+  'Ledger device: UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown0x6801',
+  'Ledger device: Invalid data received (0x6a80)':
+    'ledgerError.invalidData0x6a80'
 };
-const WARNING = {};
+const WARNING = {
+  'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
+    'ledgerError.deniedByUser0x6985'
+};
 
 export default err => {
   const errorValues = Object.keys(ERRORS);

@@ -6,6 +6,9 @@ if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     updated() {
       if (window) window.dispatchEvent(new Event('PWA_UPDATED'));
+    },
+    error() {
+      if (window) window.dispatchEvent(new Event('PWA_MOUNT_ERROR'));
     }
   });
 }

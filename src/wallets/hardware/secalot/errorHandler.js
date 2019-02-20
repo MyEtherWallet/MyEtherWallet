@@ -2,7 +2,8 @@ import { Toast } from '@/helpers';
 import Vue from 'vue';
 
 const ERRORS = {
-  'Sign failed': 'secalotError.signFailed'
+  'Sign failed': 'secalotError.signFailed',
+  "Cannot read property 'requestId' of null": 'secalotError.notConnected'
 };
 const WARNING = {};
 

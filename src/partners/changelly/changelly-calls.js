@@ -142,6 +142,53 @@ const login = () => {
   return Promise.resolve({});
 };
 
+const getFixRate = async (fromCurrency, toCurrency, fromValue, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].getFixRate, [
+          {
+            from: fromCurrency,
+            to: toCurrency
+          }
+        ])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const createFixTransaction = async (transactionParams, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(
+          changellyMethods[network].createFixTransaction,
+          transactionParams
+        )
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 export default {
   getCurrencies,
   getRate,
@@ -149,5 +196,7 @@ export default {
   validateAddress,
   createTransaction,
   getStatus,
-  login
+  login,
+  getFixRate,
+  createFixTransaction
 };

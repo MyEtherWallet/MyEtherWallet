@@ -1,7 +1,12 @@
 {
-  "failedToSign" : "Your Ledger device has timed out.",
-  "noDevice" : "No Ledger device found. Please make sure device is connected.",
-  "deviceBusy" : "Ledger device is currently busy.",
-  "unknown0x6804" : "Ledger device errored. (0x6804)",
-  "failedToSignOther" : "Ledger signing failed"
+  "failedToSign": "Failed to sign, Ledger device timedout.",
+  "noDevice": "No Ledger device found!",
+  "deviceBusy": "Ledger Device is busy",
+  "unknown0x6804": "Ledger device: UNKNOWN_ERROR (0x6804)",
+  "failedToSignOther": "Ledger failed to sign! U2F OTHER_ERROR",
+  "failedSignIneligible": "Ledger failed to sign! U2F DEVICE_INELIGIBLE",
+  "deviceBusyTx": "Ledger device is busy!",
+  "unknown0x6801": "Ledger device: UNKNOWN_ERROR (0x6801)",
+  "invalidData0x6a80": "Ledger received invalid data. (0x6a80)",
+  "deniedByUser0x6985": "User denied action. (0x6985)"
 }

@@ -28,6 +28,7 @@ class CompileSwapOptions {
         .call();
     } catch (e) {
       console.error(e);
+      return {}
     }
   }
 
@@ -130,7 +131,8 @@ class CompileSwapOptions {
         name: item.fullName,
         symbol: item.name.toUpperCase(),
         contractAddress: item.addressUrl,
-        decimals: decimals
+        decimals: decimals,
+        fixRateEnabled: item.fixRateEnabled
       };
     } else {
       if (decimals === 0) {
@@ -143,7 +145,8 @@ class CompileSwapOptions {
         name: item.fullName,
         symbol: item.name.toUpperCase(),
         contractAddress: match[0],
-        decimals: decimals
+        decimals: decimals,
+        fixRateEnabled: item.fixRateEnabled
       };
     }
   }
@@ -160,9 +163,10 @@ class CompileSwapOptions {
         accumulator.other[currentValue.name.toUpperCase()] = {
           symbol: currentValue.name.toUpperCase(),
           name: currentValue.fullName,
-          addressLookup: currentValue.addressUrl,
-          explorer: currentValue.transactionUrl
-        };
+          addressLookup: currentValue.addressUrl ? currentValue.addressUrl.replace('%1$s', '[[address]]') : currentValue.addressUrl,
+          explorer: currentValue.transactionUrl ? currentValue.transactionUrl.replace('%1$s', '[[txHash]]') : currentValue.transactionUrl,
+          fixRateEnabled: currentValue.fixRateEnabled
+      };
       }
     }
     return accumulator;
@@ -217,7 +221,8 @@ class CompileSwapOptions {
     for (let prop in options) {
       this.changellyBaseOptions[prop] = {
         symbol: prop,
-        name: options[prop].name
+        name: options[prop].name,
+        fixRateEnabled: options[prop].fixRateEnabled
       };
     }
   }
@@ -232,6 +237,14 @@ class CompileSwapOptions {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
       }
     }
+
+    if (Object.keys(withChangelly.other).length > 0) {
+      fs.writeFileSync(
+        `${swapConfigFolder}/OtherCoins.js`,
+        `export default ${JSON.stringify(withChangelly.other)} `
+      );
+    }
+
     if (Object.keys(withChangelly.ETH).length > 0) {
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.js`,

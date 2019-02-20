@@ -46,7 +46,7 @@ class KeepkeyWallet {
         'showHardwarePinMatrix',
         { name: this.identifier },
         pin => {
-          this.keepkey.acknowledgeWithPin(pin);
+          this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
         }
       );
     });
@@ -55,7 +55,9 @@ class KeepkeyWallet {
         'showHardwarePassword',
         { name: this.identifier },
         passPhrase => {
-          this.keepkey.acknowledgeWithPassphrase(passPhrase);
+          this.keepkey
+            .acknowledgeWithPassphrase(passPhrase)
+            .catch(errorHandler);
         }
       );
     });

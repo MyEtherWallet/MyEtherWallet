@@ -1,3 +1,4 @@
 {
-  "signFailed": "Sign failed"
+  "signFailed": "Sign failed",
+  "notConnected": "Cannot read property 'requestId' of null"
 }
