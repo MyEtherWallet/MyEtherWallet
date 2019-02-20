@@ -355,9 +355,8 @@ export default {
             value: this.selectedProvider.maxValue,
             currency: this.fromCurrency
           });
-        } else {
-          return false;
         }
+        return false;
       } else if (
         new BigNumber(this.fromValue).gt(
           new BigNumber(this.selectedProvider.maxValue)
@@ -446,7 +445,7 @@ export default {
       if (this.isExitToFiat) {
         // const validExitAddress =
         if (this.fromCurrency === this.baseCurrency) {
-          this.exitFromAddress = this.currentAddress;
+          // this.exitFromAddress = this.currentAddress;
           return true;
         }
         return this.exitFromAddress !== '' && this.validExitAddress;

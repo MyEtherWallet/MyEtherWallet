@@ -21,5 +21,6 @@
   "contractCreation": "Contract Creation",
   "mewConnectDisconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
   "providerDepositAddress": "Deposit Address",
-  "provider": "Provider"
+  "provider": "Provider",
+  "invalidIBAN": "Invalid IBAN"
 }
