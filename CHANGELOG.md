@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix offline Worker issue []()
+- Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 
 ### Release v5.0.3
 
