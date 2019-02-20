@@ -12,7 +12,7 @@
       Initial Coin Offerings offer “Tokens” in return for users who support them
       by sending them Ether. When you give these ICO teams your ETH/BTC or other
       currencies, it means that you believe that these technologies they are
-      creating will bring value to the Ethereum Community.
+      creating will bring value to the XinFin Community.
     </p>
     <p>
       In the beginning of an ICO, the leading team will explain their vision and
