@@ -11,15 +11,13 @@
       <div class="form-content-container">
         <div class="accordion-menu-container">
           <p class="beta-notice">{{ $t('interface.CryptoToFiatBeta') }}</p>
-
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
+          <!-- Phone Number - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps.step1"
             :title="$t('interface.phoneNumber')"
             :greytitle="false"
-            :editbutton="true"
+            :editbutton="false"
+            :right-text="complete.step1 ? 'complete' : 'incomplete'"
             number="1"
             @titleClicked="reOpen"
           >
@@ -35,16 +33,6 @@
                     class="phone-number"
                     @onValidate="setPhoneNumber"
                   ></vue-tel-input>
-                  <!--<standard-input-->
-                  <!--:options="inputCountryCode"-->
-                  <!--class="country-code"-->
-                  <!--@changedValue="countryCode = $event"-->
-                  <!--/>-->
-                  <!--<standard-input-->
-                  <!--:options="inputPhoneNumber"-->
-                  <!--class="phone-number"-->
-                  <!--@changedValue="phoneNumber = $event"-->
-                  <!--/>-->
                 </div>
               </li>
               <li>
@@ -52,14 +40,13 @@
               </li>
             </ul>
           </accordion-menu>
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
+          <!-- Tan Code - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps.verifyStep"
             :greytitle="false"
-            :editbutton="true"
+            :editbutton="false"
             :title="$t('interface.enterVerification')"
+            :right-text="complete.verifyStep ? 'complete' : 'incomplete'"
             number="2"
             @titleClicked="reOpen"
           >
@@ -73,11 +60,14 @@
                   @changedValue="tan = $event"
                 />
               </li>
+              <li>
+                <p v-if="invalidTanEntered">
+                  {{ $t('interface.invalidTanCode') }}
+                </p>
+              </li>
             </ul>
           </accordion-menu>
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
+          <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps.step2"
             :title="$t('interface.bankInfo')"
@@ -110,9 +100,7 @@
               </li>
             </ul>
           </accordion-menu>
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
-          <!-- accordion-menu ******************************** -->
+          <!-- Personal Details - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps.step3"
             :title="$t('interface.personalInfo')"
@@ -178,28 +166,21 @@
           <standard-button
             v-if="steps.step1"
             :options="button1"
-            :button-disabled="phoneNumber !== ''"
-            @click.native="
-              updateStep('verifyStep');
-              updateStage('step1');
-              registerPhone();
-            "
+            :button-disabled="!isValidPhoneNumber"
+            @click.native="registerPhone()"
           />
           <standard-button
             v-if="steps.verifyStep"
             :options="verifyButton"
-            @click.native="
-              updateStep('step2');
-              updateStage('verifyStep');
-              confirmUser();
-            "
+            :button-disabled="!validTan"
+            @click.native="confirmUser()"
           />
           <standard-button
             v-if="steps.step2"
             :options="button2"
             @click.native="
               updateStep('step3');
-              updateStage('step2');
+              stageComplete('step2');
             "
           />
           <standard-button
@@ -207,7 +188,7 @@
             :options="button3"
             @click.native="
               updateStep('');
-              updateStage('step3');
+              stageComplete('step3');
               createExitOrder();
             "
           />
@@ -240,6 +221,7 @@ import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
 import VueTelInput from 'vue-tel-input';
+import IBAN from 'iban'
 
 import { providerMap } from '@/partners';
 
@@ -272,6 +254,7 @@ export default {
   },
   data() {
     return {
+      localStoreKey: 'linkedPhone',
       previouslyVerified: false,
       addSpace: false,
       finalizingSwap: false,
@@ -370,8 +353,11 @@ export default {
       },
       provider: {},
       countryCode: '',
-      phonenumber: '',
+      validTan: false,
+      validPhoneNumber: false,
+      phoneNumber: '',
       tan: '',
+      invalidTanEntered: false,
       orderDetails: {
         currency: this.swapDetails.toCurrency,
         type: 'bank_account',
@@ -394,20 +380,33 @@ export default {
   computed: {
     countryOptions() {
       return this.countryList;
+    },
+    isValidIBAN() {
+      return IBAN.isValid(this.orderDetails.iban);
+    },
+    isValidPhoneNumber() {
+      return this.validPhoneNumber;
+    }
+  },
+  watch: {
+    tan(val) {
+      console.log(this.tan.toString().length === 6); // todo remove dev item
+      console.log(/\d\d\d\d\d\d/.test(this.tan)); // todo remove dev item
+      const correctLength = val.toString().length === 6;
+      const allNumbers = /^\d\d\d\d\d\d$/.test(val);
+      this.validTan = correctLength && allNumbers;
     }
   },
   mounted() {
     this.openMenu();
     const providerConstructor = providerMap.get(this.swapDetails.provider);
     this.provider = new providerConstructor();
-    const haveCred = store.get('exit_to_fiat');
+    const haveCred = store.get(this.localStoreKey);
     if (haveCred !== null && haveCred !== undefined) {
-      const userDetails = store.get('exit_to_fiat');
+      const userDetails = store.get(this.localStoreKey);
       if (userDetails.phone_token && userDetails.verified) {
-        this.steps.step1 = false;
-        this.steps.verifyStep = false;
-        this.steps.step2 = true;
-        this.steps.step3 = false;
+        this.stageComplete('step1');
+        this.stageComplete('verifyStep');
       }
       if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
     }
@@ -431,7 +430,7 @@ export default {
         }
       });
     },
-    updateStage(stage) {
+    stageComplete(stage) {
       this.complete[stage] = true;
     },
     openMenu(val) {
@@ -439,7 +438,9 @@ export default {
     },
     setPhoneNumber({ number, isValid, country }) {
       console.log(number, isValid, country);
-      console.log(this.phoneNumber); // todo remove dev item
+      console.log('phoneNumber', this.phoneNumber); // todo remove dev item
+      this.validPhoneNumber = isValid;
+      this.phoneNumber = number;
     },
     backButtonAction() {
       this.$emit('backButtonClick');
@@ -455,23 +456,29 @@ export default {
       const existing = await this.provider.registerUser(initData);
       if (existing) {
         this.previouslyVerified = true;
-        this.step1 = false;
-        this.verifyStep = false;
-        this.step2 = true;
+        this.stageComplete('step1');
+        this.stageComplete('verifyStep');
+        this.updateStep('step2');
       } else {
-        this.step1 = false;
-        this.verifyStep = true;
+        this.stageComplete('step1');
+        this.updateStep('verifyStep');
       }
     },
     async confirmUser() {
-      const verifyData = {
-        tan: this.tan,
-        ...this.swapDetails
-      };
-      const verified = await this.provider.verifyUser(verifyData);
-      if (verified.success) {
-        this.verifyStep = false;
-        this.step2 = true;
+      if (this.validTan) {
+        const verifyData = {
+          tan: this.tan,
+          ...this.swapDetails
+        };
+        const verified = await this.provider.verifyUser(verifyData);
+        console.log(typeof verified.success); // todo remove dev item
+        if (verified.success) {
+          this.invalidTanEntered = false;
+          this.stageComplete('verifyStep');
+          this.updateStep('step2');
+        } else {
+          this.invalidTanEntered = true;
+        }
       }
     },
     async createExitOrder() {
