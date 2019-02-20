@@ -199,8 +199,8 @@ export default {
     web3() {
       this.setupOnlineEnvironment();
     },
-    address() {
-      this.setupOnlineEnvironment();
+    address(val) {
+      if (val) this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -406,13 +406,17 @@ export default {
             store.set('customTokens', customStore);
             resolve(res);
           });
-        }).then(res => {
-          const allTokens = this.tokens
-            .filter(token => token.balance > 0)
-            .concat(res.filter(token => token.balance > 0));
-          this.tokensWithBalance = allTokens;
-          this.receivedTokens = true;
-        });
+        })
+          .then(res => {
+            const allTokens = this.tokens
+              .filter(token => token.balance > 0)
+              .concat(res.filter(token => token.balance > 0));
+            this.tokensWithBalance = allTokens;
+            this.receivedTokens = true;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
       } else {
         this.receivedTokens = true;
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
