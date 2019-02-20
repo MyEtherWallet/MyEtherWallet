@@ -4,6 +4,7 @@
 
 ### Devop
 
+- Update Send offline helper UI [#663](https://github.com/MyEtherWallet/MyEtherWallet/pull/663)
 - Include Service worker error [#660](https://github.com/MyEtherWallet/MyEtherWallet/pull/660)
 - Update Front-Page UI [#677](https://github.com/MyEtherWallet/MyEtherWallet/pull/677)
 - Update notification dot [#679](https://github.com/MyEtherWallet/MyEtherWallet/pull/679)
