@@ -228,6 +228,7 @@ export default class SwapProviders {
       }
       return OtherCoins[coin].addressLookup;
     }
+    return '';
   }
   // Get transaction explorer base url for non-ethereum blockchain
   static getBlockChainExplorerUrl(coin, hash) {
@@ -237,6 +238,7 @@ export default class SwapProviders {
       }
       return OtherCoins[coin].explorer;
     }
+    return '';
   }
 
   async startSwap({
