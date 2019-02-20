@@ -1,8 +1,14 @@
+### Devop
+
+- Update Send offline helper UI [#663](https://github.com/MyEtherWallet/MyEtherWallet/pull/663)
+- Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
+- Add Missing nodes from v3 [#672](https://github.com/MyEtherWallet/MyEtherWallet/pull/672)
+- Update hdkey 1.1.1 & imagemin-webpack-plugin 2.4.2 [#668](https://github.com/MyEtherWallet/MyEtherWallet/pull/668)
+
 ### Release v5.0.2
 
 ### Bug
 
-- Update Send offline helper UI [#663](https://github.com/MyEtherWallet/MyEtherWallet/pull/663)
 - Fix mobile settings [#651](https://github.com/MyEtherWallet/MyEtherWallet/pull/651)
 - Mandatory password input for Get a New Wallet -> Mnemonic Phrase [#649](https://github.com/MyEtherWallet/MyEtherWallet/pull/649)
 - fix data copy error on FF, and MEWconnect disconnect modal [#648](https://github.com/MyEtherWallet/MyEtherWallet/pull/648)
