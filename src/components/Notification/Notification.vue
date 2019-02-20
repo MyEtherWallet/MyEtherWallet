@@ -11,6 +11,7 @@
       no-padding
       class="bootstrap-modal-wide nopadding"
       @show="countUnread"
+      @hide="hiddenModal"
     >
       <template slot="modal-title">
         <div>
@@ -131,6 +132,7 @@ export default {
   },
   data() {
     return {
+      cancelHide: false,
       shown: false,
       unreadCount: 0,
       ethPrice: new BigNumber(0),
@@ -172,13 +174,22 @@ export default {
     }
     this.countUnread();
     this.fetchBalanceData();
-    this.$refs.notification.$on('hide', () => {
-      this.shown = false;
-      this.hideDetails();
-    });
     this.checkForUnResolvedTxNotifications();
   },
   methods: {
+    hiddenModal(evt) {
+      if (!this.cancelHide) {
+        this.shown = false;
+        this.hideDetails();
+      } else {
+        evt.cancel();
+      }
+    },
+    toggleCanhide() {
+      setTimeout(() => {
+        this.cancelHide = false;
+      }, 100);
+    },
     checkForUnResolvedTxNotifications() {
       if (!this.notifications[this.account.address]) return [];
       const check = this.notifications[this.account.address]
@@ -233,12 +244,16 @@ export default {
       this.$refs.notification.show();
     },
     showDetails(details) {
+      console.log(details); // todo remove dev item
+      this.cancelHide = true;
       this.detailsShown = true;
       this.detailType = details[0];
       this.notificationDetails = details[1];
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
+      this.toggleCanhide();
+      console.log('showDetails'); // todo remove dev item
     },
     hideDetails() {
       this.detailsShown = false;
@@ -335,21 +350,21 @@ export default {
       }
       return notice.body.errorMessage;
     },
-    hashLink(hash) {
+    hashLink(hash, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getBlockChainExplorerUrl(currency, hash);
+      }
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
-      // if (currency) {
-      //   return Swap.getBlockChainExplorerUrl(currency, hash);
-      // }
     },
-    addressLink(addr) {
+    addressLink(addr, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getAddressLookupUrl(currency, addr);
+      }
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
       }
-      // if (currency) {
-      //   return Swap.getAddressLookupUrl(currency, addr);
-      // }
     },
     dateString(notice) {
       if (notice !== {}) {

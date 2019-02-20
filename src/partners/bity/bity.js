@@ -457,8 +457,8 @@ export default class BitySwap {
 
   static parseOrder(order) {
     return {
-      orderId: order.id,
-      statusId: order.reference,
+      orderId: order.reference,
+      statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
       sendValue: order.payment_amount,
@@ -470,8 +470,8 @@ export default class BitySwap {
 
   static parseExitOrder(order) {
     return {
-      orderId: order.id,
-      statusId: order.reference,
+      orderId: order.reference,
+      statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.amount,
       sendValue: order.payment_amount,
@@ -490,7 +490,7 @@ export default class BitySwap {
 
   static async getOrderStatusCrypto(noticeDetails) {
     try {
-      const data = await getStatus(noticeDetails.orderId);
+      const data = await getStatus(noticeDetails.statusId);
       if (data.status === bityStatuses.EXEC) {
         return swapNotificationStatuses.COMPLETE;
       }
@@ -523,7 +523,7 @@ export default class BitySwap {
   static async getOrderStatusFiat(noticeDetails) {
     try {
       const data = await getStatusFiat(
-        noticeDetails.orderId,
+        noticeDetails.statusId,
         noticeDetails.special
       );
       if (!utils.isJson(data)) return swapNotificationStatuses.PENDING;
