@@ -15,11 +15,11 @@ import team from './team/ru_RU';
 import popover from './popover/ru_RU';
 import withoutWallet from './without-wallet/ru_RU';
 import errorsGlobal from './errors-global/ru_RU';
-import trezorError from './errors-trezor/en_US';
-import ledgerError from './errors-ledger/en_US';
-import secalotError from './errors-secalot/en_US';
-import keepkeyError from './errors-keepkey/en_US';
-import bitboxError from './errors-bitbox/en_US';
+import trezorError from './errors-trezor/ru_RU';
+import ledgerError from './errors-ledger/ru_RU';
+import secalotError from './errors-secalot/ru_RU';
+import keepkeyError from './errors-keepkey/ru_RU';
+import bitboxError from './errors-bitbox/ru_RU';
 
 const ru_RU = {
   common: common,
