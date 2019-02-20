@@ -133,6 +133,7 @@ import {
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
+  name: 'Interface',
   components: {
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
