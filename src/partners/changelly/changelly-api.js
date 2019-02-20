@@ -22,7 +22,8 @@ const getSupportedCurrencies = async network => {
           ) {
             const details = {
               symbol: currencyList[i].name.toUpperCase(),
-              name: currencyList[i].fullName
+              name: currencyList[i].fullName,
+              fixRateEnabled: currencyList[i].fixRateEnabled
             };
             currencyDetails[details.symbol] = details;
             tokenDetails[details.symbol] = details;

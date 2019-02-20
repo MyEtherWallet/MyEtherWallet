@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -8,9 +8,9 @@
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "build": "npm run update && vue-cli-service build",
-    "test": "jest --clearCache && npm run test:unit",
+    "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
-    "codecov": "npm run test:unit && codecov",
+    "codecov": "npm run test && codecov",
     "dev": "vue-cli-service serve",
     "lint:code": "vue-cli-service lint",
     "lint:md": "remark . -o -f",
@@ -27,7 +27,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "4.6.0",
+    "@sentry/browser": "4.6.1",
     "detect-browser": "4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
@@ -66,7 +66,7 @@
     "babel-jest": "23.6.0",
     "bignumber.js": "8.0.2",
     "bip39": "2.5.0",
-    "bootstrap-vue": "2.0.0-rc.11",
+    "bootstrap-vue": "2.0.0-rc.13",
     "canvas": "1.6.13",
     "codecov": "3.2.0",
     "copy-webpack-plugin": "4.6.0",
@@ -79,11 +79,13 @@
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.1",
     "i18n-iso-countries": "3.7.8",
+    "iban": "0.0.12",
     "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "jest-skipped-reporter": "0.0.4",
     "jspdf": "1.5.3",
     "keccak": "2.0.0",
+    "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
     "package-json": "6.0.0",
@@ -106,6 +108,7 @@
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
     "vue-i18n": "8.8.1",
+    "vue-tel-input": "2.0.13",
     "vue-template-compiler": "2.6.6",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
@@ -117,7 +120,6 @@
     "web3-utils": "1.0.0-beta.37",
     "webpack": "4.28.4",
     "worker-loader": "2.0.0",
-    "worker-timers": "5.0.9",
     "zxcvbn": "4.4.2"
   },
   "engines": {
