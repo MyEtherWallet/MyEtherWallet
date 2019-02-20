@@ -14,6 +14,7 @@ import interfaceTranslations from './interface/ko_KR';
 import team from './team/ko_KR';
 import popover from './popover/ko_KR';
 import withoutWallet from './without-wallet/ko_KR';
+import errorsGlobal from './errors-global/ko_KR';
 
 const ko_KR = {
   common: common,
@@ -30,6 +31,7 @@ const ko_KR = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  withoutWallet: withoutWallet
+  withoutWallet: withoutWallet,
+  errorsGlobal: errorsGlobal
 };
 export default ko_KR;
