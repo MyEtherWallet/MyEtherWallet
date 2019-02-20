@@ -89,7 +89,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
-import CAValidator from 'cryptocurrency-address-validator';
+import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 
@@ -168,7 +168,7 @@ export default {
             );
           } catch (e) {
             try {
-              this.validAddress = CAValidator.validate(
+              this.validAddress = MAValidator.validate(
                 checkAddress,
                 this.currency
               );

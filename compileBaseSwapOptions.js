@@ -163,8 +163,8 @@ class CompileSwapOptions {
         accumulator.other[currentValue.name.toUpperCase()] = {
           symbol: currentValue.name.toUpperCase(),
           name: currentValue.fullName,
-          addressLookup: currentValue.addressUrl,
-          explorer: currentValue.transactionUrl,
+          addressLookup: currentValue.addressUrl ? currentValue.addressUrl.replace('%1$s', '[[address]]') : currentValue.addressUrl,
+          explorer: currentValue.transactionUrl ? currentValue.transactionUrl.replace('%1$s', '[[txHash]]') : currentValue.transactionUrl,
           fixRateEnabled: currentValue.fixRateEnabled
       };
       }
@@ -237,6 +237,14 @@ class CompileSwapOptions {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
       }
     }
+
+    if (Object.keys(withChangelly.other).length > 0) {
+      fs.writeFileSync(
+        `${swapConfigFolder}/OtherCoins.js`,
+        `export default ${JSON.stringify(withChangelly.other)} `
+      );
+    }
+
     if (Object.keys(withChangelly.ETH).length > 0) {
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.js`,

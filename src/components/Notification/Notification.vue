@@ -120,6 +120,8 @@ import {
   notificationType
 } from '@/helpers/notificationFormatters';
 
+import { Swap } from '@/partners';
+
 export default {
   components: {
     'swap-notification': SwapNotification,
@@ -333,14 +335,20 @@ export default {
       }
       return notice.body.errorMessage;
     },
-    hashLink(hash) {
+    hashLink(hash, currency) {
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
+      if (currency) {
+        return Swap.getBlockChainExplorerUrl(currency, hash);
+      }
     },
-    addressLink(addr) {
+    addressLink(addr, currency) {
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+      }
+      if (currency) {
+        return Swap.getAddressLookupUrl(currency, addr);
       }
     },
     dateString(notice) {
