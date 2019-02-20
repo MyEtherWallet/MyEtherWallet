@@ -74,11 +74,7 @@
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span>
-                  {{
-                    web3.utils.hexToNumberString(
-                      web3.utils.fromWei(item.gasPrice, 'gwei')
-                    )
-                  }}
+                  {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
                   Gwei
                 </span>
               </div>
