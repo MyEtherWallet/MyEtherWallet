@@ -1,8 +1,8 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
-const tokenFolder = './src/tokens';
-const contractFolder = './src/contracts';
-const darklistFolder = './src/darklist';
+const tokenFolder = 'src/tokens';
+const contractFolder = 'src/contracts';
+const darklistFolder = 'src/darklist';
 
 async function fetchTokens() {
   try {
