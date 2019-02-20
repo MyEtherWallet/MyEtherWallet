@@ -30,6 +30,7 @@ class EtherscanProvider {
           for (let i = 0; i < this.requestThrottler.remaining; i++) {
             if (this.requestThrottler.requests.length) {
               const req = this.requestThrottler.requests.shift();
+              this.requestThrottler.remaining--;
               this.send_(req.payload, req.callback);
             }
           }
