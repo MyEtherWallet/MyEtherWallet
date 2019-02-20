@@ -19,5 +19,6 @@
   "maxTxFee": "Max Transaction Fee",
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
   "contractCreation": "Contract Creation",
-  "mewConnectDisconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App."
+  "mewConnectDisconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
+  "providerDepositAddress": "{provider} Deposit Address"
 }

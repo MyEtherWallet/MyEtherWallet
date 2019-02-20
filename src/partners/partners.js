@@ -4,6 +4,7 @@ import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
   EthereumTokens,
+  OtherCoins,
   fiat
 } from './partnersConfig';
 
@@ -217,6 +218,25 @@ export default class SwapProviders {
 
   hasKnownTokenBalance() {
     return;
+  }
+
+  // Get address explorer base url for non-ethereum blockchain
+  static getAddressLookupUrl(coin, address) {
+    if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
+      if (address) {
+        return OtherCoins[coin].addressLookup.replace('[[address]]', address);
+      }
+      return OtherCoins[coin].addressLookup;
+    }
+  }
+  // Get transaction explorer base url for non-ethereum blockchain
+  static getBlockChainExplorerUrl(coin, hash) {
+    if (OtherCoins[coin] && OtherCoins[coin].explorer) {
+      if (hash) {
+        return OtherCoins[coin].explorer.replace('[[txHash]]', hash);
+      }
+      return OtherCoins[coin].explorer;
+    }
   }
 
   async startSwap({

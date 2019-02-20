@@ -56,7 +56,7 @@
             <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
           </div>
         </li>
-        <li>
+        <li v-if="isEthereum">
           <p>{{ $t('common.toAddress') }}:</p>
           <div class="detail-data">
             <p>
@@ -66,6 +66,16 @@
             </p>
           </div>
         </li>
+        <!--<li v-if="isToOtherChain">-->
+          <!--<p>{{ $t('header.providerDepositAddress', {provider: notice.body.provider}) }}:</p>-->
+          <!--<div class="detail-data">-->
+            <!--<p>-->
+              <!--<a :href="addressLink(details.providerAddress, details.toCurrency)" target="_blank">-->
+                <!--{{ details.providerAddress }}-->
+              <!--</a>-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</li>-->
         <li v-if="notice.body.gasUsed && isEthereum">
           <p>{{ $t('common.txFee') }}:</p>
           <div class="detail-data">
@@ -231,6 +241,9 @@ export default {
     },
     isEthereum() {
       return EthereumTokens[this.notice.body.fromCurrency] !== undefined;
+    },
+    isToOtherChain(){
+      return EthereumTokens[this.notice.body.toCurrency] === undefined;
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);
