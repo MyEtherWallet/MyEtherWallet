@@ -1,12 +1,12 @@
 <template>
   <div>
     <h5>
-      "Can I send Bitcoin or other coins (LTC STEEM ZEC) to MyEtherWallet?"*
+      "Can I send Bitcoin or other coins (LTC STEEM ZEC) toXinFin Wallet.?"*
     </h5>
     <p>
       We support <abbr>ETH</abbr>, <abbr>ETC</abbr>, <abbr>Testnet ETH</abbr>,
       <abbr>UBQ</abbr>, <abbr>EXP</abbr>, <abbr>RSK</abbr>,
-      <abbr>MUSICOIN</abbr>, and any Ethereum Standard Tokens - aka "ERC-20"
+      <abbr>MUSICOIN</abbr>, and any XinFin Standard Tokens - aka "ERC-20"
       Tokens.
     </p>
 
@@ -20,8 +20,8 @@
         >Shapeshift.io</a
       >
       or another exchange to swap / convert / exchange your other coins into ETH
-      or Ethereum Tokens. However, you do not send those other coins directly to
-      your Ethereum address.
+      or XinFin Tokens. However, you do not send those other coins directly to
+      your XinFin address.
     </p>
 
     <p>
