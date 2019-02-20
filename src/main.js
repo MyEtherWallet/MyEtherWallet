@@ -4,7 +4,7 @@
 import * as Sentry from '@sentry/browser';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
-// import InfiniteSlider from 'vue-infinite-slide-bar';
+
 import '@/assets/font-awesome.css';
 import '@/assets/google-fonts.css';
 import 'bootstrap/dist/css/bootstrap.css';

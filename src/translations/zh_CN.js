@@ -14,6 +14,7 @@ import interfaceTranslations from './interface/zh_CN';
 import team from './team/zh_CN';
 import popover from './popover/zh_CN';
 import withoutWallet from './without-wallet/zh_CN';
+import errorsGlobal from './errors-global/zh_CN';
 
 const zh_CN = {
   common: common,
@@ -30,6 +31,7 @@ const zh_CN = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  withoutWallet: withoutWallet
+  withoutWallet: withoutWallet,
+  errorsGlobal: errorsGlobal
 };
 export default zh_CN;

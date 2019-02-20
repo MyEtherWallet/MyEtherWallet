@@ -1,22 +1,24 @@
 import { Toast } from '@/helpers';
 const ERRORS = {
-  POPUP_CLOSED: 'Popup closed',
-  DEVICE_DISCONNECTED: 'Device disconnected',
-  DEVICE_DISCONNECTED_ACTION: 'device disconnected during action',
-  ACTION_CANCELLED: 'Action cancelled by user',
-  NO_PERMISSION: 'Permissions not granted',
-  TRANSPORT_MISSING: 'Device call in progress'
+  'Popup closed': 'Popup closed',
+  'Device disconnected': 'Device disconnected',
+  'device disconnected during action': 'device disconnected during action',
+  'Action cancelled by user': 'Action cancelled by user',
+  'Permissions not granted': 'Permissions not granted',
+  'Device call in progress': 'Device call in progress'
 };
 
 const WARNING = {};
 
 export default err => {
-  const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNING);
+  const errorValues = Object.keys(ERRORS);
+  const warningValues = Object.keys(WARNING);
   if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
+    const idx = errorValues.indexOf(err.message);
+    Toast.responseHandler(ERRORS[errorValues[idx]], Toast.ERROR);
   } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+    const idx = warningValues.indexOf(err.message);
+    Toast.responseHandler(WARNING[errorValues[idx]], Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }

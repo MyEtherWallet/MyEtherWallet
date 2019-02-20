@@ -14,6 +14,7 @@ import interfaceTranslations from './interface/en_US';
 import team from './team/en_US';
 import popover from './popover/en_US';
 import withoutWallet from './without-wallet/en_US';
+import errorsGlobal from './errors-global/en_US';
 
 const en_US = {
   common: common,
@@ -30,6 +31,7 @@ const en_US = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  withoutWallet: withoutWallet
+  withoutWallet: withoutWallet,
+  errorsGlobal: errorsGlobal
 };
 export default en_US;
