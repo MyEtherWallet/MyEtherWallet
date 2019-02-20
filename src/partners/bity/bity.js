@@ -384,7 +384,7 @@ export default class BitySwap {
   }
 
   setStoredCredentials(phoneSha, phoneToken, verified = false) {
-    console.log(phoneSha, phoneToken, verified ); // todo remove dev item
+    console.log(phoneSha, phoneToken, verified); // todo remove dev item
     let userDetails = store.get(LOCAL_STORAGE_KEY);
     if (userDetails === null || userDetails === undefined) {
       userDetails = {};

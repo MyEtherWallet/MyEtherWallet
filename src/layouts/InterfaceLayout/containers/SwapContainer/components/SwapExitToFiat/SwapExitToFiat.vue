@@ -221,7 +221,7 @@ import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
 import VueTelInput from 'vue-tel-input';
-import IBAN from 'iban'
+import IBAN from 'iban';
 
 import { providerMap } from '@/partners';
 
