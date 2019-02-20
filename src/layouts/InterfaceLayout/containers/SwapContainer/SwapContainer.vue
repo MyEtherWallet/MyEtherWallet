@@ -767,12 +767,6 @@ export default {
             fromValue
           );
           this.updateEstimate(to);
-          // doesn't update the ui
-          // // todo: Bity 3
-          // console.log(this.providerData.length); // todo remove dev item
-          // if (this.providerData.length === 1) {
-          //   this.setSelectedProvider(this.providerData[0].provider);
-          // }
         }
       }
     },

@@ -177,13 +177,13 @@ export default {
     this.checkForUnResolvedTxNotifications();
   },
   methods: {
-    hiddenModal(evt) {
-      if (!this.cancelHide) {
+    hiddenModal(/*evt*/) {
+      // if (!this.cancelHide) {
         this.shown = false;
         this.hideDetails();
-      } else {
-        evt.cancel();
-      }
+      // } else {
+      //   evt.cancel();
+      // }
     },
     toggleCanhide() {
       setTimeout(() => {
@@ -252,7 +252,7 @@ export default {
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
-      this.toggleCanhide();
+      // this.toggleCanhide();
       console.log('showDetails'); // todo remove dev item
     },
     hideDetails() {
