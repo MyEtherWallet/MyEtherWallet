@@ -96,7 +96,6 @@ export default class Changelly {
   }
 
   async getFixedRate(fromCurrency, toCurrency, fromValue) {
-    console.log('fixed'); // todo remove dev item
     const changellyDetails = await changellyCalls.getFixRate(
       fromCurrency,
       toCurrency,
@@ -296,7 +295,6 @@ export default class Changelly {
     let validFor;
     if (order.payTill) {
       validFor = utils.getTimeRemaining(order.payTill);
-      console.log('validFor', validFor); // todo remove dev item
     }
     return {
       orderId: order.id,

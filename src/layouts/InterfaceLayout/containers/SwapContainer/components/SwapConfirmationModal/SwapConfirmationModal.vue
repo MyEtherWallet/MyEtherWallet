@@ -159,12 +159,10 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      console.log(swapDetails.timestamp, swapDetails.validFor); // todo remove dev item
       this.timeRemaining = utils.getTimeRemainingString(
         swapDetails.timestamp,
         swapDetails.validFor
       );
-      console.log(this.timeRemaining); // todo remove dev item
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
           swapDetails.timestamp,

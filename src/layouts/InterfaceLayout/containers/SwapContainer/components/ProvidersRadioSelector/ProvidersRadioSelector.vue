@@ -8,6 +8,7 @@
           :key="provider.provider + idx"
           :class="provider.provider"
           class="providers"
+          @click="setSelectedProvider(provider.provider)"
         >
           <div class="mew-custom-form__radio-button">
             <input

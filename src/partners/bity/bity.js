@@ -156,10 +156,10 @@ export default class BitySwap {
       rate: rate,
       minValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, false)
-        : this.minValue,
+        : this.getBtcEquivalentMaxMin(fromCurrency, false),
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
-        : this.getBtcEquivalentMax(fromCurrency)
+        : this.getBtcEquivalentMaxMin(fromCurrency, true)
     };
   }
 
@@ -184,14 +184,18 @@ export default class BitySwap {
     );
   }
 
-  getBtcEquivalentMax(currency) {
+  getBtcEquivalentMaxMin(currency, max) {
     if (currency === BASE_EQUIVALENT_CURRENCY) {
-      return this.maxValue;
+      return max ? this.maxValue : this.minValue;
     }
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
-    return new BigNumber(this.maxValue)
-      .div(new BigNumber(btcRate))
-      .toFixed(6, BigNumber.ROUND_UP);
+    return max
+      ? new BigNumber(this.maxValue)
+        .div(new BigNumber(btcRate))
+        .toFixed(6, BigNumber.ROUND_UP)
+      : new BigNumber(this.minValue)
+        .div(new BigNumber(btcRate))
+        .toFixed(6, BigNumber.ROUND_UP);
   }
 
   getChfEquivalentMaxMin(cryptoCurrency, max) {
@@ -384,7 +388,6 @@ export default class BitySwap {
   }
 
   setStoredCredentials(phoneSha, phoneToken, verified = false) {
-    console.log(phoneSha, phoneToken, verified); // todo remove dev item
     let userDetails = store.get(LOCAL_STORAGE_KEY);
     if (userDetails === null || userDetails === undefined) {
       userDetails = {};
@@ -399,18 +402,14 @@ export default class BitySwap {
   }
 
   async registerUser(initData) {
-    console.log('registerUser', initData); // todo remove dev item
     this.phoneSha = web3Utils.sha3(initData.phoneNumber);
     if (this.userDetails[this.phoneSha] === undefined) {
-      console.log('1'); // todo remove dev item
       await this.getPhoneToken(initData);
       return false;
     } else if (!this.userDetails[this.phoneSha].verified) {
-      console.log('2'); // todo remove dev item
       await this.getPhoneToken(initData);
       return false;
     }
-    console.log('3'); // todo remove dev item
     return true;
   }
 
@@ -431,7 +430,6 @@ export default class BitySwap {
     };
     // returns {success: true} if successful
     const result = await sendReceivedSmsCode(verificationData);
-    console.log('result', result); // todo remove dev item
     this.setStoredCredentials(this.phoneSha, this.phoneToken, result.success);
     return result;
   }
