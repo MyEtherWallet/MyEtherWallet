@@ -16,12 +16,13 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "start": "npm run update && npm run dev",
+    "start": "npm run update && npm run update:mainlists && npm run dev",
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
-    "update:lists": "node fetchEthListData.js",
+    "update:lists": "node fetchLists/index.js",
     "update:swap": "node compileBaseSwapOptions.js",
-    "update": "npm run update:packages && npm run update:lists"
+    "update": "npm run update:packages && npm run update:lists",
+    "update:mainlists": "node fetchLists/fetchMainLists.js"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
