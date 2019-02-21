@@ -1,7 +1,7 @@
 <img src="./src/assets/images/logo.png" width="300px"/>
 
 
-# XDC Wallet
+
 XDC Wallet is a open-source, free, client-side tool for easily & securely interacting with the XDC blockchain. The wallet is dedicated to provide all the stakeholders with an easy-to-understand and accessible suite of tools for their needs. The wallet is primarily Designed for token transfer and track account details of any account on XinFin network.
 <!-- [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
