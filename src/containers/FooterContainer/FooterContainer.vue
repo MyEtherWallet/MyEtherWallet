@@ -9,8 +9,7 @@
             v-for="(item, index) in footerContent"
             :ref="item.class"
             :class="item.class"
-            :key="item.title + index"
-          >
+            :key="item.title + index">
           </div>
         </div>
         <div class="flex-space-between foot-note">
