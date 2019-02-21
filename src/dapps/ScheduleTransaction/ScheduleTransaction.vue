@@ -258,7 +258,7 @@
             variant="success"
             dismissible
             fade
-            class="m-5 schedule-success-alert"
+            class="tx-scheduled-notification m-5 schedule-success-alert"
             @dismissed="tx.notificationDismissed = true"
           >
             <p>

@@ -78,7 +78,8 @@ const estimateBountyForGasPrice = (gasPrice, futureGasLimit) => {
     let endFound = false;
 
     let i = estimatedEth.length;
-    while (i-- && !endFound) {
+    while (i && !endFound) {
+      i -= 1;
       const char = estimatedEth.charAt(estimatedEth.length - i - 1);
       if (char !== '0' && char !== '.') {
         endFound = true;
