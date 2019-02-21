@@ -3,7 +3,9 @@ module.exports = {
   globals: {
     WITH_NETWORK: false,
     VERSION: 'test',
-    NODE_ENV: 'test'
+    NODE_ENV: 'test',
+    ROUTER_MODE: 'hash',
+    BUILD_TYPE: 'web'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: ['.*index.js$', 'src/components/FaqContents/.*', 'src/wallets/hardware/.*', 'src/networks/.*'],
@@ -23,7 +25,7 @@ module.exports = {
     '^@/tests/(.*)$': '<rootDir>/tests/$1',
     '\\.worker.js': '<rootDir>/tests/unit/__mocks__/workerMock.js'
   },
-  transformIgnorePatterns: ['node_modules/(?!vue-router)'],
+  transformIgnorePatterns: ['node_modules/(?!(vue-router|bootstrap|register-service-worker))'],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [

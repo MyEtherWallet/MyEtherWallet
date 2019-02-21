@@ -32,11 +32,13 @@ import EnsResolver from '@/directives/EnsResolver';
 import Capitalize from '@/filters/Capitalize';
 import ConcatAddr from '@/filters/ConcatAddr';
 // etc
-import i18n from './translation.config.js';
+// import i18n from './translation.config.js';
+import languages from '@/translations';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
 import { Promise } from 'q';
+import VueI18n from 'vue-i18n';
 
 Vue.use(VueMq, {
   breakpoints: {
@@ -76,8 +78,13 @@ Vue.use(VeeValidate);
 Vue.use(BootstrapVue);
 
 // // Define vue-i18n
-// Vue.use(VueI18n);
-
+Vue.use(VueI18n);
+const i18n = new VueI18n({
+  locale: 'en_US',
+  fallbackLocale: 'en_US',
+  messages: languages,
+  silentTranslationWarn: true
+});
 // Register global toasts
 Vue.use(Toasted);
 Object.keys(toastConfig).forEach(item => {
@@ -88,7 +95,6 @@ Object.keys(toastConfig).forEach(item => {
   );
 });
 
-Vue.prototype.translate = i18n.t;
 /* eslint-disable no-new */
 const vue = new Vue({
   i18n,
@@ -96,6 +102,7 @@ const vue = new Vue({
   store,
   render: h => h(getApp())
 }).$mount('#app');
+
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [new Sentry.Integrations.Vue({ vue })],
@@ -116,3 +123,5 @@ Sentry.init({
     });
   }
 });
+
+export default vue;
