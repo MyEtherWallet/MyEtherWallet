@@ -30,5 +30,5 @@ module.exports = {
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
   testEnvironmentOptions: {},
-  testURL: 'http://localhost/'
+  testURL: 'http://0.0.0.0/'
 };
