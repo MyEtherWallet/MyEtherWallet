@@ -11,7 +11,7 @@
             :class="item.class"
             :key="item.title + index"
           >
-            <div class="content-title" @click="toggler(item.class)">
+            <!-- <div class="content-title" @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
               <p class="open" @click="openContent(item.class)">
                 <i class="fa fa-plus" aria-hidden="true" />
@@ -40,10 +40,10 @@
                   </a>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="donate-us">
-            <div class="content-title">
+            </div> -->
+          <!-- </div>
+          <div class="donate-us"> -->
+            <!-- <div class="content-title">
               <h3 class="lite">
                 {{ $t('footer.love') }}
                 <img src="~@/assets/images/icons/heart.svg" />
@@ -77,7 +77,7 @@
                   Donation
                 </p>
               </a>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="flex-space-between foot-note">
