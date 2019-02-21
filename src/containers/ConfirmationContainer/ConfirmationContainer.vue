@@ -49,7 +49,7 @@
       ref="successModal"
       :message="successMessage"
       :link-message="linkMessage"
-      :rawtx="rawTx"
+      :link-to="linkTo"
     />
     <error-modal
       ref="errorModal"
@@ -130,6 +130,7 @@ export default {
       signedMessage: '',
       successMessage: 'Success',
       linkMessage: 'OK',
+      linkTo: '/',
       dismissed: true,
       signedArray: [],
       txBatch: null,
@@ -143,7 +144,8 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      network: 'network'
     }),
     fromAddress() {
       if (this.account) {
@@ -157,9 +159,9 @@ export default {
     });
   },
   created() {
-    this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
+    this.$eventHub.$on('showSuccessModal', (message, linkMessage, linkTo) => {
       if (!message) message = null;
-      this.showSuccessModal(message, linkMessage);
+      this.showSuccessModal(message, linkMessage, linkTo);
     });
 
     this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
@@ -328,10 +330,11 @@ export default {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message, linkMessage) {
+    showSuccessModal(message, linkMessage, linkTo) {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
+      if (linkTo !== null) this.linkTo = linkTo;
       this.$refs.successModal.$refs.success.show();
     },
     showErrorModal(message, linkMessage) {
@@ -458,8 +461,16 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
+
       if (this.raw.generateOnly) return;
-      this.showSuccessModal('Transaction sent!', 'Okay');
+      this.showSuccessModal(
+        'Transaction sent!',
+        'Okay',
+        this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          this.signedTxObject.tx.hash
+        )
+      );
     },
     reset() {
       this.responseFunction = null;
