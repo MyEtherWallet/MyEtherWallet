@@ -1,8 +1,8 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
-const tokenFolder = 'src/tokens';
-const contractFolder = 'src/contracts';
-const darklistFolder = 'src/darklist';
+const tokenFolder = './src/tokens';
+const contractFolder = './src/contracts';
+const darklistFolder = './src/darklist';
 
 async function fetchTokens() {
   try {
@@ -26,6 +26,7 @@ async function fetchTokens() {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (tokensCollection !== undefined) {
+          console.log(`${tokenFolder}/tokens-${tokenFile.name}.json`)
           fs.writeFileSync(
             `${tokenFolder}/tokens-${tokenFile.name}.json`,
             JSON.stringify(tokensCollection)
@@ -53,6 +54,7 @@ async function fetchDarkList() {
       'data': darkList,
       'timestamp': Date.now()
     }
+    console.log(`${darklistFolder}/address-darklist.json`)
     fs.writeFileSync(`${darklistFolder}/address-darklist.json`, JSON.stringify(jsonToStore));
   } catch (e) {
     console.log(e); // Not captured by sentry
@@ -83,6 +85,7 @@ async function fetchContracts() {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
+          console.log(`${contractFolder}/contract-abi-${contractFile.name}.json`)
           fs.writeFileSync(
             `${contractFolder}/contract-abi-${contractFile.name}.json`,
             JSON.stringify(contractsCollection)
