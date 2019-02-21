@@ -1,2 +1,5 @@
 {
+  "notAValidAmountTotal": "Not enough ",
+  "toSend": "to send.",
+  "invalidValue": "Invalid value"
 }
