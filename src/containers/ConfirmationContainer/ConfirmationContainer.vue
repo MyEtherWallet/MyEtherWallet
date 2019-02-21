@@ -70,7 +70,7 @@ import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
+import { WEB3_WALLET, KEEPKEY, MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 
@@ -142,7 +142,8 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      network: 'network'
     }),
     fromAddress() {
       if (this.account) {
@@ -174,9 +175,34 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      const signPromise = this.wallet.signTransaction(tx);
+
+      let signPromise;
+      if (this.account.identifier === MEW_CONNECT) {
+        let tokenInfo;
+        if (tx.data.slice(0, 10) === '0xa9059cbb') {
+          const customStore = store.get('customTokens');
+          tokenInfo = this.network.types.tokens.find(
+            entry => entry.address === tx.to
+          );
+          // tokenInfo = tokenInfo || defaultTokens.find(entry => entry.address === rawTx.to);
+          if (tokenInfo) {
+            tx.currency = {
+              symbol: tokenInfo.symbol,
+              decimal: tokenInfo.decimals,
+              address: tokenInfo.address
+            };
+          }
+        }
+        // this.network.types.tokens.find()
+        console.log('tx', tx); // todo remove dev item
+        signPromise = this.wallet.signTransaction(tx);
+      } else {
+        signPromise = this.wallet.signTransaction(tx);
+      }
+
       signPromise
         .then(_response => {
+          console.log('_response', _response); // todo remove dev item
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         })
