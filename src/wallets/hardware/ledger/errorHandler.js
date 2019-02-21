@@ -12,7 +12,8 @@ const ERRORS = {
   'Ledger Device is busy (lock signTransaction)': 'ledgerError.deviceBusyTx',
   'Ledger device: UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown0x6801',
   'Ledger device: Invalid data received (0x6a80)':
-    'ledgerError.invalidData0x6a80'
+    'ledgerError.invalidData0x6a80',
+  'Ledger device: CLA_NOT_SUPPORTED (0x6e00)': 'ledgerError.claNotSupport0x6e00'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

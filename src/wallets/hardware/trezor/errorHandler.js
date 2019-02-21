@@ -8,7 +8,8 @@ const ERRORS = {
   'Action cancelled by user': 'trezorError.userCancelledAction',
   'Permissions not granted': 'trezorError.noPermission',
   'Device call in progress': 'trezorError.callInProgress',
-  'Transport is missing': 'trezorError.transportMissing'
+  'Transport is missing': 'trezorError.transportMissing',
+  Cancelled: 'trezorError.cancelled'
 };
 
 const WARNING = {};

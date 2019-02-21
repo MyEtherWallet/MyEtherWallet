@@ -1,6 +1,9 @@
+### Release v5.0.4
+
 ### Devop
 
-- Redo wallet errors, include translations [](<>)
+- Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
+- Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
 
 ### Release v5.0.3
 
