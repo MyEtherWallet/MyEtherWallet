@@ -1,12 +1,11 @@
 import { Toast } from '@/helpers';
-import vue from '@/main';
+import Vue from 'vue';
 const ERRORS = {
   'No device selected.': 'keepkeyError.noDeviceSelected',
   'Invalid PIN': 'keepkeyError.invalidPin',
   'Unable to claim interface.': 'keepKey.cantClaim'
 };
 const WARNING = {};
-
 export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
@@ -19,9 +18,9 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }
