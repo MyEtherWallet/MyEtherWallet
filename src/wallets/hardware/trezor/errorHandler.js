@@ -6,7 +6,8 @@ const ERRORS = {
   ACTION_CANCELLED: 'Action cancelled by user',
   NO_PERMISSION: 'Permissions not granted',
   DEVICE_CALL_IN_PROGRESS: 'Device call in progress',
-  TRANSPORT_MISSING: 'Transport is missing'
+  TRANSPORT_MISSING: 'Transport is missing',
+  PUBKEY_EXPORT_CANCELLED: 'Cancelled'
 };
 
 const WARNING = {};
