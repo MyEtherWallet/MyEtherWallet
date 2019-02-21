@@ -14,10 +14,10 @@
       </div>
 
       <div class="buttons">
-        <a href="https://etherscan.io/" target="_blank"
+        <a :href="linkTo" target="_blank"
           ><standard-button :options="buttonCheckEtherscan"
         /></a>
-        <standard-button :options="buttonOk" @click="hideModal" />
+        <standard-button :options="buttonOk" @click.native="hideModal" />
       </div>
     </div>
     <!-- .modal-content-block -->
@@ -62,9 +62,7 @@ export default {
   mounted() {},
   methods: {
     hideModal() {
-      if (this.linkTo !== '/') {
-        this.$router.push({ path: this.linkTo });
-      }
+      console.log(this.$refs);
       this.$refs.success.hide();
     }
   }
