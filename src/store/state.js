@@ -21,6 +21,7 @@ const customPaths =
 const state = {
   account: {
     balance: 0,
+    tokens: [],
     address: null,
     isHardware: false,
     identifier: ''
