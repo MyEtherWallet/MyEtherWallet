@@ -62,7 +62,6 @@ export default {
   mounted() {},
   methods: {
     hideModal() {
-      console.log(this.$refs);
       this.$refs.success.hide();
     }
   }
