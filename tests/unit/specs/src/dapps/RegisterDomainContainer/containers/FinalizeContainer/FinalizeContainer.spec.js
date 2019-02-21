@@ -1,15 +1,14 @@
+/* eslint-disable no-undef */
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
 import FinalizeContainer from '@/dapps/RegisterDomain/containers/FinalizeContainer/FinalizeContainer.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('FinalizeContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const spy = sinon.stub()
+  const spy = sinon.stub();
   const mockRoute = {
     push: spy
   };
@@ -19,7 +18,7 @@ describe('FinalizeContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -32,23 +31,28 @@ describe('FinalizeContainer.vue', () => {
         'interface-bottom-text': InterfaceBottomText
       },
       mocks: {
-        $router: mockRoute,
+        $router: mockRoute
       }
     });
   });
 
   it('should render correct domainName props', () => {
-    let domainName = 'domainName';
+    const domainName = 'domainName';
     wrapper.setProps({ domainName });
-    expect(wrapper.vm.$el.querySelector('.finalize-container h3').textContent.trim().indexOf(domainName)).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.finalize-container h3')
+        .textContent.trim()
+        .indexOf(domainName)
+    ).toBeGreaterThan(-1);
   });
 
   describe('FinalizeContainer.vue Methods', () => {
     it('should render correct finalize props', () => {
-      let finalize = sinon.stub();
+      const finalize = sinon.stub();
       wrapper.setProps({ finalize });
       wrapper.find('.finalize-button').trigger('click');
       expect(finalize.called).toBe(true);
-    })
+    });
   });
 });

@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import ConfirmationContainer from '@/containers/ConfirmationContainer/ConfirmationContainer.vue';
 import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
@@ -9,13 +7,9 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import ConfirmCollectionModal from '@/containers/ConfirmationContainer/components/ConfirmCollectionModal/ConfirmCollectionModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import sinon from 'sinon';
-import nodeList from '@/networks';
-import url from 'url';
 import Web3 from 'web3';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -28,73 +22,31 @@ const BModalStub = {
     show: showModal,
     hide: hideModal
   }
-}
-
-
-const mockRoute = {
-  $on: jest.fn()
 };
 
-xdescribe('ConfirmationContainer.vue', () => {
-  let localVue, i18n, wrapper, store, newWeb3;
+xdescribe('[Failing] ConfirmationContainer.vue', () => {
+  let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-      hostUrl.pathname
-      }`
-    );
-
-
-    const wallet = {
-      getChecksumAddressString: function () {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-
-    let getters = {
-      Networks: () => {
-        return nodeList
-      },
-      network: () => {
-        return network
-      },
-      web3: () => {
-        return newWeb3
-      },
-      wallet: () => {return wallet },
-      gasPrice: () => {
-        return 100
-      }
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
     initWrapper();
   });
 
-  function initWrapper () {
+  function initWrapper() {
     wrapper = shallowMount(ConfirmationContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
       stubs: {
-        'qrcode': VueQrcode,
-        'b-modal':  BModalStub, 
+        qrcode: VueQrcode,
+        'b-modal': BModalStub,
         'address-block': AddressBlock,
         'confirm-modal': ConfirmModal,
         'confirm-collection-modal': ConfirmCollectionModal,
@@ -105,56 +57,95 @@ xdescribe('ConfirmationContainer.vue', () => {
   }
 
   it('should render correct transactionFee data', () => {
-      const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
-      checkboxElement.trigger('click');
-      wrapper.setData({transactionFee: 100});
-      expect(wrapper.vm.$el.querySelectorAll('.expended-info .grid-block')[3].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.vm.$data.transactionFee + ' ETH');
+    const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
+    checkboxElement.trigger('click');
+    wrapper.setData({ transactionFee: 100 });
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.expended-info .grid-block')[3]
+        .querySelectorAll('p')[1]
+        .textContent.trim()
+    ).toEqual(wrapper.vm.$data.transactionFee + ' ETH');
   });
 
   it('should render correct fromAddress data', () => {
-    expect(wrapper.vm.$el.querySelector('.address-container .address').textContent.trim()).toEqual(wrapper.vm.fromAddress);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.address-container .address')
+        .textContent.trim()
+    ).toEqual(wrapper.vm.fromAddress);
   });
 
   it('should render correct linkMessage data', () => {
-    expect(wrapper.vm.$el.querySelector('.button-container').textContent.trim()).toEqual(wrapper.vm.$data.linkMessage);
+    expect(
+      wrapper.vm.$el.querySelector('.button-container').textContent.trim()
+    ).toEqual(wrapper.vm.$data.linkMessage);
   });
 
-  it('should render correct successMessage data' , () => {
-      expect(wrapper.vm.$el.querySelector('.d-block p').textContent.trim()).toEqual(wrapper.vm.$data.successMessage);
+  it('should render correct successMessage data', () => {
+    expect(
+      wrapper.vm.$el.querySelector('.d-block p').textContent.trim()
+    ).toEqual(wrapper.vm.$data.successMessage);
   });
 
   it('should render correct gasLimit data', () => {
-    const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
+    const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[1].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.vm.$data.gasLimit + ' wei');
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.grid-block')[1]
+        .querySelectorAll('p')[1]
+        .textContent.trim()
+    ).toEqual(wrapper.vm.$data.gasLimit + ' wei');
   });
 
   it('should render correct gasPrice data', () => {
-    const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
+    const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[2].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.vm.gasPrice + ' gwei');
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.grid-block')[2]
+        .querySelectorAll('p')[1]
+        .textContent.trim()
+    ).toEqual(wrapper.vm.gasPrice + ' gwei');
   });
 
   it('should render correct nonce data', () => {
-    const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
+    const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[4].querySelectorAll('p')[1].textContent.trim()).toEqual(String(wrapper.vm.$data.nonce));
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.grid-block')[4]
+        .querySelectorAll('p')[1]
+        .textContent.trim()
+    ).toEqual(String(wrapper.vm.$data.nonce));
   });
 
   it('should render correct data data', () => {
-    const checkboxElement = wrapper.find('.sliding-switch-white .switch input')
+    const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    expect(wrapper.vm.$el.querySelectorAll('.grid-block')[5].querySelectorAll('p')[1].textContent.trim()).toEqual(wrapper.vm.$data.data);
-  })
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.grid-block')[5]
+        .querySelectorAll('p')[1]
+        .textContent.trim()
+    ).toEqual(wrapper.vm.$data.data);
+  });
 
   it('should render correct amount data', () => {
-    var eth = Web3.utils.fromWei(String(wrapper.vm.$data.amount), 'ether');
-    expect(wrapper.vm.$el.querySelector('.currency-amt').textContent.trim()).toEqual('- ' + eth);
+    const eth = Web3.utils.fromWei(String(wrapper.vm.$data.amount), 'ether');
+    expect(
+      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim()
+    ).toEqual('- ' + eth);
   });
 
   it('should render correct toAddress data', () => {
-      wrapper.setData({toAddress:'0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'})
-      expect(wrapper.vm.$el.querySelectorAll('.address')[1].textContent.trim()).toEqual(wrapper.vm.toAddress);
+    wrapper.setData({
+      toAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+    });
+    expect(
+      wrapper.vm.$el.querySelectorAll('.address')[1].textContent.trim()
+    ).toEqual(wrapper.vm.toAddress);
   });
 
   // describe('ConfirmationContainer.vue Methods', () => {
@@ -174,7 +165,6 @@ xdescribe('ConfirmationContainer.vue', () => {
   //     expect(hideModal.called).toBe(true);
   //   });
 
-    
   //   it('should render correct confirmationModalOpen method', () => {
   //     initWrapper();
   //     window.pageXOffset = 100;
@@ -226,7 +216,7 @@ xdescribe('ConfirmationContainer.vue', () => {
   //     initWrapper();
   //     wrapper.vm.showSuccessModal();
   //     expect(showModal.called).toBe(true);
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
@@ -251,7 +241,7 @@ xdescribe('ConfirmationContainer.vue', () => {
 
   //   it('should render correct reset method', () => {
   //     wrapper.vm.reset();
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);

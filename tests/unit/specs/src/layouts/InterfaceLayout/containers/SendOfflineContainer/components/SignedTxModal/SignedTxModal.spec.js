@@ -1,16 +1,14 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/components/SignedTxModal/SignedTxModal.vue';
-import sinon from 'sinon'
-import {
-  Tooling
-} from '@@/helpers';
+import sinon from 'sinon';
+import { Tooling } from '@@/helpers';
 
-xdescribe('SignedTxModal.vue', () => {
+//xdescribe
+describe('SignedTxModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
-  const rawTx = { data: 'rawTx' }
-  const spy = sinon.stub()
+  const rawTx = { data: 'rawTx' };
+  const spy = sinon.stub();
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -36,11 +34,14 @@ xdescribe('SignedTxModal.vue', () => {
     });
   });
 
-  it('should render correct content', () => {
-    expect(wrapper.vm.$el.querySelector('.signed-tx-container code').textContent.trim()).toEqual('');
+  xit('[Failing] should render correct content', () => {
+    expect(
+      wrapper.vm.$el
+        .querySelector('.signed-tx-container code')
+        .textContent.trim()
+    ).toEqual('');
     const closeButton = wrapper.find('.close-button');
     closeButton.trigger('click');
     expect(spy.calledOnce).toBe(true);
   });
-
 });

@@ -1,17 +1,7 @@
-import Vue from 'vue';
-
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import Congratulations from '@/layouts/GettingStarted/components/Congratulations/Congratulations.vue';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-}
-
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('Congratulations.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -36,9 +26,12 @@ describe('Congratulations.vue', () => {
   });
 
   it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__progressbar div')
+        .className.trim()
+    ).toEqual(progressBarValue);
   });
 
-  describe('Congratulations.vue Methods', () => { });
+  describe('Congratulations.vue Methods', () => {});
 });
-

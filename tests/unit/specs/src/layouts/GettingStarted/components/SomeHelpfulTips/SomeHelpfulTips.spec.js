@@ -1,10 +1,6 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import SomeHelpfulTips from '@/layouts/GettingStarted/components/SomeHelpfulTips/SomeHelpfulTips.vue';
-import {
-  Tooling
-} from '@@/helpers';
-
+import { Tooling } from '@@/helpers';
 
 describe('SomeHelpfulTips.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -27,11 +23,13 @@ describe('SomeHelpfulTips.vue', () => {
     });
   });
 
-
   it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__progressbar div')
+        .className.trim()
+    ).toEqual(progressBarValue);
   });
 
-  describe('SomeHelpfulTips.vue Methods', () => { });
+  describe('SomeHelpfulTips.vue Methods', () => {});
 });
-

@@ -5,20 +5,25 @@
       :title="$t('dapps.finalize')"
       hide-footer
       centered
-      class="bootstrap-modal-wide nopadding finalize-modal">
+      class="bootstrap-modal-wide nopadding finalize-modal"
+    >
       <div class="finalize-modal-container">
-        <h3>{{ $t('dapps.areYouFinalizing') }} <br> {{ domainName }}.eth {{ $t('dapps.areYouFinalizingCont') }}</h3>
+        <h3>
+          {{ $t('dapps.areYouFinalizing') }} <br />
+          {{ domainName }}.eth {{ $t('dapps.areYouFinalizingCont') }}
+        </h3>
         <div class="button-container">
-          <button
-            class="cancel"
-            @click="close">{{ $t('common.cancel') }}</button>
-          <button
-            class="confirm"
-            @click="finalize">{{ $t('dapps.confirm') }}</button>
+          <button class="cancel" @click="close">
+            {{ $t('common.cancel') }}
+          </button>
+          <button class="confirm" @click="finalize">
+            {{ $t('dapps.confirm') }}
+          </button>
         </div>
-        <p>{{ $t('dapps.nodeProvider') }} <a
-          :href="network.url"
-          target="_blank">{{ network.service }}</a></p>
+        <p>
+          {{ $t('dapps.nodeProvider') }}
+          <a :href="network.url" target="_blank">{{ network.service }}</a>
+        </p>
       </div>
     </b-modal>
   </div>

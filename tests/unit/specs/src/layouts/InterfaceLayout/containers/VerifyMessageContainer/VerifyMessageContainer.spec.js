@@ -1,18 +1,14 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import VerifyMessageContainer from '@/layouts/InterfaceLayout/containers/VerifyMessageContainer/VerifyMessageContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
-xdescribe('VerifyMessageContainer.vue', () => {
+//xdescribe
+describe('VerifyMessageContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const resetView = jest.fn()
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -28,9 +24,9 @@ xdescribe('VerifyMessageContainer.vue', () => {
         }
       },
       wallet: {
-        getAddressString: function () { }
+        getAddressString: function() {}
       }
-    })
+    });
     wrapper = shallowMount(VerifyMessageContainer, {
       localVue,
       i18n,
@@ -39,18 +35,20 @@ xdescribe('VerifyMessageContainer.vue', () => {
       stubs: {
         'interface-bottom-text': InterfaceBottomText,
         'interface-container-title': InterfaceContainerTitle,
-        'popover': PopOver
+        popover: PopOver
       }
     });
   });
 
-  it('should render correct message to textarea', () => {
+  xit('[Failing] should render correct message to textarea', () => {
     const message = 'message';
     wrapper.setData({ message });
-    expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(message);
+    expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(
+      message
+    );
   });
 
-  it('should render correct error message to textarea', () => {
+  xit('[Failing] should render correct error message to textarea', () => {
     const error = {
       show: true,
       msg: 'error! please try again!'
@@ -61,31 +59,44 @@ xdescribe('VerifyMessageContainer.vue', () => {
     };
     const showMessage = true;
     wrapper.setData({ message: JSON.stringify(message), error, showMessage });
-    expect(wrapper.vm.$el.querySelectorAll('p')[0].textContent.indexOf(message.address)).toBeGreaterThan(-1)
-    expect(wrapper.vm.$el.querySelectorAll('p')[0].textContent.indexOf(message.msg)).toBeGreaterThan(-1)
-    expect(wrapper.vm.$el.querySelectorAll('p')[1].textContent).toEqual(String(error.show))
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('p')[0]
+        .textContent.indexOf(message.address)
+    ).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el.querySelectorAll('p')[0].textContent.indexOf(message.msg)
+    ).toBeGreaterThan(-1);
+    expect(wrapper.vm.$el.querySelectorAll('p')[1].textContent).toEqual(
+      String(error.show)
+    );
   });
 
   describe('VerifyMessageContainer.vue Methods', () => {
-    it('should verify message when click button', () => {
+    xit('[Failing] should verify message when click button', () => {
       const message = {
         msg: 'message',
         address: '0xadfasdfasjflaksjdflkasdjlfk',
         sig: 'aaa'
       };
-      const showMessage = false;
       wrapper.setData({ message: JSON.stringify(message) });
       wrapper.find('.submit-button').trigger('click');
       expect(wrapper.vm.$data.error.show).toBe(true);
-      expect(wrapper.vm.$data.error.msg).toEqual('Something went terribly WRONG!!!!');
+      expect(wrapper.vm.$data.error.msg).toEqual(
+        'Something went terribly WRONG!!!!'
+      );
     });
 
-    it('should delete textarea when click button', () => {
+    xit('[Failing] should delete textarea when click button', () => {
       const message = 'message';
       wrapper.setData({ message });
-      expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual(message)
+      expect(
+        wrapper.vm.$el.querySelector('.domain-name textarea').value
+      ).toEqual(message);
       wrapper.find('.copy-buttons span').trigger('click');
-      expect(wrapper.vm.$el.querySelector('.domain-name textarea').value).toEqual('')
-    })
+      expect(
+        wrapper.vm.$el.querySelector('.domain-name textarea').value
+      ).toEqual('');
+    });
   });
 });
