@@ -1,6 +1,9 @@
 <img src="./src/assets/images/logo.png" width="300px"/>
 
-[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
+
+# XDC Wallet
+XDC Wallet is a open-source, free, client-side tool for easily & securely interacting with the XDC blockchain. The wallet is dedicated to provide all the stakeholders with an easy-to-understand and accessible suite of tools for their needs. The wallet is primarily Designed for token transfer and track account details of any account on XinFin network.
+<!-- [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
 [![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
 [![Travis](https://img.shields.io/travis/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://travis-ci.org/MyEtherWallet/MyEtherWallet)
@@ -9,7 +12,7 @@
 
 MyEtherWallet is a doorway to the XinFin blockchain, allowing users to manage their own funds without a centralized platform. -_Stephen, #MEWForce_
 
-!["MyEtherWallet Logo](./src/assets/images/mew-screen.png "MyEtherWallet")
+!["MyEtherWallet Logo](./src/assets/images/mew-screen.png "MyEtherWallet") -->
 
 ## Philosophy
 
@@ -25,27 +28,12 @@ MyEtherWallet is a doorway to the XinFin blockchain, allowing users to manage th
 ## Getting started
 
 1. Open terminal
-2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
+2. Clone the repo: `git clone https://github.com/XinFinOrg/Wallet`
 3. run `npm i` to install node packages.
-4. run `npm build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-5. start `npm start`
+4. run `npm build .` You can also use the offline version by opening the index file from the dist folder with your preferred browser
+5. start `npm run dev`
 6. App should be running in `https://localhost:8080`
-
-## MEW Around the Web
-
-- [Website: https://www.myetherwallet.com/](https://www.myetherwallet.com/)
-- [CX: https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
-- [Anti-phish CX](https://chrome.google.com/webstore/detail/etheraddresslookup/pdknmigbbbhmllnmgdfalmedcmcefdfn)
-- [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)
-- [Twitter: https://twitter.com/myetherwallet](https://twitter.com/myetherwallet)
-- [Medium: https://medium.com/@myetherwallet](https://medium.com/@myetherwallet)
-- [Github MEW Repo: https://github.com/MyEtherWallet/MyEtherWallet](https://github.com/MyEtherWallet/MyEtherWallet)
-- [Github MEW Org: https://github.com/MyEtherWallet](https://github.com/MyEtherWallet)
-- [Github Latest Releases: https://github.com/MyEtherWallet/MyEtherWallet/releases/latest](https://github.com/MyEtherWallet/MyEtherWallet/releases/latest)
-- [Github Anti-phish CX: https://github.com/409H/EtherAddressLookup](https://github.com/409H/EtherAddressLookup)
-- MEW ETH Donation Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D (mewtopia.eth)
-- MEW BTC Donation Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
 
 ## Bug / Feature Request
 
-If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
+If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/XinFinOrg/Wallet/issues)
