@@ -455,6 +455,7 @@ export default {
       this.sending = true;
     },
     sendBatchTransactions() {
+      this.$refs.confirmCollectionModal.$refs.confirmCollection.hide();
       this.doBatchTransactions();
     },
     sendTx() {

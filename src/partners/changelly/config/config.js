@@ -11,7 +11,9 @@ const changellyMethods = {
     min: 'getMinAmount',
     validate: 'validateAddress',
     createTransaction: 'createTransaction',
-    status: 'getStatus'
+    status: 'getStatus',
+    createFixTransaction: 'createFixTransaction',
+    getFixRate: 'getFixRate'
   }
 };
 
