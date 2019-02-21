@@ -103,6 +103,8 @@ const vue = new Vue({
   render: h => h(getApp())
 }).$mount('#app');
 
+// Vue.$t = vue.$i18n.t
+
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [new Sentry.Integrations.Vue({ vue })],
