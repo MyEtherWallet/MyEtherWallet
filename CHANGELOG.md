@@ -1,3 +1,7 @@
+### Devop
+
+- Redo wallet errors, include translations [](<>)
+
 ### Release v5.0.3
 
 ### Bug

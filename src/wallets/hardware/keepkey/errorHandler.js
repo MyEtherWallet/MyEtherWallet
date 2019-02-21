@@ -1,5 +1,5 @@
 import { Toast } from '@/helpers';
-import i18n from '@/translation.config.js';
+import vue from '@/main';
 const ERRORS = {
   'No device selected.': 'keepkeyError.noDeviceSelected',
   'Invalid PIN': 'keepkeyError.invalidPin',
@@ -19,9 +19,9 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(i18n.tc(ERRORS[foundError]), Toast.ERROR);
+    Toast.responseHandler(vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(i18n.tc(WARNING[foundWarning]), Toast.WARN);
+    Toast.responseHandler(vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }
