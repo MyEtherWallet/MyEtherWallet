@@ -1,12 +1,6 @@
-import Vue from 'vue';
-
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import WhereAreMyFundsStored from '@/layouts/GettingStarted/components/WhereAreMyFundsStored/WhereAreMyFundsStored.vue';
-import {
-  Tooling
-} from '@@/helpers';
-
-
+import { Tooling } from '@@/helpers';
 
 describe('WhereAreMyFundsStored.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -30,16 +24,27 @@ describe('WhereAreMyFundsStored.vue', () => {
   });
 
   it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__progressbar div')
+        .className.trim()
+    ).toEqual(progressBarValue);
   });
 
   it('validate address when dropdown is selected', () => {
     const dropdownOpen = wrapper.find('.switch input');
     dropdownOpen.trigger('click');
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__sliding-switch-expender').getElementsByClassName('content').length).toEqual(1);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__sliding-switch-expender')
+        .getElementsByClassName('content').length
+    ).toEqual(1);
     dropdownOpen.trigger('click');
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__sliding-switch-expender').getElementsByClassName('content').length).toEqual(0);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__sliding-switch-expender')
+        .getElementsByClassName('content').length
+    ).toEqual(0);
   });
-  describe('WhereAreMyFundsStored.vue Methods', () => { });
+  describe('WhereAreMyFundsStored.vue Methods', () => {});
 });
-

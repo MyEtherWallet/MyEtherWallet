@@ -1,10 +1,7 @@
-import Vue from 'vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import MewConnectModal from '@/layouts/AccessWalletLayout/components/MewConnectModal/MewConnectModal.vue';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('MewConnectModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -23,16 +20,16 @@ describe('MewConnectModal.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'qrcode': VueQrcode
+        qrcode: VueQrcode
       }
     });
   });
 
   it('should render correct contents', () => {
-    const QrCode = 'QrCode'
-    wrapper.setData({ QrCode: QrCode })
-    expect(wrapper.vm.$data.QrCode).toEqual(QrCode)
+    const QrCode = 'QrCode';
+    wrapper.setData({ QrCode: QrCode });
+    expect(wrapper.vm.$data.QrCode).toEqual(QrCode);
   });
 
-  describe('MewConnectModal.vue Methods', () => { });
+  describe('MewConnectModal.vue Methods', () => {});
 });

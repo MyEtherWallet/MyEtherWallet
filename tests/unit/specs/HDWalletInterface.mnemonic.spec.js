@@ -58,6 +58,7 @@ for (let i = 0; i < 3; i++)
       hdk.derive(ETH_PATH + '/' + i).publicKey,
       false,
       'mnemonic',
+      () => {},
       tx => {
         tx = new ethTx(tx);
         return new Promise(resolve => {

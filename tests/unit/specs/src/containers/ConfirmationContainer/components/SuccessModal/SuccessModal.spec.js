@@ -1,12 +1,9 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import sinon from 'sinon';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
-const hideModal = sinon.stub()
+const hideModal = sinon.stub();
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
@@ -14,20 +11,20 @@ const BModalStub = {
   methods: {
     hide: hideModal
   }
-}
+};
 
 const BBtnStub = {
   name: 'b-btn',
   template: '<div  class="b-btn"><slot></slot></div>'
-}
+};
 
 describe('SuccessModal.vue', () => {
   let localVue, i18n, wrapper, store;
-  const message = 'message'
-  const linkMessage = 'linkMessage'
+  const message = 'message';
+  const linkMessage = 'linkMessage';
   const linkTo = '/linkTo';
 
-  const spy = sinon.stub()
+  const spy = sinon.stub();
   const mockRoute = {
     push: spy
   };
@@ -51,17 +48,21 @@ describe('SuccessModal.vue', () => {
         'b-btn': BBtnStub
       },
       mocks: {
-        $router: mockRoute,
+        $router: mockRoute
       }
     });
   });
 
   it('should render correct message props', () => {
-    expect(wrapper.vm.$el.querySelector('.d-block p').textContent.trim()).toEqual(message);
+    expect(
+      wrapper.vm.$el.querySelector('.d-block p').textContent.trim()
+    ).toEqual(message);
   });
 
   it('should render correct linkMessage props', () => {
-    expect(wrapper.vm.$el.querySelector('.button-container').textContent.trim()).toEqual(linkMessage);
+    expect(
+      wrapper.vm.$el.querySelector('.button-container').textContent.trim()
+    ).toEqual(linkMessage);
   });
 
   describe('SuccessModal.vue Methods', () => {

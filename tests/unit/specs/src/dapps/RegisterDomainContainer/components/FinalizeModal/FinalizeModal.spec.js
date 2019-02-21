@@ -1,17 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
-import {
-  Tooling
-} from '@@/helpers';
-
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
+import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
 
-const hideModal = sinon.stub()
+const hideModal = sinon.stub();
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
@@ -19,9 +11,10 @@ const BModalStub = {
   methods: {
     hide: hideModal
   }
-}
+};
 
-xdescribe('FinalizeModal.vue', () => {
+//xdescribe
+describe('FinalizeModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -29,34 +22,6 @@ xdescribe('FinalizeModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-      hostUrl.pathname
-      }`
-    );
-
-    let getters = {
-      Networks: () => {
-        return nodeList
-      },
-      network: () => {
-        return network
-      },
-      web3: () => {
-        return newWeb3
-      },
-      ens: () => {
-
-      }
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
-
   });
 
   beforeEach(() => {
@@ -72,15 +37,23 @@ xdescribe('FinalizeModal.vue', () => {
   });
 
   it('should render correct domain name', () => {
-    let domainName = 'domainName';
+    const domainName = 'domainName';
     wrapper.setProps({ domainName });
-    expect(wrapper.vm.$el.querySelector('.finalize-modal-container h3').textContent.trim().indexOf(domainName)).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.finalize-modal-container h3')
+        .textContent.trim()
+        .indexOf(domainName)
+    ).toBeGreaterThan(-1);
   });
 
   it('should render correct confirm button', () => {
     const finalize = sinon.stub();
     wrapper.setProps({ finalize });
-    wrapper.findAll('.button-container button').at(1).trigger('click');
+    wrapper
+      .findAll('.button-container button')
+      .at(1)
+      .trigger('click');
     expect(finalize.called).toBe(true);
   });
 
@@ -93,7 +66,10 @@ xdescribe('FinalizeModal.vue', () => {
     it('should hide modal when close button clicked', () => {
       const finalize = sinon.stub();
       wrapper.setProps({ finalize });
-      wrapper.findAll('.button-container button').at(0).trigger('click');
+      wrapper
+        .findAll('.button-container button')
+        .at(0)
+        .trigger('click');
       expect(hideModal.called).toBe(true);
     });
   });

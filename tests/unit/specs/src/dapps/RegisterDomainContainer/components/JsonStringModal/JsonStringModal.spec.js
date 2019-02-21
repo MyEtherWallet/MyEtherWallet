@@ -1,12 +1,9 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
-const hideModal = jest.fn()
-const updateJsonString = jest.fn()
+const hideModal = jest.fn();
+const updateJsonString = jest.fn();
 const BModalStub = {
   name: 'b-modal',
   template: '<div><slot></slot></div>',
@@ -14,7 +11,7 @@ const BModalStub = {
   methods: {
     hide: hideModal
   }
-}
+};
 
 describe('JsonStringModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -42,7 +39,9 @@ describe('JsonStringModal.vue', () => {
   it('should render correct domain name', () => {
     const jsonText = 'jsonText';
     wrapper.setData({ jsonText });
-    expect(wrapper.vm.$el.querySelector('.input-container textarea').value).toEqual(jsonText);
+    expect(
+      wrapper.vm.$el.querySelector('.input-container textarea').value
+    ).toEqual(jsonText);
   });
 
   describe('JsonStringModal.vue Methods', () => {

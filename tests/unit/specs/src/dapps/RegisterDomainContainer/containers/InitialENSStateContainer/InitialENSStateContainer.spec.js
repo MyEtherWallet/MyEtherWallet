@@ -1,21 +1,19 @@
 import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
 import InitialENSStateContainer from '@/dapps/RegisterDomain/containers/InitialENSStateContainer/InitialENSStateContainer.vue';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('InitialENSStateContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const checkDomain = sinon.stub();
-  let domainName = 'domainName';
+  const domainName = 'domainName';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -29,13 +27,15 @@ describe('InitialENSStateContainer.vue', () => {
   });
 
   it('should render correct domain name', () => {
-    expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(domainName);
+    expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(
+      domainName
+    );
   });
 
   it('should render correct localdomainName watch method', () => {
     wrapper.setProps({ domainName: 'domainName11' });
     expect(wrapper.emitted().domainNameChange).toBeTruthy();
-  })
+  });
 
   it('should render correct domainNameErr props', () => {
     wrapper.setData({ domainNameErr: true });
@@ -48,13 +48,13 @@ describe('InitialENSStateContainer.vue', () => {
     expect(wrapper.find('.contract-loading-warning').isVisible()).toBe(true);
     wrapper.setData({ contractInitiated: true });
     expect(wrapper.find('.contract-loading-warning').isVisible()).toBe(false);
-  })
+  });
 
   it('should show/hide spinner icon according to loading flag', () => {
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(false);
     wrapper.setData({ loading: true });
     expect(wrapper.find('.fa-spinner').isVisible()).toBe(true);
-  })
+  });
 
   describe('InitialENSStateContainer.vue Methods', () => {
     it('should check domain when submit button clicked', () => {

@@ -1,23 +1,20 @@
 import Vue from 'vue';
-import VueX from 'vuex';
 import sinon from 'sinon';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens/InterfaceTokens.vue';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal/InterfaceTokensModal.vue';
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
 const BModalStub = {
-  name:'b-modal',
-  template:'<div><slot></slot></div>',
-  props:['to'],
+  name: 'b-modal',
+  template: '<div><slot></slot></div>',
+  props: ['to'],
   methods: {
     show: showModal,
     hide: hideModal
-  }  
+  }
 };
 
 describe('InterfaceTokens.vue', () => {
@@ -40,16 +37,7 @@ describe('InterfaceTokens.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    let getters = {
-      network: () => []
-    }
-
-    store = new VueX.Store({
-      getters
-    })
-
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -65,38 +53,52 @@ describe('InterfaceTokens.vue', () => {
   });
 
   it('should render correct search data', () => {
-    const search = 'search'
+    const search = 'search';
     wrapper.setData({ search });
-    expect(wrapper.vm.$el.querySelector('.search-block input').value).toEqual(search);
+    expect(wrapper.vm.$el.querySelector('.search-block input').value).toEqual(
+      search
+    );
   });
 
   it('should render correct customTokens data', () => {
     wrapper.setData({ customTokens });
 
-    const tableElement = wrapper.vm.$el.querySelectorAll('.token-table-container table')[0];
+    const tableElement = wrapper.vm.$el.querySelectorAll(
+      '.token-table-container table'
+    )[0];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
-      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(customTokens[i].name)
-      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(String(customTokens[i].balance))
+      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
+        customTokens[i].name
+      );
+      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
+        String(customTokens[i].balance)
+      );
     }
   });
 
   it('should render correct localTokens data', () => {
     wrapper.setData({ localTokens });
-    const tableElement = wrapper.vm.$el.querySelectorAll('.token-table-container table')[1];
+    const tableElement = wrapper.vm.$el.querySelectorAll(
+      '.token-table-container table'
+    )[1];
     const trElements = tableElement.querySelectorAll('tr');
-    for (var i = 0; i < trElements.length; i++) {
+    for (let i = 0; i < trElements.length; i++) {
       const trElement = trElements[i];
-      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(localTokens[i].name)
-      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(String(localTokens[i].balance))
+      expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
+        localTokens[i].name
+      );
+      expect(trElement.querySelectorAll('td')[1].textContent.trim()).toEqual(
+        String(localTokens[i].balance)
+      );
     }
   });
-  
+
   describe('InterfaceTokens.vue Methods', () => {
     it('should render correct addTokenModal method', () => {
-        wrapper.vm.addTokenModal();
-        expect(showModal.called).toBe(true);
+      wrapper.vm.addTokenModal();
+      expect(showModal.called).toBe(true);
     });
   });
 });

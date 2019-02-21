@@ -1,13 +1,10 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
-
-xdescribe('HardwarePasswordModal.vue', () => {
+//xdescribe
+describe('HardwarePasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -22,46 +19,51 @@ xdescribe('HardwarePasswordModal.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true,
+      attachToDocument: true
     });
   });
 
-
-
-  it('should render correct error data', () => {
+  xit('[Failing] should render correct error data', () => {
     const error = 'error';
     wrapper.setData({ error });
     expect(wrapper.find('p.error').text()).toEqual(error);
   });
 
-  it('should render correct password data', () => {
+  xit('[Failing] should render correct password data', () => {
     const password = 'password';
-    wrapper.setData({ password })
-    expect(wrapper.vm.$el.querySelector('.input-container input').value).toEqual(password);
+    wrapper.setData({ password });
+    expect(
+      wrapper.vm.$el.querySelector('.input-container input').value
+    ).toEqual(password);
   });
 
-  it('should render correct hardwareBrand props', () => {
+  xit('[Failing] should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
-    wrapper.setProps({ hardwareBrand })
-    expect(wrapper.find('.submit-button').text().indexOf(hardwareBrand)).toBeGreaterThan(-1)
+    wrapper.setProps({ hardwareBrand });
+    expect(
+      wrapper
+        .find('.submit-button')
+        .text()
+        .indexOf(hardwareBrand)
+    ).toBeGreaterThan(-1);
   });
 
   describe('HardwarePasswordModal.vue Methods', () => {
-    it('should change password data when input triggers', () => {
-      var inputElement = wrapper.find('.input-container input')
-      var inputText = 'testpassword';
+    xit('[Failing] should change password data when input triggers', () => {
+      const inputElement = wrapper.find('.input-container input');
+      const inputText = 'testpassword';
       inputElement.setValue(inputText);
       inputElement.trigger('change');
       expect(wrapper.vm.$data.password).toBe(inputText);
     });
 
-    it('should change show data when button click', () => {
-      var imgElement = wrapper.find('.input-container img')
-      imgElement.trigger('click')
-      expect(wrapper.vm.$data.show).toBe(true)
-      imgElement = wrapper.find('.input-container img')
-      imgElement.trigger('click')
-      expect(wrapper.vm.$data.show).toBe(false)
+    xit('[Failing] should change show data when button click', () => {
+      let imgElement = wrapper.find('.input-container img');
+      imgElement.trigger('click');
+      expect(wrapper.vm.$data.show).toBe(true);
+      imgElement = wrapper.find('.input-container img');
+      imgElement.trigger('click');
+      expect(wrapper.vm.$data.show).toBe(false);
     });
   });
 });
