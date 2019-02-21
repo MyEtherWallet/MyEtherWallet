@@ -74,7 +74,7 @@ export default {
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
-          href: 'mailto:support@myetherwallet.com'
+          href: 'mailto:support@xinfin.network'
         },
         {
           title: this.$t('footer.privacy'),
@@ -86,7 +86,7 @@ export default {
         },
         {
           title: `v${version}`,
-          href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
+          href: `https://github.com/xinfinorg/Wallet/releases/tag/v${version}`
         }
       ],
       footerContent: [
@@ -178,31 +178,31 @@ export default {
       ],
       links: [
         {
-          to: 'https://www.facebook.com/myetherwallet',
+          to: 'https://www.facebook.com/XinFinHybridBlockchain/',
           class: 'fa-facebook'
         },
         {
-          to: 'https://www.twitter.com/@myetherwallet',
+          to: 'https://twitter.com/XinFin_Official',
           class: 'fa-twitter'
         },
         {
-          to: 'https://www.instagram.com/myetherwallet',
+          to: 'https://www.instagram.com/xinfin_hybridblockchain',
           class: 'fa-instagram'
         },
         {
-          to: 'https://www.linkedin.com/company/myetherwallet',
+          to: 'https://www.linkedin.com/company/xinfin/',
           class: 'fa-linkedin'
         },
         {
-          to: 'https://www.github.com/myetherwallet',
+          to: 'https://www.github.com/XinFinOrg',
           class: 'fa-github'
         },
         {
-          to: 'https://www.reddit.com/r/myetherwallet',
+          to: 'https://www.reddit.com/r/xinfin/',
           class: 'fa-reddit-alien'
         },
         {
-          to: 'https://www.medium.com/@myetherwallet',
+          to: 'https://medium.com/xinfin',
           class: 'fa-medium'
         }
       ]
