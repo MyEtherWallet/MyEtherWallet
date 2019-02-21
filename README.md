@@ -25,7 +25,12 @@ MyEtherWallet is a doorway to the XinFin blockchain, allowing users to manage th
 - **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
 - **Open source & audit-able**
 
+
+
 ## Getting started
+
+
+
 
 1. Open terminal
 2. Clone the repo: `git clone https://github.com/XinFinOrg/Wallet`
@@ -33,6 +38,19 @@ MyEtherWallet is a doorway to the XinFin blockchain, allowing users to manage th
 4. run `npm build .` You can also use the offline version by opening the index file from the dist folder with your preferred browser
 5. start `npm run dev`
 6. App should be running in `https://localhost:8080`
+
+
+### Errors :- 
+
+To Install canvas@1.6.3,You can quickly install the dependencies by using the command for your OS:
+
+OS | Command
+----- | -----
+OS X | `brew install pkg-config cairo libpng jpeg giflib`
+Ubuntu | `sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++`
+Fedora | `sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel`
+Solaris | `pkgin install cairo pkg-config xproto renderproto kbproto xextproto`
+Windows | [Instructions on our wiki](https://github.com/Automattic/node-canvas/wiki/Installation---Windows)
 
 ## Bug / Feature Request
 
