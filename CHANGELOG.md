@@ -1,3 +1,9 @@
+### Release v5.0.4
+
+### Devop
+
+- Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
+
 ### Release v5.0.3
 
 ### Bug
