@@ -180,11 +180,9 @@ export default {
       if (this.account.identifier === MEW_CONNECT) {
         let tokenInfo;
         if (tx.data.slice(0, 10) === '0xa9059cbb') {
-          const customStore = store.get('customTokens');
-          tokenInfo = this.network.types.tokens.find(
+          tokenInfo = this.account.tokens.find(
             entry => entry.address === tx.to
           );
-          // tokenInfo = tokenInfo || defaultTokens.find(entry => entry.address === rawTx.to);
           if (tokenInfo) {
             tx.currency = {
               symbol: tokenInfo.symbol,
@@ -193,7 +191,6 @@ export default {
             };
           }
         }
-        // this.network.types.tokens.find()
         console.log('tx', tx); // todo remove dev item
         signPromise = this.wallet.signTransaction(tx);
       } else {
