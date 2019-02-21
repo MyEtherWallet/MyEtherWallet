@@ -33,7 +33,7 @@
             provided in English and, because of this, the English version of our
             website is the official text.
           </p>
-          <p>MIT License Copyright © 2015-2017XinFin WalletINC</p>
+          <p>MIT License Copyright © 2015-2017 XinFin Wallet INC </p>
           <p>
             Permission is hereby granted, free of charge, to any person
             obtaining a copy of this software and associated documentation files
