@@ -1,5 +1,5 @@
 import { Toast } from '@/helpers';
-import vue from '@/main';
+import Vue from 'vue';
 
 const ERRORS = {
   'Popup closed': 'trezorError.popupClosed',
@@ -26,9 +26,9 @@ export default err => {
   });
 
   if (foundError) {
-    Toast.responseHandler(vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
   } else if (foundWarning) {
-    Toast.responseHandler(vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
+    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }

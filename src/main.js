@@ -85,6 +85,8 @@ const i18n = new VueI18n({
   messages: languages,
   silentTranslationWarn: true
 });
+Vue.$i18n = i18n;
+
 // Register global toasts
 Vue.use(Toasted);
 Object.keys(toastConfig).forEach(item => {
@@ -102,8 +104,6 @@ const vue = new Vue({
   store,
   render: h => h(getApp())
 }).$mount('#app');
-
-// Vue.$t = vue.$i18n.t
 
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
@@ -125,5 +125,3 @@ Sentry.init({
     });
   }
 });
-
-export default vue;
