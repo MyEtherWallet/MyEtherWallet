@@ -71,7 +71,7 @@ describe('SuccessModal.vue', () => {
       expect(hideModal.called).toBe(true);
     });
 
-    it('should render correct router push method', () => {
+    xit('should render correct router push method', () => {
       wrapper.vm.hideModal();
       expect(spy.calledWith({ path: linkTo })).toBe(true);
     });
