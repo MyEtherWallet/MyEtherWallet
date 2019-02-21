@@ -167,7 +167,7 @@ export default {
             },
             {
               text: this.$t('common.customerSupport'),
-              href: 'mailto:support@myetherwallet.com'
+              href: 'mailto:support@xinfin.network'
             },
             {
               text: 'Help Center',
