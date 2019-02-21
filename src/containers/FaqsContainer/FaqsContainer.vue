@@ -32,7 +32,11 @@
               </div>
               <div v-if="faqs[prop].open" class="qa__contents--content">
                 {{ faqs[prop].content }}
-                <a :href="faqs[prop].link" target="_blank">
+                <a
+                  :href="faqs[prop].link"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   {{ faqs[prop].linkText }}
                 </a>
               </div>
