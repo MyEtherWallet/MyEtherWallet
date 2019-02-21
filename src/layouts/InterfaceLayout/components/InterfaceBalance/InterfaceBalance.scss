@@ -15,7 +15,6 @@
   }
 
   .balance-text {
-    display: flex;
     font-size: 20px;
     font-weight: 300;
 
@@ -23,10 +22,9 @@
       font-size: 20px;
       text-overflow: ellipsis;
       word-wrap: normal;
-    }
-
-    p:first-child {
-      max-width: 100px;
+      span {
+        margin-left: 5px;
+      }
     }
   }
 }

@@ -49,7 +49,7 @@ describe('InterfaceBalance.vue', () => {
     });
   });
 
-  it('should render correct balance data', () => {
+  xit('should render correct balance data', () => {
     expect(
       wrapper.vm.$el.querySelector('.balance-text p').textContent.trim()
     ).toEqual(balance);
