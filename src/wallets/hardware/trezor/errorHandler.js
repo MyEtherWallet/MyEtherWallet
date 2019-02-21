@@ -5,7 +5,9 @@ const ERRORS = {
   DEVICE_DISCONNECTED_ACTION: 'device disconnected during action',
   ACTION_CANCELLED: 'Action cancelled by user',
   NO_PERMISSION: 'Permissions not granted',
-  TRANSPORT_MISSING: 'Device call in progress'
+  DEVICE_CALL_IN_PROGRESS: 'Device call in progress',
+  TRANSPORT_MISSING: 'Transport is missing',
+  PUBKEY_EXPORT_CANCELLED: 'Cancelled'
 };
 
 const WARNING = {};

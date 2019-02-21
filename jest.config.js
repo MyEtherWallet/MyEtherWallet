@@ -1,5 +1,5 @@
 module.exports = {
-  collectCoverage:process.env.NODE_ENV === 'production' ? true : false,
+  collectCoverage: process.env.NODE_ENV === 'production' ? true : false,
   globals: {
     WITH_NETWORK: false,
     VERSION: 'test',
@@ -30,5 +30,6 @@ module.exports = {
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
   testEnvironmentOptions: {},
-  testURL: 'http://localhost/'
+  testURL: 'http://localhost/',
+  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/__mocks__/mocks.js'
 };

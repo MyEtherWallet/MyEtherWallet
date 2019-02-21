@@ -14,7 +14,7 @@ const toastObject = {
       toastObject.goAway(0);
     }
   },
-  duration: 10000
+  duration: 5000
 };
 
 const error = {
