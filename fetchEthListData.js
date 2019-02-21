@@ -100,9 +100,7 @@ async function fetchContracts() {
 }
 
 const run = async () => {
-  await fetchTokens();
-  await fetchContracts();
-  await fetchDarkList();
+  await fetchTokens().then(fetchContracts).then(fetchDarkList);
 }
 
 (async () => {
