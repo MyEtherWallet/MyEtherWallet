@@ -1,0 +1,34 @@
+@import '~@/scss/GlobalVariables';
+
+.support-content {
+  cursor: pointer;
+  color: $mew-green;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.email-prefill-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px 0 30px;
+
+  input,
+  textarea {
+    background-color: $light-grey-1;
+    border: 0;
+    font-size: 14px;
+    margin: 10px 20px;
+    padding: 20px;
+  }
+
+  textarea {
+    min-height: 200px;
+  }
+
+  a {
+    color: $white !important;
+  }
+}
