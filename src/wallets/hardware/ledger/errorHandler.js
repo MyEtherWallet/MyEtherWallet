@@ -8,9 +8,9 @@ const ERRORS = {
   DEVICE_BUSY_LOCK_TX: 'Ledger Device is busy (lock signTransaction)',
   UNKNOWN_ERROR_6804: 'Ledger device: UNKNOWN_ERROR (0x6804)',
   UNKNOWN_ERROR_6801: 'Ledger device: UNKNOWN_ERROR (0x6801)',
-  U2F_OTHER_ERROR:
-    'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR',
-  INVALID_DATA: 'Ledger device: Invalid data received (0x6a80)'
+  U2F_OTHER_ERROR: 'Failed to sign with Ledger device: U2F OTHER_ERROR',
+  INVALID_DATA: 'Ledger device: Invalid data received (0x6a80)',
+  WRONG_APP: 'Ledger device: CLA_NOT_SUPPORTED (0x6e00)'
 };
 const WARNING = {
   DENIED_BY_USER:
