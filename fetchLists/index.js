@@ -20,7 +20,6 @@ const fetchTokens = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (tokensCollection !== undefined) {
-          console.log(`${configs.TOKENS_PATH}/tokens-${tokenFile.name}.json`);
           fs.writeFileSync(
             `${configs.TOKENS_PATH}/tokens-${tokenFile.name}.json`,
             JSON.stringify(tokensCollection)
@@ -48,7 +47,6 @@ const fetchDarkList = async () => {
       data: darkList,
       timestamp: Date.now()
     };
-    console.log(`${configs.DARKLIST_PATH}/address-darklist.json`);
     fs.writeFileSync(
       `${configs.DARKLIST_PATH}/address-darklist.json`,
       JSON.stringify(jsonToStore)
@@ -77,9 +75,6 @@ const fetchContracts = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
-          console.log(
-            `${configs.CONTRACTS_PATH}/contract-abi-${contractFile.name}.json`
-          );
           fs.writeFileSync(
             `${configs.CONTRACTS_PATH}/contract-abi-${contractFile.name}.json`,
             JSON.stringify(contractsCollection)
