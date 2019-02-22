@@ -5,12 +5,7 @@ import FinishModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicConta
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { Tooling } from '@@/helpers';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('ByMnemonicContainer.vue', () => {
   let localVue, i18n, wrapper, store;

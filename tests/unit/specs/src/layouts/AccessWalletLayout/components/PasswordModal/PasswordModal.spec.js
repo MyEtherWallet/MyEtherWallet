@@ -1,18 +1,9 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import { Tooling } from '@@/helpers';
 
 describe('PasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
-  window.matchMedia =
-    window.matchMedia ||
-    function() {
-      return {
-        matches: false,
-        addListener: jest.fn(),
-        removeListener: jest.fn()
-      };
-    };
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -22,7 +13,7 @@ describe('PasswordModal.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = mount(PasswordModal, {
+    wrapper = shallowMount(PasswordModal, {
       localVue,
       i18n,
       store,
