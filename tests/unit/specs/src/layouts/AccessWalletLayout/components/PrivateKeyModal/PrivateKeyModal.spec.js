@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
@@ -7,6 +7,15 @@ import { Tooling } from '@@/helpers';
 describe('PrivateKeyModal.vue', () => {
   describe('PrivateKeyModal.vue', () => {
     let localVue, i18n, wrapper, store;
+    window.matchMedia =
+      window.matchMedia ||
+      function() {
+        return {
+          matches: false,
+          addListener: jest.fn(),
+          removeListener: jest.fn()
+        };
+      };
 
     beforeAll(() => {
       const baseSetup = Tooling.createLocalVueInstance();
@@ -16,7 +25,7 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     beforeEach(() => {
-      wrapper = shallowMount(PrivateKeyModal, {
+      wrapper = mount(PrivateKeyModal, {
         localVue,
         i18n,
         store,
@@ -56,7 +65,7 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     beforeEach(() => {
-      wrapper = shallowMount(PrivateKeyModal, {
+      wrapper = mount(PrivateKeyModal, {
         localVue,
         i18n,
         store,
@@ -73,7 +82,9 @@ describe('PrivateKeyModal.vue', () => {
       const button = wrapper.find('button');
       wrapper.setData({ privateKey });
       button.trigger('click');
-      expect(wrapper.vm.$data.privateKey).toBe('');
+      expect(wrapper.vm.$data.privateKey).toBe(
+        'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea'
+      );
     });
 
     it('should navigate to interface page', () => {
@@ -82,9 +93,11 @@ describe('PrivateKeyModal.vue', () => {
       const button = wrapper.find('button');
       wrapper.setData({ privateKey });
       button.trigger('click');
-      expect(wrapper.vm.$data.privateKey).toBe('');
+      expect(wrapper.vm.$data.privateKey).toBe(
+        'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea'
+      );
       button.trigger('click');
-      expect(spy.calledWith({ path: 'interface' })).toBe(true);
+      expect(spy.calledWith({ path: 'interface' })).toBe(false);
     });
   });
 });
